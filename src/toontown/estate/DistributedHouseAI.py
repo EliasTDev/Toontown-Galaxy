@@ -271,7 +271,7 @@ class DistributedHouseAI(DistributedObjectAI):
             if item.getFlags() & FLCloset:
                 items = list(ClosetToClothes.keys()) if item.getFlags() & FLCloset else list(BankToMoney.keys())
             elif item.getFlags() & FLBank:
-            	items = list(BankToMoney.keys())
+                items = list(BankToMoney.keys())
                 for itItem in self.interiorItems:
                     if itItem.furnitureType in items:
                         posHpr = itItem.posHpr

@@ -219,7 +219,7 @@ def doEffect(textId, speakingToon, nearbyToons):
         for toonId in nearbyToons:
             toon = base.cr.doId2do.get(toonId)
             if toon and not toon.ghostMode:
-				toon.setAnimState('victory')
+                toon.setAnimState('victory')
     elif menuIndex == RESISTANCE_TICKETS:
         effect = BattleParticles.loadParticleFile('resistanceEffectSparkle.ptf')
         fadeColor = VBase4(1, 0.5,1,1 )

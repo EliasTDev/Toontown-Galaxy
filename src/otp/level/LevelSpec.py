@@ -1,7 +1,8 @@
 from pandac import PandaModules as PM
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.PythonUtil import list2dict, uniqueElements
-import LevelConstants, types
+from . import LevelConstants
+import types
 
 class LevelSpec:
     notify = DirectNotifyGlobal.directNotify.newCategory('LevelSpec')

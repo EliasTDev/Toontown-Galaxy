@@ -31,7 +31,8 @@ from toontown.toon import NPCToons
 from toontown.toonbase import TTLocalizer, ToontownBattleGlobals, ToontownGlobals
 from toontown.toonbase.ToontownGlobals import *
 from .NPCToons import npcFriends
-import Experience, InventoryBase, ToonDNA, random, time
+from . import Experience, InventoryBase, ToonDNA
+import random, time
 import http.client, urllib.request, urllib.parse, urllib.error
 from functools import reduce
 try:
@@ -5168,11 +5169,11 @@ def suit(command, suitIndex, cogType=0, cogAbilities=0):
         return "Couldn't spawn building with index {0}.".format(suitName)
     elif command == 'do':
         if suitIndex == 0:
-		 suitResult = 31
+            suitResult = 31
         elif suitIndex == 1:
-		 suitResult = 13
+            suitResult = 13
         else:
-		 return "Usage is ~suit do [0/1] with just 1 number and without the [] or /!"
+            return "Usage is ~suit do [0/1] with just 1 number and without the [] or /!"
         returnCode = invoker.doCogdoTakeOver(suitResult)
         if returnCode[0] == 'success':
             return 'Successfully spawned Cogdo!'.format(suitResult)

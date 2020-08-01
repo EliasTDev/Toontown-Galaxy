@@ -3,7 +3,8 @@ from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.distributed.ClockDelta import *
 from direct.fsm import ClassicFSM, State
 from direct.task import Task
-import ButterflyGlobals, random
+from . import ButterflyGlobals
+import random
 
 class DistributedButterflyAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("DistributedButterflyAI")

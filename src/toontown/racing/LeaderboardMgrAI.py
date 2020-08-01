@@ -1,6 +1,7 @@
 from otp.ai.MagicWordGlobal import *
 from toontown.toonbase import TTLocalizer
-import RaceGlobals, operator, time
+from . import RaceGlobals
+import operator, time
 
 class LeaderboardMgrAI:
 
