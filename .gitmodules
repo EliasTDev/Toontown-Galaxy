@@ -1,0 +1,3 @@
+[submodule "resources"]
+	path = src/resources
+	url = https://github.com/ToontownGalaxy/resources.git
