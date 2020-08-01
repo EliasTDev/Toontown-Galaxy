@@ -1,4 +1,4 @@
-# Toontown Empire
+# Toontown Galaxy
 The official repo for Toontown Galaxy, a new Toontown game based on Disney's Toontown Online.
 
 # staff:
