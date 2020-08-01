@@ -1,5 +1,5 @@
 from direct.directnotify import DirectNotifyGlobal
-import DistributedFactory
+from . import DistributedFactory
 
 class DistributedMegaCorp(DistributedFactory.DistributedFactory):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedMegaCorp')

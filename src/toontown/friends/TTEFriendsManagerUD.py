@@ -269,7 +269,7 @@ class TTEFriendsManagerUD(DistributedObjectGlobalUD):
     # -- Teleport and Whispers --
     def routeTeleportQuery(self, toId):
         fromId = self.air.getAvatarIdFromSender()
-        if fromId in self.tpRequests.values():
+        if fromId in list(self.tpRequests.values()):
             return
         self.tpRequests[fromId] = toId
         self.sendUpdateToAvatarId(toId, 'teleportQuery', [fromId])

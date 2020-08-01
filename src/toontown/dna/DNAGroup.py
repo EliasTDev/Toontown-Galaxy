@@ -1,5 +1,5 @@
-from common import *
-import DNAUtil
+from .common import *
+from . import DNAUtil
 
 class DNAGroup:
     COMPONENT_CODE = 1

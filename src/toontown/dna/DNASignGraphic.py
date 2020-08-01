@@ -1,4 +1,4 @@
-import DNAProp
+from . import DNAProp
 
 class DNASignGraphic(DNAProp.DNAProp):
     COMPONENT_CODE = 8

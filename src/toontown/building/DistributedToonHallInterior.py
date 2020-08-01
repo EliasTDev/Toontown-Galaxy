@@ -5,7 +5,7 @@ from otp.ai.MagicWordGlobal import *
 from toontown.dna.DNAParser import *
 from toontown.hood import ZoneUtil
 from toontown.toon import DistributedNPCToonBase
-from DistributedToonInterior import DistributedToonInterior
+from .DistributedToonInterior import DistributedToonInterior
 import ToonInteriorColors, random
 
 class DistributedToonHallInterior(DistributedToonInterior):

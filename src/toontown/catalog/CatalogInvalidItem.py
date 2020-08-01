@@ -1,4 +1,4 @@
-import CatalogItem
+from . import CatalogItem
 from direct.showbase import PythonUtil
 from toontown.toonbase import ToontownGlobals, TTLocalizer
 

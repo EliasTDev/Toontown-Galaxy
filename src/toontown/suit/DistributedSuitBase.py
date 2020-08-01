@@ -10,7 +10,7 @@ from otp.nametag.NametagConstants import *
 from otp.nametag import NametagGlobals
 from toontown.battle import BattleProps
 from toontown.toonbase import TTLocalizer, ToontownGlobals
-import Suit, SuitBase, SuitDialog, SuitTimings
+from . import Suit, SuitBase, SuitDialog, SuitTimings
 import random
 
 class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit, SuitBase.SuitBase):
@@ -294,7 +294,7 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit, SuitBa
     def makePathTrack(self, nodePath, posPoints, velocity, name):
         track = Sequence(name=name)
         nodePath.setPos(posPoints[0])
-        for pointIndex in xrange(len(posPoints) - 1):
+        for pointIndex in range(len(posPoints) - 1):
             startPoint = posPoints[pointIndex]
             endPoint = posPoints[pointIndex + 1]
             track.append(Func(nodePath.headsUp, endPoint[0], endPoint[1], endPoint[2]))

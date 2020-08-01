@@ -582,7 +582,7 @@ class PartyPlanner(DirectFrame, FSM):
         return page
 
     def __handleHolidays(self):
-        self.inviteThemes = range(len(PartyGlobals.InviteTheme))
+        self.inviteThemes = list(range(len(PartyGlobals.InviteTheme)))
 
 
 

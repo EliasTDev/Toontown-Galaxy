@@ -193,7 +193,7 @@ class CalendarGuiDay(DirectFrame):
 
 
         if self.filter == ToontownGlobals.CalendarFilterShowAll or self.filter == ToontownGlobals.CalendarFilterShowOnlyHolidays:
-            for id, holiday in HolidayGlobals.Holidays.iteritems():
+            for id, holiday in HolidayGlobals.Holidays.items():
                 title, description = TTLocalizer.HolidayNamesInCalendar[id]
 
                 if 'weekDay' in holiday:

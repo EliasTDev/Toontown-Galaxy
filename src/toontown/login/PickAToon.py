@@ -77,7 +77,7 @@ class DeleteFrame(DirectLabel):
 
 class NewPickAToon:
     def __init__(self, avList, parentFSM, doneEvent):
-        self.toonsList = {i: (i in [x.position for x in avList]) for i in xrange(6)}
+        self.toonsList = {i: (i in [x.position for x in avList]) for i in range(6)}
         self.avList = avList
         
         self.currentSlot = 0

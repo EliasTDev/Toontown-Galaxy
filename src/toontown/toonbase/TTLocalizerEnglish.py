@@ -3,7 +3,7 @@ from toontown.catalog import CatalogAccessoryItemGlobals
 from otp.otpbase import OTPLocalizer as OL
 import random
 OL.SpeedChatStaticText = OL.SpeedChatStaticTextToontown.copy()
-for key in OL.SpeedChatStaticTextCommon.iterkeys():
+for key in OL.SpeedChatStaticTextCommon.keys():
     OL.SpeedChatStaticText[key] = OL.SpeedChatStaticTextCommon[key]
 
 
@@ -5086,7 +5086,7 @@ AccessoryNamePrefix = {0: 'hat unisex ',
  10: 'backpack girl ',
  11: 'shoes girl '}
 AccessoryTypeNames = {}
-for accessoryId in CatalogAccessoryItemGlobals.AccessoryTypes.keys():
+for accessoryId in list(CatalogAccessoryItemGlobals.AccessoryTypes.keys()):
     accessoryInfo = CatalogAccessoryItemGlobals.AccessoryTypes[accessoryId]
     if accessoryInfo[0] % 4 == 0:
         accessoryStyleDescription = HatStylesDescriptions
@@ -7898,7 +7898,7 @@ def getRecipeBeanText(beanTuple):
     if not beanTuple:
         return retval
     allTheSame = True
-    for index in xrange(len(beanTuple)):
+    for index in range(len(beanTuple)):
         if index + 1 < len(beanTuple):
             if not beanTuple[index] == beanTuple[index + 1]:
                 allTheSame = False
@@ -7912,7 +7912,7 @@ def getRecipeBeanText(beanTuple):
     else:
         retval += 'a'
         maxBeans = len(beanTuple)
-        for index in xrange(maxBeans):
+        for index in range(maxBeans):
             if index == maxBeans - 1:
                 retval += ' and %s Jellybean' % BeanColorWords[beanTuple[index]]
             elif index == 0:
@@ -8625,7 +8625,7 @@ def getRandomPetName(gender = None, seed = None):
     return random.choice(nameList)
 
 def getPetNameId(name):
-    for key, value in PetNameDictionary.items():
+    for key, value in list(PetNameDictionary.items()):
         if name == value:
             return key
 

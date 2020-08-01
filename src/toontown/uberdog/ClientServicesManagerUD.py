@@ -14,21 +14,21 @@ from toontown.uberdog import NameJudgeBlacklist
 from panda3d.core import *
 
 import hashlib, hmac, json
-import anydbm, math, os
-import urllib2, time, urllib
-import cookielib, socket
+import dbm, math, os
+import urllib.request, urllib.error, urllib.parse, time, urllib.request, urllib.parse, urllib.error
+import http.cookiejar, socket
 
 def rejectConfig(issue, securityIssue=True, retarded=True):
-    print
-    print
-    print 'Lemme get this straight....'
-    print 'You are trying to use remote account database type...'
-    print 'However,', issue + '!!!!'
+    print()
+    print()
+    print('Lemme get this straight....')
+    print('You are trying to use remote account database type...')
+    print('However,', issue + '!!!!')
     if securityIssue:
-        print 'Do you want this server to get hacked?'
+        print('Do you want this server to get hacked?')
     if retarded:
-        print '"Either down\'s or autism"\n  - JohnnyDaPirate, 2015'
-    print 'Go fix that!'
+        print('"Either down\'s or autism"\n  - JohnnyDaPirate, 2015')
+    print('Go fix that!')
     exit()
 
 def entropy(string):
@@ -75,15 +75,15 @@ def executeHttpRequest(url, **extras):
     # MOVE THIS TO ToontownInternalRepository (this might be interesting for AI)
     ##### USE PYTHON 2.7.9 ON PROD WITH SSL AND CLOUDFLARE #####
     _data = {}
-    if len(extras.items()) != 0:
-        for k, v in extras.items():
+    if len(list(extras.items())) != 0:
+        for k, v in list(extras.items()):
             _data[k] = v
     signature = hashlib.sha512(json.dumps(_data) + apiSecret).hexdigest()
-    data = urllib.urlencode({'data': json.dumps(_data), 'hmac': signature})
-    cookie_jar = cookielib.LWPCookieJar()
-    cookie = urllib2.HTTPCookieProcessor(cookie_jar)
-    opener = urllib2.build_opener(cookie)
-    req = urllib2.Request('http://192.168.1.212/api/' + url, data,
+    data = urllib.parse.urlencode({'data': json.dumps(_data), 'hmac': signature})
+    cookie_jar = http.cookiejar.LWPCookieJar()
+    cookie = urllib.request.HTTPCookieProcessor(cookie_jar)
+    opener = urllib.request.build_opener(cookie)
+    req = urllib.request.Request('http://192.168.1.212/api/' + url, data,
                           headers={"Content-Type" : "application/x-www-form-urlencoded"})
     req.get_method = lambda: "POST"
     try:
@@ -144,7 +144,7 @@ class AccountDB:
         filename = config.GetString('account-bridge-filename', 'account-bridge.db')
         filename = os.path.join('dependencies', filename)
 
-        self.dbm = anydbm.open(filename, 'c')
+        self.dbm = dbm.open(filename, 'c')
 
     def addNameRequest(self, avId, name, accountID = None):
         return True
@@ -653,7 +653,7 @@ class GetAvatarsFSM(AvatarOperationFSM):
     def enterSendAvatars(self):
         potentialAvs = []
 
-        for avId, fields in self.avatarFields.items():
+        for avId, fields in list(self.avatarFields.items()):
             index = self.avList.index(avId)
             wishNameState = fields.get('setWishNameState', [''])[0]
             name = fields['setName'][0]

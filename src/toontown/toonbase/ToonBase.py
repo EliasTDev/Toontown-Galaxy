@@ -148,7 +148,7 @@ class ToonBase(OTPBase.OTPBase):
             self.showGroupTracker = True
         
         settings['grouptracker'] = self.showGroupTracker
-        print('Group Tracker Settings:', self.showGroupTracker)
+        print(('Group Tracker Settings:', self.showGroupTracker))
 
         tpMgr = TextPropertiesManager.getGlobalPtr()
         WLDisplay = TextProperties()

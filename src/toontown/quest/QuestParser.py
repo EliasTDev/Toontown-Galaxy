@@ -8,7 +8,7 @@ from toontown.suit import Suit, SuitDNA
 from toontown.toon import ToonHeadFrame
 from toontown.toonbase import TTLocalizer, ToontownBattleGlobals
 from toontown.quest import QuestScripts
-import copy, re, tokenize, BlinkingArrows, StringIO
+import copy, re, tokenize, BlinkingArrows, io
 
 notify = DirectNotifyGlobal.directNotify.newCategory('QuestParser')
 lineDict = {}
@@ -42,7 +42,7 @@ def clear():
 
 def readFile():
     global curId
-    script = StringIO.StringIO(QuestScripts.script)
+    script = io.StringIO(QuestScripts.script)
 
     def readLine():
         return script.readline().replace('\r', '')
@@ -68,7 +68,7 @@ def getLineOfTokens(gen):
     tokens = []
     nextNeg = 0
     try:
-        token = gen.next()
+        token = next(gen)
     except StopIteration:
         return None
     if token[0] == tokenize.ENDMARKER:
@@ -96,7 +96,7 @@ def getLineOfTokens(gen):
             notify.warning('Ignored token type: %s on line: %s' % (tokenize.tok_name[token[0]], token[2][0]))
 
         try:
-            token = gen.next()
+            token = next(gen)
         except StopIteration:
             break
 
@@ -163,7 +163,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
             self.currentTrack = None
         self.ignoreAll()
         taskMgr.remove(self.uniqueId)
-        for toonHeadFrame in self.toonHeads.values():
+        for toonHeadFrame in list(self.toonHeads.values()):
             toonHeadFrame.destroy()
 
         del self.toonHeads
@@ -896,7 +896,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
             curGagLevel = newGagLevel
             access = [0, 0, 0, 0, 0, 0, 0]
 
-            for i in xrange(len(self.oldTrackAccess)):
+            for i in range(len(self.oldTrackAccess)):
                 access[i] = curGagLevel if self.oldTrackAccess[i] > 0 else 0
 
             base.localAvatar.setTrackAccess(access)

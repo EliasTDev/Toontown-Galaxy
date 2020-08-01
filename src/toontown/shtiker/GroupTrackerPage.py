@@ -49,7 +49,7 @@ class GroupTrackerGroup(DirectButton):
     
     def updatePlayerCount(self):
         maxPlayers = GroupTrackerGlobals.CATEGORY_TO_MAX_PLAYERS[self.category]
-        self.playerCount['text'] = (`len(self.memberIds)` + '/' + `maxPlayers`) 
+        self.playerCount['text'] = (repr(len(self.memberIds)) + '/' + repr(maxPlayers)) 
     
     def getLeaderId(self):
         return self.leaderId
@@ -448,7 +448,7 @@ class GroupTrackerPage(ShtikerPage.ShtikerPage):
             if not group[GroupTrackerGlobals.SHOW] or len(group[GroupTrackerGlobals.MEMBER_IDS]) == 0:
                 continue # We are using this to see if this group is dead or if someone doesnt want it up
             leaderId = 0
-            for i, g in base.cr.globalGroupTracker.leader2Group.items():
+            for i, g in list(base.cr.globalGroupTracker.leader2Group.items()):
                 if g == group:
                     leaderId = i
             if not leaderId:

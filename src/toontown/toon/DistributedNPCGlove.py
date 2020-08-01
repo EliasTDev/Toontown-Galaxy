@@ -1,7 +1,7 @@
 from otp.nametag.NametagConstants import CFSpeech, CFTimeout
 from toontown.toonbase import TTLocalizer, ToontownGlobals
 from toontown.toon import NPCToons
-from DistributedNPCToonBase import DistributedNPCToonBase
+from .DistributedNPCToonBase import DistributedNPCToonBase
 import GloveNPCGlobals, GloveShopGui, time
 
 class DistributedNPCGlove(DistributedNPCToonBase):

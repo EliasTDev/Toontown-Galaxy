@@ -2,7 +2,7 @@ from direct.gui.DirectGui import *
 from direct.task.Task import Task
 from otp.otpbase import OTPLocalizer
 from toontown.toonbase import ToontownGlobals, TTLocalizer, ToontownTimer
-import SosShopGlobals
+from . import SosShopGlobals
 
 try:
  from panda3d.core import *

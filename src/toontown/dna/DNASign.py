@@ -1,6 +1,6 @@
-import DNAProp
+from . import DNAProp
 
-from common import *
+from .common import *
 
 class DNASign(DNAProp.DNAProp):
     COMPONENT_CODE = 5

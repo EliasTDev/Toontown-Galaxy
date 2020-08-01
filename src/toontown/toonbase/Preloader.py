@@ -21,10 +21,10 @@ class Preloader(DirectObject):
     def destroy(self):
         self.ignore(self.asyncRequestDoneEvent)
 
-        for key in self.requests.keys():
+        for key in list(self.requests.keys()):
             self.cancelAsyncRequest(key)
 
-        for key in self.modelPool.keys():
+        for key in list(self.modelPool.keys()):
             self.unloadModel(key)
 
     def getUniqueName(self):

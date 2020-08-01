@@ -1,5 +1,5 @@
-import DNAProp
-from common import *
+from . import DNAProp
+from .common import *
 
 from panda3d.core import ModelNode
 

@@ -2,7 +2,7 @@ from panda3d.core import *
 from otp.nametag.NametagGroup import *
 from toontown.hood import ZoneUtil
 from toontown.toonbase import TTLocalizer, ToontownBattleGlobals, ToontownGlobals
-import ToonDNA
+from . import ToonDNA
 
 QUEST_MOVIE_CLEAR = 0
 QUEST_MOVIE_REJECT = 1
@@ -69,19 +69,19 @@ def getRandomDNA(seed, gender):
     return randomDNA.asTuple()
 
 def createNPC(air, npcId, desc, zoneId, posIndex = 0, questCallback = None):
-    import DistributedNPCToonAI
-    import DistributedNPCClerkAI
-    import DistributedNPCTailorAI
-    import DistributedNPCBlockerAI
-    import DistributedNPCFishermanAI
-    import DistributedNPCPetclerkAI
-    import DistributedNPCKartClerkAI
-    import DistributedNPCPartyPersonAI
-    import DistributedNPCSpecialQuestGiverAI
-    import DistributedNPCFlippyInToonHallAI
-    import DistributedNPCScientistAI
-    import DistributedNPCGloveAI
-    import DistributedNPCSosAI
+    from . import DistributedNPCToonAI
+    from . import DistributedNPCClerkAI
+    from . import DistributedNPCTailorAI
+    from . import DistributedNPCBlockerAI
+    from . import DistributedNPCFishermanAI
+    from . import DistributedNPCPetclerkAI
+    from . import DistributedNPCKartClerkAI
+    from . import DistributedNPCPartyPersonAI
+    from . import DistributedNPCSpecialQuestGiverAI
+    from . import DistributedNPCFlippyInToonHallAI
+    from . import DistributedNPCScientistAI
+    from . import DistributedNPCGloveAI
+    from . import DistributedNPCSosAI
     #import DistributedNPCLaffRestockAI
     canonicalZoneId, name, dnaType, gender, protected, type = desc
     if type == NPC_REGULAR:
@@ -113,7 +113,7 @@ def createNPC(air, npcId, desc, zoneId, posIndex = 0, questCallback = None):
     elif type == NPC_SOS_SHOP:
         npc = DistributedNPCSosAI.DistributedNPCSosAI(air, npcId)
     else:
-        print 'Invalid NPC type: %s' % type
+        print('Invalid NPC type: %s' % type)
     npc.setName(name)
     dna = ToonDNA.ToonDNA()
     if dnaType == 'r':
@@ -150,7 +150,7 @@ def createNpcsInZone(air, zoneId):
 def createLocalNPC(npcId):
     if npcId not in NPCToonDict:
         return
-    import Toon
+    from . import Toon
     desc = NPCToonDict[npcId]
     canonicalZoneId, name, dnaType, gender, protected, type = desc
     npc = Toon.Toon()
@@ -890,7 +890,7 @@ def generateZone2NpcDict():
     if zone2NpcDict:
         return
 
-    for id, npcDesc in NPCToonDict.items():
+    for id, npcDesc in list(NPCToonDict.items()):
         zoneId = npcDesc[0]
         if zoneId in zone2NpcDict:
             zone2NpcDict[zoneId].append(id)
@@ -981,7 +981,7 @@ def getNPCName(npcId):
         return NPCToonDict[npcId][1]
 
 def npcFriendsMinMaxStars(minStars, maxStars):
-    return [id for id in npcFriends.keys() if getNPCTrackLevelHpRarity(id)[3] >= minStars and getNPCTrackLevelHpRarity(id)[3] <= maxStars]
+    return [id for id in list(npcFriends.keys()) if getNPCTrackLevelHpRarity(id)[3] >= minStars and getNPCTrackLevelHpRarity(id)[3] <= maxStars]
 
 def getNPCTrack(npcId):
     if npcId in npcFriends:

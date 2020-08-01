@@ -1,6 +1,6 @@
-import DNANode
+from . import DNANode
 
-from common import *
+from .common import *
 
 class DNAProp(DNANode.DNANode):
     COMPONENT_CODE = 4

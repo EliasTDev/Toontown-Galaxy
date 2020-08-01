@@ -3,8 +3,8 @@ from direct.gui import DirectGuiGlobals as DGG
 from direct.showbase.PythonUtil import Functor
 from direct.task.Task import Task
 
-import MinigameGlobals
-from PurchaseBase import *
+from . import MinigameGlobals
+from .PurchaseBase import *
 from toontown.distributed import DelayDelete
 from otp.nametag.NametagFloat2d import *
 from otp.nametag import NametagGlobals
@@ -76,7 +76,7 @@ class Purchase(PurchaseBase):
         numAvs = 0
         count = 0
         localToonIndex = 0
-        for index in xrange(len(self.ids)):
+        for index in range(len(self.ids)):
             avId = self.ids[index]
             if avId == base.localAvatar.doId:
                 localToonIndex = index
@@ -98,7 +98,7 @@ class Purchase(PurchaseBase):
         TOON_INDEX = 2
         self.avInfoArray = [(base.localAvatar.doId, headFramePosList[0], localToonIndex)]
         pos = 1
-        for index in xrange(len(self.ids)):
+        for index in range(len(self.ids)):
             avId = self.ids[index]
             if self.states[index] != PURCHASE_NO_CLIENT_STATE and self.states[index] != PURCHASE_DISCONNECTED_STATE:
                 if avId != base.localAvatar.doId:
@@ -305,7 +305,7 @@ class Purchase(PurchaseBase):
         floorNode.addSolid(floor)
         self.collisionFloor = render.attachNewNode(floorNode)
         NametagGlobals.setOnscreenChatForced(1)
-        for index in xrange(len(self.ids)):
+        for index in range(len(self.ids)):
             avId = self.ids[index]
             if self.states[index] != PURCHASE_NO_CLIENT_STATE and self.states[index] != PURCHASE_DISCONNECTED_STATE and avId in base.cr.doId2do:
                 numToons += 1
@@ -365,7 +365,7 @@ class Purchase(PurchaseBase):
                 counter.hide()
 
             winningPoints = max(task.pointsArray)
-            for i in xrange(len(task.ids)):
+            for i in range(len(task.ids)):
                 if task.pointsArray[i] == winningPoints:
                     avId = task.ids[i]
                     if avId in base.cr.doId2do:

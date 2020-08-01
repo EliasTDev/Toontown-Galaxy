@@ -9,4 +9,4 @@ def dgi_extract_string8(dgi):
 
 
 def dgi_extract_color(dgi):
-    return tuple((dgi.getUint8() / 255.0 for _ in xrange(4)))
+    return tuple((dgi.getUint8() / 255.0 for _ in range(4)))

@@ -41,7 +41,7 @@ class LeaderboardMgrAI:
             self.saveDatabase()
 
     def submitRace(self, raceId, name, timestamp):
-        for i in xrange(len(TTLocalizer.RecordPeriodStrings)):
+        for i in range(len(TTLocalizer.RecordPeriodStrings)):
             race = '%s, %s' % (raceId, i)
 
             if race in self.database:

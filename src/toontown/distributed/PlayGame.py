@@ -3,7 +3,7 @@ from toontown.toonbase.ToonBaseGlobal import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM, State, StateData
 from direct.task.Task import Task
-from ToontownMsgTypes import *
+from .ToontownMsgTypes import *
 from toontown.toonbase import ToontownGlobals, TTLocalizer
 from toontown.hood import TTHood, DDHood, MMHood, BRHood, DGHood, DLHood, GSHood, OZHood, GZHood, TutorialHood, SellbotHQ, CashbotHQ, LawbotHQ, BossbotHQ, QuietZoneState, ZoneUtil, EstateHood, PartyHood
 from direct.task import TaskManagerGlobal
@@ -499,7 +499,7 @@ class PlayGame(StateData.StateData):
     def getCatalogCodes(self, category):
         numCodes = self.dnaStore.getNumCatalogCodes(category)
         codes = []
-        for i in xrange(numCodes):
+        for i in range(numCodes):
             codes.append(self.dnaStore.getCatalogCode(category, i))
 
         return codes
