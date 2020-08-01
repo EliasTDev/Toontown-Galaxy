@@ -1,4 +1,4 @@
-import ToontownControlManager
+from . import ToontownControlManager
 from direct.controls.GhostWalker import GhostWalker
 from direct.controls.GravityWalker import GravityWalker
 from direct.controls.ObserverWalker import ObserverWalker
@@ -899,7 +899,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.Dis
 
         whisper = WhisperPopup(chatString, OTPGlobals.getInterfaceFont(), whisperType)
 
-        if sender or isinstance(fromId, basestring):
+        if sender or isinstance(fromId, str):
             whisper.setClickable(fromId)
 
         whisper.manage(base.marginManager)
@@ -1107,7 +1107,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.Dis
             self.setSystemMessage(0, OTPLocalizer.WhisperFriendLoggedOut % friend.getName())
 
     def clickedWhisper(self, doId):
-        if isinstance(doId, basestring):
+        if isinstance(doId, str):
             webbrowser.open(doId, new=2, autoraise=True)
             return
 

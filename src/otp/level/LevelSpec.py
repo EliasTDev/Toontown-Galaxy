@@ -11,11 +11,11 @@ class LevelSpec:
         newSpec = 0
         if type(spec) is types.ModuleType:
             self.specDict = spec.levelSpec
-        elif type(spec) is types.DictType:
+        elif type(spec) is dict:
             self.specDict = spec
         self.entId2specDict = {}
         self.entId2specDict.update(list2dict(self.getGlobalEntIds(), value=self.privGetGlobalEntityDict()))
-        for i in xrange(self.getNumScenarios()):
+        for i in range(self.getNumScenarios()):
             self.entId2specDict.update(list2dict(self.getScenarioEntIds(i), value=self.privGetScenarioEntityDict(i)))
 
         self.setScenario(scenario)
@@ -37,19 +37,19 @@ class LevelSpec:
         return self.scenario
 
     def getGlobalEntIds(self):
-        return self.privGetGlobalEntityDict().keys()
+        return list(self.privGetGlobalEntityDict().keys())
 
     def getScenarioEntIds(self, scenario = None):
         if scenario is None:
             scenario = self.scenario
-        return self.privGetScenarioEntityDict(scenario).keys()
+        return list(self.privGetScenarioEntityDict(scenario).keys())
 
     def getAllEntIds(self):
         return self.getGlobalEntIds() + self.getScenarioEntIds()
 
     def getAllEntIdsFromAllScenarios(self):
         entIds = self.getGlobalEntIds()
-        for scenario in xrange(self.getNumScenarios()):
+        for scenario in range(self.getNumScenarios()):
             entIds.extend(self.getScenarioEntIds(scenario))
 
         return entIds

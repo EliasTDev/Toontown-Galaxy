@@ -2317,7 +2317,7 @@ SpeedChatStaticTextPirates = {
     60909: 'Check Hand' }
 SpeedChatStaticText = SpeedChatStaticTextCommon
 SpeedChatStaticText = SpeedChatStaticTextToontown.copy()
-for key in SpeedChatStaticTextCommon.iterkeys():
+for key in SpeedChatStaticTextCommon.keys():
     SpeedChatStaticText[key] = SpeedChatStaticTextCommon[key]
 
 Emotes_Root = 'EMO\xc3\x87\xc3\x95ES'
