@@ -8,7 +8,8 @@ from . import SuitPlannerBase
 from . import SuitBase
 from . import SuitDialog
 from . import SuitDNA
-from toontown.dna.SuitLegList import *
+from toontown.dna.DNAParser import *
+from libpandadna import *
 from direct.directnotify import DirectNotifyGlobal
 from toontown.battle import SuitBattleGlobals
 from toontown.building import FADoorCodes
@@ -278,15 +279,15 @@ class DistributedSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
 
     def __beginLegType(self, legType):
         self.legType = legType
-        if legType == SuitLeg.TWalkFromStreet:
+        if legType == SuitLeg.T_walk_from_street:
             self.checkBuildingState()
-        elif legType == SuitLeg.TToToonBuilding:
+        elif legType == SuitLeg.T_to_toon_building:
             self.openToonDoor()
-        elif legType == SuitLeg.TToSuitBuilding:
+        elif legType == SuitLeg.T_to_suit_uilding:
             self.openSuitDoor()
-        elif legType == SuitLeg.TToCogHQ:
+        elif legType == SuitLeg.T_to_coghq:
             self.openCogHQDoor(1)
-        elif legType == SuitLeg.TFromCogHQ:
+        elif legType == SuitLeg.T_from_coghq:
             self.openCogHQDoor(0)
 
     def resume(self):

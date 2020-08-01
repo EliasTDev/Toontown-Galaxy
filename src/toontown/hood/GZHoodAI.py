@@ -1,10 +1,10 @@
 from panda3d.core import *
-from toontown.dna.DNAParser import DNAGroup, DNAVisGroup
+from toontown.dna.DNAParser import *
 from toontown.hood import HoodAI
 from toontown.hood import ZoneUtil
 from toontown.safezone.DistributedGolfKartAI import DistributedGolfKartAI
 from toontown.toonbase import ToontownGlobals
-
+from libpandadna import *
 
 class GZHoodAI(HoodAI.HoodAI):
     def __init__(self, air):

@@ -20,7 +20,7 @@ from direct.gui import DirectLabel
 from otp.distributed.TelemetryLimiter import RotationLimitToH, TLGatherAllAvs
 from toontown.quest import Quests
 from toontown.battle import BattleParticles
-from toontown.dna.DNAParser import DNABulkLoader
+from toontown.dna.DNAParser import *
 
 class Playground(Place.Place):
     notify = DirectNotifyGlobal.directNotify.newCategory('Playground')

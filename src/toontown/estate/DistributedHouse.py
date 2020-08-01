@@ -18,7 +18,7 @@ from toontown.hood import Place
 from . import HouseGlobals
 from toontown.building import ToonInteriorColors
 from direct.showbase.MessengerGlobal import messenger
-from toontown.dna.DNAParser import DNADoor
+from toontown.dna.DNAParser import *
 from otp.nametag.NametagGroup import NametagGroup
 from otp.nametag.Nametag import Nametag
 

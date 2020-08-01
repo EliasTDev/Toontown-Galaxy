@@ -3,14 +3,14 @@ from panda3d.core import *
 from toontown.toonbase import ToontownGlobals
 from toontown.distributed.DistributedTimerAI import DistributedTimerAI
 import string
-from toontown.dna.DNAParser import DNAGroup, DNAVisGroup
+from toontown.dna.DNAParser import *
 from toontown.safezone.DistributedPicnicBasketAI import DistributedPicnicBasketAI
 from toontown.safezone import DistributedPicnicTableAI
 from toontown.safezone import DistributedChineseCheckersAI
 from toontown.safezone import DistributedCheckersAI
 from toontown.hood import ZoneUtil
 import random
-
+from libpandadna import *
 
 class OZHoodAI(HoodAI.HoodAI):
     def __init__(self, air):

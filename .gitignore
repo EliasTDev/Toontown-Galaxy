@@ -4,3 +4,4 @@ src/resources/terrain.bam
 src/dependencies/MongoDB/Server/3.0/mongodb/diagnostic.data/metrics.2020-08-01T17-25-45Z-00000
 *.interim
 *._0
+src/dependencies/MongoDB/Server/3.0/mongodb/journal/lsn

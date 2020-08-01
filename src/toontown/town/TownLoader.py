@@ -17,7 +17,7 @@ from direct.fsm import StateData
 from toontown.building import ToonInterior
 from toontown.hood import QuietZoneState, ZoneUtil, HydrantInteractiveProp, MailboxInteractiveProp, TrashcanInteractiveProp
 from direct.interval.IntervalGlobal import *
-from toontown.dna.DNAParser import DNABulkLoader
+from toontown.dna.DNAParser import *
 
 class TownLoader(StateData.StateData):
     notify = DirectNotifyGlobal.directNotify.newCategory('TownLoader')
@@ -182,7 +182,7 @@ class TownLoader(StateData.StateData):
 
     def createHood(self, dnaFile, loadStorage = 1):
         if loadStorage:
-            files = ('phase_5/dna/storage_town.pdna', self.townStorageDNAFile)
+            files = ('phase_5/dna/storage_town.dna', self.townStorageDNAFile)
             dnaBulk = DNABulkLoader(self.hood.dnaStore, files)
             dnaBulk.loadDNAFiles()
         node = loader.loadDNAFile(self.hood.dnaStore, dnaFile)

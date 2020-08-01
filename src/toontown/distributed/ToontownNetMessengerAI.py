@@ -19,7 +19,7 @@ class ToontownNetMessengerAI:
         dg = PyDatagram()
         dg.addServerHeader(self.msgChannel, self.air.ourChannel, self.msgType)
         dg.addString(message)
-        dg.addString(zlib.compress(pickle.dumps(sentArgs)))
+        dg.addBlob(zlib.compress(pickle.dumps(sentArgs)))
         return dg
         
     def send(self, message, sentArgs=[]):

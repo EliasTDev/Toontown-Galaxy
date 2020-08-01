@@ -1,4 +1,5 @@
-from toontown.dna.DNAParser import DNAGroup, DNAVisGroup
+from toontown.dna.DNAParser import *
+from libpandadna import *
 from toontown.hood import HoodAI
 from toontown.hood import ZoneUtil
 from toontown.racing import RaceGlobals
