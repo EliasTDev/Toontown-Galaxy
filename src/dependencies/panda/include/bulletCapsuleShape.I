@@ -1,67 +1,57 @@
-// Filename: bulletCapsuleShape.I
-// Created by:  enn0x (27Jan10)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file bulletCapsuleShape.I
+ * @author enn0x
+ * @date 2010-01-27
+ */
 
-////////////////////////////////////////////////////////////////////
-//     Function: BulletCapsuleShape::Destructor
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ * Only used by make_from_bam.
+ */
+INLINE BulletCapsuleShape::
+BulletCapsuleShape() :
+  _shape(nullptr),
+  _radius(0),
+  _height(0),
+  _up(X_up) {
+}
+
+/**
+ *
+ */
 INLINE BulletCapsuleShape::
 ~BulletCapsuleShape() {
 
   delete _shape;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: BulletCapsuleShape::Copy Constructor
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
-INLINE BulletCapsuleShape::
-BulletCapsuleShape(const BulletCapsuleShape &copy) :
-  _shape(copy._shape) {
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: BulletCapsuleShape::Copy Assignment Operator
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
-INLINE void BulletCapsuleShape::
-operator = (const BulletCapsuleShape &copy) {
-  _shape = copy._shape;
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: BulletCapsuleShape::get_radius
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the radius that was used to construct this capsule.
+ */
 INLINE PN_stdfloat BulletCapsuleShape::
 get_radius() const {
-
-  return (PN_stdfloat)_shape->getRadius();
+  return _radius;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: BulletCapsuleShape::get_half_height
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns half of get_height().
+ * @deprecated see get_height() instead.
+ */
 INLINE PN_stdfloat BulletCapsuleShape::
 get_half_height() const {
-
-  return (PN_stdfloat)_shape->getHalfHeight();
+  return _height * 0.5;
 }
 
+/**
+ * Returns the height that was used to construct this capsule.
+ */
+INLINE PN_stdfloat BulletCapsuleShape::
+get_height() const {
+  return _height;
+}

@@ -1,27 +1,25 @@
-// Filename: webcamVideo.h
-// Created by: jyelon (01Nov2007)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file webcamVideo.h
+ * @author jyelon
+ * @date 2007-11-01
+ */
 
 #ifndef WEBCAMVIDEO_H
 #define WEBCAMVIDEO_H
 
 #include "movieVideo.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : WebcamVideo
-// Description : Allows you to open a webcam or other video capture
-//               device as a video stream.
-////////////////////////////////////////////////////////////////////
+/**
+ * Allows you to open a webcam or other video capture device as a video
+ * stream.
+ */
 class EXPCL_VISION WebcamVideo : public MovieVideo {
 
 PUBLISHED:
@@ -30,15 +28,16 @@ PUBLISHED:
   static int             get_num_options();
   static PT(WebcamVideo) get_option(int n);
   MAKE_SEQ(get_options, get_num_options, get_option);
+  MAKE_SEQ_PROPERTY(options, get_num_options, get_option);
 
   INLINE int get_size_x() const;
   INLINE int get_size_y() const;
   INLINE double get_fps() const;
-  INLINE const string &get_pixel_format() const;
+  INLINE const std::string &get_pixel_format() const;
 
   virtual PT(MovieVideoCursor) open() = 0;
 
-  INLINE void output(ostream &out) const;
+  INLINE void output(std::ostream &out) const;
 
 public:
   static void find_all_webcams();
@@ -47,7 +46,7 @@ protected:
   int _size_x;
   int _size_y;
   double _fps;
-  string _pixel_format;
+  std::string _pixel_format;
 
   static pvector<PT(WebcamVideo)> _all_webcams;
 
@@ -69,7 +68,7 @@ private:
   static TypeHandle _type_handle;
 };
 
-INLINE ostream &operator << (ostream &out, const WebcamVideo &n);
+INLINE std::ostream &operator << (std::ostream &out, const WebcamVideo &n);
 
 #include "webcamVideo.I"
 

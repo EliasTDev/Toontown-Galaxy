@@ -1,16 +1,15 @@
-// Filename: physical.h
-// Created by:  charles (14Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file physical.h
+ * @author charles
+ * @date 2000-06-14
+ */
 
 #ifndef PHYSICAL_H
 #define PHYSICAL_H
@@ -31,20 +30,18 @@
 class PhysicalNode;
 class PhysicsManager;
 
-////////////////////////////////////////////////////////////////////
-//       Class : Physical
-// Description : Defines a set of physically modeled attributes.
-//               If you want physics applied to your class, derive
-//               it from this.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAPHYSICS Physical : public TypedReferenceCount {
+/**
+ * Defines a set of physically modeled attributes.  If you want physics
+ * applied to your class, derive it from this.
+ */
+class EXPCL_PANDA_PHYSICS Physical : public TypedReferenceCount {
 public:
-  //typedef pvector<PT(PhysicsObject)> PhysicsObjectVector;
+  // typedef pvector<PT(PhysicsObject)> PhysicsObjectVector;
   typedef pvector<PT(LinearForce)> LinearForceVector;
   typedef pvector<PT(AngularForce)> AngularForceVector;
 
 PUBLISHED:
-  Physical(int total_objects = 1, bool pre_alloc = false);
+  explicit Physical(int total_objects = 1, bool pre_alloc = false);
   Physical(const Physical& copy);
 
   virtual ~Physical();
@@ -73,17 +70,17 @@ PUBLISHED:
 
   INLINE void set_viscosity(PN_stdfloat viscosity);
   INLINE PN_stdfloat get_viscosity() const;
-  
+
   const PhysicsObjectCollection get_objects() const;
 
-  virtual void output(ostream &out = cout) const;
+  virtual void output(std::ostream &out = std::cout) const;
   virtual void write_physics_objects(
-    ostream &out = cout, unsigned int indent=0) const;
+    std::ostream &out = std::cout, int indent=0) const;
   virtual void write_linear_forces(
-    ostream &out = cout, unsigned int indent=0) const;
+    std::ostream &out = std::cout, int indent=0) const;
   virtual void write_angular_forces(
-    ostream &out = cout, unsigned int indent=0) const;
-  virtual void write(ostream &out = cout, unsigned int indent=0) const;
+    std::ostream &out = std::cout, int indent=0) const;
+  virtual void write(std::ostream &out = std::cout, int indent=0) const;
 
 public:
   INLINE const PhysicsObject::Vector &get_object_vector() const;
@@ -100,11 +97,11 @@ protected:
   LinearForceVector _linear_forces;
   AngularForceVector _angular_forces;
 
-  // this pointer exists to make life easy.  If a physical exists
-  // with only one element (i.e. NOT a particle system or set-physical),
-  // then this pointer points at the only PhysicsObject.  The object
-  // is still of course contained in the _physics_objects vector, but
-  // this is kind of a quicker way there.
+  // this pointer exists to make life easy.  If a physical exists with only
+  // one element (i.e.  NOT a particle system or set-physical), then this
+  // pointer points at the only PhysicsObject.  The object is still of course
+  // contained in the _physics_objects vector, but this is kind of a quicker
+  // way there.
   PhysicsObject *_phys_body;
 
 private:

@@ -13,8 +13,6 @@
 # when that fails, the next aux-display line, and so on.
 
 load-display pandagl
-#load-display pandadx9
-#load-display pandagles
 #load-display p3tinydisplay
 
 # These control the placement and size of the default rendering window.
@@ -31,7 +29,7 @@ fullscreen #f
 
 # The framebuffer-hardware flag forces it to use an accelerated driver.
 # The framebuffer-software flag forces it to use a software renderer.
-# If you don't set either, it will use whatever's available.
+# If you set both to false, it will use whatever's available.
 
 framebuffer-hardware #t
 framebuffer-software #f
@@ -41,7 +39,7 @@ framebuffer-software #f
 # consistent with the other framebuffer requirements.
 
 depth-bits 1
-color-bits 1
+color-bits 1 1 1
 alpha-bits 0
 stencil-bits 0
 multisamples 0
@@ -89,7 +87,7 @@ hardware-animated-vertices #f
 
 # Enable the model-cache, but only for models, not textures.
 
-model-cache-dir $USER_APPDATA/Panda3D-1.10/cache
+model-cache-dir $USER_APPDATA/Panda3D-1.11
 model-cache-textures #f
 
 # This option specifies the default profiles for Cg shaders.

@@ -1,16 +1,15 @@
-// Filename: daeCharacter.h
-// Created by:  pro-rsoft (24Nov08)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file daeCharacter.h
+ * @author rdb
+ * @date 2008-11-24
+ */
 
 #ifndef DAECHARACTER_H
 #define DAECHARACTER_H
@@ -22,18 +21,17 @@
 #include "epvector.h"
 
 #include "pre_fcollada_include.h"
-#include "FCollada.h"
-#include "FCDocument/FCDSceneNode.h"
-#include "FCDocument/FCDControllerInstance.h"
-#include "FCDocument/FCDSkinController.h"
-#include "FCDocument/FCDGeometryMesh.h"
+#include <FCollada.h>
+#include <FCDocument/FCDSceneNode.h>
+#include <FCDocument/FCDControllerInstance.h>
+#include <FCDocument/FCDSkinController.h>
+#include <FCDocument/FCDGeometryMesh.h>
 
 class DAEToEggConverter;
 
-////////////////////////////////////////////////////////////////////
-//       Class : DaeCharacter
-// Description : Class representing an animated character.
-////////////////////////////////////////////////////////////////////
+/**
+ * Class representing an animated character.
+ */
 class DaeCharacter : public TypedReferenceCount {
 public:
   DaeCharacter(EggGroup *node_group, const FCDControllerInstance* controller_instance);
@@ -42,7 +40,7 @@ public:
     INLINE Joint(EggGroup *group, const FCDSceneNode *scene_node) :
       _group(group),
       _scene_node(scene_node),
-      _character(NULL),
+      _character(nullptr),
       _bind_pose(LMatrix4d::ident_mat()) {}
 
     LMatrix4d _bind_pose;
@@ -51,7 +49,7 @@ public:
     DaeCharacter *_character;
   };
   typedef epvector<Joint> Joints;
-  typedef pmap<string, Joint> JointMap;
+  typedef pmap<std::string, Joint> JointMap;
 
   void bind_joints(JointMap &joint_map);
   void adjust_joints(FCDSceneNode *node, const JointMap &joint_map,
@@ -71,7 +69,7 @@ public:
   LMatrix4d _bind_shape_mat;
 
 private:
-  string _name;
+  std::string _name;
   const FCDSkinController *_skin_controller;
   Joints _joints;
   JointMap _bound_joints;

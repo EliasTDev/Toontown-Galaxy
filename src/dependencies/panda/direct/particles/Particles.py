@@ -1,3 +1,9 @@
+"""The Python specialization of the particle system.
+
+See the :ref:`particle-effects` section in the manual for an explanation
+of the particle system.
+"""
+
 from panda3d.core import *
 
 from panda3d.physics import PhysicalNode
@@ -22,11 +28,13 @@ from panda3d.physics import RingEmitter
 from panda3d.physics import SphereSurfaceEmitter
 from panda3d.physics import SphereVolumeEmitter
 from panda3d.physics import TangentRingEmitter
+from panda3d.physics import SpriteAnim
 
-import SpriteParticleRendererExt
+from . import SpriteParticleRendererExt
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 import sys
+
 
 class Particles(ParticleSystem):
     notify = directNotify.newCategory('Particles')
@@ -108,7 +116,7 @@ class Particles(ParticleSystem):
         elif (type == "OrientedParticleFactory"):
             self.factory = OrientedParticleFactory()
         else:
-            print "unknown factory type: %s" % type
+            print("unknown factory type: %s" % type)
             return None
         self.factory.setLifespanBase(0.5)
         ParticleSystem.setFactory(self, self.factory)
@@ -139,7 +147,7 @@ class Particles(ParticleSystem):
             self.renderer = SpriteParticleRendererExt.SpriteParticleRendererExt()
             # self.renderer.setTextureFromFile()
         else:
-            print "unknown renderer type: %s" % type
+            print("unknown renderer type: %s" % type)
             return None
         ParticleSystem.setRenderer(self, self.renderer)
 
@@ -171,7 +179,7 @@ class Particles(ParticleSystem):
         elif (type == "TangentRingEmitter"):
             self.emitter = TangentRingEmitter()
         else:
-            print "unknown emitter type: %s" % type
+            print("unknown emitter type: %s" % type)
             return None
         ParticleSystem.setEmitter(self, self.emitter)
 
@@ -568,12 +576,11 @@ class Particles(ParticleSystem):
                          self.factory.getLifespanBase()+self.factory.getLifespanSpread()]
         birthRateRange = [self.getBirthRate()] * 3
 
-        print 'Litter Ranges:    ',litterRange
-        print 'LifeSpan Ranges:  ',lifespanRange
-        print 'BirthRate Ranges: ',birthRateRange
+        print('Litter Ranges:    %s' % litterRange)
+        print('LifeSpan Ranges:  %s' % lifespanRange)
+        print('BirthRate Ranges: %s' % birthRateRange)
 
         return dict(zip(('min','median','max'),[l*s/b for l,s,b in zip(litterRange,lifespanRange,birthRateRange)]))
-
 
     def accelerate(self,time,stepCount = 1,stepTime=0.0):
         if time > 0.0:
@@ -593,3 +600,17 @@ class Particles(ParticleSystem):
                 base.physicsMgr.doPhysics(remainder,self)
 
             self.render()
+
+    # Snake-case aliases.
+    is_enabled = isEnabled
+    set_factory = setFactory
+    set_renderer = setRenderer
+    set_emitter = setEmitter
+    add_force = addForce
+    remove_force = removeForce
+    set_render_node_path = setRenderNodePath
+    get_factory = getFactory
+    get_emitter = getEmitter
+    get_renderer = getRenderer
+    print_params = printParams
+    get_pool_size_ranges = getPoolSizeRanges

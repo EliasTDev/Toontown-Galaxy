@@ -1,16 +1,15 @@
-// Filename: spriteParticleRenderer.h
-// Created by:  charles (13Jul00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file spriteParticleRenderer.h
+ * @author charles
+ * @date 2000-07-13
+ */
 
 #ifndef SPRITEPARTICLERENDERER_H
 #define SPRITEPARTICLERENDERER_H
@@ -33,13 +32,11 @@
 
 class NodePath;
 
-////////////////////////////////////////////////////////////////////
-//       Class : SpriteWriter
-// Description : Helper class used by SpriteParticleRenderer to
-//               keep track of the various GeomVertexWriters
-//               associated with each geom created in 
-//               SpriteParticleRenderer::init_geoms().
-////////////////////////////////////////////////////////////////////
+/**
+ * Helper class used by SpriteParticleRenderer to keep track of the various
+ * GeomVertexWriters associated with each geom created in
+ * SpriteParticleRenderer::init_geoms().
+ */
 class SpriteWriter {
 public:
   SpriteWriter() {
@@ -67,12 +64,10 @@ public:
   GeomVertexWriter aspect_ratio;
 };
 
-////////////////////////////////////////////////////////////////////
-//       Class : SpriteAnim
-// Description : Helper class used by SpriteParticleRenderer to
-//               keep track of its textures and their respective UVs
-//               and source types.  
-////////////////////////////////////////////////////////////////////
+/**
+ * Helper class used by SpriteParticleRenderer to keep track of its textures
+ * and their respective UVs and source types.
+ */
 class SpriteAnim : public ReferenceCount{
 PUBLISHED:
   enum SourceType {
@@ -80,12 +75,12 @@ PUBLISHED:
     ST_from_node,
   };
 
-  void set_source_info(const string &tex) {
+  void set_source_info(const std::string &tex) {
     _source_type = ST_texture;
     _source_tex = tex;
   }
 
-  void set_source_info(const string &model, const string &node) {
+  void set_source_info(const std::string &model, const std::string &node) {
     _source_type = ST_from_node;
     _source_model = model;
     _source_node = node;
@@ -95,15 +90,15 @@ PUBLISHED:
     return _source_type;
   }
 
-  string get_tex_source() const {
+  std::string get_tex_source() const {
     return _source_tex;
   }
 
-  string get_model_source() const {
+  std::string get_model_source() const {
     return _source_model;
   }
 
-  string get_node_source() const {
+  std::string get_node_source() const {
     return _source_node;
   }
 
@@ -125,7 +120,7 @@ public:
       textures.push_back(t.get_texture(i));
     }
   };
-  
+
   void set_ll(const int n, LTexCoord c) {
     ll[n] = c;
   }
@@ -150,17 +145,15 @@ private:
   pvector< PT(Texture) > textures;
   pvector< LTexCoord > ll,ur;
   SourceType _source_type;
-  string _source_tex,_source_model,_source_node;
+  std::string _source_tex,_source_model,_source_node;
 };
 
-////////////////////////////////////////////////////////////////////
-//       Class : SpriteParticleRenderer
-// Description : Renders a particle system with high-speed nasty
-//               trick sprites.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAPHYSICS SpriteParticleRenderer : public BaseParticleRenderer {
+/**
+ * Renders a particle system with high-speed nasty trick sprites.
+ */
+class EXPCL_PANDA_PARTICLESYSTEM SpriteParticleRenderer : public BaseParticleRenderer {
 PUBLISHED:
-  SpriteParticleRenderer(Texture *tex = (Texture *) NULL);
+  explicit SpriteParticleRenderer(Texture *tex = nullptr);
   SpriteParticleRenderer(const SpriteParticleRenderer &copy);
   virtual ~SpriteParticleRenderer();
 
@@ -169,9 +162,9 @@ public:
 
 PUBLISHED:
   void set_from_node(const NodePath &node_path, bool size_from_texels = false);
-  void set_from_node(const NodePath &node_path, const string &model, const string &node, bool size_from_texels = false);
+  void set_from_node(const NodePath &node_path, const std::string &model, const std::string &node, bool size_from_texels = false);
   void add_from_node(const NodePath &node_path, bool size_from_texels = false, bool resize = false);
-  void add_from_node(const NodePath &node_path, const string &model, const string &node, bool size_from_texels = false, bool resize = false);
+  void add_from_node(const NodePath &node_path, const std::string &model, const std::string &node, bool size_from_texels = false, bool resize = false);
 
   INLINE void set_texture(Texture *tex, PN_stdfloat texels_per_unit = 1.0f);
   INLINE void add_texture(Texture *tex, PN_stdfloat texels_per_unit = 1.0f, bool resize = false);
@@ -186,7 +179,7 @@ PUBLISHED:
   INLINE void set_y_scale_flag(bool animate_y_ratio);
   INLINE void set_anim_angle_flag(bool animate_theta);
   INLINE void set_initial_x_scale(PN_stdfloat initial_x_scale);
-  INLINE void set_final_x_scale(PN_stdfloat final_x_scale);  
+  INLINE void set_final_x_scale(PN_stdfloat final_x_scale);
   INLINE void set_initial_y_scale(PN_stdfloat initial_y_scale);
   INLINE void set_final_y_scale(PN_stdfloat final_y_scale);
   INLINE void set_nonanimated_theta(PN_stdfloat theta);
@@ -219,13 +212,13 @@ PUBLISHED:
   INLINE PN_stdfloat get_final_y_scale() const;
   INLINE PN_stdfloat get_nonanimated_theta() const;
   INLINE ParticleRendererBlendMethod get_alpha_blend_method() const;
-  INLINE bool get_alpha_disable() const;  
-  INLINE bool get_animate_frames_enable() const;  
+  INLINE bool get_alpha_disable() const;
+  INLINE bool get_animate_frames_enable() const;
   INLINE PN_stdfloat get_animate_frames_rate() const;
   INLINE int get_animate_frames_index() const;
 
-  virtual void output(ostream &out) const;
-  virtual void write(ostream &out, int indent_level = 0) const;
+  virtual void output(std::ostream &out) const;
+  virtual void write(std::ostream &out, int indent_level = 0) const;
 
 private:
   pvector< pvector< PT(Geom) > > _sprite_primitive;

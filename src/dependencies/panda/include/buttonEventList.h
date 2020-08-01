@@ -1,16 +1,15 @@
-// Filename: buttonEventList.h
-// Created by:  drose (12Mar02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file buttonEventList.h
+ * @author drose
+ * @date 2002-03-12
+ */
 
 #ifndef BUTTONEVENTLIST_H
 #define BUTTONEVENTLIST_H
@@ -26,16 +25,13 @@ class ModifierButtons;
 class Datagram;
 class DatagramIterator;
 
-////////////////////////////////////////////////////////////////////
-//       Class : ButtonEventList
-// Description : Records a set of button events that happened
-//               recently.  This class is usually used only in the
-//               data graph, to transmit the recent button presses,
-//               but it may be used anywhere a list of ButtonEvents
-//               is desired.
-////////////////////////////////////////////////////////////////////
+/**
+ * Records a set of button events that happened recently.  This class is
+ * usually used only in the data graph, to transmit the recent button presses,
+ * but it may be used anywhere a list of ButtonEvents is desired.
+ */
 class EXPCL_PANDA_EVENT ButtonEventList : public ParamValueBase {
-public:
+PUBLISHED:
   INLINE ButtonEventList();
   INLINE ButtonEventList(const ButtonEventList &copy);
   INLINE void operator = (const ButtonEventList &copy);
@@ -48,8 +44,8 @@ public:
   void add_events(const ButtonEventList &other);
   void update_mods(ModifierButtons &mods) const;
 
-  virtual void output(ostream &out) const;
-  void write(ostream &out, int indent_level = 0) const;
+  virtual void output(std::ostream &out) const;
+  void write(std::ostream &out, int indent_level = 0) const;
 
 private:
   typedef pvector<ButtonEvent> Events;
@@ -83,7 +79,7 @@ private:
   static TypeHandle _type_handle;
 };
 
-INLINE ostream &operator << (ostream &out, const ButtonEventList &buttonlist) {
+INLINE std::ostream &operator << (std::ostream &out, const ButtonEventList &buttonlist) {
   buttonlist.output(out);
   return out;
 }
@@ -91,4 +87,3 @@ INLINE ostream &operator << (ostream &out, const ButtonEventList &buttonlist) {
 #include "buttonEventList.I"
 
 #endif
-

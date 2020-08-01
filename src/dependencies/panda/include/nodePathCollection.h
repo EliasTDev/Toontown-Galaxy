@@ -1,16 +1,15 @@
-// Filename: nodePathCollection.h
-// Created by:  drose (06Mar02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file nodePathCollection.h
+ * @author drose
+ * @date 2002-03-06
+ */
 
 #ifndef NODEPATHCOLLECTION_H
 #define NODEPATHCOLLECTION_H
@@ -19,19 +18,14 @@
 #include "nodePath.h"
 #include "pointerToArray.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : NodePathCollection
-// Description : This is a set of zero or more NodePaths.  It's handy
-//               for returning from functions that need to return
-//               multiple NodePaths (for instance,
-//               NodePaths::get_children).
-////////////////////////////////////////////////////////////////////
+/**
+ * This is a set of zero or more NodePaths.  It's handy for returning from
+ * functions that need to return multiple NodePaths (for instance,
+ * NodePaths::get_children).
+ */
 class EXPCL_PANDA_PGRAPH NodePathCollection {
 PUBLISHED:
-  NodePathCollection();
-  NodePathCollection(const NodePathCollection &copy);
-  void operator = (const NodePathCollection &copy);
-  INLINE ~NodePathCollection();
+  NodePathCollection() = default;
 
 #ifdef HAVE_PYTHON
   EXTENSION(NodePathCollection(PyObject *self, PyObject *sequence));
@@ -51,8 +45,8 @@ PUBLISHED:
   int get_num_paths() const;
   NodePath get_path(int index) const;
   MAKE_SEQ(get_paths, get_num_paths, get_path);
-  NodePath operator [] (int index) const;
-  int size() const;
+  NodePath operator [] (size_t index) const;
+  size_t size() const;
   INLINE void operator += (const NodePathCollection &other);
   INLINE NodePathCollection operator + (const NodePathCollection &other) const;
 
@@ -62,9 +56,9 @@ PUBLISHED:
 
   // Handy operations on many NodePaths at once.
   INLINE void ls() const;
-  void ls(ostream &out, int indent_level = 0) const;
+  void ls(std::ostream &out, int indent_level = 0) const;
 
-  NodePathCollection find_all_matches(const string &path) const;
+  NodePathCollection find_all_matches(const std::string &path) const;
   void reparent_to(const NodePath &other);
   void wrt_reparent_to(const NodePath &other);
 
@@ -101,8 +95,8 @@ PUBLISHED:
 
   void set_attrib(const RenderAttrib *attrib, int priority = 0);
 
-  void output(ostream &out) const;
-  void write(ostream &out, int indent_level = 0) const;
+  void output(std::ostream &out) const;
+  void write(std::ostream &out, int indent_level = 0) const;
 
 private:
   typedef PTA(NodePath) NodePaths;
@@ -112,7 +106,7 @@ private:
   typedef pmap<CPT(RenderState), CPT(RenderState) > StateMap;
 };
 
-INLINE ostream &operator << (ostream &out, const NodePathCollection &col) {
+INLINE std::ostream &operator << (std::ostream &out, const NodePathCollection &col) {
   col.output(out);
   return out;
 }
@@ -120,5 +114,3 @@ INLINE ostream &operator << (ostream &out, const NodePathCollection &col) {
 #include "nodePathCollection.I"
 
 #endif
-
-

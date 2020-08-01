@@ -1,16 +1,15 @@
-// Filename: virtualFileMountMultifile.h
-// Created by:  drose (03Aug02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file virtualFileMountMultifile.h
+ * @author drose
+ * @date 2002-08-03
+ */
 
 #ifndef VIRTUALFILEMOUNTMULTIFILE_H
 #define VIRTUALFILEMOUNTMULTIFILE_H
@@ -21,12 +20,10 @@
 #include "multifile.h"
 #include "pointerTo.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : VirtualFileMountMultifile
-// Description : Maps a Multifile's contents into the
-//               VirtualFileSystem.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAEXPRESS VirtualFileMountMultifile : public VirtualFileMount {
+/**
+ * Maps a Multifile's contents into the VirtualFileSystem.
+ */
+class EXPCL_PANDA_EXPRESS VirtualFileMountMultifile : public VirtualFileMount {
 PUBLISHED:
   INLINE VirtualFileMountMultifile(Multifile *multifile);
   virtual ~VirtualFileMountMultifile();
@@ -39,18 +36,18 @@ public:
   virtual bool is_regular_file(const Filename &file) const;
 
   virtual bool read_file(const Filename &file, bool do_uncompress,
-                         pvector<unsigned char> &result) const;
+                         vector_uchar &result) const;
 
-  virtual istream *open_read_file(const Filename &file) const;
-  virtual streamsize get_file_size(const Filename &file, istream *stream) const;
-  virtual streamsize get_file_size(const Filename &file) const;
+  virtual std::istream *open_read_file(const Filename &file) const;
+  virtual std::streamsize get_file_size(const Filename &file, std::istream *stream) const;
+  virtual std::streamsize get_file_size(const Filename &file) const;
   virtual time_t get_timestamp(const Filename &file) const;
   virtual bool get_system_info(const Filename &file, SubfileInfo &info);
 
-  virtual bool scan_directory(vector_string &contents, 
+  virtual bool scan_directory(vector_string &contents,
                               const Filename &dir) const;
 
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
 private:
   PT(Multifile) _multifile;

@@ -1,33 +1,33 @@
 class Delegator:
 
-    # The cache is only used to be able to change delegates!
-
     def __init__(self, delegate=None):
         self.delegate = delegate
-        self.__cache = {}
+        self.__cache = set()
+        # Cache is used to only remove added attributes
+        # when changing the delegate.
 
     def __getattr__(self, name):
         attr = getattr(self.delegate, name) # May raise AttributeError
         setattr(self, name, attr)
-        self.__cache[name] = attr
+        self.__cache.add(name)
         return attr
 
     def resetcache(self):
-        for key in self.__cache.keys():
+        "Removes added attributes while leaving original attributes."
+        # Function is really about resetting delegator dict
+        # to original state.  Cache is just a means
+        for key in self.__cache:
             try:
                 delattr(self, key)
             except AttributeError:
                 pass
         self.__cache.clear()
 
-    def cachereport(self):
-        keys = self.__cache.keys()
-        keys.sort()
-        print keys
-
     def setdelegate(self, delegate):
+        "Reset attributes and change delegate."
         self.resetcache()
         self.delegate = delegate
 
-    def getdelegate(self):
-        return self.delegate
+if __name__ == '__main__':
+    from unittest import main
+    main('idlelib.idle_test.test_delegator', verbosity=2)

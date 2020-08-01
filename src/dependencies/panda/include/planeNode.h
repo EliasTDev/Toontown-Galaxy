@@ -1,16 +1,15 @@
-// Filename: planeNode.h
-// Created by:  drose (11Jul02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file planeNode.h
+ * @author drose
+ * @date 2002-07-11
+ */
 
 #ifndef PLANENODE_H
 #define PLANENODE_H
@@ -29,21 +28,19 @@
 #include "cycleDataStageWriter.h"
 #include "pipelineCycler.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : PlaneNode
-// Description : A node that contains a plane.  This is most often
-//               used as a clipping plane, but it can serve other
-//               purposes as well; whenever a plane is needed to be
-//               defined in some coordinate space in the world.
-////////////////////////////////////////////////////////////////////
+/**
+ * A node that contains a plane.  This is most often used as a clipping plane,
+ * but it can serve other purposes as well; whenever a plane is needed to be
+ * defined in some coordinate space in the world.
+ */
 class EXPCL_PANDA_PGRAPH PlaneNode : public PandaNode {
 PUBLISHED:
-  PlaneNode(const string &name, const LPlane &plane = LPlane());
+  explicit PlaneNode(const std::string &name, const LPlane &plane = LPlane());
 
 protected:
   PlaneNode(const PlaneNode &copy);
 public:
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
   virtual PandaNode *make_copy() const;
   virtual void xform(const LMatrix4 &mat);
@@ -77,11 +74,10 @@ protected:
                                        int pipeline_stage,
                                        Thread *current_thread) const;
   PT(Geom) get_viz(CullTraverser *trav, CullTraverserData &data);
-  
+
 private:
-  // The priority is not cycled, because there's no real reason to do
-  // so, and cycling it makes it difficult to synchronize with the
-  // ClipPlaneAttribs.
+  // The priority is not cycled, because there's no real reason to do so, and
+  // cycling it makes it difficult to synchronize with the ClipPlaneAttribs.
   int _priority;
   int _clip_effect;
   static UpdateSeq _sort_seq;

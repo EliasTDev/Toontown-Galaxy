@@ -1,16 +1,15 @@
-// Filename: mouseWatcher.h
-// Created by:  drose (12Mar02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file mouseWatcher.h
+ * @author drose
+ * @date 2002-03-12
+ */
 
 #ifndef MOUSEWATCHER_H
 #define MOUSEWATCHER_H
@@ -37,37 +36,31 @@
 class MouseWatcherParameter;
 class DisplayRegion;
 
-////////////////////////////////////////////////////////////////////
-//       Class : MouseWatcher
-// Description : This TFormer maintains a list of rectangular regions
-//               on the screen that are considered special mouse
-//               regions; typically these will be click buttons.  When
-//               the mouse passes in or out of one of these regions,
-//               or when a button is clicked while the mouse is in one
-//               of these regions, an event is thrown.
-//
-//               Mouse events may also be suppressed from the rest of
-//               the datagraph in these special regions.
-//
-//               This class can also implement a software mouse
-//               pointer by automatically generating a transform to
-//               apply to a piece of geometry placed under the 2-d
-//               scene graph.  It will move the geometry around
-//               according to the mouse's known position.
-//
-//               Finally, this class can keep a record of the mouse
-//               trail.  This is useful if you want to know, not just
-//               where the mouse is, but the exact sequence of movements
-//               it took to get there.  This information is mainly useful
-//               for gesture-recognition code.  To use trail logging,
-//               you need to enable the generation of pointer events
-//               in the GraphicsWindowInputDevice and set the trail
-//               log duration in the MouseWatcher. Otherwise, the
-//               trail log will be empty.
-////////////////////////////////////////////////////////////////////
+/**
+ * This TFormer maintains a list of rectangular regions on the screen that are
+ * considered special mouse regions; typically these will be click buttons.
+ * When the mouse passes in or out of one of these regions, or when a button
+ * is clicked while the mouse is in one of these regions, an event is thrown.
+ *
+ * Mouse events may also be suppressed from the rest of the datagraph in these
+ * special regions.
+ *
+ * This class can also implement a software mouse pointer by automatically
+ * generating a transform to apply to a piece of geometry placed under the 2-d
+ * scene graph.  It will move the geometry around according to the mouse's
+ * known position.
+ *
+ * Finally, this class can keep a record of the mouse trail.  This is useful
+ * if you want to know, not just where the mouse is, but the exact sequence of
+ * movements it took to get there.  This information is mainly useful for
+ * gesture-recognition code.  To use trail logging, you need to enable the
+ * generation of pointer events in the GraphicsWindowInputDevice and set the
+ * trail log duration in the MouseWatcher.  Otherwise, the trail log will be
+ * empty.
+ */
 class EXPCL_PANDA_TFORM MouseWatcher : public DataNode, public MouseWatcherBase {
 PUBLISHED:
-  MouseWatcher(const string &name = "");
+  explicit MouseWatcher(const std::string &name = "");
   ~MouseWatcher();
 
   bool remove_region(MouseWatcherRegion *region);
@@ -92,26 +85,26 @@ PUBLISHED:
 
   INLINE bool is_button_down(ButtonHandle button) const;
 
-  INLINE void set_button_down_pattern(const string &pattern);
-  INLINE const string &get_button_down_pattern() const;
+  INLINE void set_button_down_pattern(const std::string &pattern);
+  INLINE const std::string &get_button_down_pattern() const;
 
-  INLINE void set_button_up_pattern(const string &pattern);
-  INLINE const string &get_button_up_pattern() const;
+  INLINE void set_button_up_pattern(const std::string &pattern);
+  INLINE const std::string &get_button_up_pattern() const;
 
-  INLINE void set_button_repeat_pattern(const string &pattern);
-  INLINE const string &get_button_repeat_pattern() const;
+  INLINE void set_button_repeat_pattern(const std::string &pattern);
+  INLINE const std::string &get_button_repeat_pattern() const;
 
-  INLINE void set_enter_pattern(const string &pattern);
-  INLINE const string &get_enter_pattern() const;
+  INLINE void set_enter_pattern(const std::string &pattern);
+  INLINE const std::string &get_enter_pattern() const;
 
-  INLINE void set_leave_pattern(const string &pattern);
-  INLINE const string &get_leave_pattern() const;
+  INLINE void set_leave_pattern(const std::string &pattern);
+  INLINE const std::string &get_leave_pattern() const;
 
-  INLINE void set_within_pattern(const string &pattern);
-  INLINE const string &get_within_pattern() const;
+  INLINE void set_within_pattern(const std::string &pattern);
+  INLINE const std::string &get_within_pattern() const;
 
-  INLINE void set_without_pattern(const string &pattern);
-  INLINE const string &get_without_pattern() const;
+  INLINE void set_without_pattern(const std::string &pattern);
+  INLINE const std::string &get_without_pattern() const;
 
   INLINE void set_geometry(PandaNode *node);
   INLINE bool has_geometry() const;
@@ -141,11 +134,11 @@ PUBLISHED:
   INLINE double get_inactivity_timeout() const;
   INLINE void clear_inactivity_timeout();
 
-  INLINE void set_inactivity_timeout_event(const string &event);
-  INLINE const string &get_inactivity_timeout_event() const;
+  INLINE void set_inactivity_timeout_event(const std::string &event);
+  INLINE const std::string &get_inactivity_timeout_event() const;
 
   INLINE CPT(PointerEventList) get_trail_log() const;
-  INLINE int   num_trail_recent() const;
+  INLINE size_t num_trail_recent() const;
   void         set_trail_log_duration(double duration);
   PT(GeomNode) get_trail_node();
   void         clear_trail_node();
@@ -154,8 +147,8 @@ PUBLISHED:
   void note_activity();
 
 public:
-  virtual void output(ostream &out) const;
-  virtual void write(ostream &out, int indent_level = 0) const;
+  virtual void output(std::ostream &out) const;
+  virtual void write(std::ostream &out, int indent_level = 0) const;
 
 protected:
   void get_over_regions(Regions &regions, const LPoint2 &pos) const;
@@ -164,11 +157,9 @@ protected:
   void set_current_regions(Regions &regions);
   void clear_current_regions();
 
-#ifndef NDEBUG
   virtual void do_show_regions(const NodePath &render2d,
-                               const string &bin_name, int draw_order);
+                               const std::string &bin_name, int draw_order);
   virtual void do_hide_regions();
-#endif  // NDEBUG
 
   static void intersect_regions(Regions &only_a,
                                 Regions &only_b,
@@ -180,7 +171,7 @@ protected:
   static bool has_region_in(const Regions &regions,
                             MouseWatcherRegion *region);
 
-  void throw_event_pattern(const string &pattern,
+  void throw_event_pattern(const std::string &pattern,
                            const MouseWatcherRegion *region,
                            const ButtonHandle &button);
 
@@ -188,7 +179,7 @@ protected:
   void press(ButtonHandle button, bool keyrepeat);
   void release(ButtonHandle button);
   void keystroke(int keycode);
-  void candidate(const wstring &candidate, size_t highlight_start,
+  void candidate(const std::wstring &candidate, size_t highlight_start,
                  size_t highlight_end, size_t cursor_pos);
 
   void global_keyboard_press(const MouseWatcherParameter &param);
@@ -212,8 +203,8 @@ private:
                                 Thread *current_thread);
 
 private:
-  // This wants to be a set, but because you cannot export sets across
-  // dlls in windows, we will make it a vector instead
+  // This wants to be a set, but because you cannot export sets across dlls in
+  // windows, we will make it a vector instead
   typedef pvector< PT(MouseWatcherGroup) > Groups;
   Groups _groups;
 
@@ -227,7 +218,7 @@ private:
   LVecBase4 _frame;
 
   PT(PointerEventList) _trail_log;
-  int _num_trail_recent;
+  size_t _num_trail_recent;
   double _trail_log_duration;
   PT(GeomNode) _trail_node;
 
@@ -239,13 +230,13 @@ private:
   bool _enter_multiple;
   bool _implicit_click;
 
-  string _button_down_pattern;
-  string _button_up_pattern;
-  string _button_repeat_pattern;
-  string _enter_pattern;
-  string _leave_pattern;
-  string _within_pattern;
-  string _without_pattern;
+  std::string _button_down_pattern;
+  std::string _button_up_pattern;
+  std::string _button_repeat_pattern;
+  std::string _enter_pattern;
+  std::string _leave_pattern;
+  std::string _within_pattern;
+  std::string _without_pattern;
 
   PT(PandaNode) _geometry;
 
@@ -256,7 +247,7 @@ private:
 
   bool _has_inactivity_timeout;
   double _inactivity_timeout;
-  string _inactivity_timeout_event;
+  std::string _inactivity_timeout_event;
   double _last_activity;
 
   enum InactivityState {
@@ -267,11 +258,9 @@ private:
   };
   InactivityState _inactivity_state;
 
-#ifndef NDEBUG
   NodePath _show_regions_render2d;
-  string _show_regions_bin_name;
+  std::string _show_regions_bin_name;
   int _show_regions_draw_order;
-#endif
 
 protected:
   // Inherited from DataNode

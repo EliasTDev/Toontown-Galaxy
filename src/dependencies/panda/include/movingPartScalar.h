@@ -1,16 +1,15 @@
-// Filename: movingPartScalar.h
-// Created by:  drose (23Feb99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file movingPartScalar.h
+ * @author drose
+ * @date 1999-02-23
+ */
 
 #ifndef MOVINGPARTSCALAR_H
 #define MOVINGPARTSCALAR_H
@@ -23,18 +22,16 @@
 
 EXPORT_TEMPLATE_CLASS(EXPCL_PANDA_CHAN, EXPTP_PANDA_CHAN, MovingPart<ACScalarSwitchType>);
 
-////////////////////////////////////////////////////////////////////
-//       Class : MovingPartScalar
-// Description : This is a particular kind of MovingPart that accepts
-//               a scalar each frame.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is a particular kind of MovingPart that accepts a scalar each frame.
+ */
 class EXPCL_PANDA_CHAN MovingPartScalar : public MovingPart<ACScalarSwitchType> {
 protected:
   INLINE MovingPartScalar(const MovingPartScalar &copy);
 
 public:
-  INLINE MovingPartScalar(PartGroup *parent, const string &name,
-                          const PN_stdfloat &default_value = 0);
+  INLINE MovingPartScalar(PartGroup *parent, const std::string &name,
+                          PN_stdfloat default_value = 0);
   virtual ~MovingPartScalar();
 
   virtual void get_blend_value(const PartBundle *root);
@@ -73,12 +70,4 @@ private:
 
 #include "movingPartScalar.I"
 
-// Tell GCC that we'll take care of the instantiation explicitly here.
-#ifdef __GNUC__
-#pragma interface
 #endif
-
-#endif
-
-
-

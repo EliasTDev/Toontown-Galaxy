@@ -1,19 +1,22 @@
+import linecache
 import os
 import sys
-import linecache
 
-from idlelib.TreeWidget import TreeNode, TreeItem, ScrolledCanvas
-from idlelib.ObjectBrowser import ObjectTreeItem, make_objecttreeitem
+import tkinter as tk
+
+from idlelib.debugobj import ObjectTreeItem, make_objecttreeitem
+from idlelib.tree import TreeNode, TreeItem, ScrolledCanvas
 
 def StackBrowser(root, flist=None, tb=None, top=None):
+    global sc, item, node  # For testing.
     if top is None:
-        from Tkinter import Toplevel
-        top = Toplevel(root)
+        top = tk.Toplevel(root)
     sc = ScrolledCanvas(top, bg="white", highlightthickness=0)
     sc.frame.pack(expand=1, fill="both")
     item = StackTreeItem(flist, tb)
     node = TreeNode(sc.canvas, None, item)
     node.expand()
+
 
 class StackTreeItem(TreeItem):
 
@@ -52,6 +55,7 @@ class StackTreeItem(TreeItem):
             item = FrameTreeItem(info, self.flist)
             sublist.append(item)
         return sublist
+
 
 class FrameTreeItem(TreeItem):
 
@@ -94,6 +98,7 @@ class FrameTreeItem(TreeItem):
             if os.path.isfile(filename):
                 self.flist.gotofileline(filename, lineno)
 
+
 class VariablesTreeItem(ObjectTreeItem):
 
     def GetText(self):
@@ -105,12 +110,9 @@ class VariablesTreeItem(ObjectTreeItem):
     def IsExpandable(self):
         return len(self.object) > 0
 
-    def keys(self):
-        return self.object.keys()
-
     def GetSubList(self):
         sublist = []
-        for key in self.keys():
+        for key in self.object.keys():
             try:
                 value = self.object[key]
             except KeyError:
@@ -122,16 +124,32 @@ class VariablesTreeItem(ObjectTreeItem):
         return sublist
 
 
-def _test():
-    try:
-        import testcode
-        reload(testcode)
-    except:
-        sys.last_type, sys.last_value, sys.last_traceback = sys.exc_info()
-    from Tkinter import Tk
-    root = Tk()
-    StackBrowser(None, top=root)
-    root.mainloop()
+def _stack_viewer(parent):  # htest #
+    from idlelib.pyshell import PyShellFileList
+    top = tk.Toplevel(parent)
+    top.title("Test StackViewer")
+    x, y = map(int, parent.geometry().split('+')[1:])
+    top.geometry("+%d+%d" % (x + 50, y + 175))
+    flist = PyShellFileList(top)
+    try: # to obtain a traceback object
+        intentional_name_error
+    except NameError:
+        exc_type, exc_value, exc_tb = sys.exc_info()
+    # inject stack trace to sys
+    sys.last_type = exc_type
+    sys.last_value = exc_value
+    sys.last_traceback = exc_tb
 
-if __name__ == "__main__":
-    _test()
+    StackBrowser(top, flist=flist, top=top, tb=exc_tb)
+
+    # restore sys to original state
+    del sys.last_type
+    del sys.last_value
+    del sys.last_traceback
+
+if __name__ == '__main__':
+    from unittest import main
+    main('idlelib.idle_test.test_stackviewer', verbosity=2, exit=False)
+
+    from idlelib.idle_test.htest import run
+    run(_stack_viewer)

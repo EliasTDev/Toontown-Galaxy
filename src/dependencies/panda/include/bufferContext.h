@@ -1,16 +1,15 @@
-// Filename: bufferContext.h
-// Created by:  drose (16Mar06)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file bufferContext.h
+ * @author drose
+ * @date 2006-03-16
+ */
 
 #ifndef BUFFERCONTEXT_H
 #define BUFFERCONTEXT_H
@@ -24,30 +23,37 @@
 #include "bufferResidencyTracker.h"
 
 class PreparedGraphicsObjects;
+class TypedWritableReferenceCount;
 
-////////////////////////////////////////////////////////////////////
-//       Class : BufferContext
-// Description : This is a base class for those kinds of SavedContexts
-//               that occupy an easily-measured (and substantial)
-//               number of bytes in the video card's frame buffer
-//               memory or AGP memory.  At the present, this includes
-//               most of the SavedContext types: VertexBufferContext
-//               and IndexBufferContext, as well as TextureContext.
-//
-//               This class provides methods for tracking the video
-//               memory utilization, as well as residency of each
-//               object, via PStats.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is a base class for those kinds of SavedContexts that occupy an
+ * easily-measured (and substantial) number of bytes in the video card's frame
+ * buffer memory or AGP memory.  At the present, this includes most of the
+ * SavedContext types: VertexBufferContext and IndexBufferContext, as well as
+ * TextureContext.
+ *
+ * This class provides methods for tracking the video memory utilization, as
+ * well as residency of each object, via PStats.
+ */
 class EXPCL_PANDA_GOBJ BufferContext : public SavedContext, private LinkedListNode {
 public:
-  BufferContext(BufferResidencyTracker *residency);
+  BufferContext(BufferResidencyTracker *residency, TypedWritableReferenceCount *object);
   virtual ~BufferContext();
+
+  INLINE TypedWritableReferenceCount *get_object() const;
 
 PUBLISHED:
   INLINE size_t get_data_size_bytes() const;
   INLINE UpdateSeq get_modified() const;
   INLINE bool get_active() const;
   INLINE bool get_resident() const;
+
+  MAKE_PROPERTY(object, get_object);
+
+  MAKE_PROPERTY(data_size_bytes, get_data_size_bytes);
+  MAKE_PROPERTY(modified, get_modified);
+  MAKE_PROPERTY(active, get_active);
+  MAKE_PROPERTY(resident, get_resident);
 
 public:
   INLINE void set_active(bool flag);
@@ -60,6 +66,11 @@ public:
 
 private:
   void set_owning_chain(BufferContextChain *chain);
+
+protected:
+  // This cannot be a PT(), because the object and the GSG both own their
+  // BufferContexts!  That would create a circular reference count.
+  TypedWritableReferenceCount *_object;
 
 private:
   BufferResidencyTracker *_residency;
@@ -94,4 +105,3 @@ private:
 #include "bufferContext.I"
 
 #endif
-

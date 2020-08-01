@@ -1,10 +1,14 @@
-"""Undocumented Module"""
+"""This module contains the DirectButton class.
+
+See the :ref:`directbutton` page in the programming manual for a more
+in-depth explanation and an example of how to use this class.
+"""
 
 __all__ = ['DirectButton']
 
 from panda3d.core import *
-import DirectGuiGlobals as DGG
-from DirectFrame import *
+from . import DirectGuiGlobals as DGG
+from .DirectFrame import *
 
 class DirectButton(DirectFrame):
     """
@@ -47,7 +51,7 @@ class DirectButton(DirectFrame):
 
         # Initialize superclasses
         DirectFrame.__init__(self, parent)
-        
+
         # If specifed, add scaling to the pressed state to make it
         # look like the button is moving when you press it.  We have
         # to set up the node first, before we call initialise options;
@@ -57,7 +61,7 @@ class DirectButton(DirectFrame):
         if self['pressEffect']:
             pressEffectNP = self.stateNodePath[1].attachNewNode('pressEffect', 1)
             self.stateNodePath[1] = pressEffectNP
-            
+
         # Call option initialization functions
         self.initialiseoptions(DirectButton)
 
@@ -100,8 +104,8 @@ class DirectButton(DirectFrame):
     def commandFunc(self, event):
         if self['command']:
             # Pass any extra args to command
-            apply(self['command'], self['extraArgs'])
-            
+            self['command'](*self['extraArgs'])
+
     def setClickSound(self):
         clickSound = self['clickSound']
         # Clear out sounds

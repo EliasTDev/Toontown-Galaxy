@@ -1,38 +1,31 @@
-// Filename: textEncoder.I
-// Created by:  drose (26Mar03)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file textEncoder.I
+ * @author drose
+ * @date 2003-03-26
+ */
 
-
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::Constructor
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 INLINE TextEncoder::
 TextEncoder() {
   _encoding = _default_encoding;
-  
-  // Initially, since the text string is empty, we know that both
-  // _text and _wtext accurately reflect the empty state; so we "got"
-  // both of them.
+
+  // Initially, since the text string is empty, we know that both _text and
+  // _wtext accurately reflect the empty state; so we "got" both of them.
   _flags = (F_got_text | F_got_wtext);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::Copy Constructor
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 INLINE TextEncoder::
 TextEncoder(const TextEncoder &copy) :
   _flags(copy._flags),
@@ -42,19 +35,15 @@ TextEncoder(const TextEncoder &copy) :
 {
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::set_encoding
-//       Access: Published
-//  Description: Specifies how the string set via set_text() is to be
-//               interpreted.  The default, E_iso8859, means a
-//               standard string with one-byte characters
-//               (i.e. ASCII).  Other encodings are possible to take
-//               advantage of character sets with more than 256
-//               characters.
-//
-//               This affects only future calls to set_text(); it does
-//               not change text that was set previously.
-////////////////////////////////////////////////////////////////////
+/**
+ * Specifies how the string set via set_text() is to be interpreted.  The
+ * default, E_iso8859, means a standard string with one-byte characters (i.e.
+ * ASCII).  Other encodings are possible to take advantage of character sets
+ * with more than 256 characters.
+ *
+ * This affects only future calls to set_text(); it does not change text that
+ * was set previously.
+ */
 INLINE void TextEncoder::
 set_encoding(TextEncoder::Encoding encoding) {
   // Force the previously-set strings to be encoded or decoded now.
@@ -63,91 +52,77 @@ set_encoding(TextEncoder::Encoding encoding) {
   _encoding = encoding;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::get_encoding
-//       Access: Published
-//  Description: Returns the encoding by which the string set via
-//               set_text() is to be interpreted.  See set_encoding().
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the encoding by which the string set via set_text() is to be
+ * interpreted.  See set_encoding().
+ */
 INLINE TextEncoder::Encoding TextEncoder::
 get_encoding() const {
   return _encoding;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::set_default_encoding
-//       Access: Published, Static
-//  Description: Specifies the default encoding to be used for all
-//               subsequently created TextEncoder objects.  See
-//               set_encoding().
-////////////////////////////////////////////////////////////////////
+/**
+ * Specifies the default encoding to be used for all subsequently created
+ * TextEncoder objects.  See set_encoding().
+ */
 INLINE void TextEncoder::
 set_default_encoding(TextEncoder::Encoding encoding) {
   _default_encoding = encoding;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::get_default_encoding
-//       Access: Published, Static
-//  Description: Specifies the default encoding to be used for all
-//               subsequently created TextEncoder objects.  See
-//               set_encoding().
-////////////////////////////////////////////////////////////////////
+/**
+ * Specifies the default encoding to be used for all subsequently created
+ * TextEncoder objects.  See set_encoding().
+ */
 INLINE TextEncoder::Encoding TextEncoder::
 get_default_encoding() {
   return _default_encoding;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::set_text
-//       Access: Published
-//  Description: Changes the text that is stored in the encoder.  The
-//               text should be encoded according to the method
-//               indicated by set_encoding().  Subsequent calls to
-//               get_text() will return this same string, while
-//               get_wtext() will return the decoded version of the
-//               string.
-////////////////////////////////////////////////////////////////////
+/**
+ * Changes the text that is stored in the encoder.  The text should be encoded
+ * according to the method indicated by set_encoding().  Subsequent calls to
+ * get_text() will return this same string, while get_wtext() will return the
+ * decoded version of the string.
+ */
 INLINE void TextEncoder::
-set_text(const string &text) {
+set_text(const std::string &text) {
   if (!has_text() || _text != text) {
     _text = text;
     _flags = (_flags | F_got_text) & ~F_got_wtext;
+    text_changed();
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::set_text
-//       Access: Published
-//  Description: The two-parameter version of set_text() accepts an
-//               explicit encoding; the text is immediately decoded
-//               and stored as a wide-character string.  Subsequent
-//               calls to get_text() will return the same text
-//               re-encoded using whichever encoding is specified by
-//               set_encoding().
-////////////////////////////////////////////////////////////////////
+/**
+ * The two-parameter version of set_text() accepts an explicit encoding; the
+ * text is immediately decoded and stored as a wide-character string.
+ * Subsequent calls to get_text() will return the same text re-encoded using
+ * whichever encoding is specified by set_encoding().
+ */
 INLINE void TextEncoder::
-set_text(const string &text, TextEncoder::Encoding encoding) {
-  set_wtext(decode_text(text, encoding));
+set_text(const std::string &text, TextEncoder::Encoding encoding) {
+  if (encoding == _encoding) {
+    set_text(text);
+  } else {
+    set_wtext(decode_text(text, encoding));
+  }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::clear_text
-//       Access: Published
-//  Description: Removes the text from the TextEncoder.
-////////////////////////////////////////////////////////////////////
+/**
+ * Removes the text from the TextEncoder.
+ */
 INLINE void TextEncoder::
 clear_text() {
-  _text = string();
-  _wtext = wstring();
+  _text = std::string();
+  _wtext = std::wstring();
   _flags |= (F_got_text | F_got_wtext);
+  text_changed();
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::has_text
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 INLINE bool TextEncoder::
 has_text() const {
   if (_flags & F_got_wtext) {
@@ -157,13 +132,10 @@ has_text() const {
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::get_text
-//       Access: Published
-//  Description: Returns the current text, as encoded via the current
-//               encoding system.
-////////////////////////////////////////////////////////////////////
-INLINE string TextEncoder::
+/**
+ * Returns the current text, as encoded via the current encoding system.
+ */
+INLINE std::string TextEncoder::
 get_text() const {
   if ((_flags & F_got_text) == 0) {
     ((TextEncoder *)this)->_text = encode_wtext(_wtext);
@@ -172,178 +144,162 @@ get_text() const {
   return _text;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::get_text
-//       Access: Published
-//  Description: Returns the current text, as encoded via the indicated
-//               encoding system.
-////////////////////////////////////////////////////////////////////
-INLINE string TextEncoder::
+/**
+ * Returns the current text, as encoded via the indicated encoding system.
+ */
+INLINE std::string TextEncoder::
 get_text(TextEncoder::Encoding encoding) const {
   return encode_wtext(get_wtext(), encoding);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::append_text
-//       Access: Published
-//  Description: Appends the indicates string to the end of the stored
-//               text.
-////////////////////////////////////////////////////////////////////
+/**
+ * Appends the indicates string to the end of the stored text.
+ */
 INLINE void TextEncoder::
-append_text(const string &text) {
-  _text = get_text() + text;
-  _flags = (_flags | F_got_text) & ~F_got_wtext;
+append_text(const std::string &text) {
+  if (!text.empty()) {
+    _text = get_text() + text;
+    _flags = (_flags | F_got_text) & ~F_got_wtext;
+    text_changed();
+  }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::append_unicode_char
-//       Access: Published
-//  Description: Appends a single character to the end of the stored
-//               text.  This may be a wide character, up to 16 bits in
-//               Unicode.
-////////////////////////////////////////////////////////////////////
+/**
+ * Appends a single character to the end of the stored text.  This may be a
+ * wide character, up to 16 bits in Unicode.
+ */
 INLINE void TextEncoder::
-append_unicode_char(int character) {
-  _wtext = get_wtext() + wstring(1, (wchar_t)character);
+append_unicode_char(char32_t character) {
+#if WCHAR_MAX >= 0x10FFFF
+  // wchar_t might be UTF-32.
+  _wtext = get_wtext() + std::wstring(1, (wchar_t)character);
+#else
+  if ((character & ~0xffff) == 0) {
+    _wtext = get_wtext() + std::wstring(1, (wchar_t)character);
+  } else {
+    // Encode as a surrogate pair.
+    uint32_t v = (uint32_t)character - 0x10000u;
+    wchar_t wstr[2] = {
+      (wchar_t)((v >> 10u) | 0xd800u),
+      (wchar_t)((v & 0x3ffu) | 0xdc00u),
+    };
+    _wtext = get_wtext() + std::wstring(wstr, 2);
+  }
+#endif
   _flags = (_flags | F_got_wtext) & ~F_got_text;
+  text_changed();
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::get_num_chars
-//       Access: Published
-//  Description: Returns the number of characters in the stored text.
-//               This is a count of wide characters, after the string
-//               has been decoded according to set_encoding().
-////////////////////////////////////////////////////////////////////
-INLINE int TextEncoder::
+/**
+ * Returns the number of characters in the stored text.  This is a count of
+ * wide characters, after the string has been decoded according to
+ * set_encoding().
+ */
+INLINE size_t TextEncoder::
 get_num_chars() const {
   return get_wtext().length();
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::get_unicode_char
-//       Access: Published
-//  Description: Returns the Unicode value of the nth character in the
-//               stored text.  This may be a wide character (greater
-//               than 255), after the string has been decoded
-//               according to set_encoding().
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the Unicode value of the nth character in the stored text.  This
+ * may be a wide character (greater than 255), after the string has been
+ * decoded according to set_encoding().
+ */
 INLINE int TextEncoder::
-get_unicode_char(int index) const {
+get_unicode_char(size_t index) const {
   get_wtext();
-  if (index >= 0 && index < (int)_wtext.length()) {
+  if (index < _wtext.length()) {
     return _wtext[index];
   }
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::set_unicode_char
-//       Access: Published
-//  Description: Sets the Unicode value of the nth character in the
-//               stored text.  This may be a wide character (greater
-//               than 255), after the string has been decoded
-//               according to set_encoding().
-////////////////////////////////////////////////////////////////////
+/**
+ * Sets the Unicode value of the nth character in the stored text.  This may
+ * be a wide character (greater than 255), after the string has been decoded
+ * according to set_encoding().
+ */
 INLINE void TextEncoder::
-set_unicode_char(int index, int character) {
+set_unicode_char(size_t index, char32_t character) {
   get_wtext();
-  if (index >= 0 && index < (int)_wtext.length()) {
+  if (index < _wtext.length()) {
     _wtext[index] = character;
     _flags &= ~F_got_text;
+    text_changed();
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::get_encoded_char
-//       Access: Published
-//  Description: Returns the nth char of the stored text, as a one-,
-//               two-, or three-byte encoded string.
-////////////////////////////////////////////////////////////////////
-INLINE string TextEncoder::
-get_encoded_char(int index) const {
+/**
+ * Returns the nth char of the stored text, as a one-, two-, or three-byte
+ * encoded string.
+ */
+INLINE std::string TextEncoder::
+get_encoded_char(size_t index) const {
   return get_encoded_char(index, get_encoding());
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::get_encoded_char
-//       Access: Published
-//  Description: Returns the nth char of the stored text, as a one-,
-//               two-, or three-byte encoded string.
-////////////////////////////////////////////////////////////////////
-INLINE string TextEncoder::
-get_encoded_char(int index, TextEncoder::Encoding encoding) const {
-  wstring wch(1, (wchar_t)get_unicode_char(index));
+/**
+ * Returns the nth char of the stored text, as a one-, two-, or three-byte
+ * encoded string.
+ */
+INLINE std::string TextEncoder::
+get_encoded_char(size_t index, TextEncoder::Encoding encoding) const {
+  std::wstring wch(1, (wchar_t)get_unicode_char(index));
   return encode_wtext(wch, encoding);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::get_text_as_ascii
-//       Access: Published
-//  Description: Returns the text associated with the node, converted
-//               as nearly as possible to a fully-ASCII
-//               representation.  This means replacing accented
-//               letters with their unaccented ASCII equivalents.
-//
-//               It is possible that some characters in the string
-//               cannot be converted to ASCII.  (The string may
-//               involve symbols like the copyright symbol, for
-//               instance, or it might involve letters in some other
-//               alphabet such as Greek or Cyrillic, or even Latin
-//               letters like thorn or eth that are not part of the
-//               ASCII character set.)  In this case, as much of the
-//               string as possible will be converted to ASCII, and
-//               the nonconvertible characters will remain encoded in
-//               the encoding specified by set_encoding().
-////////////////////////////////////////////////////////////////////
-INLINE string TextEncoder::
+/**
+ * Returns the text associated with the node, converted as nearly as possible
+ * to a fully-ASCII representation.  This means replacing accented letters
+ * with their unaccented ASCII equivalents.
+ *
+ * It is possible that some characters in the string cannot be converted to
+ * ASCII.  (The string may involve symbols like the copyright symbol, for
+ * instance, or it might involve letters in some other alphabet such as Greek
+ * or Cyrillic, or even Latin letters like thorn or eth that are not part of
+ * the ASCII character set.)  In this case, as much of the string as possible
+ * will be converted to ASCII, and the nonconvertible characters will remain
+ * encoded in the encoding specified by set_encoding().
+ */
+INLINE std::string TextEncoder::
 get_text_as_ascii() const {
   return encode_wtext(get_wtext_as_ascii());
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::reencode_text
-//       Access: Published, Static
-//  Description: Given the indicated text string, which is assumed to
-//               be encoded via the encoding "from", decodes it and
-//               then reencodes it into the encoding "to", and returns
-//               the newly encoded string.  This does not change or
-//               affect any properties on the TextEncoder itself.
-////////////////////////////////////////////////////////////////////
-INLINE string TextEncoder::
-reencode_text(const string &text, TextEncoder::Encoding from, 
+/**
+ * Given the indicated text string, which is assumed to be encoded via the
+ * encoding "from", decodes it and then reencodes it into the encoding "to",
+ * and returns the newly encoded string.  This does not change or affect any
+ * properties on the TextEncoder itself.
+ */
+INLINE std::string TextEncoder::
+reencode_text(const std::string &text, TextEncoder::Encoding from,
               TextEncoder::Encoding to) {
   return encode_wtext(decode_text(text, from), to);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::unicode_isalpha
-//       Access: Published, Static
-//  Description: Returns true if the indicated character is an
-//               alphabetic letter, false otherwise.  This is akin to
-//               ctype's isalpha(), extended to Unicode.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns true if the indicated character is an alphabetic letter, false
+ * otherwise.  This is akin to ctype's isalpha(), extended to Unicode.
+ */
 INLINE bool TextEncoder::
-unicode_isalpha(int character) {
+unicode_isalpha(char32_t character) {
   const UnicodeLatinMap::Entry *entry = UnicodeLatinMap::look_up(character);
-  if (entry == (const UnicodeLatinMap::Entry *)NULL) {
+  if (entry == nullptr) {
     return false;
   }
   return entry->_char_type == UnicodeLatinMap::CT_upper ||
     entry->_char_type == UnicodeLatinMap::CT_lower;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::unicode_isdigit
-//       Access: Published, Static
-//  Description: Returns true if the indicated character is a
-//               numeric digit, false otherwise.  This is akin to
-//               ctype's isdigit(), extended to Unicode.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns true if the indicated character is a numeric digit, false
+ * otherwise.  This is akin to ctype's isdigit(), extended to Unicode.
+ */
 INLINE bool TextEncoder::
-unicode_isdigit(int character) {
+unicode_isdigit(char32_t character) {
   const UnicodeLatinMap::Entry *entry = UnicodeLatinMap::look_up(character);
-  if (entry == (const UnicodeLatinMap::Entry *)NULL) {
+  if (entry == nullptr) {
     // The digits aren't actually listed in the map.
     return (character >= '0' && character <= '9');
   }
@@ -351,48 +307,39 @@ unicode_isdigit(int character) {
   return (isdigit(entry->_ascii_equiv) != 0);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::unicode_ispunct
-//       Access: Published, Static
-//  Description: Returns true if the indicated character is a
-//               punctuation mark, false otherwise.  This is akin to
-//               ctype's ispunct(), extended to Unicode.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns true if the indicated character is a punctuation mark, false
+ * otherwise.  This is akin to ctype's ispunct(), extended to Unicode.
+ */
 INLINE bool TextEncoder::
-unicode_ispunct(int character) {
+unicode_ispunct(char32_t character) {
   const UnicodeLatinMap::Entry *entry = UnicodeLatinMap::look_up(character);
-  if (entry == (const UnicodeLatinMap::Entry *)NULL) {
+  if (entry == nullptr) {
     // Some punctuation marks aren't listed in the map.
-    return (character >= 0 && character < 128 && ispunct(character));
+    return (character < 128 && ispunct(character));
   }
   return entry->_char_type == UnicodeLatinMap::CT_punct;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::unicode_isupper
-//       Access: Published, Static
-//  Description: Returns true if the indicated character is an
-//               uppercase letter, false otherwise.  This is akin to
-//               ctype's isupper(), extended to Unicode.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns true if the indicated character is an uppercase letter, false
+ * otherwise.  This is akin to ctype's isupper(), extended to Unicode.
+ */
 INLINE bool TextEncoder::
-unicode_isupper(int character) {
+unicode_isupper(char32_t character) {
   const UnicodeLatinMap::Entry *entry = UnicodeLatinMap::look_up(character);
-  if (entry == (const UnicodeLatinMap::Entry *)NULL) {
+  if (entry == nullptr) {
     return false;
   }
   return entry->_char_type == UnicodeLatinMap::CT_upper;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::unicode_isspace
-//       Access: Published, Static
-//  Description: Returns true if the indicated character is a
-//               whitespace letter, false otherwise.  This is akin to
-//               ctype's isspace(), extended to Unicode.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns true if the indicated character is a whitespace letter, false
+ * otherwise.  This is akin to ctype's isspace(), extended to Unicode.
+ */
 INLINE bool TextEncoder::
-unicode_isspace(int character) {
+unicode_isspace(char32_t character) {
   switch (character) {
   case ' ':
   case '\t':
@@ -404,73 +351,60 @@ unicode_isspace(int character) {
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::unicode_islower
-//       Access: Published, Static
-//  Description: Returns true if the indicated character is a
-//               lowercase letter, false otherwise.  This is akin to
-//               ctype's islower(), extended to Unicode.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns true if the indicated character is a lowercase letter, false
+ * otherwise.  This is akin to ctype's islower(), extended to Unicode.
+ */
 INLINE bool TextEncoder::
-unicode_islower(int character) {
+unicode_islower(char32_t character) {
   const UnicodeLatinMap::Entry *entry = UnicodeLatinMap::look_up(character);
-  if (entry == (const UnicodeLatinMap::Entry *)NULL) {
+  if (entry == nullptr) {
     return false;
   }
   return entry->_char_type == UnicodeLatinMap::CT_lower;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::unicode_toupper
-//       Access: Published, Static
-//  Description: Returns the uppercase equivalent of the given Unicode
-//               character.  This is akin to ctype's toupper(),
-//               extended to Unicode.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the uppercase equivalent of the given Unicode character.  This is
+ * akin to ctype's toupper(), extended to Unicode.
+ */
 INLINE int TextEncoder::
-unicode_toupper(int character) {
+unicode_toupper(char32_t character) {
   const UnicodeLatinMap::Entry *entry = UnicodeLatinMap::look_up(character);
-  if (entry == (const UnicodeLatinMap::Entry *)NULL) {
+  if (entry == nullptr) {
     return character;
-  } 
+  }
   return entry->_toupper_character;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::unicode_tolower
-//       Access: Published, Static
-//  Description: Returns the uppercase equivalent of the given Unicode
-//               character.  This is akin to ctype's tolower(),
-//               extended to Unicode.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the uppercase equivalent of the given Unicode character.  This is
+ * akin to ctype's tolower(), extended to Unicode.
+ */
 INLINE int TextEncoder::
-unicode_tolower(int character) {
+unicode_tolower(char32_t character) {
   const UnicodeLatinMap::Entry *entry = UnicodeLatinMap::look_up(character);
-  if (entry == (const UnicodeLatinMap::Entry *)NULL) {
+  if (entry == nullptr) {
     return character;
-  } 
+  }
   return entry->_tolower_character;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::upper
-//       Access: Published, Static
-//  Description: Converts the string to uppercase, assuming the string
-//               is encoded in the default encoding.
-////////////////////////////////////////////////////////////////////
-INLINE string TextEncoder::
-upper(const string &source) {
+/**
+ * Converts the string to uppercase, assuming the string is encoded in the
+ * default encoding.
+ */
+INLINE std::string TextEncoder::
+upper(const std::string &source) {
   return upper(source, get_default_encoding());
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::upper
-//       Access: Published, Static
-//  Description: Converts the string to uppercase, assuming the string
-//               is encoded in the indicated encoding.
-////////////////////////////////////////////////////////////////////
-INLINE string TextEncoder::
-upper(const string &source, TextEncoder::Encoding encoding) {
+/**
+ * Converts the string to uppercase, assuming the string is encoded in the
+ * indicated encoding.
+ */
+INLINE std::string TextEncoder::
+upper(const std::string &source, TextEncoder::Encoding encoding) {
   TextEncoder encoder;
   encoder.set_encoding(encoding);
   encoder.set_text(source);
@@ -478,25 +412,21 @@ upper(const string &source, TextEncoder::Encoding encoding) {
   return encoder.get_text();
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::lower
-//       Access: Published, Static
-//  Description: Converts the string to lowercase, assuming the string
-//               is encoded in the default encoding.
-////////////////////////////////////////////////////////////////////
-INLINE string TextEncoder::
-lower(const string &source) {
+/**
+ * Converts the string to lowercase, assuming the string is encoded in the
+ * default encoding.
+ */
+INLINE std::string TextEncoder::
+lower(const std::string &source) {
   return lower(source, get_default_encoding());
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::lower
-//       Access: Published, Static
-//  Description: Converts the string to lowercase, assuming the string
-//               is encoded in the indicated encoding.
-////////////////////////////////////////////////////////////////////
-INLINE string TextEncoder::
-lower(const string &source, TextEncoder::Encoding encoding) {
+/**
+ * Converts the string to lowercase, assuming the string is encoded in the
+ * indicated encoding.
+ */
+INLINE std::string TextEncoder::
+lower(const std::string &source, TextEncoder::Encoding encoding) {
   TextEncoder encoder;
   encoder.set_encoding(encoding);
   encoder.set_text(source);
@@ -504,29 +434,25 @@ lower(const string &source, TextEncoder::Encoding encoding) {
   return encoder.get_text();
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::set_wtext
-//       Access: Published
-//  Description: Changes the text that is stored in the encoder.
-//               Subsequent calls to get_wtext() will return this same
-//               string, while get_text() will return the encoded
-//               version of the string.
-////////////////////////////////////////////////////////////////////
+/**
+ * Changes the text that is stored in the encoder.  Subsequent calls to
+ * get_wtext() will return this same string, while get_text() will return the
+ * encoded version of the string.
+ */
 INLINE void TextEncoder::
-set_wtext(const wstring &wtext) {
+set_wtext(const std::wstring &wtext) {
   if (!has_text() || _wtext != wtext) {
     _wtext = wtext;
     _flags = (_flags | F_got_wtext) & ~F_got_text;
+    text_changed();
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::get_wtext
-//       Access: Published
-//  Description: Returns the text associated with the TextEncoder, as
-//               a wide-character string.
-////////////////////////////////////////////////////////////////////
-INLINE const wstring &TextEncoder::
+/**
+ * Returns the text associated with the TextEncoder, as a wide-character
+ * string.
+ */
+INLINE const std::wstring &TextEncoder::
 get_wtext() const {
   if ((_flags & F_got_wtext) == 0) {
     ((TextEncoder *)this)->_wtext = decode_text(_text);
@@ -535,47 +461,41 @@ get_wtext() const {
   return _wtext;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::append_wtext
-//       Access: Published
-//  Description: Appends the indicates string to the end of the stored
-//               wide-character text.
-////////////////////////////////////////////////////////////////////
+/**
+ * Appends the indicates string to the end of the stored wide-character text.
+ */
 INLINE void TextEncoder::
-append_wtext(const wstring &wtext) {
-  _wtext = get_wtext() + wtext;
-  _flags = (_flags | F_got_wtext) & ~F_got_text;
+append_wtext(const std::wstring &wtext) {
+  if (!wtext.empty()) {
+    _wtext = get_wtext() + wtext;
+    _flags = (_flags | F_got_wtext) & ~F_got_text;
+    text_changed();
+  }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::encode_wtext
-//       Access: Published
-//  Description: Encodes a wide-text string into a single-char string,
-//               according to the current encoding.
-////////////////////////////////////////////////////////////////////
-INLINE string TextEncoder::
-encode_wtext(const wstring &wtext) const {
+/**
+ * Encodes a wide-text string into a single-char string, according to the
+ * current encoding.
+ */
+INLINE std::string TextEncoder::
+encode_wtext(const std::wstring &wtext) const {
   return encode_wtext(wtext, _encoding);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: TextEncoder::decode_text
-//       Access: Published
-//  Description: Returns the given wstring decoded to a single-byte
-//               string, via the current encoding system.
-////////////////////////////////////////////////////////////////////
-INLINE wstring TextEncoder::
-decode_text(const string &text) const {
+/**
+ * Returns the given wstring decoded to a single-byte string, via the current
+ * encoding system.
+ */
+INLINE std::wstring TextEncoder::
+decode_text(const std::string &text) const {
   return decode_text(text, _encoding);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: wstring ostream operator
-//  Description: Uses the current default encoding to output the
-//               wstring.
-////////////////////////////////////////////////////////////////////
-INLINE ostream &
-operator << (ostream &out, const wstring &str) {
+/**
+ * Uses the current default encoding to output the wstring.
+ */
+INLINE std::ostream &
+operator << (std::ostream &out, const std::wstring &str) {
   TextEncoder encoder;
   encoder.set_wtext(str);
   out << encoder.get_text();

@@ -2,15 +2,17 @@
 DevWalker.py is for avatars.
 
 A walker control such as this one provides:
-    - creation of the collision nodes
-    - handling the keyboard and mouse input for avatar movement
-    - moving the avatar
+
+- creation of the collision nodes
+- handling the keyboard and mouse input for avatar movement
+- moving the avatar
 
 it does not:
-    - play sounds
-    - play animations
 
-although it does send messeges that allow a listener to play sounds or
+- play sounds
+- play animations
+
+although it does send messages that allow a listener to play sounds or
 animations based on walker events.
 """
 
@@ -18,13 +20,14 @@ from direct.showbase.InputStateGlobal import inputState
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase import DirectObject
 from direct.task.Task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
+
 
 class DevWalker(DirectObject.DirectObject):
 
     notify = DirectNotifyGlobal.directNotify.newCategory("DevWalker")
-    wantDebugIndicator = base.config.GetBool('want-avatar-physics-indicator', 0)
-    runMultiplier = base.config.GetFloat('dev-run-multiplier', 4.0)
+    wantDebugIndicator = ConfigVariableBool('want-avatar-physics-indicator', False)
+    runMultiplier = ConfigVariableDouble('dev-run-multiplier', 4.0)
 
     # Ghost mode overrides this:
     slideName = "slide-is-disabled"
@@ -109,13 +112,13 @@ class DevWalker(DirectObject.DirectObject):
         slideRight = inputState.isSet("slideRight")
         levitateUp = inputState.isSet("levitateUp")
         levitateDown = inputState.isSet("levitateDown")
-        run = inputState.isSet("run") and self.runMultiplier or 1.0
+        run = inputState.isSet("run") and self.runMultiplier.getValue() or 1.0
 
         # Check for Auto-Run
         if base.localAvatar.getAutoRun():
             forward = 1
             reverse = 0
-        
+
         # Determine what the speeds are based on the buttons:
         self.speed=(
                 (forward and self.avatarControlForwardSpeed or
@@ -182,7 +185,7 @@ class DevWalker(DirectObject.DirectObject):
 
     def flushEventHandlers(self):
         pass
-    
+
     if __debug__:
         def debugPrint(self, message):
             """for debugging"""

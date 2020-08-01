@@ -1,65 +1,38 @@
-// Filename: mutexSpinlockImpl.I
-// Created by:  drose (11Apr06)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file mutexSpinlockImpl.I
+ * @author drose
+ * @date 2006-04-11
+ */
 
-
-////////////////////////////////////////////////////////////////////
-//     Function: MutexSpinlockImpl::Constructor
-//       Access: Public
-//  Description:
-////////////////////////////////////////////////////////////////////
-INLINE MutexSpinlockImpl::
-MutexSpinlockImpl() {
-  _lock = 0;
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: MutexSpinlockImpl::Destructor
-//       Access: Public
-//  Description:
-////////////////////////////////////////////////////////////////////
-INLINE MutexSpinlockImpl::
-~MutexSpinlockImpl() {
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: MutexSpinlockImpl::acquire
-//       Access: Public
-//  Description: 
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 INLINE void MutexSpinlockImpl::
-acquire() {
-  if (!try_acquire()) {
+lock() {
+  if (!try_lock()) {
     do_lock();
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: MutexSpinlockImpl::try_acquire
-//       Access: Public
-//  Description: 
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 INLINE bool MutexSpinlockImpl::
-try_acquire() {
-  return (AtomicAdjust::compare_and_exchange(_lock, 0, 1) == 0);
+try_lock() {
+  return !_flag.test_and_set(std::memory_order_acquire);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: MutexSpinlockImpl::release
-//       Access: Public
-//  Description: 
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 INLINE void MutexSpinlockImpl::
-release() {
-  AtomicAdjust::set(_lock, 0);
+unlock() {
+  _flag.clear(std::memory_order_release);
 }

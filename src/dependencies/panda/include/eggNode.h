@@ -1,16 +1,15 @@
-// Filename: eggNode.h
-// Created by:  drose (16Jan99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggNode.h
+ * @author drose
+ * @date 1999-01-16
+ */
 
 #ifndef EGGNODE_H
 #define EGGNODE_H
@@ -28,16 +27,14 @@ class EggGroupNode;
 class EggRenderMode;
 class EggTextureCollection;
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggNode
-// Description : A base class for things that may be directly added
-//               into the egg hierarchy.  This includes groups,
-//               joints, polygons, vertex pools, etc., but does not
-//               include things like vertices.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAEGG EggNode : public EggNamedObject {
+/**
+ * A base class for things that may be directly added into the egg hierarchy.
+ * This includes groups, joints, polygons, vertex pools, etc., but does not
+ * include things like vertices.
+ */
+class EXPCL_PANDA_EGG EggNode : public EggNamedObject {
 PUBLISHED:
-  INLINE EggNode(const string &name = "");
+  INLINE explicit EggNode(const std::string &name = "");
   INLINE EggNode(const EggNode &copy);
   INLINE EggNode &operator = (const EggNode &copy);
 
@@ -47,6 +44,9 @@ PUBLISHED:
   INLINE bool is_under_transform() const;
   INLINE bool is_local_coord() const;
 
+  MAKE_PROPERTY(parent, get_parent);
+  MAKE_PROPERTY(depth, get_depth);
+
   INLINE const LMatrix4d &get_vertex_frame() const;
   INLINE const LMatrix4d &get_node_frame() const;
   INLINE const LMatrix4d &get_vertex_frame_inv() const;
@@ -54,12 +54,12 @@ PUBLISHED:
   INLINE const LMatrix4d &get_vertex_to_node() const;
   INLINE const LMatrix4d &get_node_to_vertex() const;
 
-  INLINE const LMatrix4d *get_vertex_frame_ptr()const;
-  INLINE const LMatrix4d *get_node_frame_ptr()const;
-  INLINE const LMatrix4d *get_vertex_frame_inv_ptr()const;
-  INLINE const LMatrix4d *get_node_frame_inv_ptr()const;
-  INLINE const LMatrix4d *get_vertex_to_node_ptr()const;
-  INLINE const LMatrix4d *get_node_to_vertex_ptr()const;
+  INLINE const LMatrix4d *get_vertex_frame_ptr() const;
+  INLINE const LMatrix4d *get_node_frame_ptr() const;
+  INLINE const LMatrix4d *get_vertex_frame_inv_ptr() const;
+  INLINE const LMatrix4d *get_node_frame_inv_ptr() const;
+  INLINE const LMatrix4d *get_vertex_to_node_ptr() const;
+  INLINE const LMatrix4d *get_node_to_vertex_ptr() const;
 
   INLINE void transform(const LMatrix4d &mat);
   INLINE void transform_vertices_only(const LMatrix4d &mat);
@@ -81,8 +81,8 @@ PUBLISHED:
   virtual bool determine_indexed();
   virtual bool determine_decal();
 
-  virtual void write(ostream &out, int indent_level) const=0;
-  bool parse_egg(const string &egg_syntax);
+  virtual void write(std::ostream &out, int indent_level) const=0;
+  bool parse_egg(const std::string &egg_syntax);
 
 #ifdef _DEBUG
   void test_under_integrity() const;
@@ -114,8 +114,8 @@ protected:
   virtual void r_apply_texmats(EggTextureCollection &textures);
 
   // These members are updated automatically by prepare_add_child(),
-  // prepare_remove_child(), and update_under().  Other functions
-  // shouldn't be fiddling with them.
+  // prepare_remove_child(), and update_under().  Other functions shouldn't be
+  // fiddling with them.
 
   EggGroupNode *_parent;
   int _depth;

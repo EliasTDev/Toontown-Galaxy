@@ -1,16 +1,15 @@
-// Filename: wdxGraphicsPipe9.h
-// Created by:  drose (20Dec02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file wdxGraphicsPipe9.h
+ * @author drose
+ * @date 2002-12-20
+ */
 
 #ifndef WDXGRAPHICSPIPE9_H
 #define WDXGRAPHICSPIPE9_H
@@ -21,17 +20,16 @@
 #include "dxgsg9base.h"
 #include <ddraw.h>
 
-////////////////////////////////////////////////////////////////////
-//       Class : wdxGraphicsPipe9
-// Description : This graphics pipe represents the interface for
-//               creating DirectX9 graphics windows.
-////////////////////////////////////////////////////////////////////
+/**
+ * This graphics pipe represents the interface for creating DirectX9 graphics
+ * windows.
+ */
 class EXPCL_PANDADX wdxGraphicsPipe9 : public WinGraphicsPipe {
 public:
   wdxGraphicsPipe9();
   virtual ~wdxGraphicsPipe9();
 
-  virtual string get_interface_name() const;
+  virtual std::string get_interface_name() const;
   static PT(GraphicsPipe) pipe_constructor();
 
   virtual PT(GraphicsDevice) make_device(void *scrn);
@@ -52,7 +50,7 @@ public:
    bool special_check_fullscreen_resolution(DXScreenData &scrn, UINT x_size,UINT y_size);
 
 protected:
-  virtual PT(GraphicsOutput) make_output(const string &name,
+  virtual PT(GraphicsOutput) make_output(const std::string &name,
                                          const FrameBufferProperties &fb_prop,
                                          const WindowProperties &win_prop,
                                          int flags,
@@ -84,7 +82,7 @@ private:
   Direct3DCreate9_ProcPtr _Direct3DCreate9;
 
   // CardID is used in DX7 lowmem card-classification pass so DX8 can
-  // establish correspondence b/w DX7 mem info & DX8 device
+  // establish correspondence bw DX7 mem info & DX8 device
   struct CardID {
     HMONITOR _monitor;
     DWORD _max_available_video_memory;
@@ -95,7 +93,6 @@ private:
 
   typedef pvector<CardID> CardIDs;
   CardIDs _card_ids;
-  bool __is_dx9_1;
 
 public:
   static TypeHandle get_class_type() {

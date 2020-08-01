@@ -1,22 +1,22 @@
-// Filename: sparseArray.h
-// Created by:  drose (14Feb07)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file sparseArray.h
+ * @author drose
+ * @date 2007-02-14
+ */
 
 #ifndef SPARSEARRAY_H
 #define SPARSEARRAY_H
 
 #include "pandabase.h"
 #include "ordered_vector.h"
+#include "extension.h"
 
 class BitArray;
 class BamWriter;
@@ -24,33 +24,25 @@ class BamReader;
 class Datagram;
 class DatagramIterator;
 
-////////////////////////////////////////////////////////////////////
-//       Class : SparseArray
-// Description : This class records a set of integers, where each
-//               integer is either present or not present in the set.
-//
-//               It is similar in principle and in interface to a
-//               BitArray (which can be thought of as a set of
-//               integers, one integer corresponding to each different
-//               bit position), but the SparseArray is implemented as
-//               a list of min/max subrange lists, rather than as a
-//               bitmask.  
-//
-//               This makes it particularly efficient for storing sets
-//               which consist of large sections of consecutively
-//               included or consecutively excluded elements, with
-//               arbitrarily large integers, but particularly
-//               inefficient for doing boolean operations such as & or
-//               |.
-//
-//               Also, unlike BitArray, the SparseArray can store
-//               negative integers.
-////////////////////////////////////////////////////////////////////
+/**
+ * This class records a set of integers, where each integer is either present
+ * or not present in the set.
+ *
+ * It is similar in principle and in interface to a BitArray (which can be
+ * thought of as a set of integers, one integer corresponding to each
+ * different bit position), but the SparseArray is implemented as a list of
+ * min/max subrange lists, rather than as a bitmask.
+ *
+ * This makes it particularly efficient for storing sets which consist of
+ * large sections of consecutively included or consecutively excluded
+ * elements, with arbitrarily large integers, but particularly inefficient for
+ * doing boolean operations such as & or |.
+ *
+ * Also, unlike BitArray, the SparseArray can store negative integers.
+ */
 class EXPCL_PANDA_PUTIL SparseArray {
 PUBLISHED:
   INLINE SparseArray();
-  INLINE SparseArray(const SparseArray &copy);
-  INLINE SparseArray &operator = (const SparseArray &copy);
   SparseArray(const BitArray &from);
 
   INLINE static SparseArray all_on();
@@ -58,8 +50,6 @@ PUBLISHED:
   INLINE static SparseArray lower_on(int on_bits);
   INLINE static SparseArray bit(int index);
   INLINE static SparseArray range(int low_bit, int size);
-
-  INLINE ~SparseArray();
 
   INLINE static bool has_max_num_bits();
   INLINE static int get_max_num_bits();
@@ -91,7 +81,7 @@ PUBLISHED:
   bool has_bits_in_common(const SparseArray &other) const;
   INLINE void clear();
 
-  void output(ostream &out) const;
+  void output(std::ostream &out) const;
 
   INLINE bool operator == (const SparseArray &other) const;
   INLINE bool operator != (const SparseArray &other) const;
@@ -123,9 +113,13 @@ PUBLISHED:
   INLINE void operator >>= (int shift);
 
   INLINE bool is_inverse() const;
-  INLINE int get_num_subranges() const;
-  INLINE int get_subrange_begin(int n) const;
-  INLINE int get_subrange_end(int n) const;
+  INLINE size_t get_num_subranges() const;
+  INLINE int get_subrange_begin(size_t n) const;
+  INLINE int get_subrange_end(size_t n) const;
+
+  EXTENSION(bool __bool__() const);
+  EXTENSION(PyObject *__getstate__() const);
+  EXTENSION(void __setstate__(PyObject *state));
 
 private:
   void do_add_range(int begin, int end);
@@ -138,8 +132,7 @@ private:
   void do_intersection_neg(const SparseArray &other);
   void do_shift(int offset);
 
-  // The SparseArray is implemented as a set of non-overlapping
-  // Subranges.
+  // The SparseArray is implemented as a set of non-overlapping Subranges.
   class Subrange {
   public:
     INLINE Subrange(int begin, int end);
@@ -151,6 +144,8 @@ private:
   typedef ov_set<Subrange> Subranges;
   Subranges _subranges;
   bool _inverse;
+
+  friend class Extension<SparseArray>;
 
 public:
   void write_datagram(BamWriter *manager, Datagram &dg) const;
@@ -170,11 +165,10 @@ private:
 
 #include "sparseArray.I"
 
-INLINE ostream &
-operator << (ostream &out, const SparseArray &array) {
+INLINE std::ostream &
+operator << (std::ostream &out, const SparseArray &array) {
   array.output(out);
   return out;
 }
 
 #endif
-

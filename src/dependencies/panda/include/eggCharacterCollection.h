@@ -1,16 +1,15 @@
-// Filename: eggCharacterCollection.h
-// Created by:  drose (26Feb01)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggCharacterCollection.h
+ * @author drose
+ * @date 2001-02-26
+ */
 
 #ifndef EGGCHARACTERCOLLECTION_H
 #define EGGCHARACTERCOLLECTION_H
@@ -26,12 +25,10 @@
 class EggTable;
 class EggAttributes;
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggCharacterCollection
-// Description : Represents a set of characters, as read and collected
-//               from possibly several model and/or animation egg
-//               files.
-////////////////////////////////////////////////////////////////////
+/**
+ * Represents a set of characters, as read and collected from possibly several
+ * model and/or animation egg files.
+ */
 class EggCharacterCollection {
 public:
   EggCharacterCollection();
@@ -46,21 +43,21 @@ public:
 
   INLINE int get_num_characters() const;
   INLINE EggCharacterData *get_character(int i) const;
-  EggCharacterData *get_character_by_name(const string &character_name) const;
+  EggCharacterData *get_character_by_name(const std::string &character_name) const;
 
   INLINE EggCharacterData *get_character_by_model_index(int model_index) const;
 
-  void rename_char(int i, const string &name);
+  void rename_char(int i, const std::string &name);
 
-  virtual void write(ostream &out, int indent_level = 0) const;
-  void check_errors(ostream &out, bool force_initial_rest_frame);
+  virtual void write(std::ostream &out, int indent_level = 0) const;
+  void check_errors(std::ostream &out, bool force_initial_rest_frame);
 
   virtual EggCharacterData *make_character_data();
   virtual EggJointData *make_joint_data(EggCharacterData *char_data);
   virtual EggSliderData *make_slider_data(EggCharacterData *char_data);
 
 public:
-  EggCharacterData *make_character(const string &character_name);
+  EggCharacterData *make_character(const std::string &character_name);
 
   class EggInfo {
   public:
@@ -80,9 +77,9 @@ public:
 private:
   bool scan_hierarchy(EggNode *egg_node);
   void scan_for_top_joints(EggNode *egg_node, EggNode *model_root,
-                           const string &character_name);
+                           const std::string &character_name);
   void scan_for_top_tables(EggTable *bundle, EggNode *model_root,
-                           const string &character_name);
+                           const std::string &character_name);
   void scan_for_morphs(EggNode *egg_node, int model_index,
                        EggCharacterData *char_data);
   void scan_for_sliders(EggNode *egg_node, int model_index,
@@ -93,8 +90,8 @@ private:
   void add_morph_back_pointers_vertex(EggVertex *vertex, EggObject *egg_object,
                                       int model_index, EggCharacterData *char_data);
 
-  // The _top_egg_nodes member is only used temporarily, when adding
-  // each pre-existing egg file to the structure for the first time.
+  // The _top_egg_nodes member is only used temporarily, when adding each pre-
+  // existing egg file to the structure for the first time.
   typedef pvector<EggNode *> EggNodeList;
   class ModelDescription {
   public:
@@ -104,7 +101,7 @@ private:
   };
 
   typedef pmap<EggNode *, ModelDescription> TopEggNodes;
-  typedef pmap<string, TopEggNodes> TopEggNodesByName;
+  typedef pmap<std::string, TopEggNodes> TopEggNodesByName;
   TopEggNodesByName _top_egg_nodes;
 
   int _next_model_index;
@@ -118,5 +115,3 @@ private:
 #include "eggCharacterCollection.I"
 
 #endif
-
-

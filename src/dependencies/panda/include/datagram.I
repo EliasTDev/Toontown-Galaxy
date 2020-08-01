@@ -1,571 +1,434 @@
-// Filename: datagram.I
-// Created by:  drose (06Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file datagram.I
+ * @author drose
+ * @date 2000-06-06
+ */
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::Constructor
-//       Access: Public
-//  Description: Constructs an empty datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Constructs a datagram from an existing block of data.
+ */
 INLINE Datagram::
-Datagram() :
-#ifdef STDFLOAT_DOUBLE
-  _stdfloat_double(true)
-#else
-  _stdfloat_double(false)
-#endif
-{
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::Constructor
-//       Access: Public
-//  Description: Constructs a datagram from an existing block of data.
-////////////////////////////////////////////////////////////////////
-INLINE Datagram::
-Datagram(const void *data, size_t size) :
-#ifdef STDFLOAT_DOUBLE
-  _stdfloat_double(true)
-#else
-  _stdfloat_double(false)
-#endif
-{
+Datagram(const void *data, size_t size) {
   append_data(data, size);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::Constructor
-//       Access: Public
-//  Description: Constructs a datagram from an existing block of data.
-////////////////////////////////////////////////////////////////////
+/**
+ * Constructs a datagram from an existing block of data.
+ */
 INLINE Datagram::
-Datagram(const string &data) :
-#ifdef STDFLOAT_DOUBLE
-  _stdfloat_double(true)
-#else
-  _stdfloat_double(false)
-#endif
-{
-  append_data(data);
+Datagram(vector_uchar data) :
+  _data(std::move(data)) {
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::Copy Constructor
-//       Access: Public
-//  Description:
-////////////////////////////////////////////////////////////////////
-INLINE Datagram::
-Datagram(const Datagram &copy) :
-  _data(copy._data),
-  _stdfloat_double(copy._stdfloat_double)
-{
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::Copy Assignment Operator
-//       Access: Public
-//  Description:
-////////////////////////////////////////////////////////////////////
-INLINE void Datagram::
-operator = (const Datagram &copy) {
-  _data = copy._data;
-  _stdfloat_double = copy._stdfloat_double;
-}
-
-#ifdef USE_MOVE_SEMANTICS
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::Copy Constructor
-//       Access: Public
-//  Description:
-////////////////////////////////////////////////////////////////////
-INLINE Datagram::
-Datagram(Datagram &&from) NOEXCEPT :
-  _data(move(from._data)),
-  _stdfloat_double(from._stdfloat_double)
-{
-}
-#endif  // USE_MOVE_SEMANTICS
-
-#ifdef USE_MOVE_SEMANTICS
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::Move Assignment Operator
-//       Access: Public
-//  Description:
-////////////////////////////////////////////////////////////////////
-INLINE void Datagram::
-operator = (Datagram &&from) NOEXCEPT {
-  _data = move(from._data);
-  _stdfloat_double = from._stdfloat_double;
-}
-#endif  // USE_MOVE_SEMANTICS
-
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_bool
-//       Access: Public
-//  Description: Adds a boolean value to the datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a boolean value to the datagram.
+ */
 INLINE void Datagram::
 add_bool(bool b) {
   add_uint8(b);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_int8
-//       Access: Public
-//  Description: Adds a signed 8-bit integer to the datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a signed 8-bit integer to the datagram.
+ */
 INLINE void Datagram::
-add_int8(PN_int8 value) {
+add_int8(int8_t value) {
   append_data(&value, 1);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_uint8
-//       Access: Public
-//  Description: Adds an unsigned 8-bit integer to the datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds an unsigned 8-bit integer to the datagram.
+ */
 INLINE void Datagram::
-add_uint8(PN_uint8 value) {
+add_uint8(uint8_t value) {
   append_data(&value, 1);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_int16
-//       Access: Public
-//  Description: Adds a signed 16-bit integer to the datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a signed 16-bit integer to the datagram.
+ */
 INLINE void Datagram::
-add_int16(PN_int16 value) {
+add_int16(int16_t value) {
   LittleEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_int32
-//       Access: Public
-//  Description: Adds a signed 32-bit integer to the datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a signed 32-bit integer to the datagram.
+ */
 INLINE void Datagram::
-add_int32(PN_int32 value) {
+add_int32(int32_t value) {
   LittleEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_int64
-//       Access: Public
-//  Description: Adds a signed 64-bit integer to the datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a signed 64-bit integer to the datagram.
+ */
 INLINE void Datagram::
-add_int64(PN_int64 value) {
+add_int64(int64_t value) {
   LittleEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_uint16
-//       Access: Public
-//  Description: Adds an unsigned 16-bit integer to the datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds an unsigned 16-bit integer to the datagram.
+ */
 INLINE void Datagram::
-add_uint16(PN_uint16 value) {
+add_uint16(uint16_t value) {
   LittleEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_uint32
-//       Access: Public
-//  Description: Adds an unsigned 32-bit integer to the datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds an unsigned 32-bit integer to the datagram.
+ */
 INLINE void Datagram::
-add_uint32(PN_uint32 value) {
+add_uint32(uint32_t value) {
   LittleEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_uint64
-//       Access: Public
-//  Description: Adds an unsigned 64-bit integer to the datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds an unsigned 64-bit integer to the datagram.
+ */
 INLINE void Datagram::
-add_uint64(PN_uint64 value) {
+add_uint64(uint64_t value) {
   LittleEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_float32
-//       Access: Public
-//  Description: Adds a 32-bit single-precision floating-point number
-//               to the datagram.  Since this kind of float is not
-//               necessarily portable across different architectures,
-//               special care is required.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a 32-bit single-precision floating-point number to the datagram.
+ * Since this kind of float is not necessarily portable across different
+ * architectures, special care is required.
+ */
 INLINE void Datagram::
 add_float32(PN_float32 value) {
   LittleEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_float64
-//       Access: Public
-//  Description: Adds a 64-bit floating-point number to the datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a 64-bit floating-point number to the datagram.
+ */
 INLINE void Datagram::
 add_float64(PN_float64 value) {
   LittleEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_stdfloat
-//       Access: Public
-//  Description: Adds either a 32-bit or a 64-bit floating-point
-//               number, according to set_stdfloat_double().
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds either a 32-bit or a 64-bit floating-point number, according to
+ * set_stdfloat_double().
+ */
 INLINE void Datagram::
 add_stdfloat(PN_stdfloat value) {
   if (_stdfloat_double) {
-    add_float64(value);
+    add_float64((double)value);
   } else {
-    add_float32(value);
+    add_float32((float)value);
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_be_int16
-//       Access: Public
-//  Description: Adds a signed 16-bit big-endian integer to the
-//               datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a signed 16-bit big-endian integer to the datagram.
+ */
 INLINE void Datagram::
-add_be_int16(PN_int16 value) {
+add_be_int16(int16_t value) {
   BigEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_be_int32
-//       Access: Public
-//  Description: Adds a signed 32-bit big-endian integer to the
-//               datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a signed 32-bit big-endian integer to the datagram.
+ */
 INLINE void Datagram::
-add_be_int32(PN_int32 value) {
+add_be_int32(int32_t value) {
   BigEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_be_int64
-//       Access: Public
-//  Description: Adds a signed 64-bit big-endian integer to the
-//               datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a signed 64-bit big-endian integer to the datagram.
+ */
 INLINE void Datagram::
-add_be_int64(PN_int64 value) {
+add_be_int64(int64_t value) {
   BigEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_be_uint16
-//       Access: Public
-//  Description: Adds an unsigned 16-bit big-endian integer to the
-//               datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds an unsigned 16-bit big-endian integer to the datagram.
+ */
 INLINE void Datagram::
-add_be_uint16(PN_uint16 value) {
+add_be_uint16(uint16_t value) {
   BigEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_be_uint32
-//       Access: Public
-//  Description: Adds an unsigned 32-bit big-endian integer to the
-//               datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds an unsigned 32-bit big-endian integer to the datagram.
+ */
 INLINE void Datagram::
-add_be_uint32(PN_uint32 value) {
+add_be_uint32(uint32_t value) {
   BigEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_be_uint64
-//       Access: Public
-//  Description: Adds an unsigned 64-bit big-endian integer to the
-//               datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds an unsigned 64-bit big-endian integer to the datagram.
+ */
 INLINE void Datagram::
-add_be_uint64(PN_uint64 value) {
+add_be_uint64(uint64_t value) {
   BigEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_be_float32
-//       Access: Public
-//  Description: Adds a 32-bit single-precision big-endian
-//               floating-point number to the datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a 32-bit single-precision big-endian floating-point number to the
+ * datagram.
+ */
 INLINE void Datagram::
 add_be_float32(PN_float32 value) {
   BigEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_be_float64
-//       Access: Public
-//  Description: Adds a 64-bit big-endian floating-point number to the
-//               datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a 64-bit big-endian floating-point number to the datagram.
+ */
 INLINE void Datagram::
 add_be_float64(PN_float64 value) {
   BigEndian s(&value, sizeof(value));
   append_data(s.get_data(), sizeof(value));
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_string
-//       Access: Public
-//  Description: Adds a variable-length string to the datagram.  This
-//               actually adds a count followed by n bytes.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a variable-length string to the datagram.  This actually adds a count
+ * followed by n bytes.
+ */
 INLINE void Datagram::
-add_string(const string &str) {
+add_string(const std::string &str) {
   // The max sendable length for a string is 2^16.
-  nassertv(str.length() <= (PN_uint16)0xffff);
+  nassertv(str.length() <= (uint16_t)0xffff);
 
   // Strings always are preceded by their length
-  add_uint16(str.length());
+  add_uint16((uint16_t)str.length());
 
   // Add the string
-  append_data(str);
+  append_data(str.data(), str.length());
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_string32
-//       Access: Public
-//  Description: Adds a variable-length string to the datagram, using
-//               a 32-bit length field to allow very long strings.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a variable-length string to the datagram, using a 32-bit length field
+ * to allow very long strings.
+ */
 INLINE void Datagram::
-add_string32(const string &str) {
+add_string32(const std::string &str) {
   // Strings always are preceded by their length
-  add_uint32(str.length());
+  add_uint32((uint32_t)str.length());
 
   // Add the string
-  append_data(str);
+  append_data(str.data(), str.length());
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_z_string
-//       Access: Public
-//  Description: Adds a variable-length string to the datagram, as a
-//               NULL-terminated string.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a variable-length string to the datagram, as a NULL-terminated string.
+ */
 INLINE void Datagram::
-add_z_string(string str) {
+add_z_string(const std::string &str) {
   // We must not have any nested null characters in the string.
   size_t null_pos = str.find('\0');
   // Add the string (sans the null character).
-  append_data(str.substr(0, null_pos));
+  append_data(str.data(), std::min<size_t>(null_pos, str.length()));
 
   // And the null character.
   add_uint8('\0');
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::add_fixed_string
-//       Access: Public
-//  Description: Adds a fixed-length string to the datagram.  If the
-//               string given is less than the requested size, this
-//               will pad the string out with zeroes; if it is greater
-//               than the requested size, this will silently truncate
-//               the string.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a fixed-length string to the datagram.  If the string given is less
+ * than the requested size, this will pad the string out with zeroes; if it is
+ * greater than the requested size, this will silently truncate the string.
+ */
 INLINE void Datagram::
-add_fixed_string(const string &str, size_t size) {
+add_fixed_string(const std::string &str, size_t size) {
   if (str.length() < size) {
-    append_data(str);
+    append_data(str.data(), str.length());
     pad_bytes(size - str.length());
 
   } else { // str.length() >= size
-    append_data(str.substr(0, size));
+    append_data(str.data(), size);
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::append_data
-//       Access: Public
-//  Description: Appends some more raw data to the end of the
-//               datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds a variable-length binary blob to the datagram.  This actually adds a
+ * count followed by n bytes.
+ */
 INLINE void Datagram::
-append_data(const string &data) {
-  append_data(data.data(), data.length());
+add_blob(const vector_uchar &data) {
+  // The max sendable size for a blob is 2^16.
+  nassertv(data.size() <= (uint16_t)0xffff);
+
+  // Blobs always are preceded by their size
+  add_uint16((uint16_t)data.size());
+
+  // Add the blob
+  append_data(data.data(), data.size());
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::get_message
-//       Access: Public
-//  Description: Returns the datagram's data as a string.
-////////////////////////////////////////////////////////////////////
-INLINE string Datagram::
+/**
+ * Adds a variable-length binary blob to the datagram, using a 32-bit length
+ * field to allow very long blobs.
+ */
+INLINE void Datagram::
+add_blob32(const vector_uchar &data) {
+  // Blobs always are preceded by their size
+  add_uint32((uint32_t)data.size());
+
+  // Add the blob
+  append_data(data.data(), data.size());
+}
+
+/**
+ * Appends some more raw data to the end of the datagram.
+ */
+INLINE void Datagram::
+append_data(const vector_uchar &data) {
+  append_data(data.data(), data.size());
+}
+
+/**
+ * Returns the datagram's data as a string.
+ */
+INLINE std::string Datagram::
 get_message() const {
   // Silly special case for gcc 3.2, which can't tolerate string(NULL, 0).
   if (_data.size() == 0) {
-    return string();
+    return std::string();
   } else {
-    return string((const char *)_data.p(), _data.size());
+    return std::string((const char *)_data.p(), _data.size());
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::get_data
-//       Access: Public
-//  Description: Returns a pointer to the beginning of the datagram's
-//               data.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns a pointer to the beginning of the datagram's data.
+ */
 INLINE const void *Datagram::
 get_data() const {
   return _data.p();
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::get_length
-//       Access: Public
-//  Description: Returns the number of bytes in the datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the number of bytes in the datagram.
+ */
 INLINE size_t Datagram::
 get_length() const {
   return _data.size();
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::set_array
-//       Access: Public
-//  Description: Replaces the data in the Datagram with the data in
-//               the indicated PTA_uchar.  This is assignment by
-//               reference: subsequent changes to the Datagram will
-//               also change the source PTA_uchar.
-////////////////////////////////////////////////////////////////////
+/**
+ * Replaces the data in the Datagram with the data in the indicated PTA_uchar.
+ * This is assignment by reference: subsequent changes to the Datagram will
+ * also change the source PTA_uchar.
+ */
 INLINE void Datagram::
 set_array(PTA_uchar data) {
   _data = data;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::copy_array
-//       Access: Public
-//  Description: Replaces the data in the Datagram with a copy of the
-//               data in the indicated CPTA_uchar.  Unlike
-//               set_array(), a complete copy is made of the data;
-//               subsequent changes to the Datagram will *not* change
-//               the source CPTA_uchar.
-////////////////////////////////////////////////////////////////////
+/**
+ * Replaces the data in the Datagram with a copy of the data in the indicated
+ * CPTA_uchar.  Unlike set_array(), a complete copy is made of the data;
+ * subsequent changes to the Datagram will *not* change the source CPTA_uchar.
+ */
 INLINE void Datagram::
 copy_array(CPTA_uchar data) {
   _data.clear();
   _data.v() = data.v();
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::get_array
-//       Access: Public
-//  Description: Returns a const pointer to the actual data in
-//               the Datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns a const pointer to the actual data in the Datagram.
+ */
 INLINE CPTA_uchar Datagram::
 get_array() const {
   return _data;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::modify_array
-//       Access: Public
-//  Description: Returns a modifiable pointer to the actual data in
-//               the Datagram.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns a modifiable pointer to the actual data in the Datagram.
+ */
 INLINE PTA_uchar Datagram::
 modify_array() {
+  if (_data == nullptr) {
+    // Create a new array.
+    _data = PTA_uchar::empty_array(0);
+
+  } else if (_data.get_ref_count() != 1) {
+    // Copy on write.
+    PTA_uchar new_data = PTA_uchar::empty_array(0);
+    new_data.v() = _data.v();
+    _data = new_data;
+  }
+
   return _data;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::set_stdfloat_double
-//       Access: Public
-//  Description: Changes the stdfloat_double flag, which defines the
-//               operation performed by add_stdfloat() and
-//               DatagramIterator::get_stdfloat().  When this is true,
-//               add_stdfloat() adds a 64-bit floating-point number;
-//               when it is false, it adds a 32-bit floating-point
-//               number.  The default is based on the STDFLOAT_DOUBLE
-//               compilation flag.
-////////////////////////////////////////////////////////////////////
+/**
+ * Changes the stdfloat_double flag, which defines the operation performed by
+ * add_stdfloat() and DatagramIterator::get_stdfloat().  When this is true,
+ * add_stdfloat() adds a 64-bit floating-point number; when it is false, it
+ * adds a 32-bit floating-point number.  The default is based on the
+ * STDFLOAT_DOUBLE compilation flag.
+ */
 INLINE void Datagram::
 set_stdfloat_double(bool stdfloat_double) {
   _stdfloat_double = stdfloat_double;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::get_stdfloat_double
-//       Access: Public
-//  Description: Returns the stdfloat_double flag.  See
-//               set_stdfloat_double().
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the stdfloat_double flag.  See set_stdfloat_double().
+ */
 INLINE bool Datagram::
 get_stdfloat_double() const {
   return _stdfloat_double;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::operator ==
-//       Access: Public
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 INLINE bool Datagram::
 operator == (const Datagram &other) const {
   if (_data == other._data) {
     return true;
   }
-  if (_data != (uchar *)NULL && other._data != (uchar *)NULL) {
+  if (_data != nullptr && other._data != nullptr) {
     return _data.v() == other._data.v();
   }
   return false;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::operator !=
-//       Access: Public
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 INLINE bool Datagram::
 operator != (const Datagram &other) const {
   return !operator == (other);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: Datagram::operator <
-//       Access: Public
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 INLINE bool Datagram::
 operator < (const Datagram &other) const {
   if (_data == other._data) {
@@ -573,7 +436,7 @@ operator < (const Datagram &other) const {
     return false;
   }
 
-  if (_data != (uchar *)NULL && other._data != (uchar *)NULL) {
+  if (_data != nullptr && other._data != nullptr) {
     // Different pointers, neither NULL.
     return _data.v() < other._data.v();
   }
@@ -603,11 +466,16 @@ generic_write_datagram(Datagram &dest, double value) {
 }
 
 INLINE void
-generic_write_datagram(Datagram &dest, const string &value) {
+generic_write_datagram(Datagram &dest, const std::string &value) {
   dest.add_string(value);
 }
 
 INLINE void
-generic_write_datagram(Datagram &dest, const wstring &value) {
+generic_write_datagram(Datagram &dest, const std::wstring &value) {
   dest.add_wstring(value);
+}
+
+INLINE void
+generic_write_datagram(Datagram &dest, const vector_uchar &value) {
+  dest.add_blob(value);
 }

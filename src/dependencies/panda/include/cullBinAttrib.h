@@ -1,16 +1,15 @@
-// Filename: cullBinAttrib.h
-// Created by:  drose (01Mar02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file cullBinAttrib.h
+ * @author drose
+ * @date 2002-03-01
+ */
 
 #ifndef CULLBINATTRIB_H
 #define CULLBINATTRIB_H
@@ -21,32 +20,34 @@
 
 class FactoryParams;
 
-////////////////////////////////////////////////////////////////////
-//       Class : CullBinAttrib
-// Description : Assigns geometry to a particular bin by name.  The
-//               bins must be created separately via the
-//               CullBinManager interface.
-////////////////////////////////////////////////////////////////////
+/**
+ * Assigns geometry to a particular bin by name.  The bins must be created
+ * separately via the CullBinManager interface.
+ */
 class EXPCL_PANDA_PGRAPH CullBinAttrib : public RenderAttrib {
 private:
   INLINE CullBinAttrib();
 
 PUBLISHED:
-  static CPT(RenderAttrib) make(const string &bin_name, int draw_order);
+  static CPT(RenderAttrib) make(const std::string &bin_name, int draw_order);
   static CPT(RenderAttrib) make_default();
 
-  INLINE const string &get_bin_name() const;
+  INLINE const std::string &get_bin_name() const;
   INLINE int get_draw_order() const;
 
+PUBLISHED:
+  MAKE_PROPERTY(bin_name, get_bin_name);
+  MAKE_PROPERTY(draw_order, get_draw_order);
+
 public:
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
 protected:
   virtual int compare_to_impl(const RenderAttrib *other) const;
   virtual size_t get_hash_impl() const;
 
 private:
-  string _bin_name;
+  std::string _bin_name;
   int _draw_order;
 
 PUBLISHED:
@@ -56,6 +57,7 @@ PUBLISHED:
   virtual int get_slot() const {
     return get_class_slot();
   }
+  MAKE_PROPERTY(class_slot, get_class_slot);
 
 public:
   static void register_with_read_factory();
@@ -64,7 +66,7 @@ public:
 protected:
   static TypedWritable *make_from_bam(const FactoryParams &params);
   void fillin(DatagramIterator &scan, BamReader *manager);
-  
+
 public:
   static TypeHandle get_class_type() {
     return _type_handle;
@@ -73,7 +75,7 @@ public:
     RenderAttrib::init_type();
     register_type(_type_handle, "CullBinAttrib",
                   RenderAttrib::get_class_type());
-    _attrib_slot = register_slot(_type_handle, 100, make_default);
+    _attrib_slot = register_slot(_type_handle, 100, new CullBinAttrib);
   }
   virtual TypeHandle get_type() const {
     return get_class_type();
@@ -88,4 +90,3 @@ private:
 #include "cullBinAttrib.I"
 
 #endif
-

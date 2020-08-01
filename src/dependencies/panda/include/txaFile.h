@@ -1,16 +1,15 @@
-// Filename: txaFile.h
-// Created by:  drose (30Nov00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file txaFile.h
+ * @author drose
+ * @date 2000-11-30
+ */
 
 #ifndef TXAFILE_H
 #define TXAFILE_H
@@ -24,25 +23,23 @@
 
 #include "pvector.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : TxaFile
-// Description : This represents the .txa file (usually textures.txa)
-//               that contains the user instructions for resizing,
-//               grouping, etc. the various textures.
-////////////////////////////////////////////////////////////////////
+/**
+ * This represents the .txa file (usually textures.txa) that contains the user
+ * instructions for resizing, grouping, etc.  the various textures.
+ */
 class TxaFile {
 public:
   TxaFile();
 
-  bool read(istream &in, const string &filename);
+  bool read(std::istream &in, const std::string &filename);
 
   bool match_egg(EggFile *egg_file) const;
   bool match_texture(TextureImage *texture) const;
 
-  void write(ostream &out) const;
+  void write(std::ostream &out) const;
 
 private:
-  static int get_line_or_semicolon(istream &in, string &line);
+  static int get_line_or_semicolon(std::istream &in, std::string &line);
 
   bool parse_group_line(const vector_string &words);
   bool parse_palette_line(const vector_string &words);
@@ -62,4 +59,3 @@ private:
 };
 
 #endif
-

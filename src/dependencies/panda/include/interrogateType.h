@@ -1,16 +1,15 @@
-// Filename: interrogateType.h
-// Created by:  drose (31Jul00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file interrogateType.h
+ * @author drose
+ * @date 2000-07-31
+ */
 
 #ifndef INTERROGATETYPE_H
 #define INTERROGATETYPE_H
@@ -25,26 +24,25 @@ class IndexRemapper;
 class CPPType;
 class CPPScope;
 
-////////////////////////////////////////////////////////////////////
-//       Class : InterrogateType
-// Description : An internal representation of a type.
-////////////////////////////////////////////////////////////////////
+/**
+ * An internal representation of a type.
+ */
 class EXPCL_INTERROGATEDB InterrogateType : public InterrogateComponent {
 public:
-  InterrogateType(InterrogateModuleDef *def = NULL);
+  InterrogateType(InterrogateModuleDef *def = nullptr);
   InterrogateType(const InterrogateType &copy);
   void operator = (const InterrogateType &copy);
 
   INLINE bool is_global() const;
 
   INLINE bool has_scoped_name() const;
-  INLINE const string &get_scoped_name() const;
+  INLINE const std::string &get_scoped_name() const;
 
   INLINE bool has_true_name() const;
-  INLINE const string &get_true_name() const;
+  INLINE const std::string &get_true_name() const;
 
   INLINE bool has_comment() const;
-  INLINE const string &get_comment() const;
+  INLINE const std::string &get_comment() const;
 
   INLINE bool is_nested() const;
   INLINE TypeIndex get_outer_class() const;
@@ -67,15 +65,17 @@ public:
   INLINE int get_array_size() const;
 
   INLINE bool is_enum() const;
+  INLINE bool is_scoped_enum() const;
   INLINE int number_of_enum_values() const;
-  INLINE const string &get_enum_value_name(int n) const;
-  INLINE const string &get_enum_value_scoped_name(int n) const;
-  INLINE const string &get_enum_value_comment(int n) const;
+  INLINE const std::string &get_enum_value_name(int n) const;
+  INLINE const std::string &get_enum_value_scoped_name(int n) const;
+  INLINE const std::string &get_enum_value_comment(int n) const;
   INLINE int get_enum_value(int n) const;
 
   INLINE bool is_struct() const;
   INLINE bool is_class() const;
   INLINE bool is_union() const;
+  INLINE bool is_final() const;
 
   INLINE bool is_fully_defined() const;
   INLINE bool is_unpublished() const;
@@ -83,6 +83,7 @@ public:
   INLINE FunctionIndex get_constructor(int n) const;
   INLINE bool has_destructor() const;
   INLINE bool destructor_is_inherited() const;
+  INLINE bool destructor_is_implicit() const;
   INLINE FunctionIndex get_destructor() const;
   INLINE int number_of_elements() const;
   INLINE ElementIndex get_element(int n) const;
@@ -108,8 +109,8 @@ public:
   INLINE TypeIndex get_nested_type(int n) const;
 
   void merge_with(const InterrogateType &other);
-  void output(ostream &out) const;
-  void input(istream &in);
+  void output(std::ostream &out) const;
+  void input(std::istream &in);
 
   void remap_indices(const IndexRemapper &remap);
 
@@ -138,29 +139,31 @@ private:
     F_unpublished          = 0x100000,
     F_typedef              = 0x200000,
     F_array                = 0x400000,
+    F_scoped_enum          = 0x800000,
+    F_final                =0x1000000,
   };
 
 public:
   int _flags;
 
-  string _scoped_name;
-  string _true_name;
-  string _comment;
+  std::string _scoped_name;
+  std::string _true_name;
+  std::string _comment;
   TypeIndex _outer_class;
   AtomicToken _atomic_token;
   TypeIndex _wrapped_type;
   int _array_size;
 
-  typedef vector<FunctionIndex> Functions;
+  typedef std::vector<FunctionIndex> Functions;
   Functions _constructors;
   FunctionIndex _destructor;
 
-  typedef vector<ElementIndex> Elements;
+  typedef std::vector<ElementIndex> Elements;
   Elements _elements;
   Functions _methods;
   Functions _casts;
 
-  typedef vector<MakeSeqIndex> MakeSeqs;
+  typedef std::vector<MakeSeqIndex> MakeSeqs;
   MakeSeqs _make_seqs;
 
   enum DerivationFlags {
@@ -170,13 +173,13 @@ public:
   };
 
 public:
-  // This nested class must be declared public just so we can declare
-  // the external ostream and istream I/O operator functions, on the
-  // SGI compiler.  Arguably a compiler bug, but what can you do.
+  // This nested class must be declared public just so we can declare the
+  // external ostream and istream IO operator functions, on the SGI compiler.
+  // Arguably a compiler bug, but what can you do.
   class Derivation {
   public:
-    void output(ostream &out) const;
-    void input(istream &in);
+    void output(std::ostream &out) const;
+    void input(std::istream &in);
 
     int _flags;
     TypeIndex _base;
@@ -185,49 +188,49 @@ public:
   };
 
 private:
-  typedef vector<Derivation> Derivations;
+  typedef std::vector<Derivation> Derivations;
   Derivations _derivations;
 
 public:
   // This nested class must also be public, for the same reason.
   class EnumValue {
   public:
-    void output(ostream &out) const;
-    void input(istream &in);
+    void output(std::ostream &out) const;
+    void input(std::istream &in);
 
-    string _name;
-    string _scoped_name;
-    string _comment;
+    std::string _name;
+    std::string _scoped_name;
+    std::string _comment;
     int _value;
   };
 
 private:
-  typedef vector<EnumValue> EnumValues;
+  typedef std::vector<EnumValue> EnumValues;
   EnumValues _enum_values;
 
-  typedef vector<TypeIndex> Types;
+  typedef std::vector<TypeIndex> Types;
   Types _nested_types;
 
 public:
-  // The rest of the members in this class aren't part of the public
-  // interface to interrogate, but are used internally as the
-  // interrogate database is built.  They are valid only during the
-  // session of interrogate that generates the database, and will not
-  // be filled in when the database is reloaded from disk.
+  // The rest of the members in this class aren't part of the public interface
+  // to interrogate, but are used internally as the interrogate database is
+  // built.  They are valid only during the session of interrogate that
+  // generates the database, and will not be filled in when the database is
+  // reloaded from disk.
   CPPType *_cpptype;
   CPPScope *_cppscope;
 
   friend class InterrogateBuilder;
 };
 
-INLINE ostream &operator << (ostream &out, const InterrogateType &type);
-INLINE istream &operator >> (istream &in, InterrogateType &type);
+INLINE std::ostream &operator << (std::ostream &out, const InterrogateType &type);
+INLINE std::istream &operator >> (std::istream &in, InterrogateType &type);
 
-INLINE ostream &operator << (ostream &out, const InterrogateType::Derivation &d);
-INLINE istream &operator >> (istream &in, InterrogateType::Derivation &d);
+INLINE std::ostream &operator << (std::ostream &out, const InterrogateType::Derivation &d);
+INLINE std::istream &operator >> (std::istream &in, InterrogateType::Derivation &d);
 
-INLINE ostream &operator << (ostream &out, const InterrogateType::EnumValue &d);
-INLINE istream &operator >> (istream &in, InterrogateType::EnumValue &d);
+INLINE std::ostream &operator << (std::ostream &out, const InterrogateType::EnumValue &d);
+INLINE std::istream &operator >> (std::istream &in, InterrogateType::EnumValue &d);
 
 #include "interrogateType.I"
 

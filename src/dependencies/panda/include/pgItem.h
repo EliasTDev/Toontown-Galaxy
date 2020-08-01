@@ -1,16 +1,15 @@
-// Filename: pgItem.h
-// Created by:  drose (13Mar02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file pgItem.h
+ * @author drose
+ * @date 2002-03-13
+ */
 
 #ifndef PGITEM_H
 #define PGITEM_H
@@ -41,26 +40,22 @@ class AudioSound;
 class ClipPlaneAttrib;
 class ScissorAttrib;
 
-////////////////////////////////////////////////////////////////////
-//       Class : PGItem
-// Description : This is the base class for all the various kinds of
-//               gui widget objects.
-//
-//               It is a Node which corresponds to a rectangular
-//               region on the screen, and it may have any number of
-//               "state" subgraphs, one of which is rendered at any
-//               given time according to its current state.
-//
-//               The PGItem node must be parented to the scene graph
-//               somewhere beneath a PGTop node in order for this
-//               behavior to work.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is the base class for all the various kinds of gui widget objects.
+ *
+ * It is a Node which corresponds to a rectangular region on the screen, and
+ * it may have any number of "state" subgraphs, one of which is rendered at
+ * any given time according to its current state.
+ *
+ * The PGItem node must be parented to the scene graph somewhere beneath a
+ * PGTop node in order for this behavior to work.
+ */
 class EXPCL_PANDA_PGUI PGItem : public PandaNode {
 PUBLISHED:
-  PGItem(const string &name);
+  explicit PGItem(const std::string &name);
   virtual ~PGItem();
 
-  INLINE void set_name(const string &name);
+  INLINE void set_name(const std::string &name);
 
 protected:
   PGItem(const PGItem &copy);
@@ -82,11 +77,12 @@ protected:
                                GeomTransformer &transformer,
                                Thread *current_thread);
 
-public:
   virtual void xform(const LMatrix4 &mat);
   bool activate_region(const LMatrix4 &transform, int sort,
                        const ClipPlaneAttrib *cpa,
                        const ScissorAttrib *sa);
+
+public:
   INLINE PGMouseWatcherRegion *get_region() const;
 
   virtual void enter_region(const MouseWatcherParameter &param);
@@ -135,45 +131,45 @@ PUBLISHED:
   int get_num_state_defs() const;
   void clear_state_def(int state);
   bool has_state_def(int state) const;
-  NodePath &get_state_def(int state);
+  INLINE NodePath &get_state_def(int state);
   MAKE_SEQ(get_state_defs, get_num_state_defs, get_state_def);
   NodePath instance_to_state_def(int state, const NodePath &path);
 
   PGFrameStyle get_frame_style(int state);
   void set_frame_style(int state, const PGFrameStyle &style);
 
-  INLINE const string &get_id() const;
-  INLINE void set_id(const string &id);
+  INLINE const std::string &get_id() const;
+  INLINE void set_id(const std::string &id);
 
-  INLINE static string get_enter_prefix();
-  INLINE static string get_exit_prefix();
-  INLINE static string get_within_prefix();
-  INLINE static string get_without_prefix();
-  INLINE static string get_focus_in_prefix();
-  INLINE static string get_focus_out_prefix();
-  INLINE static string get_press_prefix();
-  INLINE static string get_repeat_prefix();
-  INLINE static string get_release_prefix();
-  INLINE static string get_keystroke_prefix();
+  INLINE static std::string get_enter_prefix();
+  INLINE static std::string get_exit_prefix();
+  INLINE static std::string get_within_prefix();
+  INLINE static std::string get_without_prefix();
+  INLINE static std::string get_focus_in_prefix();
+  INLINE static std::string get_focus_out_prefix();
+  INLINE static std::string get_press_prefix();
+  INLINE static std::string get_repeat_prefix();
+  INLINE static std::string get_release_prefix();
+  INLINE static std::string get_keystroke_prefix();
 
-  INLINE string get_enter_event() const;
-  INLINE string get_exit_event() const;
-  INLINE string get_within_event() const;
-  INLINE string get_without_event() const;
-  INLINE string get_focus_in_event() const;
-  INLINE string get_focus_out_event() const;
-  INLINE string get_press_event(const ButtonHandle &button) const;
-  INLINE string get_repeat_event(const ButtonHandle &button) const;
-  INLINE string get_release_event(const ButtonHandle &button) const;
-  INLINE string get_keystroke_event() const;
+  INLINE std::string get_enter_event() const;
+  INLINE std::string get_exit_event() const;
+  INLINE std::string get_within_event() const;
+  INLINE std::string get_without_event() const;
+  INLINE std::string get_focus_in_event() const;
+  INLINE std::string get_focus_out_event() const;
+  INLINE std::string get_press_event(const ButtonHandle &button) const;
+  INLINE std::string get_repeat_event(const ButtonHandle &button) const;
+  INLINE std::string get_release_event(const ButtonHandle &button) const;
+  INLINE std::string get_keystroke_event() const;
 
   INLINE LMatrix4 get_frame_inv_xform() const;
 
 #ifdef HAVE_AUDIO
-  void set_sound(const string &event, AudioSound *sound);
-  void clear_sound(const string &event);
-  AudioSound *get_sound(const string &event) const;
-  bool has_sound(const string &event) const;
+  void set_sound(const std::string &event, AudioSound *sound);
+  void clear_sound(const std::string &event);
+  AudioSound *get_sound(const std::string &event) const;
+  bool has_sound(const std::string &event) const;
 #endif
 
   static TextNode *get_text_node();
@@ -182,7 +178,7 @@ PUBLISHED:
   INLINE static PGItem *get_focus_item();
 
 protected:
-  void play_sound(const string &event);
+  void play_sound(const std::string &event);
 
   void reduce_region(LVecBase4 &clip, PGItem *obscurer) const;
   void reduce_region(LVecBase4 &frame, PN_stdfloat px, PN_stdfloat py) const;
@@ -192,13 +188,14 @@ protected:
   virtual void frame_changed();
 
 private:
+  NodePath &do_get_state_def(int state);
   void slot_state_def(int state);
   void update_frame(int state);
   void mark_frames_stale();
 
   INLINE static PN_stdfloat compute_area(const LVecBase4 &frame);
-  INLINE static void compare_largest(const LVecBase4 *&largest, 
-                                     PN_stdfloat &largest_area, 
+  INLINE static void compare_largest(const LVecBase4 *&largest,
+                                     PN_stdfloat &largest_area,
                                      const LVecBase4 *new_frame);
 
   typedef pvector<LVecBase2> ClipPoints;
@@ -220,7 +217,7 @@ private:
   };
   int _flags;
 
-  PT(PGMouseWatcherRegion) _region;
+  PT(PGMouseWatcherRegion) const _region;
 
   LMatrix4 _frame_inv_xform;
 
@@ -236,7 +233,7 @@ private:
   StateDefs _state_defs;
 
 #ifdef HAVE_AUDIO
-  typedef pmap<string, PT(AudioSound) > Sounds;
+  typedef pmap<std::string, PT(AudioSound) > Sounds;
   Sounds _sounds;
 #endif
 

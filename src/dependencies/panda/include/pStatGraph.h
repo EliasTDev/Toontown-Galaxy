@@ -1,16 +1,15 @@
-// Filename: pStatGraph.h
-// Created by:  drose (19Jul00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file pStatGraph.h
+ * @author drose
+ * @date 2000-07-19
+ */
 
 #ifndef PSTATGRAPH_H
 #define PSTATGRAPH_H
@@ -27,12 +26,10 @@
 
 class PStatView;
 
-////////////////////////////////////////////////////////////////////
-//       Class : PStatGraph
-// Description : This is an abstract base class for several different
-//               kinds of graphs that have a few things in common,
-//               like labels and guide bars.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is an abstract base class for several different kinds of graphs that
+ * have a few things in common, like labels and guide bars.
+ */
 class PStatGraph {
 public:
   PStatGraph(PStatMonitor *monitor, int xsize, int ysize);
@@ -42,7 +39,7 @@ public:
 
   INLINE int get_num_labels() const;
   INLINE int get_label_collector(int n) const;
-  INLINE string get_label_name(int n) const;
+  INLINE std::string get_label_name(int n) const;
   INLINE LRGBColor get_label_color(int n) const;
 
   INLINE void set_target_frame_rate(double frame_rate);
@@ -56,14 +53,14 @@ public:
     GBS_target,
     GBS_user,
   };
-  
+
   class GuideBar {
   public:
-    GuideBar(double height, const string &label, GuideBarStyle style);
+    GuideBar(double height, const std::string &label, GuideBarStyle style);
     GuideBar(const GuideBar &copy);
 
     double _height;
-    string _label;
+    std::string _label;
     GuideBarStyle _style;
   };
 
@@ -86,12 +83,12 @@ public:
 
   INLINE void set_guide_bar_units(int unit_mask);
   INLINE int get_guide_bar_units() const;
-  INLINE void set_guide_bar_unit_name(const string &unit_name);
-  INLINE const string &get_guide_bar_unit_name() const;
+  INLINE void set_guide_bar_unit_name(const std::string &unit_name);
+  INLINE const std::string &get_guide_bar_unit_name() const;
 
-  static string format_number(double value);
-  static string format_number(double value, int guide_bar_units,
-                              const string &unit_name = string());
+  static std::string format_number(double value);
+  static std::string format_number(double value, int guide_bar_units,
+                              const std::string &unit_name = std::string());
 
 protected:
   virtual void normal_guide_bars()=0;
@@ -108,15 +105,15 @@ protected:
   int _xsize;
   int _ysize;
 
-  // Table of the collectors that should be drawn as labels, in order
-  // from bottom to top.
+  // Table of the collectors that should be drawn as labels, in order from
+  // bottom to top.
   typedef vector_int Labels;
   Labels _labels;
 
   typedef pvector<GuideBar> GuideBars;
   GuideBars _guide_bars;
   int _guide_bar_units;
-  string _unit_name;
+  std::string _unit_name;
 };
 
 #include "pStatGraph.I"

@@ -1,16 +1,15 @@
-// Filename: curveFitter.h
-// Created by:  drose (17Sep98)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file curveFitter.h
+ * @author drose
+ * @date 1998-09-17
+ */
 
 #ifndef CURVEFITTER_H
 #define CURVEFITTER_H
@@ -28,11 +27,10 @@ class HermiteCurve;
 class ParametricCurve;
 class NurbsCurve;
 
-////////////////////////////////////////////////////////////////////
-//       Class : CurveFitter
-// Description :
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDA_GOBJ CurveFitter {
+/**
+ *
+ */
+class EXPCL_PANDA_PARAMETRICS CurveFitter {
 PUBLISHED:
   CurveFitter();
   ~CurveFitter();
@@ -58,14 +56,14 @@ PUBLISHED:
   PT(ParametricCurveCollection) make_hermite() const;
   PT(ParametricCurveCollection) make_nurbs() const;
 
-  void output(ostream &out) const;
-  void write(ostream &out) const;
+  void output(std::ostream &out) const;
+  void write(std::ostream &out) const;
 
 public:
   class DataPoint {
   public:
     INLINE DataPoint();
-    INLINE void output(ostream &out) const;
+    INLINE void output(std::ostream &out) const;
     INLINE bool operator < (const DataPoint &other) const;
 
     PN_stdfloat _t;
@@ -93,12 +91,12 @@ private:
   static TypeHandle _type_handle;
 };
 
-INLINE ostream &operator << (ostream &out, const CurveFitter::DataPoint &dp) {
+INLINE std::ostream &operator << (std::ostream &out, const CurveFitter::DataPoint &dp) {
   dp.output(out);
   return out;
 }
 
-INLINE ostream &operator << (ostream &out, const CurveFitter &cf) {
+INLINE std::ostream &operator << (std::ostream &out, const CurveFitter &cf) {
   cf.output(out);
   return out;
 }

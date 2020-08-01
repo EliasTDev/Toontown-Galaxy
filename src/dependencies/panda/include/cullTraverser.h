@@ -1,16 +1,15 @@
-// Filename: cullTraverser.h
-// Created by:  drose (23eb02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file cullTraverser.h
+ * @author drose
+ * @date 2002-02-23
+ */
 
 #ifndef CULLTRAVERSER_H
 #define CULLTRAVERSER_H
@@ -37,14 +36,12 @@ class CullTraverserData;
 class PortalClipper;
 class NodePath;
 
-////////////////////////////////////////////////////////////////////
-//       Class : CullTraverser
-// Description : This object performs a depth-first traversal of the
-//               scene graph, with optional view-frustum culling,
-//               collecting CullState and searching for GeomNodes.
-//               Each renderable Geom encountered is passed along with
-//               its associated RenderState to the CullHandler object.
-////////////////////////////////////////////////////////////////////
+/**
+ * This object performs a depth-first traversal of the scene graph, with
+ * optional view-frustum culling, collecting CullState and searching for
+ * GeomNodes.  Each renderable Geom encountered is passed along with its
+ * associated RenderState to the CullHandler object.
+ */
 class EXPCL_PANDA_PGRAPH CullTraverser : public TypedReferenceCount {
 PUBLISHED:
   CullTraverser();
@@ -58,7 +55,7 @@ PUBLISHED:
                          bool dr_incomplete_render);
   INLINE SceneSetup *get_scene() const;
   INLINE bool has_tag_state_key() const;
-  INLINE const string &get_tag_state_key() const;
+  INLINE const std::string &get_tag_state_key() const;
 
   INLINE void set_camera_mask(const DrawMask &camera_mask);
   INLINE const DrawMask &get_camera_mask() const;
@@ -112,16 +109,13 @@ private:
   static CPT(RenderState) get_bounds_outer_viz_state();
   static CPT(RenderState) get_bounds_inner_viz_state();
   static CPT(RenderState) get_depth_offset_state();
-  void start_decal(const CullTraverserData &data);
-  CullableObject *r_get_decals(CullTraverserData &data,
-                               CullableObject *decals);
 
   GraphicsStateGuardianBase *_gsg;
   Thread *_current_thread;
   PT(SceneSetup) _scene_setup;
   DrawMask _camera_mask;
   bool _has_tag_state_key;
-  string _tag_state_key;
+  std::string _tag_state_key;
   CPT(RenderState) _initial_state;
   PT(GeometricBoundingVolume) _view_frustum;
   CullHandler *_cull_handler;

@@ -1,16 +1,15 @@
-// Filename: dcNumericRange.h
-// Created by:  drose (21Jun04)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file dcNumericRange.h
+ * @author drose
+ * @date 2004-06-21
+ */
 
 #ifndef DCNUMERICRANGE_H
 #define DCNUMERICRANGE_H
@@ -19,14 +18,12 @@
 #include "hashGenerator.h"
 #include "dcPacker.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : DCNumericRange
-// Description : Represents a range of legal integer or floating-point
-//               values.  This is used to constrain simple numeric
-//               types, as well as array sizes.
-////////////////////////////////////////////////////////////////////
+/**
+ * Represents a range of legal integer or floating-point values.  This is used
+ * to constrain simple numeric types, as well as array sizes.
+ */
 template <class NUM>
-class DCNumericRange {
+class EXPCL_DIRECT_DCPARSER DCNumericRange {
 public:
   typedef NUM Number;
 
@@ -35,20 +32,20 @@ public:
   INLINE DCNumericRange(const DCNumericRange &copy);
   INLINE void operator = (const DCNumericRange &copy);
 
-  bool is_in_range(Number num) const;
+  INLINE bool is_in_range(Number num) const;
   INLINE void validate(Number num, bool &range_error) const;
 
   INLINE bool has_one_value() const;
   INLINE Number get_one_value() const;
 
-  void generate_hash(HashGenerator &hashgen) const;
+  INLINE void generate_hash(HashGenerator &hashgen) const;
 
-  void output(ostream &out, Number divisor = 1) const;
-  void output_char(ostream &out, Number divisor = 1) const;
+  INLINE void output(std::ostream &out, Number divisor = 1) const;
+  INLINE void output_char(std::ostream &out, Number divisor = 1) const;
 
 public:
   INLINE void clear();
-  bool add_range(Number min, Number max);
+  INLINE bool add_range(Number min, Number max);
 
   INLINE bool is_empty() const;
   INLINE int get_num_ranges() const;
@@ -63,8 +60,8 @@ private:
     Number _min;
     Number _max;
   };
-  INLINE void output_minmax(ostream &out, Number divisor, const MinMax &range) const;
-  INLINE void output_minmax_char(ostream &out, const MinMax &range) const;
+  INLINE void output_minmax(std::ostream &out, Number divisor, const MinMax &range) const;
+  INLINE void output_minmax_char(std::ostream &out, const MinMax &range) const;
 
   typedef pvector<MinMax> Ranges;
   Ranges _ranges;
@@ -74,8 +71,8 @@ private:
 
 typedef DCNumericRange<int> DCIntRange;
 typedef DCNumericRange<unsigned int> DCUnsignedIntRange;
-typedef DCNumericRange<PN_int64> DCInt64Range;
-typedef DCNumericRange<PN_uint64> DCUnsignedInt64Range;
+typedef DCNumericRange<int64_t> DCInt64Range;
+typedef DCNumericRange<uint64_t> DCUnsignedInt64Range;
 typedef DCNumericRange<double> DCDoubleRange;
 
 #endif

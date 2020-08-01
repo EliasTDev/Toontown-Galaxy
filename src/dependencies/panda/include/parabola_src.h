@@ -1,30 +1,26 @@
-// Filename: parabola_src.h
-// Created by:  drose (10Oct07)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file parabola_src.h
+ * @author drose
+ * @date 2007-10-10
+ */
 
-////////////////////////////////////////////////////////////////////
-//       Class : LParabola
-// Description : An abstract mathematical description of a parabola,
-//               particularly useful for describing arcs of
-//               projectiles.
-//
-//               The parabolic equation, given parametrically here, is
-//               P = At^2 + Bt + C.
-////////////////////////////////////////////////////////////////////
+/**
+ * An abstract mathematical description of a parabola, particularly useful for
+ * describing arcs of projectiles.
+ *
+ * The parabolic equation, given parametrically here, is P = At^2 + Bt + C.
+ */
 class EXPCL_PANDA_MATHUTIL FLOATNAME(LParabola) {
 PUBLISHED:
   INLINE_MATHUTIL FLOATNAME(LParabola)();
-  INLINE_MATHUTIL FLOATNAME(LParabola)(const FLOATNAME(LVecBase3) &a, 
+  INLINE_MATHUTIL FLOATNAME(LParabola)(const FLOATNAME(LVecBase3) &a,
                                       const FLOATNAME(LVecBase3) &b,
                                       const FLOATNAME(LVecBase3) &c);
   INLINE_MATHUTIL FLOATNAME(LParabola)(const FLOATNAME(LParabola) &copy);
@@ -39,8 +35,8 @@ PUBLISHED:
 
   INLINE_MATHUTIL FLOATNAME(LPoint3) calc_point(FLOATTYPE t) const;
 
-  void output(ostream &out) const;
-  void write(ostream &out, int indent_level = 0) const;
+  void output(std::ostream &out) const;
+  void write(std::ostream &out, int indent_level = 0) const;
 
   void write_datagram_fixed(Datagram &destination) const;
   void read_datagram_fixed(DatagramIterator &source);
@@ -51,8 +47,8 @@ private:
   FLOATNAME(LVecBase3) _a, _b, _c;
 };
 
-inline ostream &
-operator << (ostream &out, const FLOATNAME(LParabola) &p) {
+inline std::ostream &
+operator << (std::ostream &out, const FLOATNAME(LParabola) &p) {
   p.output(out);
   return out;
 }

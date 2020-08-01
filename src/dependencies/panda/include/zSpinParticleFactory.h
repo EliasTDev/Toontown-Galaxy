@@ -1,27 +1,25 @@
-// Filename: zSpinParticleFactory.h
-// Created by:  charles (16Aug00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file zSpinParticleFactory.h
+ * @author charles
+ * @date 2000-08-16
+ */
 
 #ifndef ZSPINPARTICLEFACTORY_H
 #define ZSPINPARTICLEFACTORY_H
 
 #include "baseParticleFactory.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : ZSpinParticleFactory
-// Description :
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAPHYSICS ZSpinParticleFactory : public BaseParticleFactory {
+/**
+ *
+ */
+class EXPCL_PANDA_PARTICLESYSTEM ZSpinParticleFactory : public BaseParticleFactory {
 PUBLISHED:
   ZSpinParticleFactory();
   ZSpinParticleFactory(const ZSpinParticleFactory &copy);
@@ -46,8 +44,8 @@ PUBLISHED:
   INLINE void enable_angular_velocity(bool bEnabled);
   INLINE bool get_angular_velocity_enabled() const;
 
-  virtual void output(ostream &out) const;
-  virtual void write(ostream &out, int indent=0) const;
+  virtual void output(std::ostream &out) const;
+  virtual void write(std::ostream &out, int indent=0) const;
 
 private:
   PN_stdfloat _initial_angle;

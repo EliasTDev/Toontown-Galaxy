@@ -1,16 +1,15 @@
-// Filename: sequenceNode.h
-// Created by:  drose (06Mar02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file sequenceNode.h
+ * @author drose
+ * @date 2002-03-06
+ */
 
 #ifndef SEQUENCENODE_H
 #define SEQUENCENODE_H
@@ -21,14 +20,13 @@
 #include "animInterface.h"
 #include "clockObject.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : SequenceNode
-// Description : A node that automatically cycles through rendering
-//               each one of its children according to its frame rate.
-////////////////////////////////////////////////////////////////////
+/**
+ * A node that automatically cycles through rendering each one of its children
+ * according to its frame rate.
+ */
 class EXPCL_PANDA_PGRAPHNODES SequenceNode : public SelectiveChildNode, public AnimInterface {
 PUBLISHED:
-  INLINE SequenceNode(const string &name);
+  INLINE explicit SequenceNode(const std::string &name);
 
 protected:
   SequenceNode(const SequenceNode &copy);
@@ -36,6 +34,8 @@ protected:
 PUBLISHED:
   virtual int get_num_frames() const;
   INLINE void set_frame_rate(double frame_rate);
+
+  MAKE_PROPERTY(frame_rate, get_frame_rate, set_frame_rate);
 
 public:
   virtual PandaNode *make_copy() const;
@@ -47,7 +47,7 @@ public:
   virtual bool has_single_child_visibility() const;
   virtual int get_visible_child() const;
 
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
 public:
   static void register_with_read_factory();

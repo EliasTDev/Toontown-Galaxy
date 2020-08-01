@@ -1,9 +1,8 @@
 
-from cPickle import dumps, loads
-
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.PyDatagram import PyDatagram
 from direct.showbase.Messenger import Messenger
+from pickle import dumps, loads
 
 
 class NetMessenger(Messenger):

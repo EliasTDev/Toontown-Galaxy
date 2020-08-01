@@ -1,16 +1,15 @@
-// Filename: collisionVisualizer.h
-// Created by:  drose (16Apr03)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file collisionVisualizer.h
+ * @author drose
+ * @date 2003-04-16
+ */
 
 #ifndef COLLISIONVISUALIZER_H
 #define COLLISIONVISUALIZER_H
@@ -21,22 +20,22 @@
 #include "collisionSolid.h"
 #include "nodePath.h"
 #include "pmap.h"
+#include "lightMutex.h"
 
 #ifdef DO_COLLISION_RECORDING
 
-////////////////////////////////////////////////////////////////////
-//       Class : CollisionVisualizer
-// Description : This class is used to help debug the work the
-//               collisions system is doing.  It shows the polygons
-//               that are detected as collisions, as well as those
-//               that are simply considered for collisions.
-//
-//               It may be parented anywhere in the scene graph where
-//               it will be rendered to achieve this.
-////////////////////////////////////////////////////////////////////
+/**
+ * This class is used to help debug the work the collisions system is doing.
+ * It shows the polygons that are detected as collisions, as well as those
+ * that are simply considered for collisions.
+ *
+ * It may be parented anywhere in the scene graph where it will be rendered to
+ * achieve this.
+ */
 class EXPCL_PANDA_COLLIDE CollisionVisualizer : public PandaNode, public CollisionRecorder {
-PUBLISHED:
-  CollisionVisualizer(const string &name);
+public:
+  explicit CollisionVisualizer(const std::string &name);
+  CollisionVisualizer(const CollisionVisualizer &copy);
   virtual ~CollisionVisualizer();
 
   INLINE void set_point_scale(PN_stdfloat point_scale);
@@ -52,7 +51,7 @@ public:
   virtual PandaNode *make_copy() const;
   virtual bool cull_callback(CullTraverser *trav, CullTraverserData &data);
   virtual bool is_renderable() const;
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
   // from parent class CollisionRecorder.
   virtual void begin_traversal();
@@ -88,6 +87,7 @@ private:
     Points _points;
   };
 
+  LightMutex _lock;
   typedef pmap<CPT(TransformState), VizInfo> Data;
   Data _data;
 
@@ -117,6 +117,6 @@ private:
 
 #include "collisionVisualizer.I"
 
-#endif  // DO_COLLISION_RECORDING  
+#endif  // DO_COLLISION_RECORDING
 
 #endif

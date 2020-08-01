@@ -1,49 +1,46 @@
-"""Undocumented Module"""
+"""Contains the EventManager class.  See :mod:`.EventManagerGlobal` for the
+global eventMgr instance."""
 
 __all__ = ['EventManager']
 
 
-from MessengerGlobal import *
+from .MessengerGlobal import *
 from direct.directnotify.DirectNotifyGlobal import *
 from direct.task.TaskManagerGlobal import taskMgr
 from panda3d.core import PStatCollector, EventQueue, EventHandler
+from panda3d.core import ConfigVariableBool
 
 class EventManager:
 
     notify = None
 
-    # delayed import, since this is imported by the Toontown Launcher
-    # before the complete PandaModules have been downloaded.
-    PStatCollector = None
-    
     def __init__(self, eventQueue = None):
         """
         Create a C++ event queue and handler
         """
         # Make a notify category for this class (unless there already is one)
-        if (EventManager.notify == None):
+        if EventManager.notify is None:
             EventManager.notify = directNotify.newCategory("EventManager")
 
         self.eventQueue = eventQueue
         self.eventHandler = None
 
-        self._wantPstats = None # no config at this point
+        self._wantPstats = ConfigVariableBool('pstats-eventmanager', False)
 
     def doEvents(self):
         """
         Process all the events on the C++ event queue
         """
-        if self._wantPstats is None:
-            self._wantPstats = config.GetBool('pstats-eventmanager', 0)
-            EventManager.PStatCollector = PStatCollector
         # use different methods for handling events with and without pstats tracking
         # for efficiency
         if self._wantPstats:
             processFunc = self.processEventPstats
         else:
             processFunc = self.processEvent
-        while (not self.eventQueue.isQueueEmpty()):
-            processFunc(self.eventQueue.dequeueEvent())
+        isEmptyFunc = self.eventQueue.isQueueEmpty
+        dequeueFunc = self.eventQueue.dequeueEvent
+        while not isEmptyFunc():
+            processFunc(dequeueFunc())
 
     def eventLoopTask(self, task):
         """
@@ -73,7 +70,7 @@ class EventManager:
             # Must be some user defined type, return the ptr
             # which will be downcast to that type.
             return eventParameter.getPtr()
-        
+
     def processEvent(self, event):
         """
         Process a C++ event
@@ -83,13 +80,13 @@ class EventManager:
         # ******** Duplicate any changes in processEventPstats *********
         # **************************************************************
         # Get the event name
-        eventName = event.getName()
+        eventName = event.name
         if eventName:
             paramList = []
-            for i in range(event.getNumParameters()):
-                eventParameter = event.getParameter(i)
+            for eventParameter in event.parameters:
                 eventParameterData = self.parseEventParameter(eventParameter)
                 paramList.append(eventParameterData)
+
             # Do not print the new frame debug, it is too noisy!
             if (EventManager.notify.getDebug() and eventName != 'NewFrame'):
                 EventManager.notify.debug('received C++ event named: ' + eventName +
@@ -97,16 +94,15 @@ class EventManager:
             # **************************************************************
             # ******** Duplicate any changes in processEventPstats *********
             # **************************************************************
-            # Send the event, we used to send it with the event 
+            # Send the event, we used to send it with the event
             # name as a parameter, but now you can use extraArgs for that
-            if paramList:
-                messenger.send(eventName, paramList)
-            else:
-                messenger.send(eventName)
+            messenger.send(eventName, paramList)
+
             # Also send the event down into C++ land
-            if self.eventHandler:
-                self.eventHandler.dispatchEvent(event)
-            
+            handler = self.eventHandler
+            if handler:
+                handler.dispatchEvent(event)
+
         else:
             # An unnamed event from C++ is probably a bad thing
             EventManager.notify.warning('unnamed event in processEvent')
@@ -120,61 +116,52 @@ class EventManager:
         # ******** Duplicate any changes in processEvent *********
         # ********************************************************
         # Get the event name
-        eventName = event.getName()
+        eventName = event.name
         if eventName:
             paramList = []
-            for i in range(event.getNumParameters()):
-                eventParameter = event.getParameter(i)
+            for eventParameter in event.parameters:
                 eventParameterData = self.parseEventParameter(eventParameter)
                 paramList.append(eventParameterData)
+
             # Do not print the new frame debug, it is too noisy!
             if (EventManager.notify.getDebug() and eventName != 'NewFrame'):
                 EventManager.notify.debug('received C++ event named: ' + eventName +
                                           ' parameters: ' + repr(paramList))
-            # Send the event, we used to send it with the event 
+            # Send the event, we used to send it with the event
             # name as a parameter, but now you can use extraArgs for that
             # ********************************************************
             # ******** Duplicate any changes in processEvent *********
             # ********************************************************
-            if self._wantPstats:
-                name = eventName
-                hyphen = name.find('-')
-                if hyphen >= 0:
-                    name = name[0:hyphen]
-                pstatCollector = EventManager.PStatCollector('App:Show code:eventManager:' + name)
-                pstatCollector.start()
-                if self.eventHandler:
-                    cppPstatCollector = EventManager.PStatCollector(
-                        'App:Show code:eventManager:' + name + ':C++')
-
-            if paramList:
-                messenger.send(eventName, paramList)
-            else:
-                messenger.send(eventName)
-            # Also send the event down into C++ land
+            name = eventName
+            hyphen = name.find('-')
+            if hyphen >= 0:
+                name = name[0:hyphen]
+            pstatCollector = PStatCollector('App:Show code:eventManager:' + name)
+            pstatCollector.start()
             if self.eventHandler:
-                if self._wantPstats:
-                    cppPstatCollector.start()
-                self.eventHandler.dispatchEvent(event)
-            # ********************************************************
-            # ******** Duplicate any changes in processEvent *********
-            # ********************************************************
+                cppPstatCollector = PStatCollector(
+                    'App:Show code:eventManager:' + name + ':C++')
 
-            if self._wantPstats:
-                if self.eventHandler:
-                    cppPstatCollector.stop()
-                pstatCollector.stop()
-            
+            messenger.send(eventName, paramList)
+
+            # Also send the event down into C++ land
+            handler = self.eventHandler
+            if handler:
+                cppPstatCollector.start()
+                handler.dispatchEvent(event)
+                cppPstatCollector.stop()
+
+            pstatCollector.stop()
+
         else:
             # An unnamed event from C++ is probably a bad thing
             EventManager.notify.warning('unnamed event in processEvent')
 
-
     def restart(self):
-        if self.eventQueue == None:
+        if self.eventQueue is None:
             self.eventQueue = EventQueue.getGlobalEventQueue()
 
-        if self.eventHandler == None:
+        if self.eventHandler is None:
             if self.eventQueue == EventQueue.getGlobalEventQueue():
                 # If we are using the global event queue, then we also
                 # want to use the global event handler.

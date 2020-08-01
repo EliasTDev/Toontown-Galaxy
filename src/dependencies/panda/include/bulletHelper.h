@@ -1,16 +1,15 @@
-// Filename: bulletHelper.h
-// Created by:  enn0x (19Jan11)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file bulletHelper.h
+ * @author enn0x
+ * @date 2011-01-19
+ */
 
 #ifndef __BULLET_HELPER_H__
 #define __BULLET_HELPER_H__
@@ -24,10 +23,11 @@
 #include "nodePath.h"
 #include "nodePathCollection.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : BulletHelper
-// Description : 
-////////////////////////////////////////////////////////////////////
+class BulletSoftBodyNode;
+
+/**
+ *
+ */
 class EXPCL_PANDABULLET BulletHelper {
 
 PUBLISHED:
@@ -44,14 +44,17 @@ PUBLISHED:
   static CPT(GeomVertexFormat) add_sb_flip_column(const GeomVertexFormat *format);
 
   // Geom utils
-  static PT(Geom) make_geom_from_faces(BulletSoftBodyNode *node, 
-      const GeomVertexFormat *format=NULL,
+  static PT(Geom) make_geom_from_faces(BulletSoftBodyNode *node,
+      const GeomVertexFormat *format=nullptr,
       bool two_sided=false);
 
   static PT(Geom) make_geom_from_links(BulletSoftBodyNode *node,
-      const GeomVertexFormat *format=NULL);
+      const GeomVertexFormat *format=nullptr);
 
   static void make_texcoords_for_patch(Geom *geom, int resx, int resy);
+
+  MAKE_PROPERTY(sb_index, get_sb_index);
+  MAKE_PROPERTY(sb_flip, get_sb_flip);
 
 private:
   static PT(InternalName) _sb_index;
@@ -59,7 +62,7 @@ private:
 
   static bool is_tangible(CollisionNode *cnode);
 
-  static PT(Geom) make_geom(BulletSoftBodyNode *node, 
+  static PT(Geom) make_geom(BulletSoftBodyNode *node,
       const GeomVertexFormat *format,
       bool use_faces,
       bool two_sided);

@@ -1,16 +1,15 @@
-// Filename: cMetaInterval.h
-// Created by:  drose (27Aug02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file cMetaInterval.h
+ * @author drose
+ * @date 2002-08-27
+ */
 
 #ifndef CMETAINTERVAL_H
 #define CMETAINTERVAL_H
@@ -25,15 +24,14 @@
 #include "pset.h"
 #include <math.h>
 
-////////////////////////////////////////////////////////////////////
-//       Class : CMetaInterval
-// Description : This interval contains a list of nested intervals,
-//               each of which has its own begin and end times.  Some
-//               of them may overlap and some of them may not.
-////////////////////////////////////////////////////////////////////
-class EXPCL_DIRECT CMetaInterval : public CInterval {
+/**
+ * This interval contains a list of nested intervals, each of which has its
+ * own begin and end times.  Some of them may overlap and some of them may
+ * not.
+ */
+class EXPCL_DIRECT_INTERVAL CMetaInterval : public CInterval {
 PUBLISHED:
-  CMetaInterval(const string &name);
+  explicit CMetaInterval(const std::string &name);
   virtual ~CMetaInterval();
 
   enum RelativeStart {
@@ -46,20 +44,20 @@ PUBLISHED:
   INLINE double get_precision() const;
 
   void clear_intervals();
-  int push_level(const string &name,
+  int push_level(const std::string &name,
                  double rel_time, RelativeStart rel_to);
-  int add_c_interval(CInterval *c_interval, 
-                     double rel_time = 0.0f, 
+  int add_c_interval(CInterval *c_interval,
+                     double rel_time = 0.0f,
                      RelativeStart rel_to = RS_previous_end);
-  int add_ext_index(int ext_index, const string &name,
+  int add_ext_index(int ext_index, const std::string &name,
                     double duration, bool open_ended,
                     double rel_time, RelativeStart rel_to);
   int pop_level(double duration = -1.0);
 
-  bool set_interval_start_time(const string &name, double rel_time, 
+  bool set_interval_start_time(const std::string &name, double rel_time,
                                RelativeStart rel_to = RS_level_begin);
-  double get_interval_start_time(const string &name) const;
-  double get_interval_end_time(const string &name) const;
+  double get_interval_start_time(const std::string &name) const;
+  double get_interval_end_time(const std::string &name) const;
 
   enum DefType {
     DT_c_interval,
@@ -88,8 +86,8 @@ PUBLISHED:
   INLINE EventType get_event_type() const;
   void pop_event();
 
-  virtual void write(ostream &out, int indent_level) const;
-  void timeline(ostream &out) const;
+  virtual void write(std::ostream &out, int indent_level) const;
+  void timeline(std::ostream &out) const;
 
 protected:
   virtual void do_recompute();
@@ -100,7 +98,7 @@ private:
     DefType _type;
     PT(CInterval) _c_interval;
     int _ext_index;
-    string _ext_name;
+    std::string _ext_name;
     double _ext_duration;
     bool _ext_open_ended;
     double _rel_time;
@@ -134,9 +132,9 @@ private:
 
   typedef pvector<IntervalDef> Defs;
   typedef pvector<PlaybackEvent *> PlaybackEvents;
-  // ActiveEvents must be either a list or a vector--something that
-  // preserves order--so we can call priv_step() on the currently
-  // active intervals in the order they were encountered.
+  // ActiveEvents must be either a list or a vector--something that preserves
+  // order--so we can call priv_step() on the currently active intervals in
+  // the order they were encountered.
   typedef plist<PlaybackEvent *> ActiveEvents;
   typedef pdeque<EventQueueEntry> EventQueue;
 
@@ -161,7 +159,7 @@ private:
   int get_begin_time(const IntervalDef &def, int level_begin,
                      int previous_begin, int previous_end);
 
-  void write_event_desc(ostream &out, const IntervalDef &def, 
+  void write_event_desc(std::ostream &out, const IntervalDef &def,
                         int &extra_indent_level) const;
 
 
@@ -178,12 +176,11 @@ private:
 
   // This is the queue of events that have occurred due to a recent
   // priv_initialize(), priv_step(), etc., but have not yet been serviced, due
-  // to an embedded external (e.g. Python) interval that the scripting
-  // language must service.  This queue should be considered precious,
-  // and should never be arbitrarily flushed without servicing all of
-  // its events.
+  // to an embedded external (e.g.  Python) interval that the scripting
+  // language must service.  This queue should be considered precious, and
+  // should never be arbitrarily flushed without servicing all of its events.
   EventQueue _event_queue;
-  
+
 public:
   static TypeHandle get_class_type() {
     return _type_handle;
@@ -205,4 +202,3 @@ private:
 #include "cMetaInterval.I"
 
 #endif
-

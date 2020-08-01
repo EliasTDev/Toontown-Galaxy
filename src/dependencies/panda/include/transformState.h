@@ -1,16 +1,15 @@
-// Filename: transformState.h
-// Created by:  drose (25Feb02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file transformState.h
+ * @author drose
+ * @date 2002-02-25
+ */
 
 #ifndef TRANSFORMSTATE_H
 #define TRANSFORMSTATE_H
@@ -37,39 +36,31 @@
 class GraphicsStateGuardianBase;
 class FactoryParams;
 
-////////////////////////////////////////////////////////////////////
-//       Class : TransformState
-// Description : Indicates a coordinate-system transform on vertices.
-//               TransformStates are the primary means for storing
-//               transformations on the scene graph.
-//
-//               Transforms may be specified in one of two ways:
-//               componentwise, with a pos-hpr-scale, or with an
-//               arbitrary transform matrix.  If you specify a
-//               transform componentwise, it will remember its
-//               original components.
-//
-//               TransformState objects are managed very much like
-//               RenderState objects.  They are immutable and
-//               reference-counted automatically.
-//
-//               You should not attempt to create or modify a
-//               TransformState object directly.  Instead, call one of
-//               the make() functions to create one for you.  And
-//               instead of modifying a TransformState object, create a
-//               new one.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDA_PGRAPH TransformState FINAL : public NodeCachedReferenceCount {
+/**
+ * Indicates a coordinate-system transform on vertices.  TransformStates are
+ * the primary means for storing transformations on the scene graph.
+ *
+ * Transforms may be specified in one of two ways: componentwise, with a pos-
+ * hpr-scale, or with an arbitrary transform matrix.  If you specify a
+ * transform componentwise, it will remember its original components.
+ *
+ * TransformState objects are managed very much like RenderState objects.
+ * They are immutable and reference-counted automatically.
+ *
+ * You should not attempt to create or modify a TransformState object
+ * directly.  Instead, call one of the make() functions to create one for you.
+ * And instead of modifying a TransformState object, create a new one.
+ */
+class EXPCL_PANDA_PGRAPH TransformState final : public NodeCachedReferenceCount {
 protected:
   TransformState();
 
-private:
-  TransformState(const TransformState &copy);
-  void operator = (const TransformState &copy);
-
 public:
+  TransformState(const TransformState &copy) = delete;
   virtual ~TransformState();
   ALLOC_DELETED_CHAIN(TransformState);
+
+  TransformState &operator = (const TransformState &copy) = delete;
 
 PUBLISHED:
   INLINE bool operator != (const TransformState &other) const;
@@ -156,6 +147,14 @@ PUBLISHED:
   INLINE PN_stdfloat get_shear2d() const;
   INLINE LMatrix3 get_mat3() const;
 
+  MAKE_PROPERTY(pos, get_pos);
+  MAKE_PROPERTY(hpr, get_hpr);
+  MAKE_PROPERTY(quat, get_quat);
+  MAKE_PROPERTY(norm_quat, get_norm_quat);
+  MAKE_PROPERTY(scale, get_scale);
+  MAKE_PROPERTY(shear, get_shear);
+  MAKE_PROPERTY(mat, get_mat);
+
   CPT(TransformState) set_pos(const LVecBase3 &pos) const;
   CPT(TransformState) set_hpr(const LVecBase3 &hpr) const;
   CPT(TransformState) set_quat(const LQuaternion &quat) const;
@@ -182,38 +181,42 @@ PUBLISHED:
   INLINE void node_ref() const;
   INLINE bool node_unref() const;
 
-  INLINE int get_composition_cache_num_entries() const;
-  INLINE int get_invert_composition_cache_num_entries() const;
+  INLINE size_t get_composition_cache_num_entries() const;
+  INLINE size_t get_invert_composition_cache_num_entries() const;
 
-  INLINE int get_composition_cache_size() const;
-  INLINE const TransformState *get_composition_cache_source(int n) const;
-  INLINE const TransformState *get_composition_cache_result(int n) const;
-  INLINE int get_invert_composition_cache_size() const;
-  INLINE const TransformState *get_invert_composition_cache_source(int n) const;
-  INLINE const TransformState *get_invert_composition_cache_result(int n) const;
+  INLINE size_t get_composition_cache_size() const;
+  INLINE const TransformState *get_composition_cache_source(size_t n) const;
+  INLINE const TransformState *get_composition_cache_result(size_t n) const;
+  INLINE size_t get_invert_composition_cache_size() const;
+  INLINE const TransformState *get_invert_composition_cache_source(size_t n) const;
+  INLINE const TransformState *get_invert_composition_cache_result(size_t n) const;
   bool validate_composition_cache() const;
   EXTENSION(PyObject *get_composition_cache() const);
   EXTENSION(PyObject *get_invert_composition_cache() const);
 
-  void output(ostream &out) const;
-  void write(ostream &out, int indent_level) const;
-  void write_composition_cache(ostream &out, int indent_level) const;
+  void output(std::ostream &out) const;
+  void write(std::ostream &out, int indent_level) const;
+  void write_composition_cache(std::ostream &out, int indent_level) const;
 
   static int get_num_states();
   static int get_num_unused_states();
   static int clear_cache();
   static int garbage_collect();
-  static void list_cycles(ostream &out);
-  static void list_states(ostream &out);
+  static void list_cycles(std::ostream &out);
+  static void list_states(std::ostream &out);
   static bool validate_states();
   EXTENSION(static PyObject *get_states());
   EXTENSION(static PyObject *get_unused_states());
-
 
 public:
   static void init_states();
 
   INLINE static void flush_level();
+
+  INLINE void cache_ref_only() const;
+
+protected:
+  INLINE void cache_unref_only() const;
 
 private:
   INLINE bool do_cache_unref() const;
@@ -235,9 +238,7 @@ private:
   static CPT(TransformState) return_unique(TransformState *state);
 
   CPT(TransformState) do_compose(const TransformState *other) const;
-  CPT(TransformState) store_compose(const TransformState *other, const TransformState *result);
   CPT(TransformState) do_invert_compose(const TransformState *other) const;
-  CPT(TransformState) store_invert_compose(const TransformState *other, const TransformState *result);
   void detect_and_break_cycles();
   static bool r_detect_cycles(const TransformState *start_state,
                               const TransformState *current_state,
@@ -252,53 +253,51 @@ private:
   void remove_cache_pointers();
 
 private:
-  // This mutex protects _states.  It also protects any modification
-  // to the cache, which is encoded in _composition_cache and
+  // This mutex protects _states.  It also protects any modification to the
+  // cache, which is encoded in _composition_cache and
   // _invert_composition_cache.
   static LightReMutex *_states_lock;
-  class Empty {
-  };
-  typedef SimpleHashMap<const TransformState *, Empty, indirect_equals_hash<const TransformState *> > States;
-  static States *_states;
+  typedef SimpleHashMap<const TransformState *, std::nullptr_t, indirect_equals_hash<const TransformState *> > States;
+  static States _states;
   static CPT(TransformState) _identity_state;
   static CPT(TransformState) _invalid_state;
 
-  // This iterator records the entry corresponding to this
-  // TransformState object in the above global set.  We keep the index
-  // around so we can remove it when the TransformState destructs.
+  // This iterator records the entry corresponding to this TransformState
+  // object in the above global set.  We keep the index around so we can
+  // remove it when the TransformState destructs.
   int _saved_entry;
 
-  // This data structure manages the job of caching the composition of
-  // two TransformStates.  It's complicated because we have to be sure to
-  // remove the entry if *either* of the input TransformStates destructs.
-  // To implement this, we always record Composition entries in pairs,
-  // one in each of the two involved TransformState objects.
+  // This data structure manages the job of caching the composition of two
+  // TransformStates.  It's complicated because we have to be sure to remove
+  // the entry if *either* of the input TransformStates destructs.  To
+  // implement this, we always record Composition entries in pairs, one in
+  // each of the two involved TransformState objects.
 
-  // The first element of the map is the object we compose with.  This
-  // is not reference counted within this map; instead we store a
-  // companion pointer in the other object, and remove the references
-  // explicitly when either object destructs.
+  // The first element of the map is the object we compose with.  This is not
+  // reference counted within this map; instead we store a companion pointer
+  // in the other object, and remove the references explicitly when either
+  // object destructs.
   class Composition {
   public:
     INLINE Composition();
     INLINE Composition(const Composition &copy);
 
-    // _result is reference counted if and only if it is not the same
-    // pointer as this.
+    // _result is reference counted if and only if it is not the same pointer
+    // as this.
     const TransformState *_result;
   };
 
   typedef SimpleHashMap<const TransformState *, Composition, pointer_hash> CompositionCache;
-  CompositionCache _composition_cache;
-  CompositionCache _invert_composition_cache;
+  mutable CompositionCache _composition_cache;
+  mutable CompositionCache _invert_composition_cache;
 
   // This is used to mark nodes as we visit them to detect cycles.
   UpdateSeq _cycle_detect;
   static UpdateSeq _last_cycle_detect;
 
-  // This keeps track of our current position through the garbage
-  // collection cycle.
-  static int _garbage_index;
+  // This keeps track of our current position through the garbage collection
+  // cycle.
+  static size_t _garbage_index;
 
   static bool _uniquify_matrix;
 
@@ -409,7 +408,11 @@ private:
   friend class Extension<TransformState>;
 };
 
-INLINE ostream &operator << (ostream &out, const TransformState &state) {
+// We can safely redefine this as a no-op.
+template<>
+INLINE void PointerToBase<TransformState>::update_type(To *ptr) {}
+
+INLINE std::ostream &operator << (std::ostream &out, const TransformState &state) {
   state.output(out);
   return out;
 }
@@ -417,4 +420,3 @@ INLINE ostream &operator << (ostream &out, const TransformState &state) {
 #include "transformState.I"
 
 #endif
-

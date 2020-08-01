@@ -1,16 +1,15 @@
-// Filename: openSSLWrapper.h
-// Created by:  drose (05Sep09)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file openSSLWrapper.h
+ * @author drose
+ * @date 2009-09-05
+ */
 
 #ifndef OPENSSLWRAPPER_H
 #define OPENSSLWRAPPER_H
@@ -24,26 +23,27 @@
 #include <winsock2.h>  // must be included prior to including OpenSSL.
 #endif
 
+#ifndef OPENSSL_NO_KRB5
 #define OPENSSL_NO_KRB5
-#include "openssl/ssl.h"
-#include "openssl/rand.h"
-#include "openssl/err.h"
-#include "openssl/x509.h"
-#include "openssl/x509v3.h"
+#endif
+
+#include <openssl/ssl.h>
+#include <openssl/rand.h>
+#include <openssl/err.h>
+#include <openssl/x509.h>
+#include <openssl/x509v3.h>
 
 // Windows may define this macro inappropriately.
 #ifdef X509_NAME
 #undef X509_NAME
 #endif
 
-////////////////////////////////////////////////////////////////////
-//       Class : OpenSSLWrapper
-// Description : Provides an interface wrapper around the OpenSSL
-//               library, to ensure that the library is properly
-//               initialized in the application, and to provide some
-//               hooks into global OpenSSL context data.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAEXPRESS OpenSSLWrapper {
+/**
+ * Provides an interface wrapper around the OpenSSL library, to ensure that
+ * the library is properly initialized in the application, and to provide some
+ * hooks into global OpenSSL context data.
+ */
+class EXPCL_PANDA_EXPRESS OpenSSLWrapper {
 private:
   OpenSSLWrapper();
   ~OpenSSLWrapper();
@@ -54,8 +54,8 @@ PUBLISHED:
   int load_certificates_from_pem_ram(const char *data, size_t data_size);
   int load_certificates_from_der_ram(const char *data, size_t data_size);
 
-  INLINE int load_certificates_from_pem_ram(const string &data);
-  INLINE int load_certificates_from_der_ram(const string &data);
+  INLINE int load_certificates_from_pem_ram(const std::string &data);
+  INLINE int load_certificates_from_der_ram(const std::string &data);
 
   X509_STORE *get_x509_store();
 

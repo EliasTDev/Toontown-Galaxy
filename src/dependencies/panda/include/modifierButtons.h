@@ -1,16 +1,15 @@
-// Filename: modifierButtons.h
-// Created by:  drose (01Mar00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file modifierButtons.h
+ * @author drose
+ * @date 2000-03-01
+ */
 
 #ifndef MODIFIERBUTTONS_H
 #define MODIFIERBUTTONS_H
@@ -20,12 +19,10 @@
 #include "buttonHandle.h"
 #include "pointerToArray.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : ModifierButtons
-// Description : This class monitors the state of a number of
-//               individual buttons and tracks whether each button is
-//               known to be down or up.
-////////////////////////////////////////////////////////////////////
+/**
+ * This class monitors the state of a number of individual buttons and tracks
+ * whether each button is known to be down or up.
+ */
 class EXPCL_PANDA_PUTIL ModifierButtons {
 PUBLISHED:
   ModifierButtons();
@@ -54,6 +51,7 @@ PUBLISHED:
   INLINE int get_num_buttons() const;
   INLINE ButtonHandle get_button(int index) const;
   MAKE_SEQ(get_buttons, get_num_buttons, get_button);
+  MAKE_SEQ_PROPERTY(buttons, get_num_buttons, get_button);
 
   bool button_down(ButtonHandle button);
   bool button_up(ButtonHandle button);
@@ -63,10 +61,10 @@ PUBLISHED:
   INLINE bool is_down(int index) const;
   INLINE bool is_any_down() const;
 
-  string get_prefix() const;
+  std::string get_prefix() const;
 
-  void output(ostream &out) const;
-  void write(ostream &out) const;
+  void output(std::ostream &out) const;
+  void write(std::ostream &out) const;
 
 private:
   void modify_button_list();
@@ -76,7 +74,7 @@ private:
   BitmaskType _state;
 };
 
-INLINE ostream &operator << (ostream &out, const ModifierButtons &mb) {
+INLINE std::ostream &operator << (std::ostream &out, const ModifierButtons &mb) {
   mb.output(out);
   return out;
 }
@@ -84,4 +82,3 @@ INLINE ostream &operator << (ostream &out, const ModifierButtons &mb) {
 #include "modifierButtons.I"
 
 #endif
-

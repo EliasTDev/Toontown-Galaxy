@@ -1,16 +1,20 @@
-# objects that report different types of leaks to the ContainerLeakDetector
+"""Contains objects that report different types of leaks to the
+ContainerLeakDetector.
+"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase.DirectObject import DirectObject
 from direct.showbase.Job import Job
-import __builtin__, gc
+import gc
+import builtins
+
 
 class LeakDetector:
     def __init__(self):
         # put this object just under __builtins__ where the
         # ContainerLeakDetector will find it quickly
-        if not hasattr(__builtin__, "leakDetectors"):
-            __builtin__.leakDetectors = {}
+        if not hasattr(builtins, "leakDetectors"):
+            builtins.leakDetectors = {}
         self._leakDetectorsKey = self.getLeakDetectorKey()
         if __dev__:
             assert self._leakDetectorsKey not in leakDetectors
@@ -52,7 +56,7 @@ class ObjectTypesLeakDetector(LeakDetector):
         self._thisLdGen = 0
 
     def destroy(self):
-        for ld in self._type2ld.itervalues():
+        for ld in self._type2ld.values():
             ld.destroy()
         LeakDetector.destroy(self)
 
@@ -133,10 +137,10 @@ class CppMemoryUsage(LeakDetector):
 class TaskLeakDetectorBase:
     def _getTaskNamePattern(self, taskName):
         # get a generic string pattern from a task name by removing numeric characters
-        for i in xrange(10):
+        for i in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9):
             taskName = taskName.replace('%s' % i, '')
         return taskName
-    
+
 class _TaskNamePatternLeakDetector(LeakDetector, TaskLeakDetectorBase):
     # tracks the number of each individual task type
     # e.g. are we leaking 'examine-<doId>' tasks
@@ -165,7 +169,7 @@ class TaskLeakDetector(LeakDetector, TaskLeakDetectorBase):
         self._taskName2collector = {}
 
     def destroy(self):
-        for taskName, collector in self._taskName2collector.iteritems():
+        for taskName, collector in self._taskName2collector.items():
             collector.destroy()
         del self._taskName2collector
         LeakDetector.destroy(self)
@@ -189,7 +193,7 @@ class TaskLeakDetector(LeakDetector, TaskLeakDetectorBase):
 class MessageLeakDetectorBase:
     def _getMessageNamePattern(self, msgName):
         # get a generic string pattern from a message name by removing numeric characters
-        for i in xrange(10):
+        for i in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9):
             msgName = msgName.replace('%s' % i, '')
         return msgName
 
@@ -266,7 +270,7 @@ class MessageTypesLeakDetector(LeakDetector, MessageLeakDetectorBase):
         if self._createJob:
             self._createJob.destroy()
         self._createJob = None
-        for msgName, detector in self._msgName2detector.iteritems():
+        for msgName, detector in self._msgName2detector.items():
             detector.destroy()
         del self._msgName2detector
         LeakDetector.destroy(self)
@@ -280,7 +284,7 @@ class MessageTypesLeakDetector(LeakDetector, MessageLeakDetectorBase):
         jobMgr.add(self._createJob)
         # are we leaking message types?
         return len(self._msgName2detector)
-    
+
 class _MessageListenerTypeLeakDetector(LeakDetector):
     # tracks the number of each object type that is listening for events
     def __init__(self, typeName):
@@ -342,7 +346,7 @@ class MessageListenerTypesLeakDetector(LeakDetector):
         if self._createJob:
             self._createJob.destroy()
         self._createJob = None
-        for typeName, detector in self._typeName2detector.iteritems():
+        for typeName, detector in self._typeName2detector.items():
             detector.destroy()
         del self._typeName2detector
         LeakDetector.destroy(self)

@@ -1,9 +1,13 @@
-"""Undocumented Module"""
+"""Contains the DirectLabel class.
+
+See the :ref:`directlabel` page in the programming manual for a more in-depth
+explanation and an example of how to use this class.
+"""
 
 __all__ = ['DirectLabel']
 
 from panda3d.core import *
-from DirectFrame import *
+from .DirectFrame import *
 
 class DirectLabel(DirectFrame):
     """
@@ -34,7 +38,7 @@ class DirectLabel(DirectFrame):
 
         # Initialize superclasses
         DirectFrame.__init__(self, parent)
-        
+
         # Call option initialization functions
         self.initialiseoptions(DirectLabel)
 

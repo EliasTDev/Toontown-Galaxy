@@ -1,16 +1,15 @@
-// Filename: eggComment.h
-// Created by:  drose (20Jan99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggComment.h
+ * @author drose
+ * @date 1999-01-20
+ */
 
 #ifndef EGGCOMMENT_H
 #define EGGCOMMENT_H
@@ -19,33 +18,31 @@
 
 #include "eggNode.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggComment
-// Description : A comment that appears in an egg file within a
-//               <Comment> entry.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAEGG EggComment : public EggNode {
+/**
+ * A comment that appears in an egg file within a <Comment> entry.
+ */
+class EXPCL_PANDA_EGG EggComment : public EggNode {
 PUBLISHED:
-  INLINE EggComment(const string &node_name, const string &comment);
+  INLINE explicit EggComment(const std::string &node_name, const std::string &comment);
   INLINE EggComment(const EggComment &copy);
 
-  // You can use the string operators to directly set and manipulate
-  // the comment.
+  // You can use the string operators to directly set and manipulate the
+  // comment.
 
-  INLINE EggComment &operator = (const string &comment);
+  INLINE EggComment &operator = (const std::string &comment);
   INLINE EggComment &operator = (const EggComment &copy);
 
-  INLINE operator const string & () const;
+  INLINE operator const std::string & () const;
 
   // Or, you can set and get it explicitly.
 
-  INLINE void set_comment(const string &comment);
-  INLINE string get_comment() const;
+  INLINE void set_comment(const std::string &comment);
+  INLINE std::string get_comment() const;
 
-  virtual void write(ostream &out, int indent_level) const;
+  virtual void write(std::ostream &out, int indent_level) const;
 
 private:
-  string _comment;
+  std::string _comment;
 
 
 public:

@@ -1,20 +1,19 @@
-// Filename: odeTriMeshData.I
-// Created by:  joswilso (27Dec06)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file odeTriMeshData.I
+ * @author joswilso
+ * @date 2006-12-27
+ */
 
 INLINE OdeTriMeshData::TriMeshDataMap &OdeTriMeshData::
 get_tri_mesh_data_map() {
-  if (_tri_mesh_data_map == (TriMeshDataMap *)NULL) {
+  if (_tri_mesh_data_map == nullptr) {
     _tri_mesh_data_map = new TriMeshDataMap;
   }
   return *_tri_mesh_data_map;
@@ -39,7 +38,9 @@ get(int data_id) {
 
 INLINE void OdeTriMeshData::
 build_single(const void* vertices, int vertex_stride, int vertex_count, const void* indices, int index_count, int tri_stride) {
-  odetrimeshdata_cat.debug() << "build_single(" << vertices << ", " << vertex_stride << ", " << vertex_count << ", " << indices << ", " << index_count << ", " << tri_stride << ")\n";
+  if (odetrimeshdata_cat.is_debug()) {
+    odetrimeshdata_cat.debug() << "build_single(" << vertices << ", " << vertex_stride << ", " << vertex_count << ", " << indices << ", " << index_count << ", " << tri_stride << ")\n";
+  }
   dGeomTriMeshDataBuildSingle(_id, vertices, vertex_stride, vertex_count, indices, index_count, tri_stride);
 }
 

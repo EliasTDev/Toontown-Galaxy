@@ -1,16 +1,15 @@
-// Filename: cppTemplateParameterList.h
-// Created by:  drose (28Oct99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file cppTemplateParameterList.h
+ * @author drose
+ * @date 1999-10-28
+ */
 
 #ifndef CPPTEMPLATEPARAMETERLIST_H
 #define CPPTEMPLATEPARAMETERLIST_H
@@ -24,19 +23,17 @@
 
 class CPPScope;
 
-///////////////////////////////////////////////////////////////////
-//       Class : CPPTemplateParameterList
-// Description : This class serves to store the parameter list for a
-//               template function or class, both for the formal
-//               parameter list (given when the template is defined)
-//               and for the actual parameter list (given when the
-//               template is instantiated).
-////////////////////////////////////////////////////////////////////
+/**
+ * This class serves to store the parameter list for a template function or
+ * class, both for the formal parameter list (given when the template is
+ * defined) and for the actual parameter list (given when the template is
+ * instantiated).
+ */
 class CPPTemplateParameterList {
 public:
   CPPTemplateParameterList();
 
-  string get_string() const;
+  std::string get_string() const;
   void build_subst_decl(const CPPTemplateParameterList &formal_params,
                         CPPDeclaration::SubstDecl &subst,
                         CPPScope *current_scope, CPPScope *global_scope) const;
@@ -52,16 +49,16 @@ public:
                                             CPPScope *current_scope,
                                             CPPScope *global_scope);
 
-  void output(ostream &out, CPPScope *scope) const;
-  void write_formal(ostream &out, CPPScope *scope) const;
+  void output(std::ostream &out, CPPScope *scope) const;
+  void write_formal(std::ostream &out, CPPScope *scope) const;
 
-  typedef vector<CPPDeclaration *> Parameters;
+  typedef std::vector<CPPDeclaration *> Parameters;
   Parameters _parameters;
 };
 
-inline ostream &
-operator << (ostream &out, const CPPTemplateParameterList &plist) {
-  plist.output(out, (CPPScope *)NULL);
+inline std::ostream &
+operator << (std::ostream &out, const CPPTemplateParameterList &plist) {
+  plist.output(out, nullptr);
   return out;
 }
 
@@ -77,5 +74,3 @@ public:
 };
 
 #endif
-
-

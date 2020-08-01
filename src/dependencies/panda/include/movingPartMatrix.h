@@ -1,16 +1,15 @@
-// Filename: movingPartMatrix.h
-// Created by:  drose (23Feb99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file movingPartMatrix.h
+ * @author drose
+ * @date 1999-02-23
+ */
 
 #ifndef MOVINGPARTMATRIX_H
 #define MOVINGPARTMATRIX_H
@@ -24,17 +23,15 @@
 
 EXPORT_TEMPLATE_CLASS(EXPCL_PANDA_CHAN, EXPTP_PANDA_CHAN, MovingPart<ACMatrixSwitchType>);
 
-////////////////////////////////////////////////////////////////////
-//       Class : MovingPartMatrix
-// Description : This is a particular kind of MovingPart that accepts
-//               a matrix each frame.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is a particular kind of MovingPart that accepts a matrix each frame.
+ */
 class EXPCL_PANDA_CHAN MovingPartMatrix : public MovingPart<ACMatrixSwitchType> {
 protected:
   INLINE MovingPartMatrix(const MovingPartMatrix &copy);
 
 public:
-  INLINE MovingPartMatrix(PartGroup *parent, const string &name,
+  INLINE MovingPartMatrix(PartGroup *parent, const std::string &name,
                           const LMatrix4 &default_value);
   virtual ~MovingPartMatrix();
 
@@ -75,12 +72,4 @@ private:
 
 #include "movingPartMatrix.I"
 
-// Tell GCC that we'll take care of the instantiation explicitly here.
-#ifdef __GNUC__
-#pragma interface
 #endif
-
-#endif
-
-
-

@@ -1,16 +1,15 @@
-// Filename: pStatCollectorDef.h
-// Created by:  drose (09Jul00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file pStatCollectorDef.h
+ * @author drose
+ * @date 2000-07-09
+ */
 
 #ifndef PSTATCOLLECTORDEF_H
 #define PSTATCOLLECTORDEF_H
@@ -23,15 +22,14 @@ class DatagramIterator;
 class PStatClient;
 class PStatClientVersion;
 
-////////////////////////////////////////////////////////////////////
-//       Class : PStatCollectorDef
-// Description : Defines the details about the Collectors: the name,
-//               the suggested color, etc.
-////////////////////////////////////////////////////////////////////
+/**
+ * Defines the details about the Collectors: the name, the suggested color,
+ * etc.
+ */
 class EXPCL_PANDA_PSTATCLIENT PStatCollectorDef {
 public:
   PStatCollectorDef();
-  PStatCollectorDef(int index, const string &name);
+  PStatCollectorDef(int index, const std::string &name);
   void set_parent(const PStatCollectorDef &parent);
 
   void write_datagram(Datagram &destination) const;
@@ -42,11 +40,11 @@ public:
   };
 
   int _index;
-  string _name;
+  std::string _name;
   int _parent_index;
   ColorDef _suggested_color;
   int _sort;
-  string _level_units;
+  std::string _level_units;
   double _suggested_scale;
   double _factor;
   bool _is_active;
@@ -54,4 +52,3 @@ public:
 };
 
 #endif
-

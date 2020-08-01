@@ -1,16 +1,15 @@
-// Filename: eggGroupUniquifier.h
-// Created by:  drose (22Feb01)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggGroupUniquifier.h
+ * @author drose
+ * @date 2001-02-22
+ */
 
 #ifndef EGGGROUPUNIQUIFIER_H
 #define EGGGROUPUNIQUIFIER_H
@@ -19,21 +18,19 @@
 
 #include "eggNameUniquifier.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggGroupUniquifier
-// Description : This is a specialization of EggNameUniquifier to
-//               generate unique names for EggGroup nodes.  It's not
-//               called automatically; you must invoke it yourself if
-//               you want it.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAEGG EggGroupUniquifier : public EggNameUniquifier {
+/**
+ * This is a specialization of EggNameUniquifier to generate unique names for
+ * EggGroup nodes.  It's not called automatically; you must invoke it yourself
+ * if you want it.
+ */
+class EXPCL_PANDA_EGG EggGroupUniquifier : public EggNameUniquifier {
 PUBLISHED:
-  EggGroupUniquifier(bool filter_names = true);
+  explicit EggGroupUniquifier(bool filter_names = true);
 
-  virtual string get_category(EggNode *node);
-  virtual string filter_name(EggNode *node);
-  virtual string generate_name(EggNode *node,
-                               const string &category, int index);
+  virtual std::string get_category(EggNode *node);
+  virtual std::string filter_name(EggNode *node);
+  virtual std::string generate_name(EggNode *node,
+                               const std::string &category, int index);
 
 private:
   bool _filter_names;
@@ -58,5 +55,3 @@ private:
 };
 
 #endif
-
-

@@ -1,11 +1,14 @@
-"""Undocumented Module"""
+"""Contains the DirectWaitBar class, a progress bar widget.
+
+See the :ref:`directwaitbar` page in the programming manual for a more
+in-depth explanation and an example of how to use this class.
+"""
 
 __all__ = ['DirectWaitBar']
 
 from panda3d.core import *
-import DirectGuiGlobals as DGG
-from DirectFrame import *
-import types
+from . import DirectGuiGlobals as DGG
+from .DirectFrame import *
 
 """
 import DirectWaitBar
@@ -15,7 +18,7 @@ d = DirectWaitBar(borderWidth=(0, 0))
 class DirectWaitBar(DirectFrame):
     """ DirectWaitBar - A DirectWidget that shows progress completed
     towards a task.  """
-    
+
     def __init__(self, parent = None, **kw):
         # Inherits from DirectFrame
         # A Direct Frame can have:
@@ -33,7 +36,7 @@ class DirectWaitBar(DirectFrame):
             ('barColor',       (1, 0, 0, 1),       self.setBarColor),
             ('barTexture',     None,               self.setBarTexture),
             ('barRelief',      DGG.FLAT,           self.setBarRelief),
-            ('sortOrder',      NO_FADE_SORT_INDEX, None),
+            ('sortOrder',      DGG.NO_FADE_SORT_INDEX, None),
             )
         if 'text' in kw:
             textoptiondefs = (
@@ -93,7 +96,7 @@ class DirectWaitBar(DirectFrame):
         """Updates the bar texture, which you can set using bar['barTexture']."""
         # this must be a single texture (or a string).
         texture = self['barTexture']
-        if isinstance(texture, types.StringTypes):
+        if isinstance(texture, str):
             texture = loader.loadTexture(texture)
         if texture:
             self.barStyle.setTexture(texture)

@@ -1,16 +1,15 @@
-// Filename: perspectiveLens.h
-// Created by:  drose (18Feb99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file perspectiveLens.h
+ * @author drose
+ * @date 1999-02-18
+ */
 
 #ifndef PERSPECTIVELENS_H
 #define PERSPECTIVELENS_H
@@ -20,14 +19,13 @@
 #include "lens.h"
 
 
-////////////////////////////////////////////////////////////////////
-//       Class : PerspectiveLens
-// Description : A perspective-type lens: a normal camera.
-////////////////////////////////////////////////////////////////////
+/**
+ * A perspective-type lens: a normal camera.
+ */
 class EXPCL_PANDA_GOBJ PerspectiveLens : public Lens {
 PUBLISHED:
   INLINE PerspectiveLens();
-  INLINE PerspectiveLens(PN_stdfloat hfov, PN_stdfloat vfov);
+  INLINE explicit PerspectiveLens(PN_stdfloat hfov, PN_stdfloat vfov);
 
 public:
   INLINE PerspectiveLens(const PerspectiveLens &copy);

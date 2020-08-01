@@ -1,7 +1,7 @@
 """ Class used to create and control radamec device """
 from math import *
 from direct.showbase.DirectObject import DirectObject
-from DirectDeviceManager import *
+from .DirectDeviceManager import *
 
 from direct.directnotify import DirectNotifyGlobal
 
@@ -20,9 +20,9 @@ class DirectFastrak(DirectObject):
     fastrakCount = 0
     notify = DirectNotifyGlobal.directNotify.newCategory('DirectFastrak')
 
-    def __init__(self, device = 'Tracker0', nodePath = base.direct.camera):
+    def __init__(self, device = 'Tracker0', nodePath = None):
         # See if device manager has been initialized
-        if base.direct.deviceManager == None:
+        if base.direct.deviceManager is None:
             base.direct.deviceManager = DirectDeviceManager()
 
         # Set name

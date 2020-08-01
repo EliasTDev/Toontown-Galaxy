@@ -1,32 +1,31 @@
-// Filename: pnmimage_base.h
-// Created by:  drose (14Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file pnmimage_base.h
+ * @author drose
+ * @date 2000-06-14
+ */
 
 #ifndef PNMIMAGE_BASE_H
 #define PNMIMAGE_BASE_H
 
-// This header file make a few typedefs and other definitions
-// essential to everything in the PNMImage package.
+// This header file make a few typedefs and other definitions essential to
+// everything in the PNMImage package.
 
 #include "pandabase.h"
 #include "pnotify.h"
 
-// Since we no longer include pnm.h directly, we have to provide our
-// own definitions for xel and xelval.
+// Since we no longer include pnm.h directly, we have to provide our own
+// definitions for xel and xelval.
 
-// For now, we have PGM_BIGGRAYS defined, which gives us 16-bit
-// channels.  Undefine this if you have memory problems and need to
-// use 8-bit channels instead.
+// For now, we have PGM_BIGGRAYS defined, which gives us 16-bit channels.
+// Undefine this if you have memory problems and need to use 8-bit channels
+// instead.
 #define PGM_BIGGRAYS
 
 #ifdef PGM_BIGGRAYS
@@ -41,7 +40,7 @@ typedef unsigned char gray;
 
 struct pixel {
 PUBLISHED:
-  pixel() { }
+  pixel() = default;
   pixel(gray fill) : r(fill), g(fill), b(fill) { }
   pixel(gray r, gray g, gray b) : r(r), g(g), b(b) { }
 
@@ -60,9 +59,25 @@ PUBLISHED:
   void operator *= (const double mult)
     { r *= mult; g *= mult; b *= mult; }
 
+  bool operator == (const pixel &other) {
+    return r == other.r && g == other.g && r == other.r;
+  }
+  bool operator != (const pixel &other) {
+    return r != other.r || g != other.g || r != other.r;
+  }
+  bool operator < (const pixel &other) const {
+    if (r != other.r) {
+      return r < other.r;
+    }
+    if (g != other.g) {
+      return g < other.g;
+    }
+    return b < other.b;
+  }
+
 #ifdef HAVE_PYTHON
   static int size() { return 3; }
-  void output(ostream &out) {
+  void output(std::ostream &out) {
     out << "pixel(r=" << r << ", g=" << g << ", b=" << b << ")";
   }
 #endif
@@ -95,8 +110,8 @@ typedef gray xelval;
         ( (int) PPM_GETB(p) * (newmaxval) + (oldmaxval) / 2 ) / (oldmaxval) )
 
 
-// pnm defines these functions, and it's easier to emulate them than
-// to rewrite the code that calls them.
+// pnm defines these functions, and it's easier to emulate them than to
+// rewrite the code that calls them.
 EXPCL_PANDA_PNMIMAGE void pm_message(const char *format, ...);
 EXPCL_PANDA_PNMIMAGE void pm_error(const char *format, ...);  // doesn't return.
 
@@ -106,14 +121,14 @@ EXPCL_PANDA_PNMIMAGE int pm_bitstomaxval(int bits);
 EXPCL_PANDA_PNMIMAGE char *pm_allocrow(int cols, int size);
 EXPCL_PANDA_PNMIMAGE void pm_freerow(char *itrow);
 
-EXPCL_PANDA_PNMIMAGE int pm_readbigshort(istream *in, short *sP);
-EXPCL_PANDA_PNMIMAGE int pm_writebigshort(ostream *out, short s);
-EXPCL_PANDA_PNMIMAGE int pm_readbiglong(istream *in, long *lP);
-EXPCL_PANDA_PNMIMAGE int pm_writebiglong(ostream *out, long l);
-EXPCL_PANDA_PNMIMAGE int pm_readlittleshort(istream *in, short *sP);
-EXPCL_PANDA_PNMIMAGE int pm_writelittleshort(ostream *out, short s);
-EXPCL_PANDA_PNMIMAGE int pm_readlittlelong(istream *in, long *lP);
-EXPCL_PANDA_PNMIMAGE int pm_writelittlelong(ostream *out, long l);
+EXPCL_PANDA_PNMIMAGE int pm_readbigshort(std::istream *in, short *sP);
+EXPCL_PANDA_PNMIMAGE int pm_writebigshort(std::ostream *out, short s);
+EXPCL_PANDA_PNMIMAGE int pm_readbiglong(std::istream *in, long *lP);
+EXPCL_PANDA_PNMIMAGE int pm_writebiglong(std::ostream *out, long l);
+EXPCL_PANDA_PNMIMAGE int pm_readlittleshort(std::istream *in, short *sP);
+EXPCL_PANDA_PNMIMAGE int pm_writelittleshort(std::ostream *out, short s);
+EXPCL_PANDA_PNMIMAGE int pm_readlittlelong(std::istream *in, long *lP);
+EXPCL_PANDA_PNMIMAGE int pm_writelittlelong(std::ostream *out, long l);
 
 
 // These ratios are used to compute the brightness of a colored pixel; they

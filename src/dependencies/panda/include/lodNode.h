@@ -1,16 +1,15 @@
-// Filename: lodNode.h
-// Created by:  drose (06Mar02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file lodNode.h
+ * @author drose
+ * @date 2002-03-06
+ */
 
 #ifndef LODNODE_H
 #define LODNODE_H
@@ -21,18 +20,16 @@
 #include "luse.h"
 #include "pvector.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : LODNode
-// Description : A Level-of-Detail node.  This selects only one of its
-//               children for rendering, according to the distance
-//               from the camera and the table indicated in the
-//               associated LOD object.
-////////////////////////////////////////////////////////////////////
+/**
+ * A Level-of-Detail node.  This selects only one of its children for
+ * rendering, according to the distance from the camera and the table
+ * indicated in the associated LOD object.
+ */
 class EXPCL_PANDA_PGRAPHNODES LODNode : public PandaNode {
 PUBLISHED:
-  INLINE LODNode(const string &name);
+  INLINE explicit LODNode(const std::string &name);
 
-  static PT(LODNode) make_default_lod(const string &name);
+  static PT(LODNode) make_default_lod(const std::string &name);
 
 protected:
   INLINE LODNode(const LODNode &copy);
@@ -43,15 +40,15 @@ public:
   virtual void xform(const LMatrix4 &mat);
   virtual bool cull_callback(CullTraverser *trav, CullTraverserData &data);
 
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
   virtual bool is_lod_node() const;
 
 PUBLISHED:
-  // The sense of in vs. out distances is as if the object were coming
-  // towards you from far away: it switches "in" at the far distance,
-  // and switches "out" at the close distance.  Thus, "in" should be
-  // larger than "out".
+  // The sense of in vs.  out distances is as if the object were coming
+  // towards you from far away: it switches "in" at the far distance, and
+  // switches "out" at the close distance.  Thus, "in" should be larger than
+  // "out".
 
   INLINE void add_switch(PN_stdfloat in, PN_stdfloat out);
   INLINE bool set_switch(int index, PN_stdfloat in, PN_stdfloat out);
@@ -69,14 +66,21 @@ PUBLISHED:
   INLINE void force_switch(int index);
   INLINE void clear_force_switch();
 
-  //for performance tuning, increasing this value should improve performance
-  //at the cost of model quality
+  // for performance tuning, increasing this value should improve performance
+  // at the cost of model quality
   INLINE void set_lod_scale(PN_stdfloat value);
   INLINE PN_stdfloat get_lod_scale() const;
 
 
   INLINE void set_center(const LPoint3 &center);
   INLINE const LPoint3 &get_center() const;
+
+  MAKE_SEQ_PROPERTY(ins, get_num_switches, get_in);
+  MAKE_SEQ_PROPERTY(outs, get_num_switches, get_out);
+  MAKE_PROPERTY(lowest_switch, get_lowest_switch);
+  MAKE_PROPERTY(highest_switch, get_highest_switch);
+  MAKE_PROPERTY(lod_scale, get_lod_scale, set_lod_scale);
+  MAKE_PROPERTY(center, get_center, set_center);
 
   void show_switch(int index);
   void show_switch(int index, const LColor &color);
@@ -157,7 +161,7 @@ protected:
   typedef pvector<Switch> SwitchVector;
 
 private:
-  class EXPCL_PANDA_PGRAPH CData : public CycleData {
+  class EXPCL_PANDA_PGRAPHNODES CData : public CycleData {
   public:
     INLINE CData();
     INLINE CData(const CData &copy);

@@ -1,16 +1,15 @@
-// Filename: typedWritable.h
-// Created by:  jason (08Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file typedWritable.h
+ * @author jason
+ * @date 2000-06-08
+ */
 
 #ifndef TYPEDWRITABLE_H
 #define TYPEDWRITABLE_H
@@ -20,6 +19,7 @@
 #include "pvector.h"
 #include "lightMutex.h"
 #include "updateSeq.h"
+#include "vector_uchar.h"
 
 class BamReader;
 class BamWriter;
@@ -27,13 +27,11 @@ class Datagram;
 class DatagramIterator;
 class ReferenceCount;
 
-////////////////////////////////////////////////////////////////////
-//       Class : TypedWritable
-// Description : Base class for objects that can be written to and
-//               read from Bam files.
-//
-//               See also TypedObject for detailed instructions.
-////////////////////////////////////////////////////////////////////
+/**
+ * Base class for objects that can be written to and read from Bam files.
+ *
+ * See also TypedObject for detailed instructions.
+ */
 class EXPCL_PANDA_PUTIL TypedWritable : public TypedObject {
 public:
   static TypedWritable* const Null;
@@ -50,7 +48,10 @@ public:
   virtual int complete_pointers(TypedWritable **p_list, BamReader *manager);
   virtual bool require_fully_complete() const;
 
+PUBLISHED:
   virtual void fillin(DatagramIterator &scan, BamReader *manager);
+
+public:
   virtual void finalize(BamReader *manager);
 
   virtual ReferenceCount *as_reference_count();
@@ -62,20 +63,20 @@ PUBLISHED:
   EXTENSION(PyObject *__reduce__(PyObject *self) const);
   EXTENSION(PyObject *__reduce_persist__(PyObject *self, PyObject *pickler) const);
 
-  INLINE string encode_to_bam_stream() const;
-  bool encode_to_bam_stream(string &data, BamWriter *writer = NULL) const;
+  INLINE vector_uchar encode_to_bam_stream() const;
+  bool encode_to_bam_stream(vector_uchar &data, BamWriter *writer = nullptr) const;
   static bool decode_raw_from_bam_stream(TypedWritable *&ptr,
                                          ReferenceCount *&ref_ptr,
-                                         const string &data,
-                                         BamReader *reader = NULL);
+                                         vector_uchar data,
+                                         BamReader *reader = nullptr);
 
 private:
   void add_bam_writer(BamWriter *writer);
   void remove_bam_writer(BamWriter *writer);
 
-  // We may need to store a list of the BamWriter(s) that have a
-  // reference to this object, so that we can remove the object from
-  // those tables when it destructs.
+  // We may need to store a list of the BamWriter(s) that have a reference to
+  // this object, so that we can remove the object from those tables when it
+  // destructs.
   struct BamWriterLink {
     BamWriter *_writer;
     BamWriterLink *_next;

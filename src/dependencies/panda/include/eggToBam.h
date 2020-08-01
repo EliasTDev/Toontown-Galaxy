@@ -1,16 +1,15 @@
-// Filename: eggToBam.h
-// Created by:  drose (28Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggToBam.h
+ * @author drose
+ * @date 2000-06-28
+ */
 
 #ifndef EGGTOBAM_H
 #define EGGTOBAM_H
@@ -28,10 +27,9 @@ class GraphicsEngine;
 class GraphicsStateGuardian;
 class GraphicsOutput;
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggToBam
-// Description :
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 class EggToBam : public EggToSomething {
 public:
   EggToBam();
@@ -66,8 +64,8 @@ private:
   bool _tex_txopz;
   bool _tex_ctex;
   bool _tex_mipmap;
-  string _ctex_quality;
-  string _load_display;
+  std::string _ctex_quality;
+  std::string _load_display;
 
   // The rest of this is required to support -ctex.
   PT(GraphicsPipe) _pipe;

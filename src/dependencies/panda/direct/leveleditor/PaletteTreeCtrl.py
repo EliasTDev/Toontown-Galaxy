@@ -2,8 +2,8 @@
 Defines Palette tree control
 """
 import wx
-import cPickle as pickle
-from ObjectPaletteBase import *
+from .ObjectPaletteBase import *
+
 
 class PaletteTreeCtrl(wx.TreeCtrl):
     def __init__(self, parent, treeStyle, rootName):
@@ -41,7 +41,7 @@ class PaletteTreeCtrl(wx.TreeCtrl):
                roots.append(key)
         for root in roots:
             newItem = self.AppendItem(parentItem, root)
-            self.SetItemPyData(newItem, root)
+            self.SetItemData(newItem, root)
             rootItems.append(newItem)
             itemKeys.remove(root)
         for rootItem in rootItems:
@@ -97,7 +97,7 @@ class PaletteTreeCtrl(wx.TreeCtrl):
         itemText = self.GetItemText(item)
         if item and itemText != self.rootName:
            self.Delete(item)
-           self.paletteUI.palette.delete(itemText)        
+           self.paletteUI.palette.delete(itemText)
 
     def DeleteSelected(self):
         item = self.GetSelection()
@@ -108,7 +108,7 @@ class PaletteTreeCtrl(wx.TreeCtrl):
         item, cookie = self.GetFirstChild(parent)
         while item:
            itemName = self.GetItemText(item)
-           itemData = self.GetItemPyData(item)
+           itemData = self.GetItemData(item)
 
            newItem = self.AppendItem(newParent, itemName)
            self.SetItemPyData(newItem, itemData)
@@ -155,7 +155,7 @@ class PaletteTreeCtrl(wx.TreeCtrl):
 
         if item != self.GetRootItem(): # prevent dragging root item
             text = self.GetItemText(item)
-            print "Starting drag'n'drop with %s..." % repr(text)
+            print("Starting drag'n'drop with %s..." % repr(text))
 
             tdo = wx.TextDataObject(text)
             tds = wx.DropSource(self)

@@ -1,16 +1,15 @@
-// Filename: imageResize.h
-// Created by:  drose (13Mar03)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file imageResize.h
+ * @author drose
+ * @date 2003-03-13
+ */
 
 #ifndef IMAGERESIZE_H
 #define IMAGERESIZE_H
@@ -19,11 +18,10 @@
 
 #include "imageFilter.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : ImageResize
-// Description : A program to read an image file and resize it to a
-//               larger or smaller image file.
-////////////////////////////////////////////////////////////////////
+/**
+ * A program to read an image file and resize it to a larger or smaller image
+ * file.
+ */
 class ImageResize : public ImageFilter {
 public:
   ImageResize();
@@ -31,7 +29,7 @@ public:
   void run();
 
 private:
-  static bool dispatch_size_request(const string &opt, const string &arg, void *var);
+  static bool dispatch_size_request(const std::string &opt, const std::string &arg, void *var);
 
   enum RequestType {
     RT_none,
@@ -68,4 +66,3 @@ private:
 #include "imageResize.I"
 
 #endif
-

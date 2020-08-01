@@ -1,16 +1,15 @@
-// Filename: stencilAttrib.h
-// Created by:  aignacio (18May06)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file stencilAttrib.h
+ * @author aignacio
+ * @date 2006-05-18
+ */
 
 #ifndef STENCILATTRIB_H
 #define STENCILATTRIB_H
@@ -20,22 +19,20 @@
 
 class FactoryParams;
 
-////////////////////////////////////////////////////////////////////
-//       Class : StencilAttrib
-// Description : A StencilAttrib is a collection of all stencil render
-//               states.  The render states in a StencilAttrib are
-//               read-only.  A StencilAttrib is created with make or
-//               make_2_sided.  To determine if two sided stencil is
-//               supported, call the function GraphicsStateGuardian::
-//               get_supports_two_sided_stencil.
-////////////////////////////////////////////////////////////////////
+/**
+ * A StencilAttrib is a collection of all stencil render states.  The render
+ * states in a StencilAttrib are read-only.  A StencilAttrib is created with
+ * make or make_2_sided.  To determine if two sided stencil is supported, call
+ * the function GraphicsStateGuardian:: get_supports_two_sided_stencil.
+ */
 class EXPCL_PANDA_PGRAPH StencilAttrib : public RenderAttrib {
 
 private:
   StencilAttrib();
 
 PUBLISHED:
-  // enums are duplicated here from class StencilRenderStates for use in Python
+  // enums are duplicated here from class StencilRenderStates for use in
+  // Python
   enum StencilRenderState {
     SRS_front_comparison_function,
     SRS_front_stencil_fail_operation,
@@ -91,7 +88,7 @@ PUBLISHED:
     StencilOperation front_stencil_pass_z_pass_operation,
     unsigned int reference,
     unsigned int read_mask,
-    unsigned int write_mask);
+    unsigned int write_mask=~(unsigned int)0);
 
   static CPT(RenderAttrib) make_2_sided(
     bool front_enable,
@@ -142,7 +139,7 @@ PUBLISHED:
 public:
   static const char *stencil_render_state_name_array [SRS_total];
 
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
 protected:
   virtual int compare_to_impl(const RenderAttrib *other) const;
@@ -158,6 +155,7 @@ PUBLISHED:
   virtual int get_slot() const {
     return get_class_slot();
   }
+  MAKE_PROPERTY(class_slot, get_class_slot);
 
 public:
   static void register_with_read_factory();
@@ -175,7 +173,7 @@ public:
     RenderAttrib::init_type();
     register_type(_type_handle, "StencilAttrib",
                   RenderAttrib::get_class_type());
-    _attrib_slot = register_slot(_type_handle, 100, make_default);
+    _attrib_slot = register_slot(_type_handle, 100, new StencilAttrib);
   }
   virtual TypeHandle get_type() const {
     return get_class_type();
@@ -190,4 +188,3 @@ private:
 #include "stencilAttrib.I"
 
 #endif
-

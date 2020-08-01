@@ -1,5 +1,5 @@
 # tclConfig.sh --
-# 
+#
 # This shell script (for sh) is generated automatically by Tcl's
 # configure script.  It will create shell variables for most of
 # the configuration options discovered by the configure script.
@@ -8,40 +8,38 @@
 # out for themselves.
 #
 # The information in this file is specific to a single platform.
-#
-# RCS: @(#) $Id: tclConfig.sh.in,v 1.8 2001/11/08 03:07:22 mdejong Exp $
 
-TCL_DLL_FILE="tcl85.dll"
+TCL_DLL_FILE="tcl86t.dll"
 
 # Tcl's version number.
-TCL_VERSION='8.5'
+TCL_VERSION='8.6'
 TCL_MAJOR_VERSION='8'
-TCL_MINOR_VERSION='5'
-TCL_PATCH_LEVEL='8.5.2'
+TCL_MINOR_VERSION='6'
+TCL_PATCH_LEVEL='8.6.9'
 
 # C compiler to use for compilation.
 TCL_CC='cl'
 
 # -D flags for use with the C compiler.
-TCL_DEFS='-nologo -c -DWINVER=0x0500 -D_WIN32_WINNT=0x0500 -DNTDDI_VERSION=NTDDI_WIN2KSP4 -W3 -D _CRT_SECURE_NO_DEPRECATE -D _CRT_NONSTDC_NO_DEPRECATE -Fp.\Release_86_VC9\tcl_Dynamic\ -O2  -Ot -Oi -fp:strict -Gs -GS -GL -MD -I"..\win" -I"..\generic" -I"..\libtommath" -DTCL_PIPE_DLL=\"tclpip85.dll\" -DTCL_TOMMATH -DMP_PREC=4 -Dinline=__inline -DTCL_CFGVAL_ENCODING=\"cp1252\" -DSTDC_HEADERS -DTCL_CFG_OPTIMIZED'
+TCL_DEFS='-nologo -c /D_ATL_XP_TARGETING /DUNICODE /D_UNICODE  -W3 -wd4311 -wd4312 -wd4311 -wd4312 -FpC:\_work\11\b\tcl-core-8.6.9.0\win\Release_AMD64_VC13\tcl_ThreadedDynamic\  -fp:strict -O2 -GS -GL -MD -I"C:\_work\11\b\tcl-core-8.6.9.0\win\..\win" -I"C:\_work\11\b\tcl-core-8.6.9.0\win\..\generic"  -I"C:\_work\11\b\tcl-core-8.6.9.0\win\..\libtommath"  -DTCL_TOMMATH -DMP_PREC=4 -Dinline=__inline -DHAVE_ZLIB=1 -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DTCL_CFGVAL_ENCODING=\"cp1252\" -DSTDC_HEADERS -DTCL_THREADS=1 -DUSE_THREAD_ALLOC=1 -DNDEBUG -DTCL_CFG_OPTIMIZED -DTCL_CFG_DO64BIT   -DBUILD_tcl'
 
 # If TCL was built with debugging symbols, generated libraries contain
 # this string at the end of the library name (before the extension).
-TCL_DBGX=
+TCL_DBGX=t
 
 # Default flags used in an optimized and debuggable build, respectively.
-TCL_CFLAGS_DEBUG='-nologo -c -W3 -YX -Fp.\Release_86_VC9\tcl_Dynamic\ -MDd'
-TCL_CFLAGS_OPTIMIZE='-nologo -c -W3 -YX -Fp.\Release_86_VC9\tcl_Dynamic\ -MD'
+TCL_CFLAGS_DEBUG='-nologo -c -W3 -YX -FpC:\_work\11\b\tcl-core-8.6.9.0\win\Release_AMD64_VC13\tcl_ThreadedDynamic\ -MDd'
+TCL_CFLAGS_OPTIMIZE='-nologo -c -W3 -YX -FpC:\_work\11\b\tcl-core-8.6.9.0\win\Release_AMD64_VC13\tcl_ThreadedDynamic\ -MD'
 
 # Default linker flags used in an optimized and debuggable build, respectively.
-TCL_LDFLAGS_DEBUG='-nologo -machine:X86 -debug:full -debugtype:cv'
-TCL_LDFLAGS_OPTIMIZE='-nologo -machine:X86 -release -opt:ref -opt:icf,3'
+TCL_LDFLAGS_DEBUG='-nologo -machine:AMD64 -debug -debugtype:cv'
+TCL_LDFLAGS_OPTIMIZE='-nologo -machine:AMD64 -release -opt:ref -opt:icf,3'
 
 # Flag, 1: we built a shared lib, 0 we didn't
 TCL_SHARED_BUILD=1
 
 # The name of the Tcl library (may be either a .a file or a shared library):
-TCL_LIB_FILE='tcl85.lib'
+TCL_LIB_FILE='tcl86t.lib'
 
 # Flag to indicate whether shared libraries need export files.
 TCL_NEEDS_EXP_FILE=
@@ -50,18 +48,18 @@ TCL_NEEDS_EXP_FILE=
 # name that comes after the "libxxx" (includes version number, if any,
 # extension, and anything else needed).  May depend on the variables
 # VERSION.  On most UNIX systems this is ${VERSION}.exp.
-TCL_EXPORT_FILE_SUFFIX='85.lib'
+TCL_EXPORT_FILE_SUFFIX='86t.lib'
 
 # Additional libraries to use when linking Tcl.
-TCL_LIBS='kernel32.lib user32.lib ws2_32.lib'
+TCL_LIBS='kernel32.lib advapi32.lib netapi32.lib user32.lib userenv.lib ws2_32.lib ucrt.lib netapi32.lib user32.lib userenv.lib ws2_32.lib'
 
 # Top-level directory in which Tcl's platform-independent files are
 # installed.
-TCL_PREFIX='C:\Users\martin\32\tcltk'
+TCL_PREFIX='C:\_work\11\b\tcltk-8.6.9.0\amd64'
 
 # Top-level directory in which Tcl's platform-specific files (e.g.
 # executables) are installed.
-TCL_EXEC_PREFIX='C:\Users\martin\32\tcltk\bin'
+TCL_EXEC_PREFIX='C:\_work\11\b\tcltk-8.6.9.0\amd64\bin'
 
 # Flags to pass to cc when compiling the components of a shared library:
 TCL_SHLIB_CFLAGS=''
@@ -73,7 +71,7 @@ TCL_CFLAGS_WARNING='-W3'
 TCL_EXTRA_CFLAGS='-YX'
 
 # Base command to use for combining object files into a shared library:
-TCL_SHLIB_LD='link -nologo -machine:X86 -ltcg -release -opt:ref -opt:icf,3 -dll'
+TCL_SHLIB_LD='link -nologo -machine:AMD64  -ltcg -release -opt:ref -opt:icf,3 -nodefaultlib:libucrt.lib -dll'
 
 # Base command to use for combining object files into a static library:
 TCL_STLIB_LD='lib -nologo'
@@ -81,7 +79,7 @@ TCL_STLIB_LD='lib -nologo'
 # Either '$LIBS' (if dependent libraries should be included when linking
 # shared libraries) or an empty string.  See Tcl's configure.in for more
 # explanation.
-TCL_SHLIB_LD_LIBS='kernel32.lib user32.lib ws2_32.lib'
+TCL_SHLIB_LD_LIBS='kernel32.lib advapi32.lib netapi32.lib user32.lib userenv.lib ws2_32.lib ucrt.lib netapi32.lib user32.lib userenv.lib ws2_32.lib'
 
 # Suffix to use for the name of a shared library.
 TCL_SHLIB_SUFFIX='.dll'
@@ -94,10 +92,11 @@ TCL_DL_LIBS=''
 # an executable tclsh or tcltest binary.
 TCL_LD_FLAGS=''
 
-# Flags to pass to ld, such as "-R /usr/local/tcl/lib", that tell the
+# Flags to pass to cc/ld, such as "-R /usr/local/tcl/lib", that tell the
 # run-time dynamic linker where to look for shared libraries such as
 # libtcl.so.  Used when linking applications.  Only works if there
 # is a variable "LIB_RUNTIME_DIR" defined in the Makefile.
+TCL_CC_SEARCH_FLAGS=''
 TCL_LD_SEARCH_FLAGS=''
 
 # Additional object files linked with Tcl to provide compatibility
@@ -116,11 +115,11 @@ TCL_BUILD_LIB_SPEC=''
 
 # String to pass to linker to pick up the Tcl library from its
 # installed directory.
-TCL_LIB_SPEC='C:\Users\martin\32\tcltk\lib\tcl85.lib'
+TCL_LIB_SPEC='C:\_work\11\b\tcltk-8.6.9.0\amd64\lib\tcl86t.lib'
 
 # String to pass to the compiler so that an extension can
 # find installed Tcl headers.
-TCL_INCLUDE_SPEC='-IC:\Users\martin\32\tcltk\include'
+TCL_INCLUDE_SPEC='-IC:\_work\11\b\tcltk-8.6.9.0\amd64\include'
 
 # Indicates whether a version numbers should be used in -l switches
 # ("ok" means it's safe to use switches like -ltcl7.5;  "nodots" means
@@ -133,13 +132,13 @@ TCL_LIB_VERSIONS_OK=''
 # extension, and anything else needed).  May depend on the variables
 # VERSION and SHLIB_SUFFIX.  On most UNIX systems this is
 # ${VERSION}${SHLIB_SUFFIX}.
-TCL_SHARED_LIB_SUFFIX='85.dll'
+TCL_SHARED_LIB_SUFFIX='86t.dll'
 
 # String that can be evaluated to generate the part of an unshared library
 # name that comes after the "libxxx" (includes version number, if any,
 # extension, and anything else needed).  May depend on the variable
 # VERSION.  On most UNIX systems this is ${VERSION}.a.
-TCL_UNSHARED_LIB_SUFFIX='85.lib'
+TCL_UNSHARED_LIB_SUFFIX='86t.lib'
 
 # Location of the top-level source directory from which Tcl was built.
 # This is the directory that contains a README file as well as
@@ -147,7 +146,7 @@ TCL_UNSHARED_LIB_SUFFIX='85.lib'
 # different place than the directory containing the source files, this
 # points to the location of the sources, not the location where Tcl was
 # compiled.
-TCL_SRC_DIR='..'
+TCL_SRC_DIR='C:\_work\11\b\tcl-core-8.6.9.0\win\..'
 
 # List of standard directories in which to look for packages during
 # "package require" commands.  Contains the "prefix" directory plus also
@@ -158,25 +157,25 @@ TCL_PACKAGE_PATH=''
 TCL_SUPPORTS_STUBS=1
 
 # The name of the Tcl stub library (.a):
-TCL_STUB_LIB_FILE='tclstub85.lib'
+TCL_STUB_LIB_FILE='tclstub86.lib'
 
 # -l flag to pass to the linker to pick up the Tcl stub library
-TCL_STUB_LIB_FLAG='tclstub85.lib'
+TCL_STUB_LIB_FLAG='tclstub86.lib'
 
 # String to pass to linker to pick up the Tcl stub library from its
 # build directory.
-TCL_BUILD_STUB_LIB_SPEC='-L.\Release_X86_VC9 tclstub85.lib'
+TCL_BUILD_STUB_LIB_SPEC='-LC:\_work\11\b\tcl-core-8.6.9.0\win\Release_AMD64_VC13 tclstub86.lib'
 
 # String to pass to linker to pick up the Tcl stub library from its
 # installed directory.
-TCL_STUB_LIB_SPEC='-LC:\Users\martin\32\tcltk\lib tclstub85.lib'
+TCL_STUB_LIB_SPEC='-LC:\_work\11\b\tcltk-8.6.9.0\amd64\lib tclstub86.lib'
 
 # Path to the Tcl stub library in the build directory.
-TCL_BUILD_STUB_LIB_PATH='.\Release_X86_VC9\tclstub85.lib'
+TCL_BUILD_STUB_LIB_PATH='C:\_work\11\b\tcl-core-8.6.9.0\win\Release_AMD64_VC13\tclstub86.lib'
 
 # Path to the Tcl stub library in the install directory.
-TCL_STUB_LIB_PATH='C:\Users\martin\32\tcltk\lib\tclstub85.lib'
+TCL_STUB_LIB_PATH='C:\_work\11\b\tcltk-8.6.9.0\amd64\lib\tclstub86.lib'
 
-# Flag, 1: we built Tcl with threads enables, 0 we didn't
-TCL_THREADS=0
+# Flag, 1: we built Tcl with threads enabled, 0 we didn't
+TCL_THREADS=1
 

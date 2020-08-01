@@ -1,16 +1,15 @@
-// Filename: cLwoSurface.h
-// Created by:  drose (25Apr01)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file cLwoSurface.h
+ * @author drose
+ * @date 2001-04-25
+ */
 
 #ifndef CLWOSURFACE_H
 #define CLWOSURFACE_H
@@ -33,18 +32,16 @@ class LwoToEggConverter;
 class LwoSurfaceBlock;
 class EggPrimitive;
 
-////////////////////////////////////////////////////////////////////
-//       Class : CLwoSurface
-// Description : This class is a wrapper around LwoSurface and stores
-//               additional information useful during the
-//               conversion-to-egg process.
-////////////////////////////////////////////////////////////////////
+/**
+ * This class is a wrapper around LwoSurface and stores additional information
+ * useful during the conversion-to-egg process.
+ */
 class CLwoSurface {
 public:
   CLwoSurface(LwoToEggConverter *converter, const LwoSurface *surface);
   ~CLwoSurface();
 
-  INLINE const string &get_name() const;
+  INLINE const std::string &get_name() const;
 
   void apply_properties(EggPrimitive *egg_prim,
                         vector_PT_EggVertex &egg_vertices,
@@ -53,7 +50,7 @@ public:
   bool check_material();
 
   INLINE bool has_named_uvs() const;
-  INLINE const string &get_uv_name() const;
+  INLINE const std::string &get_uv_name() const;
 
 
   enum Flags {
@@ -110,5 +107,3 @@ private:
 #include "cLwoSurface.I"
 
 #endif
-
-

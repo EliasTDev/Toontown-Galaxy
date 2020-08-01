@@ -1,16 +1,15 @@
-// Filename: multiplexStreamBuf.h
-// Created by:  drose (27Nov00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file multiplexStreamBuf.h
+ * @author drose
+ * @date 2000-11-27
+ */
 
 #ifndef MULTIPLEXSTREAMBUF_H
 #define MULTIPLEXSTREAMBUF_H
@@ -18,15 +17,14 @@
 #include "pandabase.h"
 
 #include "pvector.h"
+#include "mutexImpl.h"
 #include <stdio.h>
 
-////////////////////////////////////////////////////////////////////
-//       Class : MultiplexStreamBuf
-// Description : Used by MultiplexStream to implement an ostream that
-//               sends what is written to it to any number of
-//               additional sources, like other ostreams.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAEXPRESS MultiplexStreamBuf : public streambuf {
+/**
+ * Used by MultiplexStream to implement an ostream that sends what is written
+ * to it to any number of additional sources, like other ostreams.
+ */
+class EXPCL_PANDA_DOWNLOADER MultiplexStreamBuf : public std::streambuf {
 public:
   MultiplexStreamBuf();
   virtual ~MultiplexStreamBuf();
@@ -43,8 +41,8 @@ public:
   };
 
   void add_output(BufferType buffer_type, OutputType output_type,
-                  ostream *out = (ostream *)NULL,
-                  FILE *fout = (FILE *)NULL,
+                  std::ostream *out = nullptr,
+                  FILE *fout = nullptr,
                   bool owns_obj = false);
 
   void flush();
@@ -60,11 +58,11 @@ private:
   class Output {
   public:
     void close();
-    void write_string(const string &str);
+    void write_string(const std::string &str);
 
     BufferType _buffer_type;
     OutputType _output_type;
-    ostream *_out;
+    std::ostream *_out;
     FILE *_fout;
     bool _owns_obj;
   };
@@ -72,7 +70,8 @@ private:
   typedef pvector<Output> Outputs;
   Outputs _outputs;
 
-  string _line_buffer;
+  MutexImpl _lock;
+  std::string _line_buffer;
 };
 
 #include "multiplexStreamBuf.I"

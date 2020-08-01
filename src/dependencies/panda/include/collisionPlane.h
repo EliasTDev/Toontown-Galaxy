@@ -1,16 +1,15 @@
-// Filename: collisionPlane.h
-// Created by:  drose (25Apr00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file collisionPlane.h
+ * @author drose
+ * @date 2000-04-25
+ */
 
 #ifndef COLLISIONPLANE_H
 #define COLLISIONPLANE_H
@@ -22,10 +21,9 @@
 #include "luse.h"
 #include "plane.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : CollisionPlane
-// Description :
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 class EXPCL_PANDA_COLLIDE CollisionPlane : public CollisionSolid {
 protected:
   INLINE CollisionPlane();
@@ -44,7 +42,7 @@ public:
   virtual PStatCollector &get_volume_pcollector();
   virtual PStatCollector &get_test_pcollector();
 
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
   INLINE static void flush_level();
 
@@ -56,6 +54,10 @@ PUBLISHED:
   INLINE const LPlane &get_plane() const;
 
   INLINE void flip();
+
+PUBLISHED:
+  MAKE_PROPERTY(normal, get_normal);
+  MAKE_PROPERTY(plane, get_plane, set_plane);
 
 protected:
   virtual PT(BoundingVolume) compute_internal_bounds() const;
@@ -70,7 +72,11 @@ protected:
   virtual PT(CollisionEntry)
   test_intersection_from_segment(const CollisionEntry &entry) const;
   virtual PT(CollisionEntry)
+  test_intersection_from_capsule(const CollisionEntry &entry) const;
+  virtual PT(CollisionEntry)
   test_intersection_from_parabola(const CollisionEntry &entry) const;
+  virtual PT(CollisionEntry)
+  test_intersection_from_box(const CollisionEntry &entry) const;
 
   virtual void fill_viz_geom();
 
@@ -110,5 +116,3 @@ private:
 #include "collisionPlane.I"
 
 #endif
-
-

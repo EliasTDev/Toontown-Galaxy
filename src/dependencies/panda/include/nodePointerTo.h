@@ -1,16 +1,15 @@
-// Filename: nodePointerTo.h
-// Created by:  drose (07May05)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file nodePointerTo.h
+ * @author drose
+ * @date 2005-05-07
+ */
 
 #ifndef NODEPOINTERTO_H
 #define NODEPOINTERTO_H
@@ -18,28 +17,23 @@
 #include "pandabase.h"
 #include "nodePointerToBase.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : NodePointerTo
-// Description : This implements the special NodePointerTo template
-//               class, which works just like PointerTo except it
-//               manages the objects node_ref_count instead of the
-//               normal ref_count.
-////////////////////////////////////////////////////////////////////
+/**
+ * This implements the special NodePointerTo template class, which works just
+ * like PointerTo except it manages the objects node_ref_count instead of the
+ * normal ref_count.
+ */
 template <class T>
 class NodePointerTo : public NodePointerToBase<T> {
 public:
-  // By hiding this template from interrogate, we improve compile-time
-  // speed and memory utilization.
+  // By hiding this template from interrogate, we improve compile-time speed
+  // and memory utilization.
 #ifndef CPPPARSER
-  typedef TYPENAME NodePointerToBase<T>::To To;
-  INLINE NodePointerTo(To *ptr = (To *)NULL);
+  typedef typename NodePointerToBase<T>::To To;
+  INLINE NodePointerTo(To *ptr = nullptr);
   INLINE NodePointerTo(const NodePointerTo<T> &copy);
-  INLINE ~NodePointerTo();
+  INLINE NodePointerTo(NodePointerTo<T> &&from) noexcept;
 
-#ifdef USE_MOVE_SEMANTICS
-  INLINE NodePointerTo(NodePointerTo<T> &&from) NOEXCEPT;
-  INLINE NodePointerTo<T> &operator = (NodePointerTo<T> &&from) NOEXCEPT;
-#endif
+  INLINE NodePointerTo<T> &operator = (NodePointerTo<T> &&from) noexcept;
 
   INLINE To &operator *() const;
   INLINE To *operator -> () const;
@@ -55,29 +49,25 @@ public:
 };
 
 
-////////////////////////////////////////////////////////////////////
-//       Class : NodeConstPointerTo
-// Description : A NodeConstPointerTo is similar to a NodePointerTo,
-//               except it keeps a const pointer to the thing.
-////////////////////////////////////////////////////////////////////
+/**
+ * A NodeConstPointerTo is similar to a NodePointerTo, except it keeps a const
+ * pointer to the thing.
+ */
 template <class T>
 class NodeConstPointerTo : public NodePointerToBase<T> {
 public:
-  // By hiding this template from interrogate, we improve compile-time
-  // speed and memory utilization.
+  // By hiding this template from interrogate, we improve compile-time speed
+  // and memory utilization.
 #ifndef CPPPARSER
-  typedef TYPENAME NodePointerToBase<T>::To To;
-  INLINE NodeConstPointerTo(const To *ptr = (const To *)NULL);
+  typedef typename NodePointerToBase<T>::To To;
+  INLINE NodeConstPointerTo(const To *ptr = nullptr);
   INLINE NodeConstPointerTo(const NodePointerTo<T> &copy);
   INLINE NodeConstPointerTo(const NodeConstPointerTo<T> &copy);
-  INLINE ~NodeConstPointerTo();
+  INLINE NodeConstPointerTo(NodePointerTo<T> &&from) noexcept;
+  INLINE NodeConstPointerTo(NodeConstPointerTo<T> &&from) noexcept;
 
-#ifdef USE_MOVE_SEMANTICS
-  INLINE NodeConstPointerTo(NodePointerTo<T> &&from) NOEXCEPT;
-  INLINE NodeConstPointerTo(NodeConstPointerTo<T> &&from) NOEXCEPT;
-  INLINE NodeConstPointerTo<T> &operator = (NodePointerTo<T> &&from) NOEXCEPT;
-  INLINE NodeConstPointerTo<T> &operator = (NodeConstPointerTo<T> &&from) NOEXCEPT;
-#endif
+  INLINE NodeConstPointerTo<T> &operator = (NodePointerTo<T> &&from) noexcept;
+  INLINE NodeConstPointerTo<T> &operator = (NodeConstPointerTo<T> &&from) noexcept;
 
   INLINE const To &operator *() const;
   INLINE const To *operator -> () const;
@@ -92,12 +82,12 @@ public:
 };
 
 template <class T>
-void swap(NodePointerTo<T> &one, NodePointerTo<T> &two) NOEXCEPT {
+void swap(NodePointerTo<T> &one, NodePointerTo<T> &two) noexcept {
   one.swap(two);
 }
 
 template <class T>
-void swap(NodeConstPointerTo<T> &one, NodeConstPointerTo<T> &two) NOEXCEPT {
+void swap(NodeConstPointerTo<T> &one, NodeConstPointerTo<T> &two) noexcept {
   one.swap(two);
 }
 

@@ -1,16 +1,15 @@
-// Filename: pandaFileStream.h
-// Created by:  drose (08Sep08)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file pandaFileStream.h
+ * @author drose
+ * @date 2008-09-08
+ */
 
 #ifndef PANDAFILESTREAM_H
 #define PANDAFILESTREAM_H
@@ -21,28 +20,25 @@
 
 #include "pandaFileStreamBuf.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : IFileStream
-// Description : Implements a C++ stream object suitable for reading
-//               from files on disk.  This is similar to ifstream, but
-//               it provides low-level support for Panda's
-//               simple-threading implementation (using this interface
-//               will block only the current thread, rather than the
-//               entire process, on I/O waits).
-////////////////////////////////////////////////////////////////////
-class EXPCL_DTOOL IFileStream : public istream {
+/**
+ * Implements a C++ stream object suitable for reading from files on disk.
+ * This is similar to ifstream, but it provides low-level support for Panda's
+ * simple-threading implementation (using this interface will block only the
+ * current thread, rather than the entire process, on I/O waits).
+ */
+class EXPCL_DTOOL_DTOOLUTIL IFileStream : public std::istream {
 PUBLISHED:
   INLINE IFileStream();
-  INLINE IFileStream(const char *filename, ios::openmode mode = ios::in);
+  INLINE explicit IFileStream(const char *filename, std::ios::openmode mode = std::ios::in);
   INLINE ~IFileStream();
 
-  INLINE void open(const char *filename, ios::openmode mode = ios::in);
+  INLINE void open(const char *filename, std::ios::openmode mode = std::ios::in);
 
 public:
 #ifdef _WIN32
-  INLINE void attach(const char *filename, HANDLE handle, ios::openmode mode = ios::in);
+  INLINE void attach(const char *filename, HANDLE handle, std::ios::openmode mode = std::ios::in);
 #else
-  INLINE void attach(const char *filename, int fd, ios::openmode mode = ios::in);
+  INLINE void attach(const char *filename, int fd, std::ios::openmode mode = std::ios::in);
 #endif
 
 PUBLISHED:
@@ -52,28 +48,25 @@ private:
   PandaFileStreamBuf _buf;
 };
 
-////////////////////////////////////////////////////////////////////
-//       Class : OFileStream
-// Description : Implements a C++ stream object suitable for writing
-//               to files on disk.  This is similar to ofstream, but
-//               it provides low-level support for Panda's
-//               simple-threading implementation (using this interface
-//               will block only the current thread, rather than the
-//               entire process, on I/O waits).
-////////////////////////////////////////////////////////////////////
-class EXPCL_DTOOL OFileStream : public ostream {
+/**
+ * Implements a C++ stream object suitable for writing to files on disk.  This
+ * is similar to ofstream, but it provides low-level support for Panda's
+ * simple-threading implementation (using this interface will block only the
+ * current thread, rather than the entire process, on I/O waits).
+ */
+class EXPCL_DTOOL_DTOOLUTIL OFileStream : public std::ostream {
 PUBLISHED:
   INLINE OFileStream();
-  INLINE OFileStream(const char *filename, ios::openmode mode = ios::out);
+  INLINE explicit OFileStream(const char *filename, std::ios::openmode mode = std::ios::out);
   INLINE ~OFileStream();
 
-  INLINE void open(const char *filename, ios::openmode mode = ios::out);
+  INLINE void open(const char *filename, std::ios::openmode mode = std::ios::out);
 
 public:
 #ifdef _WIN32
-  INLINE void attach(const char *filename, HANDLE handle, ios::openmode mode = ios::out);
+  INLINE void attach(const char *filename, HANDLE handle, std::ios::openmode mode = std::ios::out);
 #else
-  INLINE void attach(const char *filename, int fd, ios::openmode mode = ios::out);
+  INLINE void attach(const char *filename, int fd, std::ios::openmode mode = std::ios::out);
 #endif
 
 PUBLISHED:
@@ -83,28 +76,26 @@ private:
   PandaFileStreamBuf _buf;
 };
 
-////////////////////////////////////////////////////////////////////
-//       Class : FileStream
-// Description : Implements a C++ stream object suitable for reading
-//               from and/or writing to files on disk.  This is
-//               similar to fstream, but it provides low-level support
-//               for Panda's simple-threading implementation (using
-//               this interface will block only the current thread,
-//               rather than the entire process, on I/O waits).
-////////////////////////////////////////////////////////////////////
-class EXPCL_DTOOL FileStream : public iostream {
+/**
+ * Implements a C++ stream object suitable for reading from and/or writing to
+ * files on disk.  This is similar to fstream, but it provides low-level
+ * support for Panda's simple-threading implementation (using this interface
+ * will block only the current thread, rather than the entire process, on I/O
+ * waits).
+ */
+class EXPCL_DTOOL_DTOOLUTIL FileStream : public std::iostream {
 PUBLISHED:
   INLINE FileStream();
-  INLINE FileStream(const char *filename, ios::openmode mode = ios::in);
+  INLINE explicit FileStream(const char *filename, std::ios::openmode mode = std::ios::in);
   INLINE ~FileStream();
 
-  INLINE void open(const char *filename, ios::openmode mode = ios::in);
+  INLINE void open(const char *filename, std::ios::openmode mode = std::ios::in);
 
 public:
 #ifdef _WIN32
-  INLINE void attach(const char *filename, HANDLE handle, ios::openmode mode);
+  INLINE void attach(const char *filename, HANDLE handle, std::ios::openmode mode);
 #else
-  INLINE void attach(const char *filename, int fd, ios::openmode mode);
+  INLINE void attach(const char *filename, int fd, std::ios::openmode mode);
 #endif
 
 PUBLISHED:

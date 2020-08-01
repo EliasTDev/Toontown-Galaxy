@@ -1,14 +1,14 @@
-// Filename: panda.h
-// Created by:  drose (2Jan01)
-// 
-////////////////////////////////////////////////////////////////////
+/**
+ * @file panda.h
+ * @author drose
+ * @date 2001-01-02
+ */
 
 #ifndef PANDA_H
 #define PANDA_H
 
 #include "pandabase.h"
 
-EXPCL_PANDA void init_libpanda();
+EXPCL_LIBPANDA void init_libpanda();
 
 #endif
-

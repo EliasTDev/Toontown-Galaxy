@@ -1,16 +1,15 @@
-// Filename: preparedGraphicsObjects.h
-// Created by:  drose (19Feb04)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file preparedGraphicsObjects.h
+ * @author drose
+ * @date 2004-02-19
+ */
 
 #ifndef PREPAREDGRAPHICSOBJECTS_H
 #define PREPAREDGRAPHICSOBJECTS_H
@@ -23,12 +22,14 @@
 #include "geomVertexArrayData.h"
 #include "geomPrimitive.h"
 #include "shader.h"
+#include "shaderBuffer.h"
 #include "pointerTo.h"
 #include "pStatCollector.h"
 #include "pset.h"
 #include "reMutex.h"
 #include "bufferResidencyTracker.h"
 #include "adaptiveLru.h"
+#include "asyncFuture.h"
 
 class TextureContext;
 class SamplerContext;
@@ -36,39 +37,36 @@ class GeomContext;
 class ShaderContext;
 class VertexBufferContext;
 class IndexBufferContext;
+class BufferContext;
 class GraphicsStateGuardianBase;
+class SavedContext;
 
-////////////////////////////////////////////////////////////////////
-//       Class : PreparedGraphicsObjects
-// Description : A table of objects that are saved within the graphics
-//               context for reference by handle later.  Generally,
-//               this represents things like OpenGL texture objects or
-//               display lists (or their equivalent on other
-//               platforms).
-//
-//               This object simply records the pointers to the
-//               context objects created by the individual GSG's;
-//               these context objects will contain enough information
-//               to reference or release the actual object stored
-//               within the graphics context.
-//
-//               These tables may potentially be shared between
-//               related graphics contexts, hence their storage here
-//               in a separate object rather than as a part of the
-//               GraphicsStateGuardian.
-////////////////////////////////////////////////////////////////////
+/**
+ * A table of objects that are saved within the graphics context for reference
+ * by handle later.  Generally, this represents things like OpenGL texture
+ * objects or display lists (or their equivalent on other platforms).
+ *
+ * This object simply records the pointers to the context objects created by
+ * the individual GSG's; these context objects will contain enough information
+ * to reference or release the actual object stored within the graphics
+ * context.
+ *
+ * These tables may potentially be shared between related graphics contexts,
+ * hence their storage here in a separate object rather than as a part of the
+ * GraphicsStateGuardian.
+ */
 class EXPCL_PANDA_GOBJ PreparedGraphicsObjects : public ReferenceCount {
 public:
   PreparedGraphicsObjects();
   ~PreparedGraphicsObjects();
 
 PUBLISHED:
-  INLINE const string &get_name() const;
+  INLINE const std::string &get_name() const;
 
   void set_graphics_memory_limit(size_t limit);
   INLINE size_t get_graphics_memory_limit() const;
-  void show_graphics_memory_lru(ostream &out) const;
-  void show_residency_trackers(ostream &out) const;
+  void show_graphics_memory_lru(std::ostream &out) const;
+  void show_residency_trackers(std::ostream &out) const;
 
   INLINE void release_all();
   INLINE int get_num_queued() const;
@@ -148,27 +146,91 @@ PUBLISHED:
   prepare_index_buffer_now(GeomPrimitive *data,
                            GraphicsStateGuardianBase *gsg);
 
+  void enqueue_shader_buffer(ShaderBuffer *data);
+  bool is_shader_buffer_queued(const ShaderBuffer *data) const;
+  bool dequeue_shader_buffer(ShaderBuffer *data);
+  bool is_shader_buffer_prepared(const ShaderBuffer *data) const;
+  void release_shader_buffer(BufferContext *bc);
+  int release_all_shader_buffers();
+  int get_num_queued_shader_buffers() const;
+  int get_num_prepared_shader_buffers() const;
+
+  BufferContext *
+  prepare_shader_buffer_now(ShaderBuffer *data,
+                            GraphicsStateGuardianBase *gsg);
+
 public:
+  /**
+   * This is a handle to an enqueued object, from which the result can be
+   * obtained upon completion.
+   */
+  class EXPCL_PANDA_GOBJ EnqueuedObject final : public AsyncFuture {
+  public:
+    EnqueuedObject(PreparedGraphicsObjects *pgo, TypedWritableReferenceCount *object);
+
+    TypedWritableReferenceCount *get_object() { return _object.p(); }
+    SavedContext *get_result() { return (SavedContext *)AsyncFuture::get_result(); }
+    void set_result(SavedContext *result);
+
+    void notify_removed();
+    virtual bool cancel() final;
+
+  PUBLISHED:
+    MAKE_PROPERTY(object, get_object);
+
+  private:
+    PreparedGraphicsObjects *_pgo;
+    PT(TypedWritableReferenceCount) const _object;
+
+  public:
+    static TypeHandle get_class_type() {
+      return _type_handle;
+    }
+    static void init_type() {
+      AsyncFuture::init_type();
+      register_type(_type_handle, "EnqueuedObject",
+                    AsyncFuture::get_class_type());
+    }
+    virtual TypeHandle get_type() const {
+      return get_class_type();
+    }
+    virtual TypeHandle force_init_type() {init_type(); return get_class_type();}
+
+  private:
+    static TypeHandle _type_handle;
+  };
+
+  // These are variations of enqueue_xxx that also return a future.  They are
+  // used to implement texture->prepare(), etc.  They are only marked public
+  // so we don't have to define a whole bunch of friend classes.
+  PT(EnqueuedObject) enqueue_texture_future(Texture *tex);
+  //PT(EnqueuedObject) enqueue_geom_future(Geom *geom);
+  PT(EnqueuedObject) enqueue_shader_future(Shader *shader);
+  //PT(EnqueuedObject) enqueue_vertex_buffer_future(GeomVertexArrayData *data);
+  //PT(EnqueuedObject) enqueue_index_buffer_future(GeomPrimitive *data);
+  //PT(EnqueuedObject) enqueue_shader_buffer_future(ShaderBuffer *data);
+
   void begin_frame(GraphicsStateGuardianBase *gsg,
                    Thread *current_thread);
   void end_frame(Thread *current_thread);
 
 private:
-  static string init_name();
+  static std::string init_name();
 
 private:
   typedef phash_set<TextureContext *, pointer_hash> Textures;
-  typedef phash_set< PT(Texture) > EnqueuedTextures;
+  typedef phash_map< PT(Texture), PT(EnqueuedObject) > EnqueuedTextures;
   typedef phash_set<GeomContext *, pointer_hash> Geoms;
   typedef phash_set< PT(Geom) > EnqueuedGeoms;
   typedef phash_set<ShaderContext *, pointer_hash> Shaders;
-  typedef phash_set< PT(Shader) > EnqueuedShaders;
+  typedef phash_map< PT(Shader), PT(EnqueuedObject) > EnqueuedShaders;
   typedef phash_set<BufferContext *, pointer_hash> Buffers;
   typedef phash_set< PT(GeomVertexArrayData) > EnqueuedVertexBuffers;
   typedef phash_set< PT(GeomPrimitive) > EnqueuedIndexBuffers;
+  typedef phash_set< PT(ShaderBuffer) > EnqueuedShaderBuffers;
 
-  // Sampler states are stored a little bit differently, as they are
-  // mapped by value and can't store the list of prepared samplers.
+  // Sampler states are stored a little bit differently, as they are mapped by
+  // value and can't store the list of prepared samplers.
   typedef pmap<SamplerState, SamplerContext *> PreparedSamplers;
   typedef pset<SamplerContext *, pointer_hash> ReleasedSamplers;
   typedef pset<SamplerState> EnqueuedSamplers;
@@ -191,7 +253,7 @@ private:
                                BufferCacheLRU &buffer_cache_lru,
                                size_t &buffer_cache_size,
                                int released_buffer_cache_size,
-                               Buffers &released_buffers);
+                               pvector<BufferContext *> &released_buffers);
   BufferContext *get_cached_buffer(size_t data_size_bytes,
                                    GeomEnums::UsageHint usage_hint,
                                    BufferCache &buffer_cache,
@@ -199,8 +261,9 @@ private:
                                    size_t &buffer_cache_size);
 
   ReMutex _lock;
-  string _name;
-  Textures _prepared_textures, _released_textures;
+  std::string _name;
+  Textures _prepared_textures;
+  pvector<TextureContext *> _released_textures;
   EnqueuedTextures _enqueued_textures;
   PreparedSamplers _prepared_samplers;
   ReleasedSamplers _released_samplers;
@@ -209,10 +272,15 @@ private:
   EnqueuedGeoms _enqueued_geoms;
   Shaders _prepared_shaders, _released_shaders;
   EnqueuedShaders _enqueued_shaders;
-  Buffers _prepared_vertex_buffers, _released_vertex_buffers;
+  Buffers _prepared_vertex_buffers;
+  pvector<BufferContext *> _released_vertex_buffers;
   EnqueuedVertexBuffers _enqueued_vertex_buffers;
-  Buffers _prepared_index_buffers, _released_index_buffers;
+  Buffers _prepared_index_buffers;
+  pvector<BufferContext *> _released_index_buffers;
   EnqueuedIndexBuffers _enqueued_index_buffers;
+  Buffers _prepared_shader_buffers;
+  pvector<BufferContext *> _released_shader_buffers;
+  EnqueuedShaderBuffers _enqueued_shader_buffers;
 
   BufferCache _vertex_buffer_cache;
   BufferCacheLRU _vertex_buffer_cache_lru;
@@ -226,13 +294,14 @@ public:
   BufferResidencyTracker _texture_residency;
   BufferResidencyTracker _vbuffer_residency;
   BufferResidencyTracker _ibuffer_residency;
+  BufferResidencyTracker _sbuffer_residency;
 
   AdaptiveLru _graphics_memory_lru;
   SimpleLru _sampler_object_lru;
 
 public:
-  // This is only public as a temporary hack.  Don't mess with it
-  // unless you know what you're doing.
+  // This is only public as a temporary hack.  Don't mess with it unless you
+  // know what you're doing.
   bool _support_released_buffer_cache;
 
 private:

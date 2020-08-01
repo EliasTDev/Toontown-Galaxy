@@ -28,12 +28,10 @@ The order by which events are called is defined by these rules:
    unless this conflicts with the first rule.
 Each function will be called at most once for each event.
 """
-
-import sys
-import string
 import re
-import Tkinter
-from idlelib import macosxSupport
+import sys
+
+import tkinter
 
 # the event type constants, which define the meaning of mc_type
 MC_KEYPRESS=0; MC_KEYRELEASE=1; MC_BUTTONPRESS=2; MC_BUTTONRELEASE=3;
@@ -46,7 +44,7 @@ MC_SHIFT = 1<<0; MC_CONTROL = 1<<2; MC_ALT = 1<<3; MC_META = 1<<5
 MC_OPTION = 1<<6; MC_COMMAND = 1<<7
 
 # define the list of modifiers, to be used in complex event types.
-if macosxSupport.runningAsOSXApp():
+if sys.platform == "darwin":
     _modifiers = (("Shift",), ("Control",), ("Option",), ("Command",))
     _modifier_masks = (MC_SHIFT, MC_CONTROL, MC_OPTION, MC_COMMAND)
 else:
@@ -57,6 +55,12 @@ else:
 _modifier_names = dict([(name, number)
                          for number in range(len(_modifiers))
                          for name in _modifiers[number]])
+
+# In 3.4, if no shell window is ever open, the underlying Tk widget is
+# destroyed before .__del__ methods here are called.  The following
+# is used to selectively ignore shutdown exceptions to avoid
+# 'Exception ignored' messages.  See http://bugs.python.org/issue20167
+APPLICATION_GONE = "application has been destroyed"
 
 # A binder is a class which binds functions to one type of event. It has two
 # methods: bind and unbind, which get a function and a parsed sequence, as
@@ -99,10 +103,15 @@ class _SimpleBinder:
 
     def __del__(self):
         if self.handlerid:
-            self.widget.unbind(self.widgetinst, self.sequence, self.handlerid)
+            try:
+                self.widget.unbind(self.widgetinst, self.sequence,
+                        self.handlerid)
+            except tkinter.TclError as e:
+                if not APPLICATION_GONE in e.args[0]:
+                    raise
 
 # An int in range(1 << len(_modifiers)) represents a combination of modifiers
-# (if the least significent bit is on, _modifiers[0] is on, and so on).
+# (if the least significant bit is on, _modifiers[0] is on, and so on).
 # _state_subsets gives for each combination of modifiers, or *state*,
 # a list of the states which are a subset of it. This list is ordered by the
 # number of modifiers is the state - the most specific state comes first.
@@ -228,7 +237,11 @@ class _ComplexBinder:
 
     def __del__(self):
         for seq, id in self.handlerids:
-            self.widget.unbind(self.widgetinst, seq, id)
+            try:
+                self.widget.unbind(self.widgetinst, seq, id)
+            except tkinter.TclError as e:
+                if not APPLICATION_GONE in e.args[0]:
+                    raise
 
 # define the list of event types to be handled by MultiEvent. the order is
 # compatible with the definition of event type constants.
@@ -259,19 +272,16 @@ def _parse_sequence(sequence):
     """
     if not sequence or sequence[0] != '<' or sequence[-1] != '>':
         return None
-    words = string.split(sequence[1:-1], '-')
-
+    words = sequence[1:-1].split('-')
     modifiers = 0
     while words and words[0] in _modifier_names:
         modifiers |= 1 << _modifier_names[words[0]]
         del words[0]
-
     if words and words[0] in _type_names:
         type = _type_names[words[0]]
         del words[0]
     else:
         return None
-
     if _binder_classes[type] is _SimpleBinder:
         if modifiers or words:
             return None
@@ -310,7 +320,7 @@ def MultiCallCreator(widget):
         return _multicall_dict[widget]
 
     class MultiCall (widget):
-        assert issubclass(widget, Tkinter.Misc)
+        assert issubclass(widget, tkinter.Misc)
 
         def __init__(self, *args, **kwargs):
             widget.__init__(self, *args, **kwargs)
@@ -322,7 +332,8 @@ def MultiCallCreator(widget):
                               for i in range(len(_types))]
 
         def bind(self, sequence=None, func=None, add=None):
-            #print "bind(%s, %s, %s) called." % (sequence, func, add)
+            #print("bind(%s, %s, %s)" % (sequence, func, add),
+            #      file=sys.__stderr__)
             if type(sequence) is str and len(sequence) > 2 and \
                sequence[:2] == "<<" and sequence[-2:] == ">>":
                 if sequence in self.__eventinfo:
@@ -350,7 +361,8 @@ def MultiCallCreator(widget):
             return widget.unbind(self, sequence, funcid)
 
         def event_add(self, virtual, *sequences):
-            #print "event_add(%s,%s) was called"%(repr(virtual),repr(sequences))
+            #print("event_add(%s, %s)" % (repr(virtual), repr(sequences)),
+            #      file=sys.__stderr__)
             if virtual not in self.__eventinfo:
                 self.__eventinfo[virtual] = [None, []]
 
@@ -358,7 +370,7 @@ def MultiCallCreator(widget):
             for seq in sequences:
                 triplet = _parse_sequence(seq)
                 if triplet is None:
-                    #print >> sys.stderr, "Seq. %s was added by Tkinter."%seq
+                    #print("Tkinter event_add(%s)" % seq, file=sys.__stderr__)
                     widget.event_add(self, virtual, seq)
                 else:
                     if func is not None:
@@ -372,7 +384,7 @@ def MultiCallCreator(widget):
             for seq in sequences:
                 triplet = _parse_sequence(seq)
                 if triplet is None:
-                    #print >> sys.stderr, "Seq. %s was deleted by Tkinter."%seq
+                    #print("Tkinter event_delete: %s" % seq, file=sys.__stderr__)
                     widget.event_delete(self, virtual, seq)
                 else:
                     if func is not None:
@@ -392,20 +404,26 @@ def MultiCallCreator(widget):
                 func, triplets = self.__eventinfo[virtual]
                 if func:
                     for triplet in triplets:
-                        self.__binders[triplet[1]].unbind(triplet, func)
-
+                        try:
+                            self.__binders[triplet[1]].unbind(triplet, func)
+                        except tkinter.TclError as e:
+                            if not APPLICATION_GONE in e.args[0]:
+                                raise
 
     _multicall_dict[widget] = MultiCall
     return MultiCall
 
-if __name__ == "__main__":
-    # Test
-    root = Tkinter.Tk()
-    text = MultiCallCreator(Tkinter.Text)(root)
+
+def _multi_call(parent):  # htest #
+    top = tkinter.Toplevel(parent)
+    top.title("Test MultiCall")
+    x, y = map(int, parent.geometry().split('+')[1:])
+    top.geometry("+%d+%d" % (x, y + 175))
+    text = MultiCallCreator(tkinter.Text)(top)
     text.pack()
     def bindseq(seq, n=[0]):
         def handler(event):
-            print seq
+            print(seq)
         text.bind("<<handler%d>>"%n[0], handler)
         text.event_add("<<handler%d>>"%n[0], seq)
         n[0] += 1
@@ -416,8 +434,15 @@ if __name__ == "__main__":
     bindseq("<Alt-Control-Key-a>")
     bindseq("<Key-b>")
     bindseq("<Control-Button-1>")
+    bindseq("<Button-2>")
     bindseq("<Alt-Button-1>")
     bindseq("<FocusOut>")
     bindseq("<Enter>")
     bindseq("<Leave>")
-    root.mainloop()
+
+if __name__ == "__main__":
+    from unittest import main
+    main('idlelib.idle_test.test_mainmenu', verbosity=2, exit=False)
+
+    from idlelib.idle_test.htest import run
+    run(_multi_call)

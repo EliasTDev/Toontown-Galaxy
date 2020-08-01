@@ -1,61 +1,22 @@
-// Filename: doubleBitMask.I
-// Created by:  drose (08Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file doubleBitMask.I
+ * @author drose
+ * @date 2000-06-08
+ */
 
 template<class BMType>
 TypeHandle DoubleBitMask<BMType>::_type_handle;
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::Constructor
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
-template<class BMType>
-INLINE DoubleBitMask<BMType>::
-DoubleBitMask() {
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::Copy Constructor
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
-template<class BMType>
-INLINE DoubleBitMask<BMType>::
-DoubleBitMask(const DoubleBitMask<BMType> &copy) :
-  _lo(copy._lo),
-  _hi(copy._hi)
-{
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::Copy Assignment Operator
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
-template<class BMType>
-INLINE DoubleBitMask<BMType> &DoubleBitMask<BMType>::
-operator = (const DoubleBitMask<BMType> &copy) {
-  _lo = copy._lo;
-  _hi = copy._hi;
-  return *this;
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::Named all_on constructor
-//       Access: Published, Static
-//  Description: Returns a DoubleBitMask whose bits are all on.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns a DoubleBitMask whose bits are all on.
+ */
 template<class BMType>
 INLINE DoubleBitMask<BMType> DoubleBitMask<BMType>::
 all_on() {
@@ -65,11 +26,9 @@ all_on() {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::Named all_on constructor
-//       Access: Published, Static
-//  Description: Returns a DoubleBitMask whose bits are all off.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns a DoubleBitMask whose bits are all off.
+ */
 template<class BMType>
 INLINE DoubleBitMask<BMType> DoubleBitMask<BMType>::
 all_off() {
@@ -79,11 +38,9 @@ all_off() {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::Named lower_on constructor
-//       Access: Published, Static
-//  Description: Returns a DoubleBitMask whose lower on_bits bits are on.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns a DoubleBitMask whose lower on_bits bits are on.
+ */
 template<class BMType>
 INLINE DoubleBitMask<BMType> DoubleBitMask<BMType>::
 lower_on(int on_bits) {
@@ -102,11 +59,9 @@ lower_on(int on_bits) {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::Named bit constructor
-//       Access: Published, Static
-//  Description: Returns a DoubleBitMask with only the indicated bit on.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns a DoubleBitMask with only the indicated bit on.
+ */
 template<class BMType>
 INLINE DoubleBitMask<BMType> DoubleBitMask<BMType>::
 bit(int index) {
@@ -115,12 +70,9 @@ bit(int index) {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::Named range constructor
-//       Access: Published, Static
-//  Description: Returns a DoubleBitMask whose size bits, beginning at
-//               low_bit, are on.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns a DoubleBitMask whose size bits, beginning at low_bit, are on.
+ */
 template<class BMType>
 INLINE DoubleBitMask<BMType> DoubleBitMask<BMType>::
 range(int low_bit, int size) {
@@ -129,72 +81,19 @@ range(int low_bit, int size) {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::Destructor
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the number of bits available to set in the doubleBitMask.
+ */
 template<class BMType>
-INLINE DoubleBitMask<BMType>::
-~DoubleBitMask() {
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::has_max_num_bits
-//       Access: Published, Static
-//  Description: Returns true if there is a maximum number of bits
-//               that may be stored in this structure, false
-//               otherwise.  If this returns true, the number may be
-//               queried in get_max_num_bits().
-//
-//               This method always returns true.  This method is
-//               defined so generic programming algorithms can use
-//               DoubleBitMask or BitArray interchangeably.
-////////////////////////////////////////////////////////////////////
-template<class BMType>
-CONSTEXPR bool DoubleBitMask<BMType>::
-has_max_num_bits() {
-  return true;
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::get_max_num_bits
-//       Access: Published, Static
-//  Description: If get_max_num_bits() returned true, this method may
-//               be called to return the maximum number of bits that
-//               may be stored in this structure.  It is an error to
-//               call this if get_max_num_bits() return false.
-//
-//               It is never an error to call this method.  This
-//               returns the same thing as get_num_bits().  This
-//               method is defined so generic programming algorithms
-//               can use DoubleBitMask or BitArray interchangeably.
-////////////////////////////////////////////////////////////////////
-template<class BMType>
-CONSTEXPR int DoubleBitMask<BMType>::
-get_max_num_bits() {
+constexpr int DoubleBitMask<BMType>::
+get_num_bits() const {
   return num_bits;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::get_num_bits
-//       Access: Published, Static
-//  Description: Returns the number of bits available to set in the
-//               doubleBitMask.
-////////////////////////////////////////////////////////////////////
-template<class BMType>
-CONSTEXPR int DoubleBitMask<BMType>::
-get_num_bits() {
-  return num_bits;
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::get_bit
-//       Access: Published
-//  Description: Returns true if the nth bit is set, false if it is
-//               cleared.  index must be in the range [0,
-//               num_bits).
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns true if the nth bit is set, false if it is cleared.  index must be
+ * in the range [0, num_bits).
+ */
 template<class BMType>
 INLINE bool DoubleBitMask<BMType>::
 get_bit(int index) const {
@@ -205,12 +104,9 @@ get_bit(int index) const {
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::set_bit
-//       Access: Published
-//  Description: Sets the nth bit on.  index must be in the range
-//               [0, num_bits).
-////////////////////////////////////////////////////////////////////
+/**
+ * Sets the nth bit on.  index must be in the range [0, num_bits).
+ */
 template<class BMType>
 INLINE void DoubleBitMask<BMType>::
 set_bit(int index) {
@@ -221,12 +117,9 @@ set_bit(int index) {
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::clear_bit
-//       Access: Published
-//  Description: Sets the nth bit off.  index must be in the range
-//               [0, num_bits).
-////////////////////////////////////////////////////////////////////
+/**
+ * Sets the nth bit off.  index must be in the range [0, num_bits).
+ */
 template<class BMType>
 INLINE void DoubleBitMask<BMType>::
 clear_bit(int index) {
@@ -237,13 +130,10 @@ clear_bit(int index) {
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::set_bit_to
-//       Access: Published
-//  Description: Sets the nth bit either on or off, according to the
-//               indicated bool value.  index must be in the range [0,
-//               num_bits).
-////////////////////////////////////////////////////////////////////
+/**
+ * Sets the nth bit either on or off, according to the indicated bool value.
+ * index must be in the range [0, num_bits).
+ */
 template<class BMType>
 INLINE void DoubleBitMask<BMType>::
 set_bit_to(int index, bool value) {
@@ -254,39 +144,30 @@ set_bit_to(int index, bool value) {
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::is_zero
-//       Access: Published
-//  Description: Returns true if the entire doubleBitMask is zero, false
-//               otherwise.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns true if the entire doubleBitMask is zero, false otherwise.
+ */
 template<class BMType>
 INLINE bool DoubleBitMask<BMType>::
 is_zero() const {
   return (_lo.is_zero() && _hi.is_zero());
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::is_all_on
-//       Access: Published
-//  Description: Returns true if the entire doubleBitMask is one, false
-//               otherwise.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns true if the entire doubleBitMask is one, false otherwise.
+ */
 template<class BMType>
 INLINE bool DoubleBitMask<BMType>::
 is_all_on() const {
   return (_lo.is_all_on() && _hi.is_all_on());
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::extract
-//       Access: Published
-//  Description: Returns a word that represents only the indicated
-//               range of bits within this DoubleBitMask, shifted to the
-//               least-significant position.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns a word that represents only the indicated range of bits within this
+ * DoubleBitMask, shifted to the least-significant position.
+ */
 template<class BMType>
-INLINE TYPENAME DoubleBitMask<BMType>::WordType DoubleBitMask<BMType>::
+INLINE typename DoubleBitMask<BMType>::WordType DoubleBitMask<BMType>::
 extract(int low_bit, int size) const {
   if (low_bit >= half_bits) {
     return _hi.extract(low_bit - half_bits, size);
@@ -300,12 +181,10 @@ extract(int low_bit, int size) const {
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::store
-//       Access: Published
-//  Description: Stores the indicated word into the indicated range of
-//               bits with this DoubleBitMask.
-////////////////////////////////////////////////////////////////////
+/**
+ * Stores the indicated word into the indicated range of bits with this
+ * DoubleBitMask.
+ */
 template<class BMType>
 INLINE void DoubleBitMask<BMType>::
 store(WordType value, int low_bit, int size) {
@@ -322,12 +201,9 @@ store(WordType value, int low_bit, int size) {
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::has_any_of
-//       Access: Published
-//  Description: Returns true if any bit in the indicated range is
-//               set, false otherwise.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns true if any bit in the indicated range is set, false otherwise.
+ */
 template<class BMType>
 INLINE bool DoubleBitMask<BMType>::
 has_any_of(int low_bit, int size) const {
@@ -338,17 +214,14 @@ has_any_of(int low_bit, int size) const {
   } else {
     int hi_portion = low_bit + size - half_bits;
     int lo_portion = size - hi_portion;
-    return (_hi.has_any_of(0, hi_portion) << lo_portion) ||
-      _lo.has_any_of(low_bit, lo_portion);
+    return _hi.has_any_of(0, hi_portion)
+        || _lo.has_any_of(low_bit, lo_portion);
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::has_all_of
-//       Access: Published
-//  Description: Returns true if all bits in the indicated range are
-//               set, false otherwise.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns true if all bits in the indicated range are set, false otherwise.
+ */
 template<class BMType>
 INLINE bool DoubleBitMask<BMType>::
 has_all_of(int low_bit, int size) const {
@@ -359,16 +232,14 @@ has_all_of(int low_bit, int size) const {
   } else {
     int hi_portion = low_bit + size - half_bits;
     int lo_portion = size - hi_portion;
-    return (_hi.has_all_of(0, hi_portion) << lo_portion) &&
-      _lo.has_all_of(low_bit, lo_portion);
+    return _hi.has_all_of(0, hi_portion)
+        && _lo.has_all_of(low_bit, lo_portion);
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::set_range
-//       Access: Published
-//  Description: Sets the indicated range of bits on.
-////////////////////////////////////////////////////////////////////
+/**
+ * Sets the indicated range of bits on.
+ */
 template<class BMType>
 INLINE void DoubleBitMask<BMType>::
 set_range(int low_bit, int size) {
@@ -385,11 +256,9 @@ set_range(int low_bit, int size) {
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::clear_range
-//       Access: Published
-//  Description: Sets the indicated range of bits off.
-////////////////////////////////////////////////////////////////////
+/**
+ * Sets the indicated range of bits off.
+ */
 template<class BMType>
 INLINE void DoubleBitMask<BMType>::
 clear_range(int low_bit, int size) {
@@ -406,11 +275,9 @@ clear_range(int low_bit, int size) {
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::set_range_to
-//       Access: Published
-//  Description: Sets the indicated range of bits to either on or off.
-////////////////////////////////////////////////////////////////////
+/**
+ * Sets the indicated range of bits to either on or off.
+ */
 template<class BMType>
 INLINE void DoubleBitMask<BMType>::
 set_range_to(bool value, int low_bit, int size) {
@@ -421,36 +288,28 @@ set_range_to(bool value, int low_bit, int size) {
   }
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::get_num_on_bits
-//       Access: Published
-//  Description: Returns the number of bits that are set to 1 in the
-//               mask.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the number of bits that are set to 1 in the mask.
+ */
 template<class BMType>
 INLINE int DoubleBitMask<BMType>::
 get_num_on_bits() const {
   return _lo.get_num_on_bits() + _hi.get_num_on_bits();
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::get_num_off_bits
-//       Access: Published
-//  Description: Returns the number of bits that are set to 0 in the
-//               mask.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the number of bits that are set to 0 in the mask.
+ */
 template<class BMType>
 INLINE int DoubleBitMask<BMType>::
 get_num_off_bits() const {
   return _lo.get_num_off_bits() + _hi.get_num_off_bits();
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::get_lowest_on_bit
-//       Access: Published
-//  Description: Returns the index of the lowest 1 bit in the mask.
-//               Returns -1 if there are no 1 bits.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the index of the lowest 1 bit in the mask.  Returns -1 if there are
+ * no 1 bits.
+ */
 template<class BMType>
 INLINE int DoubleBitMask<BMType>::
 get_lowest_on_bit() const {
@@ -464,12 +323,10 @@ get_lowest_on_bit() const {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::get_lowest_off_bit
-//       Access: Published
-//  Description: Returns the index of the lowest 0 bit in the mask.
-//               Returns -1 if there are no 0 bits.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the index of the lowest 0 bit in the mask.  Returns -1 if there are
+ * no 0 bits.
+ */
 template<class BMType>
 INLINE int DoubleBitMask<BMType>::
 get_lowest_off_bit() const {
@@ -483,12 +340,10 @@ get_lowest_off_bit() const {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::get_highest_on_bit
-//       Access: Published
-//  Description: Returns the index of the highest 1 bit in the mask.
-//               Returns -1 if there are no 1 bits.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the index of the highest 1 bit in the mask.  Returns -1 if there
+ * are no 1 bits.
+ */
 template<class BMType>
 INLINE int DoubleBitMask<BMType>::
 get_highest_on_bit() const {
@@ -501,12 +356,10 @@ get_highest_on_bit() const {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::get_highest_off_bit
-//       Access: Published
-//  Description: Returns the index of the highest 0 bit in the mask.
-//               Returns -1 if there are no 0 bits.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the index of the highest 0 bit in the mask.  Returns -1 if there
+ * are no 0 bits.
+ */
 template<class BMType>
 INLINE int DoubleBitMask<BMType>::
 get_highest_off_bit() const {
@@ -519,17 +372,13 @@ get_highest_off_bit() const {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::get_next_higher_different_bit
-//       Access: Published
-//  Description: Returns the index of the next bit in the mask, above
-//               low_bit, whose value is different that the value of
-//               low_bit.  Returns low_bit again if all bits higher
-//               than low_bit have the same value.
-//
-//               This can be used to quickly iterate through all of
-//               the bits in the mask.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the index of the next bit in the mask, above low_bit, whose value
+ * is different that the value of low_bit.  Returns low_bit again if all bits
+ * higher than low_bit have the same value.
+ *
+ * This can be used to quickly iterate through all of the bits in the mask.
+ */
 template<class BMType>
 INLINE int DoubleBitMask<BMType>::
 get_next_higher_different_bit(int low_bit) const {
@@ -551,12 +400,10 @@ get_next_higher_different_bit(int low_bit) const {
   return result + half_bits;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::invert_in_place
-//       Access: Published
-//  Description: Inverts all the bits in the DoubleBitMask.  This is
-//               equivalent to mask = ~mask.
-////////////////////////////////////////////////////////////////////
+/**
+ * Inverts all the bits in the DoubleBitMask.  This is equivalent to mask =
+ * ~mask.
+ */
 template<class BMType>
 INLINE void DoubleBitMask<BMType>::
 invert_in_place() {
@@ -564,29 +411,24 @@ invert_in_place() {
   _hi.invert_in_place();
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::has_bits_in_common
-//       Access: Published
-//  Description: Returns true if this DoubleBitMask has any "one" bits in
-//               common with the other one, false otherwise.
-//
-//               This is equivalent to (mask & other) != 0, but may be
-//               faster.  (Actually, it should only be faster in the
-//               BitArray case, but this method is provided for the
-//               benefit of generic programming algorithms).
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns true if this DoubleBitMask has any "one" bits in common with the
+ * other one, false otherwise.
+ *
+ * This is equivalent to (mask & other) != 0, but may be faster.  (Actually,
+ * it should only be faster in the BitArray case, but this method is provided
+ * for the benefit of generic programming algorithms).
+ */
 template<class BMType>
 INLINE bool DoubleBitMask<BMType>::
 has_bits_in_common(const DoubleBitMask<BMType> &other) const {
-  return _lo.has_bits_in_common(other._lo) || 
+  return _lo.has_bits_in_common(other._lo) ||
     _hi.has_bits_in_common(other._hi);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::clear
-//       Access: Published
-//  Description: Sets all the bits in the DoubleBitMask off.
-////////////////////////////////////////////////////////////////////
+/**
+ * Sets all the bits in the DoubleBitMask off.
+ */
 template<class BMType>
 INLINE void DoubleBitMask<BMType>::
 clear() {
@@ -594,91 +436,75 @@ clear() {
   _hi.clear();
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::output
-//       Access: Published
-//  Description: Writes the DoubleBitMask out as a binary or a hex number,
-//               according to the number of bits.
-////////////////////////////////////////////////////////////////////
+/**
+ * Writes the DoubleBitMask out as a binary or a hex number, according to the
+ * number of bits.
+ */
 template<class BMType>
 void DoubleBitMask<BMType>::
-output(ostream &out) const {
+output(std::ostream &out) const {
   output_hex(out);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::output_binary
-//       Access: Published
-//  Description: Writes the DoubleBitMask out as a binary number, with
-//               spaces every four bits.
-////////////////////////////////////////////////////////////////////
+/**
+ * Writes the DoubleBitMask out as a binary number, with spaces every four
+ * bits.
+ */
 template<class BMType>
 void DoubleBitMask<BMType>::
-output_binary(ostream &out, int spaces_every) const {
+output_binary(std::ostream &out, int spaces_every) const {
   _hi.output_binary(out);
   out << ' ';
   _lo.output_binary(out);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::output_hex
-//       Access: Published
-//  Description: Writes the DoubleBitMask out as a hexadecimal number, with
-//               spaces every four digits.
-////////////////////////////////////////////////////////////////////
+/**
+ * Writes the DoubleBitMask out as a hexadecimal number, with spaces every
+ * four digits.
+ */
 template<class BMType>
 void DoubleBitMask<BMType>::
-output_hex(ostream &out, int spaces_every) const {
+output_hex(std::ostream &out, int spaces_every) const {
   _hi.output_hex(out);
   out << ' ';
   _lo.output_hex(out);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::write
-//       Access: Published
-//  Description: Writes the DoubleBitMask out as a binary or a hex number,
-//               according to the number of bits.
-////////////////////////////////////////////////////////////////////
+/**
+ * Writes the DoubleBitMask out as a binary or a hex number, according to the
+ * number of bits.
+ */
 template<class BMType>
 void DoubleBitMask<BMType>::
-write(ostream &out, int indent_level) const {
+write(std::ostream &out, int indent_level) const {
   indent(out, indent_level) << *this << "\n";
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::operator ==
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 template<class BMType>
 INLINE bool DoubleBitMask<BMType>::
 operator == (const DoubleBitMask<BMType> &other) const {
   return _lo == other._lo && _hi == other._hi;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::operator !=
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 template<class BMType>
 INLINE bool DoubleBitMask<BMType>::
 operator != (const DoubleBitMask<BMType> &other) const {
   return _lo != other._lo && _hi != other._hi;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::operator <
-//       Access: Published
-//  Description: The ordering operator is of limited usefulness with a
-//               DoubleBitMask, however, it has a definition which places
-//               all unique DoubleBitMasks into a unique ordering.  It may
-//               be useful when defining ordered STL containers of
-//               DoubleBitMasks, for instance; and it's required in order to
-//               export any STL container (ordered or unordered) of
-//               DoubleBitMask under Windows.
-////////////////////////////////////////////////////////////////////
+/**
+ * The ordering operator is of limited usefulness with a DoubleBitMask,
+ * however, it has a definition which places all unique DoubleBitMasks into a
+ * unique ordering.  It may be useful when defining ordered STL containers of
+ * DoubleBitMasks, for instance; and it's required in order to export any STL
+ * container (ordered or unordered) of DoubleBitMask under Windows.
+ */
 template<class BMType>
 INLINE bool DoubleBitMask<BMType>::
 operator < (const DoubleBitMask<BMType> &other) const {
@@ -689,14 +515,12 @@ operator < (const DoubleBitMask<BMType> &other) const {
   return _lo < other._lo;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::compare_to
-//       Access: Published
-//  Description: Returns a number less than zero if this DoubleBitMask sorts
-//               before the indicated other DoubleBitMask, greater than zero
-//               if it sorts after, or 0 if they are equivalent.  This
-//               is based on the same ordering defined by operator <.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns a number less than zero if this DoubleBitMask sorts before the
+ * indicated other DoubleBitMask, greater than zero if it sorts after, or 0 if
+ * they are equivalent.  This is based on the same ordering defined by
+ * operator <.
+ */
 template<class BMType>
 INLINE int DoubleBitMask<BMType>::
 compare_to(const DoubleBitMask<BMType> &other) const {
@@ -707,11 +531,9 @@ compare_to(const DoubleBitMask<BMType> &other) const {
   return _lo.compare_to(other._lo);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::operator &
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 template<class BMType>
 INLINE DoubleBitMask<BMType> DoubleBitMask<BMType>::
 operator & (const DoubleBitMask<BMType> &other) const {
@@ -720,11 +542,9 @@ operator & (const DoubleBitMask<BMType> &other) const {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::operator |
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 template<class BMType>
 INLINE DoubleBitMask<BMType> DoubleBitMask<BMType>::
 operator | (const DoubleBitMask<BMType> &other) const {
@@ -733,11 +553,9 @@ operator | (const DoubleBitMask<BMType> &other) const {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::operator ^
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 template<class BMType>
 INLINE DoubleBitMask<BMType> DoubleBitMask<BMType>::
 operator ^ (const DoubleBitMask<BMType> &other) const {
@@ -746,11 +564,9 @@ operator ^ (const DoubleBitMask<BMType> &other) const {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::operator ~
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 template<class BMType>
 INLINE DoubleBitMask<BMType> DoubleBitMask<BMType>::
 operator ~ () const {
@@ -759,11 +575,9 @@ operator ~ () const {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::operator <<
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 template<class BMType>
 INLINE DoubleBitMask<BMType> DoubleBitMask<BMType>::
 operator << (int shift) const {
@@ -772,11 +586,9 @@ operator << (int shift) const {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::operator >>
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 template<class BMType>
 INLINE DoubleBitMask<BMType> DoubleBitMask<BMType>::
 operator >> (int shift) const {
@@ -785,11 +597,9 @@ operator >> (int shift) const {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::operator &=
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 template<class BMType>
 INLINE void DoubleBitMask<BMType>::
 operator &= (const DoubleBitMask<BMType> &other) {
@@ -797,11 +607,9 @@ operator &= (const DoubleBitMask<BMType> &other) {
   _hi &= other._hi;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::operator |=
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 template<class BMType>
 INLINE void DoubleBitMask<BMType>::
 operator |= (const DoubleBitMask<BMType> &other) {
@@ -809,11 +617,9 @@ operator |= (const DoubleBitMask<BMType> &other) {
   _hi |= other._hi;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::operator ^=
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 template<class BMType>
 INLINE void DoubleBitMask<BMType>::
 operator ^= (const DoubleBitMask<BMType> &other) {
@@ -821,35 +627,29 @@ operator ^= (const DoubleBitMask<BMType> &other) {
   _hi ^= other._hi;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::operator <<=
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 template<class BMType>
 INLINE void DoubleBitMask<BMType>::
 operator <<= (int shift) {
-  _hi = (_hi << shift) | ((_lo >> half_bits - shift) & BitMaskType::lower_on(shift));
+  _hi = (_hi << shift) | ((_lo >> (half_bits - shift)) & BitMaskType::lower_on(shift));
   _lo <<= shift;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::operator >>=
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 template<class BMType>
 INLINE void DoubleBitMask<BMType>::
 operator >>= (int shift) {
-  _lo = (_lo >> shift) | ((_hi & BitMaskType::lower_on(shift)) << half_bits - shift);
+  _lo = (_lo >> shift) | ((_hi & BitMaskType::lower_on(shift)) << (half_bits - shift));
   _hi >>= shift;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::generate_hash
-//       Access: Public
-//  Description: Adds the doubleBitMask to the indicated hash generator.
-////////////////////////////////////////////////////////////////////
+/**
+ * Adds the doubleBitMask to the indicated hash generator.
+ */
 template<class BMType>
 INLINE void DoubleBitMask<BMType>::
 generate_hash(ChecksumHashGenerator &hashgen) const {
@@ -857,15 +657,13 @@ generate_hash(ChecksumHashGenerator &hashgen) const {
   _lo.generate_hash(hashgen);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: DoubleBitMask::init_type
-//       Access: Public
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 template<class BMType>
 void DoubleBitMask<BMType>::
 init_type() {
-  ostringstream str;
+  std::ostringstream str;
   str << "DoubleBitMask" << num_bits;
   register_type(_type_handle, str.str());
 }

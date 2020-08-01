@@ -1,59 +1,49 @@
+"""Contains miscellaneous utility functions and classes."""
 
-"""Undocumented Module"""
+__all__ = [
 
-__all__ = ['indent',
-'StackTrace', 'traceFunctionCall', 'traceParentCall', 'printThisCall',
-'doc', 'adjust', 'difference', 'intersection', 'union',
-'sameElements', 'makeList', 'makeTuple', 'list2dict', 'invertDict',
-'invertDictLossless', 'uniqueElements', 'disjoint', 'contains',
-'replace', 'reduceAngle', 'fitSrcAngle2Dest', 'fitDestAngle2Src',
-'closestDestAngle2', 'closestDestAngle', 'binaryRepr', 'profileFunc',
-'profiled', 'startProfile', 'printProfile', 'getSetterName',
-'getSetter', 'Functor', 'Stack', 'Queue',
-'bound', 'clamp', 'lerp', 'average', 'addListsByValue',
-'boolEqual', 'lineupPos', 'formatElapsedSeconds', 'solveQuadratic',
-'stackEntryInfo', 'lineInfo', 'callerInfo', 'lineTag',
-'findPythonModule', 'mostDerivedLast',
-'weightedChoice', 'randFloat', 'normalDistrib',
-'weightedRand', 'randUint31', 'randInt32', 'randUint32',
-'SerialNumGen', 'serialNum', 'uniqueName', 'Enum', 'Singleton',
-'SingletonError', 'printListEnum', 'safeRepr',
-'fastRepr', 'isDefaultValue',
-'ScratchPad', 'Sync', 'itype', 'getNumberedTypedString',
-'getNumberedTypedSortedString', 'getNumberedTypedSortedStringWithReferrers',
-'getNumberedTypedSortedStringWithReferrersGen',
-'printNumberedTyped', 'DelayedCall', 'DelayedFunctor',
-'FrameDelayedCall', 'SubframeCall', 'getBase',
-'HotkeyBreaker','logMethodCalls','GoldenRatio',
-'GoldenRectangle', 'rad90', 'rad180', 'rad270', 'rad360',
-'nullGen', 'loopGen', 'makeFlywheelGen', 'flywheel', 'choice',
-'printStack', 'printReverseStack', 'listToIndex2item', 'listToItem2index',
-'pandaBreak','pandaTrace','formatTimeCompact',
-'deeptype','getProfileResultString','StdoutCapture','StdoutPassthrough',
-'Averager', 'getRepository', 'formatTimeExact', 'startSuperLog', 'endSuperLog',
-'typeName', 'safeTypeName', 'histogramDict', 'unescapeHtmlString']
+    'indent', 'doc', 'adjust', 'difference', 'intersection', 'union',
+    'sameElements', 'makeList', 'makeTuple', 'list2dict', 'invertDict',
+    'invertDictLossless', 'uniqueElements', 'disjoint', 'contains', 'replace',
+    'reduceAngle', 'fitSrcAngle2Dest', 'fitDestAngle2Src', 'closestDestAngle2',
+    'closestDestAngle', 'getSetterName', 'getSetter', 'Functor', 'Stack',
+    'Queue', 'bound', 'clamp', 'lerp', 'average', 'addListsByValue',
+    'boolEqual', 'lineupPos', 'formatElapsedSeconds', 'solveQuadratic',
+    'findPythonModule', 'mostDerivedLast', 'clampScalar', 'weightedChoice',
+    'randFloat', 'normalDistrib', 'weightedRand', 'randUint31', 'randInt32',
+    'SerialNumGen', 'serialNum', 'uniqueName', 'Enum', 'Singleton',
+    'SingletonError', 'printListEnum', 'safeRepr', 'fastRepr',
+    'isDefaultValue', 'ScratchPad', 'Sync', 'itype', 'getNumberedTypedString',
+    'getNumberedTypedSortedString', 'printNumberedTyped', 'DelayedCall',
+    'DelayedFunctor', 'FrameDelayedCall', 'SubframeCall', 'getBase',
+    'GoldenRatio', 'GoldenRectangle', 'rad90', 'rad180', 'rad270', 'rad360',
+    'nullGen', 'loopGen', 'makeFlywheelGen', 'flywheel', 'listToIndex2item',
+    'listToItem2index', 'formatTimeCompact', 'deeptype', 'StdoutCapture',
+    'StdoutPassthrough', 'Averager', 'getRepository', 'formatTimeExact',
+    'startSuperLog', 'endSuperLog', 'typeName', 'safeTypeName',
+    'histogramDict', 'unescapeHtmlString',
+]
+
+if __debug__:
+    __all__ += ['StackTrace', 'traceFunctionCall', 'traceParentCall',
+                'printThisCall', 'stackEntryInfo', 'lineInfo', 'callerInfo',
+                'lineTag', 'profileFunc', 'profiled', 'startProfile',
+                'printProfile', 'getProfileResultString', 'printStack',
+                'printReverseStack']
 
 import types
-import string
 import math
-import operator
-import inspect
 import os
 import sys
 import random
 import time
-import gc
-#if __debug__:
-import traceback
-import __builtin__
-from StringIO import StringIO
-import marshal
+import builtins
+import importlib
 
 __report_indent = 3
 
 from panda3d.core import ConfigVariableBool
 
-ScalarTypes = (types.FloatType, types.IntType, types.LongType)
 
 """
 # with one integer positional arg, this uses about 4/5 of the memory of the Functor class below
@@ -64,6 +54,7 @@ def Functor(function, *args, **kArgs):
         return function(*(argsCopy + cArgs), **kArgs)
     return functor
 """
+
 
 class Functor:
     def __init__(self, function, *args, **kargs):
@@ -92,15 +83,6 @@ class Functor:
         _kargs.update(kargs)
         return self._function(*(self._args + args), **_kargs)
 
-    # this method is used in place of __call__ if we are recording creation stacks
-    def _exceptionLoggedCreationStack__call__(self, *args, **kargs):
-        try:
-            return self._do__call__(*args, **kargs)
-        except Exception, e:
-            print '-->Functor creation stack (%s): %s' % (
-                self.__name__, self.getCreationStackTraceCompactStr())
-            raise
-
     __call__ = _do__call__
 
     def __repr__(self):
@@ -111,7 +93,7 @@ class Functor:
             except:
                 argStr = 'bad repr: %s' % arg.__class__
             s += ', %s' % argStr
-        for karg, value in self._kargs.items():
+        for karg, value in list(self._kargs.items()):
             s += ', %s=%s' % (karg, repr(value))
         s += ')'
         return s
@@ -156,27 +138,6 @@ class Queue:
     def __len__(self):
         return len(self.__list)
 
-if __debug__ and __name__ == '__main__':
-    q = Queue()
-    assert q.isEmpty()
-    q.clear()
-    assert q.isEmpty()
-    q.push(10)
-    assert not q.isEmpty()
-    q.push(20)
-    assert not q.isEmpty()
-    assert len(q) == 2
-    assert q.front() == 10
-    assert q.back() == 20
-    assert q.top() == 10
-    assert q.top() == 10
-    assert q.pop() == 10
-    assert len(q) == 1
-    assert not q.isEmpty()
-    assert q.pop() == 20
-    assert len(q) == 0
-    assert q.isEmpty()
-
 
 def indent(stream, numIndents, str):
     """
@@ -186,113 +147,113 @@ def indent(stream, numIndents, str):
     stream.write('    ' * numIndents + str)
 
 
-#if __debug__: #RAU accdg to Darren its's ok that StackTrace is not protected by __debug__
-# DCR: if somebody ends up using StackTrace in production, either
-# A) it will be OK because it hardly ever gets called, or
-# B) it will be easy to track it down (grep for StackTrace)
-class StackTrace:
-    def __init__(self, label="", start=0, limit=None):
-        """
-        label is a string (or anything that be be a string)
-        that is printed as part of the trace back.
-        This is just to make it easier to tell what the
-        stack trace is referring to.
-        start is an integer number of stack frames back
-        from the most recent.  (This is automatically
-        bumped up by one to skip the __init__ call
-        to the StackTrace).
-        limit is an integer number of stack frames
-        to record (or None for unlimited).
-        """
-        self.label = label
-        if limit is not None:
-            self.trace = traceback.extract_stack(sys._getframe(1+start),
-                                                 limit=limit)
-        else:
-            self.trace = traceback.extract_stack(sys._getframe(1+start))
+if __debug__:
+    import traceback
+    import marshal
 
-    def compact(self):
-        r = ''
-        comma = ','
-        for filename, lineNum, funcName, text in self.trace:
-            r += '%s.%s:%s%s' % (filename[:filename.rfind('.py')][filename.rfind('\\')+1:], funcName, lineNum, comma)
-        if len(r):
-            r = r[:-len(comma)]
-        return r
-
-    def reverseCompact(self):
-        r = ''
-        comma = ','
-        for filename, lineNum, funcName, text in self.trace:
-            r = '%s.%s:%s%s%s' % (filename[:filename.rfind('.py')][filename.rfind('\\')+1:], funcName, lineNum, comma, r)
-        if len(r):
-            r = r[:-len(comma)]
-        return r
-
-    def __str__(self):
-        r = "Debug stack trace of %s (back %s frames):\n"%(
-            self.label, len(self.trace),)
-        for i in traceback.format_list(self.trace):
-            r+=i
-        r+="***** NOTE: This is not a crash. This is a debug stack trace. *****"
-        return r
-
-def printStack():
-    print StackTrace(start=1).compact()
-    return True
-def printReverseStack():
-    print StackTrace(start=1).reverseCompact()
-    return True
-def printVerboseStack():
-    print StackTrace(start=1)
-    return True
-
-#-----------------------------------------------------------------------------
-
-def traceFunctionCall(frame):
-    """
-    return a string that shows the call frame with calling arguments.
-    e.g.
-    foo(x=234, y=135)
-    """
-    f = frame
-    co = f.f_code
-    dict = f.f_locals
-    n = co.co_argcount
-    if co.co_flags & 4: n = n+1
-    if co.co_flags & 8: n = n+1
-    r=''
-    if 'self' in dict:
-        r = '%s.'%(dict['self'].__class__.__name__,)
-    r+="%s("%(f.f_code.co_name,)
-    comma=0 # formatting, whether we should type a comma.
-    for i in range(n):
-        name = co.co_varnames[i]
-        if name=='self':
-            continue
-        if comma:
-            r+=', '
-        else:
-            # ok, we skipped the first one, the rest get commas:
-            comma=1
-        r+=name
-        r+='='
-        if name in dict:
-            v=safeRepr(dict[name])
-            if len(v)>2000:
-                # r+="<too big for debug>"
-                r += (v[:2000] + "...")
+    class StackTrace:
+        def __init__(self, label="", start=0, limit=None):
+            """
+            label is a string (or anything that be be a string)
+            that is printed as part of the trace back.
+            This is just to make it easier to tell what the
+            stack trace is referring to.
+            start is an integer number of stack frames back
+            from the most recent.  (This is automatically
+            bumped up by one to skip the __init__ call
+            to the StackTrace).
+            limit is an integer number of stack frames
+            to record (or None for unlimited).
+            """
+            self.label = label
+            if limit is not None:
+                self.trace = traceback.extract_stack(sys._getframe(1+start),
+                                                     limit=limit)
             else:
-                r+=v
-        else: r+="*** undefined ***"
-    return r+')'
+                self.trace = traceback.extract_stack(sys._getframe(1+start))
 
-def traceParentCall():
-    return traceFunctionCall(sys._getframe(2))
+        def compact(self):
+            r = ''
+            comma = ','
+            for filename, lineNum, funcName, text in self.trace:
+                r += '%s.%s:%s%s' % (filename[:filename.rfind('.py')][filename.rfind('\\')+1:], funcName, lineNum, comma)
+            if len(r):
+                r = r[:-len(comma)]
+            return r
 
-def printThisCall():
-    print traceFunctionCall(sys._getframe(1))
-    return 1 # to allow "assert printThisCall()"
+        def reverseCompact(self):
+            r = ''
+            comma = ','
+            for filename, lineNum, funcName, text in self.trace:
+                r = '%s.%s:%s%s%s' % (filename[:filename.rfind('.py')][filename.rfind('\\')+1:], funcName, lineNum, comma, r)
+            if len(r):
+                r = r[:-len(comma)]
+            return r
+
+        def __str__(self):
+            r = "Debug stack trace of %s (back %s frames):\n"%(
+                self.label, len(self.trace),)
+            for i in traceback.format_list(self.trace):
+                r+=i
+            r+="***** NOTE: This is not a crash. This is a debug stack trace. *****"
+            return r
+
+    def printStack():
+        print(StackTrace(start=1).compact())
+        return True
+    def printReverseStack():
+        print(StackTrace(start=1).reverseCompact())
+        return True
+    def printVerboseStack():
+        print(StackTrace(start=1))
+        return True
+
+    #-----------------------------------------------------------------------------
+
+    def traceFunctionCall(frame):
+        """
+        return a string that shows the call frame with calling arguments.
+        e.g.
+        foo(x=234, y=135)
+        """
+        f = frame
+        co = f.f_code
+        dict = f.f_locals
+        n = co.co_argcount
+        if co.co_flags & 4: n = n+1
+        if co.co_flags & 8: n = n+1
+        r=''
+        if 'self' in dict:
+            r = '%s.'%(dict['self'].__class__.__name__,)
+        r+="%s("%(f.f_code.co_name,)
+        comma=0 # formatting, whether we should type a comma.
+        for i in range(n):
+            name = co.co_varnames[i]
+            if name=='self':
+                continue
+            if comma:
+                r+=', '
+            else:
+                # ok, we skipped the first one, the rest get commas:
+                comma=1
+            r+=name
+            r+='='
+            if name in dict:
+                v=safeRepr(dict[name])
+                if len(v)>2000:
+                    # r+="<too big for debug>"
+                    r += (v[:2000] + "...")
+                else:
+                    r+=v
+            else: r+="*** undefined ***"
+        return r+')'
+
+    def traceParentCall():
+        return traceFunctionCall(sys._getframe(2))
+
+    def printThisCall():
+        print(traceFunctionCall(sys._getframe(1)))
+        return 1 # to allow "assert printThisCall()"
 
 # Magic numbers: These are the bit masks in func_code.co_flags that
 # reveal whether or not the function has a *arg or **kw argument.
@@ -302,7 +263,7 @@ _KEY_DICT = 8
 def doc(obj):
     if (isinstance(obj, types.MethodType)) or \
        (isinstance(obj, types.FunctionType)):
-        print obj.__doc__
+        print(obj.__doc__)
 
 def adjust(command = None, dim = 1, parent = None, **kw):
     """
@@ -325,18 +286,20 @@ def adjust(command = None, dim = 1, parent = None, **kw):
     10.0
     """
     # Make sure we enable Tk
-    from direct.tkwidgets import Valuator
+    # Don't use a regular import, to prevent ModuleFinder from picking
+    # it up as a dependency when building a .p3d package.
+    Valuator = importlib.import_module('direct.tkwidgets.Valuator')
     # Set command if specified
     if command:
-        kw['command'] = lambda x: apply(command, x)
+        kw['command'] = lambda x: command(*x)
         if parent is None:
             kw['title'] = command.__name__
     kw['dim'] = dim
     # Create toplevel if needed
     if not parent:
-        vg = apply(Valuator.ValuatorGroupPanel, (parent,), kw)
+        vg = Valuator.ValuatorGroupPanel(parent, **kw)
     else:
-        vg = apply(Valuator.ValuatorGroup, (parent,), kw)
+        vg = Valuator.ValuatorGroup(parent, **kw)
         vg.pack(expand = 1, fill = 'x')
     return vg
 
@@ -394,18 +357,18 @@ def sameElements(a, b):
 
 def makeList(x):
     """returns x, converted to a list"""
-    if type(x) is types.ListType:
+    if type(x) is list:
         return x
-    elif type(x) is types.TupleType:
+    elif type(x) is tuple:
         return list(x)
     else:
         return [x,]
 
 def makeTuple(x):
     """returns x, converted to a tuple"""
-    if type(x) is types.ListType:
+    if type(x) is list:
         return tuple(x)
-    elif type(x) is types.TupleType:
+    elif type(x) is tuple:
         return x
     else:
         return (x,)
@@ -445,7 +408,7 @@ def invertDict(D, lossy=False):
     n = {}
     for key, value in D.items():
         if not lossy and value in n:
-            raise 'duplicate key in invertDict: %s' % value
+            raise Exception('duplicate key in invertDict: %s' % value)
         n[value] = key
     return n
 
@@ -504,7 +467,7 @@ def replace(list, old, new, all=0):
         return 1
     else:
         numReplaced = 0
-        for i in xrange(len(list)):
+        for i in range(len(list)):
             if list[i] == old:
                 numReplaced += 1
                 list[i] = new
@@ -576,19 +539,6 @@ def closestDestAngle(src, dest):
         # otherwise just go to the original destination
         return dest
 
-
-def binaryRepr(number, max_length = 32):
-    # This will only work reliably for relatively small numbers.
-    # Increase the value of max_length if you think you're going
-    # to use long integers
-    assert number < 2L << max_length
-    shifts = map (operator.rshift, max_length * [number], \
-                  range (max_length - 1, -1, -1))
-    digits = map (operator.mod, shifts, max_length * [2])
-    if not digits.count (1): return 0
-    digits = digits [digits.index (1):]
-    return ''.join([repr(digit) for digit in digits])
-
 class StdoutCapture:
     # redirects stdout to a string
     def __init__(self):
@@ -615,260 +565,265 @@ class StdoutPassthrough(StdoutCapture):
         self._oldStdout.write(string)
 
 # constant profile defaults
-PyUtilProfileDefaultFilename = 'profiledata'
-PyUtilProfileDefaultLines = 80
-PyUtilProfileDefaultSorts = ['cumulative', 'time', 'calls']
+if __debug__:
+    from io import StringIO
 
-_ProfileResultStr = ''
+    PyUtilProfileDefaultFilename = 'profiledata'
+    PyUtilProfileDefaultLines = 80
+    PyUtilProfileDefaultSorts = ['cumulative', 'time', 'calls']
 
-def getProfileResultString():
-    # if you called profile with 'log' not set to True,
-    # you can call this function to get the results as
-    # a string
-    global _ProfileResultStr
-    return _ProfileResultStr
+    _ProfileResultStr = ''
 
-def profileFunc(callback, name, terse, log=True):
-    global _ProfileResultStr
-    if 'globalProfileFunc' in __builtin__.__dict__:
-        # rats. Python profiler is not re-entrant...
-        base.notify.warning(
-            'PythonUtil.profileStart(%s): aborted, already profiling %s'
-            #'\nStack Trace:\n%s'
-            % (name, __builtin__.globalProfileFunc,
-            #StackTrace()
-            ))
-        return
-    __builtin__.globalProfileFunc = callback
-    __builtin__.globalProfileResult = [None]
-    prefix = '***** START PROFILE: %s *****' % name
-    if log:
-        print prefix
-    startProfile(cmd='globalProfileResult[0]=globalProfileFunc()', callInfo=(not terse), silent=not log)
-    suffix = '***** END PROFILE: %s *****' % name
-    if log:
-        print suffix
-    else:
-        _ProfileResultStr = '%s\n%s\n%s' % (prefix, _ProfileResultStr, suffix)
-    result = globalProfileResult[0]
-    del __builtin__.__dict__['globalProfileFunc']
-    del __builtin__.__dict__['globalProfileResult']
-    return result
+    def getProfileResultString():
+        # if you called profile with 'log' not set to True,
+        # you can call this function to get the results as
+        # a string
+        global _ProfileResultStr
+        return _ProfileResultStr
 
-def profiled(category=None, terse=False):
-    """ decorator for profiling functions
-    turn categories on and off via "want-profile-categoryName 1"
-
-    e.g.
-
-    @profiled('particles')
-    def loadParticles():
-        ...
-
-    want-profile-particles 1
-    """
-    assert type(category) in (types.StringType, types.NoneType), "must provide a category name for @profiled"
-
-    # allow profiling in published versions
-    """
-    try:
-        null = not __dev__
-    except:
-        null = not __debug__
-    if null:
-        # if we're not in __dev__, just return the function itself. This
-        # results in zero runtime overhead, since decorators are evaluated
-        # at module-load.
-        def nullDecorator(f):
-            return f
-        return nullDecorator
-    """
-
-    def profileDecorator(f):
-        def _profiled(*args, **kArgs):
-            name = '(%s) %s from %s' % (category, f.func_name, f.__module__)
-
-            # showbase might not be loaded yet, so don't use
-            # base.config.  Instead, query the ConfigVariableBool.
-            if (category is None) or ConfigVariableBool('want-profile-%s' % category, 0).getValue():
-                return profileFunc(Functor(f, *args, **kArgs), name, terse)
-            else:
-                return f(*args, **kArgs)
-        _profiled.__doc__ = f.__doc__
-        return _profiled
-    return profileDecorator
-
-# intercept profile-related file operations to avoid disk access
-movedOpenFuncs = []
-movedDumpFuncs = []
-movedLoadFuncs = []
-profileFilenames = set()
-profileFilenameList = Stack()
-profileFilename2file = {}
-profileFilename2marshalData = {}
-
-def _profileOpen(filename, *args, **kArgs):
-    # this is a replacement for the file open() builtin function
-    # for use during profiling, to intercept the file open
-    # operation used by the Python profiler and profile stats
-    # systems
-    if filename in profileFilenames:
-        # if this is a file related to profiling, create an
-        # in-RAM file object
-        if filename not in profileFilename2file:
-            file = StringIO()
-            file._profFilename = filename
-            profileFilename2file[filename] = file
+    def profileFunc(callback, name, terse, log=True):
+        global _ProfileResultStr
+        if 'globalProfileFunc' in builtins.__dict__:
+            # rats. Python profiler is not re-entrant...
+            base.notify.warning(
+                'PythonUtil.profileStart(%s): aborted, already profiling %s'
+                #'\nStack Trace:\n%s'
+                % (name, builtins.globalProfileFunc,
+                #StackTrace()
+                ))
+            return
+        builtins.globalProfileFunc = callback
+        builtins.globalProfileResult = [None]
+        prefix = '***** START PROFILE: %s *****' % name
+        if log:
+            print(prefix)
+        startProfile(cmd='globalProfileResult[0]=globalProfileFunc()', callInfo=(not terse), silent=not log)
+        suffix = '***** END PROFILE: %s *****' % name
+        if log:
+            print(suffix)
         else:
-            file = profileFilename2file[filename]
-    else:
-        file = movedOpenFuncs[-1](filename, *args, **kArgs)
-    return file
+            _ProfileResultStr = '%s\n%s\n%s' % (prefix, _ProfileResultStr, suffix)
+        result = globalProfileResult[0]
+        del builtins.__dict__['globalProfileFunc']
+        del builtins.__dict__['globalProfileResult']
+        return result
 
-def _profileMarshalDump(data, file):
-    # marshal.dump doesn't work with StringIO objects
-    # simulate it
-    if isinstance(file, StringIO) and hasattr(file, '_profFilename'):
-        if file._profFilename in profileFilenames:
-            profileFilename2marshalData[file._profFilename] = data
-            return None
-    return movedDumpFuncs[-1](data, file)
+    def profiled(category=None, terse=False):
+        """ decorator for profiling functions
+        turn categories on and off via "want-profile-categoryName 1"
 
-def _profileMarshalLoad(file):
-    # marshal.load doesn't work with StringIO objects
-    # simulate it
-    if isinstance(file, StringIO) and hasattr(file, '_profFilename'):
-        if file._profFilename in profileFilenames:
-            return profileFilename2marshalData[file._profFilename]
-    return movedLoadFuncs[-1](file)
+        e.g.::
 
-def _installProfileCustomFuncs(filename):
-    assert filename not in profileFilenames
-    profileFilenames.add(filename)
-    profileFilenameList.push(filename)
-    movedOpenFuncs.append(__builtin__.open)
-    __builtin__.open = _profileOpen
-    movedDumpFuncs.append(marshal.dump)
-    marshal.dump = _profileMarshalDump
-    movedLoadFuncs.append(marshal.load)
-    marshal.load = _profileMarshalLoad
+            @profiled('particles')
+            def loadParticles():
+                ...
 
-def _getProfileResultFileInfo(filename):
-    return (profileFilename2file.get(filename, None),
-            profileFilename2marshalData.get(filename, None))
+        ::
 
-def _setProfileResultsFileInfo(filename, info):
-    f, m = info
-    if f:
-        profileFilename2file[filename] = f
-    if m:
-        profileFilename2marshalData[filename] = m
+            want-profile-particles 1
+        """
+        assert type(category) in (str, type(None)), "must provide a category name for @profiled"
 
-def _clearProfileResultFileInfo(filename):
-    profileFilename2file.pop(filename, None)
-    profileFilename2marshalData.pop(filename, None)
+        # allow profiling in published versions
+        """
+        try:
+            null = not __dev__
+        except:
+            null = not __debug__
+        if null:
+            # if we're not in __dev__, just return the function itself. This
+            # results in zero runtime overhead, since decorators are evaluated
+            # at module-load.
+            def nullDecorator(f):
+                return f
+            return nullDecorator
+        """
 
-def _removeProfileCustomFuncs(filename):
-    assert profileFilenameList.top() == filename
-    marshal.load = movedLoadFuncs.pop()
-    marshal.dump = movedDumpFuncs.pop()
-    __builtin__.open = movedOpenFuncs.pop()
-    profileFilenames.remove(filename)
-    profileFilenameList.pop()
-    profileFilename2file.pop(filename, None)
-    # don't let marshalled data pile up
-    profileFilename2marshalData.pop(filename, None)
+        def profileDecorator(f):
+            def _profiled(*args, **kArgs):
+                name = '(%s) %s from %s' % (category, f.__name__, f.__module__)
+
+                # showbase might not be loaded yet, so don't use
+                # base.config.  Instead, query the ConfigVariableBool.
+                if (category is None) or ConfigVariableBool('want-profile-%s' % category, 0).getValue():
+                    return profileFunc(Functor(f, *args, **kArgs), name, terse)
+                else:
+                    return f(*args, **kArgs)
+            _profiled.__doc__ = f.__doc__
+            return _profiled
+        return profileDecorator
+
+    # intercept profile-related file operations to avoid disk access
+    movedOpenFuncs = []
+    movedDumpFuncs = []
+    movedLoadFuncs = []
+    profileFilenames = set()
+    profileFilenameList = Stack()
+    profileFilename2file = {}
+    profileFilename2marshalData = {}
+
+    def _profileOpen(filename, *args, **kArgs):
+        # this is a replacement for the file open() builtin function
+        # for use during profiling, to intercept the file open
+        # operation used by the Python profiler and profile stats
+        # systems
+        if filename in profileFilenames:
+            # if this is a file related to profiling, create an
+            # in-RAM file object
+            if filename not in profileFilename2file:
+                file = StringIO()
+                file._profFilename = filename
+                profileFilename2file[filename] = file
+            else:
+                file = profileFilename2file[filename]
+        else:
+            file = movedOpenFuncs[-1](filename, *args, **kArgs)
+        return file
+
+    def _profileMarshalDump(data, file):
+        # marshal.dump doesn't work with StringIO objects
+        # simulate it
+        if isinstance(file, StringIO) and hasattr(file, '_profFilename'):
+            if file._profFilename in profileFilenames:
+                profileFilename2marshalData[file._profFilename] = data
+                return None
+        return movedDumpFuncs[-1](data, file)
+
+    def _profileMarshalLoad(file):
+        # marshal.load doesn't work with StringIO objects
+        # simulate it
+        if isinstance(file, StringIO) and hasattr(file, '_profFilename'):
+            if file._profFilename in profileFilenames:
+                return profileFilename2marshalData[file._profFilename]
+        return movedLoadFuncs[-1](file)
+
+    def _installProfileCustomFuncs(filename):
+        assert filename not in profileFilenames
+        profileFilenames.add(filename)
+        profileFilenameList.push(filename)
+        movedOpenFuncs.append(builtins.open)
+        builtins.open = _profileOpen
+        movedDumpFuncs.append(marshal.dump)
+        marshal.dump = _profileMarshalDump
+        movedLoadFuncs.append(marshal.load)
+        marshal.load = _profileMarshalLoad
+
+    def _getProfileResultFileInfo(filename):
+        return (profileFilename2file.get(filename, None),
+                profileFilename2marshalData.get(filename, None))
+
+    def _setProfileResultsFileInfo(filename, info):
+        f, m = info
+        if f:
+            profileFilename2file[filename] = f
+        if m:
+            profileFilename2marshalData[filename] = m
+
+    def _clearProfileResultFileInfo(filename):
+        profileFilename2file.pop(filename, None)
+        profileFilename2marshalData.pop(filename, None)
+
+    def _removeProfileCustomFuncs(filename):
+        assert profileFilenameList.top() == filename
+        marshal.load = movedLoadFuncs.pop()
+        marshal.dump = movedDumpFuncs.pop()
+        builtins.open = movedOpenFuncs.pop()
+        profileFilenames.remove(filename)
+        profileFilenameList.pop()
+        profileFilename2file.pop(filename, None)
+        # don't let marshalled data pile up
+        profileFilename2marshalData.pop(filename, None)
 
 
-# call this from the prompt, and break back out to the prompt
-# to stop profiling
-#
-# OR to do inline profiling, you must make a globally-visible
-# function to be profiled, i.e. to profile 'self.load()', do
-# something like this:
-#
-#        def func(self=self):
-#            self.load()
-#        import __builtin__
-#        __builtin__.func = func
-#        PythonUtil.startProfile(cmd='func()', filename='profileData')
-#        del __builtin__.func
-#
-def _profileWithoutGarbageLeak(cmd, filename):
-    # The profile module isn't necessarily installed on every Python
-    # installation, so we import it here, instead of in the module
-    # scope.
-    import profile
-    # this is necessary because the profile module creates a memory leak
-    Profile = profile.Profile
-    statement = cmd
-    sort = -1
-    retVal = None
-    #### COPIED FROM profile.run ####
-    prof = Profile()
-    try:
-        prof = prof.run(statement)
-    except SystemExit:
-        pass
-    if filename is not None:
-        prof.dump_stats(filename)
-    else:
-        #return prof.print_stats(sort)  #DCR
-        retVal = prof.print_stats(sort) #DCR
-    #################################
-    # eliminate the garbage leak
-    del prof.dispatcher
-    return retVal
+    # call this from the prompt, and break back out to the prompt
+    # to stop profiling
+    #
+    # OR to do inline profiling, you must make a globally-visible
+    # function to be profiled, i.e. to profile 'self.load()', do
+    # something like this:
+    #
+    #        def func(self=self):
+    #            self.load()
+    #        import builtins
+    #        builtins.func = func
+    #        PythonUtil.startProfile(cmd='func()', filename='profileData')
+    #        del builtins.func
+    #
+    def _profileWithoutGarbageLeak(cmd, filename):
+        # The profile module isn't necessarily installed on every Python
+        # installation, so we import it here, instead of in the module
+        # scope.
+        import profile
+        # this is necessary because the profile module creates a memory leak
+        Profile = profile.Profile
+        statement = cmd
+        sort = -1
+        retVal = None
+        #### COPIED FROM profile.run ####
+        prof = Profile()
+        try:
+            prof = prof.run(statement)
+        except SystemExit:
+            pass
+        if filename is not None:
+            prof.dump_stats(filename)
+        else:
+            #return prof.print_stats(sort)  #DCR
+            retVal = prof.print_stats(sort) #DCR
+        #################################
+        # eliminate the garbage leak
+        del prof.dispatcher
+        return retVal
 
-def startProfile(filename=PyUtilProfileDefaultFilename,
-                 lines=PyUtilProfileDefaultLines,
-                 sorts=PyUtilProfileDefaultSorts,
-                 silent=0,
-                 callInfo=1,
-                 useDisk=False,
-                 cmd='run()'):
-    # uniquify the filename to allow multiple processes to profile simultaneously
-    filename = '%s.%s%s' % (filename, randUint31(), randUint31())
-    if not useDisk:
-        # use a RAM file
-        _installProfileCustomFuncs(filename)
-    _profileWithoutGarbageLeak(cmd, filename)
-    if silent:
-        extractProfile(filename, lines, sorts, callInfo)
-    else:
-        printProfile(filename, lines, sorts, callInfo)
-    if not useDisk:
-        # discard the RAM file
-        _removeProfileCustomFuncs(filename)
-    else:
-        os.remove(filename)
+    def startProfile(filename=PyUtilProfileDefaultFilename,
+                     lines=PyUtilProfileDefaultLines,
+                     sorts=PyUtilProfileDefaultSorts,
+                     silent=0,
+                     callInfo=1,
+                     useDisk=False,
+                     cmd='run()'):
+        # uniquify the filename to allow multiple processes to profile simultaneously
+        filename = '%s.%s%s' % (filename, randUint31(), randUint31())
+        if not useDisk:
+            # use a RAM file
+            _installProfileCustomFuncs(filename)
+        _profileWithoutGarbageLeak(cmd, filename)
+        if silent:
+            extractProfile(filename, lines, sorts, callInfo)
+        else:
+            printProfile(filename, lines, sorts, callInfo)
+        if not useDisk:
+            # discard the RAM file
+            _removeProfileCustomFuncs(filename)
+        else:
+            os.remove(filename)
 
-# call these to see the results again, as a string or in the log
-def printProfile(filename=PyUtilProfileDefaultFilename,
-                 lines=PyUtilProfileDefaultLines,
-                 sorts=PyUtilProfileDefaultSorts,
-                 callInfo=1):
-    import pstats
-    s = pstats.Stats(filename)
-    s.strip_dirs()
-    for sort in sorts:
-        s.sort_stats(sort)
-        s.print_stats(lines)
-        if callInfo:
-            s.print_callees(lines)
-            s.print_callers(lines)
+    # call these to see the results again, as a string or in the log
+    def printProfile(filename=PyUtilProfileDefaultFilename,
+                     lines=PyUtilProfileDefaultLines,
+                     sorts=PyUtilProfileDefaultSorts,
+                     callInfo=1):
+        import pstats
+        s = pstats.Stats(filename)
+        s.strip_dirs()
+        for sort in sorts:
+            s.sort_stats(sort)
+            s.print_stats(lines)
+            if callInfo:
+                s.print_callees(lines)
+                s.print_callers(lines)
 
-# same args as printProfile
-def extractProfile(*args, **kArgs):
-    global _ProfileResultStr
-    # capture print output
-    sc = StdoutCapture()
-    # print the profile output, redirected to the result string
-    printProfile(*args, **kArgs)
-    # make a copy of the print output
-    _ProfileResultStr = sc.getString()
-    # restore stdout to what it was before
-    sc.destroy()
+    # same args as printProfile
+    def extractProfile(*args, **kArgs):
+        global _ProfileResultStr
+        # capture print output
+        sc = StdoutCapture()
+        # print the profile output, redirected to the result string
+        printProfile(*args, **kArgs)
+        # make a copy of the print output
+        _ProfileResultStr = sc.getString()
+        # restore stdout to what it was before
+        sc.destroy()
 
 def getSetterName(valueName, prefix='set'):
     # getSetterName('color') -> 'setColor'
@@ -1029,77 +984,80 @@ def solveQuadratic(a, b, c):
         root2 = ((-b) + sqrtD) / twoA
         return [root1, root2]
 
-def stackEntryInfo(depth=0, baseFileName=1):
-    """
-    returns the sourcefilename, line number, and function name of
-    an entry in the stack.
-    'depth' is how far back to go in the stack; 0 is the caller of this
-    function, 1 is the function that called the caller of this function, etc.
-    by default, strips off the path of the filename; override with baseFileName
-    returns (fileName, lineNum, funcName) --> (string, int, string)
-    returns (None, None, None) on error
-    """
-    try:
-        stack = None
-        frame = None
+if __debug__:
+    def stackEntryInfo(depth=0, baseFileName=1):
+        """
+        returns the sourcefilename, line number, and function name of
+        an entry in the stack.
+        'depth' is how far back to go in the stack; 0 is the caller of this
+        function, 1 is the function that called the caller of this function, etc.
+        by default, strips off the path of the filename; override with baseFileName
+        returns (fileName, lineNum, funcName) --> (string, int, string)
+        returns (None, None, None) on error
+        """
+        import inspect
+
         try:
-            stack = inspect.stack()
-            # add one to skip the frame associated with this function
-            frame = stack[depth+1]
-            filename = frame[1]
-            if baseFileName:
-                filename = os.path.basename(filename)
-            lineNum = frame[2]
-            funcName = frame[3]
-            result = (filename, lineNum, funcName)
-        finally:
-            del stack
-            del frame
-    except:
-        result = (None, None, None)
+            stack = None
+            frame = None
+            try:
+                stack = inspect.stack()
+                # add one to skip the frame associated with this function
+                frame = stack[depth+1]
+                filename = frame[1]
+                if baseFileName:
+                    filename = os.path.basename(filename)
+                lineNum = frame[2]
+                funcName = frame[3]
+                result = (filename, lineNum, funcName)
+            finally:
+                del stack
+                del frame
+        except:
+            result = (None, None, None)
 
-    return result
+        return result
 
-def lineInfo(baseFileName=1):
-    """
-    returns the sourcefilename, line number, and function name of the
-    code that called this function
-    (answers the question: 'hey lineInfo, where am I in the codebase?')
-    see stackEntryInfo, above, for info on 'baseFileName' and return types
-    """
-    return stackEntryInfo(1, baseFileName)
+    def lineInfo(baseFileName=1):
+        """
+        returns the sourcefilename, line number, and function name of the
+        code that called this function
+        (answers the question: 'hey lineInfo, where am I in the codebase?')
+        see stackEntryInfo, above, for info on 'baseFileName' and return types
+        """
+        return stackEntryInfo(1, baseFileName)
 
-def callerInfo(baseFileName=1, howFarBack=0):
-    """
-    returns the sourcefilename, line number, and function name of the
-    caller of the function that called this function
-    (answers the question: 'hey callerInfo, who called me?')
-    see stackEntryInfo, above, for info on 'baseFileName' and return types
-    """
-    return stackEntryInfo(2+howFarBack, baseFileName)
+    def callerInfo(baseFileName=1, howFarBack=0):
+        """
+        returns the sourcefilename, line number, and function name of the
+        caller of the function that called this function
+        (answers the question: 'hey callerInfo, who called me?')
+        see stackEntryInfo, above, for info on 'baseFileName' and return types
+        """
+        return stackEntryInfo(2+howFarBack, baseFileName)
 
-def lineTag(baseFileName=1, verbose=0, separator=':'):
-    """
-    returns a string containing the sourcefilename and line number
-    of the code that called this function
-    (equivalent to lineInfo, above, with different return type)
-    see stackEntryInfo, above, for info on 'baseFileName'
+    def lineTag(baseFileName=1, verbose=0, separator=':'):
+        """
+        returns a string containing the sourcefilename and line number
+        of the code that called this function
+        (equivalent to lineInfo, above, with different return type)
+        see stackEntryInfo, above, for info on 'baseFileName'
 
-    if 'verbose' is false, returns a compact string of the form
-    'fileName:lineNum:funcName'
-    if 'verbose' is true, returns a longer string that matches the
-    format of Python stack trace dumps
+        if 'verbose' is false, returns a compact string of the form
+        'fileName:lineNum:funcName'
+        if 'verbose' is true, returns a longer string that matches the
+        format of Python stack trace dumps
 
-    returns empty string on error
-    """
-    fileName, lineNum, funcName = callerInfo(baseFileName)
-    if fileName is None:
-        return ''
-    if verbose:
-        return 'File "%s", line %s, in %s' % (fileName, lineNum, funcName)
-    else:
-        return '%s%s%s%s%s' % (fileName, separator, lineNum, separator,
-                               funcName)
+        returns empty string on error
+        """
+        fileName, lineNum, funcName = callerInfo(baseFileName)
+        if fileName is None:
+            return ''
+        if verbose:
+            return 'File "%s", line %s, in %s' % (fileName, lineNum, funcName)
+        else:
+            return '%s%s%s%s%s' % (fileName, separator, lineNum, separator,
+                                   funcName)
 
 def findPythonModule(module):
     # Look along the python load path for the indicated filename.
@@ -1113,10 +1071,31 @@ def findPythonModule(module):
 
     return None
 
+def clampScalar(value, a, b):
+    # calling this ought to be faster than calling both min and max
+    if a < b:
+        if value < a:
+            return a
+        elif value > b:
+            return b
+        else:
+            return value
+    else:
+        if value < b:
+            return b
+        elif value > a:
+            return a
+        else:
+            return value
+
 def weightedChoice(choiceList, rng=random.random, sum=None):
     """given a list of (weight, item) pairs, chooses an item based on the
     weights. rng must return 0..1. if you happen to have the sum of the
     weights, pass it in 'sum'."""
+    # Throw an IndexError if we got an empty list.
+    if not choiceList:
+        raise IndexError('Cannot choose from an empty sequence')
+
     # TODO: add support for dicts
     if sum is None:
         sum = 0.
@@ -1125,6 +1104,7 @@ def weightedChoice(choiceList, rng=random.random, sum=None):
 
     rand = rng()
     accum = rand * sum
+    item = None
     for weight, item in choiceList:
         accum -= weight
         if accum <= 0.:
@@ -1153,7 +1133,7 @@ def normalDistrib(a, b, gauss=random.gauss):
     uniformly onto the curve inside [a, b]
 
     ------------------------------------------------------------------------
-    http://www-stat.stanford.edu/~naras/jsm/NormalDensity/NormalDensity.html
+    https://statweb.stanford.edu/~naras/jsm/NormalDensity/NormalDensity.html
 
     The 68-95-99.7% Rule
     ====================
@@ -1177,16 +1157,17 @@ def normalDistrib(a, b, gauss=random.gauss):
 
 def weightedRand(valDict, rng=random.random):
     """
-    pass in a dictionary with a selection -> weight mapping.  Eg.
-    {"Choice 1": 10,
-     "Choice 2": 30,
-     "bear":     100}
+    pass in a dictionary with a selection -> weight mapping.  E.g.::
 
-    -Weights need not add up to any particular value.
-    -The actual selection will be returned.
+        {"Choice 1": 10,
+         "Choice 2": 30,
+         "bear":     100}
+
+    - Weights need not add up to any particular value.
+    - The actual selection will be returned.
     """
-    selections = valDict.keys()
-    weights = valDict.values()
+    selections = list(valDict.keys())
+    weights = list(valDict.values())
 
     totalWeight = 0
     for weight in weights:
@@ -1218,11 +1199,6 @@ def randInt32(rng=random.random):
         i *= -1
     return i
 
-def randUint32(rng=random.random):
-    """returns a random integer in [0..2^32).
-    rng must return float in [0..1]"""
-    return long(rng() * 0xFFFFFFFFL)
-
 class SerialNumGen:
     """generates serial numbers"""
     def __init__(self, start=None):
@@ -1251,15 +1227,16 @@ def uniqueName(name):
 
 class EnumIter:
     def __init__(self, enum):
-        self._values = enum._stringTable.keys()
+        self._values = list(enum._stringTable.keys())
         self._index = 0
     def __iter__(self):
         return self
-    def next(self):
+    def __next__(self):
         if self._index >= len(self._values):
             raise StopIteration
         self._index += 1
         return self._values[self._index-1]
+    next = __next__
 
 class Enum:
     """Pass in list of strings or string of comma-separated strings.
@@ -1282,25 +1259,25 @@ class Enum:
 
     if __debug__:
         # chars that cannot appear within an item string.
-        InvalidChars = string.whitespace
         def _checkValidIdentifier(item):
-            invalidChars = string.whitespace+string.punctuation
-            invalidChars = invalidChars.replace('_','')
+            import string
+            invalidChars = string.whitespace + string.punctuation
+            invalidChars = invalidChars.replace('_', '')
             invalidFirstChars = invalidChars+string.digits
             if item[0] in invalidFirstChars:
-                raise SyntaxError, ("Enum '%s' contains invalid first char" %
+                raise SyntaxError("Enum '%s' contains invalid first char" %
                                     item)
             if not disjoint(item, invalidChars):
                 for char in item:
                     if char in invalidChars:
-                        raise SyntaxError, (
+                        raise SyntaxError(
                             "Enum\n'%s'\ncontains illegal char '%s'" %
                             (item, char))
             return 1
         _checkValidIdentifier = staticmethod(_checkValidIdentifier)
 
     def __init__(self, items, start=0):
-        if type(items) == types.StringType:
+        if isinstance(items, str):
             items = items.split(',')
 
         self._stringTable = {}
@@ -1312,7 +1289,7 @@ class Enum:
         i = start
         for item in items:
             # remove leading/trailing whitespace
-            item = string.strip(item)
+            item = item.strip()
             # is there anything left?
             if len(item) == 0:
                 continue
@@ -1412,7 +1389,7 @@ def printListEnumGen(l):
         n //= 10
     format = '%0' + '%s' % digits + 'i:%s'
     for i in range(len(l)):
-        print format % (i, l[i])
+        print(format % (i, l[i]))
         yield None
 
 def printListEnum(l):
@@ -1420,17 +1397,14 @@ def printListEnum(l):
         pass
 
 # base class for all Panda C++ objects
-# libdtoolconfig doesn't seem to have this, grab it off of PandaNode
+# libdtoolconfig doesn't seem to have this, grab it off of TypedObject
 dtoolSuperBase = None
 
 def _getDtoolSuperBase():
     global dtoolSuperBase
     from panda3d.core import TypedObject
     dtoolSuperBase = TypedObject.__bases__[0]
-    assert repr(dtoolSuperBase) == "<type 'libdtoolconfig.DTOOL_SUPER_BASE111'>" \
-        or repr(dtoolSuperBase) == "<type 'libdtoolconfig.DTOOL_SUPPER_BASE111'>" \
-        or repr(dtoolSuperBase) == "<type 'dtoolconfig.DTOOL_SUPER_BASE111'>" \
-        or repr(dtoolSuperBase) == "<type 'dtoolconfig.DTOOL_SUPER_BASE'>"
+    assert dtoolSuperBase.__name__ == 'DTOOL_SUPER_BASE'
 
 safeReprNotify = None
 
@@ -1487,10 +1461,10 @@ def fastRepr(obj, maxLen=200, strFactor=10, _visitedIds=None):
             _visitedIds = set()
         if id(obj) in _visitedIds:
             return '<ALREADY-VISITED %s>' % itype(obj)
-        if type(obj) in (types.TupleType, types.ListType):
+        if type(obj) in (tuple, list):
             s = ''
-            s += {types.TupleType: '(',
-                  types.ListType:  '[',}[type(obj)]
+            s += {tuple: '(',
+                  list:  '[',}[type(obj)]
             if maxLen is not None and len(obj) > maxLen:
                 o = obj[:maxLen]
                 ellips = '...'
@@ -1503,16 +1477,16 @@ def fastRepr(obj, maxLen=200, strFactor=10, _visitedIds=None):
                 s += ', '
             _visitedIds.remove(id(obj))
             s += ellips
-            s += {types.TupleType: ')',
-                  types.ListType:  ']',}[type(obj)]
+            s += {tuple: ')',
+                  list:  ']',}[type(obj)]
             return s
-        elif type(obj) is types.DictType:
+        elif type(obj) is dict:
             s = '{'
             if maxLen is not None and len(obj) > maxLen:
-                o = obj.keys()[:maxLen]
+                o = list(obj.keys())[:maxLen]
                 ellips = '...'
             else:
-                o = obj.keys()
+                o = list(obj.keys())
                 ellips = ''
             _visitedIds.add(id(obj))
             for key in o:
@@ -1523,7 +1497,7 @@ def fastRepr(obj, maxLen=200, strFactor=10, _visitedIds=None):
             s += ellips
             s += '}'
             return s
-        elif type(obj) is types.StringType:
+        elif type(obj) is str:
             if maxLen is not None:
                 maxLen *= strFactor
             if maxLen is not None and len(obj) > maxLen:
@@ -1541,14 +1515,14 @@ def fastRepr(obj, maxLen=200, strFactor=10, _visitedIds=None):
 
 def convertTree(objTree, idList):
     newTree = {}
-    for key in objTree.keys():
+    for key in list(objTree.keys()):
         obj = (idList[key],)
         newTree[obj] = {}
         r_convertTree(objTree[key], newTree[obj], idList)
     return newTree
 
 def r_convertTree(oldTree, newTree, idList):
-    for key in oldTree.keys():
+    for key in list(oldTree.keys()):
 
         obj = idList.get(key)
         if(not obj):
@@ -1561,14 +1535,14 @@ def r_convertTree(oldTree, newTree, idList):
 
 def pretty_print(tree):
     for name in tree.keys():
-        print name
+        print(name)
         r_pretty_print(tree[name], 0)
 
 
 def r_pretty_print(tree, num):
     num+=1
     for name in tree.keys():
-        print "  "*num,name
+        print("  "*num,name)
         r_pretty_print(tree[name],num)
 
 
@@ -1594,13 +1568,13 @@ def appendStr(obj, st):
 class ScratchPad:
     """empty class to stick values onto"""
     def __init__(self, **kArgs):
-        for key, value in kArgs.iteritems():
+        for key, value in kArgs.items():
             setattr(self, key, value)
         self._keys = set(kArgs.keys())
     def add(self, **kArgs):
-        for key, value in kArgs.iteritems():
+        for key, value in kArgs.items():
             setattr(self, key, value)
-        self._keys.update(kArgs.keys())
+        self._keys.update(list(kArgs.keys()))
     def destroy(self):
         for key in self._keys:
             delattr(self, key)
@@ -1646,18 +1620,13 @@ def itype(obj):
     # version of type that gives more complete information about instance types
     global dtoolSuperBase
     t = type(obj)
-    if t is types.InstanceType:
-        return '%s of <class %s>>' % (repr(types.InstanceType)[:-1],
-                                      str(obj.__class__))
-    else:
-        # C++ object instances appear to be types via type()
-        # check if this is a C++ object
-        if dtoolSuperBase is None:
-            _getDtoolSuperBase()
-        if isinstance(obj, dtoolSuperBase):
-            return '%s of %s>' % (repr(types.InstanceType)[:-1],
-                                  str(obj.__class__))
-        return t
+    # C++ object instances appear to be types via type()
+    # check if this is a C++ object
+    if dtoolSuperBase is None:
+        _getDtoolSuperBase()
+    if isinstance(obj, dtoolSuperBase):
+        return "<type 'instance' of %s>" % (obj.__class__)
+    return t
 
 def deeptype(obj, maxLen=100, _visitedIds=None):
     if _visitedIds is None:
@@ -1665,10 +1634,10 @@ def deeptype(obj, maxLen=100, _visitedIds=None):
     if id(obj) in _visitedIds:
         return '<ALREADY-VISITED %s>' % itype(obj)
     t = type(obj)
-    if t in (types.TupleType, types.ListType):
+    if t in (tuple, list):
         s = ''
-        s += {types.TupleType: '(',
-              types.ListType:  '[',}[type(obj)]
+        s += {tuple: '(',
+              list:  '[',}[type(obj)]
         if maxLen is not None and len(obj) > maxLen:
             o = obj[:maxLen]
             ellips = '...'
@@ -1681,16 +1650,16 @@ def deeptype(obj, maxLen=100, _visitedIds=None):
             s += ', '
         _visitedIds.remove(id(obj))
         s += ellips
-        s += {types.TupleType: ')',
-              types.ListType:  ']',}[type(obj)]
+        s += {tuple: ')',
+              list:  ']',}[type(obj)]
         return s
-    elif type(obj) is types.DictType:
+    elif type(obj) is dict:
         s = '{'
         if maxLen is not None and len(obj) > maxLen:
-            o = obj.keys()[:maxLen]
+            o = list(obj.keys())[:maxLen]
             ellips = '...'
         else:
-            o = obj.keys()
+            o = list(obj.keys())
             ellips = ''
         _visitedIds.add(id(obj))
         for key in o:
@@ -1717,7 +1686,7 @@ def getNumberedTypedString(items, maxLen=5000, numPrefix=''):
     first = True
     s = ''
     snip = '<SNIP>'
-    for i in xrange(len(items)):
+    for i in range(len(items)):
         if not first:
             s += '\n'
         first = False
@@ -1748,49 +1717,12 @@ def getNumberedTypedSortedString(items, maxLen=5000, numPrefix=''):
     first = True
     s = ''
     strs.sort()
-    for i in xrange(len(strs)):
+    for i in range(len(strs)):
         if not first:
             s += '\n'
         first = False
         objStr = strs[i]
         s += format % (i, itype(items[i]), strs[i])
-    return s
-
-def getNumberedTypedSortedStringWithReferrersGen(items, maxLen=10000, numPrefix=''):
-    """get a string that has each item of the list on its own line,
-    the items are stringwise-sorted, the object's referrers are shown,
-    and each item is numbered on the left from zero"""
-    digits = 0
-    n = len(items)
-    while n > 0:
-        digits += 1
-        n //= 10
-    digits = digits
-    format = numPrefix + '%0' + '%s' % digits + 'i:%s @ %s \t%s'
-    snip = '<SNIP>'
-    strs = []
-    for item in items:
-        strs.append(fastRepr(item))
-    strs.sort()
-    for i in xrange(len(strs)):
-        item = items[i]
-        objStr = strs[i]
-        objStr += ', \tREFERRERS=['
-        referrers = gc.get_referrers(item)
-        for ref in referrers:
-            objStr += '%s@%s, ' % (itype(ref), id(ref))
-        objStr += ']'
-        if len(objStr) > maxLen:
-            objStr = '%s%s' % (objStr[:(maxLen-len(snip))], snip)
-        yield format % (i, itype(items[i]), id(items[i]), objStr)
-
-def getNumberedTypedSortedStringWithReferrers(items, maxLen=10000, numPrefix=''):
-    """get a string that has each item of the list on its own line,
-    the items are stringwise-sorted, the object's referrers are shown,
-    and each item is numbered on the left from zero"""
-    s = ''
-    for line in getNumberedTypedSortedStringWithReferrersGen(items, maxLen, numPrefix):
-        s += '%s\n' % line
     return s
 
 def printNumberedTyped(items, maxLen=5000):
@@ -1803,12 +1735,12 @@ def printNumberedTyped(items, maxLen=5000):
         n //= 10
     digits = digits
     format = '%0' + '%s' % digits + 'i:%s \t%s'
-    for i in xrange(len(items)):
+    for i in range(len(items)):
         objStr = fastRepr(items[i])
         if len(objStr) > maxLen:
             snip = '<SNIP>'
             objStr = '%s%s' % (objStr[:(maxLen-len(snip))], snip)
-        print format % (i, itype(items[i]), objStr)
+        print(format % (i, itype(items[i]), objStr))
 
 def printNumberedTypesGen(items, maxLen=5000):
     digits = 0
@@ -1818,8 +1750,8 @@ def printNumberedTypesGen(items, maxLen=5000):
         n //= 10
     digits = digits
     format = '%0' + '%s' % digits + 'i:%s'
-    for i in xrange(len(items)):
-        print format % (i, itype(items[i]))
+    for i in range(len(items)):
+        print(format % (i, itype(items[i])))
         yield None
 
 def printNumberedTypes(items, maxLen=5000):
@@ -1993,7 +1925,7 @@ def pstatcollect(scope, level = None):
 
     try:
 
-        if not (__dev__ or config.GetBool('force-pstatcollect', 0)) or \
+        if not (__dev__ or ConfigVariableBool('force-pstatcollect', False)) or \
            not scope:
             return decorator
 
@@ -2025,42 +1957,42 @@ def report(types = [], prefix = '', xform = None, notifyFunc = None, dConfigPara
     has no effect and no wrapping/transform occurs.  So in production,
     it's as if the report has been asserted out.
 
-    Parameters::
-    types : A subset list of ['timeStamp', 'frameCount', 'avLocation']
-            This allows you to specify certain useful bits of info.
+    Parameters:
+        types: A subset list of ['timeStamp', 'frameCount', 'avLocation']
+            This allows you to specify certain useful bits of info:
 
-            module:     Prints the module that this report statement
-                        can be found in.
-            args:       Prints the arguments as they were passed to
-                        this function.
-            timeStamp:  Adds the current frame time to the output.
-            deltaStamp: Adds the current AI synched frame time to
-                        the output
-            frameCount: Adds the current frame count to the output.
-                        Usually cleaner than the timeStamp output.
-            avLocation: Adds the localAvatar's network location
-                        to the output.  Useful for interest debugging.
-            interests:  Prints the current interest state after the
-                        report.
-            stackTrace: Prints a stack trace after the report.
+              - *module*: Prints the module that this report statement
+                can be found in.
+              - *args*: Prints the arguments as they were passed to this
+                function.
+              - *timeStamp*: Adds the current frame time to the output.
+              - *deltaStamp*: Adds the current AI synched frame time to
+                the output
+              - *frameCount*: Adds the current frame count to the output.
+                Usually cleaner than the timeStamp output.
+              - *avLocation*: Adds the localAvatar's network location to
+                the output.  Useful for interest debugging.
+              - *interests*: Prints the current interest state after the
+                report.
+              - *stackTrace*: Prints a stack trace after the report.
 
-    prefix: Optional string to prepend to output, just before the function.
-            Allows for easy grepping and is useful when merging AI/Client
-            reports into a single file.
+        prefix: Optional string to prepend to output, just before the
+            function.  Allows for easy grepping and is useful when
+            merging AI/Client reports into a single file.
 
-    xform:  Optional callback that accepts a single parameter: argument 0 to
-            the decorated function. (assumed to be 'self')
-            It should return a value to be inserted into the report output string.
+        xform:  Optional callback that accepts a single parameter:
+            argument 0 to the decorated function. (assumed to be 'self')
+            It should return a value to be inserted into the report
+            output string.
 
-    notifyFunc: A notify function such as info, debug, warning, etc.
-                By default the report will be printed to stdout. This
-                will allow you send the report to a designated 'notify'
-                output.
+        notifyFunc: A notify function such as info, debug, warning, etc.
+            By default the report will be printed to stdout. This will
+            allow you send the report to a designated 'notify' output.
 
-    dConfigParam: A list of Config.prc string variables.
-                  By default the report will always print.  If you
-                  specify this param, it will only print if one of the
-                  specified config strings resolve to True.
+        dConfigParam: A list of Config.prc string variables.
+            By default the report will always print.  If you specify
+            this param, it will only print if one of the specified
+            config strings resolve to True.
     """
 
 
@@ -2111,10 +2043,10 @@ def report(types = [], prefix = '', xform = None, notifyFunc = None, dConfigPara
                 pass
             pass
 
-    except NameError,e:
+    except NameError as e:
         return decorator
 
-    from direct.distributed.ClockDelta import globalClockDelta
+    globalClockDelta = importlib.import_module("direct.distributed.ClockDelta").globalClockDelta
 
     def decorator(f):
         def wrap(*args,**kwargs):
@@ -2133,7 +2065,7 @@ def report(types = [], prefix = '', xform = None, notifyFunc = None, dConfigPara
                 rArgs = '(' + reduce(str.__add__,rArgs)[:-2] + ')'
 
 
-            outStr = '%s%s' % (f.func_name, rArgs)
+            outStr = '%s%s' % (f.__name__, rArgs)
 
             # Insert prefix place holder, if needed
             if prefixes:
@@ -2164,18 +2096,18 @@ def report(types = [], prefix = '', xform = None, notifyFunc = None, dConfigPara
                     if notifyFunc:
                         notifyFunc(outStr % (prefix,))
                     else:
-                        print indent(outStr % (prefix,))
+                        print(indent(outStr % (prefix,)))
             else:
                 if notifyFunc:
                     notifyFunc(outStr)
                 else:
-                    print indent(outStr)
+                    print(indent(outStr))
 
             if 'interests' in types:
                 base.cr.printInterestSets()
 
             if 'stackTrace' in types:
-                print StackTrace()
+                print(StackTrace())
 
             global __report_indent
             rVal = None
@@ -2185,14 +2117,14 @@ def report(types = [], prefix = '', xform = None, notifyFunc = None, dConfigPara
             finally:
                 __report_indent -= 1
                 if rVal is not None:
-                    print indent(' -> '+repr(rVal))
+                    print(indent(' -> '+repr(rVal)))
                     pass
                 pass
             return rVal
 
-        wrap.func_name = f.func_name
-        wrap.func_dict = f.func_dict
-        wrap.func_doc = f.func_doc
+        wrap.__name__ = f.__name__
+        wrap.__dict__ = f.__dict__
+        wrap.__doc__ = f.__doc__
         wrap.__module__ = f.__module__
         return wrap
     return decorator
@@ -2210,127 +2142,57 @@ def getRepository():
         return simbase.air
 
 exceptionLoggedNotify = None
+if __debug__:
+    def exceptionLogged(append=True):
+        """decorator that outputs the function name and all arguments
+        if an exception passes back through the stack frame
+        if append is true, string is appended to the __str__ output of
+        the exception. if append is false, string is printed to the log
+        directly. If the output will take up many lines, it's recommended
+        to set append to False so that the exception stack is not hidden
+        by the output of this decorator.
+        """
+        try:
+            null = not __dev__
+        except:
+            null = not __debug__
+        if null:
+            # if we're not in __dev__, just return the function itself. This
+            # results in zero runtime overhead, since decorators are evaluated
+            # at module-load.
+            def nullDecorator(f):
+                return f
+            return nullDecorator
 
-def exceptionLogged(append=True):
-    """decorator that outputs the function name and all arguments
-    if an exception passes back through the stack frame
-    if append is true, string is appended to the __str__ output of
-    the exception. if append is false, string is printed to the log
-    directly. If the output will take up many lines, it's recommended
-    to set append to False so that the exception stack is not hidden
-    by the output of this decorator.
-    """
-    try:
-        null = not __dev__
-    except:
-        null = not __debug__
-    if null:
-        # if we're not in __dev__, just return the function itself. This
-        # results in zero runtime overhead, since decorators are evaluated
-        # at module-load.
-        def nullDecorator(f):
-            return f
-        return nullDecorator
-
-    def _decoratorFunc(f, append=append):
-        global exceptionLoggedNotify
-        if exceptionLoggedNotify is None:
-            from direct.directnotify.DirectNotifyGlobal import directNotify
-            exceptionLoggedNotify = directNotify.newCategory("ExceptionLogged")
-        def _exceptionLogged(*args, **kArgs):
-            try:
-                return f(*args, **kArgs)
-            except Exception, e:
+        def _decoratorFunc(f, append=append):
+            global exceptionLoggedNotify
+            if exceptionLoggedNotify is None:
+                from direct.directnotify.DirectNotifyGlobal import directNotify
+                exceptionLoggedNotify = directNotify.newCategory("ExceptionLogged")
+            def _exceptionLogged(*args, **kArgs):
                 try:
-                    s = '%s(' % f.func_name
-                    for arg in args:
-                        s += '%s, ' % arg
-                    for key, value in kArgs.items():
-                        s += '%s=%s, ' % (key, value)
-                    if len(args) or len(kArgs):
-                        s = s[:-2]
-                    s += ')'
-                    if append:
-                        appendStr(e, '\n%s' % s)
-                    else:
-                        exceptionLoggedNotify.info(s)
-                except:
-                    exceptionLoggedNotify.info(
-                        '%s: ERROR IN PRINTING' % f.func_name)
-                raise
-        _exceptionLogged.__doc__ = f.__doc__
-        return _exceptionLogged
-    return _decoratorFunc
-
-# class 'decorator' that records the stack at the time of creation
-# be careful with this, it creates a StackTrace, and that can take a
-# lot of CPU
-def recordCreationStack(cls):
-    if not hasattr(cls, '__init__'):
-        raise 'recordCreationStack: class \'%s\' must define __init__' % cls.__name__
-    cls.__moved_init__ = cls.__init__
-    def __recordCreationStack_init__(self, *args, **kArgs):
-        self._creationStackTrace = StackTrace(start=1)
-        return self.__moved_init__(*args, **kArgs)
-    def getCreationStackTrace(self):
-        return self._creationStackTrace
-    def getCreationStackTraceCompactStr(self):
-        return self._creationStackTrace.compact()
-    def printCreationStackTrace(self):
-        print self._creationStackTrace
-    cls.__init__ = __recordCreationStack_init__
-    cls.getCreationStackTrace = getCreationStackTrace
-    cls.getCreationStackTraceCompactStr = getCreationStackTraceCompactStr
-    cls.printCreationStackTrace = printCreationStackTrace
-    return cls
-
-# like recordCreationStack but stores the stack as a compact stack list-of-strings
-# scales well for memory usage
-def recordCreationStackStr(cls):
-    if not hasattr(cls, '__init__'):
-        raise 'recordCreationStackStr: class \'%s\' must define __init__' % cls.__name__
-    cls.__moved_init__ = cls.__init__
-    def __recordCreationStackStr_init__(self, *args, **kArgs):
-        # store as list of strings to conserve memory
-        self._creationStackTraceStrLst = StackTrace(start=1).compact().split(',')
-        return self.__moved_init__(*args, **kArgs)
-    def getCreationStackTraceCompactStr(self):
-        return ','.join(self._creationStackTraceStrLst)
-    def printCreationStackTrace(self):
-        print ','.join(self._creationStackTraceStrLst)
-    cls.__init__ = __recordCreationStackStr_init__
-    cls.getCreationStackTraceCompactStr = getCreationStackTraceCompactStr
-    cls.printCreationStackTrace = printCreationStackTrace
-    return cls
-
-
-# class 'decorator' that logs all method calls for a particular class
-def logMethodCalls(cls):
-    if not hasattr(cls, 'notify'):
-        raise 'logMethodCalls: class \'%s\' must have a notify' % cls.__name__
-    for name in dir(cls):
-        method = getattr(cls, name)
-        if hasattr(method, '__call__'):
-            def getLoggedMethodCall(method):
-                def __logMethodCall__(obj, *args, **kArgs):
-                    s = '%s(' % method.__name__
-                    for arg in args:
-                        try:
-                            argStr = repr(arg)
-                        except:
-                            argStr = 'bad repr: %s' % arg.__class__
-                        s += '%s, ' % argStr
-                    for karg, value in kArgs.items():
-                        s += '%s=%s, ' % (karg, repr(value))
-                    if len(args) or len(kArgs):
-                        s = s[:-2]
-                    s += ')'
-                    obj.notify.info(s)
-                    return method(obj, *args, **kArgs)
-                return __logMethodCall__
-            setattr(cls, name, getLoggedMethodCall(method))
-    __logMethodCall__ = None
-    return cls
+                    return f(*args, **kArgs)
+                except Exception as e:
+                    try:
+                        s = '%s(' % f.__name__
+                        for arg in args:
+                            s += '%s, ' % arg
+                        for key, value in list(kArgs.items()):
+                            s += '%s=%s, ' % (key, value)
+                        if len(args) or len(kArgs):
+                            s = s[:-2]
+                        s += ')'
+                        if append:
+                            appendStr(e, '\n%s' % s)
+                        else:
+                            exceptionLoggedNotify.info(s)
+                    except:
+                        exceptionLoggedNotify.info(
+                            '%s: ERROR IN PRINTING' % f.__name__)
+                    raise
+            _exceptionLogged.__doc__ = f.__doc__
+            return _exceptionLogged
+        return _decoratorFunc
 
 # http://en.wikipedia.org/wiki/Golden_ratio
 GoldenRatio = (1. + math.sqrt(5.)) / 2.
@@ -2341,45 +2203,6 @@ class GoldenRectangle:
     @staticmethod
     def getShorterEdge(longer):
         return longer / GoldenRatio
-
-class HotkeyBreaker:
-    def __init__(self,breakKeys = []):
-        from direct.showbase.DirectObject import DirectObject
-        self.do = DirectObject()
-        self.breakKeys = {}
-        if not isinstance(breakKeys, (list,tuple)):
-            breakKeys = (breakKeys,)
-        for key in breakKeys:
-            self.addBreakKey(key)
-
-    def addBreakKey(self,breakKey):
-        if __dev__:
-            self.do.accept(breakKey,self.breakFunc,extraArgs = [breakKey])
-
-    def removeBreakKey(self,breakKey):
-        if __dev__:
-            self.do.ignore(breakKey)
-
-    def breakFunc(self,breakKey):
-        if __dev__:
-            self.breakKeys[breakKey] = True
-
-    def setBreakPt(self, breakKey = None, persistent = False):
-        if __dev__:
-            if not breakKey:
-                import pdb;pdb.set_trace()
-                return True
-            else:
-                if self.breakKeys.get(breakKey,False):
-                    if not persistent:
-                        self.breakKeys.pop(breakKey)
-                    import pdb;pdb.set_trace()
-                    return True
-        return True
-
-    def clearBreakPt(self, breakKey):
-        if __dev__:
-            return bool(self.breakKeys.pop(breakKey,None))
 
 def nullGen():
     # generator that ends immediately
@@ -2407,7 +2230,7 @@ def makeFlywheelGen(objects, countList=None, countFunc=None, scale=None):
     def flywheel(index2objectAndCount):
         # generator to produce a sequence whose elements appear a specific number of times
         while len(index2objectAndCount):
-            keyList = index2objectAndCount.keys()
+            keyList = list(index2objectAndCount.keys())
             for key in keyList:
                 if index2objectAndCount[key][1] > 0:
                     yield index2objectAndCount[key][0]
@@ -2422,14 +2245,14 @@ def makeFlywheelGen(objects, countList=None, countFunc=None, scale=None):
             countList.append(countFunc(object))
     if scale is not None:
         # scale the counts if we've got a scale factor
-        for i in xrange(len(countList)):
+        for i in range(len(countList)):
             yield None
             if countList[i] > 0:
                 countList[i] = max(1, int(countList[i] * scale))
     # create a dict for the flywheel to use during its iteration to efficiently select
     # the objects for the sequence
     index2objectAndCount = {}
-    for i in xrange(len(countList)):
+    for i in range(len(countList)):
         yield None
         index2objectAndCount[i] = [objects[i], countList[i]]
     # create the flywheel generator
@@ -2449,71 +2272,43 @@ def flywheel(*args, **kArgs):
         pass
     return flywheel
 
-if __debug__ and __name__ == '__main__':
-    f = flywheel(['a','b','c','d'], countList=[11,20,3,4])
-    obj2count = {}
-    for obj in f:
-        obj2count.setdefault(obj, 0)
-        obj2count[obj] += 1
-    assert obj2count['a'] == 11
-    assert obj2count['b'] == 20
-    assert obj2count['c'] == 3
-    assert obj2count['d'] == 4
 
-    f = flywheel([1,2,3,4], countFunc=lambda x: x*2)
-    obj2count = {}
-    for obj in f:
-        obj2count.setdefault(obj, 0)
-        obj2count[obj] += 1
-    assert obj2count[1] == 2
-    assert obj2count[2] == 4
-    assert obj2count[3] == 6
-    assert obj2count[4] == 8
+if __debug__:
+    def quickProfile(name="unnamed"):
+        import pstats
+        def profileDecorator(f):
+            if(not config.GetBool("use-profiler",0)):
+                return f
+            def _profiled(*args, **kArgs):
+                # must do this in here because we don't have base/simbase
+                # at the time that PythonUtil is loaded
+                if(not config.GetBool("profile-debug",0)):
+                    #dumb timings
+                    st=globalClock.getRealTime()
+                    f(*args,**kArgs)
+                    s=globalClock.getRealTime()-st
+                    print("Function %s.%s took %s seconds"%(f.__module__, f.__name__,s))
+                else:
+                    import profile as prof, pstats
 
-    f = flywheel([1,2,3,4], countFunc=lambda x: x, scale = 3)
-    obj2count = {}
-    for obj in f:
-        obj2count.setdefault(obj, 0)
-        obj2count[obj] += 1
-    assert obj2count[1] == 1 * 3
-    assert obj2count[2] == 2 * 3
-    assert obj2count[3] == 3 * 3
-    assert obj2count[4] == 4 * 3
+                    #detailed profile, stored in base.stats under (
+                    if(not hasattr(base,"stats")):
+                        base.stats={}
+                    if(not base.stats.get(name)):
+                        base.stats[name]=[]
 
-def quickProfile(name="unnamed"):
-    import pstats
-    def profileDecorator(f):
-        if(not config.GetBool("use-profiler",0)):
-            return f
-        def _profiled(*args, **kArgs):
-            # must do this in here because we don't have base/simbase
-            # at the time that PythonUtil is loaded
-            if(not config.GetBool("profile-debug",0)):
-                #dumb timings
-                st=globalClock.getRealTime()
-                f(*args,**kArgs)
-                s=globalClock.getRealTime()-st
-                print "Function %s.%s took %s seconds"%(f.__module__, f.__name__,s)
-            else:
-                import profile as prof, pstats
-                #detailed profile, stored in base.stats under (
-                if(not hasattr(base,"stats")):
-                    base.stats={}
-                if(not base.stats.get(name)):
-                    base.stats[name]=[]
+                    prof.runctx('f(*args, **kArgs)', {'f':f,'args':args,'kArgs':kArgs},None,"t.prof")
+                    s=pstats.Stats("t.prof")
+                    #p=hotshot.Profile("t.prof")
+                    #p.runctx('f(*args, **kArgs)', {'f':f,'args':args,'kArgs':kArgs},None)
+                    #s = hotshot.stats.load("t.prof")
+                    s.strip_dirs()
+                    s.sort_stats("cumulative")
+                    base.stats[name].append(s)
 
-                prof.runctx('f(*args, **kArgs)', {'f':f,'args':args,'kArgs':kArgs},None,"t.prof")
-                s=pstats.Stats("t.prof")
-                #p=hotshot.Profile("t.prof")
-                #p.runctx('f(*args, **kArgs)', {'f':f,'args':args,'kArgs':kArgs},None)
-                #s = hotshot.stats.load("t.prof")
-                s.strip_dirs()
-                s.sort_stats("cumulative")
-                base.stats[name].append(s)
-
-        _profiled.__doc__ = f.__doc__
-        return _profiled
-    return profileDecorator
+            _profiled.__doc__ = f.__doc__
+            return _profiled
+        return profileDecorator
 
 def getTotalAnnounceTime():
     td=0
@@ -2525,20 +2320,13 @@ def getTotalAnnounceTime():
 def getAnnounceGenerateTime(stat):
     val=0
     stats=stat.stats
-    for i in stats.keys():
+    for i in list(stats.keys()):
         if(i[2]=="announceGenerate"):
             newVal=stats[i][3]
             if(newVal>val):
                 val=newVal
     return val
 
-
-def choice(condition, ifTrue, ifFalse):
-    # equivalent of C++ (condition ? ifTrue : ifFalse)
-    if condition:
-        return ifTrue
-    else:
-        return ifFalse
 
 class MiniLog:
     def __init__(self, name):
@@ -2595,9 +2383,9 @@ class MiniLogSentry:
         del self.log
 
 def logBlock(id, msg):
-    print '<< LOGBLOCK(%03d)' % id
-    print str(msg)
-    print '/LOGBLOCK(%03d) >>' % id
+    print('<< LOGBLOCK(%03d)' % id)
+    print(str(msg))
+    print('/LOGBLOCK(%03d) >>' % id)
 
 class HierarchyException(Exception):
     JOSWILSO = 0
@@ -2610,18 +2398,6 @@ class HierarchyException(Exception):
 
     def __repr__(self):
         return 'HierarchyException(%s)' % (self.owner, )
-
-# __dev__ is not defined at import time, call this after it's defined
-def recordFunctorCreationStacks():
-    global Functor
-    from panda3d.direct import get_config_showbase
-    config = get_config_showbase()
-    # off by default, very slow
-    if __dev__ and config.GetBool('record-functor-creation-stacks', 0):
-        if not hasattr(Functor, '_functorCreationStacksRecorded'):
-            Functor = recordCreationStackStr(Functor)
-            Functor._functorCreationStacksRecorded = True
-            Functor.__call__ = Functor._exceptionLoggedCreationStack__call__
 
 def formatTimeCompact(seconds):
     # returns string in format '1d3h22m43s'
@@ -2700,7 +2476,7 @@ class AlphabetCounter:
         index = -1
         while True:
             curChar = self._curCounter[index]
-            if curChar is 'Z':
+            if curChar == 'Z':
                 nextChar = 'A'
                 carry = True
             else:
@@ -2722,7 +2498,7 @@ if __debug__ and __name__ == '__main__':
     def testAlphabetCounter():
         tempList = []
         ac = AlphabetCounter()
-        for i in xrange(26*3):
+        for i in range(26*3):
             tempList.append(ac.next())
         assert tempList == [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                             'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR','AS','AT','AU','AV','AW','AX','AY','AZ',
@@ -2733,63 +2509,12 @@ if __debug__ and __name__ == '__main__':
         num += 26 # AAZ
         num += 1 # ABA
         num += 2 # ABC
-        for i in xrange(num):
+        for i in range(num):
             x = ac.next()
         assert x == 'ABC'
     testAlphabetCounter()
     del testAlphabetCounter
 
-globalPdb = None
-
-traceCalled = False
-
-def setupPdb():
-    import pdb;
-    class pandaPdb(pdb.Pdb):
-        def stop_here(self, frame):
-            global traceCalled
-            if(traceCalled):
-                result = pdb.Pdb.stop_here(self, frame)
-                if(result == True):
-                    traceCalled = False
-                return result
-            if frame is self.stopframe:
-                return True
-            return False
-    global globalPdb
-    globalPdb = pandaPdb()
-    globalPdb.reset()
-    sys.settrace(globalPdb.trace_dispatch)
-
-def pandaTrace():
-    if __dev__:
-        if not globalPdb:
-            setupPdb()
-        global traceCalled
-        globalPdb.set_trace(sys._getframe().f_back)
-        traceCalled = True
-
-packageMap = {
-    "toontown":"$TOONTOWN",
-    "direct":"$DIRECT",
-    "otp":"$OTP",
-    "pirates":"$PIRATES",
-}
-
-
-#assuming . dereferncing for nice linking to imports
-def pandaBreak(dotpath, linenum, temporary = 0, cond = None):
-    if __dev__:
-        from panda3d.core import Filename
-        if not globalPdb:
-            setupPdb()
-        dirs = dotpath.split(".")
-        root = Filename.expandFrom(packageMap[dirs[0]]).toOsSpecific()
-        filename = root + "\\src"
-        for d in dirs[1:]:
-            filename="%s\\%s"%(filename,d)
-        print filename
-        globalPdb.set_break(filename+".py", linenum, temporary, cond)
 
 class Default:
     # represents 'use the default value'
@@ -2831,9 +2556,6 @@ def endSuperLog():
         sys.settrace(None)
         superLogFile.close()
         superLogFile = None
-
-def isInteger(n):
-    return type(n) in (types.IntType, types.LongType)
 
 def configIsToday(configName):
     # TODO: replace usage of strptime with something else
@@ -2894,72 +2616,84 @@ def unescapeHtmlString(s):
         result += char
     return result
 
-if __debug__ and __name__ == '__main__':
-    assert unescapeHtmlString('asdf') == 'asdf'
-    assert unescapeHtmlString('as+df') == 'as df'
-    assert unescapeHtmlString('as%32df') == 'as2df'
-    assert unescapeHtmlString('asdf%32') == 'asdf2'
+class PriorityCallbacks:
+    """ manage a set of prioritized callbacks, and allow them to be invoked in order of priority """
+    def __init__(self):
+        self._callbacks = []
 
-def unicodeUtf8(s):
-    # * -> Unicode UTF-8
-    if type(s) is types.UnicodeType:
-        return s
-    else:
-        return unicode(str(s), 'utf-8')
+    def clear(self):
+        del self._callbacks[:]
 
-def encodedUtf8(s):
-    # * -> 8-bit-encoded UTF-8
-    return unicodeUtf8(s).encode('utf-8')
+    def add(self, callback, priority=None):
+        if priority is None:
+            priority = 0
+        callbacks = self._callbacks
+        lo = 0
+        hi = len(callbacks)
+        while lo < hi:
+            mid = (lo + hi) // 2
+            if priority < callbacks[mid][0]:
+                hi = mid
+            else:
+                lo = mid + 1
+        item = (priority, callback)
+        callbacks.insert(lo, item)
+        return item
 
-import __builtin__
-__builtin__.Functor = Functor
-__builtin__.Stack = Stack
-__builtin__.Queue = Queue
-__builtin__.Enum = Enum
-__builtin__.SerialNumGen = SerialNumGen
-__builtin__.SerialMaskedGen = SerialMaskedGen
-__builtin__.ScratchPad = ScratchPad
-__builtin__.uniqueName = uniqueName
-__builtin__.serialNum = serialNum
-__builtin__.profiled = profiled
-__builtin__.itype = itype
-__builtin__.exceptionLogged = exceptionLogged
-__builtin__.appendStr = appendStr
-__builtin__.bound = bound
-__builtin__.clamp = clamp
-__builtin__.lerp = lerp
-__builtin__.makeList = makeList
-__builtin__.makeTuple = makeTuple
-__builtin__.printStack = printStack
-__builtin__.printReverseStack = printReverseStack
-__builtin__.printVerboseStack = printVerboseStack
-__builtin__.DelayedCall = DelayedCall
-__builtin__.DelayedFunctor = DelayedFunctor
-__builtin__.FrameDelayedCall = FrameDelayedCall
-__builtin__.SubframeCall = SubframeCall
-__builtin__.invertDict = invertDict
-__builtin__.invertDictLossless = invertDictLossless
-__builtin__.getBase = getBase
-__builtin__.getRepository = getRepository
-__builtin__.safeRepr = safeRepr
-__builtin__.fastRepr = fastRepr
-__builtin__.nullGen = nullGen
-__builtin__.flywheel = flywheel
-__builtin__.loopGen = loopGen
-__builtin__.StackTrace = StackTrace
-__builtin__.choice = choice
-__builtin__.report = report
-__builtin__.pstatcollect = pstatcollect
-__builtin__.MiniLog = MiniLog
-__builtin__.MiniLogSentry = MiniLogSentry
-__builtin__.logBlock = logBlock
-__builtin__.HierarchyException = HierarchyException
-__builtin__.deeptype = deeptype
-__builtin__.Default = Default
-__builtin__.isInteger = isInteger
-__builtin__.configIsToday = configIsToday
-__builtin__.typeName = typeName
-__builtin__.safeTypeName = safeTypeName
-__builtin__.histogramDict = histogramDict
-__builtin__.unicodeUtf8 = unicodeUtf8
-__builtin__.encodedUtf8 = encodedUtf8
+    def remove(self, item):
+        self._callbacks.remove(item)
+
+    def __call__(self):
+        for priority, callback in self._callbacks:
+            callback()
+
+builtins.Functor = Functor
+builtins.Stack = Stack
+builtins.Queue = Queue
+builtins.Enum = Enum
+builtins.SerialNumGen = SerialNumGen
+builtins.SerialMaskedGen = SerialMaskedGen
+builtins.ScratchPad = ScratchPad
+builtins.uniqueName = uniqueName
+builtins.serialNum = serialNum
+if __debug__:
+    builtins.profiled = profiled
+    builtins.exceptionLogged = exceptionLogged
+builtins.itype = itype
+builtins.appendStr = appendStr
+builtins.bound = bound
+builtins.clamp = clamp
+builtins.lerp = lerp
+builtins.makeList = makeList
+builtins.makeTuple = makeTuple
+if __debug__:
+    builtins.printStack = printStack
+    builtins.printReverseStack = printReverseStack
+    builtins.printVerboseStack = printVerboseStack
+builtins.DelayedCall = DelayedCall
+builtins.DelayedFunctor = DelayedFunctor
+builtins.FrameDelayedCall = FrameDelayedCall
+builtins.SubframeCall = SubframeCall
+builtins.invertDict = invertDict
+builtins.invertDictLossless = invertDictLossless
+builtins.getBase = getBase
+builtins.getRepository = getRepository
+builtins.safeRepr = safeRepr
+builtins.fastRepr = fastRepr
+builtins.nullGen = nullGen
+builtins.flywheel = flywheel
+builtins.loopGen = loopGen
+if __debug__:
+    builtins.StackTrace = StackTrace
+builtins.report = report
+builtins.pstatcollect = pstatcollect
+builtins.MiniLog = MiniLog
+builtins.MiniLogSentry = MiniLogSentry
+builtins.logBlock = logBlock
+builtins.HierarchyException = HierarchyException
+builtins.deeptype = deeptype
+builtins.Default = Default
+builtins.configIsToday = configIsToday
+builtins.typeName = typeName
+builtins.safeTypeName = safeTypeName
+builtins.histogramDict = histogramDict

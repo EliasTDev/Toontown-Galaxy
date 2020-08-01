@@ -1,4 +1,4 @@
-"""Undocumented Module"""
+"""Defines tree widgets for the tkinter GUI system."""
 
 __all__ = ['TreeNode', 'TreeItem']
 
@@ -19,15 +19,10 @@ __all__ = ['TreeNode', 'TreeItem']
 # - keep track of object ids to allow more careful cleaning
 # - optimize tree redraw after expand of subnode
 
-import os
+import os, sys
 from direct.showbase.TkGlobal import *
-from Tkinter import *
 from panda3d.core import *
 
-# Initialize icon directory
-ICONDIR = ConfigVariableSearchPath('model-path').findFile(Filename('icons')).toOsSpecific()
-if not os.path.isdir(ICONDIR):
-    raise RuntimeError, "can't find DIRECT icon directory (%s)" % repr(ICONDIR)
 
 class TreeNode:
 
@@ -60,7 +55,7 @@ class TreeNode:
     def setChildrenTag(self, tag, fModeChildrenTag):
         self.childrenTag = tag
         self.fModeChildrenTag = fModeChildrenTag
-    
+
     def destroy(self):
         if self._popupMenu:
             self._popupMenu.destroy()
@@ -71,14 +66,14 @@ class TreeNode:
         self.parent = None
 
     def geticonimage(self, name):
-        try:
+        if name in self.iconimages:
             return self.iconimages[name]
-        except KeyError:
-            pass
-        file, ext = os.path.splitext(name)
-        ext = ext or ".gif"
-        fullname = os.path.join(ICONDIR, file + ext)
-        image = PhotoImage(master=self.canvas, file=fullname)
+
+        fn = Filename("icons", name)
+        if not fn.resolveFilename(getModelPath().value, "gif"):
+            raise FileNotFoundError("couldn't find \"%s\"" % (fn))
+
+        image = PhotoImage(master=self.canvas, file=fn.toOsSpecific())
         self.iconimages[name] = image
         return image
 
@@ -135,7 +130,7 @@ class TreeNode:
                         value = i,
                         indicatoron = 0,
                         command = self.popupMenuCommand)
-                    
+
     def popupMenu(self, event=None):
         if not self._popupMenu:
             self.createPopupMenu()
@@ -146,7 +141,7 @@ class TreeNode:
 
     def popupMenuCommand(self):
         command = self.menuList[self.menuVar.get()]
-        
+
         if (command == 'Expand All'):
             self.updateAll(1)
         elif (command == 'Collapse All'):
@@ -233,7 +228,7 @@ class TreeNode:
             self.kidKeys.append(key)
 
         # Remove unused children
-        for key in self.children.keys():
+        for key in list(self.children.keys()):
             if key not in self.kidKeys:
                 del(self.children[key])
 
@@ -264,7 +259,7 @@ class TreeNode:
         self.x, self.y = x, y
         self.drawicon()
         self.drawtext()
-        
+
         if self.state != 'expanded':
             return y+17
         # draw children
@@ -273,7 +268,7 @@ class TreeNode:
             # IsExpandable() was mistaken; that's allowed
             return y+17
         self.kidKeys = []
-        
+
         # [gjeon] to sort children
         if self.fSortChildren:
             def compareText(x, y):
@@ -304,14 +299,14 @@ class TreeNode:
             if self.fModeChildrenTag:
                 if self.childrenTag:
                     showThisItem = False
-                    for tagKey in self.childrenTag.keys():
+                    for tagKey in list(self.childrenTag.keys()):
                         if item.nodePath.hasTag(tagKey):
                             showThisItem = self.childrenTag[tagKey]
                     if not showThisItem:
                         self.kidKeys.remove(key)
 
         # Remove unused children
-        for key in self.children.keys():
+        for key in list(self.children.keys()):
             if key not in self.kidKeys:
                 del(self.children[key])
         cx = x+20
@@ -353,7 +348,7 @@ class TreeNode:
         self.canvas.tag_bind(id, "<1>", self.select)
         self.canvas.tag_bind(id, "<Double-1>", self.flip)
         self.canvas.tag_bind(id, "<3>", self.popupMenu)
-        
+
     def drawtext(self):
         textx = self.x+20-1
         texty = self.y-1
@@ -437,7 +432,7 @@ class TreeNode:
             if self.fModeChildrenTag:
                 if self.childrenTag:
                     showThisItem = False
-                    for tagKey in self.childrenTag.keys():
+                    for tagKey in list(self.childrenTag.keys()):
                         if self.item.nodePath.hasTag(tagKey):
                             showThisItem = self.childrenTag[tagKey]
                     if not showThisItem:

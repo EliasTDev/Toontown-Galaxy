@@ -1,16 +1,15 @@
-// Filename: texturePlacement.h
-// Created by:  drose (28Nov00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file texturePlacement.h
+ * @author drose
+ * @date 2000-11-28
+ */
 
 #ifndef TEXTUREPLACEMENT_H
 #define TEXTUREPLACEMENT_H
@@ -34,14 +33,11 @@ class TextureProperties;
 class TextureReference;
 class PNMImage;
 
-////////////////////////////////////////////////////////////////////
-//       Class : TexturePlacement
-// Description : This corresponds to a particular assignment of a
-//               TextureImage with a PaletteGroup, and specifically
-//               describes which PaletteImage (if any), and where on
-//               the PaletteImage, the TextureImage has been assigned
-//               to.
-////////////////////////////////////////////////////////////////////
+/**
+ * This corresponds to a particular assignment of a TextureImage with a
+ * PaletteGroup, and specifically describes which PaletteImage (if any), and
+ * where on the PaletteImage, the TextureImage has been assigned to.
+ */
 class TexturePlacement : public TypedWritable {
 private:
   TexturePlacement();
@@ -50,7 +46,7 @@ public:
   TexturePlacement(TextureImage *texture, PaletteGroup *group);
   ~TexturePlacement();
 
-  const string &get_name() const;
+  const std::string &get_name() const;
   TextureImage *get_texture() const;
   const TextureProperties &get_properties() const;
   PaletteGroup *get_group() const;
@@ -86,7 +82,7 @@ public:
 
   void compute_tex_matrix(LMatrix3d &transform);
 
-  void write_placed(ostream &out, int indent_level = 0);
+  void write_placed(std::ostream &out, int indent_level = 0);
 
   bool is_filled() const;
   void mark_unfilled();
@@ -128,10 +124,9 @@ protected:
   void fillin(DatagramIterator &scan, BamReader *manager);
 
 private:
-  // This value is only filled in while reading from the bam file;
-  // don't use it otherwise.
+  // This value is only filled in while reading from the bam file; don't use
+  // it otherwise.
   int _num_references;
-  int _margin_override;
   int _num_textureSwaps;
 
 public:
@@ -152,12 +147,11 @@ private:
 };
 
 
-// This is an STL object to sort an array of TexturePlacement pointers
-// in order from biggest to smallest.
+// This is an STL object to sort an array of TexturePlacement pointers in
+// order from biggest to smallest.
 class SortPlacementBySize {
 public:
   bool operator ()(TexturePlacement *a, TexturePlacement *b) const;
 };
 
 #endif
-

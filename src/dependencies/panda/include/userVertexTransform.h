@@ -1,16 +1,15 @@
-// Filename: userVertexTransform.h
-// Created by:  drose (24Mar05)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file userVertexTransform.h
+ * @author drose
+ * @date 2005-03-24
+ */
 
 #ifndef USERVERTEXTRANSFORM_H
 #define USERVERTEXTRANSFORM_H
@@ -24,26 +23,24 @@
 
 class FactoryParams;
 
-////////////////////////////////////////////////////////////////////
-//       Class : UserVertexTransform
-// Description : This is a specialization on VertexTransform that
-//               allows the user to specify any arbitrary transform
-//               matrix he likes.  This is rarely used except for
-//               testing.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is a specialization on VertexTransform that allows the user to specify
+ * any arbitrary transform matrix he likes.  This is rarely used except for
+ * testing.
+ */
 class EXPCL_PANDA_GOBJ UserVertexTransform : public VertexTransform {
 PUBLISHED:
-  UserVertexTransform(const string &name);
+  explicit UserVertexTransform(const std::string &name);
 
-  INLINE const string &get_name() const;
+  INLINE const std::string &get_name() const;
 
   INLINE void set_matrix(const LMatrix4 &matrix);
   virtual void get_matrix(LMatrix4 &matrix) const;
 
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
 private:
-  string _name;
+  std::string _name;
 
   // This is the data that must be cycled between pipeline stages.
   class EXPCL_PANDA_GOBJ CData : public CycleData {

@@ -1,43 +1,47 @@
-// Filename: eglGraphicsStateGuardian.h
-// Created by:  pro-rsoft (21May09)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eglGraphicsStateGuardian.h
+ * @author rdb
+ * @date 2009-05-21
+ */
 
 #ifndef EGLGRAPHICSSTATEGUARDIAN_H
 #define EGLGRAPHICSSTATEGUARDIAN_H
 
 #include "pandabase.h"
 #include "eglGraphicsPipe.h"
-#include "get_x11.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : eglGraphicsStateGuardian
-// Description : A tiny specialization on GLESGraphicsStateGuardian
-//               to add some egl-specific information.
-////////////////////////////////////////////////////////////////////
-#ifdef OPENGLES_2
-class eglGraphicsStateGuardian : public GLES2GraphicsStateGuardian {
-#else
-class eglGraphicsStateGuardian : public GLESGraphicsStateGuardian {
+#ifdef HAVE_X11
+#include "get_x11.h"
 #endif
+
+#ifdef OPENGLES_2
+typedef GLES2GraphicsStateGuardian BaseGraphicsStateGuardian;
+#elif defined(OPENGLES_1)
+typedef GLESGraphicsStateGuardian BaseGraphicsStateGuardian;
+#else
+typedef GLGraphicsStateGuardian BaseGraphicsStateGuardian;
+#endif
+
+/**
+ * A tiny specialization on GLESGraphicsStateGuardian to add some egl-specific
+ * information.
+ */
+class eglGraphicsStateGuardian : public BaseGraphicsStateGuardian {
 public:
   INLINE const FrameBufferProperties &get_fb_properties() const;
   void get_properties(FrameBufferProperties &properties,
              bool &pbuffer_supported, bool &pixmap_supported,
                                bool &slow, EGLConfig config);
   void choose_pixel_format(const FrameBufferProperties &properties,
-         X11_Display *_display,
-         int _screen,
-         bool need_pbuffer, bool need_pixmap);
+                           eglGraphicsPipe *egl_pipe, bool need_window,
+                           bool need_pbuffer, bool need_pixmap);
 
   eglGraphicsStateGuardian(GraphicsEngine *engine, GraphicsPipe *pipe,
          eglGraphicsStateGuardian *share_with);
@@ -51,10 +55,9 @@ public:
   EGLContext _share_context;
   EGLContext _context;
   EGLDisplay _egl_display;
-  X11_Display *_display;
-  int _screen;
-  XVisualInfo *_visual;
-  XVisualInfo *_visuals;
+#ifdef HAVE_X11
+  XVisualInfo *_visual = nullptr;
+#endif
   EGLConfig _fbconfig;
   FrameBufferProperties _fbprops;
 
@@ -74,15 +77,9 @@ public:
     return _type_handle;
   }
   static void init_type() {
-#ifdef OPENGLES_2
-    GLES2GraphicsStateGuardian::init_type();
+    BaseGraphicsStateGuardian::init_type();
     register_type(_type_handle, "eglGraphicsStateGuardian",
-                  GLES2GraphicsStateGuardian::get_class_type());
-#else
-    GLESGraphicsStateGuardian::init_type();
-    register_type(_type_handle, "eglGraphicsStateGuardian",
-                  GLESGraphicsStateGuardian::get_class_type());
-#endif
+                  BaseGraphicsStateGuardian::get_class_type());
   }
   virtual TypeHandle get_type() const {
     return get_class_type();

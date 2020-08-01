@@ -2,7 +2,7 @@
 
 # Module and documentation by Eric S. Raymond, 21 Dec 1998
 
-import os, shlex
+import os, shlex, stat
 
 __all__ = ["netrc", "NetrcParseError"]
 
@@ -21,31 +21,27 @@ class NetrcParseError(Exception):
 
 class netrc:
     def __init__(self, file=None):
+        default_netrc = file is None
         if file is None:
-            try:
-                file = os.path.join(os.environ['HOME'], ".netrc")
-            except KeyError:
-                raise IOError("Could not find .netrc: $HOME is not set")
+            file = os.path.join(os.path.expanduser("~"), ".netrc")
         self.hosts = {}
         self.macros = {}
         with open(file) as fp:
-            self._parse(file, fp)
+            self._parse(file, fp, default_netrc)
 
-    def _parse(self, file, fp):
+    def _parse(self, file, fp, default_netrc):
         lexer = shlex.shlex(fp)
         lexer.wordchars += r"""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"""
         lexer.commenters = lexer.commenters.replace('#', '')
         while 1:
             # Look for a machine, default, or macdef top-level keyword
+            saved_lineno = lexer.lineno
             toplevel = tt = lexer.get_token()
             if not tt:
                 break
             elif tt[0] == '#':
-                # seek to beginning of comment, in case reading the token put
-                # us on a new line, and then skip the rest of the line.
-                pos = len(tt) + 1
-                lexer.instream.seek(-pos, 1)
-                lexer.instream.readline()
+                if lexer.lineno == saved_lineno and len(tt) == 1:
+                    lexer.instream.readline()
                 continue
             elif tt == 'machine':
                 entryname = lexer.get_token()
@@ -88,6 +84,27 @@ class netrc:
                 elif tt == 'account':
                     account = lexer.get_token()
                 elif tt == 'password':
+                    if os.name == 'posix' and default_netrc:
+                        prop = os.fstat(fp.fileno())
+                        if prop.st_uid != os.getuid():
+                            import pwd
+                            try:
+                                fowner = pwd.getpwuid(prop.st_uid)[0]
+                            except KeyError:
+                                fowner = 'uid %s' % prop.st_uid
+                            try:
+                                user = pwd.getpwuid(os.getuid())[0]
+                            except KeyError:
+                                user = 'uid %s' % os.getuid()
+                            raise NetrcParseError(
+                                ("~/.netrc file owner (%s) does not match"
+                                 " current user (%s)") % (fowner, user),
+                                file, lexer.lineno)
+                        if (prop.st_mode & (stat.S_IRWXG | stat.S_IRWXO)):
+                            raise NetrcParseError(
+                               "~/.netrc access too permissive: access"
+                               " permissions must restrict access to only"
+                               " the owner", file, lexer.lineno)
                     password = lexer.get_token()
                 else:
                     raise NetrcParseError("bad follower token %r" % tt,
@@ -107,16 +124,16 @@ class netrc:
         rep = ""
         for host in self.hosts.keys():
             attrs = self.hosts[host]
-            rep = rep + "machine "+ host + "\n\tlogin " + repr(attrs[0]) + "\n"
+            rep += f"machine {host}\n\tlogin {attrs[0]}\n"
             if attrs[1]:
-                rep = rep + "account " + repr(attrs[1])
-            rep = rep + "\tpassword " + repr(attrs[2]) + "\n"
+                rep += f"\taccount {attrs[1]}\n"
+            rep += f"\tpassword {attrs[2]}\n"
         for macro in self.macros.keys():
-            rep = rep + "macdef " + macro + "\n"
+            rep += f"macdef {macro}\n"
             for line in self.macros[macro]:
-                rep = rep + line
-            rep = rep + "\n"
+                rep += line
+            rep += "\n"
         return rep
 
 if __name__ == '__main__':
-    print netrc()
+    print(netrc())

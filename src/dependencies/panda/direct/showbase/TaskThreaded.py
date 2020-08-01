@@ -1,9 +1,12 @@
-"""Undocumented Module"""
+"""Contains the TaskThreaded and TaskThread classes."""
 
 __all__ = ['TaskThreaded', 'TaskThread']
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.task import Task
+
+from .PythonUtil import SerialNumGen
+
 
 class TaskThreaded:
     """ derive from this if you need to do a bunch of CPU-intensive
@@ -12,7 +15,7 @@ class TaskThreaded:
     notify = directNotify.newCategory("TaskThreaded")
 
     _Serial = SerialNumGen()
-    
+
     def __init__(self, name, threaded=True, timeslice=None, callback=None):
         # timeslice is how long this thread should take every frame.
         self.__name = name

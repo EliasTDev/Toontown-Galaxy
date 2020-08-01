@@ -1,16 +1,15 @@
-// Filename: paletteGroups.h
-// Created by:  drose (30Nov00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file paletteGroups.h
+ * @author drose
+ * @date 2000-11-30
+ */
 
 #ifndef PALETTEGROUPS_H
 #define PALETTEGROUPS_H
@@ -22,18 +21,16 @@
 class PaletteGroup;
 class FactoryParams;
 
-////////////////////////////////////////////////////////////////////
-//       Class : PaletteGroups
-// Description : A set of PaletteGroups.  This presents an interface
-//               very like an STL set, with a few additional
-//               functions.
-////////////////////////////////////////////////////////////////////
+/**
+ * A set of PaletteGroups.  This presents an interface very like an STL set,
+ * with a few additional functions.
+ */
 class PaletteGroups : public TypedWritable {
 private:
   typedef pset<PaletteGroup *> Groups;
 
 public:
-#ifndef WIN32_VC
+#ifndef _WIN32
   typedef Groups::const_pointer pointer;
   typedef Groups::const_pointer const_pointer;
 #endif
@@ -63,8 +60,8 @@ public:
   iterator begin() const;
   iterator end() const;
 
-  void output(ostream &out) const;
-  void write(ostream &out, int indent_level = 0) const;
+  void output(std::ostream &out) const;
+  void write(std::ostream &out, int indent_level = 0) const;
 
 private:
   void r_make_complete(Groups &result, PaletteGroup *group);
@@ -85,8 +82,8 @@ public:
   void fillin(DatagramIterator &scan, BamReader *manager);
 
 private:
-  // This value is only filled in while reading from the bam file;
-  // don't use it otherwise.
+  // This value is only filled in while reading from the bam file; don't use
+  // it otherwise.
   int _num_groups;
 
 public:
@@ -106,10 +103,9 @@ private:
   static TypeHandle _type_handle;
 };
 
-INLINE ostream &operator << (ostream &out, const PaletteGroups &groups) {
+INLINE std::ostream &operator << (std::ostream &out, const PaletteGroups &groups) {
   groups.output(out);
   return out;
 }
 
 #endif
-

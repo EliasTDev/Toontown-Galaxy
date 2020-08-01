@@ -1,16 +1,15 @@
-// Filename: eggNurbsCurve.h
-// Created by:  drose (15Feb00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggNurbsCurve.h
+ * @author drose
+ * @date 2000-02-15
+ */
 
 #ifndef EGGNURBSCURVE_H
 #define EGGNURBSCURVE_H
@@ -21,15 +20,16 @@
 
 #include "vector_double.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggNurbsCurve
-// Description : A parametric NURBS curve.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAEGG EggNurbsCurve : public EggCurve {
+/**
+ * A parametric NURBS curve.
+ */
+class EXPCL_PANDA_EGG EggNurbsCurve : public EggCurve {
 PUBLISHED:
-  INLINE EggNurbsCurve(const string &name = "");
+  INLINE explicit EggNurbsCurve(const std::string &name = "");
   INLINE EggNurbsCurve(const EggNurbsCurve &copy);
   INLINE EggNurbsCurve &operator = (const EggNurbsCurve &copy);
+
+  virtual EggNurbsCurve *make_copy() const override;
 
   void setup(int order, int num_knots);
 
@@ -50,7 +50,12 @@ PUBLISHED:
   INLINE double get_knot(int k) const;
   MAKE_SEQ(get_knots, get_num_knots, get_knot);
 
-  virtual void write(ostream &out, int indent_level) const;
+  virtual void write(std::ostream &out, int indent_level) const override;
+
+  MAKE_PROPERTY(order, get_order, set_order);
+  MAKE_PROPERTY(degree, get_degree);
+  MAKE_PROPERTY(closed, is_closed);
+  MAKE_SEQ_PROPERTY(knots, get_num_knots, get_knot, set_knot);
 
 private:
   typedef vector_double Knots;
@@ -67,10 +72,13 @@ public:
     register_type(_type_handle, "EggNurbsCurve",
                   EggCurve::get_class_type());
   }
-  virtual TypeHandle get_type() const {
+  virtual TypeHandle get_type() const override {
     return get_class_type();
   }
-  virtual TypeHandle force_init_type() {init_type(); return get_class_type();}
+  virtual TypeHandle force_init_type() override {
+    init_type();
+    return get_class_type();
+  }
 
 private:
   static TypeHandle _type_handle;

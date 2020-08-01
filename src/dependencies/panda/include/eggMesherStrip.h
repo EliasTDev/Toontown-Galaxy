@@ -1,16 +1,15 @@
-// Filename: eggMesherStrip.h
-// Created by:  drose (13Mar05)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggMesherStrip.h
+ * @author drose
+ * @date 2005-03-13
+ */
 
 #ifndef EGGMESHERSTRIP_H
 #define EGGMESHERSTRIP_H
@@ -23,14 +22,12 @@
 
 class EggMesherEdge;
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggMesherStrip
-// Description : Represents a triangle strip or quad strip in
-//               progress, as assembled by the mesher.  It might also
-//               represent a single polygon such as a triangle or
-//               quad, since that's how strips generally start out.
-////////////////////////////////////////////////////////////////////
-class EggMesherStrip {
+/**
+ * Represents a triangle strip or quad strip in progress, as assembled by the
+ * mesher.  It might also represent a single polygon such as a triangle or
+ * quad, since that's how strips generally start out.
+ */
+class EXPCL_PANDA_EGG EggMesherStrip {
 public:
   enum PrimType {
     PT_poly,
@@ -45,10 +42,10 @@ public:
   };
 
   enum MesherOrigin {
-    MO_unknown, 
-    MO_user, 
-    MO_firstquad, 
-    MO_fanpoly, 
+    MO_unknown,
+    MO_user,
+    MO_firstquad,
+    MO_fanpoly,
     MO_mate
   };
 
@@ -79,7 +76,7 @@ public:
                           EggMesherStrip &back, const EggVertexPool *vertex_pool);
 
   int count_neighbors() const;
-  void output_neighbors(ostream &out) const;
+  void output_neighbors(std::ostream &out) const;
 
   INLINE bool is_coplanar_with(const EggMesherStrip &other, PN_stdfloat threshold) const;
   INLINE PN_stdfloat coplanarity(const EggMesherStrip &other) const;
@@ -118,7 +115,7 @@ public:
   bool pick_sheet_mate(const EggMesherStrip &a_strip,
                        const EggMesherStrip &b_strip) const;
 
-  void output(ostream &out) const;
+  void output(std::ostream &out) const;
 
   typedef plist<CPT(EggPrimitive) > Prims;
   typedef plist<EggMesherEdge *> Edges;
@@ -129,9 +126,9 @@ public:
   Verts _verts;
 
   enum MesherStatus {
-    MS_alive, 
-    MS_dead, 
-    MS_done, 
+    MS_alive,
+    MS_dead,
+    MS_done,
     MS_paired
   };
 
@@ -147,8 +144,8 @@ public:
   bool _flat_shaded;
 };
 
-INLINE ostream &
-operator << (ostream &out, const EggMesherStrip &strip) {
+INLINE std::ostream &
+operator << (std::ostream &out, const EggMesherStrip &strip) {
   strip.output(out);
   return out;
 }

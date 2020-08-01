@@ -1,16 +1,15 @@
-// Filename: collisionTraverser.h
-// Created by:  drose (16Mar02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file collisionTraverser.h
+ * @author drose
+ * @date 2002-03-16
+ */
 
 #ifndef COLLISIONTRAVERSER_H
 #define COLLISIONTRAVERSER_H
@@ -33,26 +32,25 @@ class Geom;
 class NodePath;
 class CollisionEntry;
 
-////////////////////////////////////////////////////////////////////
-//       Class : CollisionTraverser
-// Description : This class manages the traversal through the scene
-//               graph to detect collisions.  It holds ownership of a
-//               number of collider objects, each of which is a
-//               CollisionNode and an associated CollisionHandler.
-//
-//               When traverse() is called, it begins at the indicated
-//               root and detects all collisions with any of its
-//               collider objects against nodes at or below the
-//               indicated root, calling the appropriate
-//               CollisionHandler for each detected collision.
-////////////////////////////////////////////////////////////////////
+/**
+ * This class manages the traversal through the scene graph to detect
+ * collisions.  It holds ownership of a number of collider objects, each of
+ * which is a CollisionNode and an associated CollisionHandler.
+ *
+ * When traverse() is called, it begins at the indicated root and detects all
+ * collisions with any of its collider objects against nodes at or below the
+ * indicated root, calling the appropriate CollisionHandler for each detected
+ * collision.
+ */
 class EXPCL_PANDA_COLLIDE CollisionTraverser : public Namable {
 PUBLISHED:
-  CollisionTraverser(const string &name = "ctrav");
+  explicit CollisionTraverser(const std::string &name = "ctrav");
   ~CollisionTraverser();
 
   INLINE void set_respect_prev_transform(bool flag);
   INLINE bool get_respect_prev_transform() const;
+  MAKE_PROPERTY(respect_prev_transform, get_respect_prev_transform,
+                                        set_respect_prev_transform);
 
   void add_collider(const NodePath &collider, CollisionHandler *handler);
   bool remove_collider(const NodePath &collider);
@@ -62,21 +60,24 @@ PUBLISHED:
   MAKE_SEQ(get_colliders, get_num_colliders, get_collider);
   CollisionHandler *get_handler(const NodePath &collider) const;
   void clear_colliders();
+  MAKE_SEQ_PROPERTY(colliders, get_num_colliders, get_collider);
 
   void traverse(const NodePath &root);
 
-#ifdef DO_COLLISION_RECORDING
+#if defined(DO_COLLISION_RECORDING) || !defined(CPPPARSER)
   void set_recorder(CollisionRecorder *recorder);
   INLINE bool has_recorder() const;
   INLINE CollisionRecorder *get_recorder() const;
   INLINE void clear_recorder();
+  MAKE_PROPERTY2(recorder, has_recorder, get_recorder,
+                           set_recorder, clear_recorder);
 
-  CollisionVisualizer *show_collisions(const NodePath &root);
+  PandaNode *show_collisions(const NodePath &root);
   void hide_collisions();
 #endif  // DO_COLLISION_RECORDING
 
-  void output(ostream &out) const;
-  void write(ostream &out, int indent_level) const;
+  void output(std::ostream &out) const;
+  void write(std::ostream &out, int indent_level) const;
 
 private:
   typedef pvector<CollisionLevelStateSingle> LevelStatesSingle;
@@ -110,7 +111,6 @@ private:
 
 private:
   PT(CollisionHandler) _default_handler;
-  TypeHandle _graph_type;
 
   class OrderedColliderDef {
   public:
@@ -132,6 +132,9 @@ private:
 #ifdef DO_COLLISION_RECORDING
   CollisionRecorder *_recorder;
   NodePath _collision_visualizer_np;
+#else
+  CollisionRecorder *_recorder_disabled = nullptr;
+  NodePath _collision_visualizer_np_disabled;
 #endif  // DO_COLLISION_RECORDING
 
   // Statistics
@@ -144,7 +147,8 @@ private:
   PStatCollector _this_pcollector;
   typedef pvector<PStatCollector> PassCollectors;
   PassCollectors _pass_collectors;
-  // pstats category for actual collision detection (vs. bounding heirarchy collision detection)
+  // pstats category for actual collision detection (vs.  bounding heirarchy
+  // collision detection)
   typedef pvector<PStatCollector> SolidCollideCollectors;
   SolidCollideCollectors _solid_collide_collectors;
 
@@ -162,7 +166,7 @@ private:
   friend class SortByColliderSort;
 };
 
-INLINE ostream &operator << (ostream &out, const CollisionTraverser &trav) {
+INLINE std::ostream &operator << (std::ostream &out, const CollisionTraverser &trav) {
   trav.output(out);
   return out;
 }
@@ -170,4 +174,3 @@ INLINE ostream &operator << (ostream &out, const CollisionTraverser &trav) {
 #include "collisionTraverser.I"
 
 #endif
-
