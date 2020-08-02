@@ -28,8 +28,8 @@ rpc-server-endpoint http://localhost:8080/
 dc-file dependencies/astron/dclass/empire.dc
 
 # Client settings
-window-title Toontown Empire
-server-version Toontown Empire
+window-title Toontown Galaxy
+server-version Toontown Galaxy
 build-version production
 sync-video #f
 want-dev #f

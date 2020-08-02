@@ -5,7 +5,7 @@ distribution qa
 model-path /
 
 # Server:
-server-version Toontown Empire
+server-version Toontown Galaxy
 build-version BUILD_VERSION
 min-access-level 100
 accountdb-type remote

@@ -1,6 +1,6 @@
 @echo off
 
-title Toontown Empire Alpha Game Launcher
+title Toontown Galaxy Alpha Game Launcher
 
 echo Choose your connection method!
 echo.
@@ -45,7 +45,7 @@ if %INPUT%==2 (
 echo.
 
 echo ===============================
-echo Starting Toontown Empire...
+echo Starting Toontown Galaxy...
 echo ppython: "dependencies/panda/python/ppython.exe"
 
 if %INPUT%==2 (

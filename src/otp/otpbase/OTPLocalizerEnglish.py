@@ -131,10 +131,10 @@ CRBootedReasons = {100: 'You have been disconnected because someone else just lo
  101: 'Please relaunch the game from the official launcher.',
  102: 'You are not authorized to use administrator privileges.',
  103: 'You were banned by a moderator.\n\nBehave next time!',
- 105: 'Toontown Empire is now temporarily closed for maintenance. Everyone who was playing has been disconnected from the game.\n\nFor more information, please visit the Toontown Empire website.\n\nWe are sorry and hope to be back real soon!',
- 124: 'Your installed files are out of date! Use the official launcher to download the newest version, or contact Toontown Empire Support if the problem persists.',
+ 105: 'Toontown Galaxy is now temporarily closed for maintenance. Everyone who was playing has been disconnected from the game.\n\nFor more information, please visit the Toontown Galaxy website.\n\nWe are sorry and hope to be back real soon!',
+ 124: 'Your installed files are out of date! Use the official launcher to download the newest version, or contact Toontown Galaxy Support if the problem persists.',
  153: 'The district you were playing on has been reset.  Everyone who was playing on that district has been disconnected.  However, you should be able to connect again and go right back into the game.',
- 154: 'Toontown Empire is now temporarily closed for maintenance. Everyone who was playing has been disconnected from the game.\n\nFor more information, please visit the Toontown Empire website.\n\nWe are sorry and hope to be back real soon!',
+ 154: 'Toontown Galaxy is now temporarily closed for maintenance. Everyone who was playing has been disconnected from the game.\n\nFor more information, please visit the Toontown Galaxy website.\n\nWe are sorry and hope to be back real soon!',
  166: 'You were disconnected to prevent a district reset.'}
 CRBootedReasonUnknownCode = 'An unexpected problem has occurred (error code %s).  Your connection has been lost, but you should be able to connect again and go right back into the game.'
 CRTryConnectAgain = '\n\nTry to connect again?'
@@ -142,8 +142,8 @@ CRToontownUnavailable = 'The server appears to be temporarily unavailable, still
 CRToontownUnavailableCancel = lCancel
 CRNameCongratulations = 'CONGRATULATIONS!!'
 CRNameAccepted = 'Your name has been\napproved by the Toon Council.\n\nFrom this day forth\nyou will be named\n"%s"'
-CRMaintenanceCountdownMessage = 'Attention Toons! Toontown Empire will be going down for maintenance in %d minutes.'
-CRMaintenanceMessage = 'Attention Toons! Toontown Empire is now going down for maintenance.'
+CRMaintenanceCountdownMessage = 'Attention Toons! Toontown Galaxy will be going down for maintenance in %d minutes.'
+CRMaintenanceMessage = 'Attention Toons! Toontown Galaxy is now going down for maintenance.'
 AfkForceAcknowledgeMessage = 'Your toon got sleepy and went to bed.'
 CREnteringToontown = 'Entering...'
 DialogSpecial = 'ooo'
@@ -2341,4 +2341,4 @@ def timeElapsedString(timeDelta):
     else:
         return '%s minutes ago' % (timeDelta.seconds / 60)
 
-AsciiNotSupported = 'Sorry, but Toontown Empire does not support non-ASCII characters.'
+AsciiNotSupported = 'Sorry, but Toontown Galaxy does not support non-ASCII characters.'

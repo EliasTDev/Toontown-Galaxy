@@ -11,7 +11,7 @@ set DISTRICT_NAME=Gravity Falls
 set BASE_CHANNEL=401000000
 
 echo ===============================
-echo Starting Toontown Empire AI server...
+echo Starting Toontown Galaxy AI server...
 echo ppython: "dependencies/panda/python/ppython.exe"
 echo District name: %DISTRICT_NAME%
 echo Base channel: %BASE_CHANNEL%

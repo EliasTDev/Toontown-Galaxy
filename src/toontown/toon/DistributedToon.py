@@ -2723,5 +2723,5 @@ def hideParticles():
 @magicWord(category=CATEGORY_TRIAL)
 def FordTheWriter():
     av = spellbook.getTarget()
-    av.setSystemMessage(1, "FordTheWriter is the creator of this project, Toontown Empire. He also Lead-Developer, Game-Developer, Server-Administrator, and Launcher Developer.")
+    av.setSystemMessage(1, "FordTheWriter is the creator of this project, Toontown Galaxy. He also Lead-Developer, Game-Developer, Server-Administrator, and Launcher Developer.")
 

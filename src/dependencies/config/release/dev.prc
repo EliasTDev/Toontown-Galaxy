@@ -19,7 +19,7 @@ vfs-mount resources/server /server
 model-path /
 
 # Server:
-server-version Toontown Empire
+server-version Toontown Galaxy
 build-version dev
 accountdb-type developer
 

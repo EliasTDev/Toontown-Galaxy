@@ -193,8 +193,8 @@ CRBootedReasons = {100: 'Você foi desconectado porque alguém acabou logado com
  101: 'Por favor, relançar o jogo a partir do lançador oficial.',
  102: 'Você não está autorizado a usar os privilégios de administrador.',
  103: 'Você foi banido por um moderador. \N\nBehave próxima vez!',
- 105: 'Toontown Empire agora está temporariamente fechada para manutenção. Todo mundo que estava jogando foi desconectado do jogo. \N\nPara obter mais informações, visite o site da Toontown Empire.',
- 124: 'Seus arquivos instalados estão desatualizados ! Use o lançador oficial para baixar a versão mais recente , ou entre em contato Toontown Empire suporte se o problema persistir .',
+ 105: 'Toontown Galaxy agora está temporariamente fechada para manutenção. Todo mundo que estava jogando foi desconectado do jogo. \N\nPara obter mais informações, visite o site da Toontown Galaxy.',
+ 124: 'Seus arquivos instalados estão desatualizados ! Use o lançador oficial para baixar a versão mais recente , ou entre em contato Toontown Galaxy suporte se o problema persistir .',
  153: 'O distrito você estava jogando no foi redefinida. Todo mundo que estava jogando em que o distrito foi desconectado. No entanto , você deve ser capaz de se conectar novamente e vá para a direita de volta para o jogo.',
  166: 'Você foi desconectado para evitar uma reinicialização do distrito.'}
 CRBootedReasonUnknownCode = 'Houve um problema inesperado (c\xc3\xb3digo de erro %s). A conex\xc3\xa3o falhou, e voc\xc3\xaa precisa se conectar novamente para voltar ao jogo.'
@@ -209,8 +209,8 @@ CRServerConstantsTryAgain = 'N\xc3\xa3o foi poss\xc3\xadvel contatar %s.\n\nO se
 CRServerDateTryAgain = 'N\xc3\xa3o foi poss\xc3\xadvel obter a data do servidor de %s. Tentar novamente?'
 AfkForceAcknowledgeMessage = 'O seu Toon ficou com sono e foi para a cama.'
 PeriodTimerWarning = 'O seu limite de tempo em Toontown neste m\xc3\xaas est\xc3\xa1 quase no fim!'
-CRMaintenanceCountdownMessage = 'Atenção Toons! Toontown Empire estará indo para baixo para manutenção em % d minutos.'
-CRMaintenanceMessage = 'Atenção Toons! Toontown Empire está indo agora em manutenção.'
+CRMaintenanceCountdownMessage = 'Atenção Toons! Toontown Galaxy estará indo para baixo para manutenção em % d minutos.'
+CRMaintenanceMessage = 'Atenção Toons! Toontown Galaxy está indo agora em manutenção.'
 PeriodForceAcknowledgeMessage = 'Voc\xc3\xaa usou todos os seus minutos dispon\xc3\xadveis em Toontown neste m\xc3\xaas. Volte e jogue mais no pr\xc3\xb3ximo m\xc3\xaas!'
 CREnteringToontown = 'Entrando em Toontown...'
 DownloadWatcherUpdate = 'Fazendo o download de %s'
@@ -2983,5 +2983,5 @@ def timeElapsedString(timeDelta):
     else:
         return '%s minutes ago' % (timeDelta.seconds / 60)
 
-AsciiNotSupported = 'Desculpe, mas Toontown Empire não suporta caracteres não-ASCII .'
+AsciiNotSupported = 'Desculpe, mas Toontown Galaxy não suporta caracteres não-ASCII .'
 

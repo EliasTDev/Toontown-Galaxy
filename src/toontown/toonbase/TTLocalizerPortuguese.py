@@ -2737,7 +2737,7 @@ AvatarPanelGroupRetract = 'Retirar Convite'
 AvatarPanelGroupMember = 'Já no Grupo'
 AvatarPanelGroupMemberKick = 'Remova'
 AvatarPanelCast = 'Membro da equipe'
-AvatarPanelCastInfo = 'Staff Member % s é um Toontown Empire equipe membro.'
+AvatarPanelCastInfo = 'Staff Member % s é um Toontown Galaxy equipe membro.'
 ReportPanelTitle = 'Denunciar um Jogador'
 ReportPanelBody = 'Este recurso enviará uma denúncia completa a um Moderador. Em vez de denunciar, você pode optar pelo seguinte:\n\n  - Teleportar-se para outra região\n  - Usar "Ignorar" no painel do Toon\n\nQuer mesmo denunciar %s para um Moderador?'
 ReportPanelBodyFriends = 'Este recurso enviará uma denúncia completa a um Moderador. Em vez de denunciar, você pode optar pelo seguinte:\n\n  - Teleportar-se para outra região\n  - Romper sua amizade\n\nQuer mesmo denunciar %s para um Moderador?\n\n(Isso também vai romper sua amizade)'
@@ -6093,7 +6093,7 @@ MusicEncntrGeneralBg = 'Encontro Com Cogs'
 MusicTcSzActivity = 'Mistureba de Toontorial'
 MusicTcSz = 'Passeando Juntos'
 MusicCreateAToon = 'Novo Toon na Cidade'
-MusictteTheme = 'O Toontown Empire Tema'
+MusictteTheme = 'O Toontown Galaxy Tema'
 MusicTtTheme = 'O tema Toontown'
 MusicMinigameRace = 'Devagar e Firme'
 MusicMgPairing = 'Você se lembra de Mim?'
@@ -7100,7 +7100,7 @@ ClothesShopShortsStyle = 'Shorts Estilo'
 ClothesShopShortsColor = 'Shorts Cor'
 ClothesShopBottomsStyle = 'Saias Estilo'
 ClothesShopBottomsColor = 'Saias Cor'
-PromptTutorial = 'Parabéns!! \nVocê são o mais novo cidadão Toontown Empire! \nGostaria de continuar para a Toontorial ou teleportar diretamente para Toontown Central?'
+PromptTutorial = 'Parabéns!! \nVocê são o mais novo cidadão Toontown Galaxy! \nGostaria de continuar para a Toontorial ou teleportar diretamente para Toontown Central?'
 MakeAToonSkipTutorial = 'Pular Toontorial'
 MakeAToonEnterTutorial = 'Acessar Toontorial'
 MakeAToonDone = lOK
@@ -10063,7 +10063,7 @@ TipDict = {TIP_NONE: ('',),
                'Open or close your Shticker Book by pressing the "F8" key.',
                'You can look up by pressing the "Page Up" key and look down by pressing the "Page Down" key.',
                'Press the "Control" key to jump.',
-               'Press the "F9" key to take a screenshot, which will be saved in your Toontown Empire folder on your computer.',
+               'Press the "F9" key to take a screenshot, which will be saved in your Toontown Galaxy folder on your computer.',
                'You can change your screen resolution, adjust audio, and control other options on the Options Page in the Shticker Book.',
                "Try on your friend's clothing at the closet in their house.",
                'You can go to your house using the "Go Home" button on your map.',
@@ -10077,7 +10077,7 @@ TipDict = {TIP_NONE: ('',),
                'Change to different views of your Toon by pressing the Tab Key.',
                'Sometimes you can find several different ToonTasks offered for the same reward. Shop around!',
                'Finding friends with similar ToonTasks is a fun way to progress through the game.',
-               'You never need to save your Toontown progress. The Toontown Empire servers continually save all the necessary information.',
+               'You never need to save your Toontown progress. The Toontown Galaxy servers continually save all the necessary information.',
                'You can whisper to other Toons either by clicking on them or by selecting them from your Friends List.',
                'Some SpeedChat phrases play emotion animations on your Toon.',
                'If the area you are in is crowded, try changing Districts. Go to the District Page in the Shticker Book and select a different one.',
@@ -11476,7 +11476,7 @@ InteractivePropTrackBonusTerms = {
 PlayingCardUnknown = 'Nome de Cartão desconhecido'
 AllTrickOrTreatFounded = 'Doces ou travessuras'
 TrickOrTreatScavengerHuntCompleted = 'Doces ou travessuras'
-MusictteTheme = 'Tema de Toontown Empire'
+MusictteTheme = 'Tema de Toontown Galaxy'
 TrunkNotOwnerMessage = "Não é seu baú, mas você pode experimentar os acessórios."
 TrunkNotPaidMessage = "should not be seen"
 TrunkAreYouSureMessage = 'Você deleteu alguns acessórios.  Tem certeza disso?'
