@@ -1,16 +1,15 @@
-// Filename: collisionSphere.h
-// Created by:  drose (24Apr00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file collisionSphere.h
+ * @author drose
+ * @date 2000-04-24
+ */
 
 #ifndef COLLISIONSPHERE_H
 #define COLLISIONSPHERE_H
@@ -20,14 +19,13 @@
 #include "parabola.h"
 #include "collisionBox.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : CollisionSphere
-// Description : A spherical collision volume or object.
-////////////////////////////////////////////////////////////////////
+/**
+ * A spherical collision volume or object.
+ */
 class EXPCL_PANDA_COLLIDE CollisionSphere : public CollisionSolid {
 PUBLISHED:
-  INLINE CollisionSphere(const LPoint3 &center, PN_stdfloat radius);
-  INLINE CollisionSphere(PN_stdfloat cx, PN_stdfloat cy, PN_stdfloat cz, PN_stdfloat radius);
+  INLINE explicit CollisionSphere(const LPoint3 &center, PN_stdfloat radius);
+  INLINE explicit CollisionSphere(PN_stdfloat cx, PN_stdfloat cy, PN_stdfloat cz, PN_stdfloat radius);
 
   virtual LPoint3 get_collision_origin() const;
 
@@ -46,7 +44,7 @@ public:
   virtual PStatCollector &get_volume_pcollector();
   virtual PStatCollector &get_test_pcollector();
 
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
   INLINE static void flush_level();
 
@@ -57,6 +55,10 @@ PUBLISHED:
 
   INLINE void set_radius(PN_stdfloat radius);
   INLINE PN_stdfloat get_radius() const;
+
+PUBLISHED:
+  MAKE_PROPERTY(center, get_center, set_center);
+  MAKE_PROPERTY(radius, get_radius, set_radius);
 
 protected:
   virtual PT(BoundingVolume) compute_internal_bounds() const;
@@ -69,6 +71,8 @@ protected:
   test_intersection_from_ray(const CollisionEntry &entry) const;
   virtual PT(CollisionEntry)
   test_intersection_from_segment(const CollisionEntry &entry) const;
+  virtual PT(CollisionEntry)
+  test_intersection_from_capsule(const CollisionEntry &entry) const;
   virtual PT(CollisionEntry)
   test_intersection_from_parabola(const CollisionEntry &entry) const;
   virtual PT(CollisionEntry)
@@ -121,5 +125,3 @@ private:
 #include "collisionSphere.I"
 
 #endif
-
-

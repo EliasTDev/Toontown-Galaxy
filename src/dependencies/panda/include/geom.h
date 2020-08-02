@@ -1,16 +1,15 @@
-// Filename: geom.h
-// Created by:  drose (06Mar05)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file geom.h
+ * @author drose
+ * @date 2005-03-06
+ */
 
 #ifndef GEOM_H
 #define GEOM_H
@@ -44,17 +43,14 @@
 class GeomContext;
 class PreparedGraphicsObjects;
 
-////////////////////////////////////////////////////////////////////
-//       Class : Geom
-// Description : A container for geometry primitives.  This class
-//               associates one or more GeomPrimitive objects with a
-//               table of vertices defined by a GeomVertexData object.
-//               All of the primitives stored in a particular Geom are
-//               drawn from the same set of vertices (each primitive
-//               uses a subset of all of the vertices in the table),
-//               and all of them must be rendered at the same time, in
-//               the same graphics state.
-////////////////////////////////////////////////////////////////////
+/**
+ * A container for geometry primitives.  This class associates one or more
+ * GeomPrimitive objects with a table of vertices defined by a GeomVertexData
+ * object.  All of the primitives stored in a particular Geom are drawn from
+ * the same set of vertices (each primitive uses a subset of all of the
+ * vertices in the table), and all of them must be rendered at the same time,
+ * in the same graphics state.
+ */
 class EXPCL_PANDA_GOBJ Geom : public CopyOnWriteObject, public GeomEnums {
 protected:
   virtual PT(CopyOnWriteObject) make_cow_copy();
@@ -75,9 +71,13 @@ PUBLISHED:
   INLINE PrimitiveType get_primitive_type() const;
   INLINE ShadeModel get_shade_model() const;
   INLINE int get_geom_rendering() const;
+  MAKE_PROPERTY(primitive_type, get_primitive_type);
+  MAKE_PROPERTY(shade_model, get_shade_model);
+  MAKE_PROPERTY(geom_rendering, get_geom_rendering);
 
-  INLINE UsageHint get_usage_hint() const;
+  UsageHint get_usage_hint() const;
   void set_usage_hint(UsageHint usage_hint);
+  //MAKE_PROPERTY(usage_hint, get_usage_hint, set_usage_hint);
 
   INLINE CPT(GeomVertexData) get_vertex_data(Thread *current_thread = Thread::get_current_thread()) const;
   PT(GeomVertexData) modify_vertex_data();
@@ -85,16 +85,20 @@ PUBLISHED:
   void offset_vertices(const GeomVertexData *data, int offset);
   int make_nonindexed(bool composite_only);
 
+  CPT(GeomVertexData) get_animated_vertex_data(bool force, Thread *current_thread = Thread::get_current_thread()) const;
+
   INLINE bool is_empty() const;
 
-  INLINE int get_num_primitives() const;
-  INLINE CPT(GeomPrimitive) get_primitive(int i) const;
+  INLINE size_t get_num_primitives() const;
+  INLINE CPT(GeomPrimitive) get_primitive(size_t i) const;
   MAKE_SEQ(get_primitives, get_num_primitives, get_primitive);
-  INLINE PT(GeomPrimitive) modify_primitive(int i);
-  void set_primitive(int i, const GeomPrimitive *primitive);
-  void add_primitive(const GeomPrimitive *primitive);
-  void remove_primitive(int i);
+  INLINE PT(GeomPrimitive) modify_primitive(size_t i);
+  void set_primitive(size_t i, const GeomPrimitive *primitive);
+  void insert_primitive(size_t i, const GeomPrimitive *primitive);
+  INLINE void add_primitive(const GeomPrimitive *primitive);
+  void remove_primitive(size_t i);
   void clear_primitives();
+  MAKE_SEQ_PROPERTY(primitives, get_num_primitives, get_primitive, set_primitive, remove_primitive, insert_primitive);
 
   INLINE PT(Geom) decompose() const;
   INLINE PT(Geom) doubleside() const;
@@ -104,6 +108,7 @@ PUBLISHED:
   INLINE PT(Geom) make_points() const;
   INLINE PT(Geom) make_lines() const;
   INLINE PT(Geom) make_patches() const;
+  INLINE PT(Geom) make_adjacency() const;
 
   void decompose_in_place();
   void doubleside_in_place();
@@ -113,11 +118,14 @@ PUBLISHED:
   void make_points_in_place();
   void make_lines_in_place();
   void make_patches_in_place();
+  void make_adjacency_in_place();
 
   virtual bool copy_primitives_from(const Geom *other);
 
   int get_num_bytes() const;
   INLINE UpdateSeq get_modified(Thread *current_thread = Thread::get_current_thread()) const;
+  MAKE_PROPERTY(num_bytes, get_num_bytes);
+  MAKE_PROPERTY(modified, get_modified);
 
   bool request_resident() const;
 
@@ -132,9 +140,10 @@ PUBLISHED:
   INLINE BoundingVolume::BoundsType get_bounds_type() const;
   INLINE void set_bounds(const BoundingVolume *volume);
   INLINE void clear_bounds();
+  MAKE_PROPERTY(bounds_type, get_bounds_type, set_bounds_type);
 
-  virtual void output(ostream &out) const;
-  virtual void write(ostream &out, int indent_level = 0) const;
+  virtual void output(std::ostream &out) const;
+  virtual void write(std::ostream &out, int indent_level = 0) const;
 
   void clear_cache();
   void clear_cache_stage(Thread *current_thread);
@@ -149,7 +158,6 @@ PUBLISHED:
 
 public:
   bool draw(GraphicsStateGuardianBase *gsg,
-            const GeomMunger *munger,
             const GeomVertexData *vertex_data,
             bool force, Thread *current_thread) const;
 
@@ -190,25 +198,23 @@ private:
   void clear_prepared(PreparedGraphicsObjects *prepared_objects);
   bool check_will_be_valid(const GeomVertexData *vertex_data) const;
 
-  void reset_usage_hint(CData *cdata);
   void reset_geom_rendering(CData *cdata);
 
-  void combine_primitives(GeomPrimitive *a_prim, const GeomPrimitive *b_prim,
+  void combine_primitives(GeomPrimitive *a_prim, CPT(GeomPrimitive) b_prim,
                           Thread *current_thread);
 
 private:
   typedef pvector<COWPT(GeomPrimitive) > Primitives;
 
   // We have to use reference-counting pointers here instead of having
-  // explicit cleanup in the GeomVertexFormat destructor, because the
-  // cache needs to be stored in the CycleData, which makes accurate
-  // cleanup more difficult.  We use the GeomCacheManager class to
-  // avoid cache bloat.
+  // explicit cleanup in the GeomVertexFormat destructor, because the cache
+  // needs to be stored in the CycleData, which makes accurate cleanup more
+  // difficult.  We use the GeomCacheManager class to avoid cache bloat.
 
-  // Note: the above comment is no longer true.  The cache is not
-  // stored in the CycleData, which just causes problems; instead, we
-  // cycle each individual CacheEntry as needed.  Need to investigate
-  // if we could simplify the cache system now.
+  // Note: the above comment is no longer true.  The cache is not stored in
+  // the CycleData, which just causes problems; instead, we cycle each
+  // individual CacheEntry as needed.  Need to investigate if we could
+  // simplify the cache system now.
 
   // The pipelined data with each CacheEntry.
   class EXPCL_PANDA_GOBJ CDataCache : public CycleData {
@@ -243,19 +249,17 @@ private:
   typedef CycleDataWriter<CDataCache> CDCacheWriter;
 
 public:
-  // The CacheKey class separates out just the part of CacheEntry that
-  // is used to key the cache entry within the map.  We have this as a
-  // separate class so we can easily look up a new entry in the map,
-  // without having to execute the relatively expensive CacheEntry
-  // constructor.
+  // The CacheKey class separates out just the part of CacheEntry that is used
+  // to key the cache entry within the map.  We have this as a separate class
+  // so we can easily look up a new entry in the map, without having to
+  // execute the relatively expensive CacheEntry constructor.
   class CacheKey {
   public:
     INLINE CacheKey(const GeomVertexData *source_data,
                     const GeomMunger *modifier);
     INLINE CacheKey(const CacheKey &copy);
-#ifdef USE_MOVE_SEMANTICS
-    INLINE CacheKey(CacheKey &&from) NOEXCEPT;
-#endif
+    INLINE CacheKey(CacheKey &&from) noexcept;
+
     INLINE bool operator < (const CacheKey &other) const;
 
     CPT(GeomVertexData) _source_data;
@@ -268,13 +272,12 @@ public:
                       const GeomVertexData *source_data,
                       const GeomMunger *modifier);
     INLINE CacheEntry(Geom *source, const CacheKey &key);
-#ifdef USE_MOVE_SEMANTICS
-    INLINE CacheEntry(Geom *source, CacheKey &&key) NOEXCEPT;
-#endif
+    INLINE CacheEntry(Geom *source, CacheKey &&key) noexcept;
+
     ALLOC_DELETED_CHAIN(CacheEntry);
 
     virtual void evict_callback();
-    virtual void output(ostream &out) const;
+    virtual void output(std::ostream &out) const;
 
     Geom *_source;  // A back pointer to the containing Geom
     CacheKey _key;
@@ -292,7 +295,7 @@ public:
     }
 
   private:
-    static TypeHandle _type_handle;
+    static EXPCL_PANDA_GOBJ TypeHandle _type_handle;
   };
   typedef pmap<const CacheKey *, PT(CacheEntry), IndirectLess<CacheKey> > Cache;
 
@@ -301,7 +304,8 @@ private:
   class EXPCL_PANDA_GOBJ CData : public CycleData {
   public:
     INLINE CData();
-    INLINE CData(const CData &copy);
+    INLINE CData(GeomVertexData *data);
+
     ALLOC_DELETED_CHAIN(CData);
     virtual CycleData *make_copy() const;
     virtual void write_datagram(BamWriter *manager, Datagram &dg) const;
@@ -316,8 +320,6 @@ private:
     PrimitiveType _primitive_type;
     ShadeModel _shade_model;
     int _geom_rendering;
-    UsageHint _usage_hint;
-    bool _got_usage_hint;
     UpdateSeq _modified;
 
     CPT(BoundingVolume) _internal_bounds;
@@ -348,8 +350,8 @@ private:
   Cache _cache;
   LightMutex _cache_lock;
 
-  // This works just like the Texture contexts: each Geom keeps a
-  // record of all the PGO objects that hold the Geom, and vice-versa.
+  // This works just like the Texture contexts: each Geom keeps a record of
+  // all the PGO objects that hold the Geom, and vice-versa.
   typedef pmap<PreparedGraphicsObjects *, GeomContext *> Contexts;
   Contexts _contexts;
 
@@ -393,31 +395,31 @@ private:
   friend class PreparedGraphicsObjects;
 };
 
-////////////////////////////////////////////////////////////////////
-//       Class : GeomPipelineReader
-// Description : Encapsulates the data from a Geom,
-//               pre-fetched for one stage of the pipeline.
-////////////////////////////////////////////////////////////////////
+/**
+ * Encapsulates the data from a Geom, pre-fetched for one stage of the
+ * pipeline.
+ *
+ * Does not hold a reference to the Geom.  The caller must ensure that the
+ * Geom persists for at least the lifetime of the GeomPipelineReader.
+ */
 class EXPCL_PANDA_GOBJ GeomPipelineReader : public GeomEnums {
 public:
+  INLINE GeomPipelineReader(Thread *current_thread);
   INLINE GeomPipelineReader(const Geom *object, Thread *current_thread);
-private:
-  INLINE GeomPipelineReader(const GeomPipelineReader &copy);
-  INLINE void operator = (const GeomPipelineReader &copy);
-
-public:
+  GeomPipelineReader(const GeomPipelineReader &copy) = delete;
   INLINE ~GeomPipelineReader();
+
   ALLOC_DELETED_CHAIN(GeomPipelineReader);
 
+  GeomPipelineReader &operator = (const GeomPipelineReader &copy) = delete;
+
+  INLINE void set_object(const Geom *object);
   INLINE const Geom *get_object() const;
   INLINE Thread *get_current_thread() const;
-
-  void check_usage_hint() const;
 
   INLINE PrimitiveType get_primitive_type() const;
   INLINE ShadeModel get_shade_model() const;
   INLINE int get_geom_rendering() const;
-  INLINE UsageHint get_usage_hint() const;
   INLINE CPT(GeomVertexData) get_vertex_data() const;
   INLINE int get_num_primitives() const;
   INLINE CPT(GeomPrimitive) get_primitive(int i) const;
@@ -429,12 +431,12 @@ public:
   INLINE GeomContext *prepare_now(PreparedGraphicsObjects *prepared_objects,
                                   GraphicsStateGuardianBase *gsg) const;
 
-  bool draw(GraphicsStateGuardianBase *gsg, const GeomMunger *munger,
+  bool draw(GraphicsStateGuardianBase *gsg,
             const GeomVertexDataPipelineReader *data_reader,
             bool force) const;
 
 private:
-  CPT(Geom) _object;
+  const Geom *_object;
   Thread *_current_thread;
   const Geom::CData *_cdata;
 
@@ -450,7 +452,7 @@ private:
   static TypeHandle _type_handle;
 };
 
-INLINE ostream &operator << (ostream &out, const Geom &obj);
+INLINE std::ostream &operator << (std::ostream &out, const Geom &obj);
 
 #include "geom.I"
 

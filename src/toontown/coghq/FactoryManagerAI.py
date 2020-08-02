@@ -1,6 +1,6 @@
 from direct.directnotify import DirectNotifyGlobal
-import DistributedMegaCorpAI
-import DistributedFactoryAI
+from . import DistributedMegaCorpAI
+from . import DistributedFactoryAI
 from toontown.toonbase import ToontownGlobals
 from direct.showbase import DirectObject
 

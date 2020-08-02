@@ -1,7 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from toontown.toonbase import ToontownGlobals
-import HouseGlobals
+from . import HouseGlobals
 import time, random
 
 from toontown.fishing.DistributedFishingPondAI import DistributedFishingPondAI
@@ -11,17 +11,17 @@ from toontown.safezone.SZTreasurePlannerAI import SZTreasurePlannerAI
 from toontown.safezone.DistributedFishingSpotAI import DistributedFishingSpotAI
 from toontown.parties.DistributedPartyJukeboxActivityAI import DistributedPartyJukeboxActivityAI
 
-from DistributedGardenBoxAI import *
-from DistributedGardenPlotAI import *
-from DistributedGagTreeAI import *
-from DistributedFlowerAI import *
-from DistributedStatuaryAI import *
-from DistributedToonStatuaryAI import *
-from DistributedAnimatedStatuaryAI import *
-from DistributedChangingStatuaryAI import *
-from DistributedCannonAI import *
-from DistributedTargetAI import *
-import CannonGlobals, GardenGlobals
+from .DistributedGardenBoxAI import *
+from .DistributedGardenPlotAI import *
+from .DistributedGagTreeAI import *
+from .DistributedFlowerAI import *
+from .DistributedStatuaryAI import *
+from .DistributedToonStatuaryAI import *
+from .DistributedAnimatedStatuaryAI import *
+from .DistributedChangingStatuaryAI import *
+from .DistributedCannonAI import *
+from .DistributedTargetAI import *
+from . import CannonGlobals, GardenGlobals
 
 # planted, waterLevel, lastCheck, growthLevel, optional
 NULL_PLANT = [-1, -1, 0, 0, 0]
@@ -354,8 +354,8 @@ class Garden:
             return
             
         bonus = [-1] * 7
-        for track in xrange(7):
-            for level in xrange(8):#7
+        for track in range(7):
+            for level in range(8):#7
                 if not self.hasTree(track, level):
                     break
                     
@@ -384,7 +384,7 @@ class GardenManager:
             self.gardens[avId] = g
         
     def destroy(self):
-        for garden in self.gardens.values():
+        for garden in list(self.gardens.values()):
             garden.destroy()
             
         del self.gardens
@@ -423,7 +423,7 @@ class CannonRental(Rental):
         doIds = []
         z = 35
         
-        for i in xrange(20):
+        for i in range(20):
             x = random.randint(100, 300) - 200
             y = random.randint(100, 300) - 200
             treasure = DistributedEFlyingTreasureAI.DistributedEFlyingTreasureAI(self.estate.air, self, 7, x, y, z)
@@ -540,8 +540,8 @@ class DistributedEstateAI(DistributedObjectAI):
 
 
         ButterflyGlobals.generateIndexes(self.zoneId, ButterflyGlobals.ESTATE)
-        for i in xrange(0, ButterflyGlobals.NUM_BUTTERFLY_AREAS[ButterflyGlobals.ESTATE]):
-            for j in xrange(0, ButterflyGlobals.NUM_BUTTERFLIES[ButterflyGlobals.ESTATE]):
+        for i in range(0, ButterflyGlobals.NUM_BUTTERFLY_AREAS[ButterflyGlobals.ESTATE]):
+            for j in range(0, ButterflyGlobals.NUM_BUTTERFLIES[ButterflyGlobals.ESTATE]):
                 butterfly = DistributedButterflyAI.DistributedButterflyAI(self.air, ButterflyGlobals.ESTATE, i, self.zoneId)
                 butterfly.generateWithRequired(self.zoneId)
                 butterfly.start()
@@ -837,7 +837,7 @@ class DistributedEstateAI(DistributedObjectAI):
         return self.items[5]
 
     def setIdList(self, idList):
-        for i in xrange(len(idList)):
+        for i in range(len(idList)):
             if i >= 6:
                 return
             self.toons[i] = idList[i]
@@ -884,7 +884,7 @@ class DistributedEstateAI(DistributedObjectAI):
             
             self.sendUpdate('awardedTrophy', [avId])
         
-        av.b_setGardenTrophies(range(len(collection) // 10))
+        av.b_setGardenTrophies(list(range(len(collection) // 10)))
     
     def completeFishSale(self):
         avId = self.air.getAvatarIdFromSender()
@@ -956,7 +956,7 @@ class DistributedEstateAI(DistributedObjectAI):
         DistributedObjectAI.announceGenerate(self)
         self.sendUpdate('setIdList', [self.toons])
         
-        for index, started in self.__pendingGardens.items():
+        for index, started in list(self.__pendingGardens.items()):
             if started:
                 self.gardenManager.handleSingleGarden(self.toons[index])
             

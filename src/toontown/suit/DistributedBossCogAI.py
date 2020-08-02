@@ -9,7 +9,7 @@ from toontown.battle import DistributedBattleFinalAI
 from toontown.building import SuitPlannerInteriorAI
 from toontown.battle import BattleBase
 from panda3d.core import *
-import SuitDNA
+from . import SuitDNA
 import random
 AllBossCogs = []
 
@@ -328,9 +328,9 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
         random.shuffle(toons)
         numToons = min(len(toons), 8)
         if numToons < 4:
-            numToonsB = numToons / 2
+            numToonsB = numToons // 2
         else:
-            numToonsB = (numToons + random.choice([0, 1])) / 2
+            numToonsB = (numToons + random.choice([0, 1])) // 2
         self.toonsA = toons[numToonsB:numToons]
         self.toonsB = toons[:numToonsB]
         self.looseToons += toons[numToons:]
@@ -477,7 +477,7 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
         return suits
 
     def generateSuits(self, battleNumber):
-        raise StandardError, 'generateSuits unimplemented'
+        raise Exception('generateSuits unimplemented')
 
     def handleRoundDone(self, battle, suits, activeSuits, toonIds, totalHp, deadSuits):
         totalMaxHp = 0

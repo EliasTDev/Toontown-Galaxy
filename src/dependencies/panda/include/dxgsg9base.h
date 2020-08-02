@@ -1,16 +1,15 @@
-// Filename: dxgsg9base.h
-// Created by:  georges (07Oct01)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file dxgsg9base.h
+ * @author georges
+ * @date 2001-10-07
+ */
 
 #ifndef DXGSG9BASE_H
 #define DXGSG9BASE_H
@@ -30,24 +29,12 @@
 #include <windows.h>
 
 #define D3D_OVERLOADS   //  get D3DVECTOR '+' operator, etc from d3dtypes.h
-//#define D3D_DEBUG_INFO
+// #define D3D_DEBUG_INFO
 
 #undef Configure
 #include <d3d9.h>
 #include <d3dx9.h>
-
-// This symbol is defined (or not defined) in Config.pp.
-//#define USE_GENERIC_DXERR_LIBRARY 1
-
-#ifdef USE_GENERIC_DXERR_LIBRARY
 #include <dxerr.h>
-#define DX_GET_ERROR_STRING_FUNC DXGetErrorString
-#define DX_GET_ERROR_DESCRIPTION_FUNC DXGetErrorDescription
-#else
-#include <dxerr9.h>
-#define DX_GET_ERROR_STRING_FUNC DXGetErrorString9
-#define DX_GET_ERROR_DESCRIPTION_FUNC DXGetErrorDescription9
-#endif
 
 #undef WIN32_LEAN_AND_MEAN
 
@@ -57,13 +44,14 @@
 
 #ifndef D3DERRORSTRING
 #ifdef NDEBUG
-#define D3DERRORSTRING(HRESULT) " at (" << __FILE__ << ":" << __LINE__ << "), hr=" <<  DX_GET_ERROR_STRING_FUNC(HRESULT) << endl  // leave out descriptions to shrink release build
+#define D3DERRORSTRING(HRESULT) " at (" << __FILE__ << ":" << __LINE__ << "), hr=" <<  DXGetErrorString(HRESULT) << std::endl  // leave out descriptions to shrink release build
 #else
-#define D3DERRORSTRING(HRESULT) " at (" << __FILE__ << ":" << __LINE__ << "), hr=" <<  DX_GET_ERROR_STRING_FUNC(HRESULT) << ": " << DX_GET_ERROR_DESCRIPTION_FUNC(HRESULT) << endl
+#define D3DERRORSTRING(HRESULT) " at (" << __FILE__ << ":" << __LINE__ << "), hr=" <<  DXGetErrorString(HRESULT) << ": " << DXGetErrorDescription(HRESULT) << std::endl
 #endif
 #endif
 
-// imperfect method to ID NVid? could also scan desc str, but that isnt fullproof either
+// imperfect method to ID NVid?  could also scan desc str, but that isnt
+// fullproof either
 #define IS_NVIDIA(DDDEVICEID) ((DDDEVICEID.VendorId==0x10DE) || (DDDEVICEID.VendorId==0x12D2))
 #define IS_ATI(DDDEVICEID) (DDDEVICEID.VendorId==0x1002)
 #define IS_MATROX(DDDEVICEID) (DDDEVICEID.VendorId==0x102B)
@@ -82,42 +70,41 @@ typedef DWORD DXShaderHandle;
     var.dwSize = sizeof(type);
 
 #define SAFE_DELSHADER(TYPE,HANDLE,PDEVICE)  \
-  if((HANDLE!=NULL)&&IS_VALID_PTR(PDEVICE)) { PDEVICE->Delete##TYPE##Shader(HANDLE);  HANDLE=NULL; }
+  if((HANDLE!=nullptr)&&IS_VALID_PTR(PDEVICE)) { PDEVICE->Delete##TYPE##Shader(HANDLE);  HANDLE=nullptr; }
 
-#define SAFE_DELETE(p)       { if(p) { assert(IS_VALID_PTR(p));   delete (p);     (p)=NULL; } }
-#define SAFE_DELETE_ARRAY(p) { if(p) { assert(IS_VALID_PTR(p));   delete [] (p);   (p)=NULL; } }
+#define SAFE_DELETE(p)       { if(p) { assert(IS_VALID_PTR(p));   delete (p);     (p)=nullptr; } }
+#define SAFE_DELETE_ARRAY(p) { if(p) { assert(IS_VALID_PTR(p));   delete [] (p);   (p)=nullptr; } }
 
 // for stuff outside a panda class
-#define SAFE_RELEASE(p)      { if(p) { assert(IS_VALID_PTR(p)); (p)->Release(); (p)=NULL; } }
-#define SAFE_FREELIB(hDLL)   { if(hDLL!=NULL) {  FreeLibrary(hDLL);hDLL = NULL; } }
+#define SAFE_RELEASE(p)      { if(p) { assert(IS_VALID_PTR(p)); (p)->Release(); (p)=nullptr; } }
+#define SAFE_FREELIB(hDLL)   { if(hDLL!=nullptr) {  FreeLibrary(hDLL);hDLL = nullptr; } }
 
 // this is bDoDownToZero argument to RELEASE()
 #define RELEASE_DOWN_TO_ZERO true
 #define RELEASE_ONCE false
 
 
-// uncomment to add refcnt debug output
-// #define DEBUG_RELEASES
+// uncomment to add refcnt debug output #define DEBUG_RELEASES
 
 #ifdef DEBUG_RELEASES
 #define RELEASE(OBJECT,MODULE,DBGSTR,bDoDownToZero)             {  \
    ULONG refcnt;                                                \
    if(IS_VALID_PTR(OBJECT)) {                                   \
         refcnt = (OBJECT)->Release();                           \
-        MODULE##_cat.debug() << DBGSTR << " released, refcnt = " << refcnt << " at " << __FILE__ << ":" << __LINE__ << endl; \
+        MODULE##_cat.debug() << DBGSTR << " released, refcnt = " << refcnt << " at " << __FILE__ << ":" << __LINE__ << std::endl; \
         if((bDoDownToZero) && (refcnt>0)) {                     \
               MODULE##_cat.warning() << DBGSTR << " released but still has a non-zero refcnt(" << refcnt << "), multi-releasing it down to zero!\n"; \
               do {                                \
                 refcnt = (OBJECT)->Release();     \
               } while(refcnt>0);                  \
         }                                         \
-        (OBJECT) = NULL;                          \
+        (OBJECT) = nullptr;                          \
       } else {                                    \
-        MODULE##_cat.debug() << DBGSTR << " not released, ptr == NULL" << endl;  \
+        MODULE##_cat.debug() << DBGSTR << " not released, ptr == NULL" << std::endl;  \
       }}
 
 #define PRINT_REFCNT(MODULE,p) { ULONG refcnt;  (p)->AddRef();  refcnt=(p)->Release(); \
-                                 MODULE##_cat.debug() << #p << " has refcnt = " << refcnt << " at " << __FILE__ << ":" << __LINE__ << endl; }
+                                 MODULE##_cat.debug() << #p << " has refcnt = " << refcnt << " at " << __FILE__ << ":" << __LINE__ << std::endl; }
 
 #else
 #define RELEASE(OBJECT,MODULE,DBGSTR,bDoDownToZero)   { \
@@ -130,7 +117,7 @@ typedef DWORD DXShaderHandle;
                 refcnt = (OBJECT)->Release();     \
               } while(refcnt>0);                  \
         }                                         \
-        (OBJECT) = NULL;                          \
+        (OBJECT) = nullptr;                          \
    }}
 
 #define PRINT_REFCNT(MODULE,p)
@@ -165,15 +152,15 @@ typedef enum {
     L8_FLAG =           FLG(15),
     A8L8_FLAG =         FLG(16),
     A4L4_FLAG =         FLG(17),
-    V8U8_FLAG =         FLG(18),
-    L6V5U5_FLAG =       FLG(19),
-    X8L8V8U8_FLAG =     FLG(20),
-    Q8W8V8U8_FLAG =     FLG(21),
-    V16U16_FLAG =       FLG(22),
+    D16_FLAG =          FLG(18),
+    D24X8_FLAG =        FLG(19),
+    D24S8_FLAG =        FLG(20),
+    D32_FLAG =          FLG(21),
+    INTZ_FLAG =         FLG(22),
     W11V11U10_FLAG =    FLG(23),
     A2W10V10U10_FLAG =  FLG(24),
-    UYVY_FLAG =         FLG(25),
-    YUY2_FLAG =         FLG(26),
+    ATI1_FLAG =         FLG(25),
+    ATI2_FLAG =         FLG(26),
     DXT1_FLAG =         FLG(27),
     DXT2_FLAG =         FLG(28),
     DXT3_FLAG =         FLG(29),
@@ -181,7 +168,12 @@ typedef enum {
     DXT5_FLAG =         FLG(31)
 } D3DFORMAT_FLAG;
 
-// this is only used in conjunction w/rendertgt fmts, so just make it something that can never be a rtgt
+#define D3DFMT_INTZ ((D3DFORMAT)MAKEFOURCC('I', 'N', 'T', 'Z'))
+#define D3DFMT_ATI1 ((D3DFORMAT)MAKEFOURCC('A', 'T', 'I', '1'))
+#define D3DFMT_ATI2 ((D3DFORMAT)MAKEFOURCC('A', 'T', 'I', '2'))
+
+// this is only used in conjunction wrendertgt fmts, so just make it something
+// that can never be a rtgt
 #define DISPLAY_32BPP_REQUIRES_16BPP_ZBUFFER_FLAG DXT1_FLAG
 #define DISPLAY_16BPP_REQUIRES_16BPP_ZBUFFER_FLAG DXT2_FLAG
 
@@ -207,7 +199,6 @@ struct DXScreenData {
   bool _is_tnl_device;
   bool _can_use_hw_vertex_shaders;
   bool _can_use_pixel_shaders;
-  bool _is_dx9_1;
   UINT _supported_screen_depths_mask;
   UINT _supported_tex_formats_mask;
   bool _supports_rgba16f_texture_format;
@@ -231,7 +222,7 @@ struct DXScreenData {
 };
 
 
-//utility stuff
+// utility stuff
 extern pmap<D3DFORMAT_FLAG,D3DFORMAT> g_D3DFORMATmap;
 extern void Init_D3DFORMAT_map();
 extern const char *D3DFormatStr(D3DFORMAT fmt);

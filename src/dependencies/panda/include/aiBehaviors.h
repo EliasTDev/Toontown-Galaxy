@@ -1,38 +1,20 @@
-////////////////////////////////////////////////////////////////////////
-// Filename    : aiBehaviors.cxx
-// Created by  : Deepak, John, Navin
-// Date        :  8 Sep 09
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
-
-#pragma warning (disable:4996)
-#pragma warning (disable:4005)
-#pragma warning(disable:4275)
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file aiBehaviors.h
+ * @author Deepak, John, Navin
+ * @date 2009-09-08
+ */
 
 #ifndef _AIBEHAVIORS_H
 #define _AIBEHAVIORS_H
 
 #include "aiGlobals.h"
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Class : AIBehaviors
-// Description : This class implements all the steering behaviors of the AI framework, such as
-//                seek, flee, pursue, evade, wander and flock. Each steering behavior has a weight which is used when more than
-//                one type of steering behavior is acting on the same ai character. The weight decides the contribution of each
-//                type of steering behavior. The AICharacter class has a handle to an object of this class and this allows to
-//                invoke the steering behaviors via the AICharacter. This class also provides functionality such as pausing, resuming
-//                and removing the AI behaviors of an AI character at anytime.
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class AICharacter;
 class Seek;
@@ -46,11 +28,23 @@ class PathFollow;
 class PathFind;
 class ObstacleAvoidance;
 
-typedef list<Flee, allocator<Flee> > ListFlee;
-typedef list<Evade, allocator<Evade> > ListEvade;
+#include "flee.h"
+#include "evade.h"
 
+typedef std::list<Flee, std::allocator<Flee> > ListFlee;
+typedef std::list<Evade, std::allocator<Evade> > ListEvade;
+
+/**
+ * This class implements all the steering behaviors of the AI framework, such
+ * as seek, flee, pursue, evade, wander and flock.  Each steering behavior has
+ * a weight which is used when more than one type of steering behavior is
+ * acting on the same ai character.  The weight decides the contribution of
+ * each type of steering behavior.  The AICharacter class has a handle to an
+ * object of this class and this allows to invoke the steering behaviors via
+ * the AICharacter.  This class also provides functionality such as pausing,
+ * resuming and removing the AI behaviors of an AI character at anytime.
+ */
 class EXPCL_PANDAAI AIBehaviors {
-
 public:
   enum _behavior_type {
       _none = 0x00000,
@@ -81,7 +75,8 @@ public:
   Flee *_flee_obj;
   LVecBase3 _flee_force;
 
-  //! This list is used if the ai character needs to flee from multiple onjects.
+  // ! This list is used if the ai character needs to flee from multiple
+  // onjects.
   ListFlee _flee_list;
   ListFlee::iterator _flee_itr;
 
@@ -91,14 +86,16 @@ public:
   Evade *_evade_obj;
   LVecBase3 _evade_force;
 
-  //! This list is used if the ai character needs to evade from multiple onjects.
+  // ! This list is used if the ai character needs to evade from multiple
+  // onjects.
   ListEvade _evade_list;
   ListEvade::iterator _evade_itr;
 
   Arrival *_arrival_obj;
   LVecBase3 _arrival_force;
 
-  //! Since Flock is a collective behavior the variables are declared within the AIBehaviors class.
+  // ! Since Flock is a collective behavior the variables are declared within
+  // the AIBehaviors class.
   float _flock_weight;
   LVecBase3 _flock_force;
   bool _flock_done;
@@ -119,21 +116,21 @@ public:
   ~AIBehaviors();
 
   bool is_on(_behavior_type bt);
-  bool is_on(string ai_type); // special cases for pathfollow and pathfinding
+  bool is_on(std::string ai_type); // special cases for pathfollow and pathfinding
   bool is_off(_behavior_type bt);
-  bool is_off(string ai_type); // special cases for pathfollow and pathfinding
-  void turn_on(string ai_type);
-  void turn_off(string ai_type);
+  bool is_off(std::string ai_type); // special cases for pathfollow and pathfinding
+  void turn_on(std::string ai_type);
+  void turn_off(std::string ai_type);
 
   bool is_conflict();
 
-  void accumulate_force(string force_type, LVecBase3 force);
+  void accumulate_force(std::string force_type, LVecBase3 force);
   LVecBase3 calculate_prioritized();
 
   void flock_activate();
   LVecBase3 do_flock();
 
-  int char_to_int(string ai_type);
+  int char_to_int(std::string ai_type);
 
 PUBLISHED:
   void seek(NodePath target_object, float seek_wt = 1.0);
@@ -156,32 +153,21 @@ PUBLISHED:
 
   void path_follow(float follow_wt);
   void add_to_path(LVecBase3 pos);
-  void start_follow(string type = "normal");
+  void start_follow(std::string type = "normal");
 
   // should have different function names.
   void init_path_find(const char* navmesh_filename);
-  void path_find_to(LVecBase3 pos, string type = "normal");
-  void path_find_to(NodePath target, string type = "normal");
+  void path_find_to(LVecBase3 pos, std::string type = "normal");
+  void path_find_to(NodePath target, std::string type = "normal");
   void add_static_obstacle(NodePath obstacle);
   void add_dynamic_obstacle(NodePath obstacle);
-  //
 
-  void remove_ai(string ai_type);
-  void pause_ai(string ai_type);
-  void resume_ai(string ai_type);
 
-  string behavior_status(string ai_type);
+  void remove_ai(std::string ai_type);
+  void pause_ai(std::string ai_type);
+  void resume_ai(std::string ai_type);
+
+  std::string behavior_status(std::string ai_type);
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-

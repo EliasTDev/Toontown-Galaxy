@@ -101,7 +101,7 @@ class ShtikerBook(DirectFrame, StateData.StateData):
         self.pages[self.currPageIndex].exit()
         base.render.show()
         setBlackBackground = 0
-        for obj in base.cr.doId2do.values():
+        for obj in list(base.cr.doId2do.values()):
             if isinstance(obj, DistributedFireworkShow.DistributedFireworkShow) or isinstance(obj, DistributedPartyFireworksActivity.DistributedPartyFireworksActivity):
                 setBlackBackground = 1
 
@@ -175,23 +175,24 @@ class ShtikerBook(DirectFrame, StateData.StateData):
         if pageName not in self.pageOrder:
             self.notify.error('Trying to add page %s in the ShtickerBook. Page not listed in the order.' % pageName)
             return
-        print 'addPage %s' % pageName
+        print('addPage %s' % pageName)
         pageIndex = 0
         if len(self.pages):
             newIndex = len(self.pages)
             prevIndex = newIndex - 1
             if self.pages[prevIndex].pageName == TTLocalizer.NewsPageName:
-                print 'news'
+                print('news')
                 self.pages.insert(prevIndex, page)
                 pageIndex = prevIndex
-                if self.currPageIndex >= pageIndex:
-                    self.currPageIndex += 1
+                if self.currPageIndex:
+                    if self.currPageIndex >= pageIndex:
+                        self.currPageIndex += 1
             else:
-                print 'else 1'
+                print('else 1')
                 self.pages.append(page)
                 pageIndex = len(self.pages) - 1
         else:
-            print 'else 2'
+            print('else 2')
             self.pages.append(page)
             pageIndex = len(self.pages) - 1
         page.setBook(self)

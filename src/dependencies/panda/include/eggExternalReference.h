@@ -1,16 +1,15 @@
-// Filename: eggExternalReference.h
-// Created by:  drose (11Feb99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggExternalReference.h
+ * @author drose
+ * @date 1999-02-11
+ */
 
 #ifndef EGGEXTERNALREFERENCE_H
 #define EGGEXTERNALREFERENCE_H
@@ -19,20 +18,19 @@
 
 #include "eggFilenameNode.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggExternalReference
-// Description : Defines a reference to another egg file which should
-//               be inserted at this point.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAEGG EggExternalReference : public EggFilenameNode {
+/**
+ * Defines a reference to another egg file which should be inserted at this
+ * point.
+ */
+class EXPCL_PANDA_EGG EggExternalReference : public EggFilenameNode {
 PUBLISHED:
-  EggExternalReference(const string &node_name, const string &filename);
+  explicit EggExternalReference(const std::string &node_name, const std::string &filename);
   EggExternalReference(const EggExternalReference &copy);
   EggExternalReference &operator = (const EggExternalReference &copy);
 
-  virtual void write(ostream &out, int indent_level) const;
+  virtual void write(std::ostream &out, int indent_level) const;
 
-  virtual string get_default_extension() const;
+  virtual std::string get_default_extension() const;
 
 
 public:

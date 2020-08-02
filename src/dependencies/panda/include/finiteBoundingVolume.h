@@ -1,16 +1,15 @@
-// Filename: finiteBoundingVolume.h
-// Created by:  drose (02Oct99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file finiteBoundingVolume.h
+ * @author drose
+ * @date 1999-10-02
+ */
 
 #ifndef FINITEBOUNDINGVOLUME_H
 #define FINITEBOUNDINGVOLUME_H
@@ -20,17 +19,20 @@
 #include "geometricBoundingVolume.h"
 
 
-////////////////////////////////////////////////////////////////////
-//       Class : FiniteBoundingVolume
-// Description : A special kind of GeometricBoundingVolume that is
-//               known to be finite.  It is possible to query this
-//               kind of volume for its minimum and maximum extents.
-////////////////////////////////////////////////////////////////////
+/**
+ * A special kind of GeometricBoundingVolume that is known to be finite.  It
+ * is possible to query this kind of volume for its minimum and maximum
+ * extents.
+ */
 class EXPCL_PANDA_MATHUTIL FiniteBoundingVolume : public GeometricBoundingVolume {
 PUBLISHED:
   virtual LPoint3 get_min() const=0;
   virtual LPoint3 get_max() const=0;
   virtual PN_stdfloat get_volume() const;
+
+  MAKE_PROPERTY(min, get_min);
+  MAKE_PROPERTY(max, get_max);
+  MAKE_PROPERTY(volume, get_volume);
 
 public:
   virtual const FiniteBoundingVolume *as_finite_bounding_volume() const;
@@ -60,22 +62,3 @@ private:
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

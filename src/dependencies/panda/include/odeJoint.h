@@ -1,16 +1,15 @@
-// Filename: odeJoint.h
-// Created by:  joswilso (27Dec06)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file odeJoint.h
+ * @author joswilso
+ * @date 2006-12-27
+ */
 
 #ifndef ODEJOINT_H
 #define ODEJOINT_H
@@ -46,10 +45,9 @@ class OdeAMotorJoint;
 class OdeLMotorJoint;
 class OdePlane2dJoint;
 
-////////////////////////////////////////////////////////////////////
-//       Class : OdeJoint
-// Description :
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 class EXPCL_PANDAODE OdeJoint : public TypedObject {
   friend class OdeBody;
   friend class OdeUtil;
@@ -85,12 +83,12 @@ PUBLISHED:
   INLINE void set_feedback(bool flag = true);
   INLINE OdeJointFeedback *get_feedback();
 
-  EXTENSION(void attach(const OdeBody *body1, const OdeBody *body2));
+  EXTENSION(void attach(PyObject *body1, PyObject *body2));
   void attach_bodies(const OdeBody &body1, const OdeBody &body2);
   void attach_body(const OdeBody &body, int index);
   void detach();
 
-  virtual void write(ostream &out = cout, unsigned int indent=0) const;
+  virtual void write(std::ostream &out = std::cout, unsigned int indent=0) const;
   INLINE int compare_to(const OdeJoint &other) const;
   INLINE bool operator == (const OdeJoint &other) const;
   operator bool () const;

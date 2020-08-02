@@ -1,16 +1,15 @@
-// Filename: interrogate.h
-// Created by:  drose (31Jul00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file interrogate.h
+ * @author drose
+ * @date 2000-07-31
+ */
 
 #ifndef INTERROGATE_H
 #define INTERROGATE_H
@@ -26,7 +25,7 @@ extern CPPParser parser;
 // A few global variables that control the interrogate process.
 extern Filename output_code_filename;
 extern Filename output_data_filename;
-extern string output_data_basename;
+extern std::string output_data_basename;
 extern bool output_module_specific;
 extern bool output_function_pointers;
 extern bool output_function_names;
@@ -45,7 +44,7 @@ extern bool generate_spam;
 extern bool left_inheritance_requires_upcast;
 extern bool mangle_names;
 extern CPPVisibility min_vis;
-extern string library_name;
-extern string module_name;
+extern std::string library_name;
+extern std::string module_name;
 
 #endif

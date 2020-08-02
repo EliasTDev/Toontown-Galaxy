@@ -1,16 +1,15 @@
-// Filename: fltTexture.h
-// Created by:  drose (25Aug00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file fltTexture.h
+ * @author drose
+ * @date 2000-08-25
+ */
 
 #ifndef FLTTEXTURE_H
 #define FLTTEXTURE_H
@@ -22,17 +21,16 @@
 #include "filename.h"
 #include "luse.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : FltTexture
-// Description : Represents a single texture in the texture palette.
-////////////////////////////////////////////////////////////////////
+/**
+ * Represents a single texture in the texture palette.
+ */
 class FltTexture : public FltRecord {
 public:
   FltTexture(FltHeader *header);
 
   virtual void apply_converted_filenames();
 
-  string _orig_filename;
+  std::string _orig_filename;
   Filename _converted_filename;
   int _pattern_index;
   int _x_location;
@@ -159,7 +157,7 @@ public:
   typedef pvector<GeospecificControlPoint> GeospecificControlPoints;
 
   struct SubtextureDef {
-    string _name;
+    std::string _name;
     int _left;
     int _bottom;
     int _right;
@@ -218,7 +216,7 @@ public:
   ImageOrigin _image_origin;
   PointsUnits _geospecific_points_units;
   Hemisphere _geospecific_hemisphere;
-  string _comment;
+  std::string _comment;
   int _file_version;
   GeospecificControlPoints _geospecific_control_points;
   SubtextureDefs _subtexture_defs;
@@ -252,5 +250,3 @@ private:
 };
 
 #endif
-
-

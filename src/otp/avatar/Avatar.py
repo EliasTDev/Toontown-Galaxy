@@ -2,7 +2,7 @@ from direct.actor.Actor import Actor
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import ClockDelta
 from direct.interval.IntervalGlobal import *
-from direct.showbase.PythonUtil import recordCreationStack
+from toontown.toonbase.PythonUtil import recordCreationStack
 from panda3d.core import *
 import random
 
@@ -570,10 +570,10 @@ def target():
     Returns the current Spellbook target.
     """
     target = spellbook.getTarget()
-    print 'Called target.'
-    print 'Name: ' + target.getName()
+    print('Called target.')
+    print('Name: ' + target.getName())
     doId = str(int(target.doId))
-    print 'doId: ', doId
+    print('doId: ', doId)
     accessLevel = str(int(target.getAdminAccess()))
-    print 'Access Level: ', accessLevel
+    print('Access Level: ', accessLevel)
     return 'Target: %s-%d [%d]' % (target.getName(), int(target.doId), int(target.getAdminAccess()))

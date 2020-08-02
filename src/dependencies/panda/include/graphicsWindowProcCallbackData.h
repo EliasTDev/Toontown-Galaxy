@@ -1,16 +1,15 @@
-// Filename: graphicsWindowProcCallbackData.h
-// Created by:  Walt Destler (June 2010)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file graphicsWindowProcCallbackData.h
+ * @author Walt Destler
+ * @date 2010-06
+ */
 
 #ifndef GRAPHICSWINDOWPROCCALLBACKDATA_H
 #define GRAPHICSWINDOWPROCCALLBACKDATA_H
@@ -21,30 +20,29 @@
 
 class GraphicsWindow;
 
-////////////////////////////////////////////////////////////////////
-//       Class : GraphicsWindowProcCallbackData
-// Description : This specialization on CallbackData is passed when
-//               the callback is initiated from from an implementation
-//               of the GraphicsWindowProc class, such as PythonGraphicsWindowProc.
-////////////////////////////////////////////////////////////////////
+/**
+ * This specialization on CallbackData is passed when the callback is
+ * initiated from from an implementation of the GraphicsWindowProc class, such
+ * as PythonGraphicsWindowProc.
+ */
 class EXPCL_PANDA_DISPLAY GraphicsWindowProcCallbackData : public CallbackData {
 public:
   INLINE GraphicsWindowProcCallbackData(GraphicsWindow* graphicsWindow);
 
   INLINE GraphicsWindow* get_graphics_window() const;
 
-#ifdef WIN32
-  INLINE void set_hwnd(int hwnd);
+#ifdef _WIN32
+  INLINE void set_hwnd(uintptr_t hwnd);
   INLINE void set_msg(int msg);
   INLINE void set_wparam(int wparam);
   INLINE void set_lparam(int lparam);
 #endif
 
 PUBLISHED:
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
-#ifdef WIN32
-  INLINE int get_hwnd() const;
+#ifdef _WIN32
+  INLINE uintptr_t get_hwnd() const;
   INLINE int get_msg() const;
   INLINE int get_wparam() const;
   INLINE int get_lparam() const;
@@ -56,8 +54,8 @@ PUBLISHED:
 
 private:
   GraphicsWindow* _graphicsWindow;
-#ifdef WIN32
-  int _hwnd;
+#ifdef _WIN32
+  uintptr_t _hwnd;
   int _msg;
   int _wparam;
   int _lparam;

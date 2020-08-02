@@ -1,16 +1,15 @@
-// Filename: graphicsWindow.h
-// Created by:  mike (09Jan97)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file graphicsWindow.h
+ * @author mike
+ * @date 1997-01-09
+ */
 
 #ifndef GRAPHICSWINDOW_H
 #define GRAPHICSWINDOW_H
@@ -34,17 +33,15 @@
 #include "windowHandle.h"
 #include "touchInfo.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : GraphicsWindow
-// Description : A window, fullscreen or on a desktop, into which a
-//               graphics device sends its output for interactive
-//               display.
-////////////////////////////////////////////////////////////////////
+/**
+ * A window, fullscreen or on a desktop, into which a graphics device sends
+ * its output for interactive display.
+ */
 class EXPCL_PANDA_DISPLAY GraphicsWindow : public GraphicsOutput {
 protected:
   GraphicsWindow(GraphicsEngine *engine,
-                 GraphicsPipe *pipe, 
-                 const string &name,
+                 GraphicsPipe *pipe,
+                 const std::string &name,
                  const FrameBufferProperties &fb_prop,
                  const WindowProperties &win_prop,
                  int flags,
@@ -63,20 +60,31 @@ PUBLISHED:
   virtual bool is_active() const;
   INLINE bool is_fullscreen() const;
 
-  void set_window_event(const string &window_event);
-  string get_window_event() const;
+  MAKE_PROPERTY(properties, get_properties);
+  MAKE_PROPERTY(requested_properties, get_requested_properties);
+  MAKE_PROPERTY(rejected_properties, get_rejected_properties);
+  MAKE_PROPERTY(closed, is_closed);
 
-  void set_close_request_event(const string &close_request_event);
-  string get_close_request_event() const;
+  void set_window_event(const std::string &window_event);
+  std::string get_window_event() const;
+  MAKE_PROPERTY(window_event, get_window_event, set_window_event);
+
+  void set_close_request_event(const std::string &close_request_event);
+  std::string get_close_request_event() const;
+  MAKE_PROPERTY(close_request_event, get_close_request_event, set_close_request_event);
 
   INLINE void set_unexposed_draw(bool unexposed_draw);
   INLINE bool get_unexposed_draw() const;
+  MAKE_PROPERTY(unexposed_draw, get_unexposed_draw, set_unexposed_draw);
 
   INLINE WindowHandle *get_window_handle() const;
-  
+  MAKE_PROPERTY(window_handle, get_window_handle);
+
   // Mouse and keyboard routines
   int get_num_input_devices() const;
-  string get_input_device_name(int device) const;
+  InputDevice *get_input_device(int i) const;
+  std::string get_input_device_name(int device) const;
+  MAKE_SEQ(get_input_devices, get_num_input_devices, get_input_device);
   MAKE_SEQ(get_input_device_names, get_num_input_devices, get_input_device_name);
   bool has_pointer(int device) const;
   bool has_keyboard(int device) const;
@@ -84,20 +92,14 @@ PUBLISHED:
 
   void enable_pointer_events(int device);
   void disable_pointer_events(int device);
-  void enable_pointer_mode(int device, double speed);
-  void disable_pointer_mode(int device);
+  /*void enable_pointer_mode(int device, double speed);
+  void disable_pointer_mode(int device);*/
 
-  MouseData get_pointer(int device) const;
+  virtual MouseData get_pointer(int device) const;
   virtual bool move_pointer(int device, int x, int y);
   virtual void close_ime();
 
 public:
-  // No need to publish these.
-  bool has_button_event(int device) const;
-  ButtonEvent get_button_event(int device);
-  bool has_pointer_event(int device) const;
-  PT(PointerEventList) get_pointer_events(int device);
-
   virtual void add_window_proc( const GraphicsWindowProc* wnd_proc_object ){};
   virtual void remove_window_proc( const GraphicsWindowProc* wnd_proc_object ){};
   virtual void clear_window_procs(){};
@@ -113,9 +115,9 @@ public:
   virtual void request_open();
   virtual void request_close();
 
-  // It is an error to call any of the following methods from any
-  // thread other than the window thread.  These methods are normally
-  // called by the GraphicsEngine.
+  // It is an error to call any of the following methods from any thread other
+  // than the window thread.  These methods are normally called by the
+  // GraphicsEngine.
   virtual void set_close_now();
   virtual void process_events();
   virtual void set_properties_now(WindowProperties &properties);
@@ -131,14 +133,14 @@ protected:
   virtual void mouse_mode_absolute();
   virtual void mouse_mode_relative();
 
-  // It is an error to call any of the following methods from any
-  // thread other than the window thread.
+  // It is an error to call any of the following methods from any thread other
+  // than the window thread.
   void system_changed_properties(const WindowProperties &properties);
   void system_changed_size(int x_size, int y_size);
 
 protected:
-  int add_input_device(const GraphicsWindowInputDevice &device);
-  typedef vector_GraphicsWindowInputDevice InputDevices;
+  int add_input_device(InputDevice *device);
+  typedef pvector<PT(InputDevice)> InputDevices;
   InputDevices _input_devices;
   LightMutex _input_lock;
 
@@ -150,14 +152,13 @@ protected:
   bool _got_expose_event;
 
 private:
-  LightReMutex _properties_lock; 
-  // protects _requested_properties, _rejected_properties, and
-  // _window_event.
+  LightReMutex _properties_lock;
+  // protects _requested_properties, _rejected_properties, and _window_event.
 
   WindowProperties _requested_properties;
   WindowProperties _rejected_properties;
-  string _window_event;
-  string _close_request_event;
+  std::string _window_event;
+  std::string _close_request_event;
   bool _unexposed_draw;
 
 #ifdef HAVE_PYTHON

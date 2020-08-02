@@ -1,11 +1,15 @@
-"""ActorInterval module: contains the ActorInterval class"""
+"""ActorInterval module: contains the ActorInterval class.
+
+See the :ref:`actor-intervals` page in the programming manual for explanation
+of this class.
+"""
 
 __all__ = ['ActorInterval', 'LerpAnimInterval']
 
 from panda3d.core import *
 from panda3d.direct import *
 from direct.directnotify.DirectNotifyGlobal import *
-import Interval
+from . import Interval
 import math
 
 class ActorInterval(Interval.Interval):
@@ -28,7 +32,7 @@ class ActorInterval(Interval.Interval):
     # specifying otherwise unless you also specify loop=1, which will
     # loop the animation over its frame range during the duration of
     # the interval.
-    
+
     # Note: if loop == 0 and duration > anim duration then the
     # animation will play once and then hold its final pose for the
     # remainder of the interval.
@@ -36,7 +40,7 @@ class ActorInterval(Interval.Interval):
     # loop = 1 implies a loop within the entire range of animation,
     # while constrainedLoop = 1 implies a loop within startFrame and
     # endFrame only.
-    
+
     def __init__(self, actor, animName, loop=0, constrainedLoop=0,
                  duration=None, startTime=None, endTime=None,
                  startFrame=None, endFrame=None,
@@ -83,7 +87,7 @@ class ActorInterval(Interval.Interval):
                 if startTime == None:
                     startTime = float(self.startFrame) / float(self.frameRate)
                 endTime = startTime + duration
-                self.endFrame = duration * self.frameRate
+                self.endFrame = endTime * self.frameRate
             else:
                 # No end frame specified.  Choose the maximum of all
                 # of the controls' numbers of frames.
@@ -134,7 +138,7 @@ class ActorInterval(Interval.Interval):
         frameCount = t * self.frameRate
         if self.constrainedLoop:
             frameCount = frameCount % self.numFrames
-            
+
         if self.reverse:
             absFrame = self.endFrame - frameCount
         else:
@@ -186,7 +190,7 @@ class ActorInterval(Interval.Interval):
             # Otherwise, the user-specified duration determines which
             # is our final frame.
             self.privStep(self.getDuration())
-            
+
         self.state = CInterval.SFinal
         self.intervalDone()
 
@@ -225,7 +229,7 @@ class LerpAnimInterval(CLerpAnimEffectInterval):
             for control in controls:
                 self.addControl(control, startAnim,
                                 1.0 - startWeight, 1.0 - endWeight)
-                
+
         if endAnim != None:
             controls = actor.getAnimControls(
                 endAnim, partName = partName, lodName = lodName)

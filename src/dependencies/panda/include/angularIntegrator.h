@@ -1,16 +1,15 @@
-// Filename: angularIntegrator.h
-// Created by:  charles (09Aug00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file angularIntegrator.h
+ * @author charles
+ * @date 2000-08-09
+ */
 
 #ifndef ANGULARINTEGRATOR_H
 #define ANGULARINTEGRATOR_H
@@ -19,13 +18,11 @@
 #include "angularForce.h"
 #include "configVariableDouble.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : BaseAngularIntegrator
-// Description : Pure virtual base class for physical modeling.
-//               Takes physically modelable objects and applies
-//               forces to them.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAPHYSICS AngularIntegrator : public BaseIntegrator {
+/**
+ * Pure virtual base class for physical modeling.  Takes physically modelable
+ * objects and applies forces to them.
+ */
+class EXPCL_PANDA_PHYSICS AngularIntegrator : public BaseIntegrator {
 PUBLISHED:
   virtual ~AngularIntegrator();
 public:
@@ -33,9 +30,9 @@ public:
   void integrate(Physical *physical, AngularForceVector &forces,
                  PN_stdfloat dt);
 
-PUBLISHED:  
-  virtual void output(ostream &out) const;
-  virtual void write(ostream &out, unsigned int indent=0) const;
+PUBLISHED:
+  virtual void output(std::ostream &out) const;
+  virtual void write(std::ostream &out, int indent=0) const;
 
 protected:
   AngularIntegrator();
@@ -43,8 +40,8 @@ protected:
 private:
   static ConfigVariableDouble _max_angular_dt;
 
-  // this allows baseAngularIntegrator to censor/modify data that the
-  // actual integration function receives.
+  // this allows baseAngularIntegrator to censormodify data that the actual
+  // integration function receives.
   virtual void child_integrate(Physical *physical, AngularForceVector &forces,
                                PN_stdfloat dt) = 0;
 };

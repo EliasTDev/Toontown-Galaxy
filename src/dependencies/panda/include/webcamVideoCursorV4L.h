@@ -1,23 +1,22 @@
-// Filename: webcamVideoCursorV4L.h
-// Created by: rdb (11Jun2010)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file webcamVideoCursorV4L.h
+ * @author rdb
+ * @date 2010-06-11
+ */
 
 #ifndef WEBCAMVIDEOCURSORV4L_H
 #define WEBCAMVIDEOCURSORV4L_H
 
 #include "pandabase.h"
 
-#ifdef HAVE_VIDEO4LINUX
+#if defined(HAVE_VIDEO4LINUX) && !defined(CPPPARSER)
 
 #include "webcamVideo.h"
 #include "movieVideoCursor.h"
@@ -25,17 +24,25 @@
 #include <linux/videodev2.h>
 
 #ifdef HAVE_JPEG
+// jconfig.h overrides our INLINE definition.
+#ifdef __GNUC__
+#pragma push_macro("INLINE")
+#endif
+
 extern "C" {
   #include <jpeglib.h>
 }
+
+#ifdef __GNUC__
+#pragma pop_macro("INLINE")
+#endif
 #endif
 
 class WebcamVideoV4L;
 
-////////////////////////////////////////////////////////////////////
-//       Class : WebcamVideoCursorV4L
-// Description : The Video4Linux implementation of webcams.
-////////////////////////////////////////////////////////////////////
+/**
+ * The Video4Linux implementation of webcams.
+ */
 class WebcamVideoCursorV4L : public MovieVideoCursor {
 public:
   WebcamVideoCursorV4L(WebcamVideoV4L *src);

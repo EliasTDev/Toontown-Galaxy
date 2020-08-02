@@ -5,7 +5,7 @@ from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
-import HouseGlobals
+from . import HouseGlobals
 from toontown.catalog import CatalogItemList
 from toontown.catalog import CatalogItem
 from toontown.catalog import CatalogSurfaceItem
@@ -78,7 +78,7 @@ class DistributedHouseInterior(DistributedObject.DistributedObject):
         doorNP = door.copyTo(door_origin)
         houseColor = HouseGlobals.atticWood
         color = Vec4(houseColor[0], houseColor[1], houseColor[2], 1)
-        DNADoor.setupDoor(doorNP, door_origin, door_origin, dnaStore, str(self.houseId), color)
+        setupDoor(doorNP, door_origin, door_origin, dnaStore, str(self.houseId), color)
         doorFrame = doorNP.find('door_*_flat')
         doorFrame.setColor(color)
         self.interior.flattenMedium()
@@ -114,11 +114,11 @@ class DistributedHouseInterior(DistributedObject.DistributedObject):
             return
         numSurfaceTypes = CatalogSurfaceItem.NUM_ST_TYPES
         numRooms = min(len(self.wallpaper) / numSurfaceTypes, len(RoomNames))
-        for room in xrange(numRooms):
+        for room in range(numRooms):
             roomName = RoomNames[room]
             roomNode = self.interior.find(roomName)
             if not roomNode.isEmpty():
-                for surface in xrange(numSurfaceTypes):
+                for surface in range(numSurfaceTypes):
                     slot = room * numSurfaceTypes + surface
                     wallpaper = self.wallpaper[slot]
                     color = wallpaper.getColor()

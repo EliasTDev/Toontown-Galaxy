@@ -1,16 +1,15 @@
-// Filename: animChannelScalarDynamic.h
-// Created by:  drose (20Oct03)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file animChannelScalarDynamic.h
+ * @author drose
+ * @date 2003-10-20
+ */
 
 #ifndef ANIMCHANNELSCALARDYNAMIC_H
 #define ANIMCHANNELSCALARDYNAMIC_H
@@ -22,47 +21,48 @@
 class PandaNode;
 class TransformState;
 
-////////////////////////////////////////////////////////////////////
-//       Class : AnimChannelScalarDynamic
-// Description : An animation channel that accepts a scalar each frame
-//               from some dynamic input provided by code.
-//
-//               This object operates in two modes: in explicit mode,
-//               the programmer should call set_value() each frame to
-//               indicate the new value; in implicit mode, the
-//               programmer should call set_value_node() to indicate
-//               the node whose X component will be copied to the
-//               scalar each frame.
-////////////////////////////////////////////////////////////////////
+/**
+ * An animation channel that accepts a scalar each frame from some dynamic
+ * input provided by code.
+ *
+ * This object operates in two modes: in explicit mode, the programmer should
+ * call set_value() each frame to indicate the new value; in implicit mode,
+ * the programmer should call set_value_node() to indicate the node whose X
+ * component will be copied to the scalar each frame.
+ */
 class EXPCL_PANDA_CHAN AnimChannelScalarDynamic : public AnimChannelScalar {
 protected:
   AnimChannelScalarDynamic();
   AnimChannelScalarDynamic(AnimGroup *parent, const AnimChannelScalarDynamic &copy);
 
 public:
-  AnimChannelScalarDynamic(const string &name);
+  AnimChannelScalarDynamic(const std::string &name);
 
-  virtual bool has_changed(int last_frame, double last_frac, 
+  virtual bool has_changed(int last_frame, double last_frac,
                            int this_frame, double this_frac);
   virtual void get_value(int frame, PN_stdfloat &value);
+  INLINE PN_stdfloat get_value() const;
+  INLINE PandaNode *get_value_node() const;
 
 PUBLISHED:
   void set_value(PN_stdfloat value);
   void set_value_node(PandaNode *node);
 
+  MAKE_PROPERTY(value, get_value, set_value);
+  MAKE_PROPERTY(value_node, get_value_node, set_value_node);
+
 protected:
   virtual AnimGroup *make_copy(AnimGroup *parent) const;
 
 private:
-  // This is filled in only if we are using the set_value_node()
-  // interface to get an implicit value from the transform on the
-  // indicated node each frame.
+  // This is filled in only if we are using the set_value_node() interface to
+  // get an implicit value from the transform on the indicated node each
+  // frame.
   PT(PandaNode) _value_node;
   CPT(TransformState) _value;
   CPT(TransformState) _last_value;
 
-  // This is used only if we are using the explicit set_value()
-  // interface.
+  // This is used only if we are using the explicit set_value() interface.
   bool _value_changed;
   PN_stdfloat _float_value;
 

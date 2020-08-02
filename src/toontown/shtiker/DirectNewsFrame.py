@@ -273,7 +273,7 @@ class DirectNewsFrame(DirectObject.DirectObject):
         return self.downloadNextFile(task)
 
     def downloadNextFile(self, task):
-        while self.nextNewsFile < len(self.newsFiles) and 'aaver' in self.newsFiles[self.nextNewsFile]:
+        while self.nextNewsFile < len(self.newsFiles) and b'aaver' in self.newsFiles[self.nextNewsFile]:
             self.nextNewsFile += 1
 
         if self.nextNewsFile >= len(self.newsFiles):
@@ -292,7 +292,7 @@ class DirectNewsFrame(DirectObject.DirectObject):
                 self.parseNewsContent()
             return task.done
         self.percentDownloaded = float(self.nextNewsFile) / float(len(self.newsFiles))
-        self.filename = self.newsFiles[self.nextNewsFile]
+        self.filename = self.newsFiles[self.nextNewsFile].decode()
         self.nextNewsFile += 1
         self.url = self.newsUrl + self.filename
         localFilename = Filename(self.newsDir, self.filename)
@@ -354,12 +354,12 @@ class DirectNewsFrame(DirectObject.DirectObject):
         cacheIndexFilename = Filename(self.newsDir, self.CacheIndexFilename)
         try:
             file = open(cacheIndexFilename.toOsSpecific(), 'w')
-        except IOError, e:
+        except IOError as e:
             self.notify.warning('error opening news cache file %s: %s' % (cacheIndexFilename, str(e)))
             return
 
-        for filename, (size, date) in self.newsCache.items():
-            print >> file, '%s\t%s\t%s' % (filename, size, date)
+        for filename, (size, date) in list(self.newsCache.items()):
+            print('%s\t%s\t%s' % (filename, size, date), file=file)
 
     def handleNewIssueOut(self):
         if hasattr(self, 'createdTime') and base.cr.inGameNewsMgr.getLatestIssue() < self.createdTime:

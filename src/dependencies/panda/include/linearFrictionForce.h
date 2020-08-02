@@ -1,37 +1,35 @@
-// Filename: linearFrictionForce.h
-// Created by:  charles (23Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file linearFrictionForce.h
+ * @author charles
+ * @date 2000-06-23
+ */
 
 #ifndef LINEARFRICTIONFORCE_H
 #define LINEARFRICTIONFORCE_H
 
 #include "linearForce.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : LinearFrictionForce
-// Description : Friction-based drag force
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAPHYSICS LinearFrictionForce : public LinearForce {
+/**
+ * Friction-based drag force
+ */
+class EXPCL_PANDA_PHYSICS LinearFrictionForce : public LinearForce {
 PUBLISHED:
-  LinearFrictionForce(PN_stdfloat coef = 1.0f, PN_stdfloat a = 1.0f, bool m = false);
+  explicit LinearFrictionForce(PN_stdfloat coef = 1.0f, PN_stdfloat a = 1.0f, bool m = false);
   LinearFrictionForce(const LinearFrictionForce &copy);
   virtual ~LinearFrictionForce();
 
   INLINE void set_coef(PN_stdfloat coef);
   INLINE PN_stdfloat get_coef() const;
-  
-  virtual void output(ostream &out) const;
-  virtual void write(ostream &out, unsigned int indent=0) const;
+
+  virtual void output(std::ostream &out) const;
+  virtual void write(std::ostream &out, int indent=0) const;
 
 private:
   PN_stdfloat _coef;

@@ -1,16 +1,15 @@
-// Filename: eggToSomethingConverter.h
-// Created by:  drose (26Sep12)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggToSomethingConverter.h
+ * @author drose
+ * @date 2012-09-26
+ */
 
 #ifndef EGGTOSOMETHINGCONVERTER_H
 #define EGGTOSOMETHINGCONVERTER_H
@@ -25,16 +24,13 @@
 class EggData;
 class EggGroupNode;
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggToSomethingConverter
-// Description : This is a base class for a family of converter
-//               classes that manage a conversion from egg format to
-//               some other file type.
-//
-//               Classes of this type can be used to implement egg2xxx
-//               converter programs, as well as LoaderFileTypeXXX
-//               run-time savers.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is a base class for a family of converter classes that manage a
+ * conversion from egg format to some other file type.
+ *
+ * Classes of this type can be used to implement egg2xxx converter programs,
+ * as well as LoaderFileTypeXXX run-time savers.
+ */
 class EggToSomethingConverter {
 public:
   EggToSomethingConverter();
@@ -55,9 +51,9 @@ public:
   INLINE void set_output_coordinate_system(CoordinateSystem output_coordinate_system) const;
   INLINE CoordinateSystem get_output_coordinate_system() const;
 
-  virtual string get_name() const=0;
-  virtual string get_extension() const=0;
-  virtual string get_additional_extensions() const;
+  virtual std::string get_name() const=0;
+  virtual std::string get_extension() const=0;
+  virtual std::string get_additional_extensions() const;
   virtual bool supports_compressed() const;
 
   virtual bool write_file(const Filename &filename)=0;
@@ -73,5 +69,3 @@ protected:
 #include "eggToSomethingConverter.I"
 
 #endif
-
-

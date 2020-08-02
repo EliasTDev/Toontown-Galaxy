@@ -1,16 +1,15 @@
-// Filename: sceneGraphAnalyzer.h
-// Created by:  drose (02Jul00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file sceneGraphAnalyzer.h
+ * @author drose
+ * @date 2000-07-02
+ */
 
 #ifndef SCENEGRAPHANALYZER_H
 #define SCENEGRAPHANALYZER_H
@@ -31,11 +30,10 @@ class GeomVertexFormat;
 class GeomVertexArrayData;
 class Texture;
 
-////////////////////////////////////////////////////////////////////
-//       Class : SceneGraphAnalyzer
-// Description : A handy class that can scrub over a scene graph and
-//               collect interesting statistics on it.
-////////////////////////////////////////////////////////////////////
+/**
+ * A handy class that can scrub over a scene graph and collect interesting
+ * statistics on it.
+ */
 class EXPCL_PANDA_PGRAPHNODES SceneGraphAnalyzer {
 PUBLISHED:
   SceneGraphAnalyzer();
@@ -54,7 +52,7 @@ PUBLISHED:
   void clear();
   void add_node(PandaNode *node);
 
-  void write(ostream &out, int indent_level = 0) const;
+  void write(std::ostream &out, int indent_level = 0) const;
 
   INLINE int get_num_nodes() const;
   INLINE int get_num_instances() const;
@@ -65,7 +63,7 @@ PUBLISHED:
   INLINE int get_num_geoms() const;
   INLINE int get_num_geom_vertex_datas() const;
   INLINE int get_num_geom_vertex_formats() const;
-  INLINE int get_vertex_data_size() const;
+  INLINE size_t get_vertex_data_size() const;
 
   INLINE int get_num_vertices() const;
   INLINE int get_num_normals() const;
@@ -83,7 +81,7 @@ PUBLISHED:
   INLINE int get_num_triangles_in_fans() const;
   INLINE int get_num_vertices_in_patches() const;
 
-  INLINE int get_texture_bytes() const;
+  INLINE size_t get_texture_bytes() const;
 
   INLINE int get_num_long_normals() const;
   INLINE int get_num_short_normals() const;
@@ -152,7 +150,7 @@ private:
   int _num_triangles_in_fans;
   int _num_vertices_in_patches;
 
-  int _texture_bytes;
+  size_t _texture_bytes;
 
   int _num_long_normals;
   int _num_short_normals;

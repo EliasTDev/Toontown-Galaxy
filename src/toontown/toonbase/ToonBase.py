@@ -42,6 +42,7 @@ for filename in ['toonmono.cur', 'icon.ico']:
         f.write(vfs.readFile(p3filename, False))
 loadPrcFileData('Window: icon', 'icon-filename %s' % Filename.fromOsSpecific(os.path.join(tempdir, 'icon.ico')))
 
+
 class ToonBase(OTPBase.OTPBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('ToonBase')
 
@@ -50,7 +51,7 @@ class ToonBase(OTPBase.OTPBase):
         self.disableShowbaseMouse()
         self.addCullBins()
         self.debugRunningMultiplier /= OTPGlobals.ToonSpeedFactor
-        self.lightspeed =   3.00 * 10 ** 8
+        self.lightspeed = 3.00 * 10 ** 8
         self.baseXpMultiplier = self.config.GetFloat('base-xp-multiplier', 1.0)
         self.toonChatSounds = self.config.GetBool('toon-chat-sounds', 1)
         self.placeBeforeObjects = self.config.GetBool('place-before-objects', 1)
@@ -58,7 +59,7 @@ class ToonBase(OTPBase.OTPBase):
         self.wantDynamicShadows = 0
         self.exitErrorCode = 0
         camera.setPosHpr(0, 0, 0, 0, 0, 0)
-        self.camLens.setMinFov(settings['fov']/(4./3.))
+        self.camLens.setMinFov(settings['fov'] / (4. / 3.))
         self.camLens.setNearFar(ToontownGlobals.DefaultCameraNear, ToontownGlobals.DefaultCameraFar)
         self.musicManager.setVolume(0.65)
         self.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
@@ -139,16 +140,16 @@ class ToonBase(OTPBase.OTPBase):
         self.slowQuietZone = self.config.GetBool('slow-quiet-zone', 0)
         self.slowQuietZoneDelay = self.config.GetFloat('slow-quiet-zone-delay', 5)
         self.killInterestResponse = self.config.GetBool('kill-interest-response', 0)
-        
+
         # group tracker prefs
         print('setting group tracker setting')
         if 'grouptracker' in settings:
             self.showGroupTracker = settings.get('grouptracker', False)
         else:
             self.showGroupTracker = True
-        
+
         settings['grouptracker'] = self.showGroupTracker
-        print('Group Tracker Settings:', self.showGroupTracker)
+        print(('Group Tracker Settings:', self.showGroupTracker))
 
         tpMgr = TextPropertiesManager.getGlobalPtr()
         WLDisplay = TextProperties()
@@ -172,8 +173,8 @@ class ToonBase(OTPBase.OTPBase):
         self.wantCogInterface = settings.get('cogInterface', True)
         self.wantantialiasing = settings.get('antialiasing', 1)
 
-	self.wantWASD = settings.get('want-WASD', False)
-	self.wantNews = settings.get('want-News', True)
+        self.wantWASD = settings.get('want-WASD', False)
+        self.wantNews = settings.get('want-News', True)
 
         self.Move_Up = 'arrow_up'
         self.Move_Left = 'arrow_left'
@@ -188,10 +189,12 @@ class ToonBase(OTPBase.OTPBase):
             self.Move_Right = 'd'
             self.JUMP = 'shift'
 
+
     def openMainWindow(self, *args, **kw):
         result = OTPBase.OTPBase.openMainWindow(self, *args, **kw)
         self.setCursorAndIcon()
         return result
+
 
     def setCursorAndIcon(self):
         atexit.register(shutil.rmtree, tempdir)
@@ -201,11 +204,13 @@ class ToonBase(OTPBase.OTPBase):
         wp.setIconFilename(Filename.fromOsSpecific(os.path.join(tempdir, 'icon.ico')))
         self.win.requestProperties(wp)
 
+
     def addCullBins(self):
         cbm = CullBinManager.getGlobalPtr()
         cbm.addBin('ground', CullBinManager.BTUnsorted, 18)
         cbm.addBin('shadow', CullBinManager.BTBackToFront, 19)
         cbm.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
+
 
     def disableShowbaseMouse(self):
         self.useDrive()
@@ -213,14 +218,17 @@ class ToonBase(OTPBase.OTPBase):
         if self.mouseInterface: self.mouseInterface.detachNode()
         if self.mouse2cam: self.mouse2cam.detachNode()
 
+
     def __walking(self, pressed):
         self.walking = pressed
+
 
     def toggleGui(self):
         if aspect2d.isHidden():
             aspect2d.show()
         else:
             aspect2d.hide()
+
 
     def takeScreenShot(self):
         if not os.path.exists(TTLocalizer.ScreenshotPath):
@@ -244,11 +252,15 @@ class ToonBase(OTPBase.OTPBase):
         self.screenshotStr = ''
         messenger.send('takingScreenshot')
         if coordOnScreen:
-            coordTextLabel = DirectLabel(pos=(-0.81, 0.001, -0.87), text=ctext, text_scale=0.05, text_fg=VBase4(1.0, 1.0, 1.0, 1.0), text_bg=(0, 0, 0, 0), text_shadow=(0, 0, 0, 1), relief=None)
+            coordTextLabel = DirectLabel(pos=(-0.81, 0.001, -0.87), text=ctext, text_scale=0.05,
+                                         text_fg=VBase4(1.0, 1.0, 1.0, 1.0), text_bg=(0, 0, 0, 0), text_shadow=(0, 0, 0, 1),
+                                         relief=None)
             coordTextLabel.setBin('gui-popup', 0)
             strTextLabel = None
             if len(self.screenshotStr):
-                strTextLabel = DirectLabel(pos=(0.0, 0.001, 0.9), text=self.screenshotStr, text_scale=0.05, text_fg=VBase4(1.0, 1.0, 1.0, 1.0), text_bg=(0, 0, 0, 0), text_shadow=(0, 0, 0, 1), relief=None)
+                strTextLabel = DirectLabel(pos=(0.0, 0.001, 0.9), text=self.screenshotStr, text_scale=0.05,
+                                           text_fg=VBase4(1.0, 1.0, 1.0, 1.0), text_bg=(0, 0, 0, 0),
+                                           text_shadow=(0, 0, 0, 1), relief=None)
                 strTextLabel.setBin('gui-popup', 0)
         self.graphicsEngine.renderFrame()
         self.screenshot(namePrefix=namePrefix, imageComment=ctext + ' ' + self.screenshotStr)
@@ -261,10 +273,12 @@ class ToonBase(OTPBase.OTPBase):
             coordTextLabel.destroy()
         return
 
+
     def addScreenshotString(self, str):
         if len(self.screenshotStr):
             self.screenshotStr += '\n'
         self.screenshotStr += str
+
 
     def initNametagGlobals(self):
         arrow = loader.loadModel('phase_3/models/props/arrow')
@@ -305,26 +319,27 @@ class ToonBase(OTPBase.OTPBase):
 
         # Order: Top to bottom
         self.leftCells = [
-            mm.addGridCell(0.2 + padding, -0.45, base.a2dTopLeft), # Above boarding groups
+            mm.addGridCell(0.2 + padding, -0.45, base.a2dTopLeft),  # Above boarding groups
             mm.addGridCell(0.2 + padding, -0.9, base.a2dTopLeft),  # 1
             mm.addGridCell(0.2 + padding, -1.35, base.a2dTopLeft)  # Below Boarding Groups
         ]
 
         # Order: Left to right
         self.bottomCells = [
-            mm.addGridCell(-0.87, 0.2 + padding, base.a2dBottomCenter), # To the right of the laff meter
-            mm.addGridCell(-0.43, 0.2 + padding, base.a2dBottomCenter), # 1
+            mm.addGridCell(-0.87, 0.2 + padding, base.a2dBottomCenter),  # To the right of the laff meter
+            mm.addGridCell(-0.43, 0.2 + padding, base.a2dBottomCenter),  # 1
             mm.addGridCell(0.01, 0.2 + padding, base.a2dBottomCenter),  # 2
             mm.addGridCell(0.45, 0.2 + padding, base.a2dBottomCenter),  # 3
-            mm.addGridCell(0.89, 0.2 + padding, base.a2dBottomCenter)   # To the left of the shtiker book
+            mm.addGridCell(0.89, 0.2 + padding, base.a2dBottomCenter)  # To the left of the shtiker book
         ]
 
         # Order: Bottom to top
         self.rightCells = [
-            mm.addGridCell(-0.2 - padding, -1.35, base.a2dTopRight), # Above the street map
+            mm.addGridCell(-0.2 - padding, -1.35, base.a2dTopRight),  # Above the street map
             mm.addGridCell(-0.2 - padding, -0.9, base.a2dTopRight),  # Below the friends list
             mm.addGridCell(-0.2 - padding, -0.45, base.a2dTopRight)  # Behind the friends list
         ]
+
 
     def hideFriendMargins(self):
         middleCell = self.rightCells[1]
@@ -332,15 +347,18 @@ class ToonBase(OTPBase.OTPBase):
 
         self.setCellsAvailable([middleCell, topCell], False)
 
+
     def showFriendMargins(self):
         middleCell = self.rightCells[1]
         topCell = self.rightCells[2]
 
         self.setCellsAvailable([middleCell, topCell], True)
 
+
     def setCellsAvailable(self, cell_list, available):
         for cell in cell_list:
             self.marginManager.setCellAvailable(cell, available)
+
 
     def startShow(self, cr):
         self.cr = cr
@@ -384,6 +402,7 @@ class ToonBase(OTPBase.OTPBase):
         self.lastTrueClockTime = TrueClock.getGlobalPtr().getLongTime()
         taskMgr.add(self.__speedHackCheckTick, 'speedHackCheck-tick')
 
+
     def __speedHackCheckTick(self, task):
         elapsed = time.time() - self.lastSpeedHackCheck
         tcElapsed = TrueClock.getGlobalPtr().getLongTime() - self.lastTrueClockTime
@@ -400,18 +419,23 @@ class ToonBase(OTPBase.OTPBase):
 
         return task.cont
 
+
     def removeGlitchMessage(self):
         self.ignore('InputState-forward')
 
-    def exitShow(self, errorCode = None):
+
+    def exitShow(self, errorCode=None):
         self.notify.info('Exiting Toontown: errorCode = %s' % errorCode)
         sys.exit()
+
 
     def setExitErrorCode(self, code):
         self.exitErrorCode = code
 
+
     def getExitErrorCode(self):
         return self.exitErrorCode
+
 
     def userExit(self):
         try:
@@ -440,20 +464,25 @@ class ToonBase(OTPBase.OTPBase):
         self.ignore(ToontownGlobals.MinimizeGameHotKeyRepeatOSX)
         self.exitShow()
 
+
     def panda3dRenderError(self):
         if self.cr.timeManager:
             self.cr.timeManager.setDisconnectReason(ToontownGlobals.DisconnectGraphicsError)
         self.cr.sendDisconnect()
         sys.exit()
 
-    def playMusic(self, music, looping = 0, interrupt = 1, volume = None, time = 0.0):
+
+    def playMusic(self, music, looping=0, interrupt=1, volume=None, time=0.0):
         OTPBase.OTPBase.playMusic(self, music, looping, interrupt, volume, time)
+
 
     # OS X Specific Actions
     def exitOSX(self):
-        self.confirm = TTDialog.TTGlobalDialog(doneEvent='confirmDone', message=TTLocalizer.OptionsPageExitConfirm, style=TTDialog.TwoChoice)
+        self.confirm = TTDialog.TTGlobalDialog(doneEvent='confirmDone', message=TTLocalizer.OptionsPageExitConfirm,
+                                               style=TTDialog.TwoChoice)
         self.confirm.show()
         self.accept('confirmDone', self.handleConfirm)
+
 
     def handleConfirm(self):
         status = self.confirm.doneStatus
@@ -463,13 +492,15 @@ class ToonBase(OTPBase.OTPBase):
         if status == 'ok':
             self.userExit()
 
+
     def hideGame(self):
         # Hacky, I know, but it works
         hideCommand = """osascript -e 'tell application "System Events"
-                                            set frontProcess to first process whose frontmost is true
-                                            set visible of frontProcess to false
-                                       end tell'"""
+                                                set frontProcess to first process whose frontmost is true
+                                                set visible of frontProcess to false
+                                           end tell'"""
         os.system(hideCommand)
+
 
     def minimizeGame(self):
         wp = WindowProperties()

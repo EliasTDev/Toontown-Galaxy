@@ -1,16 +1,15 @@
-// Filename: loader.h
-// Created by:  mike (09Jan97)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file loader.h
+ * @author mike
+ * @date 1997-01-09
+ */
 
 #ifndef LOADER_H
 #define LOADER_H
@@ -29,21 +28,17 @@
 
 class LoaderFileType;
 
-////////////////////////////////////////////////////////////////////
-//       Class : Loader
-// Description : A convenient class for loading models from disk, in
-//               bam or egg format (or any of a number of other
-//               formats implemented by a LoaderFileType, such as
-//               ptloader).
-//
-//               This class supports synchronous as well as
-//               asynchronous loading.  In asynchronous loading, the
-//               model is loaded in the background by a thread, and an
-//               event will be generated when the model is available.
-//               If threading is not available, the asynchronous
-//               loading interface may be used, but it loads
-//               synchronously.
-////////////////////////////////////////////////////////////////////
+/**
+ * A convenient class for loading models from disk, in bam or egg format (or
+ * any of a number of other formats implemented by a LoaderFileType, such as
+ * ptloader).
+ *
+ * This class supports synchronous as well as asynchronous loading.  In
+ * asynchronous loading, the model is loaded in the background by a thread,
+ * and an event will be generated when the model is available.  If threading
+ * is not available, the asynchronous loading interface may be used, but it
+ * loads synchronously.
+ */
 class EXPCL_PANDA_PGRAPH Loader : public TypedReferenceCount, public Namable {
 private:
   class ConsiderFile {
@@ -75,12 +70,12 @@ PUBLISHED:
     Files _files;
   };
 
-  Loader(const string &name = "loader");
+  explicit Loader(const std::string &name = "loader");
 
   INLINE void set_task_manager(AsyncTaskManager *task_manager);
   INLINE AsyncTaskManager *get_task_manager() const;
-  INLINE void set_task_chain(const string &task_chain);
-  INLINE const string &get_task_chain() const;
+  INLINE void set_task_chain(const std::string &task_chain);
+  INLINE const std::string &get_task_chain() const;
 
   BLOCKING INLINE void stop_threads();
   INLINE bool remove(AsyncTask *task);
@@ -99,9 +94,9 @@ PUBLISHED:
                                         PandaNode *node);
   INLINE void save_async(AsyncTask *request);
 
-  BLOCKING PT(PandaNode) load_bam_stream(istream &in);
+  BLOCKING PT(PandaNode) load_bam_stream(std::istream &in);
 
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
   INLINE static Loader *get_global_ptr();
 
@@ -118,7 +113,7 @@ private:
   static void make_global_ptr();
 
   PT(AsyncTaskManager) _task_manager;
-  string _task_chain;
+  std::string _task_chain;
 
   static void load_file_types();
   static bool _file_types_loaded;

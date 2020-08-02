@@ -269,9 +269,9 @@ class DistributedHouseAI(DistributedObjectAI):
             self.atticItems.append(item)
         elif item.replacesExisting() and item.hasExisting():
             if item.getFlags() & FLCloset:
-                items = ClosetToClothes.keys() if item.getFlags() & FLCloset else BankToMoney.keys()
+                items = list(ClosetToClothes.keys()) if item.getFlags() & FLCloset else list(BankToMoney.keys())
             elif item.getFlags() & FLBank:
-            	items = BankToMoney.keys()
+                items = list(BankToMoney.keys())
                 for itItem in self.interiorItems:
                     if itItem.furnitureType in items:
                         posHpr = itItem.posHpr
@@ -301,7 +301,7 @@ class DistributedHouseAI(DistributedObjectAI):
         self.atticWallpaper.append(item)
         self.d_setAtticWallpaper(self.atticWallpaper.getBlob())
         self.interior.furnitureManager.loadFromHouse()
-    
+
     def initializeInterior(self):
         if (not self.isInteriorInitialized):
             self.notify.info('Initializing interior...')

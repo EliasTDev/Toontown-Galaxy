@@ -1,22 +1,17 @@
 import os
 import imp
 
-from ObjectMgr import ObjectMgr
-from ObjectHandler import ObjectHandler
-from ObjectPalette import ObjectPalette
-from ProtoPalette import ProtoPalette
-import ObjectGlobals as OG
 
 class FileMgr:
     """ To handle data file """
-    
+
     def __init__(self, editor=None):
         self.editor = editor
 
     def saveToFile(self, fileName):
         try:
             f = open(fileName, 'w')
-            f.write("from pandac.PandaModules import *\n")
+            f.write("from panda3d.core import *\n")
             f.write("\nif hasattr(base, 'le'):\n")
             f.write("    objectMgr = base.le.objectMgr\n")
             f.write("    animMgr = base.le.animMgr\n")
@@ -40,7 +35,7 @@ class FileMgr:
             self.editor.updateStatusReadout('Sucessfully saved to %s'%fileName)
             self.editor.fNeedToSave = False
         except IOError:
-            print 'failed to save %s'%fileName
+            print('failed to save %s'%fileName)
             if f:
                 f.close()
 
@@ -54,4 +49,4 @@ class FileMgr:
             self.editor.updateStatusReadout('Sucessfully opened file %s'%fileName)
             self.editor.fNeedToSave = False
         except:
-            print 'failed to load %s'%fileName
+            print('failed to load %s'%fileName)

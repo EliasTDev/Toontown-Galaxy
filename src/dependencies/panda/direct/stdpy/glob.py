@@ -2,9 +2,7 @@
 vfs constructs.  This enables Python to interface more easily with Panda's
 virtual file system. """
 
-import sys
 import os
-import re
 import fnmatch
 
 from direct.stdpy import file
@@ -53,15 +51,12 @@ def iglob(pathname):
 def glob1(dirname, pattern):
     if not dirname:
         dirname = os.curdir
-    if isinstance(pattern, unicode) and not isinstance(dirname, unicode):
-        dirname = unicode(dirname, sys.getfilesystemencoding() or
-                                   sys.getdefaultencoding())
     try:
         names = os.listdir(dirname)
     except os.error:
         return []
     if pattern[0] != '.':
-        names = filter(lambda x: x[0] != '.', names)
+        names = [x for x in names if x[0] != '.']
     return fnmatch.filter(names, pattern)
 
 def glob0(dirname, basename):
@@ -76,7 +71,28 @@ def glob0(dirname, basename):
     return []
 
 
-magic_check = re.compile('[*?[]')
-
 def has_magic(s):
-    return magic_check.search(s) is not None
+    if isinstance(s, bytes):
+        return b'*' in s or b'?' in s or b'[' in s
+    else:
+        return '*' in s or '?' in s or '[' in s
+
+
+def escape(pathname):
+    drive, pathname = os.path.splitdrive(pathname)
+    if isinstance(pathname, bytes):
+        newpath = bytearray(drive)
+        for c in pathname:
+            if c == 42 or c == 63 or c == 91:
+                newpath += bytes((91, c, 93))
+            else:
+                newpath.append(c)
+        return bytes(newpath)
+    else:
+        newpath = drive
+        for c in pathname:
+            if c == '*' or c == '?' or c == '[':
+                newpath += '[' + c + ']'
+            else:
+                newpath += c
+        return newpath

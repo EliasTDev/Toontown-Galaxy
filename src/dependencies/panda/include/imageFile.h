@@ -1,16 +1,15 @@
-// Filename: imageFile.h
-// Created by:  drose (28Nov00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file imageFile.h
+ * @author drose
+ * @date 2000-11-28
+ */
 
 #ifndef IMAGEFILE_H
 #define IMAGEFILE_H
@@ -26,18 +25,16 @@ class PNMImage;
 class EggTexture;
 class PaletteGroup;
 
-////////////////////////////////////////////////////////////////////
-//       Class : ImageFile
-// Description : This is the base class of both TextureImage and
-//               PaletteImage.  It encapsulates all the information
-//               specific to an image file that can be assigned as a
-//               texture image to egg geometry.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is the base class of both TextureImage and PaletteImage.  It
+ * encapsulates all the information specific to an image file that can be
+ * assigned as a texture image to egg geometry.
+ */
 class ImageFile : public TypedWritable {
 public:
   ImageFile();
 
-  bool make_shadow_image(const string &basename);
+  bool make_shadow_image(const std::string &basename);
 
   bool is_size_known() const;
   int get_x_size() const;
@@ -49,8 +46,8 @@ public:
   void clear_basic_properties();
   void update_properties(const TextureProperties &properties);
 
-  bool set_filename(PaletteGroup *group, const string &basename);
-  bool set_filename(const string &dirname, const string &basename);
+  bool set_filename(PaletteGroup *group, const std::string &basename);
+  bool set_filename(const std::string &dirname, const std::string &basename);
   const Filename &get_filename() const;
   const Filename &get_alpha_filename() const;
   int get_alpha_file_channel() const;
@@ -62,7 +59,7 @@ public:
 
   void update_egg_tex(EggTexture *egg_tex) const;
 
-  void output_filename(ostream &out) const;
+  void output_filename(std::ostream &out) const;
 
 protected:
   TextureProperties _properties;
@@ -101,4 +98,3 @@ private:
 };
 
 #endif
-

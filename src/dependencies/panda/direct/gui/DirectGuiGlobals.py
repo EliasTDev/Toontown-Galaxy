@@ -1,12 +1,10 @@
-"""Undocumented Module"""
-
-__all__ = []
-
-
 """
 Global definitions used by Direct Gui Classes and handy constants
 that can be used during widget construction
 """
+
+__all__ = []
+
 from panda3d.core import *
 
 defaultFont = None
@@ -14,12 +12,14 @@ defaultFontFunc = TextNode.getDefaultFont
 defaultClickSound = None
 defaultRolloverSound = None
 defaultDialogGeom = None
+defaultDialogRelief = PGFrameStyle.TBevelOut
 drawOrder = 100
 panel = None
 
 # USEFUL GUI CONSTANTS
-# Constant used to indicate that an option can only be set by a call
-# to the constructor.
+
+#: Constant used to indicate that an option can only be set by a call
+#: to the constructor.
 INITOPT = ['initopt']
 
 # Mouse buttons
@@ -64,12 +64,14 @@ WITHOUT = PGButton.getWithoutPrefix()
 B1CLICK = PGButton.getClickPrefix() + MouseButton.one().getName() + '-'
 B2CLICK = PGButton.getClickPrefix() + MouseButton.two().getName() + '-'
 B3CLICK = PGButton.getClickPrefix() + MouseButton.three().getName() + '-'
-B1PRESS = PGButton.getPressPrefix() + MouseButton.one().getName() + '-'  
-B2PRESS = PGButton.getPressPrefix() + MouseButton.two().getName() + '-'  
+B1PRESS = PGButton.getPressPrefix() + MouseButton.one().getName() + '-'
+B2PRESS = PGButton.getPressPrefix() + MouseButton.two().getName() + '-'
 B3PRESS = PGButton.getPressPrefix() + MouseButton.three().getName() + '-'
-B1RELEASE = PGButton.getReleasePrefix() + MouseButton.one().getName() + '-'  
-B2RELEASE = PGButton.getReleasePrefix() + MouseButton.two().getName() + '-'  
+B1RELEASE = PGButton.getReleasePrefix() + MouseButton.one().getName() + '-'
+B2RELEASE = PGButton.getReleasePrefix() + MouseButton.two().getName() + '-'
 B3RELEASE = PGButton.getReleasePrefix() + MouseButton.three().getName() + '-'
+WHEELUP = PGButton.getReleasePrefix() + MouseButton.wheelUp().getName() + '-'
+WHEELDOWN = PGButton.getReleasePrefix() + MouseButton.wheelDown().getName() + '-'
 # For DirectEntry widgets
 OVERFLOW = PGEntry.getOverflowPrefix()
 ACCEPT = PGEntry.getAcceptPrefix() + KeyboardButton.enter().getName() + '-'
@@ -85,6 +87,9 @@ ADJUST = PGSliderBar.getAdjustPrefix()
 IMAGE_SORT_INDEX = 10
 GEOM_SORT_INDEX = 20
 TEXT_SORT_INDEX = 30
+
+FADE_SORT_INDEX = 1000
+NO_FADE_SORT_INDEX = 2000
 
 # Handy conventions for organizing top-level gui objects in loose buckets.
 BACKGROUND_SORT_INDEX = -100
@@ -132,13 +137,16 @@ def setDefaultFontFunc(newFontFunc):
 
 def getDefaultDialogGeom():
     global defaultDialogGeom
-    if defaultDialogGeom == None:
-        defaultDialogGeom = loader.loadModel('models/gui/dialog_box_gui', okMissing = True)
     return defaultDialogGeom
 
-def setDefaultDialogGeom(newDialogGeom):
-    global defaultDialogGeom
+def getDefaultDialogRelief():
+    global defaultDialogRelief
+    return defaultDialogRelief
+
+def setDefaultDialogGeom(newDialogGeom, relief=None):
+    global defaultDialogGeom, defaultDialogRelief
     defaultDialogGeom = newDialogGeom
+    defaultDialogRelief = relief
 
 def getDefaultDrawOrder():
     return drawOrder
@@ -153,7 +161,3 @@ def getDefaultPanel():
 def setDefaultPanel(newPanel):
     global panel
     panel = newPanel
-
-#from OnscreenText import *
-#from OnscreenGeom import *
-#from OnscreenImage import *

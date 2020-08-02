@@ -1,16 +1,15 @@
-// Filename: nurbsCurveEvaluator.h
-// Created by:  drose (03Dec02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file nurbsCurveEvaluator.h
+ * @author drose
+ * @date 2002-12-03
+ */
 
 #ifndef NURBSCURVEEVALUATOR_H
 #define NURBSCURVEEVALUATOR_H
@@ -27,20 +26,16 @@
 #include "referenceCount.h"
 #include "luse.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : NurbsCurveEvaluator
-// Description : This class is an abstraction for evaluating NURBS
-//               curves.  It accepts an array of vertices, each of
-//               which may be in a different coordinate space (as
-//               defined by a NodePath), as well as an optional knot
-//               vector.
-//
-//               This is not related to NurbsCurve, CubicCurveseg or
-//               any of the ParametricCurve-derived objects in this
-//               module.  It is a completely parallel implementation
-//               of NURBS curves, and will probably eventually replace
-//               the whole ParametricCurve class hierarchy.
-////////////////////////////////////////////////////////////////////
+/**
+ * This class is an abstraction for evaluating NURBS curves.  It accepts an
+ * array of vertices, each of which may be in a different coordinate space (as
+ * defined by a NodePath), as well as an optional knot vector.
+ *
+ * This is not related to NurbsCurve, CubicCurveseg or any of the
+ * ParametricCurve-derived objects in this module.  It is a completely
+ * parallel implementation of NURBS curves, and will probably eventually
+ * replace the whole ParametricCurve class hierarchy.
+ */
 class EXPCL_PANDA_PARAMETRICS NurbsCurveEvaluator : public ReferenceCount {
 PUBLISHED:
   NurbsCurveEvaluator();
@@ -59,7 +54,7 @@ PUBLISHED:
   MAKE_SEQ(get_vertices, get_num_vertices, get_vertex);
 
   INLINE void set_vertex_space(int i, const NodePath &space);
-  INLINE void set_vertex_space(int i, const string &space);
+  INLINE void set_vertex_space(int i, const std::string &space);
   NodePath get_vertex_space(int i, const NodePath &rel_to) const;
 
   INLINE void set_extended_vertex(int i, int d, PN_stdfloat value);
@@ -79,7 +74,7 @@ PUBLISHED:
   PT(NurbsCurveResult) evaluate(const NodePath &rel_to,
                                 const LMatrix4 &mat) const;
 
-  void output(ostream &out) const;
+  void output(std::ostream &out) const;
 
 public:
   typedef epvector<LVecBase4> Vert4Array;
@@ -104,9 +99,8 @@ private:
   NurbsBasisVector _basis;
 };
 
-INLINE ostream &operator << (ostream &out, const NurbsCurveEvaluator &n);
+INLINE std::ostream &operator << (std::ostream &out, const NurbsCurveEvaluator &n);
 
 #include "nurbsCurveEvaluator.I"
 
 #endif
-

@@ -1,5 +1,6 @@
 from toontown.toonbase import ToontownGlobals
-import SosShopGlobals, DistributedNPCToonBaseAI, random, math, NPCToons
+from . import SosShopGlobals, DistributedNPCToonBaseAI, NPCToons
+import random, math
 
 class DistributedNPCSosAI(DistributedNPCToonBaseAI.DistributedNPCToonBaseAI):
 

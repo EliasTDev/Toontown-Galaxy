@@ -1,16 +1,15 @@
-// Filename: cLwoPolygons.h
-// Created by:  drose (25Apr01)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file cLwoPolygons.h
+ * @author drose
+ * @date 2001-04-25
+ */
 
 #ifndef CLWOPOLYGONS_H
 #define CLWOPOLYGONS_H
@@ -30,12 +29,10 @@ class LwoTags;
 class LwoPolygonTags;
 class LwoDiscontinuousVertexMap;
 
-////////////////////////////////////////////////////////////////////
-//       Class : CLwoPolygons
-// Description : This class is a wrapper around LwoPolygons and stores
-//               additional information useful during the
-//               conversion-to-egg process.
-////////////////////////////////////////////////////////////////////
+/**
+ * This class is a wrapper around LwoPolygons and stores additional
+ * information useful during the conversion-to-egg process.
+ */
 class CLwoPolygons {
 public:
   INLINE CLwoPolygons(LwoToEggConverter *converter,
@@ -46,7 +43,7 @@ public:
   void add_vmad(const LwoDiscontinuousVertexMap *lwo_vmad);
 
   CLwoSurface *get_surface(int polygon_index) const;
-  bool get_uv(const string &uv_name, int pi, int vi, LPoint2 &uv) const;
+  bool get_uv(const std::string &uv_name, int pi, int vi, LPoint2 &uv) const;
 
   void make_egg();
   void connect_egg();
@@ -62,9 +59,9 @@ public:
 
   const LwoPolygonTags *_surf_ptags;
 
-  // There might be named maps associated with the polygons to bring a
-  // per-polygon mapping to the UV's.
-  typedef pmap<string, const LwoDiscontinuousVertexMap *> VMad;
+  // There might be named maps associated with the polygons to bring a per-
+  // polygon mapping to the UV's.
+  typedef pmap<std::string, const LwoDiscontinuousVertexMap *> VMad;
   VMad _txuv;
 
 private:
@@ -74,5 +71,3 @@ private:
 #include "cLwoPolygons.I"
 
 #endif
-
-

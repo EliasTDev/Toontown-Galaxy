@@ -1,16 +1,15 @@
-// Filename: particleSystemManager.h
-// Created by:  charles (28Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file particleSystemManager.h
+ * @author charles
+ * @date 2000-06-28
+ */
 
 #ifndef PARTICLESYSTEMMANAGER_H
 #define PARTICLESYSTEMMANAGER_H
@@ -20,16 +19,14 @@
 #include "particleSystem.h"
 #include "pStatCollector.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : ParticleSystemManager
-// Description : Manages a set of individual ParticleSystem objects,
-//               so that each individual one doesn't have to be
-//               updated and rendered every frame
-//    See Also : particleSystemManager.cxx
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAPHYSICS ParticleSystemManager {
+/**
+ * Manages a set of individual ParticleSystem objects, so that each individual
+ * one doesn't have to be updated and rendered every frame See Also :
+ * particleSystemManager.cxx
+ */
+class EXPCL_PANDA_PARTICLESYSTEM ParticleSystemManager {
 PUBLISHED:
-  ParticleSystemManager(int every_nth_frame = 1);
+  explicit ParticleSystemManager(int every_nth_frame = 1);
   virtual ~ParticleSystemManager();
 
   INLINE void set_frame_stepping(int every_nth_frame);
@@ -42,9 +39,9 @@ PUBLISHED:
   void do_particles(PN_stdfloat dt);
   void do_particles(PN_stdfloat dt, ParticleSystem * ps, bool do_render = true);
 
-  virtual void output(ostream &out) const;
-  virtual void write_ps_list(ostream &out, int indent=0) const;
-  virtual void write(ostream &out, int indent=0) const;
+  virtual void output(std::ostream &out) const;
+  virtual void write_ps_list(std::ostream &out, int indent=0) const;
+  virtual void write(std::ostream &out, int indent=0) const;
 
 private:
   plist< PT(ParticleSystem) > _ps_list;

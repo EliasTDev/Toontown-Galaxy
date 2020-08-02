@@ -1,5 +1,6 @@
 __all__ = ['jobMgr']
 
-import JobManager
+from . import JobManager
 
+#: Contains the global :class:`~.JobManager.JobManager` object.
 jobMgr = JobManager.JobManager()

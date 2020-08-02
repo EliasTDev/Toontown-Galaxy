@@ -1,16 +1,15 @@
-// Filename: fltRecordReader.h
-// Created by:  drose (24Aug00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file fltRecordReader.h
+ * @author drose
+ * @date 2000-08-24
+ */
 
 #ifndef FLTRECORDREADER_H
 #define FLTRECORDREADER_H
@@ -23,17 +22,14 @@
 #include "datagram.h"
 #include "datagramIterator.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : FltRecordReader
-// Description : This class turns an istream into a sequence of
-//               FltRecords by reading a sequence of Datagrams and
-//               extracting the opcode from each one.  It remembers
-//               where it is in the file and what the current record
-//               is.
-////////////////////////////////////////////////////////////////////
+/**
+ * This class turns an istream into a sequence of FltRecords by reading a
+ * sequence of Datagrams and extracting the opcode from each one.  It
+ * remembers where it is in the file and what the current record is.
+ */
 class FltRecordReader {
 public:
-  FltRecordReader(istream &in);
+  FltRecordReader(std::istream &in);
   ~FltRecordReader();
 
   FltOpcode get_opcode() const;
@@ -49,7 +45,7 @@ public:
 private:
   void read_next_header();
 
-  istream &_in;
+  std::istream &_in;
   Datagram _datagram;
   FltOpcode _opcode;
   int _record_length;
@@ -69,5 +65,3 @@ private:
 };
 
 #endif
-
-

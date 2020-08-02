@@ -1,16 +1,15 @@
-// Filename: textureAttrib.h
-// Created by:  drose (21Feb02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file textureAttrib.h
+ * @author drose
+ * @date 2002-02-21
+ */
 
 #ifndef TEXTUREATTRIB_H
 #define TEXTUREATTRIB_H
@@ -25,20 +24,18 @@
 #include "vector_int.h"
 #include "epvector.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : TextureAttrib
-// Description : Indicates the set of TextureStages and their
-//               associated Textures that should be applied to (or
-//               removed from) a node.
-////////////////////////////////////////////////////////////////////
+/**
+ * Indicates the set of TextureStages and their associated Textures that
+ * should be applied to (or removed from) a node.
+ */
 class EXPCL_PANDA_PGRAPH TextureAttrib : public RenderAttrib {
 protected:
   INLINE TextureAttrib();
   INLINE TextureAttrib(const TextureAttrib &copy);
 
 PUBLISHED:
-  // These methods are used to create a simple, single-textured layer.
-  // For multitexture, use the multitexture interfaces, further below.
+  // These methods are used to create a simple, single-textured layer.  For
+  // multitexture, use the multitexture interfaces, further below.
   static CPT(RenderAttrib) make(Texture *tex);
   static CPT(RenderAttrib) make_off();
   static CPT(RenderAttrib) make_default();
@@ -46,10 +43,10 @@ PUBLISHED:
   INLINE bool is_off() const;
   INLINE Texture *get_texture() const;
 
-  // The following methods define the new multitexture mode for
-  // TextureAttrib.  Each TextureAttrib can add or remove individual
-  // texture stages from the complete set of textures that are to be
-  // applied; this is similar to the mechanism of LightAttrib.
+  // The following methods define the new multitexture mode for TextureAttrib.
+  // Each TextureAttrib can add or remove individual texture stages from the
+  // complete set of textures that are to be applied; this is similar to the
+  // mechanism of LightAttrib.
   static CPT(RenderAttrib) make();
   static CPT(RenderAttrib) make_all_off();
 
@@ -67,11 +64,21 @@ PUBLISHED:
 
   int find_on_stage(const TextureStage *stage) const;
 
+  MAKE_SEQ_PROPERTY(on_stages, get_num_on_stages, get_on_stage);
+
+  MAKE_MAP_PROPERTY(textures, has_on_stage, get_on_texture);
+  MAKE_MAP_KEYS_SEQ(textures, get_num_on_stages, get_on_stage);
+
+  MAKE_MAP_PROPERTY(samplers, has_on_stage, get_on_sampler);
+  MAKE_MAP_KEYS_SEQ(samplers, get_num_on_stages, get_on_stage);
+
   INLINE int get_num_off_stages() const;
   INLINE TextureStage *get_off_stage(int n) const;
   MAKE_SEQ(get_off_stages, get_num_off_stages, get_off_stage);
   INLINE bool has_off_stage(TextureStage *stage) const;
   INLINE bool has_all_off() const;
+
+  MAKE_SEQ_PROPERTY(off_stages, get_num_off_stages, get_off_stage);
 
   INLINE bool is_identity() const;
 
@@ -82,12 +89,13 @@ PUBLISHED:
   CPT(RenderAttrib) add_off_stage(TextureStage *stage, int override = 0) const;
   CPT(RenderAttrib) remove_off_stage(TextureStage *stage) const;
   CPT(RenderAttrib) unify_texture_stages(TextureStage *stage) const;
+  CPT(RenderAttrib) replace_texture(Texture *tex, Texture *new_tex) const;
 
 public:
   CPT(TextureAttrib) filter_to_max(int max_texture_stages) const;
 
   virtual bool lower_attrib_can_override() const;
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
   virtual bool has_cull_callback() const;
   virtual bool cull_callback(CullTraverser *trav, const CullTraverserData &data) const;
@@ -97,7 +105,6 @@ protected:
   virtual size_t get_hash_impl() const;
   virtual CPT(RenderAttrib) compose_impl(const RenderAttrib *other) const;
   virtual CPT(RenderAttrib) invert_compose_impl(const RenderAttrib *other) const;
-  virtual CPT(RenderAttrib) get_auto_shader_attrib_impl(const RenderState *state) const;
 
 private:
   INLINE void check_sorted() const;
@@ -161,6 +168,7 @@ PUBLISHED:
   virtual int get_slot() const {
     return get_class_slot();
   }
+  MAKE_PROPERTY(class_slot, get_class_slot);
 
 public:
   static void register_with_read_factory();
@@ -179,7 +187,7 @@ public:
     RenderAttrib::init_type();
     register_type(_type_handle, "TextureAttrib",
                   RenderAttrib::get_class_type());
-    _attrib_slot = register_slot(_type_handle, 30, make_default);
+    _attrib_slot = register_slot(_type_handle, 30, new TextureAttrib);
   }
   virtual TypeHandle get_type() const {
     return get_class_type();

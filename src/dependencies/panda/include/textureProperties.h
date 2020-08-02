@@ -1,16 +1,15 @@
-// Filename: textureProperties.h
-// Created by:  drose (28Nov00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file textureProperties.h
+ * @author drose
+ * @date 2000-11-28
+ */
 
 #ifndef TEXTUREPROPERTIES_H
 #define TEXTUREPROPERTIES_H
@@ -23,14 +22,11 @@
 class PNMFileType;
 class FactoryParams;
 
-////////////////////////////////////////////////////////////////////
-//       Class : TextureProperties
-// Description : This is the set of characteristics of a texture that,
-//               if different from another texture, prevent the two
-//               textures from sharing a PaletteImage.  It includes
-//               properties such as mipmapping, number of channels,
-//               etc.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is the set of characteristics of a texture that, if different from
+ * another texture, prevent the two textures from sharing a PaletteImage.  It
+ * includes properties such as mipmapping, number of channels, etc.
+ */
 class TextureProperties : public TypedWritable {
 public:
   TextureProperties();
@@ -46,7 +42,7 @@ public:
   void force_nonalpha();
   bool uses_alpha() const;
 
-  string get_string() const;
+  std::string get_string() const;
   void update_properties(const TextureProperties &other);
   void fully_define();
 
@@ -68,11 +64,11 @@ public:
   PNMFileType *_alpha_type;
 
 private:
-  static string get_format_string(EggTexture::Format format);
-  static string get_filter_string(EggTexture::FilterType filter_type);
-  static string get_anisotropic_degree_string(int aniso_degree);
-  static string get_quality_level_string(EggTexture::QualityLevel quality_level);
-  static string get_type_string(PNMFileType *color_type,
+  static std::string get_format_string(EggTexture::Format format);
+  static std::string get_filter_string(EggTexture::FilterType filter_type);
+  static std::string get_anisotropic_degree_string(int aniso_degree);
+  static std::string get_quality_level_string(EggTexture::QualityLevel quality_level);
+  static std::string get_type_string(PNMFileType *color_type,
                                 PNMFileType *alpha_type);
 
   static EggTexture::Format union_format(EggTexture::Format a,
@@ -118,4 +114,3 @@ private:
 };
 
 #endif
-

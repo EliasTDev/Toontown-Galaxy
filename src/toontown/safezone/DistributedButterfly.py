@@ -1,4 +1,5 @@
 from panda3d.core import *
+from panda3d.direct import *
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
 from direct.directnotify import DirectNotifyGlobal
@@ -9,7 +10,7 @@ from panda3d.core import NodePath
 from direct.directutil import Mopath
 from toontown.toonbase import ToontownGlobals
 from direct.actor import Actor
-import ButterflyGlobals
+from . import ButterflyGlobals
 from direct.showbase import RandomNumGen
 import random
 

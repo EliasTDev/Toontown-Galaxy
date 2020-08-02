@@ -1,6 +1,10 @@
 """ This module defines a Python-level wrapper around the C++
-AsyncTaskManager interface.  It replaces the old full-Python
-implementation of the Task system. """
+:class:`~panda3d.core.AsyncTaskManager` interface.  It replaces the old
+full-Python implementation of the Task system.
+
+For more information about the task system, consult the
+:ref:`tasks-and-event-handling` page in the programming manual.
+"""
 
 __all__ = ['Task', 'TaskManager',
            'cont', 'done', 'again', 'pickup', 'exit',
@@ -12,13 +16,16 @@ from direct.showbase.PythonUtil import *
 from direct.showbase.MessengerGlobal import messenger
 import types
 import random
+import importlib
 
 try:
-    import signal
+    import _signal as signal
 except ImportError:
     signal = None
 
 from panda3d.core import *
+from direct.extensions_native import HTTPChannel_extensions
+
 
 def print_exc_plus():
     """
@@ -40,21 +47,21 @@ def print_exc_plus():
         f = f.f_back
     stack.reverse()
     traceback.print_exc()
-    print "Locals by frame, innermost last"
+    print("Locals by frame, innermost last")
     for frame in stack:
-        print
-        print "Frame %s in %s at line %s" % (frame.f_code.co_name,
+        print("")
+        print("Frame %s in %s at line %s" % (frame.f_code.co_name,
                                              frame.f_code.co_filename,
-                                             frame.f_lineno)
-        for key, value in frame.f_locals.items():
-            print "\t%20s = " % key,
+                                             frame.f_lineno))
+        for key, value in list(frame.f_locals.items()):
             #We have to be careful not to cause a new error in our error
             #printer! Calling str() on an unknown object could cause an
             #error we don't want.
             try:
-                print value
+                valueStr = str(value)
             except:
-                print "<ERROR WHILE PRINTING VALUE>"
+                valueStr = "<ERROR WHILE PRINTING VALUE>"
+            print("\t%20s = %s" % (key, valueStr))
 
 # For historical purposes, we remap the C++-defined enumeration to
 # these Python names, and define them both at the module level, here,
@@ -66,13 +73,15 @@ again = AsyncTask.DSAgain
 pickup = AsyncTask.DSPickup
 exit = AsyncTask.DSExit
 
-# Alias PythonTask to Task for historical purposes.
+#: Task aliases to :class:`panda3d.core.PythonTask` for historical purposes.
 Task = PythonTask
 
 # Copy the module-level enums above into the class level.  This funny
 # syntax is necessary because it's a C++-wrapped extension type, not a
 # true Python class.
-Task.DtoolClassDict['done'] = done
+# We can't override 'done', which is already a known method.  We have a
+# special check in PythonTask for when the method is being returned.
+#Task.DtoolClassDict['done'] = done
 Task.DtoolClassDict['cont'] = cont
 Task.DtoolClassDict['again'] = again
 Task.DtoolClassDict['pickup'] = pickup
@@ -81,6 +90,8 @@ Task.DtoolClassDict['exit'] = exit
 # Alias the AsyncTaskPause constructor as Task.pause().
 pause = AsyncTaskPause
 Task.DtoolClassDict['pause'] = staticmethod(pause)
+
+gather = Task.gather
 
 def sequence(*taskList):
     seq = AsyncTaskSequence('sequence')
@@ -100,7 +111,10 @@ Task.DtoolClassDict['loop'] = staticmethod(loop)
 class TaskManager:
     notify = directNotify.newCategory("TaskManager")
 
-    extendedExceptions = False
+    taskTimerVerbose = ConfigVariableBool('task-timer-verbose', False)
+    extendedExceptions = ConfigVariableBool('extended-exceptions', False)
+    pStatsTasks = ConfigVariableBool('pstats-tasks', False)
+
     MaxEpochSpeed = 1.0/30.0
 
     def __init__(self):
@@ -114,7 +128,7 @@ class TaskManager:
         self.fKeyboardInterrupt = False
         self.interruptCount = 0
 
-        self._frameProfileQueue = Queue()
+        self._frameProfileQueue = []
 
         # this will be set when it's safe to import StateVar
         self._profileFrames = None
@@ -148,8 +162,10 @@ class TaskManager:
         self.mgr.setClock(clockObject)
         self.globalClock = clockObject
 
+    clock = property(lambda self: self.mgr.getClock(), setClock)
+
     def invokeDefaultHandler(self, signalNumber, stackFrame):
-        print '*** allowing mid-frame keyboard interrupt.'
+        print('*** allowing mid-frame keyboard interrupt.')
         # Restore default interrupt handler
         if signal:
             signal.signal(signal.SIGINT, signal.default_int_handler)
@@ -160,9 +176,9 @@ class TaskManager:
         self.fKeyboardInterrupt = 1
         self.interruptCount += 1
         if self.interruptCount == 1:
-            print '* interrupt by keyboard'
+            print('* interrupt by keyboard')
         elif self.interruptCount == 2:
-            print '** waiting for end of frame before interrupting...'
+            print('** waiting for end of frame before interrupting...')
             # The user must really want to interrupt this process
             # Next time around invoke the default handler
             signal.signal(signal.SIGINT, self.invokeDefaultHandler)
@@ -263,7 +279,7 @@ class TaskManager:
     def getTasksMatching(self, taskPattern):
         """Returns a list of all tasks, active or sleeping, with a
         name that matches the pattern, which can include standard
-        shell globbing characters like *, ?, and []. """
+        shell globbing characters like \\*, ?, and []. """
 
         return self.__makeTaskList(self.mgr.findTasksMatching(GlobPattern(taskPattern)))
 
@@ -291,7 +307,7 @@ class TaskManager:
                       uponDeath = None, appendTask = False, owner = None):
 
         """Adds a task to be performed at some time in the future.
-        This is identical to add(), except that the specified
+        This is identical to `add()`, except that the specified
         delayTime is applied to the Task object first, which means
         that the task will not begin executing until at least the
         indicated delayTime (in seconds) has elapsed.
@@ -310,61 +326,66 @@ class TaskManager:
         self.mgr.add(task)
         return task
 
+    do_method_later = doMethodLater
+
     def add(self, funcOrTask, name = None, sort = None, extraArgs = None,
             priority = None, uponDeath = None, appendTask = False,
             taskChain = None, owner = None):
-
         """
         Add a new task to the taskMgr.  The task will begin executing
         immediately, or next frame if its sort value has already
         passed this frame.
 
-        The parameters are:
+        Parameters:
+            funcOrTask: either an existing Task object (not already
+                added to the task manager), or a callable function
+                object. If this is a function, a new Task object will be
+                created and returned. You may also pass in a coroutine
+                object.
 
-        funcOrTask - either an existing Task object (not already added
-        to the task manager), or a callable function object.  If this
-        is a function, a new Task object will be created and returned.
+            name (str): the name to assign to the Task.  Required,
+                unless you are passing in a Task object that already has
+                a name.
 
-        name - the name to assign to the Task.  Required, unless you
-        are passing in a Task object that already has a name.
+            extraArgs (list): the list of arguments to pass to the task
+                function.  If this is omitted, the list is just the task
+                object itself.
 
-        extraArgs - the list of arguments to pass to the task
-        function.  If this is omitted, the list is just the task
-        object itself.
+            appendTask (bool): If this is true, then the task object
+                itself will be appended to the end of the extraArgs list
+                before calling the function.
 
-        appendTask - a boolean flag.  If this is true, then the task
-        object itself will be appended to the end of the extraArgs
-        list before calling the function.
+            sort (int): the sort value to assign the task.  The default
+                sort is 0.  Within a particular task chain, it is
+                guaranteed that the tasks with a lower sort value will
+                all run before tasks with a higher sort value run.
 
-        sort - the sort value to assign the task.  The default sort is
-        0.  Within a particular task chain, it is guaranteed that the
-        tasks with a lower sort value will all run before tasks with a
-        higher sort value run.
+            priority (int): the priority at which to run the task.  The
+                default priority is 0.  Higher priority tasks are run
+                sooner, and/or more often.  For historical purposes, if
+                you specify a priority without also specifying a sort,
+                the priority value is understood to actually be a sort
+                value. (Previously, there was no priority value, only a
+                sort value, and it was called "priority".)
 
-        priority - the priority at which to run the task.  The default
-        priority is 0.  Higher priority tasks are run sooner, and/or
-        more often.  For historical purposes, if you specify a
-        priority without also specifying a sort, the priority value is
-        understood to actually be a sort value.  (Previously, there
-        was no priority value, only a sort value, and it was called
-        "priority".)
+            uponDeath (bool): a function to call when the task
+                terminates, either because it has run to completion, or
+                because it has been explicitly removed.
 
-        uponDeath - a function to call when the task terminates,
-        either because it has run to completion, or because it has
-        been explicitly removed.
+            taskChain (str): the name of the task chain to assign the
+                task to.
 
-        taskChain - the name of the task chain to assign the task to.
+            owner: an optional Python object that is declared as the
+                "owner" of this task for maintenance purposes.  The
+                owner must have two methods:
+                ``owner._addTask(self, task)``, which is called when the
+                task begins, and ``owner._clearTask(self, task)``, which
+                is called when the task terminates.  This is all the
+                ownermeans.
 
-        owner - an optional Python object that is declared as the
-        "owner" of this task for maintenance purposes.  The owner must
-        have two methods: owner._addTask(self, task), which is called
-        when the task begins, and owner._clearTask(self, task), which
-        is called when the task terminates.  This is all the owner
-        means.
-
-        The return value of add() is the new Task object that has been
-        added, or the original Task object that was passed in.
-
+        Returns:
+            The new Task object that has been added, or the original
+            Task object that was passed in.
         """
 
         task = self.__setupTask(funcOrTask, name, priority, sort, extraArgs, taskChain, appendTask, owner, uponDeath)
@@ -374,8 +395,14 @@ class TaskManager:
     def __setupTask(self, funcOrTask, name, priority, sort, extraArgs, taskChain, appendTask, owner, uponDeath):
         if isinstance(funcOrTask, AsyncTask):
             task = funcOrTask
-        elif hasattr(funcOrTask, '__call__'):
+        elif hasattr(funcOrTask, '__call__') or \
+                hasattr(funcOrTask, 'cr_await') or \
+                type(funcOrTask) == types.GeneratorType:
+            # It's a function, coroutine, or something emulating a coroutine.
             task = PythonTask(funcOrTask)
+            if name is None:
+                name = getattr(funcOrTask, '__qualname__', None) or \
+                       getattr(funcOrTask, '__name__', None)
         else:
             self.notify.error(
                 'add: Tried to add a task that was not a Task or a func')
@@ -391,7 +418,6 @@ class TaskManager:
                 'Task %s does not accept arguments.' % (repr(task)))
 
         if name is not None:
-            assert isinstance(name, types.StringTypes), 'Name must be a string type'
             task.setName(name)
         assert task.hasName()
 
@@ -425,21 +451,19 @@ class TaskManager:
         all tasks with the indicated name are removed.  Returns the
         number of tasks removed. """
 
-        if isinstance(taskOrName, types.StringTypes):
-            tasks = self.mgr.findTasks(taskOrName)
-            return self.mgr.remove(tasks)
-        elif isinstance(taskOrName, AsyncTask):
+        if isinstance(taskOrName, AsyncTask):
             return self.mgr.remove(taskOrName)
-        elif isinstance(taskOrName, types.ListType):
+        elif isinstance(taskOrName, list):
             for task in taskOrName:
                 self.remove(task)
         else:
-            self.notify.error('remove takes a string or a Task')
+            tasks = self.mgr.findTasks(taskOrName)
+            return self.mgr.remove(tasks)
 
     def removeTasksMatching(self, taskPattern):
         """Removes all tasks whose names match the pattern, which can
-        include standard shell globbing characters like *, ?, and [].
-        See also remove().
+        include standard shell globbing characters like \\*, ?, and [].
+        See also :meth:`remove()`.
 
         Returns the number of tasks removed.
         """
@@ -478,6 +502,9 @@ class TaskManager:
         """Starts the task manager running.  Does not return until an
         exception is encountered (including KeyboardInterrupt). """
 
+        if PandaSystem.getPlatform() == 'emscripten':
+            return
+
         # Set the clock to have last frame's time in case we were
         # Paused at the prompt for a long time
         t = self.globalClock.getFrameTime()
@@ -495,7 +522,7 @@ class TaskManager:
             while self.running:
                 try:
                     if len(self._frameProfileQueue):
-                        numFrames, session, callback = self._frameProfileQueue.pop()
+                        numFrames, session, callback = self._frameProfileQueue.pop(0)
                         def _profileFunc(numFrames=numFrames):
                             self._doProfiledFrames(numFrames)
                         session.setFunc(_profileFunc)
@@ -511,7 +538,7 @@ class TaskManager:
                 except SystemExit:
                     self.stop()
                     raise
-                except IOError, ioError:
+                except IOError as ioError:
                     code, message = self._unpackIOError(ioError)
                     # Since upgrading to Python 2.4.1, pausing the execution
                     # often gives this IOError during the sleep function:
@@ -523,7 +550,7 @@ class TaskManager:
                         self.stop()
                     else:
                         raise
-                except Exception, e:
+                except Exception as e:
                     if self.extendedExceptions:
                         self.stop()
                         print_exc_plus()
@@ -562,13 +589,13 @@ class TaskManager:
 
         method = task.getFunction()
         if (type(method) == types.MethodType):
-            function = method.im_func
+            function = method.__func__
         else:
             function = method
         if (function == oldMethod):
             newMethod = types.MethodType(newFunction,
-                                         method.im_self,
-                                         method.im_class)
+                                         method.__self__,
+                                         method.__self__.__class__)
             task.setFunction(newMethod)
             # Found a match
             return 1
@@ -581,7 +608,9 @@ class TaskManager:
         return numFound
 
     def popupControls(self):
-        from direct.tkpanels import TaskManagerPanel
+        # Don't use a regular import, to prevent ModuleFinder from picking
+        # it up as a dependency when building a .p3d package.
+        TaskManagerPanel = importlib.import_module('direct.tkpanels.TaskManagerPanel')
         return TaskManagerPanel.TaskManagerPanel(self)
 
     def getProfileSession(self, name=None):
@@ -591,8 +620,8 @@ class TaskManager:
 
         # Defer this import until we need it: some Python
         # distributions don't provide the profile and pstats modules.
-        from direct.showbase.ProfileSession import ProfileSession
-        return ProfileSession(name)
+        PS = importlib.import_module('direct.showbase.ProfileSession')
+        return PS.ProfileSession(name)
 
     def profileFrames(self, num=None, session=None, callback=None):
         if num is None:
@@ -601,10 +630,10 @@ class TaskManager:
             session = self.getProfileSession()
         # make sure the profile session doesn't get destroyed before we're done with it
         session.acquire()
-        self._frameProfileQueue.push((num, session, callback))
+        self._frameProfileQueue.append((num, session, callback))
 
     def _doProfiledFrames(self, numFrames):
-        for i in xrange(numFrames):
+        for i in range(numFrames):
             result = self.step()
         return result
 
@@ -618,8 +647,8 @@ class TaskManager:
         self._profileFrames.set(profileFrames)
         if (not self._frameProfiler) and profileFrames:
             # import here due to import dependencies
-            from direct.task.FrameProfiler import FrameProfiler
-            self._frameProfiler = FrameProfiler()
+            FP = importlib.import_module('direct.task.FrameProfiler')
+            self._frameProfiler = FP.FrameProfiler()
 
     def getProfileTasks(self):
         return self._profileTasks.get()
@@ -631,8 +660,8 @@ class TaskManager:
         self._profileTasks.set(profileTasks)
         if (not self._taskProfiler) and profileTasks:
             # import here due to import dependencies
-            from direct.task.TaskProfiler import TaskProfiler
-            self._taskProfiler = TaskProfiler()
+            TP = importlib.import_module('direct.task.TaskProfiler')
+            self._taskProfiler = TP.TaskProfiler()
 
     def logTaskProfiles(self, name=None):
         if self._taskProfiler:
@@ -678,9 +707,9 @@ class TaskManager:
 
         # Defer this import until we need it: some Python
         # distributions don't provide the profile and pstats modules.
-        from direct.showbase.ProfileSession import ProfileSession
-        profileSession = ProfileSession('profiled-task-%s' % task.getName(),
-                                        Functor(profileInfo.taskFunc, *profileInfo.taskArgs))
+        PS = importlib.import_module('direct.showbase.ProfileSession')
+        profileSession = PS.ProfileSession('profiled-task-%s' % task.getName(),
+                                           Functor(profileInfo.taskFunc, *profileInfo.taskArgs))
         ret = profileSession.run()
 
         # set these values *after* profiling in case we're profiling the TaskProfiler
@@ -699,12 +728,12 @@ class TaskManager:
     def _getRandomTask(self):
         # Figure out when the next frame is likely to expire, so we
         # won't grab any tasks that are sleeping for a long time.
-        now = globalClock.getFrameTime()
-        avgFrameRate = globalClock.getAverageFrameRate()
+        now = self.globalClock.getFrameTime()
+        avgFrameRate = self.globalClock.getAverageFrameRate()
         if avgFrameRate < .00001:
             avgFrameDur = 0.
         else:
-            avgFrameDur = (1. / globalClock.getAverageFrameRate())
+            avgFrameDur = (1. / self.globalClock.getAverageFrameRate())
         next = now + avgFrameDur
 
         # Now grab a task at random, until we find one that we like.
@@ -1250,22 +1279,22 @@ if __debug__:
                 return task.done
         obj = TestClass()
         startRefCount = sys.getrefcount(obj)
-        print 'sys.getrefcount(obj): %s' % sys.getrefcount(obj)
-        print '** addTask'
+        print('sys.getrefcount(obj): %s' % sys.getrefcount(obj))
+        print('** addTask')
         t = obj.addTask(obj.doTask, 'test')
-        print 'sys.getrefcount(obj): %s' % sys.getrefcount(obj)
-        print 'task.getRefCount(): %s' % t.getRefCount()
-        print '** removeTask'
+        print('sys.getrefcount(obj): %s' % sys.getrefcount(obj))
+        print('task.getRefCount(): %s' % t.getRefCount())
+        print('** removeTask')
         obj.removeTask('test')
-        print 'sys.getrefcount(obj): %s' % sys.getrefcount(obj)
-        print 'task.getRefCount(): %s' % t.getRefCount()
-        print '** step'
+        print('sys.getrefcount(obj): %s' % sys.getrefcount(obj))
+        print('task.getRefCount(): %s' % t.getRefCount())
+        print('** step')
         taskMgr.step()
         taskMgr.step()
         taskMgr.step()
-        print 'sys.getrefcount(obj): %s' % sys.getrefcount(obj)
-        print 'task.getRefCount(): %s' % t.getRefCount()
-        print '** task release'
+        print('sys.getrefcount(obj): %s' % sys.getrefcount(obj))
+        print('task.getRefCount(): %s' % t.getRefCount())
+        print('** task release')
         t = None
-        print 'sys.getrefcount(obj): %s' % sys.getrefcount(obj)
+        print('sys.getrefcount(obj): %s' % sys.getrefcount(obj))
         assert sys.getrefcount(obj) == startRefCount

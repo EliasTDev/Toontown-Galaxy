@@ -139,9 +139,9 @@ def simulateRecoveryVar(numNeeded, baseChance, list = 0, cap = 1):
         else:
             currentFail += 1
 
-    print 'Test results: %s tries, %s longest failure chain, %s cap hits' % (numTries, greatestFailChain, capHits)
+    print('Test results: %s tries, %s longest failure chain, %s cap hits' % (numTries, greatestFailChain, capHits))
     if list:
-        print 'failures for each succes %s' % attemptList
+        print('failures for each succes %s' % attemptList)
 
 
 def simulateRecoveryFix(numNeeded, baseChance, list = 0):
@@ -166,9 +166,9 @@ def simulateRecoveryFix(numNeeded, baseChance, list = 0):
         else:
             currentFail += 1
 
-    print 'Test results: %s tries, %s longest failure chain' % (numTries, greatestFailChain)
+    print('Test results: %s tries, %s longest failure chain' % (numTries, greatestFailChain))
     if list:
-        print 'failures for each success %s' % attemptList
+        print('failures for each success %s' % attemptList)
 
 
 class Quest:
@@ -187,14 +187,14 @@ class Quest:
         pass
 
     def checkLocation(self, location):
-        locations = [Anywhere] + TTLocalizer.GlobalStreetNames.keys()
+        locations = [Anywhere] + list(TTLocalizer.GlobalStreetNames.keys())
         self.check(location in locations, 'invalid location: %s' % location)
 
     def checkNumCogs(self, num):
         self.check(1, 'invalid number of cogs: %s' % num)
 
     def checkCogType(self, type):
-        types = [Any] + SuitBattleGlobals.SuitAttributes.keys()
+        types = [Any] + list(SuitBattleGlobals.SuitAttributes.keys())
         self.check(type in types, 'invalid cog type: %s' % type)
 
     def checkCogTrack(self, track):
@@ -273,7 +273,7 @@ class Quest:
         holderTypes = ['type', 'level', 'track']
         self.check(holderType in holderTypes, 'invalid recovery item holderType: %s' % holderType)
         if holderType == 'type':
-            holders = [Any, AnyFish] + SuitBattleGlobals.SuitAttributes.keys()
+            holders = [Any, AnyFish] + list(SuitBattleGlobals.SuitAttributes.keys())
             self.check(holder in holders, 'invalid recovery item holder: %s for holderType: %s' % (holder, holderType))
         elif holderType == 'level':
             pass
@@ -736,7 +736,7 @@ class TexturedQuest:
         return True
 
     def getFrame(self):
-        print 'getFrame from TexturedQuest not implemented!'
+        print('getFrame from TexturedQuest not implemented!')
         return [None, None]
 
 class BossQuest(CogQuest, TexturedQuest):
@@ -1222,7 +1222,7 @@ class DeliverGagQuest(Quest):
         gag = self.getGagType()
         inventory = av.inventory
         takenGags = 0
-        for i in xrange(self.getNumGags()):
+        for i in range(self.getNumGags()):
             if inventory.useItem(gag[0], gag[1]):
                 takenGags += 1
         av.b_setInventory(inventory.makeNetString())
@@ -1346,7 +1346,7 @@ class RecoverItemQuest(LocationBasedQuest):
 
     def testDone(self, progress):
         numberDone = progress & pow(2, 16) - 1
-        print 'Quest number done %s' % numberDone
+        print('Quest number done %s' % numberDone)
         if numberDone >= self.getNumItems():
             return 1
         else:
@@ -1496,7 +1496,7 @@ class TrackChoiceQuest(Quest):
         first = None
         second = None
 
-        for i in xrange(len(trackAccess)):
+        for i in range(len(trackAccess)):
             if trackAccess[i] == 0:
                 if first is None:
                     first = i
@@ -3126,7 +3126,7 @@ QuestDict = {
 
 Tier2QuestsDict = {}
 
-for questId, questDesc in QuestDict.items():
+for questId, questDesc in list(QuestDict.items()):
     if questDesc[QuestDictStartIndex] == Start:
         tier = questDesc[QuestDictTierIndex]
         if tier in Tier2QuestsDict:
@@ -3140,11 +3140,11 @@ Quest2RemainingStepsDict = {}
 
 def getAllRewardIdsForReward(rewardId):
     if rewardId is AnyCashbotSuitPart:
-        return range(4000, 4011 + 1)
+        return list(range(4000, 4011 + 1))
     if rewardId is AnyLawbotSuitPart:
-        return range(4100, 4113 + 1)
+        return list(range(4100, 4113 + 1))
     if rewardId is AnyBossbotSuitPart:
-        return range(4200, 4216 + 1)
+        return list(range(4200, 4216 + 1))
     return (rewardId,)
 
 def findFinalRewardId(questId):
@@ -3155,7 +3155,7 @@ def findFinalRewardId(questId):
         try:
             questDesc = QuestDict[questId]
         except KeyError:
-            print 'findFinalRewardId: Quest ID: %d not found' % questId
+            print('findFinalRewardId: Quest ID: %d not found' % questId)
             return -1
 
         nextQuestId = questDesc[QuestDictNextQuestIndex]
@@ -3187,12 +3187,12 @@ def findFinalRewardId(questId):
     return (finalRewardId, remainingSteps)
 
 
-for questId in QuestDict.keys():
+for questId in list(QuestDict.keys()):
     findFinalRewardId(questId)
 
 def getStartingQuests(tier = None):
     startingQuests = []
-    for questId in QuestDict.keys():
+    for questId in list(QuestDict.keys()):
         if isStartingQuest(questId):
             if tier is None:
                 startingQuests.append(questId)
@@ -3270,7 +3270,7 @@ def filterQuests(entireQuestPool, currentNpc, av):
         notify.debug('filterQuests: entireQuestPool: %s' % entireQuestPool)
     validQuestPool = dict([ (questId, 1) for questId in entireQuestPool ])
     if isLoopingFinalTier(av.getRewardTier()):
-        history = map(lambda questDesc: questDesc[0], av.quests)
+        history = [questDesc[0] for questDesc in av.quests]
     else:
         history = av.getQuestHistory()
     if notify.getDebug():
@@ -3308,7 +3308,7 @@ def filterQuests(entireQuestPool, currentNpc, av):
                     notify.debug('filterQuests: Removed %s because npc involved' % questId)
                 break
 
-    finalQuestPool = filter(lambda key: validQuestPool[key], validQuestPool.keys())
+    finalQuestPool = [key for key in list(validQuestPool.keys()) if validQuestPool[key]]
     if notify.getDebug():
         notify.debug('filterQuests: finalQuestPool: %s' % finalQuestPool)
     return finalQuestPool
@@ -3399,7 +3399,7 @@ def transformReward(baseRewardId, av):
 
 def chooseBestQuests(tier, currentNpc, av):
     if isLoopingFinalTier(tier):
-        rewardHistory = map(lambda questDesc: questDesc[3], av.quests)
+        rewardHistory = [questDesc[3] for questDesc in av.quests]
     else:
         rewardHistory = av.getRewardHistory()[1]
 
@@ -3421,7 +3421,7 @@ def chooseBestQuests(tier, currentNpc, av):
     if numChoices == 0:
         numChoices = 1
     bestQuests = []
-    for i in xrange(numChoices):
+    for i in range(numChoices):
         if len(validQuestPool) == 0:
             break
         if len(rewards) == 0:
@@ -3794,7 +3794,7 @@ class TrackTrainingReward(Reward):
             track = 0
             trackAccess = av.getTrackAccess()
 
-            for i in xrange(len(trackAccess)):
+            for i in range(len(trackAccess)):
                 if trackAccess[i] == 0:
                     return i
         return track
@@ -4035,7 +4035,7 @@ def getNextRewards(numChoices, tier, av):
     if tier == TT_TIER + 3:
         optRewards = []
     if isLoopingFinalTier(tier):
-        rewardHistory = map(lambda questDesc: questDesc[3], av.quests)
+        rewardHistory = [questDesc[3] for questDesc in av.quests]
         if notify.getDebug():
             notify.debug('getNextRewards: current rewards (history): %s' % rewardHistory)
     else:
@@ -4077,7 +4077,7 @@ def getNextRewards(numChoices, tier, av):
         else:
             return [rewardTier[0]]
     rewardPool = rewardTier[:numChoices]
-    for i in xrange(len(rewardPool), numChoices * 2):
+    for i in range(len(rewardPool), numChoices * 2):
         if optRewards:
             optionalReward = seededRandomChoice(optRewards)
             optRewards.remove(optionalReward)
@@ -4092,7 +4092,7 @@ def getNextRewards(numChoices, tier, av):
             notify.debug('getNextRewards: no rewards left at all')
         return []
     finalRewardPool = [rewardPool.pop(0)]
-    for i in xrange(numChoices - 1):
+    for i in range(numChoices - 1):
         if len(rewardPool) == 0:
             break
         selectedReward = seededRandomChoice(rewardPool)
@@ -4555,7 +4555,7 @@ def avatarHasCompletedPhoneQuest(av):
 def avatarWorkingOnRequiredRewards(av):
     tier = av.getRewardTier()
     rewardList = list(getRewardsInTier(tier))
-    for i in xrange(len(rewardList)):
+    for i in range(len(rewardList)):
         actualRewardId = transformReward(rewardList[i], av)
         rewardList[i] = actualRewardId
 
@@ -4580,7 +4580,7 @@ def avatarHasAllRequiredRewards(av, tier):
     avQuests = av.getQuests()
 
     # Iterate through the current quests.
-    for i in xrange(0, len(avQuests), 5):
+    for i in range(0, len(avQuests), 5):
         questDesc = avQuests[i:i + 5]
         questId, fromNpcId, toNpcId, rewardId, toonProgress = questDesc
         transformedRewardId = transformReward(rewardId, av)
@@ -4640,7 +4640,7 @@ def avatarHasAllRequiredRewards(av, tier):
 def nextQuestList(nextQuest):
     if nextQuest == NA:
         return None
-    seqTypes = (types.ListType, types.TupleType)
+    seqTypes = (list, tuple)
     if type(nextQuest) in seqTypes:
         return nextQuest
     else:
@@ -4653,12 +4653,12 @@ def checkReward(questId, forked = 0):
     reward = quest[5]
     nextQuests = nextQuestList(quest[6])
     if nextQuests is None:
-        validRewards = RewardDict.keys() + [Any,
+        validRewards = list(RewardDict.keys()) + [Any,
          AnyCashbotSuitPart,
          AnyLawbotSuitPart,
          OBSOLETE]
         if reward is OBSOLETE:
-            print 'warning: quest %s is obsolete' % questId
+            print('warning: quest %s is obsolete' % questId)
         return reward
     else:
         forked = forked or len(nextQuests) > 1
@@ -4671,16 +4671,16 @@ def checkReward(questId, forked = 0):
 
 
 def assertAllQuestsValid():
-    print 'checking quests...'
-    for questId in QuestDict.keys():
+    print('checking quests...')
+    for questId in list(QuestDict.keys()):
         try:
             quest = getQuest(questId)
-        except AssertionError, e:
+        except AssertionError as e:
             err = 'invalid quest: %s' % questId
-            print err
+            print(err)
             raise
 
-    for questId in QuestDict.keys():
+    for questId in list(QuestDict.keys()):
         quest = QuestDict[questId]
         tier, start, questDesc, fromNpc, toNpc, reward, nextQuest, dialog = quest
         if start:

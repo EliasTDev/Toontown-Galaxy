@@ -1,10 +1,11 @@
-"""Undocumented Module"""
+"""Defines the DirectObject class, a convenient class to inherit from if the
+object needs to be able to respond to events."""
 
 __all__ = ['DirectObject']
 
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from MessengerGlobal import messenger
+from .MessengerGlobal import messenger
 
 class DirectObject:
     """
@@ -48,43 +49,43 @@ class DirectObject:
         kwargs['owner']=self
         task = taskMgr.add(*args, **kwargs)
         return task
-    
+
     def doMethodLater(self, *args, **kwargs):
         if(not hasattr(self,"_taskList")):
             self._taskList ={}
-        kwargs['owner']=self            
+        kwargs['owner']=self
         task = taskMgr.doMethodLater(*args, **kwargs)
         return task
-    
+
     def removeTask(self, taskOrName):
         if type(taskOrName) == type(''):
             # we must use a copy, since task.remove will modify self._taskList
             if hasattr(self, '_taskList'):
-                taskListValues = self._taskList.values()
+                taskListValues = list(self._taskList.values())
                 for task in taskListValues:
                     if task.name == taskOrName:
-                        task.remove()            
+                        task.remove()
         else:
             taskOrName.remove()
 
     def removeAllTasks(self):
         if hasattr(self,'_taskList'):
-            for task in self._taskList.values():
+            for task in list(self._taskList.values()):
                 task.remove()
 
     def _addTask(self, task):
         self._taskList[task.id] = task
 
     def _clearTask(self, task):
-        del self._taskList[task.id]        
-        
+        del self._taskList[task.id]
+
     def detectLeaks(self):
         if not __dev__:
             return
-        
+
         # call this after the DirectObject instance has been destroyed
         # if it's leaking, will notify user
-        
+
         # make sure we're not still listening for messenger events
         events = messenger.getAllAccepting(self)
         # make sure we're not leaking tasks
@@ -100,3 +101,15 @@ class DirectObject:
             func = choice(getRepository()._crashOnProactiveLeakDetect,
                           self.notify.error, self.notify.warning)
             func('destroyed %s instance is still %s%s' % (self.__class__.__name__, estr, tstr))
+
+    #snake_case alias:
+    add_task = addTask
+    do_method_later = doMethodLater
+    detect_leaks = detectLeaks
+    accept_once = acceptOnce
+    ignore_all = ignoreAll
+    get_all_accepting = getAllAccepting
+    is_ignoring = isIgnoring
+    remove_all_tasks = removeAllTasks
+    remove_task = removeTask
+    is_accepting = isAccepting

@@ -1,22 +1,20 @@
-// Filename: plane_src.h
-// Created by:  mike (09Jan97)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file plane_src.h
+ * @author mike
+ * @date 1997-01-09
+ */
 
-////////////////////////////////////////////////////////////////////
-//       Class : LPlane
-// Description : An abstract mathematical description of a plane.  A
-//               plane is defined by the equation Ax + By + Cz + D = 0.
-////////////////////////////////////////////////////////////////////
+/**
+ * An abstract mathematical description of a plane.  A plane is defined by the
+ * equation Ax + By + Cz + D = 0.
+ */
 class EXPCL_PANDA_MATHUTIL FLOATNAME(LPlane) : public FLOATNAME(LVecBase4) {
 PUBLISHED:
   INLINE_MATHUTIL FLOATNAME(LPlane)();
@@ -41,6 +39,9 @@ PUBLISHED:
   FLOATNAME(LPoint3) get_point() const;
 
   INLINE_MATHUTIL FLOATTYPE dist_to_plane(const FLOATNAME(LPoint3) &point) const;
+
+  INLINE_MATHUTIL bool normalize();
+  INLINE_MATHUTIL FLOATNAME(LPlane) normalized() const;
   INLINE_MATHUTIL FLOATNAME(LPoint3) project(const FLOATNAME(LPoint3) &point) const;
   INLINE_MATHUTIL void flip();
 
@@ -58,11 +59,11 @@ PUBLISHED:
   bool intersects_parabola(FLOATTYPE &t1, FLOATTYPE &t2,
                            const FLOATNAME(LParabola) &parabola) const;
 
-  void output(ostream &out) const;
-  void write(ostream &out, int indent_level = 0) const;
+  void output(std::ostream &out) const;
+  void write(std::ostream &out, int indent_level = 0) const;
 };
 
-INLINE_MATHUTIL ostream &
-operator << (ostream &out, const FLOATNAME(LPlane) &p);
+INLINE_MATHUTIL std::ostream &
+operator << (std::ostream &out, const FLOATNAME(LPlane) &p);
 
 #include "plane_src.I"

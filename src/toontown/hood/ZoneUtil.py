@@ -1,6 +1,5 @@
 from toontown.toonbase.ToontownGlobals import *
 
-
 zoneUtilNotify = directNotify.newCategory('ZoneUtil')
 tutorialDict = None
 
@@ -75,6 +74,7 @@ def isHQ(zoneId):
         return True
     return False
 
+
 def isPetshop(zoneId):
     if zoneId == 2522 or zoneId == 1510 or zoneId == 3511 or zoneId == 4508 or zoneId == 5505 or zoneId == 7504 or zoneId == 9508:
         return True
@@ -147,10 +147,12 @@ def getCanonicalBranchZone(zoneId):
 def getCanonicalZoneId(zoneId):
     return zoneId
 
+
 def getTrueZoneId(zoneId, currentZoneId):
-        hoodId = getHoodId(zoneId)
-        offset = currentZoneId
-	return zoneId
+    hoodId = getHoodId(zoneId)
+    offset = currentZoneId
+    return zoneId
+
 
 def getHoodId(zoneId):
     if tutorialDict:
@@ -170,8 +172,10 @@ def getSafeZoneId(zoneId):
 def getCanonicalHoodId(zoneId):
     return getHoodId(getCanonicalZoneId(zoneId))
 
+
 def getCanonicalSafeZoneId(zoneId):
     return getSafeZoneId(getCanonicalZoneId(zoneId))
+
 
 def isInterior(zoneId):
     if tutorialDict:
@@ -183,20 +187,23 @@ def isInterior(zoneId):
         r = zoneId % 1000 >= 500
     return r
 
+
 def overrideOn(branch, exteriorList, interiorList):
     global tutorialDict
     if tutorialDict:
         zoneUtilNotify.warning('setTutorialDict: tutorialDict is already set!')
     tutorialDict = {'branch': branch,
-     'exteriors': exteriorList,
-     'interiors': interiorList}
+                    'exteriors': exteriorList,
+                    'interiors': interiorList}
+
 
 def overrideOff():
     global tutorialDict
     tutorialDict = None
     return
 
-def getWakeInfo(hoodId = None, zoneId = None):
+
+def getWakeInfo(hoodId=None, zoneId=None):
     wakeWaterHeight = 0
     showWake = 0
     try:
@@ -221,6 +228,7 @@ def getWakeInfo(hoodId = None, zoneId = None):
         pass
 
     return (showWake, wakeWaterHeight)
+
 
 def canWearSuit(zoneId):
     zoneId = getCanonicalHoodId(zoneId)

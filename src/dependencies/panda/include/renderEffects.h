@@ -1,16 +1,15 @@
-// Filename: renderEffects.h
-// Created by:  drose (14Mar02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file renderEffects.h
+ * @author drose
+ * @date 2002-03-14
+ */
 
 #ifndef RENDEREFFECTS_H
 #define RENDEREFFECTS_H
@@ -31,28 +30,23 @@ class CullTraverser;
 class CullTraverserData;
 class FactoryParams;
 
-////////////////////////////////////////////////////////////////////
-//       Class : RenderEffects
-// Description : This represents a unique collection of RenderEffect
-//               objects that correspond to a particular renderable
-//               state.
-//
-//               You should not attempt to create or modify a
-//               RenderEffects object directly.  Instead, call one of
-//               the make() functions to create one for you.  And
-//               instead of modifying a RenderEffects object, create a
-//               new one.
-////////////////////////////////////////////////////////////////////
+/**
+ * This represents a unique collection of RenderEffect objects that correspond
+ * to a particular renderable state.
+ *
+ * You should not attempt to create or modify a RenderEffects object directly.
+ * Instead, call one of the make() functions to create one for you.  And
+ * instead of modifying a RenderEffects object, create a new one.
+ */
 class EXPCL_PANDA_PGRAPH RenderEffects : public TypedWritableReferenceCount {
 protected:
   RenderEffects();
 
-private:
-  RenderEffects(const RenderEffects &copy);
-  void operator = (const RenderEffects &copy);
-
 public:
+  RenderEffects(const RenderEffects &copy) = delete;
   virtual ~RenderEffects();
+
+  RenderEffects &operator = (const RenderEffects &copy) = delete;
 
   bool safe_to_transform() const;
   virtual CPT(TransformState) prepare_flatten_transform(const TransformState *net_transform) const;
@@ -63,8 +57,12 @@ PUBLISHED:
   bool operator < (const RenderEffects &other) const;
 
   INLINE bool is_empty() const;
-  INLINE int get_num_effects() const;
-  INLINE const RenderEffect *get_effect(int n) const;
+  INLINE size_t get_num_effects() const;
+  INLINE const RenderEffect *get_effect(size_t n) const;
+
+  INLINE size_t size() const;
+  INLINE const RenderEffect *operator [] (size_t n) const;
+  INLINE const RenderEffect *operator [] (TypeHandle type) const;
 
   int find_effect(TypeHandle type) const;
 
@@ -87,11 +85,11 @@ PUBLISHED:
 
   virtual bool unref() const;
 
-  void output(ostream &out) const;
-  void write(ostream &out, int indent_level) const;
+  void output(std::ostream &out) const;
+  void write(std::ostream &out, int indent_level) const;
 
   static int get_num_states();
-  static void list_states(ostream &out);
+  static void list_states(std::ostream &out);
   static bool validate_states();
 
 public:
@@ -107,7 +105,7 @@ public:
   INLINE bool has_adjust_transform() const;
   void adjust_transform(CPT(TransformState) &net_transform,
                         CPT(TransformState) &node_transform,
-                        PandaNode *node) const;
+                        const PandaNode *node) const;
 
   static void init_states();
 
@@ -121,8 +119,8 @@ private:
   void determine_adjust_transform();
 
 private:
-  // This mutex protects _states.  It also protects any modification
-  // to the cache, which is encoded in _composition_cache and
+  // This mutex protects _states.  It also protects any modification to the
+  // cache, which is encoded in _composition_cache and
   // _invert_composition_cache.
   static LightReMutex *_states_lock;
   typedef pset<const RenderEffects *, indirect_less<const RenderEffects *> > States;
@@ -130,13 +128,12 @@ private:
   static CPT(RenderEffects) _empty_state;
 
   // This iterator records the entry corresponding to this RenderEffects
-  // object in the above global set.  We keep the iterator around so
-  // we can remove it when the RenderEffects destructs.
+  // object in the above global set.  We keep the iterator around so we can
+  // remove it when the RenderEffects destructs.
   States::iterator _saved_entry;
 
 private:
-  // This is the actual data within the RenderEffects: a set of
-  // RenderEffects.
+  // This is the actual data within the RenderEffects: a set of RenderEffects.
   class Effect {
   public:
     INLINE Effect(const RenderEffect *effect);
@@ -181,7 +178,7 @@ public:
 protected:
   static TypedWritable *make_from_bam(const FactoryParams &params);
   void fillin(DatagramIterator &scan, BamReader *manager);
-  
+
 public:
   static TypeHandle get_class_type() {
     return _type_handle;
@@ -200,7 +197,7 @@ private:
   static TypeHandle _type_handle;
 };
 
-INLINE ostream &operator << (ostream &out, const RenderEffects &state) {
+INLINE std::ostream &operator << (std::ostream &out, const RenderEffects &state) {
   state.output(out);
   return out;
 }
@@ -208,4 +205,3 @@ INLINE ostream &operator << (ostream &out, const RenderEffects &state) {
 #include "renderEffects.I"
 
 #endif
-

@@ -1,16 +1,15 @@
-// Filename: textureStage.h
-// Created by:  drose (14Jul04)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file textureStage.h
+ * @author drose
+ * @date 2004-07-14
+ */
 
 #ifndef TEXTURESTAGE_H
 #define TEXTURESTAGE_H
@@ -22,23 +21,21 @@
 #include "typedWritableReferenceCount.h"
 #include "updateSeq.h"
 #include "luse.h"
+#include "graphicsStateGuardianBase.h"
 
 class FactoryParams;
 
-////////////////////////////////////////////////////////////////////
-//       Class : TextureStage
-// Description : Defines the properties of a named stage of the
-//               multitexture pipeline.  The TextureAttrib will
-//               associated a number of these stages with Texture
-//               objects, and the GSG will render geometry by sorting
-//               all of the currently active TextureStages in order
-//               and then issuing the appropriate rendering calls to
-//               activate them.
-////////////////////////////////////////////////////////////////////
+/**
+ * Defines the properties of a named stage of the multitexture pipeline.  The
+ * TextureAttrib will associated a number of these stages with Texture
+ * objects, and the GSG will render geometry by sorting all of the currently
+ * active TextureStages in order and then issuing the appropriate rendering
+ * calls to activate them.
+ */
 class EXPCL_PANDA_GOBJ TextureStage : public TypedWritableReferenceCount {
 PUBLISHED:
-  explicit TextureStage(const string &name);
-  INLINE TextureStage(TextureStage &copy);
+  explicit TextureStage(const std::string &name);
+  INLINE TextureStage(const TextureStage &copy);
   void operator = (const TextureStage &copy);
 
   virtual ~TextureStage();
@@ -77,8 +74,7 @@ PUBLISHED:
     CM_interpolate,
     CM_subtract,
 
-    // The following are valid only for combine_rgb, not
-    // combine_alpha.
+    // The following are valid only for combine_rgb, not combine_alpha.
     CM_dot3_rgb,
     CM_dot3_rgba,
   };
@@ -101,8 +97,8 @@ PUBLISHED:
     CO_one_minus_src_alpha,
   };
 
-  INLINE void set_name(const string &name);
-  INLINE const string &get_name() const;
+  INLINE void set_name(const std::string &name);
+  INLINE const std::string &get_name() const;
 
   INLINE void set_sort(int sort);
   INLINE int get_sort() const;
@@ -111,7 +107,7 @@ PUBLISHED:
   INLINE int get_priority() const;
 
   INLINE void set_texcoord_name(InternalName *name);
-  INLINE void set_texcoord_name(const string &texcoord_name);
+  INLINE void set_texcoord_name(const std::string &texcoord_name);
   INLINE InternalName *get_texcoord_name() const;
   INLINE InternalName *get_tangent_name() const;
   INLINE InternalName *get_binormal_name() const;
@@ -136,12 +132,12 @@ PUBLISHED:
   INLINE void set_tex_view_offset(int tex_view_offset);
   INLINE int get_tex_view_offset() const;
 
-  INLINE void set_combine_rgb(CombineMode mode, 
+  INLINE void set_combine_rgb(CombineMode mode,
                               CombineSource source0, CombineOperand operand0);
-  INLINE void set_combine_rgb(CombineMode mode, 
+  INLINE void set_combine_rgb(CombineMode mode,
                               CombineSource source0, CombineOperand operand0,
                               CombineSource source1, CombineOperand operand1);
-  INLINE void set_combine_rgb(CombineMode mode, 
+  INLINE void set_combine_rgb(CombineMode mode,
                               CombineSource source0, CombineOperand operand0,
                               CombineSource source1, CombineOperand operand1,
                               CombineSource source2, CombineOperand operand2);
@@ -154,12 +150,12 @@ PUBLISHED:
   INLINE CombineSource get_combine_rgb_source2() const;
   INLINE CombineOperand get_combine_rgb_operand2() const;
 
-  INLINE void set_combine_alpha(CombineMode mode, 
+  INLINE void set_combine_alpha(CombineMode mode,
                                 CombineSource source0, CombineOperand operand0);
-  INLINE void set_combine_alpha(CombineMode mode, 
+  INLINE void set_combine_alpha(CombineMode mode,
                                 CombineSource source0, CombineOperand operand0,
                                 CombineSource source1, CombineOperand operand1);
-  INLINE void set_combine_alpha(CombineMode mode, 
+  INLINE void set_combine_alpha(CombineMode mode,
                                 CombineSource source0, CombineOperand operand0,
                                 CombineSource source1, CombineOperand operand1,
                                 CombineSource source2, CombineOperand operand2);
@@ -183,13 +179,35 @@ PUBLISHED:
 
   int compare_to(const TextureStage &other) const;
 
-  void write(ostream &out) const;
-  void output(ostream &out) const;
+  void write(std::ostream &out) const;
+  void output(std::ostream &out) const;
 
   INLINE static TextureStage *get_default();
 
+PUBLISHED:
+  MAKE_PROPERTY(name, get_name, set_name);
+  MAKE_PROPERTY(sort, get_sort, set_sort);
+  MAKE_PROPERTY(priority, get_priority, set_priority);
+
+  MAKE_PROPERTY(texcoord_name, get_texcoord_name, set_texcoord_name);
+  MAKE_PROPERTY(tangent_name, get_tangent_name);
+  MAKE_PROPERTY(binormal_name, get_binormal_name);
+
+  MAKE_PROPERTY(mode, get_mode, set_mode);
+
+  MAKE_PROPERTY(color, get_color, set_color);
+  MAKE_PROPERTY(rgb_scale, get_rgb_scale, set_rgb_scale);
+  MAKE_PROPERTY(alpha_scale, get_alpha_scale, set_alpha_scale);
+  MAKE_PROPERTY(saved_result, get_saved_result, set_saved_result);
+
+  MAKE_PROPERTY(tex_view_offset, get_tex_view_offset, set_tex_view_offset);
+
+  MAKE_PROPERTY(default, get_default);
+
 public:
   INLINE static UpdateSeq get_sort_seq();
+
+  INLINE void mark_used_by_auto_shader() const;
 
 private:
   INLINE void update_color_flags();
@@ -198,7 +216,7 @@ private:
   static bool operand_valid_for_rgb(CombineOperand co);
   static bool operand_valid_for_alpha(CombineOperand co);
 
-  string _name;
+  std::string _name;
   int _sort;
   int _priority;
   PT(InternalName) _texcoord_name;
@@ -234,6 +252,8 @@ private:
   static PT(TextureStage) _default_stage;
   static UpdateSeq _sort_seq;
 
+  mutable bool _used_by_auto_shader;
+
 public:
   // Datagram stuff
   static void register_with_read_factory();
@@ -263,12 +283,12 @@ private:
   static TypeHandle _type_handle;
 };
 
-INLINE ostream &operator << (ostream &out, const TextureStage &ts);
+INLINE std::ostream &operator << (std::ostream &out, const TextureStage &ts);
 
-EXPCL_PANDA_GOBJ ostream &operator << (ostream &out, TextureStage::Mode mode);
-EXPCL_PANDA_GOBJ ostream &operator << (ostream &out, TextureStage::CombineMode cm);
-EXPCL_PANDA_GOBJ ostream &operator << (ostream &out, TextureStage::CombineSource cs);
-EXPCL_PANDA_GOBJ ostream &operator << (ostream &out, TextureStage::CombineOperand co);
+EXPCL_PANDA_GOBJ std::ostream &operator << (std::ostream &out, TextureStage::Mode mode);
+EXPCL_PANDA_GOBJ std::ostream &operator << (std::ostream &out, TextureStage::CombineMode cm);
+EXPCL_PANDA_GOBJ std::ostream &operator << (std::ostream &out, TextureStage::CombineSource cs);
+EXPCL_PANDA_GOBJ std::ostream &operator << (std::ostream &out, TextureStage::CombineOperand co);
 
 
 #include "textureStage.I"

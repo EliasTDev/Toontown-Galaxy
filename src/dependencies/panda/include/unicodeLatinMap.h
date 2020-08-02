@@ -1,16 +1,15 @@
-// Filename: unicodeLatinMap.h
-// Created by:  drose (01Feb03)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file unicodeLatinMap.h
+ * @author drose
+ * @date 2003-02-01
+ */
 
 #ifndef UNICODELATINMAP_H
 #define UNICODELATINMAP_H
@@ -18,19 +17,15 @@
 #include "dtoolbase.h"
 #include "pmap.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : UnicodeLatinMap
-// Description : This class mainly serves as a container for a largish
-//               table of the subset of the Unicode character set that
-//               corresponds to the Latin alphabet, with its various
-//               accent marks and so on.  Specifically, this table
-//               indicates how to map between the Unicode accented
-//               character and the corresponding ASCII equivalent
-//               without the accent mark; as well as how to switch
-//               case from upper to lower while retaining the Unicode
-//               accent marks.
-////////////////////////////////////////////////////////////////////
-class EXPCL_DTOOL UnicodeLatinMap {
+/**
+ * This class mainly serves as a container for a largish table of the subset
+ * of the Unicode character set that corresponds to the Latin alphabet, with
+ * its various accent marks and so on.  Specifically, this table indicates how
+ * to map between the Unicode accented character and the corresponding ASCII
+ * equivalent without the accent mark; as well as how to switch case from
+ * upper to lower while retaining the Unicode accent marks.
+ */
+class EXPCL_DTOOL_DTOOLUTIL UnicodeLatinMap {
 public:
   enum AccentType {
     AT_none,
@@ -108,7 +103,7 @@ public:
     AF_smallcap   = 0x0008,
     AF_dotless    = 0x0010,
   };
-  
+
   enum CharType {
     CT_upper,
     CT_lower,
@@ -117,23 +112,25 @@ public:
 
   class Entry {
   public:
-    wchar_t _character;
+    char32_t _character;
     CharType _char_type;
     char _ascii_equiv;
     char _ascii_additional;
-    wchar_t _tolower_character;
-    wchar_t _toupper_character;
+    char32_t _tolower_character;
+    char32_t _toupper_character;
     AccentType _accent_type;
     int _additional_flags;
   };
 
-  static const Entry *look_up(wchar_t character);
+  static const Entry *look_up(char32_t character);
+
+  static wchar_t get_combining_accent(AccentType accent);
 
 private:
   static void init();
   static bool _initialized;
 
-  typedef phash_map<wchar_t, const Entry *, integer_hash<wchar_t> > ByCharacter;
+  typedef phash_map<char32_t, const Entry *, integer_hash<char32_t> > ByCharacter;
   static ByCharacter *_by_character;
   enum { max_direct_chars = 256 };
   static const Entry *_direct_chars[max_direct_chars];

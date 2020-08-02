@@ -5,15 +5,14 @@ __all__ = ['DirectSessionPanel']
 # Import Tkinter, Pmw, and the dial code
 from direct.showbase.TkGlobal import *
 from direct.tkwidgets.AppShell import *
-from Tkinter import *
 from panda3d.core import *
-import Pmw, string
+import Pmw
 from direct.tkwidgets import Dial
 from direct.tkwidgets import Floater
 from direct.tkwidgets import Slider
 from direct.tkwidgets import VectorWidgets
 from direct.tkwidgets import SceneGraphExplorer
-from TaskManagerPanel import TaskManagerWidget
+from .TaskManagerPanel import TaskManagerWidget
 from direct.tkwidgets import MemoryExplorer
 
 """
@@ -178,8 +177,8 @@ class DirectSessionPanel(AppShell):
             sgeFrame, nodePath = render,
             scrolledCanvas_hull_width = 250,
             scrolledCanvas_hull_height = 300)
-        self.SGE.pack(fill = BOTH, expand = 0)
-        sgeFrame.pack(side = LEFT, fill = 'both', expand = 0)
+        self.SGE.pack(fill = BOTH, expand = 1)
+        sgeFrame.pack(side = LEFT, fill = 'both', expand = 1)
 
         # Create the notebook pages
         notebook = Pmw.NoteBook(notebookFrame)
@@ -195,10 +194,10 @@ class DirectSessionPanel(AppShell):
 
         framePane.pack(expand = 1, fill = BOTH)
         mainFrame.pack(fill = 'both', expand = 1)
-        
+
         # Put this here so it isn't called right away
         notebook['raisecommand'] = self.updateInfo
-       
+
     def createEnvPage(self, envPage):
         bkgrdFrame = Frame(envPage, borderwidth = 2, relief = 'sunken')
 
@@ -607,7 +606,7 @@ class DirectSessionPanel(AppShell):
             scrolledCanvas_hull_width = 250,
             scrolledCanvas_hull_height = 250)
         self.MemExp.pack(fill = BOTH, expand = 1)
-            
+
     def toggleDirect(self):
         if self.directEnabled.get():
             base.direct.enable()
@@ -744,8 +743,8 @@ class DirectSessionPanel(AppShell):
                                 color[2]/255.0)
 
     def selectDisplayRegionNamed(self, name):
-        if (string.find(name, 'Display Region ') >= 0):
-            drIndex = string.atoi(name[-1:])
+        if name.find('Display Region ') >= 0:
+            drIndex = int(name[-1:])
             self.activeDisplayRegion = base.direct.drList[drIndex]
         else:
             self.activeDisplayRegion = None

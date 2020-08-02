@@ -1,16 +1,15 @@
-// Filename: eggMorphList.h
-// Created by:  drose (29Jan99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggMorphList.h
+ * @author drose
+ * @date 1999-01-29
+ */
 
 #ifndef EGGMORPHLIST_H
 #define EGGMORPHLIST_H
@@ -23,19 +22,18 @@
 
 #include "epvector.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggMorphList
-// Description : A collection of <Dxyz>'s or <Duv>'s or some such.
-////////////////////////////////////////////////////////////////////
+/**
+ * A collection of <Dxyz>'s or <Duv>'s or some such.
+ */
 template<class MorphType>
 class EggMorphList {
 private:
   typedef epvector<MorphType> Morphs;
 
 public:
-  typedef TYPENAME Morphs::iterator iterator;
-  typedef TYPENAME Morphs::const_iterator const_iterator;
-  typedef TYPENAME Morphs::size_type size_type;
+  typedef typename Morphs::iterator iterator;
+  typedef typename Morphs::const_iterator const_iterator;
+  typedef typename Morphs::size_type size_type;
 
   INLINE EggMorphList();
   INLINE EggMorphList(const EggMorphList<MorphType> &copy);
@@ -55,11 +53,11 @@ public:
   INLINE size_type size() const;
   INLINE bool empty() const;
 
-  pair<iterator, bool> insert(const MorphType &value);
+  std::pair<iterator, bool> insert(const MorphType &value);
   INLINE void clear();
 
-  void write(ostream &out, int indent_level,
-             const string &tag, int num_dimensions) const;
+  void write(std::ostream &out, int indent_level,
+             const std::string &tag, int num_dimensions) const;
 
 private:
   Morphs _morphs;

@@ -1,16 +1,15 @@
-// Filename: pfmVizzer.h
-// Created by:  drose (30Sep12)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file pfmVizzer.h
+ * @author drose
+ * @date 2012-09-30
+ */
 
 #ifndef PFMVIZZER_H
 #define PFMVIZZER_H
@@ -25,18 +24,17 @@ class GeomNode;
 class Lens;
 class GeomVertexWriter;
 
-////////////////////////////////////////////////////////////////////
-//       Class : PfmVizzer
-// Description : This class aids in the visualization and manipulation
-//               of PfmFile objects.
-////////////////////////////////////////////////////////////////////
+/**
+ * This class aids in the visualization and manipulation of PfmFile objects.
+ */
 class EXPCL_PANDA_GRUTIL PfmVizzer {
 PUBLISHED:
-  PfmVizzer(PfmFile &pfm);
+  explicit PfmVizzer(PfmFile &pfm);
+  INLINE ~PfmVizzer();
   INLINE PfmFile &get_pfm();
   INLINE const PfmFile &get_pfm() const;
 
-  BLOCKING void project(const Lens *lens, const PfmFile *undist_lut = NULL);
+  BLOCKING void project(const Lens *lens, const PfmFile *undist_lut = nullptr);
   BLOCKING void extrude(const Lens *lens);
 
   INLINE void set_vis_inverse(bool vis_inverse);
@@ -71,9 +69,9 @@ PUBLISHED:
   };
   void clear_vis_columns();
   void add_vis_column(ColumnType source, ColumnType target,
-                      InternalName *name, 
-                      const TransformState *transform = NULL, const Lens *lens = NULL,
-                      const PfmFile *undist_lut = NULL);
+                      InternalName *name,
+                      const TransformState *transform = nullptr, const Lens *lens = nullptr,
+                      const PfmFile *undist_lut = nullptr);
 
   BLOCKING NodePath generate_vis_points() const;
 
@@ -91,10 +89,10 @@ PUBLISHED:
 
 private:
   bool uses_aux_pfm() const;
-  void r_fill_displacement(PNMImage &result, int xi, int yi, 
+  void r_fill_displacement(PNMImage &result, int xi, int yi,
                            double nxi, double nyi, double u_scale, double v_scale,
                            int distance) const;
-  void r_fill_displacement(PfmFile &result, int xi, int yi, 
+  void r_fill_displacement(PfmFile &result, int xi, int yi,
                            double nxi, double nyi, double u_scale, double v_scale,
                            int distance) const;
 
@@ -119,11 +117,11 @@ private:
   };
   typedef pvector<VisColumn> VisColumns;
 
-  static void add_vis_column(VisColumns &vis_columns, 
+  static void add_vis_column(VisColumns &vis_columns,
                              ColumnType source, ColumnType target,
-                             InternalName *name, 
-                             const TransformState *transform = NULL,
-                             const Lens *lens = NULL, const PfmFile *undist_lut = NULL);
+                             InternalName *name,
+                             const TransformState *transform = nullptr,
+                             const Lens *lens = nullptr, const PfmFile *undist_lut = nullptr);
   void build_auto_vis_columns(VisColumns &vis_columns, bool for_points) const;
   CPT(GeomVertexFormat) make_array_format(const VisColumns &vis_columns) const;
 
@@ -145,4 +143,3 @@ private:
 #include "pfmVizzer.I"
 
 #endif
-

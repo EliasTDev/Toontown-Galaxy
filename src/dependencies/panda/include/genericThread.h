@@ -1,16 +1,15 @@
-// Filename: genericThread.h
-// Created by:  drose (09Nov11)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file genericThread.h
+ * @author drose
+ * @date 2011-11-09
+ */
 
 #ifndef GENERICTHREAD_H
 #define GENERICTHREAD_H
@@ -18,17 +17,16 @@
 #include "pandabase.h"
 #include "thread.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : GenericThread
-// Description : A generic thread type that allows calling a C-style thread
-//               function without having to subclass.
-////////////////////////////////////////////////////////////////////
+/**
+ * A generic thread type that allows calling a C-style thread function without
+ * having to subclass.
+ */
 class EXPCL_PANDA_PIPELINE GenericThread : public Thread {
 public:
   typedef void ThreadFunc(void *user_data);
 
-  GenericThread(const string &name, const string &sync_name);
-  GenericThread(const string &name, const string &sync_name, ThreadFunc *function, void *user_data);
+  GenericThread(const std::string &name, const std::string &sync_name);
+  GenericThread(const std::string &name, const std::string &sync_name, ThreadFunc *function, void *user_data);
 
   INLINE void set_function(ThreadFunc *function);
   INLINE ThreadFunc *get_function() const;
@@ -64,4 +62,3 @@ private:
 #include "genericThread.I"
 
 #endif
-

@@ -5,7 +5,7 @@ from direct.showbase import PythonUtil
 from direct.task import Task
 from panda3d.core import *
 
-from Avatar import Avatar
+from .Avatar import Avatar
 from otp.ai.MagicWordGlobal import *
 from otp.otpbase import OTPGlobals
 from toontown.battle.BattleProps import globalPropPool
@@ -255,7 +255,7 @@ class DistributedAvatar(DistributedActor, Avatar):
     def getDialogueArray(self):
         return None
 
-@magicWord(category=CATEGORY_LEADER)
+@magicWord(category=CATEGORY_DEVELOPER)
 def warp():
     """
     warp the target to the invoker's current position, and rotation.
@@ -266,7 +266,7 @@ def warp():
         return "You can't warp yourself!"
     target.setPosHpr(invoker.getPos(), invoker.getHpr())
 
-@magicWord(category=CATEGORY_LEADER, types=[str])
+@magicWord(category=CATEGORY_DEVELOPER, types=[str])
 def loop(anim):
     """
     animate the target using animation [anim] on the entire actor.
@@ -274,7 +274,7 @@ def loop(anim):
     target = spellbook.getTarget()
     target.loop(anim)
 
-@magicWord(category=CATEGORY_LEADER, types=[str, int, str])
+@magicWord(category=CATEGORY_DEVELOPER, types=[str, int, str])
 def pose(anim, frame, part=None):
     """
     freeze the target on frame [frame] of animation [anim] on the entire actor,
@@ -283,7 +283,7 @@ def pose(anim, frame, part=None):
     target = spellbook.getTarget()
     target.pose(anim, frame, partName=part)
 
-@magicWord(category=CATEGORY_LEADER, types=[str, int, int, str])
+@magicWord(category=CATEGORY_DEVELOPER, types=[str, int, int, str])
 def pingpong(anim, start=None, end=None, part=None):
     """
     animate the target by bouncing back and forth between the start and end, or
@@ -293,7 +293,7 @@ def pingpong(anim, start=None, end=None, part=None):
     target = spellbook.getTarget()
     target.pingpong(anim, partName=part, fromFrame=start, toFrame=end)
 
-@magicWord(category=CATEGORY_LEADER, types=[str])
+@magicWord(category=CATEGORY_DEVELOPER, types=[str])
 def rightHand(prop=None):
     """
     parents the optional <prop> to the target's right hand node.
@@ -309,7 +309,7 @@ def rightHand(prop=None):
         requestedProp = globalPropPool.getProp(prop)
         requestedProp.reparentTo(rightHand)
 
-@magicWord(category=CATEGORY_LEADER, types=[str])
+@magicWord(category=CATEGORY_DEVELOPER, types=[str])
 def leftHand(prop=None):
     """
     parents the optional <prop> to the target's left hand node.
@@ -332,7 +332,7 @@ def getPos():
     """
     return spellbook.getTarget().getPos()
 
-@magicWord(category=CATEGORY_LEADER, types=[int])
+@magicWord(category=CATEGORY_DEVELOPER, types=[int])
 def setFov(fov=OTPGlobals.DefaultCameraFov):
     """
     Set your field of view in-game.

@@ -1,67 +1,48 @@
-// Filename: bulletConeShape.I
-// Created by:  enn0x (24Jan10)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file bulletConeShape.I
+ * @author enn0x
+ * @date 2010-01-24
+ */
 
-////////////////////////////////////////////////////////////////////
-//     Function: BulletConeShape::Destructor
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ * Only used by make_from_bam.
+ */
+INLINE BulletConeShape::
+BulletConeShape() :
+  _shape(nullptr),
+  _radius(0),
+  _height(0),
+  _up(X_up) {
+}
+
+/**
+ *
+ */
 INLINE BulletConeShape::
 ~BulletConeShape() {
 
   delete _shape;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: BulletConeShape::Copy Constructor
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
-INLINE BulletConeShape::
-BulletConeShape(const BulletConeShape &copy) :
-  _shape(copy._shape) {
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: BulletConeShape::Copy Assignment Operator
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
-INLINE void BulletConeShape::
-operator = (const BulletConeShape &copy) {
-  _shape = copy._shape;
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: BulletConeShape::get_radius
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the radius that was passed into the constructor.
+ */
 INLINE PN_stdfloat BulletConeShape::
 get_radius() const {
-
-  return (PN_stdfloat)_shape->getRadius();
+  return _radius;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: BulletConeShape::get_height
-//       Access: Published
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns the height that was passed into the constructor.
+ */
 INLINE PN_stdfloat BulletConeShape::
 get_height() const {
-
-  return (PN_stdfloat)_shape->getHeight();
+  return _height;
 }
-

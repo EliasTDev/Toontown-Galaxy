@@ -1,16 +1,15 @@
-// Filename: frameBufferProperties.h
-// Created by:  drose (27Jan03)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file frameBufferProperties.h
+ * @author drose
+ * @date 2003-01-27
+ */
 
 #ifndef FRAMEBUFFERPROPERTIES_H
 #define FRAMEBUFFERPROPERTIES_H
@@ -20,12 +19,10 @@
 
 class Texture;
 
-////////////////////////////////////////////////////////////////////
-//       Class : FrameBufferProperties
-// Description : A container for the various kinds of properties we
-//               might ask to have on a graphics frameBuffer before we
-//               create a GSG.
-////////////////////////////////////////////////////////////////////
+/**
+ * A container for the various kinds of properties we might ask to have on a
+ * graphics frameBuffer before we create a GSG.
+ */
 class EXPCL_PANDA_DISPLAY FrameBufferProperties {
 
 private:
@@ -66,11 +63,11 @@ private:
     FBF_all            = 0x100-1,
   };
 
-  int _property[FBP_COUNT];
-  int _specified;
+  int _property[FBP_COUNT] = {0};
+  int _specified = 0;
 
-  int _flags;
-  int _flags_specified;
+  int _flags = 0;
+  int _flags_specified = 0;
 
 PUBLISHED:
 
@@ -123,12 +120,33 @@ PUBLISHED:
   INLINE void set_float_color(bool n);
   INLINE void set_float_depth(bool n);
 
+  MAKE_PROPERTY(depth_bits, get_depth_bits, set_depth_bits);
+  MAKE_PROPERTY(color_bits, get_color_bits, set_color_bits);
+  MAKE_PROPERTY(red_bits, get_red_bits, set_red_bits);
+  MAKE_PROPERTY(green_bits, get_green_bits, set_green_bits);
+  MAKE_PROPERTY(blue_bits, get_blue_bits, set_blue_bits);
+  MAKE_PROPERTY(alpha_bits, get_alpha_bits, set_alpha_bits);
+  MAKE_PROPERTY(stencil_bits, get_stencil_bits, set_stencil_bits);
+  MAKE_PROPERTY(accum_bits, get_accum_bits, set_accum_bits);
+  MAKE_PROPERTY(aux_rgba, get_aux_rgba, set_aux_rgba);
+  MAKE_PROPERTY(aux_hrgba, get_aux_hrgba, set_aux_hrgba);
+  MAKE_PROPERTY(aux_float, get_aux_float, set_aux_float);
+  MAKE_PROPERTY(multisamples, get_multisamples, set_multisamples);
+  MAKE_PROPERTY(coverage_samples, get_coverage_samples, set_coverage_samples);
+  MAKE_PROPERTY(back_buffers, get_back_buffers, set_back_buffers);
+  MAKE_PROPERTY(indexed_color, get_indexed_color, set_indexed_color);
+  MAKE_PROPERTY(rgb_color, get_rgb_color, set_rgb_color);
+  MAKE_PROPERTY(stereo, get_stereo, set_stereo);
+  MAKE_PROPERTY(force_hardware, get_force_hardware, set_force_hardware);
+  MAKE_PROPERTY(force_software, get_force_software, set_force_software);
+  MAKE_PROPERTY(srgb_color, get_srgb_color, set_srgb_color);
+  MAKE_PROPERTY(float_color, get_float_color, set_float_color);
+  MAKE_PROPERTY(float_depth, get_float_depth, set_float_depth);
+
   // Other.
 
-  FrameBufferProperties();
-  INLINE FrameBufferProperties(const FrameBufferProperties &copy);
-  INLINE ~FrameBufferProperties();
-  void operator = (const FrameBufferProperties &copy);
+  constexpr FrameBufferProperties() = default;
+
   static const FrameBufferProperties &get_default();
   bool operator == (const FrameBufferProperties &other) const;
   INLINE bool operator != (const FrameBufferProperties &other) const;
@@ -137,7 +155,7 @@ PUBLISHED:
   void set_all_specified();
   bool subsumes(const FrameBufferProperties &other) const;
   void add_properties(const FrameBufferProperties &other);
-  void output(ostream &out) const;
+  void output(std::ostream &out) const;
   void set_one_bit_per_channel();
 
   INLINE bool is_stereo() const;
@@ -147,13 +165,13 @@ PUBLISHED:
   bool is_basic() const;
   int get_aux_mask() const;
   int get_buffer_mask() const;
-  bool verify_hardware_software(const FrameBufferProperties &props, const string &renderer) const;
+  bool verify_hardware_software(const FrameBufferProperties &props, const std::string &renderer) const;
 
   bool setup_color_texture(Texture *tex) const;
   bool setup_depth_texture(Texture *tex) const;
 };
 
-INLINE ostream &operator << (ostream &out, const FrameBufferProperties &properties);
+INLINE std::ostream &operator << (std::ostream &out, const FrameBufferProperties &properties);
 
 #include "frameBufferProperties.I"
 

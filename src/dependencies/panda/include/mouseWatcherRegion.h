@@ -1,16 +1,15 @@
-// Filename: mouseWatcherRegion.h
-// Created by:  drose (13Jul00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file mouseWatcherRegion.h
+ * @author drose
+ * @date 2000-07-13
+ */
 
 #ifndef MOUSEWATCHERREGION_H
 #define MOUSEWATCHERREGION_H
@@ -25,16 +24,15 @@
 
 class MouseWatcherParameter;
 
-////////////////////////////////////////////////////////////////////
-//       Class : MouseWatcherRegion
-// Description : This is the class that defines a rectangular region
-//               on the screen for the MouseWatcher.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is the class that defines a rectangular region on the screen for the
+ * MouseWatcher.
+ */
 class EXPCL_PANDA_TFORM MouseWatcherRegion : public TypedWritableReferenceCount, public Namable {
 PUBLISHED:
-  INLINE MouseWatcherRegion(const string &name, PN_stdfloat left, PN_stdfloat right,
-                            PN_stdfloat bottom, PN_stdfloat top);
-  INLINE MouseWatcherRegion(const string &name, const LVecBase4 &frame);
+  INLINE explicit MouseWatcherRegion(const std::string &name, PN_stdfloat left, PN_stdfloat right,
+                                     PN_stdfloat bottom, PN_stdfloat top);
+  INLINE explicit MouseWatcherRegion(const std::string &name, const LVecBase4 &frame);
 
   INLINE void set_frame(PN_stdfloat left, PN_stdfloat right, PN_stdfloat bottom, PN_stdfloat top);
   INLINE void set_frame(const LVecBase4 &frame);
@@ -60,8 +58,17 @@ PUBLISHED:
   INLINE void set_suppress_flags(int suppress_flags);
   INLINE int get_suppress_flags() const;
 
-  void output(ostream &out) const;
-  void write(ostream &out, int indent_level = 0) const;
+  void output(std::ostream &out) const;
+  void write(std::ostream &out, int indent_level = 0) const;
+
+PUBLISHED:
+  MAKE_PROPERTY(frame, get_frame, set_frame);
+  MAKE_PROPERTY(area, get_area);
+
+  MAKE_PROPERTY(sort, get_sort, set_sort);
+  MAKE_PROPERTY(active, get_active, set_active);
+  MAKE_PROPERTY(keyboard, get_keyboard, set_keyboard);
+  MAKE_PROPERTY(suppress_flags, get_suppress_flags, set_suppress_flags);
 
 public:
   INLINE bool operator < (const MouseWatcherRegion &other) const;
@@ -82,8 +89,8 @@ private:
   int _sort;
 
   enum Flags {
-    // F_suppress_flags is the union of all of the SuppressFlags,
-    // above.  Presently, we reserve 8 bits for suppress flags.
+    // F_suppress_flags is the union of all of the SuppressFlags, above.
+    // Presently, we reserve 8 bits for suppress flags.
     F_suppress_flags = 0x0ff,
     F_active         = 0x100,
     F_keyboard       = 0x200,
@@ -110,7 +117,7 @@ private:
   static TypeHandle _type_handle;
 };
 
-INLINE ostream &operator << (ostream &out, const MouseWatcherRegion &region) {
+INLINE std::ostream &operator << (std::ostream &out, const MouseWatcherRegion &region) {
   region.output(out);
   return out;
 }

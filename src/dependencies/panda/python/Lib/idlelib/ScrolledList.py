@@ -1,4 +1,8 @@
-from Tkinter import *
+from tkinter import *
+from tkinter.ttk import Frame, Scrollbar
+
+from idlelib import macosx
+
 
 class ScrolledList:
 
@@ -22,7 +26,11 @@ class ScrolledList:
         # Bind events to the list box
         listbox.bind("<ButtonRelease-1>", self.click_event)
         listbox.bind("<Double-ButtonRelease-1>", self.double_click_event)
-        listbox.bind("<ButtonPress-3>", self.popup_event)
+        if macosx.isAquaTk():
+            listbox.bind("<ButtonPress-2>", self.popup_event)
+            listbox.bind("<Control-Button-1>", self.popup_event)
+        else:
+            listbox.bind("<ButtonPress-3>", self.popup_event)
         listbox.bind("<Key-Up>", self.up_event)
         listbox.bind("<Key-Down>", self.down_event)
         # Mark as empty
@@ -68,6 +76,7 @@ class ScrolledList:
         index = self.listbox.index("active")
         self.select(index)
         menu.tk_popup(event.x_root, event.y_root)
+        return "break"
 
     def make_menu(self):
         menu = Menu(self.listbox, tearoff=0)
@@ -119,21 +128,22 @@ class ScrolledList:
         pass
 
 
-def test():
-    root = Tk()
-    root.protocol("WM_DELETE_WINDOW", root.destroy)
+def _scrolled_list(parent):  # htest #
+    top = Toplevel(parent)
+    x, y = map(int, parent.geometry().split('+')[1:])
+    top.geometry("+%d+%d" % (x+200, y + 175))
     class MyScrolledList(ScrolledList):
-        def fill_menu(self): self.menu.add_command(label="pass")
-        def on_select(self, index): print "select", self.get(index)
-        def on_double(self, index): print "double", self.get(index)
-    s = MyScrolledList(root)
-    for i in range(30):
-        s.append("item %02d" % i)
-    return root
+        def fill_menu(self): self.menu.add_command(label="right click")
+        def on_select(self, index): print("select", self.get(index))
+        def on_double(self, index): print("double", self.get(index))
 
-def main():
-    root = test()
-    root.mainloop()
+    scrolled_list = MyScrolledList(top)
+    for i in range(30):
+        scrolled_list.append("Item %02d" % i)
 
 if __name__ == '__main__':
-    main()
+    from unittest import main
+    main('idlelib.idle_test.test_scrolledlist', verbosity=2,)
+
+    from idlelib.idle_test.htest import run
+    run(_scrolled_list)

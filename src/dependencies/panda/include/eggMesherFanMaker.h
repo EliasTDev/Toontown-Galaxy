@@ -1,16 +1,15 @@
-// Filename: eggMesherFanMaker.h
-// Created by:  drose (22Mar05)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggMesherFanMaker.h
+ * @author drose
+ * @date 2005-03-22
+ */
 
 #ifndef EGGMESHERFANMAKER_H
 #define EGGMESHERFANMAKER_H
@@ -28,18 +27,16 @@
 
 class EggMesher;
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggMesherFanMaker
-// Description : This class is used by EggMesher::find_fans() to
-//               attempt to make an EggTriangleFan out of the polygons
-//               connected to the indicated vertex.
-////////////////////////////////////////////////////////////////////
-class EggMesherFanMaker {
+/**
+ * This class is used by EggMesher::find_fans() to attempt to make an
+ * EggTriangleFan out of the polygons connected to the indicated vertex.
+ */
+class EXPCL_PANDA_EGG EggMesherFanMaker {
 public:
   typedef plist<const EggMesherEdge *> Edges;
   typedef plist<EggMesherStrip *> Strips;
 
-  EggMesherFanMaker(int vertex, EggMesherStrip *tri, 
+  EggMesherFanMaker(int vertex, EggMesherStrip *tri,
                     EggMesher *mesher);
   EggMesherFanMaker(const EggMesherFanMaker &copy);
   void operator = (const EggMesherFanMaker &copy);
@@ -60,7 +57,7 @@ public:
              Edges::iterator edge_begin, Edges::iterator edge_end,
              EggGroupNode *unrolled_tris);
 
-  void output(ostream &out) const;
+  void output(std::ostream &out) const;
 
   int _vertex;
   Edges _edges;
@@ -69,7 +66,7 @@ public:
   EggMesher *_mesher;
 };
 
-INLINE ostream &operator << (ostream &out, const EggMesherFanMaker &fm);
+INLINE std::ostream &operator << (std::ostream &out, const EggMesherFanMaker &fm);
 
 #include "eggMesherFanMaker.I"
 

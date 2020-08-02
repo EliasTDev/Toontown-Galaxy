@@ -3,7 +3,7 @@ from panda3d.core import *
 from otp.nametag.NametagFloat3d import NametagFloat3d
 from otp.nametag.Nametag import Nametag
 from toontown.toonbase.ToonBaseGlobal import *
-from DistributedMinigame import *
+from .DistributedMinigame import *
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
 from direct.fsm import ClassicFSM, State
@@ -11,12 +11,12 @@ from direct.fsm import State
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import ToontownTimer
 from direct.task.Task import Task
-import Trajectory
+from . import Trajectory
 import math
 from toontown.toon import ToonHead
 from toontown.effects import Splash
 from toontown.effects import DustCloud
-import CannonGameGlobals
+from . import CannonGameGlobals
 from direct.gui.DirectGui import *
 from toontown.toonbase import TTLocalizer
 LAND_TIME = 2
@@ -190,7 +190,7 @@ class DistributedCannonGame(DistributedMinigame):
         del self.downButton
         del self.leftButton
         del self.rightButton
-        for avId in self.toonHeadDict.keys():
+        for avId in list(self.toonHeadDict.keys()):
             head = self.toonHeadDict[avId]
             head.stopBlink()
             head.stopLookAroundNow()
@@ -202,12 +202,12 @@ class DistributedCannonGame(DistributedMinigame):
             head.delete()
 
         del self.toonHeadDict
-        for model in self.toonModelDict.values():
+        for model in list(self.toonModelDict.values()):
             model.removeNode()
 
         del self.toonModelDict
         del self.toonScaleDict
-        for interval in self.toonIntervalDict.values():
+        for interval in list(self.toonIntervalDict.values()):
             interval.finish()
 
         del self.toonIntervalDict
@@ -309,7 +309,7 @@ class DistributedCannonGame(DistributedMinigame):
             self.cannonDict[avId] = [cannon, barrel]
 
         numAvs = self.numPlayers
-        for i in xrange(numAvs):
+        for i in range(numAvs):
             avId = self.avIdList[i]
             self.cannonLocationDict[avId] = Point3(i * CANNON_X_SPACING - (numAvs - 1) * CANNON_X_SPACING / 2, CANNON_Y, CANNON_Z)
             if self.DEBUG_TOWER_RANGE:

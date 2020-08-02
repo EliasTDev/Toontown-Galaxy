@@ -1,16 +1,15 @@
-// Filename: paramNodePath.h
-// Created by:  rdb (25Feb15)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file paramNodePath.h
+ * @author rdb
+ * @date 2015-02-25
+ */
 
 #ifndef PARAMNODEPATH_H
 #define PARAMNODEPATH_H
@@ -19,25 +18,21 @@
 #include "paramValue.h"
 #include "nodePath.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : ParamNodePath
-// Description : A class object for storing a NodePath as a parameter.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDA_GOBJ ParamNodePath : public ParamValueBase {
+/**
+ * A class object for storing a NodePath as a parameter.
+ */
+class EXPCL_PANDA_PGRAPH ParamNodePath : public ParamValueBase {
 protected:
   INLINE ParamNodePath() {};
 
 PUBLISHED:
-  INLINE ParamNodePath(const NodePath &node_path);
-
-#ifdef USE_MOVE_SEMANTICS
-  INLINE ParamNodePath(NodePath &&node_path) NOEXCEPT;
-#endif
+  ParamNodePath(NodePath node_path);
+  virtual ~ParamNodePath();
 
   INLINE virtual TypeHandle get_value_type() const;
-  INLINE const NodePath &get_value() const;
+  INLINE NodePath get_value() const;
 
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
 private:
   NodePath _node_path;

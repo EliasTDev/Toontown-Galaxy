@@ -1,16 +1,15 @@
-// Filename: dcMolecularField.h
-// Created by:  drose (05Oct00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file dcMolecularField.h
+ * @author drose
+ * @date 2000-10-05
+ */
 
 #ifndef DCMOLECULARFIELD_H
 #define DCMOLECULARFIELD_H
@@ -21,16 +20,14 @@
 class DCAtomicField;
 class DCParameter;
 
-////////////////////////////////////////////////////////////////////
-//       Class : DCMolecularField
-// Description : A single molecular field of a Distributed Class, as
-//               read from a .dc file.  This represents a combination
-//               of two or more related atomic fields, that will often
-//               be treated as a unit.
-////////////////////////////////////////////////////////////////////
-class EXPCL_DIRECT DCMolecularField : public DCField {
+/**
+ * A single molecular field of a Distributed Class, as read from a .dc file.
+ * This represents a combination of two or more related atomic fields, that
+ * will often be treated as a unit.
+ */
+class EXPCL_DIRECT_DCPARSER DCMolecularField : public DCField {
 public:
-  DCMolecularField(const string &name, DCClass *dclass);
+  DCMolecularField(const std::string &name, DCClass *dclass);
 
 PUBLISHED:
   virtual DCMolecularField *as_molecular_field();
@@ -42,8 +39,8 @@ PUBLISHED:
 public:
   void add_atomic(DCAtomicField *atomic);
 
-  virtual void output(ostream &out, bool brief) const;
-  virtual void write(ostream &out, bool brief, int indent_level) const;
+  virtual void output(std::ostream &out, bool brief) const;
+  virtual void write(std::ostream &out, bool brief, int indent_level) const;
   virtual void generate_hash(HashGenerator &hashgen) const;
 
   virtual DCPackerInterface *get_nested_field(int n) const;
@@ -66,5 +63,3 @@ private:
 };
 
 #endif
-
-

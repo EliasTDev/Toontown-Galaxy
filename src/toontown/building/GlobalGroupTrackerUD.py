@@ -1,5 +1,5 @@
 from otp.uberdog.GlobalOtpObjectUD import GlobalOtpObjectUD
-from GroupTrackerGlobals import *
+from .GroupTrackerGlobals import *
 
 
 class GlobalGroupTrackerUD(GlobalOtpObjectUD):
@@ -47,7 +47,7 @@ class GlobalGroupTrackerUD(GlobalOtpObjectUD):
             # We have no info to display. The client should be notified by the timeout task.
             return
             
-        self.sendToAvatar(avId, 'requestGroupsResponse', [self.leader2Group.keys(), self.leader2Group.values()])
+        self.sendToAvatar(avId, 'requestGroupsResponse', [list(self.leader2Group.keys()), list(self.leader2Group.values())])
 
     def doneRequesting(self, avId):
         self.ignore('distObjDelete-%d' % avId)

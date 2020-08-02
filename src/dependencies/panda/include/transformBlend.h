@@ -1,16 +1,15 @@
-// Filename: transformBlend.h
-// Created by:  drose (24Mar05)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file transformBlend.h
+ * @author drose
+ * @date 2005-03-24
+ */
 
 #ifndef TRANSFORMBLEND_H
 #define TRANSFORMBLEND_H
@@ -26,13 +25,10 @@
 #include "cycleDataWriter.h"
 #include "pipelineCycler.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : TransformBlend
-// Description : This defines a single entry in a
-//               TransformBlendTable.  It represents a unique
-//               combination of VertexTransform pointers and blend
-//               amounts.
-////////////////////////////////////////////////////////////////////
+/**
+ * This defines a single entry in a TransformBlendTable.  It represents a
+ * unique combination of VertexTransform pointers and blend amounts.
+ */
 class EXPCL_PANDA_GOBJ TransformBlend {
 PUBLISHED:
   INLINE TransformBlend();
@@ -62,12 +58,18 @@ PUBLISHED:
   bool has_transform(const VertexTransform *transform) const;
   PN_stdfloat get_weight(const VertexTransform *transform) const;
 
-  INLINE int get_num_transforms() const;
-  INLINE const VertexTransform *get_transform(int n) const;
+  INLINE size_t get_num_transforms() const;
+  INLINE const VertexTransform *get_transform(size_t n) const;
   MAKE_SEQ(get_transforms, get_num_transforms, get_transform);
-  INLINE PN_stdfloat get_weight(int n) const;
-  INLINE void set_transform(int n, const VertexTransform *transform);
-  INLINE void set_weight(int n, PN_stdfloat weight);
+  INLINE PN_stdfloat get_weight(size_t n) const;
+  INLINE void remove_transform(size_t n);
+  INLINE void set_transform(size_t n, const VertexTransform *transform);
+  INLINE void set_weight(size_t n, PN_stdfloat weight);
+
+  MAKE_SEQ_PROPERTY(transforms, get_num_transforms, get_transform,
+                    set_transform, remove_transform);
+  MAKE_MAP_PROPERTY(weights, has_transform, get_weight);
+  MAKE_MAP_KEYS_SEQ(weights, get_num_transforms, get_transform);
 
   INLINE void update_blend(Thread *current_thread) const;
 
@@ -81,10 +83,11 @@ PUBLISHED:
   INLINE void transform_point(LPoint3d &point, Thread *current_thread) const;
   INLINE void transform_vector(LVector3d &point, Thread *current_thread) const;
 
-  INLINE UpdateSeq get_modified(Thread *current_thread) const;
+  INLINE UpdateSeq get_modified(Thread *current_thread = Thread::get_current_thread()) const;
+  MAKE_PROPERTY(modified, get_modified);
 
-  void output(ostream &out) const;
-  void write(ostream &out, int indent_level) const;
+  void output(std::ostream &out) const;
+  void write(std::ostream &out, int indent_level) const;
 
 private:
   class CData;
@@ -102,8 +105,8 @@ private:
   typedef ov_set<TransformEntry> Entries;
   Entries _entries;
 
-  // This is the data that must be cycled between pipeline stages; it
-  // is just a local cache.
+  // This is the data that must be cycled between pipeline stages; it is just
+  // a local cache.
   class EXPCL_PANDA_GOBJ CData : public CycleData {
   public:
     INLINE CData();
@@ -142,7 +145,7 @@ private:
   static TypeHandle _type_handle;
 };
 
-INLINE ostream &operator << (ostream &out, const TransformBlend &obj);
+INLINE std::ostream &operator << (std::ostream &out, const TransformBlend &obj);
 
 #include "transformBlend.I"
 

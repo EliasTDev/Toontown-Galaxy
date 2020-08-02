@@ -2,17 +2,18 @@ from otp.ai.AIBaseGlobal import *
 from panda3d.core import *
 from direct.distributed.ClockDelta import *
 from otp.avatar import DistributedAvatarAI
-import SuitTimings
+from . import SuitTimings
 from direct.task import Task
-import SuitPlannerBase
-import SuitBase
-import SuitDialog
-import SuitDNA
-from toontown.dna.SuitLegList import *
+from . import SuitPlannerBase
+from . import SuitBase
+from . import SuitDialog
+from . import SuitDNA
+from toontown.dna.DNAParser import *
+from libpandadna import *
 from direct.directnotify import DirectNotifyGlobal
 from toontown.battle import SuitBattleGlobals
 from toontown.building import FADoorCodes
-import DistributedSuitBaseAI
+from . import DistributedSuitBaseAI
 from toontown.hood import ZoneUtil
 from toontown.toon import NPCToons
 import random
@@ -208,7 +209,7 @@ class DistributedSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
         self.makeLegList()
         if self.notify.getDebug():
             self.notify.debug('Leg list:')
-            print self.legList
+            print(self.legList)
         idx1 = self.startPoint.getIndex()
         idx2 = self.endPoint.getIndex()
         self.pathStartTime = globalClock.getFrameTime()
@@ -278,15 +279,15 @@ class DistributedSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
 
     def __beginLegType(self, legType):
         self.legType = legType
-        if legType == SuitLeg.TWalkFromStreet:
+        if legType == SuitLeg.T_walk_from_street:
             self.checkBuildingState()
-        elif legType == SuitLeg.TToToonBuilding:
+        elif legType == SuitLeg.T_to_toon_building:
             self.openToonDoor()
-        elif legType == SuitLeg.TToSuitBuilding:
+        elif legType == SuitLeg.T_to_suit_building:
             self.openSuitDoor()
-        elif legType == SuitLeg.TToCogHQ:
+        elif legType == SuitLeg.T_to_coghq:
             self.openCogHQDoor(1)
-        elif legType == SuitLeg.TFromCogHQ:
+        elif legType == SuitLeg.T_from_coghq:
             self.openCogHQDoor(0)
 
     def resume(self):

@@ -1,9 +1,11 @@
+#pragma once
 
 class bt32BitAxisSweep3;
 class btActionInterface;
 class btAxisSweep3;
 class btBoxShape;
 class btBroadphaseInterface;
+class btBroadphaseProxy;
 class btBulletWorldImporter;
 class btBvhTriangleMeshShape;
 class btCapsuleShape;
@@ -63,7 +65,6 @@ class btPoint2PointConstraint;
 class btPolyhedralConvexShape;
 class btQuaternion;
 class btSequentialImpulseConstraintSolver;
-class btScalar;
 class btSliderConstraint;
 class btSoftBodyHelpers;
 class btSoftBodyRigidBodyCollisionConfiguration;
@@ -75,13 +76,16 @@ class btStaticPlaneShape;
 class btStridingMeshInterface;
 class btTransform;
 class btTranslationalLimitMotor;
+class btTriangleIndexVertexArray;
 class btTriangleMesh;
 class btTypedConstraint;
 class btTypedObject;
-class btVector3;
 class btVehicleRaycaster;
 
 template <typename T> class btAlignedObjectArray;
+
+struct btVector3 {};
+typedef double btScalar;
 
 class btWheelInfo {
 public:

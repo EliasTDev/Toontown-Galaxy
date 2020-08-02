@@ -2,11 +2,12 @@
 Notifier module: contains methods for handling information output
 for the programmer/user
 """
-from LoggerGlobal import defaultLogger
+from .LoggerGlobal import defaultLogger
 from direct.showbase import PythonUtil
 from panda3d.core import ConfigVariableBool, NotifyCategory, StreamWriter, Notify
 import time
 import sys
+
 
 class Notifier:
     serverDelta = 0
@@ -23,12 +24,11 @@ class Notifier:
 
     def __init__(self, name, logger=None):
         """
-        name is a string
-        logger is a Logger
-
-        Create a new instance of the Notifier class with a given name
-        and an optional Logger class for piping output to. If no logger
-        specified, use the global default
+        Parameters:
+            name (str): a string name given to this Notifier instance.
+            logger (Logger, optional): an optional Logger object for
+                piping output to.  If none is specified, the global
+                :data:`~.LoggerGlobal.defaultLogger` is used.
         """
         self.__name = name
 
@@ -116,7 +116,7 @@ class Notifier:
             return NSError
 
     # error funcs
-    def error(self, errorString, exception=StandardError):
+    def error(self, errorString, exception=Exception):
         """
         Raise an exception with given string and optional type:
         Exception: error
@@ -235,9 +235,9 @@ class Notifier:
         Prints the string to output followed by a newline.
         """
         if self.streamWriter:
-            self.streamWriter.appendData(string + '\n')
+            self.streamWriter.write(string + '\n')
         else:
-            print >> sys.stderr, string
+            sys.stderr.write(string + '\n')
 
     def debugStateCall(self, obj=None, fsmMemberName='fsm',
             secondaryFsm='secondaryFSM'):

@@ -1,16 +1,15 @@
-// Filename: sparkleParticleRenderer.h
-// Created by:  charles (27Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file sparkleParticleRenderer.h
+ * @author charles
+ * @date 2000-06-27
+ */
 
 #ifndef SPARKLEPARTICLERENDERER_H
 #define SPARKLEPARTICLERENDERER_H
@@ -29,11 +28,10 @@ enum SparkleParticleLifeScale {
   SP_SCALE
 };
 
-////////////////////////////////////////////////////////////////////
-//       Class : SparkleParticleRenderer
-// Description : pretty sparkly things.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAPHYSICS SparkleParticleRenderer : public BaseParticleRenderer {
+/**
+ * pretty sparkly things.
+ */
+class EXPCL_PANDA_PARTICLESYSTEM SparkleParticleRenderer : public BaseParticleRenderer {
 PUBLISHED:
   enum SparkleParticleLifeScale {
     SP_NO_SCALE,
@@ -42,12 +40,12 @@ PUBLISHED:
 
   SparkleParticleRenderer();
   SparkleParticleRenderer(const SparkleParticleRenderer& copy);
-  SparkleParticleRenderer(const LColor& center,
-                          const LColor& edge,
-                          PN_stdfloat birth_radius,
-                          PN_stdfloat death_radius,
-                          SparkleParticleLifeScale life_scale,
-                          ParticleRendererAlphaMode alpha_mode);
+  explicit SparkleParticleRenderer(const LColor& center,
+                                   const LColor& edge,
+                                   PN_stdfloat birth_radius,
+                                   PN_stdfloat death_radius,
+                                   SparkleParticleLifeScale life_scale,
+                                   ParticleRendererAlphaMode alpha_mode);
 
   virtual ~SparkleParticleRenderer();
 
@@ -67,8 +65,8 @@ PUBLISHED:
   INLINE PN_stdfloat get_death_radius() const;
   INLINE SparkleParticleLifeScale get_life_scale() const;
 
-  virtual void output(ostream &out) const;
-  virtual void write(ostream &out, int indent_level = 0) const;
+  virtual void output(std::ostream &out) const;
+  virtual void write(std::ostream &out, int indent_level = 0) const;
 
 private:
   LColor _center_color;

@@ -3,7 +3,7 @@ from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import ToontownGlobals, TTLocalizer
 from direct.task import Task
-import FlowerBase, FlowerPicker
+from . import FlowerBase, FlowerPicker
 
 class FlowerSellGUI(DirectFrame):
     notify = DirectNotifyGlobal.directNotify.newCategory('FlowerGui')

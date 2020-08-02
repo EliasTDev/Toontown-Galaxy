@@ -1,16 +1,15 @@
-// Filename: mouseWatcherParameter.h
-// Created by:  drose (06Jul01)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file mouseWatcherParameter.h
+ * @author drose
+ * @date 2001-07-06
+ */
 
 #ifndef MOUSEWATCHERPARAMETER_H
 #define MOUSEWATCHERPARAMETER_H
@@ -22,12 +21,10 @@
 #include "textEncoder.h"
 #include "luse.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : MouseWatcherParameter
-// Description : This is sent along as a parameter to most events
-//               generated for a region to indicate the mouse and
-//               button state for the event.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is sent along as a parameter to most events generated for a region to
+ * indicate the mouse and button state for the event.
+ */
 class EXPCL_PANDA_TFORM MouseWatcherParameter {
 public:
   INLINE MouseWatcherParameter();
@@ -38,8 +35,8 @@ public:
   INLINE void set_button(const ButtonHandle &button);
   INLINE void set_keyrepeat(bool flag);
   INLINE void set_keycode(int keycode);
-  INLINE void set_candidate(const wstring &candidate_string,
-                            size_t highlight_start, 
+  INLINE void set_candidate(const std::wstring &candidate_string,
+                            size_t highlight_start,
                             size_t higlight_end,
                             size_t cursor_pos);
   INLINE void set_modifier_buttons(const ModifierButtons &mods);
@@ -57,11 +54,11 @@ PUBLISHED:
   INLINE bool has_candidate() const;
 
 public:
-  INLINE const wstring &get_candidate_string() const;
+  INLINE const std::wstring &get_candidate_string() const;
 
 PUBLISHED:
-  INLINE string get_candidate_string_encoded() const;
-  INLINE string get_candidate_string_encoded(TextEncoder::Encoding encoding) const;
+  INLINE std::string get_candidate_string_encoded() const;
+  INLINE std::string get_candidate_string_encoded(TextEncoder::Encoding encoding) const;
   INLINE size_t get_highlight_start() const;
   INLINE size_t get_highlight_end() const;
   INLINE size_t get_cursor_pos() const;
@@ -73,12 +70,12 @@ PUBLISHED:
 
   INLINE bool is_outside() const;
 
-  void output(ostream &out) const;
+  void output(std::ostream &out) const;
 
 public:
   ButtonHandle _button;
-  short _keycode;
-  wstring _candidate_string;
+  int _keycode;
+  std::wstring _candidate_string;
   size_t _highlight_start;
   size_t _highlight_end;
   size_t _cursor_pos;
@@ -96,7 +93,7 @@ public:
   int _flags;
 };
 
-INLINE ostream &operator << (ostream &out, const MouseWatcherParameter &parm);
+INLINE std::ostream &operator << (std::ostream &out, const MouseWatcherParameter &parm);
 
 #include "mouseWatcherParameter.I"
 

@@ -2,7 +2,7 @@ from direct.distributed.AstronInternalRepository import AstronInternalRepository
 from otp.distributed.OtpDoGlobals import *
 from toontown.distributed.ToontownNetMessengerAI import ToontownNetMessengerAI
 from direct.distributed.PyDatagram import PyDatagram
-import traceback, sys, urlparse
+import traceback, sys, urllib.parse
 
 class ToontownInternalRepository(AstronInternalRepository):
     GameGlobalsId = OTP_DO_ID_TOONTOWN
@@ -59,7 +59,7 @@ class ToontownInternalRepository(AstronInternalRepository):
         try:
             return AstronInternalRepository.readerPollOnce(self)
             
-        except SystemExit, KeyboardInterrupt:
+        except SystemExit as KeyboardInterrupt:
             raise
             
         except Exception as e:
@@ -72,7 +72,6 @@ class ToontownInternalRepository(AstronInternalRepository):
                 
             self.writeServerEvent('INTERNAL-EXCEPTION', self.getAvatarIdFromSender(), self.getAccountIdFromSender(), repr(e), traceback.format_exc())
             self.notify.warning('INTERNAL-EXCEPTION: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
-            print traceback.format_exc()
-            sys.exc_clear()
-            
+            print(traceback.format_exc())
+
         return 1

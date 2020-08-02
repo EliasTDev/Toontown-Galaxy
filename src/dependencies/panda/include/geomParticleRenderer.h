@@ -1,16 +1,15 @@
-// Filename: geomParticleRenderer.h
-// Created by:  charles (05Jul00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file geomParticleRenderer.h
+ * @author charles
+ * @date 2000-07-05
+ */
 
 #ifndef GEOMPARTICLERENDERER_H
 #define GEOMPARTICLERENDERER_H
@@ -24,16 +23,16 @@
 #include "pvector.h"
 #include "pStatCollector.h"
 
-class EXPCL_PANDAPHYSICS GeomParticleRenderer : public BaseParticleRenderer {
+class EXPCL_PANDA_PARTICLESYSTEM GeomParticleRenderer : public BaseParticleRenderer {
 PUBLISHED:
-  GeomParticleRenderer(ParticleRendererAlphaMode am = PR_ALPHA_NONE,
-                       PandaNode *geom_node = (PandaNode *) NULL);
+  explicit GeomParticleRenderer(ParticleRendererAlphaMode am = PR_ALPHA_NONE,
+                                PandaNode *geom_node = nullptr);
   GeomParticleRenderer(const GeomParticleRenderer& copy);
   virtual ~GeomParticleRenderer();
 
   INLINE void set_geom_node(PandaNode *node);
   INLINE PandaNode *get_geom_node();
-  INLINE ColorInterpolationManager* get_color_interpolation_manager() const;  
+  INLINE ColorInterpolationManager* get_color_interpolation_manager() const;
 
   INLINE void set_x_scale_flag(bool animate_x_ratio);
   INLINE void set_y_scale_flag(bool animate_y_ratio);
@@ -58,9 +57,9 @@ PUBLISHED:
 public:
   virtual BaseParticleRenderer *make_copy();
 
-  virtual void output(ostream &out) const;
-  virtual void write_linear_forces(ostream &out, int indent=0) const;
-  virtual void write(ostream &out, int indent=0) const;
+  virtual void output(std::ostream &out) const;
+  virtual void write_linear_forces(std::ostream &out, int indent=0) const;
+  virtual void write(std::ostream &out, int indent=0) const;
 
 private:
   PT(PandaNode) _geom_node;
@@ -80,7 +79,7 @@ private:
   bool _animate_y_ratio;
   bool _animate_z_ratio;
 
-  // geomparticlerenderer takes advantage of the birth/death functions
+  // geomparticlerenderer takes advantage of the birthdeath functions
 
   virtual void birth_particle(int index);
   virtual void kill_particle(int index);

@@ -44,7 +44,7 @@ class FilterManager(DirectObject):
             FilterManager.notify = directNotify.newCategory("FilterManager")
 
         # Find the appropriate display region.
-        
+
         region = None
         for dr in win.getDisplayRegions():
             drcam = dr.getCamera()
@@ -54,7 +54,7 @@ class FilterManager(DirectObject):
         if region is None:
             self.notify.error('Could not find appropriate DisplayRegion to filter')
             return False
-        
+
         # Instance Variables.
 
         self.win = win
@@ -102,7 +102,7 @@ class FilterManager(DirectObject):
                 (self.region.getRight()  == 1.0) and
                 (self.region.getBottom() == 0.0) and
                 (self.region.getTop()    == 1.0))
-            
+
     def getScaledSize(self, mul, div, align):
 
         """ Calculate the size of the desired window. Not public. """
@@ -124,7 +124,7 @@ class FilterManager(DirectObject):
 
         return winx,winy
 
-    def renderSceneInto(self, depthtex=None, colortex=None, auxtex=None, auxbits=0, textures=None):
+    def renderSceneInto(self, depthtex=None, colortex=None, auxtex=None, auxbits=0, textures=None, fbprops=None):
 
         """ Causes the scene to be rendered into the supplied textures
         instead of into the original window.  Puts a fullscreen quad
@@ -185,7 +185,10 @@ class FilterManager(DirectObject):
         # Choose the size of the offscreen buffer.
 
         (winx, winy) = self.getScaledSize(1,1,1)
-        buffer = self.createBuffer("filter-base", winx, winy, texgroup)
+        if fbprops is not None:
+            buffer = self.createBuffer("filter-base", winx, winy, texgroup, fbprops=fbprops)
+        else:
+            buffer = self.createBuffer("filter-base", winx, winy, texgroup)
 
         if (buffer == None):
             return None
@@ -213,7 +216,7 @@ class FilterManager(DirectObject):
         lens.setNearFar(-1000, 1000)
         quadcamnode.setLens(lens)
         quadcam = quad.attachNewNode(quadcamnode)
-        
+
         self.region.setCamera(quadcam)
 
         self.setStackedClears(buffer, self.rclears, self.wclears)
@@ -236,7 +239,7 @@ class FilterManager(DirectObject):
 
         return quad
 
-    def renderQuadInto(self, mul=1, div=1, align=1, depthtex=None, colortex=None, auxtex0=None, auxtex1=None):
+    def renderQuadInto(self, name="filter-stage", mul=1, div=1, align=1, depthtex=None, colortex=None, auxtex0=None, auxtex1=None, fbprops=None):
 
         """ Creates an offscreen buffer for an intermediate
         computation. Installs a quad into the buffer.  Returns
@@ -247,10 +250,13 @@ class FilterManager(DirectObject):
         texgroup = (depthtex, colortex, auxtex0, auxtex1)
 
         winx, winy = self.getScaledSize(mul, div, align)
-        
+
         depthbits = bool(depthtex != None)
 
-        buffer = self.createBuffer("filter-stage", winx, winy, texgroup, depthbits)
+        if fbprops is not None:
+            buffer = self.createBuffer(name, winx, winy, texgroup, depthbits, fbprops=fbprops)
+        else:
+            buffer = self.createBuffer(name, winx, winy, texgroup, depthbits)
 
         if (buffer == None):
             return None
@@ -284,10 +290,10 @@ class FilterManager(DirectObject):
 
         self.buffers.append(buffer)
         self.sizes.append((mul, div, align))
-        
+
         return quad
 
-    def createBuffer(self, name, xsize, ysize, texgroup, depthbits=1):
+    def createBuffer(self, name, xsize, ysize, texgroup, depthbits=1, fbprops=None):
         """ Low-level buffer creation.  Not intended for public use. """
 
         winprops = WindowProperties()
@@ -297,6 +303,9 @@ class FilterManager(DirectObject):
         props.setRgbColor(1)
         props.setDepthBits(depthbits)
         props.setStereo(self.win.isStereo())
+        if fbprops is not None:
+            props.addProperties(fbprops)
+
         depthtex, colortex, auxtex0, auxtex1 = texgroup
         if (auxtex0 != None):
             props.setAuxRgba(1)
@@ -349,3 +358,15 @@ class FilterManager(DirectObject):
         self.nextsort = self.win.getSort() - 1000
         self.basex = 0
         self.basey = 0
+
+    #snake_case alias:
+    is_fullscreen = isFullscreen
+    resize_buffers = resizeBuffers
+    set_stacked_clears = setStackedClears
+    render_scene_into = renderSceneInto
+    get_scaled_size = getScaledSize
+    render_quad_into = renderQuadInto
+    get_clears = getClears
+    set_clears = setClears
+    create_buffer = createBuffer
+    window_event = windowEvent

@@ -1,29 +1,27 @@
-// Filename: lquaternion_src.h
-// Created by:  frang (06Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file lquaternion_src.h
+ * @author frang
+ * @date 2000-06-06
+ */
 
-////////////////////////////////////////////////////////////////////
-//       Class : FLOATNAME(LQuaternion)
-// Description : This is the base quaternion class
-////////////////////////////////////////////////////////////////////
+/**
+ * This is the base quaternion class
+ */
 class EXPCL_PANDA_LINMATH FLOATNAME(LQuaternion) : public FLOATNAME(LVecBase4) {
 PUBLISHED:
   INLINE_LINMATH FLOATNAME(LQuaternion)();
   INLINE_LINMATH FLOATNAME(LQuaternion)(const FLOATNAME(LVecBase4) &copy);
-  INLINE_LINMATH FLOATNAME(LQuaternion)(FLOATTYPE, const FLOATNAME(LVecBase3) &copy);
-  INLINE_LINMATH FLOATNAME(LQuaternion)(FLOATTYPE, FLOATTYPE, FLOATTYPE, FLOATTYPE);
+  INLINE_LINMATH FLOATNAME(LQuaternion)(FLOATTYPE r, const FLOATNAME(LVecBase3) &copy);
+  INLINE_LINMATH FLOATNAME(LQuaternion)(FLOATTYPE r, FLOATTYPE i, FLOATTYPE j, FLOATTYPE k);
 
-  static FLOATNAME(LQuaternion) pure_imaginary(const FLOATNAME(LVector3) &);
+  static FLOATNAME(LQuaternion) pure_imaginary(const FLOATNAME(LVector3) &v);
 
   INLINE_LINMATH FLOATNAME(LQuaternion) conjugate() const;
 
@@ -59,6 +57,8 @@ PUBLISHED:
   INLINE_LINMATH FLOATNAME(LMatrix3) operator *(const FLOATNAME(LMatrix3) &);
   INLINE_LINMATH FLOATNAME(LMatrix4) operator *(const FLOATNAME(LMatrix4) &);
 
+  FLOATNAME(LQuaternion) __pow__(FLOATTYPE) const;
+
   INLINE_LINMATH bool almost_equal(
       const FLOATNAME(LQuaternion) &other) const;
   INLINE_LINMATH bool almost_equal(
@@ -68,7 +68,7 @@ PUBLISHED:
   INLINE_LINMATH bool almost_same_direction(
       const FLOATNAME(LQuaternion) &other, FLOATTYPE threshold) const;
 
-  INLINE_LINMATH void output(ostream&) const;
+  INLINE_LINMATH void output(std::ostream&) const;
 
   void extract_to_matrix(FLOATNAME(LMatrix3) &m) const;
   void extract_to_matrix(FLOATNAME(LMatrix4) &m) const;
@@ -127,7 +127,7 @@ private:
 };
 
 
-INLINE ostream& operator<<(ostream& os, const FLOATNAME(LQuaternion)& q) {
+INLINE std::ostream& operator<<(std::ostream& os, const FLOATNAME(LQuaternion)& q) {
   q.output(os);
   return os;
 }

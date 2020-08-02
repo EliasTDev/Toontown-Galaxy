@@ -1,17 +1,15 @@
-// Filename: test_bam.h
-// Created by:  jason (12Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
-
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file test_bam.h
+ * @author jason
+ * @date 2000-06-12
+ */
 
 #include "pandabase.h"
 #include "pnotify.h"
@@ -47,16 +45,16 @@ public:
   bool isMale() {return myGender == MALE;}
 
   void print_relationships();
-  string name() {return _name;}
+  std::string name() {return _name;}
 private:
   Person *_bro, *_sis;
   sex myGender;
-  string _name;
+  std::string _name;
 
 public:
   Person() {}
-  Person(const string &name, const sex Gender) :
-     _name(name), myGender(Gender), _bro((Person*)NULL), _sis((Person*)NULL) {
+  Person(const std::string &name, const sex Gender) :
+     _name(name), myGender(Gender), _bro(nullptr), _sis(nullptr) {
 
   }
   virtual ~Person() {
@@ -102,7 +100,7 @@ private:
 
 public:
   Parent() {}
-  Parent(const string &name, const sex Gender) : Person(name, Gender) {
+  Parent(const std::string &name, const sex Gender) : Person(name, Gender) {
 
   }
   virtual ~Parent() {
@@ -148,7 +146,7 @@ private:
 
 public:
   Child() {}
-  Child(const string &name, const sex Gender) : Person(name, Gender) {
+  Child(const std::string &name, const sex Gender) : Person(name, Gender) {
 
   }
   virtual ~Child() {
@@ -172,6 +170,3 @@ public:
 private:
   static TypeHandle _type_handle;
 };
-
-
-

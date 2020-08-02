@@ -1,16 +1,15 @@
-// Filename: stdtypedefs.h
-// Created by:  drose (12May00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file stdtypedefs.h
+ * @author drose
+ * @date 2000-05-12
+ */
 
 // This file, and all the other files in this directory, aren't
 // intended to be compiled--they're just parsed by CPPParser (and
@@ -19,30 +18,39 @@
 
 #ifndef STDTYPEDEFS_H
 #define STDTYPEDEFS_H
-#ifndef __APPLE__
-typedef unsigned long size_t;
-typedef long ssize_t;
-typedef int off_t;
-typedef unsigned int time_t;
-typedef int clock_t;
 
-struct FILE;
-
-namespace std {
-}
-#endif
-typedef int ptrdiff_t;
+typedef long time_t;
+typedef long clock_t;
 
 typedef unsigned int uint;
 typedef unsigned long ulong;
 typedef unsigned short ushort;
 typedef unsigned char uchar;
 
+#ifdef _WIN64
+#define __SIZE_TYPE__ unsigned long long
+#define __PTRDIFF_TYPE__ long long
+#else
+#define __SIZE_TYPE__ unsigned long
+#define __PTRDIFF_TYPE__ long
+#endif
+
+inline namespace std {
+  typedef __SIZE_TYPE__ size_t;
+  typedef __PTRDIFF_TYPE__ ssize_t;
+  typedef __PTRDIFF_TYPE__ ptrdiff_t;
+}
+
+struct timeval;
+
 #ifdef __cplusplus
 #define NULL 0L
 #else
 #define NULL ((void *)0)
 #endif
+namespace std {
+  typedef decltype(nullptr) nullptr_t;
+}
 
 // One day, we might extend interrogate to be able to parse this,
 // but we currently don't need it.

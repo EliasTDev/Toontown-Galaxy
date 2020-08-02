@@ -1,16 +1,15 @@
-// Filename: pnmFileTypeTGA.h
-// Created by:  drose (27Apr01)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file pnmFileTypeTGA.h
+ * @author drose
+ * @date 2001-04-27
+ */
 
 #ifndef PNMFILETYPETGA_H
 #define PNMFILETYPETGA_H
@@ -27,39 +26,37 @@
 
 struct ImageHeader;
 
-
-////////////////////////////////////////////////////////////////////
-//       Class : PNMFileTypeTGA
-// Description : For reading and writing Targa image files.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDA_PNMIMAGETYPES PNMFileTypeTGA : public PNMFileType {
+/**
+ * For reading and writing Targa image files.
+ */
+class PNMFileTypeTGA : public PNMFileType {
 public:
   PNMFileTypeTGA();
 
-  virtual string get_name() const;
+  virtual std::string get_name() const;
 
   virtual int get_num_extensions() const;
-  virtual string get_extension(int n) const;
-  virtual string get_suggested_extension() const;
+  virtual std::string get_extension(int n) const;
+  virtual std::string get_suggested_extension() const;
 
-  virtual PNMReader *make_reader(istream *file, bool owns_file = true,
-                                 const string &magic_number = string());
-  virtual PNMWriter *make_writer(ostream *file, bool owns_file = true);
+  virtual PNMReader *make_reader(std::istream *file, bool owns_file = true,
+                                 const std::string &magic_number = std::string());
+  virtual PNMWriter *make_writer(std::ostream *file, bool owns_file = true);
 
 public:
   class Reader : public PNMReader {
   public:
-    Reader(PNMFileType *type, istream *file, bool owns_file, string magic_number);
+    Reader(PNMFileType *type, std::istream *file, bool owns_file, std::string magic_number);
     virtual ~Reader();
 
     virtual int read_data(xel *array, xelval *alpha);
 
   private:
-    void readtga ( istream* ifp, struct ImageHeader* tgaP, const string &magic_number );
-    void get_map_entry ( istream* ifp, pixel* Value, int Size,
+    void readtga ( std::istream* ifp, struct ImageHeader* tgaP, const std::string &magic_number );
+    void get_map_entry ( std::istream* ifp, pixel* Value, int Size,
                          gray* Alpha);
-    void get_pixel ( istream* ifp, pixel* dest, int Size, gray* alpha_p);
-    unsigned char getbyte ( istream* ifp );
+    void get_pixel ( std::istream* ifp, pixel* dest, int Size, gray* alpha_p);
+    unsigned char getbyte ( std::istream* ifp );
 
     int rows, cols, rlencoded, mapped;
     struct ImageHeader *tga_head;
@@ -74,7 +71,7 @@ public:
 
   class Writer : public PNMWriter {
   public:
-    Writer(PNMFileType *type, ostream *file, bool owns_file);
+    Writer(PNMFileType *type, std::ostream *file, bool owns_file);
     virtual ~Writer();
 
     virtual int write_data(xel *array, xelval *alpha);
@@ -126,5 +123,3 @@ private:
 #endif  // HAVE_TGA
 
 #endif
-
-

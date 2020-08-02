@@ -11,7 +11,7 @@ except:
 def getLanguage():
     return language
 
-print 'TTLocalizer: Running in language: %s' % language
+print('TTLocalizer: Running in language: %s' % language)
 from toontown.toonbase.TTLocalizerEnglish import *
 #from toontown.toonbase.TTLocalizerSpanish import *
 #from toontown.toonbase.TTLocalizerPortuguese import *
@@ -22,24 +22,24 @@ if language != 'English':
     module = 'toontown.toonbase.TTLocalizer' + language
     englishModule = __import__('toontown.toonbase.TTLocalizerEnglish', g, l)
     foreignModule = __import__(module, g, l)
-    for key, val in englishModule.__dict__.items():
+    for key, val in list(englishModule.__dict__.items()):
         if key not in foreignModule.__dict__:
-            print 'WARNING: Foreign module: %s missing key: %s' % (module, key)
+            print('WARNING: Foreign module: %s missing key: %s' % (module, key))
             locals()[key] = val
-        elif isinstance(val, types.DictType):
+        elif isinstance(val, dict):
             fval = foreignModule.__dict__.get(key)
-            for dkey, dval in val.items():
+            for dkey, dval in list(val.items()):
                 if dkey not in fval:
-                    print 'WARNING: Foreign module: %s missing key: %s.%s' % (module, key, dkey)
+                    print('WARNING: Foreign module: %s missing key: %s.%s' % (module, key, dkey))
                     fval[dkey] = dval
 
-            for dkey in fval.keys():
+            for dkey in list(fval.keys()):
                 if dkey not in val:
-                    print 'WARNING: Foreign module: %s extra key: %s.%s' % (module, key, dkey)
+                    print('WARNING: Foreign module: %s extra key: %s.%s' % (module, key, dkey))
 
-    for key in foreignModule.__dict__.keys():
+    for key in list(foreignModule.__dict__.keys()):
         if key not in englishModule.__dict__:
-            print 'WARNING: Foreign module: %s extra key: %s' % (module, key)
+            print('WARNING: Foreign module: %s extra key: %s' % (module, key))
 
 '''
 if language != 'Spanish':

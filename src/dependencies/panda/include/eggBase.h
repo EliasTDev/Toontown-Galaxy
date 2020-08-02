@@ -1,16 +1,15 @@
-// Filename: eggBase.h
-// Created by:  drose (14Feb00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggBase.h
+ * @author drose
+ * @date 2000-02-14
+ */
 
 #ifndef EGGBASE_H
 #define EGGBASE_H
@@ -20,15 +19,13 @@
 #include "programBase.h"
 #include "eggData.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggBase
-// Description : This is a base class for both EggSingleBase and
-//               EggMultiBase.  Don't inherit directly from this; use
-//               one of those two classes instead.
-//
-//               This is just a base class; see EggReader, EggWriter,
-//               or EggFilter according to your particular I/O needs.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is a base class for both EggSingleBase and EggMultiBase.  Don't
+ * inherit directly from this; use one of those two classes instead.
+ *
+ * This is just a base class; see EggReader, EggWriter, or EggFilter according
+ * to your particular I/O needs.
+ */
 class EggBase : public ProgramBase {
 public:
   EggBase();
@@ -42,17 +39,17 @@ public:
 
 protected:
   void append_command_comment(EggData *_data);
-  static void append_command_comment(EggData *_data, const string &comment);
+  static void append_command_comment(EggData *_data, const std::string &comment);
 
-  static bool dispatch_normals(ProgramBase *self, const string &opt, const string &arg, void *mode);
-  bool ns_dispatch_normals(const string &opt, const string &arg, void *mode);
+  static bool dispatch_normals(ProgramBase *self, const std::string &opt, const std::string &arg, void *mode);
+  bool ns_dispatch_normals(const std::string &opt, const std::string &arg, void *mode);
 
-  static bool dispatch_scale(const string &opt, const string &arg, void *var);
-  static bool dispatch_rotate_xyz(ProgramBase *self, const string &opt, const string &arg, void *var);
-  bool ns_dispatch_rotate_xyz(const string &opt, const string &arg, void *var);
-  static bool dispatch_rotate_axis(ProgramBase *self, const string &opt, const string &arg, void *var);
-  bool ns_dispatch_rotate_axis(const string &opt, const string &arg, void *var);
-  static bool dispatch_translate(const string &opt, const string &arg, void *var);
+  static bool dispatch_scale(const std::string &opt, const std::string &arg, void *var);
+  static bool dispatch_rotate_xyz(ProgramBase *self, const std::string &opt, const std::string &arg, void *var);
+  bool ns_dispatch_rotate_xyz(const std::string &opt, const std::string &arg, void *var);
+  static bool dispatch_rotate_axis(ProgramBase *self, const std::string &opt, const std::string &arg, void *var);
+  bool ns_dispatch_rotate_axis(const std::string &opt, const std::string &arg, void *var);
+  static bool dispatch_translate(const std::string &opt, const std::string &arg, void *var);
 
 protected:
   enum NormalsMode {
@@ -66,7 +63,7 @@ protected:
   vector_string _tbn_names;
   bool _got_tbnall;
   bool _got_tbnauto;
-  
+
   bool _make_points;
 
   bool _got_transform;
@@ -79,5 +76,3 @@ protected:
 };
 
 #endif
-
-

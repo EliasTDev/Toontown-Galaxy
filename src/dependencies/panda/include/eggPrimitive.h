@@ -1,16 +1,15 @@
-// Filename: eggPrimitive.h
-// Created by:  drose (16Jan99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggPrimitive.h
+ * @author drose
+ * @date 1999-01-16
+ */
 
 #ifndef EGGPRIMITIVE_H
 #define EGGPRIMITIVE_H
@@ -35,26 +34,23 @@
 
 class EggVertexPool;
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggPrimitive
-// Description : A base class for any of a number of kinds of geometry
-//               primitives: polygons, point lights, nurbs patches,
-//               parametrics curves, etc.  Things with a set of
-//               vertices and some rendering properties like color.
-//
-//               An EggPrimitive is an STL-style container of pointers
-//               to EggVertex's.  In fact, it IS a vector, and can be
-//               manipulated in all the ways that vectors can.
-//               However, it is necessary that all vertices belong to
-//               the same vertex pool.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAEGG EggPrimitive : public EggNode, public EggAttributes,
+/**
+ * A base class for any of a number of kinds of geometry primitives: polygons,
+ * point lights, nurbs patches, parametrics curves, etc.  Things with a set of
+ * vertices and some rendering properties like color.
+ *
+ * An EggPrimitive is an STL-style container of pointers to EggVertex's.  In
+ * fact, it IS a vector, and can be manipulated in all the ways that vectors
+ * can.  However, it is necessary that all vertices belong to the same vertex
+ * pool.
+ */
+class EXPCL_PANDA_EGG EggPrimitive : public EggNode, public EggAttributes,
                      public EggRenderMode
 {
 
-  // This is a bit of private interface stuff that must be here as a
-  // forward reference.  This allows us to define the EggPrimitive as
-  // an STL container.
+  // This is a bit of private interface stuff that must be here as a forward
+  // reference.  This allows us to define the EggPrimitive as an STL
+  // container.
 
 private:
   typedef vector_PT_EggVertex Vertices;
@@ -63,18 +59,20 @@ private:
 
 PUBLISHED:
   enum Shading {
-    // The order here is important.  The later choices are more
-    // specific than the earlier ones.
+    // The order here is important.  The later choices are more specific than
+    // the earlier ones.
     S_unknown,
     S_overall,
     S_per_face,
     S_per_vertex
   };
 
-  INLINE EggPrimitive(const string &name = "");
+  INLINE explicit EggPrimitive(const std::string &name = "");
   INLINE EggPrimitive(const EggPrimitive &copy);
   INLINE EggPrimitive &operator = (const EggPrimitive &copy);
   INLINE ~EggPrimitive();
+
+  virtual EggPrimitive *make_copy() const=0;
 
   virtual EggRenderMode *determine_alpha_mode();
   virtual EggRenderMode *determine_depth_write_mode();
@@ -84,7 +82,7 @@ PUBLISHED:
   virtual EggRenderMode *determine_draw_order();
   virtual EggRenderMode *determine_bin();
 
-  INLINE string get_sort_name() const;
+  INLINE std::string get_sort_name() const;
 
   virtual Shading get_shading() const;
   INLINE void clear_connected_shading();
@@ -109,6 +107,14 @@ PUBLISHED:
   INLINE void set_bface_flag(bool flag);
   INLINE bool get_bface_flag() const;
 
+  MAKE_PROPERTY(sort_name, get_sort_name);
+  MAKE_PROPERTY(shading, get_shading);
+  MAKE_PROPERTY(connected_shading, get_connected_shading);
+
+  MAKE_SEQ_PROPERTY(textures, get_num_textures, get_texture);
+  MAKE_PROPERTY2(material, has_material, get_material, set_material, clear_material);
+  MAKE_PROPERTY(bface_flag, get_bface_flag, set_bface_flag);
+
   void copy_attributes(const EggAttributes &other);
   void copy_attributes(const EggPrimitive &other);
 
@@ -129,12 +135,12 @@ PUBLISHED:
   virtual bool has_normals() const;
 
 
-  // The EggPrimitive itself appears to be an STL container of
-  // pointers to EggVertex objects.  The set of vertices is read-only,
-  // however, except through the limited add_vertex/remove_vertex or
-  // insert/erase interface.  The following implements this.
+  // The EggPrimitive itself appears to be an STL container of pointers to
+  // EggVertex objects.  The set of vertices is read-only, however, except
+  // through the limited add_vertexremove_vertex or inserterase interface.
+  // The following implements this.
 public:
-#if defined(WIN32_VC) || defined(WIN64_VC)
+#ifdef _WIN32
   typedef PT_EggVertex *pointer;
   typedef PT_EggVertex *const_pointer;
 #else
@@ -170,17 +176,22 @@ PUBLISHED:
 
   EggVertex *add_vertex(EggVertex *vertex);
   EggVertex *remove_vertex(EggVertex *vertex);
+  void remove_vertex(size_t index);
   void copy_vertices(const EggPrimitive &other);
 
   // These are shorthands if you don't want to use the iterators.
-  INLINE int get_num_vertices() const;
-  INLINE void set_vertex(int index, EggVertex *vertex);
-  INLINE EggVertex *get_vertex(int index) const;
+  INLINE size_t get_num_vertices() const;
+  INLINE EggVertex *get_vertex(size_t index) const;
+  INLINE void set_vertex(size_t index, EggVertex *vertex);
+  INLINE void insert_vertex(size_t index, EggVertex *vertex);
   MAKE_SEQ(get_vertices, get_num_vertices, get_vertex);
 
   INLINE EggVertexPool *get_pool() const;
 
-  virtual void write(ostream &out, int indent_level) const=0;
+  MAKE_SEQ_PROPERTY(vertices, get_num_vertices, get_vertex, set_vertex, remove_vertex, insert_vertex);
+  MAKE_PROPERTY(pool, get_pool);
+
+  virtual void write(std::ostream &out, int indent_level) const=0;
 
 #ifdef _DEBUG
   void test_vref_integrity() const;
@@ -191,14 +202,14 @@ PUBLISHED:
 protected:
   Vertices _vertices;
 
-  // Don't try to use these private functions.  User code should add
-  // and remove vertices via add_vertex()/remove_vertex(), or via the
-  // STL-like push_back()/pop_back() or insert()/erase(), above.
+  // Don't try to use these private functions.  User code should add and
+  // remove vertices via add_vertex()remove_vertex(), or via the STL-like
+  // push_back()pop_back() or insert()erase(), above.
   virtual void prepare_add_vertex(EggVertex *vertex, int i, int n);
   virtual void prepare_remove_vertex(EggVertex *vertex, int i, int n);
 
 protected:
-  void write_body(ostream &out, int indent_level) const;
+  void write_body(std::ostream &out, int indent_level) const;
 
   virtual bool egg_start_parse_body();
   virtual void r_transform(const LMatrix4d &mat, const LMatrix4d &inv,

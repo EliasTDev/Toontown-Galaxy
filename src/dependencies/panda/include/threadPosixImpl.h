@@ -1,16 +1,15 @@
-// Filename: threadPosixImpl.h
-// Created by:  drose (09Feb06)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file threadPosixImpl.h
+ * @author drose
+ * @date 2006-02-09
+ */
 
 #ifndef THREADPOSIXIMPL_H
 #define THREADPOSIXIMPL_H
@@ -26,12 +25,15 @@
 
 #include <pthread.h>
 
+#ifdef ANDROID
+typedef struct _JNIEnv JNIEnv;
+#endif
+
 class Thread;
 
-////////////////////////////////////////////////////////////////////
-//       Class : ThreadPosixImpl
-// Description : Uses Posix threads to implement a thread.
-////////////////////////////////////////////////////////////////////
+/**
+ * Uses Posix threads to implement a thread.
+ */
 class EXPCL_PANDA_PIPELINE ThreadPosixImpl {
 public:
   INLINE ThreadPosixImpl(Thread *parent_obj);
@@ -42,7 +44,7 @@ public:
   void join();
   INLINE void preempt();
 
-  string get_unique_id() const;
+  std::string get_unique_id() const;
 
   INLINE static void prepare_for_exit();
 
@@ -54,6 +56,12 @@ public:
   INLINE static void sleep(double seconds);
   INLINE static void yield();
   INLINE static void consider_yield();
+
+#ifdef ANDROID
+  INLINE JNIEnv *get_jni_env() const;
+  bool attach_java_vm();
+  static void bind_java_thread();
+#endif
 
 private:
   static void *root_func(void *data);
@@ -73,6 +81,10 @@ private:
   bool _joinable;
   bool _detached;
   PStatus _status;
+
+#ifdef ANDROID
+  JNIEnv *_jni_env;
+#endif
 
   static pthread_key_t _pt_ptr_index;
   static bool _got_pt_ptr_index;

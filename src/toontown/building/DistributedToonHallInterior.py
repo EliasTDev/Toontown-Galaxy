@@ -5,8 +5,9 @@ from otp.ai.MagicWordGlobal import *
 from toontown.dna.DNAParser import *
 from toontown.hood import ZoneUtil
 from toontown.toon import DistributedNPCToonBase
-from DistributedToonInterior import DistributedToonInterior
-import ToonInteriorColors, random
+from .DistributedToonInterior import DistributedToonInterior
+from . import ToonInteriorColors
+import random
 
 class DistributedToonHallInterior(DistributedToonInterior):
 
@@ -416,7 +417,7 @@ class DistributedToonHallInterior(DistributedToonInterior):
     def delete(self):
         DistributedToonInterior.delete(self)
 
-@magicWord(category=CATEGORY_LEADER, types=[int])
+@magicWord(category=CATEGORY_DEVELOPER, types=[int])
 def sillyPhase(phase):
     """
     Set the silly meter phase.

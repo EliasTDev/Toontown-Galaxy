@@ -1,6 +1,6 @@
 from direct.interval.IntervalGlobal import *
-import CatalogAtticItem
-import CatalogItem
+from . import CatalogAtticItem
+from . import CatalogItem
 import random, glob
 from toontown.toonbase import TTLocalizer, ToontownGlobals
 from panda3d.core import *
@@ -46,7 +46,7 @@ BankToMoney = {
  1320: 20000
 }
 MoneyToBank = {}
-for bankId, maxMoney in BankToMoney.items():
+for bankId, maxMoney in list(BankToMoney.items()):
     MoneyToBank[maxMoney] = bankId
 
 MaxBankId = 1320
@@ -63,7 +63,7 @@ ClosetToClothes = {
  518: 50
 }
 ClothesToCloset = {}
-for closetId, maxClothes in ClosetToClothes.items():
+for closetId, maxClothes in list(ClosetToClothes.items()):
     if not maxClothes in ClothesToCloset:
         ClothesToCloset[maxClothes] = (closetId,)
     else:
@@ -1086,7 +1086,7 @@ class CatalogFurnitureItem(CatalogAtticItem.CatalogAtticItem):
         self.applyColor(model, type[FTColor])
         if type[FTColorOptions] != None:
             if self.colorOption == None:
-                option = random.choice(type[FTColorOptions].values())
+                option = random.choice(list(type[FTColorOptions].values()))
             else:
                 option = type[FTColorOptions].get(self.colorOption)
             self.applyColor(model, option)
@@ -1178,7 +1178,7 @@ def getMaxClosets():
 
 def getAllClosets():
     list = []
-    for closetId in ClosetToClothes.keys():
+    for closetId in list(ClosetToClothes.keys()):
         list.append(CatalogFurnitureItem(closetId))
 
     return list
@@ -1186,7 +1186,7 @@ def getAllClosets():
 def getAllBanks():
     list = []
 
-    for bankId in BankToMoney.keys():
+    for bankId in list(BankToMoney.keys()):
         list.append(CatalogFurnitureItem(bankId))
 
     return list
@@ -1194,7 +1194,7 @@ def getAllBanks():
 def getAllFurnitures(index):
     list = []
     colors = FurnitureTypes[index][FTColorOptions]
-    for n in xrange(len(colors)):
+    for n in range(len(colors)):
         list.append(CatalogFurnitureItem(index, n))
 
     return list

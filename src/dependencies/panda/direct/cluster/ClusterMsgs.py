@@ -31,18 +31,16 @@ CLUSTER_DAEMON_PORT = 8001
 CLUSTER_SERVER_PORT = 1970
 
 # Precede command string with ! to tell server to execute command string
-# NOTE: Had to stick with the import __builtin__ scheme, at startup,
-# __builtins__ is a module, not a dictionary, like it is inside of a module
 # Note, this startup string obviates the need to set any cluster related
 # config variables in the client Configrc files
 SERVER_STARTUP_STRING = (
     '!bash ppython -c ' +
-    '"import __builtin__; ' +
-    '__builtin__.clusterMode = \'server\';' +
-    '__builtin__.clusterServerPort = %s;' +
-    '__builtin__.clusterSyncFlag = %d;' +
-    '__builtin__.clusterDaemonClient = \'%s\';' +
-    '__builtin__.clusterDaemonPort = %d;'
+    '"import builtins; ' +
+    'builtins.clusterMode = \'server\';' +
+    'builtins.clusterServerPort = %s;' +
+    'builtins.clusterSyncFlag = %d;' +
+    'builtins.clusterDaemonClient = \'%s\';' +
+    'builtins.clusterDaemonPort = %d;'
     'from direct.directbase.DirectStart import *; run()"')
 
 class ClusterMsgHandler:
@@ -166,7 +164,7 @@ class ClusterMsgHandler:
         self.packetNumber = self.packetNumber + 1
         datagram.addUint8(CLUSTER_NAMED_MOVEMENT_DONE)
         return datagram
-            
+
 
     def makeNamedObjectMovementDatagram(self, xyz, hpr, scale, color, hidden, name):
         datagram = PyDatagram()
@@ -186,9 +184,9 @@ class ClusterMsgHandler:
         datagram.addFloat32(color[0])
         datagram.addFloat32(color[1])
         datagram.addFloat32(color[2])
-        datagram.addFloat32(color[3])        
+        datagram.addFloat32(color[3])
         datagram.addBool(hidden)
-        return datagram    
+        return datagram
 
     def parseCamMovementDatagram(self, dgi):
         x=dgi.getFloat32()
@@ -215,7 +213,7 @@ class ClusterMsgHandler:
         red = dgi.getFloat32()
         g = dgi.getFloat32()
         b = dgi.getFloat32()
-        a = dgi.getFloat32()        
+        a = dgi.getFloat32()
         hidden = dgi.getBool()
         return (name,x, y, z, h, p, r, sx, sy, sz, red, g, b, a, hidden)
 

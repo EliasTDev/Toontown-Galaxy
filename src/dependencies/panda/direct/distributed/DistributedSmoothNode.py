@@ -1,24 +1,26 @@
 """DistributedSmoothNode module: contains the DistributedSmoothNode class"""
 
-from pandac.PandaModules import *
-from ClockDelta import *
-import DistributedNode
-import DistributedSmoothNodeBase
+from panda3d.core import NodePath
+from panda3d.direct import SmoothMover
+from .ClockDelta import *
+from . import DistributedNode
+from . import DistributedSmoothNodeBase
 from direct.task.Task import cont
+from direct.showbase import DConfig as config
 
 # This number defines our tolerance for out-of-sync telemetry packets.
 # If a packet appears to have originated from more than MaxFuture
 # seconds in the future, assume we're out of sync with the other
 # avatar and suggest a resync for both.
-MaxFuture = base.config.GetFloat("smooth-max-future", 0.2)
+MaxFuture = config.GetFloat("smooth-max-future", 0.2)
 
 # How frequently can we suggest a resynchronize with another client?
-MinSuggestResync = base.config.GetFloat("smooth-min-suggest-resync", 15)
+MinSuggestResync = config.GetFloat("smooth-min-suggest-resync", 15)
 
 # These flags indicate whether global smoothing and/or prediction is
 # allowed or disallowed.
-EnableSmoothing = base.config.GetBool("smooth-enable-smoothing", 1)
-EnablePrediction = base.config.GetBool("smooth-enable-prediction", 1)
+EnableSmoothing = config.GetBool("smooth-enable-smoothing", 1)
+EnablePrediction = config.GetBool("smooth-enable-prediction", 1)
 
 # These values represent the amount of time, in seconds, to delay the
 # apparent position of other avatars, when non-predictive and
@@ -26,8 +28,8 @@ EnablePrediction = base.config.GetBool("smooth-enable-prediction", 1)
 # addition to the automatic delay of the observed average latency from
 # each avatar, which is intended to compensate for relative clock
 # skew.
-Lag = base.config.GetDouble("smooth-lag", 0.2)
-PredictionLag = base.config.GetDouble("smooth-prediction-lag", 0.0)
+Lag = config.GetDouble("smooth-lag", 0.2)
+PredictionLag = config.GetDouble("smooth-prediction-lag", 0.0)
 
 
 GlobalSmoothing = 0
@@ -113,7 +115,7 @@ class DistributedSmoothNode(DistributedNode.DistributedNode,
         to specialize the behavior.
         """
         self.smoother.computeAndApplySmoothPosHpr(self, self)
-            
+
     def doSmoothTask(self, task):
         self.smoothPosition()
         return cont
@@ -205,7 +207,7 @@ class DistributedSmoothNode(DistributedNode.DistributedNode,
                 self.smoother.markPosition()
 
         self.stopped = False
-        
+
     # distributed set pos and hpr functions
     # 'send' versions are inherited from DistributedSmoothNodeBase
     def setSmStop(self, timestamp=None):
@@ -398,7 +400,7 @@ class DistributedSmoothNode(DistributedNode.DistributedNode,
         return self.getR()
     def getComponentT(self):
         return 0
-                
+
     @report(types = ['args'], dConfigParam = 'smoothnode')
     def clearSmoothing(self, bogus = None):
         # Call this to invalidate all the old position reports
@@ -442,7 +444,7 @@ class DistributedSmoothNode(DistributedNode.DistributedNode,
         self.sendUpdate("suggestResync", [avId, timestampA, timestampB,
                                           serverTimeSec, serverTimeUSec,
                                           uncertainty])
-        
+
     def suggestResync(self, avId, timestampA, timestampB,
                       serverTimeSec, serverTimeUSec, uncertainty):
         """
@@ -471,14 +473,14 @@ class DistributedSmoothNode(DistributedNode.DistributedNode,
                     self.cr.localAvatarDoId, timestampB,
                     serverTime,
                     globalClockDelta.getUncertainty())
-        
+
 
     def d_returnResync(self, avId, timestampB, serverTime, uncertainty):
         serverTimeSec = math.floor(serverTime)
         serverTimeUSec = (serverTime - serverTimeSec) * 10000.0
         self.sendUpdate("returnResync", [
             avId, timestampB, serverTimeSec, serverTimeUSec, uncertainty])
-        
+
     def returnResync(self, avId, timestampB, serverTimeSec, serverTimeUSec,
             uncertainty):
         """

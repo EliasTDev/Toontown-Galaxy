@@ -1,16 +1,15 @@
-// Filename: lwoVertexMap.h
-// Created by:  drose (24Apr01)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file lwoVertexMap.h
+ * @author drose
+ * @date 2001-04-24
+ */
 
 #ifndef LWOVERTEXMAP_H
 #define LWOVERTEXMAP_H
@@ -21,12 +20,10 @@
 
 #include "pta_stdfloat.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : LwoVertexMap
-// Description : A mapping of floating-point values per integer index.
-//               The meaning of these values is determined by the
-//               mapping type code and/or its name.
-////////////////////////////////////////////////////////////////////
+/**
+ * A mapping of floating-point values per integer index.  The meaning of these
+ * values is determined by the mapping type code and/or its name.
+ */
 class LwoVertexMap : public LwoChunk {
 public:
   bool has_value(int index) const;
@@ -34,11 +31,11 @@ public:
 
   IffId _map_type;
   int _dimension;
-  string _name;
+  std::string _name;
 
 public:
   virtual bool read_iff(IffInputFile *in, size_t stop_at);
-  virtual void write(ostream &out, int indent_level = 0) const;
+  virtual void write(std::ostream &out, int indent_level = 0) const;
 
 private:
   typedef pmap<int, PTA_stdfloat> VMap;
@@ -63,5 +60,3 @@ private:
 };
 
 #endif
-
-

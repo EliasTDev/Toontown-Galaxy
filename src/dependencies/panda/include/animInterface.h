@@ -1,16 +1,15 @@
-// Filename: animInterface.h
-// Created by:  drose (20Sep05)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file animInterface.h
+ * @author drose
+ * @date 2005-09-20
+ */
 
 #ifndef ANIMINTERFACE_H
 #define ANIMINTERFACE_H
@@ -28,14 +27,11 @@ class BamReader;
 class Datagram;
 class DatagramIterator;
 
-////////////////////////////////////////////////////////////////////
-//       Class : AnimInterface
-// Description : This is the fundamental interface for things that
-//               have a play/loop/stop type interface for frame-based
-//               animation, such as animated characters.  This is the
-//               base class for AnimControl and other, similar
-//               classes.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is the fundamental interface for things that have a play/loop/stop
+ * type interface for frame-based animation, such as animated characters.
+ * This is the base class for AnimControl and other, similar classes.
+ */
 class EXPCL_PANDA_PUTIL AnimInterface {
 protected:
   AnimInterface();
@@ -64,7 +60,19 @@ PUBLISHED:
   INLINE double get_full_fframe() const;
   INLINE bool is_playing() const;
 
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
+
+PUBLISHED:
+  MAKE_PROPERTY(play_rate, get_play_rate, set_play_rate);
+  MAKE_PROPERTY(frame_rate, get_frame_rate);
+  MAKE_PROPERTY(num_frames, get_num_frames);
+
+  MAKE_PROPERTY(frame, get_frame);
+  MAKE_PROPERTY(next_frame, get_next_frame);
+  MAKE_PROPERTY(frac, get_frac);
+  MAKE_PROPERTY(full_frame, get_full_frame);
+  MAKE_PROPERTY(full_fframe, get_full_fframe);
+  MAKE_PROPERTY(playing, is_playing);
 
 protected:
   INLINE void set_frame_rate(double frame_rate);
@@ -79,9 +87,8 @@ private:
     PM_pingpong,
   };
 
-  // This data is not cycled, because it is a semi-permanent part of
-  // the interface.  Also, some derivatives of AnimInterface don't
-  // even use it.
+  // This data is not cycled, because it is a semi-permanent part of the
+  // interface.  Also, some derivatives of AnimInterface don't even use it.
   int _num_frames;
 
   // This is the data that must be cycled between pipeline stages.
@@ -106,7 +113,7 @@ private:
     double get_full_fframe() const;
     bool is_playing() const;
 
-    virtual void output(ostream &out) const;
+    virtual void output(std::ostream &out) const;
 
     void internal_set_rate(double frame_rate, double play_rate);
     double get_f() const;
@@ -119,7 +126,7 @@ private:
     double _play_frames;
     int _from_frame;
     int _to_frame;
-    
+
     double _play_rate;
     double _effective_frame_rate;
     bool _paused;
@@ -146,7 +153,7 @@ private:
   static TypeHandle _type_handle;
 };
 
-INLINE ostream &operator << (ostream &out, const AnimInterface &ai);
+INLINE std::ostream &operator << (std::ostream &out, const AnimInterface &ai);
 
 #include "animInterface.I"
 
