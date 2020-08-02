@@ -3,7 +3,8 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from direct.task.Task import Task
 from panda3d.core import *
-import random, Motion, math, types, AccessoryGlobals, TTEmote, ToonDNA, LaffMeter
+import random, math, types
+from . import  AccessoryGlobals, TTEmote, ToonDNA, LaffMeter, Motion
 from .ToonHead import *
 from otp.ai.MagicWordGlobal import *
 from otp.avatar import Avatar, Emote
@@ -731,7 +732,7 @@ class Toon(Avatar.Avatar, ToonHead):
             self.loadModel(
                 preloader.getModel(modelPath), 'legs', lodName, True)
         if not copy:
-			self.loadAnims(LegsAnimDict[legStyle], 'legs', '250')
+            self.loadAnims(LegsAnimDict[legStyle], 'legs', '250')
         for lodName in ('1000', '500', '250'):
                 self.showPart('legs', lodName)
         for lodName in ('1000', '500', '250'):

@@ -6,7 +6,8 @@ from toontown.dna.DNAParser import *
 from toontown.hood import ZoneUtil
 from toontown.toon import DistributedNPCToonBase
 from .DistributedToonInterior import DistributedToonInterior
-import ToonInteriorColors, random
+from . import ToonInteriorColors
+import random
 
 class DistributedToonHallInterior(DistributedToonInterior):
 

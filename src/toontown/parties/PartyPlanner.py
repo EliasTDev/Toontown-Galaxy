@@ -451,8 +451,8 @@ class PartyPlanner(DirectFrame, FSM):
             self.noFriends = False
             for friendPair in base.localAvatar.friendsList:
             	if friendPair == int:
-            		friendPair = str(friendPair)
-                	self.friendList.addFriend(determineFriendName(friendPair), friendPair[0])
+                    friendPair = str(friendPair)
+                    self.friendList.addFriend(determineFriendName(friendPair), friendPair[0])
 
             self.friendList.scrollTo(0)
         pos = self.gui.find('**/step_04_partyWillBe_locator').getPos()

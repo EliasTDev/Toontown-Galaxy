@@ -283,7 +283,7 @@ class DistributedSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
             self.checkBuildingState()
         elif legType == SuitLeg.T_to_toon_building:
             self.openToonDoor()
-        elif legType == SuitLeg.T_to_suit_uilding:
+        elif legType == SuitLeg.T_to_suit_building:
             self.openSuitDoor()
         elif legType == SuitLeg.T_to_coghq:
             self.openCogHQDoor(1)

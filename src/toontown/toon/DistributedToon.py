@@ -7,7 +7,9 @@ from direct.fsm import ClassicFSM
 from direct.interval.IntervalGlobal import Sequence, Wait, Func, Parallel, SoundInterval
 from direct.showbase import PythonUtil
 from direct.task.Task import Task
-import operator, random, time, Experience, InventoryNew, TTEmote, Toon, copy
+import operator, random, time
+from . import Experience, InventoryNew, TTEmote, Toon
+import copy
 from panda3d.core import *
 
 from otp.ai.MagicWordGlobal import *

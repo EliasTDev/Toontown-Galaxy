@@ -5,7 +5,8 @@ from direct.fsm import StateData
 from direct.gui.DirectGui import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
-import random, AvatarChoice
+import random
+from . import AvatarChoice
 
 MAX_AVATARS = 6
 POSITIONS = (Vec3(-0.840167, 0, 0.359333),

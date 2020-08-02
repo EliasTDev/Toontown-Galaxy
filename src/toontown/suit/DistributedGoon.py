@@ -8,7 +8,8 @@ from otp.level import BasicEntities, DistributedEntity
 from direct.directnotify import DirectNotifyGlobal
 from toontown.coghq import DistributedCrushableEntity, MovingPlatform
 from toontown.toonbase import ToontownGlobals
-import Goon, GoonDeath, random
+from . import Goon, GoonDeath
+import random
 from direct.task.Task import Task
 from otp.level import PathEntity
 

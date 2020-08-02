@@ -154,9 +154,9 @@ class NewsPageButtonManager(FSM.FSM):
     def isNewIssueButtonShown(self):
         from toontown.toon import LocalToon
         if not config.GetBool('want-news-tab', 1) or not base.wantNews:
-         return False
+            return False
         if config.GetBool('want-news-tab', 1):
-	     return True
+            return True
         return False
 
     def enterHidden(self):

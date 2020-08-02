@@ -6,7 +6,8 @@ from toontown.battle import SuitBattleGlobals
 from otp.nametag.NametagGroup import NametagGroup
 from toontown.toonbase import TTLocalizer, ToontownGlobals
 from toontown.suit import SuitGlobals
-import SuitDNA, SuitHealthBar, string
+from . import SuitDNA, SuitHealthBar
+import string
 
 if base.config.GetBool('want-tiny-cogs'):
  aSize = 12.12

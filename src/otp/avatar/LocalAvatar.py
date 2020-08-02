@@ -11,7 +11,8 @@ from direct.interval.IntervalGlobal import *
 from direct.showbase.InputStateGlobal import inputState
 from direct.showbase.PythonUtil import *
 from direct.task import Task
-import math, random, webbrowser, numbers, DistributedAvatar
+import math, random, webbrowser, numbers
+from . import DistributedAvatar
 from panda3d.core import *
 from otp.ai.MagicWordGlobal import *
 from otp.otpbase import OTPGlobals, OTPLocalizer

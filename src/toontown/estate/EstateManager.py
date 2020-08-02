@@ -2,7 +2,8 @@ from panda3d.core import *
 from toontown.toonbase import ToontownGlobals, TTLocalizer
 from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
-import random, HouseGlobals, Estate 
+import random
+from . import HouseGlobals, Estate 
 from direct.gui.DirectGui import *
 
 class EstateManager(DistributedObject.DistributedObject):

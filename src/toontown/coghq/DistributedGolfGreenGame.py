@@ -23,7 +23,8 @@ from toontown.battle import BattleParticles
 from toontown.battle import MovieUtil
 from toontown.toonbase import ToontownTimer
 from math import pi
-import GameSprite3D, math, random
+from . import GameSprite3D
+import math, random
 
 class DistributedGolfGreenGame(BattleBlocker.BattleBlocker):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGolfGreenGame')

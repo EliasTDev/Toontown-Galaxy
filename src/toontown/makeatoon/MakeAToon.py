@@ -9,7 +9,8 @@ from direct.task import Task
 from panda3d.core import *
 import random
 
-import random, BodyShop, ColorShop, GenderShop, MakeClothesGUI, TrackShop, NameShop
+import random
+from . import  BodyShop, ColorShop, GenderShop, MakeClothesGUI, TrackShop, NameShop
 from .MakeAToonGlobals import *
 from otp.avatar import Avatar
 from otp.nametag.NametagConstants import *

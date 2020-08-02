@@ -29,7 +29,7 @@ class ToontownNetMessengerAI:
         
     def handle(self, msgType, di):
         message = di.getString()
-        data = zlib.decompress(di.getString())
+        data = zlib.decompress(di.getBlob())
         sentArgs = pickle.loads(data)
         messenger.send(message, sentArgs)
         
