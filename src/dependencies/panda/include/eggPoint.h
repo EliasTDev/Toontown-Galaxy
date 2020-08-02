@@ -1,16 +1,15 @@
-// Filename: eggPoint.h
-// Created by:  drose (15Dec99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggPoint.h
+ * @author drose
+ * @date 1999-12-15
+ */
 
 #ifndef EGGPOINT_H
 #define EGGPOINT_H
@@ -19,16 +18,17 @@
 
 #include "eggPrimitive.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggPoint
-// Description : A single point, or a collection of points as defined
-//               by a single <PointLight> entry.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAEGG EggPoint : public EggPrimitive {
+/**
+ * A single point, or a collection of points as defined by a single
+ * <PointLight> entry.
+ */
+class EXPCL_PANDA_EGG EggPoint : public EggPrimitive {
 PUBLISHED:
-  INLINE EggPoint(const string &name = "");
+  INLINE explicit EggPoint(const std::string &name = "");
   INLINE EggPoint(const EggPoint &copy);
   INLINE EggPoint &operator = (const EggPoint &copy);
+
+  virtual EggPoint *make_copy() const override;
 
   INLINE bool has_thick() const;
   INLINE double get_thick() const;
@@ -40,9 +40,9 @@ PUBLISHED:
   INLINE void set_perspective(bool perspective);
   INLINE void clear_perspective();
 
-  virtual bool cleanup();
+  virtual bool cleanup() override;
 
-  virtual void write(ostream &out, int indent_level) const;
+  virtual void write(std::ostream &out, int indent_level) const override;
 
 private:
   enum Flags {
@@ -64,10 +64,13 @@ public:
     register_type(_type_handle, "EggPoint",
                   EggPrimitive::get_class_type());
   }
-  virtual TypeHandle get_type() const {
+  virtual TypeHandle get_type() const override {
     return get_class_type();
   }
-  virtual TypeHandle force_init_type() {init_type(); return get_class_type();}
+  virtual TypeHandle force_init_type() override {
+    init_type();
+    return get_class_type();
+  }
 
 private:
   static TypeHandle _type_handle;

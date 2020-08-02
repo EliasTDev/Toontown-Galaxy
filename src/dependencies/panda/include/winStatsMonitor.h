@@ -1,16 +1,15 @@
-// Filename: winStatsMonitor.h
-// Created by:  drose (02Dec03)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file winStatsMonitor.h
+ * @author drose
+ * @date 2003-12-02
+ */
 
 #ifndef WINSTATSMONITOR_H
 #define WINSTATSMONITOR_H
@@ -24,16 +23,18 @@
 #include "pvector.h"
 #include "pmap.h"
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN 1
+#endif
 #include <windows.h>
 
 class WinStatsServer;
 class WinStatsChartMenu;
 
-////////////////////////////////////////////////////////////////////
-//       Class : WinStatsMonitor
-// Description : This class represents a connection to a PStatsClient
-//               and manages the data exchange with the client.
-////////////////////////////////////////////////////////////////////
+/**
+ * This class represents a connection to a PStatsClient and manages the data
+ * exchange with the client.
+ */
 class WinStatsMonitor : public PStatMonitor {
 public:
   class MenuDef {
@@ -49,7 +50,7 @@ public:
   WinStatsMonitor(WinStatsServer *server);
   virtual ~WinStatsMonitor();
 
-  virtual string get_monitor_name();
+  virtual std::string get_monitor_name();
 
   virtual void initialized();
   virtual void got_hello();
@@ -74,7 +75,7 @@ public:
   void set_time_units(int unit_mask);
   void set_scroll_speed(double scroll_speed);
   void set_pause(bool pause);
-  
+
 private:
   void add_graph(WinStatsGraph *graph);
   void remove_graph(WinStatsGraph *graph);
@@ -104,7 +105,7 @@ private:
   HMENU _menu_bar;
   HMENU _options_menu;
   HMENU _speed_menu;
-  string _window_title;
+  std::string _window_title;
   int _time_units;
   double _scroll_speed;
   bool _pause;

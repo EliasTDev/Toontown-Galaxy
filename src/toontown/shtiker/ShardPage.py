@@ -10,6 +10,7 @@ from toontown.shtiker import ShtikerPage
 from toontown.suit import SuitDNA, Suit
 from toontown.toonbase import TTLocalizer, ToontownGlobals
 from toontown.toontowngui import TTDialog
+import functools
 
 
 ICON_COLORS = (Vec4(0.863, 0.776, 0.769, 1.0), Vec4(0.749, 0.776, 0.824, 1.0),
@@ -113,9 +114,9 @@ class ShardPage(ShtikerPage.ShtikerPage):
 
     def firstLoadShard(self, buttonTuple):
         curShardTuples = base.cr.listActiveShards()
-        curShardTuples.sort(compareShardTuples)
+        curShardTuples.sort(key=functools.cmp_to_key(compareShardTuples))
         actualShardId = base.localAvatar.defaultShard
-        for i in xrange(len(curShardTuples)):
+        for i in range(len(curShardTuples)):
             shardId, name, pop, WVPop, invasionStatus = curShardTuples[i]
             if shardId == actualShardId:
                 self.currentBTP = buttonTuple[0]
@@ -294,7 +295,7 @@ class ShardPage(ShtikerPage.ShtikerPage):
 
     def updateScrollList(self):
         curShardTuples = base.cr.listActiveShards()
-        curShardTuples.sort(compareShardTuples)
+        curShardTuples.sort(key=functools.cmp_to_key(compareShardTuples))
 
         currentShardId = self.getCurrentShardId()
         actualShardId = base.localAvatar.defaultShard
@@ -305,7 +306,7 @@ class ShardPage(ShtikerPage.ShtikerPage):
         currentMap = {}
         self.shardButtons = []
 
-        for i in xrange(len(curShardTuples)):
+        for i in range(len(curShardTuples)):
 
             shardId, name, pop, WVPop, invasionStatus = curShardTuples[i]
 
@@ -345,7 +346,7 @@ class ShardPage(ShtikerPage.ShtikerPage):
             else:
                 removeInvasionMarker(buttonTuple[3])
 
-        for shardId, buttonTuple in self.shardButtonMap.items():
+        for shardId, buttonTuple in list(self.shardButtonMap.items()):
 
             if shardId not in currentMap:
                 buttonTuple[3].removeNode()
@@ -378,7 +379,7 @@ class ShardPage(ShtikerPage.ShtikerPage):
         self.accept('shardInfoUpdated', self.updateScrollList)
 
     def exit(self):
-        for shardId, buttonTuple in self.shardButtonMap.items():
+        for shardId, buttonTuple in list(self.shardButtonMap.items()):
             buttonTuple[1]['state'] = DGG.NORMAL
             buttonTuple[2]['state'] = DGG.NORMAL
         self.ignore('shardInfoUpdated')

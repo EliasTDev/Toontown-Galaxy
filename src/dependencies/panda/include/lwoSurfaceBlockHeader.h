@@ -1,16 +1,15 @@
-// Filename: lwoSurfaceBlockHeader.h
-// Created by:  drose (24Apr01)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file lwoSurfaceBlockHeader.h
+ * @author drose
+ * @date 2001-04-24
+ */
 
 #ifndef LWOSURFACEBLOCKHEADER_H
 #define LWOSURFACEBLOCKHEADER_H
@@ -19,17 +18,16 @@
 
 #include "lwoGroupChunk.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : LwoSurfaceBlockHeader
-// Description : The header chunk within a LwoSurfaceBlock chunk.
-////////////////////////////////////////////////////////////////////
+/**
+ * The header chunk within a LwoSurfaceBlock chunk.
+ */
 class LwoSurfaceBlockHeader : public LwoGroupChunk {
 public:
-  string _ordinal;
+  std::string _ordinal;
 
 public:
   virtual bool read_iff(IffInputFile *in, size_t stop_at);
-  virtual void write(ostream &out, int indent_level = 0) const;
+  virtual void write(std::ostream &out, int indent_level = 0) const;
 
   virtual IffChunk *make_new_chunk(IffInputFile *in, IffId id);
 
@@ -52,7 +50,3 @@ private:
 };
 
 #endif
-
-
-
-

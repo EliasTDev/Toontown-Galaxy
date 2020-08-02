@@ -1,16 +1,15 @@
-// Filename: fadeLodNode.h
-// Created by:  sshodhan (14Jun04)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file fadeLodNode.h
+ * @author sshodhan
+ * @date 2004-06-14
+ */
 
 #ifndef FADELODNODE_H
 #define FADELODNODE_H
@@ -19,31 +18,35 @@
 
 #include "lodNode.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : FadeLODNode
-// Description : A Level-of-Detail node with alpha based switching.
-////////////////////////////////////////////////////////////////////
+/**
+ * A Level-of-Detail node with alpha based switching.
+ */
 class EXPCL_PANDA_PGRAPHNODES FadeLODNode : public LODNode {
 PUBLISHED:
-  FadeLODNode(const string &name);
+  explicit FadeLODNode(const std::string &name);
 
 protected:
   FadeLODNode(const FadeLODNode &copy);
 public:
   virtual PandaNode *make_copy() const;
   virtual bool cull_callback(CullTraverser *trav, CullTraverserData &data);
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
 PUBLISHED:
   INLINE void set_fade_time(PN_stdfloat t);
   INLINE PN_stdfloat get_fade_time() const;
+  MAKE_PROPERTY(fade_time, get_fade_time, set_fade_time);
 
-  void set_fade_bin(const string &name, int draw_order);
-  INLINE const string &get_fade_bin_name() const;
+  void set_fade_bin(const std::string &name, int draw_order);
+  INLINE const std::string &get_fade_bin_name() const;
   INLINE int get_fade_bin_draw_order() const;
+  MAKE_PROPERTY(fade_bin_name, get_fade_bin_name);
+  MAKE_PROPERTY(fade_bin_draw_order, get_fade_bin_draw_order);
 
   void set_fade_state_override(int override);
   INLINE int get_fade_state_override() const;
+  MAKE_PROPERTY(fade_state_override, get_fade_state_override,
+                                     set_fade_state_override);
 
 private:
   CPT(RenderState) get_fade_1_old_state();
@@ -53,7 +56,7 @@ private:
 
 private:
   PN_stdfloat _fade_time;
-  string _fade_bin_name;
+  std::string _fade_bin_name;
   int _fade_bin_draw_order;
   int _fade_state_override;
 
@@ -61,7 +64,7 @@ private:
   CPT(RenderState) _fade_1_old_state;
   CPT(RenderState) _fade_2_new_state;
   CPT(RenderState) _fade_2_old_state;
-  
+
 public:
   static void register_with_read_factory();
   virtual void write_datagram(BamWriter *manager, Datagram &dg);

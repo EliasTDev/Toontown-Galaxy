@@ -1,16 +1,15 @@
-// Filename: eggJointPointer.h
-// Created by:  drose (26Feb01)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggJointPointer.h
+ * @author drose
+ * @date 2001-02-26
+ */
 
 #ifndef EGGJOINTPOINTER_H
 #define EGGJOINTPOINTER_H
@@ -22,15 +21,13 @@
 
 class EggCharacterDb;
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggJointPointer
-// Description : This is a base class for EggJointNodePointer and
-//               EggMatrixTablePointer.  It stores a back pointer to
-//               either a <Joint> entry or an xform <Table> data, and
-//               thus presents an interface that returns 1-n matrices,
-//               one for each frame.  (<Joint> entries, for model
-//               files, appear the same as one-frame animations.)
-////////////////////////////////////////////////////////////////////
+/**
+ * This is a base class for EggJointNodePointer and EggMatrixTablePointer.  It
+ * stores a back pointer to either a <Joint> entry or an xform <Table> data,
+ * and thus presents an interface that returns 1-n matrices, one for each
+ * frame.  (<Joint> entries, for model files, appear the same as one-frame
+ * animations.)
+ */
 class EggJointPointer : public EggBackPointer {
 public:
   virtual int get_num_frames() const=0;
@@ -45,11 +42,11 @@ public:
 
   virtual void optimize();
   virtual void expose(EggGroup::DCSType dcs_type);
-  virtual void zero_channels(const string &components);
-  virtual void quantize_channels(const string &components, double quantum);
+  virtual void zero_channels(const std::string &components);
+  virtual void quantize_channels(const std::string &components, double quantum);
   virtual void apply_default_pose(EggJointPointer *source_joint, int frame);
 
-  virtual EggJointPointer *make_new_joint(const string &name)=0;
+  virtual EggJointPointer *make_new_joint(const std::string &name)=0;
 
 public:
   static TypeHandle get_class_type() {
@@ -72,5 +69,3 @@ private:
 #include "eggJointPointer.I"
 
 #endif
-
-

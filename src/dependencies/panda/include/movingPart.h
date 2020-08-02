@@ -1,16 +1,15 @@
-// Filename: movingPart.h
-// Created by:  drose (22Feb99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file movingPart.h
+ * @author drose
+ * @date 1999-02-22
+ */
 
 #ifndef MOVINGPART_H
 #define MOVINGPART_H
@@ -20,28 +19,26 @@
 #include "movingPartBase.h"
 #include "animChannel.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : MovingPart
-// Description : This is the template instantiation of MovingPartBase,
-//               on the particular type of value provided by the
-//               channel.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is the template instantiation of MovingPartBase, on the particular
+ * type of value provided by the channel.
+ */
 template<class SwitchType>
 class MovingPart : public MovingPartBase {
 public:
-  typedef TYPENAME SwitchType::ValueType ValueType;
+  typedef typename SwitchType::ValueType ValueType;
   typedef AnimChannel<SwitchType> ChannelType;
 
 protected:
   INLINE MovingPart(const MovingPart &copy);
 
 public:
-  INLINE MovingPart(PartGroup *parent, const string &name,
+  INLINE MovingPart(PartGroup *parent, const std::string &name,
                     const ValueType &default_value);
 
   virtual TypeHandle get_value_type() const;
   virtual AnimChannelBase *make_default_channel() const;
-  virtual void output_value(ostream &out) const;
+  virtual void output_value(std::ostream &out) const;
 
   ValueType _value;
   ValueType _default_value;
@@ -82,6 +79,3 @@ private:
 #include "movingPart.I"
 
 #endif
-
-
-

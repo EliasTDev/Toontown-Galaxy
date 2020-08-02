@@ -1,16 +1,15 @@
-// Filename: hermiteCurve.h
-// Created by:  drose (27Feb98)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file hermiteCurve.h
+ * @author drose
+ * @date 1998-02-27
+ */
 
 #ifndef HERMITECURVE_H
 #define HERMITECURVE_H
@@ -22,33 +21,32 @@
 BEGIN_PUBLISH //[
 // Hermite curve continuity types.
 #define HC_CUT         1
-// The curve is disconnected at this point.  All points between
-// this and the following CV are not part of the curve.
+// The curve is disconnected at this point.  All points between this and the
+// following CV are not part of the curve.
 
 #define HC_FREE        2
 // Tangents are unconstrained.  The curve is continuous, but its first
 // derivative is not.  This is G0 geometric continuity.
 
 #define HC_G1          3
-// Tangents are constrained to be collinear.  The curve's derivative
-// is not continuous in parametric space, but its geometric slope is.
-// The distinction is mainly relevant in the context of animation
-// along the curve--when crossing the join point, direction of motion
-// will change continuously, but the speed of motion may change
-// suddenly.  This is G1 geometric continuity.
+// Tangents are constrained to be collinear.  The curve's derivative is not
+// continuous in parametric space, but its geometric slope is.  The
+// distinction is mainly relevant in the context of animation along the curve
+// --when crossing the join point, direction of motion will change
+// continuously, but the speed of motion may change suddenly.  This is G1
+// geometric continuity.
 
 #define HC_SMOOTH     4
 // Tangents are constrained to be identical.  The curve and its first
-// derivative are continuous in parametric space.  When animating
-// motion across the join point, speed and direction of motion will
-// change continuously.  This is C1 parametric continuity.
+// derivative are continuous in parametric space.  When animating motion
+// across the join point, speed and direction of motion will change
+// continuously.  This is C1 parametric continuity.
 END_PUBLISH //]
 
-////////////////////////////////////////////////////////////////////
-//       Class : HermiteCurveCV
-// Description : A single CV of a Hermite curve.  Hermite curve CV's
-//               include an in and out tangent, as well as a position.
-////////////////////////////////////////////////////////////////////
+/**
+ * A single CV of a Hermite curve.  Hermite curve CV's include an in and out
+ * tangent, as well as a position.
+ */
 class EXPCL_PANDA_PARAMETRICS HermiteCurveCV {
 public:
   HermiteCurveCV();
@@ -59,9 +57,9 @@ public:
   void set_in(const LVecBase3 &in);
   void set_out(const LVecBase3 &out);
   void set_type(int type);
-  void set_name(const string &name);
+  void set_name(const std::string &name);
 
-  void format_egg(ostream &out, int indent, int num_dimensions,
+  void format_egg(std::ostream &out, int indent, int num_dimensions,
               bool show_in, bool show_out,
               PN_stdfloat scale_in, PN_stdfloat scale_out) const;
 
@@ -70,21 +68,18 @@ public:
 
   LVecBase3 _p, _in, _out;
   int _type;
-  string _name;
+  std::string _name;
 };
 
-////////////////////////////////////////////////////////////////////
-//       Class : HermiteCurve
-// Description : A parametric curve defined by a sequence of control
-//               vertices, each with an in and out tangent.
-//
-//               This class is actually implemented as a
-//               PiecewiseCurve made up of several CubicCurvesegs,
-//               each of which is created using the hermite_basis()
-//               method.  The HermiteCurve class itself keeps its own
-//               list of the CV's that are used to define the curve
-//               (since the CubicCurveseg class doesn't retain these).
-////////////////////////////////////////////////////////////////////
+/**
+ * A parametric curve defined by a sequence of control vertices, each with an
+ * in and out tangent.
+ *
+ * This class is actually implemented as a PiecewiseCurve made up of several
+ * CubicCurvesegs, each of which is created using the hermite_basis() method.
+ * The HermiteCurve class itself keeps its own list of the CV's that are used
+ * to define the curve (since the CubicCurveseg class doesn't retain these).
+ */
 class EXPCL_PANDA_PARAMETRICS HermiteCurve : public PiecewiseCurve {
 PUBLISHED:
   HermiteCurve();
@@ -127,10 +122,10 @@ PUBLISHED:
   const LVecBase3 &get_cv_out(int n) const;
   void get_cv_out(int n, LVecBase3 &v) const;
   PN_stdfloat get_cv_tstart(int n) const;
-  string get_cv_name(int n) const;
+  std::string get_cv_name(int n) const;
 
-  virtual void output(ostream &out) const;
-  void write_cv(ostream &out, int n) const;
+  virtual void output(std::ostream &out) const;
+  void write_cv(std::ostream &out, int n) const;
 
 public:
 
@@ -145,8 +140,8 @@ public:
                    int rtype3, PN_stdfloat t3, const LVecBase4 &v3);
 
 protected:
-  virtual bool format_egg(ostream &out, const string &name,
-                          const string &curve_type, int indent_level) const;
+  virtual bool format_egg(std::ostream &out, const std::string &name,
+                          const std::string &curve_type, int indent_level) const;
 
   void invalidate_cv(int n, bool redo_all);
   int find_cv(PN_stdfloat t);
@@ -168,7 +163,9 @@ public:
     return _type_handle;
   }
   static void init_type() {
-    register_type(_type_handle, "HermiteCurve");
+    PiecewiseCurve::init_type();
+    register_type(_type_handle, "HermiteCurve",
+                  PiecewiseCurve::get_class_type());
   }
   virtual TypeHandle get_type() const {
     return get_class_type();

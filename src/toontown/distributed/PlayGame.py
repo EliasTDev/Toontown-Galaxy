@@ -3,12 +3,13 @@ from toontown.toonbase.ToonBaseGlobal import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM, State, StateData
 from direct.task.Task import Task
-from ToontownMsgTypes import *
+from .ToontownMsgTypes import *
 from toontown.toonbase import ToontownGlobals, TTLocalizer
 from toontown.hood import TTHood, DDHood, MMHood, BRHood, DGHood, DLHood, GSHood, OZHood, GZHood, TutorialHood, SellbotHQ, CashbotHQ, LawbotHQ, BossbotHQ, QuietZoneState, ZoneUtil, EstateHood, PartyHood
 from direct.task import TaskManagerGlobal
 from toontown.parties.PartyGlobals import GoToPartyStatus
 from toontown.dna.DNAParser import *
+from libpandadna import *
 
 class PlayGame(StateData.StateData):
     notify = DirectNotifyGlobal.directNotify.newCategory('PlayGame')
@@ -125,14 +126,14 @@ class PlayGame(StateData.StateData):
 
     def loadDnaStoreTutorial(self):
         self.dnaStore = DNAStorage()
-        files = ('phase_3.5/dna/storage_tutorial.pdna', 'phase_3.5/dna/storage_interior.pdna')
+        files = ('phase_3.5/dna/storage_tutorial.dna', 'phase_3.5/dna/storage_interior.dna')
         dnaBulk = DNABulkLoader(self.dnaStore, files)
         dnaBulk.loadDNAFiles()
 
     def loadDnaStore(self):
         if not hasattr(self, 'dnaStore'):
             self.dnaStore = DNAStorage()
-            files = ('phase_4/dna/storage.pdna', 'phase_3.5/dna/storage_interior.pdna')
+            files = ('phase_4/dna/storage.dna', 'phase_3.5/dna/storage_interior.dna')
             dnaBulk = DNABulkLoader(self.dnaStore, files)
             dnaBulk.loadDNAFiles()
             self.dnaStore.storeFont('humanist', ToontownGlobals.getInterfaceFont())
@@ -499,7 +500,7 @@ class PlayGame(StateData.StateData):
     def getCatalogCodes(self, category):
         numCodes = self.dnaStore.getNumCatalogCodes(category)
         codes = []
-        for i in xrange(numCodes):
+        for i in range(numCodes):
             codes.append(self.dnaStore.getCatalogCode(category, i))
 
         return codes

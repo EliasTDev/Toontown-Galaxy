@@ -1,16 +1,15 @@
-// Filename: fltHeader.h
-// Created by:  drose (24Aug00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file fltHeader.h
+ * @author drose
+ * @date 2000-08-24
+ */
 
 #ifndef FLTHEADER_H
 #define FLTHEADER_H
@@ -35,16 +34,13 @@
 #include "pset.h"
 #include "pmap.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : FltHeader
-// Description : This is the first bead in the file, the top of the
-//               bead hierarchy, and the primary interface to reading
-//               and writing a Flt file.  You always read a Flt file
-//               by creating a header and calling read_flt(), which
-//               fills in its children beads automatically; you write
-//               a Flt file by creating a header, adding its children,
-//               and calling write_flt().
-////////////////////////////////////////////////////////////////////
+/**
+ * This is the first bead in the file, the top of the bead hierarchy, and the
+ * primary interface to reading and writing a Flt file.  You always read a Flt
+ * file by creating a header and calling read_flt(), which fills in its
+ * children beads automatically; you write a Flt file by creating a header,
+ * adding its children, and calling write_flt().
+ */
 class FltHeader : public FltBeadID {
 public:
   FltHeader(PathReplace *path_replace);
@@ -61,9 +57,9 @@ public:
   const Filename &get_flt_filename() const;
 
   FltError read_flt(Filename filename);
-  FltError read_flt(istream &in);
+  FltError read_flt(std::istream &in);
   FltError write_flt(Filename filename);
-  FltError write_flt(ostream &out);
+  FltError write_flt(std::ostream &out);
 
   enum AttrUpdate {
     AU_none,
@@ -117,7 +113,7 @@ public:
 
   int _format_revision_level;
   int _edit_revision_level;
-  string _last_revision;
+  std::string _last_revision;
   int _next_group_id;
   int _next_lod_id;
   int _next_object_id;
@@ -179,13 +175,13 @@ public:
   int get_offset_by_vertex(FltVertex *vertex);
 
 
-  // Accessors into the color palette.  This is read-only; why would
-  // you want to mess with building a new color palette?
+  // Accessors into the color palette.  This is read-only; why would you want
+  // to mess with building a new color palette?
   int get_num_colors() const;
   LColor get_color(int color_index) const;
   LRGBColor get_rgb(int color_index) const;
   bool has_color_name(int color_index) const;
-  string get_color_name(int color_index) const;
+  std::string get_color_name(int color_index) const;
 
   int get_closest_color(const LColor &color) const;
   int get_closest_rgb(const LRGBColor &color) const;
@@ -193,8 +189,8 @@ public:
   int get_num_color_entries() const;
   int get_num_color_shades() const;
 
-  // These functions are mainly used behind-the-scenes to decode the
-  // strange forest of color options defined for faces and vertices.
+  // These functions are mainly used behind-the-scenes to decode the strange
+  // forest of color options defined for faces and vertices.
   LColor get_color(int color_index, bool use_packed_color,
                    const FltPackedColor &packed_color,
                    int transparency);
@@ -225,7 +221,7 @@ public:
   void remove_light_source(int light_index);
 
 
-  // Accessors into the eyepoint/trackplane palette.
+  // Accessors into the eyepointtrackplane palette.
   bool got_eyepoint_trackplane_palette() const;
   void set_eyepoint_trackplane_palette(bool flag);
 
@@ -236,8 +232,8 @@ public:
 
 private:
   // Instance subtrees.  These are standalone subtrees, which may be
-  // referenced by various points in the hierarchy, stored by instance
-  // ID number.
+  // referenced by various points in the hierarchy, stored by instance ID
+  // number.
   typedef pmap<int, PT(FltInstanceDefinition)> Instances;
   Instances _instances;
 
@@ -258,15 +254,15 @@ private:
 
   bool _vertex_lookups_stale;
 
-  // This is maintained while the header is being read, to map the
-  // vertices to their corresponding offsets in the vertex palette.
+  // This is maintained while the header is being read, to map the vertices to
+  // their corresponding offsets in the vertex palette.
   int _current_vertex_offset;
 
 
   // Support for the color palette.
   bool _got_color_palette;
   typedef pvector<FltPackedColor> Colors;
-  typedef pmap<int, string> ColorNames;
+  typedef pmap<int, std::string> ColorNames;
   Colors _colors;
   ColorNames _color_names;
 
@@ -290,7 +286,7 @@ private:
   LightSources _light_sources;
 
 
-  // Support for the eyepoint/trackplane palette.
+  // Support for the eyepointtrackplane palette.
   bool _got_eyepoint_trackplane_palette;
   FltEyepoint _eyepoints[10];
   FltTrackplane _trackplanes[10];
@@ -342,5 +338,3 @@ private:
 };
 
 #endif
-
-

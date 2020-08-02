@@ -1,16 +1,15 @@
-// Filename: collisionLine.h
-// Created by:  drose (05Jan05)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file collisionLine.h
+ * @author drose
+ * @date 2005-01-05
+ */
 
 #ifndef COLLISIONLINE_H
 #define COLLISIONLINE_H
@@ -19,18 +18,16 @@
 
 #include "collisionRay.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : CollisionLine
-// Description : An infinite line, similar to a CollisionRay, except
-//               that it extends in both directions.  It is, however,
-//               directional.
-////////////////////////////////////////////////////////////////////
+/**
+ * An infinite line, similar to a CollisionRay, except that it extends in both
+ * directions.  It is, however, directional.
+ */
 class EXPCL_PANDA_COLLIDE CollisionLine : public CollisionRay {
 PUBLISHED:
   INLINE CollisionLine();
-  INLINE CollisionLine(const LPoint3 &origin, const LVector3 &direction);
-  INLINE CollisionLine(PN_stdfloat ox, PN_stdfloat oy, PN_stdfloat oz,
-                       PN_stdfloat dx, PN_stdfloat dy, PN_stdfloat dz);
+  INLINE explicit CollisionLine(const LPoint3 &origin, const LVector3 &direction);
+  INLINE explicit CollisionLine(PN_stdfloat ox, PN_stdfloat oy, PN_stdfloat oz,
+                                PN_stdfloat dx, PN_stdfloat dy, PN_stdfloat dz);
 
 public:
   INLINE CollisionLine(const CollisionLine &copy);
@@ -39,7 +36,7 @@ public:
   virtual PT(CollisionEntry)
   test_intersection(const CollisionEntry &entry) const;
 
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
 protected:
   virtual void fill_viz_geom();
@@ -73,5 +70,3 @@ private:
 #include "collisionLine.I"
 
 #endif
-
-

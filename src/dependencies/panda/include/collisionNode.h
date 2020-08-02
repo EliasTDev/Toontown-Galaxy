@@ -1,16 +1,15 @@
-// Filename: collisionNode.h
-// Created by:  drose (16Mar02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file collisionNode.h
+ * @author drose
+ * @date 2002-03-16
+ */
 
 #ifndef COLLISIONNODE_H
 #define COLLISIONNODE_H
@@ -22,17 +21,15 @@
 #include "collideMask.h"
 #include "pandaNode.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : CollisionNode
-// Description : A node in the scene graph that can hold any number of
-//               CollisionSolids.  This may either represent a bit of
-//               static geometry in the scene that things will collide
-//               with, or an animated object twirling around in the
-//               world and running into things.
-////////////////////////////////////////////////////////////////////
+/**
+ * A node in the scene graph that can hold any number of CollisionSolids.
+ * This may either represent a bit of static geometry in the scene that things
+ * will collide with, or an animated object twirling around in the world and
+ * running into things.
+ */
 class EXPCL_PANDA_COLLIDE CollisionNode : public PandaNode {
 PUBLISHED:
-  CollisionNode(const string &name);
+  explicit CollisionNode(const std::string &name);
 
 protected:
   CollisionNode(const CollisionNode &copy);
@@ -42,14 +39,14 @@ public:
   virtual PandaNode *make_copy() const;
   virtual bool preserve_name() const;
   virtual void xform(const LMatrix4 &mat);
-  virtual PandaNode *combine_with(PandaNode *other); 
+  virtual PandaNode *combine_with(PandaNode *other);
   virtual CollideMask get_legal_collide_mask() const;
 
   virtual bool cull_callback(CullTraverser *trav, CullTraverserData &data);
   virtual bool is_renderable() const;
   virtual bool is_collision_node() const;
 
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
 PUBLISHED:
   INLINE void set_collide_mask(CollideMask mask);
@@ -58,19 +55,28 @@ PUBLISHED:
   INLINE CollideMask get_from_collide_mask() const;
   INLINE CollideMask get_into_collide_mask() const;
 
+  MAKE_PROPERTY(from_collide_mask, get_from_collide_mask,
+                                   set_from_collide_mask);
+  MAKE_PROPERTY(into_collide_mask, get_into_collide_mask,
+                                   set_into_collide_mask);
+
   INLINE void clear_solids();
-  INLINE int get_num_solids() const;
-  INLINE CPT(CollisionSolid) get_solid(int n) const;
+  INLINE size_t get_num_solids() const;
+  INLINE CPT(CollisionSolid) get_solid(size_t n) const;
   MAKE_SEQ(get_solids, get_num_solids, get_solid);
-  INLINE PT(CollisionSolid) modify_solid(int n);
-  INLINE void set_solid(int n, CollisionSolid *solid);
-  INLINE void remove_solid(int n);
-  INLINE int add_solid(const CollisionSolid *solid);
+  INLINE PT(CollisionSolid) modify_solid(size_t n);
+  INLINE void set_solid(size_t n, CollisionSolid *solid);
+  INLINE void insert_solid(size_t n, const CollisionSolid *solid);
+  INLINE void remove_solid(size_t n);
+  INLINE size_t add_solid(const CollisionSolid *solid);
+  MAKE_SEQ_PROPERTY(solids, get_num_solids, get_solid, set_solid, remove_solid, insert_solid);
 
   INLINE int get_collider_sort() const;
   INLINE void set_collider_sort(int sort);
+  MAKE_PROPERTY(collider_sort, get_collider_sort, set_collider_sort);
 
   INLINE static CollideMask get_default_collide_mask();
+  MAKE_PROPERTY(default_collide_mask, get_default_collide_mask);
 
 protected:
   virtual void compute_internal_bounds(CPT(BoundingVolume) &internal_bounds,
@@ -81,15 +87,16 @@ protected:
 private:
   CPT(RenderState) get_last_pos_state();
 
-  // This data is not cycled, for now.  We assume the collision
-  // traversal will take place in App only.  Perhaps we will revisit
-  // this later.
+  // This data is not cycled, for now.  We assume the collision traversal will
+  // take place in App only.  Perhaps we will revisit this later.
   CollideMask _from_collide_mask;
   int _collider_sort;
 
   typedef pvector< COWPT(CollisionSolid) > Solids;
   Solids _solids;
-  
+
+  friend class CollisionTraverser;
+
 public:
   static void register_with_read_factory();
   virtual void write_datagram(BamWriter *manager, Datagram &dg);

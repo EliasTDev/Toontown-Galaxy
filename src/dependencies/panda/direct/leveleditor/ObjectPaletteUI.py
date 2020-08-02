@@ -2,8 +2,8 @@
 Defines ObjectPalette tree UI
 """
 import wx
-import cPickle as pickle
-from PaletteTreeCtrl import *
+from .PaletteTreeCtrl import *
+
 
 class ObjectPaletteUI(wx.Panel):
     def __init__(self, parent, editor):
@@ -69,4 +69,4 @@ class ObjectPaletteUI(wx.Panel):
         return cmp(index1, index2)
 
     def getSelected(self):
-        return self.tree.GetItemPyData(self.tree.GetSelection())
+        return self.tree.GetItemData(self.tree.GetSelection())

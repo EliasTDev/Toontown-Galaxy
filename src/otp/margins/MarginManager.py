@@ -1,5 +1,5 @@
 from panda3d.core import *
-from MarginCell import MarginCell
+from .MarginCell import MarginCell
 import random
 
 class MarginManager(PandaNode):

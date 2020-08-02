@@ -1,5 +1,5 @@
 from direct.directnotify import DirectNotifyGlobal
-import FactoryInterior
+from . import FactoryInterior
 
 class MegaCorpInterior(FactoryInterior.FactoryInterior):
     notify = DirectNotifyGlobal.directNotify.newCategory('FactoryInterior')

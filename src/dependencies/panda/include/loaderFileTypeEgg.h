@@ -1,16 +1,15 @@
-// Filename: loaderFileTypeEgg.h
-// Created by:  drose (20Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file loaderFileTypeEgg.h
+ * @author drose
+ * @date 2000-06-20
+ */
 
 #ifndef LOADERFILETYPEEGG_H
 #define LOADERFILETYPEEGG_H
@@ -19,16 +18,15 @@
 
 #include "loaderFileType.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : LoaderFileTypeEgg
-// Description : This defines the Loader interface to read Egg files.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAEGG LoaderFileTypeEgg : public LoaderFileType {
+/**
+ * This defines the Loader interface to read Egg files.
+ */
+class EXPCL_PANDA_EGG2PG LoaderFileTypeEgg : public LoaderFileType {
 public:
   LoaderFileTypeEgg();
 
-  virtual string get_name() const;
-  virtual string get_extension() const;
+  virtual std::string get_name() const;
+  virtual std::string get_extension() const;
   virtual bool supports_compressed() const;
 
   virtual bool supports_load() const;
@@ -58,4 +56,3 @@ private:
 };
 
 #endif
-

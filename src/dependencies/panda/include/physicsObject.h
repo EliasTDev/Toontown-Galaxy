@@ -1,16 +1,15 @@
-// Filename: physicsObject.h
-// Created by:  charles (13Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file physicsObject.h
+ * @author charles
+ * @date 2000-06-13
+ */
 
 #ifndef PHYSICS_OBJECT_H
 #define PHYSICS_OBJECT_H
@@ -20,13 +19,12 @@
 #include "luse.h"
 #include "configVariableDouble.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : PhysicsObject
-// Description : A body on which physics will be applied.  If you're
-//               looking to add physical motion to your class, do
-//               NOT derive from this.  Derive from Physical instead.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAPHYSICS PhysicsObject : public TypedReferenceCount {
+/**
+ * A body on which physics will be applied.  If you're looking to add physical
+ * motion to your class, do NOT derive from this.  Derive from Physical
+ * instead.
+ */
+class EXPCL_PANDA_PHYSICS PhysicsObject : public TypedReferenceCount {
 public:
   typedef pvector<PT(PhysicsObject)> Vector;
 
@@ -44,7 +42,7 @@ PUBLISHED:
   INLINE void set_mass(PN_stdfloat);
   INLINE PN_stdfloat get_mass() const;
 
-  //INLINE void set_center_of_mass(const LPoint3 &pos); use set_position.
+  // INLINE void set_center_of_mass(const LPoint3 &pos); use set_position.
   INLINE void set_position(const LPoint3 &pos);
   INLINE void set_position(PN_stdfloat x, PN_stdfloat y, PN_stdfloat z);
   INLINE LPoint3 get_position() const;
@@ -88,18 +86,18 @@ PUBLISHED:
   virtual LMatrix4 get_inertial_tensor() const;
   virtual LMatrix4 get_lcs() const;
   virtual PhysicsObject *make_copy() const;
-  
-  #ifndef NDEBUG
-    void set_name(const string &name) {
-      _name = name;
-    }
-    const string& get_name() {
-      return _name;
-    }
-  #endif
-  
-  virtual void output(ostream &out) const;
-  virtual void write(ostream &out, unsigned int indent=0) const;
+
+#if !defined(NDEBUG) || !defined(CPPPARSER)
+  void set_name(const std::string &name) {
+    _name = name;
+  }
+  const std::string &get_name() {
+    return _name;
+  }
+#endif
+
+  virtual void output(std::ostream &out) const;
+  virtual void write(std::ostream &out, int indent=0) const;
 
 private:
   // physical
@@ -116,10 +114,8 @@ private:
 
   bool _process_me;
   bool _oriented;
-  
-  #ifndef NDEBUG
-    string _name;
-  #endif
+
+  std::string _name;
 
 public:
   static TypeHandle get_class_type() {

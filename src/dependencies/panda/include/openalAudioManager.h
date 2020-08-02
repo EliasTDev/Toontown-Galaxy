@@ -1,18 +1,14 @@
-// Filename: openalAudioManager.h
-// Created by:  Ben Buchwald <bb2@alumni.cmu.edu>
-//
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
-
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file openalAudioManager.h
+ * @author Ben Buchwald <bb2@alumni.cmu.edu>
+ */
 
 #ifndef __OPENAL_AUDIO_MANAGER_H__
 #define __OPENAL_AUDIO_MANAGER_H__
@@ -27,7 +23,7 @@
 #include "reMutex.h"
 
 // OSX uses the OpenAL framework
-#ifdef IS_OSX
+#ifdef HAVE_OPENAL_FRAMEWORK
   #include <OpenAL/al.h>
   #include <OpenAL/alc.h>
 #else
@@ -47,7 +43,7 @@ class EXPCL_OPENAL_AUDIO OpenALAudioManager : public AudioManager {
   friend class OpenALSoundData;
 
  public:
-  //Constructor and Destructor
+  // Constructor and Destructor
   OpenALAudioManager();
   virtual ~OpenALAudioManager();
 
@@ -55,10 +51,10 @@ class EXPCL_OPENAL_AUDIO OpenALAudioManager : public AudioManager {
 
   virtual bool is_valid();
 
-  virtual PT(AudioSound) get_sound(const string&,     bool positional = false, int mode=SM_heuristic);
+  virtual PT(AudioSound) get_sound(const Filename &, bool positional = false, int mode=SM_heuristic);
   virtual PT(AudioSound) get_sound(MovieAudio *sound, bool positional = false, int mode=SM_heuristic);
 
-  virtual void uncache_sound(const string&);
+  virtual void uncache_sound(const Filename &);
   virtual void clear_cache();
   virtual void set_cache_limit(unsigned int count);
   virtual unsigned int get_cache_limit() const;
@@ -72,12 +68,12 @@ class EXPCL_OPENAL_AUDIO OpenALAudioManager : public AudioManager {
   virtual void set_active(bool);
   virtual bool get_active() const;
 
-  // This controls the "set of ears" that listens to 3D spacialized sound
-  // px, py, pz are position coordinates. Can be 0.0f to ignore.
-  // vx, vy, vz are a velocity vector in UNITS PER SECOND.
-  // fx, fy and fz are the respective components of a unit forward-vector
-  // ux, uy and uz are the respective components of a unit up-vector
-  // These changes will NOT be invoked until audio_3d_update() is called.
+  // This controls the "set of ears" that listens to 3D spacialized sound px,
+  // py, pz are position coordinates.  Can be 0.0f to ignore.  vx, vy, vz are
+  // a velocity vector in UNITS PER SECOND. fx, fy and fz are the respective
+  // components of a unit forward-vector ux, uy and uz are the respective
+  // components of a unit up-vector These changes will NOT be invoked until
+  // audio_3d_update() is called.
   virtual void audio_3d_set_listener_attributes(PN_stdfloat px, PN_stdfloat py, PN_stdfloat pz,
                                                 PN_stdfloat vx, PN_stdfloat xy, PN_stdfloat xz,
                                                 PN_stdfloat fx, PN_stdfloat fy, PN_stdfloat fz,
@@ -88,22 +84,24 @@ class EXPCL_OPENAL_AUDIO OpenALAudioManager : public AudioManager {
                                                 PN_stdfloat *fx, PN_stdfloat *fy, PN_stdfloat *fz,
                                                 PN_stdfloat *ux, PN_stdfloat *uy, PN_stdfloat *uz);
 
-  // Control the "relative distance factor" for 3D spacialized audio in units-per-foot. Default is 1.0
-  // OpenAL has no distance factor but we use this as a scale
-  // on the min/max distances of sounds to preserve FMOD compatibility.
-  // Also, adjusts the speed of sound to compensate for unit difference.
+
+  // Control the "relative scale that sets the distance factor" units for 3D
+  // spacialized audio. This is a float in units-per-meter. Default value is
+  // 1.0, which means that Panda units are understood as meters; for e.g.
+  // feet, set 3.28. This factor is applied only to Fmod and OpenAL at the
+  // moment.
+  // OpenAL in fact has no distance factor like Fmod, but works with the speed
+  // of sound instead, so we use this factor to scale the speed of sound.
   virtual void audio_3d_set_distance_factor(PN_stdfloat factor);
   virtual PN_stdfloat audio_3d_get_distance_factor() const;
 
-  // Control the presence of the Doppler effect. Default is 1.0
-  // Exaggerated Doppler, use >1.0
-  // Diminshed Doppler, use <1.0
+  // Control the presence of the Doppler effect.  Default is 1.0 Exaggerated
+  // Doppler, use >1.0 Diminshed Doppler, use <1.0
   virtual void audio_3d_set_doppler_factor(PN_stdfloat factor);
   virtual PN_stdfloat audio_3d_get_doppler_factor() const;
 
-  // Exaggerate or diminish the effect of distance on sound. Default is 1.0
-  // Faster drop off, use >1.0
-  // Slower drop off, use <1.0
+  // Exaggerate or diminish the effect of distance on sound.  Default is 1.0
+  // Faster drop off, use >1.0 Slower drop off, use <1.0
   virtual void audio_3d_set_drop_off_factor(PN_stdfloat factor);
   virtual PN_stdfloat audio_3d_get_drop_off_factor() const;
 
@@ -116,6 +114,8 @@ class EXPCL_OPENAL_AUDIO OpenALAudioManager : public AudioManager {
   virtual void update();
 
 private:
+  std::string select_audio_device();
+
   void make_current() const;
 
   bool can_use_audio(MovieAudioCursor *source);
@@ -129,6 +129,8 @@ private:
   void decrement_client_count(SoundData *sd);
   void discard_excess_cache(int limit);
 
+  void delete_buffer(ALuint buffer);
+
   void starting_sound(OpenALAudioSound* audio);
   void stopping_sound(OpenALAudioSound* audio);
 
@@ -138,26 +140,24 @@ private:
   // This global lock protects all access to OpenAL library interfaces.
   static ReMutex _lock;
 
-  // An expiration queue is a list of SoundData
-  // that are no longer being used.  They are kept
-  // around for a little while, since it is common to
-  // stop using a sound for a brief moment and then
-  // quickly resume.
+  // An expiration queue is a list of SoundData that are no longer being used.
+  // They are kept around for a little while, since it is common to stop using
+  // a sound for a brief moment and then quickly resume.
 
   typedef plist<void *> ExpirationQueue;
   ExpirationQueue _expiring_samples;
   ExpirationQueue _expiring_streams;
 
-  // An AudioSound that uses a SoundData is called a "client"
-  // of the SoundData.  The SoundData keeps track of how
-  // many clients are using it.  When the number of clients
-  // drops to zero, the SoundData is no longer in use.  The
-  // expiration queue is a list of all SoundData that aren't
-  // in use, in least-recently-used order.  If a SoundData
-  // in the expiration queue gains a new client, it is removed
-  // from the expiration queue.  When the number of sounds
-  // in the expiration queue exceeds the cache limit, the
-  // first sound in the expiration queue is purged.
+/*
+ * An AudioSound that uses a SoundData is called a "client" of the SoundData.
+ * The SoundData keeps track of how many clients are using it.  When the
+ * number of clients drops to zero, the SoundData is no longer in use.  The
+ * expiration queue is a list of all SoundData that aren't in use, in least-
+ * recently-used order.  If a SoundData in the expiration queue gains a new
+ * client, it is removed from the expiration queue.  When the number of sounds
+ * in the expiration queue exceeds the cache limit, the first sound in the
+ * expiration queue is purged.
+ */
 
   class SoundData {
   public:
@@ -175,7 +175,7 @@ private:
   };
 
 
-  typedef phash_map<string, SoundData *> SampleCache;
+  typedef phash_map<std::string, SoundData *> SampleCache;
   SampleCache _sample_cache;
 
   typedef phash_set<PT(OpenALAudioSound)> SoundsPlaying;
@@ -215,9 +215,7 @@ private:
   ALfloat _velocity[3];
   ALfloat _forward_up[6];
 
-  ////////////////////////////////////////////////////////////
-  //These are needed for Panda's Pointer System. DO NOT ERASE!
-  ////////////////////////////////////////////////////////////
+  // These are needed for Panda's Pointer System.  DO NOT ERASE!
 
  public:
   static TypeHandle get_class_type() {
@@ -238,9 +236,7 @@ private:
  private:
   static TypeHandle _type_handle;
 
-  ////////////////////////////////////////////////////////////
-  //DONE
-  ////////////////////////////////////////////////////////////
+  // DONE
 
 };
 

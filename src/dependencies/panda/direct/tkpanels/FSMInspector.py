@@ -1,14 +1,117 @@
-""" Finite State Machine Inspector module """
+"""Defines the `FSMInspector` class, which opens a Tkinter window for
+inspecting :ref:`finite-state-machines`.
+
+Using the Finite State Inspector
+--------------------------------
+
+1) In your Config.prc add::
+
+    want-tk #t
+
+2) Start up the show and create a Finite State Machine::
+
+    from direct.showbase.ShowBaseGlobal import *
+
+    from direct.fsm import ClassicFSM
+    from direct.fsm import State
+
+    def enterState():
+        print('enterState')
+
+    def exitState():
+        print 'exitState'
+
+    fsm = ClassicFSM.ClassicFSM('stopLight',
+              [State.State('red', enterState, exitState, ['green']),
+                State.State('yellow', enterState, exitState, ['red']),
+                State.State('green', enterState, exitState, ['yellow'])],
+              'red',
+              'red')
+
+    import FSMInspector
+
+    inspector = FSMInspector.FSMInspector(fsm, title = fsm.getName())
+
+    # Note, the inspectorPos argument is optional, the inspector will
+    # automagically position states on startup
+    fsm = ClassicFSM.ClassicFSM('stopLight', [
+        State.State('yellow',
+                    enterState,
+                    exitState,
+                    ['red'],
+                    inspectorPos = [95.9, 48.0]),
+        State.State('red',
+                    enterState,
+                    exitState,
+                    ['green'],
+                    inspectorPos = [0.0, 0.0]),
+        State.State('green',
+                    enterState,
+                    exitState,
+                    ['yellow'],
+                    inspectorPos = [0.0, 95.9])],
+            'red',
+            'red')
+
+3) Pop open a viewer::
+
+    import FSMInspector
+    insp = FSMInspector.FSMInspector(fsm)
+
+or if you wish to be fancy::
+
+    insp = FSMInspector.FSMInspector(fsm, title = fsm.getName())
+
+Features:
+
+  - Right mouse button over a state pops up a menu allowing you to
+    request a transition to that state
+  - Middle mouse button will grab the canvas and slide things around if
+    your state machine is bigger than the viewing area
+  - There are some self explanatory menu options up at the top, the most
+    useful being: "print ClassicFSM layout" which will print out Python
+    code which will create an ClassicFSM augmented with layout
+    information for the viewer so everything shows up in the same place
+    the next time you inspect the state machine
+
+Caveat
+------
+
+There is an unexplained problem with using Tk and emacs right now which
+occasionally results in everything locking up.  This procedure seems to
+avoid the problem for me::
+
+   # Start up the show
+   from direct.showbase.ShowBaseGlobal import *
+
+   # You will see the window and a Tk panel pop open
+
+   # Type a number at the emacs prompt
+   >>> 123
+
+   # At this point everything will lock up and you won't get your prompt back
+
+   # Hit a bunch of Control-C's in rapid succession, in most cases
+   # this will break you out of whatever badness you were in and
+   # from that point on everything will behave normally
+
+
+   # This is how you pop up an inspector
+   import FSMInspector
+   inspector = FSMInspector.FSMInspector(fsm, title = fsm.getName())
+
+"""
 
 __all__ = ['FSMInspector', 'StateInspector']
 
 from direct.tkwidgets.AppShell import *
 from direct.showbase.TkGlobal import *
-from tkSimpleDialog import askstring
-from Tkinter import *
 import Pmw, math, operator
+from tkinter.simpledialog import askstring
+
 
 DELTA = (5.0 / 360.) * 2.0 * math.pi
+
 
 class FSMInspector(AppShell):
     # Override class variables
@@ -115,14 +218,14 @@ class FSMInspector(AppShell):
         self._canvas.itemconfigure('labels', font = ('MS Sans Serif', size))
 
     def setMarkerSize(self, size):
-        for key in self.stateInspectorDict.keys():
+        for key in self.stateInspectorDict:
             self.stateInspectorDict[key].setRadius(size)
         self.drawConnections()
 
     def drawConnections(self, event = None):
         # Get rid of existing arrows
         self._canvas.delete('arrow')
-        for key in self.stateInspectorDict.keys():
+        for key in self.stateInspectorDict:
             si = self.stateInspectorDict[key]
             state = si.state
             if state.getTransitions():
@@ -151,7 +254,7 @@ class FSMInspector(AppShell):
                       toCenter,
                       self.computePoint(toState.radius,
                                          angle - DELTA))
-        return newFromPt + newToPt
+        return list(newFromPt) + list(newToPt)
 
     def computePoint(self, radius, angle):
         x = radius * math.cos(angle)
@@ -236,7 +339,7 @@ class FSMInspector(AppShell):
         self.setGridSize(self._gridSize)
 
     def setGridSize(self, size):
-        for key in self.stateInspectorDict.keys():
+        for key in self.stateInspectorDict:
             self.stateInspectorDict[key].setGridSize(size)
 
     def popupGridDialog(self):
@@ -253,29 +356,27 @@ class FSMInspector(AppShell):
 
     def printLayout(self):
         dict = self.stateInspectorDict
-        keys = dict.keys()
-        keys.sort
-        print "ClassicFSM.ClassicFSM('%s', [" % self.name
+        keys = list(dict.keys())
+        keys.sort()
+        print("ClassicFSM.ClassicFSM('%s', [" % self.name)
         for key in keys[:-1]:
             si = dict[key]
             center = si.center()
-            print "    State.State('%s'," % si.state.getName()
-            print "                %s," % si.state.getEnterFunc().__name__
-            print "                %s," % si.state.getExitFunc().__name__
-            print "                %s," % si.state.getTransitions()
-            print "                inspectorPos = ",
-            print "[%.1f, %.1f])," % (center[0], center[1])
+            print("    State.State('%s'," % si.state.getName())
+            print("                %s," % si.state.getEnterFunc().__name__)
+            print("                %s," % si.state.getExitFunc().__name__)
+            print("                %s," % si.state.getTransitions())
+            print("                inspectorPos = [%.1f, %.1f])," % (center[0], center[1]))
         for key in keys[-1:]:
             si = dict[key]
             center = si.center()
-            print "    State.State('%s'," % si.state.getName()
-            print "                %s," % si.state.getEnterFunc().__name__
-            print "                %s," % si.state.getExitFunc().__name__
-            print "                %s," % si.state.getTransitions()
-            print "                inspectorPos = ",
-            print "[%.1f, %.1f])]," % (center[0], center[1])
-        print "        '%s'," % self.fsm.getInitialState().getName()
-        print "        '%s')" % self.fsm.getFinalState().getName()
+            print("    State.State('%s'," % si.state.getName())
+            print("                %s," % si.state.getEnterFunc().__name__)
+            print("                %s," % si.state.getExitFunc().__name__)
+            print("                %s," % si.state.getTransitions())
+            print("                inspectorPos = [%.1f, %.1f])]," % (center[0], center[1]))
+        print("        '%s'," % self.fsm.getInitialState().getName())
+        print("        '%s')" % self.fsm.getFinalState().getName())
 
     def toggleBalloon(self):
         if self.toggleBalloonVar.get():
@@ -434,7 +535,7 @@ class StateInspector(Pmw.MegaArchetype):
         self.fsm.request(self.getName())
 
     def inspectSubMachine(self):
-        print 'inspect ' + self.tag + ' subMachine'
+        print('inspect ' + self.tag + ' subMachine')
         for childFSM in self.state.getChildren():
             FSMInspector(childFSM)
 
@@ -443,104 +544,3 @@ class StateInspector(Pmw.MegaArchetype):
 
     def exitedState(self):
         self._canvas.itemconfigure(self.marker, fill = 'CornflowerBlue')
-
-
-"""
-# USING FINITE STATE INSPECTOR
-
-1)      in your Configrc add:
-
-want-tk #t
-
-2)      start up the show and create a Finite State Machine
-
-from direct.showbase.ShowBaseGlobal import *
-
-from direct.fsm import ClassicFSM
-from direct.fsm import State
-
-def enterState():
-    print 'enterState'
-
-def exitState():
-    print 'exitState'
-
-fsm = ClassicFSM.ClassicFSM('stopLight',
-          [State.State('red', enterState, exitState, ['green']),
-            State.State('yellow', enterState, exitState, ['red']),
-            State.State('green', enterState, exitState, ['yellow'])],
-          'red',
-          'red')
-
-import FSMInspector
-
-inspector = FSMInspector.FSMInspector(fsm, title = fsm.getName())
-
-# Note, the inspectorPos argument is optional, the inspector will
-# automagically position states on startup
-fsm = ClassicFSM.ClassicFSM('stopLight', [
-    State.State('yellow',
-                enterState,
-                exitState,
-                ['red'],
-                inspectorPos = [95.9, 48.0]),
-    State.State('red',
-                enterState,
-                exitState,
-                ['green'],
-                inspectorPos = [0.0, 0.0]),
-    State.State('green',
-                enterState,
-                exitState,
-                ['yellow'],
-                inspectorPos = [0.0, 95.9])],
-        'red',
-        'red')
-
-3)      Pop open a viewer
-
-import FSMInspector
-insp = FSMInspector.FSMInspector(fsm)
-
-or if you wish to be fancy:
-
-insp = FSMInspector.FSMInspector(fsm, title = fsm.getName())
-
-Features:
-   -  Right mouse button over a state pops up a menu allowing you to
-        request a transition to that state
-   -  Middle mouse button will grab the canvas and slide things around
-        if your state machine is bigger than the viewing area
-   -  There are some self explanatory menu options up at the top, the most
-        useful being: "print ClassicFSM layout" which will print out python code
-        which will create an ClassicFSM augmented with layout information for the
-        viewer so everything shows up in the same place the next time you
-        inspect the state machine
-
-CAVEAT:
-
-There is some unexplained problems with using TK and emacs right now which
-occasionally results in everything locking up.  This procedure seems to
-avoid the problem for me:
-
-# Start up the show
-from direct.showbase.ShowBaseGlobal import *
-
-# You will see the window and a Tk panel pop open
-
-# Type a number at the emacs prompt
->>> 123
-
-# At this point everything will lock up and you won't get your prompt back
-
-# Hit a bunch of Control-C's in rapid succession, in most cases
-# this will break you out of whatever badness you were in and
-# from that point on everything will behave normally
-
-
-# This is how you pop up an inspector
-import FSMInspector
-inspector = FSMInspector.FSMInspector(fsm, title = fsm.getName())
-
-"""
-

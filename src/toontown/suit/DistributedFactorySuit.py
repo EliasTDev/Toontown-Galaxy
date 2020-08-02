@@ -2,7 +2,7 @@ from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.fsm import ClassicFSM, State
 from direct.directnotify import DirectNotifyGlobal
-import DistributedSuitBase
+from . import DistributedSuitBase
 from direct.task.Task import Task
 import random
 from toontown.toonbase import ToontownGlobals
@@ -401,7 +401,7 @@ class DistributedFactorySuit(DistributedSuitBase.DistributedSuitBase, DelayDelet
             actorNode = self.find('**/__Actor_modelRoot')
             actorCollection = actorNode.findAllMatches('*')
             parts = ()
-            for thingIndex in xrange(0, actorCollection.getNumPaths()):
+            for thingIndex in range(0, actorCollection.getNumPaths()):
                 thing = actorCollection[thingIndex]
                 if thing.getName() not in ('joint_attachMeter', 'joint_nameTag', 'def_nameTag'):
                     thing.setColorScale(1.0, 0.0, 0.0, 1.0)

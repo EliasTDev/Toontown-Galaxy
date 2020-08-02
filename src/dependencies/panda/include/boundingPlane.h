@@ -1,16 +1,15 @@
-// Filename: boundingPlane.h
-// Created by:  drose (19Aug05)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file boundingPlane.h
+ * @author drose
+ * @date 2005-08-19
+ */
 
 #ifndef BOUNDINGPLANE_H
 #define BOUNDINGPLANE_H
@@ -20,14 +19,12 @@
 #include "geometricBoundingVolume.h"
 #include "plane.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : BoundingPlane
-// Description : This funny bounding volume is an infinite plane that
-//               divides space into two regions: the part behind the
-//               normal, which is "inside" the bounding volume, and
-//               the part in front of the normal, which is "outside"
-//               the bounding volume.
-////////////////////////////////////////////////////////////////////
+/**
+ * This funny bounding volume is an infinite plane that divides space into two
+ * regions: the part behind the normal, which is "inside" the bounding volume,
+ * and the part in front of the normal, which is "outside" the bounding
+ * volume.
+ */
 class EXPCL_PANDA_MATHUTIL BoundingPlane : public GeometricBoundingVolume {
 PUBLISHED:
   INLINE_MATHUTIL BoundingPlane();
@@ -40,10 +37,12 @@ public:
   virtual LPoint3 get_approx_center() const;
   virtual void xform(const LMatrix4 &mat);
 
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
 PUBLISHED:
   INLINE_MATHUTIL const LPlane &get_plane() const;
+
+  MAKE_PROPERTY(plane, get_plane);
 
 public:
   virtual const BoundingPlane *as_bounding_plane() const;
@@ -85,6 +84,7 @@ private:
 
   friend class BoundingSphere;
   friend class BoundingBox;
+  friend class BoundingHexahedron;
 };
 
 #include "boundingPlane.I"

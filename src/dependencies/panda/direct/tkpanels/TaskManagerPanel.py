@@ -3,9 +3,11 @@
 __all__ = ['TaskManagerPanel', 'TaskManagerWidget']
 
 from direct.tkwidgets.AppShell import *
-from Tkinter import *
 from direct.showbase.DirectObject import DirectObject
 import Pmw
+from tkinter import *
+from tkinter.messagebox import askokcancel
+
 
 class TaskManagerPanel(AppShell):
     # Override class variables here
@@ -23,7 +25,7 @@ class TaskManagerPanel(AppShell):
         self.defineoptions(kw, optiondefs)
 
         self.taskMgr = taskMgr
-        
+
         # Call superclass initialization function
         AppShell.__init__(self, parent = parent)
 
@@ -80,7 +82,7 @@ class TaskManagerWidget(DirectObject):
         self._popupMenu.add_command(
             label = 'Remove Matching Tasks',
             command = self.removeMatchingTasks)
-                                           
+
         # Controls Frame
         controlsFrame = Frame(parent)
         self.removeButton = Button(controlsFrame, text = 'Remove Task',
@@ -112,7 +114,7 @@ class TaskManagerWidget(DirectObject):
         controlsFrame.pack(fill = X)
         controlsFrame.grid_columnconfigure(0, weight = 1)
         controlsFrame.grid_columnconfigure(1, weight = 1)
-        
+
         # Add hook to spawnTaskEvents
         self.accept('TaskManager-spawnTask', self.spawnTaskHook)
         self.accept('TaskManager-removeTask', self.removeTaskHook)
@@ -158,7 +160,7 @@ class TaskManagerWidget(DirectObject):
             taskNames.append(task.getName())
             self.__taskDict[count] = task
             count += 1
-        
+
         if taskNames:
             self.taskListBox.setlist(taskNames)
             # And set current index (so keypresses will start with index 0)
@@ -188,7 +190,6 @@ class TaskManagerWidget(DirectObject):
                 (name == 'tkLoop') or
                 (name == 'eventManager') or
                 (name == 'igLoop')):
-                from tkMessageBox import askokcancel
                 ok = askokcancel('TaskManagerControls',
                                  'Remove: %s?' % name,
                                  parent = self.parent,
@@ -205,7 +206,6 @@ class TaskManagerWidget(DirectObject):
             (name == 'tkLoop') or
             (name == 'eventManager') or
             (name == 'igLoop')):
-            from tkMessageBox import askokcancel
             ok = askokcancel('TaskManagerControls',
                              'Remove tasks named: %s?' % name,
                              parent = self.parent,
@@ -217,5 +217,5 @@ class TaskManagerWidget(DirectObject):
     def onDestroy(self):
         self.ignore('TaskManager-spawnTask')
         self.ignore('TaskManager-removeTask')
-        
+
 

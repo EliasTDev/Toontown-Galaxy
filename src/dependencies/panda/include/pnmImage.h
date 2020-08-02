@@ -1,16 +1,15 @@
-// Filename: pnmImage.h
-// Created by:  drose (14Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file pnmImage.h
+ * @author drose
+ * @date 2000-06-14
+ */
 
 #ifndef PNMIMAGE_H
 #define PNMIMAGE_H
@@ -27,50 +26,41 @@ class PNMReader;
 class PNMWriter;
 class PNMFileType;
 
-////////////////////////////////////////////////////////////////////
-//       Class : PNMImage
-// Description : The name of this class derives from the fact that we
-//               originally implemented it as a layer on top of the
-//               "pnm library", based on netpbm, which was built to
-//               implement pbm, pgm, and pbm files, and is the
-//               underlying support of a number of public-domain image
-//               file converters.  Nowadays we are no longer derived
-//               directly from the pnm library, mainly to allow
-//               support of C++ iostreams instead of the C stdio FILE
-//               interface.
-//
-//               Conceptually, a PNMImage is a two-dimensional array
-//               of xels, which are the PNM-defined generic pixel
-//               type.  Each xel may have a red, green, and blue
-//               component, or (if the image is grayscale) a gray
-//               component.  The image may be read in, the individual
-//               xels manipulated, and written out again, or a black
-//               image may be constructed from scratch.
-//
-//               A PNMImage has a color space and a maxval, the
-//               combination of which defines how a floating-point
-//               linear color value is encoded as an integer value in
-//               memory.  The functions ending in _val operate on
-//               encoded colors, whereas the regular ones work with
-//               linear floating-point values.  All operations are
-//               color space correct unless otherwise specified.
-//
-//               The image is of size XSize() by YSize() xels,
-//               numbered from top to bottom, left to right, beginning
-//               at zero.
-//
-//               Files can be specified by filename, or by an iostream
-//               pointer.  The filename "-" refers to stdin or stdout.
-//
-//               This class is not inherently thread-safe; use it
-//               from a single thread or protect access using a mutex.
-////////////////////////////////////////////////////////////////////
+/**
+ * The name of this class derives from the fact that we originally implemented
+ * it as a layer on top of the "pnm library", based on netpbm, which was built
+ * to implement pbm, pgm, and pbm files, and is the underlying support of a
+ * number of public-domain image file converters.  Nowadays we are no longer
+ * derived directly from the pnm library, mainly to allow support of C++
+ * iostreams instead of the C stdio FILE interface.
+ *
+ * Conceptually, a PNMImage is a two-dimensional array of xels, which are the
+ * PNM-defined generic pixel type.  Each xel may have a red, green, and blue
+ * component, or (if the image is grayscale) a gray component.  The image may
+ * be read in, the individual xels manipulated, and written out again, or a
+ * black image may be constructed from scratch.
+ *
+ * A PNMImage has a color space and a maxval, the combination of which defines
+ * how a floating-point linear color value is encoded as an integer value in
+ * memory.  The functions ending in _val operate on encoded colors, whereas
+ * the regular ones work with linear floating-point values.  All operations
+ * are color space correct unless otherwise specified.
+ *
+ * The image is of size XSize() by YSize() xels, numbered from top to bottom,
+ * left to right, beginning at zero.
+ *
+ * Files can be specified by filename, or by an iostream pointer.  The
+ * filename "-" refers to stdin or stdout.
+ *
+ * This class is not inherently thread-safe; use it from a single thread or
+ * protect access using a mutex.
+ */
 class EXPCL_PANDA_PNMIMAGE PNMImage : public PNMImageHeader {
 PUBLISHED:
   INLINE PNMImage();
-  explicit PNMImage(const Filename &filename, PNMFileType *type = NULL);
+  explicit PNMImage(const Filename &filename, PNMFileType *type = nullptr);
   INLINE explicit PNMImage(int x_size, int y_size, int num_channels = 3,
-                           xelval maxval = 255, PNMFileType *type = NULL,
+                           xelval maxval = 255, PNMFileType *type = nullptr,
                            ColorSpace color_space = CS_linear);
   INLINE PNMImage(const PNMImage &copy);
   INLINE void operator = (const PNMImage &copy);
@@ -78,14 +68,16 @@ PUBLISHED:
   INLINE ~PNMImage();
 
   INLINE xelval clamp_val(int input_value) const;
+  INLINE xel to_val(const LRGBColorf &input_value) const;
   INLINE xelval to_val(float input_value) const;
   INLINE xelval to_alpha_val(float input_value) const;
+  INLINE LRGBColorf from_val(const xel &input_value) const;
   INLINE float from_val(xelval input_value) const;
   INLINE float from_alpha_val(xelval input_value) const;
 
   void clear();
   void clear(int x_size, int y_size, int num_channels = 3,
-             xelval maxval = 255, PNMFileType *type = NULL,
+             xelval maxval = 255, PNMFileType *type = nullptr,
              ColorSpace color_space = CS_linear);
 
   void copy_from(const PNMImage &copy);
@@ -110,16 +102,16 @@ PUBLISHED:
   INLINE int get_read_y_size() const;
   INLINE ColorSpace get_color_space() const;
 
-  BLOCKING bool read(const Filename &filename, PNMFileType *type = NULL,
+  BLOCKING bool read(const Filename &filename, PNMFileType *type = nullptr,
                      bool report_unknown_type = true);
-  BLOCKING bool read(istream &data, const string &filename = string(),
-                     PNMFileType *type = NULL,
+  BLOCKING bool read(std::istream &data, const std::string &filename = std::string(),
+                     PNMFileType *type = nullptr,
                      bool report_unknown_type = true);
   BLOCKING bool read(PNMReader *reader);
 
-  BLOCKING bool write(const Filename &filename, PNMFileType *type = NULL) const;
-  BLOCKING bool write(ostream &data, const string &filename = string(),
-                      PNMFileType *type = NULL) const;
+  BLOCKING bool write(const Filename &filename, PNMFileType *type = nullptr) const;
+  BLOCKING bool write(std::ostream &data, const std::string &filename = std::string(),
+                      PNMFileType *type = nullptr) const;
   BLOCKING bool write(PNMWriter *writer) const;
 
   INLINE bool is_valid() const;
@@ -134,8 +126,8 @@ PUBLISHED:
   void make_grayscale(float rc, float gc, float bc);
   INLINE void make_rgb();
 
-  void premultiply_alpha();
-  void unpremultiply_alpha();
+  BLOCKING void premultiply_alpha();
+  BLOCKING void unpremultiply_alpha();
 
   BLOCKING void reverse_rows();
   BLOCKING void flip(bool flip_x, bool flip_y, bool transpose);
@@ -143,10 +135,10 @@ PUBLISHED:
   BLOCKING void set_maxval(xelval maxval);
 
   // The *_val() functions return or set the color values in the range
-  // [0..get_maxval()].  This range may be different for different
-  // images!  Use the corresponding functions (without _val()) to work
-  // in the normalized range [0..1].  These return values in the
-  // image's stored color space.
+  // [0..get_maxval()].  This range may be different for different images!
+  // Use the corresponding functions (without _val()) to work in the
+  // normalized range [0..1].  These return values in the image's stored color
+  // space.
 
   INLINE xel &get_xel_val(int x, int y);
   INLINE xel get_xel_val(int x, int y) const;
@@ -174,9 +166,9 @@ PUBLISHED:
   PixelSpec get_pixel(int x, int y) const;
   void set_pixel(int x, int y, const PixelSpec &pixel);
 
-  // The corresponding get_xel(), set_xel(), get_red(), etc. functions
-  // automatically scale their values by get_maxval() into the range
-  // [0..1], and into the linear color space.
+  // The corresponding get_xel(), set_xel(), get_red(), etc.  functions
+  // automatically scale their values by get_maxval() into the range [0..1],
+  // and into the linear color space.
 
   INLINE LRGBColorf get_xel(int x, int y) const;
   INLINE void set_xel(int x, int y, const LRGBColorf &value);
@@ -236,6 +228,9 @@ PUBLISHED:
   BLOCKING void fill_distance_inside(const PNMImage &mask, float threshold, int radius, bool shrink_from_border);
   BLOCKING void fill_distance_outside(const PNMImage &mask, float threshold, int radius);
 
+  void indirect_1d_lookup(const PNMImage &index_image, int channel,
+                          const PNMImage &pixel_values);
+
   void rescale(float min_val, float max_val);
 
   void copy_channel(const PNMImage &copy, int xto, int yto, int cto,
@@ -248,30 +243,31 @@ PUBLISHED:
   void expand_border(int left, int right, int bottom, int top,
                      const LColorf &color);
 
-  // The bodies for the non-inline *_filter() functions can be found
-  // in the file pnm-image-filter.cxx.
+  // The bodies for the non-inline *_filter() functions can be found in the
+  // file pnm-image-filter.cxx.
 
-  INLINE void box_filter(float radius = 1.0);
-  INLINE void gaussian_filter(float radius = 1.0);
+  BLOCKING INLINE void box_filter(float radius = 1.0);
+  BLOCKING INLINE void gaussian_filter(float radius = 1.0);
 
-  void unfiltered_stretch_from(const PNMImage &copy);
-  void box_filter_from(float radius, const PNMImage &copy);
-  void gaussian_filter_from(float radius, const PNMImage &copy);
-  void quick_filter_from(const PNMImage &copy,
-                         int xborder = 0, int yborder = 0);
+  BLOCKING void unfiltered_stretch_from(const PNMImage &copy);
+  BLOCKING void box_filter_from(float radius, const PNMImage &copy);
+  BLOCKING void gaussian_filter_from(float radius, const PNMImage &copy);
+  BLOCKING void quick_filter_from(const PNMImage &copy,
+                                  int xborder = 0, int yborder = 0);
 
   void make_histogram(Histogram &hist);
-  void perlin_noise_fill(float sx, float sy, int table_size = 256,
-                         unsigned long seed = 0);
+  void quantize(size_t max_colors);
+  BLOCKING void perlin_noise_fill(float sx, float sy, int table_size = 256,
+                                  unsigned long seed = 0);
   void perlin_noise_fill(StackedPerlinNoise2 &perlin);
 
   void remix_channels(const LMatrix4 &conv);
-  INLINE void gamma_correct(float from_gamma, float to_gamma);
-  INLINE void gamma_correct_alpha(float from_gamma, float to_gamma);
-  INLINE void apply_exponent(float gray_exponent);
-  INLINE void apply_exponent(float gray_exponent, float alpha_exponent);
-  INLINE void apply_exponent(float red_exponent, float green_exponent, float blue_exponent);
-  void apply_exponent(float red_exponent, float green_exponent, float blue_exponent, float alpha_exponent);
+  BLOCKING INLINE void gamma_correct(float from_gamma, float to_gamma);
+  BLOCKING INLINE void gamma_correct_alpha(float from_gamma, float to_gamma);
+  BLOCKING INLINE void apply_exponent(float gray_exponent);
+  BLOCKING INLINE void apply_exponent(float gray_exponent, float alpha_exponent);
+  BLOCKING INLINE void apply_exponent(float red_exponent, float green_exponent, float blue_exponent);
+  BLOCKING void apply_exponent(float red_exponent, float green_exponent, float blue_exponent, float alpha_exponent);
 
   LRGBColorf get_average_xel() const;
   LColorf get_average_xel_a() const;
@@ -280,8 +276,8 @@ PUBLISHED:
   void do_fill_distance(int xi, int yi, int d);
 
 PUBLISHED:
-  // Provides an accessor for reading or writing the contents of one row
-  // of the image in-place.
+  // Provides an accessor for reading or writing the contents of one row of
+  // the image in-place.
   class EXPCL_PANDA_PNMIMAGE Row {
   PUBLISHED:
     INLINE size_t size() const;
@@ -302,8 +298,8 @@ PUBLISHED:
     int _y;
   };
 
-  // Provides an accessor for reading the contents of one row of the
-  // image in-place.
+  // Provides an accessor for reading the contents of one row of the image in-
+  // place.
   class EXPCL_PANDA_PNMIMAGE CRow {
   PUBLISHED:
     INLINE size_t size() const;
@@ -353,6 +349,9 @@ private:
   void setup_rc();
   void setup_encoding();
 
+  void r_quantize(pmap<xel, xel> &color_map, size_t max_colors,
+                  xel *colors, size_t num_colors);
+
 PUBLISHED:
   PNMImage operator ~() const;
 
@@ -373,6 +372,7 @@ PUBLISHED:
 
 private:
   friend class Row;
+  friend class Texture;
 
   xel *_array;
   xelval *_alpha;
@@ -384,12 +384,12 @@ private:
   // The reciprocal of _maxval, as an optimization for from_val.
   float _inv_maxval;
 
-  // These method pointers contain the implementation for to_val and
-  // from_val, respectively, dependent on the maxval and color space.
+  // These method pointers contain the implementation for to_val and from_val,
+  // respectively, dependent on the maxval and color space.
   ColorSpace _color_space;
 
-  // The following enum determines which code path we should take in
-  // the set_xel and get_xel methods.
+  // The following enum determines which code path we should take in the
+  // set_xel and get_xel methods.
   enum XelEncoding {
     XE_generic,
     XE_generic_alpha,

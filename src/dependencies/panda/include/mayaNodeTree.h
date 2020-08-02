@@ -1,16 +1,15 @@
-// Filename: mayaNodeTree.h
-// Created by:  drose (06Jun03)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file mayaNodeTree.h
+ * @author drose
+ * @date 2003-06-06
+ */
 
 #ifndef MAYANODETREE_H
 #define MAYANODETREE_H
@@ -32,11 +31,9 @@ class EggTable;
 class EggXfmSAnim;
 class EggSAnimData;
 
-////////////////////////////////////////////////////////////////////
-//       Class : MayaNodeTree
-// Description : Describes a complete tree of maya nodes for
-//               conversion.
-////////////////////////////////////////////////////////////////////
+/**
+ * Describes a complete tree of maya nodes for conversion.
+ */
 class MayaNodeTree {
 public:
   MayaNodeTree(MayaToEggConverter *converter);
@@ -44,7 +41,7 @@ public:
   bool build_hierarchy();
 
   void tag_joint_all();
-  //  bool tag_joint_selected();
+  // bool tag_joint_selected();
   bool tag_joint_named(const GlobPattern &glob);
 
   void tag_all();
@@ -56,15 +53,15 @@ public:
   MayaNodeDesc *get_node(int n) const;
 
   void clear();
-  void clear_egg(EggData *egg_data, EggGroupNode *egg_root, 
+  void clear_egg(EggData *egg_data, EggGroupNode *egg_root,
                  EggGroupNode *skeleton_node, EggGroupNode *morph_node);
   EggGroup *get_egg_group(MayaNodeDesc *node_desc);
   EggTable *get_egg_table(MayaNodeDesc *node_desc);
   EggXfmSAnim *get_egg_anim(MayaNodeDesc *node_desc);
   EggSAnimData *get_egg_slider(MayaBlendDesc *blend_desc);
 
-  bool ignore_slider(const string &name) const;
-  void report_ignored_slider(const string &name);
+  bool ignore_slider(const std::string &name) const;
+  void report_ignored_slider(const std::string &name);
 
   MayaBlendDesc *add_blend_desc(MayaBlendDesc *blend_desc);
   int get_num_blend_descs() const;
@@ -73,12 +70,12 @@ public:
   void reset_sliders();
 
 public:
-  string _subroot_parent_name;
+  std::string _subroot_parent_name;
   PT(MayaNodeDesc) _root;
   PN_stdfloat _fps;
 
 private:
-  MayaNodeDesc *r_build_node(const string &path);
+  MayaNodeDesc *r_build_node(const std::string &path);
 
   MayaToEggConverter *_converter;
 
@@ -87,7 +84,7 @@ private:
   EggGroupNode *_skeleton_node;
   EggGroupNode *_morph_node;
 
-  typedef pmap<string, MayaNodeDesc *> NodesByPath;
+  typedef pmap<std::string, MayaNodeDesc *> NodesByPath;
   NodesByPath _nodes_by_path;
 
   typedef pvector<MayaNodeDesc *> Nodes;
@@ -96,7 +93,7 @@ private:
   typedef ov_set<PT(MayaBlendDesc), IndirectCompareNames<MayaBlendDesc> > BlendDescs;
   BlendDescs _blend_descs;
 
-  typedef pset<string> Strings;
+  typedef pset<std::string> Strings;
   Strings _ignored_slider_names;
 };
 

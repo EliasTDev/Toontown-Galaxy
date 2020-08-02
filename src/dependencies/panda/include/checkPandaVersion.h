@@ -1,10 +1,13 @@
 
+# ifndef CHECKPANDAVERSION_H
+# define CHECKPANDAVERSION_H
 # include "dtoolbase.h"
-extern EXPCL_DTOOL int panda_version_1_10;
-# ifndef WIN32
-/* For Windows, exporting the symbol from the DLL is sufficient; the
-      DLL will not load unless all expected public symbols are defined.
-      Other systems may not mind if the symbol is absent unless we
-      explictly write code that references it. */
-static int check_panda_version = panda_version_1_10;
+extern EXPCL_DTOOL_DTOOLBASE int panda_version_1_11;
+// Hack to forcibly depend on the check
+template<typename T>
+class CheckPandaVersion {
+public:
+  int check_version() { return panda_version_1_11; }
+};
+template class CheckPandaVersion<void>;
 # endif

@@ -1,4 +1,5 @@
-import DistributedNPCToonBaseAI, random
+from . import DistributedNPCToonBaseAI
+import random
 
 Animation = random.choice(["ScientistPlay", "ScientistWork", "ScientistLessWork", "ScientistJealous"])
 

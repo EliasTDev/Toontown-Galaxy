@@ -1,4 +1,4 @@
-import ToontownControlManager
+from . import ToontownControlManager
 from direct.controls.GhostWalker import GhostWalker
 from direct.controls.GravityWalker import GravityWalker
 from direct.controls.ObserverWalker import ObserverWalker
@@ -11,7 +11,8 @@ from direct.interval.IntervalGlobal import *
 from direct.showbase.InputStateGlobal import inputState
 from direct.showbase.PythonUtil import *
 from direct.task import Task
-import math, random, webbrowser, numbers, DistributedAvatar
+import math, random, webbrowser, numbers
+from . import DistributedAvatar
 from panda3d.core import *
 from otp.ai.MagicWordGlobal import *
 from otp.otpbase import OTPGlobals, OTPLocalizer
@@ -899,7 +900,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.Dis
 
         whisper = WhisperPopup(chatString, OTPGlobals.getInterfaceFont(), whisperType)
 
-        if sender or isinstance(fromId, basestring):
+        if sender or isinstance(fromId, str):
             whisper.setClickable(fromId)
 
         whisper.manage(base.marginManager)
@@ -1107,7 +1108,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.Dis
             self.setSystemMessage(0, OTPLocalizer.WhisperFriendLoggedOut % friend.getName())
 
     def clickedWhisper(self, doId):
-        if isinstance(doId, basestring):
+        if isinstance(doId, str):
             webbrowser.open(doId, new=2, autoraise=True)
             return
 
@@ -1145,7 +1146,7 @@ def collisionsOn():
     base.localAvatar.collisionsOn()
     return 'Collisions are enabled.'
 
-@magicWord(category=CATEGORY_LEADER, types=[int])
+@magicWord(category=CATEGORY_DEVELOPER, types=[int])
 def gravity(value):
     """
     Modifies the invoker's gravity. For default, use 0.
@@ -1157,14 +1158,14 @@ def gravity(value):
     else:
         base.localAvatar.ToontownControlManager.currentControls.setGravity(value)
 
-@magicWord(category=CATEGORY_LEADER, types=[float, float, float])
+@magicWord(category=CATEGORY_DEVELOPER, types=[float, float, float])
 def xyz(x, y, z):
     """
     Modifies the position of the invoker.
     """
     base.localAvatar.setPos(x, y, z)
 
-@magicWord(category=CATEGORY_LEADER, types=[float, float, float])
+@magicWord(category=CATEGORY_DEVELOPER, types=[float, float, float])
 def hpr(h, p, r):
     """
     Modifies the rotation of the invoker.

@@ -9,7 +9,7 @@ from otp.ai.MagicWordGlobal import *
 from toontown.toonbase import ToontownGlobals
 from toontown.parties import PartyGlobals
 
-import FireworkShows
+from . import FireworkShows
 import random
 
 class DistributedFireworkShowAI(DistributedObjectAI):
@@ -36,7 +36,7 @@ class DistributedFireworkShowAI(DistributedObjectAI):
         pass
 
 
-@magicWord(category=CATEGORY_LEADER, types=[str])
+@magicWord(category=CATEGORY_DEVELOPER, types=[str])
 def fireworks(showName='july4'):
     """
     Starts a fireworks show on the AI server.

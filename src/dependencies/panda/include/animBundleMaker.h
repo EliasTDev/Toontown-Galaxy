@@ -1,16 +1,15 @@
-// Filename: animBundleMaker.h
-// Created by:  drose (22Feb99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file animBundleMaker.h
+ * @author drose
+ * @date 1999-02-22
+ */
 
 #ifndef ANIMBUNDLEMAKER_H
 #define ANIMBUNDLEMAKER_H
@@ -29,14 +28,13 @@ class AnimBundleNode;
 class AnimChannelScalarTable;
 class AnimChannelMatrixXfmTable;
 
-////////////////////////////////////////////////////////////////////
-//       Class : AnimBundleMaker
-// Description : Converts an EggTable hierarchy, beginning with a
-//               <Bundle> entry, into an AnimBundle hierarchy.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAEGG AnimBundleMaker {
+/**
+ * Converts an EggTable hierarchy, beginning with a <Bundle> entry, into an
+ * AnimBundle hierarchy.
+ */
+class EXPCL_PANDA_EGG2PG AnimBundleMaker {
 public:
-  AnimBundleMaker(EggTable *root);
+  explicit AnimBundleMaker(EggTable *root);
 
   AnimBundleNode *make_node();
 
@@ -47,13 +45,13 @@ private:
   void build_hierarchy(EggTable *egg_table, AnimGroup *parent);
 
   AnimChannelScalarTable *
-  create_s_channel(EggSAnimData *egg_anim, const string &name,
+  create_s_channel(EggSAnimData *egg_anim, const std::string &name,
                    AnimGroup *parent);
   AnimChannelMatrixXfmTable *
-  create_xfm_channel(EggNode *egg_node, const string &name,
+  create_xfm_channel(EggNode *egg_node, const std::string &name,
                      AnimGroup *parent);
   AnimChannelMatrixXfmTable *
-  create_xfm_channel(EggXfmSAnim *egg_anim, const string &name,
+  create_xfm_channel(EggXfmSAnim *egg_anim, const std::string &name,
                      AnimGroup *parent);
 
   PN_stdfloat _fps;

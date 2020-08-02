@@ -16,6 +16,7 @@ class ScrolledFriendList(DirectScrolledList):
         DirectScrolledList.__init__(self, parent=parent, relief=None, incButton_image=(self.gui.find('**/inviteButtonDown_up'), self.gui.find('**/inviteButtonDown_down'), self.gui.find('**/inviteButtonDown_rollover')), incButton_relief=None, incButton_pos=(0.0, 0.0, -0.03), incButton_image3_color=Vec4(0.6, 0.6, 0.6, 0.6), decButton_image=(self.gui.find('**/inviteButtonUp_up'), self.gui.find('**/inviteButtonUp_down'), self.gui.find('**/inviteButtonUp_rollover')), decButton_relief=None, decButton_pos=(0.0, 0.0, 0.02), decButton_image3_color=Vec4(0.6, 0.6, 0.6, 0.6), itemFrame_relief=None, forceHeight=0.084, numItemsVisible=8, items=[], incButtonCallback=self.scrollButtonPressed, decButtonCallback=self.scrollButtonPressed, itemFrame_pos=(0.0, 0.0, -0.01))
         self.incButtonCallback = None
         self.decButtonCallback = None
+        self._DirectScrolledList__incButtonCallback = None
         self.setForceHeight()
         return
 

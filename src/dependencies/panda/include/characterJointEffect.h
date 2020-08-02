@@ -1,16 +1,15 @@
-// Filename: characterJointEffect.h
-// Created by:  drose (26Jul06)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file characterJointEffect.h
+ * @author drose
+ * @date 2006-07-26
+ */
 
 #ifndef CHARACTERJOINTEFFECT_H
 #define CHARACTERJOINTEFFECT_H
@@ -23,17 +22,15 @@
 #include "character.h"
 #include "weakPointerTo.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : CharacterJointEffect
-// Description : This effect will be added automatically to a node by
-//               CharacterJoint::add_net_transform() and
-//               CharacterJoint::add_local_transform().
-//
-//               The effect binds the node back to the character, so
-//               that querying the relative transform of the affected
-//               node will automatically force the indicated character
-//               to be updated first.
-////////////////////////////////////////////////////////////////////
+/**
+ * This effect will be added automatically to a node by
+ * CharacterJoint::add_net_transform() and
+ * CharacterJoint::add_local_transform().
+ *
+ * The effect binds the node back to the character, so that querying the
+ * relative transform of the affected node will automatically force the
+ * indicated character to be updated first.
+ */
 class EXPCL_PANDA_CHAR CharacterJointEffect : public RenderEffect {
 private:
   INLINE CharacterJointEffect();
@@ -41,12 +38,14 @@ private:
 PUBLISHED:
   static CPT(RenderEffect) make(Character *character);
 
-  INLINE Character *get_character() const;
+  INLINE PT(Character) get_character() const;
 
 public:
+  INLINE bool matches_character(Character *character) const;
+
   virtual bool safe_to_transform() const;
   virtual bool safe_to_combine() const;
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
   virtual bool has_cull_callback() const;
   virtual void cull_callback(CullTraverser *trav, CullTraverserData &data,
@@ -56,7 +55,7 @@ public:
   virtual bool has_adjust_transform() const;
   virtual void adjust_transform(CPT(TransformState) &net_transform,
                                 CPT(TransformState) &node_transform,
-                                PandaNode *node) const;
+                                const PandaNode *node) const;
 
 protected:
   virtual int compare_to_impl(const RenderEffect *other) const;
@@ -73,7 +72,7 @@ public:
 protected:
   static TypedWritable *make_from_bam(const FactoryParams &params);
   void fillin(DatagramIterator &scan, BamReader *manager);
-  
+
 public:
   static TypeHandle get_class_type() {
     return _type_handle;
@@ -95,4 +94,3 @@ private:
 #include "characterJointEffect.I"
 
 #endif
-

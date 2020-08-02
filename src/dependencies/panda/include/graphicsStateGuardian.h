@@ -1,18 +1,18 @@
-// Filename: graphicsStateGuardian.h
-// Created by:  drose (02eb99)
-// Updated by: fperazzi, PandaSE (05May10) (added fetch_ptr_parameter,
-//  _max_2d_texture_array_layers on z axis, get_supports_cg_profile)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file graphicsStateGuardian.h
+ * @author drose
+ * @date 1999-02-02
+ * @author fperazzi, PandaSE
+ * @date 2010-05-05
+ *  _max_2d_texture_array_layers on z axis, get_supports_cg_profile)
+ */
 
 #ifndef GRAPHICSSTATEGUARDIAN_H
 #define GRAPHICSSTATEGUARDIAN_H
@@ -54,20 +54,16 @@
 class DrawableRegion;
 class GraphicsEngine;
 
-////////////////////////////////////////////////////////////////////
-//       Class : GraphicsStateGuardian
-// Description : Encapsulates all the communication with a particular
-//               instance of a given rendering backend.  Tries to
-//               guarantee that redundant state-change requests are
-//               not issued (hence "state guardian").
-//
-//               There will be one of these objects for each different
-//               graphics context active in the system.
-////////////////////////////////////////////////////////////////////
+/**
+ * Encapsulates all the communication with a particular instance of a given
+ * rendering backend.  Tries to guarantee that redundant state-change requests
+ * are not issued (hence "state guardian").
+ *
+ * There will be one of these objects for each different graphics context
+ * active in the system.
+ */
 class EXPCL_PANDA_DISPLAY GraphicsStateGuardian : public GraphicsStateGuardianBase {
-  //
   // Interfaces all GSGs should have
-  //
 public:
   GraphicsStateGuardian(CoordinateSystem internal_coordinate_system,
                         GraphicsEngine *engine, GraphicsPipe *pipe);
@@ -83,6 +79,7 @@ PUBLISHED:
     SM_30,
     SM_40,
     SM_50,
+    SM_51,
   };
 
   INLINE void release_all();
@@ -91,25 +88,33 @@ PUBLISHED:
   INLINE int release_all_geoms();
   INLINE int release_all_vertex_buffers();
   INLINE int release_all_index_buffers();
+  INLINE int release_all_shader_buffers();
 
   INLINE void set_active(bool active);
   INLINE bool is_active() const;
   INLINE bool is_valid() const;
   INLINE bool needs_reset() const;
+  MAKE_PROPERTY(active, is_active, set_active);
+  MAKE_PROPERTY(valid, is_valid);
 
   INLINE void set_incomplete_render(bool incomplete_render);
   virtual INLINE bool get_incomplete_render() const;
   virtual INLINE bool get_effective_incomplete_render() const;
+  MAKE_PROPERTY(incomplete_render, get_incomplete_render, set_incomplete_render);
+  MAKE_PROPERTY(effective_incomplete_render, get_effective_incomplete_render);
 
   INLINE void set_loader(Loader *loader);
   INLINE Loader *get_loader() const;
+  MAKE_PROPERTY(loader, get_loader, set_loader);
 
   INLINE void set_shader_generator(ShaderGenerator *shader_generator);
   INLINE ShaderGenerator *get_shader_generator() const;
+  MAKE_PROPERTY(shader_generator, get_shader_generator, set_shader_generator);
 
   INLINE GraphicsPipe *get_pipe() const;
   GraphicsEngine *get_engine() const;
   INLINE const GraphicsThreadingModel &get_threading_model() const;
+  MAKE_PROPERTY(pipe, get_pipe);
 
   INLINE bool is_hardware() const;
   virtual INLINE bool prefers_triangle_strips() const;
@@ -131,6 +136,7 @@ PUBLISHED:
   INLINE bool get_supports_2d_texture_array() const;
   INLINE bool get_supports_cube_map() const;
   INLINE bool get_supports_buffer_texture() const;
+  INLINE bool get_supports_cube_map_array() const;
   INLINE bool get_supports_tex_non_pow2() const;
   INLINE bool get_supports_texture_srgb() const;
 
@@ -148,6 +154,7 @@ PUBLISHED:
   INLINE bool get_supports_generate_mipmap() const;
   INLINE bool get_supports_depth_texture() const;
   INLINE bool get_supports_depth_stencil() const;
+  INLINE bool get_supports_luminance_texture() const;
   INLINE bool get_supports_shadow_filter() const;
   INLINE bool get_supports_sampler_objects() const;
   INLINE bool get_supports_basic_shaders() const;
@@ -155,9 +162,11 @@ PUBLISHED:
   INLINE bool get_supports_tessellation_shaders() const;
   INLINE bool get_supports_compute_shaders() const;
   INLINE bool get_supports_glsl() const;
+  INLINE bool get_supports_hlsl() const;
   INLINE bool get_supports_stencil() const;
   INLINE bool get_supports_two_sided_stencil() const;
   INLINE bool get_supports_geometry_instancing() const;
+  INLINE bool get_supports_indirect_draw() const;
 
   INLINE bool get_supports_occlusion_query() const;
   INLINE bool get_supports_timer_query() const;
@@ -165,12 +174,61 @@ PUBLISHED:
 
   INLINE int get_max_color_targets() const;
   INLINE int get_maximum_simultaneous_render_targets() const;
+  INLINE bool get_supports_dual_source_blending() const;
 
-  INLINE int get_shader_model() const;
-  INLINE void set_shader_model(int shader_model);
+  MAKE_PROPERTY(max_vertices_per_array, get_max_vertices_per_array);
+  MAKE_PROPERTY(max_vertices_per_primitive, get_max_vertices_per_primitive);
+  MAKE_PROPERTY(max_texture_stages, get_max_texture_stages);
+  MAKE_PROPERTY(max_texture_dimension, get_max_texture_dimension);
+  MAKE_PROPERTY(max_3d_texture_dimension, get_max_3d_texture_dimension);
+  MAKE_PROPERTY(max_2d_texture_array_layers, get_max_2d_texture_array_layers);
+  MAKE_PROPERTY(max_cube_map_dimension, get_max_cube_map_dimension);
+  MAKE_PROPERTY(max_buffer_texture_size, get_max_buffer_texture_size);
+  MAKE_PROPERTY(supports_texture_combine, get_supports_texture_combine);
+  MAKE_PROPERTY(supports_texture_saved_result, get_supports_texture_saved_result);
+  MAKE_PROPERTY(supports_texture_dot3, get_supports_texture_dot3);
+  MAKE_PROPERTY(supports_3d_texture, get_supports_3d_texture);
+  MAKE_PROPERTY(supports_2d_texture_array, get_supports_2d_texture_array);
+  MAKE_PROPERTY(supports_cube_map, get_supports_cube_map);
+  MAKE_PROPERTY(supports_buffer_texture, get_supports_buffer_texture);
+  MAKE_PROPERTY(supports_cube_map_array, get_supports_cube_map_array);
+  MAKE_PROPERTY(supports_tex_non_pow2, get_supports_tex_non_pow2);
+  MAKE_PROPERTY(supports_texture_srgb, get_supports_texture_srgb);
+  MAKE_PROPERTY(supports_compressed_texture, get_supports_compressed_texture);
+  MAKE_PROPERTY(max_lights, get_max_lights);
+  MAKE_PROPERTY(max_clip_planes, get_max_clip_planes);
+  MAKE_PROPERTY(max_vertex_transforms, get_max_vertex_transforms);
+  MAKE_PROPERTY(max_vertex_transform_indices, get_max_vertex_transform_indices);
+  MAKE_PROPERTY(copy_texture_inverted, get_copy_texture_inverted);
+  MAKE_PROPERTY(supports_multisample, get_supports_multisample);
+  MAKE_PROPERTY(supports_generate_mipmap, get_supports_generate_mipmap);
+  MAKE_PROPERTY(supports_depth_texture, get_supports_depth_texture);
+  MAKE_PROPERTY(supports_depth_stencil, get_supports_depth_stencil);
+  MAKE_PROPERTY(supports_luminance_texture, get_supports_luminance_texture);
+  MAKE_PROPERTY(supports_shadow_filter, get_supports_shadow_filter);
+  MAKE_PROPERTY(supports_sampler_objects, get_supports_sampler_objects);
+  MAKE_PROPERTY(supports_basic_shaders, get_supports_basic_shaders);
+  MAKE_PROPERTY(supports_geometry_shaders, get_supports_geometry_shaders);
+  MAKE_PROPERTY(supports_tessellation_shaders, get_supports_tessellation_shaders);
+  MAKE_PROPERTY(supports_compute_shaders, get_supports_compute_shaders);
+  MAKE_PROPERTY(supports_glsl, get_supports_glsl);
+  MAKE_PROPERTY(supports_hlsl, get_supports_hlsl);
+  MAKE_PROPERTY(supports_stencil, get_supports_stencil);
+  MAKE_PROPERTY(supports_two_sided_stencil, get_supports_two_sided_stencil);
+  MAKE_PROPERTY(supports_geometry_instancing, get_supports_geometry_instancing);
+  MAKE_PROPERTY(supports_indirect_draw, get_supports_indirect_draw);
+  MAKE_PROPERTY(supports_occlusion_query, get_supports_occlusion_query);
+  MAKE_PROPERTY(supports_timer_query, get_supports_timer_query);
+  MAKE_PROPERTY(timer_queries_active, get_timer_queries_active);
+  MAKE_PROPERTY(max_color_targets, get_max_color_targets);
+  MAKE_PROPERTY(supports_dual_source_blending, get_supports_dual_source_blending);
+
+  INLINE ShaderModel get_shader_model() const;
+  INLINE void set_shader_model(ShaderModel shader_model);
+  MAKE_PROPERTY(shader_model, get_shader_model, set_shader_model);
 
   virtual int get_supported_geom_rendering() const;
-  virtual bool get_supports_cg_profile(const string &name) const;
+  virtual bool get_supports_cg_profile(const std::string &name) const;
 
   INLINE bool get_color_scale_via_lighting() const;
   INLINE bool get_alpha_scale_via_texture() const;
@@ -182,44 +240,60 @@ PUBLISHED:
   void set_coordinate_system(CoordinateSystem cs);
   INLINE CoordinateSystem get_coordinate_system() const;
   virtual CoordinateSystem get_internal_coordinate_system() const;
+  MAKE_PROPERTY(coordinate_system, get_coordinate_system, set_coordinate_system);
 
   virtual PreparedGraphicsObjects *get_prepared_objects();
+  MAKE_PROPERTY(prepared_objects, get_prepared_objects);
 
   virtual bool set_gamma(PN_stdfloat gamma);
-  PN_stdfloat get_gamma(PN_stdfloat gamma);
+  PN_stdfloat get_gamma() const;
   virtual void restore_gamma();
+  MAKE_PROPERTY(gamma, get_gamma, set_gamma);
 
   INLINE void set_texture_quality_override(Texture::QualityLevel quality_level);
   INLINE Texture::QualityLevel get_texture_quality_override() const;
+  MAKE_PROPERTY(texture_quality_override, get_texture_quality_override,
+                                          set_texture_quality_override);
 
   EXTENSION(PyObject *get_prepared_textures() const);
   typedef bool TextureCallback(TextureContext *tc, void *callback_arg);
   void traverse_prepared_textures(TextureCallback *func, void *callback_arg);
 
-#ifndef NDEBUG
+#if !defined(NDEBUG) || !defined(CPPPARSER)
   void set_flash_texture(Texture *tex);
   void clear_flash_texture();
   Texture *get_flash_texture() const;
+  MAKE_PROPERTY(flash_texture, get_flash_texture, set_flash_texture);
 #endif
 
 PUBLISHED:
-  virtual bool has_extension(const string &extension) const;
+  virtual bool has_extension(const std::string &extension) const;
 
-  virtual string get_driver_vendor();
-  virtual string get_driver_renderer();
-  virtual string get_driver_version();
+  virtual std::string get_driver_vendor();
+  virtual std::string get_driver_renderer();
+  virtual std::string get_driver_version();
   virtual int get_driver_version_major();
   virtual int get_driver_version_minor();
   virtual int get_driver_shader_version_major();
   virtual int get_driver_shader_version_minor();
 
+  MAKE_PROPERTY(driver_vendor, get_driver_vendor);
+  MAKE_PROPERTY(driver_renderer, get_driver_renderer);
+  MAKE_PROPERTY(driver_version, get_driver_version);
+  MAKE_PROPERTY(driver_version_major, get_driver_version_major);
+  MAKE_PROPERTY(driver_version_minor, get_driver_version_minor);
+  MAKE_PROPERTY(driver_shader_version_major, get_driver_shader_version_major);
+  MAKE_PROPERTY(driver_shader_version_minor, get_driver_shader_version_minor);
+
   bool set_scene(SceneSetup *scene_setup);
-  virtual SceneSetup *get_scene() const;
+  virtual SceneSetup *get_scene() const final;
+  MAKE_PROPERTY(scene, get_scene, set_scene);
 
 public:
-  virtual TextureContext *prepare_texture(Texture *tex);
+  virtual TextureContext *prepare_texture(Texture *tex, int view);
   virtual bool update_texture(TextureContext *tc, bool force);
   virtual void release_texture(TextureContext *tc);
+  virtual void release_textures(const pvector<TextureContext *> &contexts);
   virtual bool extract_texture_data(Texture *tex);
 
   virtual SamplerContext *prepare_sampler(const SamplerState &sampler);
@@ -233,9 +307,15 @@ public:
 
   virtual VertexBufferContext *prepare_vertex_buffer(GeomVertexArrayData *data);
   virtual void release_vertex_buffer(VertexBufferContext *vbc);
+  virtual void release_vertex_buffers(const pvector<BufferContext *> &contexts);
 
   virtual IndexBufferContext *prepare_index_buffer(GeomPrimitive *data);
   virtual void release_index_buffer(IndexBufferContext *ibc);
+  virtual void release_index_buffers(const pvector<BufferContext *> &contexts);
+
+  virtual BufferContext *prepare_shader_buffer(ShaderBuffer *data);
+  virtual void release_shader_buffer(BufferContext *ibc);
+  virtual void release_shader_buffers(const pvector<BufferContext *> &contexts);
 
   virtual void begin_occlusion_query();
   virtual PT(OcclusionQueryContext) end_occlusion_query();
@@ -252,14 +332,20 @@ public:
   virtual void set_state_and_transform(const RenderState *state,
                                        const TransformState *transform);
 
-  virtual PN_stdfloat compute_distance_to(const LPoint3 &point) const;
+  PN_stdfloat compute_distance_to(const LPoint3 &point) const;
 
   virtual void clear(DrawableRegion *clearable);
 
-  const LMatrix4 *fetch_specified_value(Shader::ShaderMatSpec &spec, int altered);
-  const LMatrix4 *fetch_specified_part(Shader::ShaderMatInput input, InternalName *name,
-                                       LMatrix4 &t, int index);
+  void update_shader_matrix_cache(Shader *shader, LMatrix4 *cache, int altered);
+  const LMatrix4 *fetch_specified_value(Shader::ShaderMatSpec &spec, const LMatrix4 *cache, int altered);
+  void fetch_specified_part(Shader::ShaderMatInput input, InternalName *name,
+                            LMatrix4 *into, int count = 1);
+  void fetch_specified_member(const NodePath &np, CPT_InternalName member,
+                              LMatrix4 &t);
+  PT(Texture) fetch_specified_texture(Shader::ShaderTexSpec &spec,
+                                      SamplerState &sampler, int &view);
   const Shader::ShaderPtrData *fetch_ptr_parameter(const Shader::ShaderPtrSpec& spec);
+  bool fetch_ptr_parameter(const Shader::ShaderPtrSpec &spec, Shader::ShaderPtrData &data);
 
   virtual void prepare_display_region(DisplayRegionPipelineReader *dr);
   virtual void clear_before_callback();
@@ -288,21 +374,28 @@ public:
   virtual void finish_decal();
 
   virtual bool begin_draw_primitives(const GeomPipelineReader *geom_reader,
-                                     const GeomMunger *munger,
                                      const GeomVertexDataPipelineReader *data_reader,
                                      bool force);
   virtual bool draw_triangles(const GeomPrimitivePipelineReader *reader,
                               bool force);
+  virtual bool draw_triangles_adj(const GeomPrimitivePipelineReader *reader,
+                                  bool force);
   virtual bool draw_tristrips(const GeomPrimitivePipelineReader *reader,
                               bool force);
+  virtual bool draw_tristrips_adj(const GeomPrimitivePipelineReader *reader,
+                                  bool force);
   virtual bool draw_trifans(const GeomPrimitivePipelineReader *reader,
                             bool force);
   virtual bool draw_patches(const GeomPrimitivePipelineReader *reader,
                             bool force);
   virtual bool draw_lines(const GeomPrimitivePipelineReader *reader,
                           bool force);
+  virtual bool draw_lines_adj(const GeomPrimitivePipelineReader *reader,
+                              bool force);
   virtual bool draw_linestrips(const GeomPrimitivePipelineReader *reader,
                                bool force);
+  virtual bool draw_linestrips_adj(const GeomPrimitivePipelineReader *reader,
+                                   bool force);
   virtual bool draw_points(const GeomPrimitivePipelineReader *reader,
                            bool force);
   virtual void end_draw_primitives();
@@ -344,7 +437,11 @@ public:
 
   static void create_gamma_table (PN_stdfloat gamma, unsigned short *red_table, unsigned short *green_table, unsigned short *blue_table);
 
-  virtual PT(Texture) make_shadow_buffer(const NodePath &light_np, GraphicsOutputBase *host);
+  PT(Texture) get_shadow_map(const NodePath &light_np, GraphicsOutputBase *host=nullptr);
+  PT(Texture) get_dummy_shadow_map(Texture::TextureType texture_type) const;
+  virtual GraphicsOutput *make_shadow_buffer(LightLensNode *light, Texture *tex, GraphicsOutput *host);
+
+  virtual void ensure_generated_shader(const RenderState *state);
 
 #ifdef DO_PSTATS
   static void init_frame_pstats();
@@ -366,6 +463,7 @@ protected:
   virtual void end_bind_clip_planes();
 
   void determine_target_texture();
+  void determine_target_shader();
 
   virtual void free_pointers();
   virtual void close_gsg();
@@ -377,7 +475,7 @@ protected:
   static CPT(RenderState) get_unclipped_state();
   static CPT(RenderState) get_untextured_state();
 
-  void async_reload_texture(TextureContext *tc);
+  AsyncFuture *async_reload_texture(TextureContext *tc);
 
 protected:
   PT(SceneSetup) _scene_null;
@@ -391,36 +489,32 @@ protected:
   // set_state_and_transform().
   CPT(RenderState) _target_rs;
 
-  // This bitmask contains a 1 bit everywhere that _state_rs has a
-  // known value.  If a bit is 0, the corresponding state must be
-  // re-sent.
-  //
-  // Derived GSGs should initialize _inv_state_mask in reset() as a mask of
-  // 1's where they don't care, and 0's where they do care, about the state.
+  // This bitmask contains a 1 bit everywhere that _state_rs has a known
+  // value.  If a bit is 0, the corresponding state must be re-sent.  Derived
+  // GSGs should initialize _inv_state_mask in reset() as a mask of 1's where
+  // they don't care, and 0's where they do care, about the state.
   RenderState::SlotMask _state_mask;
   RenderState::SlotMask _inv_state_mask;
 
-  // The current transform, as of the last call to
-  // set_state_and_transform().
+  // The current transform, as of the last call to set_state_and_transform().
   CPT(TransformState) _internal_transform;
 
-  // The current TextureAttrib is a special case; we may further
-  // restrict it (according to graphics cards limits) or extend it
-  // (according to ColorScaleAttribs in effect) beyond what is
-  // specifically requested in the scene graph.
+  // The current TextureAttrib is a special case; we may further restrict it
+  // (according to graphics cards limits) or extend it (according to
+  // ColorScaleAttribs in effect) beyond what is specifically requested in the
+  // scene graph.
   CPT(TextureAttrib) _target_texture;
   CPT(TextureAttrib) _state_texture;
   CPT(TexGenAttrib) _target_tex_gen;
   CPT(TexGenAttrib) _state_tex_gen;
 
-  // Also, the shader might be the explicitly-requested shader, or it
-  // might be an auto-generated one.
+  // Also, the shader might be the explicitly-requested shader, or it might be
+  // an auto-generated one.
   CPT(ShaderAttrib) _state_shader;
   CPT(ShaderAttrib) _target_shader;
 
-  // These are set by begin_draw_primitives(), and are only valid
-  // between begin_draw_primitives() and end_draw_primitives().
-  CPT(GeomMunger) _munger;
+  // This is set by begin_draw_primitives(), and are only valid between
+  // begin_draw_primitives() and end_draw_primitives().
   const GeomVertexDataPipelineReader *_data_reader;
 
   unsigned int _color_write_mask;
@@ -488,6 +582,7 @@ protected:
   bool _supports_2d_texture_array;
   bool _supports_cube_map;
   bool _supports_buffer_texture;
+  bool _supports_cube_map_array;
   bool _supports_tex_non_pow2;
   bool _supports_texture_srgb;
 
@@ -511,7 +606,7 @@ protected:
 
   int _last_query_frame;
   int _last_num_queried;
-  //double _timer_delta;
+  // double _timer_delta;
   typedef pdeque<PT(TimerQueryContext)> TimerQueryQueue;
   TimerQueryQueue _pending_timer_queries;
 #endif
@@ -521,6 +616,7 @@ protected:
   bool _supports_generate_mipmap;
   bool _supports_depth_texture;
   bool _supports_depth_stencil;
+  bool _supports_luminance_texture;
   bool _supports_shadow_filter;
   bool _supports_sampler_objects;
   bool _supports_basic_shaders;
@@ -528,6 +624,7 @@ protected:
   bool _supports_tessellation_shaders;
   bool _supports_compute_shaders;
   bool _supports_glsl;
+  bool _supports_hlsl;
   bool _supports_framebuffer_multisample;
   bool _supports_framebuffer_blit;
 
@@ -535,8 +632,10 @@ protected:
   bool _supports_stencil_wrap;
   bool _supports_two_sided_stencil;
   bool _supports_geometry_instancing;
+  bool _supports_indirect_draw;
 
   int _max_color_targets;
+  bool _supports_dual_source_blending;
 
   int  _supported_geom_rendering;
   bool _color_scale_via_lighting;
@@ -545,8 +644,8 @@ protected:
 
   int  _stereo_buffer_mask;
 
-  int _auto_detect_shader_model;
-  int _shader_model;
+  ShaderModel _auto_detect_shader_model;
+  ShaderModel _shader_model;
 
   static PT(TextureStage) _alpha_scale_texture_stage;
 
@@ -559,16 +658,21 @@ protected:
 
 #ifndef NDEBUG
   PT(Texture) _flash_texture;
+#else
+  PT(Texture) _flash_texture_unused;
 #endif
 
 public:
   // Statistics
   static PStatCollector _vertex_buffer_switch_pcollector;
   static PStatCollector _index_buffer_switch_pcollector;
+  static PStatCollector _shader_buffer_switch_pcollector;
   static PStatCollector _load_vertex_buffer_pcollector;
   static PStatCollector _load_index_buffer_pcollector;
+  static PStatCollector _load_shader_buffer_pcollector;
   static PStatCollector _create_vertex_buffer_pcollector;
   static PStatCollector _create_index_buffer_pcollector;
+  static PStatCollector _create_shader_buffer_pcollector;
   static PStatCollector _load_texture_pcollector;
   static PStatCollector _data_transferred_pcollector;
   static PStatCollector _texmgrmem_total_pcollector;
@@ -590,7 +694,6 @@ public:
   static PStatCollector _texture_state_pcollector;
   static PStatCollector _draw_primitive_pcollector;
   static PStatCollector _draw_set_state_pcollector;
-  static PStatCollector _clear_pcollector;
   static PStatCollector _flush_pcollector;
   static PStatCollector _compute_dispatch_pcollector;
   static PStatCollector _wait_occlusion_pcollector;
@@ -605,9 +708,10 @@ public:
   static PStatCollector _prepare_shader_pcollector;
   static PStatCollector _prepare_vertex_buffer_pcollector;
   static PStatCollector _prepare_index_buffer_pcollector;
+  static PStatCollector _prepare_shader_buffer_pcollector;
 
-  // A whole slew of collectors to measure the cost of individual
-  // state changes.  These are disabled by default.
+  // A whole slew of collectors to measure the cost of individual state
+  // changes.  These are disabled by default.
   static PStatCollector _draw_set_state_transform_pcollector;
   static PStatCollector _draw_set_state_alpha_test_pcollector;
   static PStatCollector _draw_set_state_antialias_pcollector;
@@ -663,6 +767,8 @@ private:
   friend class GraphicsWindow;
   friend class GraphicsEngine;
 };
+
+EXPCL_PANDA_DISPLAY std::ostream &operator << (std::ostream &out, GraphicsStateGuardian::ShaderModel sm);
 
 #include "graphicsStateGuardian.I"
 

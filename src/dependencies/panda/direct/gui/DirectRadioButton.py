@@ -1,11 +1,18 @@
-"""Undocumented Module"""
+"""A DirectRadioButton is a type of button that, similar to a
+DirectCheckButton, has a separate indicator and can be toggled between
+two states.  However, only one DirectRadioButton in a group can be enabled
+at a particular time.
+
+See the :ref:`directradiobutton` page in the programming manual for a more
+in-depth explanation and an example of how to use this class.
+"""
 
 __all__ = ['DirectRadioButton']
 
 from panda3d.core import *
-import DirectGuiGlobals as DGG
-from DirectButton import *
-from DirectLabel import *
+from . import DirectGuiGlobals as DGG
+from .DirectButton import *
+from .DirectLabel import *
 
 class DirectRadioButton(DirectButton):
     """
@@ -190,7 +197,7 @@ class DirectRadioButton(DirectButton):
 
 
     def commandFunc(self, event):
-        if len(self['value']) == len(self['variable']) != 0:            
+        if len(self['value']) == len(self['variable']) != 0:
             for i in range(len(self['value'])):
                 self['variable'][i] = self['value'][i]
         self.check()
@@ -205,7 +212,7 @@ class DirectRadioButton(DirectButton):
 
         if self['command']:
             # Pass any extra args to command
-            apply(self['command'], self['extraArgs'])
+            self['command'](*self['extraArgs'])
 
     def setOthers(self, others):
         self['others'] = others

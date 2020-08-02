@@ -1,16 +1,15 @@
-// Filename: socketStreamRecorder.h
-// Created by:  drose (28Jan04)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file socketStreamRecorder.h
+ * @author drose
+ * @date 2004-01-28
+ */
 
 #ifndef SOCKETSTREAMRECORDER_H
 #define SOCKETSTREAMRECORDER_H
@@ -25,28 +24,24 @@ class BamWriter;
 class FactoryParams;
 class DatagramIterator;
 
-// At the present, this module is not compiled if OpenSSL is not
-// available, since in that case socketStream.h is not compiled
-// either.
+// At the present, this module is not compiled if OpenSSL is not available,
+// since in that case socketStream.h is not compiled either.
 
 #ifdef HAVE_OPENSSL
 
-////////////////////////////////////////////////////////////////////
-//       Class : SocketStreamRecorder
-// Description : Records any data received from the indicated socket
-//               stream.  On playback, it will act as if the incoming
-//               data is coming over the wire again even if an actual
-//               connection is not available.
-//
-//               Outbound data will not be recorded, but will be sent
-//               straight through to the socket if it is connected, or
-//               silently ignored if it is not.
-////////////////////////////////////////////////////////////////////
+/**
+ * Records any data received from the indicated socket stream.  On playback,
+ * it will act as if the incoming data is coming over the wire again even if
+ * an actual connection is not available.
+ *
+ * Outbound data will not be recorded, but will be sent straight through to
+ * the socket if it is connected, or silently ignored if it is not.
+ */
 class EXPCL_PANDA_RECORDER SocketStreamRecorder : public RecorderBase,
                                                   public ReferenceCount {
 PUBLISHED:
   INLINE SocketStreamRecorder();
-  INLINE SocketStreamRecorder(SocketStream *stream, bool owns_stream);
+  INLINE explicit SocketStreamRecorder(SocketStream *stream, bool owns_stream);
   INLINE ~SocketStreamRecorder();
 
   bool receive_datagram(Datagram &dg);
@@ -79,8 +74,9 @@ public:
   static void register_with_read_factory();
   virtual void write_recorder(BamWriter *manager, Datagram &dg);
 
-  INLINE virtual void ref() const FINAL { ReferenceCount::ref(); };
-  INLINE virtual bool unref() const FINAL { return ReferenceCount::unref(); };
+  INLINE virtual int get_ref_count() const final { return ReferenceCount::get_ref_count(); };
+  INLINE virtual void ref() const final { ReferenceCount::ref(); };
+  INLINE virtual bool unref() const final { return ReferenceCount::unref(); };
 
 protected:
   static RecorderBase *make_recorder(const FactoryParams &params);

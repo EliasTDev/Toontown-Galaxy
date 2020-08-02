@@ -5,10 +5,9 @@ EntryScale Class: Scale with a label, and a linked and validated entry
 __all__ = ['EntryScale', 'EntryScaleGroup']
 
 from direct.showbase.TkGlobal import *
-from Tkinter import *
-import string, Pmw
-import tkColorChooser
-from tkSimpleDialog import *
+import Pmw
+from tkinter.simpledialog import *
+from tkinter.colorchooser import askcolor
 
 """
 Change Min/Max buttons to labels, add highlight binding
@@ -204,7 +203,7 @@ class EntryScale(Pmw.MegaWidget):
         if not self.fScaleCommand:
             return
         # convert scale val to float
-        self.set(string.atof(strVal))
+        self.set(float(strVal))
         """
         # Update entry to reflect formatted value
         self.entryValue.set(self.entryFormat % self.value)
@@ -215,10 +214,10 @@ class EntryScale(Pmw.MegaWidget):
 
     def _entryCommand(self, event = None):
         try:
-            val = string.atof(self.entryValue.get())
-            apply(self.onReturn, self['callbackData'])
+            val = float(self.entryValue.get())
+            self.onReturn(*self['callbackData'])
             self.set(val)
-            apply(self.onReturnRelease, self['callbackData'])
+            self.onReturnRelease(*self['callbackData'])
         except ValueError:
             pass
 
@@ -266,7 +265,7 @@ class EntryScale(Pmw.MegaWidget):
     def __onPress(self, event):
         # First execute onpress callback
         if self['preCallback']:
-            apply(self['preCallback'], self['callbackData'])
+            self['preCallback'](*self['callbackData'])
         # Now enable slider command
         self.fScaleCommand = 1
 
@@ -279,7 +278,7 @@ class EntryScale(Pmw.MegaWidget):
         self.fScaleCommand = 0
         # First execute onpress callback
         if self['postCallback']:
-            apply(self['postCallback'], self['callbackData'])
+            self['postCallback'](*self['callbackData'])
 
     def onRelease(self, *args):
         """ User redefinable callback executed on button release """
@@ -417,7 +416,7 @@ class EntryScaleGroup(Pmw.MegaToplevel):
 
     def __onReturn(self, esg):
         # Execute onReturn callback
-        apply(self.onReturn, esg.get())
+        self.onReturn(*esg.get())
 
     def onReturn(self, *args):
         """ User redefinable callback executed on button press """
@@ -425,7 +424,7 @@ class EntryScaleGroup(Pmw.MegaToplevel):
 
     def __onReturnRelease(self, esg):
         # Execute onReturnRelease callback
-        apply(self.onReturnRelease, esg.get())
+        self.onReturnRelease(*esg.get())
 
     def onReturnRelease(self, *args):
         """ User redefinable callback executed on button press """
@@ -434,7 +433,7 @@ class EntryScaleGroup(Pmw.MegaToplevel):
     def __onPress(self, esg):
         # Execute onPress callback
         if self['preCallback']:
-            apply(self['preCallback'], esg.get())
+            self['preCallback'](*esg.get())
 
     def onPress(self, *args):
         """ User redefinable callback executed on button press """
@@ -443,7 +442,7 @@ class EntryScaleGroup(Pmw.MegaToplevel):
     def __onRelease(self, esg):
         # Execute onRelease callback
         if self['postCallback']:
-            apply(self['postCallback'], esg.get())
+            self['postCallback'](*esg.get())
 
     def onRelease(self, *args):
         """ User redefinable callback executed on button release """
@@ -492,7 +491,7 @@ def rgbPanel(nodePath, callback = None):
     # System color picker
     def popupColorPicker(esg = esg):
         # Can pass in current color with: color = (255, 0, 0)
-        color = tkColorChooser.askcolor(
+        color = askcolor(
             parent = esg.interior(),
             # Initialize it to current color
             initialcolor = tuple(esg.get()[:3]))[0]
@@ -502,7 +501,7 @@ def rgbPanel(nodePath, callback = None):
                         command = popupColorPicker)
     def printToLog(nodePath=nodePath):
         c=nodePath.getColor()
-        print "Vec4(%.3f, %.3f, %.3f, %.3f)"%(c[0], c[1], c[2], c[3])
+        print("Vec4(%.3f, %.3f, %.3f, %.3f)"%(c[0], c[1], c[2], c[3]))
     menu.insert_command(index = 5, label = 'Print to log',
                         command = printToLog)
 
@@ -520,7 +519,7 @@ if __name__ == '__main__':
 
     # Dummy command
     def printVal(val):
-        print val
+        print(val)
 
     # Create and pack a EntryScale megawidget.
     mega1 = EntryScale(root, command = printVal)

@@ -3,12 +3,12 @@ from toontown.toonbase.ToonBaseGlobal import *
 from direct.gui.DirectGui import *
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
-import math, time, cPickle, random
+import math, time, pickle, random
 from toontown.toonbase import ToontownGlobals
 from direct.distributed import DistributedObject
 from direct.task.Task import Task
 from toontown.toonbase import TTLocalizer
-import HouseGlobals
+from . import HouseGlobals
 from toontown.estate import GardenGlobals, FlowerSellGUI
 from toontown.estate.EstateGlobals import *
 from toontown.toontowngui import TTDialog
@@ -187,7 +187,7 @@ class DistributedEstate(DistributedObject.DistributedObject):
 
     def setHouseInfo(self, houseInfo):
         self.notify.debug('setHouseInfo')
-        houseType, housePos = cPickle.loads(houseInfo)
+        houseType, housePos = pickle.loads(houseInfo)
         self.loadEstate(houseType, housePos)
 
     def loadEstate(self, indexList, posList):

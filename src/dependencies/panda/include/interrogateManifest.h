@@ -1,16 +1,15 @@
-// Filename: interrogateManifest.h
-// Created by:  drose (11Aug00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file interrogateManifest.h
+ * @author drose
+ * @date 2000-08-11
+ */
 
 #ifndef INTERROGATEMANIFEST_H
 #define INTERROGATEMANIFEST_H
@@ -21,17 +20,16 @@
 
 class IndexRemapper;
 
-////////////////////////////////////////////////////////////////////
-//       Class : InterrogateManifest
-// Description : An internal representation of a manifest constant.
-////////////////////////////////////////////////////////////////////
+/**
+ * An internal representation of a manifest constant.
+ */
 class EXPCL_INTERROGATEDB InterrogateManifest : public InterrogateComponent {
 public:
-  INLINE InterrogateManifest(InterrogateModuleDef *def = NULL);
+  INLINE InterrogateManifest(InterrogateModuleDef *def = nullptr);
   INLINE InterrogateManifest(const InterrogateManifest &copy);
   INLINE void operator = (const InterrogateManifest &copy);
 
-  INLINE const string &get_definition() const;
+  INLINE const std::string &get_definition() const;
   INLINE bool has_type() const;
   INLINE TypeIndex get_type() const;
   INLINE bool has_getter() const;
@@ -39,8 +37,8 @@ public:
   INLINE bool has_int_value() const;
   INLINE int get_int_value() const;
 
-  void output(ostream &out) const;
-  void input(istream &in);
+  void output(std::ostream &out) const;
+  void input(std::istream &in);
 
   void remap_indices(const IndexRemapper &remap);
 
@@ -52,7 +50,7 @@ private:
   };
 
   int _flags;
-  string _definition;
+  std::string _definition;
   int _int_value;
   TypeIndex _type;
   FunctionIndex _getter;
@@ -60,8 +58,8 @@ private:
   friend class InterrogateBuilder;
 };
 
-INLINE ostream &operator << (ostream &out, const InterrogateManifest &manifest);
-INLINE istream &operator >> (istream &in, InterrogateManifest &manifest);
+INLINE std::ostream &operator << (std::ostream &out, const InterrogateManifest &manifest);
+INLINE std::istream &operator >> (std::istream &in, InterrogateManifest &manifest);
 
 #include "interrogateManifest.I"
 

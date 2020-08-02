@@ -4,8 +4,8 @@ from toontown.toonbase.ToonBaseGlobal import *
 from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
 from toontown.toonbase import ToontownGlobals, TTLocalizer
-import DistributedFurnitureItem, BankGUI
-from BankGlobals import *
+from . import DistributedFurnitureItem, BankGUI
+from .BankGlobals import *
 from toontown.toontowngui import TTDialog
 from toontown.catalog.CatalogFurnitureItem import FurnitureTypes, FTScale
 

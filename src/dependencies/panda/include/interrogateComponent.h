@@ -1,16 +1,15 @@
-// Filename: interrogateComponent.h
-// Created by:  drose (08Aug00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file interrogateComponent.h
+ * @author drose
+ * @date 2000-08-08
+ */
 
 #ifndef INTERROGATECOMPONENT_H
 #define INTERROGATECOMPONENT_H
@@ -24,15 +23,13 @@
 
 class IndexRemapper;
 
-////////////////////////////////////////////////////////////////////
-//       Class : InterrogateComponent
-// Description : The base class for things that are part of the
-//               interrogate database.  This includes types,
-//               functions, and function wrappers.
-////////////////////////////////////////////////////////////////////
+/**
+ * The base class for things that are part of the interrogate database.  This
+ * includes types, functions, and function wrappers.
+ */
 class EXPCL_INTERROGATEDB InterrogateComponent {
 public:
-  INLINE InterrogateComponent(InterrogateModuleDef *def = NULL);
+  INLINE InterrogateComponent(InterrogateModuleDef *def = nullptr);
   INLINE InterrogateComponent(const InterrogateComponent &copy);
   INLINE void operator = (const InterrogateComponent &copy);
 
@@ -43,22 +40,22 @@ public:
   INLINE const char *get_module_name() const;
 
   INLINE bool has_name() const;
-  INLINE const string &get_name() const;
+  INLINE const std::string &get_name() const;
 
   INLINE int get_num_alt_names() const;
-  INLINE const string &get_alt_name(int n) const;
+  INLINE const std::string &get_alt_name(int n) const;
 
-  void output(ostream &out) const;
-  void input(istream &in);
+  void output(std::ostream &out) const;
+  void input(std::istream &in);
 
 protected:
-  static string _empty_string;
+  static std::string _empty_string;
 
 private:
   InterrogateModuleDef *_def;
-  string _name;
+  std::string _name;
 
-  typedef vector<string> Strings;
+  typedef std::vector<std::string> Strings;
   Strings _alt_names;
 
   friend class InterrogateBuilder;
@@ -68,5 +65,3 @@ private:
 #include "interrogateComponent.I"
 
 #endif
-
-

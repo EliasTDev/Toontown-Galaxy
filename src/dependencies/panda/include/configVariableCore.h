@@ -1,16 +1,15 @@
-// Filename: configVariableCore.h
-// Created by:  drose (15Oct04)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file configVariableCore.h
+ * @author drose
+ * @date 2004-10-15
+ */
 
 #ifndef CONFIGVARIABLECORE_H
 #define CONFIGVARIABLECORE_H
@@ -24,29 +23,26 @@
 
 class ConfigDeclaration;
 
-////////////////////////////////////////////////////////////////////
-//       Class : ConfigVariableCore
-// Description : The internal definition of a ConfigVariable.  This
-//               object is shared between all instances of a
-//               ConfigVariable that use the same variable name.
-//
-//               You cannot create a ConfigVariableCore instance
-//               directly; instead, use the make() method, which may
-//               return a shared instance.  Once created, these
-//               objects are never destructed.
-////////////////////////////////////////////////////////////////////
-class EXPCL_DTOOLCONFIG ConfigVariableCore : public ConfigFlags {
+/**
+ * The internal definition of a ConfigVariable.  This object is shared between
+ * all instances of a ConfigVariable that use the same variable name.
+ *
+ * You cannot create a ConfigVariableCore instance directly; instead, use the
+ * make() method, which may return a shared instance.  Once created, these
+ * objects are never destructed.
+ */
+class EXPCL_DTOOL_PRC ConfigVariableCore : public ConfigFlags {
 private:
-  ConfigVariableCore(const string &name);
-  ConfigVariableCore(const ConfigVariableCore &templ, const string &name);
+  ConfigVariableCore(const std::string &name);
+  ConfigVariableCore(const ConfigVariableCore &templ, const std::string &name);
   ~ConfigVariableCore();
 
 PUBLISHED:
-  INLINE const string &get_name() const;
+  INLINE const std::string &get_name() const;
   INLINE bool is_used() const;
 
   INLINE ValueType get_value_type() const;
-  INLINE const string &get_description() const;
+  INLINE const std::string &get_description() const;
   INLINE int get_flags() const;
   INLINE bool is_closed() const;
   INLINE int get_trust_level() const;
@@ -55,8 +51,8 @@ PUBLISHED:
 
   void set_value_type(ValueType value_type);
   void set_flags(int flags);
-  void set_description(const string &description);
-  void set_default_value(const string &default_value);
+  void set_description(const std::string &description);
+  void set_default_value(const std::string &default_value);
   INLINE void set_used();
 
   ConfigDeclaration *make_local_value();
@@ -64,24 +60,39 @@ PUBLISHED:
   INLINE bool has_local_value() const;
 
   bool has_value() const;
-  int get_num_declarations() const;
-  const ConfigDeclaration *get_declaration(int n) const;
+  size_t get_num_declarations() const;
+  const ConfigDeclaration *get_declaration(size_t n) const;
   MAKE_SEQ(get_declarations, get_num_declarations, get_declaration);
 
-  INLINE int get_num_references() const;
-  INLINE const ConfigDeclaration *get_reference(int n) const;
+  INLINE size_t get_num_references() const;
+  INLINE const ConfigDeclaration *get_reference(size_t n) const;
   MAKE_SEQ(get_references, get_num_references, get_reference);
 
-  INLINE int get_num_trusted_references() const;
-  INLINE const ConfigDeclaration *get_trusted_reference(int n) const;
+  INLINE size_t get_num_trusted_references() const;
+  INLINE const ConfigDeclaration *get_trusted_reference(size_t n) const;
   MAKE_SEQ(get_trusted_references, get_num_trusted_references, get_trusted_reference);
 
-  INLINE int get_num_unique_references() const;
-  INLINE const ConfigDeclaration *get_unique_reference(int n) const;
+  INLINE size_t get_num_unique_references() const;
+  INLINE const ConfigDeclaration *get_unique_reference(size_t n) const;
   MAKE_SEQ(get_unique_references, get_num_unique_references, get_unique_reference);
+  MAKE_SEQ_PROPERTY(declarations, get_num_declarations, get_declaration);
 
-  void output(ostream &out) const;
-  void write(ostream &out) const;
+  void output(std::ostream &out) const;
+  void write(std::ostream &out) const;
+
+  MAKE_PROPERTY(name, get_name);
+  MAKE_PROPERTY(used, is_used);
+  MAKE_PROPERTY(closed, is_closed);
+  MAKE_PROPERTY(trust_level, get_trust_level);
+  MAKE_PROPERTY(dynamic, is_dynamic);
+
+  MAKE_PROPERTY(value_type, get_value_type, set_value_type);
+  MAKE_PROPERTY(description, get_description, set_description);
+  MAKE_PROPERTY(default_value, get_default_value, set_default_value);
+
+  MAKE_SEQ_PROPERTY(references, get_num_references, get_reference);
+  MAKE_SEQ_PROPERTY(trusted_references, get_num_trusted_references, get_trusted_reference);
+  MAKE_SEQ_PROPERTY(unique_references, get_num_unique_references, get_unique_reference);
 
 private:
   void add_declaration(ConfigDeclaration *decl);
@@ -91,15 +102,15 @@ private:
   void sort_declarations();
 
 private:
-  string _name;
+  std::string _name;
   bool _is_used;
   ValueType _value_type;
-  string _description;
+  std::string _description;
   int _flags;
   ConfigDeclaration *_default_value;
   ConfigDeclaration *_local_value;
 
-  typedef vector<const ConfigDeclaration *> Declarations;
+  typedef std::vector<const ConfigDeclaration *> Declarations;
   Declarations _declarations;
   Declarations _trusted_declarations;
   Declarations _untrusted_declarations;
@@ -111,7 +122,7 @@ private:
   friend class ConfigVariableManager;
 };
 
-INLINE ostream &operator << (ostream &out, const ConfigVariableCore &variable);
+INLINE std::ostream &operator << (std::ostream &out, const ConfigVariableCore &variable);
 
 #include "configVariableCore.I"
 

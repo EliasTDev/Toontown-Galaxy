@@ -1,16 +1,15 @@
-// Filename: animChannel.h
-// Created by:  drose (22Feb99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file animChannel.h
+ * @author drose
+ * @date 1999-02-22
+ */
 
 #ifndef ANIMCHANNEL_H
 #define ANIMCHANNEL_H
@@ -21,24 +20,22 @@
 
 #include "luse.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : AnimChannel
-// Description : This template class is the parent class for all kinds
-//               of AnimChannels that return different values.
-////////////////////////////////////////////////////////////////////
+/**
+ * This template class is the parent class for all kinds of AnimChannels that
+ * return different values.
+ */
 template<class SwitchType>
 class AnimChannel : public AnimChannelBase {
 protected:
-  // The default constructor is protected: don't try to create an
-  // AnimChannel without a parent.  To create an AnimChannel hierarchy,
-  // you must first create an AnimBundle, and use that to create any
-  // subsequent children.
-  INLINE AnimChannel(const string &name = "");
+  // The default constructor is protected: don't try to create an AnimChannel
+  // without a parent.  To create an AnimChannel hierarchy, you must first
+  // create an AnimBundle, and use that to create any subsequent children.
+  INLINE AnimChannel(const std::string &name = "");
   INLINE AnimChannel(AnimGroup *parent, const AnimChannel &copy);
 public:
-  typedef TYPENAME SwitchType::ValueType ValueType;
+  typedef typename SwitchType::ValueType ValueType;
 
-  INLINE AnimChannel(AnimGroup *parent, const string &name);
+  INLINE AnimChannel(AnimGroup *parent, const std::string &name);
   INLINE ~AnimChannel();
 
 PUBLISHED:
@@ -54,8 +51,8 @@ PUBLISHED:
 
   virtual TypeHandle get_value_type() const;
 
-  //This class has no Read/Write functions as it is abstract
-  //and defines no new data
+  // This class has no ReadWrite functions as it is abstract and defines no
+  // new data
 
 public:
   virtual TypeHandle get_type() const {
@@ -84,7 +81,7 @@ public:
   static const char *get_channel_type_name() { return "AnimChannelMatrix"; }
   static const char *get_fixed_channel_type_name() { return "AnimChannelFixed<LMatrix4>"; }
   static const char *get_part_type_name() { return "MovingPart<LMatrix4>"; }
-  static void output_value(ostream &out, const ValueType &value);
+  static void output_value(std::ostream &out, const ValueType &value);
 
   static void write_datagram(Datagram &dest, ValueType& me)
   {
@@ -106,7 +103,7 @@ public:
   static const char *get_channel_type_name() { return "AnimChannelScalar"; }
   static const char *get_fixed_channel_type_name() { return "AnimChannelScalarFixed"; }
   static const char *get_part_type_name() { return "MovingPart<PN_stdfloat>"; }
-  static void output_value(ostream &out, ValueType value) {
+  static void output_value(std::ostream &out, ValueType value) {
     out << value;
   }
   static void write_datagram(Datagram &dest, ValueType& me)
@@ -125,11 +122,4 @@ typedef AnimChannel<ACScalarSwitchType> AnimChannelScalar;
 
 #include "animChannel.I"
 
-
-// Tell GCC that we'll take care of the instantiation explicitly here.
-#ifdef __GNUC__
-#pragma interface
 #endif
-
-#endif
-

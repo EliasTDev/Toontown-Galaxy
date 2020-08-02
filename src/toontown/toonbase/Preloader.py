@@ -21,10 +21,10 @@ class Preloader(DirectObject):
     def destroy(self):
         self.ignore(self.asyncRequestDoneEvent)
 
-        for key in self.requests.keys():
+        for key in list(self.requests.keys()):
             self.cancelAsyncRequest(key)
 
-        for key in self.modelPool.keys():
+        for key in list(self.modelPool.keys()):
             self.unloadModel(key)
 
     def getUniqueName(self):
@@ -41,7 +41,7 @@ class Preloader(DirectObject):
         if priority is not None:
             request.setPriority(priority)
         request.setDoneEvent(self.asyncRequestDoneEvent)
-        request.setPythonObject(modelPath)
+        #request.setPythonObject(modelPath)
         self.requests[modelPath] = (
             request, self.loadModelCallback, [modelPath])
 
@@ -76,7 +76,7 @@ class Preloader(DirectObject):
             self.loader.remove(request)
 
     def __handleAsyncRequestDone(self, request):
-        key = request.getPythonObject()
+        key = request
 
         if key not in self.requests:
             return

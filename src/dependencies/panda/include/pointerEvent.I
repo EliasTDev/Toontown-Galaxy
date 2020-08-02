@@ -1,83 +1,19 @@
-// Filename: pointerEvent.I
-// Created by: jyelon (20Sep2007)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file pointerEvent.I
+ * @author jyelon
+ * @date 2007-09-20
+ */
 
-
-////////////////////////////////////////////////////////////////////
-//     Function: PointerEvent::Default Constructor
-//       Access: Public
-//  Description:
-////////////////////////////////////////////////////////////////////
-INLINE PointerEvent::
-PointerEvent() :
-  _in_window(false),
-  _xpos(0),
-  _ypos(0),
-  _dx(0),
-  _dy(0),
-  _length(0.0),
-  _direction(0.0),
-  _rotation(0.0),
-  _sequence(0),
-  _time(0.0)
-{
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: PointerEvent::Copy Constructor
-//       Access: Public
-//  Description:
-////////////////////////////////////////////////////////////////////
-INLINE PointerEvent::
-PointerEvent(const PointerEvent &copy) :
-  _in_window(copy._in_window),
-  _xpos(copy._xpos),
-  _ypos(copy._ypos),
-  _dx(copy._dx),
-  _dy(copy._dy),
-  _length(copy._length),
-  _direction(copy._direction),
-  _rotation(copy._rotation),
-  _sequence(copy._sequence),
-  _time(copy._time)
-{
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: PointerEvent::Copy Assignment Operator
-//       Access: Public
-//  Description:
-////////////////////////////////////////////////////////////////////
-INLINE void PointerEvent::
-operator = (const PointerEvent &copy) {
-  _in_window = copy._in_window;
-  _xpos = copy._xpos;
-  _ypos = copy._ypos;
-  _dx = copy._dx;
-  _dy = copy._dy;
-  _sequence = copy._sequence;
-  _length = copy._length;
-  _direction = copy._direction;
-  _rotation = copy._rotation;
-  _time = copy._time;
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: PointerEvent::Equality Operator
-//       Access: Public
-//  Description: The equality operator does not consider time
-//               significant.
-////////////////////////////////////////////////////////////////////
+/**
+ * The equality operator does not consider time significant.
+ */
 INLINE bool PointerEvent::
 operator == (const PointerEvent &other) const {
   return (_in_window == other._in_window &&
@@ -91,21 +27,17 @@ operator == (const PointerEvent &other) const {
           _rotation == other._rotation);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: PointerEvent::Inequality Operator
-//       Access: Public
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 INLINE bool PointerEvent::
 operator != (const PointerEvent &other) const {
   return !operator == (other);
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: PointerEvent::Ordering Operator
-//       Access: Public
-//  Description:
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 INLINE bool PointerEvent::
 operator < (const PointerEvent &other) const {
   if (_sequence != other._sequence) {
@@ -134,4 +66,3 @@ operator < (const PointerEvent &other) const {
   }
   return _in_window < other._in_window;
 }
-

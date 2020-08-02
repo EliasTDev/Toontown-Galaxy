@@ -1,16 +1,15 @@
-// Filename: pgFrameStyle.h
-// Created by:  drose (03Jul01)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file pgFrameStyle.h
+ * @author drose
+ * @date 2001-07-03
+ */
 
 #ifndef PGFRAMESTYLE_H
 #define PGFRAMESTYLE_H
@@ -24,10 +23,9 @@
 class PandaNode;
 class NodePath;
 
-////////////////////////////////////////////////////////////////////
-//       Class : PGFrameStyle
-// Description : 
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 class EXPCL_PANDA_PGUI PGFrameStyle {
 PUBLISHED:
   INLINE PGFrameStyle();
@@ -72,7 +70,7 @@ PUBLISHED:
 
   LVecBase4 get_internal_frame(const LVecBase4 &frame) const;
 
-  void output(ostream &out) const;
+  void output(std::ostream &out) const;
 
 public:
   bool xform(const LMatrix4 &mat);
@@ -94,8 +92,8 @@ private:
   LVecBase2 _visible_scale;
 };
 
-INLINE ostream &operator << (ostream &out, const PGFrameStyle &pfs);
-ostream &operator << (ostream &out, PGFrameStyle::Type type);
+INLINE std::ostream &operator << (std::ostream &out, const PGFrameStyle &pfs);
+std::ostream &operator << (std::ostream &out, PGFrameStyle::Type type);
 
 #include "pgFrameStyle.I"
 

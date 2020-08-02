@@ -1,16 +1,15 @@
-// Filename: ropeNode.h
-// Created by:  drose (04Dec02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file ropeNode.h
+ * @author drose
+ * @date 2002-12-04
+ */
 
 #ifndef ROPENODE_H
 #define ROPENODE_H
@@ -23,27 +22,24 @@
 
 class GeomVertexData;
 
-////////////////////////////////////////////////////////////////////
-//       Class : RopeNode
-// Description : This class draws a visible representation of the
-//               NURBS curve stored in its NurbsCurveEvaluator.  It
-//               automatically recomputes the curve every frame.
-//
-//               This is not related to NurbsCurve, CubicCurveseg or
-//               any of the ParametricCurve-derived objects in this
-//               module.  It is a completely parallel implementation
-//               of NURBS curves, and will probably eventually replace
-//               the whole ParametricCurve class hierarchy.
-////////////////////////////////////////////////////////////////////
+/**
+ * This class draws a visible representation of the NURBS curve stored in its
+ * NurbsCurveEvaluator.  It automatically recomputes the curve every frame.
+ *
+ * This is not related to NurbsCurve, CubicCurveseg or any of the
+ * ParametricCurve-derived objects in this module.  It is a completely
+ * parallel implementation of NURBS curves, and will probably eventually
+ * replace the whole ParametricCurve class hierarchy.
+ */
 class EXPCL_PANDA_PARAMETRICS RopeNode : public PandaNode {
 PUBLISHED:
-  RopeNode(const string &name);
+  explicit RopeNode(const std::string &name);
 
 protected:
   RopeNode(const RopeNode &copy);
 public:
-  virtual void output(ostream &out) const;
-  virtual void write(ostream &out, int indent_level = 0) const;
+  virtual void output(std::ostream &out) const;
+  virtual void write(std::ostream &out, int indent_level = 0) const;
 
   virtual PandaNode *make_copy() const;
 
@@ -56,12 +52,12 @@ PUBLISHED:
     // Render the rope as a one-pixel thread using a linestrip.
     RM_thread,
 
-    // Render the rope as a triangle strip oriented to be
-    // perpendicular to the tube_up vector.
+    // Render the rope as a triangle strip oriented to be perpendicular to the
+    // tube_up vector.
     RM_tape,
 
-    // Render the rope as a triangle strip oriented to be
-    // perpendicular to the view vector.
+    // Render the rope as a triangle strip oriented to be perpendicular to the
+    // view vector.
     RM_billboard,
 
     // Render the rope as a hollow tube extruded along its length.
@@ -72,20 +68,18 @@ PUBLISHED:
     // Don't generate UV's along the curve.
     UV_none,
 
-    // Generate UV's based on the parametric coordinates along the
-    // curve.
+    // Generate UV's based on the parametric coordinates along the curve.
     UV_parametric,
 
-    // Generate UV's in proportion to spatial distance along the
-    // curve, by using the distance function to compute the length of
-    // each segment.
+    // Generate UV's in proportion to spatial distance along the curve, by
+    // using the distance function to compute the length of each segment.
     UV_distance,
 
-    // As above, but don't bother to take the square root of each
-    // segment.  The distance is then in proportion to the
-    // sum-of-squares of the segments along the rope.  If the segments
-    // are similar in length, this approximates the proportion of
-    // UV_distance while avoiding hundreds of square root operations.
+    // As above, but don't bother to take the square root of each segment.
+    // The distance is then in proportion to the sum-of-squares of the
+    // segments along the rope.  If the segments are similar in length, this
+    // approximates the proportion of UV_distance while avoiding hundreds of
+    // square root operations.
     UV_distance2,
   };
 
@@ -142,6 +136,23 @@ PUBLISHED:
 
   void reset_bound(const NodePath &rel_to);
 
+PUBLISHED:
+  MAKE_PROPERTY(curve, get_curve, set_curve);
+  MAKE_PROPERTY(render_mode, get_render_mode, set_render_mode);
+  MAKE_PROPERTY(uv_mode, get_uv_mode, set_uv_mode);
+  MAKE_PROPERTY(uv_direction, get_uv_direction, set_uv_direction);
+  MAKE_PROPERTY(uv_scale, get_uv_scale, set_uv_scale);
+  MAKE_PROPERTY(normal_mode, get_normal_mode, set_normal_mode);
+  MAKE_PROPERTY(tube_up, get_tube_up, set_tube_up);
+  MAKE_PROPERTY(use_vertex_color, get_use_vertex_color, set_use_vertex_color);
+  MAKE_PROPERTY(vertex_color_dimension, get_vertex_color_dimension);
+  MAKE_PROPERTY(num_subdiv, get_num_subdiv, set_num_subdiv);
+  MAKE_PROPERTY(num_slices, get_num_slices, set_num_slices);
+  MAKE_PROPERTY(use_vertex_thickness, get_use_vertex_thickness, set_use_vertex_thickness);
+  MAKE_PROPERTY(vertex_thickness_dimension, get_vertex_thickness_dimension);
+  MAKE_PROPERTY(thickness, get_thickness, set_thickness);
+  MAKE_PROPERTY2(matrix, has_matrix, get_matrix, set_matrix, clear_matrix);
+
 protected:
   virtual void compute_internal_bounds(CPT(BoundingVolume) &internal_bounds,
                                        int &internal_vertices,
@@ -152,15 +163,15 @@ private:
   CPT(GeomVertexFormat) get_format(bool support_normals) const;
 
   PT(BoundingVolume) do_recompute_bounds(const NodePath &rel_to,
-                                         int pipeline_stage, 
+                                         int pipeline_stage,
                                          Thread *current_thread) const;
-  void render_thread(CullTraverser *trav, CullTraverserData &data, 
+  void render_thread(CullTraverser *trav, CullTraverserData &data,
                      NurbsCurveResult *result) const;
-  void render_tape(CullTraverser *trav, CullTraverserData &data, 
+  void render_tape(CullTraverser *trav, CullTraverserData &data,
                    NurbsCurveResult *result) const;
-  void render_billboard(CullTraverser *trav, CullTraverserData &data, 
+  void render_billboard(CullTraverser *trav, CullTraverserData &data,
                         NurbsCurveResult *result) const;
-  void render_tube(CullTraverser *trav, CullTraverserData &data, 
+  void render_tube(CullTraverser *trav, CullTraverserData &data,
                    NurbsCurveResult *result) const;
 
   class CurveVertex {

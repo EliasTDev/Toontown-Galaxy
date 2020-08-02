@@ -1,16 +1,15 @@
-// Filename: chunkedStreamBuf.h
-// Created by:  drose (25Sep02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file chunkedStreamBuf.h
+ * @author drose
+ * @date 2002-09-25
+ */
 
 #ifndef CHUNKEDSTREAMBUF_H
 #define CHUNKEDSTREAMBUF_H
@@ -24,13 +23,11 @@
 #include "bioStreamPtr.h"
 #include "pointerTo.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : ChunkedStreamBuf
-// Description : The streambuf object that implements
-//               IChunkedStream.
-////////////////////////////////////////////////////////////////////
-// No need to export from DLL.
-class ChunkedStreamBuf : public streambuf {
+/**
+ * The streambuf object that implements IChunkedStream.
+ */
+class ChunkedStreamBuf : public std::streambuf {
+  // No need to export from DLL.
 public:
   ChunkedStreamBuf();
   virtual ~ChunkedStreamBuf();
@@ -46,13 +43,13 @@ protected:
 
 private:
   size_t read_chars(char *start, size_t length);
-  bool http_getline(string &str);
+  bool http_getline(std::string &str);
 
   PT(BioStreamPtr) _source;
   size_t _chunk_remaining;
   bool _done;
   bool _wanted_nonblocking;
-  string _working_getline;
+  std::string _working_getline;
   ISocketStream::ReadState _read_state;
 
   PT(HTTPChannel) _doc;

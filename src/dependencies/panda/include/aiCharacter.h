@@ -1,47 +1,38 @@
-////////////////////////////////////////////////////////////////////////
-// Filename    : aiCharacter.h
-// Created by  : Deepak, John, Navin
-// Date        :  8 Sep 09
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
-
-#pragma warning (disable:4996)
-#pragma warning (disable:4005)
-#pragma warning(disable:4275)
-
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file aiCharacter.h
+ * @author Deepak, John, Navin
+ * @date 2009-09-08
+ */
 
 #ifndef _AICHARACTER_H
 #define _AICHARACTER_H
 
 #include "aiBehaviors.h"
+#include "referenceCount.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Class : AICharacter
-//  Description : This class is used for creating the ai characters. It assigns both physics and ai
-//                attributes to the character. It also has an update function which updates the physics and ai
-//                of the character. This update function is called by the AIWorld update.
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+/**
+ * This class is used for creating the AI characters.  It assigns both physics
+ * and AI attributes to the character.  It also has an update function which
+ * updates the physics and AI of the character.  This update function is
+ * called by the AIWorld update.
+ */
 class AIBehaviors;
 class AIWorld;
 
-class EXPCL_PANDAAI AICharacter {
+class EXPCL_PANDAAI AICharacter : public ReferenceCount {
  public:
   double _mass;
   double _max_force;
   LVecBase3 _velocity;
   LVecBase3 _steering_force;
-  string _name;
+  std::string _name;
   double _movt_force;
   unsigned int _ai_char_flock_id;
   AIWorld *_world;
@@ -72,7 +63,7 @@ PUBLISHED:
     // This function is used to enable or disable the guides for path finding.
     void set_pf_guide(bool pf_guide);
 
-    AICharacter(string model_name, NodePath model_np, double mass, double movt_force, double max_force);
+    explicit AICharacter(std::string model_name, NodePath model_np, double mass, double movt_force, double max_force);
     ~AICharacter();
 };
 

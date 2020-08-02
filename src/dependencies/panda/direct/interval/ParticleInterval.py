@@ -1,15 +1,13 @@
-"""Undocumented Module"""
-
-__all__ = ['ParticleInterval']
-
 """
 Contains the ParticleInterval class
 """
 
+__all__ = ['ParticleInterval']
+
 from panda3d.core import *
 from panda3d.direct import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from Interval import Interval
+from .Interval import Interval
 
 
 class ParticleInterval(Interval):
@@ -36,35 +34,31 @@ class ParticleInterval(Interval):
                  cleanup = False,
                  name = None):
         """
-        particleEffect is a ParticleEffect
-        parent is a NodePath: this is where the effect will be
-                              parented in the scenegraph
-        worldRelative is a boolean: this will override 'renderParent'
-                                    with render
-        renderParent is a NodePath: this is where the particles will
-                                    be rendered in the scenegraph
-        duration is a float: for the time
-        softStopT is a float: no effect if 0.0,
-                              a positive value will count from the
-                              start of the interval,
-                              a negative value will count from the
-                              end of the interval
-        cleanup is a boolean: if True the effect will be destroyed
-                              and removed from the scenegraph upon
-                              interval completion
-                              set to False if planning on reusing
-                              the interval
-        name is a string: use this for unique intervals so that
-                          they can be easily found in the taskMgr
+        Args:
+            particleEffect (ParticleEffect): a particle effect
+            parent (NodePath): this is where the effect will be parented in the
+                scene graph
+            worldRelative (bool): this will override 'renderParent' with render
+            renderParent (NodePath): this is where the particles will be
+                rendered in the scenegraph
+            duration (float): for the time
+            softStopT (float): no effect if 0.0, a positive value will count
+                from the start of the interval, a negative value will count
+                from the end of the interval
+            cleanup (boolean): if True the effect will be destroyed and removed
+                from the scenegraph upon interval completion.  Set to False if
+                planning on reusing the interval.
+            name (string): use this for unique intervals so that they can be
+                easily found in the taskMgr.
         """
-        
+
         # Generate unique name
         id = 'Particle-%d' % ParticleInterval.particleNum
         ParticleInterval.particleNum += 1
         if name == None:
             name = id
         # Record instance variables
-        self.particleEffect = particleEffect 
+        self.particleEffect = particleEffect
         self.cleanup = cleanup
 
         if parent != None:
@@ -76,14 +70,14 @@ class ParticleInterval(Interval):
                 particles.setRenderParent(renderParent.node())
 
         self.__softStopped = False
-        
+
         if softStopT == 0.0:
             self.softStopT = duration
         elif softStopT < 0.0:
             self.softStopT = duration+softStopT
         else:
             self.softStopT = softStopT
-            
+
         # Initialize superclass
         Interval.__init__(self, name, duration)
 
@@ -119,7 +113,7 @@ class ParticleInterval(Interval):
     def privInstant(self):
         self.privInitialize(self.getDuration())
         self.privFinalize()
-        
+
     def privStep(self, t):
         if self.state == CInterval.SPaused or t < self.currT:
             # Restarting from a pause.
@@ -138,4 +132,4 @@ class ParticleInterval(Interval):
         if self.cleanup and self.particleEffect:
             self.particleEffect.cleanup()
             self.particleEffect = None
-            
+

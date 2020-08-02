@@ -1,6 +1,7 @@
 from otp.ai.MagicWordGlobal import *
 from toontown.toonbase import TTLocalizer
-import RaceGlobals, operator, time
+from . import RaceGlobals
+import operator, time
 
 class LeaderboardMgrAI:
 
@@ -41,7 +42,7 @@ class LeaderboardMgrAI:
             self.saveDatabase()
 
     def submitRace(self, raceId, name, timestamp):
-        for i in xrange(len(TTLocalizer.RecordPeriodStrings)):
+        for i in range(len(TTLocalizer.RecordPeriodStrings)):
             race = '%s, %s' % (raceId, i)
 
             if race in self.database:
@@ -58,7 +59,7 @@ class LeaderboardMgrAI:
                 self.database[race] = [time.time(), [(name, timestamp)]]
                 self.saveDatabase()
 
-@magicWord(category=CATEGORY_LEADER, types=[str, int, int, str, int])
+@magicWord(category=CATEGORY_DEVELOPER, types=[str, int, int, str, int])
 def leaderboard(command, raceId=0, type=0, name='', time=0):
     command = command.lower()
     race = '%s, %s' % (raceId, type)

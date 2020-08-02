@@ -1,16 +1,15 @@
-// Filename: lineParticleRenderer.h
-// Created by:  darren (06Oct00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file lineParticleRenderer.h
+ * @author darren
+ * @date 2000-10-06
+ */
 
 #ifndef LINEPARTICLERENDERER_H
 #define LINEPARTICLERENDERER_H
@@ -24,19 +23,18 @@
 #include "geomLines.h"
 #include "pStatCollector.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : LineParticleRenderer
-// Description : renders a line from last position to current
-//               position -- good for rain, sparks, etc.
-////////////////////////////////////////////////////////////////////
+/**
+ * renders a line from last position to current position -- good for rain,
+ * sparks, etc.
+ */
 
-class EXPCL_PANDAPHYSICS LineParticleRenderer : public BaseParticleRenderer {
+class EXPCL_PANDA_PARTICLESYSTEM LineParticleRenderer : public BaseParticleRenderer {
 PUBLISHED:
   LineParticleRenderer();
   LineParticleRenderer(const LineParticleRenderer& copy);
-  LineParticleRenderer(const LColor& head,
-                       const LColor& tail,
-                       ParticleRendererAlphaMode alpha_mode);
+  explicit LineParticleRenderer(const LColor& head,
+                                const LColor& tail,
+                                ParticleRendererAlphaMode alpha_mode);
 
   virtual ~LineParticleRenderer();
 
@@ -49,12 +47,12 @@ PUBLISHED:
 
   INLINE const LColor& get_head_color() const;
   INLINE const LColor& get_tail_color() const;
-  
+
   INLINE void set_line_scale_factor(PN_stdfloat sf);
   INLINE PN_stdfloat get_line_scale_factor() const;
 
-  virtual void output(ostream &out) const;
-  virtual void write(ostream &out, int indent_level = 0) const;
+  virtual void output(std::ostream &out) const;
+  virtual void write(std::ostream &out, int indent_level = 0) const;
 
 private:
   LColor _head_color;

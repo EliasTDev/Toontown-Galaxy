@@ -1,16 +1,15 @@
-// Filename: paletteGroup.h
-// Created by:  drose (28Nov00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file paletteGroup.h
+ * @author drose
+ * @date 2000-11-28
+ */
 
 #ifndef PALETTEGROUP_H
 #define PALETTEGROUP_H
@@ -33,24 +32,21 @@ class PalettePage;
 class TextureImage;
 class TxaFile;
 
-////////////////////////////////////////////////////////////////////
-//       Class : PaletteGroup
-// Description : This is the highest level of grouping for
-//               TextureImages.  Textures are assigned to one or
-//               several PaletteGroups based on the information in the
-//               .txa file; each PaletteGroup is conceptually a
-//               collection of textures that are to be moved around
-//               (into texture memory, downloaded, etc.) in one big
-//               chunk.  It is the set of all textures that may be
-//               displayed together at any given time.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is the highest level of grouping for TextureImages.  Textures are
+ * assigned to one or several PaletteGroups based on the information in the
+ * .txa file; each PaletteGroup is conceptually a collection of textures that
+ * are to be moved around (into texture memory, downloaded, etc.) in one big
+ * chunk.  It is the set of all textures that may be displayed together at any
+ * given time.
+ */
 class PaletteGroup : public TypedWritable, public Namable {
 public:
   PaletteGroup();
 
-  void set_dirname(const string &dirname);
+  void set_dirname(const std::string &dirname);
   bool has_dirname() const;
-  const string &get_dirname() const;
+  const std::string &get_dirname() const;
 
   void clear_depends();
   void group_with(PaletteGroup *other);
@@ -84,17 +80,17 @@ public:
   void place_all();
   void update_unknown_textures(const TxaFile &txa_file);
 
-  void write_image_info(ostream &out, int indent_level = 0) const;
+  void write_image_info(std::ostream &out, int indent_level = 0) const;
   void optimal_resize();
   void reset_images();
   void setup_shadow_images();
   void update_images(bool redo_all);
 
-  void add_texture_swap_info(const string sourceTextureName, const vector_string &swapTextures);
+  void add_texture_swap_info(const std::string sourceTextureName, const vector_string &swapTextures);
   bool is_none_texture_swap() const;
 
 private:
-  string _dirname;
+  std::string _dirname;
   int _egg_count;
   PaletteGroups _dependent;
   int _dependency_level;
@@ -107,7 +103,7 @@ private:
   typedef pmap<TextureProperties, PalettePage *> Pages;
   Pages _pages;
 
-  typedef pmap<string, vector_string> TextureSwapInfo;
+  typedef pmap<std::string, vector_string> TextureSwapInfo;
   TextureSwapInfo _textureSwapInfo;
 
   // The TypedWritable interface follows.
@@ -123,8 +119,8 @@ protected:
   void fillin(DatagramIterator &scan, BamReader *manager);
 
 private:
-  // These values are only filled in while reading from the bam file;
-  // don't use them otherwise.
+  // These values are only filled in while reading from the bam file; don't
+  // use them otherwise.
   int _num_placements;
   int _num_pages;
   bool _has_margin_override;
@@ -153,4 +149,3 @@ private:
 };
 
 #endif
-

@@ -37,8 +37,9 @@ class DistributedGolfSpot(DistributedObject.DistributedObject, FSM.FSM):
         self.golfSpotSmoother.setSmoothMode(SmoothMover.SMOn)
         self.smoothStarted = 0
         self.__broadcastPeriod = 0.2
-        if self.index > len(self.positions):
-            self.notify.error('Invalid index %d' % index)
+        if self.index:
+            if self.index > len(self.positions):
+                self.notify.error('Invalid index %d' % index)
         self.fadeTrack = None
         self.setupPowerBar()
         self.aimStart = None
@@ -118,7 +119,7 @@ class DistributedGolfSpot(DistributedObject.DistributedObject, FSM.FSM):
         if self.releaseTrack:
             self.releaseTrack.finish()
             self.releaseTrack = None
-        flyTracks = self.flyBallTracks.values()
+        flyTracks = list(self.flyBallTracks.values())
         for track in flyTracks:
             track.finish()
 
@@ -460,7 +461,7 @@ class DistributedGolfSpot(DistributedObject.DistributedObject, FSM.FSM):
 
     def __updateBallPower(self, task):
         if not self.powerBar:
-            print '### no power bar!!!'
+            print('### no power bar!!!')
             return task.done
         newPower = self.__getBallPower(globalClock.getFrameTime())
         self.power = newPower
@@ -673,7 +674,7 @@ class DistributedGolfSpot(DistributedObject.DistributedObject, FSM.FSM):
         return self.__flyBallBubble
 
     def __flyBallHit(self, entry):
-        print entry
+        print(entry)
 
     def flyBallFinishedFlying(self, sequence):
         if sequence in self.flyBallTracks:

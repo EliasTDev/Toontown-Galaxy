@@ -1,12 +1,13 @@
+"idlelib.filelist"
+
 import os
-from Tkinter import *
-import tkMessageBox
+from tkinter import messagebox as tkMessageBox
 
 
 class FileList:
 
     # N.B. this import overridden in PyShellFileList.
-    from idlelib.EditorWindow import EditorWindow
+    from idlelib.editor import EditorWindow
 
     def __init__(self, root):
         self.root = root
@@ -33,7 +34,12 @@ class FileList:
             # Don't create window, perform 'action', e.g. open in same window
             return action(filename)
         else:
-            return self.EditorWindow(self, filename, key)
+            edit = self.EditorWindow(self, filename, key)
+            if edit.good_load:
+                return edit
+            else:
+                edit._close()
+                return None
 
     def gotofileline(self, filename, lineno=None):
         edit = self.open(filename)
@@ -44,7 +50,7 @@ class FileList:
         return self.EditorWindow(self, filename)
 
     def close_all_callback(self, *args, **kwds):
-        for edit in self.inversedict.keys():
+        for edit in list(self.inversedict):
             reply = edit.close()
             if reply == "cancel":
                 break
@@ -54,7 +60,7 @@ class FileList:
         try:
             key = self.inversedict[edit]
         except KeyError:
-            print "Don't know this EditorWindow object.  (close)"
+            print("Don't know this EditorWindow object.  (close)")
             return
         if key:
             del self.dict[key]
@@ -67,7 +73,7 @@ class FileList:
         try:
             key = self.inversedict[edit]
         except KeyError:
-            print "Don't know this EditorWindow object.  (rename)"
+            print("Don't know this EditorWindow object.  (rename)")
             return
         filename = edit.io.filename
         if not filename:
@@ -98,27 +104,28 @@ class FileList:
         if not os.path.isabs(filename):
             try:
                 pwd = os.getcwd()
-            except os.error:
+            except OSError:
                 pass
             else:
                 filename = os.path.join(pwd, filename)
         return os.path.normpath(filename)
 
 
-def _test():
-    from idlelib.EditorWindow import fixwordbreaks
-    import sys
+def _test():  # TODO check and convert to htest
+    from tkinter import Tk
+    from idlelib.editor import fixwordbreaks
+    from idlelib.run import fix_scaling
     root = Tk()
+    fix_scaling(root)
     fixwordbreaks(root)
     root.withdraw()
     flist = FileList(root)
-    if sys.argv[1:]:
-        for filename in sys.argv[1:]:
-            flist.open(filename)
-    else:
-        flist.new()
+    flist.new()
     if flist.inversedict:
         root.mainloop()
 
 if __name__ == '__main__':
-    _test()
+    from unittest import main
+    main('idlelib.idle_test.test_filelist', verbosity=2)
+
+#    _test()

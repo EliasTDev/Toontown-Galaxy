@@ -1,16 +1,15 @@
-// Filename: pnmFileType.h
-// Created by:  drose (15Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file pnmFileType.h
+ * @author drose
+ * @date 2000-06-15
+ */
 
 #ifndef PNMFILETYPE_H
 #define PNMFILETYPE_H
@@ -26,12 +25,10 @@ class PNMReader;
 class PNMWriter;
 class FactoryParams;
 
-////////////////////////////////////////////////////////////////////
-//       Class : PNMFileType
-// Description : This is the base class of a family of classes that
-//               represent particular image file types that PNMImage
-//               supports.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is the base class of a family of classes that represent particular
+ * image file types that PNMImage supports.
+ */
 class EXPCL_PANDA_PNMIMAGE PNMFileType : public TypedWritable {
 protected:
   PNMFileType();
@@ -40,20 +37,24 @@ public:
   virtual ~PNMFileType();
 
 PUBLISHED:
-  virtual string get_name() const=0;
+  virtual std::string get_name() const=0;
 
   virtual int get_num_extensions() const;
-  virtual string get_extension(int n) const;
+  virtual std::string get_extension(int n) const;
   MAKE_SEQ(get_extensions, get_num_extensions, get_extension);
-  virtual string get_suggested_extension() const;
+  virtual std::string get_suggested_extension() const;
+
+  MAKE_PROPERTY(name, get_name);
+  MAKE_SEQ_PROPERTY(extensions, get_num_extensions, get_extension);
+  MAKE_PROPERTY(suggested_extension, get_suggested_extension);
 
 public:
   virtual bool has_magic_number() const;
-  virtual bool matches_magic_number(const string &magic_number) const;
+  virtual bool matches_magic_number(const std::string &magic_number) const;
 
-  virtual PNMReader *make_reader(istream *file, bool owns_file = true,
-                                 const string &magic_number = string());
-  virtual PNMWriter *make_writer(ostream *file, bool owns_file = true);
+  virtual PNMReader *make_reader(std::istream *file, bool owns_file = true,
+                                 const std::string &magic_number = std::string());
+  virtual PNMWriter *make_writer(std::ostream *file, bool owns_file = true);
 
 protected:
   static void init_pnm();
@@ -89,4 +90,3 @@ private:
 };
 
 #endif
-

@@ -3,9 +3,9 @@ import gc
 
 gc.disable()
 
-import __builtin__
+import builtins
 
-__builtin__.process = 'client'
+builtins.process = 'client'
 
 import sys, os
 sys.path.append(
@@ -17,18 +17,21 @@ sys.path.append(
     )
 )
 
-# Temporary hack patch:
-__builtin__.__dict__.update(__import__('pandac.PandaModules', fromlist=['*']).__dict__)
+from panda3d.core import *
 
+for dtool in ('children', 'parent', 'name'):
+    del NodePath.DtoolClassDict[dtool]
+
+
+from direct.gui.DirectGuiGlobals import NO_FADE_SORT_INDEX, FADE_SORT_INDEX
+builtins.NO_FADE_SORT_INDEX = NO_FADE_SORT_INDEX
+builtins.FADE_SORT_INDEX = FADE_SORT_INDEX
 
 from panda3d.core import loadPrcFile
 
 if not os.path.exists('user/'):
     os.mkdir('user/')
 
-
-	
-	
 if __debug__:
     import sys
     from direct.stdpy import threading
@@ -64,7 +67,7 @@ preferencesFilename = ConfigVariableString(
 
 notify.info('Reading %s...' % preferencesFilename)
 
-__builtin__.settings = Settings(preferencesFilename)
+builtins.settings = Settings(preferencesFilename)
 if 'res' not in settings:
     settings['res'] = (800, 600)
 if 'fullscreen' not in settings:
@@ -112,10 +115,10 @@ else:
 import time
 import sys
 import random
-import __builtin__
+import builtins
 from toontown.launcher.TTELauncher import TTELauncher
 
-__builtin__.launcher = TTELauncher()
+builtins.launcher = TTELauncher()
 
 notify.info('Starting the game...')
 tempLoader = Loader()
@@ -123,9 +126,9 @@ backgroundNode = tempLoader.loadSync(Filename('phase_3/models/gui/loading-backgr
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
 notify.info('Setting the default font...')
-import ToontownGlobals
+from . import ToontownGlobals
 DirectGuiGlobals.setDefaultFontFunc(ToontownGlobals.getInterfaceFont)
-import ToonBase
+from . import ToonBase
 ToonBase.ToonBase()
 from panda3d.core import *
 if base.win is None:
@@ -149,7 +152,7 @@ DirectGuiGlobals.setDefaultRolloverSound(base.loadSfx('phase_3/audio/sfx/GUI_rol
 DirectGuiGlobals.setDefaultClickSound(base.loadSfx('phase_3/audio/sfx/GUI_create_toon_fwd.ogg'))
 DirectGuiGlobals.setDefaultDialogGeom(loader.loadModel('phase_3/models/gui/dialog_box_gui'))
 
-import TTLocalizer
+from . import TTLocalizer
 if base.musicManagerIsValid:
     music = base.loadMusic('phase_3/audio/bgm/tte_theme.ogg')
     if music:
@@ -161,35 +164,25 @@ if base.musicManagerIsValid:
 else:
     music = None
 
-
-
 from toontown.toon import Toon
-
-
 Toon.preload()
 
-
 from toontown.suit import Suit
-
-
 Suit.preload()
 
-
 from toontown.login import AvatarChooser
-
-
 AvatarChooser.preload()
 
-import ToontownLoader
+from . import ToontownLoader
 from direct.gui.DirectGui import *
 serverVersion = config.GetString('server-version', 'no_version_set')
 buildVersion = 'TTE.%s' % config.GetString('build-version', 'no_version_set')
-print 'ToontownStart: Build Version:', buildVersion
+print('ToontownStart: Build Version:', buildVersion)
 build = OnscreenText(buildVersion, pos=(-1.3, -0.975), scale=0.06, fg=Vec4(0, 0, 1, 0.6), align=TextNode.ALeft)
 build.setPos(0.033,0.025)
 build.reparentTo(base.a2dBottomLeft)
 loader.beginBulkLoad('init', TTLocalizer.LoaderLabel, 138, 0, TTLocalizer.TIP_NONE)
-from ToonBaseGlobal import *
+from .ToonBaseGlobal import *
 from direct.showbase.MessengerGlobal import *
 from toontown.distributed import ToontownClientRepository
 cr = ToontownClientRepository.ToontownClientRepository(serverVersion)
@@ -211,7 +204,7 @@ del tempLoader
 build.cleanup()
 del build
 base.loader = base.loader
-__builtin__.loader = base.loader
+builtins.loader = base.loader
 autoRun = ConfigVariableBool('toontown-auto-run', 1)
 
 gc.enable()

@@ -3,7 +3,8 @@ from toontown.toonbase.ToontownGlobals import *
 from direct.interval.IntervalGlobal import *
 from direct.fsm import ClassicFSM, State
 from toontown.safezone import SafeZoneLoader
-import random, math, House, Estate, HouseGlobals
+import random, math
+from . import House, Estate, HouseGlobals
 from toontown.coghq import MovingPlatform
 from direct.directnotify import DirectNotifyGlobal
 
@@ -20,7 +21,7 @@ class EstateLoader(SafeZoneLoader.SafeZoneLoader):
          State.State('final', self.enterFinal, self.exitFinal, ['start'])], 'start', 'final')
         self.musicFile = 'phase_4/audio/bgm/TC_nbrhood.ogg'
         self.activityMusicFile = 'phase_3.5/audio/bgm/TC_SZ_activity.ogg'
-        self.dnaFile = 'phase_5.5/dna/estate_1.pdna'
+        self.dnaFile = 'phase_5.5/dna/estate_1.dna'
         self.safeZoneStorageDNAFile = None
         self.cloudSwitch = 0
         self.id = MyEstate
@@ -45,8 +46,8 @@ class EstateLoader(SafeZoneLoader.SafeZoneLoader):
         self.underwaterSound = base.loadSfx('phase_4/audio/sfx/AV_ambient_water.ogg')
         self.swimSound = base.loadSfx('phase_4/audio/sfx/AV_swim_single_stroke.ogg')
         self.submergeSound = base.loadSfx('phase_5.5/audio/sfx/AV_jump_in_water.ogg')
-        self.birdSound = map(base.loadSfx, ['phase_4/audio/sfx/SZ_TC_bird1.ogg', 'phase_4/audio/sfx/SZ_TC_bird2.ogg', 'phase_4/audio/sfx/SZ_TC_bird3.ogg'])
-        self.cricketSound = map(base.loadSfx, ['phase_4/audio/sfx/SZ_TC_bird1.ogg', 'phase_4/audio/sfx/SZ_TC_bird2.ogg', 'phase_4/audio/sfx/SZ_TC_bird3.ogg'])
+        self.birdSound = list(map(base.loadSfx, ['phase_4/audio/sfx/SZ_TC_bird1.ogg', 'phase_4/audio/sfx/SZ_TC_bird2.ogg', 'phase_4/audio/sfx/SZ_TC_bird3.ogg']))
+        self.cricketSound = list(map(base.loadSfx, ['phase_4/audio/sfx/SZ_TC_bird1.ogg', 'phase_4/audio/sfx/SZ_TC_bird2.ogg', 'phase_4/audio/sfx/SZ_TC_bird3.ogg']))
 
     def unload(self):
         self.ignoreAll()
@@ -109,10 +110,10 @@ class EstateLoader(SafeZoneLoader.SafeZoneLoader):
         self.loadSunMoon()
 
     def loadHouses(self):
-        for i in xrange(HouseGlobals.NUM_HOUSE_TYPES):
+        for i in range(HouseGlobals.NUM_HOUSE_TYPES):
             self.houseModels[i] = loader.loadModel(HouseGlobals.houseModels[i])
 
-        for i in xrange(6):
+        for i in range(6):
             posHpr = HouseGlobals.houseDrops[i]
             self.houseNode[i] = self.geom.attachNewNode('esHouse_' + str(i))
             self.houseNode[i].setPosHpr(*posHpr)
@@ -266,15 +267,15 @@ class EstateLoader(SafeZoneLoader.SafeZoneLoader):
         return track
 
     def debugGeom(self, decomposed):
-        print 'numPrimitives = %d' % decomposed.getNumPrimitives()
-        for primIndex in xrange(decomposed.getNumPrimitives()):
+        print('numPrimitives = %d' % decomposed.getNumPrimitives())
+        for primIndex in range(decomposed.getNumPrimitives()):
             prim = decomposed.getPrimitive(primIndex)
-            print 'prim = %s' % prim
-            print 'isIndexed = %d' % prim.isIndexed()
-            print 'prim.getNumPrimitives = %d' % prim.getNumPrimitives()
-            for basicPrim in xrange(prim.getNumPrimitives()):
-                print '%d start=%d' % (basicPrim, prim.getPrimitiveStart(basicPrim))
-                print '%d end=%d' % (basicPrim, prim.getPrimitiveEnd(basicPrim))
+            print('prim = %s' % prim)
+            print('isIndexed = %d' % prim.isIndexed())
+            print('prim.getNumPrimitives = %d' % prim.getNumPrimitives())
+            for basicPrim in range(prim.getNumPrimitives()):
+                print('%d start=%d' % (basicPrim, prim.getPrimitiveStart(basicPrim)))
+                print('%d end=%d' % (basicPrim, prim.getPrimitiveEnd(basicPrim)))
 
     def loadOnePlatform(self, version, radius, zOffset, score, multiplier):
         self.notify.debug('loadOnePlatform version=%d' % version)
@@ -303,15 +304,15 @@ class EstateLoader(SafeZoneLoader.SafeZoneLoader):
         self.loadSkyCollision()
         self.numClouds = 12
         pinballScore = PinballScoring[PinballCloudBumperLow]
-        for i in xrange(12):
+        for i in range(12):
             self.loadOnePlatform(i, 40, 0, pinballScore[0], pinballScore[1])
 
         pinballScore = PinballScoring[PinballCloudBumperMed]
-        for i in xrange(12):
+        for i in range(12):
             self.loadOnePlatform(i, 60, 40, pinballScore[0], pinballScore[1])
 
         pinballScore = PinballScoring[PinballCloudBumperHigh]
-        for i in xrange(12):
+        for i in range(12):
             self.loadOnePlatform(i, 20, 80, pinballScore[0], pinballScore[1])
 
         self.cloudOrigin.stash()

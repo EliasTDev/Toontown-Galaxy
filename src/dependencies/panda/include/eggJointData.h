@@ -1,16 +1,15 @@
-// Filename: eggJointData.h
-// Created by:  drose (23Feb01)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggJointData.h
+ * @author drose
+ * @date 2001-02-23
+ */
 
 #ifndef EGGJOINTDATA_H
 #define EGGJOINTDATA_H
@@ -23,14 +22,12 @@
 
 class EggCharacterDb;
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggJointData
-// Description : This is one node of a hierarchy of EggJointData
-//               nodes, each of which represents a single joint of the
-//               character hierarchy across all loaded files: the
-//               various models, the LOD's of each model, and the
-//               various animation channel files.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is one node of a hierarchy of EggJointData nodes, each of which
+ * represents a single joint of the character hierarchy across all loaded
+ * files: the various models, the LOD's of each model, and the various
+ * animation channel files.
+ */
 class EggJointData : public EggComponentData {
 public:
   EggJointData(EggCharacterCollection *collection,
@@ -39,7 +36,7 @@ public:
   INLINE EggJointData *get_parent() const;
   INLINE int get_num_children() const;
   INLINE EggJointData *get_child(int n) const;
-  INLINE EggJointData *find_joint(const string &name);
+  INLINE EggJointData *find_joint(const std::string &name);
 
   LMatrix4d get_frame(int model_index, int n) const;
   LMatrix4d get_net_frame(int model_index, int n, EggCharacterDb &db) const;
@@ -57,12 +54,12 @@ public:
   bool do_rebuild_all(EggCharacterDb &db);
   void optimize();
   void expose(EggGroup::DCSType dcs_type = EggGroup::DC_default);
-  void zero_channels(const string &components);
-  void quantize_channels(const string &components, double quantum);
+  void zero_channels(const std::string &components);
+  void quantize_channels(const std::string &components, double quantum);
   void apply_default_pose(int source_model, int frame);
 
   virtual void add_back_pointer(int model_index, EggObject *egg_object);
-  virtual void write(ostream &out, int indent_level = 0) const;
+  virtual void write(std::ostream &out, int indent_level = 0) const;
 
 protected:
   void do_begin_reparent();
@@ -73,9 +70,9 @@ protected:
   void do_finish_reparent();
 
 private:
-  EggJointData *make_new_joint(const string &name);
-  EggJointData *find_joint_exact(const string &name);
-  EggJointData *find_joint_matches(const string &name);
+  EggJointData *make_new_joint(const std::string &name);
+  EggJointData *find_joint_exact(const std::string &name);
+  EggJointData *find_joint_matches(const std::string &name);
 
   bool is_new_ancestor(EggJointData *child) const;
   const LMatrix4d &get_new_net_frame(int model_index, int n, EggCharacterDb &db);

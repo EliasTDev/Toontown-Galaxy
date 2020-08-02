@@ -13,6 +13,9 @@ import os
 import re
 
 def _hasLoader(dir):
+    if dir.startswith('Pmw_2_') and sys.version_info < (3, 0):
+        return 0
+
     # Only accept Pmw_V_R_P with single digits, since ordering will
     # not work correctly with multiple digits (for example, Pmw_10_0
     # will be before Pmw_9_9).
@@ -26,7 +29,7 @@ def _hasLoader(dir):
 # First get a list of all subdirectories containing versions of Pmw.
 _dir = __path__[0]
 _listdir = os.listdir(_dir)
-_instdirs = filter(_hasLoader, _listdir)
+_instdirs = list(filter(_hasLoader, _listdir))
 _instdirs.sort()
 _instdirs.reverse()
 

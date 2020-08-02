@@ -1,16 +1,15 @@
-// Filename: cConstrainPosHprInterval.h
-// Created by:  pratt (10Mar08)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file cConstrainPosHprInterval.h
+ * @author pratt
+ * @date 2008-03-10
+ */
 
 #ifndef CCONSTRAINPOSHPRINTERVAL_H
 #define CCONSTRAINPOSHPRINTERVAL_H
@@ -21,24 +20,22 @@
 #include "lvecBase3.h"
 #include "lquaternion.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : CConstrainPosHprInterval
-// Description : A constraint interval that will constrain the
-//               position and orientation of one node to the
-//               position and orientation of another.
-////////////////////////////////////////////////////////////////////
-class EXPCL_DIRECT CConstrainPosHprInterval : public CConstraintInterval {
+/**
+ * A constraint interval that will constrain the position and orientation of
+ * one node to the position and orientation of another.
+ */
+class EXPCL_DIRECT_INTERVAL CConstrainPosHprInterval : public CConstraintInterval {
 PUBLISHED:
-  CConstrainPosHprInterval(const string &name, double duration,
-                           const NodePath &node, const NodePath &target,
-                           bool wrt, const LVecBase3 posOffset=LVector3::zero(),
-                           const LVecBase3 hprOffset=LVector3::zero());
+  explicit CConstrainPosHprInterval(const std::string &name, double duration,
+                                    const NodePath &node, const NodePath &target,
+                                    bool wrt, const LVecBase3 posOffset=LVector3::zero(),
+                                    const LVecBase3 hprOffset=LVector3::zero());
 
   INLINE const NodePath &get_node() const;
   INLINE const NodePath &get_target() const;
 
   virtual void priv_step(double t);
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
 private:
   NodePath _node;
@@ -68,4 +65,3 @@ private:
 #include "cConstrainPosHprInterval.I"
 
 #endif
-

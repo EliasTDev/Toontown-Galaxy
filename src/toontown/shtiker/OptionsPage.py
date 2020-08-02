@@ -4,9 +4,9 @@ from direct.showbase import PythonUtil
 from direct.task import Task
 from panda3d.core import *
 
-import DisplaySettingsDialog
-import ShtikerPage
-import OptionChooser
+from . import DisplaySettingsDialog
+from . import ShtikerPage
+from . import OptionChooser
 from otp.speedchat import SCColorScheme
 from otp.speedchat import SCStaticTextTerminal
 from otp.speedchat import SpeedChat

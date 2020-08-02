@@ -1,16 +1,15 @@
-// Filename: iffChunk.h
-// Created by:  drose (23Apr01)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file iffChunk.h
+ * @author drose
+ * @date 2001-04-23
+ */
 
 #ifndef IFFCHUNK_H
 #define IFFCHUNK_H
@@ -24,11 +23,10 @@
 
 class IffInputFile;
 
-////////////////////////////////////////////////////////////////////
-//       Class : IffChunk
-// Description : The basic kind of record in an EA "IFF" file, which
-//               the LightWave object file is based on.
-////////////////////////////////////////////////////////////////////
+/**
+ * The basic kind of record in an EA "IFF" file, which the LightWave object
+ * file is based on.
+ */
 class IffChunk : public TypedReferenceCount {
 public:
   INLINE IffChunk();
@@ -38,8 +36,8 @@ public:
 
   virtual bool read_iff(IffInputFile *in, size_t stop_at)=0;
 
-  virtual void output(ostream &out) const;
-  virtual void write(ostream &out, int indent_level = 0) const;
+  virtual void output(std::ostream &out) const;
+  virtual void write(std::ostream &out, int indent_level = 0) const;
 
   virtual IffChunk *make_new_chunk(IffInputFile *in, IffId id);
 
@@ -66,11 +64,9 @@ private:
 
 #include "iffChunk.I"
 
-INLINE ostream &operator << (ostream &out, const IffChunk &chunk) {
+INLINE std::ostream &operator << (std::ostream &out, const IffChunk &chunk) {
   chunk.output(out);
   return out;
 }
 
 #endif
-
-

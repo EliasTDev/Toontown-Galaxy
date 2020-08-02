@@ -2,7 +2,7 @@ from panda3d.core import *
 from direct.gui.DirectGui import *
 from direct.task.Task import Task
 from direct.interval.IntervalGlobal import *
-import DistributedCloset, ClosetGlobals, TrunkGUI
+from . import DistributedCloset, ClosetGlobals, TrunkGUI
 from toontown.toon import ToonDNA
 from toontown.toonbase import TTLocalizer, ToontownGlobals
 N_A = 0
@@ -30,15 +30,15 @@ class DistributedTrunk(DistributedCloset.DistributedCloset):
         self.shoesDeleted = 0
 
     def printInfo(self):
-        print 'avid: %s, gender: %s' % (self.av.doId, self.av.style.gender)
-        print 'current hat = %s, glasses = %s, backpack = %s, shoes = %s' % (self.av.getHat(),
+        print('avid: %s, gender: %s' % (self.av.doId, self.av.style.gender))
+        print('current hat = %s, glasses = %s, backpack = %s, shoes = %s' % (self.av.getHat(),
          self.av.getGlasses(),
          self.av.getBackpack(),
-         self.av.getShoes())
-        print 'hatList = %s' % self.av.getHatList()
-        print 'glassesList = %s' % self.av.getGlassesList()
-        print 'backpackList = %s' % self.av.getBackpackList()
-        print 'shoesList = %s' % self.av.getShoesList()
+         self.av.getShoes()))
+        print('hatList = %s' % self.av.getHatList())
+        print('glassesList = %s' % self.av.getGlassesList())
+        print('backpackList = %s' % self.av.getBackpackList())
+        print('shoesList = %s' % self.av.getShoesList())
 
     def setState(self, mode, avId, ownerId, gender, hatList, glassesList, backpackList, shoesList):
         self.notify.debug('setState, mode=%s, avId=%s, ownerId=%d' % (mode, avId, ownerId))

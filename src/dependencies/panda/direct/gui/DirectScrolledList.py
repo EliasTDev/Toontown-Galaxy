@@ -1,14 +1,18 @@
-"""Undocumented Module"""
+"""Contains the DirectScrolledList class.
+
+See the :ref:`directscrolledlist` page in the programming manual for a more
+in-depth explanation and an example of how to use this class.
+"""
 
 __all__ = ['DirectScrolledListItem', 'DirectScrolledList']
 
 from panda3d.core import *
-import DirectGuiGlobals as DGG
+from direct.showbase import ShowBaseGlobal
+from . import DirectGuiGlobals as DGG
 from direct.directnotify import DirectNotifyGlobal
 from direct.task.Task import Task
-from DirectFrame import *
-from DirectButton import *
-import types
+from .DirectFrame import *
+from .DirectButton import *
 
 
 class DirectScrolledListItem(DirectButton):
@@ -21,7 +25,7 @@ class DirectScrolledListItem(DirectButton):
 
     def __init__(self, parent=None, **kw):
         assert self.notify.debugStateCall(self)
-        self.parent = parent
+        self._parent = parent
         if "command" in kw:
             self.nextCommand = kw.get("command")
             del kw["command"]
@@ -29,7 +33,7 @@ class DirectScrolledListItem(DirectButton):
             self.nextCommandExtraArgs = kw.get("extraArgs")
             del kw["extraArgs"]
         optiondefs = (
-            ('parent', self.parent,    None),
+            ('parent', self._parent,    None),
             ('command', self.select, None),
             )
         # Merge keyword options with default options
@@ -39,8 +43,8 @@ class DirectScrolledListItem(DirectButton):
 
     def select(self):
         assert self.notify.debugStateCall(self)
-        apply(self.nextCommand, self.nextCommandExtraArgs)
-        self.parent.selectListItem(self)
+        self.nextCommand(*self.nextCommandExtraArgs)
+        self._parent.selectListItem(self)
 
 
 class DirectScrolledList(DirectFrame):
@@ -49,7 +53,7 @@ class DirectScrolledList(DirectFrame):
     def __init__(self, parent = None, **kw):
         assert self.notify.debugStateCall(self)
         self.index = 0
-        self.forceHeight = None
+        self.__forceHeight = None
 
         """ If one were to want a scrolledList that makes and adds its items
            as needed, simply pass in an items list of strings (type 'str')
@@ -61,7 +65,7 @@ class DirectScrolledList(DirectFrame):
         # so we can modify it without mangling the user's list
         if 'items' in kw:
             for item in kw['items']:
-                if type(item) != type(''):
+                if not isinstance(item, str):
                     break
             else:
                 # we get here if every item in 'items' is a string
@@ -106,7 +110,7 @@ class DirectScrolledList(DirectFrame):
                                               DirectFrame, (self,),
                                               )
         for item in self["items"]:
-            if item.__class__.__name__ != 'str':
+            if not isinstance(item, str):
                 item.reparentTo(self.itemFrame)
 
         self.initialiseoptions(DirectScrolledList)
@@ -115,41 +119,41 @@ class DirectScrolledList(DirectFrame):
 
     def setForceHeight(self):
         assert self.notify.debugStateCall(self)
-        self.forceHeight = self["forceHeight"]
+        self.__forceHeight = self["forceHeight"]
 
     def recordMaxHeight(self):
         assert self.notify.debugStateCall(self)
-        if self.forceHeight is not None:
-            self.maxHeight = self.forceHeight
+        if self.__forceHeight is not None:
+            self.maxHeight = self.__forceHeight
         else:
             self.maxHeight = 0.0
             for item in self["items"]:
-                if item.__class__.__name__ != 'str':
+                if not isinstance(item, str):
                     self.maxHeight = max(self.maxHeight, item.getHeight())
 
     def setScrollSpeed(self):
         assert self.notify.debugStateCall(self)
         # Items per second to move
-        self.scrollSpeed = self["scrollSpeed"]
-        if self.scrollSpeed <= 0:
-            self.scrollSpeed = 1
+        self.__scrollSpeed = self["scrollSpeed"]
+        if self.__scrollSpeed <= 0:
+            self.__scrollSpeed = 1
 
     def setNumItemsVisible(self):
         assert self.notify.debugStateCall(self)
         # Items per second to move
-        self.numItemsVisible = self["numItemsVisible"]
+        self.__numItemsVisible = self["numItemsVisible"]
 
     def destroy(self):
         assert self.notify.debugStateCall(self)
         taskMgr.remove(self.taskName("scroll"))
         if hasattr(self, "currentSelected"):
             del self.currentSelected
-        if self.incButtonCallback:
-            self.incButtonCallback = None
-        if self.decButtonCallback:
-            self.decButtonCallback = None
+        if self.__incButtonCallback:
+            self.__incButtonCallback = None
+        if self.__decButtonCallback:
+            self.__decButtonCallback = None
         self.incButton.destroy()
-        self.decButton.destroy()       
+        self.decButton.destroy()
         DirectFrame.destroy(self)
 
     def selectListItem(self, item):
@@ -169,10 +173,10 @@ class DirectScrolledList(DirectFrame):
         #for i in range(len(self["items"])):
         #    print "buttontext[", i,"]", self["items"][i]["text"]
 
-        if(len(self["items"])==0):
+        if len(self["items"]) == 0:
             return 0
 
-        if(type(self["items"][0])!=types.InstanceType):
+        if isinstance(self["items"][0], str):
             self.notify.warning("getItemIndexForItemID: cant find itemID for non-class list items!")
             return 0
 
@@ -200,7 +204,7 @@ class DirectScrolledList(DirectFrame):
         numItemsVisible = self["numItemsVisible"]
         numItemsTotal = len(self["items"])
         if(centered):
-            self.index = index - (numItemsVisible/2)
+            self.index = index - (numItemsVisible // 2)
         else:
             self.index = index
 
@@ -238,7 +242,7 @@ class DirectScrolledList(DirectFrame):
 
         # Hide them all
         for item in self["items"]:
-            if item.__class__.__name__ != 'str':
+            if not isinstance(item, str):
                 item.hide()
 
         # Then show the ones in range, and stack their positions
@@ -248,10 +252,10 @@ class DirectScrolledList(DirectFrame):
             #print "stacking buttontext[", i,"]", self["items"][i]["text"]
             # If the item is a 'str', then it has not been created (scrolled list is 'as needed')
             #  Therefore, use the the function given to make it or just make it a frame
-            if item.__class__.__name__ == 'str':
+            if isinstance(item, str):
                 if self['itemMakeFunction']:
                     # If there is a function to create the item
-                    item = apply(self['itemMakeFunction'], (item, i, self['itemMakeExtraArgs']))
+                    item = self['itemMakeFunction'](item, i, self['itemMakeExtraArgs'])
                 else:
                     item = DirectFrame(text = item,
                                        text_align = self['itemsAlign'],
@@ -269,7 +273,7 @@ class DirectScrolledList(DirectFrame):
 
         if self['command']:
             # Pass any extra args to command
-            apply(self['command'], self['extraArgs'])
+            self['command'](*self['extraArgs'])
         return ret
 
     def makeAllItems(self):
@@ -280,11 +284,10 @@ class DirectScrolledList(DirectFrame):
             # Therefore, use the the function given to make it or
             # just make it a frame
             #print "Making " + str(item)
-            if item.__class__.__name__ == 'str':
+            if isinstance(item, str):
                 if self['itemMakeFunction']:
                     # If there is a function to create the item
-                    item = apply(self['itemMakeFunction'],
-                                 (item, i, self['itemMakeExtraArgs']))
+                    item = self['itemMakeFunction'](item, i, self['itemMakeExtraArgs'])
                 else:
                     item = DirectFrame(text = item,
                                        text_align = self['itemsAlign'],
@@ -310,7 +313,7 @@ class DirectScrolledList(DirectFrame):
     def __incButtonDown(self, event):
         assert self.notify.debugStateCall(self)
         task = Task(self.__scrollByTask)
-        task.setDelay(1.0 / self.scrollSpeed)
+        task.setDelay(1.0 / self.__scrollSpeed)
         task.prevTime = 0.0
         task.delta = 1
         taskName = self.taskName("scroll")
@@ -318,13 +321,13 @@ class DirectScrolledList(DirectFrame):
         taskMgr.add(task, taskName)
         self.scrollBy(task.delta)
         messenger.send('wakeup')
-        if self.incButtonCallback:
-            self.incButtonCallback()
-        
+        if self.__incButtonCallback:
+            self.__incButtonCallback()
+
     def __decButtonDown(self, event):
         assert self.notify.debugStateCall(self)
         task = Task(self.__scrollByTask)
-        task.setDelay(1.0 / self.scrollSpeed)
+        task.setDelay(1.0 / self.__scrollSpeed)
         task.prevTime = 0.0
         task.delta = -1
         taskName = self.taskName("scroll")
@@ -332,30 +335,30 @@ class DirectScrolledList(DirectFrame):
         taskMgr.add(task, taskName)
         self.scrollBy(task.delta)
         messenger.send('wakeup')
-        if self.decButtonCallback:
-            self.decButtonCallback()        
-               
+        if self.__decButtonCallback:
+            self.__decButtonCallback()
+
     def __buttonUp(self, event):
         assert self.notify.debugStateCall(self)
         taskName = self.taskName("scroll")
         #print "buttonUp: removing ", taskName
         taskMgr.remove(taskName)
-        
+
     def addItem(self, item, refresh=1):
         """
         Add this string and extraArg to the list
         """
         assert self.notify.debugStateCall(self)
-        if(type(item) == types.InstanceType):
+        if not isinstance(item, str):
             # cant add attribs to non-classes (like strings & ints)
             item.itemID = self.nextItemID
             self.nextItemID += 1
         self['items'].append(item)
-        if type(item) != type(''):
+        if not isinstance(item, str):
             item.reparentTo(self.itemFrame)
         if refresh:
             self.refresh()
-        if(type(item) == types.InstanceType):
+        if not isinstance(item, str):
             return item.itemID  # to pass to scrollToItemID
 
     def removeItem(self, item, refresh=1):
@@ -370,13 +373,13 @@ class DirectScrolledList(DirectFrame):
             if hasattr(self, "currentSelected") and self.currentSelected is item:
                 del self.currentSelected
             self["items"].remove(item)
-            if type(item) != type(''):
-                item.reparentTo(hidden)
+            if not isinstance(item, str):
+                item.reparentTo(ShowBaseGlobal.hidden)
             self.refresh()
             return 1
         else:
             return 0
-        
+
     def removeAndDestroyItem(self, item, refresh = 1):
         """
         Remove and destroy this item from the panel.
@@ -388,8 +391,8 @@ class DirectScrolledList(DirectFrame):
             if (hasattr(item, 'destroy') and hasattr(item.destroy, '__call__')):
                 item.destroy()
             self["items"].remove(item)
-            if type(item) != type(''):
-                item.reparentTo(hidden)
+            if not isinstance(item, str):
+                item.reparentTo(ShowBaseGlobal.hidden)
             self.refresh()
             return 1
         else:
@@ -410,17 +413,17 @@ class DirectScrolledList(DirectFrame):
             if hasattr(self, "currentSelected") and self.currentSelected is item:
                 del self.currentSelected
             self["items"].remove(item)
-            if type(item) != type(''):
-                #RAU possible leak here, let's try to do the right thing 
-                #item.reparentTo(hidden)
+            if not isinstance(item, str):
+                #RAU possible leak here, let's try to do the right thing
+                #item.reparentTo(ShowBaseGlobal.hidden)
                 item.removeNode()
             retval = 1
 
         if (refresh):
             self.refresh()
-            
+
         return retval
-    
+
     def removeAndDestroyAllItems(self, refresh = 1):
         """
         Remove and destroy all items from the panel.
@@ -435,13 +438,13 @@ class DirectScrolledList(DirectFrame):
             if (hasattr(item, 'destroy') and hasattr(item.destroy, '__call__')):
                 item.destroy()
             self["items"].remove(item)
-            if type(item) != type(''):
-                #RAU possible leak here, let's try to do the right thing 
-                #item.reparentTo(hidden)
+            if not isinstance(item, str):
+                #RAU possible leak here, let's try to do the right thing
+                #item.reparentTo(ShowBaseGlobal.hidden)
                 item.removeNode()
             retval = 1
         if (refresh):
-            self.refresh()            
+            self.refresh()
         return retval
 
     def refresh(self):
@@ -460,18 +463,18 @@ class DirectScrolledList(DirectFrame):
 
     def getSelectedText(self):
         assert self.notify.debugStateCall(self)
-        if self['items'][self.index].__class__.__name__ == 'str':
+        if isinstance(self['items'][self.index], str):
           return self['items'][self.index]
         else:
           return self['items'][self.index]['text']
 
     def setIncButtonCallback(self):
         assert self.notify.debugStateCall(self)
-        self.incButtonCallback = self["incButtonCallback"]
+        self.__incButtonCallback = self["incButtonCallback"]
 
     def setDecButtonCallback(self):
         assert self.notify.debugStateCall(self)
-        self.decButtonCallback = self["decButtonCallback"]        
+        self.__decButtonCallback = self["decButtonCallback"]
 
 
 """

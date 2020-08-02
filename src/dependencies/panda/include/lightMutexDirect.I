@@ -1,146 +1,113 @@
-// Filename: lightMutexDirect.I
-// Created by:  drose (08Oct08)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file lightMutexDirect.I
+ * @author drose
+ * @date 2008-10-08
+ */
 
-
-////////////////////////////////////////////////////////////////////
-//     Function: LightMutexDirect::Constructor
-//       Access: Protected
-//  Description:
-////////////////////////////////////////////////////////////////////
-INLINE LightMutexDirect::
-LightMutexDirect() {
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: LightMutexDirect::Destructor
-//       Access: Protected
-//  Description:
-////////////////////////////////////////////////////////////////////
-INLINE LightMutexDirect::
-~LightMutexDirect() {
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: LightMutexDirect::Copy Constructor
-//       Access: Private
-//  Description: Do not attempt to copy lightMutexes.
-////////////////////////////////////////////////////////////////////
-INLINE LightMutexDirect::
-LightMutexDirect(const LightMutexDirect &copy) {
-  nassertv(false);
-}
-
-////////////////////////////////////////////////////////////////////
-//     Function: LightMutexDirect::Copy Assignment Operator
-//       Access: Private
-//  Description: Do not attempt to copy lightMutexes.
-////////////////////////////////////////////////////////////////////
+/**
+ * Alias for acquire() to match C++11 semantics.
+ * @see acquire()
+ */
 INLINE void LightMutexDirect::
-operator = (const LightMutexDirect &copy) {
-  nassertv(false);
+lock() {
+  TAU_PROFILE("void LightMutexDirect::acquire()", " ", TAU_USER);
+  _impl.lock();
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: LightMutexDirect::acquire
-//       Access: Published
-//  Description: Grabs the lightMutex if it is available.  If it is not
-//               available, blocks until it becomes available, then
-//               grabs it.  In either case, the function does not
-//               return until the lightMutex is held; you should then call
-//               unlock().
-//
-//               This method is considered const so that you can lock
-//               and unlock const lightMutexes, mainly to allow thread-safe
-//               access to otherwise const data.
-//
-//               Also see LightMutexHolder.
-////////////////////////////////////////////////////////////////////
+/**
+ * Alias for try_acquire() to match C++11 semantics.
+ * @see try_acquire()
+ */
+INLINE bool LightMutexDirect::
+try_lock() {
+  TAU_PROFILE("void LightMutexDirect::try_acquire()", " ", TAU_USER);
+  return _impl.try_lock();
+}
+
+/**
+ * Alias for release() to match C++11 semantics.
+ * @see release()
+ */
+INLINE void LightMutexDirect::
+unlock() {
+  TAU_PROFILE("void LightMutexDirect::unlock()", " ", TAU_USER);
+  _impl.unlock();
+}
+
+/**
+ * Grabs the lightMutex if it is available.  If it is not available, blocks
+ * until it becomes available, then grabs it.  In either case, the function
+ * does not return until the lightMutex is held; you should then call
+ * unlock().
+ *
+ * This method is considered const so that you can lock and unlock const
+ * lightMutexes, mainly to allow thread-safe access to otherwise const data.
+ *
+ * Also see LightMutexHolder.
+ */
 INLINE void LightMutexDirect::
 acquire() const {
   TAU_PROFILE("void LightMutexDirect::acquire()", " ", TAU_USER);
-  ((LightMutexDirect *)this)->_impl.acquire();
+  _impl.lock();
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: LightMutexDirect::release
-//       Access: Published
-//  Description: Releases the lightMutex.  It is an error to call this if
-//               the lightMutex was not already locked.
-//
-//               This method is considered const so that you can lock
-//               and unlock const lightMutexes, mainly to allow thread-safe
-//               access to otherwise const data.
-////////////////////////////////////////////////////////////////////
+/**
+ * Releases the lightMutex.  It is an error to call this if the lightMutex was
+ * not already locked.
+ *
+ * This method is considered const so that you can lock and unlock const
+ * lightMutexes, mainly to allow thread-safe access to otherwise const data.
+ */
 INLINE void LightMutexDirect::
 release() const {
   TAU_PROFILE("void LightMutexDirect::release()", " ", TAU_USER);
-  ((LightMutexDirect *)this)->_impl.release();
+  _impl.unlock();
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: LightMutexDirect::debug_is_locked
-//       Access: Published
-//  Description: Returns true if the current thread has locked the
-//               LightMutex, false otherwise.  This method is only intended
-//               for use in debugging, hence the method name; in the
-//               LightMutexDirect case, it always returns true, since
-//               there's not a reliable way to determine this
-//               otherwise.
-////////////////////////////////////////////////////////////////////
+/**
+ * Returns true if the current thread has locked the LightMutex, false
+ * otherwise.  This method is only intended for use in debugging, hence the
+ * method name; in the LightMutexDirect case, it always returns true, since
+ * there's not a reliable way to determine this otherwise.
+ */
 INLINE bool LightMutexDirect::
 debug_is_locked() const {
   return true;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: LightMutexDirect::set_name
-//       Access: Public
-//  Description: The lightMutex name is only defined when compiling in
-//               DEBUG_THREADS mode.
-////////////////////////////////////////////////////////////////////
+/**
+ * The lightMutex name is only defined when compiling in DEBUG_THREADS mode.
+ */
 INLINE void LightMutexDirect::
-set_name(const string &) {
+set_name(const std::string &) {
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: LightMutexDirect::clear_name
-//       Access: Public
-//  Description: The lightMutex name is only defined when compiling in
-//               DEBUG_THREADS mode.
-////////////////////////////////////////////////////////////////////
+/**
+ * The lightMutex name is only defined when compiling in DEBUG_THREADS mode.
+ */
 INLINE void LightMutexDirect::
 clear_name() {
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: LightMutexDirect::has_name
-//       Access: Public
-//  Description: The lightMutex name is only defined when compiling in
-//               DEBUG_THREADS mode.
-////////////////////////////////////////////////////////////////////
+/**
+ * The lightMutex name is only defined when compiling in DEBUG_THREADS mode.
+ */
 INLINE bool LightMutexDirect::
 has_name() const {
   return false;
 }
 
-////////////////////////////////////////////////////////////////////
-//     Function: LightMutexDirect::get_name
-//       Access: Public
-//  Description: The lightMutex name is only defined when compiling in
-//               DEBUG_THREADS mode.
-////////////////////////////////////////////////////////////////////
-INLINE string LightMutexDirect::
+/**
+ * The lightMutex name is only defined when compiling in DEBUG_THREADS mode.
+ */
+INLINE std::string LightMutexDirect::
 get_name() const {
-  return string();
+  return std::string();
 }

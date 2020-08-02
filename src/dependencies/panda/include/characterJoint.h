@@ -1,16 +1,15 @@
-// Filename: characterJoint.h
-// Created by:  drose (23Feb99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file characterJoint.h
+ * @author drose
+ * @date 1999-02-23
+ */
 
 #ifndef CHARACTERJOINT_H
 #define CHARACTERJOINT_H
@@ -26,28 +25,27 @@
 class JointVertexTransform;
 class Character;
 
-////////////////////////////////////////////////////////////////////
-//       Class : CharacterJoint
-// Description : This represents one joint of the character's
-//               animation, containing an animating transform matrix.
-////////////////////////////////////////////////////////////////////
+/**
+ * This represents one joint of the character's animation, containing an
+ * animating transform matrix.
+ */
 class EXPCL_PANDA_CHAR CharacterJoint : public MovingPartMatrix {
 protected:
   CharacterJoint();
   CharacterJoint(const CharacterJoint &copy);
 
 PUBLISHED:
-  CharacterJoint(Character *character,
-                 PartBundle *root, PartGroup *parent, const string &name,
-                 const LMatrix4 &default_value);
+  explicit CharacterJoint(Character *character, PartBundle *root,
+                          PartGroup *parent, const std::string &name,
+                          const LMatrix4 &default_value);
   virtual ~CharacterJoint();
 
 public:
   virtual bool is_character_joint() const;
   virtual PartGroup *make_copy() const;
 
-  virtual bool update_internals(PartBundle *root, PartGroup *parent, 
-                                bool self_changed, bool parent_changed, 
+  virtual bool update_internals(PartBundle *root, PartGroup *parent,
+                                bool self_changed, bool parent_changed,
                                 Thread *current_thread);
   virtual void do_xform(const LMatrix4 &mat, const LMatrix4 &inv_mat);
 
@@ -65,9 +63,9 @@ PUBLISHED:
   NodePathCollection get_local_transforms();
 
   void get_transform(LMatrix4 &transform) const;
-  INLINE const LMatrix4 &get_transform() const;  
-  CPT(TransformState) get_transform_state() const;  
-  
+  INLINE const LMatrix4 &get_transform() const;
+  CPT(TransformState) get_transform_state() const;
+
   void get_net_transform(LMatrix4 &transform) const;
 
   Character *get_character() const;
@@ -101,15 +99,20 @@ private:
   int _num_net_nodes, _num_local_nodes;
 
 public:
-  // The _geom_node member just holds a temporary pointer to a node
-  // for the CharacterMaker's convenenience while creating the
-  // character.  It does not store any meaningful value after
-  // creation is complete.
+  // The _geom_node member just holds a temporary pointer to a node for the
+  // CharacterMaker's convenenience while creating the character.  It does not
+  // store any meaningful value after creation is complete.
   PT(PandaNode) _geom_node;
 
   // These are filled in as the joint animates.
   LMatrix4 _net_transform;
   LMatrix4 _initial_net_transform_inverse;
+
+  // This is the product of the above; the matrix that gets applied to a
+  // vertex (whose coordinates are in the coordinate space of the character
+  // in its neutral pose) to transform it from its neutral position to its
+  // animated position.
+  LMatrix4 _skinning_matrix;
 
 public:
   virtual TypeHandle get_type() const {
@@ -136,5 +139,3 @@ private:
 #include "characterJoint.I"
 
 #endif
-
-

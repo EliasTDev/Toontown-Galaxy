@@ -1,16 +1,15 @@
-// Filename: odeSpace.h
-// Created by:  joswilso (27Dec06)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file odeSpace.h
+ * @author joswilso
+ * @date 2006-12-27
+ */
 
 #ifndef ODESPACE_H
 #define ODESPACE_H
@@ -20,7 +19,7 @@
 #include "luse.h"
 #include "bitMask.h"
 
-//included for collision tests
+// included for collision tests
 #include "odeWorld.h"
 #include "odeJointGroup.h"
 
@@ -32,10 +31,9 @@ class OdeSimpleSpace;
 class OdeHashSpace;
 class OdeQuadTreeSpace;
 
-////////////////////////////////////////////////////////////////////
-//       Class : OdeSpace
-// Description :
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 class EXPCL_PANDAODE OdeSpace : public TypedObject {
   friend class OdeGeom;
   static const int MAX_CONTACTS;
@@ -73,11 +71,11 @@ PUBLISHED:
   void remove(OdeSpace& space);
   void clean();
   OdeGeom get_geom(int i); // Not INLINE because of forward declaration
-  //static int get_surface_type(OdeSpace * self, dGeomID o1);
+  // static int get_surface_type(OdeSpace * self, dGeomID o1);
 
   INLINE OdeSpace get_space() const;
 
-  virtual void write(ostream &out = cout, unsigned int indent=0) const;
+  virtual void write(std::ostream &out = std::cout, unsigned int indent=0) const;
   operator bool () const;
 
   OdeSimpleSpace convert_to_simple_space() const;
@@ -99,8 +97,8 @@ PUBLISHED:
   int get_collide_id(dGeomID o1);
   int get_collide_id(OdeGeom& geom);
 
-  INLINE void set_collision_event(const string &event_name);
-  INLINE string get_collision_event();
+  INLINE void set_collision_event(const std::string &event_name);
+  INLINE std::string get_collision_event();
 
 public:
   static void auto_callback(void*, dGeomID, dGeomID);
@@ -110,7 +108,7 @@ public:
   static OdeSpace* _static_auto_collide_space;
   static dJointGroupID _static_auto_collide_joint_group;
   static int contactCount;
-  string _collision_event;
+  std::string _collision_event;
 
 protected:
   dSpaceID _id;

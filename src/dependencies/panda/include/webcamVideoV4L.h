@@ -1,43 +1,41 @@
-// Filename: webcamVideoV4L.h
-// Created by: rdb (11Jun2010)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file webcamVideoV4L.h
+ * @author rdb
+ * @date 2010-06-11
+ */
 
 #ifndef WEBCAMVIDEOV4L_H
 #define WEBCAMVIDEOV4L_H
 
 #include "pandabase.h"
 
-#ifdef HAVE_VIDEO4LINUX
+#if defined(HAVE_VIDEO4LINUX) && !defined(CPPPARSER)
 
 #include "webcamVideo.h"
 
 class WebcamVideoCursorV4L;
 
-////////////////////////////////////////////////////////////////////
-//       Class : WebcamVideoV4L
-// Description : The Video4Linux implementation of webcams.
-////////////////////////////////////////////////////////////////////
+/**
+ * The Video4Linux implementation of webcams.
+ */
 class WebcamVideoV4L : public WebcamVideo {
 private:
   virtual PT(MovieVideoCursor) open();
 
   friend class WebcamVideoCursorV4L;
   friend void find_all_webcams_v4l();
-  static void add_options_for_size(int fd, const string &dev, const char *name,
+  static void add_options_for_size(int fd, const std::string &dev, const char *name,
                                    unsigned width, unsigned height,
                                    unsigned pixelformat);
 
-  string _device;
+  std::string _device;
   uint32_t _pformat;
 
 public:

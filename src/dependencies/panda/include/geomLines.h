@@ -1,16 +1,15 @@
-// Filename: geomLines.h
-// Created by:  drose (22Mar05)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file geomLines.h
+ * @author drose
+ * @date 2005-03-22
+ */
 
 #ifndef GEOMLINES_H
 #define GEOMLINES_H
@@ -18,13 +17,12 @@
 #include "pandabase.h"
 #include "geomPrimitive.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : GeomLines
-// Description : Defines a series of disconnected line segments.
-////////////////////////////////////////////////////////////////////
+/**
+ * Defines a series of disconnected line segments.
+ */
 class EXPCL_PANDA_GOBJ GeomLines : public GeomPrimitive {
 PUBLISHED:
-  GeomLines(UsageHint usage_hint);
+  explicit GeomLines(UsageHint usage_hint);
   GeomLines(const GeomLines &copy);
   virtual ~GeomLines();
   ALLOC_DELETED_CHAIN(GeomLines);
@@ -32,6 +30,8 @@ PUBLISHED:
 public:
   virtual PT(GeomPrimitive) make_copy() const;
   virtual PrimitiveType get_primitive_type() const;
+
+  CPT(GeomPrimitive) make_adjacency() const;
 
   virtual int get_num_vertices_per_primitive() const;
   virtual int get_min_num_vertices_per_primitive() const;

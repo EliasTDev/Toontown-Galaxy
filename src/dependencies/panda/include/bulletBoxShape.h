@@ -1,16 +1,15 @@
-// Filename: bulletBoxShape.h
-// Created by:  enn0x (24Jan10)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file bulletBoxShape.h
+ * @author enn0x
+ * @date 2010-01-24
+ */
 
 #ifndef __BULLET_BOX_SHAPE_H__
 #define __BULLET_BOX_SHAPE_H__
@@ -24,19 +23,17 @@
 
 #include "collisionBox.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : BulletBoxShape
-// Description : 
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 class EXPCL_PANDABULLET BulletBoxShape : public BulletShape {
 private:
   // Only used by make_from_bam
-  INLINE BulletBoxShape() : _shape(NULL) {};
+  INLINE BulletBoxShape();
 
 PUBLISHED:
-  BulletBoxShape(const LVecBase3 &halfExtents);
-  INLINE BulletBoxShape(const BulletBoxShape &copy);
-  INLINE void operator = (const BulletBoxShape &copy);
+  explicit BulletBoxShape(const LVecBase3 &halfExtents);
+  BulletBoxShape(const BulletBoxShape &copy);
   INLINE ~BulletBoxShape();
 
   LVecBase3 get_half_extents_without_margin() const;
@@ -44,11 +41,15 @@ PUBLISHED:
 
   static BulletBoxShape *make_from_solid(const CollisionBox *solid);
 
+  MAKE_PROPERTY(half_extents_with_margin, get_half_extents_with_margin);
+  MAKE_PROPERTY(half_extents_without_margin, get_half_extents_without_margin);
+
 public:
   virtual btCollisionShape *ptr() const;
 
 private:
   btBoxShape *_shape;
+  LVecBase3 _half_extents;
 
 public:
   static void register_with_read_factory();
@@ -64,7 +65,7 @@ public:
   }
   static void init_type() {
     BulletShape::init_type();
-    register_type(_type_handle, "BulletBoxShape", 
+    register_type(_type_handle, "BulletBoxShape",
                   BulletShape::get_class_type());
   }
   virtual TypeHandle get_type() const {

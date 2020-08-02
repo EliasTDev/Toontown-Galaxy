@@ -1,16 +1,15 @@
-// Filename: collisionRecorder.h
-// Created by:  drose (16Apr03)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file collisionRecorder.h
+ * @author drose
+ * @date 2003-04-16
+ */
 
 #ifndef COLLISIONRECORDER_H
 #define COLLISIONRECORDER_H
@@ -24,13 +23,11 @@ class CollisionEntry;
 
 #ifdef DO_COLLISION_RECORDING
 
-////////////////////////////////////////////////////////////////////
-//       Class : CollisionRecorder
-// Description : This class is used to help debug the work the
-//               collisions system is doing.  It is a virtual base
-//               class that just provides an interface for recording
-//               collisions tested and detected each frame.
-////////////////////////////////////////////////////////////////////
+/**
+ * This class is used to help debug the work the collisions system is doing.
+ * It is a virtual base class that just provides an interface for recording
+ * collisions tested and detected each frame.
+ */
 class EXPCL_PANDA_COLLIDE CollisionRecorder : public TypedObject {
 protected:
   CollisionRecorder();
@@ -38,7 +35,7 @@ public:
   virtual ~CollisionRecorder();
 
 PUBLISHED:
-  void output(ostream &out) const;
+  void output(std::ostream &out) const;
 
 public:
   virtual void begin_traversal();
@@ -76,4 +73,3 @@ private:
 
 
 #endif
-

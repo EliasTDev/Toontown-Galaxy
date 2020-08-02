@@ -1,8 +1,4 @@
-/* Filename: dtoolbase.h
- * Created by:  drose (12Sep00)
- *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *
+/**
  * PANDA 3D SOFTWARE
  * Copyright (c) Carnegie Mellon University.  All rights reserved.
  *
@@ -10,7 +6,10 @@
  * license.  You should have received a copy of this license along
  * with this source code in a file named "LICENSE."
  *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ * @file dtoolbase.h
+ * @author drose
+ * @date 2000-09-12
+ */
 
 /* This file is included at the beginning of every header file and/or
    C or C++ file.  It must be compilable for C as well as C++ files,
@@ -22,19 +21,7 @@
 
 #include "dtool_config.h"
 
-/* Make sure WIN32 and WIN32_VC are defined when using MSVC */
-#if defined(_WIN32) || defined(_WIN64)
-#ifndef WIN32
-#define WIN32
-#endif
 #ifdef _MSC_VER
-#ifndef WIN32_VC
-#define WIN32_VC
-#endif
-#endif
-#endif
-
-#ifdef WIN32_VC
 /* These warning pragmas must appear before anything else for VC++ to
    respect them.  Sheesh. */
 
@@ -55,34 +42,61 @@
 #pragma warning (disable : 4355)
 /* C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data */
 #pragma warning (disable : 4244)
+/* C4267: 'var' : conversion from 'size_t' to 'type', possible loss of data */
+#pragma warning (disable : 4267)
+/* C4577: 'noexcept' used with no exception handling mode specified */
+#pragma warning (disable : 4577)
+#endif  /* _MSC_VER */
 
-#if _MSC_VER >= 1300
- #if _MSC_VER >= 1310
-   #define USING_MSVC7_1
-//#pragma message("VC 7.1")
- #else
-//#pragma message("VC 7.0")
- #endif
-#define USING_MSVC7
-#else
-// #pragma message("VC 6.0")
+/* Windows likes to define min() and max() macros, which will conflict with
+   std::min() and std::max() respectively, unless we do this: */
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #endif
 
-// Use NODEFAULT to optimize a switch() stmt to tell MSVC to automatically go to the final untested case
-// after it has failed all the other cases (i.e. 'assume at least one of the cases is always true')
+#ifndef __has_builtin
+#define __has_builtin(x) 0
+#endif
+
+#ifndef __has_attribute
+#define __has_attribute(x) 0
+#endif
+
+// Use NODEFAULT to optimize a switch() stmt to tell MSVC to automatically go
+// to the final untested case after it has failed all the other cases (i.e.
+// 'assume at least one of the cases is always true')
 #ifdef _DEBUG
-# define NODEFAULT  default: assert(0);
+#define NODEFAULT  default: assert(0); break;
+#elif __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5) || __has_builtin(__builtin_unreachable)
+#define NODEFAULT  default: __builtin_unreachable();
+#elif defined(_MSC_VER)
+#define NODEFAULT  default: __assume(0);   // special VC keyword
 #else
-# define NODEFAULT  default: __assume(0);   // special VC keyword
+#define NODEFAULT
 #endif
 
-#else /* if !WIN32_VC */
-#ifdef _DEBUG
-# define NODEFAULT   default: assert(0);
+// Use this to hint the compiler that a memory address is aligned.
+#if __has_builtin(__builtin_assume_aligned) || __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)
+#define ASSUME_ALIGNED(x, y) (__builtin_assume_aligned(x, y))
 #else
-# define NODEFAULT
+#define ASSUME_ALIGNED(x, y) (x)
 #endif
-#endif  /* WIN32_VC */
+
+#if __has_attribute(assume_aligned) || __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 9)
+#define RETURNS_ALIGNED(x) __attribute__((assume_aligned(x)))
+#else
+#define RETURNS_ALIGNED(x)
+#endif
+
+#ifdef __GNUC__
+#define LIKELY(x) __builtin_expect(!!(x), 1)
+#define UNLIKELY(x) __builtin_expect(!!(x), 0)
+#else
+#define LIKELY(x) (x)
+#define UNLIKELY(x) (x)
+#endif
 
 /*
   include win32 defns for everything up to WinServer2003, and assume
@@ -92,7 +106,7 @@
 #ifdef _WIN32_WINNT
 #undef _WIN32_WINNT
 #endif
-#define _WIN32_WINNT 0x0502
+#define _WIN32_WINNT 0x0600
 
 #ifdef __cplusplus
 #ifndef __STDC_LIMIT_MACROS
@@ -103,20 +117,19 @@
 #endif
 #endif
 
-// This is a workaround for a glibc bug that is triggered by
-// clang when compiling with -ffast-math.
-#ifdef __clang__
+// This is a workaround for a glibc bug that is triggered by clang when
+// compiling with -ffast-math.
+#if defined(__clang__) && defined(__GLIBC__)
 #include <sys/cdefs.h>
 #ifndef __extern_always_inline
 #define __extern_always_inline extern __always_inline
 #endif
 #endif
 
-#ifdef HAVE_PYTHON
-#undef _POSIX_C_SOURCE
-#undef _XOPEN_SOURCE
-#include "pyconfig.h"
-#endif
+// Instead of including the Python headers, which will implicitly add a linker
+// flag to link in Python, we'll just excerpt the forward declaration of
+// PyObject.
+typedef struct _object PyObject;
 
 #ifndef HAVE_EIGEN
 // If we don't have the Eigen library, don't define LINMATH_ALIGN.
@@ -129,8 +142,8 @@
 #include <assert.h>
 
 #ifdef __GNUC__
-// Large file >2GB support
-// this needs be be before systypes.h and other C headers
+// Large file >2GB support this needs be be before systypes.h and other C
+// headers
 #define _FILE_OFFSET_BITS 64
 #define _LARGEFILE_SOURCE 1
 #endif
@@ -177,10 +190,6 @@
 
 #ifdef PHAVE_LIMITS_H
 #include <limits.h>
-#endif
-
-#ifdef PHAVE_MINMAX_H
-#include <minmax.h>
 #endif
 
 #ifdef PHAVE_SYS_TIME_H
@@ -250,8 +259,6 @@
 #define TAU_TRACK_MEMORY_HERE()
 #define TAU_ENABLE_TRACKING_MEMORY()
 #define TAU_DISABLE_TRACKING_MEMORY()
-#define TAU_TRACK_MEMORY()
-#define TAU_TRACK_MEMORY_HERE()
 #define TAU_ENABLE_TRACKING_MUSE_EVENTS()
 #define TAU_DISABLE_TRACKING_MUSE_EVENTS()
 #define TAU_TRACK_MUSE_EVENTS()
@@ -323,7 +330,7 @@
 
 #ifdef __WORDSIZE
 #define NATIVE_WORDSIZE __WORDSIZE
-#elif defined(_LP64)
+#elif defined(_LP64) || defined(_WIN64)
 #define NATIVE_WORDSIZE 64
 #else
 #define NATIVE_WORDSIZE 32
@@ -334,63 +341,94 @@
 #define ALIGN_4BYTE
 #define ALIGN_8BYTE
 #define ALIGN_16BYTE
+#define ALIGN_32BYTE
 #define ALIGN_64BYTE
 #elif defined(_MSC_VER)
 #define ALIGN_4BYTE __declspec(align(4))
 #define ALIGN_8BYTE __declspec(align(8))
 #define ALIGN_16BYTE __declspec(align(16))
+#define ALIGN_32BYTE __declspec(align(32))
 #define ALIGN_64BYTE __declspec(align(64))
 #elif defined(__GNUC__)
 #define ALIGN_4BYTE __attribute__ ((aligned (4)))
 #define ALIGN_8BYTE __attribute__ ((aligned (8)))
 #define ALIGN_16BYTE __attribute__ ((aligned (16)))
+#define ALIGN_32BYTE __attribute__ ((aligned (32)))
 #define ALIGN_64BYTE __attribute__ ((aligned (64)))
 #else
 #define ALIGN_4BYTE
 #define ALIGN_8BYTE
 #define ALIGN_16BYTE
+#define ALIGN_32BYTE
+#define ALIGN_64BYTE
 #endif
 
-// Do we need to implement memory-alignment enforcement within the
-// MemoryHook class, or will the underlying malloc implementation
-// provide it automatically?
+// Do we need to implement memory-alignment enforcement within the MemoryHook
+// class, or will the underlying malloc implementation provide it
+// automatically?
 #if !defined(LINMATH_ALIGN)
-// We don't actually require any special memory-alignment beyond what
-// the underlying implementation is likely to provide anyway.
+// We don't actually require any special memory-alignment beyond what the
+// underlying implementation is likely to provide anyway.
 #undef MEMORY_HOOK_DO_ALIGN
 
 #elif defined(USE_MEMORY_DLMALLOC)
-// This specialized malloc implementation can perform the required
-// alignment.
+// This specialized malloc implementation can perform the required alignment.
 #undef MEMORY_HOOK_DO_ALIGN
 
 #elif defined(USE_MEMORY_PTMALLOC2)
-// But not this one.  For some reason it crashes when we try to build
-// it with alignment 16.  So if we're using ptmalloc2, we need to
-// enforce alignment externally.
+// But not this one.  For some reason it crashes when we try to build it with
+// alignment 16.  So if we're using ptmalloc2, we need to enforce alignment
+// externally.
 #define MEMORY_HOOK_DO_ALIGN 1
 
-#elif defined(IS_OSX) || defined(_WIN64)
-// The OS-provided malloc implementation will do the required
-// alignment.
+#elif (defined(IS_OSX) || defined(_WIN64)) && !defined(__AVX__)
+// The OS-provided malloc implementation will do the required alignment.
 #undef MEMORY_HOOK_DO_ALIGN
 
 #elif defined(MEMORY_HOOK_DO_ALIGN)
 // We need memory alignment, and we're willing to provide it ourselves.
 
 #else
-// We need memory alignment, and we haven't specified whether it
-// should be provided on top of the existing malloc library, or
-// otherwise.  Let's rely on dlmalloc to provide it, it seems to be
-// the most memory-efficient option.
+// We need memory alignment, and we haven't specified whether it should be
+// provided on top of the existing malloc library, or otherwise.  Let's rely
+// on dlmalloc to provide it, it seems to be the most memory-efficient option.
 #define USE_MEMORY_DLMALLOC 1
 
+#endif
+
+#ifdef LINMATH_ALIGN
+/* We require 16-byte alignment of certain structures, to support SSE2.  We
+   don't strictly have to align everything, but it's just easier to do so. */
+#if defined(HAVE_EIGEN) && defined(__AVX__) && defined(STDFLOAT_DOUBLE)
+/* Eigen uses AVX instructions, but let's only enable this when compiling with
+   double precision, so that we can keep our ABI a bit more stable. */
+#define MEMORY_HOOK_ALIGNMENT 32
+#else
+#define MEMORY_HOOK_ALIGNMENT 16
+#endif
+/* Otherwise, align to two words.  This seems to be pretty standard to the
+   point where some code may rely on this being the case. */
+#elif defined(IS_OSX) || NATIVE_WORDSIZE >= 64
+#define MEMORY_HOOK_ALIGNMENT 16
+#else
+#define MEMORY_HOOK_ALIGNMENT 8
+#endif
+
+#ifdef HAVE_EIGEN
+/* Make sure that Eigen doesn't assume alignment guarantees we don't offer. */
+#define EIGEN_MAX_ALIGN_BYTES MEMORY_HOOK_ALIGNMENT
+#ifndef EIGEN_MPL2_ONLY
+#define EIGEN_MPL2_ONLY 1
+#endif
+#if !defined(_DEBUG) && !defined(EIGEN_NO_DEBUG)
+#define EIGEN_NO_DEBUG 1
+#endif
 #endif
 
 /* Determine our memory-allocation requirements. */
 #if defined(USE_MEMORY_PTMALLOC2) || defined(USE_MEMORY_DLMALLOC) || defined(DO_MEMORY_USAGE) || defined(MEMORY_HOOK_DO_ALIGN)
 /* In this case we have some custom memory management requirements. */
-#else 
+#else
 /* Otherwise, if we have no custom memory management needs at all, we
    might as well turn it all off and go straight to the OS-level
    calls. */
@@ -413,8 +451,11 @@
 #define END_PUBLISH __end_publish
 #define BLOCKING __blocking
 #define MAKE_PROPERTY(property_name, ...) __make_property(property_name, __VA_ARGS__)
+#define MAKE_PROPERTY2(property_name, ...) __make_property2(property_name, __VA_ARGS__)
 #define MAKE_SEQ(seq_name, num_name, element_name) __make_seq(seq_name, num_name, element_name)
-#undef USE_STL_ALLOCATOR  /* Don't try to parse these template classes in interrogate. */
+#define MAKE_SEQ_PROPERTY(property_name, ...) __make_seq_property(property_name, __VA_ARGS__)
+#define MAKE_MAP_PROPERTY(property_name, ...) __make_map_property(property_name, __VA_ARGS__)
+#define MAKE_MAP_KEYS_SEQ(property_name, ...) __make_map_keys_seq(property_name, __VA_ARGS__)
 #define EXTENSION(x) __extension x
 #define EXTEND __extension
 #else
@@ -422,13 +463,17 @@
 #define END_PUBLISH
 #define BLOCKING
 #define MAKE_PROPERTY(property_name, ...)
+#define MAKE_PROPERTY2(property_name, ...)
 #define MAKE_SEQ(seq_name, num_name, element_name)
+#define MAKE_SEQ_PROPERTY(property_name, ...)
+#define MAKE_MAP_PROPERTY(property_name, ...)
+#define MAKE_MAP_KEYS_SEQ(property_name, ...)
 #define EXTENSION(x)
 #define EXTEND
 #endif
 
 /* These symbols are used in dtoolsymbols.h and pandasymbols.h. */
-#if defined(WIN32_VC) && !defined(CPPPARSER) && !defined(LINK_ALL_STATIC)
+#if defined(_WIN32) && !defined(CPPPARSER) && !defined(LINK_ALL_STATIC)
 #define EXPORT_CLASS __declspec(dllexport)
 #define IMPORT_CLASS __declspec(dllimport)
 #elif __GNUC__ >= 4 && !defined(CPPPARSER) && !defined(LINK_ALL_STATIC)
@@ -438,13 +483,23 @@
 #define EXPORT_CLASS
 #define IMPORT_CLASS
 #endif
+
 /* "extern template" is now part of the C++11 standard. */
-#if !defined(CPPPARSER) && !defined(LINK_ALL_STATIC)
+#if defined(CPPPARSER) || defined(LINK_ALL_STATIC)
+#define EXPORT_TEMPL
+#define IMPORT_TEMPL
+#elif defined(_MSC_VER)
+/* Nowadays, we'd define both of these as "extern" in all cases, so that
+   the header file always marks the symbol as "extern" and the .cxx file
+   explicitly instantiates it.  However, MSVC versions before 2013 break
+   the spec by explicitly disallowing it, so we have to instantiate the
+   class from the header file.  Fortunately, its linker is okay with the
+   duplicate template instantiations that this causes. */
 #define EXPORT_TEMPL
 #define IMPORT_TEMPL extern
 #else
-#define EXPORT_TEMPL
-#define IMPORT_TEMPL
+#define EXPORT_TEMPL extern
+#define IMPORT_TEMPL extern
 #endif
 
 #ifdef __cplusplus

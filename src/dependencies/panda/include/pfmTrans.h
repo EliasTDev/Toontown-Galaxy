@@ -1,16 +1,15 @@
-// Filename: pfmTrans.h
-// Created by:  drose (23Dec10)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file pfmTrans.h
+ * @author drose
+ * @date 2010-12-23
+ */
 
 #ifndef PFMTRANS_H
 #define PFMTRANS_H
@@ -24,10 +23,9 @@
 
 class PfmFile;
 
-////////////////////////////////////////////////////////////////////
-//       Class : PfmTrans
-// Description : Operates on a pfm file.
-////////////////////////////////////////////////////////////////////
+/**
+ * Operates on a pfm file.
+ */
 class PfmTrans : public ProgramBase {
 public:
   PfmTrans();
@@ -40,12 +38,12 @@ public:
 protected:
   virtual bool handle_args(Args &args);
 
-  static bool dispatch_scale(const string &opt, const string &arg, void *var);
-  static bool dispatch_rotate_xyz(ProgramBase *self, const string &opt, const string &arg, void *var);
-  bool ns_dispatch_rotate_xyz(const string &opt, const string &arg, void *var);
-  static bool dispatch_rotate_axis(ProgramBase *self, const string &opt, const string &arg, void *var);
-  bool ns_dispatch_rotate_axis(const string &opt, const string &arg, void *var);
-  static bool dispatch_translate(const string &opt, const string &arg, void *var);
+  static bool dispatch_scale(const std::string &opt, const std::string &arg, void *var);
+  static bool dispatch_rotate_xyz(ProgramBase *self, const std::string &opt, const std::string &arg, void *var);
+  bool ns_dispatch_rotate_xyz(const std::string &opt, const std::string &arg, void *var);
+  static bool dispatch_rotate_axis(ProgramBase *self, const std::string &opt, const std::string &arg, void *var);
+  bool ns_dispatch_rotate_axis(const std::string &opt, const std::string &arg, void *var);
+  static bool dispatch_translate(const std::string &opt, const std::string &arg, void *var);
 
 private:
   typedef pvector<Filename> Filenames;

@@ -1,16 +1,15 @@
-// Filename: cppTypeProxy.h
-// Created by:  drose (07Dec99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file cppTypeProxy.h
+ * @author drose
+ * @date 1999-12-07
+ */
 
 #ifndef CPPTYPEPROXY_H
 #define CPPTYPEPROXY_H
@@ -19,13 +18,11 @@
 
 #include "cppType.h"
 
-///////////////////////////////////////////////////////////////////
-//       Class : CPPTypeProxy
-// Description : This is a special kind of type that is a placeholder
-//               for some type, currently unknown, that will be filled
-//               in later.  It's used when a type that references
-//               itself must instantiate.
-////////////////////////////////////////////////////////////////////
+/**
+ * This is a special kind of type that is a placeholder for some type,
+ * currently unknown, that will be filled in later.  It's used when a type
+ * that references itself must instantiate.
+ */
 class CPPTypeProxy : public CPPType {
 public:
   CPPTypeProxy();
@@ -36,20 +33,20 @@ public:
   virtual bool is_tbd() const;
 
   bool has_typedef_name() const;
-  string get_typedef_name(CPPScope *scope = NULL) const;
+  std::string get_typedef_name(CPPScope *scope = nullptr) const;
 
-  virtual string get_simple_name() const;
-  virtual string get_local_name(CPPScope *scope = NULL) const;
-  virtual string get_fully_scoped_name() const;
-  virtual string get_preferred_name() const;
+  virtual std::string get_simple_name() const;
+  virtual std::string get_local_name(CPPScope *scope = nullptr) const;
+  virtual std::string get_fully_scoped_name() const;
+  virtual std::string get_preferred_name() const;
 
   virtual bool is_incomplete() const;
 
-  virtual void output_instance(ostream &out, int indent_level,
+  virtual void output_instance(std::ostream &out, int indent_level,
                                CPPScope *scope,
-                               bool complete, const string &prename,
-                               const string &name) const;
-  virtual void output(ostream &out, int indent_level, CPPScope *scope,
+                               bool complete, const std::string &prename,
+                               const std::string &name) const;
+  virtual void output(std::ostream &out, int indent_level, CPPScope *scope,
                       bool complete) const;
 
   virtual SubType get_subtype() const;

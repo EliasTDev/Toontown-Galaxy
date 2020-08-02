@@ -1,16 +1,15 @@
-// Filename: cullBin.h
-// Created by:  drose (27Feb02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file cullBin.h
+ * @author drose
+ * @date 2002-02-27
+ */
 
 #ifndef CULLBIN_H
 #define CULLBIN_H
@@ -21,6 +20,7 @@
 #include "pStatCollector.h"
 #include "pointerTo.h"
 #include "luse.h"
+#include "geomNode.h"
 
 class CullableObject;
 class GraphicsStateGuardianBase;
@@ -28,29 +28,25 @@ class SceneSetup;
 class TransformState;
 class RenderState;
 class PandaNode;
-class GeomNode;
 
-////////////////////////////////////////////////////////////////////
-//       Class : CullBin
-// Description : A collection of Geoms and their associated state, for
-//               a particular scene.  The cull traversal (and the
-//               BinCullHandler) assigns Geoms to bins as it comes
-//               across them.
-//
-//               This is an abstract base class; derived classes like
-//               CullBinStateSorted and CullBinBackToFront provide the
-//               actual implementation.
-////////////////////////////////////////////////////////////////////
+/**
+ * A collection of Geoms and their associated state, for a particular scene.
+ * The cull traversal (and the BinCullHandler) assigns Geoms to bins as it
+ * comes across them.
+ *
+ * This is an abstract base class; derived classes like CullBinStateSorted and
+ * CullBinBackToFront provide the actual implementation.
+ */
 class EXPCL_PANDA_PGRAPH CullBin : public TypedReferenceCount, public CullBinEnums {
 protected:
   INLINE CullBin(const CullBin &copy);
 public:
-  INLINE CullBin(const string &name, BinType bin_type,
+  INLINE CullBin(const std::string &name, BinType bin_type,
                  GraphicsStateGuardianBase *gsg,
                  const PStatCollector &draw_region_pcollector);
   virtual ~CullBin();
 
-  INLINE const string &get_name() const;
+  INLINE const std::string &get_name() const;
   INLINE BinType get_bin_type() const;
 
   virtual PT(CullBin) make_next() const;
@@ -73,12 +69,12 @@ private:
   void check_flash_color();
 
 protected:
-  string _name;
+  std::string _name;
   BinType _bin_type;
   GraphicsStateGuardianBase *_gsg;
 
   // Used in make_result_graph() and fill_result_graph().
-  class ResultGraphBuilder {
+  class EXPCL_PANDA_PGRAPH ResultGraphBuilder {
   public:
     ResultGraphBuilder(PandaNode *root_node);
     void add_object(CullableObject *object);
@@ -119,6 +115,3 @@ private:
 #include "cullBin.I"
 
 #endif
-
-
-  

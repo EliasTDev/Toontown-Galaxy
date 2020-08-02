@@ -1,4 +1,5 @@
-"""Undocumented Module"""
+"""Defines the IntervalManager class as well as the global instance of
+this class, ivalMgr."""
 
 __all__ = ['IntervalManager', 'ivalMgr']
 
@@ -55,7 +56,7 @@ class IntervalManager(CIntervalManager):
 
     def getIntervalsMatching(self, pattern):
         ivals = []
-        
+
         count = 0
         maxIndex = self.getMaxIndex()
         for index in range(maxIndex):
@@ -136,6 +137,5 @@ class IntervalManager(CIntervalManager):
         assert self.ivals[index] == None or self.ivals[index] == interval
         self.ivals[index] = interval
 
-# The global IntervalManager object.
+#: The global IntervalManager object.
 ivalMgr = IntervalManager(1)
-

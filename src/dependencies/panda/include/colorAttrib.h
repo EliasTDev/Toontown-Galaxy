@@ -1,16 +1,15 @@
-// Filename: colorAttrib.h
-// Created by:  drose (22Feb02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file colorAttrib.h
+ * @author drose
+ * @date 2002-02-22
+ */
 
 #ifndef COLORATTRIB_H
 #define COLORATTRIB_H
@@ -22,11 +21,9 @@
 
 class FactoryParams;
 
-////////////////////////////////////////////////////////////////////
-//       Class : ColorAttrib
-// Description : Indicates what color should be applied to renderable
-//               geometry.
-////////////////////////////////////////////////////////////////////
+/**
+ * Indicates what color should be applied to renderable geometry.
+ */
 class EXPCL_PANDA_PGRAPH ColorAttrib : public RenderAttrib {
 PUBLISHED:
   enum Type {
@@ -45,13 +42,16 @@ PUBLISHED:
   INLINE Type get_color_type() const;
   INLINE const LColor &get_color() const;
 
+PUBLISHED:
+  MAKE_PROPERTY(color_type, get_color_type);
+  MAKE_PROPERTY(color, get_color);
+
 public:
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
 protected:
   virtual int compare_to_impl(const RenderAttrib *other) const;
   virtual size_t get_hash_impl() const;
-  virtual CPT(RenderAttrib) get_auto_shader_attrib_impl(const RenderState *state) const;
 
 private:
   void quantize_color();
@@ -69,6 +69,7 @@ PUBLISHED:
   virtual int get_slot() const {
     return get_class_slot();
   }
+  MAKE_PROPERTY(class_slot, get_class_slot);
 
 public:
   static void register_with_read_factory();
@@ -77,7 +78,7 @@ public:
 protected:
   static TypedWritable *make_from_bam(const FactoryParams &params);
   void fillin(DatagramIterator &scan, BamReader *manager);
-  
+
 public:
   static TypeHandle get_class_type() {
     return _type_handle;
@@ -86,7 +87,8 @@ public:
     RenderAttrib::init_type();
     register_type(_type_handle, "ColorAttrib",
                   RenderAttrib::get_class_type());
-    _attrib_slot = register_slot(_type_handle, 100, make_default);
+    _attrib_slot = register_slot(_type_handle, 100,
+      new ColorAttrib(T_vertex, LColor::zero()));
   }
   virtual TypeHandle get_type() const {
     return get_class_type();
@@ -101,4 +103,3 @@ private:
 #include "colorAttrib.I"
 
 #endif
-

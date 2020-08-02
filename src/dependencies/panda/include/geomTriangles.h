@@ -1,16 +1,15 @@
-// Filename: geomTriangles.h
-// Created by:  drose (06Mar05)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file geomTriangles.h
+ * @author drose
+ * @date 2005-03-06
+ */
 
 #ifndef GEOMTRIANGLES_H
 #define GEOMTRIANGLES_H
@@ -18,13 +17,12 @@
 #include "pandabase.h"
 #include "geomPrimitive.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : GeomTriangles
-// Description : Defines a series of disconnected triangles.
-////////////////////////////////////////////////////////////////////
+/**
+ * Defines a series of disconnected triangles.
+ */
 class EXPCL_PANDA_GOBJ GeomTriangles : public GeomPrimitive {
 PUBLISHED:
-  GeomTriangles(UsageHint usage_hint);
+  explicit GeomTriangles(UsageHint usage_hint);
   GeomTriangles(const GeomTriangles &copy);
   virtual ~GeomTriangles();
   ALLOC_DELETED_CHAIN(GeomTriangles);
@@ -32,6 +30,8 @@ PUBLISHED:
 public:
   virtual PT(GeomPrimitive) make_copy() const;
   virtual PrimitiveType get_primitive_type() const;
+
+  CPT(GeomPrimitive) make_adjacency() const;
 
   virtual int get_num_vertices_per_primitive() const;
 

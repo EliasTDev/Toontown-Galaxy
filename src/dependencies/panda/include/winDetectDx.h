@@ -1,18 +1,18 @@
-// Filename: winDetectDx.h
-// Created by:  aignacio (18Jan07)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file winDetectDx.h
+ * @author aignacio
+ * @date 2007-01-18
+ */
 
 #include <time.h>
+#include "displayInformation.h"
 
 typedef struct {
   D3DFORMAT d3d_format;
@@ -20,18 +20,6 @@ typedef struct {
   int fullscreen_only;
 }
 DISPLAY_FORMAT;
-
-typedef union
-{
-  struct
-  {
-    unsigned int day : 8;
-    unsigned int month : 8;
-    unsigned int year : 16;
-  };
-  DWORD whql;
-}
-WHQL;
 
 static DISPLAY_FORMAT display_format_array [ ] = {
   D3DFMT_X8R8G8B8,    32, FALSE,
@@ -44,20 +32,18 @@ static DISPLAY_FORMAT display_format_array [ ] = {
   D3DFMT_UNKNOWN,      0, FALSE,
 };
 
-typedef BOOL (WINAPI *GlobalMemoryStatusExType) (LPMEMORYSTATUSEX lpBuffer);
-
 static int d3d_format_to_bits_per_pixel (D3DFORMAT d3d_format) {
   int format_index;
   int bits_per_pixel;
 
   format_index = 0;
-  bits_per_pixel = 0;  
+  bits_per_pixel = 0;
   while (display_format_array [format_index].d3d_format != D3DFMT_UNKNOWN) {
     if (d3d_format == display_format_array [format_index].d3d_format) {
-      bits_per_pixel = display_format_array [format_index].bits_per_pixel;  
+      bits_per_pixel = display_format_array [format_index].bits_per_pixel;
       break;
     }
-    
+
     format_index++;
   }
 
@@ -72,9 +58,9 @@ static DWORD _GetLastError (char *message_prefix) {
   error = GetLastError ( );
   if (FormatMessage (
         FORMAT_MESSAGE_ALLOCATE_BUFFER |FORMAT_MESSAGE_FROM_SYSTEM,
-        NULL, error, MAKELANGID( LANG_ENGLISH, SUBLANG_ENGLISH_US ),
-        (LPTSTR)&ptr,0, NULL)) {
-    cout << "ERROR: "<< message_prefix << " result = " << (char*) ptr << "\n";
+        nullptr, error, MAKELANGID( LANG_ENGLISH, SUBLANG_ENGLISH_US ),
+        (LPTSTR)&ptr,0, nullptr)) {
+    std::cout << "ERROR: "<< message_prefix << " result = " << (char*) ptr << "\n";
     LocalFree( ptr );
   }
 
@@ -94,13 +80,13 @@ static DWORD print_GetLastError (char *message_prefix)
   error = GetLastError ( );
   if (FormatMessage( FORMAT_MESSAGE_ALLOCATE_BUFFER |
                   FORMAT_MESSAGE_FROM_SYSTEM,
-                  NULL,
+                  nullptr,
                   error,
                   MAKELANGID( LANG_ENGLISH, SUBLANG_ENGLISH_US ),
                   (LPTSTR)&ptr,
-                  0, NULL))
+                  0, nullptr))
   {
-    cout << "ERROR: "<< message_prefix << " result = " << (char*) ptr << "\n";
+    std::cout << "ERROR: "<< message_prefix << " result = " << (char*) ptr << "\n";
     LocalFree( ptr );
   }
 
@@ -110,13 +96,13 @@ static DWORD print_GetLastError (char *message_prefix)
 static int get_display_information (DisplaySearchParameters &display_search_parameters, DisplayInformation *display_information) {
 
   int debug = false;
-  
+
   int success;
   DisplayInformation::DetectionState state;
   int get_adapter_display_mode_state;
   int get_device_caps_state;
 
-  int shader_model;
+  GraphicsStateGuardian::ShaderModel shader_model;
   UINT minimum_width;
   UINT maximum_width;
   UINT minimum_height;
@@ -133,8 +119,8 @@ static int get_display_information (DisplaySearchParameters &display_search_para
   int total_display_modes;
   DisplayMode *display_mode_array;
 
-  PN_uint64 physical_memory;
-  PN_uint64 available_physical_memory;
+  uint64_t physical_memory;
+  uint64_t available_physical_memory;
 
   int vendor_id;
   int device_id;
@@ -153,7 +139,7 @@ static int get_display_information (DisplaySearchParameters &display_search_para
   window_height = 0;
   window_bits_per_pixel = 0;
   total_display_modes = 0;
-  display_mode_array = NULL;
+  display_mode_array = nullptr;
 
   minimum_width = display_search_parameters._minimum_width;
   minimum_height = display_search_parameters._minimum_height;
@@ -166,7 +152,7 @@ static int get_display_information (DisplaySearchParameters &display_search_para
   video_memory = 0;
   texture_memory = 0;
 
-  state = DisplayInformation::DS_unknown;    
+  state = DisplayInformation::DS_unknown;
   get_adapter_display_mode_state = false;
   get_device_caps_state = false;
 
@@ -184,7 +170,7 @@ static int get_display_information (DisplaySearchParameters &display_search_para
   month = 0;
   day = 0;
   year = 0;
-  
+
   HMODULE d3d_dll;
   DIRECT_3D_CREATE Direct3DCreate;
 
@@ -195,7 +181,7 @@ static int get_display_information (DisplaySearchParameters &display_search_para
       DIRECT_3D direct_3d;
 
       direct_3d = Direct3DCreate (D3D_SDK_VERSION);
-      if (direct_3d != NULL) {
+      if (direct_3d != nullptr) {
         DWORD flags;
         UINT adapter;
         D3DDEVTYPE device_type;
@@ -248,7 +234,8 @@ static int get_display_information (DisplaySearchParameters &display_search_para
           char system_directory [MAX_PATH];
           char dll_file_path [MAX_PATH];
 
-          // find the dll in the system directory if possible and get the date of the file
+          // find the dll in the system directory if possible and get the date
+          // of the file
           if (GetSystemDirectory (system_directory, MAX_PATH) > 0) {
             if (debug) {
               printf ("system_directory = %s \n", system_directory);
@@ -271,14 +258,14 @@ static int get_display_information (DisplaySearchParameters &display_search_para
               if (debug) {
                 printf ("Driver Date: %d/%d/%d\n",  month, day, year);
               }
-              
+
               _findclose (find);
-            }  
+            }
           }
 
           /*
           HMODULE driver_dll;
-          
+
           driver_dll = LoadLibrary (d3d_adapter_identifier.Driver);
           if (driver_dll)
           {
@@ -292,7 +279,7 @@ static int get_display_information (DisplaySearchParameters &display_search_para
             }
             else
             {
-              printf ("ERROR: could not get GetModuleFileName for %s \n", d3d_adapter_identifier.Driver);  
+              printf ("ERROR: could not get GetModuleFileName for %s \n", d3d_adapter_identifier.Driver);
             }
 
             FreeLibrary (driver_dll);
@@ -308,7 +295,7 @@ static int get_display_information (DisplaySearchParameters &display_search_para
             printf ("VendorId = 0x%x\n", d3d_adapter_identifier.VendorId);
             printf ("DeviceId = 0x%x\n", d3d_adapter_identifier.DeviceId);
           }
-          
+
           vendor_id = d3d_adapter_identifier.VendorId;
           device_id = d3d_adapter_identifier.DeviceId;
 
@@ -319,14 +306,6 @@ static int get_display_information (DisplaySearchParameters &display_search_para
 
           if (debug) {
             printf ("DRIVER VERSION: %d.%d.%d.%d \n", product, version, sub_version, build);
-          }
-          
-          WHQL whql;
-          
-          whql.whql= d3d_adapter_identifier.WHQLLevel;
-
-          if (debug) {
-            printf ("WHQL: %d %d %d \n", whql.day, whql.day, whql.year);
           }
         }
 
@@ -351,7 +330,8 @@ static int get_display_information (DisplaySearchParameters &display_search_para
               shader_model = GraphicsStateGuardian::SM_11;
               break;
             case 2:
-              // minimim specification for pixel shader 2.0 is 96 instruction slots
+              // minimim specification for pixel shader 2.0 is 96 instruction
+              // slots
               shader_model = GraphicsStateGuardian::SM_20;
               if (d3d_caps.PS20Caps.NumInstructionSlots >= 512) {
                 shader_model = GraphicsStateGuardian::SM_2X;
@@ -452,7 +432,7 @@ static int get_display_information (DisplaySearchParameters &display_search_para
                     }
                   }
                 }
-              }            
+              }
             }
           }
 
@@ -466,18 +446,18 @@ static int get_display_information (DisplaySearchParameters &display_search_para
         height = 480;
 
         // make a window
-        WNDCLASSEX window_class = 
-        { 
-          sizeof (WNDCLASSEX), CS_CLASSDC, window_procedure, 0L, 0L, 
-          GetModuleHandle(NULL), NULL, NULL, NULL, NULL,
-          "class_name", NULL 
+        WNDCLASSEX window_class =
+        {
+          sizeof (WNDCLASSEX), CS_CLASSDC, window_procedure, 0L, 0L,
+          GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr,
+          "class_name", nullptr
         };
         RegisterClassEx (&window_class);
 
         HWND window_handle;
 
-        window_handle = CreateWindow ("class_name", "window_name", WS_DISABLED, 0, 0, width, height, (HWND) NULL, (HMENU) NULL, window_class.hInstance, NULL);
-        if (window_handle != NULL) {
+        window_handle = CreateWindow ("class_name", "window_name", WS_DISABLED, 0, 0, width, height, (HWND) nullptr, (HMENU) nullptr, window_class.hInstance, nullptr);
+        if (window_handle != nullptr) {
           ShowWindow (window_handle, SW_HIDE);
 
           DIRECT_3D_DEVICE direct_3d_device;
@@ -508,7 +488,8 @@ static int get_display_information (DisplaySearchParameters &display_search_para
           else {
             behavior_flags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
           }
-          // This is important to prevent DirectX from forcing the FPU into single-precision mode.
+          // This is important to prevent DirectX from forcing the FPU into
+          // single-precision mode.
           behavior_flags |= D3DCREATE_FPU_PRESERVE;
 
           HRESULT result;
@@ -516,7 +497,8 @@ static int get_display_information (DisplaySearchParameters &display_search_para
           result = direct_3d -> CreateDevice (adapter, device_type, window_handle, behavior_flags, &present_parameters, &direct_3d_device);
           if (result == D3D_OK) {
 
-            // allocate 512x512 32-bit textures (1MB size) until we run out or hit the limit
+            // allocate 512x512 32-bit textures (1MB size) until we run out or
+            // hit the limit
             #define MAXIMUM_TEXTURES (2048 - 1)
 
             int total_textures;
@@ -534,7 +516,7 @@ static int get_display_information (DisplaySearchParameters &display_search_para
                 D3DFMT_A8R8G8B8,
                 D3DPOOL_DEFAULT,
                 &texture_array [total_textures],
-                NULL);
+                nullptr);
               if (texture_result == D3D_OK) {
                 total_textures++;
               }
@@ -628,37 +610,22 @@ static int get_display_information (DisplaySearchParameters &display_search_para
   }
 
   // memory
-  bool memory_state;
-  HMODULE kernel32_dll;
-    
-  memory_state = false;
-  kernel32_dll = LoadLibrary ("kernel32.dll");
-  if (kernel32_dll) {
-    GlobalMemoryStatusExType GlobalMemoryStatusExFunction;
+  MEMORYSTATUSEX memory_status;
+  memory_status.dwLength = sizeof(MEMORYSTATUSEX);
 
-    GlobalMemoryStatusExFunction = (GlobalMemoryStatusExType) GetProcAddress (kernel32_dll, "GlobalMemoryStatusEx");
-    if (GlobalMemoryStatusExFunction) {
-      MEMORYSTATUSEX memory_status;
-
-      memory_status.dwLength = sizeof (MEMORYSTATUSEX);
-      if (GlobalMemoryStatusExFunction (&memory_status)) {
-        physical_memory = memory_status.ullTotalPhys;
-        available_physical_memory = memory_status.ullAvailPhys;
-        memory_state = true;
-      }    
-    }
-    FreeLibrary (kernel32_dll);
-  }
-  if (memory_state == false) {
+  if (GlobalMemoryStatusEx(&memory_status)) {
+    physical_memory = memory_status.ullTotalPhys;
+    available_physical_memory = memory_status.ullAvailPhys;
+  } else  {
     MEMORYSTATUS memory_status;
+    memory_status.dwLength = sizeof(MEMORYSTATUS);
 
-    memory_status.dwLength = sizeof (MEMORYSTATUS);
-    GlobalMemoryStatus (&memory_status);
+    GlobalMemoryStatus(&memory_status);
 
     physical_memory = memory_status.dwTotalPhys;
     available_physical_memory = memory_status.dwAvailPhys;
   }
-  
+
   if (debug) {
     printf ("physical_memory %I64d \n", physical_memory);
     printf ("available_physical_memory %I64d \n", available_physical_memory);

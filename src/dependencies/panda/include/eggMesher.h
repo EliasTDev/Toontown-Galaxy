@@ -1,16 +1,15 @@
-// Filename: eggMesher.h
-// Created by:  drose (13Mar05)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggMesher.h
+ * @author drose
+ * @date 2005-03-13
+ */
 
 #ifndef EGGMESHER_H
 #define EGGMESHER_H
@@ -26,19 +25,18 @@
 
 #include <algorithm>
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggMesher
-// Description : Collects together unrelated EggPrimitives, determines
-//               their edge connectivity, and generates a set of
-//               EggTriangleStrips that represent the same geometry.
-////////////////////////////////////////////////////////////////////
-class EggMesher {
+/**
+ * Collects together unrelated EggPrimitives, determines their edge
+ * connectivity, and generates a set of EggTriangleStrips that represent the
+ * same geometry.
+ */
+class EXPCL_PANDA_EGG EggMesher {
 public:
   EggMesher();
 
   void mesh(EggGroupNode *group, bool flat_shaded);
 
-  void write(ostream &out) const;
+  void write(std::ostream &out) const;
 
   bool _consider_fans;
   bool _retesselate_coplanar;
@@ -47,7 +45,7 @@ public:
 
 private:
   void clear();
-  bool add_polygon(const EggPolygon *egg_poly, 
+  bool add_polygon(const EggPolygon *egg_poly,
                    EggMesherStrip::MesherOrigin origin);
   void do_mesh();
   PT(EggPrimitive) get_prim(EggMesherStrip &strip);

@@ -1,16 +1,15 @@
-// Filename: eggNurbsSurface.h
-// Created by:  drose (15Feb00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggNurbsSurface.h
+ * @author drose
+ * @date 2000-02-15
+ */
 
 #ifndef EGGNURBSSURFACE_H
 #define EGGNURBSSURFACE_H
@@ -22,11 +21,10 @@
 #include "vector_double.h"
 #include "plist.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggNurbsSurface
-// Description : A parametric NURBS surface.
-////////////////////////////////////////////////////////////////////
-class EXPCL_PANDAEGG EggNurbsSurface : public EggSurface {
+/**
+ * A parametric NURBS surface.
+ */
+class EXPCL_PANDA_EGG EggNurbsSurface : public EggSurface {
 PUBLISHED:
   typedef plist< PT(EggNurbsCurve) > Curves;
   typedef Curves Loop;
@@ -34,9 +32,11 @@ PUBLISHED:
   typedef Loops Trim;
   typedef plist<Trim> Trims;
 
-  INLINE EggNurbsSurface(const string &name = "");
+  INLINE explicit EggNurbsSurface(const std::string &name = "");
   INLINE EggNurbsSurface(const EggNurbsSurface &copy);
   INLINE EggNurbsSurface &operator = (const EggNurbsSurface &copy);
+
+  virtual EggNurbsSurface *make_copy() const override;
 
   void setup(int u_order, int v_order,
              int num_u_knots, int num_v_knots);
@@ -75,14 +75,14 @@ PUBLISHED:
   MAKE_SEQ(get_v_knots, get_num_v_knots, get_v_knot);
   INLINE EggVertex *get_cv(int ui, int vi) const;
 
-  virtual void write(ostream &out, int indent_level) const;
+  virtual void write(std::ostream &out, int indent_level) const override;
 
 public:
   Curves _curves_on_surface;
   Trims _trims;
 
 protected:
-  virtual void r_apply_texmats(EggTextureCollection &textures);
+  virtual void r_apply_texmats(EggTextureCollection &textures) override;
 
 private:
   typedef vector_double Knots;
@@ -101,10 +101,13 @@ public:
     register_type(_type_handle, "EggNurbsSurface",
                   EggSurface::get_class_type());
   }
-  virtual TypeHandle get_type() const {
+  virtual TypeHandle get_type() const override {
     return get_class_type();
   }
-  virtual TypeHandle force_init_type() {init_type(); return get_class_type();}
+  virtual TypeHandle force_init_type() override {
+    init_type();
+    return get_class_type();
+  }
 
 private:
   static TypeHandle _type_handle;

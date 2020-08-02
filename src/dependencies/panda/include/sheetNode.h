@@ -1,16 +1,15 @@
-// Filename: sheetNode.h
-// Created by:  drose (11Oct03)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file sheetNode.h
+ * @author drose
+ * @date 2003-10-11
+ */
 
 #ifndef SHEETNODE_H
 #define SHEETNODE_H
@@ -20,28 +19,25 @@
 #include "pandaNode.h"
 #include "pStatCollector.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : SheetNode
-// Description : This class draws a visible representation of the
-//               NURBS surface stored in its NurbsSurfaceEvaluator.  It
-//               automatically recomputes the surface every frame.
-//
-//               This is not related to NurbsSurface, CubicSurfaceseg
-//               or any of the ParametricSurface-derived objects in
-//               this module.  It is a completely parallel
-//               implementation of NURBS surfaces, and will probably
-//               eventually replace the whole ParametricSurface class
-//               hierarchy.
-////////////////////////////////////////////////////////////////////
+/**
+ * This class draws a visible representation of the NURBS surface stored in
+ * its NurbsSurfaceEvaluator.  It automatically recomputes the surface every
+ * frame.
+ *
+ * This is not related to NurbsSurface, CubicSurfaceseg or any of the
+ * ParametricSurface-derived objects in this module.  It is a completely
+ * parallel implementation of NURBS surfaces, and will probably eventually
+ * replace the whole ParametricSurface class hierarchy.
+ */
 class EXPCL_PANDA_PARAMETRICS SheetNode : public PandaNode {
 PUBLISHED:
-  SheetNode(const string &name);
+  explicit SheetNode(const std::string &name);
 
 protected:
   SheetNode(const SheetNode &copy);
 public:
-  virtual void output(ostream &out) const;
-  virtual void write(ostream &out, int indent_level = 0) const;
+  virtual void output(std::ostream &out) const;
+  virtual void write(std::ostream &out, int indent_level = 0) const;
 
   virtual PandaNode *make_copy() const;
 
@@ -73,7 +69,7 @@ private:
   PT(BoundingVolume) do_recompute_bounds(const NodePath &rel_to,
                                          int pipeline_stage,
                                          Thread *current_thread) const;
-  void render_sheet(CullTraverser *trav, CullTraverserData &data, 
+  void render_sheet(CullTraverser *trav, CullTraverserData &data,
                     NurbsSurfaceResult *result);
 
 private:

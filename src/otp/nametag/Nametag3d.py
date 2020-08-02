@@ -1,6 +1,6 @@
-from Nametag import *
-import NametagGlobals
-from NametagConstants import *
+from .Nametag import *
+from . import NametagGlobals
+from .NametagConstants import *
 from panda3d.core import *
 import math
 

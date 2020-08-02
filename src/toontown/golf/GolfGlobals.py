@@ -7,7 +7,7 @@ for key in TrophyRequirements:NumTrophies += len(TrophyRequirements[key])
 NumCups=3;TrophiesPerCup=NumTrophies/NumCups
 def calcTrophyListFromHistory(h):
     rv,hi=[],0
-    for ti in xrange(NumHistory):
+    for ti in range(NumHistory):
         r=TrophyRequirements[ti]
         for an in r:
             if h[hi]>=an:rv.append(True)
@@ -18,7 +18,7 @@ def calcCupListFromHistory(h):
     rv,tl,nt=[False]*NumCups,calcTrophyListFromHistory(h),0
     for gt in tl:
         if gt:nt+=1
-    for ci in xrange(len(rv)):
+    for ci in range(len(rv)):
         tr=(ci+1)*TrophiesPerCup
         if tr<=nt:rv[ci]=True
     return rv

@@ -1,16 +1,15 @@
-// Filename: odeBody.h
-// Created by:  joswilso (27Dec06)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file odeBody.h
+ * @author joswilso
+ * @date 2006-12-27
+ */
 
 #ifndef ODEBODY_H
 #define ODEBODY_H
@@ -22,18 +21,14 @@
 #include "ode_includes.h"
 #include "odeWorld.h"
 #include "odeMass.h"
-#ifdef HAVE_PYTHON
-#include "Python.h"
-#endif
 
 class OdeJoint;
 class OdeGeom;
 class OdeCollisionEntry;
 
-////////////////////////////////////////////////////////////////////
-//       Class : OdeBody
-// Description : 
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 class EXPCL_PANDAODE OdeBody : public TypedObject {
   friend class OdeJoint;
   friend class OdeGeom;
@@ -56,9 +51,7 @@ PUBLISHED:
   INLINE void set_auto_disable_flag(int do_auto_disable);
   INLINE void set_auto_disable_defaults();
   INLINE void set_data(void *data);
-#ifdef HAVE_PYTHON
-  INLINE void set_data(PyObject *data);
-#endif
+  EXTENSION(void set_data(PyObject *data));
 
   INLINE void set_position(dReal x, dReal y, dReal z);
   INLINE void set_position(const LVecBase3f &pos);
@@ -76,11 +69,10 @@ PUBLISHED:
   INLINE int   get_auto_disable_steps() const;
   INLINE dReal get_auto_disable_time() const;
   INLINE int   get_auto_disable_flag() const;
-#ifdef HAVE_PYTHON
-  INLINE PyObject* get_data() const;
-#else
-  INLINE void* get_data() const;
+#ifndef CPPPARSER
+  INLINE void *get_data() const;
 #endif
+  EXTENSION(PyObject *get_data() const);
 
   INLINE LVecBase3f  get_position() const;
   INLINE LMatrix3f  get_rotation() const;
@@ -97,21 +89,21 @@ PUBLISHED:
   INLINE void add_rel_force(const LVecBase3f &f);
   INLINE void add_rel_torque(dReal fx, dReal fy, dReal fz);
   INLINE void add_rel_torque(const LVecBase3f &f);
-  INLINE void add_force_at_pos(dReal fx, dReal fy, dReal fz, 
+  INLINE void add_force_at_pos(dReal fx, dReal fy, dReal fz,
                                dReal px, dReal py, dReal pz);
-  INLINE void add_force_at_pos(const LVecBase3f &f, 
+  INLINE void add_force_at_pos(const LVecBase3f &f,
                                const LVecBase3f &pos);
-  INLINE void add_force_at_rel_pos(dReal fx, dReal fy, dReal fz, 
+  INLINE void add_force_at_rel_pos(dReal fx, dReal fy, dReal fz,
                                    dReal px, dReal py, dReal pz);
-  INLINE void add_force_at_rel_pos(const LVecBase3f &f, 
+  INLINE void add_force_at_rel_pos(const LVecBase3f &f,
                                    const LVecBase3f &pos);
-  INLINE void add_rel_force_at_pos(dReal fx, dReal fy, dReal fz, 
+  INLINE void add_rel_force_at_pos(dReal fx, dReal fy, dReal fz,
                                    dReal px, dReal py, dReal pz);
-  INLINE void add_rel_force_at_pos(const LVecBase3f &f, 
+  INLINE void add_rel_force_at_pos(const LVecBase3f &f,
                                    const LVecBase3f &pos);
-  INLINE void add_rel_force_at_rel_pos(dReal fx, dReal fy, dReal fz, 
+  INLINE void add_rel_force_at_rel_pos(dReal fx, dReal fy, dReal fz,
                                        dReal px, dReal py, dReal pz);
-  INLINE void add_rel_force_at_rel_pos(const LVecBase3f &f, 
+  INLINE void add_rel_force_at_rel_pos(const LVecBase3f &f,
                                        const LVecBase3f &pos);
   INLINE void set_force(dReal x, dReal y, dReal z);
   INLINE void set_force(const LVecBase3f &f);
@@ -141,6 +133,7 @@ PUBLISHED:
   OdeJoint get_joint(int index) const;
   MAKE_SEQ(get_joints, get_num_joints, get_joint);
   EXTENSION(INLINE PyObject *get_converted_joint(int i) const);
+  MAKE_SEQ_PROPERTY(joints, get_num_joints, get_converted_joint);
 
   INLINE void enable();
   INLINE void disable();
@@ -148,12 +141,16 @@ PUBLISHED:
   INLINE void set_gravity_mode(int mode);
   INLINE int get_gravity_mode() const;
 
-  virtual void write(ostream &out = cout, unsigned int indent=0) const;
+  virtual void write(std::ostream &out = std::cout, unsigned int indent=0) const;
   operator bool () const;
   INLINE int compare_to(const OdeBody &other) const;
 
 private:
   dBodyID _id;
+
+public:
+  typedef void (*DestroyCallback)(OdeBody &body);
+  DestroyCallback _destroy_callback = nullptr;
 
 public:
   static TypeHandle get_class_type() {

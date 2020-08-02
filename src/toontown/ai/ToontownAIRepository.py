@@ -26,7 +26,7 @@ from toontown.distributed.ToontownDistrictAI import ToontownDistrictAI
 from toontown.distributed.ToontownDistrictStatsAI import ToontownDistrictStatsAI
 from toontown.distributed.ToontownInternalRepository import ToontownInternalRepository
 from toontown.coderedemption.TTCodeRedemptionMgrAI import TTCodeRedemptionMgrAI
-from toontown.dna.DNAParser import loadDNAFileAI
+from toontown.dna.DNAParser import *
 from toontown.estate.EstateManagerAI import EstateManagerAI
 from toontown.hood import BRHoodAI
 from toontown.hood import BossbotHQAI
@@ -231,7 +231,7 @@ class ToontownAIRepository(ToontownInternalRepository):
             phaseNum = ToontownGlobals.phaseMap[hoodId]
         else:
             phaseNum = ToontownGlobals.streetPhaseMap[hoodId]
-        return 'phase_%s/dna/%s_%s.pdna' % (phaseNum, hood, zoneId)
+        return 'phase_%s/dna/%s_%s.dna' % (phaseNum, hood, zoneId)
 
     def loadDNAFileAI(self, dnastore, filename):
         return loadDNAFileAI(dnastore, filename)

@@ -1,16 +1,15 @@
-// Filename: computeNode.h
-// Created by:  rdb (19Jun14)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file computeNode.h
+ * @author rdb
+ * @date 2014-06-19
+ */
 
 #ifndef COMPUTENODE_H
 #define COMPUTENODE_H
@@ -21,24 +20,26 @@
 #include "callbackNode.h"
 #include "pointerTo.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : ComputeNode
-// Description : A special node, the sole purpose of which is to
-//               invoke a dispatch operation on the assigned
-//               compute shader.
-////////////////////////////////////////////////////////////////////
+/**
+ * A special node, the sole purpose of which is to invoke a dispatch operation
+ * on the assigned compute shader.
+ */
 class EXPCL_PANDA_PGRAPHNODES ComputeNode : public PandaNode {
 PUBLISHED:
-  ComputeNode(const string &name);
+  explicit ComputeNode(const std::string &name);
 
   INLINE void add_dispatch(const LVecBase3i &num_groups);
   INLINE void add_dispatch(int num_groups_x, int num_groups_y, int num_groups_z);
 
-  INLINE int get_num_dispatches() const;
-  INLINE const LVecBase3i &get_dispatch(int i) const;
+  INLINE size_t get_num_dispatches() const;
+  INLINE const LVecBase3i &get_dispatch(size_t i) const;
+  INLINE void set_dispatch(size_t i, const LVecBase3i &num_groups);
+  INLINE void insert_dispatch(size_t i, const LVecBase3i &num_groups);
+  INLINE void remove_dispatch(size_t i);
   INLINE void clear_dispatches();
 
   MAKE_SEQ(get_dispatches, get_num_dispatches, get_dispatch);
+  MAKE_SEQ_PROPERTY(dispatches, get_num_dispatches, get_dispatch, set_dispatch, remove_dispatch, insert_dispatch);
 
 public:
   ComputeNode(const ComputeNode &copy);
@@ -49,7 +50,7 @@ public:
   virtual bool is_renderable() const;
   virtual void add_for_draw(CullTraverser *trav, CullTraverserData &data);
 
-  virtual void output(ostream &out) const;
+  virtual void output(std::ostream &out) const;
 
 public:
   class EXPCL_PANDA_PGRAPHNODES Dispatcher : public CallbackObject {

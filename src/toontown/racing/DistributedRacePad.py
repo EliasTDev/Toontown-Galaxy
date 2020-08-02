@@ -1,3 +1,4 @@
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.task.Task import Task
 from direct.distributed.ClockDelta import *
@@ -208,7 +209,7 @@ class DistributedRacePad(DistributedKartPad, FSM):
         if self.tunnelSign:
             textNodePaths = self.tunnelSign.findAllMatches('**/+TextNode')
             numTextNodePaths = textNodePaths.getNumPaths()
-            for i in xrange(numTextNodePaths):
+            for i in range(numTextNodePaths):
                 textNodePath = textNodePaths.getPath(i)
                 textNodePath.hide()
 
@@ -216,7 +217,7 @@ class DistributedRacePad(DistributedKartPad, FSM):
         if self.tunnelSign:
             textNodePaths = self.tunnelSign.findAllMatches('**/+TextNode')
             numTextNodePaths = textNodePaths.getNumPaths()
-            for i in xrange(numTextNodePaths):
+            for i in range(numTextNodePaths):
                 textNodePath = textNodePaths.getPath(i)
                 textNodePath.show()
 
@@ -267,7 +268,7 @@ class DistributedRacePad(DistributedKartPad, FSM):
         if self.tunnelSign:
             textNodePaths = self.tunnelSign.findAllMatches('**/+TextNode')
             numTextNodePaths = textNodePaths.getNumPaths()
-            for i in xrange(numTextNodePaths):
+            for i in range(numTextNodePaths):
                 textNodePath = textNodePaths.getPath(i)
                 textNodePath.removeNode()
                 textNodePath = None

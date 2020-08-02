@@ -1,16 +1,15 @@
-// Filename: animChannelMatrixDynamic.h
-// Created by:  drose (20Oct03)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file animChannelMatrixDynamic.h
+ * @author drose
+ * @date 2003-10-20
+ */
 
 #ifndef ANIMCHANNELMATRIXDYNAMIC_H
 #define ANIMCHANNELMATRIXDYNAMIC_H
@@ -22,27 +21,24 @@
 #include "pandaNode.h"
 #include "pointerTo.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : AnimChannelMatrixDynamic
-// Description : An animation channel that accepts a matrix each frame
-//               from some dynamic input provided by code.
-//
-//               This object operates in two modes: in explicit mode,
-//               the programmer should call set_value() each frame to
-//               indicate the new value; in implicit mode, the
-//               programmer should call set_value_node() to indicate
-//               the node whose transform will be copied to the joint
-//               each frame.
-////////////////////////////////////////////////////////////////////
+/**
+ * An animation channel that accepts a matrix each frame from some dynamic
+ * input provided by code.
+ *
+ * This object operates in two modes: in explicit mode, the programmer should
+ * call set_value() each frame to indicate the new value; in implicit mode,
+ * the programmer should call set_value_node() to indicate the node whose
+ * transform will be copied to the joint each frame.
+ */
 class EXPCL_PANDA_CHAN AnimChannelMatrixDynamic : public AnimChannelMatrix {
 protected:
   AnimChannelMatrixDynamic();
   AnimChannelMatrixDynamic(AnimGroup *parent, const AnimChannelMatrixDynamic &copy);
 
 public:
-  AnimChannelMatrixDynamic(const string &name);
+  AnimChannelMatrixDynamic(const std::string &name);
 
-  virtual bool has_changed(int last_frame, double last_frac, 
+  virtual bool has_changed(int last_frame, double last_frac,
                            int this_frame, double this_frac);
   virtual void get_value(int frame, LMatrix4 &mat);
 
@@ -61,14 +57,16 @@ PUBLISHED:
   INLINE const TransformState *get_value_transform() const;
   INLINE PandaNode *get_value_node() const;
 
+  MAKE_PROPERTY(value_node, get_value_node, set_value_node);
+
 protected:
   virtual AnimGroup *make_copy(AnimGroup *parent) const;
 
 
 private:
-  // This is filled in only if we are using the set_value_node()
-  // interface to get an implicit value from the transform on the
-  // indicated node each frame.
+  // This is filled in only if we are using the set_value_node() interface to
+  // get an implicit value from the transform on the indicated node each
+  // frame.
   PT(PandaNode) _value_node;
 
   CPT(TransformState) _value;

@@ -1,5 +1,6 @@
-"""instantiate global Logger object"""
+"""Instantiates a global :class:`~.Logger.Logger` object."""
 
-import Logger
+from . import Logger
 
+#: Contains a global :class:`~.Logger.Logger` object.
 defaultLogger = Logger.Logger()

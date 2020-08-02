@@ -1,16 +1,15 @@
-// Filename: eggToDXFLayer.h
-// Created by:  drose (04May04)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file eggToDXFLayer.h
+ * @author drose
+ * @date 2004-05-04
+ */
 
 #ifndef EGGTODXFLAYER_H
 #define EGGTODXFLAYER_H
@@ -24,11 +23,9 @@ class EggToDXF;
 class EggPolygon;
 class EggGroupNode;
 
-////////////////////////////////////////////////////////////////////
-//       Class : EggToDXFLayer
-// Description : A single layer in the DXF file to be written by
-//               EggToDXF.
-////////////////////////////////////////////////////////////////////
+/**
+ * A single layer in the DXF file to be written by EggToDXF.
+ */
 class EggToDXFLayer {
 public:
   EggToDXFLayer(EggToDXF *egg2dxf, EggGroupNode *group);
@@ -38,10 +35,10 @@ public:
   void add_color(const LColor &color);
   void choose_overall_color();
 
-  void write_layer(ostream &out);
-  void write_polyline(EggPolygon *poly, ostream &out);
-  void write_3d_face(EggPolygon *poly, ostream &out);
-  void write_entities(ostream &out);
+  void write_layer(std::ostream &out);
+  void write_polyline(EggPolygon *poly, std::ostream &out);
+  void write_3d_face(EggPolygon *poly, std::ostream &out);
+  void write_entities(std::ostream &out);
 
 private:
   int get_autocad_color(const LColor &color);

@@ -1,16 +1,15 @@
-// Filename: interrogateFunctionWrapper.h
-// Created by:  drose (06Aug00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file interrogateFunctionWrapper.h
+ * @author drose
+ * @date 2000-08-06
+ */
 
 #ifndef INTERROGATEFUNCTIONWRAPPER_H
 #define INTERROGATEFUNCTIONWRAPPER_H
@@ -23,13 +22,12 @@
 
 class IndexRemapper;
 
-////////////////////////////////////////////////////////////////////
-//       Class : InterrogateFunctionWrapper
-// Description : An internal representation of a callable function.
-////////////////////////////////////////////////////////////////////
+/**
+ * An internal representation of a callable function.
+ */
 class EXPCL_INTERROGATEDB InterrogateFunctionWrapper : public InterrogateComponent {
 public:
-  INLINE InterrogateFunctionWrapper(InterrogateModuleDef *def = NULL);
+  INLINE InterrogateFunctionWrapper(InterrogateModuleDef *def = nullptr);
   INLINE InterrogateFunctionWrapper(const InterrogateFunctionWrapper &copy);
   INLINE void operator = (const InterrogateFunctionWrapper &copy);
 
@@ -45,16 +43,16 @@ public:
   INLINE int number_of_parameters() const;
   INLINE TypeIndex parameter_get_type(int n) const;
   INLINE bool parameter_has_name(int n) const;
-  INLINE const string &parameter_get_name(int n) const;
+  INLINE const std::string &parameter_get_name(int n) const;
   INLINE bool parameter_is_this(int n) const;
 
-  INLINE const string &get_unique_name() const;
+  INLINE const std::string &get_unique_name() const;
 
   INLINE bool has_comment() const;
-  INLINE const string &get_comment() const;
+  INLINE const std::string &get_comment() const;
 
-  void output(ostream &out) const;
-  void input(istream &in);
+  void output(std::ostream &out) const;
+  void input(std::istream &in);
 
   void remap_indices(const IndexRemapper &remap);
 
@@ -74,36 +72,36 @@ private:
   FunctionIndex _function;
   TypeIndex _return_type;
   FunctionIndex _return_value_destructor;
-  string _unique_name;
-  string _comment;
+  std::string _unique_name;
+  std::string _comment;
 
 public:
-  // This nested class must be declared public just so we can declare
-  // the external ostream and istream I/O operator functions, on the
-  // SGI compiler.  Arguably a compiler bug, but what can you do.
+  // This nested class must be declared public just so we can declare the
+  // external ostream and istream IO operator functions, on the SGI compiler.
+  // Arguably a compiler bug, but what can you do.
   class Parameter {
   public:
-    void output(ostream &out) const;
-    void input(istream &in);
+    void output(std::ostream &out) const;
+    void input(std::istream &in);
 
     int _parameter_flags;
     TypeIndex _type;
-    string _name;
+    std::string _name;
   };
 
 private:
-  typedef vector<Parameter> Parameters;
+  typedef std::vector<Parameter> Parameters;
   Parameters _parameters;
 
   friend class InterrogateBuilder;
   friend class FunctionRemap;
 };
 
-INLINE ostream &operator << (ostream &out, const InterrogateFunctionWrapper &wrapper);
-INLINE istream &operator >> (istream &in, InterrogateFunctionWrapper &wrapper);
+INLINE std::ostream &operator << (std::ostream &out, const InterrogateFunctionWrapper &wrapper);
+INLINE std::istream &operator >> (std::istream &in, InterrogateFunctionWrapper &wrapper);
 
-INLINE ostream &operator << (ostream &out, const InterrogateFunctionWrapper::Parameter &p);
-INLINE istream &operator >> (istream &in, InterrogateFunctionWrapper::Parameter &p);
+INLINE std::ostream &operator << (std::ostream &out, const InterrogateFunctionWrapper::Parameter &p);
+INLINE std::istream &operator >> (std::istream &in, InterrogateFunctionWrapper::Parameter &p);
 
 #include "interrogateFunctionWrapper.I"
 

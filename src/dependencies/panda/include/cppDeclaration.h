@@ -1,16 +1,15 @@
-// Filename: cppDeclaration.h
-// Created by:  drose (19Oct99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file cppDeclaration.h
+ * @author drose
+ * @date 1999-10-19
+ */
 
 #ifndef CPPDECLARATION_H
 #define CPPDECLARATION_H
@@ -25,8 +24,6 @@
 #include <vector>
 #include <map>
 #include <set>
-
-using namespace std;
 
 class CPPInstance;
 class CPPTemplateParameterList;
@@ -49,16 +46,16 @@ class CPPEnumType;
 class CPPTypeProxy;
 class CPPMakeProperty;
 class CPPMakeSeq;
+class CPPClosureType;
 class CPPClassTemplateParameter;
 class CPPTBDType;
 class CPPScope;
 class CPPTemplateScope;
 class CPPPreprocessor;
 
-///////////////////////////////////////////////////////////////////
-//       Class : CPPDeclaration
-// Description :
-////////////////////////////////////////////////////////////////////
+/**
+ *
+ */
 class CPPDeclaration {
 public:
   enum SubType {
@@ -87,11 +84,14 @@ public:
     ST_tbd,
     ST_type_proxy,
     ST_typedef,
+    ST_closure,
   };
 
   CPPDeclaration(const CPPFile &file);
   CPPDeclaration(const CPPDeclaration &copy);
-  virtual ~CPPDeclaration();
+  virtual ~CPPDeclaration() {};
+
+  CPPDeclaration &operator = (const CPPDeclaration &copy);
 
   bool operator == (const CPPDeclaration &other) const;
   bool operator != (const CPPDeclaration &other) const;
@@ -103,17 +103,17 @@ public:
   virtual CPPDeclaration *
   instantiate(const CPPTemplateParameterList *actual_params,
               CPPScope *current_scope, CPPScope *global_scope,
-              CPPPreprocessor *error_sink = NULL) const;
+              CPPPreprocessor *error_sink = nullptr) const;
 
-  typedef map<CPPDeclaration *, CPPDeclaration *> SubstDecl;
+  typedef std::map<CPPDeclaration *, CPPDeclaration *> SubstDecl;
   virtual CPPDeclaration *substitute_decl(SubstDecl &subst,
                                           CPPScope *current_scope,
                                           CPPScope *global_scope);
 
-  typedef set<CPPDeclaration *> Instantiations;
+  typedef std::set<CPPDeclaration *> Instantiations;
   Instantiations _instantiations;
 
-  virtual void output(ostream &out, int indent_level, CPPScope *scope,
+  virtual void output(std::ostream &out, int indent_level, CPPScope *scope,
                       bool complete) const=0;
 
   virtual SubType get_subtype() const=0;
@@ -140,6 +140,77 @@ public:
   virtual CPPTypeProxy *as_type_proxy();
   virtual CPPMakeProperty *as_make_property();
   virtual CPPMakeSeq *as_make_seq();
+  virtual CPPClosureType *as_closure_type();
+
+  inline const CPPInstance *as_instance() const {
+    return ((CPPDeclaration *)this)->as_instance();
+  }
+  inline const CPPClassTemplateParameter *as_class_template_parameter() const {
+    return ((CPPDeclaration *)this)->as_class_template_parameter();
+  }
+  inline const CPPTypedefType *as_typedef_type() const {
+    return ((CPPDeclaration *)this)->as_typedef_type();
+  }
+  inline const CPPTypeDeclaration *as_type_declaration() const {
+    return ((CPPDeclaration *)this)->as_type_declaration();
+  }
+  inline const CPPExpression *as_expression() const {
+    return ((CPPDeclaration *)this)->as_expression();
+  }
+  inline const CPPType *as_type() const {
+    return ((CPPDeclaration *)this)->as_type();
+  }
+  inline const CPPNamespace *as_namespace() const {
+    return ((CPPDeclaration *)this)->as_namespace();
+  }
+  inline const CPPUsing *as_using() const {
+    return ((CPPDeclaration *)this)->as_using();
+  }
+  inline const CPPSimpleType *as_simple_type() const {
+    return ((CPPDeclaration *)this)->as_simple_type();
+  }
+  inline const CPPPointerType *as_pointer_type() const {
+    return ((CPPDeclaration *)this)->as_pointer_type();
+  }
+  inline const CPPReferenceType *as_reference_type() const {
+    return ((CPPDeclaration *)this)->as_reference_type();
+  }
+  inline const CPPArrayType *as_array_type() const {
+    return ((CPPDeclaration *)this)->as_array_type();
+  }
+  inline const CPPConstType *as_const_type() const {
+    return ((CPPDeclaration *)this)->as_const_type();
+  }
+  inline const CPPFunctionType *as_function_type() const {
+    return ((CPPDeclaration *)this)->as_function_type();
+  }
+  inline const CPPFunctionGroup *as_function_group() const {
+    return ((CPPDeclaration *)this)->as_function_group();
+  }
+  inline const CPPExtensionType *as_extension_type() const {
+    return ((CPPDeclaration *)this)->as_extension_type();
+  }
+  inline const CPPStructType *as_struct_type() const {
+    return ((CPPDeclaration *)this)->as_struct_type();
+  }
+  inline const CPPEnumType *as_enum_type() const {
+    return ((CPPDeclaration *)this)->as_enum_type();
+  }
+  inline const CPPTBDType *as_tbd_type() const {
+    return ((CPPDeclaration *)this)->as_tbd_type();
+  }
+  inline const CPPTypeProxy *as_type_proxy() const {
+    return ((CPPDeclaration *)this)->as_type_proxy();
+  }
+  inline const CPPMakeProperty *as_make_property() const {
+    return ((CPPDeclaration *)this)->as_make_property();
+  }
+  inline const CPPMakeSeq *as_make_seq() const {
+    return ((CPPDeclaration *)this)->as_make_seq();
+  }
+  inline const CPPClosureType *as_closure_type() const {
+    return ((CPPDeclaration *)this)->as_closure_type();
+  }
 
   CPPVisibility _vis;
   CPPTemplateScope *_template_scope;
@@ -151,13 +222,13 @@ protected:
   virtual bool is_less(const CPPDeclaration *other) const;
 };
 
-inline ostream &
-operator << (ostream &out, const CPPDeclaration &decl) {
-  decl.output(out, 0, (CPPScope *)NULL, false);
+inline std::ostream &
+operator << (std::ostream &out, const CPPDeclaration &decl) {
+  decl.output(out, 0, nullptr, false);
   return out;
 }
 
-ostream &
-operator << (ostream &out, const CPPDeclaration::SubstDecl &decl);
+std::ostream &
+operator << (std::ostream &out, const CPPDeclaration::SubstDecl &decl);
 
 #endif

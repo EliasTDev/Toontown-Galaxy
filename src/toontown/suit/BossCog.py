@@ -8,8 +8,8 @@ from direct.task.Task import Task
 from panda3d.core import *
 import types
 import random
-import Suit
-import SuitDNA
+from . import Suit
+from . import SuitDNA
 from otp.avatar import Avatar
 from toontown.battle import BattleParticles
 from toontown.battle import BattleProps
@@ -571,7 +571,7 @@ class BossCog(Avatar.Avatar):
             self.raised = 1
         elif anim == 'Fb_fall':
             ival = Parallel(ActorInterval(self, 'Fb_fall'), Sequence(SoundInterval(self.reelSfx, node=self), SoundInterval(self.deathSfx)))
-        elif isinstance(anim, types.StringType):
+        elif isinstance(anim, bytes):
             ival = ActorInterval(self, anim)
         else:
             ival = anim

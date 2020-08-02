@@ -1,16 +1,15 @@
-// Filename: qtessInputFile.h
-// Created by:  drose (13Oct03)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file qtessInputFile.h
+ * @author drose
+ * @date 2003-10-13
+ */
 
 #ifndef QTESSINPUTFILE_H
 #define QTESSINPUTFILE_H
@@ -19,14 +18,14 @@
 #include "qtessInputEntry.h"
 #include "filename.h"
 #include "pvector.h"
+#include "vector_double.h"
 
 class QtessSurface;
 
-////////////////////////////////////////////////////////////////////
-//       Class : QtessInputFile
-// Description : Stores all the information read from a tesselation
-//               input file: a list of QtessInputEntry's.
-////////////////////////////////////////////////////////////////////
+/**
+ * Stores all the information read from a tesselation input file: a list of
+ * QtessInputEntry's.
+ */
 class QtessInputFile {
 public:
   QtessInputFile();
@@ -39,7 +38,7 @@ public:
   QtessInputEntry::Type match(QtessSurface *surface);
   int count_tris();
 
-  void write(ostream &out, int indent_level = 0) const;
+  void write(std::ostream &out, int indent_level = 0) const;
 
 private:
   void add_default_entry();

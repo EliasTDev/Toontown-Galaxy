@@ -1,16 +1,15 @@
-// Filename: throw_event.h
-// Created by:  drose (19Feb99)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file throw_event.h
+ * @author drose
+ * @date 1999-02-19
+ */
 
 #ifndef THROW_EVENT_H
 #define THROW_EVENT_H
@@ -23,17 +22,17 @@
 
 // A handful of convenience functions to throw events.
 INLINE void throw_event(const CPT_Event &event);
-INLINE void throw_event(const string &event_name);
-INLINE void throw_event(const string &event_name,
+INLINE void throw_event(const std::string &event_name);
+INLINE void throw_event(const std::string &event_name,
                         const EventParameter &p1);
-INLINE void throw_event(const string &event_name,
+INLINE void throw_event(const std::string &event_name,
                         const EventParameter &p1,
                         const EventParameter &p2);
-INLINE void throw_event(const string &event_name,
+INLINE void throw_event(const std::string &event_name,
                         const EventParameter &p1,
                         const EventParameter &p2,
                         const EventParameter &p3);
-INLINE void throw_event(const string &event_name,
+INLINE void throw_event(const std::string &event_name,
                         const EventParameter &p1,
                         const EventParameter &p2,
                         const EventParameter &p3,
@@ -44,16 +43,16 @@ INLINE void throw_event(const string &event_name,
 INLINE void throw_event_directly(EventHandler& handler,
                                  const CPT_Event &event);
 INLINE void throw_event_directly(EventHandler& handler,
-                                 const string &event_name);
+                                 const std::string &event_name);
 INLINE void throw_event_directly(EventHandler& handler,
-                                 const string &event_name,
+                                 const std::string &event_name,
                                  const EventParameter &p1);
 INLINE void throw_event_directly(EventHandler& handler,
-                                 const string &event_name,
+                                 const std::string &event_name,
                                  const EventParameter &p1,
                                  const EventParameter &p2);
 INLINE void throw_event_directly(EventHandler& handler,
-                                 const string &event_name,
+                                 const std::string &event_name,
                                  const EventParameter &p1,
                                  const EventParameter &p2,
                                  const EventParameter &p3);

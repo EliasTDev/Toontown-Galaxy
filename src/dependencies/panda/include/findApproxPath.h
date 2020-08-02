@@ -1,16 +1,15 @@
-// Filename: FindApproxPath.h
-// Created by:  drose (13Mar02)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file findApproxPath.h
+ * @author drose
+ * @date 2002-03-13
+ */
 
 #ifndef FINDAPPROXPATH_H
 #define FINDAPPROXPATH_H
@@ -24,28 +23,26 @@
 
 class PandaNode;
 
-////////////////////////////////////////////////////////////////////
-//       Class : FindApproxPath
-// Description : This class is local to this package only; it doesn't
-//               get exported.  It chops a string path, as supplied to
-//               find_up() or find_down(), and breaks it up into its
-//               component pieces.
-////////////////////////////////////////////////////////////////////
+/**
+ * This class is local to this package only; it doesn't get exported.  It
+ * chops a string path, as supplied to find_up() or find_down(), and breaks it
+ * up into its component pieces.
+ */
 class FindApproxPath {
 public:
   INLINE FindApproxPath();
 
-  bool add_string(const string &str_path);
-  bool add_flags(const string &str_flags);
-  bool add_component(string str_component);
+  bool add_string(const std::string &str_path);
+  bool add_flags(const std::string &str_flags);
+  bool add_component(std::string str_component);
 
-  void add_match_name(const string &name, int flags);
-  void add_match_name_glob(const string &glob, int flags);
+  void add_match_name(const std::string &name, int flags);
+  void add_match_name_glob(const std::string &glob, int flags);
   void add_match_exact_type(TypeHandle type, int flags);
   void add_match_inexact_type(TypeHandle type, int flags);
-  void add_match_tag(const string &key, int flags);
-  void add_match_tag_value(const string &key, const string &value, int flags);
-  
+  void add_match_tag(const std::string &key, int flags);
+  void add_match_tag_value(const std::string &key, const std::string &value, int flags);
+
   void add_match_one(int flags);
   void add_match_many(int flags);
   void add_match_pointer(PandaNode *pointer, int flags);
@@ -59,12 +56,12 @@ public:
   INLINE bool return_stashed() const;
   INLINE bool case_insensitive() const;
 
-  void output(ostream &out) const;
-  INLINE void output_component(ostream &out, int index) const;
+  void output(std::ostream &out) const;
+  INLINE void output_component(std::ostream &out, int index) const;
 
-#if !defined(WIN32_VC) && !defined(WIN64_VC)
-// Visual C++ won't let us define the ostream operator functions for
-// these guys if they're private--even though we declare them friends.
+#ifndef _MSC_VER
+// Visual C++ won't let us define the ostream operator functions for these
+// guys if they're private--even though we declare them friends.
 private:
 #endif
   enum ComponentType {
@@ -86,10 +83,10 @@ private:
   class Component {
   public:
     bool matches(PandaNode *node) const;
-    void output(ostream &out) const;
+    void output(std::ostream &out) const;
 
     ComponentType _type;
-    string _name;
+    std::string _name;
     GlobPattern _glob;
     TypeHandle _type_handle;
     PandaNode *_pointer;
@@ -103,21 +100,21 @@ private:
   bool _return_stashed;
   bool _case_insensitive;
 
-friend ostream &operator << (ostream &, FindApproxPath::ComponentType);
-friend INLINE ostream &operator << (ostream &, const FindApproxPath::Component &);
+friend std::ostream &operator << (std::ostream &, FindApproxPath::ComponentType);
+friend INLINE std::ostream &operator << (std::ostream &, const FindApproxPath::Component &);
 };
 
-ostream &
-operator << (ostream &out, FindApproxPath::ComponentType type);
+std::ostream &
+operator << (std::ostream &out, FindApproxPath::ComponentType type);
 
-INLINE ostream &
-operator << (ostream &out, const FindApproxPath::Component &component) {
+INLINE std::ostream &
+operator << (std::ostream &out, const FindApproxPath::Component &component) {
   component.output(out);
   return out;
 }
 
-INLINE ostream &
-operator << (ostream &out, const FindApproxPath &path) {
+INLINE std::ostream &
+operator << (std::ostream &out, const FindApproxPath &path) {
   path.output(out);
   return out;
 }

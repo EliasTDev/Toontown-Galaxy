@@ -5,7 +5,7 @@ from panda3d.core import *
 import random
 import types
 
-import Toon, ToonDNA
+from . import Toon, ToonDNA
 from otp.avatar import Emote
 from otp.otpbase import OTPLocalizer
 from otp.nametag.NametagConstants import *
@@ -393,7 +393,7 @@ class TTEmote(Emote.Emote):
 
     def unlockStateChangeMsg(self):
         if self.stateChangeMsgLocks <= 0:
-            print PythonUtil.lineTag() + ': someone unlocked too many times'
+            print(PythonUtil.lineTag() + ': someone unlocked too many times')
             return
         self.stateChangeMsgLocks -= 1
         if self.stateChangeMsgLocks == 0 and self.stateHasChanged:
@@ -409,12 +409,12 @@ class TTEmote(Emote.Emote):
     def disableAll(self, toon, msg = None):
         if toon != base.localAvatar:
             return
-        self.disableGroup(range(len(self.emoteFunc)), toon)
+        self.disableGroup(list(range(len(self.emoteFunc))), toon)
 
     def releaseAll(self, toon, msg = None):
         if toon != base.localAvatar:
             return
-        self.enableGroup(range(len(self.emoteFunc)), toon)
+        self.enableGroup(list(range(len(self.emoteFunc))), toon)
 
     def disableBody(self, toon, msg = None):
         if toon != base.localAvatar:
@@ -454,7 +454,7 @@ class TTEmote(Emote.Emote):
         self.unlockStateChangeMsg()
 
     def disable(self, index, toon):
-        if isinstance(index, types.StringType):
+        if isinstance(index, bytes):
             index = OTPLocalizer.EmoteFuncDict[index]
         self.emoteFunc[index][1] = self.emoteFunc[index][1] + 1
         if toon is base.localAvatar:
@@ -462,7 +462,7 @@ class TTEmote(Emote.Emote):
                 self.emoteEnableStateChanged()
 
     def enable(self, index, toon):
-        if isinstance(index, types.StringType):
+        if isinstance(index, bytes):
             index = OTPLocalizer.EmoteFuncDict[index]
         self.emoteFunc[index][1] = self.emoteFunc[index][1] - 1
         if toon is base.localAvatar:
@@ -473,7 +473,7 @@ class TTEmote(Emote.Emote):
         try:
             func = self.emoteFunc[emoteIndex][0]
         except:
-            print 'Error in finding emote func %s' % emoteIndex
+            print('Error in finding emote func %s' % emoteIndex)
             return (None, None)
 
         def clearEmoteTrack():

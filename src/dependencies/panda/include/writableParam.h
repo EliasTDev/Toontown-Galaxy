@@ -1,16 +1,15 @@
-// Filename: writableParam.h
-// Created by:  jason (13Jun00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file writableParam.h
+ * @author jason
+ * @date 2000-06-13
+ */
 
 #ifndef WRITABLEPARAM_H
 #define WRITABLEPARAM_H
@@ -22,13 +21,11 @@
 
 #include "pvector.h"
 
-////////////////////////////////////////////////////////////////////
-//       Class : WritableParam
-// Description : The specific derivation of FactoryParam that
-//               contains the information needed by a TypedWritable
-//               object.  Simply contains a Datagram for the object
-//               to construct itself from.
-////////////////////////////////////////////////////////////////////
+/**
+ * The specific derivation of FactoryParam that contains the information
+ * needed by a TypedWritable object.  Simply contains a Datagram for the
+ * object to construct itself from.
+ */
 class EXPCL_PANDA_PUTIL WritableParam : public FactoryParam {
 public:
   INLINE const Datagram &get_datagram();
@@ -39,11 +36,10 @@ private:
 public:
   INLINE WritableParam(const Datagram &datagram);
   INLINE WritableParam(const WritableParam &other);
-  INLINE ~WritableParam();
 
 private:
   // The assignment operator cannot be used for this class.
-  INLINE void operator = (const WritableParam &other);
+  WritableParam &operator = (const WritableParam &other) = delete;
 
 public:
   virtual TypeHandle get_type() const {
@@ -66,4 +62,3 @@ private:
 #include "writableParam.I"
 
 #endif
-

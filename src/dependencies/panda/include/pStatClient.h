@@ -1,16 +1,15 @@
-// Filename: pStatClient.h
-// Created by:  drose (09Jul00)
-//
-////////////////////////////////////////////////////////////////////
-//
-// PANDA 3D SOFTWARE
-// Copyright (c) Carnegie Mellon University.  All rights reserved.
-//
-// All use of this software is subject to the terms of the revised BSD
-// license.  You should have received a copy of this license along
-// with this source code in a file named "LICENSE."
-//
-////////////////////////////////////////////////////////////////////
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file pStatClient.h
+ * @author drose
+ * @date 2000-07-09
+ */
 
 #ifndef PSTATCLIENT_H
 #define PSTATCLIENT_H
@@ -18,7 +17,6 @@
 #include "pandabase.h"
 
 #include "pStatFrameData.h"
-#include "pStatClientImpl.h"
 #include "pStatCollectorDef.h"
 #include "reMutex.h"
 #include "lightMutex.h"
@@ -32,75 +30,80 @@
 #include "numeric_types.h"
 #include "bitArray.h"
 
+class PStatClientImpl;
 class PStatCollector;
 class PStatCollectorDef;
 class PStatThread;
 class GraphicsStateGuardian;
 
-////////////////////////////////////////////////////////////////////
-//       Class : PStatClient
-// Description : Manages the communications to report statistics via a
-//               network connection to a remote PStatServer.
-//
-//               Normally, there is only one PStatClient in the world,
-//               although it is possible to have multiple PStatClients
-//               if extraordinary circumstances require in.  Since
-//               each PStatCollector registers itself with the
-//               PStatClient when it is created, having multiple
-//               PStatClients requires special care when constructing
-//               the various PStatCollectors.
-//
-//               If DO_PSTATS is not defined, we don't want to use
-//               stats at all.  This class is therefore defined as a
-//               stub class.
-////////////////////////////////////////////////////////////////////
+/**
+ * Manages the communications to report statistics via a network connection to
+ * a remote PStatServer.
+ *
+ * Normally, there is only one PStatClient in the world, although it is
+ * possible to have multiple PStatClients if extraordinary circumstances
+ * require in.  Since each PStatCollector registers itself with the
+ * PStatClient when it is created, having multiple PStatClients requires
+ * special care when constructing the various PStatCollectors.
+ *
+ * If DO_PSTATS is not defined, we don't want to use stats at all.  This class
+ * is therefore defined as a stub class.
+ */
 #ifdef DO_PSTATS
-class EXPCL_PANDA_PSTATCLIENT PStatClient : public ConnectionManager, public Thread::PStatsCallback {
+class EXPCL_PANDA_PSTATCLIENT PStatClient : public Thread::PStatsCallback {
 public:
   PStatClient();
   ~PStatClient();
 
 PUBLISHED:
-  INLINE void set_client_name(const string &name);
-  INLINE string get_client_name() const;
-  INLINE void set_max_rate(double rate);
-  INLINE double get_max_rate() const;
+  void set_client_name(const std::string &name);
+  std::string get_client_name() const;
+  void set_max_rate(double rate);
+  double get_max_rate() const;
 
   INLINE int get_num_collectors() const;
   PStatCollector get_collector(int index) const;
   MAKE_SEQ(get_collectors, get_num_collectors, get_collector);
   INLINE PStatCollectorDef *get_collector_def(int index) const;
-  string get_collector_name(int index) const;
-  string get_collector_fullname(int index) const;
+  std::string get_collector_name(int index) const;
+  std::string get_collector_fullname(int index) const;
 
   INLINE int get_num_threads() const;
   PStatThread get_thread(int index) const;
   MAKE_SEQ(get_threads, get_num_threads, get_thread);
-  INLINE string get_thread_name(int index) const;
-  INLINE string get_thread_sync_name(int index) const;
-  INLINE Thread *get_thread_object(int index) const;
+  INLINE std::string get_thread_name(int index) const;
+  INLINE std::string get_thread_sync_name(int index) const;
+  INLINE PT(Thread) get_thread_object(int index) const;
 
   PStatThread get_main_thread() const;
   PStatThread get_current_thread() const;
 
-  INLINE double get_real_time() const;
+  double get_real_time() const;
 
-  INLINE static bool connect(const string &hostname = string(), int port = -1);
+  MAKE_PROPERTY(client_name, get_client_name, set_client_name);
+  MAKE_PROPERTY(max_rate, get_max_rate, set_max_rate);
+  MAKE_SEQ_PROPERTY(collectors, get_num_collectors, get_collector);
+  MAKE_SEQ_PROPERTY(threads, get_num_threads, get_thread);
+  MAKE_PROPERTY(main_thread, get_main_thread);
+  MAKE_PROPERTY(current_thread, get_current_thread);
+  MAKE_PROPERTY(real_time, get_real_time);
+
+  INLINE static bool connect(const std::string &hostname = std::string(), int port = -1);
   INLINE static void disconnect();
   INLINE static bool is_connected();
 
   INLINE static void resume_after_pause();
 
   static void main_tick();
-  static void thread_tick(const string &sync_name);
+  static void thread_tick(const std::string &sync_name);
 
   void client_main_tick();
-  void client_thread_tick(const string &sync_name);
-  INLINE bool client_connect(string hostname, int port);
+  void client_thread_tick(const std::string &sync_name);
+  bool client_connect(std::string hostname, int port);
   void client_disconnect();
-  INLINE bool client_is_connected() const;
+  bool client_is_connected() const;
 
-  INLINE void client_resume_after_pause();
+  void client_resume_after_pause();
 
   static PStatClient *get_global_pstats();
 
@@ -108,13 +111,14 @@ private:
   INLINE bool has_impl() const;
   INLINE PStatClientImpl *get_impl();
   INLINE const PStatClientImpl *get_impl() const;
+  void make_impl() const;
 
-  PStatCollector make_collector_with_relname(int parent_index, string relname);
-  PStatCollector make_collector_with_name(int parent_index, const string &name);
+  PStatCollector make_collector_with_relname(int parent_index, std::string relname);
+  PStatCollector make_collector_with_name(int parent_index, const std::string &name);
   PStatThread do_get_current_thread() const;
   PStatThread make_thread(Thread *thread);
   PStatThread do_make_thread(Thread *thread);
-  PStatThread make_gpu_thread(const string &name);
+  PStatThread make_gpu_thread(const std::string &name);
 
   bool is_active(int collector_index, int thread_index) const;
   bool is_started(int collector_index, int thread_index) const;
@@ -148,13 +152,12 @@ private:
   // This mutex protects everything in this class.
   ReMutex _lock;
 
-  typedef pmap<string, int> ThingsByName;
-  typedef pmap<string, vector_int> MultiThingsByName;
+  typedef pmap<std::string, int> ThingsByName;
+  typedef pmap<std::string, vector_int> MultiThingsByName;
   MultiThingsByName _threads_by_name, _threads_by_sync_name;
 
-  // This is for the data that is per-collector, per-thread.  A vector
-  // of these is stored in each Collector object, below, indexed by
-  // thread index.
+  // This is for the data that is per-collector, per-thread.  A vector of
+  // these is stored in each Collector object, below, indexed by thread index.
   class PerThreadData {
   public:
     PerThreadData();
@@ -164,13 +167,13 @@ private:
   };
   typedef pvector<PerThreadData> PerThread;
 
-  // This is where the meat of the Collector data is stored.  (All the
-  // stuff in PStatCollector and PStatCollectorDef is just fluff.)
-  class Collector {
+  // This is where the meat of the Collector data is stored.  (All the stuff
+  // in PStatCollector and PStatCollectorDef is just fluff.)
+  class EXPCL_PANDA_PSTATCLIENT Collector {
   public:
-    INLINE Collector(int parent_index, const string &name);
+    INLINE Collector(int parent_index, const std::string &name);
     INLINE int get_parent_index() const;
-    INLINE const string &get_name() const;
+    INLINE const std::string &get_name() const;
     INLINE bool is_active() const;
     INLINE PStatCollectorDef *get_def(const PStatClient *client, int this_index) const;
 
@@ -178,14 +181,13 @@ private:
     void make_def(const PStatClient *client, int this_index);
 
   private:
-    // This pointer is initially NULL, and will be filled in when it
-    // is first needed.
+    // This pointer is initially NULL, and will be filled in when it is first
+    // needed.
     PStatCollectorDef *_def;
 
-    // This data is used to create the PStatCollectorDef when it is
-    // needed.
+    // This data is used to create the PStatCollectorDef when it is needed.
     int _parent_index;
-    string _name;
+    std::string _name;
 
   public:
     // Relations to other collectors.
@@ -197,17 +199,17 @@ private:
   AtomicAdjust::Integer _collectors_size;  // size of the allocated array
   AtomicAdjust::Integer _num_collectors;   // number of in-use elements within the array
 
-  // This defines a single thread, i.e. a separate chain of execution,
-  // independent of all other threads.  Timing and level data are
-  // maintained separately for each thread.
+  // This defines a single thread, i.e.  a separate chain of execution,
+  // independent of all other threads.  Timing and level data are maintained
+  // separately for each thread.
   class InternalThread {
   public:
     InternalThread(Thread *thread);
-    InternalThread(const string &name, const string &sync_name = "Main");
+    InternalThread(const std::string &name, const std::string &sync_name = "Main");
 
     WPT(Thread) _thread;
-    string _name;
-    string _sync_name;
+    std::string _name;
+    std::string _sync_name;
     PStatFrameData _frame_data;
     bool _is_active;
     int _frame_number;
@@ -216,9 +218,9 @@ private:
     bool _thread_active;
     BitArray _active_collectors;  // no longer used.
 
-    // This mutex is used to protect writes to _frame_data for this
-    // particular thread, as well as writes to the _per_thread data
-    // for this particular thread in the Collector class, above.
+    // This mutex is used to protect writes to _frame_data for this particular
+    // thread, as well as writes to the _per_thread data for this particular
+    // thread in the Collector class, above.
     LightMutex _thread_lock;
   };
   typedef InternalThread *ThreadPointer;
@@ -226,7 +228,7 @@ private:
   AtomicAdjust::Integer _threads_size;  // size of the allocated array
   AtomicAdjust::Integer _num_threads;   // number of in-use elements within the array
 
-  PStatClientImpl *_impl;
+  mutable PStatClientImpl *_impl;
 
   static PStatCollector _heap_total_size_pcollector;
   static PStatCollector _heap_overhead_size_pcollector;
@@ -263,14 +265,64 @@ public:
   PStatClient() { }
   ~PStatClient() { }
 
+  void set_client_name(const std::string &name);
+  std::string get_client_name() const;
+  void set_max_rate(double rate);
+  double get_max_rate() const;
+
+  PStatCollector get_collector(int index) const;
+  std::string get_collector_name(int index) const;
+  std::string get_collector_fullname(int index) const;
+
+  INLINE int get_num_threads() const { return 0; }
+  PStatThread get_thread(int index) const;
+  INLINE std::string get_thread_name(int index) const { return ""; }
+  INLINE std::string get_thread_sync_name(int index) const { return ""; }
+  INLINE PT(Thread) get_thread_object(int index) const { return nullptr; }
+
+  PStatThread get_main_thread() const;
+  PStatThread get_current_thread() const;
+
+  double get_real_time() const;
+
 PUBLISHED:
-  INLINE static bool connect(const string & = string(), int = -1) { return false; }
+  INLINE static bool connect(const std::string & = std::string(), int = -1) { return false; }
   INLINE static void disconnect() { }
   INLINE static bool is_connected() { return false; }
   INLINE static void resume_after_pause() { }
 
-  INLINE static void main_tick() { }
-  INLINE static void thread_tick(const string &) { }
+  static void main_tick();
+  static void thread_tick(const std::string &);
+
+public:
+  void client_main_tick();
+  void client_thread_tick(const std::string &sync_name);
+  bool client_connect(std::string hostname, int port);
+  void client_disconnect();
+  bool client_is_connected() const;
+
+  void client_resume_after_pause();
+
+  static PStatClient *get_global_pstats();
+
+private:
+  // These are used by inline PStatCollector methods, so they need to be
+  // stubbed out for ABI compatibility.
+  PStatCollector make_collector_with_relname(int parent_index, std::string relname);
+  PStatThread make_thread(Thread *thread);
+
+  bool is_active(int collector_index, int thread_index) const;
+  bool is_started(int collector_index, int thread_index) const;
+
+  void start(int collector_index, int thread_index);
+  void start(int collector_index, int thread_index, double as_of);
+  void stop(int collector_index, int thread_index);
+  void stop(int collector_index, int thread_index, double as_of);
+
+  void clear_level(int collector_index, int thread_index);
+  void set_level(int collector_index, int thread_index, double level);
+  void add_level(int collector_index, int thread_index, double increment);
+  double get_level(int collector_index, int thread_index) const;
 };
 
 #endif  // DO_PSTATS
