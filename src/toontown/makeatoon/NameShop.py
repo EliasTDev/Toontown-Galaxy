@@ -511,7 +511,6 @@ class NameShop(StateData.StateData):
     def _checkNpcNames(self, name):
 
         def match(npcName, name = name):
-            name = TextEncoder().encodeWtext(name)
             name = name.strip()
             return TextEncoder.upper(npcName) == TextEncoder.upper(name)
 
@@ -716,11 +715,11 @@ class NameShop(StateData.StateData):
     def __typedAName(self, *args):
         self.notify.debug('__typedAName')
         self.nameEntry['focus'] = 0
-        name = self.nameEntry.get()
+        name = self.nameEntry.get().encode()
         name = TextEncoder().decodeText(name)
         name = name.strip()
         name = TextEncoder().encodeWtext(name)
-        self.nameEntry.enterText(name)
+        self.nameEntry.enterText(name.decode())
         problem = self.nameIsValid(self.nameEntry.get())
         if problem:
             self.rejectName(problem)

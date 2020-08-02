@@ -171,7 +171,7 @@ class DistributedSuitPlanner(DistributedObject.DistributedObject, SuitPlannerBas
             self.__makePathVizText(str(p.getIndex()), pos[0], pos[1], pos[2], color, i=p.getIndex())
 
 
-@magicWord(category=CATEGORY_LEADER)
+@magicWord(category=CATEGORY_DEVELOPER)
 def suitPaths():
     response = "Couldn't toggle suit path visualization."
     for do in list(base.cr.doId2do.values()):

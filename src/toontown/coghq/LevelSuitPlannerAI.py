@@ -5,6 +5,7 @@ from direct.directnotify import DirectNotifyGlobal
 from . import LevelBattleManagerAI
 import types
 import random
+import functools
 
 class LevelSuitPlannerAI(DirectObject.DirectObject):
     notify = DirectNotifyGlobal.directNotify.newCategory('LevelSuitPlannerAI')
@@ -40,7 +41,10 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
         for currChance in range(num):
             joinChances.append(random.randint(1, 100))
 
-        joinChances.sort()
+        def cmp(a, b):
+            return (a > b) - (a < b)
+
+        joinChances.sort(key=functools.cmp_to_key(cmp))
         return joinChances
 
     def __genSuitInfos(self, level, track):

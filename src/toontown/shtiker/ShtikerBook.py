@@ -184,8 +184,9 @@ class ShtikerBook(DirectFrame, StateData.StateData):
                 print('news')
                 self.pages.insert(prevIndex, page)
                 pageIndex = prevIndex
-                if self.currPageIndex >= pageIndex:
-                    self.currPageIndex += 1
+                if self.currPageIndex:
+                    if self.currPageIndex >= pageIndex:
+                        self.currPageIndex += 1
             else:
                 print('else 1')
                 self.pages.append(page)

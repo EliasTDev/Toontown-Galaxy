@@ -8,9 +8,8 @@ from toontown.suit import Suit, SuitDNA
 from toontown.toon import ToonHeadFrame
 from toontown.toonbase import TTLocalizer, ToontownBattleGlobals
 from toontown.quest import QuestScripts
-import copy, re, tokenize
+import copy, re, tokenize, io
 from . import BlinkingArrows
-import io
 
 notify = DirectNotifyGlobal.directNotify.newCategory('QuestParser')
 lineDict = {}

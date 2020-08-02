@@ -8,6 +8,7 @@ from toontown.catalog.CatalogFlooringItem import CatalogFlooringItem
 from toontown.catalog.CatalogWainscotingItem import CatalogWainscotingItem
 from .DNAFurnitureReaderAI import DNAFurnitureReaderAI
 from toontown.dna.DNAParser import *
+from libpandadna import *
 from . import HouseGlobals
 import random
 

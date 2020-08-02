@@ -1,3 +1,4 @@
+from panda3d.core import *
 from direct.gui.DirectGui import *
 from toontown.toonbase import TTLocalizer, ToontownGlobals, ToontownBattleGlobals
 from . import NPCToons, ToonDNA, ToonHead

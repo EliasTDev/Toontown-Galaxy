@@ -7,6 +7,7 @@ from panda3d.core import *
 from toontown.battle import BattlePlace
 from toontown.building import Elevator
 from toontown.dna.DNAParser import *
+from libpandadna import *
 from toontown.hood import ZoneUtil
 from toontown.toonbase import ToontownGlobals
 

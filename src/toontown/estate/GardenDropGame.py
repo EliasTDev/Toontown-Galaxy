@@ -1,5 +1,5 @@
-from . import GameSprite, GardenGameGlobals
 import math, random
+from . import GameSprite, GardenGameGlobals
 from math import pi
 from direct.gui.DirectGui import *
 from direct.distributed.ClockDelta import *

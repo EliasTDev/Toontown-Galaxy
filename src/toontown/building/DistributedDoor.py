@@ -265,7 +265,7 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         track.append(moveHere)
         if avatar.doId == base.localAvatar.doId:
             track.append(Sequence(Wait(duration * 0.5), Func(base.transitions.irisOut, duration * 0.5), Wait(duration * 0.5), Func(avatar.b_setParent, ToontownGlobals.SPHidden)))
-        track.delayDelete = DelayDelete.DelayDelete(avatar, 'avatarEnterDoorTrack')
+        #track.delayDelete = DelayDelete.DelayDelete(avatar, 'avatarEnterDoorTrack')
         return track
 
     def avatarEnqueueTrack(self, avatar, duration):
@@ -280,7 +280,7 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         standHere = Sequence(LerpPosHprInterval(nodePath = avatar, other = otherNP, duration = duration, pos = offset, hpr = VBase3(0, 0, 0), blendType = 'easeInOut'), self.getAnimStateInterval(avatar, 'neutral'))
         trackName = 'avatarEnqueueDoor-%d-%d' % (self.doId, avatar.doId)
         track = Parallel(walkLike, standHere, name = trackName)
-        track.delayDelete = DelayDelete.DelayDelete(avatar, 'avatarEnqueueTrack')
+        #track.delayDelete = DelayDelete.DelayDelete(avatar, 'avatarEnqueueTrack')
         return track
 
     def getAnimStateInterval(self, avatar, animName):
@@ -438,7 +438,7 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
             track.append(Func(base.transitions.irisIn))
         if hasattr(avatar, 'startSmooth'):
             track.append(Func(avatar.startSmooth))
-        track.delayDelete = DelayDelete.DelayDelete(avatar, 'DistributedDoor.avatarExitTrack')
+        #track.delayDelete = DelayDelete.DelayDelete(avatar, 'DistributedDoor.avatarExitTrack')
         return track
 
     def exitCompleted(self):

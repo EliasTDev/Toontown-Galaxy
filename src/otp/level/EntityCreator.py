@@ -3,7 +3,7 @@ from . import EntityCreatorBase
 from . import BasicEntities
 from direct.directnotify import DirectNotifyGlobal
 from . import EntrancePoint
-from .import LevelMgr
+from . import LevelMgr
 from . import LogicGate
 from . import ZoneEntity
 from . import ModelEntity

@@ -1,4 +1,4 @@
-from panda3d.core import Vec4
+from panda3d.core import Vec4, Fog
 from toontown.safezone.DDSafeZoneLoader import DDSafeZoneLoader
 from toontown.town.DDTownLoader import DDTownLoader
 from toontown.toonbase import ToontownGlobals

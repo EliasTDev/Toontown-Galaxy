@@ -17,7 +17,7 @@ class FactoryEntityCreator(EntityCreator.EntityCreator):
         EntityCreator.EntityCreator.__init__(self, level)
         nothing = EntityCreator.nothing
         _nonlocal = EntityCreator._nonlocal
-        self.privRegisterTypes({'activeCell': __nonlocal,
+        self.privRegisterTypes({'activeCell': _nonlocal,
          'crusherCell': _nonlocal,
          'battleBlocker': _nonlocal,
          'beanBarrel': _nonlocal,

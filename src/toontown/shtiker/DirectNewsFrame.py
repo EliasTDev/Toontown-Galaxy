@@ -273,7 +273,7 @@ class DirectNewsFrame(DirectObject.DirectObject):
         return self.downloadNextFile(task)
 
     def downloadNextFile(self, task):
-        while self.nextNewsFile < len(self.newsFiles) and 'aaver' in self.newsFiles[self.nextNewsFile]:
+        while self.nextNewsFile < len(self.newsFiles) and b'aaver' in self.newsFiles[self.nextNewsFile]:
             self.nextNewsFile += 1
 
         if self.nextNewsFile >= len(self.newsFiles):
@@ -292,7 +292,7 @@ class DirectNewsFrame(DirectObject.DirectObject):
                 self.parseNewsContent()
             return task.done
         self.percentDownloaded = float(self.nextNewsFile) / float(len(self.newsFiles))
-        self.filename = self.newsFiles[self.nextNewsFile]
+        self.filename = self.newsFiles[self.nextNewsFile].decode()
         self.nextNewsFile += 1
         self.url = self.newsUrl + self.filename
         localFilename = Filename(self.newsDir, self.filename)

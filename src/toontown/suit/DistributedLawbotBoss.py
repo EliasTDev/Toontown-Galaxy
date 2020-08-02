@@ -11,6 +11,7 @@ from direct.task import Task
 import math
 from panda3d.core import *
 import random
+import functools
 
 from . import DistributedBossCog
 from . import SuitDNA
@@ -1329,7 +1330,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         newCollisionNode.setIntoCollideMask(newCollideMask)
         threshold = 0.1
-        planes.sort(lambda p1, p2: p1.compareTo(p2, threshold))
+        planes.sort(key=functools.cmp_to_key((lambda p1, p2: p1.compareTo(p2, threshold))))
         lastPlane = None
         for plane in planes:
             if lastPlane == None or plane.compareTo(lastPlane, threshold) != 0:

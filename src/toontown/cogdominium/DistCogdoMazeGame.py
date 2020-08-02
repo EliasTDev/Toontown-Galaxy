@@ -230,7 +230,7 @@ class DistCogdoMazeGame(DistCogdoGame, DistCogdoMazeGameBase):
         self.game.handleToonDisconnected(toonId)
 
 from otp.ai.MagicWordGlobal import *
-@magicWord(category=CATEGORY_LEADER)
+@magicWord(category=CATEGORY_DEVELOPER)
 def revealMap():
     if hasattr(base.cr, 'cogdoGame'):
         game = base.cr.cogdoGame

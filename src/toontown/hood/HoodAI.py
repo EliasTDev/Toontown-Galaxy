@@ -1,6 +1,7 @@
 from direct.directnotify.DirectNotifyGlobal import *
 from toontown.building import DistributedBuildingMgrAI
 from toontown.dna.DNAParser import *
+from libpandadna import *
 from toontown.fishing.DistributedFishingPondAI import DistributedFishingPondAI
 from toontown.hood import ZoneUtil
 from toontown.safezone import TreasureGlobals
@@ -12,7 +13,7 @@ from toontown.toon import NPCToons
 from toontown.toonbase import TTLocalizer
 from toontown.toonbase import ToontownGlobals
 
-from libpandadna import *
+
 class HoodAI:
     notify = directNotify.newCategory('HoodAI')
     notify.setInfo(True)

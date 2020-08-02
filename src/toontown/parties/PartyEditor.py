@@ -186,13 +186,13 @@ class PartyEditor(FSM):
 
     def getMutuallyExclusiveActivities(self):
         currentActivities = self.partyEditorGrid.getActivitiesOnGrid()
-        actSet = Set([])
+        actSet = set([])
         for act in currentActivities:
             actSet.add(act[0])
 
         result = None
         for mutuallyExclusiveTuples in PartyGlobals.MutuallyExclusiveActivities:
-            mutSet = Set(mutuallyExclusiveTuples)
+            mutSet = set(mutuallyExclusiveTuples)
             inter = mutSet.intersection(actSet)
             if len(inter) > 1:
                 result = inter

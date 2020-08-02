@@ -7,9 +7,8 @@ from direct.fsm import ClassicFSM
 from direct.interval.IntervalGlobal import Sequence, Wait, Func, Parallel, SoundInterval
 from direct.showbase import PythonUtil
 from direct.task.Task import Task
-import operator, random, time
+import operator, random, time, copy
 from . import Experience, InventoryNew, TTEmote, Toon
-import copy
 from panda3d.core import *
 
 from otp.ai.MagicWordGlobal import *
@@ -2680,7 +2679,7 @@ def globalTeleport():
     invoker.setTeleportAccess(list(ToontownGlobals.HoodsForTeleportAll))
     return 'Global teleport has been activated.'
 
-@magicWord(category=CATEGORY_LEADER, types=[int])
+@magicWord(category=CATEGORY_DEVELOPER, types=[int])
 def zone(zoneId):
     """
     Changes the invoker's zone ID.
@@ -2688,7 +2687,7 @@ def zone(zoneId):
     base.cr.sendSetZoneMsg(zoneId, [zoneId])
     return 'You have been moved to zone %d.' % zoneId
 
-@magicWord(category=CATEGORY_LEADER)
+@magicWord(category=CATEGORY_DEVELOPER)
 def blackCat():
     """
     Ask the black cat manager to turn you into a cat.

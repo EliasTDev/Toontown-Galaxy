@@ -3,7 +3,7 @@ from toontown.toonbase import ToontownGlobals, TTLocalizer
 from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
 import random
-from . import HouseGlobals, Estate 
+from . import HouseGlobals, Estate
 from direct.gui.DirectGui import *
 
 class EstateManager(DistributedObject.DistributedObject):

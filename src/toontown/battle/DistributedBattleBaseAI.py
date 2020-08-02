@@ -366,6 +366,8 @@ class DistributedBattleBaseAI(DistributedObjectAI.DistributedObjectAI, BattleBas
             id = sa[SUIT_ID_COL]
             if id != -1:
                 index = suitIds.index(id)
+            if sa[SUIT_ATK_COL] == None:
+                sa[SUIT_ATK_COL] = 0
             if sa[SUIT_ATK_COL] == -1:
                 targetIndex = -1
             else:

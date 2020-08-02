@@ -1,5 +1,5 @@
 import urllib.request, urllib.parse, urllib.error
-from panda3d.core import Vec4, Vec3, TextNode
+from panda3d.core import *
 from direct.task.Task import Task
 from direct.gui.DirectGui import DirectFrame, DirectLabel, DirectButton, DirectScrolledList, DirectCheckButton, OnscreenText
 from direct.gui import DirectGuiGlobals

@@ -97,18 +97,6 @@ def describeException(backTrace = 4):
     description += "%s: %s" % (exceptionName, extraInfo)
     return description
 
-# __dev__ is not defined at import time, call this after it's defined
-def recordFunctorCreationStacks():
-    global Functor
-    from pandac.PandaModules import getConfigShowbase
-    config = getConfigShowbase()
-    # off by default, very slow
-    if __dev__ and config.GetBool('record-functor-creation-stacks', 0):
-        if not hasattr(Functor, '_functorCreationStacksRecorded'):
-            Functor = recordCreationStackStr(Functor)
-            Functor._functorCreationStacksRecorded = True
-            Functor.__call__ = Functor._exceptionLoggedCreationStack__call__
-
 # class 'decorator' that records the stack at the time of creation
 # be careful with this, it creates a StackTrace, and that can take a
 # lot of CPU
@@ -130,6 +118,37 @@ def recordCreationStack(cls):
     cls.getCreationStackTraceCompactStr = getCreationStackTraceCompactStr
     cls.printCreationStackTrace = printCreationStackTrace
     return cls
+
+# like recordCreationStack but stores the stack as a compact stack list-of-strings
+# scales well for memory usage
+def recordCreationStackStr(cls):
+    if not hasattr(cls, '__init__'):
+        raise 'recordCreationStackStr: class \'%s\' must define __init__' % cls.__name__
+    cls.__moved_init__ = cls.__init__
+    def __recordCreationStackStr_init__(self, *args, **kArgs):
+        # store as list of strings to conserve memory
+        self._creationStackTraceStrLst = StackTrace(start=1).compact().split(',')
+        return self.__moved_init__(*args, **kArgs)
+    def getCreationStackTraceCompactStr(self):
+        return ','.join(self._creationStackTraceStrLst)
+    def printCreationStackTrace(self):
+        print(','.join(self._creationStackTraceStrLst))
+    cls.__init__ = __recordCreationStackStr_init__
+    cls.getCreationStackTraceCompactStr = getCreationStackTraceCompactStr
+    cls.printCreationStackTrace = printCreationStackTrace
+    return cls
+
+# __dev__ is not defined at import time, call this after it's defined
+def recordFunctorCreationStacks():
+    global Functor
+    from pandac.PandaModules import get_config_showbase
+    config = get_config_showbase()
+    # off by default, very slow
+    if __dev__ and config.GetBool('record-functor-creation-stacks', 0):
+        if not hasattr(Functor, '_functorCreationStacksRecorded'):
+            Functor = recordCreationStackStr(Functor)
+            Functor._functorCreationStacksRecorded = True
+            Functor.__call__ = Functor._exceptionLoggedCreationStack__call__
 
 def choice(condition, ifTrue, ifFalse):
     # equivalent of C++ (condition ? ifTrue : ifFalse)

@@ -28,8 +28,8 @@ def loadDNAFile(dnaStorage, file):
     else:
         file = '/' + file
     node = libpandadna.loadDNAFile(dnaStorage, file)
-    if node.node().getNumChildren() > 0:
-        return node.node()
+    if node.getNumChildren() > 0:
+        return node
     return None
 
 def loadDNAFileAI(dnaStorage, file):
@@ -39,3 +39,6 @@ def loadDNAFileAI(dnaStorage, file):
         file = '/' + file
     data = libpandadna.loadDNAFileAI(dnaStorage, file)
     return data
+
+def setupDoor(doorNodePath, parentNode, doorOrigin, dnaStore, block, color):
+    libpandadna.DNADoor.setupDoor(doorNodePath, parentNode, doorOrigin, dnaStore, block, color)

@@ -11,6 +11,7 @@ import random
 from . import MovieCamera
 from . import MovieUtil
 from .MovieUtil import calcAvgSuitPos
+import functools
 notify = DirectNotifyGlobal.directNotify.newCategory('MovieThrow')
 hitSoundFiles = ('AA_tart_only.ogg', 'AA_slice_only.ogg', 'AA_slice_only.ogg', 'AA_slice_only.ogg', 'AA_slice_only.ogg', 'AA_wholepie_only.ogg', 'AA_wholepie_only.ogg')
 tPieLeavesHand = 2.7
@@ -46,7 +47,7 @@ def doFires(fires):
         elif len(a) < len(b):
             return -1
         return 0
-    suitFires.sort(compFunc)
+    suitFires.sort(key=functools.cmp_to_key(compFunc))
 
     totalHitDict = {}
     singleHitDict = {}

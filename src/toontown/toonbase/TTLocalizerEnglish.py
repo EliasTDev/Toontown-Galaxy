@@ -7405,6 +7405,9 @@ ResistanceMoneyChat = 'Toons of the World, Spend Wisely!'
 ResistanceTicketsMenu = 'Tickets'
 ResistanceTicketsItem = '%s Tickets'
 ResistanceTicketsChat = 'Toons of the World, Go Race!'
+ResistanceMeritsMenu = 'Merits'
+ResistanceMeritsItem = '%s merits'
+ResistanceMeritsChat = 'Toons of the World, Go Fight Some Bosses!'
 ResistanceEmote1 = NPCToonNames[9228] + ': Welcome to the Resistance!'
 ResistanceEmote2 = NPCToonNames[9228] + ': Use your new emote to identify yourself to other members.'
 ResistanceEmote3 = NPCToonNames[9228] + ': Good luck!'
@@ -8454,6 +8457,7 @@ HolidayNamesInCalendar = {1: ('Summer Fireworks', 'Celebrate Summer with a firew
  102: ('Jellybean Week', 'Celebrate Jellybean Week with double Jellybean rewards!'),
  103: ("Top Toons New Year's Day Marathon", "Chances to win every hour! See the What's New Blog for details!"),
  105: ('Toons go GREEN!', 'Toons make a green scene at Green Bean Jeans on Oak Street in Daisy Gardens!'),
+ 117: ('SOS Cards on Sale!', 'SOS Cards are now on sale in Sellbot HQ!'),
  123: ('Day of the Magic Cat', 'Toons gather around to honor the Magic Cat, the creator of the universe!')}
 UnknownHoliday = 'Unknown Holiday %d'
 HolidayFormat = '%b %d '

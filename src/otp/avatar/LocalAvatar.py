@@ -1146,7 +1146,7 @@ def collisionsOn():
     base.localAvatar.collisionsOn()
     return 'Collisions are enabled.'
 
-@magicWord(category=CATEGORY_LEADER, types=[int])
+@magicWord(category=CATEGORY_DEVELOPER, types=[int])
 def gravity(value):
     """
     Modifies the invoker's gravity. For default, use 0.
@@ -1158,14 +1158,14 @@ def gravity(value):
     else:
         base.localAvatar.ToontownControlManager.currentControls.setGravity(value)
 
-@magicWord(category=CATEGORY_LEADER, types=[float, float, float])
+@magicWord(category=CATEGORY_DEVELOPER, types=[float, float, float])
 def xyz(x, y, z):
     """
     Modifies the position of the invoker.
     """
     base.localAvatar.setPos(x, y, z)
 
-@magicWord(category=CATEGORY_LEADER, types=[float, float, float])
+@magicWord(category=CATEGORY_DEVELOPER, types=[float, float, float])
 def hpr(h, p, r):
     """
     Modifies the rotation of the invoker.

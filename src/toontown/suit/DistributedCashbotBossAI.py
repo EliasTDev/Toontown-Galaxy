@@ -11,6 +11,7 @@ from . import SuitDNA
 import random
 from otp.ai.MagicWordGlobal import *
 import math
+import functools
 
 class DistributedCashbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCashbotBossAI')
@@ -66,10 +67,13 @@ class DistributedCashbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
             suit = activeSuits.pop()
             reserveSuits.append((suit, 100))
 
+        def cmp(a, b):
+            return (a > b) - (a < b)
+
         def compareJoinChance(a, b):
             return cmp(a[1], b[1])
 
-        reserveSuits.sort(compareJoinChance)
+        reserveSuits.sort(key=functools.cmp_to_key(compareJoinChance))
         return {'activeSuits': activeSuits,
          'reserveSuits': reserveSuits}
 
@@ -490,7 +494,7 @@ class DistributedCashbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
         self.d_setRewardId(self.rewardId)
 
 
-@magicWord(category=CATEGORY_LEADER)
+@magicWord(category=CATEGORY_DEVELOPER)
 def restartCraneRound():
     """
     Restarts the crane round in the CFO.
@@ -510,7 +514,7 @@ def restartCraneRound():
     return 'Restarting the crane round...'
 
 
-@magicWord(category=CATEGORY_LEADER)
+@magicWord(category=CATEGORY_DEVELOPER)
 def skipCFO():
     """
     Skips to the final round of the CFO.
@@ -530,7 +534,7 @@ def skipCFO():
     boss.b_setState('PrepareBattleThree')
     return 'Skipping the first round...'
 
-@magicWord(category=CATEGORY_LEADER)
+@magicWord(category=CATEGORY_DEVELOPER)
 def killCFO():
     """
     Kills the CFO.

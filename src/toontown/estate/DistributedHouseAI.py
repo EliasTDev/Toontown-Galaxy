@@ -301,7 +301,7 @@ class DistributedHouseAI(DistributedObjectAI):
         self.atticWallpaper.append(item)
         self.d_setAtticWallpaper(self.atticWallpaper.getBlob())
         self.interior.furnitureManager.loadFromHouse()
-    
+
     def initializeInterior(self):
         if (not self.isInteriorInitialized):
             self.notify.info('Initializing interior...')

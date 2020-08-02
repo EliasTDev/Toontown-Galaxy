@@ -9,6 +9,7 @@ from toontown.hood import TTHood, DDHood, MMHood, BRHood, DGHood, DLHood, GSHood
 from direct.task import TaskManagerGlobal
 from toontown.parties.PartyGlobals import GoToPartyStatus
 from toontown.dna.DNAParser import *
+from libpandadna import *
 
 class PlayGame(StateData.StateData):
     notify = DirectNotifyGlobal.directNotify.newCategory('PlayGame')
