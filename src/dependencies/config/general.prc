@@ -128,5 +128,5 @@ want-news-tab #t
 want-news-page #t
 
 # MongoDB:
- want-mongo #t
- want-mongo-client #t
+ want-mongo #f
+ want-mongo-client #f
