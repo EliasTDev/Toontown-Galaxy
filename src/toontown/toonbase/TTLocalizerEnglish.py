@@ -11763,7 +11763,7 @@ UnknownHoliday = "Unknown Holiday %d"
 HolidayFormat = "%b %d "
 
 # parties/ToontownTimeManager.py
-TimeZone = "US/Pacific"
+TimeZone = "America/New_York"
 
 # Cogdo Boardroom Game
 BoardroomGameTitle = "Boardroom Hijinks"

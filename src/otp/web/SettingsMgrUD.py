@@ -1,6 +1,6 @@
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.http.WebRequest import WebRequestDispatcher
+#from http.WebRequest import WebRequestDispatcher
 from direct.task import Task
 from otp.ai import AIMsgTypes
 from otp.web.SettingsMgrBase import SettingsMgrBase
@@ -10,25 +10,28 @@ import string
 import socket
 
 class SettingsMgrUD(DistributedObjectGlobalUD, SettingsMgrBase):
+
+
     """global object for tweaking settings across all shards and clients in realtime"""
     notify = directNotify.newCategory('SettingsMgrUD')
 
-    SessionIdAlphabet = string.letters + string.digits
+    SessionIdAlphabet = string.ascii_letters + string.digits
 
     ModifiedColor = "CCFFCC"
     
     def __init__(self, air):
+        pass
         assert self.notify.debugCall()
         DistributedObjectGlobalUD.__init__(self, air)
 
         self.HTTPListenPort = uber.settingsMgrHTTPListenPort
-        
-        self.webDispatcher = WebRequestDispatcher()
-        self.webDispatcher.landingPage.setTitle("SettingsMgr")
-        self.webDispatcher.landingPage.setDescription("SettingsMgr enables developers to tweak game settings without restarting the site.")
-        self.webDispatcher.registerGETHandler("settings",self.handleHTTPSettings,returnsResponse=True,autoSkin=True)
-        self.webDispatcher.landingPage.addTab("Settings","/settings")
-        self.webDispatcher.listenOnPort(self.HTTPListenPort)
+        #TODO find alternative to depercated http module
+        #self.webDispatcher = WebRequestDispatcher()
+       # self.webDispatcher.landingPage.setTitle("SettingsMgr")
+       # self.webDispatcher.landingPage.setDescription("SettingsMgr enables developers to tweak game settings without restarting the site.")
+        #self.webDispatcher.registerGETHandler("settings",self.handleHTTPSettings,returnsResponse=True,autoSkin=True)
+        #self.webDispatcher.landingPage.addTab("Settings","/settings")
+        #self.webDispatcher.listenOnPort(self.HTTPListenPort)
 
         self.air.setConnectionName("SettingsMgr")
         self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
@@ -55,7 +58,7 @@ class SettingsMgrUD(DistributedObjectGlobalUD, SettingsMgrBase):
     def _newSessionId(self):
         # unique URL-safe string
         self._sessionId = ''
-        for i in xrange(32):
+        for i in range(32):
             self._sessionId += random.choice(SettingsMgrUD.SessionIdAlphabet)
 
     def handleHTTPSettings(self, **kw):
@@ -67,7 +70,7 @@ class SettingsMgrUD(DistributedObjectGlobalUD, SettingsMgrBase):
         staleSession = (sessionId is not None) and (sessionId != self._sessionId)
         if not staleSession:
             self._newSessionId()
-            for settingName, valueStr in kw.iteritems():
+            for settingName, valueStr in kw.items():
                 try:
                     setting = self._getSetting(settingName)
                 except:
@@ -122,7 +125,7 @@ class SettingsMgrUD(DistributedObjectGlobalUD, SettingsMgrBase):
              <input type="submit" value="Restart Process">
              </p></form>
              <form action="settings" method="GET"><p>""" % (self._sessionId, self._sessionId, )
-        settingNames = self._settings.keys()
+        settingNames = list(self._settings.keys())
         settingNames.sort()
         page += "<table><caption>%s</caption><thead><tr><th scope=col>Setting</th><th scope=col>Value</th></tr></thead>\n" % self.getPageTitle()
         rowNum=-1
@@ -188,5 +191,5 @@ class SettingsMgrUD(DistributedObjectGlobalUD, SettingsMgrBase):
         Task that polls the HTTP server for new requests.
         """
         assert self.notify.debugCall()
-        self.webDispatcher.poll()
+        #self.webDispatcher.poll()
         return Task.again

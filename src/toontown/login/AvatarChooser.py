@@ -2,7 +2,7 @@
 
 from pandac.PandaModules import *
 from toontown.toonbase import ToontownGlobals
-import AvatarChoice
+from . import AvatarChoice
 from direct.fsm import StateData
 from direct.fsm import ClassicFSM, State
 from direct.fsm import State
@@ -127,7 +127,7 @@ class AvatarChooser(StateData.StateData):
         if self.isLoaded == 1:
             return None
 
-        self.isPaid = isPaid
+        self.isPaid = 1
 
         gui = loader.loadModel("phase_3/models/gui/pick_a_toon_gui")
         gui2 = loader.loadModel("phase_3/models/gui/quit_button")

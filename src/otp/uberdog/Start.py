@@ -23,8 +23,9 @@ import sys
 # Initialize ihooks importer On the production servers, we run genPyCode -n
 # meaning no squeeze, so nobody else does this. When we squeeze, the
 # unpacker does this for us and it does not hurt to do in either case.
-import ihooks
-ihooks.install()
+#import ihooks
+#ihooks.install()
+#TODO find alternative for ihooks for python3
 
 print "Initializing the UberDog (Uber Distributed Object Globals server)..."
 

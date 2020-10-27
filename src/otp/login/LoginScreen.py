@@ -19,8 +19,8 @@ from otp.otpbase import OTPLocalizer
 from otp.otpbase import OTPGlobals
 from otp.uberdog.AccountDetailRecord import AccountDetailRecord, SubDetailRecord
 
-import TTAccount
-import GuiScreen
+from . import TTAccount
+from . import GuiScreen
 
 class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
     """
@@ -420,7 +420,7 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
 
         try:
             error=self.loginInterface.authorize(self.userName, self.password)
-        except TTAccount.TTAccountException, e:
+        except TTAccount.TTAccountException as e:
             self.fsm.request('showConnectionProblemDialog', [str(e)])
             return
 
@@ -627,7 +627,7 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         self.notify.setServerDelta(serverDelta, 28800)
 
         # Whether the user is paid
-        self.isPaid = di.getUint8()
+        self.isPaid = 1
         self.cr.setIsPaid(self.isPaid)
         if self.isPaid:
             launcher.setPaidUserLoggedIn()

@@ -5,13 +5,13 @@ import sys
 # Initialize ihooks importer On the production servers, we run genPyCode -n
 # meaning no squeeze, so nobody else does this. When we squeeze, the
 # unpacker does this for us and it does not hurt to do in either case.
-import ihooks
-ihooks.install()
+#import ihooks
+#ihooks.install()
 
-print "Initializing..."
+print("Initializing...")
     
 from otp.ai.AIBaseGlobal import *
-import UtilityAIRepository
+from . import UtilityAIRepository
 
 simbase.mdip = simbase.config.GetString("msg-director-ip", "localhost")
 simbase.mdport = simbase.config.GetInt("msg-director-port", 6665)

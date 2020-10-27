@@ -1,10 +1,10 @@
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import socket
 import datetime
 import os
 import pytz
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
-from direct.http.WebRequest import WebRequestDispatcher
+#from toontown.http.WebRequest import WebRequestDispatcher
 from otp.distributed import OtpDoGlobals
 from otp.ai import BanManagerAI
 from toontown.toonbase import ToontownGlobals
@@ -13,6 +13,7 @@ from toontown.ai.ToontownAIMsgTypes import IN_GAME_NEWS_MANAGER_UD_TO_ALL_AI
 
 
 class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
+
     """
     Uberdog object is more properly called the Security / Ban Manager
 
@@ -53,16 +54,16 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
         assert self.notify.debugCall()
         DistributedObjectGlobalUD.__init__(self, air)
         self.HTTPListenPort = uber.cpuInfoMgrHTTPListenPort
-
-        self.webDispatcher = WebRequestDispatcher()
-        self.webDispatcher.landingPage.setTitle("SecurityBanMgr")
-        self.webDispatcher.landingPage.setDescription("SecurityBanMgr for now handles banning my mac address.")
-        self.webDispatcher.registerGETHandler('securityBanMgr', self.securityBanMgr)
-        self.webDispatcher.registerGETHandler('securityBanMgrAddFingerprint', self.addFingerprint)
-        self.webDispatcher.registerGETHandler('securityBanMgrRemoveFingerprint', self.removeFingerprint)
-        self.webDispatcher.registerGETHandler('securityBanMgrListFingerprints', self.listFingerprints)
-        self.webDispatcher.listenOnPort(self.HTTPListenPort)
-        self.webDispatcher.landingPage.addTab("SecurityBanMgr","/securityBanMgr")
+#TODO find alternative to depercated http module
+        #self.webDispatcher = WebRequestDispatcher()
+        #self.webDispatcher.landingPage.setTitle("SecurityBanMgr")
+        #self.webDispatcher.landingPage.setDescription("SecurityBanMgr for now handles banning my mac address.")
+        #self.webDispatcher.registerGETHandler('securityBanMgr', self.securityBanMgr)
+       # self.webDispatcher.registerGETHandler('securityBanMgrAddFingerprint', self.addFingerprint)
+       # self.webDispatcher.registerGETHandler('securityBanMgrRemoveFingerprint', self.removeFingerprint)
+        #self.webDispatcher.registerGETHandler('securityBanMgrListFingerprints', self.listFingerprints)
+        #self.webDispatcher.listenOnPort(self.HTTPListenPort)
+        #self.webDispatcher.landingPage.addTab("SecurityBanMgr","/securityBanMgr")
 
         self.air.setConnectionName("SecurityBanMgr")
         self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
@@ -85,7 +86,8 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
         """Start accepting http requests."""
         assert self.notify.debugCall()
         DistributedObjectGlobalUD.announceGenerate(self)
-        self.webDispatcher.startCheckingIncomingHTTP()
+        #self.webDispatcher.startCheckingIncomingHTTP()
+        #TODO find alternative to depercated http module
 
     def securityBanMgr(self, replyTo, **kw):
         """Handle all calls to web requests awardMgr."""
@@ -242,14 +244,14 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
     def addFingerprint(self, replyTo, **kw):
         """Add a new fingerprint to auto ban."""
         try:
-            fingerprint = urllib.unquote(kw['fingerprintToAdd'])
+            fingerprint = urllib.parse.unquote(kw['fingerprintToAdd'])
             self.bannedFingerprints.add(fingerprint)
             self.updateRecordFile()
             header,body,footer,help= self.getMainMenu()
             replyTo.respondXML(self.securityBanMgrAddFingerprintXML %
                                ("%s" % fingerprint))
             
-        except Exception, e:
+        except Exception as e:
             replyTo.respondXML(self.securityBanMgrFailureXML %
                                ("Catastrophic failure add fingerprint %s" % str(e)))
             self.notify.warning("Got exception %s" % str(e))
@@ -258,7 +260,7 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
     def removeFingerprint(self, replyTo, **kw):
         """Remove a fingerprint to auto ban."""
         try:
-            fingerprint = urllib.unquote(kw['fingerprintToRemove'])
+            fingerprint = urllib.parse.unquote(kw['fingerprintToRemove'])
             if fingerprint in self.bannedFingerprints:
                 self.bannedFingerprints.remove(fingerprint)
                 self.updateRecordFile()
@@ -267,7 +269,7 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
                                    ("%s" % fingerprint))
             else:
                 replyTo.respondXML(self.securityBanMgrFailureXML % ("%s not a banned fingerprint" % fingerprint))
-        except Exception, e:
+        except Exception as e:
             replyTo.respondXML(self.securityBanMgrFailureXML %
                                ("Catastrophic failure add fingerprint %s" % str(e)))
             self.notify.warning("Got exception %s" % str(e))  
@@ -286,7 +288,7 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
             </table>
             """        
             replyTo.respond(header +body+ help+footer)
-        except Exception, e:
+        except Exception as e:
             replyTo.respondXML(self.securityBanMgrFailureXML % ("Catastrophic failure listing fingerprints %s" % str(e)))
             self.notify.warning("Got exception %s" % str(e))
 

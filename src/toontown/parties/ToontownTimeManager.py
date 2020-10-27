@@ -1,6 +1,6 @@
 import time
 from datetime import datetime, timedelta
-import pytz
+from toontown.parties.ToontownTimeZone import ToontownTimeZone, UTC 
 from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import TTLocalizer
@@ -20,14 +20,14 @@ class ToontownTimeManager(DistributedObject.DistributedObject):
                  globalClockRealTimeUponLogin=0):
         """Construct ourself. Default values are at 1970"""
         # TODO: Perhaps the AI and UD should have their own version of this class? SG-SLWP
-        try:
-            self.serverTimeZoneString = base.config.GetString('server-timezone',TTLocalizer.TimeZone)
-        except:
-            try:
-                self.serverTimeZoneString = simbase.config.GetString('server-timezone',TTLocalizer.TimeZone)
-            except:
-                notify.error("ToontownTimeManager does not have access to base or simbase.")
-        self.serverTimeZone = pytz.timezone(self.serverTimeZoneString)
+    #    try:
+     #       self.serverTimeZoneString = base.config.GetString('server-timezone',TTLocalizer.TimeZone)
+      #  except:
+       #     try:
+        #        self.serverTimeZoneString = simbase.config.GetString('server-timezone',TTLocalizer.TimeZone)
+         #   except:
+          #      notify.error("ToontownTimeManager does not have access to base or simbase.")
+        self.serverTimeZone = ToontownTimeZone()
         self.updateLoginTimes(serverTimeUponLogin, clientTimeUponLogin,
                               globalClockRealTimeUponLogin)
         self.debugSecondsAdded = 0
@@ -48,7 +48,7 @@ class ToontownTimeManager(DistributedObject.DistributedObject):
         self.globalClockRealTimeUponLogin = globalClockRealTimeUponLogin
         naiveTime = datetime.utcfromtimestamp(
             self.serverTimeUponLogin)
-        self.utcServerDateTime = naiveTime.replace(tzinfo = pytz.utc)
+        #self.utcServerDateTime = naiveTime.replace(tzinfo = pytz.utc)
         self.serverDateTime = datetime.fromtimestamp(
             self.serverTimeUponLogin, self.serverTimeZone)
 
@@ -56,8 +56,7 @@ class ToontownTimeManager(DistributedObject.DistributedObject):
         """Return the current datetime object of the server."""
         secondsPassed = globalClock.getRealTime() - self.globalClockRealTimeUponLogin + \
                         self.debugSecondsAdded
-        curDateTime = self.serverTimeZone.normalize(
-            self.serverDateTime + timedelta(seconds=secondsPassed))
+        curDateTime = self.serverDateTime + timedelta(seconds=secondsPassed)
         return curDateTime
 
     def getCurServerDateTimeForComparison(self):

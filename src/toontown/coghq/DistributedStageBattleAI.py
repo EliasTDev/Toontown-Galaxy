@@ -4,9 +4,9 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import State
 from direct.fsm import ClassicFSM, State
 from toontown.battle.BattleBase import *
-import CogDisguiseGlobals
+from . import CogDisguiseGlobals
 from toontown.toonbase.ToontownBattleGlobals import getStageCreditMultiplier
-from direct.showbase.PythonUtil import addListsByValue, enumerate
+from otp.otpbase.PythonUtil import addListsByValue, enumerate
 
 class DistributedStageBattleAI(DistributedLevelBattleAI.DistributedLevelBattleAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedStageBattleAI')

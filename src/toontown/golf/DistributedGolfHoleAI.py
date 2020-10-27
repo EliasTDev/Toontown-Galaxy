@@ -2,7 +2,7 @@ from direct.distributed import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import ToontownGlobals
 from pandac.PandaModules import *
-import DistributedPhysicsWorldAI
+from . import DistributedPhysicsWorldAI
 from direct.fsm.FSM import FSM
 from toontown.ai.ToonBarrier import *
 from toontown.golf import GolfGlobals
@@ -503,10 +503,10 @@ class DistributedGolfHoleAI(DistributedPhysicsWorldAI.DistributedPhysicsWorldAI,
     def parseLocators(self, objectCollection, optional = 0):
         if optional and objectCollection.getNumPaths():
             # setup the optional movers as dictated by HoleInfo
-            if self.holeInfo.has_key('optionalMovers'):
+            if 'optionalMovers' in self.holeInfo:
                 for optionalMoverId in self.holeInfo['optionalMovers']:
                     searchStr = 'optional_mover_' + str(optionalMoverId)
-                    for objIndex in xrange(objectCollection.getNumPaths()):
+                    for objIndex in range(objectCollection.getNumPaths()):
                         object = objectCollection.getPath(objIndex)
                         if searchStr in object.getName():
                             self.fillLocator(objectCollection, objIndex)
@@ -528,15 +528,15 @@ class DistributedGolfHoleAI(DistributedPhysicsWorldAI.DistributedPhysicsWorldAI,
             #print subString
             if subString[:1] == "X":
                 dataString = subString[1:]
-                dataString = dataString.replace("p", ".")
+                dataString = datastr.replace("p", ".")
                 sizeX = float(dataString)
             elif subString[:1] == "Y":
                 dataString = subString[1:]
-                dataString = dataString.replace("p", ".")
+                dataString = datastr.replace("p", ".")
                 sizeY = float(dataString)
             elif subString[:1] == "d":
                 dataString = subString[1:]
-                dataString = dataString.replace("p", ".")
+                dataString = datastr.replace("p", ".")
                 move = float(dataString)
             elif subString == "mover":
                 type = 4

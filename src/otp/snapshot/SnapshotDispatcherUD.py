@@ -1,12 +1,12 @@
 import direct
-from libdirect import HttpRequest
+#from libdirect import HttpRequest #TODO figure out alternative for this
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from otp.ai import AIMsgTypes
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.http.WebRequest import WebRequestDispatcher
+#from http.WebRequest import WebRequestDispatcher
 
 from direct.task import Task
-import Queue
+import queue
 import socket
 
 #--------------------------------------------------
@@ -26,6 +26,7 @@ class RenderJob:
 #--------------------------------------------------
 
 class SnapshotDispatcherUD(DistributedObjectGlobalUD):
+
     """
     Uberdog object for queuing and routing avatar
     render requests.  Happens to use the DC system
@@ -34,6 +35,8 @@ class SnapshotDispatcherUD(DistributedObjectGlobalUD):
     notify = directNotify.newCategory('SnapshotDispatcherUD')
 
     def __init__(self, air):
+         
+
         assert self.notify.debugCall()
         DistributedObjectGlobalUD.__init__(self, air)
 
@@ -48,7 +51,7 @@ class SnapshotDispatcherUD(DistributedObjectGlobalUD):
         self.numServedAtLastLog = 0
 
         # Unassigned work
-        self.jobQueue = Queue.Queue()
+        self.jobQueue = queue.Queue()
 
         # If the queue gets longer than this, log warnings
         self.maxSafeJobQueueLength = 1000
@@ -61,14 +64,14 @@ class SnapshotDispatcherUD(DistributedObjectGlobalUD):
 
         # Jobs we completed recently (so we can avoid doing them again)
         self.recentlyDeletedAvatars = {}
-
-        self.webDispatcher = WebRequestDispatcher()
-        self.webDispatcher.landingPage.setTitle("SnapshotDispatcher")
-        self.webDispatcher.landingPage.setDescription("SnapshotDispatcher routes render jobs to any number of SnapshotRenderers.")
-        self.webDispatcher.landingPage.addQuickStat("Total Renders", 0, 0)
-        self.webDispatcher.registerGETHandler("getSnapshot",self.handleHTTPGetSnapshot)
-        self.webDispatcher.registerGETHandler("queueSnapshot",self.handleHTTPQueueSnapshot)
-        self.webDispatcher.listenOnPort(self.HTTPListenPort)
+#TODO find alternative to depercated http module
+       # self.webDispatcher = WebRequestDispatcher()
+        #self.webDispatcher.landingPage.setTitle("SnapshotDispatcher")
+        #self.webDispatcher.landingPage.setDescription("SnapshotDispatcher routes render jobs to any number of SnapshotRenderers.")
+        #self.webDispatcher.landingPage.addQuickStat("Total Renders", 0, 0)
+        #self.webDispatcher.registerGETHandler("getSnapshot",self.handleHTTPGetSnapshot)
+        #self.webDispatcher.registerGETHandler("queueSnapshot",self.handleHTTPQueueSnapshot)
+        #self.webDispatcher.listenOnPort(self.HTTPListenPort)
 
         self.air.setConnectionName("SnapshotDispatcherUD")
         self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
@@ -130,7 +133,7 @@ class SnapshotDispatcherUD(DistributedObjectGlobalUD):
         """
         Task that polls the HTTP server for new requests.
         """
-        self.webDispatcher.poll()
+       # self.webDispatcher.poll()
         return Task.again
 
     def monitorJobQueueTask(self,task):
@@ -150,7 +153,7 @@ class SnapshotDispatcherUD(DistributedObjectGlobalUD):
                                                                                          self.numErrors,
                                                                                          self.jobQueue._qsize()))
         self.numServedAtLastLog = self.numServed
-        self.webDispatcher.landingPage.updateQuickStat("Total Renders", self.numServed)
+        #self.webDispatcher.landingPage.updateQuickStat("Total Renders", self.numServed)
         return Task.again
 
     def clearRecentDeleteRecord(self,avatarId):
@@ -238,7 +241,7 @@ class SnapshotDispatcherUD(DistributedObjectGlobalUD):
             return
         try:
             job = self.jobQueue.get_nowait()
-        except Queue.Empty:
+        except queue.Empty:
             # No work to give!  Do nothing.
             return
 

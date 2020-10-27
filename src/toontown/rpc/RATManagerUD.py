@@ -1,7 +1,7 @@
 import string
 import direct
 import socket
-from direct.http.WebRequest import WebRequestDispatcher
+#from direct.http.WebRequest import WebRequestDispatcher
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.task import Task
@@ -13,6 +13,9 @@ from toontown.rpc import RATRequests
 from toontown.rpc import RATResponses
 
 class RATManagerUD(DistributedObjectGlobalUD):
+    pass 
+    #TODO find alternative to depercated http module
+
     """
     Uberdog object for making RAT awards to Toons
     """
@@ -27,17 +30,17 @@ class RATManagerUD(DistributedObjectGlobalUD):
         self.HTTPListenPort = uber.RATManagerHTTPListenPort
 
         self.numServed = 0
-
-        self.webDispatcher = WebRequestDispatcher()
-        self.webDispatcher.landingPage.setTitle("RATManager")
-        self.webDispatcher.landingPage.setDescription("RATManager is a REST-like interface allowing in-game awards from other services.")
-        self.webDispatcher.registerGETHandler("getToonList",self.handleHTTPGetToonList)
-        self.webDispatcher.registerGETHandler("giveToonBeansRAT",self.handleHTTPGiveToonBeansRAT)
-        self.webDispatcher.registerGETHandler("giveToonBeansCS",self.handleHTTPGiveToonBeansCS)
-        self.webDispatcher.registerGETHandler("getToonPicId",self.handleHTTPGetToonPicId)
-        self.webDispatcher.registerGETHandler("getToonDNA",self.handleHTTPGetToonDNA)
+#TODO find alternative to depercated http module
+        #self.webDispatcher = WebRequestDispatcher()
+        #self.webDispatcher.landingPage.setTitle("RATManager")
+        #self.webDispatcher.landingPage.setDescription("RATManager is a REST-like interface allowing in-game awards from other services.")
+        #self.webDispatcher.registerGETHandler("getToonList",self.handleHTTPGetToonList)
+        #self.webDispatcher.registerGETHandler("giveToonBeansRAT",self.handleHTTPGiveToonBeansRAT)
+        #self.webDispatcher.registerGETHandler("giveToonBeansCS",self.handleHTTPGiveToonBeansCS)
+        #self.webDispatcher.registerGETHandler("getToonPicId",self.handleHTTPGetToonPicId)
+        #self.webDispatcher.registerGETHandler("getToonDNA",self.handleHTTPGetToonDNA)
             
-        self.webDispatcher.listenOnPort(self.HTTPListenPort)
+        #self.webDispatcher.listenOnPort(self.HTTPListenPort)
 
         self.air.setConnectionName("RATManagerUD")
         self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
@@ -46,7 +49,7 @@ class RATManagerUD(DistributedObjectGlobalUD):
     def announceGenerate(self):
         assert self.notify.debugCall()
         DistributedObjectGlobalUD.announceGenerate(self)
-        self.webDispatcher.startCheckingIncomingHTTP()
+        #self.webDispatcher.startCheckingIncomingHTTP()
 
 
     # -- HTTP Handlers --
@@ -81,7 +84,7 @@ class RATManagerUD(DistributedObjectGlobalUD):
             assert toonId < (1<<32)
             assert beanAmount > 0
             assert beanAmount < (1<<16)
-        except Exception,e:
+        except Exception as e:
             self.notify.warning("Invalid giveToonBeansRAT request from %s: %s" % (replyTo.getSourceAddress(),str(kw)))
             replyTo.respondXML(RATResponses.giveToonBeansRATFailureXML % "INVALID_REQUEST")
             return

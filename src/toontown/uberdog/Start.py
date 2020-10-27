@@ -2,13 +2,13 @@
 Start the Toontown UberDog (Uber Distributed Object Globals server).
 """
 
-import __builtin__
+import builtins
 from direct.task.Task import Task
 
 class game:
     name = "uberDog"
     process = "server"
-__builtin__.game = game()
+builtins.game = game()
 
 import time
 import os
@@ -17,30 +17,31 @@ import sys
 # Initialize ihooks importer On the production servers, we run genPyCode -n
 # meaning no squeeze, so nobody else does this. When we squeeze, the
 # unpacker does this for us and it does not hurt to do in either case.
-import ihooks
-ihooks.install()
+#import ihooks
+#ihooks.install()
 
-if os.getenv('TTMODELS'):
-    from pandac.PandaModules import getModelPath, Filename
+#if os.getenv('TTMODELS'):
+from pandac.PandaModules import getModelPath, Filename
     # In the publish environment, TTMODELS won't be on the model
     # path by default, so we always add it there.  In the dev
     # environment, it'll be on the model path already, but it
     # doesn't hurt to add it again.
-    getModelPath().appendDirectory(Filename.expandFrom("$TTMODELS/built"))
+getModelPath().appendDirectory(Filename.expandFrom("resources/"))
 
 from direct.showbase.PythonUtil import *
+from otp.otpbase.PythonUtil import *
 from otp.uberdog.UberDogGlobal import *
 from toontown.coderedemption import TTCodeRedemptionConsts
 from toontown.uberdog.ToontownUberDog import ToontownUberDog
 from toontown.uberdog import PartiesUdConfig
 
-print "Initializing the Toontown UberDog (Uber Distributed Object Globals server)..."
+print("Initializing the Toontown UberDog (Uber Distributed Object Globals server)...")
 
 uber.mdip = uber.config.GetString("msg-director-ip", "localhost")
-uber.mdport = uber.config.GetInt("msg-director-port", 6666)
+uber.mdport = uber.config.GetInt("msg-director-port", 7100)
 
 uber.esip = uber.config.GetString("event-server-ip", "localhost")
-uber.esport = uber.config.GetInt("event-server-port", 4343)
+uber.esport = uber.config.GetInt("event-server-port", 7198)
 
 stateServerId = uber.config.GetInt("state-server-id", 20100000)
 
@@ -61,7 +62,6 @@ uber.RATManagerHTTPListenPort = uber.config.GetInt("rat-port",8080)
 uber.awardManagerHTTPListenPort = uber.config.GetInt("award-port",8888)
 uber.inGameNewsMgrHTTPListenPort = uber.config.GetInt("in-game-news-port",8889)
 uber.mysqlhost = uber.config.GetString("mysql-host", PartiesUdConfig.ttDbHost)
-
 
 uber.codeRedemptionMgrHTTPListenPort = uber.config.GetInt('code-redemption-port', 8998)
 uber.crDbName = uber.config.GetString("tt-code-db-name", TTCodeRedemptionConsts.DefaultDbName)
