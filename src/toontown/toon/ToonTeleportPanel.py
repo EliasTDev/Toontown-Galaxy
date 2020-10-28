@@ -369,7 +369,7 @@ class ToonTeleportPanel(DirectFrame):
                 pop = shard[2]
  
         # if we got a pop for the shard in question and it's full
-        if pop and pop > localAvatar.shardPage.midPop:
+        if pop and pop > localAvatar.shardPage.oggPop:
             self.notify.warning("Entering full shard: issuing performance warning")
             self['text'] = (TTLocalizer.TeleportPanelBusyShard %
                             ({"avName" : self.avName}))

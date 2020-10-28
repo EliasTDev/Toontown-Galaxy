@@ -16,7 +16,7 @@ from toontown.toonbase import TTLocalizer
 from toontown.toonbase import ToontownBattleGlobals
 from toontown.launcher import ToontownDownloadWatcher
 
-
+from libotp import *
 class ToonBase(OTPBase.OTPBase):
     """ToonBase class"""
 
@@ -266,7 +266,7 @@ class ToonBase(OTPBase.OTPBase):
         self.glitchCount = 0
         self.walking = 0
 
-        self.resetMusic = self.loadMusic("phase_3/audio/bgm/MIDI_Events_16channels.mid")
+        #self.resetMusic = self.loadMusic("phase_3/audio/bgm/MIDI_Events_16channels.ogg")
 
     def disableShowbaseMouse(self):
         # Hack:
@@ -276,9 +276,9 @@ class ToonBase(OTPBase.OTPBase):
         self.useDrive()
         self.disableMouse()
         if self.mouseInterface:
-            self.mouseInterface.reparentTo(self.dataUnused)
+            self.mouseInterface.detachNode()
         if base.mouse2cam:
-            self.mouse2cam.reparentTo(self.dataUnused)
+            self.mouse2cam.detachNode()
         # end of hack.
         
     def __walking(self, pressed):
@@ -597,5 +597,10 @@ class ToonBase(OTPBase.OTPBase):
 
     def playMusic(self, music, looping = 0, interrupt = 1, volume = None, time = 0.0):
         # play the reset midi file to kill stuck notes
-        OTPBase.OTPBase.playMusic(self, self.resetMusic)
+        #OTPBase.OTPBase.playMusic(self, self.resetMusic)
         OTPBase.OTPBase.playMusic(self, music, looping, interrupt, volume, time)
+
+    def isMainWindowOpen(self):
+        if self.win != None:
+            return self.win.isValid()
+        return 0

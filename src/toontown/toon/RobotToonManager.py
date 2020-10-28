@@ -1118,7 +1118,7 @@ class RobotToonManager(DirectObject):
         self.marginManager = MarginManager()
         self.margins = \
           base.aspect2d.attachNewNode(
-            self.marginManager, DirectGuiGlobals.MIDGROUND_SORT_INDEX + 1)
+            self.marginManager, DirectGuiGlobals.oggGROUND_SORT_INDEX + 1)
 
         # And define a bunch of cells along the margins.
         mm = self.marginManager

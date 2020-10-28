@@ -47,7 +47,7 @@ class ShardPage(ShtikerPage.ShtikerPage):
         self.textDisabledColor = Vec4(0.4,0.8,0.4,1)
         self.ShardInfoUpdateInterval = 5.0  # seconds
 
-        self.lowPop, self.midPop, self.highPop = base.getShardPopLimits()
+        self.lowPop, self.oggPop, self.highPop = base.getShardPopLimits()
         self.showPop = config.GetBool("show-total-population", 0)
         self.noTeleport = config.GetBool("shard-page-disable", 0)
         
@@ -261,16 +261,16 @@ class ShardPage(ShtikerPage.ShtikerPage):
         The Japanese client is a little different from the others.
         """
         if base.cr.productName == "JP":
-            if pop < self.midPop:
+            if pop < self.oggPop:
                 color1 = POP_COLORS_NTT[0]
                 color2 = POP_COLORS_NTT[1]
-                popRange = self.midPop - self.lowPop
+                popRange = self.oggPop - self.lowPop
                 pop = pop - self.lowPop
             else:
                 color1 = POP_COLORS_NTT[1]
                 color2 = POP_COLORS_NTT[2]
-                popRange = self.highPop - self.midPop
-                pop = pop - self.midPop
+                popRange = self.highPop - self.oggPop
+                pop = pop - self.oggPop
             popPercent = pop / float(popRange)
             if popPercent > 1:
                 popPercent = 1
@@ -278,7 +278,7 @@ class ShardPage(ShtikerPage.ShtikerPage):
         else:
             if pop <= self.lowPop:
                 newColor = POP_COLORS[0]
-            elif pop <= self.midPop:
+            elif pop <= self.oggPop:
                 newColor = POP_COLORS[1]
             else:
                 newColor = POP_COLORS[2]
@@ -290,7 +290,7 @@ class ShardPage(ShtikerPage.ShtikerPage):
         """
         if pop <= self.lowPop:
             popText = TTLocalizer.ShardPageLow
-        elif pop <= self.midPop:
+        elif pop <= self.oggPop:
             popText = TTLocalizer.ShardPageMed
         else:
             popText = TTLocalizer.ShardPageHigh
@@ -306,7 +306,7 @@ class ShardPage(ShtikerPage.ShtikerPage):
         """
         if base.cr.productName == "JP":
             handler = self.choseShard
-        elif pop <= self.midPop:
+        elif pop <= self.oggPop:
             if self.noTeleport and not self.showPop:
                 handler = self.shardChoiceReject
             else:

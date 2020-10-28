@@ -42,7 +42,7 @@ uberdogs:
 roles:
     - type: clientagent
       bind: 0.0.0.0:7199
-      version: "Toontown Galaxy"
+      version: "sv1.0.47.38"
       client:
        relocate: true
        add_interest: enabled

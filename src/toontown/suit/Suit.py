@@ -479,7 +479,7 @@ def loadDialog(level):
                             ]
         # load the audio files and store into the dialogue array
         for file in SuitDialogFiles:
-            SuitDialogArray.append(base.loadSfx(loadPath + file + ".mp3"))
+            SuitDialogArray.append(base.loader.loadSfx(loadPath + file + ".mp3"))
         SuitDialogArray.append(SuitDialogArray[2])
         SuitDialogArray.append(SuitDialogArray[2])
 

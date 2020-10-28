@@ -2033,7 +2033,7 @@ class ShowBase(DirectObject.DirectObject):
         """
         :deprecated: Use `.Loader.Loader.loadSfx()` instead.
         """
-        assert self.notify.warning("base.loadSfx is deprecated, use base.loader.loadSfx instead.")
+        assert self.notify.warning("base.loader.loadSfx is deprecated, use base.loader.loadSfx instead.")
         return self.loader.loadSfx(name)
 
     # This function should only be in the loader but is here for

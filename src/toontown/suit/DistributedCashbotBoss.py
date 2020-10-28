@@ -227,7 +227,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     def loadEnvironment(self):
         DistributedBossCog.DistributedBossCog.loadEnvironment(self)
 
-        self.midVault = loader.loadModel('phase_10/models/cogHQ/MidVault.bam')
+        self.oggVault = loader.loadModel('phase_10/models/cogHQ/MidVault.bam')
         self.endVault = loader.loadModel('phase_10/models/cogHQ/EndVault.bam')
         self.lightning = loader.loadModel('phase_10/models/cogHQ/CBLightning.bam')
         self.magnet = loader.loadModel('phase_10/models/cogHQ/CBMagnet.bam')
@@ -247,11 +247,11 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         # Position the two rooms relative to each other, and so that
         # the floor is at z == 0
-        self.midVault.setPos(0, -222, -70.7)
+        self.oggVault.setPos(0, -222, -70.7)
         self.endVault.setPos(84, -201, -6)
 
         self.geom = NodePath('geom')
-        self.midVault.reparentTo(self.geom)
+        self.oggVault.reparentTo(self.geom)
         self.endVault.reparentTo(self.geom)
 
         # Clear out unneeded backstage models from the EndVault, if
@@ -269,12 +269,12 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         # This is the door to Somewhere Else, through which the boss
         # makes his entrance.
-        self.door1 = self.midVault.find('**/SlidingDoor1/')
+        self.door1 = self.oggVault.find('**/SlidingDoor1/')
 
         # This is the door from the mid vault to the end vault.
         # Everyone proceeds through this door to the final battle
         # scene.
-        self.door2 = self.midVault.find('**/SlidingDoor/')
+        self.door2 = self.oggVault.find('**/SlidingDoor/')
 
         # This is the door from the end vault back to the mid vault.
         # The boss makes his "escape" through this door.
@@ -284,7 +284,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         elevatorModel = loader.loadModel("phase_10/models/cogHQ/CFOElevator")
 
         # Set up an origin for the elevator.
-        elevatorOrigin = self.midVault.find('**/elevator_origin')
+        elevatorOrigin = self.oggVault.find('**/elevator_origin')
         elevatorOrigin.setScale(1)
 
         elevatorModel.reparentTo(elevatorOrigin)
@@ -761,7 +761,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         loco = loader.loadModel('phase_10/models/cogHQ/CashBotLocomotive')
         car1 = loader.loadModel('phase_10/models/cogHQ/CashBotBoxCar')
         car2 = loader.loadModel('phase_10/models/cogHQ/CashBotTankCar')
-        trainPassingSfx = base.loadSfx('phase_10/audio/sfx/CBHQ_TRAIN_pass.mp3')
+        trainPassingSfx = base.loader.loadSfx('phase_10/audio/sfx/CBHQ_TRAIN_pass.mp3')
         boomSfx = loader.loadSfx('phase_3.5/audio/sfx/ENC_cogfall_apart.mp3')
 
         rollThroughDoor = self.rollBossToPoint(
@@ -1027,7 +1027,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.resistanceToon.removeActive()
 
         self.endVault.stash()
-        self.midVault.unstash()
+        self.oggVault.unstash()
         self.__showResistanceToon(True)
         
     def exitElevator(self):
@@ -1044,7 +1044,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         self.endVault.unstash()
         self.evWalls.stash()
-        self.midVault.unstash()
+        self.oggVault.unstash()
         self.__showResistanceToon(True)
 
         base.playMusic(self.stingMusic, looping=1, volume=0.9)
@@ -1068,7 +1068,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.doAnimate()
 
         self.endVault.stash()
-        self.midVault.unstash()
+        self.oggVault.unstash()
         self.__hideResistanceToon()
 
     def exitBattleOne(self):
@@ -1102,7 +1102,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         self.endVault.unstash()
         self.evWalls.stash()
-        self.midVault.unstash()
+        self.oggVault.unstash()
         self.__showResistanceToon(False)
 
         taskMgr.add(self.__doPhysics, self.uniqueName('physics'),
@@ -1151,7 +1151,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         self.endVault.unstash()
         self.evWalls.unstash()
-        self.midVault.stash()
+        self.oggVault.stash()
         self.__hideResistanceToon()
 
         localAvatar.setCameraFov(ToontownGlobals.BossBattleCameraFov)
@@ -1202,7 +1202,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         self.endVault.unstash()
         self.evWalls.unstash()
-        self.midVault.unstash()
+        self.oggVault.unstash()
         self.__hideResistanceToon()
         self.__hideToons()
 
@@ -1444,7 +1444,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         self.endVault.unstash()
         self.evWalls.stash()
-        self.midVault.unstash()
+        self.oggVault.unstash()
         self.__hideResistanceToon()
 
     def exitFrolic(self):

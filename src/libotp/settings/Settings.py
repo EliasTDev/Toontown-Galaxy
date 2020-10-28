@@ -1,3 +1,4 @@
+#TODO there is a lot of things we need to get done in here to read from a preferences file or settings file
 class Settings:
     GL = 0
     DX7 = 1
@@ -5,15 +6,15 @@ class Settings:
 
     @staticmethod
     def readSettings():
-        pass  # todo
+        pass  # TODO
 
     @staticmethod
     def writeSettings():
-        pass  # lol not yet
+        pass  # TODO
 
     @staticmethod
     def setWindowedMode(_):
-        pass
+        pass #TODO
 
     @staticmethod
     def getWindowedMode():
@@ -21,15 +22,22 @@ class Settings:
 
     @staticmethod
     def setMusic(_):
-        pass
+        pass #TODO
 
     @staticmethod
     def getMusic():
         return 1
+    @staticmethod
+    def getMusicVolume():
+        return 1 #TODO 
 
     @staticmethod
     def setSfx(_):
-        pass
+        pass #TODO
+
+    @staticmethod
+    def getSfxVolume():
+        return 1 #TODO
 
     @staticmethod
     def getSfx():
@@ -37,7 +45,7 @@ class Settings:
 
     @staticmethod
     def setToonChatSounds(_):
-        pass
+        pass #TODO
 
     @staticmethod
     def getToonChatSounds():
@@ -45,7 +53,7 @@ class Settings:
 
     @staticmethod
     def setResolutionDimensions(_, __):
-        pass
+        pass #TODO
 
     @staticmethod
     def getResolution():
@@ -53,7 +61,7 @@ class Settings:
 
     @staticmethod
     def setEmbeddedMode(_):
-        pass
+        pass #TODO
 
     @staticmethod
     def getEmbeddedMode():
@@ -65,7 +73,7 @@ class Settings:
 
     @staticmethod
     def setAcceptingNewFriends(_):
-        pass
+        pass #TODO
 
     @staticmethod
     def getAcceptingNewFriends():
@@ -73,7 +81,7 @@ class Settings:
 
     @staticmethod
     def setAcceptingNonFriendWhispers(_):
-        pass
+        pass #TODO
 
     @staticmethod
     def getAcceptingNonFriendWhispers():

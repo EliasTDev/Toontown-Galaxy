@@ -50,8 +50,8 @@ class PartyLoader(SafeZoneLoader.SafeZoneLoader):
                            # Final State
                            'final',
                            )
-        self.musicFile = "phase_13/audio/bgm/party_original_theme.mid"
-        self.activityMusicFile = "phase_13/audio/bgm/party_waltz_dance.mid"
+        self.musicFile = "phase_13/audio/bgm/party_original_theme.ogg"
+        self.activityMusicFile = "phase_13/audio/bgm/party_waltz_dance.ogg"
         self.dnaFile = "phase_13/dna/party_sz.dna"
         # There is no safe zone specific DNA Storage for the party
         self.safeZoneStorageDNAFile = None
@@ -76,15 +76,15 @@ class PartyLoader(SafeZoneLoader.SafeZoneLoader):
         assert(self.notify.debug("load()"))
         SafeZoneLoader.SafeZoneLoader.load(self)
         # create music and sound effects
-        self.underwaterSound = base.loadSfx('phase_4/audio/sfx/AV_ambient_water.mp3')
-        self.swimSound = base.loadSfx('phase_4/audio/sfx/AV_swim_single_stroke.mp3')
-        self.submergeSound = base.loadSfx('phase_5.5/audio/sfx/AV_jump_in_water.mp3')
-        self.birdSound=list(map(base.loadSfx, [
+        self.underwaterSound = base.loader.loadSfx('phase_4/audio/sfx/AV_ambient_water.mp3')
+        self.swimSound = base.loader.loadSfx('phase_4/audio/sfx/AV_swim_single_stroke.mp3')
+        self.submergeSound = base.loader.loadSfx('phase_5.5/audio/sfx/AV_jump_in_water.mp3')
+        self.birdSound=list(map(base.loader.loadSfx, [
                 'phase_4/audio/sfx/SZ_TC_bird1.mp3',
                 'phase_4/audio/sfx/SZ_TC_bird2.mp3',
                 'phase_4/audio/sfx/SZ_TC_bird3.mp3']))
         # SDN: use birds as a place holder for crickets for now
-        self.cricketSound=list(map(base.loadSfx, [
+        self.cricketSound=list(map(base.loader.loadSfx, [
                 'phase_4/audio/sfx/SZ_TC_bird1.mp3',
                 'phase_4/audio/sfx/SZ_TC_bird2.mp3',
                 'phase_4/audio/sfx/SZ_TC_bird3.mp3']))

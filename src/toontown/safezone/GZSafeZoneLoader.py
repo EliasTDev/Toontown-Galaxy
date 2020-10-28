@@ -46,8 +46,8 @@ class GZSafeZoneLoader( SafeZoneLoader ):
         SafeZoneLoader.__init__( self, hood, parentFSM, doneEvent )     
 
         # Initialize Instance Variables
-        self.musicFile = "phase_6/audio/bgm/GZ_SZ.mid"
-        self.activityMusicFile = "phase_6/audio/bgm/GS_KartShop.mid"
+        self.musicFile = "phase_6/audio/bgm/GZ_SZ.ogg"
+        self.activityMusicFile = "phase_6/audio/bgm/GS_KartShop.ogg"
         self.dnaFile = "phase_6/dna/golf_zone_sz.dna"
         self.safeZoneStorageDNAFile = "phase_6/dna/storage_GZ_sz.dna"
 
@@ -91,7 +91,7 @@ class GZSafeZoneLoader( SafeZoneLoader ):
 
 
         SafeZoneLoader.load( self )
-        self.birdSound = list(map( base.loadSfx, [ 'phase_4/audio/sfx/SZ_TC_bird1.mp3',
+        self.birdSound = list(map( base.loader.loadSfx, [ 'phase_4/audio/sfx/SZ_TC_bird1.mp3',
                                               'phase_4/audio/sfx/SZ_TC_bird2.mp3',
                                               'phase_4/audio/sfx/SZ_TC_bird3.mp3' ] ))
 

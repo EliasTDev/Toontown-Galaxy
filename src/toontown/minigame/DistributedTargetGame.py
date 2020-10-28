@@ -443,7 +443,7 @@ class DistributedTargetGame(DistributedMinigame):
 
                              
         self.scoreboard.hide()        
-        self.music = base.loadMusic("phase_4/audio/bgm/MG_Diving.mid")
+        self.music = base.loadMusic("phase_4/audio/bgm/MG_Diving.ogg")
         #self.music = None
 
         self.sndAmbience = None

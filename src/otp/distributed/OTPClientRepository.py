@@ -674,7 +674,7 @@ class OTPClientRepository(ClientRepositoryBase):
             # we should choose a unique sound effect for system
             # messages, and ensure that it is downloaded in phase 3.
 
-            self.systemMessageSfx = base.loadSfx(
+            self.systemMessageSfx = base.loader.loadSfx(
                 "phase_3.5/audio/sfx/GUI_whisper_3.mp3")
 
         if self.systemMessageSfx:
