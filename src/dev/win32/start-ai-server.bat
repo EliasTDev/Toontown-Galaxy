@@ -25,13 +25,7 @@ cd ../../
 
 :main
 "dependencies/panda/python/ppython.exe" ^
-	-m toontown.ai.ServiceStart ^
-	--base-channel %BASE_CHANNEL% ^
-	--max-channels %MAX_CHANNELS% ^
-	--stateserver %STATESERVER% ^
-	--astron-ip %ASTRON_IP% ^
-	--eventlogger-ip %EVENTLOGGER_IP% ^
-	--district-name "%DISTRICT_NAME%"
+	-m toontown.ai.AIStart
 pause
 goto main
 

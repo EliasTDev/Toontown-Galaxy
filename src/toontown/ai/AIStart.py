@@ -25,10 +25,10 @@ loadPrcFileData("AIStart.py", "default-model-extension")
 simbase.mdip = simbase.config.GetString("msg-director-ip", "localhost")
 
 # Now the AI connects directly to the state server instead of the msg director
-simbase.mdport = simbase.config.GetInt("msg-director-port", 6666)
+simbase.mdport = simbase.config.GetInt("msg-director-port",  7100)
 
 simbase.esip = simbase.config.GetString("event-server-ip", "localhost")
-simbase.esport = simbase.config.GetInt("event-server-port", 4343)
+simbase.esport = simbase.config.GetInt("event-server-port", 7198)
 
 
 districtType = 0

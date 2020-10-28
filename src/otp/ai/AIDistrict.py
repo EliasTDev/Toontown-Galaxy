@@ -1,7 +1,8 @@
 from pandac.PandaModules import *
 from otp.otpbase import OTPGlobals
 from .AIMsgTypes import *
-from direct.showbase.PythonUtil import Functor, randUint32
+from direct.showbase.PythonUtil import Functor
+from otp.otpbase.PythonUtil import randUint32
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM
 from direct.fsm import State

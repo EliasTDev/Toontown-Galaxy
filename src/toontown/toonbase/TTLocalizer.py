@@ -10,13 +10,13 @@ to use in the game.
 from panda3d.core import *
 import string
 import types
-
+from direct.showbase import DConfig
 try:
     # Client
     # The Launcher will define config in the builtin namespace
     # before importing this file
-    language = getConfigExpress().GetString("language", "english")
-    checkLanguage = getConfigExpress().GetBool("check-language", 0)
+    language = DConfig.GetString('language', 'english')
+    checkLanguage = DConfig.GetBool('check-language', 0)
 except:
     # AI
     language = simbase.config.GetString("language", "english")

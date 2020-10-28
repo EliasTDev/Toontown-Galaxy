@@ -263,6 +263,11 @@ def unescapeHtmlString(s):
         i += 1
         result += char
     return result
+    
+def randUint32(rng=random.random):
+    """returns a random integer in [0..2^32).
+    rng must return float in [0..1]"""
+    return int(rng() * 0xFFFFFFFF)
 builtins.pdir = pdir
 builtins.isClient = isClient
 builtins.lerp = lerp
