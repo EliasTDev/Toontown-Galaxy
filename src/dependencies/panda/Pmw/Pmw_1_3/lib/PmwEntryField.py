@@ -381,9 +381,9 @@ def hexadecimalvalidator(text):
     
 def realvalidator(text, separator = '.'):
     if separator != '.':
-	if string.find(text, '.') >= 0:
+	if str.find(text, '.') >= 0:
 	    return ERROR
-	index = string.find(text, separator)
+	index = str.find(text, separator)
 	if index >= 0:
 	    text = text[:index] + '.' + text[index + 1:]
     try:

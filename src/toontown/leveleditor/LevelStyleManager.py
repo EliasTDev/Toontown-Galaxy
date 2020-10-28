@@ -224,8 +224,8 @@ class LevelStyleManager:
                 pair = list(map(string.strip, l.split(':')))
                 if pair[0] in style.__dict__:
                     # Convert colors and count strings to numerical values
-                    if ((string.find(pair[0],'_color') >= 0) or
-                        (string.find(pair[0],'_count') >= 0)):
+                    if ((str.find(pair[0],'_color') >= 0) or
+                        (str.find(pair[0],'_count') >= 0)):
                         style[pair[0]] = eval(pair[1])
                     else:
                         style[pair[0]] = pair[1]

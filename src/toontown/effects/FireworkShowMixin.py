@@ -199,7 +199,6 @@ class FireworkShowMixin:
         
         hood = self.getHood()
             
-        from toontown.hood import *
         
         if isinstance(hood, OZHood.OZHood):
             base.camLens.setFar(SpeedwayCameraFar)
@@ -272,7 +271,6 @@ class FireworkShowMixin:
             
             hood = self.getHood()
             
-            from toontown.hood import *
             
             if isinstance(hood, TTHood.TTHood):
                 self.fireworkShow.setPos(150,0,80)

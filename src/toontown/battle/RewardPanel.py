@@ -1003,7 +1003,7 @@ class RewardPanel(DirectFrame):
                 questLabel = self.questLabelList[i]
                 earned = 0
                 orig = questDesc[4] & (pow(2,16) - 1)
-		num = 0
+                num = 0
 
                 # Did we recovered items?
                 if quest.getType() == Quests.RecoverItemQuest:

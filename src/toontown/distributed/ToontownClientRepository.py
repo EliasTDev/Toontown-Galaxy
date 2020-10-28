@@ -131,7 +131,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         # deliberately misnamed; it should be called
         # loadClientCertificate().  See the comments in
         # loadClientCertificate.h.
-        prepareAvatar(self.http)
+        #prepareAvatar(self.http)
 
         # This flag is normally zero to allow cheesy rendering
         # effects; call forbidCheesyEffects() to increment it and

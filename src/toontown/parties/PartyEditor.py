@@ -26,7 +26,7 @@ from toontown.parties.PartyEditorGrid import PartyEditorGrid
 from toontown.parties.PartyEditorListElement import PartyEditorListElement
 
 
-class PartyEditor(DirectObject,FSM):
+class PartyEditor(FSM):
     """
     This class creates the grid and scrolled list needed for players to
     drag and drop activities and decorations onto their party grounds.

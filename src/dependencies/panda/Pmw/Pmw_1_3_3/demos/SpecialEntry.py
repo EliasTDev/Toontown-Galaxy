@@ -75,13 +75,13 @@ def _realconv(text, output = 0):
     # Convert between DD.DD and DD,DD.
 
     if output:
-	index = string.find(text, ',')
+	index = str.find(text, ',')
 	if index >= 0:
 	    return text[:index] + '.' + text[index + 1:]
 	else:
 	    return text
     else:
-	index = string.find(text, '.')
+	index = str.find(text, '.')
 	if index >= 0:
 	    return text[:index] + ',' + text[index + 1:]
 	else:

@@ -48,6 +48,8 @@ class NameGenerator:
 
         # Look for the name master file and read it in.
         searchPath = DSearchPath()
+        if __debug__:
+            searchPath.appendDirectory(Filename('resources/phase_3/etc'))
         if AppRunnerGlobal.appRunner:
             # In the web-publish runtime, it will always be here:
             searchPath.appendDirectory(Filename.expandFrom('$TT_3_ROOT/phase_3/etc'))
@@ -58,7 +60,7 @@ class NameGenerator:
             searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars(base+'/src/configfiles')))
             # RobotToonManager needs to look for file in current directory
             searchPath.appendDirectory(Filename('.'))
-        
+
         filename = Filename(TTLocalizer.NameShopNameMaster)
         found = vfs.resolveFilename(filename, searchPath)
 
@@ -69,11 +71,11 @@ class NameGenerator:
         
         currentLine = input.readline()
         while currentLine:
-            if currentLine.lstrip()[0:1] != '#':
-                a1 = currentLine.find('*')
-                a2 = currentLine.find('*', a1+1)
+            if currentLine.lstrip()[0:1] != b'#':
+                a1 = currentLine.find(b'*')
+                a2 = currentLine.find(b'*', a1+1)
                 self.nameDictionary[int(currentLine[0:a1])]=(int(currentLine[a1+1:a2]),
-                                                             currentLine[a2+1:len(currentLine)-1])
+                                                             currentLine[a2+1:len(currentLine)-1].decode('utf-8'))
             currentLine = input.readline()
 
         masterList = [self.boyTitles, self.girlTitles, self.neutralTitles,

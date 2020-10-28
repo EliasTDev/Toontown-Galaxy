@@ -9,7 +9,7 @@ class CogdoEntityCreator(EntityCreator.EntityCreator):
 
         # create short aliases for EntityCreator create funcs
         nothing = EntityCreator.nothing
-        nonlocal = EntityCreator.nonlocal
+        _nonlocal = EntityCreator._nonlocal
 
         self.privRegisterTypes({
             'levelMgr': CogdoLevelMgr,

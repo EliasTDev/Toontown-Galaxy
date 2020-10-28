@@ -311,7 +311,7 @@ def _changeReal(text, factor, increment, separator = '.'):
 
   text = str(value)
   if separator != '.':
-      index = string.find(text, '.')
+      index = str.find(text, '.')
       if index >= 0:
 	text = text[:index] + separator + text[index + 1:]
   return text

@@ -8,7 +8,7 @@ from . import VineGameGlobals
 from direct.interval.SoundInterval import SoundInterval
 
 
-class VineBat(NodePath.NodePath, DirectObject):
+class VineBat(NodePath):
     """
     Treasures toons can pickup swinging from vine to vine.  Based on MazeTreasure
     """

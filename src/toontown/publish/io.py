@@ -395,8 +395,8 @@ Usage:  brikget(imfile,unpackstr=N.Int16,shp=None)  default shp: (-1,48,61,51)
         header = imfile[0:-4]+'HEAD'
         lines = open(header).readlines()
         for i in range(len(lines)):
-            if string.find(lines[i],'DATASET_DIMENSIONS') <> -1:
-                dims = string.split(lines[i+2][0:string.find(lines[i+2],' 0')])
+            if str.find(lines[i],'DATASET_DIMENSIONS') <> -1:
+                dims = string.split(lines[i+2][0:str.find(lines[i+2],' 0')])
                 dims = map(string.atoi,dims)
                 break
         dims.reverse()

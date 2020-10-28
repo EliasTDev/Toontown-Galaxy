@@ -3165,7 +3165,7 @@
  
 +import platform
 +WIN32 = (platform.system() == 'Windows')
-+VISTA = (string.find(platform.platform(), 'Vista') != -1)
++VISTA = (str.find(platform.platform(), 'Vista') != -1)
 +
 +if VISTA:
 +    print 'Vista detected'

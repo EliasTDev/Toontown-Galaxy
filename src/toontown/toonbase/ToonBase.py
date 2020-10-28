@@ -219,7 +219,7 @@ class ToonBase(OTPBase.OTPBase):
 
         # day/night in estates
         self.dayNightEnabled = self.config.GetBool(
-            'estate-day-night', 0)
+            'estate-day-night', 1)
 
         # cloud platforms in estates
         self.cloudPlatformsEnabled = self.config.GetBool(
@@ -462,7 +462,7 @@ class ToonBase(OTPBase.OTPBase):
         else:
             gameServer = 'localhost'
 
-        serverPort = base.config.GetInt("server-port", 6667)
+        serverPort = base.config.GetInt("server-port", 7199)
 
         # The gameServer string will be a semicolon-separated list of
         # URL's.

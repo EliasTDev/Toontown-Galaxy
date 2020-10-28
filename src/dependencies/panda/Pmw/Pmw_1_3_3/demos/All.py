@@ -228,7 +228,7 @@ class Demo(Pmw.MegaWidget):
 	    if re.search('.py$', file) is not None and \
 		    file not in ['All.py', 'DemoVersion.py', 'Args.py']:
 		demoName = file[:-3]
-		index = string.find(demoName, '_')
+		index = str.find(demoName, '_')
 		if index < 0:
 		    testattr = demoName
 		else:

@@ -225,7 +225,7 @@ def clear():
 
 def readFile(filename):
     scriptFile = StreamReader(vfs.openReadFile(filename, 1), 1)
-    gen = tokenize.generate_tokens(scriptFile.readline)
+    gen = tokenize.tokenize(scriptFile.readline)
     line = getLineOfTokens(gen)
     
     while line is not None:
@@ -255,8 +255,8 @@ def getLineOfTokens(gen):
     while (token[0] != tokenize.NEWLINE) and (token[0] != tokenize.NL):
         #if notify.getDebug():
         #    tokenize.printtoken(*token)
-        # Skip comments
-        if token[0] == tokenize.COMMENT:
+        # Skip comments and encoding lines
+        if token[0] in(tokenize.COMMENT, tokenize.ENCODING):
             pass
         # Keep track of negative operators since the tokenizer
         # treats -1 as two separate tokens, '-' and '1'. We'll just
@@ -1407,6 +1407,8 @@ class NPCMoviePlayer(DirectObject.DirectObject):
 
 # Look for the script file and read it in.
 searchPath = DSearchPath()
+if __debug__:
+    searchPath.appendDirectory(Filename('resources/phase_3/etc'))
 if AppRunnerGlobal.appRunner:
     # In the web-publish runtime, it will always be here:
     searchPath.appendDirectory(Filename.expandFrom('$TT_3_ROOT/phase_3/etc'))
