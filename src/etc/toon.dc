@@ -1667,7 +1667,7 @@ dclass DistributedTugOfWarGame: DistributedMinigame {
   // these two are sent periodically with each player's power
   // so you can see how the remote toons are doing
   reportCurrentKeyRate(uint32 keyrate, int16 / 100) airecv clsend; //appears safe, but sanity check would be nice
-  sendCurrentPosition(uint32[] avidlist, int16[] index / 1000) broadcast;
+  sendCurrentPosition(uint32[] avidlist, int16 index / 1000[]) broadcast;
   sendSuitPosition(int32 index / 1000) broadcast;
   remoteKeyRateUpdate(uint32 avId, uint32 keyrate) broadcast;
 };
@@ -2131,7 +2131,7 @@ dclass PurchaseManager: DistributedObject {
   setPlayerStates(uint8, uint8, uint8, uint8) required broadcast ram;
   setCountdown(int16 timestamp) required broadcast ram;
   setMetagameRound(int8 metagameRound) required broadcast ram;
-  setVotes[](int16[] votes = {}) required broadcast ram;
+  setVotesArray(int16[] votes = {}) required broadcast ram;
 
   // Input from the player
   requestExit() airecv clsend;     // appears safe
