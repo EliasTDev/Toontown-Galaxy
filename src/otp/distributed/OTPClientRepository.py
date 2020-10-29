@@ -283,7 +283,7 @@ class OTPClientRepository(ClientRepositoryBase):
         # Free time is initially unexpired.  The Login??Account object
         # will fill this in properly at log in.
         self.freeTimeExpiresAt = -1
-        self.__isPaid=0
+        self.__isPaid=1         #we dont want membership so always have it enabled
 
         # We also have a "period timer".  This tracks the number of
         # seconds of gameplay the player has accumulated so far this
@@ -2485,6 +2485,8 @@ class OTPClientRepository(ClientRepositoryBase):
         return self.blue!=None
 
     def isPaid(self):
+        #we dont want membership so always have it enabled
+        return 1
         """
         For Toontown:
              Returns 1 if the user has paid or 0 if the user has not paid.
