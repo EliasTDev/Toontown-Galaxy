@@ -192,7 +192,7 @@ SecretFriendsInfoPanelClose = lClose
 SecretFriendsInfoPanelText = ["""
 The Open Chat with True Friends Feature
 
-The Open Chat with True Friends feature enables a member to chat directly with another member within Disney's Toontown Online (the "Service") once the members establish a True Friends connection.  When your child attempts to use the Open Chat with True Friends feature, we will require that you indicate your consent to your child's use of this feature by entering your Parent Account Password.  Here is a detailed description of the process of creating an Open Chat with True Friends connection between members whom we will call "Sally" and "Mike."
+The Open Chat with True Friends feature enables a member to chat directly with another member within Toontown Galaxy (the "Service") once the members establish a True Friends connection.  When your child attempts to use the Open Chat with True Friends feature, we will require that you indicate your consent to your child's use of this feature by entering your Parent Account Password.  Here is a detailed description of the process of creating an Open Chat with True Friends connection between members whom we will call "Sally" and "Mike."
 1. Sally's parent and Mike's parent each enable the Open Chat with True Friends feature by entering their respective Parent Account Passwords either (a) in the Account Options areas within the Service, or (b) when prompted within the game by a Parental Controls pop-up.
 2. Sally requests a True Friend Code (described below) from within the Service.
 ""","""
@@ -398,7 +398,7 @@ FriendSecretNeedsPasswordWarningOK = lOK
 FriendSecretNeedsPasswordWarningCancel = lCancel
 FriendSecretNeedsPasswordWarningWrongUsername = """That's not the correct username.  Please enter the username of the parental account.  This is not the same username used to play the game."""
 FriendSecretNeedsPasswordWarningWrongPassword = """That's not the correct password.  Please enter the password of the parental account.  This is not the same password used to play the game."""
-FriendSecretIntro = "If you are playing Disney's Toontown Online with someone you know in the real world, you can become True Friends.  You can chat using the keyboard with your True Friends.  Other Toons won't understand what you're saying.\n\nYou do this by getting a True Friend Code.  Tell the True Friend Code to your friend, but not to anyone else.  When your friend types in your True Friend Code on his or her screen, you'll be True Friends in Toontown!"
+FriendSecretIntro = "If you are playing Toontown Galaxy with someone you know in the real world, you can become True Friends.  You can chat using the keyboard with your True Friends.  Other Toons won't understand what you're saying.\n\nYou do this by getting a True Friend Code.  Tell the True Friend Code to your friend, but not to anyone else.  When your friend types in your True Friend Code on his or her screen, you'll be True Friends in Toontown!"
 FriendSecretGetSecret = "Get a True Friend Code"
 FriendSecretEnterSecret = "If you have a True Friend Code from someone you know, type it here."
 FriendSecretOK = lOK

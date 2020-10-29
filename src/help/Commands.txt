@@ -818,8 +818,8 @@ SHIRTS:
 ~dna toptex 139 = Fishing Shirt
 ~dna toptex 140 = Piano Tuna Shirt
 ~dna toptex 141 = Collared Picture Shirt
-~dna toptex 142 = Toontown Online Shirt
-~dna toptex 143 = Toontown Online Shirt #2
+~dna toptex 142 = Toontown Galaxy Shirt
+~dna toptex 143 = Toontown Galaxy Shirt #2
 ~dna toptex 144 = Werid Shirt with a little guy on it?
 ~dna toptex 145 = Cog Gear Shirt
 ~dna toptex 146 = Trolley Shirt

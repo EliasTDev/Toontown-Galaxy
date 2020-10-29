@@ -3490,7 +3490,7 @@ SuitAttackTaunts = {
                 "You aren't above the law!",
                 "There should be a law against you.",
                 "There's no ex post facto with me!",
-                "The opinions expressed in this attack are not those of Disney's Toontown Online.",
+                "The opinions expressed in this attack are not those of Toontown Galaxy.",
                 "We cannot be held responsible for damages suffered in this attack.",
                 "Your results for this attack may vary.",
                 "This attack is void where prohibited.",
@@ -5858,7 +5858,7 @@ LauncherPhaseNames = {
 
 # Lets make these messages a little more friendly
 LauncherProgress = "%(name)s (%(current)s of %(total)s)"
-LauncherStartingMessage = "Starting Disney's Toontown Online... "
+LauncherStartingMessage = "Starting Toontown Galaxy... "
 LauncherDownloadFile = "Downloading update for " + LauncherProgress + "..."
 LauncherDownloadFileBytes = "Downloading update for " + LauncherProgress + ": %(bytes)s"
 LauncherDownloadFilePercent = "Downloading update for " + LauncherProgress + ": %(percent)s%%"

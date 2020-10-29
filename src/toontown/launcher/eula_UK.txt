@@ -2,7 +2,7 @@ END USER LICENCE AGREEMENT
 IMPORTANT NOTICE
 PLEASE READ CAREFULLY BEFORE PROCEEDING
 
-This End User Licence Agreement ("Agreement") relates to Disney's Toontown Online (sm) service and all related or successor services (the "Service"),the installer program and related documentation (the "Software"). The Software shall also include any upgrades,modified versions or updates of the Software.
+This End User Licence Agreement ("Agreement") relates to Toontown Galaxy (sm) service and all related or successor services (the "Service"),the installer program and related documentation (the "Software"). The Software shall also include any upgrades,modified versions or updates of the Software.
 
 BEFORE YOU USE OR DOWNLOAD OR INSTALL THE SOFTWARE,CAREFULLY READ THIS AGREEMENT.  AT THE END OF THIS AGREEMENT,YOU WILL BE ASKED TO ACCEPT THE AGREEMENT AND CONTINUE THE INSTALLATION PROCESS.  IF YOU DO NOT WISH TO ACCEPT THE TERMS OF THIS AGREEMENT,YOU WILL NOT BE ABLE TO USE THE SOFTWARE. 
 
@@ -23,17 +23,17 @@ Copyright 1991-1995 by Stichting Mathemastisch Centrum,Amsterdam,The Netherlands
 
 MPEG Layer-3 playback supplied with the Miles Sound System from RAD Game Tools,Inc. MPEG Layer-3 audio compression technology licensed by Fraunhofer IIS and THOMSON multimedia. 
 
-© Wise Solutions,Inc.
+ï¿½ Wise Solutions,Inc.
 
-© Microsoft Corporation,Inc.  All rights reserved.
+ï¿½ Microsoft Corporation,Inc.  All rights reserved.
 
-This product contains Macromedia Shockwave™  Player and Macromedia Flash™  Player software by Macromedia,Inc.  Copyright © 1995-2000 Macromedia,Inc.  All rights reserved.  Macromedia,Shockwave,and Flash are trademarks of Macromedia,Inc. 
+This product contains Macromedia Shockwaveï¿½  Player and Macromedia Flashï¿½  Player software by Macromedia,Inc.  Copyright ï¿½ 1995-2000 Macromedia,Inc.  All rights reserved.  Macromedia,Shockwave,and Flash are trademarks of Macromedia,Inc. 
 
-Copyright © 2000 The Apache Software Foundation.  All rights reserved.
+Copyright ï¿½ 2000 The Apache Software Foundation.  All rights reserved.
 
-Copyright © 1989,1991 Free Software Foundation,Inc.
+Copyright ï¿½ 1989,1991 Free Software Foundation,Inc.
 
-Copyright © 2003 Red Hat,Inc.  All rights reserved.
+Copyright ï¿½ 2003 Red Hat,Inc.  All rights reserved.
 
-Compilation Copyright © 1995-2003 by Wei Dai
+Compilation Copyright ï¿½ 1995-2003 by Wei Dai
               

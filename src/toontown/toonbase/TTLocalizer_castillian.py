@@ -3448,7 +3448,7 @@ SuitAttackTaunts = {
                 "¡No puedes situarte al margen de la ley!",
                 "Deberían hacer una ley expresamente contra ti.",
                 "Me reservo el derecho de modificar tu contrato.",
-                "Las opiniones expresadas en este ataque no coinciden con las de Toontown Online.",
+                "Las opiniones expresadas en este ataque no coinciden con las de Toontown Galaxy.",
                 "No me hago responsable de los daños derivados de este ataque.",
                 "Vas a asumir los costes directos e indirectos de este ataque.",
                 "Me reservo el derecho de prolongar este ataque.",
@@ -4807,7 +4807,7 @@ LauncherPhaseNames = {
 
 # Lets make these messages a little more friendly
 LauncherProgress = "%(name)s (%(current)s de %(total)s)"
-LauncherStartingMessage = "Iniciando Disney's Toontown Online... "
+LauncherStartingMessage = "Iniciando Toontown Galaxy... "
 LauncherDownloadFile = "Descargando actualización para " + LauncherProgress + "..."
 LauncherDownloadFileBytes = "Descargando actualización para " + LauncherProgress + ": %(bytes)s"
 LauncherDownloadFilePercent = "Descargando actualización para " + LauncherProgress + ": %(percent)s%%"

@@ -1,5 +1,5 @@
-!define PRODUCT_NAME "Disney Toontown Online"
-!define PRODUCT_NAME_SHORT "Toontown Online"
+!define PRODUCT_NAME "Disney Toontown Galaxy"
+!define PRODUCT_NAME_SHORT "Toontown Galaxy"
 !define PRODUCT_PUBLISHER "Walt Disney Internet Group"
 !define PRODUCT_WEB_SITE "http://toontown.com"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "${TOONTOWN}\src\publish\Toontown_installer_sidepanel.bmp"  

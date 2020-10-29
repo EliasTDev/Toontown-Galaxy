@@ -2739,7 +2739,7 @@ SuitAttackTaunts = {
                 "¡No puedes situarte al margen de la ley!",
                 "Deberían hacer una ley expresamente contra ti.",
                 "Me reservo el derecho de modificar tu contrato.",
-                "Las opiniones expresadas en este ataque no coinciden con las de Toontown Online.",
+                "Las opiniones expresadas en este ataque no coinciden con las de Toontown Galaxy.",
                 "No me hago responsable de los daños derivados de este ataque.",
                 "Vas a asumir los costes directos e indirectos de este ataque.",
                 "Me reservo el derecho de prolongar este ataque.",
@@ -3800,7 +3800,7 @@ FriendSecretNeedsPasswordWarning = """To get or type a secret, you must enter th
 FriendSecretNeedsPasswordWarningOK = "OK"
 FriendSecretNeedsPasswordWarningCancel = "Cancel"
 FriendSecretNeedsPasswordWarningWrongPassword = """That's not the correct password.  Please enter the Parent Password created when purchasing this account.  This is not the same password used to play the game."""
-FriendSecretIntro = "Si estás jugando a Disney's Toontown Online con alguien que conozcas en la vida real, los dos pueden convertirse en amigos secretos.  Puedes charlar con tus amigos secretos usando el teclado.  Los demás dibus no entenderán lo que estás diciendo.\n\nPara hacer esto, necesitas obtener un Secreto.  Transmítele el Secreto a tu amigo y a nadie más.  Cuando tu amigo escriba el Secreto en su pantalla, los dos seran amigos secretos en Toontown."
+FriendSecretIntro = "Si estás jugando a Toontown Galaxy con alguien que conozcas en la vida real, los dos pueden convertirse en amigos secretos.  Puedes charlar con tus amigos secretos usando el teclado.  Los demás dibus no entenderán lo que estás diciendo.\n\nPara hacer esto, necesitas obtener un Secreto.  Transmítele el Secreto a tu amigo y a nadie más.  Cuando tu amigo escriba el Secreto en su pantalla, los dos seran amigos secretos en Toontown."
 FriendSecretGetSecret = "Obtener Secreto"
 FriendSecretEnterSecret = "Si tienes un Secreto de alguien que conozcas, escríbelo aquí."
 FriendSecretOK = "Aceptar"
@@ -3868,7 +3868,7 @@ LauncherPhaseNames = {
 
 # Lets make these messages a little more friendly
 LauncherProgress = "%(name)s (%(current)s de %(total)s)"
-LauncherStartingMessage = "Iniciando Disney's Toontown Online... "
+LauncherStartingMessage = "Iniciando Toontown Galaxy... "
 LauncherDownloadFile = "Descargando actualización para " + LauncherProgress + "..."
 LauncherDownloadFileBytes = "Descargando actualización para " + LauncherProgress + ": %(bytes)s"
 LauncherDownloadFilePercent = "Descargando actualización para " + LauncherProgress + ": %(percent)s%%"
@@ -3925,13 +3925,13 @@ MemberAgreementScreenDisagree = 'No acepto'
 MemberAgreementScreenCancel = 'Cancelar'
 MemberAgreementScreenWelcome = "¡Bienvenido!"
 MemberAgreementScreenOnYourWay = "Se ha iniciado el proceso para que te conviertas en un socio oficial de"
-MemberAgreementScreenToontown = "Avance preliminar de Disney's Toontown Online"
-MemberAgreementScreenPricing = "El avance preliminar de Disney's Toontown Online cuesta             \nel primer mes. Cada mes adicional es              .\nY el registro es fácil: basta con leer y rellenar la \ninformación que aparece a continuación y ya está."
+MemberAgreementScreenToontown = "Avance preliminar de Toontown Galaxy"
+MemberAgreementScreenPricing = "El avance preliminar de Toontown Galaxy cuesta             \nel primer mes. Cada mes adicional es              .\nY el registro es fácil: basta con leer y rellenar la \ninformación que aparece a continuación y ya está."
 MemberAgreementScreenCCUpFrontPricing = "Inscríbete ya en la prueba GRATUITA de      días. Puedes cancelar tu suscripción\nen cualquier momento del período gratuito sin coste alguno. Al final del\nperíodo gratuito de prueba, se te facturarán automáticamente            por\nel primer mes, y después,            por cada mes adicional."
-MemberAgreementScreenGetParents = "Debes tener al menos 18 años para adquirir Disney's Toontown Online. Pide a tus padres o tutores que te ayuden."
-MemberAgreementScreenGetParentsUnconditional = "Debes tener al menos 18 años para adquirir Disney's Toontown Online. Si tienes menos de 18 años, pide ayuda a tus padres o tutores."
-MemberAgreementScreenMustBeOlder = "Debes tener al menos 18 años para adquirir Disney's Toontown Online. Pide a tus padres o tutores que te ayuden."
-MemberAgreementScreenYouMustAgree = "Para adquirir Disney's Toontown Online, debes aceptar el Contrato de registro."
+MemberAgreementScreenGetParents = "Debes tener al menos 18 años para adquirir Toontown Galaxy. Pide a tus padres o tutores que te ayuden."
+MemberAgreementScreenGetParentsUnconditional = "Debes tener al menos 18 años para adquirir Toontown Galaxy. Si tienes menos de 18 años, pide ayuda a tus padres o tutores."
+MemberAgreementScreenMustBeOlder = "Debes tener al menos 18 años para adquirir Toontown Galaxy. Pide a tus padres o tutores que te ayuden."
+MemberAgreementScreenYouMustAgree = "Para adquirir Toontown Galaxy, debes aceptar el Contrato de registro."
 MemberAgreementScreenYouMustAgreeOk = "Aceptar"
 MemberAgreementScreenYouMustAgreeQuit = "Salir"
 MemberAgreementScreenAgreementTitle = "Contrato de registro"
@@ -3948,9 +3948,9 @@ MemberAgreementScreenLegalText = [
 
 """ # spacing for graphics; start next section on a new line (i.e. """\nText)
 """
-CONTRATO DE REGISTRO DE TOONTOWN ONLINE DE DISNEY
+CONTRATO DE REGISTRO DE Toontown Galaxy DE DISNEY
 
-Bienvenido/a a Toontown Online de Disney (en lo sucesivo, el "Servicio"). LE ROGAMOS QUE LEA ATENTAMENTE ESTE CONTRATO (EN LO SUCESIVO, EL "CONTRATO") ANTES DE UTILIZAR ESTE SERVICIO. Este Servicio es propiedad de Disney Online, el cual se encarga también de su explotación (en la presente, referido como "Disney", "nosotros" o cualquier forma de la primera persona del plural).
+Bienvenido/a a Toontown Galaxy de Disney (en lo sucesivo, el "Servicio"). LE ROGAMOS QUE LEA ATENTAMENTE ESTE CONTRATO (EN LO SUCESIVO, EL "CONTRATO") ANTES DE UTILIZAR ESTE SERVICIO. Este Servicio es propiedad de Disney Online, el cual se encarga también de su explotación (en la presente, referido como "Disney", "nosotros" o cualquier forma de la primera persona del plural).
 ""","""
 El uso de este Servicio implica la aceptación de estas condiciones, las Cláusulas de utilización y las Normas de la casa que aparecen en nuestro sitio Web. Si no está de acuerdo con todas ellas, le rogamos que se abstenga de utilizar este Servicio. Tenga en cuenta que en este Contrato usted aparecerá como el "Socio". La persona que se registre por primera vez en el Servicio también recibirá la denominación de "Cuenta matriz" en este documento. Por "Cuenta" se entiende la cuenta con la que se ha registrado cualquier socio, en virtud de los procedimientos de registro del Servicio. Las cláusulas de este Contrato serán de aplicación para todos los Socios, conformen éstos o no la Cuenta matriz. El titular de la Cuenta matriz será responsable de hacer que todos los socios de una misma familia (y cualquier otra persona a la que permita jugar mediante la Cuenta) conozcan las condiciones de este Contrato y de garantizar que las cumplan. El titular de la Cuenta matriz de una Cuenta cualquiera será totalmente responsable de todas las actividades que se lleven a cabo mediante dicha Cuenta.
 ""","""
@@ -3980,7 +3980,7 @@ EL SOCIO (Y NO DISNEY) ASUME EL COSTO TOTAL POR CUALQUIER TAREA DE MANTENIMIENTO
 
 SIN PERJUICIO DE LO ESTABLECIDO ANTERIORMENTE, EL SOCIO RECONOCE QUE, EN LA CALIDAD DE SERVICIO PARA LOS USUARIOS DEL SERVICIO DE DISNEY, PODEMOS INCLUIR ENLACES A OTROS SITIOS WEB DE INTERNET, Y DISNEY NO TIENE NINGÚN CONTROL NI PACTA NINGÚN TIPO DE GARANTÍA EN RELACIÓN CON EL CONTENIDO O LA ADECUACIÓN DEL CONTENIDO DE DICHOS SITIOS WEB. EL SOCIO, POR LA PRESENTE, NOS EXIME DE MANERA IRREVOCABLE DE CUALQUIER RECLAMACIÓN REFERIDA A DICHOS SITIOS WEB.
 ""","""
-Además, Disney rechaza cualquier responsabilidad relativa a la exactitud, el contenido o la disponibilidad de la información que aparece en los sitios web a los que se acceda a través de Toontown Online de Disney de terceros que no estén asociados con Disney. En Disney le aconsejamos que sea precavido cuando navegue por el Internet, ya se encuentre, utilizando nuestro servicio o el de cualquier otra persona o empresa. Dado que en ocasiones algunos sitios utilizan los resultados de búsquedas automatizadas o bien conducen a sitios web que contienen información que puede ser considerada ofensiva o inadecuada, Disney no se responsabilizará por la exactitud ni por el cumplimiento de los derechos de copyright, legalidad o decencia del material en los sitios Web de terceros, y el socio, por la presente, nos exime de cualquier reclamación contra nosotros en relación con dichos sitios web. Disney no podrá garantizarle que estará satisfecho con los productos o servicios que contrate en un sitio Web de terceros conectado a Toontown Online de Disney, ya que los canales de otros establecimientos son propiedad de otros minoristas que los explotan.
+Además, Disney rechaza cualquier responsabilidad relativa a la exactitud, el contenido o la disponibilidad de la información que aparece en los sitios web a los que se acceda a través de Toontown Galaxy de Disney de terceros que no estén asociados con Disney. En Disney le aconsejamos que sea precavido cuando navegue por el Internet, ya se encuentre, utilizando nuestro servicio o el de cualquier otra persona o empresa. Dado que en ocasiones algunos sitios utilizan los resultados de búsquedas automatizadas o bien conducen a sitios web que contienen información que puede ser considerada ofensiva o inadecuada, Disney no se responsabilizará por la exactitud ni por el cumplimiento de los derechos de copyright, legalidad o decencia del material en los sitios Web de terceros, y el socio, por la presente, nos exime de cualquier reclamación contra nosotros en relación con dichos sitios web. Disney no podrá garantizarle que estará satisfecho con los productos o servicios que contrate en un sitio Web de terceros conectado a Toontown Galaxy de Disney, ya que los canales de otros establecimientos son propiedad de otros minoristas que los explotan.
 ""","""
 Disney no garantiza ninguna de las mercancías, ni tampoco confirma la exactitud o la fiabilidad de la información que aparezca en los sitios web de dichas terceras personas. Disney no pacta ni garantiza la seguridad de ningún tipo de información, lo que incluye, entre otras cosas, los datos de su tarjeta de crédito y cualquier otro tipo de información personal que le pida cualquier empresa externa, y el Socio, por la presente, nos exime de cualquier reclamación contra nosotros en relación con dichos sitios web. Le rogamos encarecidamente que efectúe las investigaciones necesarias o que considere adecuadas antes de realizar cualquier transacción a través del Internet o fuera de ella con dichas terceras partes.
 ""","""
@@ -4123,7 +4123,7 @@ BillingScreenWhySafe = "Seguridad de la tarjeta de crédito"
 BillingScreenWhySafeTitle = "Seguridad de la tarjeta de crédito"
 BillingScreenWhySafeCreditCardGuarantee = "GARANTÍA DE LA TARJETA DE CRÉDITO"
 BillingScreenWhySafeJoin = "¡JUEGA EN"
-BillingScreenWhySafeToontown = "DISNEY'S TOONTOWN ONLINE"
+BillingScreenWhySafeToontown = "Toontown Galaxy"
 BillingScreenWhySafeToday = "HOY MISMO!"
 BillingScreenWhySafeClose = "Cerrar"
 BillingScreenWhySafeText = [
@@ -4143,11 +4143,11 @@ Para aumentar más aún la seguridad, todos los números de tarjetas de crédito
 
 
 
-Por tanto, la información de su tarjeta de crédito no sólo está a salvo en Disney's Toontown Online, sino que además la garantizamos.
-Todas las suscripciones a Disney's Toontown Online están respaldadas por nuestra garantía de tarjetas de crédito. Si en su extracto de cuentas aparecen cargos no autorizados de los que usted no es responsable como resultado directo de haber enviado los datos de su tarjeta de crédito a Disney's Toontown Online, haremos efectiva la cantidad que le reclama su banco hasta un máximo de 50 USD.
+Por tanto, la información de su tarjeta de crédito no sólo está a salvo en Toontown Galaxy, sino que además la garantizamos.
+Todas las suscripciones a Toontown Galaxy están respaldadas por nuestra garantía de tarjetas de crédito. Si en su extracto de cuentas aparecen cargos no autorizados de los que usted no es responsable como resultado directo de haber enviado los datos de su tarjeta de crédito a Toontown Galaxy, haremos efectiva la cantidad que le reclama su banco hasta un máximo de 50 USD.
 
 Si sospecha que hay un problema, dé parte siguiendo el procedimiento habitual del proveedor de su tarjeta de crédito y póngase en contacto de inmediato con nosotros.  La mayoría de las compañías de tarjetas de crédito se hacen cargo de todos los gastos derivados del uso no autorizado de dichas tarjetas, pero pueden reclamarle el pago de un máximo de 50 USD. Nosotros nos hacemos cargo del pasivo que no esté cubierto por su tarjeta de crédito.
-¿Qué significa todo esto? Significa que puede confiar en la seguridad y el servicio proporcionados por Disney's Toontown Online.
+¿Qué significa todo esto? Significa que puede confiar en la seguridad y el servicio proporcionados por Toontown Galaxy.
 
 ¿A qué espera, entonces?
 """,
@@ -4622,8 +4622,8 @@ ParentPassword = "Contraseña parental"
 WelcomeScreenHeading = "¡Bienvenido!"
 WelcomeScreenOk = "¡VAMOS A JUGAR!"
 WelcomeScreenSentence1 = "Ahora eres socio oficial de"
-WelcomeScreenToontown = "Disney's Toontown Online"
-WelcomeScreenSentence2 = "No te olvides de buscar más adelante en el correo electrónico las sorprendentes noticias sobre Disney's Toontown Online."
+WelcomeScreenToontown = "Toontown Galaxy"
+WelcomeScreenSentence2 = "No te olvides de buscar más adelante en el correo electrónico las sorprendentes noticias sobre Toontown Galaxy."
 
 # TTAccount.py
 # Fill in %s with phone number from account server
@@ -4659,9 +4659,9 @@ FreeTimeInformScreenOneDayLeft = FreeTimeInformScreenDontForget + "¡un día!"
 FreeTimeInformScreenNHoursLeft = FreeTimeInformScreenDontForget + "¡sólo %s horas!"
 FreeTimeInformScreenOneHourLeft = FreeTimeInformScreenDontForget + "¡una hora!"
 FreeTimeInformScreenLessThanOneHourLeft = FreeTimeInformScreenDontForget + "¡menos de una hora!"
-FreeTimeInformScreenSecondSentence = "Pero todavía tienes tiempo para hacerte\nsocio oficial de Disney's Toontown Online."
+FreeTimeInformScreenSecondSentence = "Pero todavía tienes tiempo para hacerte\nsocio oficial de Toontown Galaxy."
 FreeTimeInformScreenOops = "¡VAYA!"
-FreeTimeInformScreenExpired = "                 , tu prueba gratuita ha caducado.\n¿Deseas convertirte en socio oficial de Disney's Toontown Online?\n¡Inscríbete ahora y diviértete como nunca!"
+FreeTimeInformScreenExpired = "                 , tu prueba gratuita ha caducado.\n¿Deseas convertirte en socio oficial de Toontown Galaxy?\n¡Inscríbete ahora y diviértete como nunca!"
 FreeTimeInformScreenExpiredQuitText = "¿No puedes hacerlo ahora mismo? No te preocupes, te guardaremos\nel dibu. Pero ¡date prisa! Sólo podemos\nguardarte el dibu durante una semana después\nde que haya caducado tu prueba gratuita."
 FreeTimeInformScreenExpiredCCUF = "Todavía no has adquirido Disney's\nToontown Online. Para usar esta cuenta\ndebes registrarte ahora con una tarjeta de crédito.\n¡Inscríbete ahora y vuelve a divertirte como nunca!"
 FreeTimeInformScreenExpiredQuitCCUFText = "¿No puedes hacerlo ahora mismo? No te preocupes, te guardaremos\nla cuenta. Pero ¡date prisa! Sólo podemos\nguardarte la cuenta durante una semana."
@@ -4695,7 +4695,7 @@ CreateAccountScreenInvalidDob = "Escribe tu fecha de nacimiento."
 CreateAccountScreenUserNameTaken = "Ese nombre de usuario ya existe. Inténtalo de nuevo."
 CreateAccountScreenInvalidUserName = "Nombre de usuario no válido.\nInténtalo de nuevo."
 CreateAccountScreenUserNameNotFound = "No se ha encontrado el nombre de usuario.\nInténtalo de nuevo o crea otra cuenta."
-CreateAccountScreenEmailInstructions = "Escribe tu dirección de correo electrónico.\n¿Por qué? Por dos razones:\n1. Si olvidas la contraseña, te la podremos enviar.\n2. Podemos enviarte la información más reciente\nsobre Disney's Toontown Online."
+CreateAccountScreenEmailInstructions = "Escribe tu dirección de correo electrónico.\n¿Por qué? Por dos razones:\n1. Si olvidas la contraseña, te la podremos enviar.\n2. Podemos enviarte la información más reciente\nsobre Toontown Galaxy."
 CreateAccountScreenEmailInstructionsUnder13 = "Has indicado que tienes menos de 13 años.\nPara crear una cuenta necesitamos la dirección de correo electrónico de tus padres o tu tutor."
 CreateAccountScreenEmailConfirm = "Para asegurarte, escribe de nuevo la dirección de correo electrónico."
 CreateAccountScreenEmailPanelSubmit = "Siguiente"
@@ -4708,7 +4708,7 @@ SecretFriendsInfoPanelOk = "Aceptar"
 SecretFriendsInfoPanelText = ["""
 La herramienta Amigos secretos
 
-La herramienta Amigos secretos permite a los socios conversar directamente entre sí mediante en Disney's Toontown Online (en lo sucesivo, el "Servicio"). Para ello, los socios deben establecer una conexión de Amigos secretos.  Cuando su hijo intente usar la herramienta Amigos secretos, le pediremos que introduzca su contraseña parental para confirmar su consentimiento al uso de dicha herramienta.  A continuación se describe con detalle proceso de creación de una conexión de Amigos secretos entre dos socios imaginarios a los que llamaremos "Susana" y "Miguel".
+La herramienta Amigos secretos permite a los socios conversar directamente entre sí mediante en Toontown Galaxy (en lo sucesivo, el "Servicio"). Para ello, los socios deben establecer una conexión de Amigos secretos.  Cuando su hijo intente usar la herramienta Amigos secretos, le pediremos que introduzca su contraseña parental para confirmar su consentimiento al uso de dicha herramienta.  A continuación se describe con detalle proceso de creación de una conexión de Amigos secretos entre dos socios imaginarios a los que llamaremos "Susana" y "Miguel".
 1. Los padres de Susana y los de Miguel activan la herramienta Amigos secretos, introduciendo sus contraseñas parentales (a) en las Opciones de cuenta del Servicio o (b) cuando el juego se lo requiera en una ventana emergente de Control parental.
 2. Susana solicita un Secreto (descrito más adelante) desde dentro del Servicio.
 ""","""

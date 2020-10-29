@@ -1,5 +1,5 @@
 # This file defines the downloadable packages that make up the
-# published version of Toontown Online.
+# published version of Toontown Galaxy.
 
 from pandac.PandaModules import Filename, PandaSystem
 from direct.showutil import FreezeTool
