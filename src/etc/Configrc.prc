@@ -60,3 +60,5 @@ gc-save-all 0
 
 # TEMP
 fake-playtoken dev
+want-magic-words #t
+
