@@ -71,7 +71,7 @@ class AIRepository(ConnectionRepository):
         self.contextToClassName={}
         self.setClientDatagram(0)
 
-        self.readDCFile(dcFileNames = ['otp/configfiles/otp.dc', 'toontown/configfiles/toon.dc'])
+        self.readDCFile(dcFileNames = ['etc/otp.dc', 'etc/toon.dc'])
 
         # Save the state server id
         self.serverId = serverId
