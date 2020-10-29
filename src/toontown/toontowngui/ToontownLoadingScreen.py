@@ -25,7 +25,6 @@ class ToontownLoadingScreen:
         self.galaxyLogo.setTransparency(TransparencyAttrib.MAlpha)
         self.galaxyLogo.setZ(0.61)
 
-
         self.tip = DirectLabel(
             guiId = "ToontownLoadingScreenTip",
             parent = self.banner,
@@ -99,11 +98,9 @@ class ToontownLoadingScreen:
         return (self.__expectedCount, self.__count)
 
     def abort(self):
-        self.gui.reparentTo(hidden)        
+        self.gui.reparentTo(hidden)
 
     def tick(self):
         self.__count = self.__count + 1
         # update progress bar
         self.waitBar.update(self.__count)
-
-

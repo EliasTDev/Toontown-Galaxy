@@ -6,6 +6,7 @@ from direct.task import Task
 import random
 from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
+from libotp import NametagGroup
 
 AnimDict = {
     "mk": (("walk", "walk", 3),
@@ -313,7 +314,7 @@ class Char(Avatar.Avatar):
                 self.ears.append(ears)
                 # now make the ears rotate to the camera at this pitch.
                 ears.setBillboardAxis()
-                
+
         # set up the blinking eyes
         self.eyes = None
         self.lpupil = None
@@ -342,7 +343,7 @@ class Char(Avatar.Avatar):
             self.geoEyes = 1
             self.eyeOpenList = []
             self.eyeCloseList = []
-            
+
             if(self.find("**/1200/**/eyesOpen").isEmpty()):
                 self.eyeCloseList.append(self.find("**/eyesClosed"))
                 self.eyeOpenList.append(self.find("**/eyesOpen"))
@@ -436,7 +437,7 @@ class Char(Avatar.Avatar):
             self.rpupil.reparentTo(pupilOffsetNode)
 
         self.__blinkName = "blink-" + self.name
-        
+
         #import pdb; pdb.set_trace()
 
     def swapCharModel(self, charStyle):

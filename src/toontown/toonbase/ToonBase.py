@@ -460,7 +460,7 @@ class ToonBase(OTPBase.OTPBase):
             gameServer = launcherServer
             self.notify.info("Using gameServer from launcher: %s " % (gameServer))
         else:
-            gameServer = 'localhost'
+            gameServer = '127.0.0.1'
 
         serverPort = base.config.GetInt("server-port", 6667)
 

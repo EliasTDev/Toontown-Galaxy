@@ -37,7 +37,7 @@ from toontown.uberdog import PartiesUdConfig
 
 print("Initializing the Toontown UberDog (Uber Distributed Object Globals server)...")
 
-uber.mdip = uber.config.GetString("msg-director-ip", "localhost")
+uber.mdip = uber.config.GetString("msg-director-ip", "127.0.0.1")
 uber.mdport = uber.config.GetInt("msg-director-port", 7100)
 
 uber.esip = uber.config.GetString("event-server-ip", "localhost")

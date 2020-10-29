@@ -26,7 +26,7 @@ class TTPickANamePattern(PickANamePatternTwoPartLastName):
 
         return TTPickANamePattern.LastNamePrefixesCapped
 
-if __debug__:
+if not __debug__:
     assert TTPickANamePattern('Alvin', 'm').hasNamePattern()
     assert TTPickANamePattern('Fireball', 'm').hasNamePattern()
     assert TTPickANamePattern('King Alvin Sourflap', 'm').hasNamePattern()

@@ -13,6 +13,7 @@ from toontown.building import SuitInterior
 from . import QuietZoneState
 from . import ZoneUtil
 from toontown.toonbase import TTLocalizer
+from direct.interval.IntervalGlobal import *
 
 class Hood(StateData.StateData):
     """
@@ -34,7 +35,7 @@ class Hood(StateData.StateData):
 
         self.parentFSM = parentFSM
         self.dnaStore = dnaStore
-        
+
         # The event for safe zone loader or town loader done
         self.loaderDoneEvent = "loaderDone"
 
@@ -50,6 +51,7 @@ class Hood(StateData.StateData):
         self.hoodId = hoodId
 
         self.titleText = None
+        self.titleTextSeq = None
         # Title color should be overridden in base class
         self.titleColor = (1,1,1,1)
 
@@ -57,7 +59,7 @@ class Hood(StateData.StateData):
         # Updated in each of the neighborhood specific Hood files
         # Keyed off of the News Manager holiday IDs stored in ToontownGlobals
         self.holidayStorageDNADict = {}
-        
+
         #For the holiday sky
         self.spookySkyFile = None
         self.halloweenLights = []
@@ -81,7 +83,7 @@ class Hood(StateData.StateData):
             drawOrder = 0,
             mayChange = 1,
             )
-        
+
         self.fsm.request(requestStatus["loader"], [requestStatus])
 
     def getHoodText(self, zoneId):
@@ -95,7 +97,7 @@ class Hood(StateData.StateData):
                 hoodText = hoodText + "\n" + streetName[-1]
 
         return hoodText
-        
+
     def spawnTitleText(self, zoneId):
         hoodText = self.getHoodText(zoneId)
         self.doSpawnTitleText(hoodText)
@@ -106,22 +108,17 @@ class Hood(StateData.StateData):
         self.titleText.setColor(Vec4(*self.titleColor))
         self.titleText.clearColorScale()
         self.titleText.setFg(self.titleColor)
-        seq = Task.sequence(
+        self.titleTextSeq = Sequence(
             # HACK! Let a pause go by to cover the loading pause
             # This tricks the taskMgr
-            Task.pause(0.1),
-            Task.pause(6.0),
-            self.titleText.lerpColorScale(
+            Wait(0.1),
+            Wait(6.0),
+            self.titleText.colorScaleInterval(
+            0.5,
             Vec4(1.0, 1.0, 1.0, 1.0),
-            Vec4(1.0, 1.0, 1.0, 0.0),
-            0.5),
-            Task(self.hideTitleTextTask))
-        taskMgr.add(seq, "titleText")
-
-    def hideTitleTextTask(self, task):
-        assert(self.notify.debug("hideTitleTextTask()"))
-        self.titleText.hide()
-        return Task.done
+            Vec4(1.0, 1.0, 1.0, 0.0)),
+            Func(self.hideTitleText))
+        self.titleTextSeq.start()
 
     def hideTitleText(self):
         """
@@ -138,6 +135,9 @@ class Hood(StateData.StateData):
         """
         assert(self.notify.debug("exit()"))
         taskMgr.remove("titleText")
+        if self.titleTextSeq:
+            self.titleTextSeq.finish()
+            self.titleTextSeq = None
         if self.titleText:
             self.titleText.cleanup()
             self.titleText = None
@@ -200,17 +200,17 @@ class Hood(StateData.StateData):
 
         del self.fsm
         del self.parentFSM
-            
+
         # Remove all references to the neighborhood models and textures
         self.dnaStore.resetHood()
         del self.dnaStore
-            
+
         # I'm leaving the world, disable all items but localtoon in the
         # doId2do and doId2cdc
         #base.cr.disableAllButLocalToon()
         self.sky.removeNode()
         del self.sky
-        
+
         self.ignoreAll()
         # Get rid of any references to the models or textures from this hood
         ModelPool.garbageCollect()
@@ -221,9 +221,9 @@ class Hood(StateData.StateData):
 
     def exitStart(self):
         assert(self.notify.debug("exitStart()"))
-    
+
     # Done Status #
-    
+
     def isSameHood(self, status):
         """return true if the request status is in the same hood"""
         return status["hoodId"] == self.hoodId and \
@@ -350,7 +350,7 @@ class Hood(StateData.StateData):
         # Remove the sky task just in case it was spawned.
         taskMgr.remove("skyTrack")
         self.sky.reparentTo(hidden)
-        
+
     def startSpookySky(self):
         if not self.spookySkyFile:
             return
@@ -360,7 +360,7 @@ class Hood(StateData.StateData):
         self.sky.setTag("sky","Halloween")
         self.sky.setColor(0.5,0.5,0.5,1)
         self.sky.reparentTo(camera)
-        
+
         #fade the sky in
         self.sky.setTransparency(TransparencyAttrib.MDual, 1)
         fadeIn = self.sky.colorScaleInterval( 1.5, Vec4(1, 1, 1, 1),

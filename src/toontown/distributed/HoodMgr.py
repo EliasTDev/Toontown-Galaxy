@@ -55,7 +55,7 @@ class HoodMgr(DirectObject.DirectObject):
         [-2, -79, 5.7, 57.4, -0.0, 0.0],
         [-38, -78, 5.7, 9.1, -0.0, 0.0],
         ),
-        
+
         ToontownGlobals.ToontownCentral: (
         [-60, -8, 1.3, -90, 0, 0],  # veranda center
         [-66, -9, 1.3, -274, 0, 0],  # veranda off-center
@@ -72,7 +72,7 @@ class HoodMgr(DirectObject.DirectObject):
         [-46.875, 43.68, -1.05, 124, 0, 0],
         [34, -105, 2.55, 45, 0, 0],
         [16, -75, 2.55, 56, 0, 0],
-        [-27, -56, 0.1, 45, 0, 0],       
+        [-27, -56, 0.1, 45, 0, 0],
 
         [100, 27, 4.1, 150, 0, 0],
         [-70, 4.6, -1.9, 90, 0, 0],
@@ -166,7 +166,7 @@ class HoodMgr(DirectObject.DirectObject):
         ToontownGlobals.Tutorial: (
         [130.9, -8.6, -1.3, 105.5, 0, 0],
         ),
-        
+
         ToontownGlobals.SellbotHQ:(
         [64, -128, 0.26, 36, 0, 0],
         [9, -140, 0.26, 0, 0, 0],
@@ -348,7 +348,7 @@ class HoodMgr(DirectObject.DirectObject):
                 zoneId = int(zoneStr)
                 hoodId = ZoneUtil.getTrueZoneId(hoodId, currentZoneId)
                 zoneId = ZoneUtil.getTrueZoneId(zoneId, currentZoneId)
-                
+
                 # Get the actual collision sphere node
                 linkSphere = linkTunnel.find("**/tunnel_trigger")
                 # HACK: until cog tunnel trigger is renamed
@@ -418,7 +418,7 @@ class HoodMgr(DirectObject.DirectObject):
         # "345:safe_zone:exit_zone"... These are hypotheticals. The main
         # idea is that there are colon separated flags after the initial
         # zone name.
-        return(string.split(groupFullName, ":", 1)[0])
+        return(groupFullName.split(":", 1)[0])
 
     def makeLinkTunnelName(self, hoodId, currentZone):
         assert(self.notify.debug("makeLinkTunnelName() %s" %

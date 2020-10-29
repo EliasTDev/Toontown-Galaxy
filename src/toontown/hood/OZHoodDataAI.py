@@ -16,6 +16,8 @@ from toontown.safezone import DistributedPicnicTableAI
 from toontown.safezone import DistributedChineseCheckersAI
 from toontown.safezone import DistributedCheckersAI
 
+from libpandadna import DNAData, DNAGroup, DNAVisGroup
+
 if( __debug__ ):
     import pdb
 

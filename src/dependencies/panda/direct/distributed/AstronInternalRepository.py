@@ -753,3 +753,15 @@ class AstronInternalRepository(ConnectionRepository):
         dg.addServerHeader(doId, self.ourChannel, STATESERVER_OBJECT_SET_OWNER)
         dg.add_uint64(newOwner)
         self.send(dg)
+
+    def sendUpdateToDoId(self, dclassName, fieldName, doId, args=[]):
+        """
+        Send an object field update to a specific doId by its fieldName.
+
+        This is useful for AI to UD (and vice versa) field updates.
+        """
+
+        dclass = self.dclassesByName[dclassName + self.dcSuffix]
+        field = dclass.getFieldByName(fieldName)
+        dg = field.aiFormatUpdate(doId, doId, self.ourChannel, args)
+        self.send(dg)

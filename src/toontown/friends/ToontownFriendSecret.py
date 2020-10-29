@@ -16,7 +16,6 @@ from otp.friends.FriendSecret import showFriendSecret
 from otp.friends.FriendSecret import hideFriendSecret
 from otp.friends.FriendSecret import unloadFriendSecret
 
-
 def openFriendSecret(secretType):
     global globalFriendSecret
     if globalFriendSecret != None:
@@ -28,14 +27,14 @@ def openFriendSecret(secretType):
 FriendSecret.openFriendSecret = openFriendSecret
 
 class ToontownFriendSecret(FriendSecret.FriendSecret):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory("ToontownFriendSecret")
 
     def __init__(self, secretType):
         #secretType is specefied in toon/ToonAvatarPanel.py-> __handleSecrets(self):
         FriendSecret.FriendSecret.__init__(self, secretType)
         self.initialiseoptions(ToontownFriendSecret)
-        
+
     def makeFriendTypeButtons(self):
         assert self.notify.debugCall()
 
@@ -94,7 +93,7 @@ class ToontownFriendSecret(FriendSecret.FriendSecret):
             )
         accountText.reparentTo(self.accountButton.stateNodePath[2])
         self.accountButton.hide()
-        
+
         buttons.removeNode()
 
     def __determineSecret(self):

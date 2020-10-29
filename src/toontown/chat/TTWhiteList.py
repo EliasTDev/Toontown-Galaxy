@@ -25,7 +25,7 @@ class TTWhiteList(WhiteList):
 
         data = vfs.readFile(filename, 1)
 
-        lines = data.split("\n")
+        lines = data.split(b"\n")
 
         WhiteList.__init__(self,lines)
         self.defaultWord = TTLocalizer.ChatGarblerDefault[0]

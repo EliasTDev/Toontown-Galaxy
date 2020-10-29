@@ -40,8 +40,6 @@ from toontown.shtiker import NPCFriendPage
 from toontown.shtiker import EventsPage
 from toontown.shtiker import TIPPage
 
-
-
 from toontown.quest import Quests
 from toontown.quest import QuestParser
 from toontown.toonbase.ToontownGlobals import *
@@ -60,6 +58,8 @@ from toontown.toon import ElevatorNotifier
 from . import DistributedToon
 from . import Toon
 from . import LaffMeter
+
+from libotp.settings.Settings import Settings
 
 # Checks whether we want to display the news page
 # which uses Awesomium to render HTML
