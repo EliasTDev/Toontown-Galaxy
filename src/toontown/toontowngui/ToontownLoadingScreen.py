@@ -17,6 +17,14 @@ class ToontownLoadingScreen:
         self.banner = loader.loadModel("phase_3/models/gui/toon_council").find("**/scroll")
         self.banner.reparentTo(self.gui)
         self.banner.setScale(0.4,0.4,0.4)
+        #load our logo
+
+        self.galaxyLogo = OnscreenImage('phase_3/maps/toontown-logo.png')
+        self.galaxyLogo.reparentTo(self.gui)
+        self.galaxyLogo.setScale(self.gui, (0.5, 1, 0.35))
+        self.galaxyLogo.setTransparency(TransparencyAttrib.MAlpha)
+        self.galaxyLogo.setZ(0.61)
+
 
         self.tip = DirectLabel(
             guiId = "ToontownLoadingScreenTip",
