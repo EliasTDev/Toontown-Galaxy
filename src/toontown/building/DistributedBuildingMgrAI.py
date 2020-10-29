@@ -58,7 +58,7 @@ class DistributedBuildingMgrAI:
     """
 
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBuildingMgrAI')
-    serverDatafolder = simbase.config.GetString('server-data-folder', "")
+    serverDatafolder = simbase.config.GetString('server-data-folder', "backups")
 
     def __init__(self, air, branchID, dnaStore, trophyMgr):
         """
