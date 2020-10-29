@@ -707,8 +707,6 @@ class OTPClientRepository(ClientRepositoryBase):
             return
 
         self.startReaderPollTask()
-        # Start sending heartbeats
-        #self.startHeartbeat()
 
         # is this a new installation?
         newInstall = launcher.getIsNewInstallation()
