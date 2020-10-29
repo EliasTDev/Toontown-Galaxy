@@ -4,7 +4,8 @@ daemon:
 general:
     eventlogger: 127.0.0.1:7198
     dc_files:
-        - ../dclass/empire.dc
+        - ../../../etc/otp.dc
+        - ../../../etc/toon.dc
 
 messagedirector:
     bind: 127.0.0.1:7100
