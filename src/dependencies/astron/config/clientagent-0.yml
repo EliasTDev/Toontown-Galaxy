@@ -37,7 +37,7 @@ messagedirector:
 
 roles:
     - type: clientagent
-      bind: 0.0.0.0:7199
+      bind: 0.0.0.0:6667
       version: "empire-dev"
       client:
         relocate: true

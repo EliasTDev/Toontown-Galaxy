@@ -32,7 +32,7 @@ backups-extension .json
 
 # Server:
 server-timezone EST/EDT/-5
-server-port 7199
+server-port 6667
 account-bridge-filename astron/databases/account-bridge.db
 
 # Performance:

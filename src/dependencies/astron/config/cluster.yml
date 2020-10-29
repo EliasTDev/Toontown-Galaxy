@@ -42,7 +42,7 @@ uberdogs:
 
 roles:
     - type: clientagent
-      bind: 0.0.0.0:7199
+      bind: 0.0.0.0:6667
       version: "sv1.0.47.38"
       client:
        relocate: true

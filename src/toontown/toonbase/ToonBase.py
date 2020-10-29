@@ -462,7 +462,7 @@ class ToonBase(OTPBase.OTPBase):
         else:
             gameServer = 'localhost'
 
-        serverPort = base.config.GetInt("server-port", 7199)
+        serverPort = base.config.GetInt("server-port", 6667)
 
         # The gameServer string will be a semicolon-separated list of
         # URL's.
