@@ -14,7 +14,7 @@ from otp.avatar import Emote
 from . import SuitBattleGlobals
 from toontown.distributed import DelayDelete
 import random
-from libotp import CFSpeech
+from libotp import CFSpeech, CFTimeout
 
 class DistributedBattle(DistributedBattleBase.DistributedBattleBase):
 

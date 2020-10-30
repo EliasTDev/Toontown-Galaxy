@@ -18,7 +18,7 @@ class ScrolledFriendList( DirectScrolledList ):
         """
         self.makeItemsCheckBoxes = makeItemsCheckBoxes
         self.clickCallback = clickCallback
-        self.parent = parent
+        self._parent = parent
         self.gui = gui
         self.scrollSpeed = 1
         DirectScrolledList.__init__( self,
@@ -51,6 +51,7 @@ class ScrolledFriendList( DirectScrolledList ):
             decButtonCallback = self.scrollButtonPressed,
             itemFrame_pos = (0.0, 0.0, -0.01),
         )
+        self.initialiseoptions(ScrolledFriendList)
         self.incButtonCallback = None
         self.decButtonCallback = None
         self.setForceHeight()
@@ -74,7 +75,7 @@ class ScrolledFriendList( DirectScrolledList ):
                 text_align = TextNode.ALeft,
                 text_scale = 0.7,
                 text_pos = (-3.7, -0.25),
-                command = self.clickCallback, 
+                command = self.clickCallback,
                 indicator_pos = (-4.8, 0.0, 0.0),
             )
             widget["extraArgs"] = [widget]

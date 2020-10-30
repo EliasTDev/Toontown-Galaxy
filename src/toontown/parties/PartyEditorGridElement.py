@@ -25,7 +25,7 @@ class PartyEditorGridElement(DirectButton):
     They are what are placed on PartyEditorGridSquares to represent the element.
     """
     notify = directNotify.newCategory("PartyEditorGridElement")
-    
+
     def __init__(self, partyEditor, id, isDecoration, checkSoldOutAndPaidStatusAndAffordability, **kw):
         self.partyEditor = partyEditor
         self.id = id
@@ -33,11 +33,11 @@ class PartyEditorGridElement(DirectButton):
         self.checkSoldOutAndPaidStatusAndAffordability = checkSoldOutAndPaidStatusAndAffordability # method
         # Change the name and the up, down, rollover, and disabled colors
         if self.isDecoration:
-            self.name = TTLocalizer.PartyDecorationNameDict[self.id]["editor"]
+            self._name = TTLocalizer.PartyDecorationNameDict[self.id]["editor"]
             colorList = ( (1.0, 1.0, 1.0, 1.0), (0.0, 0.0, 1.0, 1.0), (0.0, 1.0, 1.0, 1.0), (0.5, 0.5, 0.5, 1.0))
             self.geom = self.partyEditor.partyPlanner.gui.find("**/%s"%PartyGlobals.DecorationInformationDict[self.id]["gridAsset"])
         else:
-            self.name = TTLocalizer.PartyActivityNameDict[self.id]["editor"]
+            self._name = TTLocalizer.PartyActivityNameDict[self.id]["editor"]
             colorList = ( (1.0, 1.0, 1.0, 1.0), (0.0, 1.0, 0.0, 1.0), (1.0, 1.0, 0.0, 1.0), (0.5, 0.5, 0.5, 1.0))
             self.geom = self.partyEditor.partyPlanner.gui.find("**/%s"%PartyGlobals.ActivityInformationDict[self.id]["gridAsset"])
 
@@ -50,15 +50,15 @@ class PartyEditorGridElement(DirectButton):
             ('geom3_color', colorList[0], None),
             ('relief', None, None),
         )
-        
+
         # Merge keyword options with default options, plus, this call makes
         # DirectButton work... that and the initializeoptions below... without
         # those two calls, strange... and I mean hard to debug, stuff happens.
         self.defineoptions(kw, optiondefs)
         DirectButton.__init__(self, self.partyEditor.parent)
         self.initialiseoptions(PartyEditorGridElement)
-        self.setName("%sGridElement"%self.name)
-        
+        self.setName("%sGridElement"%self._name)
+
         # Since normal buttons only call their command methods upon release
         # of the mouse button, we will not specify a command method and
         # instead bind our own methods to press and release.
@@ -66,8 +66,8 @@ class PartyEditorGridElement(DirectButton):
         self.bind(DirectGuiGlobals.B1RELEASE, self.released)
         self.bind(DirectGuiGlobals.ENTER, self.mouseEnter)
         self.bind(DirectGuiGlobals.EXIT, self.mouseExit)
-        
-        self.uprightNodePath = NodePath("%sUpright"%self.name)
+
+        self.uprightNodePath = NodePath("%sUpright"%self._name)
         self.uprightNodePath.reparentTo(self)
         #debugAxis = loader.loadModel("models/misc/xyzAxis")
         #debugAxis.reparentTo(self.uprightNodePath)
@@ -77,13 +77,13 @@ class PartyEditorGridElement(DirectButton):
             relief = None,
             parent = self.uprightNodePath,
             pos = Point3(0.0, 0.0, rollOverZOffset),
-            text = self.name,
+            text = self._name,
             text_fg = (1.0, 1.0, 1.0, 1.0),
             text_shadow = (0.0, 0.0, 0.0, 1.0),
             text_scale = 0.075,
         )
         self.rolloverTitle.stash()
-            
+
         self.stash()
         self.overValidSquare = False
         self.lastValidPosition = None
@@ -147,7 +147,7 @@ class PartyEditorGridElement(DirectButton):
                newPos[0] > PartyGlobals.PartyEditorTrashBounds[0][0] and \
                newPos[0] < PartyGlobals.PartyEditorTrashBounds[1][0] and \
                newPos[2] < PartyGlobals.PartyEditorTrashBounds[0][1] and \
-               newPos[2] > PartyGlobals.PartyEditorTrashBounds[1][1]:            
+               newPos[2] > PartyGlobals.PartyEditorTrashBounds[1][1]:
                 if not self.mouseOverTrash:
                     self.setOverTrash(True)
             else:
@@ -241,10 +241,10 @@ class PartyEditorGridElement(DirectButton):
             self.setR(270.0)
             self.uprightNodePath.setR(-270.0)
             # assert self.notify.debug("not fireworks uprightNodePathR=%s" % self.uprightNodePath.getR())
-            
+
         self.setPos(render2d, gridPos)
         self.lastValidPosition = gridPos
-        
+
     def getGridSquareFromPosition(self, newPos):
         localX = newPos[0] - PartyGlobals.PartyEditorGridBounds[0][0]
         localY = newPos[2] - PartyGlobals.PartyEditorGridBounds[1][1]
@@ -275,7 +275,7 @@ class PartyEditorGridElement(DirectButton):
                     self.partyEditor.partyEditorGrid.registerNewElement(self, self.centerGridSquare, self.getGridSize())
                     self.partyEditor.updateCostsAndBank()
                     self.partyEditor.handleMutuallyExclusiveActivities()
-                    
+
             else:
                 self.stash()
         self.checkSoldOutAndPaidStatusAndAffordability()
@@ -310,10 +310,10 @@ class PartyEditorGridElement(DirectButton):
         parent = self.getParent()
         self.reparentTo(parent)
         self.rolloverTitle.unstash()
-    
+
     def mouseExit(self, mouseEvent):
         self.rolloverTitle.stash()
-    
+
     def destroy(self):
         self.unbind(DirectGuiGlobals.B1PRESS)
         self.unbind(DirectGuiGlobals.B1RELEASE)

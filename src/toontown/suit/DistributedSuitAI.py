@@ -21,7 +21,6 @@ from toontown.hood import ZoneUtil
 import random
 from libpandadna import SuitLeg
 
-
 class DistributedSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
     """
     /////////////////////////////////////////////////////////////////////

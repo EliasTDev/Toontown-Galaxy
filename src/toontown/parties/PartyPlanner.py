@@ -33,6 +33,7 @@ from otp.otpbase import OTPGlobals
 from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
 from libotp import NametagGroup, NametagFloat2d, Nametag
+from libotp import CFSpeech
 
 class PartyPlanner(DirectFrame,FSM):
     """
@@ -155,7 +156,6 @@ class PartyPlanner(DirectFrame,FSM):
             baseTime += timedelta(minutes = self.asapMinuteRounding)
             #self.notify.info("baseTime is now %s" % str(baseTime))
         return baseTime
-
 
     def enterTime(self,*args):
         self.prevButton.show()

@@ -2,9 +2,9 @@
 # Contact: Shawn Patton
 # Created: Oct 2008
 #
-# Purpose: The PartyEditor allows players to drag and drop activities and 
+# Purpose: The PartyEditor allows players to drag and drop activities and
 #          decorations onto a grid representing the party grounds. It also
-#          calculates the amount of jellybeans required for the party and 
+#          calculates the amount of jellybeans required for the party and
 #          displays information about the activities and decorations.
 #-------------------------------------------------------------------------------
 import time
@@ -25,21 +25,20 @@ from toontown.parties import PartyUtils
 from toontown.parties.PartyEditorGrid import PartyEditorGrid
 from toontown.parties.PartyEditorListElement import PartyEditorListElement
 
-
 class PartyEditor(FSM):
     """
     This class creates the grid and scrolled list needed for players to
     drag and drop activities and decorations onto their party grounds.
     """
     notify = directNotify.newCategory("PartyEditor")
-    
+
     def __init__(self, partyPlanner, parent):
         FSM.__init__( self, self.__class__.__name__ )
         self.partyPlanner = partyPlanner
         self.parent = parent
         self.partyEditorGrid = PartyEditorGrid(self)
         self.currentElement = None
-        
+
         self.defaultTransitions = {
             "Hidden" : ["Idle", "Cleanup"],
             "Idle" : ["DraggingElement", "Hidden", "Cleanup"],
@@ -55,7 +54,7 @@ class PartyEditor(FSM):
         self.decorationModels = loader.loadModel("phase_4/models/parties/partyDecorations")
         pos = self.partyPlanner.gui.find("**/step_05_activitiesIcon_locator").getPos()
         self.elementList = DirectScrolledList(
-            
+
             parent = self.parent,
             relief = None,
             # inc and dec are DirectButtons
@@ -66,7 +65,7 @@ class PartyEditor(FSM):
                                ),
             decButton_relief = None,
             decButton_pos = (-0.05, 0.0, -0.38),
-            
+
             incButton_image = (self.partyPlanner.gui.find("**/activitiesButtonDown_up"),
                                self.partyPlanner.gui.find("**/activitiesButtonDown_down"),
                                self.partyPlanner.gui.find("**/activitiesButtonDown_rollover"),
@@ -74,7 +73,7 @@ class PartyEditor(FSM):
                                ),
             incButton_relief = None,
             incButton_pos = (-0.05, 0.0, -0.94),
-            
+
             # itemFrame is a DirectFrame
             itemFrame_pos = (pos[0], pos[1], pos[2]+0.04),
             itemFrame_relief = None,
@@ -82,7 +81,7 @@ class PartyEditor(FSM):
             numItemsVisible = 1,
             items = [],
         )
-        
+
         for activityId in PartyGlobals.PartyEditorActivityOrder:
             if activityId in PartyGlobals.VictoryPartyActivityIds:
                 holidayIds = base.cr.newsManager.getHolidayIdList()
@@ -99,7 +98,7 @@ class PartyEditor(FSM):
                 self.elementList.addItem(pele)
                 if activityId == PartyGlobals.ActivityIds.PartyClock:
                     self.partyClockElement = pele
-                    
+
         for decorationId in PartyGlobals.DecorationIds:
             decorName = PartyGlobals.DecorationIds.getString(decorationId)
             if (decorName == "HeartTarget") \
@@ -172,7 +171,7 @@ class PartyEditor(FSM):
         if currentTime - self.trashCanLastClickedTime < 0.2:
             self.clearPartyGrounds()
         self.trashCanLastClickedTime = time.time()
-        
+
     def clearPartyGrounds(self):
         for item in self.elementList["items"]:
             item.clearPartyGrounds()
@@ -202,7 +201,7 @@ class PartyEditor(FSM):
 
 
     ### FSM Methods ###
-    
+
     def enterHidden(self):
         PartyEditor.notify.debug("Enter Hidden")
 
@@ -221,7 +220,7 @@ class PartyEditor(FSM):
         self.handleMutuallyExclusiveActivities()
 
     def handleMutuallyExclusiveActivities(self):
-        """Smartly removed the older activity and inform the user."""    
+        """Smartly removed the older activity and inform the user."""
         mutSet = self.getMutuallyExclusiveActivities()
         if not mutSet:
             return
@@ -244,12 +243,12 @@ class PartyEditor(FSM):
         """Return the set of activities on the grid that are mutually exclusive, None otherwise."""
         # create a set of activity Ids
         currentActivities = self.partyEditorGrid.getActivitiesOnGrid()
-        actSet = Set([])
+        actSet = set([])
         for act in currentActivities:
             actSet.add(act[0])
         result = None
         for mutuallyExclusiveTuples in PartyGlobals.MutuallyExclusiveActivities:
-            mutSet = Set(mutuallyExclusiveTuples)
+            mutSet = set(mutuallyExclusiveTuples)
             inter = mutSet.intersection(actSet)
             if len(inter) > 1:
                 result = inter

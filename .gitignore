@@ -1,10 +1,7 @@
-src/backup/PainterDNA.txt
-src/resources/terrain.bam
 *.bak
-src/dependencies/MongoDB/Server/3.0/mongodb/diagnostic.data/*
 *.interim
 *._0
-src/dependencies/MongoDB/Server/3.0/mongodb/journal/lsn
 .vscode/settings.json
 src/etc/local.prc
 src/TUDS-1-anydbm.dat
+*.jpg

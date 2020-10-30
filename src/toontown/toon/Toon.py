@@ -26,6 +26,7 @@ from toontown.effects import DustCloud
 from direct.showbase.PythonUtil import Functor
 from toontown.distributed import DelayDelete
 import types, functools
+from libotp import CFThought
 
 """
 import Toon

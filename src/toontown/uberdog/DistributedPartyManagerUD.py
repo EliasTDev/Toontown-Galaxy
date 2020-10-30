@@ -399,7 +399,7 @@ class DistributedPartyManagerUD(DistributedObjectGlobalUD):
         endTime = partyInfoDict['endTime']
         activitiesStr = partyInfoDict['activities']
         formattedActivities = []
-        for i in range (len(activitiesStr) /4):
+        for i in range (len(activitiesStr) //4):
             oneActivity = (ord(activitiesStr[i*4]),
                            ord(activitiesStr[i*4 + 1]),
                            ord(activitiesStr[i*4 + 2]),
@@ -408,7 +408,7 @@ class DistributedPartyManagerUD(DistributedObjectGlobalUD):
             formattedActivities.append(oneActivity)
         decorStr = partyInfoDict['decorations']
         formattedDecors = []
-        for i in range( len(decorStr) / 4):
+        for i in range( len(decorStr) // 4):
             oneDecor = (ord(decorStr[i*4]),
                         ord(decorStr[i*4 + 1]),
                         ord(decorStr[i*4 + 2]),

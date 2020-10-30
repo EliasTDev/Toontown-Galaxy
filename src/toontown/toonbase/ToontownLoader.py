@@ -4,7 +4,7 @@ from pandac.PandaModules import *
 from direct.directnotify.DirectNotifyGlobal import *
 from direct.showbase import Loader
 from toontown.toontowngui import ToontownLoadingScreen
-from libpandadna import loadDNAFile
+from libpandadna import loadDNAFile, loadDNAFileAI
 
 class ToontownLoader(Loader.Loader):
     """ToontownLoader class"""
