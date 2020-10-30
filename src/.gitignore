@@ -7,7 +7,7 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
-# Log Files 
+# Log Files
 *.log
 
 # Database
@@ -66,3 +66,4 @@ src/user/preferences.json
 settings.json
 *.pyc
 news/
+*.buildings
