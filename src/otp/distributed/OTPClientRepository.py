@@ -51,11 +51,7 @@ from otp.distributed import OtpDoGlobals
 from otp.ai.GarbageLeakServerEventAggregator import GarbageLeakServerEventAggregator
 
 from .PotentialAvatar import PotentialAvatar
-
-CLIENT_OBJECT_DISABLE = 25
-CLIENT_OBJECT_DISABLE_OWNER = 26
-CLIENT_OBJECT_DELETE_RESP = 27
-CLIENT_OBJECT_DISABLE_RESP = 25
+from otp.distributed.DisneyMessageTypes import *
 
 class OTPClientRepository(ClientRepositoryBase):
     # Create a notify category
