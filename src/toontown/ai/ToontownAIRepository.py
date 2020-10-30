@@ -97,6 +97,10 @@ class ToontownAIRepository(ToontownInternalRepository):
         # player avatars will increment and decrement this count
         self._population = 0
 
+        # Record the reason each client leaves the shard, according to
+        # the client.
+        self._avatarDisconnectReasons = {}
+
     def handleConnected(self):
         ToontownInternalRepository.handleConnected(self)
 
@@ -440,8 +444,16 @@ class ToontownAIRepository(ToontownInternalRepository):
     def getAvatarExitEvent(self, avId):
         return 'distObjDelete-%d' % avId
 
+    def setAvatarDisconnectReason(self, avId, disconnectReason):
+        # This is told us by the client just before he disconnects.
+        self._avatarDisconnectReasons[avId] = disconnectReason
+
     def getAvatarDisconnectReason(self, avId):
-        return self.timeManager.avId2disconnectcode.get(avId, ToontownGlobals.DisconnectUnknown)
+        # Returns the reason (as reported by the client) for an
+        # avatar's unexpected exit, or 0 if the reason is unknown.  It
+        # is only valid to query this during the handler for the
+        # avatar's unexpected-exit event.
+        return self._avatarDisconnectReasons.get(avId, 0)
 
     def getZoneDataStore(self):
         return self.zoneDataStore
