@@ -6,7 +6,6 @@ from direct.showbase.InputStateGlobal import inputState
 from direct.task import Task
 from direct.task.TaskProfiler import TaskProfiler
 from otp.avatar import Avatar
-import string
 from direct.showbase import PythonUtil
 from direct.showbase.PythonUtil import Functor, DelayedCall, ScratchPad
 from otp.otpbase import OTPGlobals
@@ -814,7 +813,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
         # with the given name.  Returns a list of (name, obj) pairs.
 
         result = []
-        lowerName = string.lower(name)
+        lowerName = name.lower()
 
         for obj in list(self.cr.doId2do.values()):
             className = obj.__class__.__name__
@@ -823,9 +822,9 @@ class MagicWordManager(DistributedObject.DistributedObject):
             except:
                 name = className
 
-            if string.lower(name) == lowerName or \
-               string.lower(className) == lowerName or \
-               string.lower(className) == "distributed" + lowerName:
+            if name.lower() == lowerName or \
+               className.lower() == lowerName or \
+               className.lower() == "distributed" + lowerName:
                 result.append((name, obj))
 
         return result
@@ -867,7 +866,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
         # Decompose the string into keywords, and return the
         # corresponding collision bitmask, suitable for passing to
         # NodePath.showCS() or hideCS().
-        words = string.lower(str).split()
+        words = str.lower().split()
         if len(words) == 0:
             return None
 
@@ -925,7 +924,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
             return None
 
     def showfont(self, fontname):
-        fontname = string.lower(fontname).strip()
+        fontname = fontname.lower().strip()
         font = self.getFontByName(fontname)
         if font == None:
             self.setMagicWordResponse("Unknown font: %s" % (fontname))
@@ -1083,10 +1082,10 @@ class MagicWordManager(DistributedObject.DistributedObject):
                 return av.doId
 
         # No good; try a case-insensitive match.
-        lowerName = string.lower(name)
+        lowerName = name.lower()
         for av in Avatar.Avatar.ActiveAvatars:
             if isinstance(av, self.GameAvatarClass) and \
-               string.lower(av.getName()).strip() == lowerName:
+               av.getName().lower().strip() == lowerName:
                 return av.doId
 
         # Is it a doId anyway?

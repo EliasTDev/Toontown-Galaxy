@@ -3409,7 +3409,6 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
         if response:
             self.down_setMagicWordResponse(senderId, response)
 
-
     def doParty(self,word, av, zoneId, senderId):
         """Handle mail magic words."""
         args = word.split()
