@@ -21,7 +21,7 @@ from toontown.coghq import CogDisguiseGlobals
 from pandac.PandaModules import *
 import random
 import math
-
+from libotp import *
 # This pointer keeps track of the one DistributedCashbotBoss that
 # should appear within the avatar's current visibility zones.  If
 # there is more than one DistributedCashbotBoss visible to a client at

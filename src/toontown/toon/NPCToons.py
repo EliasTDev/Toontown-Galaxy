@@ -8,7 +8,7 @@ from toontown.toonbase import TTLocalizer
 from toontown.toonbase import ToontownBattleGlobals
 import sys, os
 import string
-
+from libotp import *
 # These are the various modes for DistributedNPC setMovie
 QUEST_MOVIE_CLEAR = 0
 QUEST_MOVIE_REJECT = 1
