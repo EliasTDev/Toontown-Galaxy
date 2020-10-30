@@ -467,7 +467,9 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
             self.cr.handleMessageType(msgType, di)
 
     def handleHelloResp(self):
+        # Start sending heartbeats
         self.cr.startHeartbeat()
+
         self.cr.astronLoginManager.handleRequestLogin()
 
     def getExtendedErrorMsg(self, errorString):
