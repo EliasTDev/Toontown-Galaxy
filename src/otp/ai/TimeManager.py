@@ -13,6 +13,7 @@ import time
 import os
 import sys
 import re
+from libotp import CFSpeech, CFTimeout
 
 class TimeManager(DistributedObject.DistributedObject):
     """
