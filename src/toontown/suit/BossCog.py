@@ -15,7 +15,7 @@ from toontown.battle import BattleProps
 from direct.showbase.PythonUtil import Functor
 import string
 import types
-from libtop import *
+from libotp import *
 GenericModel = "phase_9/models/char/bossCog"
 
 
