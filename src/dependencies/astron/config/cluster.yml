@@ -44,6 +44,10 @@ uberdogs:
       id: 4501
       anonymous: false
 
+    - class: ChatRouter
+      id: 4681
+      anonymous: false
+
 roles:
     - type: clientagent
       bind: 0.0.0.0:6667

@@ -541,6 +541,7 @@ class OTPClientRepository(ClientRepositoryBase):
             "CentralLogger")
 
         self.astronLoginManager = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_ASTRON_LOGIN_MANAGER, 'AstronLoginManager')
+        self.chatRouter = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_CHAT_ROUTER, 'ChatRouter')
 
     def startLeakDetector(self):
         if hasattr(self, 'leakDetector'):

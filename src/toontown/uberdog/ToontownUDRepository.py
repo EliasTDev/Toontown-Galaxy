@@ -144,6 +144,8 @@ class ToontownUDRepository(ToontownInternalRepository):
                 OtpDoGlobals.OTP_DO_ID_TOONTOWN_NON_REPEATABLE_RANDOM_SOURCE,
                 "NonRepeatableRandomSource")
 
+        self.chatRouter = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_CHAT_ROUTER, 'ChatRouter')
+
     def getDatabaseIdForClassName(self, className):
         return DatabaseIdFromClassName.get(
             className, DefaultDatabaseChannelId)
