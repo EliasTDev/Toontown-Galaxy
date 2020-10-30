@@ -90,7 +90,7 @@ class EstateLoader(SafeZoneLoader.SafeZoneLoader):
         assert(self.notify.debug("load()"))
         SafeZoneLoader.SafeZoneLoader.load(self)
         # create music and sound effects
-        self.music = base.loadMusic("phase_4/audio/bgm/TC_nbrhood.mid")
+        self.music = base.loader.loadMusic("phase_4/audio/bgm/TC_nbrhood.mid")
         self.underwaterSound = base.loader.loadSfx('phase_4/audio/sfx/AV_ambient_water.mp3')
         self.swimSound = base.loader.loadSfx('phase_4/audio/sfx/AV_swim_single_stroke.mp3')
         self.submergeSound = base.loader.loadSfx('phase_5.5/audio/sfx/AV_jump_in_water.mp3')

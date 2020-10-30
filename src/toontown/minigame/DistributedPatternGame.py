@@ -151,7 +151,7 @@ class DistributedPatternGame(DistributedMinigame):
         self.fallSound = base.loader.loadSfx("phase_4/audio/sfx/MG_Tag_A.mp3")
 
         # load music
-        self.music = base.loadMusic(self.bgm)
+        self.music = base.loader.loadMusic(self.bgm)
 
         # create the onscreen text messages
         self.waitingText = DirectLabel(

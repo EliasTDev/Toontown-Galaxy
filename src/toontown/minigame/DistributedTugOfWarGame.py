@@ -180,7 +180,7 @@ class DistributedTugOfWarGame(DistributedMinigame):
         self.whistleSound = base.loader.loadSfx("phase_4/audio/sfx/AA_sound_whistle.mp3")
 
         # load music
-        self.music = base.loadMusic(self.bgm)
+        self.music = base.loader.loadMusic(self.bgm)
         
         self.roundText = DirectLabel(
             text = '     ',

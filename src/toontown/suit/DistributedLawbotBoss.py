@@ -731,14 +731,14 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.setupElevator(elevatorModel)
 
         # before battles: play the boss theme music
-        self.promotionMusic = base.loadMusic(
+        self.promotionMusic = base.loader.loadMusic(
             'phase_7/audio/bgm/encntr_suit_winning_indoor.ogg')
             # 'phase_9/audio/bgm/encntr_head_suit_theme.ogg')
         # Between battle one and two: play the upbeat street battle music
-        self.betweenBattleMusic = base.loadMusic(
+        self.betweenBattleMusic = base.loader.loadMusic(
             'phase_9/audio/bgm/encntr_toon_winning.ogg')
         # Battle two: play new jury music  
-        self.battleTwoMusic = base.loadMusic(
+        self.battleTwoMusic = base.loader.loadMusic(
             'phase_11/audio/bgm/LB_juryBG.ogg')
 
         # Also replace the floor polygon with a plane, and rename it

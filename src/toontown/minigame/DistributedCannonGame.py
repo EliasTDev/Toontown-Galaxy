@@ -262,7 +262,7 @@ class DistributedCannonGame(DistributedMinigame):
             text_shadow = (0,0,0,1),
             )
 
-        self.music = base.loadMusic(
+        self.music = base.loader.loadMusic(
             #"phase_3/audio/bgm/create_a_toon.ogg"
             #"phase_4/audio/bgm/TC_SZ_activity.ogg"
             #"phase_4/audio/bgm/TC_nbrhood.ogg"

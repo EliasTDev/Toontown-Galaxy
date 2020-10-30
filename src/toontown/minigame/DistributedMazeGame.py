@@ -373,7 +373,7 @@ class DistributedMazeGame(DistributedMinigame):
         #self.treasureModel.setP(-80) # tilt the mickey heads toward the camera
         self.treasureModel.setP(-90)
 
-        self.music = base.loadMusic(
+        self.music = base.loader.loadMusic(
             "phase_4/audio/bgm/MG_toontag.ogg"
             #"phase_4/audio/bgm/TC_SZ.ogg"
             )

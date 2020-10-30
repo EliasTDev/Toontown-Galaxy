@@ -1266,20 +1266,20 @@ class DistributedBossCog(DistributedAvatar.DistributedAvatar,
 
     def loadEnvironment(self):
         # Elevator: play the introduction-to-danger sting
-        self.elevatorMusic = base.loadMusic(
+        self.elevatorMusic = base.loader.loadMusic(
             'phase_7/audio/bgm/tt_elevator.ogg')
-        self.stingMusic = base.loadMusic(
+        self.stingMusic = base.loader.loadMusic(
             'phase_7/audio/bgm/encntr_suit_winning_indoor.ogg')            
             #'phase_9/audio/bgm/encntr_sting_announce.ogg')
         # Battle one: play the standard street battle music
-        self.battleOneMusic = base.loadMusic(
+        self.battleOneMusic = base.loader.loadMusic(
             'phase_3.5/audio/bgm/encntr_general_bg.ogg')
         # Battle three: play the final boss battle music
-        self.battleThreeMusic = base.loadMusic(
+        self.battleThreeMusic = base.loader.loadMusic(
             'phase_7/audio/bgm/encntr_suit_winning_indoor.ogg')
             # 'phase_9/audio/bgm/encntr_suit_winning.ogg')
         # Reward: play the reward music
-        self.epilogueMusic = base.loadMusic(
+        self.epilogueMusic = base.loader.loadMusic(
             'phase_9/audio/bgm/encntr_hall_of_fame.ogg')
             #'phase_9/audio/bgm/CogHQ_finale.ogg')            
         

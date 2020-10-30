@@ -251,7 +251,7 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
             text_shadow = (0,0,0,1),
             )
 
-        self.music = base.loadMusic(
+        self.music = base.loader.loadMusic(
             "phase_4/audio/bgm/MG_cannon_game.ogg"
             )
 

@@ -159,7 +159,7 @@ class DistributedRace(DistributedObject.DistributedObject):
         musicFile = self.BGM_BaseDir + \
                     RaceGlobals.TrackDict[self.trackId][7]
 
-        self.raceMusic = base.loadMusic(musicFile)
+        self.raceMusic = base.loader.loadMusic(musicFile)
         base.playMusic(self.raceMusic, looping = 1, volume = 0.8)
 
         camera.reparentTo(render)

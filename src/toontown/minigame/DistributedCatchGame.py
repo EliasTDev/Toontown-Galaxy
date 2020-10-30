@@ -163,7 +163,7 @@ class DistributedCatchGame(DistributedMinigame):
                 model.setZ(-self.ObjRadius)
             model.flattenMedium()
 
-        self.music = base.loadMusic("phase_4/audio/bgm/MG_toontag.ogg")
+        self.music = base.loader.loadMusic("phase_4/audio/bgm/MG_toontag.ogg")
         self.sndGoodCatch = base.loader.loadSfx('phase_4/audio/sfx/SZ_DD_treasure.mp3')
         self.sndOof = base.loader.loadSfx(
             'phase_4/audio/sfx/MG_cannon_hit_dirt.mp3')
