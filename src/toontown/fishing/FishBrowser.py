@@ -22,13 +22,13 @@ class FishBrowser(DirectScrolledList):
         FishBrowser constructor: create a scrolling list of fish
         """
         assert self.notify.debugStateCall(self)
-        self.parent = parent
+        self._parent = parent
 
         # make the scrolling pick list for the fish names
         gui = loader.loadModel("phase_3.5/models/gui/friendslist_gui")
-        
+
         optiondefs = (
-            ('parent', self.parent,    None),
+            ('parent', self._parent,    None),
             ('relief', None,    None),
             # inc and dec are DirectButtons
             ('incButton_image', (
@@ -71,7 +71,7 @@ class FishBrowser(DirectScrolledList):
         assert self.notify.debugStateCall(self)
         DirectScrolledList.destroy(self)
         self.parent = None
-        
+
     #def load(self):
     #    assert self.notify.debugStateCall(self)
     #    pass
@@ -84,17 +84,17 @@ class FishBrowser(DirectScrolledList):
     def show(self):
         assert self.notify.debugStateCall(self)
         if not self.parent.isHidden():
-            self['items'][self.index].show()        
+            self['items'][self.index].show()
             DirectScrolledList.show(self)
             #print("fish parent not hidden showing")
-            #import pdb; pdb.set_trace()  
+            #import pdb; pdb.set_trace()
         else:
             #print("fish parent hidden not showing")
-            pass            
-                      
+            pass
+
 
     def hide(self):
         assert self.notify.debugStateCall(self)
         self['items'][self.index].hide()
-        DirectScrolledList.hide(self)        
+        DirectScrolledList.hide(self)
 

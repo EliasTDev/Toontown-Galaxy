@@ -38,9 +38,9 @@ class FishPanel(DirectFrame):
         self.initialiseoptions(FishPanel)
         self.doneEvent = doneEvent
         self.fish = fish
-        self.parent = parent
+        self._parent = parent
         self.photo = None
-        
+
     def destroy(self):
         assert self.notify.debugStateCall(self)
         if self.photo:
@@ -112,13 +112,13 @@ class FishPanel(DirectFrame):
                      buttons.find('**/CloseBtn_DN'),
                      buttons.find('**/CloseBtn_Rllvr')),
             image_scale = (0.6, 1, 0.6),
-            command = self.handleCancel,            
+            command = self.handleCancel,
             )
         buttons.removeNode()
         self.photo = FishPhoto.FishPhoto(parent=self)
         # make the scroll list
         self.update(self.fish)
-        
+
     def update(self, fish):
         assert self.notify.debugStateCall(self)
         self.fish = fish
@@ -152,14 +152,14 @@ class FishPanel(DirectFrame):
         """
         assert len(bounds) == 4
         self.swimBounds=bounds
-        
+
     def setSwimColor(self, *colors):
         """
         colors are floats: red, green, blue, alpha
         """
         assert len(colors) == 4
         self.swimColor=colors
-        
+
     def handleCancel(self):
         assert self.notify.debugStateCall(self)
         self.hide()
