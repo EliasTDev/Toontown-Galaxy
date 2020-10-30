@@ -1561,8 +1561,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         # move the interest
         interestZones = zoneId
         if visibleZoneList is not None:
-            #print(str(visibleZoneList) + ", visibleZoneList is not None")
-            #assert zoneId in visibleZoneList
+            assert zoneId in visibleZoneList
             interestZones = visibleZoneList
 
         # We don't want more than one setInterest on the wire at
