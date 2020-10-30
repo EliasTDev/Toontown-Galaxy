@@ -31,7 +31,7 @@ class Settings:
             settingsData = settingsFile.read()
             del settingsFile
             try:
-                settings = json.loads(settingsData.decode()).get('UserSettings')
+                settings = json.loads(settingsData).get('UserSettings')
             except:
                 settings = {}
 
