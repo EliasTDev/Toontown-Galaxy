@@ -7,7 +7,7 @@
 #
 # Note: you can run this standalone by letting the launcher default to None
 #   from toontown.toonbase.ToontownStart import *
-# 
+#
 from panda3d.core import *
 if __debug__:
     loadPrcFile('etc/Configrc.prc')
@@ -112,6 +112,7 @@ ConfigVariableDouble('extractor-step-time').setValue(0.01)
 backgroundNodePath = aspect2d.attachNewNode(backgroundNode, 0)
 backgroundNodePath.setPos(0.0, 0.0, 0.0)
 backgroundNodePath.setScale(render2d, VBase3(1))
+backgroundNodePath.find('**/fg').hide()
 
 #load our logo
 
@@ -182,7 +183,7 @@ version = OnscreenText(serverVersion,
 # Now fire up toon base
 loader.beginBulkLoad("init", TTLocalizer.LoaderLabel, 138, 0, TTLocalizer.TIP_NONE)
 from .ToonBaseGlobal import *
-from direct.showbase.MessengerGlobal import *    
+from direct.showbase.MessengerGlobal import *
 
 from toontown.distributed import ToontownClientRepository
 
@@ -217,7 +218,7 @@ if not launcher.isDummy():
     base.startShow(cr, launcher.getGameServer())
 else:
     base.startShow(cr)
-    
+
 
 # Now get rid of the background and the temp loader
 backgroundNodePath.reparentTo(hidden)
