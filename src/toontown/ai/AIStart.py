@@ -22,7 +22,7 @@ aiConfig = ''
 aiConfig += 'air-base-channel %s\n' % 101000000
 aiConfig += 'air-channel-allocation %s\n' % 999999
 aiConfig += 'air-stateserver %s\n' % 4002
-aiConfig += 'district-name %s\n' % 'Toon Valley'
+aiConfig += 'district-name %s\n' % os.getenv('DISTRICT_NAME', 'Toon Valley')
 aiConfig += 'air-connect %s\n' % '127.0.0.1:7100'
 aiConfig += 'eventlog-host %s\n' % '127.0.0.1:7197'
 loadPrcFileData('AI Config', aiConfig)
