@@ -35,22 +35,22 @@ class DistributedStartingBlockAI( DistributedObjectAI.DistributedObjectAI ):
     """
     Purpose: MUST ADD COMMENTS HERE.
     """
-    
+
     ######################################################################
     # Class Variables
     ######################################################################
     notify = DirectNotifyGlobal.directNotify.newCategory( "DistributedStartingBlockAI" )
     #notify.setDebug(True)
-   
-    
+
+
     def __init__( self, air, kartPad, x, y, z, h, p, r, padLocationId ):
         """
         Comments go here
         """
-        
+
         # Initialize the Super Class
         DistributedObjectAI.DistributedObjectAI.__init__( self, air )
-        
+
         # Initialize Instance Variables
         self.avId = 0
         self.isActive = True
@@ -59,42 +59,42 @@ class DistributedStartingBlockAI( DistributedObjectAI.DistributedObjectAI ):
         self.padLocationId = padLocationId
         self.posHpr = ( x, y, z, h, p, r )
         self.currentMovie = None
-           
+
     def delete( self ):
         """
         Comments go here
         """
-        
+
         self.avId = 0
         self.kartPad = None
-        
+
         # Perform Super Class Delete call
         DistributedObjectAI.DistributedObjectAI.delete( self )
-   
+
     def getPadDoId( self ):
         """
         Comment:
         """
         return self.kartPad.getDoId()
-   
+
     def getPadLocationId( self ):
         """
         Comment:
         """
         return self.padLocationId
- 
+
     def getPosHpr( self ):
         """
         Comment:
         """
         return self.posHpr
-   
+
     def setActive( self, isActive ):
         """
         Comment:
         """
         self.isActive = isActive
- 
+
     def requestEnter( self, paid ):
         """
         comment
@@ -105,20 +105,20 @@ class DistributedStartingBlockAI( DistributedObjectAI.DistributedObjectAI ):
             # Obtain the Avatar Id and attempt to add the avatar to the
             # kart pad.
             success = self.kartPad.addAvBlock( avId, self, paid )
-           
+
 
             # Debug Notification of request entry.
             self.notify.debug( "requestEnter: avId %s wants to enter the kart block." % ( avId ) )
-            
+
             if( success == KartGlobals.ERROR_CODE.success ):
                 # There is not currently an avatar occupying this kart block.
                 self.avId = avId
                 self.isActive = False
-                
+
                 # Handle an unexpected exit by the avatar.
                 self.unexpectedEvent = self.air.getAvatarExitEvent( self.avId )
                 self.acceptOnce( self.unexpectedEvent, self.unexpectedExit )
-                
+
                 # Perform other operations here.
                 self.d_setOccupied( self.avId )
                 self.d_setMovie( KartGlobals.ENTER_MOVIE )
@@ -130,25 +130,25 @@ class DistributedStartingBlockAI( DistributedObjectAI.DistributedObjectAI ):
                 errorCode = KartGlobals.ERROR_CODE.eBoardOver
             else:
                 errorCode = KartGlobals.ERROR_CODE.eOccupied
-            
+
             # The request for entry has been denied because the blocks are
             self.sendUpdateToAvatarId( avId, "rejectEnter", [ errorCode ] )
-   
+
     def requestExit( self ):
         """
         Comment:
         """
-        
+
         # Obtain the avatar id who is requesting the exit.
         avId = self.air.getAvatarIdFromSender()
-        
+
         # Debug Notification of exit request
         self.notify.debug( "requestExit: avId %s wants to exit the Kart Block." % ( avId ) )
-        
+
         success = self.validate( avId, ( self.avId == avId ), "requestExit: avId is not occupying this kart block." )
         if( not success ):
             return
-        
+
         self.normalExit()
 
    # this should be called either when the avatar finishes a movie, or the AI
@@ -156,46 +156,46 @@ class DistributedStartingBlockAI( DistributedObjectAI.DistributedObjectAI ):
     def movieFinished(self):
         if self.currentMovie == KartGlobals.EXIT_MOVIE:
             self.cleanupAvatar()
-            
+
         self.currentMovie = None
         self.kartPad.kartMovieDone()
-        
+
     def cleanupAvatar( self ):
         """
         Comment:
         """
-   
+
         # Tell the KartPad that the toon is exiting the block.
-        
+
         self.ignore( self.unexpectedEvent )
         self.kartPad.removeAvBlock( self.avId, self )
         self.avId = 0
         self.isActive = True
         self.d_setOccupied( 0 )
-        
+
     def normalExit( self ):
         """
         Comment:
         """
-        
+
         self.d_setMovie( KartGlobals.EXIT_MOVIE )
-   
+
     def raceExit( self ):
         """
         Comment:
         """
         self.cleanupAvatar()
         self.movieFinished()
- 
+
     def unexpectedExit( self ):
         """
         Comment:
         """
         self.cleanupAvatar()
         self.movieFinished()
-   
+
         self.unexpectedEvent = None
- 
+
     ######################################################################
     # Distributed Methods
     ######################################################################
@@ -204,7 +204,7 @@ class DistributedStartingBlockAI( DistributedObjectAI.DistributedObjectAI ):
         Comment:
         """
         self.sendUpdate( "setOccupied", [ avId ] )
- 
+
     def d_setMovie( self, mode ):
         """
         Comment:
@@ -223,7 +223,7 @@ class DistributedViewingBlockAI( DistributedStartingBlockAI ):
     # Class Variables
     ######################################################################
     notify = DirectNotifyGlobal.directNotify.newCategory( "DistributedViewingBlockAI" )
-   
+
     def __init__( self, air, kartPad, x, y, z, h, p, r, padLocationId ):
         """
         """
@@ -237,4 +237,4 @@ class DistributedViewingBlockAI( DistributedStartingBlockAI ):
         """
         # Call the Super Class delete
         DistributedStartingBlockAI.delete( self )
-            
+
