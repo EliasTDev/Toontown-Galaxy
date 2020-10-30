@@ -130,10 +130,8 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
         self.Estate_generated = 1
         DistributedObjectAI.DistributedObjectAI.generate(self)
 
-
     def generateWithRequiredAndId(self, doId, air, zoneId):
         self.notify.debug("DistributedEstateAI generateWithRequiredAndId")
-
 
         DistributedObjectAI.DistributedObjectAI.generateWithRequiredAndId(self, doId, air, zoneId)
 
@@ -254,7 +252,6 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
 
         self.gardenTable = []
 
-
     def initEstateData(self, estateVal=None, numHouses=0, houseId=None, houseVal=None):
         # these parameters have just been read from the database..
         # now we have to do something with them.
@@ -327,8 +324,6 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
                 pt.off()
                 pt.printTo()
 
-
-
         if self.fireworksEnabled:
             pos = (29.7, -1.77, 10.93)
             from . import DistributedFireworksCannonAI
@@ -381,7 +376,6 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
             self.b_setRentalTimeStamp(0)
             pass
             #print("not starting cannons")
-
 
     def startCannons(self, fool = 0):
         if self.cannonFlag:
@@ -550,7 +544,6 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
                 self.doEpochNow(numEpoch = numEpoch)
                 return
 
-
     def doEpochNow(self, taskFooler = 0, onlyForThisToonIndex = None, numEpoch = 1):
         taskMgr.remove(self.uniqueName("GardenEpoch"))
         #used when a zone is active. So the garden data will be cleared and reinited
@@ -569,8 +562,6 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
         #        if self.getItems(index):
         #            self.clearGarden(index)
         #            self.placeLawnDecor(index, self.getItems(index))
-
-
 
     def doEpochData(self, time, numEpochs = 0, onlyForThisToonIndex = None):
         #this function just updates the data buit doesn't effect anything within the zone
@@ -618,7 +609,6 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
 
         self.scheduleNextEpoch()
         #taskMgr.doMethodLater(self.timePerEpoch, self.doEpochNow, self.uniqueName("GardenEpoch"))
-
 
     def updateToonBonusLevels(self, index):
         # find the trees with fruit
@@ -681,7 +671,6 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
                     #log that they are starting the garden
                     self.air.writeServerEvent("garden_started", self.doId, '')
 
-
     def placeStarterGarden(self, avId = 0):
         #print("placing test Items %s" % (avId))
         for index in range(self.toonsPerAccount):
@@ -727,8 +716,6 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
                 self.gardenBoxList[index] = []
 
                 self.b_setItems(index, [(255,0,-1,-1,0)]) #empty garden tag
-
-
 
     def setWaterLevelMyGarden(self, avId, waterLevel, specificHardPoint = -1):
         """

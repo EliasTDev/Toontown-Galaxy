@@ -178,7 +178,7 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
 
     def getAvEnterEvent(self):
         return 'avatarEnterEstate'
-        
+
     def getAvExitEvent(self, avId=None):
         # listen for all exits or a particular exit
         # event args:
@@ -299,7 +299,6 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
         except:
             self.notify.warning("zone did not exist for estate owner %d, and visitor %d" % (ownerId, recipient))
             self.sendUpdateToAvatarId(recipient, "setEstateZone", [0, 0])
-
 
     def __createEstateZoneAndObjects(self, avId, isOwner, ownerId, name):
         # assume this is only called when isOwner == 1
@@ -450,8 +449,6 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
                 estateAI.generateWithRequiredAndId(estateId,
                                                    self.air.districtId,
                                                    estateZoneId)
-
-
 
                 estateAI.initEstateData(estateVal, numHouses, houseId, houseVal)
                 estateAI.setPetIds(petIds)
