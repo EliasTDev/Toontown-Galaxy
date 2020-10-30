@@ -1,6 +1,7 @@
 import os
 import time
 import datetime
+import functools
 from pandac.PandaModules import Filename, DSearchPath, TextNode
 from pandac.PandaModules import HTTPClient, Ramfile, DocumentSpec
 from direct.showbase import DirectObject
@@ -98,7 +99,7 @@ class DirectNewsFrame(DirectObject.DirectObject):
         newsDirAsFile = vfs.getFile(Filename(newsDir))
         fileList = newsDirAsFile.scanDirectory()
         fileNames = fileList.getFiles()
-        self.notify.debug("filenames=%s" % fileNames)
+        self.notify.debug("filenames=%s" % str(fileNames))
         # scan through and find hom1. thats got to be a home page
         homeFileNames = set([])
         for name in fileNames:
@@ -119,7 +120,7 @@ class DirectNewsFrame(DirectObject.DirectObject):
         def fileCmp( fileA, fileB):
             return fileA.getFilename().compareTo(fileB.getFilename())
         homeFileNames = list(homeFileNames)
-        homeFileNames.sort(cmp = fileCmp)
+        homeFileNames.sort(key = functools.cmp_to_key(fileCmp))
         self.notify.debug("returned homeFileNames=%s" % homeFileNames)
 
         return homeFileNames
