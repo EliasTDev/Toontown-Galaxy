@@ -50,6 +50,9 @@ from toontown.toonbase import ToontownGlobals
 from toontown.uberdog.DistributedInGameNewsMgrAI import DistributedInGameNewsMgrAI
 from toontown.estate.EstateManagerAI import EstateManagerAI
 from toontown.tutorial.TutorialManagerAI import TutorialManagerAI
+from toontown.fishing import DistributedFishingPondAI
+from toontown.safezone import DistributedFishingSpotAI
+from toontown.safezone import DistributedPartyGateAI
 
 class ToontownAIRepository(ToontownInternalRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory('ToontownAIRepository')
@@ -370,11 +373,98 @@ class ToontownAIRepository(ToontownInternalRepository):
     def loadDNAFileAI(self, dnaStore, dnaFileName):
         return loadDNAFileAI(dnaStore, dnaFileName)
 
-    def findFishingPonds(self, dnaData, zoneId, area):
-        return [], []  # TODO
+    def findFishingPonds(self, dnaGroup, zoneId, area, overrideDNAZone = 0):
+        """
+        Recursively scans the given DNA tree for fishing ponds.  These
+        are defined as all the groups whose code includes the string
+        "fishing_pond".  For each such group, creates a
+        DistributedFishingPondAI.  Returns the list of distributed
+        objects and a list of the DNAGroups so we can search them for
+        spots and targets.
+        """
+        fishingPonds = []
+        fishingPondGroups = []
 
-    def findPartyHats(self, dnaData, zoneId):
-        return []  # TODO
+        if ((isinstance(dnaGroup, DNAGroup)) and
+            # If it is a DNAGroup, and the name starts with fishing_pond, count it
+            (str.find(dnaGroup.getName(), 'fishing_pond') >= 0)):
+            # Here's a fishing pond!
+            fishingPondGroups.append(dnaGroup)
+            fp = DistributedFishingPondAI.DistributedFishingPondAI(self, area)
+            fp.generateWithRequired(zoneId)
+            fishingPonds.append(fp)
+        else:
+            # Now look in the children
+            # Fishing ponds cannot have other ponds in them,
+            # so do not search the one we just found:
+            # If we come across a visgroup, note the zoneId and then recurse
+            if (isinstance(dnaGroup, DNAVisGroup) and not overrideDNAZone):
+                # Make sure we get the real zone id, in case we are in welcome valley
+                zoneId = ZoneUtil.getTrueZoneId(
+                        int(dnaGroup.getName().split(':')[0]), zoneId)
+            for i in range(dnaGroup.getNumChildren()):
+                childFishingPonds, childFishingPondGroups = self.findFishingPonds(
+                        dnaGroup.at(i), zoneId, area, overrideDNAZone)
+                fishingPonds += childFishingPonds
+                fishingPondGroups += childFishingPondGroups
+        return fishingPonds, fishingPondGroups
+
+    def findFishingSpots(self, dnaPondGroup, distPond):
+        """
+        Scans the given DNAGroup pond for fishing spots.  These
+        are defined as all the props whose code includes the string
+        "fishing_spot".  Fishing spots should be the only thing under a pond
+        node. For each such prop, creates a DistributedFishingSpotAI.
+        Returns the list of distributed objects created.
+        """
+        fishingSpots = []
+        # Search the children of the pond
+        for i in range(dnaPondGroup.getNumChildren()):
+            dnaGroup = dnaPondGroup.at(i)
+            if ((isinstance(dnaGroup, DNAProp)) and
+                (str.find(dnaGroup.getCode(), 'fishing_spot') >= 0)):
+                # Here's a fishing spot!
+                pos = dnaGroup.getPos()
+                hpr = dnaGroup.getHpr()
+                fs = DistributedFishingSpotAI.DistributedFishingSpotAI(
+                     self, distPond, pos[0], pos[1], pos[2], hpr[0], hpr[1], hpr[2])
+                fs.generateWithRequired(distPond.zoneId)
+                fishingSpots.append(fs)
+            else:
+                self.notify.debug("Found dnaGroup that is not a fishing_spot under a pond group")
+        return fishingSpots
+
+    def findPartyHats(self, dnaGroup, zoneId, overrideDNAZone = 0):
+        """
+        Recursively scans the given DNA tree for party hats.  These
+        are defined as all the groups whose code includes the string
+        "party_gate".  For each such group, creates a
+        DistributedPartyGateAI.  Returns the list of distributed
+        objects.
+        """
+        partyHats = []
+
+        if ((isinstance(dnaGroup, DNAGroup)) and
+            # If it is a DNAGroup, and the name has party_gate, count it
+            (str.find(dnaGroup.getName(), 'party_gate') >= 0)):
+            # Here's a party hat!
+            ph = DistributedPartyGateAI.DistributedPartyGateAI(self)
+            ph.generateWithRequired(zoneId)
+            partyHats.append(ph)
+        else:
+            # Now look in the children
+            # Party hats cannot have other party hats in them,
+            # so do not search the one we just found:
+            # If we come across a visgroup, note the zoneId and then recurse
+            if (isinstance(dnaGroup, DNAVisGroup) and not overrideDNAZone):
+                # Make sure we get the real zone id, in case we are in welcome valley
+                zoneId = ZoneUtil.getTrueZoneId(
+                        int(dnaGroup.getName().split(':')[0]), zoneId)
+            for i in range(dnaGroup.getNumChildren()):
+                childPartyHats = self.findPartyHats(dnaGroup.at(i), zoneId, overrideDNAZone)
+                partyHats += childPartyHats
+
+        return partyHats
 
     def findRacingPads(self, dnaGroup, zoneId, area, overrideDNAZone = 0, type = 'racing_pad'):
         racingPads = []
