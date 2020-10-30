@@ -21,7 +21,7 @@ from toontown.suit import SuitDNA
 from toontown.toon import Experience
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
-
+from otp.otpbase.PythonUtil import *
 class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("MagicWordManagerAI")
 
@@ -58,7 +58,7 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
             try:
                 self.doMagicWord(word, av, zoneId, senderId)
             except:
-                response = PythonUtil.describeException(backTrace = 1)
+                response = describeException(backTrace = 1)
                 self.notify.warning("Ignoring error in magic word:\n%s" % response)
                 self.down_setMagicWordResponse(senderId, response)
         else:
