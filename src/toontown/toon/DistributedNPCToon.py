@@ -17,7 +17,7 @@ class DistributedNPCToon(DistributedNPCToonBase):
         self.curQuestMovie = None
         self.questChoiceGui = None
         self.trackChoiceGui = None
-            
+        self.npcCamera = None
     def delayDelete(self):
         DistributedNPCToonBase.delayDelete(self)
         # if there are situations where a quest movie should be able to stick around
@@ -113,6 +113,9 @@ class DistributedNPCToon(DistributedNPCToonBase):
         # TODO: make this a lerp
         self.initPos()
         if isLocalToon:
+            if self.npcCamera:
+                self.npcCamera.finish()
+                self.npcCamera = None
             taskMgr.remove(self.uniqueName("lerpCamera"))
             # Go back into walk mode
             base.localAvatar.posCamera(0,0)
@@ -127,16 +130,12 @@ class DistributedNPCToon(DistributedNPCToonBase):
         camera.wrtReparentTo(render)
         if ((mode == NPCToons.QUEST_MOVIE_QUEST_CHOICE) or
             (mode == NPCToons.QUEST_MOVIE_TRACK_CHOICE)):
-            camera.lerpPosHpr(5, 9, self.getHeight()-0.5, 155, -2, 0, 1,
-                              other=self,
-                              blendType="easeOut",
-                              task=self.uniqueName("lerpCamera"))
+            self.npcCamera = camera.posQuatInterval(1, Point3(5, 9, self.getHeight() - 0.5), quat, other=self, blendType='easeOut', name=self.uniqueName("lerpCamera"))
+            self.npcCamera.start()
+
         else:
-            camera.lerpPosHpr(-5, 9, self.getHeight()-0.5, -150, -2, 0, 1,
-                              other=self,
-                              blendType="easeOut",
-                              task=self.uniqueName("lerpCamera"))
-        
+            self.npcCamera = camera.posQuatInterval(1, Point3(-5, 9, self.getHeight() - 0.5), quat, other=self, blendType='easeOut', name=self.uniqueName("lerpCamera"))
+            self.npcCamera.start()
 
     def setMovie(self, mode, npcId, avId, quests, timestamp):
         """
