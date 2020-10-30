@@ -19,7 +19,7 @@ from toontown.toonbase import ToontownGlobals
 from toontown.estate import HouseGlobals
 from toontown.toonbase import TTLocalizer
 from direct.interval.IntervalGlobal import *
-
+from libotp import NametagGlobals
 
 visualizeZones = base.config.GetBool("visualize-zones", 0)
 

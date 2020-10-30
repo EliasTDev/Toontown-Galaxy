@@ -1,6 +1,6 @@
 @echo off
 
-title TTE Uberdog
+title TTG Uberdog
 rem Define some constants for our UberDOG server:
 set MAX_CHANNELS=999999
 set STATESERVER=4002

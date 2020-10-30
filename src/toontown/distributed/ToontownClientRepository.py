@@ -910,26 +910,6 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
             self.handleDisable(di)
         elif msgType == CLIENT_OBJECT_DELETE_RESP:
             self.handleDelete(di)
-        elif msgType == CLIENT_GET_FRIEND_LIST_RESP:
-            self.handleGetFriendsList(di)
-        elif msgType == CLIENT_GET_FRIEND_LIST_EXTENDED_RESP:
-            self.handleGetFriendsListExtended(di)
-        elif msgType == CLIENT_FRIEND_ONLINE:
-            self.handleFriendOnline(di)
-        elif msgType == CLIENT_FRIEND_OFFLINE:
-            self.handleFriendOffline(di)
-        elif msgType == CLIENT_GET_AVATAR_DETAILS_RESP:
-            self.handleGetAvatarDetailsResp(di)
-        #Roger wants to remove this elif msgType == CLIENT_SERVER_UP:
-        #Roger wants to remove this     self.handleServerUp(di)
-        #Roger wants to remove this elif msgType == CLIENT_SERVER_DOWN:
-        #Roger wants to remove this     self.handleServerDown(di)
-        # Moved to handleMessageType elif msgType == CLIENT_GET_STATE_RESP:
-        # Moved to handleMessageType     # HACK! This should really be handled.
-        # Moved to handleMessageType     pass
-        #elif msgType == CLIENT_DONE_SET_ZONE_RESP:
-        #    # HACK! This should really be handled.
-        #    pass
         else:
             self.handleMessageType(msgType, di)
 

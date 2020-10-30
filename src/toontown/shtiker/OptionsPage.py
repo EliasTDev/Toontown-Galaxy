@@ -286,7 +286,7 @@ class OptionsTabPage(DirectFrame):
 
         # Remove references to UI Components and instance variables for
         # garbage collection purposes.
-        self.parent = None
+        self._parent = None
 
         # Destroy the DirectFrame super class.
         DirectFrame.destroy(self)
@@ -567,7 +567,7 @@ class OptionsTabPage(DirectFrame):
         self.speedChatStyleIndex = base.localAvatar.getSpeedChatStyleIndex()
         self.updateSpeedChatStyle()
 
-        if self.parent.book.safeMode:
+        if self._parent.book.safeMode:
             self.exitButton.hide()
         else:
             self.exitButton.show()

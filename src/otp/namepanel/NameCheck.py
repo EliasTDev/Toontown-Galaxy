@@ -58,7 +58,7 @@ def checkName(name, otherCheckFuncs=[], font=None):
         if name.strip() == '':
             notify.info('name is empty')
             return OTPLocalizer.NCTooShort
-        
+
     def printableChars(name):
         for char in name:
             # If it is an extended character, we cannot test it for printability here (but
@@ -75,7 +75,7 @@ def checkName(name, otherCheckFuncs=[], font=None):
         if c.isalpha() or c.isspace():
             return True
         return False
-        
+
     def badCharacters(name, _validCharacter=_validCharacter):
         for char in name:
             if not _validCharacter(char):
@@ -86,7 +86,7 @@ def checkName(name, otherCheckFuncs=[], font=None):
                     notify.info('name contains bad char: %s' % TextEncoder().encodeWtext(char))
                     return OTPLocalizer.NCBadCharacter % TextEncoder().encodeWtext(char)
 
-    def fontHasCharacters(name, font=font): 
+    def fontHasCharacters(name, font=font):
         if font:
             tn = TextNode('NameCheck')
             tn.setFont(font)
@@ -117,7 +117,7 @@ def checkName(name, otherCheckFuncs=[], font=None):
             for char in word:
                 if ord(char) >= 0x80:
                     return None
-                
+
             letters = filterString(word, string.ascii_letters)
             # things like 'MD' are ok without periods
             if len(letters) > 2:
@@ -140,7 +140,7 @@ def checkName(name, otherCheckFuncs=[], font=None):
                 # make case-insensitive
                 letters = TextEncoder().decodeText(
                     TextEncoder.lower(
-                    TextEncoder().encodeWtext(letters)))
+                    TextEncoder().encodeWtext(letters).decode()).encode())
                 filtered = filterString(letters, letters[0])
                 if filtered == letters:
                     notify.info('word "%s" uses only one letter' % TextEncoder().encodeWtext(word))
@@ -170,7 +170,7 @@ def checkName(name, otherCheckFuncs=[], font=None):
                 notify.info('name makes invalid use of dashes')
                 return OTPLocalizer.NCDashUsage
             i += 1
-        
+
     def checkCommas(name):
         def validComma(index, name=name):
             # if the comma is at the beginning or the end, fail
@@ -192,7 +192,7 @@ def checkName(name, otherCheckFuncs=[], font=None):
                 notify.info('name makes invalid use of commas')
                 return problem
             i += 1
-        
+
     def checkPeriods(name):
         """ periods are allowed at the end of words, or in two-letter
         words, like 'J.T.' """
@@ -239,12 +239,12 @@ def checkName(name, otherCheckFuncs=[], font=None):
         if numApos > 3:
             notify.info('name has too many apostrophes.')
             return OTPLocalizer.NCApostrophes
-        
+
     def tooManyWords(name):
         if len(wordList(name)) > 4:
             notify.info('name has too many words')
             return OTPLocalizer.NCTooManyWords
-        
+
     def allCaps(name):
         # MICKEY MOUSE
         letters = justLetters(name)
@@ -302,7 +302,7 @@ def checkName(name, otherCheckFuncs=[], font=None):
                     return OTPLocalizer.NCBadCharacter % te.encodeWtext(chr(char))
             else:
                 # Restrict the number of characters, if three-byte-encoded utf-8 character
-                # The full-width characters would fit into a single display cell, 
+                # The full-width characters would fit into a single display cell,
                 # and the half-width characters would fit two to a display cell
                 if char in halfwidthCharacter:
                     dc += 0.5
@@ -325,7 +325,7 @@ def checkName(name, otherCheckFuncs=[], font=None):
         while i < len(name):
             char = name[i]
             i += 1
-            
+
             if char == lastChar:
                 # character is repeating
                 count += 1

@@ -20,8 +20,12 @@ class WhiteList:
         assert self.numWords > 2
 
     def cleanText(self,text):
-        text = text.strip(".,?!")
-        text = text.lower()
+        if isinstance(text, bytes):
+            text = text.decode().strip('.,?!')
+        else:
+            text = text.strip('.,?!')
+
+        text = text.lower().encode()
         return text
 
     def isWord(self,text):
@@ -41,7 +45,7 @@ class WhiteList:
             return False
 
         return self.words[i].startswith(text)
-        
+
     def prefixCount(self,text):
         text = self.cleanText(text)
         i = bisect_left(self.words,text)
@@ -50,7 +54,7 @@ class WhiteList:
 
         while j < self.numWords and self.words[j].startswith(text):
             j += 1
-            
+
         return j - i
 
     def prefixList(self,text):
@@ -61,5 +65,5 @@ class WhiteList:
 
         while j < self.numWords and self.words[j].startswith(text):
             j += 1
-            
+
         return self.words[i:j]

@@ -65,6 +65,7 @@ class ToonBase(OTPBase.OTPBase):
             sys.exit(1)
 
         self.disableShowbaseMouse()
+        self.addCullBins()
 
         self.toonChatSounds = self.config.GetBool('toon-chat-sounds', 1)
 
@@ -281,9 +282,15 @@ class ToonBase(OTPBase.OTPBase):
             self.mouse2cam.detachNode()
         # end of hack.
 
+    def addCullBins(self):
+        # These are to fix graphical issues on Modern panda.
+        cullBinMgr = CullBinManager.getGlobalPtr()
+        cullBinMgr.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
+        cullBinMgr.addBin('shadow', CullBinManager.BTFixed, 15)
+        cullBinMgr.addBin('ground', CullBinManager.BTFixed, 14)
+
     def __walking(self, pressed):
         self.walking = pressed
-
 
     def takeScreenShot(self):
         namePrefix = 'screenshot'

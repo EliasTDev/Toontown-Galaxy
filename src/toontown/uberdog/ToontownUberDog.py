@@ -102,7 +102,7 @@ class ToontownUberDog(UberDog):
                 OtpDoGlobals.OTP_DO_ID_TOONTOWN_AWARD_MANAGER,
                 "AwardManager")
 
-        if config.GetBool('want-code-redemption', 0):
+        if config.GetBool('want-code-redemption', 1):
             if self.isCodeRedemptionManager:
                 self.codeRedemptionManager = self.generateGlobalObject(
                     OtpDoGlobals.OTP_DO_ID_TOONTOWN_CODE_REDEMPTION_MANAGER,

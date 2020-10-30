@@ -2613,14 +2613,14 @@ class OTPClientRepository(ClientRepositoryBase):
         currently up and running, and accepting avatars.
         """
         assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
-        list = []
+        shardList = []
         for s in list(self.activeDistrictMap.values()):
             if s.available:
-                list.append(
+                shardList.append(
                         (s.doId, s.name, s.avatarCount,
                         s.newAvatarCount))
 
-        return list
+        return shardList
 
 
     ######### General senders and handlers #########

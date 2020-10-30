@@ -97,6 +97,10 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.buildingManagers = {}
         self.suitPlanners = {}
 
+        # Guard for publish
+        if simbase.wantBingo:
+            self.bingoMgr = None
+
         # player avatars will increment and decrement this count
         self._population = 0
 
@@ -597,3 +601,19 @@ class ToontownAIRepository(ToontownInternalRepository):
     def getWelcomeValleyCount(self):
         # avatars in Welcom Vally
         return self.welcomeValleyManager.getAvatarCount();
+
+    def createPondBingoMgrAI(self, estate):
+        """
+        estate - the estate for which the PBMgrAI should
+                be created.
+        returns: None
+
+        This method instructs the BingoManagerAI to
+        create a new PBMgrAI for a newly generated
+        estate.
+        """
+        # Guard for publish
+        if simbase.wantBingo:
+            if self.bingoMgr:
+                self.notify.info('createPondBingoMgrAI: Creating a DPBMAI for Dynamic Estate')
+                self.bingoMgr.createPondBingoMgrAI(estate, 1)
