@@ -59,3 +59,4 @@ text-minfilter linear_mipmap_linear
 gc-save-all 0
 want-magic-words #t
 want-code-redemption-init-db true
+support-rename 1
