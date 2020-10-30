@@ -4,6 +4,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from panda3d.core import *
 
 class Settings:
+    notify = directNotify.newCategory('Settings')
     GL = 0
     DX7 = 1
     DX8 = 5
@@ -88,7 +89,6 @@ class Settings:
         return Settings.music
 
     @staticmethod
-        return 1 #TODO
     def setSfx(sfx):
         Settings.sfx = sfx
 
