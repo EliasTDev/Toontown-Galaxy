@@ -2,5 +2,7 @@
 cd "../../dependencies/astron/"
 
 title TTE Astron
-astrond --loglevel info config/cluster.yml
+:main
+astrond --loglevel info --pretty config/cluster.yml
 pause
+goto :main

@@ -40,6 +40,8 @@ OTP_DO_ID_FRIENDS =               4640 # Look under the avatarId zone for friend
 OTP_DO_ID_GUILDS =                4650 # Look under a guildId zone for a guild
 OTP_DO_ID_ESCROW =                4660 # Look under the avatarId zone for pending trades
 
+OTP_DO_ID_ASTRON_LOGIN_MANAGER = 4670
+
 OTP_DO_ID_PIRATES_AVATAR_MANAGER =    4674
 OTP_DO_ID_PIRATES_CREW_MANAGER =      4675
 OTP_DO_ID_PIRATES_INVENTORY_MANAGER = 4677

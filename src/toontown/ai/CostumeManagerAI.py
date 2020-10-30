@@ -16,6 +16,7 @@ from toontown.hood import *
 from direct.showbase import DirectObject
 from toontown.toonbase import TTLocalizer
 from toontown.classicchars import *
+from toontown.classicchars import DistributedVampireMickeyAI, DistributedSuperGoofyAI
 
 class CostumeManagerAI(HolidayBaseAI.HolidayBaseAI, DirectObject.DirectObject):
     notify = DirectNotifyGlobal.directNotify.newCategory('CostumeManagerAI')
@@ -28,7 +29,7 @@ class CostumeManagerAI(HolidayBaseAI.HolidayBaseAI, DirectObject.DirectObject):
         self.runningState = 1
 
         self.cCharsSwitched = 0
-        
+
         # For use with magic words
         self.stopForever = False
 
@@ -45,7 +46,7 @@ class CostumeManagerAI(HolidayBaseAI.HolidayBaseAI, DirectObject.DirectObject):
             self.accept("GSHoodSpawned", self.__welcomeValleySpawned)
             self.accept("GSHoodDestroyed", self.__welcomeValleyDestroyed)
 
-            if hasattr(simbase.air, "holidayManager"):
+            if hasattr(simbase.air, "holidayManager") and simbase.air.holidayManager is not None:
                 if self.holidayId in simbase.air.holidayManager.currentHolidays and simbase.air.holidayManager.currentHolidays[self.holidayId] != None:
                     return
 
@@ -176,14 +177,14 @@ class CostumeManagerAI(HolidayBaseAI.HolidayBaseAI, DirectObject.DirectObject):
     def __switchChars(self, newChar, walkNode, hood):
         self.notify.debug("SwitchingChars %s to %s" %(hood.classicChar, newChar))
         self.notify.debugStateCall(self)
-        hood.classicChar.requestDelete()        
+        hood.classicChar.requestDelete()
         if hasattr(hood, "air") and hood.air:
             hood.classicChar = newChar(hood.air)
             hood.classicChar.generateWithRequired(hood.zoneId)
             hood.addDistObj(hood.classicChar)
             hood.classicChar.walk.setCurNode(walkNode)
-            hood.classicChar.fsm.request('Walk')            
-        else:        
+            hood.classicChar.fsm.request('Walk')
+        else:
             self.notify.warning("Hood empty during character switch")
         holidayDone = 1
         for classicChar in self.__classicChars.values():

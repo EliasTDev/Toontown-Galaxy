@@ -36,9 +36,9 @@ uberdogs:
       id: 4695
       anonymous: false
 
-    - class: GlobalGroupTracker
-      id: 4479
-      anonymous: false
+    - class: AstronLoginManager
+      id: 4670
+      anonymous: true
 
 roles:
     - type: clientagent
