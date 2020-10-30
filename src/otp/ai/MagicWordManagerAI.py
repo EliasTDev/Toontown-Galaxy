@@ -68,12 +68,12 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
             if (not self.supportRename):
                 self.notify.warning("Rename is not supported for %s, requested by %d" % (av.name, senderId))
             else:
-                name = string.strip(word[8:])
+                name = word[8:].strip()
                 if name == "":
                     response = "No name."
                 else:
                     av.d_setName(name)
-            
+
         elif wordIs("~badname"):
             self.notify.warning("Renaming inappropriately named toon %s (doId %d)." % (av.name, av.doId))
             name = "toon%d" % (av.doId % 1000000)
@@ -131,7 +131,7 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
             self.notify.debug("Only 1 hp for " + av.name)
         elif wordIs("~sad"):
             av.b_setHp(0)
-            self.notify.debug("Only 0 hp for " + av.name)            
+            self.notify.debug("Only 0 hp for " + av.name)
         elif wordIs("~dead"):
             av.takeDamage(av.hp)
             self.notify.debug(av.name + " is dead")
@@ -197,7 +197,7 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
 
         elif wordIs('~ai'):
             # Execute an arbitrary Python command on the AI.
-            command = string.strip(word[3:])
+            command = word[3:].strip()
             self.notify.warning("Executing command '%s' from %s" % (command, senderId))
             text = self.__execMessage(command)[:simbase.config.GetInt("ai-debug-length",300)]
             self.down_setMagicWordResponse(
@@ -511,7 +511,7 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
         response = "%s" % (dna.asTuple(),)
 
         self.down_setMagicWordResponse(senderId, response)
-    """    
+    """
 
     def _handleGPTCfinished(self, senderId, ct, gptcJob):
         self.down_setMagicWordResponse(senderId, 'aigptc(%s) finished' % ct)
@@ -571,7 +571,7 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
                 str += '%s %s\n' % (obj.accountName, obj.name)
         if not str:
             str = "No avatars."
-                
+
         senderId = self.air.getAvatarIdFromSender()
         self.down_setMagicWordResponse(senderId, str)
 
