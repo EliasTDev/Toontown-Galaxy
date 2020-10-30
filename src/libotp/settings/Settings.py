@@ -1,88 +1,149 @@
-#TODO there is a lot of things we need to get done in here to read from a preferences file or settings file
+import json, os
+
+from direct.directnotify.DirectNotifyGlobal import directNotify
+from panda3d.core import *
+
 class Settings:
     GL = 0
     DX7 = 1
     DX8 = 5
+    windowedMode = 1
+    music = 1
+    sfx = 1
+    toonChatSounds = 1
+    musicVolume = 1.0
+    sfxVolume = 1.0
+    embeddedMode = 0
+    acceptingNewFriends = 1
+    acceptingNonFriendWhispers = 1
+    resolutionDimensions = (800, 600)
+    resList = [(640, 480),
+               (800, 600),
+               (1024, 768),
+               (1280, 1024),
+               (1600, 1200)]
 
     @staticmethod
     def readSettings():
-        pass  # TODO
+        if Settings.doSavedSettingsExist():
+            settingsFile = open('./useropt')
+            settingsData = settingsFile.read()
+            del settingsFile
+            try:
+                settings = json.loads(settingsData.decode()).get('UserSettings')
+            except:
+                settings = {}
+
+            Settings.setMusic(settings.get('music', 1))
+            Settings.setSfx(settings.get('sfx', 1))
+            Settings.setToonChatSounds(settings.get('toonChatSounds', 1))
+            Settings.setAcceptingNewFriends(settings.get('acceptingNewFriends', 1))
+            Settings.setAcceptingNonFriendWhispers(settings.get('acceptingNonFriendWhispers', 1))
+            Settings.setResolutionDimensions(Settings.resList[settings.get('resolution', 1)][0],
+                                             Settings.resList[settings.get('resolution', 1)][1])
+            Settings.setWindowedMode(settings.get('windowedMode', 1))
+            Settings.setEmbeddedMode(settings.get('embeddedMode', 0))
 
     @staticmethod
     def writeSettings():
-        pass  # TODO
+        if Settings.doSavedSettingsExist():
+            settingsFile = open('./useropt')
+            settingsData = settingsFile.read()
+            del settingsFile
+            try:
+                settings = json.loads(settingsData)
+            except:
+                settings = {}
+                settings['UserSettings'] = {}
+        else:
+            settings = {}
+            settings['UserSettings'] = {}
+
+        settings['UserSettings']['music'] = Settings.getMusic()
+        settings['UserSettings']['sfx'] = Settings.getSfx()
+        settings['UserSettings']['toonChatSounds'] = Settings.getToonChatSounds()
+        settings['UserSettings']['acceptingNewFriends'] = Settings.getAcceptingNewFriends()
+        settings['UserSettings']['acceptingNonFriendWhispers'] = Settings.getAcceptingNonFriendWhispers()
+        settings['UserSettings']['resolution'] = Settings.getResolution()
+        settings['UserSettings']['windowedMode'] = Settings.getWindowedMode()
+        settings['UserSettings']['embeddedMode'] = Settings.getEmbeddedMode()
+
+        with open('./useropt', 'w') as f:
+            f.write(json.dumps(settings))
 
     @staticmethod
-    def setWindowedMode(_):
-        pass #TODO
+    def setWindowedMode(windowedMode):
+        Settings.windowedMode = windowedMode
 
     @staticmethod
     def getWindowedMode():
-        return 1
+        return Settings.windowedMode
 
     @staticmethod
-    def setMusic(_):
-        pass #TODO
+    def setMusic(music):
+        Settings.music = music
 
     @staticmethod
     def getMusic():
-        return 1
-    @staticmethod
-    def getMusicVolume():
-        return 1 #TODO 
+        return Settings.music
 
     @staticmethod
-    def setSfx(_):
-        pass #TODO
-
-    @staticmethod
-    def getSfxVolume():
         return 1 #TODO
+    def setSfx(sfx):
+        Settings.sfx = sfx
 
     @staticmethod
     def getSfx():
-        return 1
+        return Settings.sfx
 
     @staticmethod
-    def setToonChatSounds(_):
-        pass #TODO
+    def setToonChatSounds(toonChatSounds):
+        Settings.toonChatSounds = toonChatSounds
 
     @staticmethod
     def getToonChatSounds():
-        return 1
+        return Settings.toonChatSounds
 
     @staticmethod
-    def setResolutionDimensions(_, __):
-        pass #TODO
+    def getMusicVolume():
+        return Settings.musicVolume
+
+    @staticmethod
+    def getSfxVolume():
+        return Settings.sfxVolume
 
     @staticmethod
     def getResolution():
-        return 1
+        return Settings.resList.index(Settings.resolutionDimensions)
 
     @staticmethod
-    def setEmbeddedMode(_):
-        pass #TODO
+    def setEmbeddedMode(embeddedMode):
+        Settings.embeddedMode = embeddedMode
 
     @staticmethod
     def getEmbeddedMode():
-        return 0
+        return Settings.embeddedMode
 
     @staticmethod
     def doSavedSettingsExist():
-        return 0
+        return os.path.exists('./useropt')
 
     @staticmethod
-    def setAcceptingNewFriends(_):
-        pass #TODO
+    def setAcceptingNewFriends(acceptingNewFriends):
+        Settings.acceptingNewFriends = acceptingNewFriends
 
     @staticmethod
     def getAcceptingNewFriends():
-        return 1
+        return Settings.acceptingNewFriends
 
     @staticmethod
-    def setAcceptingNonFriendWhispers(_):
-        pass #TODO
+    def setAcceptingNonFriendWhispers(acceptingNonFriendWhispers):
+        Settings.acceptingNonFriendWhispers = acceptingNonFriendWhispers
 
     @staticmethod
     def getAcceptingNonFriendWhispers():
-        return 1
+        return Settings.acceptingNonFriendWhispers
+
+    @staticmethod
+    def setResolutionDimensions(x, y):
+        Settings.resolutionDimensions = (x, y)
