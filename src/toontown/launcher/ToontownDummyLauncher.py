@@ -1,6 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from otp.launcher.DummyLauncherBase import DummyLauncherBase
 from toontown.launcher.ToontownLauncher import ToontownLauncher
+import os
 
 # it's important to derive from DummyLauncherBase first so that Python
 # will find its methods before looking at the real launcher
@@ -12,7 +13,7 @@ class ToontownDummyLauncher(DummyLauncherBase, ToontownLauncher):
         self.setPhaseComplete(1, 100)
         self.setPhaseComplete(2, 100)
         self.setPhaseComplete(3, 100)
-        
+
         self.tutorialComplete = 1
         self.frequency = 0.0
         self.windowOpen = 0
@@ -30,7 +31,7 @@ class ToontownDummyLauncher(DummyLauncherBase, ToontownLauncher):
         # Fake registry
         self.reg = {}
         self.startFakeDownload()
-        
+
     def setTutorialComplete(self, complete):
         self.tutorialComplete = complete
 
@@ -80,7 +81,7 @@ class ToontownDummyLauncher(DummyLauncherBase, ToontownLauncher):
         return self.goUserName
 
     def setGoUserName(self, userName):
-        self.goUserName = userName    
+        self.goUserName = userName
 
     def getParentPasswordSet(self):
         """
@@ -95,3 +96,6 @@ class ToontownDummyLauncher(DummyLauncherBase, ToontownLauncher):
         time it will return None.
         """
         return 0
+
+    def getPlayToken(self):
+        return os.getenv('TTG_PLAYCOOKIE', 'dev')

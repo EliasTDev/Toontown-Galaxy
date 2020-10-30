@@ -17,16 +17,16 @@ set INPUT=-1
 set /P INPUT=Selection: 
 
 if %INPUT%==1 (
-    set TTE_GAMESERVER=127.0.0.1
+    set TTG_GAMESERVER=127.0.0.1
 ) else if %INPUT%==2 (
-    set TTE_GAMESERVER=13.80.121.157
+    set TTG_GAMESERVER=13.80.121.157
 ) else if %INPUT%==4 (
-    set TTE_GAMESERVER=127.0.0.1
+    set TTG_GAMESERVER=127.0.0.1
 ) else if %INPUT%==5 (
-    SET TTE_GAMESERVER=gameserver.toontownempire.com
+    SET TTG_GAMESERVER=gameserver.toontownempire.com
 ) else if %INPUT%==3 (
     echo.
-    set /P TTE_GAMESERVER=Gameserver: 
+    set /P TTG_GAMESERVER=Gameserver: 
 ) else (
 	goto selection
 )
@@ -34,12 +34,12 @@ if %INPUT%==1 (
 echo.
 
 if %INPUT%==2 (
-    set /P TTE_PLAYCOOKIE="Username: "
+    set /P TTG_PLAYCOOKIE="Username: "
 ) else if %INPUT%==4 (
-    set /P tteUsername="Username: "
-    set /P ttePassword="Password: "
+    set /P ttgUsername="Username: "
+    set /P ttgPassword="Password: "
 ) else (
-    set /P TTE_PLAYCOOKIE=Username: 
+    set /P TTG_PLAYCOOKIE=Username: 
 )
 
 echo.
@@ -49,14 +49,14 @@ echo Starting Toontown Galaxy...
 echo ppython: "dependencies/panda/python/ppython.exe"
 
 if %INPUT%==2 (
-    echo Username: %TTE_PLAYCOOKIE%
+    echo Username: %TTG_PLAYCOOKIE%
 ) else if %INPUT%==4 (
-    echo Username: %tteUsername%
+    echo Username: %ttgUsername%
 ) else (
-    echo Username: %TTE_PLAYCOOKIE%
+    echo Username: %TTG_PLAYCOOKIE%
 )
 
-echo Gameserver: %TTE_GAMESERVER%
+echo Gameserver: %TTG_GAMESERVER%
 echo ===============================
 
 cd ../../

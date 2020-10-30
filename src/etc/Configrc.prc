@@ -57,8 +57,5 @@ want-dev 0
 schellgames-dev 0
 text-minfilter linear_mipmap_linear
 gc-save-all 0
-
-# TEMP
-fake-playtoken dev
 want-magic-words #t
 
