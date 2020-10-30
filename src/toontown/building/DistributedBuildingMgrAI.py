@@ -58,7 +58,7 @@ class DistributedBuildingMgrAI:
     """
 
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBuildingMgrAI')
-    serverDatafolder = simbase.config.GetString('server-data-folder', "backups")
+    serverDatafolder = simbase.config.GetString('server-data-folder', "dependencies/backups/buildings")
 
     def __init__(self, air, branchID, dnaStore, trophyMgr):
         """
@@ -337,7 +337,10 @@ class DistributedBuildingMgrAI:
 
     def getFileName(self):
         """Figure out the path to the saved state"""
-        f = "%s%s_%d.buildings" % (self.serverDatafolder, self.shard, self.branchID)
+        if not os.path.exists(self.serverDatafolder):
+            os.makedirs(self.serverDatafolder)
+
+        f = "%s/%s_%d.buildings" % (self.serverDatafolder, self.shard, self.branchID)
         assert(self.debugPrint("getFileName() returning \""+str(f)+"\""))
         return f
 
