@@ -108,7 +108,6 @@ class QuietZoneState(StateData.StateData):
             base.cr.handlePlayGame(msgType, di)
 
     def handleWaitForZoneRedirect(self, msgType, di):
-        self.notify.debug("handleWaitForZoneRedirect("+"msgType="+str(msgType)+", di="+str(di)+")")
         if msgType == CLIENT_ENTER_OBJECT_REQUIRED:
             # Call the special filtered quiet zone generate handler
             base.cr.handleQuietZoneGenerateWithRequired(di)
