@@ -15,6 +15,7 @@ from . import SuitBattleGlobals
 from toontown.distributed import DelayDelete
 import random
 from libotp import CFSpeech, CFTimeout
+from libotp import NametagGlobals
 
 class DistributedBattle(DistributedBattleBase.DistributedBattleBase):
 

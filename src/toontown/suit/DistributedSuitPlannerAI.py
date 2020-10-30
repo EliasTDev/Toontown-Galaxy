@@ -25,7 +25,7 @@ from toontown.toonbase import ToontownGlobals
 import math
 import time
 import random
-from libpandadna import DNASuitPoint
+from libpandadna import DNASuitPoint, SuitLeg
 
 class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
                                 SuitPlannerBase.SuitPlannerBase):

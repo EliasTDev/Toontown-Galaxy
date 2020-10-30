@@ -24,6 +24,7 @@ from . import DistributedSuitBase
 from otp.otpbase import OTPLocalizer
 import random
 from libpandadna import SuitLeg
+from libotp import CFSpeech
 
 # how far outside of a door to stop in WalkFromStreet mode before
 # transitioning to ToSuitBuilding or ToToonBuilding.  This distance is
