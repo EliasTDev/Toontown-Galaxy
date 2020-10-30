@@ -99,7 +99,7 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
         TestSpamRedemptions = (([('!!!', (TTCodeRedemptionConsts.RedeemErrors.CodeDoesntExist, 0)),] * TTCodeRedemptionSpamDetector.Settings.DetectThreshold) +
                                [('!!!', (TTCodeRedemptionConsts.RedeemErrors.TooManyAttempts, 0)),]
                                )
-    
+
     def __init__(self, air):
 
         DistributedObjectGlobalUD.__init__(self, air)
@@ -318,7 +318,7 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
             }))
         # enable the submit button on page load
         SE(parentTag, 'script', type='text/javascript', text='%s(true);' % (enableSubmitFuncName, ))
-        bodyTag.set('onUnload', 'resetSubmitButton();'); 
+        bodyTag.set('onUnload', 'resetSubmitButton();');
 
     def _isValidManualCodeRewardType(self, rewardType):
         isPermanent = rewardType not in CatalogItemTypes.NonPermanentItemTypes
@@ -625,7 +625,7 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
         heInputCell = SE(hasExpRow, 'td')
         hasExpirationName = 'hasExpiration'
         heInput = SE(heInputCell, 'select', name=hasExpirationName)
-        
+
         for formVal, desc in (('yes', 'Yes'),
                               ('no', 'No'),
                               ):
@@ -979,7 +979,7 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
             values = {}
         if errors is None:
             errors = FormErrors()
-            
+
         formName = 'deleteForm'
         mainForm = SE(parent, 'form', name=formName)
         mainForm.set('action', 'codeManagement')
@@ -1045,12 +1045,12 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
             postLotNames = self._db.getLotNames()
             if values.lotName not in postLotNames:
                 success = True
-            
+
         resultHeading = SE(parent, 'h2')
         resultHeading.text = choice(success,
                                     'code lot %s deleted' % (values.lotName, ),
                                     'could not delete lot %s' % (values.lotName, ))
-            
+
         SE(parent, 'br')
 
         backToMenu = SE(parent, 'a')
@@ -1176,7 +1176,7 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
             values = {}
         if errors is None:
             errors = FormErrors()
-            
+
         formName = 'redeemForm'
         mainForm = SE(parent, 'form', name=formName)
         mainForm.set('action', 'codeManagement')
@@ -1264,7 +1264,7 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
             delayData = SE(delayRow, 'td')
             delayCenter = SE(delayData, 'center')
             delayCenter.text = 'Reward will arrive in mailbox in a few minutes.'
-            
+
             SE(body, 'br')
 
             backToMenu = SE(body, 'a')
@@ -1277,7 +1277,7 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
     def _errorCheckCode(self, errors, code, fieldName='code'):
         if len(code.strip()) == 0:
             errors.add(fieldName, self.GenericErrors.EmptyInput)
-                
+
         if self._codeHasInvalidChars(code):
             errors.add(fieldName, self.CodeErrors.InvalidCharInCode)
 
@@ -1690,7 +1690,7 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
         assert self.notify.debugCall()
         # callback takes TTCodeRedemptionConsts.RedeemErrors value
         return self._db.redeemCode(code, avId, self, callback)
-        
+
     def _giveReward(self, avId, rewardType, rewardItemId, callback):
         assert self.notify.debugCall()
         # callback takes result
@@ -1700,7 +1700,7 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
             "AwardManagerUD", "giveAwardToToon",
             OtpDoGlobals.OTP_DO_ID_TOONTOWN_AWARD_MANAGER,
             [context, self.doId, "TTCodeRedemptionMgrUD", avId, rewardType, rewardItemId, ])
-        
+
     def giveAwardToToonResult(self, context, result):
         assert self.notify.debugCall()
         callback = self._rewardContextTable.pop(context)
@@ -1708,7 +1708,7 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
             callback(result)
         except TTCodeRedemptionDB.TryAgainLater as e:
             self._warnTryAgainLater(e)
-        
+
     def _warnTryAgainLater(self, exception):
         # if we catch a TryAgainLater, drop this code submission on the floor. The AI
         # will resubmit the code shortly

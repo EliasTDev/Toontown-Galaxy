@@ -63,10 +63,9 @@ class HoodDataAI:
         for distObj in list(self.doId2do.values()):
             distObj.requestDelete()
         del self.doId2do
-        
+
         # Break back-pointers
         del self.air
-
 
     def addDistObj(self, distObj):
         self.doId2do[distObj.doId] = distObj
@@ -119,7 +118,7 @@ class HoodDataAI:
             fishingSpots += self.air.findFishingSpots(dnaGroup, distPond)
         for distObj in fishingSpots:
             self.addDistObj(distObj)
-     
+
     def createBuildingManagers(self):
         for zone in self.air.zoneTable[self.canonicalHoodId]:
             if zone[1]:
@@ -129,7 +128,7 @@ class HoodDataAI:
                     self.air, zoneId, dnaStore, self.air.trophyMgr)
                 self.buildingManagers.append(mgr)
                 self.air.buildingManagers[zoneId] = mgr
-     
+
     def createSuitPlanners(self):
         for zone in self.air.zoneTable[self.canonicalHoodId]:
             if zone[2]:
@@ -155,7 +154,6 @@ class HoodDataAI:
                 bfly.generateWithRequired(self.zoneId)
                 bfly.start()
                 self.addDistObj(bfly)
-        
 
     # WelcomeValley hoods have some additional methods for managing
     # population balancing (via the WelcomeValleyManagerAI class).
@@ -166,7 +164,7 @@ class HoodDataAI:
         # avatar requests to or within this hood are to be redirected
         # to the indicated other hood, which will also immediately
         # begin reporting this hood's population as its own.
-        
+
         if self.replacementHood:
             self.replacementHood[0].redirectingToMe.remove(self)
         self.replacementHood = replacementHood
@@ -199,7 +197,7 @@ class HoodDataAI:
         # Returns the complete population of avatars within the hood,
         # including those within hoods that are currently redirecting
         # to this hood.
-        
+
         population = self.hoodPopulation
         for hood in self.redirectingToMe:
             population += hood.getHoodPopulation()
@@ -209,7 +207,7 @@ class HoodDataAI:
         # Returns the population of avatars within the playground
         # only, including those within hoods that are currently
         # redirecting to this hood.
-        
+
         population = self.pgPopulation
         for pg in self.redirectingToMe:
             population += pg.getPgPopulation()

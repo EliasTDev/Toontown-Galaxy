@@ -40,6 +40,10 @@ uberdogs:
       id: 4670
       anonymous: true
 
+    - class: FriendManager
+      id: 4501
+      anonymous: false
+
 roles:
     - type: clientagent
       bind: 0.0.0.0:6667

@@ -5,7 +5,7 @@ title Toontown Galaxy Alpha Game Launcher
 echo Choose your connection method!
 echo.
 echo #1 - Localhost
-echo #2 - Game Server (Malverde Host)
+echo #2 - Development Server
 echo #3 - Custom
 echo #4 - Local RemoteDB
 echo #5 - Production Server
@@ -23,7 +23,7 @@ if %INPUT%==1 (
 ) else if %INPUT%==4 (
     set TTG_GAMESERVER=127.0.0.1
 ) else if %INPUT%==5 (
-    SET TTG_GAMESERVER=gameserver.toontownempire.com
+    SET TTG_GAMESERVER=gameserver.toontowngalaxy.com
 ) else if %INPUT%==3 (
     echo.
     set /P TTG_GAMESERVER=Gameserver: 

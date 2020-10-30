@@ -37,12 +37,12 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
 
         #self.sbName = wedgeName
         self.locationName = locationName
-        
+
       #  if self.sbName is None:
        #     self.sbName = "OTP%d" % random.randint(0,99999)
 
         self.everyoneIsFriends = uber.config.GetBool("everyone-is-friends",0)
-        
+
         #self.sbHost = uber.sbNSHost
         #self.sbPort = uber.sbNSPort
         #self.sbListenPort = uber.sbListenPort
@@ -117,7 +117,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
                                                                             openChatEnabled,
                                                                             createFriendsWithChat,
                                                                             chatCodeCreation))
-        
+
         if playerName == "Guest":
             accountInfo = FriendInfo(avatarName="%d"%avatarId,
                                      playerName="%s%d" % (playerName,accountId),
@@ -165,7 +165,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
             accountInfo.understandableYesNo = friendInfo.openChatFriendshipYesNo or \
                                               (friendInfo.openChatEnabledYesNo and \
                                                accountInfo.openChatEnabledYesNo)
-            
+
             friendInfo.understandableYesNo = friendInfo.openChatFriendshipYesNo or \
                                              (friendInfo.openChatEnabledYesNo and \
                                               accountInfo.openChatEnabledYesNo)
@@ -205,12 +205,12 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
     def requestRemove(self, senderId, otherAccountId):
         """
         Call this function if you want to remove an existing friend from your friends list.
-        
+
         otherAccountId may be online or offline.
         """
         accountId = senderId
         self.air.writeServerEvent('requestFriendRemove', accountId, '%s' % otherAccountId)
-                
+
         # update DISL friends list through Switchboard
         self.removeFriendship(accountId,otherAccountId)
 
@@ -227,14 +227,14 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
         self.notify.debug("recvFriendshipRemoved on %d,%d"%(accountId,otherAccountId))
 
         self.sendUpdateToChannel((3<<32)+accountId,"removePlayerFriend",[otherAccountId])
-        self.sendUpdateToChannel((3<<32)+otherAccountId,"removePlayerFriend",[accountId])        
+        self.sendUpdateToChannel((3<<32)+otherAccountId,"removePlayerFriend",[accountId])
 
 
     # SECRETS
     def requestUnlimitedSecret(self,senderId):
         print("# got unlimited secret request")
         self.sendSecretRequest(senderId)
-        
+
     def requestLimitedSecret(self,senderId,parentUsername,parentPassword):
         print("# got limited secret request")
         self.sendSecretRequest(senderId,parentUsername,parentPassword)
@@ -301,14 +301,14 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
 
         if self._validateChatMessage(playerId,senderId,msgText):
             self.sendSCWhisper(playerId,senderId,msgText)
-            
+
 
 
     def whisperSCCustomTo(self,senderId,playerId,msgId):
         assert self.sbConnected
 
         self.log.debug("PFMUD SCCustomwhisper - %d to %d: %s" % (senderId,playerId,msgId))
-        
+
         if senderId == -1:
             return
 
@@ -365,7 +365,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
 
         if self._validateChatMessage(playerId,senderId,msgText):
             self.sendSCWhisper(playerId,senderId,msgText)
-        
+
 
     #WEDGE -> UD functions
 
@@ -384,7 +384,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
     def recvEnterPlayer(self,playerId,playerInfo,friendsList):
         self.log.debug("Saw player %d enter."%playerId)
         self.log.debug("friends list: %s"%friendsList)
-        
+
         for friend in friendsList:
             self.notify.debug("update to %d saying that %d is online" % (friend,playerId))
             friendInfo = friendsList[friend]
@@ -400,7 +400,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
     def recvExitPlayer(self,playerId,playerInfo,friendsList):
         self.log.debug("Saw player %d exit."%playerId)
         self.log.debug("friends list: %s"%friendsList)
-        
+
         for friend in friendsList:
             self.notify.debug("update to %d saying that %d is offline" % (friend,playerId))
             friendInfo = friendsList[friend]
@@ -427,7 +427,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
             if [viewerId,True] in self.accountId2Friends[friendId]:
                 info.openChatFriendshipYesNo = 1
             else:
-                info.openChatFriendshipYesNo = 0            
+                info.openChatFriendshipYesNo = 0
         else:
             info.openChatFriendshipYesNo = 0
 
@@ -437,7 +437,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
             info.understandableYesNo = 0
 
         info.timestamp = 0
-            
+
         return info
 
 

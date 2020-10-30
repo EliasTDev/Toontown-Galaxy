@@ -3,7 +3,7 @@
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from otp.avatar import Avatar
-from libotp import CFQuicktalker
+from libotp import CFQuicktalker, CFTimeout, CFSpeech
 from toontown.char import CharDNA
 from toontown.char import DistributedChar
 from direct.directnotify import DirectNotifyGlobal
@@ -149,7 +149,7 @@ class DistributedCCharBase(DistributedChar.DistributedChar):
                 CCharPaths.getPaths(diffPath, self.getCCLocation())))
 
         self.setHpr(0,0,0)
-        
+
         # The characters can be immediately parented to render.
         self.setParent(ToontownGlobals.SPRender)
 
@@ -190,10 +190,10 @@ class DistributedCCharBase(DistributedChar.DistributedChar):
         self.accept('chatUpdateSC', self.__handleChatUpdateSC)
         self.accept('chatUpdateSCCustom', self.__handleChatUpdateSCCustom)
         self.accept('chatUpdateSCToontask', self.__handleChatUpdateSCToontask)
-        
+
         # put nametag in the transparent layer so toon nametags can render on top of it.
-        self.nametag3d.setBin('transparent',100)        
-        
+        self.nametag3d.setBin('transparent',100)
+
         # listen for the exit event
         self.acceptOnce("exit" + self.cSphereNode.getName(),
                         self.__handleCollisionSphereExit)
@@ -300,20 +300,20 @@ class DistributedCCharBase(DistributedChar.DistributedChar):
             # chat flags are different for DL Donald
             if self.getName() == Donald or self.getName() == WesternPluto or self.getName() == Pluto:
                 chatFlags = CFThought | CFTimeout
-                
+
                 # Make Pluto talk during April Toons' Week.
                 if hasattr(base.cr, "newsManager") and base.cr.newsManager:
                     holidayIds = base.cr.newsManager.getHolidayIdList()
                     if ToontownGlobals.APRIL_FOOLS_COSTUMES in holidayIds:
                         if self.getName() == Pluto:
                             chatFlags = CFTimeout | CFSpeech
-                
+
             elif self.getName() == DonaldDock:
                 chatFlags = CFTimeout | CFSpeech
                 self.nametag3d.hide()
             else:
                 chatFlags = CFTimeout | CFSpeech
-                
+
             # Figure out appropriate audio file here, which will get used
             # in setChatAbsolute below
             # getChatterDialogue defined in Char.py so that chatter can
@@ -362,18 +362,18 @@ class DistributedCCharBase(DistributedChar.DistributedChar):
     def getCCChatter(self):
         self.handleHolidays()
         return self.CCChatter
-        
-    def handleHolidays(self):           
-        """        
-        Handle Holiday specific behaviour        
-        """         
-        self.CCChatter = 0        
+
+    def handleHolidays(self):
+        """
+        Handle Holiday specific behaviour
+        """
+        self.CCChatter = 0
         if hasattr(base.cr, "newsManager") and base.cr.newsManager:
             holidayIds = base.cr.newsManager.getHolidayIdList()
-            if ToontownGlobals.CRASHED_LEADERBOARD in holidayIds:            
-                self.CCChatter = ToontownGlobals.CRASHED_LEADERBOARD 
-            elif ToontownGlobals.CIRCUIT_RACING_EVENT in holidayIds:            
-                self.CCChatter = ToontownGlobals.CIRCUIT_RACING_EVENT  
+            if ToontownGlobals.CRASHED_LEADERBOARD in holidayIds:
+                self.CCChatter = ToontownGlobals.CRASHED_LEADERBOARD
+            elif ToontownGlobals.CIRCUIT_RACING_EVENT in holidayIds:
+                self.CCChatter = ToontownGlobals.CIRCUIT_RACING_EVENT
             elif ToontownGlobals.WINTER_CAROLING in holidayIds:
                 self.CCChatter = ToontownGlobals.WINTER_CAROLING
             elif ToontownGlobals.WINTER_DECORATIONS in holidayIds:

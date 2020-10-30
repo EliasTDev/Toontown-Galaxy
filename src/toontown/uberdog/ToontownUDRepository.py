@@ -23,8 +23,7 @@ from otp.uberdog.RejectCode import RejectCode
 from direct.fsm.State import State
 from toontown.coderedemption import TTCodeRedemptionConsts
 
-import time 
-# TODO: Remove Astron dependence.
+import time
 
 class ToontownUDRepository(ToontownInternalRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory('ToontownUDRepository')
@@ -55,10 +54,10 @@ class ToontownUDRepository(ToontownInternalRepository):
         self.onlineAccountDetails = {}
         self.onlineAvatars = {}
         self.onlinePlayers = {}
-        self.allowUnfilteredChat = config.GetBool('want-unfiltered-chat', 1) 
+        self.allowUnfilteredChat = config.GetBool('want-unfiltered-chat', 1)
         uber.allowUnfilteredChat = self.allowUnfilteredChat
-        uber.config = config 
-        uber.bwDictPath = '' 
+        uber.config = config
+        uber.bwDictPath = ''
         self.pending={}
         self.doId2doCache={}
         uber.mysqlhost = 'localhost'
@@ -66,14 +65,12 @@ class ToontownUDRepository(ToontownInternalRepository):
         uber.crDbName = uber.config.GetString("tt-code-db-name", TTCodeRedemptionConsts.DefaultDbName)
         uber.inGameNewsMgrHTTPListenPort = uber.config.GetInt("in-game-news-port",8889)
 
-        uber.cpuInfoMgrHTTPListenPort = uber.config.GetInt("security_ban_mgr_port",8892) 
+        uber.cpuInfoMgrHTTPListenPort = uber.config.GetInt("security_ban_mgr_port",8892)
 
         if hasattr(self, 'setVerbose'):
             if self.config.GetBool('verbose-uberrepository'):
                 self.setVerbose(1)
 
-
-    
     def handleConnected(self):
         ToontownInternalRepository.handleConnected(self)
 
@@ -147,7 +144,6 @@ class ToontownUDRepository(ToontownInternalRepository):
                 OtpDoGlobals.OTP_DO_ID_TOONTOWN_NON_REPEATABLE_RANDOM_SOURCE,
                 "NonRepeatableRandomSource")
 
-
     def getDatabaseIdForClassName(self, className):
         return DatabaseIdFromClassName.get(
             className, DefaultDatabaseChannelId)
@@ -187,7 +183,7 @@ class ToontownUDRepository(ToontownInternalRepository):
         self.onlineAccountDetails[accountId] = accountDetailRecord
         messenger.send('accountOnline', [accountId])
         pass
-    
+
     @report(types = ['args'], dConfigParam = 'avatarmgr')
     def accountOffline(self, accountId):
         self.writeServerEvent('accountOffline', accountId, '')
@@ -215,7 +211,6 @@ class ToontownUDRepository(ToontownInternalRepository):
     @report(types = ['args'], dConfigParam = 'avatarmgr')
     def getAccountOnlineAvatar(self, accountId):
         return self.onlinePlayers.get(accountId, 0)
-
 
     @report(types = ['args'], dConfigParam = 'avatarmgr')
     def getAccountDetails(self, accountId):
@@ -270,7 +265,7 @@ class ToontownUDRepository(ToontownInternalRepository):
                     openChatEnabled,
                     createFriendsWithChat,
                     chatCodeCreation]
-        
+
         # necessary for local UD manager objects
         messenger.send("avatarOnline", simpleInfo)
         messenger.send("avatarOnlinePlusAccountInfo", fullInfo)
@@ -287,11 +282,10 @@ class ToontownUDRepository(ToontownInternalRepository):
         messenger.send("avatarOffline", [avatarId])
         pass
 
-
     def setConnectionName(self):
         #TODO
         pass
-    
+
     def setConnectionUrl(self):
         #TODO
         pass

@@ -211,7 +211,7 @@ class TTCodeDict:
         code = code.upper()
         cls.notify.debug('getFromReadableCode: output: %s' % code)
         return code
-    
+
     @classmethod
     def _testCodeUniqueness(cls, codeLength=None, verbose=True):
         if not codeLength:
@@ -232,4 +232,4 @@ class TTCodeDict:
                 codes.add(code)
                 i += 1
             codeLength += 1
-            
+

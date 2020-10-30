@@ -54,6 +54,7 @@ from toontown.fishing import DistributedFishingPondAI
 from toontown.safezone import DistributedFishingSpotAI
 from toontown.safezone import DistributedPartyGateAI
 from toontown.ai.ToontownMagicWordManagerAI import ToontownMagicWordManagerAI
+from toontown.uberdog.DistributedPartyManagerAI import DistributedPartyManagerAI
 
 class ToontownAIRepository(ToontownInternalRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory('ToontownAIRepository')
@@ -92,6 +93,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.estateMgr = None
         self.tutorialManager = None
         self.magicWordManager = None
+        self.partyManager = None
         self.zoneTable = {}
         self.dnaStoreMap = {}
         self.dnaDataMap = {}
@@ -143,6 +145,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.newsManager = NewsManagerAI(self)
         self.newsManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
+        # Generate our estate manager...
         self.estateMgr = EstateManagerAI(self)
         self.estateMgr.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
@@ -239,6 +242,10 @@ class ToontownAIRepository(ToontownInternalRepository):
         if magicWordString not in ('', '0', '#f'):
             self.magicWordManager = ToontownMagicWordManagerAI(self)
             self.magicWordManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+
+        # Generate our party manager...
+        self.partyManager = DistributedPartyManagerAI(self)
+        self.partyManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
     def generateHood(self, hoodConstructor, zoneId):
         # Bossbot HQ doesn't use DNA, so we skip over that.

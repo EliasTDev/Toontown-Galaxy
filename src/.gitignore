@@ -26,7 +26,6 @@ $RECYCLE.BIN/
 *.bin
 /build
 
-
 # Windows shortcuts
 *.lnk
 
@@ -59,8 +58,6 @@ Temporary Items
 *.pyc
 *.lock
 *.db
-src/dependencies/MongoDB/GardeningDatabase/mongod.lock
-src/dependencies/MongoDB/GardeningDatabase/
 src/user/preferences.json
 *.mp
 settings.json

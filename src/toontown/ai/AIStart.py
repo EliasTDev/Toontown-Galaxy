@@ -1,4 +1,4 @@
-import builtins
+import builtins, os
 
 class game:
     name = 'toontown'
@@ -9,6 +9,11 @@ builtins.game = game
 from panda3d.core import *
 
 loadPrcFile('etc/Configrc.prc')
+
+localPrc = 'etc/local.prc'
+
+if os.path.exists(localPrc):
+    loadPrcFile(localPrc)
 
 from otp.ai.AIBaseGlobal import *
 from toontown.ai.ToontownAIRepository import ToontownAIRepository
