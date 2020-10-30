@@ -115,7 +115,7 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
         self.fishingTrophies = []
         self.trackArray = []
         self.emoteAccess = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        self.maxBankMoney = 1000
+        self.maxBankMoney = 30000
         self.gardenSpecials = []#[(0,2), (1,2), (2,2), (3,2)]
 
         self.houseId = 0

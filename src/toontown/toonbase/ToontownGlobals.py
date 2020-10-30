@@ -1576,3 +1576,5 @@ AnimPropTypes = Enum(("Unknown",
                       ),
                      start = -1
                      )
+
+MaxCarryLimit = 80

@@ -11,6 +11,16 @@ import string
 import time
 import re
 from direct.task import Task
+from toontown.shtiker import CogPageGlobals 
+from toontown.coghq import CogDisguiseGlobals
+from toontown.fishing import FishGlobals
+from toontown.golf import GolfGlobals
+from toontown.quest import Quests
+from toontown.racing import RaceGlobals
+from toontown.suit import SuitDNA
+from toontown.toon import Experience
+from toontown.toonbase import ToontownGlobals
+from toontown.toonbase import TTLocalizer
 
 class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("MagicWordManagerAI")
@@ -142,6 +152,76 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
         elif wordIs("~toonup"):
             av.toonUp(av.maxHp)
             self.notify.debug("Full heal for " + av.name)
+
+        elif wordIs('maxtoon'):
+
+            av.b_setTrackAccess([1,1,1,1,1,1,1])
+            av.b_setMaxCarry(ToontownGlobals.MaxCarryLimit)
+
+            experience = Experience.Experience(av.getExperience(),av)
+            for i, track in enumerate(av.getTrackAccess()):
+                if track:
+                    experience.experience[i] = (
+                            Experience.MaxSkill - Experience.UberSkill)
+            av.b_setExperience(experience.makeNetString())
+
+            av.inventory.zeroInv()
+            av.inventory.maxOutInv(filterUberGags=0, filterPaidGags=0)
+            av.b_setInventory(av.inventory.makeNetString())
+
+            av.b_setMaxMoney(Quests.RewardDict[707][1])
+            av.b_setMoney(av.getMaxMoney())
+            av.b_setBankMoney(30000)
+
+            av.b_setMaxHp(137)
+            laff = av.getMaxHp() - av.getHp()
+            if laff < 15:
+                laff = 15
+            av.toonUp(laff)
+
+            av.b_setHoodsVisited(ToontownGlobals.Hoods)
+            av.b_setTeleportAccess(ToontownGlobals.HoodsForTeleportAll)
+
+            av.b_setCogParts([
+                CogDisguiseGlobals.PartsPerSuitBitmasks[0],
+                CogDisguiseGlobals.PartsPerSuitBitmasks[1],
+                CogDisguiseGlobals.PartsPerSuitBitmasks[2],
+                CogDisguiseGlobals.PartsPerSuitBitmasks[3],
+            ])
+            av.b_setCogLevels([ToontownGlobals.MaxCogSuitLevel] * 4 + [0])
+            av.b_setCogTypes([7] * 4 + [0])
+
+            av.b_setCogCount(list(CogPageGlobals.COG_QUOTAS[1]) * 4)
+            cogStatus = [CogPageGlobals.COG_COMPLETE2] * SuitDNA.suitsPerDept
+            av.b_setCogStatus(cogStatus * 4)
+            av.b_setCogRadar([1] * 4)
+            av.b_setBuildingRadar([1] * 4)
+
+            for id in av.getQuests():
+                av.removeQuest(id)
+            av.b_setQuestCarryLimit(ToontownGlobals.MaxQuestCarryLimit)
+            av.b_setRewardHistory(Quests.LOOPING_FINAL_TIER, av.getRewardHistory()[1])
+
+            allFish = TTLocalizer.FishSpeciesNames
+            fishLists = [[], [], []]
+            for genus in allFish.keys():
+                for species in xrange(len(allFish[genus])):
+                    fishLists[0].append(genus)
+                    fishLists[1].append(species)
+                    fishLists[2].append(FishGlobals.getRandomWeight(genus, species))
+            av.b_setFishCollection(*fishLists)
+            av.b_setFishingRod(FishGlobals.MaxRodId)
+            av.b_setFishingTrophies(FishGlobals.TrophyDict.keys())
+
+            if not av.hasKart():
+                av.b_setKartBodyType(KartDict.keys()[1])
+            av.b_setTickets(RaceGlobals.MaxTickets)
+            maxTrophies = RaceGlobals.NumTrophies + RaceGlobals.NumCups
+            av.b_setKartingTrophies(range(1, maxTrophies + 1))
+            av.b_setTickets(99999)
+
+            av.b_setGolfHistory([600] * (GolfGlobals.MaxHistoryIndex * 2))
+
         elif wordIs('~hp'):
             args = word.split()
             hp = int(args[1])

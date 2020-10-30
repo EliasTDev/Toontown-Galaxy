@@ -228,6 +228,9 @@ class MagicWordManager(DistributedObject.DistributedObject):
         elif wordIs("~run"):
             self.toggleRun()
 
+
+
+
         elif wordIs("~runFaster"):
             if(config.GetBool("want-running",1)):
                 args = word.split()
