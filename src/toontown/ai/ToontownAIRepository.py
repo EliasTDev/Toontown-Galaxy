@@ -55,6 +55,8 @@ from toontown.safezone import DistributedFishingSpotAI
 from toontown.safezone import DistributedPartyGateAI
 from toontown.ai.ToontownMagicWordManagerAI import ToontownMagicWordManagerAI
 from toontown.uberdog.DistributedPartyManagerAI import DistributedPartyManagerAI
+from toontown.parties.ToontownTimeManager import ToontownTimeManager
+import time
 
 class ToontownAIRepository(ToontownInternalRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory('ToontownAIRepository')
@@ -197,6 +199,10 @@ class ToontownAIRepository(ToontownInternalRepository):
 
         # Create our Cog suit manager...
         self.cogSuitMgr = CogSuitManagerAI(self)
+
+        # Create our Toontown time manager...
+        self.toontownTimeManager = ToontownTimeManager()
+        self.toontownTimeManager.updateLoginTimes(time.time(), time.time(), globalClock.getRealTime())
 
     def createGlobals(self):
         """
