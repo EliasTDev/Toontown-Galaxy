@@ -397,7 +397,7 @@ class DistributedPartyManagerUD(DistributedObjectGlobalUD):
     def getFormattedPartyInfo(self, partyInfoDict):
         startTime = partyInfoDict['startTime']
         endTime = partyInfoDict['endTime']
-        activitiesStr = partyInfoDict['activities']
+        activitiesStr = str(partyInfoDict['activities'])
         formattedActivities = []
         for i in range (len(activitiesStr) //4):
             oneActivity = (ord(activitiesStr[i*4]),
