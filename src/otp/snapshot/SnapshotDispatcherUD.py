@@ -73,8 +73,8 @@ class SnapshotDispatcherUD(DistributedObjectGlobalUD):
         #self.webDispatcher.registerGETHandler("queueSnapshot",self.handleHTTPQueueSnapshot)
         #self.webDispatcher.listenOnPort(self.HTTPListenPort)
 
-        self.air.setConnectionName("SnapshotDispatcherUD")
-        self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
+        #self.air.setConnectionName("SnapshotDispatcherUD")
+       # self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
 
     def announceGenerate(self):
         assert self.notify.debugCall()

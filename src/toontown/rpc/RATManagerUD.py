@@ -42,8 +42,8 @@ class RATManagerUD(DistributedObjectGlobalUD):
             
         #self.webDispatcher.listenOnPort(self.HTTPListenPort)
 
-        self.air.setConnectionName("RATManagerUD")
-        self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
+        #self.air.setConnectionName("RATManagerUD")
+        #self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
 
 
     def announceGenerate(self):

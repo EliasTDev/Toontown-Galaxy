@@ -33,8 +33,8 @@ class SettingsMgrUD(DistributedObjectGlobalUD, SettingsMgrBase):
         #self.webDispatcher.landingPage.addTab("Settings","/settings")
         #self.webDispatcher.listenOnPort(self.HTTPListenPort)
 
-        self.air.setConnectionName("SettingsMgr")
-        self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
+        #self.air.setConnectionName("SettingsMgr")
+        #self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
 
     def announceGenerate(self):
         assert self.notify.debugCall()

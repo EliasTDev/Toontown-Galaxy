@@ -35,19 +35,19 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
         assert self.notify.debugCall()
         DistributedObjectGlobalUD.__init__(self, air)
 
-        self.sbName = wedgeName
+        #self.sbName = wedgeName
         self.locationName = locationName
         
-        if self.sbName is None:
-            self.sbName = "OTP%d" % random.randint(0,99999)
+      #  if self.sbName is None:
+       #     self.sbName = "OTP%d" % random.randint(0,99999)
 
         self.everyoneIsFriends = uber.config.GetBool("everyone-is-friends",0)
         
-        self.sbHost = uber.sbNSHost
-        self.sbPort = uber.sbNSPort
-        self.sbListenPort = uber.sbListenPort
-        self.clHost = uber.clHost 
-        self.clPort = uber.clPort
+        #self.sbHost = uber.sbNSHost
+        #self.sbPort = uber.sbNSPort
+        #self.sbListenPort = uber.sbListenPort
+        self.clHost = 'localhost'
+        self.clPort = '9090'
         self.allowUnfilteredChat = uber.allowUnfilteredChat
         self.bwDictPath = uber.bwDictPath
 
@@ -67,14 +67,14 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
         self.accept("avatarOnlinePlusAccountInfo", self.avatarOnlinePlusAccountInfo, [])
         self.accept("avatarOffline", self.avatarOffline, [])
 
-        sbWedge.__init__(self,wedgeName=self.sbName,
-                         nsHost=self.sbHost,
-                         nsPort=self.sbPort,
-                         listenPort=self.sbListenPort,
-                         clHost=self.clHost,
-                         clPort=self.clPort,
-                         allowUnfilteredChat=self.allowUnfilteredChat,
-                         bwDictPath=self.bwDictPath)
+        #sbWedge.__init__(self,wedgeName=self.sbName,
+         #                nsHost=self.sbHost,
+          #               nsPort=self.sbPort,
+           #              listenPort=self.sbListenPort,
+            #             clHost=self.clHost,
+             #            clPort=self.clPort,
+              #           allowUnfilteredChat=self.allowUnfilteredChat,
+               #          bwDictPath=self.bwDictPath)
 
         def CheckSBWedge(task):
             self.handleRequests(0)

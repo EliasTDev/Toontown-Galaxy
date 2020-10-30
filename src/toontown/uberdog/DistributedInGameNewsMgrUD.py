@@ -36,8 +36,8 @@ class DistributedInGameNewsMgrUD(DistributedObjectGlobalUD):
         #self.webDispatcher.listenOnPort(self.HTTPListenPort)
         #self.webDispatcher.landingPage.addTab("InGameNewsMgr","/inGameNewsMgr")
 
-        self.air.setConnectionName("InGameNewsMgr")
-        self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
+        #self.air.setConnectionName("InGameNewsMgr")
+       # self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
 
         self.filename = self.getFilename()
         self.latestIssue = datetime.datetime.now()

@@ -65,8 +65,8 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
         #self.webDispatcher.listenOnPort(self.HTTPListenPort)
         #self.webDispatcher.landingPage.addTab("SecurityBanMgr","/securityBanMgr")
 
-        self.air.setConnectionName("SecurityBanMgr")
-        self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
+        #self.air.setConnectionName("SecurityBanMgr")
+        #self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
 
         self.filename = self.getFilename()
 

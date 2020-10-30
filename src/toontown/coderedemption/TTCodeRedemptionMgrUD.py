@@ -132,8 +132,8 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
        # if __debug__:
         #    self._db.runTests() #TODO get working
 
-        self.air.setConnectionName("TTCodeRedemptionMgr")
-        self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
+        #self.air.setConnectionName("TTCodeRedemptionMgr") #TODO
+        #self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
 
         self._createLotSerialGen = SerialNumGen()
         self._createLotId2task = {}

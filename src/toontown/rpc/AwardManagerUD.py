@@ -137,8 +137,8 @@ class AwardManagerUD(DistributedObjectGlobalUD):
        # self.webDispatcher.landingPage.addTab("AwardMgr","/awardMgr")
 
 
-        self.air.setConnectionName("AwardMgr")
-        self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
+       # self.air.setConnectionName("AwardMgr")
+        #self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
         self.awardChoices = self.getAwardChoices()  # award Choices is a dict of dicts
         self.reverseDictAwardChoices = self.getReversedAwardChoices()
         
