@@ -12,12 +12,12 @@ class DistributedTimerAI(DistributedObjectAI.DistributedObjectAI):
     def __init__(self, air):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
         self.setStartTime(globalClockDelta.getRealNetworkTime(bits = 32))
-        
+
     def generate(self):
         DistributedObjectAI.DistributedObjectAI.generate(self)
-        
+
     def setStartTime(self, time):
         self.startTime = time
-        
+
     def getStartTime(self):
         return self.startTime
