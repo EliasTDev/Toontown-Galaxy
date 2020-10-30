@@ -188,7 +188,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
             self.setMagicWordResponse(str(localAvatar.doId))
 
         elif wordIs("~doId"):
-            name = string.strip(word[6:])
+            name = word[6:].strip()
 
             objs = self.identifyDistributedObjects(name)
             if (len(objs) == 0):
@@ -261,7 +261,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
                 self.setMagicWordResponse(response)
             else:
                 tm.extraSkew = 0.0
-                skew = string.strip(word[5:])
+                skew = word[5:].strip()
                 if skew != "":
                     tm.extraSkew = float(skew)
                 globalClockDelta.clear()
@@ -272,7 +272,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
             # of seconds, or with no parameter, report the number of
             # seconds remaining.
 
-            timeout = string.strip(word[7:])
+            timeout = word[7:].strip()
             if timeout != "":
                 seconds = int(timeout)
                 self.cr.stopPeriodTimer()
@@ -797,7 +797,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
                 return
 
         nextWord = word[b+1:]
-        name = string.strip(word[5:b])
+        name = word[5:b].strip()
 
         id = self.identifyAvatar(name)
         if (id == None):
@@ -925,7 +925,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
             return None
 
     def showfont(self, fontname):
-        fontname = string.strip(string.lower(fontname))
+        fontname = string.lower(fontname).strip()
         font = self.getFontByName(fontname)
         if font == None:
             self.setMagicWordResponse("Unknown font: %s" % (fontname))
@@ -1086,7 +1086,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
         lowerName = string.lower(name)
         for av in Avatar.Avatar.ActiveAvatars:
             if isinstance(av, self.GameAvatarClass) and \
-               string.strip(string.lower(av.getName())) == lowerName:
+               string.lower(av.getName()).strip() == lowerName:
                 return av.doId
 
         # Is it a doId anyway?
