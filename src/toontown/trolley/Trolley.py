@@ -69,6 +69,7 @@ class Trolley(StateData.StateData):
                            )
 
         self.parentFSM = parentFSM
+        self.leavingCameraSeq = None
 
         return None
 
@@ -80,7 +81,7 @@ class Trolley(StateData.StateData):
         self.rolloverButton = self.buttonModels.find(
             "**/InventoryButtonRollover")
         return
-    
+
     def unload(self):
         self.parentFSM.getStateNamed("trolley").removeChild(self.fsm)
         del self.fsm
@@ -91,7 +92,7 @@ class Trolley(StateData.StateData):
         del self.downButton
         del self.rolloverButton
         return
-        
+
     def enter(self):
         """enter(self)
         """
@@ -174,7 +175,7 @@ class Trolley(StateData.StateData):
         self.cameraBoardTrack = LerpPosHprInterval(camera, 1.5,
                                                    Point3(-35, 0, 8),
                                                    Point3(-90, 0, 0))
-        
+
         self.cameraBoardTrack.start()
         return None
 
@@ -225,8 +226,9 @@ class Trolley(StateData.StateData):
 
     def enterTrolleyLeaving(self):
         # A camera move
-        camera.lerpPosHprXYZHPR(0, 18.55, 3.75, -180, 0, 0, 3,
-                                blendType = "easeInOut", task="leavingCamera")
+        self.leavingCameraSeq = camera.posHprInterval(3, (0, 18.55, 3.75), (-180, 0, 0),
+                                blendType = "easeInOut", name="leavingCamera")
+        self.leavingCameraSeq.start()
         self.acceptOnce("playMinigame", self.handlePlayMinigame)
         return None
 
@@ -240,7 +242,9 @@ class Trolley(StateData.StateData):
 
     def exitTrolleyLeaving(self):
         self.ignore("playMinigame")
-        taskMgr.remove("leavingCamera")
+        if self.leavingCameraSeq:
+            self.leavingCameraSeq.finish()
+            self.leavingCameraSeq = None
         return None
 
     def enterExiting(self):
@@ -260,4 +264,3 @@ class Trolley(StateData.StateData):
 
     def exitFinal(self):
         return None
-
