@@ -869,7 +869,7 @@ class OptionsTabPage(DirectFrame):
                                    message = TTLocalizer.OptionsPageExitConfirm,
                                    style = TTDialog.TwoChoice)
         self.confirm.show()
-        self.parent.doneStatus = {
+        self._parent.doneStatus = {
                 "mode": "exit",
                 "exitTo": "closeShard"}
         self.accept("confirmDone", self.__handleConfirm)
@@ -883,7 +883,7 @@ class OptionsTabPage(DirectFrame):
         del self.confirm
         if (status == "ok"):
             base.cr._userLoggingOut = True
-            messenger.send(self.parent.doneEvent)
+            messenger.send(self._parent.doneEvent)
             #self.cr.loginFSM.request("chooseAvatar", [self.cr.avList])
 
 class CodesTabPage(DirectFrame):

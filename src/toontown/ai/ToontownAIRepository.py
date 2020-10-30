@@ -53,6 +53,7 @@ from toontown.tutorial.TutorialManagerAI import TutorialManagerAI
 from toontown.fishing import DistributedFishingPondAI
 from toontown.safezone import DistributedFishingSpotAI
 from toontown.safezone import DistributedPartyGateAI
+from toontown.ai.ToontownMagicWordManagerAI import ToontownMagicWordManagerAI
 
 class ToontownAIRepository(ToontownInternalRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory('ToontownAIRepository')
@@ -90,6 +91,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.safeZoneManager = None
         self.estateMgr = None
         self.tutorialManager = None
+        self.magicWordManager = None
         self.zoneTable = {}
         self.dnaStoreMap = {}
         self.dnaDataMap = {}
@@ -231,6 +233,12 @@ class ToontownAIRepository(ToontownInternalRepository):
         # The Tutorial manager
         self.tutorialManager = TutorialManagerAI(self)
         self.tutorialManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+
+        # The Magic Word Manager
+        magicWordString = simbase.config.GetString('want-magic-words', '1')
+        if magicWordString not in ('', '0', '#f'):
+            self.magicWordManager = ToontownMagicWordManagerAI(self)
+            self.magicWordManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
     def generateHood(self, hoodConstructor, zoneId):
         # Bossbot HQ doesn't use DNA, so we skip over that.

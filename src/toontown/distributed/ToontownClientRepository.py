@@ -964,17 +964,17 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
 
     def handleCloseShard(self, msgType, di):
         # ignore creates for objects that are children of the old shard
-        if msgType == CLIENT_CREATE_OBJECT_REQUIRED:
+        if msgType == CLIENT_ENTER_OBJECT_REQUIRED:
             di2 = PyDatagramIterator(di)
             parentId = di2.getUint32()
             if self._doIdIsOnCurrentShard(parentId):
                 return
-        elif msgType == CLIENT_CREATE_OBJECT_REQUIRED_OTHER:
+        elif msgType == CLIENT_ENTER_OBJECT_REQUIRED_OTHER:
             di2 = PyDatagramIterator(di)
             parentId = di2.getUint32()
             if self._doIdIsOnCurrentShard(parentId):
                 return
-        elif msgType == CLIENT_OBJECT_UPDATE_FIELD:
+        elif msgType == CLIENT_SET_UPDATE_FIELD:
             di2 = PyDatagramIterator(di)
             doId = di2.getUint32()
             if self._doIdIsOnCurrentShard(doId):

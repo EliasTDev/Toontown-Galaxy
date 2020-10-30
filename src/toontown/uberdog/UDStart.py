@@ -1,10 +1,8 @@
 import builtins
 
-
 class game:
     name = 'uberDog'
     process = 'server'
-
 
 builtins.game = game
 
@@ -25,8 +23,8 @@ loadPrcFileData('UberDOG Config', udConfig)
 
 uber.air = ToontownUDRepository(config.GetInt('air-base-channel', 1000000), config.GetInt('air-stateserver', 4002))
 
-host = config.GetString('air-connect', '127.0.0.1:7199')
-port = 7199
+host = config.GetString('air-connect', '127.0.0.1:7100')
+port = 7100
 if ':' in host:
     host, port = host.split(':', 1)
     port = int(port)

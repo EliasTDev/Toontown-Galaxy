@@ -9,6 +9,7 @@ from direct.directnotify import DirectNotifyGlobal
 from . import ToonInteriorColors
 import pickle
 from toontown.toonbase import TTLocalizer
+from libpandadna import DNADoor
 
 class DistributedHQInterior(DistributedObject.DistributedObject):
     if __debug__:
@@ -59,7 +60,7 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
             # show the scope in the tutorial building for viz
             self.interior.find("**/periscope").show()
             self.interior.find("**/speakers").show()
-        
+
     def setZoneIdAndBlock(self, zoneId, block):
         self.zoneId = zoneId
         self.block = block
@@ -93,7 +94,7 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
             row.reparentTo(self.leaderBoard)
             row.setPos(0,0,z)
             z -= 1
-            
+
     def updateLeaderBoard(self):
         # Refresh the data and graphics on the leaderboard with our new information
         # Kill any existing star tasks
@@ -114,7 +115,7 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
 
     def buildTitleRow(self):
         # Build the title row on the leaderboard
-        row = hidden.attachNewNode("leaderRow")        
+        row = hidden.attachNewNode("leaderRow")
         nameText = TextNode("titleRow")
         nameText.setFont(ToontownGlobals.getSignFont())
         nameText.setAlign(TextNode.ACenter)
@@ -128,7 +129,7 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
     def buildLeaderRow(self):
         # Build a single row on the leaderboard
         row = hidden.attachNewNode("leaderRow")
-        
+
         # Text node for the toon name
         nameText = TextNode("nameText")
         nameText.setFont(ToontownGlobals.getToonFont())
@@ -218,7 +219,7 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
 
         del self.dnaStore
         del self.randomGenerator
-                                      
+
     def disable(self):
         self.leaderBoard.removeNode()
         del self.leaderBoard
@@ -284,7 +285,7 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
         r = now * task.trophyStarSpeed % 360.0
         task.trophyStar.setR(r)
         return Task.cont
-        
+
 """
 from toontown.makeatoon import NameGenerator
 ng = NameGenerator.NameGenerator()

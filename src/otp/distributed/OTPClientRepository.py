@@ -2622,7 +2622,6 @@ class OTPClientRepository(ClientRepositoryBase):
 
         return shardList
 
-
     ######### General senders and handlers #########
 
     def getPlayerAvatars(self):
@@ -2864,7 +2863,6 @@ class OTPClientRepository(ClientRepositoryBase):
         self.periodTimerSecondsRemaining = None
         messenger.send("periodTimerExpired")
         return Task.done
-
 
     def handleMessageType(self, msgType, di):
         if msgType == CLIENT_EJECT:
