@@ -242,6 +242,14 @@ class ToontownAIRepository(ToontownInternalRepository):
         hood.startup()
         self.hoods.append(hood)
 
+    def startupHood(self, hoodDataAI):
+        hoodDataAI.startup()
+        self.hoods.append(hoodDataAI)
+
+    def shutdownHood(self, hoodDataAI):
+        hoodDataAI.shutdown()
+        self.hoods.remove(hoodDataAI)
+
     def createZones(self):
         # First, generate our zone2NpcDict...
         NPCToons.generateZone2NpcDict()
