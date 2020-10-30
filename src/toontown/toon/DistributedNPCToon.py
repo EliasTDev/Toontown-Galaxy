@@ -130,10 +130,14 @@ class DistributedNPCToon(DistributedNPCToonBase):
         camera.wrtReparentTo(render)
         if ((mode == NPCToons.QUEST_MOVIE_QUEST_CHOICE) or
             (mode == NPCToons.QUEST_MOVIE_TRACK_CHOICE)):
+            quat = Quat()
+            quat.setHpr((155, -2, 0))
             self.npcCamera = camera.posQuatInterval(1, Point3(5, 9, self.getHeight() - 0.5), quat, other=self, blendType='easeOut', name=self.uniqueName("lerpCamera"))
             self.npcCamera.start()
 
         else:
+            quat = Quat()
+            quat.setHpr((155, -2, 0))
             self.npcCamera = camera.posQuatInterval(1, Point3(-5, 9, self.getHeight() - 0.5), quat, other=self, blendType='easeOut', name=self.uniqueName("lerpCamera"))
             self.npcCamera.start()
 
