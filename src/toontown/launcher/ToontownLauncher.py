@@ -160,7 +160,7 @@ class ToontownLauncher(LauncherBase):
     # TODO: take this out when Pirates ships.
     VerifyFiles = 1
     DecompressMultifiles = True
-    
+
     def __init__(self):
         # Get the command line parameters
         # argv[0] : the name of this script
@@ -176,7 +176,7 @@ class ToontownLauncher(LauncherBase):
         # if it is there.
         if sys.argv[2] == 'Phase2.py':
             sys.argv = sys.argv[:1] + sys.argv[3:]
-        
+
         if ((len(sys.argv) == 5) or (len(sys.argv) == 6)):
             self.gameServer = sys.argv[2]
             # The account server, from the command line.
@@ -220,7 +220,7 @@ class ToontownLauncher(LauncherBase):
         # Before you go further, let's parse the web acct parameters
         self.webAcctParams = "WEB_ACCT_PARAMS"
         self.parseWebAcctParams()
-        
+
         self.mainLoop()
 
     def getValue(self, key, default=None):
@@ -256,11 +256,11 @@ class ToontownLauncher(LauncherBase):
 
         if not s:
             s = self.getRegistry(self.webAcctParams)
-            
+
         # Immediately clear out the Params so it will be more
         # difficult for a hacker to pull it out of the registry.
         self.setRegistry(self.webAcctParams, "")
-       
+
         # Parse the web account params to get chat related values
         # split s to the '&'
         l = s.split('&')
@@ -278,7 +278,7 @@ class ToontownLauncher(LauncherBase):
                 name, value = args
                 dict[name] = int(value)
 
-        self.secretNeedsParentPasswordKey = 1                
+        self.secretNeedsParentPasswordKey = 1
         if 'secretsNeedsParentPassword' in dict:
             self.secretNeedsParentPasswordKey = 1 and dict['secretsNeedsParentPassword']
         else:
@@ -452,7 +452,7 @@ class ToontownLauncher(LauncherBase):
 ##         return 1 and needPwForSecretKey
 
         """
-        Everything is already parsed if parseWebAcctParams was called 
+        Everything is already parsed if parseWebAcctParams was called
         """
         return self.secretNeedsParentPasswordKey
 
@@ -461,7 +461,7 @@ class ToontownLauncher(LauncherBase):
         Get the parent password set key
         """
 ##         return self.getRegistry(self.chatEligibleKey, 0)
-        # Everything is already parsed if parseWebAcctParams was called 
+        # Everything is already parsed if parseWebAcctParams was called
         return self.chatEligibleKey
 
     def MakeNTFSFilesGlobalWriteable(self, pathToSet = None ):
@@ -480,7 +480,7 @@ class ToontownLauncher(LauncherBase):
             os.remove('Phase3.py')
         except:
             pass
-        
+
         # Read in the Phase3.pyz file
         import Phase3
 

@@ -925,7 +925,7 @@ class RaceManagerAI(DirectObject.DirectObject):
             backup = self.filename + '.bu'
             if os.path.exists(self.filename):
                 os.rename(self.filename, backup)
-            file = open(self.filename, 'w')
+            file = open(self.filename, 'wb')
             file.seek(0)
             pickle.dump(self.trackRecords, file)
             file.close()
@@ -945,7 +945,7 @@ class RaceManagerAI(DirectObject.DirectObject):
         """Load track record data from default location"""
         try:
             # Try to open the backup file:
-            file = open(self.filename + '.bu', 'r')
+            file = open(self.filename + '.bu', 'rb')
             # Remove the (assumed) broken file:
             if os.path.exists(self.filename):
                 os.remove(self.filename)
@@ -953,7 +953,7 @@ class RaceManagerAI(DirectObject.DirectObject):
             # OK, there's no backup file, good.
             try:
                 # Open the real file:
-                file = open(self.filename, 'r')
+                file = open(self.filename, 'rb')
             except IOError:
                 # OK, there's no file.  Grab the default times.
                 return self.getRecordTimes()
@@ -981,7 +981,7 @@ class RaceManagerAI(DirectObject.DirectObject):
         records = {}
         try:
             while 1:
-                records = pickle.loads(bytes(file))
+                records = pickle.load(file)
         except EOFError:
             pass
         return records

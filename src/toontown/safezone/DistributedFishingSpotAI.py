@@ -209,7 +209,7 @@ class DistributedFishingSpotAI(DistributedObjectAI.DistributedObjectAI):
         elif not self.validate(avId, (av), "sellFish: avId not currently logged in to this AI"):
             gotTrophy = False
 
-        if gotTrophy is -1:
+        if gotTrophy == -1:
             gotTrophy = self.air.fishManager.creditFishTank(av)
             self.d_sellFishComplete(avId, gotTrophy, len(av.fishCollection))
         else:
