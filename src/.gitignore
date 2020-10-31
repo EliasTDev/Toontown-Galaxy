@@ -64,3 +64,4 @@ settings.json
 *.pyc
 news/
 *.buildings
+built/*

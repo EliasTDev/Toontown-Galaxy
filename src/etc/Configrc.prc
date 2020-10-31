@@ -61,4 +61,3 @@ want-magic-words #t
 want-code-redemption-init-db true
 support-rename 1
 teleport-all 1 //disable during production
-
