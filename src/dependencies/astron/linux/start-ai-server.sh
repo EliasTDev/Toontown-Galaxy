@@ -7,7 +7,10 @@ STATESERVER=4002
 ASTRON_IP="127.0.0.1:7100"
 EVENTLOGGER_IP="127.0.0.1:7198"
 DISTRICT_NAME="Gravity Falls"
-BASE_CHANNEL=401000000
+
+# Get the user input:
+read -p "Base channel (DEFAULT: 401000000): " BASE_CHANNEL
+BASE_CHANNEL=${BASE_CHANNEL:-401000000}
 
 echo "==============================="
 echo "Starting Toontown Galaxy AI server..."
