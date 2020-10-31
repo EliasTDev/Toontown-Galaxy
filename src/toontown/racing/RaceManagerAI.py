@@ -936,8 +936,8 @@ class RaceManagerAI(DirectObject.DirectObject):
         
     def getFilename(self):
         """Compose the track record filename"""
-        if not os.path.exists(self.serverDatafolder):
-            os.makedirs(self.serverDatafolder)
+        if not os.path.exists(self.serverDataFolder):
+            os.makedirs(self.serverDataFolder)
 
         return "%s%s.trackRecords" % (self.serverDataFolder, self.shard)
 
