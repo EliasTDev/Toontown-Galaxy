@@ -505,12 +505,12 @@ class PartyCog(FSM):
         # Black magic from the early days of Panda3D, later replaced by a Sequence
         seq = Task.sequence(
             # Fly the number out of the character
-            self.hpText.posInterval(Point3(self.root.getX(render), self.root.getY(render), self.root.getZ(render) + self.height + 1.0),
+            self.hpText.posInterval(1.0, Point3(self.root.getX(render), self.root.getY(render), self.root.getZ(render) + self.height + 1.0),
                                     0.25,
                                     blendType = 'easeOut'),
             Wait(0.25),
             # Fade the number
-            self.hpText.colorInterval(Vec4(r, g, b, a),
+            self.hpText.colorInterval(0.1, Vec4(r, g, b, a),
                                       Vec4(r, g, b, 0),
                                       0.1),
             # Get rid of the number
