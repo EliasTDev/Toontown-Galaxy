@@ -510,9 +510,7 @@ class PartyCog(FSM):
                                     blendType = 'easeOut'),
             Wait(0.25),
             # Fade the number
-            self.hpText.colorInterval(0.1, Vec4(r, g, b, a),
-                                      Vec4(r, g, b, 0),
-                                      0.1),
+            self.hpText.colorInterval(0.1, Vec4(r, g, b, a)),
             # Get rid of the number
             Func(self.__hideHitScoreTask))
         

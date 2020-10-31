@@ -783,9 +783,7 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
                     # Wait 2 seconds
                     Wait(0.85),
                     # Fade the number
-                    self.hpText.colorInterval(0.1, Vec4(r, g, b, a),
-                                              Vec4(r, g, b, 0),
-                                              0.1),
+                    self.hpText.colorInterval(0.1, Vec4(r, g, b, a)),
                     # Get rid of the number
                     Func(self.hideHpTextTask))
                 seq.start()

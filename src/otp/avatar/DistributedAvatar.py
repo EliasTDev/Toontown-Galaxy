@@ -337,9 +337,7 @@ class DistributedAvatar(DistributedActor, Avatar):
                     # Wait 2 seconds
                     Wait(0.85),
                     # Fade the number
-                    self.hpText.colorInterval(Vec4(r, g, b, a),
-                                              Vec4(r, g, b, 0),
-                                              0.1),
+                    self.hpText.colorInterval(0.1, Vec4(r, g, b, a)),
                     # Get rid of the number
                     Func(self.hideHpTextTask))
                 seq.start()
@@ -391,9 +389,7 @@ class DistributedAvatar(DistributedActor, Avatar):
                     # Wait 2 seconds
                     Wait(duration),
                     # Fade the number
-                    self.hpText.colorInterval(0.1, Vec4(r, g, b, a),
-                                              Vec4(r, g, b, 0),
-                                              0.1),
+                    self.hpText.colorInterval(0.1, Vec4(r, g, b, a)),
                     # Get rid of the number
                     Func(self.hideHpTextTask))
                 seq.start()
