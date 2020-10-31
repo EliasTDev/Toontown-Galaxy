@@ -153,7 +153,7 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
             av.toonUp(av.maxHp)
             self.notify.debug("Full heal for " + av.name)
 
-        elif wordIs('maxtoon'):
+        elif wordIs('~maxtoon'):
 
             av.b_setTrackAccess([1,1,1,1,1,1,1])
             av.b_setMaxCarry(ToontownGlobals.MaxCarryLimit)
