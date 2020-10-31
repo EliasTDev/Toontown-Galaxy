@@ -978,7 +978,7 @@ class RaceManagerAI(DirectObject.DirectObject):
         records = {}
         try:
             while 1:
-                records = pickle.load(file)
+                records = pickle.loads(bytes(file))
         except EOFError:
             pass
         return records
