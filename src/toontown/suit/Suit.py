@@ -1235,7 +1235,7 @@ class Suit(Avatar.Avatar):
                     self.setSuitClothes(self.loseActor)
             else:
                 # skelecog
-                loseModel = "phase_5/models/char/cog" + string.upper(self.style.body) + "_robot-lose-mod"
+                loseModel = "phase_5/models/char/cog" + self.style.body.upper() + "_robot-lose-mod"
                 filePrefix, phase = TutorialModelDict[self.style.body]
                 loseAnim = "phase_" + str(phase) + filePrefix + "lose"
 
@@ -1273,7 +1273,7 @@ class Suit(Avatar.Avatar):
         """
         Convert to skeleton geometry.
         """
-        model = "phase_5/models/char/cog" + string.upper(self.style.body) + "_robot-zero"
+        model = "phase_5/models/char/cog" + self.style.body.upper() + "_robot-zero"
         anims = self.generateAnimDict()
 
         # remember the current anim
