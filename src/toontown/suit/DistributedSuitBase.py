@@ -774,21 +774,21 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
                     self.nametag3d.setBin('fixed', 99)
                 
                 # Initial position ... Center of the body... the "tan tien"
-                self.hpText.setPos(0, 0, self.height/2)
+                self.hpText.setPos(0, 0, self.height//2)
                 seq = Task.sequence(
                     # Fly the number out of the character
-                    self.hpText.lerpPos(Point3(0, 0, self.height + 1.5),
+                    self.hpText.posInterval(1.0, Point3(0, 0, self.height + 1.5),
                                             1.0,
                                             blendType = 'easeOut'),
                     # Wait 2 seconds
-                    Task.pause(0.85),
+                    Wait(0.85),
                     # Fade the number
-                    self.hpText.lerpColor(Vec4(r, g, b, a),
+                    self.hpText.colorInterval(0.1, Vec4(r, g, b, a),
                                               Vec4(r, g, b, 0),
                                               0.1),
                     # Get rid of the number
-                    Task.Task(self.hideHpTextTask))
-                taskMgr.add(seq, self.uniqueName("hpText"))
+                    Func(self.hideHpTextTask))
+                seq.start()
         else:
             # Just play the sound effect.
             # TODO: Put in the sound effect!
