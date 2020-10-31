@@ -12,6 +12,13 @@ from panda3d.core import *
 if __debug__:
     loadPrcFile('etc/Configrc.prc')
 
+    localPrc = 'etc/local.prc'
+
+    import os
+
+    if os.path.exists(localPrc):
+        loadPrcFile(localPrc)
+
 # This module redefines the builtin import function with one
 # that prints out every import it does in a hierarchical form
 # Annoying and very noisy, but sometimes useful
