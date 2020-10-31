@@ -2983,7 +2983,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         bottom texture color = 16
         """
         
-        dnaNetString = 't\x1b\x00\x01\x01\x00\x03\x00\x03\x01\x10\x13\x00\x13\x13'
+        dnaNetString = b't\x1b\x00\x01\x01\x00\x03\x00\x03\x01\x10\x13\x00\x13\x13'
 
         npc = Toon.Toon()
         npc.setDNAString( dnaNetString)

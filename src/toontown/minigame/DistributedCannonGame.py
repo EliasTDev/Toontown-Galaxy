@@ -1183,14 +1183,7 @@ class DistributedCannonGame(DistributedMinigame):
         # figure out what will be hit, and when
         timeOfImpact, hitWhat = self.__calcToonImpact(trajectory, towerList)
 
-        return {
-            'startPos' : startPos,
-            'startHpr' : startHpr,
-            'startVel' : startVel,
-            'trajectory' : trajectory,
-            'timeOfImpact' : timeOfImpact,
-            'hitWhat' : hitWhat,
-            }
+        return startPos, startHpr, startVel, trajectory, 3 * timeOfImpact, hitWhat
 
     def __fireCannonTask(self, task):
         """
@@ -1203,11 +1196,9 @@ class DistributedCannonGame(DistributedMinigame):
         self.notify.debug("FIRING CANNON FOR AVATAR " + str(avId))
 
         # calculate the trajectory
-        flightResults = self.__calcFlightResults(avId, launchTime)
+       
         # pull all the results into the local namespace
-        for key in flightResults:
-            exec("%s = flightResults['%s']" % (key, key))
-
+        startPos, startHpr, startVel, trajectory, timeOfImpact, hitWhat = self.__calcFlightResults(avId, launchTime)
         self.notify.debug("start position: " + str(startPos))
         self.notify.debug("start velocity: " + str(startVel))
         self.notify.debug("time of launch: " + str(launchTime))
