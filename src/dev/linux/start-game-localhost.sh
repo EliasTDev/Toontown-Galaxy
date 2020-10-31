@@ -1,20 +1,19 @@
 #!/bin/sh
-cd ..
-cd ..
-export PYTHONPATH=dependencies/linux:$PYTHONPATH
+cd ../..
+
 # Get the user input:
-read -p "Username: " tteUsername
+read -p "Username: " ttgUsername
 
 # Export the environment variables:
-export tteUsername=$tteUsername
-export ttePassword="password"
-export TTE_PLAYCOOKIE=$tteUsername
-export TTE_GAMESERVER="127.0.0.1"
+export ttgUsername=$ttgUsername
+export ttgPassword="password"
+export TTG_PLAYCOOKIE=$ttgUsername
+export TTG_GAMESERVER="127.0.0.1"
 
 echo "==============================="
 echo "Starting Toontown Galaxy"
-echo "Username: $tteUsername"
-echo "Gameserver: $TTE_GAMESERVER"
+echo "Username: $ttgUsername"
+echo "Gameserver: $TTG_GAMESERVER"
 echo "==============================="
 
-/usr/bin/python2 -m toontown.toonbase.ClientStart
+/usr/bin/python3 -m toontown.toonbase.ToontownStart
