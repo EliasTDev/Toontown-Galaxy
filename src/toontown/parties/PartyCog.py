@@ -505,18 +505,18 @@ class PartyCog(FSM):
         # Black magic from the early days of Panda3D, later replaced by a Sequence
         seq = Task.sequence(
             # Fly the number out of the character
-            self.hpText.lerpPos(Point3(self.root.getX(render), self.root.getY(render), self.root.getZ(render) + self.height + 1.0),
+            self.hpText.posInterval(Point3(self.root.getX(render), self.root.getY(render), self.root.getZ(render) + self.height + 1.0),
                                     0.25,
                                     blendType = 'easeOut'),
-            Task.pause(0.25),
+            Wait(0.25),
             # Fade the number
-            self.hpText.lerpColor(Vec4(r, g, b, a),
+            self.hpText.colorInterval(Vec4(r, g, b, a),
                                       Vec4(r, g, b, 0),
                                       0.1),
             # Get rid of the number
-            Task.Task(self.__hideHitScoreTask))
+            Func(self.__hideHitScoreTask))
         
-        taskMgr.add(seq, "PartyCogHpText" + str(self.id))
+        seq.start()
         
     def __hideHitScoreTask(self, task):
         self.hideHitScore()

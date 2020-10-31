@@ -5,7 +5,7 @@ from .BattleSounds import *
 from . import MovieCamera
 from direct.directnotify import DirectNotifyGlobal
 import types
-
+from libotp import *
 notify = DirectNotifyGlobal.directNotify.newCategory('MovieToonVictory')
 
 def __findToonReward(rewards, toon):

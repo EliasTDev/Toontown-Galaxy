@@ -1311,7 +1311,7 @@ class DistributedCannon(DistributedObject.DistributedObject):
         # put the info dict on each task
         shootTask.info = info
         flyTask.info = info
-        seqTask = Task.sequence(shootTask, smokeTask, flyTask)
+        seqTask = Sequence(shootTask, smokeTask, flyTask)
         
         if self.av == base.localAvatar:
                 print("disable controls")
