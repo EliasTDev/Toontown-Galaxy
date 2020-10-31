@@ -22,7 +22,7 @@ class FlowerBrowser(DirectScrolledList):
         FishBrowser constructor: create a scrolling list of fish
         """
         assert self.notify.debugStateCall(self)
-        self.parent = parent
+        self._parent = parent
 
         # make the scrolling pick list for the fish names
         gui = loader.loadModel("phase_3.5/models/gui/friendslist_gui")

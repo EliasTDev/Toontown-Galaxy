@@ -7,7 +7,7 @@ class BlinkingArrows:
         self.arrow1 = loader.loadModel('phase_3/models/props/arrow')
         self.arrow2 = loader.loadModel('phase_3/models/props/arrow')
         self.arrowTrack = None
-        self.parent = parent
+        self._parent = parent
         # The otherNode is an optional node that can flash along with the
         # arrows.
         self.otherNode = otherNode

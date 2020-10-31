@@ -17,7 +17,7 @@ class CatalogGui:
 
         self.type = type
         self.itemList = list
-        self.parent = parent
+        self._parent = parent
 
         self.panelPicker = None
         self.frame = DirectFrame(parent=parent, relief=None)

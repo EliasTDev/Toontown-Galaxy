@@ -41,7 +41,7 @@ class FlowerPanel(DirectFrame):
         self.initialiseoptions(FlowerPanel)
         self.doneEvent = doneEvent
         self.flower = flower
-        self.parent = parent
+        self._parent = parent
         self.photo = None
         
     def destroy(self):

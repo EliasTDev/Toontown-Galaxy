@@ -21,7 +21,7 @@ class ShuffleButton:
         """__init__(self)
         Set-up the shuffle button.
         """
-        self.parent = parent    # This is the parent class that instantiated ShuffleButton.
+        self._parent = parent    # This is the parent class that instantiated ShuffleButton.
         self.fetchEvent = fetchEvent
         self.history = [0]
         self.historyPtr = 0     # This is the pointer which points to which toon

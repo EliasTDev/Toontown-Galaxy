@@ -92,7 +92,7 @@ class ToonSignTextCtrl(wx.TextCtrl):
       def __init__(self, parent, id=-1, value=wx.EmptyString, pos=wx.DefaultPosition):
           wx.TextCtrl.__init__(self, parent.panel, id, pos=pos, value=value, validator=ToonSignTextCtrlValidator())
 
-          self.parent = parent
+          self._parent = parent
           self.Bind(wx.EVT_TEXT, self.OnText)
           self.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
 

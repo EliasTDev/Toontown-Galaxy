@@ -18,7 +18,7 @@ class FlowerPicker(DirectScrolledList):
         FlowerPicker constructor: create a scrolling list of flower
         """
         self.flowerList = []
-        self.parent = parent
+        self._parent = parent
         self.shown = 0
         
         # make the scrolling pick list for the flower names

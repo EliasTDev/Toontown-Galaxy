@@ -35,7 +35,7 @@ class PartyEditor(FSM):
     def __init__(self, partyPlanner, parent):
         FSM.__init__( self, self.__class__.__name__ )
         self.partyPlanner = partyPlanner
-        self.parent = parent
+        self._parent = parent
         self.partyEditorGrid = PartyEditorGrid(self)
         self.currentElement = None
 
@@ -55,7 +55,7 @@ class PartyEditor(FSM):
         pos = self.partyPlanner.gui.find("**/step_05_activitiesIcon_locator").getPos()
         self.elementList = DirectScrolledList(
 
-            parent = self.parent,
+            parent = self._parent,
             relief = None,
             # inc and dec are DirectButtons
             decButton_image = (self.partyPlanner.gui.find("**/activitiesButtonUp_up"),
@@ -130,7 +130,7 @@ class PartyEditor(FSM):
     def initTrashCan(self):
         trashcanGui = loader.loadModel("phase_3/models/gui/trashcan_gui")
         self.trashCanButton = DirectButton(
-            parent = self.parent,
+            parent = self._parent,
             relief = None,
             pos = Point3(*PartyGlobals.TrashCanPosition),
             scale = PartyGlobals.TrashCanScale,

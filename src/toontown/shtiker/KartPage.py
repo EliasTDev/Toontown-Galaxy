@@ -754,7 +754,7 @@ class ItemSelector( DirectFrame ):
             # Initialize instance variables
             self.currItem = None
             self.itemList = None
-            self.parent = parent
+            self._parent = parent
             self.avatar = avatar
             self.currAccessoryType = None
             self.texCount = 1
@@ -785,7 +785,7 @@ class ItemSelector( DirectFrame ):
             self.rightArrowButton.destroy()
             
             # Remove references
-            del self.avatar, self.parent, self.currItem, self.itemList
+            del self.avatar, self._parent, self.currItem, self.itemList
             del self.uiBgFrame, self.uiImagePlane, self.uiTextBox
             del self.leftArrowButton, self.rightArrowButton, self.deleteButton
 
@@ -1164,7 +1164,7 @@ class ItemSelector( DirectFrame ):
             self.updatedDNA[ self.currAccessoryType ] = self.currItem
 
             # obtain the kart and set the update
-            kart = self.parent.parent.getKartViewer().getKart()
+            kart = self._parent.parent.getKartViewer().getKart()
             kart.updateDNAField( self.currAccessoryType, self.currItem )
 
         def __handleShowItem( self ):
@@ -1203,7 +1203,7 @@ class ItemSelector( DirectFrame ):
                     self.uiImagePlane.component( 'geom0' ).setColorScale( getAccessory( self.currItem ) )
  
             elif( self.currAccessoryType == KartDNA.decalType ):
-                kart = self.parent.parent.getKartViewer().getKart()
+                kart = self._parent.parent.getKartViewer().getKart()
                 kartDecal = getDecalId( kart.kartDNA[ KartDNA.bodyType ] )
                 texNodePath = getTexCardNode( self.currItem )
    
@@ -1291,7 +1291,7 @@ class ItemSelector( DirectFrame ):
                         self.updatedDNA[ KartDNA.accColor ] = self.currItem
                         
                         # obtain the kart and set the update
-                        kart = self.parent.parent.getKartViewer().getKart()
+                        kart = self._parent.parent.getKartViewer().getKart()
                         kart.updateDNAField( KartDNA.accColor, self.currItem )
                         
                 elif( self.currAccessoryType == KartDNA.accColor ):
@@ -1300,7 +1300,7 @@ class ItemSelector( DirectFrame ):
                         self.updatedDNA[ KartDNA.bodyColor ] = self.currItem
                      
                         # obtain the kart and set the update
-                        kart = self.parent.parent.getKartViewer().getKart()
+                        kart = self._parent.parent.getKartViewer().getKart()
                         kart.updateDNAField( KartDNA.bodyColor, self.currItem )
                 else:
                     pass
@@ -1329,7 +1329,7 @@ class ItemSelector( DirectFrame ):
             self.updatedDNA[ self.currAccessoryType ] = self.currItem
              
             # obtain the kart and set the update
-            kart = self.parent.parent.getKartViewer().getKart()
+            kart = self._parent.parent.getKartViewer().getKart()
             kart.updateDNAField( self.currAccessoryType, self.currItem )
             
             if( self.avatar.getAccessoryByType( self.currAccessoryType ) == deletedItem ):
@@ -1365,7 +1365,7 @@ class ItemSelector( DirectFrame ):
         self.avatar = avatar
         self.itemViewers = {}
         self.buttonDict = {}
-        self.parent = parent
+        self._parent = parent
 
         # Construct the DirectFrame super class from which the selector
         # is derived.
@@ -1654,7 +1654,7 @@ class KartViewer( DirectFrame ):
         # Intiailize instance variables
         self.kart = None
         self.dna = dna
-        self.parent = parent
+        self._parent = parent
         self.kartFrame = None
 
         self.bounds = None
@@ -1700,7 +1700,7 @@ class KartViewer( DirectFrame ):
         if hasattr(self, "dna"):
             del self.dna
         if hasattr(self, "parent"):
-            del self.parent                                
+            del self._parent                                
 
         # Destroy DirectFrame Super class
         DirectFrame.destroy( self )
