@@ -205,7 +205,7 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
             allFish = TTLocalizer.FishSpeciesNames
             fishLists = [[], [], []]
             for genus in allFish.keys():
-                for species in xrange(len(allFish[genus])):
+                for species in range(len(allFish[genus])):
                     fishLists[0].append(genus)
                     fishLists[1].append(species)
                     fishLists[2].append(FishGlobals.getRandomWeight(genus, species))
