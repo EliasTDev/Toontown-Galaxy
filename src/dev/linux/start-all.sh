@@ -1,4 +1,3 @@
-start start-mongo
 start start-astron-cluster
 start start-uberdog-server
 start start-ai-server
