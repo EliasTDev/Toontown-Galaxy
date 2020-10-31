@@ -20,7 +20,7 @@ class RaceManagerAI(DirectObject.DirectObject):
 
     notify = DirectNotifyGlobal.directNotify.newCategory('RaceManagerAI')
     
-    serverDataFolder = simbase.config.GetString('server-data-folder', "")
+    serverDataFolder = simbase.config.GetString('server-data-folder', "dependencies/backup/racing")
 
     SuspiciousPercent = 0.15 # what percent of qualifying time counts as suspicious
         
@@ -936,6 +936,9 @@ class RaceManagerAI(DirectObject.DirectObject):
         
     def getFilename(self):
         """Compose the track record filename"""
+        if not os.path.exists(self.serverDatafolder):
+            os.makedirs(self.serverDatafolder)
+
         return "%s%s.trackRecords" % (self.serverDataFolder, self.shard)
 
     def loadRecords(self):

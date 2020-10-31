@@ -7,3 +7,4 @@ src/TUDS-1-anydbm.dat
 *.jpg
 src/useropt
 *.trackRecords
+*.jackpot
