@@ -153,6 +153,9 @@ class ToontownAIRepository(ToontownInternalRepository):
 
         self.dataStoreManager = self.generateGlobalObject(OTP_DO_ID_TOONTOWN_TEMP_STORE_MANAGER, 'DistributedDataStoreManager')
 
+        # Create our suit invasion manager...
+        self.suitInvasionManager = SuitInvasionManagerAI(self)
+
         # Create our holiday manager...
         self.holidayManager = HolidayManagerAI(self)
 
@@ -166,9 +169,6 @@ class ToontownAIRepository(ToontownInternalRepository):
 
         # Create our pet manager...
         self.petMgr = PetManagerAI(self)
-
-        # Create our suit invasion manager...
-        self.suitInvasionManager = SuitInvasionManagerAI(self)
 
         # Create our zone allocator...
         self.zoneAllocator = UniqueIdAllocator(ToontownGlobals.DynamicZonesBegin, ToontownGlobals.DynamicZonesEnd)
