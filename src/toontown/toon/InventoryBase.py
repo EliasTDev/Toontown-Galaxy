@@ -6,6 +6,7 @@ from direct.showbase import DirectObject
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
+from toontown.toonbase import ToontownGlobals
 
 class InventoryBase(DirectObject.DirectObject):
 
