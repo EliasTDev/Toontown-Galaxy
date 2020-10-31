@@ -14,6 +14,9 @@ class ToontownLoadingScreen:
 
         self.gui = loader.loadModel("phase_3/models/gui/progress-background")
 
+        # Hide the Disney logo in the model itself.
+        self.gui.find("**/logo").hide()
+
         self.banner = loader.loadModel("phase_3/models/gui/toon_council").find("**/scroll")
         self.banner.reparentTo(self.gui)
         self.banner.setScale(0.4,0.4,0.4)
