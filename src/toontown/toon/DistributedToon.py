@@ -3522,7 +3522,7 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
 
                 # Initial position ... Center of the body... the "tan tien"
                 self.hpText.setPos(0, 0, self.height//2)
-                seq = Task.sequence(
+                seq = Sequence(
                     # Fly the number out of the character
                     self.hpText.posInterval(1.0, Point3(0, 0, self.height + 1.5),
                                             1.0,
