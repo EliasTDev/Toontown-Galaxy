@@ -21,7 +21,7 @@ from toontown.friends import FriendsListManager
 from direct.controls.ControlManager import CollisionHandlerRayStart
 from direct.showbase import PythonUtil
 import random
-
+from libotp import *
 class DistributedBossCog(DistributedAvatar.DistributedAvatar,
                          BossCog.BossCog):
 

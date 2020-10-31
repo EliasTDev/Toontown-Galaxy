@@ -11,7 +11,7 @@ from toontown.suit import SuitDNA
 from direct.fsm import State
 from direct.fsm import ClassicFSM
 from toontown.toonbase import ToontownGlobals
-
+from libotp import *
 class DistributedLevelBattle(DistributedBattle.DistributedBattle):
     notify = DirectNotifyGlobal.directNotify.newCategory(
         'DistributedLevelBattle')

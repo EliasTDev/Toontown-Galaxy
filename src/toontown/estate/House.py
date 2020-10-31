@@ -11,7 +11,7 @@ from direct.fsm import State
 from direct.task import Task
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
-
+from libotp import *
 class House(Place.Place):
     """House class"""
 

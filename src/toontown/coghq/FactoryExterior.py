@@ -6,7 +6,7 @@ from direct.fsm import State
 from toontown.toonbase import ToontownGlobals
 from toontown.building import Elevator
 from pandac.PandaModules import *
-
+from libotp import *
 class FactoryExterior(BattlePlace.BattlePlace):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("FactoryExterior")

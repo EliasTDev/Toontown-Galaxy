@@ -14,6 +14,7 @@ from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 from toontown.toon import NPCForceAcknowledge
 from toontown.toon import HealthForceAcknowledge
+from libotp import *
 class ToonInterior(Place.Place):
     """ToonInterior class"""
 
