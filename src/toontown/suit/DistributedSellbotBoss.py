@@ -27,7 +27,7 @@ from direct.task import Task
 import random
 import math
 from toontown.coghq import CogDisguiseGlobals
-
+from libotp import *
 # This pointer keeps track of the one DistributedSellbotBoss that
 # should appear within the avatar's current visibility zones.  If
 # there is more than one DistributedSellbotBoss visible to a client at
