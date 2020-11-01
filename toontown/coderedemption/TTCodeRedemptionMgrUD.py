@@ -9,7 +9,7 @@ from toontown.http import recaptcha
 from direct.task import Task
 from otp.distributed import OtpDoGlobals
 from toontown.catalog import CatalogItemTypes
-from toontown.coderedemption.TTCodeRedemptionDB import TTCodeRedemptionDB#, TTCodeRedemptionDBTester
+from toontown.coderedemption.TTCodeRedemptionDB import TTCodeRedemptionDB, TTCodeRedemptionDBTester
 from toontown.coderedemption.TTCodeDict import TTCodeDict
 from toontown.coderedemption import TTCodeRedemptionConsts
 from toontown.coderedemption import TTCodeRedemptionSpamDetector
@@ -129,8 +129,8 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
 
         self._db = TTCodeRedemptionDB(self.air, self.DBhost, self.DBport, self.DBuser, self.DBpasswd, self.DBname)
 
-       # if __debug__:
-        #    self._db.runTests() #TODO get working
+        if __debug__:
+            self._db.runTests()
 
         #self.air.setConnectionName("TTCodeRedemptionMgr") #TODO
         #self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
@@ -1396,8 +1396,8 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
                 if values.lotName in self._db.getLotNames():
                     errors.add('lotName', self.CreateErrors.UsedLotName)
 
-               # if not TTCodeRedemptionDBTester.isLotNameValid(values.lotName):
-#                    errors.add('lotName', self.CreateErrors.UsedLotName)
+                if not TTCodeRedemptionDBTester.isLotNameValid(values.lotName):
+                    errors.add('lotName', self.CreateErrors.UsedLotName)
 
                 manualCode = (values.codeType == 'manual')
 
@@ -1657,7 +1657,7 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
                 if self._wantSpamDetect and self._spamDetector.avIsBlocked(senderId):
                     self.air.writeServerEvent('suspicious', avId,
                                               'too many invalid code redemption attempts, '
-                                              'submission rejected: %s' % u2ascii(code))
+                                              'submission rejected: %s' % code)
                     result = TTCodeRedemptionConsts.RedeemErrors.TooManyAttempts
 
             if result is not None:

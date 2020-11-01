@@ -378,9 +378,8 @@ class TTCodeRedemptionDBTester(Job):
         db._testing = True
         lotNames = db.getLotNames()
         for lotName in lotNames:
-            if cls.TestLotName in str(lotName):
+            if cls.TestLotName in lotName:
                 db.deleteLot(lotName)
-                pass
         db._testing = False
 
     def _handleRedeemResult(self, result, awardMgrResult):
@@ -462,24 +461,21 @@ class TTCodeRedemptionDBTester(Job):
 
                 lotNames = self._db.getLotNames()
                 if lotName not in lotNames:
-                    #self.notify.error('could not create code redemption lot \'%s\'' % lotName)
-                    pass
+                    self.notify.error('could not create code redemption lot \'%s\'' % lotName)
                 db._testing = False
                 yield None
                 db._testing = True
 
                 autoLotNames = self._db.getAutoLotNames()
                 if lotName not in autoLotNames:
-                    #self.notify.error('auto lot \'%s\' not found in getAutoLotNames()' % lotName)
-                    pass
+                    self.notify.error('auto lot \'%s\' not found in getAutoLotNames()' % lotName)
                 db._testing = False
                 yield None
                 db._testing = True
 
                 manualLotNames = self._db.getManualLotNames()
                 if lotName in manualLotNames:
-                    pass
-                    #self.notify.error('auto lot \'%s\' found in getAutoLotNames()' % lotName)
+                    self.notify.error('auto lot \'%s\' found in getAutoLotNames()' % lotName)
                 db._testing = False
                 yield None
                 db._testing = True
@@ -1124,9 +1120,8 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
 
         cursor.execute(
             """
-            SET FOREIGN_KEY_CHECKS=0;
-            DROP TABLE IF EXISTS {0}
-            """.format(lotName.decode())
+            DROP TABLE IF EXISTS code_set_%s;
+            """ % lotName
             )
 
         if conn.WantTableLocking:
@@ -1139,13 +1134,12 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
         cursor.execute(
             """
             DELETE FROM lot WHERE name='%s';
-            """ % lotName.decode()
+            """ % lotName
             )
 
         if conn.WantTableLocking:
             cursor.execute(
                 """
-                SET FOREIGN_KEY_CHECKS=1;
                 UNLOCK TABLES;
                 """
                 )
@@ -1169,9 +1163,9 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
         rows = cursor.fetchall()
         conn.destroy()
         for row in rows:
-            lotName = row['name']
+            lotName = row['name'].decode()
             if not self._testing:
-                if TTCodeRedemptionDBTester.TestLotName in lotName.decode():
+                if TTCodeRedemptionDBTester.TestLotName in lotName:
                     continue
             lotNames.append(lotName)
         return lotNames
@@ -1276,7 +1270,7 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
         cursor.execute(
             """
             SELECT %s FROM code_set_%s INNER JOIN lot WHERE code_set_%s.lot_id=lot.lot_id%s%s;
-            """ % (choice(justCode, 'code', '*'), lotName, lotName.decode(),
+            """ % (choice(justCode, 'code', '*'), lotName, lotName,
                    choice(filter==self.LotFilter.All, '', ' AND '), condition)
             )
         rows = cursor.fetchall()
@@ -1691,14 +1685,14 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
         else:
             self.notify.info('subprocess test failed! (%s)' % repr(result))
 
-    #if __debug__:
-     #   def runTests(self):
-      #      self._doRunTests(self._initializedSV.get())
-       #     self._runTestsFC = FunctionCall(self._doRunTests, self._initializedSV)
+    if __debug__:
+        def runTests(self):
+            self._doRunTests(self._initializedSV.get())
+            self._runTestsFC = FunctionCall(self._doRunTests, self._initializedSV)
 
-        #def _doRunTests(self, initialized):
-         #   if initialized and self.DoSelfTest:
-          #      jobMgr.add(TTCodeRedemptionDBTester(self))
+        def _doRunTests(self, initialized):
+            if initialized and self.DoSelfTest:
+                jobMgr.add(TTCodeRedemptionDBTester(self))
 
 # this file itself is the SQL communication subprocess when run directly
 if __name__ == '__main__':
