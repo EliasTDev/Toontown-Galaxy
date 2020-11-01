@@ -97,7 +97,7 @@ class FishPicker(DirectScrolledList):
     def destroy(self):
         assert self.notify.debugStateCall(self)
         DirectScrolledList.destroy(self)
-        self.parent = None
+        self._parent = None
         self.fishList = []
         self.fishPanel = None
 
