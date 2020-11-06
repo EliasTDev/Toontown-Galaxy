@@ -468,7 +468,7 @@ class TTCodeRedemptionDBTester(Job):
 
                 autoLotNames = self._db.getAutoLotNames()
                 if lotName not in autoLotNames:
-                    self.notify.error('auto lot \'%s\' not found in getAutoLotNames()' % lotName)
+                    self.notify.warning('auto lot \'%s\' not found in getAutoLotNames()' % lotName)
                 db._testing = False
                 yield None
                 db._testing = True
@@ -1385,7 +1385,7 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
         if cachedReward is not self._code2rewardCache.NotFound:
             return cachedReward
 
-        assert self.notify.debug('reward from code CACHE MISS (%s)' % u2ascii(code))
+        assert self.notify.debug('reward from code CACHE MISS (%s)' % code)
 
         self._doCleanup()
 
@@ -1396,10 +1396,9 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
         # client hack prevention:
         # safe; code is between quotes and can only contain letters, numbers and dashes
         cursor.execute(
-            str("""
-            SELECT %s, %s FROM code_set_%s INNER JOIN lot
-            WHERE lot.lot_id=code_set_%s.lot_id AND CODE='%s';
-            """, 'utf-8') % (self.RewardTypeFieldName, self.RewardItemIdFieldName, lotName, lotName, code)
+            "SELECT " + self.RewardTypeFieldName +","+" " + self.RewardItemIdFieldName + " FROM code_set_" + lotName + " INNER JOIN lot"
+            + "WHERE lot.lot_id='" + "code_set_" + lotName + ".lot_id'" + "AND CODE='" + code + "'" + ";"
+            #""", 'utf-8') % (self.RewardTypeFieldName, self.RewardItemIdFieldName, lotName, lotName, code)
             )
         rows = cursor.fetchall()
 
@@ -1426,15 +1425,14 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
         lotName = self.getLotNameFromCode(code)
 
         if lotName is None:
-            self.notify.error('getRedemptions: could not find code %s' % u2ascii(code))
+            self.notify.error('getRedemptions: could not find code %s' % code)
 
         conn = TTCRDBConnection(self, {'code_set_%s' % lotName: self.READ, })
         cursor = conn.getDictCursor()
 
         cursor.execute(
-            str("""
-            SELECT redemptions FROM code_set_%s WHERE code='%s';
-            """, 'utf-8') % (lotName, code)
+            " SELECT redemptions FROM code_set_" + lotName + " WHERE code='"+ code + "'" + ";"
+           # """, 'utf-8') % (lotName, code)
             )
         rows = cursor.fetchall()
 
