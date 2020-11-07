@@ -1549,7 +1549,7 @@ class DistributedBossbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.speedRecoverRate = recoverRate
         self.speedRecoverStartTime = recoverStartTime
 
-        speedFraction = max( 1 - ( speedDamage/ self.maxSpeedDamage), 0)        
+        speedFraction = max( 1 - ( speedDamage // self.maxSpeedDamage), 0)        
         self.treads.setColorScale( 1, speedFraction, speedFraction, 1)        
 
         taskName = "RecoverSpeedDamage"
@@ -1568,7 +1568,7 @@ class DistributedBossbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # as an integer value, on the client side we return it as a
         # floating-point value, so we can get the smooth transition
         # effect as the speed slowly starts to roll back up.
-        return max(self.speedDamage - self.speedRecoverRate * elapsed /60.0 ,0 )
+        return max(self.speedDamage - self.speedRecoverRate * elapsed // 60.0 ,0 )
 
     def getFractionalSpeedDamage(self):
         """Return the current speed damage as a fraction between 0 and 1."""
