@@ -41,13 +41,13 @@ class DistributedGolfSpot(DistributedObject.DistributedObject, FSM.FSM):
         DistributedObject.DistributedObject.__init__(self, cr)
         FSM.FSM.__init__(self, 'DistributedGolfSpot')
         self.boss = None
-        self.index = None
+        self.index = 0
         self.avId = 0
         self.toon = None # the actual toon which should match up with self.avId
         self.golfSpotSmoother = SmoothMover()
         self.golfSpotSmoother.setSmoothMode(SmoothMover.SMOn)
         self.smoothStarted = 0
-        self.__broadcastPeriod = 0.2        
+        self.__broadcastPeriod = 0.2     
         if self.index > len(self.positions):
             self.notify.error("Invalid index %d" % index)
         self.fadeTrack = None
