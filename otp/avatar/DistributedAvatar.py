@@ -2,7 +2,7 @@ import time
 import string
 
 from pandac.PandaModules import *
-
+from direct.interval.IntervalGlobal import *
 from direct.distributed import DistributedNode
 from direct.actor.DistributedActor import DistributedActor
 from direct.task import Task
