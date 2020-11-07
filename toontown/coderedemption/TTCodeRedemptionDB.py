@@ -426,7 +426,10 @@ class TTCodeRedemptionDBTester(Job):
 
         retryStartT = None
         retryDelay = 5
-
+        if not config.GetBool('want-db-test', 1):
+            yield Job.Done
+            return
+            
         while 1:
             try:
                 db = self._db
