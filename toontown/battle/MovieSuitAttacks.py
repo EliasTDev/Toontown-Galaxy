@@ -1037,7 +1037,7 @@ def getSplicedLerpAnims(animName, origDuration, newDuration, startTime=0, fps=30
     # If we are reversing the animation, make the animInterval negative
     if (reverse == 1):
         animInterval = -animInterval
-    for i in range(0, numAnims):
+    for i in range(0, int(numAnims)):
         # Constructing the animation list for later use with getSplicedAnimsTrack
         anims.append([animName, timeInterval, startTime+addition, animInterval])
         addition += animInterval # Add addition to push the animation forward
