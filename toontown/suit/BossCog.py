@@ -14,7 +14,6 @@ from . import SuitDNA
 from toontown.battle import BattleProps
 from direct.showbase.PythonUtil import Functor
 import string
-import types
 from libotp import *
 GenericModel = "phase_9/models/char/bossCog"
 
@@ -816,7 +815,7 @@ class BossCog(Avatar.Avatar):
                             Sequence(SoundInterval(self.reelSfx, node = self),
                                      SoundInterval(self.deathSfx)))
 
-        elif isinstance(anim, bytes):
+        elif isinstance(anim, str):
             ival = ActorInterval(self, anim)
 
         else:
