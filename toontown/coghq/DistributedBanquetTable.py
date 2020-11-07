@@ -385,6 +385,8 @@ class DistributedBanquetTable(DistributedObject.DistributedObject, FSM.FSM, Banq
         loopDuration = eatingDuration - eatInTime - eatOutTime - waitTime
         serviceLoc = self.serviceLocs[chairIndex]
         def foodAttach(self=self, diner=diner):
+            if not self.serviceLocs[chairIndex].getNumChildren():
+                return
             foodModel = self.serviceLocs[chairIndex].getChild(0)
             foodModel.reparentTo( diner.getRightHand()),
             foodModel.setHpr( Point3(0,-94,0)),
