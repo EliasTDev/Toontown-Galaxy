@@ -5,6 +5,7 @@ from pandac.PandaModules import *
 from toontown.toonbase import TTLocalizer
 import os
 from toontown.toonbase import ToontownGlobals
+from direct.gui.DirectGuiGlobals import NO_FADE_SORT_INDEX
 
 class PhotoAlbumPage(ShtikerPage.ShtikerPage):
 

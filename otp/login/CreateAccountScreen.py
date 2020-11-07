@@ -13,6 +13,7 @@ from . import TTAccount
 from . import GuiScreen
 from otp.otpbase import OTPGlobals
 from direct.distributed.MsgTypes import *
+from direct.gui.DirectGuiGlobals import NO_FADE_SORT_INDEX
 
 class CreateAccountScreen(StateData.StateData, GuiScreen.GuiScreen):
     """

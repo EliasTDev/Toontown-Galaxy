@@ -9,6 +9,7 @@ from direct.showbase import PythonUtil
 from direct.showbase.DirectObject import DirectObject
 from otp.login import LeaveToPayDialog
 #from otp.otpbase import OTPLauncherGlobals
+from direct.gui.DirectGuiGlobals import NO_FADE_SORT_INDEX
 
 """
 d.destroy()

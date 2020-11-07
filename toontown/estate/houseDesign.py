@@ -2,6 +2,7 @@ from direct.directtools.DirectSelection import *
 from direct.directtools.DirectUtil import ROUND_TO
 from direct.directtools.DirectGeometry import LineNodePath
 from direct.gui.DirectGui import *
+from direct.gui.DirectGuiGlobals import NO_FADE_SORT_INDEX
 from pandac.PandaModules import *
 from direct.showbase.DirectObject import DirectObject
 from toontown.toonbase import ToontownGlobals
