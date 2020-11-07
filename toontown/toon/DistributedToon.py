@@ -61,7 +61,7 @@ import copy
 if base.wantKarts:
     from toontown.racing.KartDNA import *
 
-from libotp import CFSpeech, CFTimeout
+from libotp import CFSpeech, CFTimeout, CFThought
 from libotp import WhisperPopup
 
 if( __debug__ ):
