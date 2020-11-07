@@ -3532,7 +3532,7 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
                     # Fade the number
                     self.hpText.colorInterval(0.1, Vec4(r, g, b, a)),
                     # Get rid of the number
-                    Func(self.hideHpTextTask))
+                    Func(self.hideHpText))
                 seq.start()
         else:
             # Just play the sound effect.

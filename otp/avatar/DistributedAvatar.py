@@ -329,7 +329,7 @@ class DistributedAvatar(DistributedActor, Avatar):
 
                 # Initial position ... Center of the body... the "tan tien"
                 self.hpText.setPos(0, 0, self.height//2)
-                seq = Task.sequence(
+                seq = Sequence(
                     # Fly the number out of the character
                     self.hpText.posInterval(1.0, Point3(0, 0, self.height + 1.5),
                                             1.0,
@@ -339,7 +339,7 @@ class DistributedAvatar(DistributedActor, Avatar):
                     # Fade the number
                     self.hpText.colorInterval(0.1, Vec4(r, g, b, a)),
                     # Get rid of the number
-                    Func(self.hideHpTextTask))
+                    Func(self.hideHpText))
                 seq.start()
         else:
             # Just play the sound effect.
@@ -381,7 +381,7 @@ class DistributedAvatar(DistributedActor, Avatar):
 
                 # Initial position ... Center of the body... the "tan tien"
                 self.hpText.setPos(0, 0, self.height//2)
-                seq = Task.sequence(
+                seq = Sequence(
                     # Fly the number out of the character
                     self.hpText.posInterval(1.0, Point3(0, 0, self.height + 1.5),
                                             1.0,
@@ -391,7 +391,7 @@ class DistributedAvatar(DistributedActor, Avatar):
                     # Fade the number
                     self.hpText.colorInterval(0.1, Vec4(r, g, b, a)),
                     # Get rid of the number
-                    Func(self.hideHpTextTask))
+                    Func(self.hideHpText))
                 seq.start()
         else:
             # Just play the sound effect.
