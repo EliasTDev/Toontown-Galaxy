@@ -11,7 +11,7 @@ import string
 import time
 import re
 from direct.task import Task
-from toontown.shtiker import CogPageGlobals 
+from toontown.shtiker import CogPageGlobals
 from toontown.coghq import CogDisguiseGlobals
 from toontown.fishing import FishGlobals
 from toontown.golf import GolfGlobals
@@ -22,6 +22,8 @@ from toontown.toon import Experience
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 from otp.otpbase.PythonUtil import *
+from game.toontown.racing.KartDNA import KartDict
+
 class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("MagicWordManagerAI")
 
@@ -211,10 +213,10 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
                     fishLists[2].append(FishGlobals.getRandomWeight(genus, species))
             av.b_setFishCollection(*fishLists)
             av.b_setFishingRod(FishGlobals.MaxRodId)
-            av.b_setFishingTrophies(FishGlobals.TrophyDict.keys())
+            av.b_setFishingTrophies(list(FishGlobals.TrophyDict.keys()))
 
             if not av.hasKart():
-                av.b_setKartBodyType(KartDict.keys()[1])
+                av.b_setKartBodyType(list(KartDict.keys())[1])
             av.b_setTickets(RaceGlobals.MaxTickets)
             maxTrophies = RaceGlobals.NumTrophies + RaceGlobals.NumCups
             av.b_setKartingTrophies(range(1, maxTrophies + 1))
