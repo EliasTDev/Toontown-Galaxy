@@ -148,7 +148,7 @@ class DistributedCogdoInteriorAI(DistributedObjectAI.DistributedObjectAI):
         difficulty = SafeZones.index(safeZone)
         self.SOSCard = self.chooseSOSCard(difficulty)
 
-   def generateWithRequired(self, zoneId):
+    def generateWithRequired(self, zoneId):
         self._disCleanupTask = None
         self._sadCleanupTask = None
         DistributedObjectAI.DistributedObjectAI.generateWithRequired(self, zoneId)
@@ -983,8 +983,7 @@ class DistributedCogdoInteriorAI(DistributedObjectAI.DistributedObjectAI):
                     toon = self.air.getDo(toonId)
                     if toon:
                         self.ignore(toon.getGoneSadMessage())
-
-        self.handleAllAboard()
+       self.handleAllAboard()
 
     def handleAllAboard(self, seats):
         if not hasattr(self, "fsm"):
