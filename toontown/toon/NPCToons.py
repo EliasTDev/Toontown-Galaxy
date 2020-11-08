@@ -987,6 +987,9 @@ def getNPCName(npcId):
     else:
         return None
 
+def npcFriendsMinMaxStars(minStars, maxStars):
+    return [ id for id in list(npcFriends.keys()) if getNPCTrackLevelHpRarity(id)[3] >= minStars and getNPCTrackLevelHpRarity(id)[3] <= maxStars ]
+
 def getNPCZone(npcId):
     npc = NPCToonDict.get(npcId)
     if npc:
@@ -1002,6 +1005,34 @@ def getBuildingArticle(zoneId):
 
 def getBuildingTitle(zoneId):
     return TTLocalizer.zone2TitleDict.get(zoneId, "Toon Building")[0]
+
+
+
+def getNPCTrack(npcId):
+    if (npcId in npcFriends):
+        return npcFriends[npcId][0]
+    return None
+
+def getNPCTrackHp(npcId):
+    if (npcId in npcFriends):
+        track, level, hp, rarity = npcFriends[npcId]
+        return track,  hp
+    return None, None
+
+def getNPCTrackLevelHp(npcId):
+    if (npcId in npcFriends):
+        track, level, hp, rarity = npcFriends[npcId]
+        return track, level, hp
+    return None, None, None
+
+
+def getNPCTrackLevelHpRarity(npcId):
+    if (npcId in npcFriends):
+        return npcFriends[npcId]
+    return None, None, None, None
+
+
+
 
 npcFriends = {
     # A dictionary of tuples, indexed by rescued toon npcId
@@ -1090,25 +1121,52 @@ npcFriends = {
             ToontownBattleGlobals.DROP_TRACK, 0, 3), 
     }
 
-def getNPCTrack(npcId):
-    if (npcId in npcFriends):
-        return npcFriends[npcId][0]
-    return None
-
-def getNPCTrackHp(npcId):
-    if (npcId in npcFriends):
-        track, level, hp, rarity = npcFriends[npcId]
-        return track,  hp
-    return None, None
-
-def getNPCTrackLevelHp(npcId):
-    if (npcId in npcFriends):
-        track, level, hp, rarity = npcFriends[npcId]
-        return track, level, hp
-    return None, None, None
-
-
-def getNPCTrackLevelHpRarity(npcId):
-    if (npcId in npcFriends):
-        return npcFriends[npcId]
-    return None, None, None, None
+FOnpcFriends = {9310: (ToontownBattleGlobals.LURE_TRACK,
+        1,
+        0,
+        0),
+ 9311: (ToontownBattleGlobals.LURE_TRACK,
+        1,
+        0,
+        1),
+ 9312: (ToontownBattleGlobals.LURE_TRACK,
+        3,
+        0,
+        2),
+ 9307: (ToontownBattleGlobals.SOUND_TRACK,
+        1,
+        10,
+        0),
+ 9308: (ToontownBattleGlobals.SOUND_TRACK,
+        3,
+        20,
+        1),
+ 9309: (ToontownBattleGlobals.SOUND_TRACK,
+        4,
+        30,
+        2),
+ 9304: (ToontownBattleGlobals.DROP_TRACK,
+        1,
+        20,
+        0),
+ 9305: (ToontownBattleGlobals.DROP_TRACK,
+        2,
+        35,
+        1),
+ 9306: (ToontownBattleGlobals.DROP_TRACK,
+        3,
+        50,
+        2),
+ 9301: (ToontownBattleGlobals.HEAL_TRACK,
+        3,
+        10,
+        0),
+ 9302: (ToontownBattleGlobals.HEAL_TRACK,
+        3,
+        20,
+        1),
+ 9303: (ToontownBattleGlobals.HEAL_TRACK,
+        3,
+        30,
+        2)}
+npcFriends.update(FOnpcFriends)

@@ -22,7 +22,10 @@ from toontown.distributed import DelayDelete
 from toontown.toon import TTEmote
 from otp.avatar import Emote
 from toontown.hood import ZoneUtil
-
+FO_DICT = {'s': 'tt_m_ara_cbe_fieldOfficeMoverShaker',
+ 'l': 'tt_m_ara_cbe_fieldOfficeLegalEagle',
+ 'm': 'tt_m_ara_cbe_fieldOfficeMoverShaker',
+ 'c': 'tt_m_ara_cbe_fieldOfficeMoverShaker'}
 class DistributedBuilding(DistributedObject.DistributedObject):
     """
     DistributedBuilding class:  The client side representation of a
@@ -486,26 +489,30 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             nodePath.append(npc.getPath(i))
         return nodePath
 
-    def loadElevator(self, newNP):
+    def loadElevator(self, newNP, cogDo=False):
+
         assert(self.debugPrint("loadElevator(newNP=%s)"%(newNP,)))
+        self.floorIndicator=[None, None, None, None, None]
         # Load up an elevator
         self.elevatorNodePath = hidden.attachNewNode("elevatorNodePath")
-        self.elevatorModel = loader.loadModel(
+        if cogDo:
+            self.elevatorModel = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_csa_elevatorB')
+        else:
+            self.elevatorModel = loader.loadModel(
                 "phase_4/models/modules/elevator")
 
         # Put up a display to show the current floor of the elevator
-        self.floorIndicator=[None, None, None, None, None]
-        npc=self.elevatorModel.findAllMatches("**/floor_light_?;+s")
-        for i in range(npc.getNumPaths()):
-            np=npc.getPath(i)
-            # Get the last character, and make it zero based:
-            floor=int(np.getName()[-1:])-1
-            self.floorIndicator[floor]=np
-            if floor < self.numFloors:
-                np.setColor(LIGHT_OFF_COLOR)
-            else:
-                np.hide()
-        
+            npc=self.elevatorModel.findAllMatches("**/floor_light_?;+s")
+            for i in range(npc.getNumPaths()):
+                np=npc.getPath(i)
+                # Get the last character, and make it zero based:
+                floor=int(np.getName()[-1:])-1
+                self.floorIndicator[floor]=np
+                if floor < self.numFloors:
+                    np.setColor(LIGHT_OFF_COLOR)
+                else:
+                    np.hide()
+            
         self.elevatorModel.reparentTo(self.elevatorNodePath)
 
         if self.mode == 'suit':
@@ -528,8 +535,11 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             cogIcons.removeNode()
         
         self.leftDoor = self.elevatorModel.find("**/left-door")
+        if self.leftDoor.isEmpty():
+            self.leftDoor = self.elevatorModel.find('**/left_door')
         self.rightDoor = self.elevatorModel.find("**/right-door")
-        
+        if self.rightDoor.isEmpty():
+            self.rightDoor = self.elevatorModel.find('**/right_door')
         # Find the door origin
         self.suitDoorOrigin = newNP.find("**/*_door_origin")
         assert(not self.suitDoorOrigin.isEmpty())
@@ -711,7 +721,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
     def setupSuitBuilding(self, nodePath):
         assert(self.debugPrint("setupSuitBuilding(nodePath=%s)"%(nodePath,)))
         dnaStore=self.cr.playGame.dnaStore
-        level = int(self.difficulty / 2) + 1
+        level = int(self.difficulty // 2) + 1
         suitNP=dnaStore.findNode("suit_landmark_"
                 +chr(self.track)+str(level))
 
@@ -744,7 +754,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         # than one line.  Try to adjust the scale and position of
         # the sign accordingly.
         textHeight = textNode.getHeight()
-        zScale = (textHeight + 2) / 3.0
+        zScale = (textHeight + 2) // 3.0
         
         # Determine where the sign should go:
         signOrigin=suitBuildingNP.find("**/sign_origin;+s")
@@ -753,17 +763,17 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         backgroundNP=loader.loadModel("phase_5/models/modules/suit_sign")
         assert(not backgroundNP.isEmpty())
         backgroundNP.reparentTo(signOrigin)
-        backgroundNP.setPosHprScale(0.0, 0.0, textHeight * 0.8 / zScale,
+        backgroundNP.setPosHprScale(0.0, 0.0, textHeight * 0.8 // zScale,
                                     0.0, 0.0, 0.0,
                                     8.0, 8.0, 8.0 * zScale)
-        backgroundNP.node().setEffect(DecalEffect.make())
+        #backgroundNP.node().setEffect(DecalEffect.make())
         # Get the text node path:
         signTextNodePath = backgroundNP.attachNewNode(textNode.generate())
         assert(not signTextNodePath.isEmpty())
         # Scale the text:
-        signTextNodePath.setPosHprScale(0.0, 0.0, -0.21 + textHeight * 0.1 / zScale,
+        signTextNodePath.setPosHprScale(0.0, 0.0, -0.21 + textHeight * 0.1 // zScale,
                                         0.0, 0.0, 0.0,
-                                        0.1, 0.1, 0.1 / zScale)
+                                        0.1, 0.1, 0.1 // zScale)
         # Clear parent color higher in the hierarchy
         signTextNodePath.setColor(1.0, 1.0, 1.0, 1.0)
         # Decal sign onto the front of the building:
@@ -824,7 +834,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         for i in sideBldgNodes:
             name=i.getName()
             timeForDrop = TO_SUIT_BLDG_TIME*0.85
-            if (name[0]=='s'):
+            if (name[0]=='c'):
                 #print 'anim2suit: suit flat scale: %s' % repr(i.getScale())
                 # set the position of the node, then unstash it to show it
                 showTrack = Sequence(
@@ -916,9 +926,8 @@ class DistributedBuilding(DistributedObject.DistributedObject):
     def setupCogdo(self, nodePath):
         assert(self.debugPrint("setupCogdo(nodePath=%s)"%(nodePath,)))
         dnaStore=self.cr.playGame.dnaStore
-        level = int(self.difficulty / 2) + 1
-        suitNP=dnaStore.findNode("suit_landmark_"
-                +'s'+str(level))
+        level = int(self.difficulty // 2) + 1
+        suitNP = dnaStore.findNode(FO_DICT[chr(self.track)])
 
         # If you want to make the suit buildings visible from a
         # distance, uncomment the following line, and comment out
@@ -941,33 +950,29 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         textNode.setTextColor(1.0, 1.0, 1.0, 1.0)
         textNode.setFont(ToontownGlobals.getSuitFont())
         textNode.setAlign(TextNode.ACenter)
-        textNode.setWordwrap(17.0)
+        textNode.setWordwrap(12.0)
         textNode.setText(buildingTitle)
 
         # Since the text is wordwrapped, it may flow over more
         # than one line.  Try to adjust the scale and position of
         # the sign accordingly.
         textHeight = textNode.getHeight()
-        zScale = (textHeight + 2) / 3.0
+        zScale = (textHeight + 2) // 3.0
         
         # Determine where the sign should go:
         signOrigin=suitBuildingNP.find("**/sign_origin;+s")
         assert(not signOrigin.isEmpty())
         # Get the background:
-        backgroundNP=loader.loadModel("phase_5/models/modules/suit_sign")
+        backgroundNP = loader.loadModel('phase_5/models/cogdominium/field_office_sign')
         assert(not backgroundNP.isEmpty())
         backgroundNP.reparentTo(signOrigin)
-        backgroundNP.setPosHprScale(0.0, 0.0, textHeight * 0.8 / zScale,
-                                    0.0, 0.0, 0.0,
-                                    8.0, 8.0, 8.0 * zScale)
-        backgroundNP.node().setEffect(DecalEffect.make())
+        backgroundNP.setPosHprScale(0.0, 0.0, -1.2 + textHeight * 0.8 / zScale, 0.0, 0.0, 0.0, 20.0, 8.0, 8.0 * zScale)
+        #backgroundNP.node().setEffect(DecalEffect.make())
         # Get the text node path:
         signTextNodePath = backgroundNP.attachNewNode(textNode.generate())
         assert(not signTextNodePath.isEmpty())
         # Scale the text:
-        signTextNodePath.setPosHprScale(0.0, 0.0, -0.21 + textHeight * 0.1 / zScale,
-                                        0.0, 0.0, 0.0,
-                                        0.1, 0.1, 0.1 / zScale)
+        signTextNodePath.setPosHprScale(0.0, 0.0, -0.13 + textHeight * 0.1 / zScale, 0.0, 0.0, 0.0, 0.1 * 8.0 / 20.0, 0.1, 0.1 // zScale)
         # Clear parent color higher in the hierarchy
         signTextNodePath.setColor(1.0, 1.0, 1.0, 1.0)
         # Decal sign onto the front of the building:
@@ -977,15 +982,12 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         frontNP.node().setEffect(DecalEffect.make())
 
         # Rename the building:
-        suitBuildingNP.setName("sb"+str(self.block)+":_landmark__DNARoot")
-        suitBuildingNP.setPosHprScale(nodePath,
-                                      0.0, 0.0, 0.0,
-                                      0.0, 0.0, 0.0,
-                                      1.0, 1.0, 1.0)
+        suitBuildingNP.setName("cb"+str(self.block)+":_landmark__DNARoot")
+        suitBuildingNP.setPosHprScale(nodePath, 15.463, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0)
         # Get rid of any transitions and extra nodes
         suitBuildingNP.flattenMedium()
         suitBuildingNP.setColorScale(.6,.6,.6,1.)
-        self.loadElevator(suitBuildingNP)
+        self.loadElevator(suitBuildingNP, cogDo=True)
         return suitBuildingNP
 
     def animToToon(self, timeStamp):

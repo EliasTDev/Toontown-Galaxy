@@ -88,7 +88,8 @@ class DistributedSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
         # either a suit or a toon building, or None.
         self.buildingDestination = None
         self.buildingDestinationIsCogdo = False
-
+        self.takeoverIsCogdo = False
+        
     def stopTasks(self):
         taskMgr.remove(self.taskName("flyAwayNow"))
         taskMgr.remove(self.taskName("danceNowFlyAwayLater"))
