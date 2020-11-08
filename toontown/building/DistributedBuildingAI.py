@@ -241,11 +241,10 @@ class DistributedBuildingAI(DistributedObjectAI.DistributedObjectAI):
 
         self.numFloors = self.FieldOfficeNumFloors
 
-        assert(self.debugPrint("cogdoTakeOver(%s, %s)" % (difficulty, numFloors - 1)))
+       # assert(self.debugPrint("cogdoTakeOver(%s, %s)" % (difficulty, numFloors - 1)))
 
         self.track= suitTrack
         self.difficulty=difficulty
-        self.numFloors=numFloors
         self.becameSuitTime = time.time()
         self.fsm.request('clearOutToonInteriorForCogdo')
 
