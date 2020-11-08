@@ -28,7 +28,7 @@ class DistCogdoMazeGame(DistCogdoGame, DistCogdoMazeGameBase):
             self.accept('onCodeReload', self.__sgOnCodeReload)
 
 
-     def delete(self):
+    def delete(self):
         del self.randomNumGen
         del self.game
         DistCogdoGame.delete(self)

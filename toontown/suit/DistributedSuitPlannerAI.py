@@ -616,7 +616,7 @@ class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
         self.numFlyInSuits = 0
         self.numBuildingSuits = 0
         self.numAttemptingTakeover = 0
-
+        self.numAttemptingCogdoTakeover = 0
         self.zoneInfo = {}
 
         self.zoneIdToPointMap = None
@@ -705,7 +705,7 @@ class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
         self.numFlyInSuits = 0
         self.numBuildingSuits = 0
         self.numAttemptingTakeover = 0
-
+        self.numAttemptingCogdoTakeover = 0
 
     def delete(self):
         self.cleanup()
@@ -1045,6 +1045,26 @@ class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
             newSuit.attemptingTakeover = self.newSuitShouldAttemptTakeover()
 
             if newSuit.attemptingTakeover:
+                cogdosNeeded = self.countNumNeededCogdos()
+                bldgsNeeded = self.countNumNeededBuildings()
+                cogdosAvailable = cogdosNeeded - self.numAttemptingCogdoTakeover
+                bldgsAvailable = bldgsNeeded - (self.numAttemptingTakeover - self.numAttemptingCogdoTakeover)
+                totalAvailable = cogdosAvailable + bldgsAvailable
+                if cogdoTakeover is None:
+                    cogdoTakeover = False
+                    if simbase.air.wantCogdominiums:
+                        if totalAvailable > 0:
+                            r = random.randrange(totalAvailable)
+                            if r < cogdosAvailable:
+                                cogdoTakeover = True
+                newSuit.takeoverIsCogdo = cogdoTakeover
+                if newSuit.takeoverIsCogdo:
+                    pendingTracks = [
+                     's', 'l']
+                    pendingHeights = self.pendingCogdoHeights
+                else:
+                    pendingTracks = self.pendingBuildingTracks
+                    pendingHeights = self.pendingBuildingHeights
                 # Also, if he's attempting a takeover, make him be a
                 # suitable track.
                 if suitTrack == None and len(self.pendingBuildingTracks) > 0:
@@ -1062,11 +1082,15 @@ class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
                     del self.pendingBuildingHeights[0]
                     self.pendingBuildingHeights.append(buildingHeight)
 
+            else:
+                if cogdoTakeover and suitTrack == None:
+                    suitTrack = random.choice(['s', 'l'])
         # If we're constrained to create only a particular type of
         # suit, do so.
         if suitName == None:
+            if not cogdoTakeOver:
             # If there is an invasion, the suit name will be picked for us
-            suitName, skelecog = self.air.suitInvasionManager.getInvadingCog()
+                suitName, skelecog = self.air.suitInvasionManager.getInvadingCog()
             # If we are still at none, use the default suit
             if suitName == None:
                 suitName = self.defaultSuitName
@@ -1078,8 +1102,11 @@ class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
         if suitLevel == None and buildingHeight != None:
             # Choose an appropriate level suit that will make a
             # building of the requested height.
-            suitLevel = self.chooseSuitLevel(self.SuitHoodInfo[self.hoodInfoIdx][self.SUIT_HOOD_INFO_LVL],
+            if not cogdoTakeover:
+                suitLevel = self.chooseSuitLevel(self.SuitHoodInfo[self.hoodInfoIdx][self.SUIT_HOOD_INFO_LVL],
                                              buildingHeight)
+            else:
+                suitLevel = self.SuitHoodInfo[self.hoodInfoIdx][self.SUIT_HOOD_INFO_LVL][-1] + 1
 
         # Now fill in the level, type, and track parameters that
         # haven't been specified yet.
@@ -1142,7 +1169,8 @@ class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
 
         if newSuit.attemptingTakeover:
             self.numAttemptingTakeover += 1
-
+            if newSuit.takeoverIsCogdo:
+                self.numAttemptingCogdoTakeover += 1
         return newSuit
 
     def countNumNeededBuildings(self):
@@ -1226,9 +1254,7 @@ class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
                     if blockNumber in self.buildingFrontDoors:
                         possibles.append((blockNumber, self.buildingFrontDoors[blockNumber]))
 
-            if cogdoTakeover is None:
-                if suit.dna.dept in ALLOWED_FIELD_OFFICES:
-                    cogdoTakeover = random.random() < self.CogdoRatio
+
         else:
             # We have all of the suit buildings that match our DNA
             # track to choose from (corporate suits don't mingle with
@@ -1293,6 +1319,14 @@ class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
         # a battle going on very near our starting point, trapping us
         # in a corner or something.
         return 0
+
+    def countCogdoTakeovers(self):
+        count = 0
+        for suit in self.suitList:
+            if suit.attemptingTakeover and suit.takeoverIsCogdo:
+                count += 1
+
+        return count
 
     def pathCollision(self, path, elapsedTime):
         """pathCollision(self, DNASuitPath path)
@@ -1406,7 +1440,8 @@ class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
                 self.numBuildingSuits -= 1
             if suit.attemptingTakeover:
                 self.numAttemptingTakeover -= 1
-
+                if suit.takeoverIsCogdo:
+                    self.numAttemptingCogdoTakeover -= 1
         assert self.numFlyInSuits + self.numBuildingSuits == len(self.suitList)
         assert self.numAttemptingTakeover == self.countTakeovers()
 

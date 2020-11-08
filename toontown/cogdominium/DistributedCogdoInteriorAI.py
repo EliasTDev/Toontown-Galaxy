@@ -1102,3 +1102,12 @@ class DistributedCogdoInteriorAI(DistributedObjectAI.DistributedObjectAI):
         else:
             card = random.choice(NPCToons.npcFriendsMinMaxStars(2, 2))
         return card
+
+    def enterBattleIntro(self):
+        timeLeft = 7.0
+        self._battleIntroTaskName = self.taskName('BattleIntro')
+        taskMgr.doMethodLater(timeLeft, self._battleIntroDone, self._battleIntroTaskName)
+        
+    def exitBattleIntro(self):
+        taskMgr.remove(self._battleIntroTaskName)
+        self._battleIntroTaskName = None
