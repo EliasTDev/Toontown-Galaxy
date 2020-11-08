@@ -1809,12 +1809,12 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
         if slow:
             args.remove("slow")
 
-        if len(args) -1 >1:
+        if len(args) >1:
             if args[1] != 'x':
                 level=int(args[2])
                 level = max(min(level, 9), 1)
 
-        if len(args) -1 >4:
+        if len(args) >4:
             if args[4] == 'all':
                 streetId = 'all'
             else:
@@ -1838,7 +1838,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             bm = sp.buildingMgr
 
             blocks = None
-            if len(args) -1 >3:
+            if len(args) >3:
                 if (args[3] == "all"):
                     blocks = bm.getToonBlocks()
                 elif (args[3] == "this"):

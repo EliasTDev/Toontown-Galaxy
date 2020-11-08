@@ -26,7 +26,7 @@ import math
 import time
 import random
 from libpandadna import DNASuitPoint, SuitLeg
-
+ALLOWED_FIELD_OFFICES = ['s', 'l']
 class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
                                 SuitPlannerBase.SuitPlannerBase):
     """
@@ -1225,6 +1225,10 @@ class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
                 if not NPCToons.isZoneProtected(intZoneId):
                     if blockNumber in self.buildingFrontDoors:
                         possibles.append((blockNumber, self.buildingFrontDoors[blockNumber]))
+
+            if cogdoTakeover is None:
+                if suit.dna.dept in ALLOWED_FIELD_OFFICES:
+                    cogdoTakeover = random.random() < self.CogdoRatio
         else:
             # We have all of the suit buildings that match our DNA
             # track to choose from (corporate suits don't mingle with
