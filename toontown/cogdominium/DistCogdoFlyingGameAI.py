@@ -7,7 +7,7 @@ import random
 from direct.distributed.ClockDelta import globalClockDelta
 from .DistCogdoGameAI import DistCogdoGameAI
 from . import CogdoFlyingGameGlobals as Globals
-class DistCogdoFlyingGameAI(DistributedMinigameAI):
+class DistCogdoFlyingGameAI(DistCogdoGameAI):
     """
     Flying Cogdominium Minigame AI Distributed Object!
     """
