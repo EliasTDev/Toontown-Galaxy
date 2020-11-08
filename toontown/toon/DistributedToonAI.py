@@ -206,6 +206,19 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
         #    import pdb; pdb.set_trace()
         #pass
 
+    def setLocation(self, parentId, zoneId):
+        DistributedPlayerAI.DistributedPlayerAI.setLocation(self, parentId, zoneId)
+
+        if self.isPlayerControlled():
+            if 100 <= zoneId < ToontownGlobals.DynamicZonesBegin:
+                hood = ZoneUtil.getHoodId(zoneId)
+                self.sendUpdate('setLastHood', [hood])
+                self.b_setDefaultZone(hood)
+
+                hoodsVisited = list(self.getHoodsVisited())
+                if hood not in hoodsVisited:
+                    hoodsVisited.append(hood)
+                    self.b_setHoodsVisited(hoodsVisited)
 
     def generate(self):
         # super spammy hack to track down ai crash
@@ -213,7 +226,6 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
         # self.air.writeServerEvent('generate' , self.doId, '')
         DistributedPlayerAI.DistributedPlayerAI.generate(self)
         DistributedSmoothNodeAI.DistributedSmoothNodeAI.generate(self)
-
 
     def announceGenerate(self):
         # super spammy hack to track down ai crash
@@ -223,6 +235,7 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
         DistributedSmoothNodeAI.DistributedSmoothNodeAI.announceGenerate(self)
         if self.isPlayerControlled():
             messenger.send('avatarEntered', [self])
+            self.sendUpdate('setDefaultShard', [self.air.districtId])
 
     ### Field definitions
 
@@ -246,9 +259,6 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
                     self.cleanupEstateData()
 
         DistributedAvatarAI.DistributedAvatarAI.sendDeleteEvent(self)
-
-
-
 
     def delete(self):
         self.notify.debug('----Deleting DistributedToonAI %d ' % self.doId)
@@ -484,6 +494,13 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
     def setDefaultZone(self, zone):
         self.defaultZone = zone
         self.notify.debug("setting default zone to %s" % zone)
+
+    def d_setDefaultZone(self, zone):
+        self.sendUpdate('setDefaultZone', [zone])
+
+    def b_setDefaultZone(self, zone):
+        self.setDefaultZone(zone)
+        self.d_setDefaultZone(zone)
 
     def getDefaultZone(self):
         return self.defaultZone
