@@ -117,7 +117,6 @@ class BingoManagerAI(object):
         # tell everyone bingo night is starting
         simbase.air.newsManager.bingoStart()
 
-
     ############################################################
     # Method:  stop
     # Purpose: This method begins the process of shutting down
