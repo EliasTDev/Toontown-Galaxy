@@ -22,7 +22,7 @@ from toontown.toon import Experience
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 from otp.otpbase.PythonUtil import *
-from game.toontown.racing.KartDNA import KartDict
+from toontown.racing.KartDNA import KartDict
 
 class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("MagicWordManagerAI")
