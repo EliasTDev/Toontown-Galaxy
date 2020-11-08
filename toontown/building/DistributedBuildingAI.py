@@ -39,7 +39,7 @@ class DistributedBuildingAI(DistributedObjectAI.DistributedObjectAI):
     version and updates the display that client's display based on who
     'owns' the building.
     """
-
+    FieldOfficeNumFloors = 1
     if __debug__:
         notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBuildingAI')
 
@@ -232,31 +232,18 @@ class DistributedBuildingAI(DistributedObjectAI.DistributedObjectAI):
         self.becameSuitTime = time.time()
         self.fsm.request('clearOutToonInterior')
 
-    def cogdoTakeOver(self, difficulty, buildingHeight):
+    def cogdoTakeOver(self, suitTrack, difficulty, buildingHeight):
         if not self.isToonBlock():
             return
 
         # Remove the old saved by credit with the old number of floors
         self.updateSavedBy(None)
 
-        minFloors, maxFloors = self._getMinMaxFloors(difficulty)
-        if buildingHeight == None:
-            # Pick a random floor number from the appropriate range.
-            numFloors = random.randint(minFloors, maxFloors)
-        else:
-            # The number of floors is specified.
-            numFloors = buildingHeight + 1
-
-            if (numFloors < minFloors or numFloors > maxFloors):
-                # Hmm, the number of floors is out of range for this
-                # suit.  There must be an invasion in effect.  In that
-                # case, go ahead and make a building of any height
-                # appropriate to the suit.
-                numFloors = random.randint(minFloors, maxFloors)
+        self.numFloors = self.FieldOfficeNumFloors
 
         assert(self.debugPrint("cogdoTakeOver(%s, %s)" % (difficulty, numFloors - 1)))
 
-        self.track='c'
+        self.track= suitTrack
         self.difficulty=difficulty
         self.numFloors=numFloors
         self.becameSuitTime = time.time()

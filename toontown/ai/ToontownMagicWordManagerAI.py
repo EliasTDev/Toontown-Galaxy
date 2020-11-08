@@ -1886,7 +1886,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     suit = None
                     retryCount = 0
                     while suit == None and len(points) > 0 and retryCount < 20:
-                        track = random.choice['s, l'])
+                        track = random.choice(['s, l'])
                         suit = sp.createNewSuit([], points,
                                                 suitTrack = track,
                                                 suitLevel = level,

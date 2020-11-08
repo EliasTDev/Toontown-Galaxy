@@ -109,12 +109,23 @@ class DistributedBuildingMgrAI:
                 blocks.append(i.getBlock()[0])
         return blocks
 
+    def isCogdoBlock(self, blockNumber):
+        return self.__buildings[blockNumber].isCogdo()
+
+    def getCogdoBlocks(self):
+        blocks = []
+        for i in list(self.__buildings.values()):
+            if i.isCogdo():
+                blocks.append(i.getBlock()[0])
+
+        return blocks
+
     def getEstablishedSuitBlocks(self):
-        assert(self.debugPrint("getEstablishedSuitBlocks()"))
-        blocks=[]
+        blocks = []
         for i in list(self.__buildings.values()):
             if i.isEstablishedSuitBlock():
                 blocks.append(i.getBlock()[0])
+
         return blocks
 
     def getToonBlocks(self):
@@ -236,6 +247,7 @@ class DistributedBuildingMgrAI:
                 building.setState("suit")
             elif blockData['state'] == 'cogdo':
                 if simbase.air.wantCogdominiums:
+                    building.numFloors = DistributedBuildingAI.DistributedBuildingAI.FieldOfficeNumFloors
                     building.setState("cogdo")
             else:
                 building.setState("toon")
