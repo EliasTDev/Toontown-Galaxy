@@ -1,9 +1,11 @@
 """ DistributedCogdoInterior module"""
-
+import random
 from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
 from toontown.building.ElevatorConstants import *
-
+from toontown.toon import NPCToons
+from pandac.PandaModules import NodePath
+from libotp import *
 from toontown.building import ElevatorUtils
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import ToontownBattleGlobals
@@ -11,10 +13,21 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM, State
 from direct.distributed import DistributedObject
 from direct.fsm import State
+from direct.fsm.StatePush import StateVar, FunctionCall
 from toontown.battle import BattleBase
 from toontown.hood import ZoneUtil
 from toontown.cogdominium.CogdoLayout import CogdoLayout
+from toontown.cogdominium import CogdoGameConsts
+from toontown.cogdominium import CogdoBarrelRoom, CogdoBarrelRoomConsts
+from toontown.distributed import DelayDelete
+from toontown.toonbase import TTLocalizer
+from .CogdoExecutiveSuiteMovies import CogdoExecutiveSuiteIntro
+from .CogdoElevatorMovie import CogdoElevatorMovie
 
+PAINTING_DICT = {'s': 'tt_m_ara_crg_paintingMoverShaker',
+ 'l': 'tt_m_ara_crg_paintingLegalEagle',
+ 'm': 'tt_m_ara_crg_paintingMoverShaker',
+ 'c': 'tt_m_ara_crg_paintingMoverShaker'}
 class DistributedCogdoInterior(DistributedObject.DistributedObject):
     """
     """
@@ -24,15 +37,15 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
                                                    'DistributedCogdoInterior')
 
     id = 0
-
+    cageHeights = [11.36, 0.01]
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
 
         self.toons = []
         self.activeIntervals = {}
 
-        self.openSfx = base.loader.loadSfx("phase_5/audio/sfx/elevator_door_open.mp3")
-        self.closeSfx = base.loader.loadSfx("phase_5/audio/sfx/elevator_door_close.mp3")
+        self.openSfx = base.loader.loadSfx("phase_5/audio/sfx/elevator_door_open.ogg")
+        self.closeSfx = base.loader.loadSfx("phase_5/audio/sfx/elevator_door_close.ogg")
 
         self.suits = []
         self.reserveSuits = []
@@ -42,6 +55,7 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
 
         # we increment this each time we come out of an elevator:
         self.currentFloor = -1
+        self._CogdoGameRepeat = config.GetBool('cogdo-game-repeat', 0)
 
         self.elevatorName = self.__uniqueName('elevator')
         self.floorModel = None
@@ -71,57 +85,57 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
                          ]
         self.BossOffice_SuitHs = [170, 120, 12, 38]
 
+        self._wantBarrelRoom = config.GetBool('cogdo-want-barrel-room', 0)
+        self.barrelRoom = CogdoBarrelRoom.CogdoBarrelRoom()
+        self.brResults = [[], []]
+        self.barrelRoomIntroTrack = None
+        self.penthouseOutroTrack = None
+        self.penthouseOutroChatDoneTrack = None
+        self.penthouseIntroTrack = None
         self.waitMusic = base.loader.loadMusic(
-            'phase_7/audio/bgm/encntr_toon_winning_indoor.mid')
+            'phase_7/audio/bgm/encntr_toon_winning_indoor.ogg')
         self.elevatorMusic = base.loader.loadMusic(
-            'phase_7/audio/bgm/tt_elevator.mid')
+            'phase_7/audio/bgm/tt_elevator.ogg')
 
-        self.fsm = ClassicFSM.ClassicFSM('DistributedCogdoInterior',
-                        [State.State('WaitForAllToonsInside',
-                                self.enterWaitForAllToonsInside,
-                                self.exitWaitForAllToonsInside,
-                                ['Elevator']),
-                        State.State('Elevator',
-                                self.enterElevator,
-                                self.exitElevator,
-                                ['Game']),
-                        State.State('Game',
-                                self.enterGame,
-                                self.exitGame,
-                                ['Battle']),
-                        State.State('Battle',
-                                self.enterBattle,
-                                self.exitBattle,
-                                ['Resting', 
-                                'Reward', 
-                                'ReservesJoining']),
-                        State.State('ReservesJoining',
-                                self.enterReservesJoining,
-                                self.exitReservesJoining,
-                                ['Battle']),
-                        State.State('Resting',
-                                self.enterResting,      
-                                self.exitResting,
-                                ['Elevator']),
-                        State.State('Reward',
-                                self.enterReward,
-                                self.exitReward,
-                                ['Off']),
-                        State.State('Off',
-                                self.enterOff,
-                                self.exitOff,
-                                ['Elevator', 
-                                'WaitForAllToonsInside',
-                                'Battle']),
-                ],
-                # Initial State
-                'Off',
-                # Final State
-                'Off',
-                )
-
+        self.fsm = ClassicFSM.ClassicFSM('DistributedCogdoInterior', [State.State('WaitForAllToonsInside', self.enterWaitForAllToonsInside, self.exitWaitForAllToonsInside, ['Elevator']),
+         State.State('Elevator', self.enterElevator, self.exitElevator, ['Game']),
+         State.State('Game', self.enterGame, self.exitGame, ['Resting', 'Failed', 'BattleIntro']),
+         State.State('BarrelRoomIntro', self.enterBarrelRoomIntro, self.exitBarrelRoomIntro, ['CollectBarrels', 'Off']),
+         State.State('CollectBarrels', self.enterCollectBarrels, self.exitCollectBarrels, ['BarrelRoomReward', 'Off']),
+         State.State('BarrelRoomReward', self.enterBarrelRoomReward, self.exitBarrelRoomReward, ['Battle',
+          'ReservesJoining',
+          'BattleIntro',
+          'Off']),
+         State.State('BattleIntro', self.enterBattleIntro, self.exitBattleIntro, ['Battle', 'ReservesJoining', 'Off']),
+         State.State('Battle', self.enterBattle, self.exitBattle, ['Resting', 'Reward', 'ReservesJoining']),
+         State.State('ReservesJoining', self.enterReservesJoining, self.exitReservesJoining, ['Battle']),
+         State.State('Resting', self.enterResting, self.exitResting, ['Elevator']),
+         State.State('Reward', self.enterReward, self.exitReward, ['Off']),
+         State.State('Failed', self.enterFailed, self.exitFailed, ['Off']),
+         State.State('Off', self.enterOff, self.exitOff, ['Elevator', 'WaitForAllToonsInside', 'Battle'])], 'Off', 'Off')
+        self._haveEntranceElevator = StateVar(False)
+        self._stashEntranceElevator = StateVar(False)
+        self._stashEntranceElevatorFC = FunctionCall(self._doStashEntranceElevator, self._haveEntranceElevator, self._stashEntranceElevator)
+        self._entranceElevCallbacks = []
+        self._doEntranceElevCallbacksFC = FunctionCall(self._doEntranceElevCallbacks, self._haveEntranceElevator)
+        self.cage = None
+        self.shopOwnerNpcId = None
+        self.shopOwnerNpc = None
+        self._movie = None
+        self.SOSToonName = None
+        self.FOType = None
         # make sure we're in the initial state
         self.fsm.enterInitialState()
+
+
+    def setShopOwnerNpcId(self, npcId):
+        self.shopOwnerNpcId = npcId
+
+    def setSOSNpcId(self, npcId):
+        self.SOSToonName = NPCToons.getNPCName(npcId)
+
+    def setFOType(self, typeId):
+        self.FOType = chr(typeId)
 
     def __uniqueName(self, name):
         DistributedCogdoInterior.id += 1
@@ -142,14 +156,29 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
 
         # Load the elevator model
         self.elevatorModelIn = loader.loadModel(
-                                'phase_5/models/modules/elevator')
+                                'phase_5/models/cogdominium/tt_m_ara_csa_elevatorB')
         self.leftDoorIn = self.elevatorModelIn.find('**/left-door')
         self.rightDoorIn = self.elevatorModelIn.find('**/right-door')
 
         self.elevatorModelOut = loader.loadModel(
-                                'phase_5/models/modules/elevator')
+                                'phase_5/models/cogdominium/tt_m_ara_csa_elevatorB')
         self.leftDoorOut = self.elevatorModelOut.find('**/left-door')
         self.rightDoorOut = self.elevatorModelOut.find('**/right-door')
+
+
+    def __makeShopOwnerNpc(self):
+        if self.shopOwnerNpc:
+            return
+        self.shopOwnerNpc = NPCToons.createLocalNPC(self.shopOwnerNpcId)
+        if not self.shopOwnerNpc:
+            self.notify.warning('No shopkeeper in this cogdominium, using FunnyFarm Sellbot FO NPCToons')
+            random.seed(self.doId)
+            shopkeeper = random.randint(7001, 7009)
+            self.shopOwnerNpc = NPCToons.createLocalNPC(shopkeeper)
+        self.shopOwnerNpc.addActive()
+        self.shopOwnerNpc.reparentTo(self.cage)
+        self.shopOwnerNpc.setPosHpr(0, -2, 0, 180, 0, 0)
+        self.shopOwnerNpc.loop('neutral')
 
     def setElevatorLights(self, elevatorModel):
         """
@@ -173,6 +202,16 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
             else:
                 np.hide()
 
+    def startAlertElevatorLightIval(self, elevatorModel):
+        light = elevatorModel.find('**/floor_light_%s' % (self.currentFloor + 1))
+        track = Sequence(Func(light.setColor, Vec4(1.0, 0.6, 0.6, 1.0)), Wait(0.9), Func(light.setColor, LIGHT_ON_COLOR), Wait(0.9))
+        self.activeIntervals['alertElevatorLight'] = track
+        track.loop()
+
+    def stopAlertElevatorLightIval(self, elevatorModel):
+        self.__finishInterval('alertElevatorLight')
+        self.setElevatorLights(elevatorModel)
+
     def handleAnnounceGenerate(self, obj):
         """
         handleAnnounceGenerate is called after all of the required fields are
@@ -180,9 +219,8 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
         'obj' is another copy of self
         """
         self.ignore(self.announceGenerateName)
-
-        assert(self.notify.debug('joining DistributedCogdoInterior'))
-        # Update the minigame AI to join our local toon doId
+        self.cageDoorSfx = loader.loadSfx('phase_5/audio/sfx/CHQ_SOS_cage_door.ogg')
+        self.cageLowerSfx = loader.loadSfx('phase_5/audio/sfx/CHQ_SOS_cage_lower.ogg')
         self.sendUpdate('setAvatarJoined', [])
 
     def disable(self):
@@ -191,10 +229,30 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
         self.__cleanupIntervals()
         self.ignoreAll()
         self.__cleanup()
+        self.__cleanupShopOwnerNpc()
+        self.__cleanupPenthouseIntro()
         DistributedObject.DistributedObject.disable(self)
+
+    def __cleanupShopOwnerNpc(self):
+        if self.shopOwnerNpc:
+            self.shopOwnerNpc.removeActive()
+            self.shopOwnerNpc.delete()
+            self.shopOwnerNpc = None
+        return
+
+    def __cleanupPenthouseIntro(self):
+        if hasattr(self, '_movie') and self._movie:
+            self._movie.unload()
+            self._movie = None
+        return
 
     def delete(self):
         assert(self.notify.debug('delete()'))
+        self._stashEntranceElevatorFC.destroy()
+        self._doEntranceElevCallbacksFC.destroy()
+        self._haveEntranceElevator.destroy()
+        self._stashEntranceElevator.destroy()
+        self._entranceElevCallbacks = None
         del self.waitMusic
         del self.elevatorMusic
         del self.openSfx
@@ -220,6 +278,13 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
             self.elevatorModelIn.removeNode()
         if (self.elevatorModelOut != None):
             self.elevatorModelOut.removeNode()
+        
+        #cleanup cage and barrel room
+        if self.cage != None:
+            self.cage = None
+        if self.barrelRoom != None:
+            self.barrelRoom.destroy()
+            self.barrelRoom = None
         # Clean up current floor
         if (self.floorModel != None):
             self.floorModel.removeNode()
@@ -363,12 +428,42 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
         assert(self.notify.debug('network:reserveJoinDone(%d)' % base.localAvatar.doId))
         self.sendUpdate('reserveJoinDone', [])
 
+    def stashElevatorIn(self, stash = True):
+        self._stashEntranceElevator.set(stash)
+
+    def getEntranceElevator(self, callback):
+        if self._haveEntranceElevator.get():
+            callback(self.elevIn)
+        else:
+            self._entranceElevCallbacks.append(callback)
+
+    def _doEntranceElevCallbacks(self, haveElev):
+        if haveElev:
+            while len(self._entranceElevCallbacks):
+                cbs = self._entranceElevCallbacks[:]
+                self._entranceElevCallbacks = []
+                for callback in cbs:
+                    callback(self.elevIn)
+
+    def _doStashEntranceElevator(self, haveElev, doStash):
+        if haveElev:
+            if doStash:
+                self.elevIn.stash()
+            else:
+                self.elevIn.unstash()
+
+    def d_elevatorDone(self):
+        self.sendUpdate('elevatorDone', [])
+
+    def d_reserveJoinDone(self):
+        self.sendUpdate('reserveJoinDone', [])
     # Specific State Functions
 
     ##### Off state #####
     
     def enterOff(self, ts=0):
         assert(self.notify.debug('enterOff()'))
+        messenger.send('sellbotFieldOfficeChanged', [False])
         return None
     
     def exitOff(self):
@@ -377,11 +472,20 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
     ##### WaitForAllToonsInside state #####
 
     def enterWaitForAllToonsInside(self, ts=0):
+        base.transitions.fadeOut(0)
         assert(self.notify.debug('enterWaitForAllToonsInside()'))
         return None
 
     def exitWaitForAllToonsInside(self):        
         return None
+
+    def enterGame(self, ts = 0):
+        return
+    
+    def exitGame(self, ts =0):
+        return
+
+
 
     ##### Elevator state #####
 
@@ -394,41 +498,83 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
         if self.floorModel:
             self.floorModel.removeNode()
             self.floorModel = None
+        
+        if self.cage:
+            self.cage = None
+
 
         if (self.currentFloor == 0):
             # bottom floor
             SuitHs = self.BottomFloor_SuitHs
             SuitPositions = self.BottomFloor_SuitPositions
         if self.isBossFloor(self.currentFloor):
+            self.barrelRoom.unload()
             # Top floor
-            self.floorModel = loader.loadModel('phase_7/models/modules/boss_suit_office')
+            self.floorModel = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_crg_penthouse')
+            self.cage = self.floorModel.find('**/cage')
+            pos = self.cage.getPos()
+            self.cagePos = []
+            for height in self.cageHeights:
+                self.cagePos.append(Point3(pos[0], pos[1], height))
+            self.cageDoor = self.floorModel.find('**/cage_door')
+            self.cageDoor.wrtReparentTo(self.cage)
+            if self.FOType:
+                paintingModelName = PAINTING_DICT.get(self.FOType)
+                for i in range(4):
+                    paintingModel = loader.loadModel('phase_5/models/cogdominium/%s' % paintingModelName)
+                    loc = self.floorModel.find('**/loc_painting%d' % (i + 1))
+                    paintingModel.reparentTo(loc)
+
             SuitHs = self.BossOffice_SuitHs
-            SuitPositions = self.BossOffice_SuitPositions            
+            SuitPositions = self.BossOffice_SuitPositions
+            self.__makeShopOwnerNpc()
+       
         else:
             # middle floor
+            if self._wantBarrelRoom:
+                self.barrelRoom.load()
+                self.barrelRoom.hide()
             SuitHs = self.Cubicle_SuitHs
             SuitPositions = self.Cubicle_SuitPositions
 
         if self.floorModel:
             self.floorModel.reparentTo(render)
-
+            if self.isBossFloor(self.currentFloor):
+                self.notify.debug('Load boss_suit_office')
             # We need to name this something more useful (and we'll need the
             # location of the opposite elevator as well)
-            elevIn = self.floorModel.find('**/elevator-in')
-            elevOut = self.floorModel.find('**/elevator-out')
+                elevIn = self.floorModel.find(CogdoGameConsts.PenthouseElevatorInPath).copyTo(render)
+                elevOut = self.floorModel.find(CogdoGameConsts.PenthouseElevatorOutPath)
+                frame = self.elevatorModelOut.find('**/frame')
+                if not frame.isEmpty():
+                    frame.hide()
+                frame = self.elevatorModelIn.find('**/frame')
+                if not frame.isEmpty():
+                    frame.hide()
+                self.elevatorModelOut.reparentTo(elevOut)
+            else:
+                elevIn = self.floorModel.find('**/elevator-in')
+                elevOut = self.floorModel.find('**/elevator-out')
+        elif self._wantBarrelRoom and self.barrelRoom.isLoaded():
+            elevIn = self.barrelRoom.dummyElevInNode
+            elevOut = self.barrelRoom.model.find(CogdoBarrelRoomConsts.BarrelRoomElevatorOutPath)
+            y = elevOut.getY(render)
+            elevOut = elevOut.copyTo(render)
+            elevOut.setY(render, y - 0.75)
         else:
-            # TODO: TEMP
+            
             floorModel = loader.loadModel('phase_7/models/modules/boss_suit_office')
             elevIn = floorModel.find('**/elevator-in').copyTo(render)
             elevOut = floorModel.find('**/elevator-out').copyTo(render)
             floorModel.removeNode()
-
+        #store elevIn until it's needed
+        self.elevIn = elevIn
         # store elevOut until it's needed
         self.elevOut = elevOut
 
         # Position the suits
-
-        assert(len(self.suits) <= 4)
+        self._haveEntranceElevator.set(True)
+        #assert(len(self.suits) <= 4) #not in more recent versions 
         for index in range(len(self.suits)):
             assert(self.notify.debug('setting suit: %d to pos: %s' % \
                 (self.suits[index].doId, SuitPositions[index])))
@@ -480,10 +626,11 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
         self.activeIntervals[name] = track
         
     def enterElevator(self, ts=0):
-        # Load model for the current floor and the suit models for the floor
         assert(self.notify.debug('enterElevator()'))
 
-        self.currentFloor += 1
+        if not self._CogdoGameRepeat:
+            self.currentFloor += 1
+        # Load model for the current floor and the suit models for the floor
         self.cr.playGame.getPlace().currentFloor = self.currentFloor
         self.setElevatorLights(self.elevatorModelIn)
         self.setElevatorLights(self.elevatorModelOut)
@@ -492,7 +639,11 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
         # unless it's the top floor, in that case leave it where it is
         if not self.isBossFloor(self.currentFloor):
             self.elevatorModelOut.detachNode()
-        
+            messenger.send('sellbotFieldOfficeChanged', [True])
+        else:
+            self._movie = CogdoElevatorMovie()
+            self._movie.load()
+            self._movie.play()
         self.__playElevator(ts, self.elevatorName, self.__handleElevatorDone)
 
         # Get the floor multiplier
@@ -506,15 +657,110 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
 
     def exitElevator(self):
         self.elevatorMusic.stop()
+        if self._movie:
+            self._movie.end()
+            self.__cleanupPenthouseIntro()
         self.__finishInterval(self.elevatorName)
         return None
 
-    def enterGame(self, ts=0):
-        assert(self.notify.debug('enterElevator()'))
-        pass
+    def __setupBarrelRoom(self):
+        base.cr.playGame.getPlace().fsm.request('stopped')
+        base.transitions.irisOut(0.0)
+        self.elevatorModelIn.detachNode()
+        self._showExitElevator()
+        self.barrelRoom.show()
+        self.barrelRoom.placeToonsAtEntrance(self.toons)
 
-    def exitGame(self):
-        pass
+    def barrelRoomIntroDone(self):
+        self.sendUpdate('toonBarrelRoomIntroDone', [])
+
+    def enterBarrelRoomIntro(self, ts = 0):
+        if not self.isBossFloor(self.currentFloor):
+            if self._wantBarrelRoom:
+                self.__setupBarrelRoom()
+                self.barrelRoomIntroTrack, trackName = self.barrelRoom.getIntroInterval()
+                self.barrelRoomIntroDoneEvent = trackName
+                self.accept(self.barrelRoomIntroDoneEvent, self.barrelRoomIntroDone)
+                self.activeIntervals[trackName] = self.barrelRoomIntroTrack
+                self.barrelRoomIntroTrack.start(ts)
+            else:
+                self._showExitElevator()
+
+    def exitBarrelRoomIntro(self):
+        if self._wantBarrelRoom and not self.isBossFloor(self.currentFloor):
+            self.ignore(self.barrelRoomIntroDoneEvent)
+            if self.barrelRoomIntroTrack:
+                self.barrelRoomIntroTrack.finish()
+                DelayDelete.cleanupDelayDeletes(self.barrelRoomIntroTrack)
+                self.barrelRoomIntroTrack = None
+        return
+
+    def __handleLocalToonLeftBarrelRoom(self):
+        self.notify.info('Local toon teleported out of barrel room.')
+        self.sendUpdate('toonLeftBarrelRoom', [])
+        self.barrelRoom.deactivate()
+
+    def enterCollectBarrels(self, ts = 0):
+        if not self.isBossFloor(self.currentFloor):
+            if self._wantBarrelRoom:
+                self.acceptOnce('localToonLeft', self.__handleLocalToonLeftBarrelRoom)
+                self.barrelRoom.activate()
+                base.playMusic(self.waitMusic, looping=1, volume=0.7)
+
+    def exitCollectBarrels(self):
+        if self._wantBarrelRoom and not self.isBossFloor(self.currentFloor):
+            self.ignore('localToonLeft')
+            self.barrelRoom.deactivate()
+            self.waitMusic.stop()
+
+    def __brRewardDone(self, task = None):
+        self.notify.info('Toon finished watching the barrel room reward.')
+        self.sendUpdate('toonBarrelRoomRewardDone', [])
+
+    def setBarrelRoomReward(self, avIds, laffs):
+        self.brResults = [avIds, laffs]
+        self.barrelRoom.setRewardResults(self.brResults)
+
+    def enterBarrelRoomReward(self, ts = 0):
+        if self._wantBarrelRoom and not self.isBossFloor(self.currentFloor):
+            base.cr.playGame.getPlace().fsm.request('stopped')
+            self.startAlertElevatorLightIval(self.elevatorModelOut)
+            track, trackName = self.barrelRoom.showRewardUi(self.brResults, callback=self.__brRewardDone)
+            self.activeIntervals[trackName] = track
+            track.start()
+            self.barrelRoom.placeToonsNearBattle(self.toons)
+
+    def exitBarrelRoomReward(self):
+        if self._wantBarrelRoom and not self.isBossFloor(self.currentFloor):
+            base.cr.playGame.getPlace().fsm.request('walk')
+            self.stopAlertElevatorLightIval(self.elevatorModelOut)
+            self.barrelRoom.hideRewardUi()
+
+    def enterBattleIntro(self, ts = 0):
+        self._movie = CogdoExecutiveSuiteIntro(self.shopOwnerNpc)
+        self._movie.load()
+        self._movie.play()
+
+    def exitBattleIntro(self):
+        self._movie.end()
+        self.__cleanupPenthouseIntro()
+
+
+
+
+
+    def _showExitElevator(self):
+        self.elevatorModelOut.reparentTo(self.elevOut)
+        self.leftDoorOut.setPos(3.5, 0, 0)
+        self.rightDoorOut.setPos(-3.5, 0, 0)
+        if not self._wantBarrelRoom and self.elevatorOutOpen == 1:
+            self.__playCloseElevatorOut(self.uniqueName('close-out-elevator'))
+            camera.setPos(0, -15, 6)
+            camera.headsUp(self.elevatorModelOut)
+        return None
+
+
+
     
     ##### Battle state #####
 
@@ -625,38 +871,49 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
 
     ##### Resting state #####
 
-    def enterResting(self, ts=0):
-        assert(self.notify.debug('enterResting()'))
+
+    def enterResting(self, ts = 0):
+        self._showExitElevator()
+        self._setAvPosFDC = FrameDelayedCall('setAvPos', self._setAvPosToExit)
+        if self._wantBarrelRoom:
+            self.barrelRoom.showBattleAreaLight(True)
         base.playMusic(self.waitMusic, looping=1, volume=0.7)
         self.__closeInElevator()
-        return
+        self._haveEntranceElevator.set(False)
+        self._stashEntranceElevator.set(False)
 
     def exitResting(self):
+        self._setAvPosFDC.destroy()
         self.waitMusic.stop()
         return
 
+    def _setAvPosToExit(self):
+        base.localAvatar.setPos(self.elevOut, 0, -10, 0)
+        base.localAvatar.setHpr(self.elevOut, 0, 0, 0)
+        base.cr.playGame.getPlace().fsm.request('walk')
+
     ##### Reward state #####
 
-    def enterReward(self, ts=0):
-        assert(self.notify.debug('enterReward()'))
-        base.localAvatar.b_setParent(ToontownGlobals.SPHidden)
-        request = {
-            "loader": ZoneUtil.getBranchLoaderName(self.extZoneId),
-            "where": ZoneUtil.getToonWhereName(self.extZoneId),
-            "how": "elevatorIn",
-            "hoodId": ZoneUtil.getHoodId(self.extZoneId),
-            "zoneId": self.extZoneId,
-            "shardId": None,
-            "avId": -1,
-            "bldgDoId": self.distBldgDoId
-            }
-        # Presumably, suitInterior.py has hung a hook waiting for
-        # this request. I mimicked what DistributedDoor was doing.
-        messenger.send("DSIDoneEvent", [request])
+    def enterReward(self, ts = 0):
+        if self.isBossFloor(self.currentFloor):
+            self.penthouseOutroTrack = self.__outroPenthouse()
+            self.penthouseOutroTrack.start(ts)
+        else:
+            self.exitCogdoBuilding()
         return None
 
     def exitReward(self):
-        return None
+        self.notify.debug('exitReward')
+        if self.penthouseOutroTrack:
+            self.penthouseOutroTrack.finish()
+            DelayDelete.cleanupDelayDeletes(self.penthouseOutroTrack)
+            self.penthouseOutroTrack = None
+            if not self.penthouseOutroChatDoneTrack:
+                self.notify.debug('exitReward: instanting outroPenthouseChatDone track')
+                self.__outroPenthouseChatDone()
+            self.penthouseOutroChatDoneTrack.finish()
+            self.penthouseOutroChatDoneTrack = None
+        return
 
     ##### Reset state #####
 
@@ -667,3 +924,64 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
 
     #def exitReset(self):
     #    return None
+
+
+
+    def enterFailed(self, ts = 0):
+        self.exitCogdoBuilding()
+        return None
+
+    def exitFailed(self):
+        self.notify.debug('exitFailed()')
+        self.exitCogdoBuilding()
+        return None
+
+    def exitCogdoBuilding(self):
+        if base.localAvatar.hp < 0:
+            return
+        base.localAvatar.b_setParent(ToontownGlobals.SPHidden)
+        request = {'loader': ZoneUtil.getBranchLoaderName(self.extZoneId),
+         'where': ZoneUtil.getToonWhereName(self.extZoneId),
+         'how': 'elevatorIn',
+         'hoodId': ZoneUtil.getHoodId(self.extZoneId),
+         'zoneId': self.extZoneId,
+         'shardId': None,
+         'avId': -1,
+         'bldgDoId': self.distBldgDoId}
+        messenger.send('DSIDoneEvent', [request])
+        return
+
+    def displayBadges(self):
+        numFloors = self.layout.getNumGameFloors()
+        if numFloors > 5 or numFloors < 3:
+            pass
+        else:
+            self.notify.warning('Invalid floor number for display badges.')
+        for player in range(len(self.toons)):
+            goldBadge = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_crg_goldTrophy')
+            goldBadge.setScale(1.2)
+            goldNode = render.find('**/gold_0' + str(player + 1))
+            goldBadge.reparentTo(goldNode)
+            for floor in range(numFloors):
+                silverBadge = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_crg_silverTrophy.bam')
+                silverBadge.setScale(1.2)
+                silverNode = render.find('**/silver_0' + str(floor * 4 + (player + 1)))
+                silverBadge.reparentTo(silverNode)
+
+    def __outroPenthouse(self):
+        avatar = base.localAvatar
+        trackName = '__outroPenthouse-%d' % avatar.doId
+        track = Parallel(name=trackName)
+        base.cr.playGame.getPlace().fsm.request('stopped')
+        speech = TTLocalizer.CogdoExecutiveSuiteToonThankYou % self.SOSToonName
+        track.append(Sequence(Func(camera.wrtReparentTo, localAvatar), Func(camera.setPos, 0, -9, 9), Func(camera.lookAt, Point3(5, 15, 0)), Parallel(self.cage.posInterval(0.75, self.cagePos[1], blendType='easeOut'), SoundInterval(self.cageLowerSfx, duration=0.5)), Parallel(self.cageDoor.hprInterval(0.5, VBase3(0, 90, 0), blendType='easeOut'), Sequence(SoundInterval(self.cageDoorSfx), duration=0)), Wait(0.25), Func(self.shopOwnerNpc.wrtReparentTo, render), Func(self.shopOwnerNpc.setScale, 1), Func(self.shopOwnerNpc.loop, 'walk'), Func(self.shopOwnerNpc.headsUp, Point3(0, 10, 0)), ParallelEndTogether(self.shopOwnerNpc.posInterval(1.5, Point3(0, 10, 0)), self.shopOwnerNpc.hprInterval(0.5, VBase3(180, 0, 0), blendType='easeInOut')), Func(self.shopOwnerNpc.setChatAbsolute, TTLocalizer.CagedToonYippee, CFSpeech), ActorInterval(self.shopOwnerNpc, 'jump'), Func(self.shopOwnerNpc.loop, 'neutral'), Func(self.shopOwnerNpc.headsUp, localAvatar), Func(self.shopOwnerNpc.setLocalPageChat, speech, 0), Func(camera.lookAt, self.shopOwnerNpc, Point3(0, 0, 2))))
+        self.activeIntervals[trackName] = track
+        self.accept('doneChatPage', self.__outroPenthouseChatDone)
+        return track
+
+    def __outroPenthouseChatDone(self, elapsed = None):
+        self.shopOwnerNpc.setChatAbsolute(TTLocalizer.CogdoExecutiveSuiteToonBye, CFSpeech)
+        self.ignore('doneChatPage')
+        track = Parallel(Sequence(ActorInterval(self.shopOwnerNpc, 'wave'), Func(self.shopOwnerNpc.loop, 'neutral')), Sequence(Wait(2.0), Func(self.exitCogdoBuilding), Func(base.camLens.setFov, ToontownGlobals.DefaultCameraFov)))
+        track.start()
+        self.penthouseOutroChatDoneTrack = track
