@@ -1189,7 +1189,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         for i in bldgNodes:
             i.clearColorScale()
             name=i.getName()
-            if (name[0]=='s'):
+            if (name[0]=='c'):
                 hideTrack = Sequence(
                     name = self.taskName('ToToonCogdoFlatsTrack'))
                 # have the suit building scale away
@@ -1549,6 +1549,11 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                     # i.hide()
                     i.stash()
 
+            elif name[0] == 'c':
+                if name.find('_landmark_') != -1:
+                    i.removeNode()
+                else:
+                    i.stash()
         # Copy the suit landmark building, based on the suit track and
         # difficulty:
         npc=hidden.findAllMatches(self.getSbSearchString())
@@ -1570,7 +1575,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         nodes=self.getNodePaths()
         for i in nodes:
             name=i.getName()
-            if (name[0]=='s'):
+            if (name[0]=='c'):
                 if (name.find("_landmark_") != -1):
                     # an old suit landmark instance.
                     i.removeNode()
@@ -1582,6 +1587,14 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                 if (name.find("_landmark_") != -1):
                     # Toon landmark buildings:
                     i.stash()
+                else:
+                    i.stash()
+                    
+
+            elif name[0] == 's':
+                if name.find('_landmark_') != -1:
+                    i.removeNode()
+
                 else:
                     # Toon flat buildings:
                     # i.hide()
@@ -1631,6 +1644,12 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                     # Toon flat buildings:
                     # i.show()
                     i.unstash()
+
+            elif (name[0]=='c'):
+                if name.find('_landmark_') != -1:
+                    i.removeNode()
+                else:
+                    i.stash()
                         
     def normalizeElevator(self):
         # Normalize the size of the elevator

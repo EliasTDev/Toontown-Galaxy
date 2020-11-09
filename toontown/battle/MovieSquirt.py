@@ -13,7 +13,7 @@ from . import BattleParticles
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import ToontownBattleGlobals
 import random
-
+import functools
 notify = DirectNotifyGlobal.directNotify.newCategory('MovieSquirt')
 
 hitSoundFiles = ('AA_squirt_flowersquirt.mp3',
@@ -87,7 +87,7 @@ def doSquirts(squirts):
         elif (len(a) < len(b)):
             return -1
         return 0
-    suitSquirts.sort(compFunc)
+    suitSquirts.sort(functools.cmp_to_key(compFunc))
     delay = 0.0
     mtrack = Parallel()
     for st in suitSquirts:

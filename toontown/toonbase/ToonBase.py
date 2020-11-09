@@ -191,6 +191,12 @@ class ToonBase(OTPBase.OTPBase):
         if self.minigameSafezoneId == -1:
             del self.minigameSafezoneId
 
+        cogdoGameSafezoneId = self.config.GetInt('cogdo-game-safezone-id', -1)
+        cogdoGameDifficulty = self.config.GetFloat('cogdo-game-difficulty', -1)
+        if cogdoGameDifficulty != -1:
+            self.cogdoGameDifficulty = cogdoGameDifficulty
+        if cogdoGameSafezoneId != -1:
+            self.cogdoGameSafezoneId = cogdoGameSafezoneId
         ToontownBattleGlobals.SkipMovie = self.config.GetBool(
             'skip-battle-movies', 0)
 

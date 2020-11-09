@@ -54,6 +54,11 @@ class DistCogdoGameAI(DistributedObjectAI):
             # Final state
             'Off')
 
+    def setExteriorZone(self, exteriorZone):
+        self.exteriorZone = exteriorZone
+        
+    def logSuspiciousEvent(self, avId, msg):
+        self.air.writeServerEvent('suspicious', avId, msg)
     def generate(self):
         DistributedObjectAI.generate(self)
         self._sadToken2callback = {}
