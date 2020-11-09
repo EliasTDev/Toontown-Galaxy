@@ -1,8 +1,3 @@
-"""
-@author: Schell Games
-3-16-2010
-"""
-  
 from pandac.PandaModules import Vec3, NodePath
 from direct.distributed.ClockDelta import globalClockDelta
 from otp.avatar.SpeedMonitor import SpeedMonitor
@@ -10,12 +5,13 @@ from toontown.cogdominium.CogdoMaze import CogdoMazeFactory
 from toontown.cogdominium.DistCogdoMazeGameBase import DistCogdoMazeGameBase
 from .DistCogdoGameAI import DistCogdoGameAI
 from . import CogdoMazeGameGlobals as Globals
-class DistCogdoMazeGameAI(DistCogdoGameAI, DistCogdoMazeGameBase):
-    """
-    Maze Cogdominium Minigame AI Distributed Object!
-    """
-    notify = directNotify.newCategory("DistCogdoMazeGameAI")
+cogdoMazeTimeScoreRatio = 0.5
+cogdoMazePerfectTime = 90
+cogdoMazeMaxTime = 210
+cogdoMazePickupScoreRatio = 0.7
 
+class DistCogdoMazeGameAI(DistCogdoGameAI, DistCogdoMazeGameBase):
+    notify = directNotify.newCategory('DistCogdoMazeGameAI')
     TimerExpiredTaskName = 'CMG_TimerExpiredTask'
     TimeoutTimerTaskName = 'CMG_timeoutTimerTask'
     CountdownTimerTaskName = 'CMG_countdownTimerTask'
@@ -43,6 +39,7 @@ class DistCogdoMazeGameAI(DistCogdoGameAI, DistCogdoMazeGameBase):
     def setExteriorZone(self, exteriorZone):
         DistCogdoGameAI.setExteriorZone(self, exteriorZone)
         self.difficulty = self.getDifficulty()
+        self.createSuits()
 
     def createSuits(self):
         serialNum = 0

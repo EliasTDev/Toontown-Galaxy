@@ -1,8 +1,3 @@
-"""
-@author: Schell Games
-3-16-2010
-"""
-
 from direct.distributed.ClockDelta import globalClockDelta
 from toontown.toonbase import TTLocalizer
 from .DistCogdoGame import DistCogdoGame
@@ -13,20 +8,14 @@ from . import CogdoMazeGameGlobals
 from . import CogdoMazeGameGlobals as Globals
 
 class DistCogdoMazeGame(DistCogdoGame, DistCogdoMazeGameBase):
-    """
-    Maze Cogdominium Minigame client Distributed Object!
-    Class is primarily a controller for the networking/game events.
-    Visuals are handled by CogdoMazeGame instead.
-    """
-    notify = directNotify.newCategory("DistCogdoMazeGame")
+    notify = directNotify.newCategory('DistCogdoMazeGame')
 
     def __init__(self, cr):
-        DistributedMinigame.__init__(self, cr)
+        DistCogdoGame.__init__(self, cr)
         self.game = CogdoMazeGame(self)
         self._numSuits = (0, 0, 0)
         if __debug__ and base.config.GetBool('schellgames-dev', True):
             self.accept('onCodeReload', self.__sgOnCodeReload)
-
 
     def delete(self):
         del self.randomNumGen

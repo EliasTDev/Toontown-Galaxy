@@ -5,13 +5,12 @@ from otp.otpbase import OTPGlobals
 from direct.fsm import FSM
 
 class DistCogdoCraneAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM):
+
     def __init__(self, air, craneGame, index):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
         FSM.FSM.__init__(self, 'DistCogdoCraneAI')
-
         self.craneGame = craneGame
         self.index = index
-
         self.avId = 0
         self.objectId = 0
 
@@ -26,9 +25,9 @@ class DistCogdoCraneAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM):
         self.request('Free')
 
     def d_setState(self, state, avId):
-        self.sendUpdate('setState', [state, avId])
-
-    ### FSM States ###
+        self.sendUpdate('setState', [
+            state,
+            avId])
 
     def enterOff(self):
         pass
@@ -42,8 +41,6 @@ class DistCogdoCraneAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM):
 
     def exitControlled(self):
         if self.objectId:
-            # This will be filled in if an object has requested a
-            # grab.  In this case, drop the object.
             obj = self.air.doId2do[self.objectId]
             obj.request('Dropped', self.avId, self.doId)
 

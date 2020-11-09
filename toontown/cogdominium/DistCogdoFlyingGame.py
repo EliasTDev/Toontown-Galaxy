@@ -1,10 +1,3 @@
-#-------------------------------------------------------------------------------
-# Contact: Sam Polglase (Schell Games)
-# Created: March 2010
-#
-# Purpose: This module currently contains all the classes necessary to run the Congdo
-#          minigame.  Soon all these classes will get split into their own modules
-#Present - These classes did get split into their own modules
 from direct.distributed.ClockDelta import globalClockDelta
 from toontown.toonbase import TTLocalizer
 from .CogdoFlyingGame import CogdoFlyingGame

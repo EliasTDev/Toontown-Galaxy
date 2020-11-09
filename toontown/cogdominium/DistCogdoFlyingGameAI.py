@@ -1,21 +1,13 @@
-"""
-@author: Schell Games
-3-16-2010
-"""
-  
 import random
 from direct.distributed.ClockDelta import globalClockDelta
 from .DistCogdoGameAI import DistCogdoGameAI
 from . import CogdoFlyingGameGlobals as Globals
+
 class DistCogdoFlyingGameAI(DistCogdoGameAI):
-    """
-    Flying Cogdominium Minigame AI Distributed Object!
-    """
-    notify = directNotify.newCategory("DistCogdoFlyingGameAI")
+    notify = directNotify.newCategory('DistCogdoFlyingGameAI')
     EagleExitCooldownTaskName = 'CFG_EagleExitCooldownTask-%s'
     InvulBuffRemoveTaskName = 'CFG_InvulBuffRemoveTask-%s'
     AnnounceGameDoneTimerTaskName = 'CFG_AnnounceGameDoneTimerTask'
-
 
     def __init__(self, air, id):
         DistCogdoGameAI.__init__(self, air, id)

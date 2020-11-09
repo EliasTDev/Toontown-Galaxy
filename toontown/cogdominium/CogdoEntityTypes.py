@@ -3,6 +3,7 @@ from otp.level.EntityTypes import *
 class CogdoLevelMgr(LevelMgr):
     type = 'levelMgr'
 
+
 class CogdoBoardroomGameSettings(Entity):
     type = 'cogdoBoardroomGameSettings'
     attribs = (('TimerScale', 1.0, 'float'),)
