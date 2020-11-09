@@ -47,7 +47,7 @@ class MazeMapGui(DirectFrame):
 
     notify = directNotify.newCategory("MazeMapGui")
 
-    def __init__(self, mazeLayout, maskResolution=None, radiusRatio=None):
+    def __init__(self, mazeLayout, maskResolution=None, radiusRatio=None,  bgColor = (0.8, 0.8, 0.8), fgColor = (0.5, 0.5, 0.5, 1.0)):
         """
         Constructor for a MazeMap.  the mazeLayout parameter is a 2d array of
         bools (or ints... maybe more depth will be added with that).
@@ -60,7 +60,8 @@ class MazeMapGui(DirectFrame):
             state = DGG.NORMAL,
             sortOrder = DGG.BACKGROUND_SORT_INDEX,
         )
-
+        self._bgColor = bgColor
+        self._fgColor = fgColor
         # store / set parameters
         self._mazeLayout = mazeLayout
         self._maskResolution = maskResolution or DEFAULT_MASK_RESOLUTION
@@ -108,6 +109,8 @@ class MazeMapGui(DirectFrame):
         """
         # create and fill empty map image
         mapImage = PNMImage(MAP_RESOLUTION, MAP_RESOLUTION)
+        mapImage.fill(*self._bgColor)
+        fgColor = VBase4F(*self._fgColor)
         blockFiles = []
         for i in range(5):
             blockFiles.append(PNMImage())
@@ -120,8 +123,8 @@ class MazeMapGui(DirectFrame):
         for x in range( len(self._mazeLayout[0]) ):
             for y in range( len(self._mazeLayout) ):
                 if self._mazeLayout[y][x]:
-                    ax = float(x)/len(self._mazeLayout[0]) * MAP_RESOLUTION
-                    ay = float(y)/len(self._mazeLayout) * MAP_RESOLUTION
+                    ax = float(x)//len(self._mazeLayout[0]) * MAP_RESOLUTION
+                    ay = float(y)//len(self._mazeLayout) * MAP_RESOLUTION
 
                     #TODO:maze use different blocks for different wall types or items
                     #mapImage.copySubImage(random.choice(blockFiles), int(ax), int(ay), 20, 20, 32, 32)
@@ -129,7 +132,7 @@ class MazeMapGui(DirectFrame):
                     #TODO:maze find the ideal block texture size for the map so we dont
                     #          have to do this strange offset
                     #mapImage.copySubImage(blockFiles[0], int(ax), int(ay), 0, 0, 32, 32)
-                    self._drawSquare(mapImage, int(ax), int(ay), 10, VBase4D(0.5, 0.5, 0.5, 1.0))
+                    self._drawSquare(mapImage, int(ax), int(ay), 10, fgColor)
 
         # create a texture from the map image
         mapTexture = Texture("mapTexture")

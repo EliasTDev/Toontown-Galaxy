@@ -690,7 +690,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                 # figure how long till the toon building will start to be
                 # compressed by the suit building coming down on it
                 #
-                timeTillSquish = (self.SUIT_INIT_HEIGHT - 20.0) / \
+                timeTillSquish = (self.SUIT_INIT_HEIGHT - 20.0) // \
                                  self.SUIT_INIT_HEIGHT
                 timeTillSquish *= timeForDrop
                 #hideTrack.append(Wait(timeTillSquish))
@@ -895,7 +895,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                 # figure how long till the toon building will start to be
                 # compressed by the cogdo coming down on it
                 #
-                timeTillSquish = (self.SUIT_INIT_HEIGHT - 20.0) / \
+                timeTillSquish = (self.SUIT_INIT_HEIGHT - 20.0) // \
                                  self.SUIT_INIT_HEIGHT
                 timeTillSquish *= timeForDrop
                 #hideTrack.append(Wait(timeTillSquish))
@@ -966,13 +966,13 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         backgroundNP = loader.loadModel('phase_5/models/cogdominium/field_office_sign')
         assert(not backgroundNP.isEmpty())
         backgroundNP.reparentTo(signOrigin)
-        backgroundNP.setPosHprScale(0.0, 0.0, -1.2 + textHeight * 0.8 / zScale, 0.0, 0.0, 0.0, 20.0, 8.0, 8.0 * zScale)
+        backgroundNP.setPosHprScale(0.0, 0.0, -1.2 + textHeight * 0.8 // zScale, 0.0, 0.0, 0.0, 20.0, 8.0, 8.0 * zScale)
         #backgroundNP.node().setEffect(DecalEffect.make())
         # Get the text node path:
         signTextNodePath = backgroundNP.attachNewNode(textNode.generate())
         assert(not signTextNodePath.isEmpty())
         # Scale the text:
-        signTextNodePath.setPosHprScale(0.0, 0.0, -0.13 + textHeight * 0.1 / zScale, 0.0, 0.0, 0.0, 0.1 * 8.0 / 20.0, 0.1, 0.1 // zScale)
+        signTextNodePath.setPosHprScale(0.0, 0.0, -0.13 + textHeight * 0.1 // zScale, 0.0, 0.0, 0.0, 0.1 * 8.0 // 20.0, 0.1, 0.1 // zScale)
         # Clear parent color higher in the hierarchy
         signTextNodePath.setColor(1.0, 1.0, 1.0, 1.0)
         # Decal sign onto the front of the building:
