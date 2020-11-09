@@ -16,10 +16,10 @@ import random
 # panda imports
 from direct.showbase.PythonUtil import Enum
 from direct.gui.DirectGui import DirectFrame, DGG
-from pandac.PandaModules import Vec2, VBase4D
-from pandac.PandaModules import CardMaker
-from pandac.PandaModules import Texture, PNMImage
-from pandac.PandaModules import Filename
+from panda3d.core import Vec2, VBase4D, VBase4F
+from panda3d.core import CardMaker
+from panda3d.core import Texture, PNMImage
+from panda3d.core import Filename
 
 #TODO:maze: move this to a config or global location
 
@@ -372,3 +372,13 @@ class MazeMapGui(DirectFrame):
         for x in range(self._maskResolution):
             for y in range(self._maskResolution):
                 self._maskImage.setXelA(x,y,0,0,0,1)
+
+    def tile2gui(self, x, y):
+        y = self._mazeHeight - y
+        cellWidth = self._maskResolution // self._mazeWidth
+        cellHeight = self._maskResolution // self._mazeHeight
+        ax = float(x) // self._mazeWidth * self._maskResolution
+        ax += cellWidth
+        ay = float(y) // self._mazeHeight * self._maskResolution
+        ay += cellHeight
+        return (ax, ay)

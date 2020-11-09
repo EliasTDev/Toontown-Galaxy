@@ -70,9 +70,9 @@ class CogdoMazeSuit(MazeSuit, FSM, CogdoMazeSplattable):
         totalFrames = self.suit.getNumFrames(animName)
         frames = totalFrames - 1 - startFrame
         frameRate = self.suit.getFrameRate(animName)
-        newRate = frames / duration
-        playRate = newRate / frameRate
-        ival = Sequence(ActorInterval(self.suit, animName, startTime=startFrame / newRate, endTime=totalFrames / newRate, playRate=playRate, partName=partName))
+        newRate = frames // duration
+        playRate = newRate // frameRate
+        ival = Sequence(ActorInterval(self.suit, animName, startTime=startFrame // newRate, endTime=totalFrames // newRate, playRate=playRate, partName=partName))
         if nextState is not None:
 
             def done():
@@ -104,7 +104,7 @@ class CogdoMazeSuit(MazeSuit, FSM, CogdoMazeSplattable):
         self.deathSuit.setHpr(render, self.suit.getHpr(render))
         self.suit.hide()
         self.collNodePath.reparentTo(self.deathSuit)
-        gearPoint = Point3(0, 0, self.suit.height / 2.0 + 2.0)
+        gearPoint = Point3(0, 0, self.suit.height // 2.0 + 2.0)
         smallGears = BattleParticles.createParticleEffect(file='gearExplosionSmall')
         singleGear = BattleParticles.createParticleEffect('GearExplosion', numParticles=1)
         smallGearExplosion = BattleParticles.createParticleEffect('GearExplosion', numParticles=10)
@@ -181,7 +181,9 @@ class CogdoMazeBossSuit(CogdoMazeSuit):
     def __init__(self, serialNum, maze, randomNumGen, difficulty, startTile = None):
         CogdoMazeSuit.__init__(self, serialNum, maze, randomNumGen, difficulty, startTile, Globals.SuitTypes.Boss, walkAnimName='stomp')
         self.dropTimer = 0
-        self._walkSpeed = float(self.maze.cellWidth) / self.cellWalkDuration * 0.5
+        if float(self.cellWalkDuration) == 0.0:
+            self.cellWalkDuration = 1.0
+        self._walkSpeed = float(self.maze.cellWidth) // float(self.cellWalkDuration * 0.5)
 
     def _initSfx(self):
         CogdoMazeSuit._initSfx(self)

@@ -11764,6 +11764,7 @@ HolidayFormat = "%b %d "
 
 # parties/ToontownTimeManager.py
 TimeZone = "US/Pacific"
+CogdoStomperName = 'Stomp-O-Matic'
 
 # Cogdo Boardroom Game
 BoardroomGameTitle = "Boardroom Hijinks"
@@ -11775,7 +11776,44 @@ CogdoCraneGameTitle = "Vend-A-Stomper"
 CogdoCraneGameInstructions = ("The COGS are using a coin-operated machine to destroy laff barrels. "
                               "Use the cranes to pick up and throw money bags, in order to prevent "
                               "barrel destruction!")
-
+#Cogdo Maze Game
+CogdoMazeGameTitle = 'Mover & Shaker\nField Office'
+CogdoMazeGameInstructions = 'The big Mover & Shaker Cogs have the code to open the door. Defeat them with your water balloons in order to get it!'
+CogdoMazeIntroMovieDialogue = (("This is the Toon Resistance! The Movers & Shakers\nhave our Jokes, and they've locked the exit!",), ('Grab water balloons at coolers, and throw them at Cogs!\nSmall Cogs drop Jokes, BIG COGS open the exit.',), ('The more Jokes you rescue, the bigger your Toon-Up\nat the end. Good luck!',))
+CogdoMazeGameDoorOpens = 'THE EXIT IS OPEN FOR 60 SECONDS!\nGET THERE FAST FOR A BIGGER TOON-UP'
+CogdoMazeGameLocalToonFoundExit = "The exit will open when\nyou've busted all four BIG COGS!"
+CogdoMazeGameWaitingForToons = 'Waiting for other Toons...'
+CogdoMazeGameTimeOut = 'Oh no, time ran out! You lost your jokes.'
+CogdoMazeGameTimeAlert = 'Hurry up! 60 seconds to go!'
+CogdoMazeGameBossGuiTitle = 'BIG COGS:'
+CogdoMazeFindHint = 'Find a Water Cooler'
+CogdoMazeThrowHint = "Press 'Ctrl' to throw your water balloon"
+CogdoMazeSquashHint = 'Falling objects pop your balloon'
+CogdoMazeBossHint = 'Big Cogs take TWO hits to defeat'
+CogdoMazeMinionHint = 'Smaller Cogs drop jokes'
+#Cogdo Flying Game
+CogdoFlyingGameTitle = 'Legal Eagle Offices'
+CogdoFlyingGameInstructions = "Fly through the Legal Eagles' lair. Watch out for obstacles and cogs along the way, and don't forget to refuel your helicopter!"
+CogdoFlyingIntroMovieDialogue = (("You won't ruffle our feathers, Toons! We're destroying barrels of your Laff, and you cannot stop us!", "A flock of Toons! We're crushing barrels of your Laff in our %s, and there's nothing you can do about it!" %  CogdoStomperName, "You can't egg us on, Toons! We're powering our offices with your Laff, and you're powerless to stop us!"), ('This is the Toon Resistance! A little bird told me you can use propellers to fly around, grab Barrel Destruction Memos, and keep Laff from being destroyed! Good luck, Toons!', 'Attention Toons! Wing it with a propeller and collect Barrel Destruction Memos to keep our Laff from being stomped! Toon Resistance out!', 'Toon Resistance here! Cause a flap by finding propellers, flying to the Barrel Destruction Memos, and keeping our Laff from being smashed! Have fun!'), ("Squawk! I'm a Silver Sprocket Award winner, I don't need this!", 'Do your best, Toons! You will find us to be quite talon-ted!', "We'll teach you to obey the pecking order, Toons!"))
+CogdoFlyingGameWaiting = 'Waiting for other Toons%s'
+CogdoFlyingGameFuelLabel = 'Fuel'
+CogdoFlyingGameLegalEagleTargeting = 'A Legal Eagle has noticed you!'
+CogdoFlyingGameLegalEagleAttacking = 'Incoming Eagle!'
+CogdoFlyingGamePickUpAPropeller = 'You need a propeller to fly!'
+CogdoFlyingGamePressCtrlToFly = "Press 'Ctrl' to fly up!"
+CogdoFlyingGameYouAreInvincible = 'Red Tape protects you!'
+CogdoFlyingGameTimeIsRunningOut = 'Time is running out!'
+CogdoFlyingGameMinimapIntro = 'This meter shows your progress!\nX marks the finish line.'
+CogdoFlyingGameMemoIntro = 'Memos prevent Laff Barrels in\nthe Stomper Room from being destroyed!'
+CogdoFlyingGameOutOfTime = 'Oh No! You ran out of time!'
+CogdoFlyingGameYouMadeIt = 'You made it on time!'
+CogdoFlyingGameYouMadeIt = 'Good work, you made it on time!'
+CogdoFlyingGameTakingMemos = 'The legal eagles took all your memos!'
+CogdoElevatorRewardLaff = 'Great job, Toons!\nYou get a Toon-Up from the jokes you saved!'
+CogdoExecutiveSuiteTitle = 'Executive Suite'
+CogdoExecutiveSuiteIntroMessage = "Oh no, they've got the shop keeper!\nDefeat the Cogs and free the captive."
+CogdoExecutiveSuiteToonThankYou = 'Thanks for the rescue!\nIf you need help in a fight, use this SOS card to call my friend %s.'
+CogdoExecutiveSuiteToonBye = 'Bye!'
 # Silly Surge Terms
 SillySurgeTerms = {
     1:  "Amusing Ascent!",

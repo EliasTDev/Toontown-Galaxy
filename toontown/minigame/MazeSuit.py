@@ -31,20 +31,31 @@ class MazeSuit(DirectObject):
     SUIT_Z = 0.1
 
     def __init__(self, serialNum, maze, randomNumGen,
-                 cellWalkPeriod, difficulty):
+                 cellWalkPeriod, difficulty, suitDnaName = 'f', startTile = None, ticFreq = MazeGameGlobals.SUIT_TIC_FREQ, walkSameDirectionProb = MazeGameGlobals.WALK_SAME_DIRECTION_PROB, walkTurnAroundProb = MazeGameGlobals.WALK_TURN_AROUND_PROB, uniqueRandomNumGen = True, walkAnimName = None):
         self.serialNum = serialNum
         self.maze = maze
-        self.rng = RandomNumGen.RandomNumGen(randomNumGen)
+        if uniqueRandomNumGen:
+            self.rng = RandomNumGen(randomNumGen)
+        else:
+            self.rng = randomNumGen
         self.difficulty = difficulty
-
+        self._walkSameDirectionProb = walkSameDirectionProb
+        self._walkTurnAroundProb = walkTurnAroundProb
+        self._walkAnimName = walkAnimName or 'walk'
         self.suit = Suit.Suit()
         d = SuitDNA.SuitDNA()
-        d.newSuit('f') # flunky
+        d.newSuit(suitDnaName) 
         self.suit.setDNA(d)
+        if startTile is None:
+            defaultStartPos = MazeGameGlobals.SUIT_START_POSITIONS[self.serialNum]
+            self.startTile = (defaultStartPos[0] * self.maze.width, defaultStartPos[1] * self.maze.height)
+        else:
+            self.startTile = startTile
+        self.ticFreq = ticFreq
 
         self.ticPeriod = int(cellWalkPeriod)
-        self.cellWalkDuration = float(self.ticPeriod) / \
-                                float(MazeGameGlobals.SUIT_TIC_FREQ)
+        self.cellWalkDuration = float(self.ticPeriod) // \
+                                float(self.ticFreq)
         self.turnDuration = 0.6 * self.cellWalkDuration
 
     def destroy(self):
@@ -68,7 +79,7 @@ class MazeSuit(DirectObject):
         # to avoid thinking all the suits on the first frame,
         # stagger the suits' first thinks by an nth of a second
         n = 20
-        self.nextThinkTic = (self.serialNum * MazeGameGlobals.SUIT_TIC_FREQ) / n
+        self.nextThinkTic = (self.serialNum *  self.ticFreq) // n
 
         # create the Point3 objects up-front
         self.fromPos = Point3(0,0,0)
@@ -120,27 +131,9 @@ class MazeSuit(DirectObject):
         return Point3(wx, wy, self.SUIT_Z)
 
     def onstage(self):
-        startPositions = [
-            [0.25, 0.25],
-            [0.75, 0.75],
-            [0.25, 0.75],
-            [0.75, 0.25],
-            [0.2, 0.5],
-            [0.8, 0.5],
-            [0.5, 0.2],
-            [0.5, 0.8],
-            [0.33, 0.],
-            [0.66, 0.],
-            [0.33, 1.],
-            [0.66, 1.],
-            [0., 0.33],
-            [0., 0.66],
-            [1., 0.33],
-            [1., 0.66],
-            ]
 
-        sTX = int(self.maze.width*startPositions[self.serialNum][0])
-        sTY = int(self.maze.height*startPositions[self.serialNum][1])
+        sTX = int(self.startTile[0])
+        sTY = int(self.startTile[1])
         # search out in a spiral for a valid spot
         c = 0
         lim = 0
@@ -175,17 +168,18 @@ class MazeSuit(DirectObject):
         self.suit.reparentTo(render)
         self.suit.setPos(self.__getWorldPos(self.TX, self.TY))
         self.suit.setHpr(self.directionHs[self.direction],0,0)
+        self.suit.reparentTo(render)
         # cache the walk animation
-        self.suit.pose('walk', 0)
+        self.suit.pose(self._walkAnimName, 0)
         self.suit.loop('neutral')
 
     def offstage(self):
         self.suit.reparentTo(hidden)
 
     def startWalkAnim(self):
-        self.suit.loop('walk')
-        speed = float(MazeData.CELL_WIDTH) / self.cellWalkDuration
-        self.suit.setPlayRate(speed / self.DEFAULT_SPEED, 'walk')
+        self.suit.loop(self._walkAnimName)
+        speed = float(self.maze.cellWidth) // self.cellWalkDuration
+        self.suit.setPlayRate(speed // self.DEFAULT_SPEED, self._walkAnimName)
 
     def __applyDirection(self, dir, TX, TY):
         if self.DIR_UP == dir:
@@ -200,7 +194,7 @@ class MazeSuit(DirectObject):
 
     def __chooseNewWalkDirection(self, unwalkables):
         # most of the time, we want to keep going in the same direction
-        if not self.rng.randrange(4):
+        if not self.rng.randrange(self._walkSameDirectionProb):
             newTX, newTY = self.__applyDirection(self.direction,
                                                  self.TX, self.TY)
             if self.maze.isWalkable(newTX, newTY, unwalkables):
@@ -208,7 +202,7 @@ class MazeSuit(DirectObject):
 
         if self.difficulty >= .5:
             # once in a while, turn around
-            if not self.rng.randrange(30):
+            if not self.rng.randrange(self._walkTurnAroundProb):
                 oppositeDir = self.oppositeDirections[self.direction]
                 newTX, newTY = self.__applyDirection(oppositeDir,
                                                      self.TX, self.TY)
@@ -316,8 +310,45 @@ class MazeSuit(DirectObject):
             else:
                 self.suit.setH(self.directionHs[self.direction])
 
-            moveStartT = float(self.nextThinkTic) / \
-                         float(MazeGameGlobals.SUIT_TIC_FREQ)
+            moveStartT = float(self.nextThinkTic) // \
+                         float(self.ticFreq)
             self.moveIval.start(curT - (moveStartT + self.gameStartTime))
 
         self.nextThinkTic += self.ticPeriod
+
+
+
+    @staticmethod
+    def thinkSuits(suitList, startTime, ticFreq = MazeGameGlobals.SUIT_TIC_FREQ):
+        curT = globalClock.getFrameTime() - startTime
+        curTic = int(curT * float(ticFreq))
+        suitUpdates = []
+        for i in range(len(suitList)):
+            updateTics = suitList[i].getThinkTimestampTics(curTic)
+            suitUpdates.extend(list(zip(updateTics, [i] * len(updateTics))))
+
+        suitUpdates.sort(lambda a, b: a[0] - b[0])
+        if len(suitUpdates) > 0:
+            curTic = 0
+            for i in range(len(suitUpdates)):
+                update = suitUpdates[i]
+                tic = update[0]
+                suitIndex = update[1]
+                suit = suitList[suitIndex]
+                if tic > curTic:
+                    curTic = tic
+                    j = i + 1
+                    while j < len(suitUpdates):
+                        if suitUpdates[j][0] > tic:
+                            break
+                        suitList[suitUpdates[j][1]].prepareToThink()
+                        j += 1
+
+                unwalkables = []
+                for si in range(suitIndex):
+                    unwalkables.extend(suitList[si].occupiedTiles)
+
+                for si in range(suitIndex + 1, len(suitList)):
+                    unwalkables.extend(suitList[si].occupiedTiles)
+
+                suit.think(curTic, curT, unwalkables)
