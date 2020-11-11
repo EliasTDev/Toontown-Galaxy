@@ -981,7 +981,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         frontNP = suitBuildingNP.find("**/*_front")
         #assert(not frontNP.isEmpty()) #not in 2013 tto source
         backgroundNP.wrtReparentTo(frontNP)
-        frontNP.node().setEffect(DecalEffect.make())
+        #frontNP.node().setEffect(DecalEffect.make())
 
         # Rename the building:
         suitBuildingNP.setName("cb"+str(self.block)+":_landmark__DNARoot")

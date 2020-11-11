@@ -715,10 +715,10 @@ def getSplicedLerpAnimsTrack(object, animName, origDuration, newDuration,
     addition = 0 # Addition will be added to the startTime to move animation forward
     numIvals = origDuration * fps # Number of actor intervals to use
     # The timeInterval is what to add before each actor interval to delay time
-    timeInterval = newDuration // numIvals
+    timeInterval = newDuration / numIvals
     # The animInterval is how much the animation progresses forward each interval
-    animInterval = origDuration // numIvals
-    for i in range(0, numIvals):
+    animInterval = origDuration / numIvals
+    for i in range(0, int(numIvals)):
         track.append(Wait(timeInterval))
         track.append(ActorInterval(object, animName, startTime=startTime+addition,
                                    duration=animInterval))
