@@ -926,7 +926,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
     def setupCogdo(self, nodePath):
         assert(self.debugPrint("setupCogdo(nodePath=%s)"%(nodePath,)))
         dnaStore=self.cr.playGame.dnaStore
-        level = int(self.difficulty // 2) + 1
+        level = int(self.difficulty / 2) + 1
         suitNP = dnaStore.findNode(FO_DICT[chr(self.track)])
 
         # If you want to make the suit buildings visible from a
@@ -957,7 +957,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         # than one line.  Try to adjust the scale and position of
         # the sign accordingly.
         textHeight = textNode.getHeight()
-        zScale = (textHeight + 2) // 3.0
+        zScale = (textHeight + 2) / 3.0
         
         # Determine where the sign should go:
         signOrigin=suitBuildingNP.find("**/sign_origin;+s")

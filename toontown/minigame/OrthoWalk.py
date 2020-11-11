@@ -85,3 +85,8 @@ class OrthoWalk:
             # broadcast the current position, if changed
             self.lt.cnode.broadcastPosHprXyh()
         return Task.cont
+
+
+    def sendCurrentPosition(self):
+        self.timeSinceLastPosBroadcast -= self.broadcastPeriod
+        self.lt.cnode.broadcastPosHprXyh()

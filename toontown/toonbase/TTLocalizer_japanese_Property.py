@@ -57,6 +57,12 @@ CMactivateChat = 0.06
 CMchatActivated = 0.06
 CMNoPasswordContinue_z = -0.23
 
+#cogdominium
+CRPgameTitleText = 0.088
+CRPgameTitleTextPos = (-0.046, 0.2, 0.13)
+#minigame
+MRPinstructionsTextWordwrap = 26.5
+
 #coghq/LawbotCogHQLoader.py
 LCLdgSign = 0.1      # the scale of the gate name
 
@@ -239,6 +245,7 @@ MRPGameTitleTextScale = 0.10
 MRPGameTitleTextPos = (-0.12, 0.2, 0.092)
 MRPInstructionsTextWordwrap = 32
 MRPInstructionsTextPos = (-0.12, 0.05, 0)
+MRPinstructionsTextPos = (-0.115, 0.05, 0)
 
 #Stuff for trolley metagame
 TravelGameBonusBeansSize = 0.35

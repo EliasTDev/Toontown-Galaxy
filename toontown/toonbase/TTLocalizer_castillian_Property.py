@@ -57,6 +57,9 @@ CMactivateChat = 0.05
 CMchatActivated = 0.05
 CMNoPasswordContinue_z = -0.25
 
+#cogdominium
+CRPgameTitleText = 0.088
+CRPgameTitleTextPos = (-0.046, 0.2, 0.13)
 #coghq/LawbotCogHQLoader.py
 LCLdgSign = 0.1      # the scale of the gate name
 
@@ -179,6 +182,8 @@ MASPnameText = 0.04
 #minigame/MinigameRulesPanel.py
 MRPplayButton = 0.040
 MRPinstructionsText = 0.05
+MRPinstructionsTextWordwrap = 26.5
+MRPinstructionsTextPos = (-0.115, 0.05, 0)
 
 #minigame/MinigamePowerMeter.py
 MPMpowerText = 0.05

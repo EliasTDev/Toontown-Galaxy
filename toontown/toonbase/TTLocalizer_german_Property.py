@@ -14,6 +14,9 @@ DHtrophyPos = (-8.6, 0, 0.3)
 #building/Elevator.py
 EelevatorHopOff = 0.7
 
+#cogdominium
+CRPgameTitleText = 0.088
+CRPgameTitleTextPos = (-0.046, 0.2, 0.13)
 #coghq/SellbotCogHQLoader.py
 SCLfdSign = 0.12
 SCLdgSign = 0.1
@@ -102,6 +105,9 @@ PstatusLabel = 0.08
 
 #minigame/PurchaseBase.py
 PBstatusLabel = 0.07
+#minigame
+MRPinstructionsTextWordwrap = 26.5
+MRPinstructionsTextPos = (-0.115, 0.05, 0)
 
 #makeatoon/NameShop.py
 NSmaxNameWidth = 10

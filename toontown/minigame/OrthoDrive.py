@@ -4,6 +4,7 @@ from toontown.toonbase.ToonBaseGlobal import *
 from direct.interval.IntervalGlobal import *
 from . import ArrowKeys
 from direct.task.Task import Task
+from otp.otpbase import OTPGlobals
 
 class OrthoDrive:
     """
@@ -21,7 +22,7 @@ class OrthoDrive:
                  customCollisionCallback=None,
                  priority=0, setHeading=1,
                  upHeading=0,
-                 instantTurn=False):
+                 instantTurn=False, wantSound=False):
         """
         customCollisionCallback should accept (current position,
         proposed offset) and return a (potentially modified) offset
@@ -39,6 +40,7 @@ class OrthoDrive:
         self.arrowKeys = ArrowKeys.ArrowKeys()
         self.lt = base.localAvatar
         self.instantTurn = instantTurn
+        self.wantSound = wantSound
 
     def destroy(self):
         self.arrowKeys.destroy()
@@ -50,6 +52,7 @@ class OrthoDrive:
         self.__placeToonHOG(self.lt.getPos())
         taskMgr.add(self.__update, OrthoDrive.TASK_NAME,
                     priority=self.priority)
+        self.lastAction = None
 
     def __placeToonHOG(self, pos, h=None):
         # place the toon unconditionally in a new position
@@ -100,6 +103,16 @@ class OrthoDrive:
 
         ## animate the toon
         speed = vel.length()
+        action = self.lt.setSpeed(speed, 0)
+        if action != self.lastAction:
+            self.lastAction = action
+            if self.wantSound:
+                if action == OTPGlobals.WALK_INDEX or action == OTPGlobals.REVERSE_INDEX:
+                    self.lt.walkSound()
+                elif action == OTPGlobals.RUN_INDEX:
+                    self.lt.runSound()
+                else:
+                    self.lt.stopSound()
         self.lt.setSpeed(speed, 0)
 
         if self.setHeading:

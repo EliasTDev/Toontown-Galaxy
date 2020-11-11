@@ -54,7 +54,7 @@ class MazeSuit(DirectObject):
         self.ticFreq = ticFreq
 
         self.ticPeriod = int(cellWalkPeriod)
-        self.cellWalkDuration = float(self.ticPeriod) // \
+        self.cellWalkDuration = float(self.ticPeriod) / \
                                 float(self.ticFreq)
         self.turnDuration = 0.6 * self.cellWalkDuration
 
@@ -178,7 +178,7 @@ class MazeSuit(DirectObject):
 
     def startWalkAnim(self):
         self.suit.loop(self._walkAnimName)
-        speed = float(self.maze.cellWidth) // self.cellWalkDuration
+        speed = float(self.maze.cellWidth) / self.cellWalkDuration
         self.suit.setPlayRate(speed // self.DEFAULT_SPEED, self._walkAnimName)
 
     def __applyDirection(self, dir, TX, TY):
@@ -327,7 +327,7 @@ class MazeSuit(DirectObject):
             updateTics = suitList[i].getThinkTimestampTics(curTic)
             suitUpdates.extend(list(zip(updateTics, [i] * len(updateTics))))
 
-        suitUpdates.sort(lambda a, b: a[0] - b[0])
+        suitUpdates.sort(key=lambda x: x[0])
         if len(suitUpdates) > 0:
             curTic = 0
             for i in range(len(suitUpdates)):
