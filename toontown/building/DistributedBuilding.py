@@ -928,7 +928,9 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         dnaStore=self.cr.playGame.dnaStore
         level = int(self.difficulty / 2) + 1
         suitNP = dnaStore.findNode(FO_DICT[chr(self.track)])
-
+        if not suitNP:
+             suitNP = loader.loadModel('phase_5/models/cogdominium/%s' % FO_DICT[chr(self.track)])
+        
         # If you want to make the suit buildings visible from a
         # distance, uncomment the following line, and comment out
         # the three lines under it.
@@ -966,18 +968,18 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         backgroundNP = loader.loadModel('phase_5/models/cogdominium/field_office_sign')
         assert(not backgroundNP.isEmpty())
         backgroundNP.reparentTo(signOrigin)
-        backgroundNP.setPosHprScale(0.0, 0.0, -1.2 + textHeight * 0.8 // zScale, 0.0, 0.0, 0.0, 20.0, 8.0, 8.0 * zScale)
+        backgroundNP.setPosHprScale(0.0, 0.0, -1.2 + textHeight * 0.8 / zScale, 0.0, 0.0, 0.0, 20.0, 8.0, 8.0 * zScale)
         #backgroundNP.node().setEffect(DecalEffect.make())
         # Get the text node path:
         signTextNodePath = backgroundNP.attachNewNode(textNode.generate())
-        assert(not signTextNodePath.isEmpty())
+        #assert(not signTextNodePath.isEmpty())
         # Scale the text:
-        signTextNodePath.setPosHprScale(0.0, 0.0, -0.13 + textHeight * 0.1 // zScale, 0.0, 0.0, 0.0, 0.1 * 8.0 // 20.0, 0.1, 0.1 // zScale)
+        signTextNodePath.setPosHprScale(0.0, 0.0, -0.13 + textHeight * 0.1 / zScale, 0.0, 0.0, 0.0, 0.1 * 8.0 / 20.0, 0.1, 0.1 / zScale)
         # Clear parent color higher in the hierarchy
         signTextNodePath.setColor(1.0, 1.0, 1.0, 1.0)
         # Decal sign onto the front of the building:
-        frontNP = suitBuildingNP.find("**/*_front/+GeomNode;+s")
-        assert(not frontNP.isEmpty())
+        frontNP = suitBuildingNP.find("**/*_front")
+        #assert(not frontNP.isEmpty()) #not in 2013 tto source
         backgroundNP.wrtReparentTo(frontNP)
         frontNP.node().setEffect(DecalEffect.make())
 

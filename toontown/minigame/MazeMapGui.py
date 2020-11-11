@@ -16,10 +16,11 @@ import random
 # panda imports
 from direct.showbase.PythonUtil import Enum
 from direct.gui.DirectGui import DirectFrame, DGG
-from panda3d.core import Vec2, VBase4F
+from panda3d.core import Vec2, VBase4, VBase4F
 from panda3d.core import CardMaker
 from panda3d.core import Texture, PNMImage
-from panda3d.core import Filename, NodePath
+from panda3d.core import Filename, NodePath, invert 
+
 
 #TODO:maze: move this to a config or global location
 
@@ -29,7 +30,7 @@ DEFAULT_MASK_RESOLUTION = 32
 
 # Default ratio for the reveal radius.  This is essentially the percentage of
 # the map that is revealed with each step.
-DEFAULT_RADIUS_RATIO = 0.09
+DEFAULT_RADIUS_RATIO = 0.05
 
 # Resolution for the map image that will be generated based on the map data.
 MAP_RESOLUTION = 320
@@ -79,7 +80,7 @@ class MazeMapGui(DirectFrame):
         self._revealedCells = []
         for y in range(self._mazeHeight):
             self._revealedCells.append([])
-            for x in range(self._mazeWidth):
+            for u in range(self._mazeWidth):
                 self._revealedCells[y].append(False)
 
         # create reveal function mappings
@@ -88,6 +89,9 @@ class MazeMapGui(DirectFrame):
             MazeRevealType.HardCircle : self._revealHardCircle,
             MazeRevealType.Square : self._revealSquare,
         }
+        self._revealFunctions = {MazeRevealType.SmoothCircle: self._revealSmoothCircle,
+         MazeRevealType.HardCircle: self._revealHardCircle,
+         MazeRevealType.Square: self._revealSquare}
         self._revealFunction = MAZE_REVEAL_TYPE
 
         # create the map and the mask
@@ -118,9 +122,9 @@ class MazeMapGui(DirectFrame):
         for x in range(self._mazeHeight):
             for y in range(self._mazeWidth):
                 if self._mazeCollTable[y][x] == 1:
-                    ax = float(x)// self._mazeWidth * MAP_RESOLUTION
+                    ax = float(x)/ self._mazeWidth * MAP_RESOLUTION
                     invertedY = self._mazeHeight - 1 - y
-                    ay = float(invertedY) // self._mazeHeight * MAP_RESOLUTION
+                    ay = float(invertedY) / self._mazeHeight * MAP_RESOLUTION
 
                     #TODO:maze use different blocks for different wall types or items
                     #mapImage.copySubImage(random.choice(blockFiles), int(ax), int(ay), 20, 20, 32, 32)
@@ -362,11 +366,11 @@ class MazeMapGui(DirectFrame):
 
     def tile2gui(self, x, y):
         y = self._mazeHeight - y
-        cellWidth = self._maskResolution // self._mazeWidth
-        cellHeight = self._maskResolution // self._mazeHeight
-        ax = float(x) // self._mazeWidth * self._maskResolution
+        cellWidth = self._maskResolution / self._mazeWidth
+        cellHeight = self._maskResolution / self._mazeHeight
+        ax = float(x) / self._mazeWidth * self._maskResolution
         ax += cellWidth
-        ay = float(y) // self._mazeHeight * self._maskResolution
+        ay = float(y) / self._mazeHeight * self._maskResolution
         ay += cellHeight
         return (ax, ay)
 
@@ -423,7 +427,7 @@ class MazeMapGui(DirectFrame):
 
 
     def gui2pos(self, x, y):
-        return (x // self._maskResolution * 2.0 - 0.97, 0, y // self._maskResolution * -2.0 + 1.02)
+        return (x / self._maskResolution * 2.0 - 0.97, 0, y / self._maskResolution * -2.0 + 1.02)
 
     def _createSimpleMarker(self, size, color = (1, 1, 1)):
         halfSize = size * 0.5

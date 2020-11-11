@@ -185,6 +185,7 @@ MASPnameText = 0.055
 #minigame/MinigameRulesPanel.py
 MRPplayButton = 0.055
 MRPinstructionsText = 0.07
+MRPgameTitleText = 0.11
 
 
 

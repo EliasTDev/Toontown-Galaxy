@@ -108,6 +108,7 @@ PBstatusLabel = 0.07
 #minigame
 MRPinstructionsTextWordwrap = 26.5
 MRPinstructionsTextPos = (-0.115, 0.05, 0)
+MRPgameTitleText = 0.11
 
 #makeatoon/NameShop.py
 NSmaxNameWidth = 10

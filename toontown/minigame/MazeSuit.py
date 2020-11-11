@@ -179,7 +179,7 @@ class MazeSuit(DirectObject):
     def startWalkAnim(self):
         self.suit.loop(self._walkAnimName)
         speed = float(self.maze.cellWidth) / self.cellWalkDuration
-        self.suit.setPlayRate(speed // self.DEFAULT_SPEED, self._walkAnimName)
+        self.suit.setPlayRate(speed / self.DEFAULT_SPEED, self._walkAnimName)
 
     def __applyDirection(self, dir, TX, TY):
         if self.DIR_UP == dir:
@@ -310,7 +310,7 @@ class MazeSuit(DirectObject):
             else:
                 self.suit.setH(self.directionHs[self.direction])
 
-            moveStartT = float(self.nextThinkTic) // \
+            moveStartT = float(self.nextThinkTic) / \
                          float(self.ticFreq)
             self.moveIval.start(curT - (moveStartT + self.gameStartTime))
 

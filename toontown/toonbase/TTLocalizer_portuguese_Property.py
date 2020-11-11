@@ -244,7 +244,7 @@ MRPInstructionsTextWordwrap = 32
 MRPInstructionsTextPos = (-0.12, 0.05, 0)
 MRPinstructionsTextWordwrap = 26.5
 MRPinstructionsTextPos = (-0.115, 0.05, 0)
-
+MRPgameTitleText = 0.11
 #Stuff for trolley metagame
 TravelGameBonusBeansSize = 0.65
 
