@@ -721,7 +721,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
     def setupSuitBuilding(self, nodePath):
         assert(self.debugPrint("setupSuitBuilding(nodePath=%s)"%(nodePath,)))
         dnaStore=self.cr.playGame.dnaStore
-        level = int(self.difficulty // 2) + 1
+        level = int(self.difficulty / 2) + 1
         suitNP=dnaStore.findNode("suit_landmark_"
                 +chr(self.track)+str(level))
 
@@ -754,7 +754,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         # than one line.  Try to adjust the scale and position of
         # the sign accordingly.
         textHeight = textNode.getHeight()
-        zScale = (textHeight + 2) // 3.0
+        zScale = (textHeight + 2) / 3.0
         
         # Determine where the sign should go:
         signOrigin=suitBuildingNP.find("**/sign_origin;+s")
@@ -763,7 +763,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         backgroundNP=loader.loadModel("phase_5/models/modules/suit_sign")
         assert(not backgroundNP.isEmpty())
         backgroundNP.reparentTo(signOrigin)
-        backgroundNP.setPosHprScale(0.0, 0.0, textHeight * 0.8 // zScale,
+        backgroundNP.setPosHprScale(0.0, 0.0, textHeight * 0.8 / zScale,
                                     0.0, 0.0, 0.0,
                                     8.0, 8.0, 8.0 * zScale)
         #backgroundNP.node().setEffect(DecalEffect.make())
@@ -771,9 +771,9 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         signTextNodePath = backgroundNP.attachNewNode(textNode.generate())
         assert(not signTextNodePath.isEmpty())
         # Scale the text:
-        signTextNodePath.setPosHprScale(0.0, 0.0, -0.21 + textHeight * 0.1 // zScale,
+        signTextNodePath.setPosHprScale(0.0, 0.0, -0.21 + textHeight * 0.1 / zScale,
                                         0.0, 0.0, 0.0,
-                                        0.1, 0.1, 0.1 // zScale)
+                                        0.1, 0.1, 0.1 / zScale)
         # Clear parent color higher in the hierarchy
         signTextNodePath.setColor(1.0, 1.0, 1.0, 1.0)
         # Decal sign onto the front of the building:
