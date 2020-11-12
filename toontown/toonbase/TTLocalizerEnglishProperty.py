@@ -187,6 +187,7 @@ MRPplayButton = 0.055
 MRPinstructionsText = 0.07
 MRPgameTitleText = 0.11
 
+MRgameTitleTextPos = (-0.046, 0.2, 0.092)
 
 
 #minigame/MinigamePowerMeter.py

@@ -1,3 +1,5 @@
+MRgameTitleTextPos = (-0.046, 0.2, 0.092)
+
 #battle/PlayByPlayText.py
 PBPTonscreenText = 0.15
 
