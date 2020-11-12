@@ -69,7 +69,7 @@ MazeBarriers = ([(7, 34),
   (34, 8),
   (34, 9),
   (34, 10)])
-ToonRunSpeed = 11.2
+ToonRunSpeed = 11.2 * 2
 CameraAngle = 60
 CameraRemoteToonRadius = 6
 CameraMinDistance = 40
