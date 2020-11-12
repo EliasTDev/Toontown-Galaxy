@@ -167,7 +167,7 @@ class DatabaseObject:
         for field, value in items:
             dg.addString(field)
         for field, value in items:
-            dg.addString(value.getMessage())
+            dg.addBlob(value.getMessage())
             
         self.air.send(dg)
 
