@@ -2387,6 +2387,8 @@ dclass DistributedCogdoInterior: DistributedObject {
   toonBarrelRoomRewardDone() airecv clsend;
 };
 
+dclass DistributedCogdoBattleBldg : DistributedBattleBldg {
+};
 dclass DistCogdoGame : DistributedObject {
   setInteriorId(uint32) required broadcast ram;
   setExteriorZone(uint32) broadcast ram required;
