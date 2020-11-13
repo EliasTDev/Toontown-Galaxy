@@ -56,7 +56,7 @@ class TTDBCursorBase:
 
     def _doExecute(self, cursorBase, *args, **kArgs):
         if self.notify.getDebug():
-            self.notify.debug('execute:\n%s' % u2ascii(args[0]))
+            self.notify.debug('execute:\n%s' % args[0])
         try:
             cursorBase.execute(self, *args, **kArgs)
         except MySQLdb.OperationalError as e:
@@ -665,7 +665,7 @@ class TTCodeRedemptionDBTester(Job):
                 for code in codes:
                     # manual code lot
                     lotName = self._getUnusedLotName()
-                    self.notify.info('manual code: %s' % u2ascii(code))
+                    self.notify.info('manual code: %s' % (code))
                     self._db.createManualLot(lotName, code, RewardType, RewardItemId)
                     if not self._db.lotExists(lotName):
                         self.notify.error('could not create manual lot %s' % lotName)
@@ -919,7 +919,7 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
             self.notify.error('tried to create lot %s that already exists' % name)
 
         if self.codeExists(code):
-            self.notify.error('tried to create code %s that already exists' % u2ascii(code))
+            self.notify.error('tried to create code %s that already exists' % (code))
 
         conn = TTCRDBConnection(self)
         conn._createTable(
@@ -1332,7 +1332,7 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
         if cachedLotName is not self._code2lotNameCache.NotFound:
             return cachedLotName
 
-        assert self.notify.debug('lotNameFromCode CACHE MISS (%s)' % u2ascii(code))
+        assert self.notify.debug('lotNameFromCode CACHE MISS (%s)' % (code))
 
         self._doCleanup()
         conn = TTCRDBConnection(self)
@@ -1434,9 +1434,10 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
         cursor = conn.getDictCursor()
 
         cursor.execute(
-            " SELECT redemptions FROM code_set_" + lotName + " WHERE code='"+ code + "'" + ";"
-           # """, 'utf-8') % (lotName, code)
-            )
+            """
+            SELECT redemptions FROM code_set_%s WHERE code='%s';
+            """) % (lotName, code)
+
         rows = cursor.fetchall()
 
         conn.destroy()
@@ -1454,7 +1455,7 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
 
         lotName = self.getLotNameFromCode(code)
         if lotName is None:
-            self.air.writeServerEvent('invalidCodeRedemption', avId, '%s' % (u2ascii(origCode), ))
+            self.air.writeServerEvent('invalidCodeRedemption', avId, '%s' % ((origCode), ))
             callback(TTCodeRedemptionConsts.RedeemErrors.CodeDoesntExist, 0)
             return
 
@@ -1466,7 +1467,7 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
         if cachedManual is not self._lotName2manualCache.NotFound:
             manualCode = cachedManual
         else:
-            assert self.notify.debug('manualFromCode CACHE MISS (%s)' % u2ascii(code))
+            assert self.notify.debug('manualFromCode CACHE MISS (%s)' % (code))
 
             cursor.execute(
                 """
@@ -1484,12 +1485,13 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
         if not manualCode:
             # client hack prevention:
             # safe; code is between quotes and can only contain letters, numbers and dashes
+            print(type(lotName))
+            print(type(code))
             cursor.execute(
-                str("""
+                """
                 SELECT redemptions FROM code_set_%s INNER JOIN lot WHERE
                 code_set_%s.lot_id=lot.lot_id AND code='%s' AND ((expiration IS NULL) OR (CURDATE()<=expiration));
-                """, 'utf-8') % (lotName, lotName, code)
-                )
+                """) % (lotName, lotName, code)
 
             rows = cursor.fetchall()
             assert len(rows) <= 1

@@ -56,6 +56,7 @@ from toontown.safezone import DistributedPartyGateAI
 from toontown.ai.ToontownMagicWordManagerAI import ToontownMagicWordManagerAI
 from toontown.uberdog.DistributedPartyManagerAI import DistributedPartyManagerAI
 from toontown.parties.ToontownTimeManager import ToontownTimeManager
+from toontown.coderedemption.TTCodeRedemptionMgrAI import TTCodeRedemptionMgrAI
 import time
 
 class ToontownAIRepository(ToontownInternalRepository):
@@ -96,6 +97,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.tutorialManager = None
         self.magicWordManager = None
         self.partyManager = None
+        self.codeRedemptionManager = None
         self.zoneTable = {}
         self.dnaStoreMap = {}
         self.dnaDataMap = {}
@@ -252,6 +254,10 @@ class ToontownAIRepository(ToontownInternalRepository):
         # Generate our party manager...
         self.partyManager = DistributedPartyManagerAI(self)
         self.partyManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+
+        # Generate our code redemption manager...
+        self.codeRedemptionManager = TTCodeRedemptionMgrAI(self)
+        self.codeRedemptionManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
     def generateHood(self, hoodConstructor, zoneId):
         # Bossbot HQ doesn't use DNA, so we skip over that.
@@ -638,5 +644,3 @@ class ToontownAIRepository(ToontownInternalRepository):
             if self.bingoMgr:
                 self.notify.info('createPondBingoMgrAI: Creating a DPBMAI for Dynamic Estate')
                 self.bingoMgr.createPondBingoMgrAI(estate, 1)
-
-

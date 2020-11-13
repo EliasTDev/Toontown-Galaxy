@@ -1636,7 +1636,7 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
             else:
                 while 1:
                     try:
-                        code = str(code, 'utf-8')
+                        code = str(code)
                     except UnicodeDecodeError as e:
                         # code is not utf-8-able
                         self.air.writeServerEvent('suspicious', avId, 'non-utf-8 code redemption: %s' % repr(code))
