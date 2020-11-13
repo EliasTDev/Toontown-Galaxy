@@ -1489,7 +1489,7 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
                 """
                 SELECT redemptions FROM code_set_%s INNER JOIN lot WHERE
                 code_set_%s.lot_id=lot.lot_id AND code='%s' AND ((expiration IS NULL) OR (CURDATE()<=expiration));
-                """) % (lotName, lotName, code)
+                """ % (lotName, lotName, code))
 
             rows = cursor.fetchall()
             assert len(rows) <= 1
