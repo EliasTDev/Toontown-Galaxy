@@ -1485,8 +1485,6 @@ class TTCodeRedemptionDB(DBInterface, DirectObject):
         if not manualCode:
             # client hack prevention:
             # safe; code is between quotes and can only contain letters, numbers and dashes
-            print(type(lotName))
-            print(type(code))
             cursor.execute(
                 """
                 SELECT redemptions FROM code_set_%s INNER JOIN lot WHERE
