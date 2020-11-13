@@ -22,6 +22,10 @@ from toontown.distributed import DelayDelete
 from toontown.toonbase import TTLocalizer
 from .CogdoExecutiveSuiteMovies import CogdoExecutiveSuiteIntro
 from .CogdoElevatorMovie import CogdoElevatorMovie
+PENTHOUSE_DICT = {'s': 'tt_m_ara_crg_penthouse_sell',
+ 'l': 'tt_m_ara_crg_penthouse_law',
+ 'm': 'tt_m_ara_crg_penthouse_sell',
+ 'c': 'tt_m_ara_crg_penthouse_sell'}
 PAINTING_DICT = {'s': 'tt_m_ara_crg_paintingMoverShaker',
  'l': 'tt_m_ara_crg_paintingLegalEagle',
  'm': 'tt_m_ara_crg_paintingMoverShaker',
@@ -70,7 +74,7 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
          120,
          12,
          38]
-        self._wantBarrelRoom = config.GetBool('cogdo-want-barrel-room', 0)
+        self._wantBarrelRoom = config.GetBool('cogdo-want-barrel-room', 1)
         self.barrelRoom = CogdoBarrelRoom.CogdoBarrelRoom()
         self.brResults = [[], []]
         self.barrelRoomIntroTrack = None
@@ -154,7 +158,7 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
             floor = int(np.getName()[-1:]) - 1
             if floor == self.currentFloor:
                 np.setColor(LIGHT_ON_COLOR)
-            elif floor < self.layout.getNumGameFloors():
+            elif floor < self.layout.getNumGameFloors() + (1 if self .FOType != 's' else 0):
                 if self.isBossFloor(self.currentFloor):
                     np.setColor(LIGHT_ON_COLOR)
                 else:
@@ -394,10 +398,12 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
         return None
 
     def enterGame(self, ts = 0):
-        base.cr.forbidCheesyEffects(1)
+        return
+       # base.cr.forbidCheesyEffects(0)
 
     def exitGame(self):
-        base.cr.forbidCheesyEffects(0)
+        return
+        #base.cr.forbidCheesyEffects(0)
 
     def __playElevator(self, ts, name, callback):
         SuitHs = []
@@ -412,7 +418,14 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
             SuitPositions = self.BottomFloor_SuitPositions
         if self.isBossFloor(self.currentFloor):
             self.barrelRoom.unload()
-            self.floorModel = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_crg_penthouse')
+            if self.FOType:
+                penthouse = PENTHOUSE_DICT.get(self.FOType)
+                for x in range(len(PENTHOUSE_DICT)):
+                    self.floorModel = loader.loadModel('phase_5/models/cogdominium/%s' % penthouse)
+
+
+
+            #self.floorModel = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_crg_penthouse')
             self.cage = self.floorModel.find('**/cage')
             pos = self.cage.getPos()
             self.cagePos = []
@@ -427,6 +440,15 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
                     paintingModel = loader.loadModel('phase_5/models/cogdominium/%s' % paintingModelName)
                     loc = self.floorModel.find('**/loc_painting%d' % (i + 1))
                     paintingModel.reparentTo(loc)
+                for x in range(len(4)):
+                    goldTrophy = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_crg_goldTrophy.bam')
+                    gold = self.floorModel.find('**/gold_0%d' % (x + 1))
+                    goldTrophy.reparentTo(gold)
+                for x in range(20):
+                    silverTrophy = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_crg_silverTrophy.bam')
+                    silver = self.floorModel.find('**/silver_0%d' % (x + 1))
+                    silverEmblem.reparentTo(silver)
+
 
             SuitHs = self.BossOffice_SuitHs
             SuitPositions = self.BossOffice_SuitPositions
@@ -453,7 +475,7 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
             else:
                 elevIn = self.floorModel.find('**/elevator-in')
                 elevOut = self.floorModel.find('**/elevator-out')
-        elif self._wantBarrelRoom and self.barrelRoom.isLoaded():
+        elif self._wantBarrelRoom and self.currentFloor == 2 and self.FOType == 'l' and self.barrelRoom.isLoaded():
             elevIn = self.barrelRoom.dummyElevInNode
             elevOut = self.barrelRoom.model.find(CogdoBarrelRoomConsts.BarrelRoomElevatorOutPath)
             y = elevOut.getY(render)

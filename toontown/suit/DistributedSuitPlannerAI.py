@@ -1628,11 +1628,11 @@ class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
         building = self.buildingMgr.getBuilding(blockNumber)
         building.suitTakeOver(suitTrack, difficulty, buildingHeight)
 
-    def cogdoTakeOver(self, blockNumber, suitTrack, difficulty, buildingHeight):
+    def cogdoTakeOver(self, blockNumber, suitTrack, difficulty, buildingHeight, dept):
         if self.pendingBuildingHeights.count(buildingHeight) > 0:
             self.pendingBuildingHeights.remove(buildingHeight)
         building = self.buildingMgr.getBuilding(blockNumber)
-        building.cogdoTakeOver(suitTrack, difficulty, buildingHeight)
+        building.cogdoTakeOver(suitTrack, difficulty, buildingHeight, dept)
 
     def recycleBuilding(self):
         # Ok, now that a building has been reclaimed by a toon, make

@@ -451,7 +451,7 @@ class DistCogdoMazeGameAI(DistCogdoGameAI, DistCogdoMazeGameBase):
 
     def exitGame(self):
         DistCogdoGameAI.exitGame(self)
-        for (toonId, token) in self._toonId2speedToken.items():
+        for (toonId, token) in list(self._toonId2speedToken.items()):
             self._speedMonitor.removeNodepath(token)
 
         self._toonId2speedToken = {}

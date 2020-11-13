@@ -9,7 +9,6 @@ import types
 from direct.task.Task import Task
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObjectAI
-from direct.fsm import State
 from direct.fsm import ClassicFSM, State
 from toontown.toonbase.ToontownGlobals import ToonHall
 from . import DistributedToonInteriorAI
@@ -857,7 +856,7 @@ class DistributedBuildingAI(DistributedObjectAI.DistributedObjectAI):
         return DistributedSuitInteriorAI.DistributedSuitInteriorAI(self.air, self.elevator)
 
     def _createCogdoInterior(self):
-        return DistributedCogdoInteriorAI(self.air, self.elevator)
+        return DistributedCogdoInteriorAI(self.air, self)
     
     def createSuitInterior(self):
         # Create a building interior in the new (interior) zone
@@ -870,7 +869,7 @@ class DistributedBuildingAI(DistributedObjectAI.DistributedObjectAI):
         # Create a building interior in the new (interior) zone
         self.interior = self._createCogdoInterior()
         dummy, interiorZoneId = self.getExteriorAndInteriorZoneId()
-        self.interior.fsm.request('WaitForAllToonsInside')
+        self.interior.b_setState('WaitForAllToonsInside')
         self.interior.generateWithRequired(interiorZoneId)
 
     def deleteSuitInterior(self):
