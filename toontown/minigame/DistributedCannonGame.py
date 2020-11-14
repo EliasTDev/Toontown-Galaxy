@@ -571,7 +571,7 @@ class DistributedCannonGame(DistributedMinigame):
             else:
                 y = yMax
         else:
-            y = self.randomNumGen.randint(yMin, yMax)
+            y = self.randomNumGen.randint(int(yMin), int(yMax))
 
         xRange = TOWER_X_RANGE
         if self.DEBUG_TOWER_RANGE:
