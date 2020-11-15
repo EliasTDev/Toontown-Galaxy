@@ -11,7 +11,7 @@ from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 from otp.otpbase import OTPGlobals
 import random
-
+from libotp import *
 class DistributedCashbotBossCrane(DistributedObject.DistributedObject, FSM.FSM):
     """ This class represents a crane holding a magnet on a cable.
     The DistributedCashbotBoss creates four of these for the CFO
