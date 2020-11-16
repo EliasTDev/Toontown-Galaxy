@@ -27,7 +27,7 @@ import math
 import time
 import random
 from libpandadna import DNASuitPoint, SuitLeg
-ALLOWED_FIELD_OFFICES = ['s', 'l']
+ALLOWED_FIELD_OFFICES = ToontownGlobals.ALLOWED_FIELD_OFFICES
 class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
                                 SuitPlannerBase.SuitPlannerBase):
     """

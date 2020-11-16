@@ -10,7 +10,8 @@ from direct.task.Task import Task
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObjectAI
 from direct.fsm import ClassicFSM, State
-from toontown.toonbase.ToontownGlobals import ToonHall
+from toontown.toonbase.ToontownGlobals import ToonHall, ALLOWED_FIELD_OFFICES
+
 from . import DistributedToonInteriorAI
 from . import DistributedToonHallInteriorAI
 from . import DistributedSuitInteriorAI
@@ -231,19 +232,23 @@ class DistributedBuildingAI(DistributedObjectAI.DistributedObjectAI):
         self.becameSuitTime = time.time()
         self.fsm.request('clearOutToonInterior')
 
-    def cogdoTakeOver(self, suitTrack, difficulty, buildingHeight):
+    def cogdoTakeOver(self,difficulty, buildingHeight, dept='s'):
         if not self.isToonBlock():
             return
 
         # Remove the old saved by credit with the old number of floors
-        self.updateSavedBy(None)
-
+        self.updateSavedBy([])
+        if dept not in ALLOWED_FIELD_OFFICES:
+            dept = random.choice(ALLOWED_FIELD_OFFICES)
+        
         self.numFloors = self.FieldOfficeNumFloors
 
        # assert(self.debugPrint("cogdoTakeOver(%s, %s)" % (difficulty, numFloors - 1)))
 
-        self.track= suitTrack
+        self.track= dept
         self.difficulty=difficulty
+        if self.track == 'l':
+            self.numFloors = 2
         self.becameSuitTime = time.time()
         self.fsm.request('clearOutToonInteriorForCogdo')
 

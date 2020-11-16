@@ -1580,3 +1580,4 @@ AnimPropTypes = Enum(("Unknown",
                      )
 
 MaxCarryLimit = 80
+ALLOWED_FIELD_OFFICES = ['s', 'l']
