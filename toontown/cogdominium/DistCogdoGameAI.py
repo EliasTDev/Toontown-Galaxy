@@ -29,7 +29,7 @@ class DistCogdoGameAI(DistributedObjectAI):
 
     def getNumPlayers(self):
         return len(self.toons)
-        
+
     def getInterior(self):
         return self.air.doId2do.get(self.interiorId)
 
@@ -108,3 +108,9 @@ class DistCogdoGameAI(DistributedObjectAI):
     def getSafezoneId(self):
         return CogdoGameConsts.getSafezoneId(self.exteriorZone)
 
+    def _handleGameFinished(self):
+       # if overrideEndless or not (self.EndlessCogdoGames):
+        self.gameDone()
+
+    def _reportSuspiciousEvent(self, senderId, message):
+        self.logSuspiciousEvent(senderId, message)

@@ -113,12 +113,20 @@ class DistCogdoFlyingGameAI(DistCogdoGameAI):
         if not av:
             return 
         if action == Globals.AI.GameActions.LandOnWinPlatform:
-            if senderId not in self.toonsOnEndPlatform:
+            if config.GetBool('want-magic-words', 0):
                 self.toonsOnEndPlatform.append(senderId)
                 self.d_broadcastDoAction(action, senderId)
                 self.updateGotoWinState()
             else:
-                self._reportSuspiciousEvent(senderId, 'Client %s has landed on the win platform twice.' % senderId)
+                if senderId not in self.toonsOnEndPlatform:
+                    self.toonsOnEndPlatform.append(senderId)
+                    self.d_broadcastDoAction(action, senderId)
+                    self.updateGotoWinState()
+
+                else:
+                    self._reportSuspiciousEvent(senderId, 'Client %s has landed on the win platform twice.' % senderId)
+
+                    
         elif action == Globals.AI.GameActions.WinStateFinished:
             if senderId not in self.toonsInWinState:
                 self.toonsInWinState.append(senderId)

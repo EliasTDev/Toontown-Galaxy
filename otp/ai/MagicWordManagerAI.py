@@ -23,6 +23,7 @@ from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 from otp.otpbase.PythonUtil import *
 from toontown.racing.KartDNA import KartDict
+from toontown.cogdominium import CogdoFlyingGameGlobals
 
 class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("MagicWordManagerAI")
@@ -229,6 +230,13 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
             hp = int(args[1])
             av.b_setHp(hp)
             self.notify.debug('Set hp to %s for %s' % (hp, av.name))
+        elif wordIs('~skipFly'):
+            if not hasattr(simbase.air, 'cogdoGame'):
+                response = 'There are no lawbot field office minigames on this district!'
+            game = simbase.air.cogdoGame
+            game.requestAction(CogdoFlyingGameGlobals.AI.GameActions.LandOnWinPlatform, 0)
+            response = 'Finished field office flying game!'
+            self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs("~ainotify"):
             args = word.split()

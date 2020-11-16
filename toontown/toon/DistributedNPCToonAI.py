@@ -143,7 +143,7 @@ class DistributedNPCToonAI(DistributedNPCToonBaseAI):
         return Task.done
 
     def rejectAvatar(self, avId):
-        self.busy = avId
+        #self.busy = avId
         # Send a movie to reject the avatar with time stamp
         self.sendUpdate("setMovie", [NPCToons.QUEST_MOVIE_REJECT,
                                      self.npcId, avId, [],
@@ -173,7 +173,7 @@ class DistributedNPCToonAI(DistributedNPCToonBaseAI):
         return
 
     def completeQuest(self, avId, questId, rewardId):
-        self.busy = avId
+        ##self.busy = avId
         # nextQuestId will be the npc for the next visiting quest (visitNpcId)
         self.sendUpdate("setMovie", [NPCToons.QUEST_MOVIE_COMPLETE,
                                      self.npcId, avId, [questId, rewardId, 0],
@@ -184,7 +184,7 @@ class DistributedNPCToonAI(DistributedNPCToonBaseAI):
         return
 
     def incompleteQuest(self, avId, questId, completeStatus, toNpcId):
-        self.busy = avId
+        #self.busy = avId
         self.sendUpdate("setMovie", [NPCToons.QUEST_MOVIE_INCOMPLETE,
                                      self.npcId, avId, [questId, completeStatus, toNpcId],
                                      ClockDelta.globalClockDelta.getRealNetworkTime()])
@@ -194,7 +194,7 @@ class DistributedNPCToonAI(DistributedNPCToonBaseAI):
         return
 
     def assignQuest(self, avId, questId, rewardId, toNpcId):
-        self.busy = avId
+        #self.busy = avId
         # Call the quest callback now. We could wait until the movie
         # is over, but I don't think we need to.
         if self.questCallback:
@@ -209,7 +209,7 @@ class DistributedNPCToonAI(DistributedNPCToonBaseAI):
         return
 
     def presentQuestChoice(self, avId, quests):
-        self.busy = avId
+        #self.busy = avId
         self.pendingAvId = avId
         self.pendingQuests = quests
         flatQuests = []
@@ -224,7 +224,7 @@ class DistributedNPCToonAI(DistributedNPCToonBaseAI):
         return
 
     def presentTrackChoice(self, avId, questId, tracks):
-        self.busy = avId
+        #self.busy = avId
         self.pendingAvId = avId
         self.pendingTracks = tracks
         self.pendingTrackQuest = questId
@@ -239,7 +239,7 @@ class DistributedNPCToonAI(DistributedNPCToonBaseAI):
         return
 
     def cancelChoseQuest(self, avId):
-        self.busy = avId
+        #self.busy = avId
         # Send a movie to present the choice to the avatar
         self.sendUpdate("setMovie", [NPCToons.QUEST_MOVIE_QUEST_CHOICE_CANCEL,
                                      self.npcId, avId, [],
@@ -250,7 +250,7 @@ class DistributedNPCToonAI(DistributedNPCToonBaseAI):
         return
 
     def cancelChoseTrack(self, avId):
-        self.busy = avId
+        #self.busy = avId
         self.sendUpdate("setMovie", [NPCToons.QUEST_MOVIE_TRACK_CHOICE_CANCEL,
                                      self.npcId, avId, [],
                                      ClockDelta.globalClockDelta.getRealNetworkTime()])

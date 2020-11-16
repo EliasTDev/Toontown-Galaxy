@@ -78,7 +78,7 @@ class DistributedNPCTailorAI(DistributedNPCToonBaseAI):
 
     def sendShoppingMovie(self, avId, flag):
         assert self.notify.debug('sendShoppingMovie()')
-        self.busy = avId
+        #self.busy = avId
         self.sendUpdate("setMovie", [flag,
                         self.npcId, avId,
                         ClockDelta.globalClockDelta.getRealNetworkTime()])
@@ -132,7 +132,7 @@ class DistributedNPCTailorAI(DistributedNPCToonBaseAI):
 
     def completePurchase(self, avId):
         assert self.notify.debug('completePurchase()')
-        self.busy = avId
+        #self.busy = avId
         # Send a movie to reward the avatar
         self.sendUpdate("setMovie", [NPCToons.PURCHASE_MOVIE_COMPLETE,
                         self.npcId, avId,

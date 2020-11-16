@@ -43,7 +43,7 @@ class DistributedNPCBlockerAI(DistributedNPCToonBaseAI):
 
     def sendStartMovie(self, avId):
         assert self.notify.debug('sendStartMovie()')
-        self.busy = avId
+        #self.busy = avId
         self.sendUpdate("setMovie", [NPCToons.BLOCKER_MOVIE_START,
                         self.npcId, avId,
                         ClockDelta.globalClockDelta.getRealNetworkTime()])

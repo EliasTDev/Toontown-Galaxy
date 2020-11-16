@@ -21,6 +21,7 @@ class DistributedNPCTailor(DistributedNPCToonBase):
         self.roomAvailable = 0
         self.button = None
         self.popupInfo = None
+        self.cameraSequence = None
             
     def disable(self):
         self.ignoreAll()
@@ -45,6 +46,9 @@ class DistributedNPCTailor(DistributedNPCToonBase):
         self.oldStyle = None
         base.localAvatar.posCamera(0, 0)
         DistributedNPCToonBase.disable(self)
+        if self.cameraSequence:
+            self.cameraSequence.finish()
+            self.cameraSequence = None
 
     def handleCollisionSphereEnter(self, collEntry):
         """
@@ -66,6 +70,9 @@ class DistributedNPCTailor(DistributedNPCToonBase):
         self.ignoreAll()
         taskMgr.remove(self.uniqueName('popupPurchaseGUI'))
         taskMgr.remove(self.uniqueName('lerpCamera'))
+        if self.cameraSequence:
+            self.cameraSequence.finish()
+            self.cameraSequence = None
         if self.clothesGUI:
             self.clothesGUI.hideButtons()
             self.clothesGUI.exit()
@@ -90,6 +97,7 @@ class DistributedNPCTailor(DistributedNPCToonBase):
         # to read through the chat balloons, just free us
         if (self.isLocalToon):
             self.freeAvatar()
+
         return Task.done
 
     def setMovie(self, mode, npcId, avId, timestamp):
@@ -118,6 +126,9 @@ class DistributedNPCTailor(DistributedNPCToonBase):
             assert self.notify.debug('PURCHASE_MOVIE_TIMEOUT')
             # In case the GUI hasn't popped up yet
             taskMgr.remove(self.uniqueName('lerpCamera'))
+            if self.cameraSequence:
+                self.cameraSequence.finish()
+                self.cameraSequence = None
             # Stop listening for the GUI
             if (self.isLocalToon):
                 self.ignore(self.purchaseDoneEvent)
@@ -163,11 +174,8 @@ class DistributedNPCTailor(DistributedNPCToonBase):
 
             if (self.isLocalToon):
                 camera.wrtReparentTo(render)
-                camera.lerpPosHpr(-5, 9, self.getHeight()-0.5, -150, -2, 0, 1,
-                                  other=self,
-                                  blendType="easeOut",
-                                  task=self.uniqueName('lerpCamera'))
-
+                self.cameraSequence = camera.posQuatInterval(1, Point3(-5, 9, self.getHeight() - 0.5), Point3(-150, -2, 0), other=self, blendType='easeOut', name=self.uniqueName('lerpCamera'))
+                self.cameraSequence.start()
             if (self.browsing == 0):
                 if (self.roomAvailable == 0):
                     self.setChatAbsolute(TTLocalizer.STOREOWNER_NOROOM,

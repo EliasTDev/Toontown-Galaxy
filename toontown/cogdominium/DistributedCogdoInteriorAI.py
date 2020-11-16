@@ -13,6 +13,7 @@ from . import DistCogdoFlyingGameAI, DistributedCogdoBarrelAI
 from .DistributedCogdoBattleBldgAI import DistributedCogdoBattleBldgAI
 from .SuitPlannerCogdoInteriorAI import SuitPlannerCogdoInteriorAI
 from toontown.cogdominium import CogdoBarrelRoomConsts
+from toontown.cogdominium import CogdoBarrelRoomAI
 
 from toontown.toon import NPCToons
 from toontown.quest import Quests
@@ -90,6 +91,9 @@ class DistributedCogdoInteriorAI(DistributedObjectAI, FSM.FSM):
         self.ignoreResponses = 0
         self.ignoreElevatorDone = 0
         self.ignoreReserveJoinDone = 0
+        self.results = [
+            [],
+            []]
 
         self.doId = 0
 
@@ -259,7 +263,7 @@ class DistributedCogdoInteriorAI(DistributedObjectAI, FSM.FSM):
 
         self.b_setState('CollectBarrels')
         for i in range(len(CogdoBarrelRoomConsts.BarrelProps)):
-            barrel = DistributedCogdoBarrelAI.DistributedCogdoBarrelAI(self.air, i)
+            barrel = DistributedCogdoBarrelAI.DistributedCogdoBarrelAI(self.air, i, )
             barrel.generateWithRequired(self.zoneId)
             self.barrels.append(barrel)
         self.timer.startCallback(BARREL_ROOM_DURATION, self.barrelReward)

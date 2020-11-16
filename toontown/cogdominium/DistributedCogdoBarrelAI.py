@@ -6,13 +6,13 @@ from toontown.cogdominium import CogdoBarrelRoomConsts
 class DistributedCogdoBarrelAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCogdoBarrelAI')
 
-    def __init__(self, air, index, collectedCallback):
+    def __init__(self, air, index):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
         self.grabbedBy = []
         self.index = index
         self.state = CogdoBarrelRoomConsts.StateHidden
         self.interactive = False
-        self.collectedCallback = collectedCallback
+        #self.collectedCallback = collectedCallback
         self.laff = random.randint(*CogdoBarrelRoomConsts.ToonUp)
 
     def generate(self):
@@ -50,7 +50,7 @@ class DistributedCogdoBarrelAI(DistributedObjectAI.DistributedObjectAI):
         return self.state == CogdoBarrelRoomConsts.StateAvailable and self.interactive and not av.isToonedUp() and av.doId not in self.grabbedBy
 
     def d_setGrab(self, avId):
-        self.collectedCallback(self, avId)
+        #self.collectedCallback(self, avId)
         self.grabbedBy.append(avId)
         self.sendUpdate('setGrab', [
             avId])

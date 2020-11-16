@@ -17,6 +17,7 @@ class DistributedNPCSpecialQuestGiver(DistributedNPCToonBase):
         self.curQuestMovie = None
         self.questChoiceGui = None
         self.trackChoiceGui = None
+        self.camSequence = None
         
     def announceGenerate(self):
         self.setAnimState("neutral", 0.9, None, None)
@@ -46,6 +47,9 @@ class DistributedNPCSpecialQuestGiver(DistributedNPCToonBase):
     def disable(self):
         self.cleanupMovie()
         DistributedNPCToonBase.disable(self)
+        if self.camSequence:
+            self.camSequence.finish()
+            self.camSequence = None 
 
     def cleanupMovie(self):        
         self.clearChat()
@@ -64,6 +68,9 @@ class DistributedNPCSpecialQuestGiver(DistributedNPCToonBase):
         if self.trackChoiceGui:
             self.trackChoiceGui.destroy()
             self.trackChoiceGui = None
+        if self.camSequence:
+            self.camSequence.finish()
+            self.camSequence = None 
             
     def allowedToTalk(self):
         """Check if the local toon is allowed to talk to this NPC."""
@@ -138,15 +145,12 @@ class DistributedNPCSpecialQuestGiver(DistributedNPCToonBase):
         camera.wrtReparentTo(render)
         if ((mode == NPCToons.QUEST_MOVIE_QUEST_CHOICE) or
             (mode == NPCToons.QUEST_MOVIE_TRACK_CHOICE)):
-            camera.lerpPosHpr(5, 9, self.getHeight()-0.5, 155, -2, 0, 1,
-                              other=self,
-                              blendType="easeOut",
-                              task=self.uniqueName("lerpCamera"))
+            self.camSequence = camera.posQuatInterval(1, Point3(5, 9, self.getHeight() - 0.5), Point3(155, -2, 0), other=self, blendType='easeOut', name=self.uniqueName('lerpCamera'))
+            self.camSequence.start()
         else:
-            camera.lerpPosHpr(-5, 9, self.getHeight()-0.5, -150, -2, 0, 1,
-                              other=self,
-                              blendType="easeOut",
-                              task=self.uniqueName("lerpCamera"))
+            self.camSequence = camera.posQuatInterval(1, Point3(-5, 9, self.getHeight() - 0.5), Point3(-150, -2, 0), other=self, blendType='easeOut', name=self.uniqueName('lerpCamera'))
+            self.camSequence.start()
+
         
 
     def setMovie(self, mode, npcId, avId, quests, timestamp):
@@ -173,6 +177,9 @@ class DistributedNPCSpecialQuestGiver(DistributedNPCToonBase):
         # Just return and do nothing
         if (mode == NPCToons.QUEST_MOVIE_TIMEOUT):
             assert self.notify.debug("setMovie: movie timeout")
+            if self.cameraSequence:
+                self.cameraSequence.finish()
+                self.cameraSequence = None
             self.cleanupMovie()
             # If we are the local toon and we have simply taken too long
             # to read through the chat balloons, just free us

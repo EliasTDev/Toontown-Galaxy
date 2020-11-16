@@ -40,7 +40,7 @@ class DistributedNPCPartyPersonAI(DistributedNPCToonBaseAI):
             return
 
         av = self.air.doId2do[avId]
-        self.busy = avId
+        #self.busy = avId
 
         # Handle unexpected exit
         self.acceptOnce(self.air.getAvatarExitEvent(avId), self.__handleUnexpectedExit, extraArgs=[avId])
