@@ -26,6 +26,10 @@ class DistCogdoGameAI(DistributedObjectAI):
         self.sendUpdate('setVisible', [])
         taskMgr.doMethodLater(self.delayIntro, self.__startIntro, self.taskName('CogdoStartIntro'))
 
+
+    def getNumPlayers(self):
+        return len(self.toons)
+        
     def getInterior(self):
         return self.air.doId2do.get(self.interiorId)
 

@@ -352,3 +352,5 @@ class DistCogdoFlyingGameAI(DistCogdoGameAI):
         DistCogdoGameAI.exitFinish(self)
         taskMgr.remove(self._announceGameDoneTask)
         del self._announceGameDoneTask
+
+    
