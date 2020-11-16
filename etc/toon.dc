@@ -2363,10 +2363,10 @@ dclass DistributedCogdoBarrel : DistributedObject {
 };
 
 dclass DistributedCogdoInterior: DistributedObject {
-  setZoneId(uint32 zoneId) required broadcast ram;
-  setExtZoneId(uint32 extZoneId) required broadcast ram;
+  setZoneId(uint32) required broadcast ram;
+  setExtZoneId(uint32) required broadcast ram;
   setDistBldgDoId(uint32) required broadcast ram;
-  setNumFloors(int8 numFloors) required broadcast ram;
+  setNumFloors(int8) required broadcast ram;
   setShopOwnerNpcId(uint32) required broadcast ram;
   setSOSNpcId(uint32) broadcast ram;
   setFOType(int8) broadcast ram;

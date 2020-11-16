@@ -826,7 +826,7 @@ class Toon(Avatar.Avatar, ToonHead):
 
         self.wake = None
         self.lastWakeTime = 0
-
+        self.forceJumpIdle = False
         self.numPies = 0
         self.pieType = 0
         self.pieModel = None
@@ -1648,7 +1648,9 @@ class Toon(Avatar.Avatar, ToonHead):
         else:
             # Didnt find any? Just look randomly
             ToonHead.findSomethingToLookAt(self)
-
+            
+    def setForceJumpIdle(self, value):
+        self.forceJumpIdle = value
 
     def setupPickTrigger(self):
         """

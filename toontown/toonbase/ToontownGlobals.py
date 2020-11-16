@@ -28,6 +28,8 @@ CogHQCameraFov = 60.0
 BossBattleCameraFov = 72.0
 MakeAToonCameraFov = 52.0
 
+CeilingBitmask = BitMask32(256)
+FloorEventBitmask = BitMask32(16)
 # Things we can throw a pie at.  (Pies also react to CameraBitmask and
 # FloorBitmask, but not WallBitmask.):
 # Brought in from OTPGlobals

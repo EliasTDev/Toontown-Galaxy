@@ -9,8 +9,8 @@ class DistCogdoFlyingGameAI(DistCogdoGameAI):
     InvulBuffRemoveTaskName = 'CFG_InvulBuffRemoveTask-%s'
     AnnounceGameDoneTimerTaskName = 'CFG_AnnounceGameDoneTimerTask'
 
-    def __init__(self, air, id):
-        DistCogdoGameAI.__init__(self, air, id)
+    def __init__(self, air):
+        DistCogdoGameAI.__init__(self, air)
         self.toonsOnEndPlatform = []
         self.toonsInWinState = []
         self.eagleId2targetIds = {}
@@ -106,10 +106,12 @@ class DistCogdoFlyingGameAI(DistCogdoGameAI):
 
     def requestAction(self, action, data):
         senderId = self.air.getAvatarIdFromSender()
-        if not self._validateSenderId(senderId) or not self._isPlayingGame(senderId):
-            return False
+        #if not self._validateSenderId(senderId) or not self._isPlayingGame(senderId):
+         #   return False
 
         av = simbase.air.doId2do.get(senderId)
+        if not av:
+            return 
         if action == Globals.AI.GameActions.LandOnWinPlatform:
             if senderId not in self.toonsOnEndPlatform:
                 self.toonsOnEndPlatform.append(senderId)
@@ -166,8 +168,12 @@ class DistCogdoFlyingGameAI(DistCogdoGameAI):
 
     def requestPickUp(self, pickupNum, pickupType):
         senderId = self.air.getAvatarIdFromSender()
-        if not self._validateSenderId(senderId) or not self._isPlayingGame(senderId):
-            return False
+        #if not self._validateSenderId(senderId) or not self._isPlayingGame(senderId):
+         #   return False
+        av = self.air.doId2do.get(senderId)
+        if not av:
+            return
+        
 
         if pickupType not in Globals.Level.GatherableTypes:
             self._reportSuspiciousEvent(senderId, 'Client %s has requested an illegal pickup type: %s.' % (senderId, pickupType))

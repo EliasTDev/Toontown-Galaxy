@@ -611,7 +611,7 @@ class DistributedSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
             difficulty = self.getActualLevel() - 1
             dept = SuitDNA.getSuitDept(self.dna.name)
             if self.buildingDestinationIsCogdo:
-                self.sp.cogdoTakeOver(blockNumber, dept, difficulty, self.buildingHeight)
+                self.sp.cogdoTakeOver(blockNumber, difficulty, self.buildingHeight, dept)
             else:
                 dept = SuitDNA.getSuitDept(self.dna.name)
                 self.sp.suitTakeOver(blockNumber, dept, difficulty, self.buildingHeight)
