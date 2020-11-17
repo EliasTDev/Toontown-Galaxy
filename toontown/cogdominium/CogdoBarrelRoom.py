@@ -51,7 +51,7 @@ class CogdoBarrelRoom:
         for i in range(len(CogdoBarrelRoomConsts.BarrelProps)):
             self.barrelPath = self.barrel.attachNewNode('%s%s'% (CogdoBarrelRoomConsts.BarrelPathName, i))
             self.barrelPath.setPos(CogdoBarrelRoomConsts.BarrelProps[i]['pos'])
-            self.barrePath.setH(CogdoBarrelRoomConsts.BarrelProps[i]['heading'])
+            self.barrelPath.setH(CogdoBarrelRoomConsts.BarrelProps[i]['heading'])
         self._isLoaded = True
 
 

@@ -471,14 +471,13 @@ class DistributedCogdoInteriorAI(DistributedObjectAI, FSM.FSM):
 
             toon = self.air.doId2do.get(v)
             if toon:
-                if self.FOType == 's':
-                    if not toon.attemptAddNPCFriend(self.sosNPC, Quests.InFO):
-                        self.notify.info('%s unable to add NPCFriend %s to %s.' % (self.doId, self.sosNPC, v))
-                elif self.FOType == 'l':
-                    reward = self.getEmblemsReward()
-                    toon.addEmblems(reward)
-                else:
-                    self.notify.warning('%s unable to reward %s: unknown reward for track %s' % (self.doId, v, self.FOType))
+                #if self.FOType == 's':
+                if not toon.attemptAddNPCFriend(self.sosNPC, Quests.InFO):
+                    self.notify.info('%s unable to add NPCFriend %s to %s.' % (self.doId, self.sosNPC, v))
+                #elif self.FOType == 'l':
+                    #TODO different reward from emblems like maybe cog summons only instead
+                #else:
+                   # self.notify.warning('%s unable to reward %s: unknown reward for track %s' % (self.doId, v, self.FOType))
 
         self.exterior.fsm.request('waitForVictorsFromCogdo', [
             victors,
@@ -524,17 +523,3 @@ class DistributedCogdoInteriorAI(DistributedObjectAI, FSM.FSM):
         DistributedObjectAI.delete(self)
         self.timer.stop()
 
-    def getEmblemsReward(self):
-        hoodIdMap = {2: .5, # Toontown Central
-                     1: 1., # Donald's Dock
-                     5: 1.5, # Daisy Gardens
-                     4: 2., # Minnie's Melodyland
-                     3: 2.7, # The Brrrgh
-                     9: 3.5 # Donald's Dreamland
-                     }
-
-        hoodValue = hoodIdMap[int(self.exterior.zoneId // 1000)]
-        diff = max(self.exterior.difficulty, 1)
-        memos = self.game.getTotalMemos()
-        E = (hoodValue * max(memos, 1) * diff) / 2.5
-        return divmod(E, 100)[::-1]
