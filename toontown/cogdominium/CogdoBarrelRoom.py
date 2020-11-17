@@ -37,8 +37,6 @@ class CogdoBarrelRoom:
         self.model.setPos(*CogdoBarrelRoomConsts.BarrelRoomModelPos)
         self.model.reparentTo(render)
         self.model.stash()
-        self.dummyElevInNode = self.model.attachNewNode('elevator-in')
-        self.dummyElevInNode.hide()
         self.entranceNode = self.model.attachNewNode('door-entrance')
         self.entranceNode.setPos(0, -65, 0)
         self.nearBattleNode = self.model.attachNewNode('near-battle')
@@ -49,7 +47,13 @@ class CogdoBarrelRoom:
         self.fog = Fog('barrel-room-fog')
         self.fog.setColor(CogdoBarrelRoomConsts.BarrelRoomFogColor)
         self.fog.setLinearRange(*CogdoBarrelRoomConsts.BarrelRoomFogLinearRange)
+        self.barrel = render.attachNewNode('@@CogdoBarrels')
+        for i in range(len(CogdoBarrelRoomConsts.BarrelProps)):
+            self.barrelPath = self.barrel.attachNewNode('%s%s'% (CogdoBarrelRoomConsts.BarrelPathName, i))
+            self.barrelPath.setPos(CogdoBarrelRoomConsts.BarrelProps[i]['pos'])
+            self.barrePath.setH(CogdoBarrelRoomConsts.BarrelProps[i]['heading'])
         self._isLoaded = True
+
 
     def unload(self):
         if self.model:
@@ -75,10 +79,9 @@ class CogdoBarrelRoom:
     def show(self):
         if not self.cogdoBarrelsNode:
             self.cogdoBarrelsNode = render.find('**/@@CogdoBarrels')
-            if not self.cogdoBarrelsNode or self.cogdoBarrelsNode.isEmpty():
-                cogdoBarrelsNode = render.attachNewNode('CogdoBarrels')
-            self.cogdoBarrelsNode.reparentTo(self.model)
-            self.cogdoBarrelsNode.unstash()
+            if not self.cogdoBarrelsNode.isEmpty():
+                self.cogdoBarrelsNode.reparentTo(self.model)
+                self.cogdoBarrelsNode.unstash()
         self.defaultFar = base.camLens.getFar()
         base.camLens.setFar(CogdoBarrelRoomConsts.BarrelRoomCameraFar)
         self.showBattleAreaLight(True)

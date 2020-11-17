@@ -32,7 +32,7 @@ class DistributedCogdoBarrel(DistributedObject.DistributedObject):
         cogdoBarrelsNode = render.find('@@CogdoBarrels')
         if not cogdoBarrelsNode or cogdoBarrelsNode.isEmpty():
             cogdoBarrelsNode = render.attachNewNode('CogdoBarrels')
-            cogdoBarrelsNode.stash()
+            #cogdoBarrelsNode.stash()
         self.model.reparentTo(cogdoBarrelsNode)
         self.availableTex = loader.loadTexture('phase_5/maps/tt_t_ara_cbr_Barrel_notUsed.jpg')
         self.usedTex = loader.loadTexture('phase_5/maps/tt_t_ara_cbr_Barrel_Used.jpg')

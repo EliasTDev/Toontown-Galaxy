@@ -11814,6 +11814,9 @@ CogdoExecutiveSuiteTitle = 'Executive Suite'
 CogdoExecutiveSuiteIntroMessage = "Oh no, they've got the shop keeper!\nDefeat the Cogs and free the captive."
 CogdoExecutiveSuiteToonThankYou = 'Thanks for the rescue!\nIf you need help in a fight, use this SOS card to call my friend %s.'
 CogdoExecutiveSuiteToonBye = 'Bye!'
+CogdoBarrelRoomTitle = 'Cog Barrel Room'
+CogdoBarrelRoomIntroDialog = 'Great work, Toons! You stopped the Stomp-O-Matic! You are now able to collect some of the stolen Laff barrels. Collect them before the Cogs come!'
+
 # Silly Surge Terms
 SillySurgeTerms = {
     1:  "Amusing Ascent!",

@@ -1,3 +1,4 @@
+#credit to toontown empire
 import random
 from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
@@ -22,6 +23,8 @@ from toontown.distributed import DelayDelete
 from toontown.toonbase import TTLocalizer
 from .CogdoExecutiveSuiteMovies import CogdoExecutiveSuiteIntro
 from .CogdoElevatorMovie import CogdoElevatorMovie
+from .CogdoBarrelRoomIntro import CogdoBarrelRoomIntro
+
 PENTHOUSE_DICT = {'s': 'tt_m_ara_crg_penthouse_sell',
  'l': 'tt_m_ara_crg_penthouse_law',
  'm': 'tt_m_ara_crg_penthouse_sell',
@@ -84,8 +87,8 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
         self.waitMusic = base.loader.loadMusic('phase_7/audio/bgm/encntr_toon_winning_indoor.ogg')
         self.elevatorMusic = base.loader.loadMusic('phase_7/audio/bgm/tt_elevator.ogg')
         self.fsm = ClassicFSM.ClassicFSM('DistributedCogdoInterior', [State.State('WaitForAllToonsInside', self.enterWaitForAllToonsInside, self.exitWaitForAllToonsInside, ['Elevator']),
-         State.State('Elevator', self.enterElevator, self.exitElevator, ['Game']),
-         State.State('Game', self.enterGame, self.exitGame, ['Resting', 'Failed', 'BarrelRoomIntro']),
+         State.State('Elevator', self.enterElevator, self.exitElevator, ['Game', 'BattleIntro', 'BarrelRoomIntro']),
+         State.State('Game', self.enterGame, self.exitGame, ['Resting', 'Failed', 'BattleIntro', 'BarrelRoomIntro', 'Elevator']),
          State.State('BarrelRoomIntro', self.enterBarrelRoomIntro, self.exitBarrelRoomIntro, ['CollectBarrels', 'Off']),
          State.State('CollectBarrels', self.enterCollectBarrels, self.exitCollectBarrels, ['BarrelRoomReward', 'Off']),
          State.State('BarrelRoomReward', self.enterBarrelRoomReward, self.exitBarrelRoomReward, ['Battle',
@@ -133,7 +136,7 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
         self.elevatorModelIn = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_csa_elevatorB')
         self.leftDoorIn = self.elevatorModelIn.find('**/left_door')
         self.rightDoorIn = self.elevatorModelIn.find('**/right_door')
-        self.elevatorModelOut = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_csa_elevatorB')
+        self.elevatorModelOut = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_csa_elevator')
         self.leftDoorOut = self.elevatorModelOut.find('**/left_door')
         self.rightDoorOut = self.elevatorModelOut.find('**/right_door')
 
@@ -476,7 +479,7 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
                 elevIn = self.floorModel.find('**/elevator-in')
                 elevOut = self.floorModel.find('**/elevator-out')
         elif self._wantBarrelRoom and self.currentFloor == 2 and self.FOType == 'l' and self.barrelRoom.isLoaded():
-            elevIn = self.barrelRoom.dummyElevInNode
+            elevIn = self.barrelRoom.model.find(CogdoBarrelRoomConsts.BarrelRoomElevatorInPath)
             elevOut = self.barrelRoom.model.find(CogdoBarrelRoomConsts.BarrelRoomElevatorOutPath)
             y = elevOut.getY(render)
             elevOut = elevOut.copyTo(render)
@@ -531,9 +534,10 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
             self.elevatorModelOut.detachNode()
             messenger.send('sellbotFieldOfficeChanged', [True])
         else:
-            self._movie = CogdoElevatorMovie()
-            self._movie.load()
-            self._movie.play()
+            if self.FOType == 's':
+                self._movie = CogdoElevatorMovie()
+                self._movie.load()
+                self._movie.play()
         self.__playElevator(ts, self.elevatorName, self.__handleElevatorDone)
         mult = ToontownBattleGlobals.getCreditMultiplier(self.currentFloor)
         base.localAvatar.inventory.setBattleCreditMultiplier(mult)
@@ -550,12 +554,16 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
         return None
 
     def __setupBarrelRoom(self):
-        base.cr.playGame.getPlace().fsm.request('stopped')
+        self.currentFloor += 1
         base.transitions.irisOut(0.0)
-        self.elevatorModelIn.detachNode()
+        self.elevatorModelOut.setY(-12)
+        self.elevatorModelIn.reparentTo(self.barrelRoom.model.find(CogdoBarrelRoomConsts.BarrelRoomElevatorInPath))
+        self.leftDoorIn.setPos(3.5, 0, 0)
+        self.rightDoorIn.setPos(-3.5, 0, 0)
         self._showExitElevator()
         self.barrelRoom.show()
         self.barrelRoom.placeToonsAtEntrance(self.toons)
+        self.setElevatorLights(self.elevatorModelOut)
 
     def barrelRoomIntroDone(self):
         self.sendUpdate('toonBarrelRoomIntroDone', [])
@@ -569,6 +577,9 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
                 self.accept(self.barrelRoomIntroDoneEvent, self.barrelRoomIntroDone)
                 self.activeIntervals[trackName] = self.barrelRoomIntroTrack
                 self.barrelRoomIntroTrack.start(ts)
+                self._movie = CogdoBarrelRoomIntro()
+                self._movie.load()
+                self._movie.play()
             else:
                 self._showExitElevator()
 

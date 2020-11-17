@@ -1,9 +1,9 @@
 from pandac.PandaModules import *
-CollectionTime = 30
-BarrelRoomIntroTimeout = 15.0
+CollectionTime = 1 # change this to 30 when we fix barrels missing
+BarrelRoomIntroTimeout = 12.0
 RewardUiTime = 5.0
-EndWithAllBarrelsCollected = False
-ShowRewardUI = False
+EndWithAllBarrelsCollected = True 
+ShowRewardUI = True
 AllBarrelsCollectedTime = 5.0
 ToonUp = (2, 4)
 BarrelProps = [{'pos': (-10, -66, 0),
@@ -55,6 +55,7 @@ StomperSound = 'phase_9/audio/sfx/CHQ_FACT_stomper_raise.ogg'
 MaxToons = 4
 BarrelRoomModel = 'phase_5/models/cogdominium/tt_m_ara_cbr_barrelRoom'
 BarrelRoomModelPos = (0, 0, 0)
+BarrelRoomElevatorInPath = '**/elevatorIn_locator'
 BarrelRoomElevatorOutPath = '**/elevatorOut_locator'
 BarrelRoomPlayerSpawnPoints = [(-4,
   0,
@@ -91,6 +92,10 @@ BarrelCollParams = (0,
  2.0)
 BarrelBumpSound = 'phase_4/audio/sfx/Golf_Hit_Barrier_2.ogg'
 BarrelGrabSound = 'phase_4/audio/sfx/SZ_DD_treasure.ogg'
+BarrelAvailableTexture = 'phase_5/maps/tt_t_ara_cbr_Barrel_notUsed.jpg'
+BarrelUsedTexture = 'phase_5/maps/tt_t_ara_cbr_Barrel_Used.jpg'
+BarrelPathName = 'CogdoBarrel_'
+
 StateHidden, StateAvailable, StateUsed, StateCrushed = list(range(4))
 
 def numBarrels():
