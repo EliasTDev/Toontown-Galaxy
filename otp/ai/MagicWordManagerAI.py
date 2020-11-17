@@ -234,7 +234,7 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
             if not hasattr(simbase.air, 'cogdoGame'):
                 response = 'There are no lawbot field office minigames on this district!'
             game = simbase.air.cogdoGame
-            game.requestAction(CogdoFlyingGameGlobals.AI.GameActions.LandOnWinPlatform, 0)
+            game.requestAction(CogdoFlyingGameGlobals.AI.GameActions.WinStateFinished, 0)
             response = 'Finished field office flying game!'
             self.down_setMagicWordResponse(senderId, response)
 

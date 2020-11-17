@@ -75,7 +75,7 @@ class CogdoBarrelRoom:
     def show(self):
         if not self.cogdoBarrelsNode:
             self.cogdoBarrelsNode = render.find('**/@@CogdoBarrels')
-            if not cogdoBarrelsNode or cogdoBarrelsNode.isEmpty():
+            if not self.cogdoBarrelsNode or self.cogdoBarrelsNode.isEmpty():
                 cogdoBarrelsNode = render.attachNewNode('CogdoBarrels')
             self.cogdoBarrelsNode.reparentTo(self.model)
             self.cogdoBarrelsNode.unstash()

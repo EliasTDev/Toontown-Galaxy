@@ -128,12 +128,17 @@ class DistCogdoFlyingGameAI(DistCogdoGameAI):
 
                     
         elif action == Globals.AI.GameActions.WinStateFinished:
-            if senderId not in self.toonsInWinState:
+            if config.GetBool('want-magic-words', 0):
                 self.toonsInWinState.append(senderId)
                 self.d_broadcastDoAction(action, senderId)
                 self.updateGameFinished()
             else:
-                self._reportSuspiciousEvent(senderId, 'Client %s wants to exit from the win state multiple times.' % senderId)
+                if senderId not in self.toonsInWinState:
+                    self.toonsInWinState.append(senderId)
+                    self.d_broadcastDoAction(action, senderId)
+                    self.updateGameFinished()
+                else:
+                    self._reportSuspiciousEvent(senderId, 'Client %s wants to exit from the win state multiple times.' % senderId)
         elif action == Globals.AI.GameActions.HitWhirlwind:
             if Globals.Dev.Invincibility != True:
                 self.damageToon(av, Globals.AI.SafezoneId2WhirlwindDamage)
