@@ -44,7 +44,7 @@ class DistributedNPCClerkAI(DistributedNPCToonBaseAI):
 
     def sendStartMovie(self, avId):
         assert self.notify.debug('sendStartMovie()')
-        #self.busy = avId
+        self.busy = avId
         self.sendUpdate("setMovie", [NPCToons.PURCHASE_MOVIE_START,
                         self.npcId, avId,
                         ClockDelta.globalClockDelta.getRealNetworkTime()])
@@ -55,7 +55,7 @@ class DistributedNPCClerkAI(DistributedNPCToonBaseAI):
                                 self.uniqueName('clearMovie'))
 
     def sendNoMoneyMovie(self, avId):
-        #self.busy = avId
+        self.busy = avId
         self.sendUpdate("setMovie", [NPCToons.PURCHASE_MOVIE_NO_MONEY,
                         self.npcId, avId,
                         ClockDelta.globalClockDelta.getRealNetworkTime()])
@@ -85,7 +85,7 @@ class DistributedNPCClerkAI(DistributedNPCToonBaseAI):
 
     def completePurchase(self, avId):
         assert self.notify.debug('completePurchase()')
-        #self.busy = avId
+        self.busy = avId
         # Send a movie to reward the avatar
         self.sendUpdate("setMovie", [NPCToons.PURCHASE_MOVIE_COMPLETE,
                         self.npcId, avId,

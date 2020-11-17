@@ -12,7 +12,7 @@ class DistributedNPCFishermanAI(DistributedNPCToonBaseAI):
         DistributedNPCToonBaseAI.__init__(self, air, npcId)
         # Fishermen are not in the business of giving out quests
         self.givesQuests = 0
-        #self.busy = 0
+        self.busy = 0
         
     def delete(self):
         taskMgr.remove(self.uniqueName('clearMovie'))
@@ -33,7 +33,7 @@ class DistributedNPCFishermanAI(DistributedNPCToonBaseAI):
             return
 
         av = self.air.doId2do[avId]
-        #self.busy = avId
+        self.busy = avId
 
         # Handle unexpected exit
         self.acceptOnce(self.air.getAvatarExitEvent(avId),

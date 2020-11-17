@@ -63,7 +63,7 @@ class DistributedNPCToonBaseAI(DistributedToonAI.DistributedToonAI):
         pass
 
     def isBusy(self):
-        return False
+        return self.busy > 0
 
     def getNpcId(self):
         return self.npcId
