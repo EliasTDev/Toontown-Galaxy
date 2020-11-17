@@ -5,6 +5,7 @@ from .BattleCalculatorAI import *
 from toontown.toonbase.ToontownBattleGlobals import *
 from .SuitBattleGlobals import *
 from direct.showbase.PythonUtil import addListsByValue
+from otp.otpbase import PythonUtil as ToonPythonUtil
 from . import DistributedBattleBaseAI
 from direct.task import Task
 from direct.directnotify import DirectNotifyGlobal
@@ -183,7 +184,7 @@ class DistributedBattleBldgAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
                 self.b_setState('Reward')
             else:
                 # calculate and assign the merits and item recoveries by floor
-                for floorNum, cogsThisFloor in PythonUtil.enumerate(self.suitsKilledPerFloor):
+                for floorNum, cogsThisFloor in ToonPythonUtil.enumerate(self.suitsKilledPerFloor):
                     for toonId in self.activeToons:
                         toon = self.getToon(toonId)
                         if toon:

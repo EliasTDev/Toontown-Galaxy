@@ -46,7 +46,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
     SUIT_INIT_HEIGHT = 125
 
     # Where to load the takeover sound effects from
-    TAKEOVER_SFX_PREFIX = "phase_5/audio/sfx/"
+    TAKEOVER_SFX_PREFIX = "resources/phase_5/audio/sfx/"
 
     def __init__(self, cr):
         """constructor for the DistributedBuilding"""
@@ -557,7 +557,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             self.cogDropSound = base.loader.loadSfx(self.TAKEOVER_SFX_PREFIX + "cogbldg_drop.ogg")
             self.cogLandSound = base.loader.loadSfx(self.TAKEOVER_SFX_PREFIX + "cogbldg_land.ogg")
             self.cogSettleSound = base.loader.loadSfx(self.TAKEOVER_SFX_PREFIX + "cogbldg_settle.ogg")
-            self.openSfx = base.loader.loadSfx("phase_5/audio/sfx/elevator_door_open.ogg")
+            self.openSfx = base.loader.loadSfx("resources/phase_5/audio/sfx/elevator_door_open.ogg")
 
     def loadAnimToToonSfx(self):
         """loadAnimToToonSfx(self)
@@ -567,7 +567,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             self.cogWeakenSound = base.loader.loadSfx(self.TAKEOVER_SFX_PREFIX + "cogbldg_weaken.ogg")
             self.toonGrowSound = base.loader.loadSfx(self.TAKEOVER_SFX_PREFIX + "toonbldg_grow.ogg")
             self.toonSettleSound = base.loader.loadSfx(self.TAKEOVER_SFX_PREFIX + "toonbldg_settle.ogg")
-            self.openSfx = base.loader.loadSfx("phase_5/audio/sfx/elevator_door_open.ogg")
+            self.openSfx = base.loader.loadSfx("resources/phase_5/audio/sfx/elevator_door_open.ogg")
 
     def unloadSfx(self):
         """unloadSfx(self)

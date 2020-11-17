@@ -425,7 +425,7 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
             elif config.GetBool('want-bossbotdo', 0) and self.FOType == 'c':
                 self.floorModel = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_crg_penthouse_boss')
                         
-            #if its still None 
+            #if its still None, this is kinda hacky for ocassions like lawbot field office , should find a better fix in future
             if self.floorModel is None:
                 self.floorModel = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_crg_penthouse_sell')
 
@@ -493,12 +493,13 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
         self.elevOut = elevOut
         self._haveEntranceElevator.set(True)
         for index in range(len(self.suits)):
-            self.suits[index].setPos(SuitPositions[index])
-            if len(self.suits) > 2:
-                self.suits[index].setH(SuitHs[index])
-            else:
-                self.suits[index].setH(170)
-            self.suits[index].loop('neutral')
+            if not  self.suits[index].isEmpty(): 
+                self.suits[index].setPos(SuitPositions[index])
+                if len(self.suits) > 2:
+                    self.suits[index].setH(SuitHs[index])
+                else:
+                    self.suits[index].setH(170)
+                self.suits[index].loop('neutral')
 
         for toon in self.toons:
             toon.reparentTo(self.elevatorModelIn)

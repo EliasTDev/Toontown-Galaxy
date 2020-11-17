@@ -41,10 +41,10 @@ class BattleSounds:
             self.sfxSearchPath.appendDirectory(Filename.expandFrom('$TT_5_ROOT/phase_5/audio/sfx'))
         else:
             # In other environments, including the dev environment, look here:
-            self.sfxSearchPath.appendDirectory(Filename('phase_3/audio/sfx'))
-            self.sfxSearchPath.appendDirectory(Filename('phase_3.5/audio/sfx'))
-            self.sfxSearchPath.appendDirectory(Filename('phase_4/audio/sfx'))
-            self.sfxSearchPath.appendDirectory(Filename('phase_5/audio/sfx'))
+            self.sfxSearchPath.appendDirectory(Filename('resources/phase_3/audio/sfx'))
+            self.sfxSearchPath.appendDirectory(Filename('resources/phase_3.5/audio/sfx'))
+            self.sfxSearchPath.appendDirectory(Filename('resources/phase_4/audio/sfx'))
+            self.sfxSearchPath.appendDirectory(Filename('resources/phase_5/audio/sfx'))
             self.sfxSearchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$TTMODELS/built/phase_3/audio/sfx')))
             self.sfxSearchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$TTMODELS/built/phase_3.5/audio/sfx')))
             self.sfxSearchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$TTMODELS/built/phase_4/audio/sfx')))
