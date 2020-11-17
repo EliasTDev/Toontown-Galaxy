@@ -6,6 +6,7 @@ from toontown.quest import TrackChoiceGui
 from toontown.toonbase import TTLocalizer
 from toontown.hood import ZoneUtil
 from toontown.toontowngui import TeaserPanel
+from libotp import CFSpeech, CFTimeout
 
 ChoiceTimeout = 20
 

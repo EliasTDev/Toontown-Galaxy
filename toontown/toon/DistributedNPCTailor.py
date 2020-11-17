@@ -8,6 +8,7 @@ from . import TailorClothesGUI
 from toontown.toonbase import TTLocalizer
 from . import ToonDNA
 from toontown.estate import ClosetGlobals
+from libotp import CFSpeech, CFTimeout
 
 class DistributedNPCTailor(DistributedNPCToonBase):
 

@@ -19,6 +19,7 @@ from direct.showbase import PythonUtil
 from pandac.PandaModules import *
 from otp.avatar import Emote
 from direct.directnotify import DirectNotifyGlobal
+from libotp import CFSpeech, CFTimeout
 
 # The emoteHandlerFunc takes an emote name from the SpeedChat menu
 # and calls setAnimState function for the toon
