@@ -1,12 +1,10 @@
-from pandac.PandaModules import *
-
+from panda3d.core import *
 from direct.showbase import DirectObject
 from toontown.suit import SuitDNA
 from direct.directnotify import DirectNotifyGlobal
 from . import LevelBattleManagerAI
 import types
 import random
-
 class LevelSuitPlannerAI(DirectObject.DirectObject):
 
     notify = DirectNotifyGlobal.directNotify.newCategory(
@@ -57,7 +55,7 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
         joinChances = []
         for currChance in range( num ):
             joinChances.append( random.randint( 1, 100 ) )
-        joinChances.sort( cmp )
+        joinChances.sort()
         return joinChances
 
     def __genSuitInfos(self, level, track):
