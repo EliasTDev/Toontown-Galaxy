@@ -1,6 +1,6 @@
 from direct.directnotify import DirectNotifyGlobal
 from panda3d.core import *
-from libotp import *
+
 from libtoontown import *
 from otp.ai.AIZoneData import AIZoneDataStore
 from otp.ai.TimeManagerAI import TimeManagerAI
