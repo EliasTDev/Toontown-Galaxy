@@ -167,7 +167,7 @@ class DistributedNPCToonBase(DistributedToon.DistributedToon):
         # Ignore avatars now to prevent unnecessary requestInteractions when we know
         # this npc is busy right now. If another toon did manage to request interaction
         # before we starting ignoring, he will get a freeAvatar message from the server
-        self.ignoreAvatars()
+        #self.ignoreAvatars()
         # Make us face each other
         # TODO: make this a lerp
         av.headsUp(self, 0, 0, 0)
