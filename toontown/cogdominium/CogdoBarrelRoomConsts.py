@@ -1,5 +1,5 @@
 from pandac.PandaModules import *
-CollectionTime = 1 # change this to 30 when we fix barrels missing
+CollectionTime = 30
 BarrelRoomIntroTimeout = 12.0
 RewardUiTime = 5.0
 EndWithAllBarrelsCollected = True 
