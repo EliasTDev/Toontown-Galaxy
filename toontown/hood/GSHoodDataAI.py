@@ -6,7 +6,7 @@ from pandac.PandaModules import *
 from toontown.racing.RaceGlobals import *
 from toontown.classicchars import DistributedGoofySpeedwayAI
 
-from libtoontown import DNAData, DNAStorage
+from libpandadna import DNAData, DNAStorage
 
 if( __debug__):
     import pdb

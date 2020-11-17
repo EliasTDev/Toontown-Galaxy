@@ -14,7 +14,7 @@ from toontown.char import Char
 from toontown.suit import SuitDNA
 from toontown.suit import Suit
 from toontown.quest import QuestParser
-from libtoontown import DNAStorage, DNADoor
+from libpandadna import DNAStorage, DNADoor
 
 class DistributedTutorialInterior(DistributedObject.DistributedObject):
 

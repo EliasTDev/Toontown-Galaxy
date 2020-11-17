@@ -16,7 +16,7 @@ from toontown.catalog import CatalogWallpaperItem
 from toontown.catalog import CatalogFlooringItem
 from toontown.catalog import CatalogMouldingItem
 from toontown.catalog import CatalogWainscotingItem
-from libtoontown import DNADoor
+from libpandadna import DNADoor
 
 WindowPlugNames = (
     "**/windowcut_a*",

@@ -14,7 +14,7 @@ from toontown.hood import ZoneUtil
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import ToontownBattleGlobals
 from toontown.hood import HoodUtil
-from libtoontown import DNAStorage, DNAInteractiveProp, DNASuitPoint
+from libpandadna import DNAStorage, DNAInteractiveProp, DNASuitPoint
 
 class SuitPlannerBase:
     """
