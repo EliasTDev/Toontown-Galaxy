@@ -3,7 +3,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
 from toontown.toonbase import ToontownGlobals, ToontownIntervals
 from toontown.cogdominium import CogdoBarrelRoomConsts
-
+import random 
 class DistributedCogdoBarrel(DistributedObject.DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCogdoBarrel')
 
@@ -17,6 +17,7 @@ class DistributedCogdoBarrel(DistributedObject.DistributedObject):
         self.collNodePath = None
         self.availableTex = None
         self.usedTex = None
+        self.barrelLaff = 0
         return
 
     def generate(self):
@@ -110,9 +111,11 @@ class DistributedCogdoBarrel(DistributedObject.DistributedObject):
         self.sendUpdate('requestGrab', [])
 
     def setGrab(self, avId):
+
         if avId == base.localAvatar.doId:
             ToontownIntervals.start(ToontownIntervals.getPulseIval(self.model, self.__pulseIvalName(), 1.15, duration=0.2))
             self.setState(CogdoBarrelRoomConsts.StateUsed)
+            self.barrelLaff = random.randint(*CogdoBarrelRoomConsts.ToonUp)
 
     def setReject(self):
         pass
@@ -122,3 +125,6 @@ class DistributedCogdoBarrel(DistributedObject.DistributedObject):
 
     def __str__(self):
         return 'Barrel %s' % self.index
+
+    def getBarrelLaff(self):
+        return self.barrelLaff
