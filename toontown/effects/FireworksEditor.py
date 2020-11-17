@@ -17,7 +17,7 @@ MAX_AMP = 100
 
 ttmodelsDirectory = Filename.expandFrom("$TTMODELS")
 
-UppercaseColorNames = list(map(string.upper, ColorNames))
+UppercaseColorNames = list(map(ColorNames.upper()))
 
 dnaDirectory = Filename.expandFrom(base.config.GetString("dna-directory", "$TTMODELS/src/dna"))
         

@@ -1390,7 +1390,7 @@ class TTCodeRedemptionMgrUD(DistributedObjectGlobalUD):
                 for char in values.lotName:
                     # lot names can only contain lowercase ASCII letters, numbers, and underscores
                     if ((char not in (string.ascii_letters + string.digits + '_')) or
-                        ((char in string.ascii_letters) and (string.upper(char) == char))):
+                        ((char in string.ascii_letters) and char.upper() == char))):
                         errors.add('lotName', self.CreateErrors.InvalidCharInLotName)
 
                 if values.lotName in self._db.getLotNames():
