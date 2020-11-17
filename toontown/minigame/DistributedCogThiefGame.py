@@ -199,11 +199,11 @@ class DistributedCogThiefGame(DistributedMinigame):
         self.toonPieTracks = {}
 
         self.sndOof = base.loader.loadSfx(
-            'phase_4/audio/sfx/MG_cannon_hit_dirt.mp3')
+            'phase_4/audio/sfx/MG_cannon_hit_dirt.ogg')
         self.sndRewardTick = base.loader.loadSfx(\
-                                 "phase_3.5/audio/sfx/tick_counter.mp3")
+                                 "phase_3.5/audio/sfx/tick_counter.ogg")
         self.sndPerfect = base.loader.loadSfx(
-            "phase_4/audio/sfx/ring_perfect.mp3")
+            "phase_4/audio/sfx/ring_perfect.ogg")
 
 
         self.timer = ToontownTimer.ToontownTimer()
@@ -321,11 +321,11 @@ class DistributedCogThiefGame(DistributedMinigame):
             }
         for i in range(self.numPlayers):
             self.sndTable["hitBySuit"][i] =  base.loader.loadSfx(
-                "phase_4/audio/sfx/MG_Tag_C.mp3"
-                #"phase_4/audio/sfx/MG_cannon_fire_alt.mp3"
+                "phase_4/audio/sfx/MG_Tag_C.ogg"
+                #"phase_4/audio/sfx/MG_cannon_fire_alt.ogg"
                 )
             self.sndTable["falling"][i] = base.loader.loadSfx(
-                "phase_4/audio/sfx/MG_cannon_whizz.mp3")            
+                "phase_4/audio/sfx/MG_cannon_whizz.ogg")            
 
         # Start music
         # RAUTODO low level bug, music volume playing at full blast even
@@ -1105,7 +1105,7 @@ class DistributedCogThiefGame(DistributedMinigame):
         if pieType == 'actor':
             animPie = ActorInterval(pie, pieName, startFrame = 48)
 
-        sound = loader.loadSfx('phase_3.5/audio/sfx/AA_pie_throw_only.mp3')
+        sound = loader.loadSfx('phase_3.5/audio/sfx/AA_pie_throw_only.ogg')
 
         # First, create a ProjectileInterval to compute the relative
         # velocity.

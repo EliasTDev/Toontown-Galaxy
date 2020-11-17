@@ -291,8 +291,8 @@ class TwoDEnemy(DirectObject):
         
         treasureSpawnPoint = Point3(self.suit.getX(), self.suit.getY(), self.suit.getZ() + self.suit.height / 2.)
         gearPoint = Point3(0, 0, self.suit.height / 2. + 2.)
-        spinningSound = base.loader.loadSfx("phase_3.5/audio/sfx/Cog_Death.mp3")
-        deathSound = base.loader.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.mp3")
+        spinningSound = base.loader.loadSfx("phase_3.5/audio/sfx/Cog_Death.ogg")
+        deathSound = base.loader.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.ogg")
         
         smallGears = BattleParticles.createParticleEffect(file='gearExplosionSmall')
         singleGear = BattleParticles.createParticleEffect('GearExplosion', numParticles = 1)

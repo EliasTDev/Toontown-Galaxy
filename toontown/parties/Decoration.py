@@ -200,7 +200,7 @@ class Decoration(NodePath):
             st = random.randint(0,10)
             animIval = ActorInterval(self.hydra, "dance")
             animIvalDur = animIval.getDuration()
-            self.decSfx = loader.loadSfx("phase_13/audio/sfx/tt_s_ara_pty_propsShow_dance.mp3")
+            self.decSfx = loader.loadSfx("phase_13/audio/sfx/tt_s_ara_pty_propsShow_dance.ogg")
             soundIval = SoundInterval(self.decSfx,
                                    node=self.hydra,
                                    listenerNode = base.localAvatar,
@@ -222,7 +222,7 @@ class Decoration(NodePath):
             st = random.randint(0,10)
             animIval = ActorInterval(self.tubeCog, "wave")
             animIvalDur = animIval.getDuration()
-            self.decSfx = loader.loadSfx("phase_13/audio/sfx/tt_s_ara_pty_tubeCogVictory_wave.mp3")
+            self.decSfx = loader.loadSfx("phase_13/audio/sfx/tt_s_ara_pty_tubeCogVictory_wave.ogg")
             soundIval = SoundInterval(self.decSfx,
                                    node=self.tubeCog,
                                    listenerNode = base.localAvatar,

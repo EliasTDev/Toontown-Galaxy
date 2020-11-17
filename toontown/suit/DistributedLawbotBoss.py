@@ -132,19 +132,19 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             }
         self.setDisplayName(nameInfo)
 
-        self.piesRestockSfx = loader.loadSfx('phase_5/audio/sfx/LB_receive_evidence.mp3')
-        self.rampSlideSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_VP_ramp_slide.mp3')
+        self.piesRestockSfx = loader.loadSfx('phase_5/audio/sfx/LB_receive_evidence.ogg')
+        self.rampSlideSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_VP_ramp_slide.ogg')
 
-        self.evidenceHitSfx = loader.loadSfx('phase_11/audio/sfx/LB_evidence_hit.mp3')
-        self.warningSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_GOON_tractor_beam_alarmed.mp3')
+        self.evidenceHitSfx = loader.loadSfx('phase_11/audio/sfx/LB_evidence_hit.ogg')
+        self.warningSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_GOON_tractor_beam_alarmed.ogg')
 
         self.juryMovesSfx = loader.loadSfx('phase_11/audio/sfx/LB_jury_moves.wav')
-        self.toonUpSfx = loader.loadSfx('phase_11/audio/sfx/LB_toonup.mp3')
+        self.toonUpSfx = loader.loadSfx('phase_11/audio/sfx/LB_toonup.ogg')
         
         # We need a different copy of the sfx for each strafe disk.
         self.strafeSfx = []
         for i in range(10):
-            self.strafeSfx.append(loader.loadSfx('phase_3.5/audio/sfx/SA_shred.mp3'))
+            self.strafeSfx.append(loader.loadSfx('phase_3.5/audio/sfx/SA_shred.ogg'))
 
         # Anything in the world we hit that's *not* the BossCog
         # inherits this global pieCode, so the splat will be colored

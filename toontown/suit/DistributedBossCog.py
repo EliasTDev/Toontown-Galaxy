@@ -727,10 +727,10 @@ class DistributedBossCog(DistributedAvatar.DistributedAvatar,
         if self.rightDoor.isEmpty():
             self.rightDoor = self.elevatorModel.find("**/right_door")
 
-        self.openSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_door_open_sliding.mp3")
-        self.finalOpenSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_door_open_final.mp3")
-        self.closeSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_door_open_sliding.mp3")
-        self.finalCloseSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_door_open_final.mp3")
+        self.openSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_door_open_sliding.ogg")
+        self.finalOpenSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_door_open_final.ogg")
+        self.closeSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_door_open_sliding.ogg")
+        self.finalCloseSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_door_open_final.ogg")
         self.openDoors = ElevatorUtils.getOpenInterval(self, self.leftDoor, self.rightDoor,
                                                        self.openSfx, self.finalOpenSfx,
                                                        self.elevatorType)

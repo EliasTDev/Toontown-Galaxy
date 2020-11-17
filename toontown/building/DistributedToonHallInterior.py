@@ -352,25 +352,25 @@ class DistributedToonHallInterior(DistributedToonInterior):
         
         self.audio3d = Audio3DManager.Audio3DManager(base.sfxManagerList[0], camera)
         
-        self.phase1Sfx = self.audio3d.loadSfx("phase_4/audio/sfx/tt_s_prp_sillyMeterPhaseOne.mp3")
+        self.phase1Sfx = self.audio3d.loadSfx("phase_4/audio/sfx/tt_s_prp_sillyMeterPhaseOne.ogg")
         self.phase1Sfx.setLoop(True)
         
-        self.phase2Sfx = self.audio3d.loadSfx("phase_4/audio/sfx/tt_s_prp_sillyMeterPhaseTwo.mp3")
+        self.phase2Sfx = self.audio3d.loadSfx("phase_4/audio/sfx/tt_s_prp_sillyMeterPhaseTwo.ogg")
         self.phase2Sfx.setLoop(True)
 
-        self.phase3Sfx = self.audio3d.loadSfx("phase_4/audio/sfx/tt_s_prp_sillyMeterPhaseThree.mp3")
+        self.phase3Sfx = self.audio3d.loadSfx("phase_4/audio/sfx/tt_s_prp_sillyMeterPhaseThree.ogg")
         self.phase3Sfx.setLoop(True)
 
-        self.phase4Sfx = self.audio3d.loadSfx("phase_4/audio/sfx/tt_s_prp_sillyMeterPhaseFour.mp3")
+        self.phase4Sfx = self.audio3d.loadSfx("phase_4/audio/sfx/tt_s_prp_sillyMeterPhaseFour.ogg")
         self.phase4Sfx.setLoop(True)
         
-        self.phase4To5Sfx = self.audio3d.loadSfx("phase_4/audio/sfx/tt_s_prp_sillyMeterPhaseFourToFive.mp3")
+        self.phase4To5Sfx = self.audio3d.loadSfx("phase_4/audio/sfx/tt_s_prp_sillyMeterPhaseFourToFive.ogg")
         self.phase4To5Sfx.setLoop(False)
         
-        self.phase5Sfx = self.audio3d.loadSfx("phase_4/audio/sfx/tt_s_prp_sillyMeterPhaseFive.mp3")
+        self.phase5Sfx = self.audio3d.loadSfx("phase_4/audio/sfx/tt_s_prp_sillyMeterPhaseFive.ogg")
         self.phase5Sfx.setLoop(True)
         
-        self.arrowSfx = self.audio3d.loadSfx("phase_4/audio/sfx/tt_s_prp_sillyMeterArrow.mp3") # The arrow reaches its destination
+        self.arrowSfx = self.audio3d.loadSfx("phase_4/audio/sfx/tt_s_prp_sillyMeterArrow.ogg") # The arrow reaches its destination
         self.arrowSfx.setLoop(False)
         
         self.audio3d.setDropOffFactor(0.1)

@@ -461,7 +461,7 @@ class DistributedLawnDecor(DistributedNode.DistributedNode, NodePath, ShadowCast
     def generateDigupTrack( self, toon):
         """
         """
-        sound = loader.loadSfx('phase_5.5/audio/sfx/burrow.mp3')
+        sound = loader.loadSfx('phase_5.5/audio/sfx/burrow.ogg')
         sound.setPlayRate(0.5)
         pos = self.model.getPos()
         pos.setZ(pos[2]-1)

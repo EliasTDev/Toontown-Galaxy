@@ -24,11 +24,6 @@ from toontown.toonbase import TTLocalizer
 from .CogdoExecutiveSuiteMovies import CogdoExecutiveSuiteIntro
 from .CogdoElevatorMovie import CogdoElevatorMovie
 from .CogdoBarrelRoomIntro import CogdoBarrelRoomIntro
-
-PENTHOUSE_DICT = {'s': 'tt_m_ara_crg_penthouse_sell',
- 'l': 'tt_m_ara_crg_penthouse_law',
- 'm': 'tt_m_ara_crg_penthouse_sell',
- 'c': 'tt_m_ara_crg_penthouse_sell'}
 PAINTING_DICT = {'s': 'tt_m_ara_crg_paintingMoverShaker',
  'l': 'tt_m_ara_crg_paintingLegalEagle',
  'm': 'tt_m_ara_crg_paintingMoverShaker',
@@ -421,14 +416,19 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
             SuitPositions = self.BottomFloor_SuitPositions
         if self.isBossFloor(self.currentFloor):
             self.barrelRoom.unload()
-            if self.FOType:
-                penthouse = PENTHOUSE_DICT.get(self.FOType)
-                for x in range(len(PENTHOUSE_DICT)):
-                    self.floorModel = loader.loadModel('phase_5/models/cogdominium/%s' % penthouse)
+            if self.FOType == 's':
+                self.floorModel = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_crg_penthouse_sell')
+            elif self.FOType == 'l':
+                self.floorModel = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_crg_penthouse_law')
+            elif config.GetBool('want-cashbotdo', 0) and self.FOType == 'm':
+                self.floorModel = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_crg_penthouse_cash')
+            elif config.GetBool('want-bossbotdo', 0) and self.FOType == 'c':
+                self.floorModel = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_crg_penthouse_boss')
+                        
+            #if its still None 
+            if self.floorModel is None:
+                self.floorModel = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_crg_penthouse_sell')
 
-
-
-            #self.floorModel = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_crg_penthouse')
             self.cage = self.floorModel.find('**/cage')
             pos = self.cage.getPos()
             self.cagePos = []

@@ -5,7 +5,7 @@ class DistributedTagTreasure(DistributedTreasure.DistributedTreasure):
     def __init__(self, cr):
         DistributedTreasure.DistributedTreasure.__init__(self, cr)
         self.modelPath = "phase_4/models/props/icecream"
-        self.grabSoundPath = "phase_4/audio/sfx/SZ_DD_treasure.mp3"
+        self.grabSoundPath = "phase_4/audio/sfx/SZ_DD_treasure.ogg"
         # listen for the minigame's offstage event so we can hide ourselves
         # this hook is cleared by an ignoreAll() in DistributedTreasure
         self.accept('minigameOffstage', self.handleMinigameOffstage)

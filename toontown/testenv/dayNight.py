@@ -7,12 +7,12 @@ dayMusic = loader.loadMusic("phase_4/audio/bgm/TC_nbrhood.ogg")
 nightMusic = loader.loadMusic("phase_8/audio/bgm/DL_nbrhood.ogg")
 
 # Load up some sfx
-birdSfx1 = loader.loadSfx("phase_8/audio/sfx/SZ_DG_bird_01.mp3")
-birdSfx2 = loader.loadSfx("phase_8/audio/sfx/SZ_DG_bird_02.mp3")
-birdSfx3 = loader.loadSfx("phase_8/audio/sfx/SZ_DG_bird_03.mp3")
-cricket1 = loader.loadSfx("/c/soundelux/Estate_Cricket_1.mp3")
-cricket2 = loader.loadSfx("/c/soundelux/Estate_Cricket_2.mp3")
-rooster = loader.loadSfx("/c/soundelux/Estate_rooster.mp3")
+birdSfx1 = loader.loadSfx("phase_8/audio/sfx/SZ_DG_bird_01.ogg")
+birdSfx2 = loader.loadSfx("phase_8/audio/sfx/SZ_DG_bird_02.ogg")
+birdSfx3 = loader.loadSfx("phase_8/audio/sfx/SZ_DG_bird_03.ogg")
+cricket1 = loader.loadSfx("/c/soundelux/Estate_Cricket_1.ogg")
+cricket2 = loader.loadSfx("/c/soundelux/Estate_Cricket_2.ogg")
+rooster = loader.loadSfx("/c/soundelux/Estate_rooster.ogg")
 
 # No more tt birds chirping
 taskMgr.remove("TT-birds")

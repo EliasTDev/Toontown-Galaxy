@@ -18,13 +18,13 @@ from direct.task import Task
 from libotp import CFSpeech, CFTimeout
 notify = DirectNotifyGlobal.directNotify.newCategory('MovieHeal')
 
-soundFiles = ('AA_heal_tickle.mp3',
-              'AA_heal_telljoke.mp3',
-              'AA_heal_smooch.mp3',
-              'AA_heal_happydance.mp3',
-              'AA_heal_pixiedust.mp3',
-              'AA_heal_juggle.mp3', 
-              'AA_heal_High_Dive.mp3')#UBER
+soundFiles = ('AA_heal_tickle.ogg',
+              'AA_heal_telljoke.ogg',
+              'AA_heal_smooch.ogg',
+              'AA_heal_happydance.ogg',
+              'AA_heal_pixiedust.ogg',
+              'AA_heal_juggle.ogg', 
+              'AA_heal_High_Dive.ogg')#UBER
 
 healPos = Point3(0, 0, 0)
 healHpr = Vec3(180.0, 0, 0)

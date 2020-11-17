@@ -271,21 +271,21 @@ class DistributedCannonGame(DistributedMinigame):
             )
 
         self.sndCannonMove = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_adjust.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_adjust.ogg")
         self.sndCannonFire = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_fire_alt.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_fire_alt.ogg")
         self.sndHitGround  = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_hit_dirt.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_hit_dirt.ogg")
         self.sndHitTower   = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_hit_tower.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_hit_tower.ogg")
         self.sndHitWater   = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_splash.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_splash.ogg")
         self.sndWhizz      = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_whizz.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_whizz.ogg")
         self.sndWin        = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_win.mp3")
+                                 "phase_4/audio/sfx/MG_win.ogg")
         self.sndRewardTick = base.loader.loadSfx(\
-                                 "phase_3.5/audio/sfx/tick_counter.mp3")
+                                 "phase_3.5/audio/sfx/tick_counter.ogg")
 
         # set up the cannon aiming/firing gui
         guiModel = "phase_4/models/gui/cannon_game_gui"

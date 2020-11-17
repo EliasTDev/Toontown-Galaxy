@@ -102,7 +102,7 @@ class DistributedPartyFireworksActivity(DistributedPartyActivity, FireworkShowMi
         
         self.rocketParticleSeq = None
         
-        self.launchSound = base.loader.loadSfx("phase_13/audio/sfx/rocket_launch.mp3")
+        self.launchSound = base.loader.loadSfx("phase_13/audio/sfx/rocket_launch.ogg")
         
         # create state machine and set initial state
         self.activityFSM = FireworksActivityFSM( self )

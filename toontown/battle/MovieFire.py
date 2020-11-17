@@ -18,23 +18,23 @@ notify = DirectNotifyGlobal.directNotify.newCategory('MovieThrow')
 # for creampie and fruitpie, wholecreampie and whole fruitpie and bdaycake
 # so the sound and animation can be synced at the end of variable-length throw
 # until we get these sounds, we just use these 'only' sounds as placeholders
-hitSoundFiles = ('AA_tart_only.mp3',
-                 'AA_slice_only.mp3',
-                 'AA_slice_only.mp3',
-                 'AA_slice_only.mp3',
-                 'AA_slice_only.mp3',
-                 'AA_wholepie_only.mp3',
-                 'AA_wholepie_only.mp3',) #UBER
+hitSoundFiles = ('AA_tart_only.ogg',
+                 'AA_slice_only.ogg',
+                 'AA_slice_only.ogg',
+                 'AA_slice_only.ogg',
+                 'AA_slice_only.ogg',
+                 'AA_wholepie_only.ogg',
+                 'AA_wholepie_only.ogg',) #UBER
 
 # need miss 'hitting' sounds to be separated from the 'throw' sounds
 # so the sound and animation can be synced at the end of variable-length throw
-# until we get these sounds, we just use 'AA_pie_throw_only.mp3' for all misses
-#missSoundFiles = ('AA_pie_throw_only.mp3',
-#                  'AA_pie_throw_only.mp3',
-#                  'AA_pie_throw_only.mp3',
-#                  'AA_pie_throw_only.mp3',
-#                  'AA_pie_throw_only.mp3',
-#                  'AA_pie_throw_only.mp3',)
+# until we get these sounds, we just use 'AA_pie_throw_only.ogg' for all misses
+#missSoundFiles = ('AA_pie_throw_only.ogg',
+#                  'AA_pie_throw_only.ogg',
+#                  'AA_pie_throw_only.ogg',
+#                  'AA_pie_throw_only.ogg',
+#                  'AA_pie_throw_only.ogg',
+#                  'AA_pie_throw_only.ogg',)
 
 #tPieLeavesHand = 2.755
 tPieLeavesHand = 2.7
@@ -309,7 +309,7 @@ def __pieMissGroupLerpCallback(t, missDict):
 
 def __getSoundTrack(level, hitSuit, node=None):
 
-    throwSound = globalBattleSoundCache.getSound('AA_drop_trigger_box.mp3')
+    throwSound = globalBattleSoundCache.getSound('AA_drop_trigger_box.ogg')
 
     throwTrack = Sequence(Wait(2.15), SoundInterval(throwSound, node=node))
 
@@ -445,16 +445,16 @@ def __throwPie(throw, delay, hitCount, showCannon = 1):
         smoke.hide()
         smoke.setBillboardPointEye()
         
-        soundBomb = base.loader.loadSfx("phase_4/audio/sfx/MG_cannon_fire_alt.mp3")
+        soundBomb = base.loader.loadSfx("phase_4/audio/sfx/MG_cannon_fire_alt.ogg")
         playSoundBomb = SoundInterval(soundBomb,node=cannonHolder)
         
-        soundFly = base.loader.loadSfx("phase_4/audio/sfx/firework_whistle_01.mp3")
+        soundFly = base.loader.loadSfx("phase_4/audio/sfx/firework_whistle_01.ogg")
         playSoundFly = SoundInterval(soundFly,node=cannonHolder)
         
-        soundCannonAdjust = base.loader.loadSfx("phase_4/audio/sfx/MG_cannon_adjust.mp3")
+        soundCannonAdjust = base.loader.loadSfx("phase_4/audio/sfx/MG_cannon_adjust.ogg")
         playSoundCannonAdjust = SoundInterval(soundCannonAdjust, duration = 0.6 ,node=cannonHolder)
         
-        soundCogPanic = base.loader.loadSfx("phase_5/audio/sfx/ENC_cogafssm.mp3")
+        soundCogPanic = base.loader.loadSfx("phase_5/audio/sfx/ENC_cogafssm.ogg")
         playSoundCogPanic = SoundInterval(soundCogPanic,node=cannonHolder)
     
     

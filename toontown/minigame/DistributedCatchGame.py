@@ -164,14 +164,14 @@ class DistributedCatchGame(DistributedMinigame):
             model.flattenMedium()
 
         self.music = base.loader.loadMusic("phase_4/audio/bgm/MG_toontag.ogg")
-        self.sndGoodCatch = base.loader.loadSfx('phase_4/audio/sfx/SZ_DD_treasure.mp3')
+        self.sndGoodCatch = base.loader.loadSfx('phase_4/audio/sfx/SZ_DD_treasure.ogg')
         self.sndOof = base.loader.loadSfx(
-            'phase_4/audio/sfx/MG_cannon_hit_dirt.mp3')
+            'phase_4/audio/sfx/MG_cannon_hit_dirt.ogg')
         self.sndAnvilLand = base.loader.loadSfx(
-            'phase_4/audio/sfx/AA_drop_anvil_miss.mp3')
+            'phase_4/audio/sfx/AA_drop_anvil_miss.ogg')
 
         self.sndPerfect = base.loader.loadSfx(
-            "phase_4/audio/sfx/ring_perfect.mp3")
+            "phase_4/audio/sfx/ring_perfect.ogg")
 
         # make a dictionary of CatchGameToonSDs; they will track
         # toons' states and animate them appropriately

@@ -310,11 +310,11 @@ class DistributedPet(DistributedSmoothNode.DistributedSmoothNode,
 
             # only load the sounds for 'real' pets
             if not self.swallowSfx:
-                self.swallowSfx = loader.loadSfx('phase_5.5/audio/sfx/beg_eat_swallow.mp3')
+                self.swallowSfx = loader.loadSfx('phase_5.5/audio/sfx/beg_eat_swallow.ogg')
             if not self.callSfx:
-                self.callSfx = loader.loadSfx('phase_5.5/audio/sfx/call_pet.mp3')
+                self.callSfx = loader.loadSfx('phase_5.5/audio/sfx/call_pet.ogg')
             if not self.petSfx:
-                self.petSfx = loader.loadSfx('phase_5.5/audio/sfx/pet_the_pet.mp3')
+                self.petSfx = loader.loadSfx('phase_5.5/audio/sfx/pet_the_pet.ogg')
 
             # kick-start the emote display
             self.handleMoodChange()

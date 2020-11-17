@@ -197,13 +197,13 @@ class DistributedLawbotCannon (DistributedObject.DistributedObject):
 
         # Sound effects
         self.sndCannonMove = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_adjust.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_adjust.ogg")
         self.sndCannonFire = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_fire_alt.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_fire_alt.ogg")
         self.sndHitGround  = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_hit_dirt.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_hit_dirt.ogg")
         self.sndHitChair  = base.loader.loadSfx(\
-                                 "phase_11/audio/sfx/LB_toon_jury.mp3")
+                                 "phase_11/audio/sfx/LB_toon_jury.ogg")
 
         self.cannon.hide()
 

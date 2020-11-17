@@ -880,7 +880,7 @@ GlobalEntities = {
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
         'enabled': 1,
-        'soundPath': 'phase_9/audio/sfx/CHQ_FACT_whistling_wind.mp3',
+        'soundPath': 'phase_9/audio/sfx/CHQ_FACT_whistling_wind.ogg',
         'volume': 1,
         }, # end entity 10010
     10016: {
@@ -892,7 +892,7 @@ GlobalEntities = {
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
         'enabled': 1,
-        'soundPath': 'phase_9/audio/sfx/CHQ_FACT_conveyor_belt.mp3',
+        'soundPath': 'phase_9/audio/sfx/CHQ_FACT_conveyor_belt.ogg',
         'volume': 0.5,
         }, # end entity 10016
     10053: {
@@ -904,7 +904,7 @@ GlobalEntities = {
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
         'enabled': 1,
-        'soundPath': 'phase_9/audio/sfx/CHQ_FACT_whistling_wind.mp3',
+        'soundPath': 'phase_9/audio/sfx/CHQ_FACT_whistling_wind.ogg',
         'volume': 1,
         }, # end entity 10053
     10055: {
@@ -916,7 +916,7 @@ GlobalEntities = {
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
         'enabled': 1,
-        'soundPath': 'phase_9/audio/sfx/CHQ_FACT_gears_turning.mp3',
+        'soundPath': 'phase_9/audio/sfx/CHQ_FACT_gears_turning.ogg',
         'volume': 1,
         }, # end entity 10055
     # BATTLEBLOCKER

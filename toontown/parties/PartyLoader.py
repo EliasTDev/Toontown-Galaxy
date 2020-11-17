@@ -76,18 +76,18 @@ class PartyLoader(SafeZoneLoader.SafeZoneLoader):
         assert(self.notify.debug("load()"))
         SafeZoneLoader.SafeZoneLoader.load(self)
         # create music and sound effects
-        self.underwaterSound = base.loader.loadSfx('phase_4/audio/sfx/AV_ambient_water.mp3')
-        self.swimSound = base.loader.loadSfx('phase_4/audio/sfx/AV_swim_single_stroke.mp3')
-        self.submergeSound = base.loader.loadSfx('phase_5.5/audio/sfx/AV_jump_in_water.mp3')
+        self.underwaterSound = base.loader.loadSfx('phase_4/audio/sfx/AV_ambient_water.ogg')
+        self.swimSound = base.loader.loadSfx('phase_4/audio/sfx/AV_swim_single_stroke.ogg')
+        self.submergeSound = base.loader.loadSfx('phase_5.5/audio/sfx/AV_jump_in_water.ogg')
         self.birdSound=list(map(base.loader.loadSfx, [
-                'phase_4/audio/sfx/SZ_TC_bird1.mp3',
-                'phase_4/audio/sfx/SZ_TC_bird2.mp3',
-                'phase_4/audio/sfx/SZ_TC_bird3.mp3']))
+                'phase_4/audio/sfx/SZ_TC_bird1.ogg',
+                'phase_4/audio/sfx/SZ_TC_bird2.ogg',
+                'phase_4/audio/sfx/SZ_TC_bird3.ogg']))
         # SDN: use birds as a place holder for crickets for now
         self.cricketSound=list(map(base.loader.loadSfx, [
-                'phase_4/audio/sfx/SZ_TC_bird1.mp3',
-                'phase_4/audio/sfx/SZ_TC_bird2.mp3',
-                'phase_4/audio/sfx/SZ_TC_bird3.mp3']))
+                'phase_4/audio/sfx/SZ_TC_bird1.ogg',
+                'phase_4/audio/sfx/SZ_TC_bird2.ogg',
+                'phase_4/audio/sfx/SZ_TC_bird3.ogg']))
         
     def unload(self):
         assert(self.notify.debug("unload()"))

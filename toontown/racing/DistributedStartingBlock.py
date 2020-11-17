@@ -56,7 +56,7 @@ class DistributedStartingBlock( DistributedObject.DistributedObject, FSM ):
     cameraHpr = Point3(0, -10, 0)
     
     SFX_BaseDir = "phase_6/audio/sfx/"
-    SFX_KartAppear = SFX_BaseDir + "KART_Appear.mp3"
+    SFX_KartAppear = SFX_BaseDir + "KART_Appear.ogg"
 
     defaultTransitions = { 'Off'        : [ 'EnterMovie' ],
                            'EnterMovie' : [ 'Off', 'Waiting', 'ExitMovie' ],

@@ -250,11 +250,11 @@ class ShtikerBook(DirectFrame, StateData.StateData):
 
         # sounds
         self.openSound = base.loader.loadSfx(
-            "phase_3.5/audio/sfx/GUI_stickerbook_open.mp3")
+            "phase_3.5/audio/sfx/GUI_stickerbook_open.ogg")
         self.closeSound = base.loader.loadSfx(
-            "phase_3.5/audio/sfx/GUI_stickerbook_delete.mp3")
+            "phase_3.5/audio/sfx/GUI_stickerbook_delete.ogg")
         self.pageSound = base.loader.loadSfx(
-            "phase_3.5/audio/sfx/GUI_stickerbook_turn.mp3")
+            "phase_3.5/audio/sfx/GUI_stickerbook_turn.ogg")
 
     def unload(self):
         """unload(self)

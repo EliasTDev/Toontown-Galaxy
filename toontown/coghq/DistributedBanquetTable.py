@@ -223,15 +223,15 @@ class DistributedBanquetTable(DistributedObject.DistributedObject, FSM.FSM, Banq
         self.tableGeom = self.tableGroup.find('**/Geometry')
         self.setupDiners()
         self.setupChairCols()
-        self.squirtSfx = loader.loadSfx('phase_4/audio/sfx/AA_squirt_seltzer_miss.mp3')
-        self.hitBossSfx = loader.loadSfx('phase_5/audio/sfx/SA_watercooler_spray_only.mp3')
+        self.squirtSfx = loader.loadSfx('phase_4/audio/sfx/AA_squirt_seltzer_miss.ogg')
+        self.hitBossSfx = loader.loadSfx('phase_5/audio/sfx/SA_watercooler_spray_only.ogg')
         self.hitBossSoundInterval = SoundInterval(self.hitBossSfx, node=self.boss,
                                                   volume = 1.0,
                                                   )
-        self.serveFoodSfx = loader.loadSfx('phase_4/audio/sfx/MG_sfx_travel_game_bell_for_trolley.mp3')
+        self.serveFoodSfx = loader.loadSfx('phase_4/audio/sfx/MG_sfx_travel_game_bell_for_trolley.ogg')
         self.pitcherMoveSfx = base.loader.loadSfx(
-            "phase_4/audio/sfx/MG_cannon_adjust.mp3")
-            #"phase_9/audio/sfx/CHQ_FACT_elevator_up_down.mp3")        
+            "phase_4/audio/sfx/MG_cannon_adjust.ogg")
+            #"phase_9/audio/sfx/CHQ_FACT_elevator_up_down.ogg")        
 
     def setupDiners(self):
         """Create the suits seated on the chairs."""
@@ -486,8 +486,8 @@ class DistributedBanquetTable(DistributedObject.DistributedObject, FSM.FSM, Banq
             Func(self.notify.debug,"diner.stash"),
             Func(diner.stash),
             )
-        spinningSound = base.loader.loadSfx("phase_3.5/audio/sfx/Cog_Death.mp3")
-        deathSound = base.loader.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.mp3")
+        spinningSound = base.loader.loadSfx("phase_3.5/audio/sfx/Cog_Death.ogg")
+        deathSound = base.loader.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.ogg")
         deathSoundTrack = Sequence(
             Wait(0.8),
             SoundInterval(spinningSound, duration=1.2, startTime = 1.5, volume=0.2, node=deathSuit),

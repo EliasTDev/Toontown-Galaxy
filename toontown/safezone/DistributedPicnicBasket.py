@@ -578,7 +578,7 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
 
         basketTrack = Sequence(
             Func( self.basket.show ),
-            SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.mp3'), node=self.basket),
+            SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.ogg'), node=self.basket),
             Func( self.basket.reparentTo, self.tablecloth ),
             Func( self.basket.setPos, 0, 0, .2 ),
             Func( self.basket.setHpr, 45, 0, 0),
@@ -637,7 +637,7 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
             LerpScaleInterval( self.basket,
                                scale = Point3( .1, .1, .1 ),
                                duration = 0.2 ),
-            SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.mp3'), node=self.basket),
+            SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.ogg'), node=self.basket),
             Wait( 0.2 ),
             LerpPosInterval( self.basket,
                              pos = pos,
@@ -662,7 +662,7 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
             # Func( self.food[seat].setActiveShadow, False ),
             foodTrack = Sequence(
                 Func( self.food[seat].show ),
-                SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.mp3'), node=self.food[seat]),
+                SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.ogg'), node=self.food[seat]),
                 Func( self.food[seat].reparentTo, self.tablecloth ),
                 Func( self.food[seat].setHpr, 45, 0, 0),
                 Func( self.food[seat].wrtReparentTo, render ),
@@ -718,7 +718,7 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
             LerpScaleInterval( self.food[seat],
                                scale = Point3( .1, .1, .1 ),
                                duration = 0.2 ),
-            SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.mp3'), node=self.food[seat]),
+            SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.ogg'), node=self.food[seat]),
             Wait( 0.2 ),
             LerpPosInterval( self.food[seat],
                              pos = pos,

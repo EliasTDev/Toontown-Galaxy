@@ -24,10 +24,10 @@ class DistributedPatternGame(DistributedMinigame):
     phase4snd = "phase_4/audio/sfx/"
 
     ButtonSoundNames = (
-        phase4snd + "m_match_trumpet.mp3",
-        phase4snd + "m_match_guitar.mp3",
-        phase4snd + "m_match_drums.mp3",
-        phase4snd + "m_match_piano.mp3",
+        phase4snd + "m_match_trumpet.ogg",
+        phase4snd + "m_match_guitar.ogg",
+        phase4snd + "m_match_drums.ogg",
+        phase4snd + "m_match_piano.ogg",
         )
 
     bgm = "phase_4/audio/bgm/m_match_bg1.ogg"
@@ -146,9 +146,9 @@ class DistributedPatternGame(DistributedMinigame):
         self.correctSound = base.loader.loadSfx("phase_4/audio/sfx/MG_pos_buzzer.wav")
         self.incorrectSound = base.loader.loadSfx(\
             "phase_4/audio/sfx/MG_neg_buzzer.wav")
-        self.perfectSound = base.loader.loadSfx("phase_4/audio/sfx/MG_win.mp3")
+        self.perfectSound = base.loader.loadSfx("phase_4/audio/sfx/MG_win.ogg")
 
-        self.fallSound = base.loader.loadSfx("phase_4/audio/sfx/MG_Tag_A.mp3")
+        self.fallSound = base.loader.loadSfx("phase_4/audio/sfx/MG_Tag_A.ogg")
 
         # load music
         self.music = base.loader.loadMusic(self.bgm)

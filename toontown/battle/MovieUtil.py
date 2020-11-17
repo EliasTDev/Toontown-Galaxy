@@ -284,8 +284,8 @@ def createSuitReviveTrack(suit, toon, battle, npcs = []):
 
 
 
-    spinningSound = base.loader.loadSfx("phase_3.5/audio/sfx/Cog_Death.mp3")
-    deathSound = base.loader.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.mp3")
+    spinningSound = base.loader.loadSfx("phase_3.5/audio/sfx/Cog_Death.ogg")
+    deathSound = base.loader.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.ogg")
     deathSoundTrack = Sequence(
         Wait(0.8),
         SoundInterval(spinningSound, duration=1.2, startTime = 1.5, volume=0.2, node=suit),
@@ -377,8 +377,8 @@ def createSuitDeathTrack(suit, toon, battle, npcs = []):
 
 
 
-    spinningSound = base.loader.loadSfx("phase_3.5/audio/sfx/Cog_Death.mp3")
-    deathSound = base.loader.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.mp3")
+    spinningSound = base.loader.loadSfx("phase_3.5/audio/sfx/Cog_Death.ogg")
+    deathSound = base.loader.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.ogg")
     deathSoundTrack = Sequence(
         Wait(0.8),
         SoundInterval(spinningSound, duration=1.2, startTime = 1.5, volume=0.2, node=deathSuit),
@@ -456,8 +456,8 @@ def createSuitDodgeMultitrack(tDodge, suit, leftSuits, rightSuits):
     suitTracks.append(Func(indicateMissed, suit))
 
     ## play the dodge sounds
-    #jumpSound = base.loader.loadSfx("phase_5/audio/sfx/ENC_cogjump_to_side.mp3")
-    #stepSound = base.loader.loadSfx("phase_5/audio/sfx/ENC_cogside_step.mp3")
+    #jumpSound = base.loader.loadSfx("phase_5/audio/sfx/ENC_cogjump_to_side.ogg")
+    #stepSound = base.loader.loadSfx("phase_5/audio/sfx/ENC_cogside_step.ogg")
     #if jumpSound:
     #    suitTracks.append(SoundInterval(jumpSound))
     #if stepSound:

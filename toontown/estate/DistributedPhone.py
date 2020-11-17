@@ -115,10 +115,10 @@ class DistributedPhone(DistributedFurnitureItem.DistributedFurnitureItem):
         mount.setTransparency(0, 1)
         self.model.reparentTo(mount)
 
-        self.ringSfx = loader.loadSfx('phase_3.5/audio/sfx/telephone_ring.mp3')
-        self.handleSfx = loader.loadSfx('phase_5.5/audio/sfx/telephone_handle2.mp3')
-        self.hangUpSfx = loader.loadSfx('phase_5.5/audio/sfx/telephone_hang_up.mp3')
-        self.pickUpSfx = loader.loadSfx('phase_5.5/audio/sfx/telephone_pickup1.mp3')
+        self.ringSfx = loader.loadSfx('phase_3.5/audio/sfx/telephone_ring.ogg')
+        self.handleSfx = loader.loadSfx('phase_5.5/audio/sfx/telephone_handle2.ogg')
+        self.hangUpSfx = loader.loadSfx('phase_5.5/audio/sfx/telephone_hang_up.ogg')
+        self.pickUpSfx = loader.loadSfx('phase_5.5/audio/sfx/telephone_pickup1.ogg')
 
         # Initially start the phone out at the scale inherited from
         # the last avatar.  It will have to scale to meet each new

@@ -489,21 +489,21 @@ class DistributedCannon(DistributedObject.DistributedObject):
         self.dustCloud.setBillboardPointEye()
 
         self.sndCannonMove = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_adjust.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_adjust.ogg")
         self.sndCannonFire = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_fire_alt.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_fire_alt.ogg")
         self.sndHitGround  = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_hit_dirt.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_hit_dirt.ogg")
         self.sndHitTower   = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_hit_tower.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_hit_tower.ogg")
         self.sndHitWater   = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_splash.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_splash.ogg")
         self.sndWhizz      = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_whizz.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_whizz.ogg")
         self.sndWin        = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_win.mp3")
+                                 "phase_4/audio/sfx/MG_win.ogg")
         self.sndHitHouse   = base.loader.loadSfx(\
-                                 "phase_5/audio/sfx/AA_drop_sandbag.mp3")
+                                 "phase_5/audio/sfx/AA_drop_sandbag.ogg")
 
         # Make a collision sphere to detect when an avatar enters the
         # cannon.

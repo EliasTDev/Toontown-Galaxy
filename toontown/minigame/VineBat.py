@@ -87,9 +87,9 @@ class VineBat(NodePath):
         #self.flattenLight()
 
         
-        self.screechSfx = base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_vine_game_bat_shriek_3.mp3")
+        self.screechSfx = base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_vine_game_bat_shriek_3.ogg")
 
-        #self.flySfx = base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_vine_game_bat_flying_lp.mp3")
+        #self.flySfx = base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_vine_game_bat_flying_lp.ogg")
         self.flySfx = base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_vine_game_bat_flying_lp.wav")
         self.oldCutoffDistance = base.sfxPlayer.getCutoffDistance()
         base.sfxPlayer.setCutoffDistance(240)

@@ -23,7 +23,7 @@ def doToonVictory(localToonActive, toons, rewardToonIds, rewardDicts,
         
     camTrack = Sequence()
     endTrack = Sequence()
-    danceSound = globalBattleSoundCache.getSound('ENC_Win.mp3')
+    danceSound = globalBattleSoundCache.getSound('ENC_Win.ogg')
 
     # The toons list might be a list of toons, or it might be a list
     # of toonId's.  In either case, build a list of toons out of it.

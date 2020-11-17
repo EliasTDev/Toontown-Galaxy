@@ -23,7 +23,7 @@ class DistributedTreasure(DistributedObject.DistributedObject):
         # The default treasure reject sound is the same for all
         # treasures.  Still, particular safe zones can override this
         # if they want to.
-        self.rejectSoundPath = "phase_4/audio/sfx/ring_miss.mp3"
+        self.rejectSoundPath = "phase_4/audio/sfx/ring_miss.ogg"
 
         self.playSoundForRemoteToons = 1
         self.scale = 1.

@@ -214,9 +214,9 @@ class Purchase(PurchaseBase):
             scale = 0.075)
         self.convertingVotesToBeansLabel.hide()
 
-        self.countSound = base.loader.loadSfx("phase_3.5/audio/sfx/tick_counter.mp3")
-        self.overMaxSound = base.loader.loadSfx("phase_3.5/audio/sfx/AV_collision.mp3")
-        self.celebrateSound = base.loader.loadSfx("phase_4/audio/sfx/MG_win.mp3")
+        self.countSound = base.loader.loadSfx("phase_3.5/audio/sfx/tick_counter.ogg")
+        self.overMaxSound = base.loader.loadSfx("phase_3.5/audio/sfx/AV_collision.ogg")
+        self.celebrateSound = base.loader.loadSfx("phase_4/audio/sfx/MG_win.ogg")
 
 
     def unload(self):

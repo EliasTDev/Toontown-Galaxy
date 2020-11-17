@@ -84,40 +84,40 @@ class DivingFishSpawn(DirectObject):
             fish.setH(90*self.direction)
             fish.loop("anim")
             cSphere = CollisionSphere(0.0, 0.0, 0.0,1.2)
-            #fishSoundName = "Clownfish.mp3"
+            #fishSoundName = "Clownfish.ogg"
         elif fish.name == 'pbj':
             fish.setH(15*self.direction)
             fish.loop("anim")
             cSphere = CollisionSphere(0.0, 0.0, 0.0,1)
-            #fishSoundName = "PBJ_Fish.mp3"
+            #fishSoundName = "PBJ_Fish.ogg"
         elif fish.name == 'balloon':
             fish.setH(0)
             fish.loop("anim", fromFrame=0, toFrame=94)
             fish.setScale(2)
             cSphere = CollisionSphere(0.0, 0.0, 0.0,.2)
-            #fishSoundName = "BalloonFish.mp3"
+            #fishSoundName = "BalloonFish.ogg"
         elif fish.name == 'bear':
             fish.setH(90*self.direction)
             cSphere = CollisionSphere(0.0,-1.0,3.5, 3.0)
             fish.loop("anim")
             fish.setScale(.4,1.7,1.7)
-            #fishSoundName = "Bear_Acuda.mp3"
+            #fishSoundName = "Bear_Acuda.ogg"
         elif fish.name == 'nurse':
             fish.setH(90*self.direction)
             cSphere = CollisionSphere(0.0,-1.0,0.0,1)
             fish.setScale(.5,1.7,1.7)
             fish.loop("anim")
-            #fishSoundName = "Nurse_Shark.mp3"
+            #fishSoundName = "Nurse_Shark.ogg"
         elif fish.name == 'mackerel':
             fish.setH(90*self.direction)
             cSphere = CollisionSphere(0.0,0.0,0.0,1.5)
             fish.loop("anim", fromFrame=36, toFrame=80)
-            #fishSoundName = "Holy_Mackerel.mp3"
+            #fishSoundName = "Holy_Mackerel.ogg"
         elif fish.name == 'piano':
             fish.loop("anim")
             fish.setScale(1.4)
             cSphere = CollisionSphere(0,0,0,1)
-            fishSoundName = "Piano_Tuna.mp3"
+            fishSoundName = "Piano_Tuna.ogg"
             if self.direction is -1:
                 fish.setH(0)
             else:

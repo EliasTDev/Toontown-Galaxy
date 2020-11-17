@@ -111,10 +111,10 @@ class DistributedCashbotBossCrane(DistributedObject.DistributedObject, FSM.FSM):
         self.magnetAdviceLabel = None
 
         self.atLimitSfx = base.loader.loadSfx(
-            "phase_4/audio/sfx/MG_cannon_adjust.mp3")
+            "phase_4/audio/sfx/MG_cannon_adjust.ogg")
 
         self.magnetOnSfx = base.loader.loadSfx(
-            "phase_10/audio/sfx/CBHQ_CFO_magnet_on.mp3")
+            "phase_10/audio/sfx/CBHQ_CFO_magnet_on.ogg")
 
         # We prefer a wav file for this looping sound effect, since
         # looping an mp3 always introduces some stutter.
@@ -128,7 +128,7 @@ class DistributedCashbotBossCrane(DistributedObject.DistributedObject, FSM.FSM):
                      Func(base.playSfx, self.magnetLoopSfx, looping=1)))
 
         self.craneMoveSfx = base.loader.loadSfx(
-            "phase_9/audio/sfx/CHQ_FACT_elevator_up_down.mp3")
+            "phase_9/audio/sfx/CHQ_FACT_elevator_up_down.ogg")
 
         self.fadeTrack = None
 

@@ -99,9 +99,9 @@ class GSSafeZoneLoader( SafeZoneLoader ):
             if ToontownGlobals.CRASHED_LEADERBOARD in holidayIds:
                 self.startSmokeEffect()                
                 
-        self.birdSound = list(map( base.loader.loadSfx, [ 'phase_4/audio/sfx/SZ_TC_bird1.mp3',
-                                              'phase_4/audio/sfx/SZ_TC_bird2.mp3',
-                                              'phase_4/audio/sfx/SZ_TC_bird3.mp3' ] ))
+        self.birdSound = list(map( base.loader.loadSfx, [ 'phase_4/audio/sfx/SZ_TC_bird1.ogg',
+                                              'phase_4/audio/sfx/SZ_TC_bird2.ogg',
+                                              'phase_4/audio/sfx/SZ_TC_bird3.ogg' ] ))
 
     def unload( self ):
         """

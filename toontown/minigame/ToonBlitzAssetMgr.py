@@ -67,15 +67,15 @@ class ToonBlitzAssetMgr(DirectObject):
         
         # Loading the music
         self.gameMusic = base.loader.loadMusic("phase_4/audio/bgm/MG_TwoDGame.ogg")
-        self.treasureGrabSound = loader.loadSfx("phase_4/audio/sfx/SZ_DD_treasure.mp3")
-        self.sndOof = base.loader.loadSfx('phase_4/audio/sfx/MG_cannon_hit_dirt.mp3')
-        self.soundJump = base.loader.loadSfx('phase_4/audio/sfx/MG_sfx_vine_game_jump.mp3')
-        self.fallSound =  base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_vine_game_fall.mp3")
-        self.watergunSound = base.loader.loadSfx("phase_4/audio/sfx/AA_squirt_seltzer_miss.mp3")
-        self.splashSound = base.loader.loadSfx("phase_4/audio/sfx/Seltzer_squirt_2dgame_hit.mp3")
-        self.threeSparkles = loader.loadSfx("phase_4/audio/sfx/threeSparkles.mp3")
-        self.sparkleSound = loader.loadSfx("phase_4/audio/sfx/sparkly.mp3")
-        self.headCollideSound = loader.loadSfx("phase_3.5/audio/sfx/AV_collision.mp3")
+        self.treasureGrabSound = loader.loadSfx("phase_4/audio/sfx/SZ_DD_treasure.ogg")
+        self.sndOof = base.loader.loadSfx('phase_4/audio/sfx/MG_cannon_hit_dirt.ogg')
+        self.soundJump = base.loader.loadSfx('phase_4/audio/sfx/MG_sfx_vine_game_jump.ogg')
+        self.fallSound =  base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_vine_game_fall.ogg")
+        self.watergunSound = base.loader.loadSfx("phase_4/audio/sfx/AA_squirt_seltzer_miss.ogg")
+        self.splashSound = base.loader.loadSfx("phase_4/audio/sfx/Seltzer_squirt_2dgame_hit.ogg")
+        self.threeSparkles = loader.loadSfx("phase_4/audio/sfx/threeSparkles.ogg")
+        self.sparkleSound = loader.loadSfx("phase_4/audio/sfx/sparkly.ogg")
+        self.headCollideSound = loader.loadSfx("phase_3.5/audio/sfx/AV_collision.ogg")
         
         # Card for the progress line
         self.faceStartPos = Vec3(-0.80, 0, -0.87)

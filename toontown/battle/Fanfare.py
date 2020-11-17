@@ -259,9 +259,9 @@ def doFanfare(delay, toon, panel):
                                        color=Vec4(1,1,0,0))
 
     # loads sounds, puts crabHorn at the Horn part, cutting out the scuttle
-    crabHorn = globalBattleSoundCache.getSound('King_Crab.mp3')
-    drumroll = globalBattleSoundCache.getSound('SZ_MM_drumroll.mp3')
-    fanfare = globalBattleSoundCache.getSound('SZ_MM_fanfare.mp3')
+    crabHorn = globalBattleSoundCache.getSound('King_Crab.ogg')
+    drumroll = globalBattleSoundCache.getSound('SZ_MM_drumroll.ogg')
+    fanfare = globalBattleSoundCache.getSound('SZ_MM_fanfare.ogg')
     crabHorn.setTime(1.5)
     
     

@@ -672,7 +672,7 @@ class PartyCogActivity(DirectObject):
         if pieType == 'actor':
             animPie = ActorInterval(pie, pieName, startFrame = 48)
 
-        sound = loader.loadSfx('phase_3.5/audio/sfx/AA_pie_throw_only.mp3')
+        sound = loader.loadSfx('phase_3.5/audio/sfx/AA_pie_throw_only.ogg')
 
         # First, create a ProjectileInterval to compute the relative
         # velocity.

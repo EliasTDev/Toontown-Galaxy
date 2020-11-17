@@ -94,7 +94,7 @@ class DistributedDivingGame(DistributedMinigame):
         loadBaseShip = "phase_5/models/props/"
         
         self.sndAmbience = base.loader.loadSfx(
-            'phase_4/audio/sfx/AV_ambient_water.mp3')
+            'phase_4/audio/sfx/AV_ambient_water.ogg')
         
         self.environModel = loader.loadModel(loadBase + "diving_game.bam")
         #self.environModel = loader.loadModel(loadBase + "seafloor.bam")
@@ -153,22 +153,22 @@ class DistributedDivingGame(DistributedMinigame):
         self.toonSDs[avId] = toonSD
         toonSD.load()
         
-        crabSoundName = "King_Crab.mp3"
+        crabSoundName = "King_Crab.ogg"
         crabSoundPath = ("phase_4/audio/sfx/%s" % (crabSoundName))
         self.crabSound = loader.loadSfx(crabSoundPath)
         
-        treasureSoundName = "SZ_DD_treasure.mp3"
+        treasureSoundName = "SZ_DD_treasure.ogg"
         treasureSoundPath = ("phase_4/audio/sfx/%s" % (treasureSoundName))
         self.treasureSound = loader.loadSfx(treasureSoundPath)
         
-        hitSoundName = "diving_game_hit.mp3"
+        hitSoundName = "diving_game_hit.ogg"
         hitSoundPath = ("phase_4/audio/sfx/%s" % (hitSoundName))
         self.hitSound = loader.loadSfx(hitSoundPath)
 
         self.music = base.loader.loadMusic("phase_4/audio/bgm/MG_Target.ogg")
         
-        self.addSound('dropGold', "diving_treasure_drop_off.mp3", "phase_4/audio/sfx/")
-        self.addSound('getGold', "diving_treasure_pick_up.mp3", "phase_4/audio/sfx/")
+        self.addSound('dropGold', "diving_treasure_drop_off.ogg", "phase_4/audio/sfx/")
+        self.addSound('getGold', "diving_treasure_pick_up.ogg", "phase_4/audio/sfx/")
     
         
         self.swimSound = loader.loadSfx("phase_4/audio/sfx/diving_swim_loop.wav")
@@ -1074,17 +1074,17 @@ class DistributedDivingGame(DistributedMinigame):
             
 
             if fish.name == 'clown':
-                fishSoundName = "Clownfish.mp3"
+                fishSoundName = "Clownfish.ogg"
             elif fish.name == 'pbj':
-                fishSoundName = "PBJ_Fish.mp3"                
+                fishSoundName = "PBJ_Fish.ogg"                
             elif fish.name == 'balloon':
-                fishSoundName = "BalloonFish.mp3"
+                fishSoundName = "BalloonFish.ogg"
             elif fish.name == 'bear':
-                fishSoundName = "Bear_Acuda.mp3"
+                fishSoundName = "Bear_Acuda.ogg"
             elif fish.name == 'nurse':
-                fishSoundName = "Nurse_Shark.mp3"
+                fishSoundName = "Nurse_Shark.ogg"
             elif fish.name == 'piano':                
-                fishSoundName = "Piano_Tuna.mp3"
+                fishSoundName = "Piano_Tuna.ogg"
             else:
                 fishSoundName = " "
                 

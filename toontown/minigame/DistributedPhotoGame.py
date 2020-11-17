@@ -256,14 +256,14 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
             )
 
         self.sndPhotoMove = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_adjust.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_adjust.ogg")
         self.sndPhotoFire = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_cannon_fire_alt.mp3")
+                                 "phase_4/audio/sfx/MG_cannon_fire_alt.ogg")
         self.sndWin        = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/MG_win.mp3")
+                                 "phase_4/audio/sfx/MG_win.ogg")
                                  
         self.sndFilmTick = base.loader.loadSfx(\
-                                 "phase_4/audio/sfx/Photo_instamatic.mp3")
+                                 "phase_4/audio/sfx/Photo_instamatic.ogg")
 
         self.timer = ToontownTimer.ToontownTimer()
         self.timer.posInTopRightCorner()
@@ -303,9 +303,9 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
         
         self.subjectToon = Toon.Toon()
         
-        self.addSound('zoom', "Photo_zoom.mp3", "phase_4/audio/sfx/")
+        self.addSound('zoom', "Photo_zoom.ogg", "phase_4/audio/sfx/")
         
-        self.addSound('snap', "Photo_shutter.mp3", "phase_4/audio/sfx/")
+        self.addSound('snap', "Photo_shutter.ogg", "phase_4/audio/sfx/")
         
         
     def __setupCapture(self):

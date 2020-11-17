@@ -18,23 +18,23 @@ notify = DirectNotifyGlobal.directNotify.newCategory('MovieThrow')
 # for creampie and fruitpie, wholecreampie and whole fruitpie and bdaycake
 # so the sound and animation can be synced at the end of variable-length throw
 # until we get these sounds, we just use these 'only' sounds as placeholders
-hitSoundFiles = ('AA_tart_only.mp3',
-                 'AA_slice_only.mp3',
-                 'AA_slice_only.mp3',
-                 'AA_slice_only.mp3',
-                 'AA_slice_only.mp3',
-                 'AA_wholepie_only.mp3',
-                 'AA_wholepie_only.mp3',) #UBER
+hitSoundFiles = ('AA_tart_only.ogg',
+                 'AA_slice_only.ogg',
+                 'AA_slice_only.ogg',
+                 'AA_slice_only.ogg',
+                 'AA_slice_only.ogg',
+                 'AA_wholepie_only.ogg',
+                 'AA_wholepie_only.ogg',) #UBER
 
 # need miss 'hitting' sounds to be separated from the 'throw' sounds
 # so the sound and animation can be synced at the end of variable-length throw
-# until we get these sounds, we just use 'AA_pie_throw_only.mp3' for all misses
-#missSoundFiles = ('AA_pie_throw_only.mp3',
-#                  'AA_pie_throw_only.mp3',
-#                  'AA_pie_throw_only.mp3',
-#                  'AA_pie_throw_only.mp3',
-#                  'AA_pie_throw_only.mp3',
-#                  'AA_pie_throw_only.mp3',)
+# until we get these sounds, we just use 'AA_pie_throw_only.ogg' for all misses
+#missSoundFiles = ('AA_pie_throw_only.ogg',
+#                  'AA_pie_throw_only.ogg',
+#                  'AA_pie_throw_only.ogg',
+#                  'AA_pie_throw_only.ogg',
+#                  'AA_pie_throw_only.ogg',
+#                  'AA_pie_throw_only.ogg',)
 
 #tPieLeavesHand = 2.755
 tPieLeavesHand = 2.7
@@ -334,12 +334,12 @@ def __pieMissGroupLerpCallback(t, missDict):
 def __getWeddingCakeSoundTrack(level, hitSuit, node=None):
     throwTrack = Sequence()
     if hitSuit:
-        throwSound = globalBattleSoundCache.getSound('AA_throw_wedding_cake.mp3')
+        throwSound = globalBattleSoundCache.getSound('AA_throw_wedding_cake.ogg')
         songTrack = Sequence()
         songTrack.append(Wait(1.0))
         songTrack.append (  SoundInterval(throwSound, node=node))
 
-        splatSound = globalBattleSoundCache.getSound('AA_throw_wedding_cake_cog.mp3')
+        splatSound = globalBattleSoundCache.getSound('AA_throw_wedding_cake_cog.ogg')
         splatTrack = Sequence()
         splatTrack.append(Wait(tPieHitsSuit))
         splatTrack.append (  SoundInterval(splatSound, node=node))
@@ -350,7 +350,7 @@ def __getWeddingCakeSoundTrack(level, hitSuit, node=None):
             ))
 
     else:
-        throwSound = globalBattleSoundCache.getSound('AA_throw_wedding_cake_miss.mp3')
+        throwSound = globalBattleSoundCache.getSound('AA_throw_wedding_cake_miss.ogg')
         throwTrack.append(Wait(tSuitDodges))
         throwTrack.append (  SoundInterval(throwSound, node=node))
 
@@ -365,7 +365,7 @@ def __getSoundTrack(level, hitSuit, node=None):
     if level == UBER_GAG_LEVEL_INDEX:
         return __getWeddingCakeSoundTrack(level, hitSuit, node)
 
-    throwSound = globalBattleSoundCache.getSound('AA_pie_throw_only.mp3')
+    throwSound = globalBattleSoundCache.getSound('AA_pie_throw_only.ogg')
 
     throwTrack = Sequence(Wait(2.6), SoundInterval(throwSound, node=node))
 

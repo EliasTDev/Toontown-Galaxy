@@ -247,9 +247,9 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
         if self.prop == None:
             self.prop = BattleProps.globalPropPool.getProp('propeller')
         if self.propInSound == None:
-            self.propInSound = base.loader.loadSfx("phase_5/audio/sfx/ENC_propeller_in.mp3")
+            self.propInSound = base.loader.loadSfx("phase_5/audio/sfx/ENC_propeller_in.ogg")
         if self.propOutSound == None:
-            self.propOutSound = base.loader.loadSfx("phase_5/audio/sfx/ENC_propeller_out.mp3")
+            self.propOutSound = base.loader.loadSfx("phase_5/audio/sfx/ENC_propeller_out.ogg")
         head = self.find("**/joint_head")
         self.prop.reparentTo(head)
 

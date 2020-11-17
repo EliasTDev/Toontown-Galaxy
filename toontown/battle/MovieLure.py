@@ -187,7 +187,7 @@ def __createFishingPoleMultiTrack(lure, dollar, dollarName):
     else: # If the lure fails
         tracks.append(Sequence(Wait(3.7),
                                Func(MovieUtil.indicateMissed, suit)))
-    tracks.append(getSoundTrack('TL_fishing_pole.mp3', delay=0.5, node=toon))
+    tracks.append(getSoundTrack('TL_fishing_pole.ogg', delay=0.5, node=toon))
         
     return tracks
 
@@ -271,9 +271,9 @@ def __createMagnetMultiTrack(lure, magnet, pos, hpr, scale, isSmallMagnet=1):
                                    Func(MovieUtil.indicateMissed, suit)))
 
     if (isSmallMagnet == 1): # using the small magnet
-        tracks.append(getSoundTrack('TL_small_magnet.mp3', delay=0.7, node=toon))
+        tracks.append(getSoundTrack('TL_small_magnet.ogg', delay=0.7, node=toon))
     else:
-        tracks.append(getSoundTrack('TL_large_magnet.mp3', delay=0.7, node=toon))
+        tracks.append(getSoundTrack('TL_large_magnet.ogg', delay=0.7, node=toon))
 
     return tracks
 
@@ -349,7 +349,7 @@ def __createHypnoGogglesMultiTrack(lure, npcs = []):
         else: # If lure fails
             tracks.append(Sequence(Wait(2.3),
                                    Func(MovieUtil.indicateMissed, suit, 1.1)))
-    tracks.append(getSoundTrack('TL_hypnotize.mp3', delay=0.5, node=toon))
+    tracks.append(getSoundTrack('TL_hypnotize.ogg', delay=0.5, node=toon))
     
 
     return tracks
@@ -478,8 +478,8 @@ def __createSuitDamageTrack(battle, suit, hp, lure, trapProp):
             Func(suit.updateHealthBar, hp),
             )
         soundTrack = Sequence(
-            SoundInterval(globalBattleSoundCache.getSound('AA_pie_throw_only.mp3'), duration=0.55, node=suit),
-            SoundInterval(globalBattleSoundCache.getSound('Toon_bodyfall_synergy.mp3'), node=suit),
+            SoundInterval(globalBattleSoundCache.getSound('AA_pie_throw_only.ogg'), duration=0.55, node=suit),
+            SoundInterval(globalBattleSoundCache.getSound('Toon_bodyfall_synergy.ogg'), node=suit),
             )
         result.append(Parallel(moveTrack, animTrack, suitTrack, damageTrack, soundTrack))
     elif ((trapName == 'rake') or (trapName == 'rake-react')):
@@ -509,7 +509,7 @@ def __createSuitDamageTrack(battle, suit, hp, lure, trapProp):
             Func(suit.showHpText, -hp, openEnded=0),
             Func(suit.updateHealthBar, hp),
             )
-        soundTrack = getSoundTrack('TL_step_on_rake.mp3', delay=0.6, node=suit)
+        soundTrack = getSoundTrack('TL_step_on_rake.ogg', delay=0.6, node=suit)
         result.append(Parallel(rakeTrack, suitTrack, damageTrack, soundTrack))
     elif (trapName == 'marbles'):
         slidePos = trapProp.getPos(parent)
@@ -528,8 +528,8 @@ def __createSuitDamageTrack(battle, suit, hp, lure, trapProp):
             Func(suit.updateHealthBar, hp),
             )
         soundTrack = Sequence(
-            SoundInterval(globalBattleSoundCache.getSound('AA_pie_throw_only.mp3'), duration=0.55, node=suit),
-            SoundInterval(globalBattleSoundCache.getSound('Toon_bodyfall_synergy.mp3'), node=suit),
+            SoundInterval(globalBattleSoundCache.getSound('AA_pie_throw_only.ogg'), duration=0.55, node=suit),
+            SoundInterval(globalBattleSoundCache.getSound('Toon_bodyfall_synergy.ogg'), node=suit),
             )
         result.append(Parallel(moveTrack, animTrack, suitTrack, damageTrack, soundTrack))
     elif (trapName == 'quicksand'):
@@ -570,9 +570,9 @@ def __createSuitDamageTrack(battle, suit, hp, lure, trapProp):
             )
         soundTrack = Sequence(
             Wait(0.7),
-            SoundInterval(globalBattleSoundCache.getSound('TL_quicksand.mp3'), node=suit),
+            SoundInterval(globalBattleSoundCache.getSound('TL_quicksand.ogg'), node=suit),
             Wait(0.1),
-            SoundInterval(globalBattleSoundCache.getSound('Toon_bodyfall_synergy.mp3'), node=suit),
+            SoundInterval(globalBattleSoundCache.getSound('Toon_bodyfall_synergy.ogg'), node=suit),
             )
         result.append(Parallel(trapTrack, moveTrack, animTrack, damageTrack, soundTrack))
     elif (trapName == 'trapdoor'):
@@ -618,9 +618,9 @@ def __createSuitDamageTrack(battle, suit, hp, lure, trapProp):
             )
         soundTrack = Sequence(
             Wait(0.8),
-            SoundInterval(globalBattleSoundCache.getSound('TL_trap_door.mp3'), node=suit),
+            SoundInterval(globalBattleSoundCache.getSound('TL_trap_door.ogg'), node=suit),
             Wait(0.8),
-            SoundInterval(globalBattleSoundCache.getSound('Toon_bodyfall_synergy.mp3'), node=suit),
+            SoundInterval(globalBattleSoundCache.getSound('Toon_bodyfall_synergy.ogg'), node=suit),
             )
         result.append(Parallel(trapTrack, moveTrack, animTrack, damageTrack, soundTrack))
     elif (trapName == 'tnt'):
@@ -650,9 +650,9 @@ def __createSuitDamageTrack(battle, suit, hp, lure, trapProp):
             Func(suit.showHpText, -hp, openEnded=0),
             Func(suit.updateHealthBar, hp),
             )
-        explosionSound = base.loader.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.mp3")
+        explosionSound = base.loader.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.ogg")
         soundTrack = Sequence(
-            SoundInterval(globalBattleSoundCache.getSound('TL_dynamite.mp3'), duration=2.0, node=suit),
+            SoundInterval(globalBattleSoundCache.getSound('TL_dynamite.ogg'), duration=2.0, node=suit),
             SoundInterval(explosionSound, duration=0.6, node=suit),
             )
         result.append(Parallel(tntTrack, suitTrack, damageTrack,
@@ -787,7 +787,7 @@ def createSuitReactionToTrain(battle, suit,hp,lure,trapProp):
     updateHealthBar = Func(suit.updateHealthBar, hp)
     anim = 'flatten'
     suitReact = ActorInterval(suit, anim)
-    cogGettingHit = getSoundTrack('TL_train_cog.mp3', node = toon)
+    cogGettingHit = getSoundTrack('TL_train_cog.ogg', node = toon)
     
     suitTrack.append(Func(suit.loop, 'neutral'))
     suitTrack.append(Wait(timeToGetHit + TRAIN_MATERIALIZE_TIME))
@@ -883,7 +883,7 @@ def createIncomingTrainInterval(battle, suit, hp, lure, trapProp):
     retval.append(trainIval)
 
     #incoming train sound effect
-    trainSoundTrack = getSoundTrack('TL_train.mp3',node=toon)
+    trainSoundTrack = getSoundTrack('TL_train.ogg',node=toon)
     retval.append(trainSoundTrack)
     return retval
 
@@ -977,7 +977,7 @@ def __createSlideshowMultiTrack(lure, npcs = []):
             tracks.append(Sequence(Wait(2.3),
                                    Func(MovieUtil.indicateMissed, suit, 1.1)))
     #TODO sound effects
-    tracks.append(getSoundTrack('TL_presentation.mp3', delay=2.3, node=toon))
-    tracks.append(getSoundTrack('AA_drop_trigger_box.mp3', delay=slideshowDelay, node=toon))
+    tracks.append(getSoundTrack('TL_presentation.ogg', delay=2.3, node=toon))
+    tracks.append(getSoundTrack('AA_drop_trigger_box.ogg', delay=slideshowDelay, node=toon))
 
     return tracks

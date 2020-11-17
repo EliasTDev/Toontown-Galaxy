@@ -75,7 +75,7 @@ class TwoDStomper(DirectObject):
         self.shaftStartScaleZ, self.shaftEndScaleZ = typeAttribs[3]
         self.numCollSolids = typeAttribs[4]
         
-        self.stompSound = loader.loadSfx('phase_4/audio/sfx/CHQ_FACT_stomper_small.mp3')
+        self.stompSound = loader.loadSfx('phase_4/audio/sfx/CHQ_FACT_stomper_small.ogg')
         self.model.setPos(self.pos)
         # Scale the whole model including the block
         self.model.setScale(self.scale)

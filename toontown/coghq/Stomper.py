@@ -14,7 +14,7 @@ class Stomper(StateData.StateData, NodePath):
     MotionSinus = 1
     MotionHalfSinus = 2
 
-    DefaultStompSound = 'phase_5/audio/sfx/AA_drop_safe.mp3'
+    DefaultStompSound = 'phase_5/audio/sfx/AA_drop_safe.ogg'
 
     def __init__(self,
                  model,

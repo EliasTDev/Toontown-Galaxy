@@ -65,8 +65,8 @@ class DistributedPicnicTable(DistributedNode.DistributedNode):
 
         self.tableState = [None, None, None, None, None, None]
         self.haveAnimated = []
-        self.winSound = base.loader.loadSfx("phase_6/audio/sfx/KART_Applause_1.mp3")
-        self.happyDance = base.loader.loadSfx("phase_5/audio/sfx/AA_heal_happydance.mp3")
+        self.winSound = base.loader.loadSfx("phase_6/audio/sfx/KART_Applause_1.ogg")
+        self.happyDance = base.loader.loadSfx("phase_5/audio/sfx/AA_heal_happydance.ogg")
 
         #Seems like these functions BOTH are required
         #To intercept the sleep event.

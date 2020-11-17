@@ -95,8 +95,8 @@ class DistributedKnockKnockDoor(DistributedAnimatedProp.DistributedAnimatedProp)
         # NOTE: the use of this rimshot sfx (which is in phase_5)
         # means we better not have any knock knock doors in phase_4,
         # which is true now.
-        self.rimshot = base.loader.loadSfx("phase_5/audio/sfx/AA_heal_telljoke.mp3")
-        self.knockSfx = base.loader.loadSfx("phase_5/audio/sfx/GUI_knock_3.mp3")
+        self.rimshot = base.loader.loadSfx("phase_5/audio/sfx/AA_heal_telljoke.ogg")
+        self.knockSfx = base.loader.loadSfx("phase_5/audio/sfx/GUI_knock_3.ogg")
 
         joke = KnockKnockJokes[self.propId%len(KnockKnockJokes)]
 

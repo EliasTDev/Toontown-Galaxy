@@ -45,11 +45,11 @@ class DistributedCashbotBossObject(DistributedSmoothNode.DistributedSmoothNode, 
         self.hitFloorSoundInterval = Sequence()
 
         # A solid sound for when we get a good hit on the boss.
-        self.hitBossSfx = loader.loadSfx('phase_5/audio/sfx/AA_drop_safe_miss.mp3')
+        self.hitBossSfx = loader.loadSfx('phase_5/audio/sfx/AA_drop_safe_miss.ogg')
         self.hitBossSoundInterval = SoundInterval(self.hitBossSfx)
 
         # A squishy sound for when we hit the boss, but not hard enough.
-        self.touchedBossSfx = loader.loadSfx('phase_5/audio/sfx/AA_drop_sandbag.mp3')
+        self.touchedBossSfx = loader.loadSfx('phase_5/audio/sfx/AA_drop_sandbag.ogg')
         self.touchedBossSoundInterval = SoundInterval(
             self.touchedBossSfx, duration = 0.8)
 

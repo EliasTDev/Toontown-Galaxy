@@ -61,8 +61,8 @@ class DistributedTrolley(DistributedObject.DistributedObject):
                            )
         self.fsm.enterInitialState()
 
-        self.trolleyAwaySfx = base.loader.loadSfx("phase_4/audio/sfx/SZ_trolley_away.mp3")
-        self.trolleyBellSfx = base.loader.loadSfx("phase_4/audio/sfx/SZ_trolley_bell.mp3")
+        self.trolleyAwaySfx = base.loader.loadSfx("phase_4/audio/sfx/SZ_trolley_away.ogg")
+        self.trolleyBellSfx = base.loader.loadSfx("phase_4/audio/sfx/SZ_trolley_bell.ogg")
 
         # Tracks on toons, for starting and stopping
         # stored by avId : track. There is only a need for one at a time,

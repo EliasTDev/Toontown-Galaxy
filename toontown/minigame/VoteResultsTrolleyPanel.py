@@ -242,12 +242,12 @@ class VoteResultsTrolleyPanel(DirectFrame):
         self.downArrowSfx = []
         for i in range (5):
             self.upArrowSfx.append(
-                base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_travel_game_blue_arrow.mp3"))
+                base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_travel_game_blue_arrow.ogg"))
             self.downArrowSfx.append(
-                base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_travel_game_red_arrow.mp3"))
-        self.winVoteSfx = base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_travel_game_win_vote.mp3")
-        self.noVoteSfx =  base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_travel_game_square_no_vote_1.mp3")            
-        self.loseVoteSfx = base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_travel_game_lose_vote.mp3")
+                base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_travel_game_red_arrow.ogg"))
+        self.winVoteSfx = base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_travel_game_win_vote.ogg")
+        self.noVoteSfx =  base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_travel_game_square_no_vote_1.ogg")            
+        self.loseVoteSfx = base.loader.loadSfx("phase_4/audio/sfx/MG_sfx_travel_game_lose_vote.ogg")
 
         self.localAvatarWon = False
         self.localAvatarLost = False;
@@ -268,11 +268,11 @@ class VoteResultsTrolleyPanel(DirectFrame):
                     self.localAvatarWon = True
 
         #"""
-        #MG_sfx_travel_game_win_vote.mp3 MG_sfx_travel_game_turntble_rotate_1.mp3 \
-        #MG_sfx_travel_game_square_no_vote_2.mp3 MG_sfx_travel_game_red_arrow.mp3 \
-        #MG_sfx_travel_game_no_bonus.mp3 MG_sfx_travel_game_lose_vote.mp3 \
-        #MG_sfx_travel_game_bonus.mp3 MG_sfx_travel_game_blue_arrow.mp3 \
-        #MG_sfx_travel_game_bell_for_trolley.mp3
+        #MG_sfx_travel_game_win_vote.ogg MG_sfx_travel_game_turntble_rotate_1.ogg \
+        #MG_sfx_travel_game_square_no_vote_2.ogg MG_sfx_travel_game_red_arrow.ogg \
+        #MG_sfx_travel_game_no_bonus.ogg MG_sfx_travel_game_lose_vote.ogg \
+        #MG_sfx_travel_game_bonus.ogg MG_sfx_travel_game_blue_arrow.ogg \
+        #MG_sfx_travel_game_bell_for_trolley.ogg
         #"""
             
     def getRowPos(self, place):

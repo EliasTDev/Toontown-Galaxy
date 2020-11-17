@@ -54,7 +54,7 @@ class DistributedLawbotBossGavel(DistributedObject.DistributedObject, FSM.FSM):
         # Put this thing in the world
         self.nodePath.wrtReparentTo(render)
 
-        self.gavelSfx = loader.loadSfx('phase_11/audio/sfx/LB_gavel.mp3')
+        self.gavelSfx = loader.loadSfx('phase_11/audio/sfx/LB_gavel.ogg')
         
         tempTuple = ToontownGlobals.LawbotBossGavelPosHprs[self.index]
         self.nodePath.setPosHpr(*tempTuple)

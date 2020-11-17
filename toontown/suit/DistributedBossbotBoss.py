@@ -168,9 +168,9 @@ class DistributedBossbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.setPosHpr(*ToontownGlobals.BossbotBossBattleOnePosHpr)
         self.reparentTo(render)
 
-        self.toonUpSfx = loader.loadSfx('phase_11/audio/sfx/LB_toonup.mp3')
-        self.warningSfx = loader.loadSfx('phase_5/audio/sfx/Skel_COG_VO_grunt.mp3')
-        self.swingClubSfx = loader.loadSfx('phase_5/audio/sfx/SA_hardball.mp3')
+        self.toonUpSfx = loader.loadSfx('phase_11/audio/sfx/LB_toonup.ogg')
+        self.warningSfx = loader.loadSfx('phase_5/audio/sfx/Skel_COG_VO_grunt.ogg')
+        self.swingClubSfx = loader.loadSfx('phase_5/audio/sfx/SA_hardball.ogg')
         self.moveBossTaskName = "CEOMoveTask"        
         
     def disable(self):
@@ -250,8 +250,8 @@ class DistributedBossbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.phaseFourMusic = base.loader.loadMusic(
            'phase_12/audio/bgm/BossBot_CEO_v2.ogg')
 
-        self.pickupFoodSfx = loader.loadSfx('phase_6/audio/sfx/SZ_MM_gliss.mp3')
-        self.explodeSfx = loader.loadSfx('phase_4/audio/sfx/firework_distance_02.mp3')
+        self.pickupFoodSfx = loader.loadSfx('phase_6/audio/sfx/SZ_MM_gliss.ogg')
+        self.explodeSfx = loader.loadSfx('phase_4/audio/sfx/firework_distance_02.ogg')
 
     def unloadEnvironment(self):
         """Unload the environment, also call base class unload."""

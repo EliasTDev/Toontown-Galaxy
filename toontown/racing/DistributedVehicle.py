@@ -91,15 +91,15 @@ class DistributedVehicle(DistributedSmoothNode.DistributedSmoothNode,
          }
     
     SFX_BaseDir = "phase_6/audio/sfx/"
-    SFX_WallHits = [ SFX_BaseDir + "KART_Hitting_Wood_Fence.mp3",
-                     SFX_BaseDir + "KART_Hitting_Wood_Fence_1.mp3",
-                     SFX_BaseDir + "KART_Hitting_Metal_Fence.mp3",
-                     SFX_BaseDir + "KART_Hitting_Wall.mp3",
+    SFX_WallHits = [ SFX_BaseDir + "KART_Hitting_Wood_Fence.ogg",
+                     SFX_BaseDir + "KART_Hitting_Wood_Fence_1.ogg",
+                     SFX_BaseDir + "KART_Hitting_Metal_Fence.ogg",
+                     SFX_BaseDir + "KART_Hitting_Wall.ogg",
                      ]
     #SFX_WallLoop_Wood =    SFX_BaseDir + "KART_Rubbing_Against_Wood_Fence.wav"
     SFX_SkidLoop_Grass =   SFX_BaseDir + "KART_Skidding_On_Grass.wav"
     SFX_SkidLoop_Asphalt = SFX_BaseDir + "KART_Skidding_On_Asphalt.wav"
-    SFX_TurboStart =       SFX_BaseDir + "KART_turboStart.mp3"
+    SFX_TurboStart =       SFX_BaseDir + "KART_turboStart.ogg"
     SFX_TurboLoop =        SFX_BaseDir + "KART_turboLoop.wav"
     
     def __init__(self, cr):

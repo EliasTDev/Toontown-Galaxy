@@ -116,9 +116,9 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
             self.soundWalk = base.loader.loadSfx(
                 "phase_3.5/audio/sfx/AV_footstep_walkloop.wav")
             self.soundWhisper = base.loader.loadSfx(
-                "phase_3.5/audio/sfx/GUI_whisper_3.mp3")
+                "phase_3.5/audio/sfx/GUI_whisper_3.ogg")
             self.soundPhoneRing = base.loader.loadSfx(
-                "phase_3.5/audio/sfx/telephone_ring.mp3")
+                "phase_3.5/audio/sfx/telephone_ring.ogg")
             self.positionExaminer = PositionExaminer.PositionExaminer()
 
             # A button to open up the Friends List.
@@ -2191,7 +2191,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         self.waterTrack = Sequence(
                                 Wait(0.0),
                                 Func(self.changeButtonText, self.wateringCanButtonFake, changeString),
-                                SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.mp3'), node=self),
+                                SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.ogg'), node=self),
                                 Wait(1.0),
                                 #Func(self.changeButtonText, self.wateringCanButtonFake, self.holdWateringCanText),
                                 Func(self.hideWateringCanButtonFake, 1),
@@ -2216,7 +2216,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         if plant:
                 self.holdShovelText = plant.getShovelAction()
 
-        #levelSound = globalBattleSoundCache.getSound('GUI_ballon_popup.mp3')
+        #levelSound = globalBattleSoundCache.getSound('GUI_ballon_popup.ogg')
         #self.shovelTrack = Sequence()
 
         #self.shovelTrack.append(Wait(0.0))
@@ -2229,7 +2229,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         self.shovelTrack = Sequence(
                                 Wait(0.0),
                                 Func(self.changeButtonText, self.shovelButtonFake, changeString),
-                                SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.mp3'), node=self),
+                                SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.ogg'), node=self),
                                 Wait(1.0),
                                 #Func(self.changeButtonText, self.shovelButtonFake, self.holdShovelText),
                                 Func(self.hideShovelButtonFake, 1),

@@ -4328,21 +4328,21 @@ SharedChatterGoodbyes = [
 
 MickeyChatter = (
         [ # Greetings specific to Mickey
-        lToontownCentral+"へようこそ！", #CC_mickey_chatter_greetings01.mp3
-        "こんにちは！僕の名前は" + Mickey + "マウス。君の名前は？", #CC_mickey_chatter_greetings02.mp3
+        lToontownCentral+"へようこそ！", #CC_mickey_chatter_greetings01.ogg
+        "こんにちは！僕の名前は" + Mickey + "マウス。君の名前は？", #CC_mickey_chatter_greetings02.ogg
         ],
         [ # Comments
-        "ねぇ、キミ！" + Donald + "を見かけなかった？", #CC_mickey_chatter_comments01.mp3
-        "これから、うっすらと霧の立ち込めた、"+lDonaldsDock+"に行こうと思うんだ！", #CC_mickey_chatter_comments02.mp3
-        "もし僕の友達の" + Goofy + "に会ったら、よろしく言っておいてね。", #CC_mickey_chatter_comments03.mp3
-        "ははっ！どうやら" + Daisy + "がお庭に新しいお花を植えたらしいよ。", #CC_mickey_chatter_comments04.mp3
+        "ねぇ、キミ！" + Donald + "を見かけなかった？", #CC_mickey_chatter_comments01.ogg
+        "これから、うっすらと霧の立ち込めた、"+lDonaldsDock+"に行こうと思うんだ！", #CC_mickey_chatter_comments02.ogg
+        "もし僕の友達の" + Goofy + "に会ったら、よろしく言っておいてね。", #CC_mickey_chatter_comments03.ogg
+        "ははっ！どうやら" + Daisy + "がお庭に新しいお花を植えたらしいよ。", #CC_mickey_chatter_comments04.ogg
         ],
         [ # Goodbyes
-        "これから、" + Minnie + "に会いにメロディーランドに行こうかなぁ。", #CC_mickey_chatter_goodbyes01.mp3
-        "ああっ、" + Minnie + "とのデートにおくれちゃうよ！", #CC_mickey_chatter_goodbyes02.mp3
-        "そろそろ" + Pluto + "に晩御飯の準備をしないと…", #CC_mickey_chatter_goodbyes03.mp3
-        "キミは"+lDonaldsDock+"に泳ぎに行ったことある？", #CC_mickey_chatter_goodbyes04.mp3
-        "ドリームランドにおひるねしに行こうかなぁ…", #CC_mickey_chatter_goodbyes05.mp3
+        "これから、" + Minnie + "に会いにメロディーランドに行こうかなぁ。", #CC_mickey_chatter_goodbyes01.ogg
+        "ああっ、" + Minnie + "とのデートにおくれちゃうよ！", #CC_mickey_chatter_goodbyes02.ogg
+        "そろそろ" + Pluto + "に晩御飯の準備をしないと…", #CC_mickey_chatter_goodbyes03.ogg
+        "キミは"+lDonaldsDock+"に泳ぎに行ったことある？", #CC_mickey_chatter_goodbyes04.ogg
+        "ドリームランドにおひるねしに行こうかなぁ…", #CC_mickey_chatter_goodbyes05.ogg
         ]
     )
 
@@ -4380,33 +4380,33 @@ VampireMickeyChatter = (
 
 MinnieChatter = (
         [ # Greetings
-        "メロディランドへようこそ！", #CC_minnie_chatter_greetings01.mp3
-        "私は" + Minnie + "マウスよ。あなたのお名前は？", #CC_minnie_chatter_greetings02.mp3
+        "メロディランドへようこそ！", #CC_minnie_chatter_greetings01.ogg
+        "私は" + Minnie + "マウスよ。あなたのお名前は？", #CC_minnie_chatter_greetings02.ogg
         ],
         [ # Comments
-        "ここはいろいろな楽器の音色であふれてるのよ！", #CC_minnie_chatter_comments01.mp3
+        "ここはいろいろな楽器の音色であふれてるのよ！", #CC_minnie_chatter_comments01.ogg
         # the merry no longer goes round
-        #"大きなメリーゴーランドを是非試してみてね！", #CC_minnie_chatter_comments02.mp3
-        "あら！おしゃれなお洋服ね！", #CC_minnie_chatter_comments03.mp3
-        "ねぇ、" + Mickey + "を見かけなかった？", #CC_minnie_chatter_comments04.mp3
-        "" + Goofy + "に会ったら、よろしくね。", #CC_minnie_chatter_comments05.mp3
-        "たくさんの" + Cogs + "が" + Donald + "のドリームランドまわりにいるらしいわ。", #CC_minnie_chatter_comments06.mp3
-        lDonaldsDock+"には霧が立ち込めているみたいよ。", #CC_minnie_chatter_comments07.mp3
-        lDaisyGardens+"の迷路も試してみてね。", #CC_minnie_chatter_comments08.mp3
-        "私も楽器を演奏してみようかしら。", #CC_minnie_chatter_comments091.mp3
-        "ねぇ、あれを見て！", #CC_minnie_chatter_comments10.mp3
-        "楽器の音色ってほんと素敵よね。", #CC_minnie_chatter_comments11.mp3
-        "メロディーランドはトゥーンじゃなくてチューンタウンなの。うふっ。", #CC_minnie_chatter_comments12.mp3
-        "マッチングゲームって面白いわよね。そう思わない？", #CC_minnie_chatter_comments13.mp3
-        "みんなが笑ってくれるとわたし、とってもうれしいわ！", #CC_minnie_chatter_comments14.mp3
-        "ねぇ、歩き回ってつかれたんじゃなぁーい？", #CC_minnie_chatter_comments15.mp3
-        "まぁ。素敵なシャツね！", #CC_minnie_chatter_comments16.mp3
-        "あらっ、そこにあるのはゼリービーンかしら？", #CC_minnie_chatter_comments17.mp3
+        #"大きなメリーゴーランドを是非試してみてね！", #CC_minnie_chatter_comments02.ogg
+        "あら！おしゃれなお洋服ね！", #CC_minnie_chatter_comments03.ogg
+        "ねぇ、" + Mickey + "を見かけなかった？", #CC_minnie_chatter_comments04.ogg
+        "" + Goofy + "に会ったら、よろしくね。", #CC_minnie_chatter_comments05.ogg
+        "たくさんの" + Cogs + "が" + Donald + "のドリームランドまわりにいるらしいわ。", #CC_minnie_chatter_comments06.ogg
+        lDonaldsDock+"には霧が立ち込めているみたいよ。", #CC_minnie_chatter_comments07.ogg
+        lDaisyGardens+"の迷路も試してみてね。", #CC_minnie_chatter_comments08.ogg
+        "私も楽器を演奏してみようかしら。", #CC_minnie_chatter_comments091.ogg
+        "ねぇ、あれを見て！", #CC_minnie_chatter_comments10.ogg
+        "楽器の音色ってほんと素敵よね。", #CC_minnie_chatter_comments11.ogg
+        "メロディーランドはトゥーンじゃなくてチューンタウンなの。うふっ。", #CC_minnie_chatter_comments12.ogg
+        "マッチングゲームって面白いわよね。そう思わない？", #CC_minnie_chatter_comments13.ogg
+        "みんなが笑ってくれるとわたし、とってもうれしいわ！", #CC_minnie_chatter_comments14.ogg
+        "ねぇ、歩き回ってつかれたんじゃなぁーい？", #CC_minnie_chatter_comments15.ogg
+        "まぁ。素敵なシャツね！", #CC_minnie_chatter_comments16.ogg
+        "あらっ、そこにあるのはゼリービーンかしら？", #CC_minnie_chatter_comments17.ogg
         ],
         [ # Goodbyes
-        "いっけなーい、" + Mickey + "と会う約束をしてたんだ。", #CC_minnie_chatter_goodbyes01.mp3
-        "そろそろ" + Pluto + "の夕飯のしたくする時間だわっ。", #CC_minnie_chatter_goodbyes02.mp3
-        "ふぁーっ、ドリームランドに行こうかしら？", #CC_minnie_chatter_goodbyes03.mp3
+        "いっけなーい、" + Mickey + "と会う約束をしてたんだ。", #CC_minnie_chatter_goodbyes01.ogg
+        "そろそろ" + Pluto + "の夕飯のしたくする時間だわっ。", #CC_minnie_chatter_goodbyes02.ogg
+        "ふぁーっ、ドリームランドに行こうかしら？", #CC_minnie_chatter_goodbyes03.ogg
         ]
     )
     
@@ -4483,29 +4483,29 @@ DaleChatter = (
 
 GoofyChatter = (
         [ # Greetings
-        "ようこそ、"+lDaisyGardens+"へ！", #CC_goofy_chatter_greetings01.mp3
-        "僕の名前は" + Goofy + "。よろしくね。キミの名前は？", #CC_goofy_chatter_greetings02.mp3
-        "おひょっ。キミにあえてうれしいよ。", #CC_goofy_chatter_greetings03.mp3
+        "ようこそ、"+lDaisyGardens+"へ！", #CC_goofy_chatter_greetings01.ogg
+        "僕の名前は" + Goofy + "。よろしくね。キミの名前は？", #CC_goofy_chatter_greetings02.ogg
+        "おひょっ。キミにあえてうれしいよ。", #CC_goofy_chatter_greetings03.ogg
         ],
         [ # Comments
-        "迷路に迷わないように気をつけてね。", #CC_goofy_chatter_comments01.mp3
-        "キミもここの迷路を試してみない？楽しいよ！", #CC_goofy_chatter_comments02.mp3
-        "ねぇ、キミ。" + Daisy + "を見かけなかった？", #CC_goofy_chatter_comments03.mp3
-        "ありゃま、" + Daisy + "はどこに行ったのかなぁ。", #CC_goofy_chatter_comments04.mp3
-        "ねぇ、" + Donald + "はどこにいるか知ってる？知ってたら教えてね。", #CC_goofy_chatter_comments05.mp3
-        "もし僕の親友の" + Mickey + "にあったらよろしくね。", #CC_goofy_chatter_comments06.mp3
-        "おなかすいたなぁ。", #CC_goofy_chatter_comments07.mp3
-        "この街の外にはね。" + Cogs + "がたくさんいるんだよ。", #CC_goofy_chatter_comments08.mp3
-        "ねぇ、見て見て。" + Daisy + "がお花を植えたのかなぁ。", #CC_goofy_chatter_comments09.mp3
-        "おひょっ。いろんな種類のギャグがあるから集めてごらん。", #CC_goofy_chatter_comments10.mp3
-        "街には必ずギャグショップがあるよ。楽しいよ。", #CC_goofy_chatter_comments11.mp3
-        "ギャグショップにはたっくさんギャグがあるよ。笑い過ぎないように気をつけてね。" #CC_goofy_chatter_comments12.mp3
+        "迷路に迷わないように気をつけてね。", #CC_goofy_chatter_comments01.ogg
+        "キミもここの迷路を試してみない？楽しいよ！", #CC_goofy_chatter_comments02.ogg
+        "ねぇ、キミ。" + Daisy + "を見かけなかった？", #CC_goofy_chatter_comments03.ogg
+        "ありゃま、" + Daisy + "はどこに行ったのかなぁ。", #CC_goofy_chatter_comments04.ogg
+        "ねぇ、" + Donald + "はどこにいるか知ってる？知ってたら教えてね。", #CC_goofy_chatter_comments05.ogg
+        "もし僕の親友の" + Mickey + "にあったらよろしくね。", #CC_goofy_chatter_comments06.ogg
+        "おなかすいたなぁ。", #CC_goofy_chatter_comments07.ogg
+        "この街の外にはね。" + Cogs + "がたくさんいるんだよ。", #CC_goofy_chatter_comments08.ogg
+        "ねぇ、見て見て。" + Daisy + "がお花を植えたのかなぁ。", #CC_goofy_chatter_comments09.ogg
+        "おひょっ。いろんな種類のギャグがあるから集めてごらん。", #CC_goofy_chatter_comments10.ogg
+        "街には必ずギャグショップがあるよ。楽しいよ。", #CC_goofy_chatter_comments11.ogg
+        "ギャグショップにはたっくさんギャグがあるよ。笑い過ぎないように気をつけてね。" #CC_goofy_chatter_comments12.ogg
         ],
         [ # Goodbyes
-        "これから、" + Minnie + "に会いに、メロディーランドに行くところなんだ。", #CC_goofy_chatter_goodbyes01.mp3
-        "オヒョッ！急がないと遅れちゃう！" + Donald + "と約束してたんだ！", #CC_goofy_chatter_goodbyes02.mp3
-        lDonaldsDock+"に泳ぎに行こうかなぁ。", #CC_goofy_chatter_goodbyes03.mp3
-        "ふああ…お昼寝の時間みたい。ドリームランドに行かなくちゃ。", #CC_goofy_chatter_goodbyes04.mp3
+        "これから、" + Minnie + "に会いに、メロディーランドに行くところなんだ。", #CC_goofy_chatter_goodbyes01.ogg
+        "オヒョッ！急がないと遅れちゃう！" + Donald + "と約束してたんだ！", #CC_goofy_chatter_goodbyes02.ogg
+        lDonaldsDock+"に泳ぎに行こうかなぁ。", #CC_goofy_chatter_goodbyes03.ogg
+        "ふああ…お昼寝の時間みたい。ドリームランドに行かなくちゃ。", #CC_goofy_chatter_goodbyes04.ogg
         ]
     )
 
@@ -4540,27 +4540,27 @@ GoofySpeedwayChatter = (
 
 DonaldChatter = (
         [ # Greetings
-        "ドリームランドへようこそ！", #CC_donald_chatter_greeting01.mp3
-        "僕は" + Donald + "！君の名前は？", #CC_donald_chatter_greeting02.mp3
+        "ドリームランドへようこそ！", #CC_donald_chatter_greeting01.ogg
+        "僕は" + Donald + "！君の名前は？", #CC_donald_chatter_greeting02.ogg
         ],
         [ # Comments
-        "ここではたまにこわいことがあるんだよ。", #CC_donald_chatter_comments01.mp3
-        "ねぇ、"+lDaisyGardens+"に行った？", #CC_donald_chatter_comments02.mp3
-        "今日もいい日だねっ！", #CC_donald_chatter_comments03.mp3
-        "ねぇ、" + Mickey + "を見なかった？", #CC_donald_chatter_comments041.mp3
-        "" + Goofy + "によろしくね。", #CC_donald_chatter_comments05.mp3
-        "釣りに行こうかなぁ", #CC_donald_chatter_comments06.mp3
-        "わぉ、町の外に、コグたちがたくさんいるよ。" #CC_donald_chatter_comments07.mp3
-        "もうボートには乗った？", #CC_donald_chatter_comments08.mp3
-        "" + Daisy + "を見なかった？", #CC_donald_chatter_comments09.mp3
-        "" + Daisy + "がお庭にお花を植えたみたいだよ。", #CC_donald_chatter_comments10.mp3
-        "クワッ！", #CC_donald_chatter_comments11.mp3
+        "ここではたまにこわいことがあるんだよ。", #CC_donald_chatter_comments01.ogg
+        "ねぇ、"+lDaisyGardens+"に行った？", #CC_donald_chatter_comments02.ogg
+        "今日もいい日だねっ！", #CC_donald_chatter_comments03.ogg
+        "ねぇ、" + Mickey + "を見なかった？", #CC_donald_chatter_comments041.ogg
+        "" + Goofy + "によろしくね。", #CC_donald_chatter_comments05.ogg
+        "釣りに行こうかなぁ", #CC_donald_chatter_comments06.ogg
+        "わぉ、町の外に、コグたちがたくさんいるよ。" #CC_donald_chatter_comments07.ogg
+        "もうボートには乗った？", #CC_donald_chatter_comments08.ogg
+        "" + Daisy + "を見なかった？", #CC_donald_chatter_comments09.ogg
+        "" + Daisy + "がお庭にお花を植えたみたいだよ。", #CC_donald_chatter_comments10.ogg
+        "クワッ！", #CC_donald_chatter_comments11.ogg
         ],
         [ # Goodbyes
-        "" + Minnie + "に会いに行こうかな？", #CC_donald_chatter_goodbyes01.mp3
-        "" + Daisy + "とのデートに遅れちゃう…", #CC_donald_chatter_goodbyes02.mp3
-        "よおっし、ちょっと泳ごうかなぁ…", #CC_donald_chatter_goodbyes03.mp3
-        "ボートは楽しいな！", #CC_donald_chatter_goodbyes04.mp3
+        "" + Minnie + "に会いに行こうかな？", #CC_donald_chatter_goodbyes01.ogg
+        "" + Daisy + "とのデートに遅れちゃう…", #CC_donald_chatter_goodbyes02.ogg
+        "よおっし、ちょっと泳ごうかなぁ…", #CC_donald_chatter_goodbyes03.ogg
+        "ボートは楽しいな！", #CC_donald_chatter_goodbyes04.ogg
         ]
     )
 
@@ -5689,9 +5689,9 @@ ToonSleepString = "…ぐ～ぐ～…"
 # Movie.py
 MovieTutorialReward1 = "「なげる」ポイントを１つゲットしたね！\n１０ポイントためると、\n次のレベルのギャグが手に入るよ！"
 MovieTutorialReward2 = "「みずでっぽう」ポイントも１つ、ゲットしたね！\nこうやってコグを倒してポイントを貯めてギャグを\nレベルアップしよう！"
-MovieTutorialReward3 = "よくやったね！最初のトゥーンタスク完了だよ！" #CC_tom_movie_tutorial_reward01.mp3
-MovieTutorialReward4 = "「トゥーンＨＱ」に\n行って、ごほうびをもらってね！" #CC_tom_movie_tutorial_reward02.mp3
-MovieTutorialReward5 = "楽しんでね！" #CC_tom_movie_tutorial_reward03.mp3
+MovieTutorialReward3 = "よくやったね！最初のトゥーンタスク完了だよ！" #CC_tom_movie_tutorial_reward01.ogg
+MovieTutorialReward4 = "「トゥーンＨＱ」に\n行って、ごほうびをもらってね！" #CC_tom_movie_tutorial_reward02.ogg
+MovieTutorialReward5 = "楽しんでね！" #CC_tom_movie_tutorial_reward03.ogg
 
 # ToontownBattleGlobals.py
 BattleGlobalTracks = ['トゥーンアップ', 'トラップ', 'おとり', 'サウンド', 'なげる', 'みずでっぽう', 'ドロップ']
@@ -6110,10 +6110,10 @@ GagShopPlayerPlayAgain = "もう１回！"
 GagShopPlayerBuying = "お買い物中"
 
 # MakeAToon.py
-GenderShopQuestionMickey = "男の子のトゥーンをつくるには、\nぼくをおしてね！" #CC_mickey_create01.mp3
-GenderShopQuestionMinnie = "女の子のトゥーンをつくるには、わたしをおしてね！" #CC_minnie_create01.mp3
-GenderShopFollow = "ついてきて！" #CC_mickey_create02.mp3 (if Mickey)
-GenderShopSeeYou = "またね！"#CC_mickey_create03.mp3 (if Mickey)
+GenderShopQuestionMickey = "男の子のトゥーンをつくるには、\nぼくをおしてね！" #CC_mickey_create01.ogg
+GenderShopQuestionMinnie = "女の子のトゥーンをつくるには、わたしをおしてね！" #CC_minnie_create01.ogg
+GenderShopFollow = "ついてきて！" #CC_mickey_create02.ogg (if Mickey)
+GenderShopSeeYou = "またね！"#CC_mickey_create03.ogg (if Mickey)
 GenderShopBoyButtonText = "男の子"
 GenderShopGirlButtonText = "女の子"
 
@@ -6307,51 +6307,51 @@ SuitInvasionBulletin2 = lToonHQ+"： %s にトゥーンタウンをのっとら�
 # DistributedHQInterior.py
 LeaderboardTitle = "トゥーン・プラトゥーン"
 # QuestScript.txt
-QuestScriptTutorialMickey_1 = "こんにちは、トム！\nトゥーンタウンの新しい住人になにか面白いギャグ、持ってない？" #CC_mickey_tutorial02.mp3　***DELETED "CC_mickey_tutorial01.mp3"***
-QuestScriptTutorialMickey_2 = "もちろん、%s！" #CC_tom_tutorial_mickey01.mp3
-QuestScriptTutorialMickey_3 = "彼がコグについて\nいろいろ教えてくれるって！\aそれじゃあ、\nまた後でね～！" #CC_mickey_tutorial03.mp3 \a CC_mickey_tutorial05.mp3　***DELETED "CC_mickey_tutorial04.mp3"***
-QuestScriptTutorialMickey_4 = "やじるしキーを使ってこっちにおいで！" #CC_tom_tutorial_mickey02.mp3
+QuestScriptTutorialMickey_1 = "こんにちは、トム！\nトゥーンタウンの新しい住人になにか面白いギャグ、持ってない？" #CC_mickey_tutorial02.ogg　***DELETED "CC_mickey_tutorial01.ogg"***
+QuestScriptTutorialMickey_2 = "もちろん、%s！" #CC_tom_tutorial_mickey01.ogg
+QuestScriptTutorialMickey_3 = "彼がコグについて\nいろいろ教えてくれるって！\aそれじゃあ、\nまた後でね～！" #CC_mickey_tutorial03.ogg \a CC_mickey_tutorial05.ogg　***DELETED "CC_mickey_tutorial04.ogg"***
+QuestScriptTutorialMickey_4 = "やじるしキーを使ってこっちにおいで！" #CC_tom_tutorial_mickey02.ogg
 
 # These are needed to correspond to the Japanese gender specific phrases
-QuestScriptTutorialMinnie_1 = "こんにちは、トム！\nトゥーンタウンの新しい住人になにか面白いギャグ、持ってない？" #CC_minnie_tutorial02.mp3　***DELETED "CC_minnie_tutorial01.mp3"***
-QuestScriptTutorialMinnie_2 = "もちろん、%s！" #CC_tom_tutorial_minnie01.mp3
-QuestScriptTutorialMinnie_3 = "彼がコグについて\nいろいろ教えてくれるのよ！\aそれじゃあ、\nまたね～！" #CC_minnie_tutorial03.mp3 \a CC_minnie_tutorial05.mp3 *** DELETED "CC_minnie_tutorial04.mp3"***
+QuestScriptTutorialMinnie_1 = "こんにちは、トム！\nトゥーンタウンの新しい住人になにか面白いギャグ、持ってない？" #CC_minnie_tutorial02.ogg　***DELETED "CC_minnie_tutorial01.ogg"***
+QuestScriptTutorialMinnie_2 = "もちろん、%s！" #CC_tom_tutorial_minnie01.ogg
+QuestScriptTutorialMinnie_3 = "彼がコグについて\nいろいろ教えてくれるのよ！\aそれじゃあ、\nまたね～！" #CC_minnie_tutorial03.ogg \a CC_minnie_tutorial05.ogg *** DELETED "CC_minnie_tutorial04.ogg"***
 
-QuestScript101_1 = "これらが「コグ」って言うんだ！\nトゥーンタウンをのっとろうとしているロボットたちなんだ。" #Please play "CC_tom_tutorial_questscript01.mp3" only / "CC_tom_tutorial_questscript02.mp3" is included.
-QuestScript101_2 = "たくさんの種類のコグがいるんだけど…" #CC_tom_tutorial_questscript03.mp3
-QuestScript101_3 = "…ハッピーな\nトゥーンビルをね…" #CC_tom_tutorial_questscript041.mp3
-QuestScript101_4 = "…みにくいコグのビルにしてしまうんだ！" #CC_tom_tutorial_questscript05.mp3
-QuestScript101_5 = "でも頭のかったーいコグはギャグをまったく理解することができないんだ！" #CC_tom_tutorial_questscript06.mp3
-QuestScript101_6 = "だからトゥーンのおもしろいギャグで、 コグの動きを止めることができるんだよ。" #CC_tom_tutorial_questscript07.mp3
-QuestScript101_7 = "たくさんのギャグがあるけど、まずはこれとこれかな…" #CC_tom_tutorial_questscript08.mp3
-QuestScript101_8 = "そうだ、ゲラゲラメーターも必要だね！" #CC_tom_tutorial_questscript09.mp3
-QuestScript101_9 = "ゲラゲラメーターが低すぎると、かなしくなって落ち込んじゃうんだよ。" #CC_tom_tutorial_questscript10.mp3
-QuestScript101_10 = "つまりハッピーだと、トゥーンは健康ってことなんだ！" #CC_tom_tutorial_questscript11.mp3
-QuestScript101_11 = "あーっ！ ぼくの店の外にコグがいる！" #CC_tom_tutorial_questscript12.mp3
-QuestScript101_12 = "たすけて、おねがい！ コグをやっつけて！" #CC_tom_tutorial_questscript13.mp3
-QuestScript101_13 = "キミに最初のトゥーンタスクをあげるね！\n　" #CC_tom_tutorial_questscript14.mp3　***DELETED "CC_tom_tutorial_questscript15.mp3"***
-QuestScript101_14 = "外にいるオベッカーを倒そう！いそいで！" #CC_tom_tutorial_questscript16.mp3
+QuestScript101_1 = "これらが「コグ」って言うんだ！\nトゥーンタウンをのっとろうとしているロボットたちなんだ。" #Please play "CC_tom_tutorial_questscript01.ogg" only / "CC_tom_tutorial_questscript02.ogg" is included.
+QuestScript101_2 = "たくさんの種類のコグがいるんだけど…" #CC_tom_tutorial_questscript03.ogg
+QuestScript101_3 = "…ハッピーな\nトゥーンビルをね…" #CC_tom_tutorial_questscript041.ogg
+QuestScript101_4 = "…みにくいコグのビルにしてしまうんだ！" #CC_tom_tutorial_questscript05.ogg
+QuestScript101_5 = "でも頭のかったーいコグはギャグをまったく理解することができないんだ！" #CC_tom_tutorial_questscript06.ogg
+QuestScript101_6 = "だからトゥーンのおもしろいギャグで、 コグの動きを止めることができるんだよ。" #CC_tom_tutorial_questscript07.ogg
+QuestScript101_7 = "たくさんのギャグがあるけど、まずはこれとこれかな…" #CC_tom_tutorial_questscript08.ogg
+QuestScript101_8 = "そうだ、ゲラゲラメーターも必要だね！" #CC_tom_tutorial_questscript09.ogg
+QuestScript101_9 = "ゲラゲラメーターが低すぎると、かなしくなって落ち込んじゃうんだよ。" #CC_tom_tutorial_questscript10.ogg
+QuestScript101_10 = "つまりハッピーだと、トゥーンは健康ってことなんだ！" #CC_tom_tutorial_questscript11.ogg
+QuestScript101_11 = "あーっ！ ぼくの店の外にコグがいる！" #CC_tom_tutorial_questscript12.ogg
+QuestScript101_12 = "たすけて、おねがい！ コグをやっつけて！" #CC_tom_tutorial_questscript13.ogg
+QuestScript101_13 = "キミに最初のトゥーンタスクをあげるね！\n　" #CC_tom_tutorial_questscript14.ogg　***DELETED "CC_tom_tutorial_questscript15.ogg"***
+QuestScript101_14 = "外にいるオベッカーを倒そう！いそいで！" #CC_tom_tutorial_questscript16.ogg
 
-QuestScript110_1 = "よくひとりでオベッカーを倒したね。 それじゃあ、ごほうびにトゥーンガイドをあげよう…" #CC_harry_tutorial_questscript01.mp3
-QuestScript110_2 = "トゥーンガイドには、たくさんの情報がはいってるよ。" #CC_harry_tutorial_questscript02.mp3
-QuestScript110_3 = "それを開いてごらん！ぼくがいろいろ教えてあげよう。" #CC_harry_tutorial_questscript03.mp3
-QuestScript110_4 = "地図はキミが行ったところを示してるんだ。" #CC_harry_tutorial_questscript04.mp3
-QuestScript110_5 = "ページをめくるとキミのギャグが…" #CC_harry_tutorial_questscript05.mp3
-QuestScript110_6 = "ん～！ギャグが残ってないね！ キミに新しいタスクをあげよう。" #CC_harry_tutorial_questscript06.mp3
-QuestScript110_7 = "キミのやらなきゃいけないタスクは次のページに書いてあるよ。" #CC_harry_tutorial_questscript07.mp3
-QuestScript110_8 = "それじゃあトロリーに乗って、ギャグを買うためのジェリービーンを稼ぎに行こう！" #CC_harry_tutorial_questscript08.mp3
-QuestScript110_9 = "まずはトロリー乗り場に行こう。ぼくの後ろのドアからプレイグラウンドへ出られるよ。" #CC_harry_tutorial_questscript09.mp3
-QuestScript110_10 = "さぁ、トゥーンガイドをとじてトロリーをみつけて！" #CC_harry_tutorial_questscript10.mp3
-QuestScript110_11 = "それがすんだら、トゥーンＨＱに戻るんだ。 じゃあね！" #CC_harry_tutorial_questscript11.mp3
+QuestScript110_1 = "よくひとりでオベッカーを倒したね。 それじゃあ、ごほうびにトゥーンガイドをあげよう…" #CC_harry_tutorial_questscript01.ogg
+QuestScript110_2 = "トゥーンガイドには、たくさんの情報がはいってるよ。" #CC_harry_tutorial_questscript02.ogg
+QuestScript110_3 = "それを開いてごらん！ぼくがいろいろ教えてあげよう。" #CC_harry_tutorial_questscript03.ogg
+QuestScript110_4 = "地図はキミが行ったところを示してるんだ。" #CC_harry_tutorial_questscript04.ogg
+QuestScript110_5 = "ページをめくるとキミのギャグが…" #CC_harry_tutorial_questscript05.ogg
+QuestScript110_6 = "ん～！ギャグが残ってないね！ キミに新しいタスクをあげよう。" #CC_harry_tutorial_questscript06.ogg
+QuestScript110_7 = "キミのやらなきゃいけないタスクは次のページに書いてあるよ。" #CC_harry_tutorial_questscript07.ogg
+QuestScript110_8 = "それじゃあトロリーに乗って、ギャグを買うためのジェリービーンを稼ぎに行こう！" #CC_harry_tutorial_questscript08.ogg
+QuestScript110_9 = "まずはトロリー乗り場に行こう。ぼくの後ろのドアからプレイグラウンドへ出られるよ。" #CC_harry_tutorial_questscript09.ogg
+QuestScript110_10 = "さぁ、トゥーンガイドをとじてトロリーをみつけて！" #CC_harry_tutorial_questscript10.ogg
+QuestScript110_11 = "それがすんだら、トゥーンＨＱに戻るんだ。 じゃあね！" #CC_harry_tutorial_questscript11.ogg
 
-QuestScriptTutorialBlocker_1 = "やぁ、こんにちは！" #CC_flippy_tutorial_blocker01.mp3
-QuestScriptTutorialBlocker_2 = "あのぅ… こんにちは？？" #CC_flippy_tutorial_blocker02.mp3
-QuestScriptTutorialBlocker_3 = "あ～、そうか！ スピードチャットの使い方がわからないんだね！" #CC_flippy_tutorial_blocker03.mp3
-QuestScriptTutorialBlocker_4 = "そのボタンをクリックして、なにか言ってみて。" #CC_flippy_tutorial_blocker04.mp3
-QuestScriptTutorialBlocker_5 = "その調子！！\aキミがこれから行くところには、話せるトゥーンがたくさんいるからね。"  #CC_flippy_tutorial_blocker05.mp3 \a CC_flippy_tutorial_blocker06.mp3
-QuestScriptTutorialBlocker_6 = "キミの友だちとキーボードを使ってチャットしたい場合は、となりの青いボタンをつかうんだよ。" #CC_flippy_tutorial_blocker07.mp3
-QuestScriptTutorialBlocker_7 = "\"チャット\"ボタンっていうんだけどこれを使うには、トゥーンタウンのオフィシャルメンバーになる必要があるんだ。" #CC_flippy_tutorial_blocker08.mp3
-QuestScriptTutorialBlocker_8 = "がんばって！ じゃあまたあとでね！" #CC_flippy_tutorial_blocker09.mp3
+QuestScriptTutorialBlocker_1 = "やぁ、こんにちは！" #CC_flippy_tutorial_blocker01.ogg
+QuestScriptTutorialBlocker_2 = "あのぅ… こんにちは？？" #CC_flippy_tutorial_blocker02.ogg
+QuestScriptTutorialBlocker_3 = "あ～、そうか！ スピードチャットの使い方がわからないんだね！" #CC_flippy_tutorial_blocker03.ogg
+QuestScriptTutorialBlocker_4 = "そのボタンをクリックして、なにか言ってみて。" #CC_flippy_tutorial_blocker04.ogg
+QuestScriptTutorialBlocker_5 = "その調子！！\aキミがこれから行くところには、話せるトゥーンがたくさんいるからね。"  #CC_flippy_tutorial_blocker05.ogg \a CC_flippy_tutorial_blocker06.ogg
+QuestScriptTutorialBlocker_6 = "キミの友だちとキーボードを使ってチャットしたい場合は、となりの青いボタンをつかうんだよ。" #CC_flippy_tutorial_blocker07.ogg
+QuestScriptTutorialBlocker_7 = "\"チャット\"ボタンっていうんだけどこれを使うには、トゥーンタウンのオフィシャルメンバーになる必要があるんだ。" #CC_flippy_tutorial_blocker08.ogg
+QuestScriptTutorialBlocker_8 = "がんばって！ じゃあまたあとでね！" #CC_flippy_tutorial_blocker09.ogg
 
 """
 GagShopTut
