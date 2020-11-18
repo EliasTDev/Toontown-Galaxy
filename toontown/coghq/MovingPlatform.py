@@ -39,6 +39,8 @@ class MovingPlatform(DirectObject.DirectObject, NodePath):
         if type(parentToken) == int:
             parentToken = ToontownGlobals.SPDynamic + parentToken
         self.parentToken = parentToken
+
+
         self.name = "MovingPlatform-%s" % (parentToken)
         self.assign(hidden.attachNewNode(self.name))
         self.model = model.copyTo(self)
