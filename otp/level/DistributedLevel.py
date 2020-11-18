@@ -763,9 +763,9 @@ class DistributedLevel(DistributedObject.DistributedObject,
             smallTitleSeq = Sequence(Func(self.hideTitleText),
                                           Func(self.showSmallTitle))
             if titleSeq:
-                self.titleTextSequence = Sequence(titleSeq, smallTitleSeq, , name=self.uniqueName('titleText'))
+                self.titleTextSequence = Sequence(titleSeq, smallTitleSeq,  name=self.uniqueName('titleText'))
             else:
-                self.titleTextSequence = Sequence(smallTitleSeq, name=self.uniqueName('titleText')
+                self.titleTextSequence = Sequence(smallTitleSeq, name=self.uniqueName('titleText'))
             self.titleTextSequence.start()
             
             
@@ -796,12 +796,11 @@ class DistributedLevel(DistributedObject.DistributedObject,
                                          startColor= Vec4(self.titleColor[0],
                                               self.titleColor[1],
                                               self.titleColor[2],
-                                              0.0),
-                                             0.5),
-                    )
+                                              0.0)
+                ))
 
             if titleSeq:
-               self.titleTextSequence = Sequence(titleSeq, self.uniqueName("titleText")))
+               self.titleTextSequence = Sequence(titleSeq, self.uniqueName("titleText"))
             self.titleTextSeq.start()
         
     def showTitleText(self):
