@@ -7,6 +7,9 @@ from toontown.toonbase import ToontownGlobals
 from toontown.building import Elevator
 from pandac.PandaModules import *
 from libotp import *
+from libpandadna import *
+from toontown.hood import ZoneUtil
+
 class FactoryExterior(BattlePlace.BattlePlace):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("FactoryExterior")
@@ -133,8 +136,10 @@ class FactoryExterior(BattlePlace.BattlePlace):
         # Add hooks for the linktunnels
         self.tunnelOriginList = base.cr.hoodMgr.addLinkTunnelHooks(self, self.nodeList, self.zoneId)
         how=requestStatus["how"]
+        if self.zoneId != ToontownGlobals.LawbotOfficeExt:
+            self.handleInterests()
         self.fsm.request(how, [requestStatus])
-
+        
     def exit(self):
         # Turn the sky off
         self.loader.hood.stopSky()
@@ -247,3 +252,26 @@ class FactoryExterior(BattlePlace.BattlePlace):
         else:
             self.notify.error("Unknown mode: " + where +
                               " in handleElevatorDone")
+
+    def handleInterests(self):
+        # First load the DNA file for the Cog HQ.
+        dnaStore = DNAStorage()
+        dnaFileName = self.genDNAFileName(self.zoneId)
+        loadDNAFileAI(dnaStore, dnaFileName)
+
+        # Next collect all of the visgroup zone IDs.
+        self.zoneVisDict = {}
+        for i in range(dnaStore.getNumDNAVisGroupsAI()):
+            groupFullName = dnaStore.getDNAVisGroupName(i)
+            visGroup = dnaStore.getDNAVisGroupAI(i)
+            visZoneId = int(base.cr.hoodMgr.extractGroupName(groupFullName))
+            visZoneId = ZoneUtil.getTrueZoneId(visZoneId, self.zoneId)
+            visibles = []
+            for i in range(visGroup.getNumVisibles()):
+                visibles.append(int(visGroup.getVisibleName(i)))
+
+            visibles.append(ZoneUtil.getBranchZone(visZoneId))
+            self.zoneVisDict[visZoneId] = visibles
+
+        # Finally, set interest in all visgroups due to this being a Cog HQ.
+        base.cr.sendSetZoneMsg(self.zoneId, list(self.zoneVisDict.values())[0])
