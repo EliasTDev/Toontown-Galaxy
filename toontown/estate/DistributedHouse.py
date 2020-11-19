@@ -38,7 +38,7 @@ class DistributedHouse(DistributedObject.DistributedObject):
         self._name = ""
         self._namePlate = None
         self._nameText = None
-        self._nametag = None
+       self.nametag = None
         self.floorMat = None
         self.matText = None
         self.randomGenerator = None
@@ -68,10 +68,10 @@ class DistributedHouse(DistributedObject.DistributedObject):
         DistributedObject.DistributedObject.delete(self)
 
     def clearNametag(self):
-        if self._nametag != None:
-            self._nametag.unmanage(base.marginManager)
-            self._nametag.setAvatar(NodePath())
-            self._nametag = None
+        ifself.nametag != None:
+           self.nametag.unmanage(base.marginManager)
+           self.nametag.setAvatar(NodePath())
+           self.nametag = None
 
     def load(self):        
         self.notify.debug("load")
@@ -285,24 +285,24 @@ class DistributedHouse(DistributedObject.DistributedObject):
 
     def __setupNametag(self):
         # set up the nametag
-        if self._nametag:
+        ifself.nametag:
             self.clearNametag()
 
         if (self._name == ""):
             houseName = ""
         else:
             houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(self._name)
-        self._nametag = NametagGroup()
-        self._nametag.setFont(ToontownGlobals.getBuildingNametagFont())
+       self.nametag = NametagGroup()
+       self.nametag.setFont(ToontownGlobals.getBuildingNametagFont())
         if TTLocalizer.BuildingNametagShadow:
-            self._nametag.setShadow(*TTLocalizer.BuildingNametagShadow)
-        self._nametag.setContents(Nametag.CName)
-        self._nametag.setColorCode(NametagGroup.CCHouseBuilding)
-        self._nametag.setActive(0)
-        self._nametag.setAvatar(self.house)
-        self._nametag.setObjectCode(self.doId)
-        self._nametag.setName(houseName)
-        self._nametag.manage(base.marginManager)
+           self.nametag.setShadow(*TTLocalizer.BuildingNametagShadow)
+       self.nametag.setContents(Nametag.CName)
+       self.nametag.setColorCode(NametagGroup.CCHouseBuilding)
+       self.nametag.setActive(0)
+       self.nametag.setAvatar(self.house)
+       self.nametag.setObjectCode(self.doId)
+       self.nametag.setName(houseName)
+       self.nametag.manage(base.marginManager)
 
     def unload(self):
         self.notify.debug("unload")

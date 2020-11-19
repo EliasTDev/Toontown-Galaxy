@@ -172,7 +172,7 @@ class Char(Avatar.Avatar):
             # make the drop shadow
             self.initializeDropShadow()
             self.initializeNametag3d()
-            self._nametag3d.setBin('fixed', 0)
+            self.nametag3d.setBin('fixed', 0)
 
             # fix Chip and Dales wonky shadow
             if (self._name == "chip") or (self._name == "dale"):
