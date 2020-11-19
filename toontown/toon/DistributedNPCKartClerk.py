@@ -25,6 +25,7 @@ class DistributedNPCKartClerk(DistributedNPCToonBase):
         self.button = None
         self.popupInfo = None
         self.kartShopGui = None
+        self.camSequence = None
             
     def disable(self):
         self.ignoreAll()
@@ -37,6 +38,9 @@ class DistributedNPCKartClerk(DistributedNPCToonBase):
         if self.kartShopGui:
             self.kartShopGui.destroy()
             self.kartShopGui = None
+        if self.camSequence:
+            self.camSequence.finish()
+            self.camSequence = None
         self.av = None
         if (self.isLocalToon):
             base.localAvatar.posCamera(0, 0)
@@ -78,7 +82,9 @@ class DistributedNPCKartClerk(DistributedNPCToonBase):
         if self.kartShopGui:
             self.kartShopGui.destroy()
             self.kartShopGui = None
-            
+        if self.camSequence:
+            self.camSequence.finish()
+            self.camSequence = None
         self.show()
         self.startLookAround()
         self.detectAvatars()
@@ -132,6 +138,9 @@ class DistributedNPCKartClerk(DistributedNPCToonBase):
                 if self.kartShopGui:
                     self.kartShopGui.destroy()
                     self.kartShopGui = None
+                if self.camSequence:
+                    self.camSequence.finish()
+                    self.camSequence = None 
 
             self.setChatAbsolute(TTLocalizer.STOREOWNER_TOOKTOOLONG,
                                  CFSpeech | CFTimeout)
@@ -151,12 +160,8 @@ class DistributedNPCKartClerk(DistributedNPCToonBase):
 
             if (self.isLocalToon):
                 camera.wrtReparentTo(render)
-                camera.lerpPosHpr(-5, 9, base.localAvatar.getHeight()-0.5,
-                                  -150, -2, 0,
-                                  1,
-                                  other=self,
-                                  blendType="easeOut",
-                                  task=self.uniqueName('lerpCamera'))
+                self.camSequence = camera.posQuatInterval(1, Point3(-5, 9, self.getHeight() - 0.5), Point3(-150, -2, 0), other=self, blendType='easeOut', name=self.uniqueName('lerpCamera'))
+                self.camSequence.start()
 
             if (self.isLocalToon):
                 taskMgr.doMethodLater(1.0, self.popupKartShopGUI,

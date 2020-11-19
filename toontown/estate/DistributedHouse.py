@@ -38,7 +38,7 @@ class DistributedHouse(DistributedObject.DistributedObject):
         self._name = ""
         self._namePlate = None
         self._nameText = None
-       self.nametag = None
+        self.nametag = None
         self.floorMat = None
         self.matText = None
         self.randomGenerator = None
@@ -68,7 +68,7 @@ class DistributedHouse(DistributedObject.DistributedObject):
         DistributedObject.DistributedObject.delete(self)
 
     def clearNametag(self):
-        ifself.nametag != None:
+        if self.nametag != None:
            self.nametag.unmanage(base.marginManager)
            self.nametag.setAvatar(NodePath())
            self.nametag = None
@@ -285,24 +285,24 @@ class DistributedHouse(DistributedObject.DistributedObject):
 
     def __setupNametag(self):
         # set up the nametag
-        ifself.nametag:
+        if self.nametag:
             self.clearNametag()
 
         if (self._name == ""):
             houseName = ""
         else:
             houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(self._name)
-       self.nametag = NametagGroup()
-       self.nametag.setFont(ToontownGlobals.getBuildingNametagFont())
+        self.nametag = NametagGroup()
+        self.nametag.setFont(ToontownGlobals.getBuildingNametagFont())
         if TTLocalizer.BuildingNametagShadow:
            self.nametag.setShadow(*TTLocalizer.BuildingNametagShadow)
-       self.nametag.setContents(Nametag.CName)
-       self.nametag.setColorCode(NametagGroup.CCHouseBuilding)
-       self.nametag.setActive(0)
-       self.nametag.setAvatar(self.house)
-       self.nametag.setObjectCode(self.doId)
-       self.nametag.setName(houseName)
-       self.nametag.manage(base.marginManager)
+        self.nametag.setContents(Nametag.CName)
+        self.nametag.setColorCode(NametagGroup.CCHouseBuilding)
+        self.nametag.setActive(0)
+        self.nametag.setAvatar(self.house)
+        self.nametag.setObjectCode(self.doId)
+        self.nametag.setName(houseName)
+        self.nametag.manage(base.marginManager)
 
     def unload(self):
         self.notify.debug("unload")
