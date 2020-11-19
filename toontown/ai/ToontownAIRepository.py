@@ -104,7 +104,8 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.hoods = []
         self.buildingManagers = {}
         self.suitPlanners = {}
-
+        self.__queryEstateContext = 0
+        self.__queryEstateFuncMap = {}
         # Guard for publish
         if simbase.wantBingo:
             self.bingoMgr = None
