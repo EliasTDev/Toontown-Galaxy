@@ -27,7 +27,7 @@ from toontown.minigame import MinigameRulesPanel
 from toontown.racing import Piejectile
 from toontown.racing import EffectManager
 from toontown.racing import PiejectileManager
-
+from libpandadna import *
 class DistributedRace(DistributedObject.DistributedObject):
 
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedRace')
@@ -1389,7 +1389,7 @@ class DistributedRace(DistributedObject.DistributedObject):
         farDistSquared = farDist * farDist
 
         #import pdb; pdb.set_trace()
-        for i in range(self.barricadeSegments):            
+        for i in range(int(self.barricadeSegments)):            
             testPoint = Point3(0,0,0)
             self.curve.getPoint(( i / self.barricadeSegments) * (self.curve.getMaxT()-.00000000001), testPoint)
             for side in ('innersidest','outersidest'):

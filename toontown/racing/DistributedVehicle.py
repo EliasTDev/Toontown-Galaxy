@@ -22,7 +22,7 @@ import random
 from direct.showbase.PythonUtil import randFloat
 from direct.task.Task import Task
 import math
-
+from libotp import *
 if __debug__:
     import pdb
 
@@ -1269,7 +1269,7 @@ class DistributedVehicle(DistributedSmoothNode.DistributedSmoothNode,
 
         # Everything within this loop is performed n times per second
         # with the physics calculations.
-        for i in range(numFrames):
+        for i in range(int(numFrames)):
             self.physicsMgr.doPhysics(self.physicsDt)
 
             # set the new tire friction force
