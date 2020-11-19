@@ -47,7 +47,7 @@ class ShardPage(ShtikerPage.ShtikerPage):
         self.ShardInfoUpdateInterval = 5.0  # seconds
 
         self.lowPop, self.oggPop, self.highPop = base.getShardPopLimits()
-        self.showPop = config.GetBool("show-total-population", 0)
+        self.showPop = config.GetBool("show-total-population", 1)
         self.noTeleport = config.GetBool("shard-page-disable", 0)
 
     def load(self):
