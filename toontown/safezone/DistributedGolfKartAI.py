@@ -204,7 +204,7 @@ class DistributedGolfKartAI(DistributedObjectAI.DistributedObjectAI):
         # Get the avatar id
         avId = self.seats[seatIndex]
         # If there is no one sitting there, that is kind of strange.
-        if avId == 0:
+        if avId == 0  or not avId:
             self.notify.warning("Clearing an empty seat index: " +
                                 str(seatIndex) + " ... Strange...")
         else:
@@ -386,11 +386,12 @@ class DistributedGolfKartAI(DistributedObjectAI.DistributedObjectAI):
         avIdList = []
         # It is possible the players exited the district
         if (numPlayers > 0):
-             for seatIndex in range(len(self.seats)):
+             for seatIndex in range(len(self.seats)):            
                 avId = self.seats[seatIndex]
-                avIdList.append(avId)
+                if avId:
+                    avIdList.append(avId)
                 # Clear the fill slot                
-                self.clearFullNow(seatIndex)
+                    self.clearFullNow(seatIndex)
 
              golfZone = GolfManagerAI.GolfManagerAI().readyGolfCourse(avIdList,
                                                                  self.golfCourse)

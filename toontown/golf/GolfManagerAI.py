@@ -36,7 +36,7 @@ class __GolfManagerAI(DirectObject.DirectObject):
         newCourse.generateWithRequired(golfZone)
         
         self.courseList.append(newCourse)
-        newCourse.addExpectedGolfers(avIds)
+        #newCourse.addExpectedGolfers(avIds)
         
         golfZone = newCourse.getZoneId()
         self.notify.debug('%s' %  self)

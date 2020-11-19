@@ -327,7 +327,7 @@ class DistributedPhysicsWorldBase:
             motor.setParamVel(1.5)
             motor.setParamFMax(500000000.0)            
             boxsize = Vec3(1.0, 1.0, 1.0)
-            motor.attach(0, cross)
+            motor.attachBody(0, cross)
             motor.setAnchor(vPos)
             motor.setAxis(ourAxis)
             self.cross = cross
@@ -406,7 +406,7 @@ class DistributedPhysicsWorldBase:
             #motor.setParamVel(0)
             motor.setParamFMax(50000.0)            
             boxsize = Vec3(1.0, 1.0, 1.0)
-            motor.attach(0, cross)
+            motor.attachBody(0, cross)
             motor.setAnchor(self.subPlacerNode.getPos(self.root))
             motor.setAxis(ourAxis)
             self.cross = cross
