@@ -769,6 +769,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         #backgroundNP.node().setEffect(DecalEffect.make())
         # Get the text node path:
         signTextNodePath = backgroundNP.attachNewNode(textNode.generate())
+        signTextNodePath.setAttrib(DepthOffsetAttrib.make(1))
         assert(not signTextNodePath.isEmpty())
         # Scale the text:
         signTextNodePath.setPosHprScale(0.0, 0.0, -0.21 + textHeight * 0.1 / zScale,
@@ -972,6 +973,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         #backgroundNP.node().setEffect(DecalEffect.make())
         # Get the text node path:
         signTextNodePath = backgroundNP.attachNewNode(textNode.generate())
+        signTextNodePath.setAttrib(DepthOffsetAttrib.make(1))
         #assert(not signTextNodePath.isEmpty())
         # Scale the text:
         signTextNodePath.setPosHprScale(0.0, 0.0, -0.13 + textHeight * 0.1 / zScale, 0.0, 0.0, 0.0, 0.1 * 8.0 / 20.0, 0.1, 0.1 / zScale)

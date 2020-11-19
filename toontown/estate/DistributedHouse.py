@@ -35,10 +35,10 @@ class DistributedHouse(DistributedObject.DistributedObject):
         self.ownerId = 0
         self.colorIndex = 0
         self.house = None
-        self.name = ""
-        self.namePlate = None
-        self.nameText = None
-        self.nametag = None
+        self._name = ""
+        self._namePlate = None
+        self._nameText = None
+        self._nametag = None
         self.floorMat = None
         self.matText = None
         self.randomGenerator = None
@@ -52,10 +52,10 @@ class DistributedHouse(DistributedObject.DistributedObject):
         self.notify.debug("delete")
         self.unload()
         self.clearNametag()
-        if self.namePlate:
-            self.namePlate.removeNode()
-            del self.namePlate
-            self.namePlate = None
+        if self._namePlate:
+            self._namePlate.removeNode()
+            del self._namePlate
+            self._namePlate = None
         if self.floorMat:
             self.floorMat.removeNode()
             del self.floorMat
@@ -68,10 +68,10 @@ class DistributedHouse(DistributedObject.DistributedObject):
         DistributedObject.DistributedObject.delete(self)
 
     def clearNametag(self):
-        if self.nametag != None:
-            self.nametag.unmanage(base.marginManager)
-            self.nametag.setAvatar(NodePath())
-            self.nametag = None
+        if self._nametag != None:
+            self._nametag.unmanage(base.marginManager)
+            self._nametag.setAvatar(NodePath())
+            self._nametag = None
 
     def load(self):        
         self.notify.debug("load")
@@ -185,10 +185,10 @@ class DistributedHouse(DistributedObject.DistributedObject):
         self.notify.debug("__setupNamePlate")
 
         # name plate above door
-        if self.namePlate:
-            self.namePlate.removeNode()
-            del self.namePlate
-            self.namePlate = None
+        if self._namePlate:
+            self._namePlate.removeNode()
+            del self._namePlate
+            self._namePlate = None
 
         nameText = TextNode('nameText')
         r = self.randomGenerator.random()
@@ -204,15 +204,15 @@ class DistributedHouse(DistributedObject.DistributedObject):
         nameText.setWordwrap(16.0)
         xScale = 1.0
         numLines = 0
-        if (self.name == ""):
+        if (self._name == ""):
             # don't bother putting an empty string up
             return
         else:
             # make the name fit nicely on the floor mat
-            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(self.name)
+            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(self._name)
 
         nameText.setText(houseName)
-        self.nameText = nameText
+        self._nameText = nameText
 
         # Since the text is wordwrapped, it may flow over more
         # than one line.  Try to adjust the scale and position of
@@ -226,10 +226,10 @@ class DistributedHouse(DistributedObject.DistributedObject):
         sign_origin = self.house.find("**/sign_origin")
         pos = sign_origin.getPos()
         sign_origin.setPosHpr(pos[0],pos[1],pos[2]+.15*textHeight,90,0,0)
-        self.namePlate = sign_origin.attachNewNode(self.nameText)
-        self.namePlate.setDepthWrite(0)
-        self.namePlate.setPos(0,-0.05,0)
-        self.namePlate.setScale(xScale)
+        self._namePlate = sign_origin.attachNewNode(self._nameText)
+        self._namePlate.setDepthWrite(0)
+        self._namePlate.setPos(0,-0.05,0)
+        self._namePlate.setScale(xScale)
 
         return nameText
 
@@ -257,12 +257,12 @@ class DistributedHouse(DistributedObject.DistributedObject):
         matText.setWordwrap(10.0)
         xScale = 1.0
         numLines = 0
-        if (self.name == ""):
+        if (self._name == ""):
             # don't bother putting an empty string up
             return
         else:
             # make the name fit nicely on the floor mat
-            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(self.name)
+            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(self._name)
 
         matText.setText(houseName)
         self.matText = matText
@@ -285,24 +285,24 @@ class DistributedHouse(DistributedObject.DistributedObject):
 
     def __setupNametag(self):
         # set up the nametag
-        if self.nametag:
+        if self._nametag:
             self.clearNametag()
 
-        if (self.name == ""):
+        if (self._name == ""):
             houseName = ""
         else:
-            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(self.name)
-        self.nametag = NametagGroup()
-        self.nametag.setFont(ToontownGlobals.getBuildingNametagFont())
+            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(self._name)
+        self._nametag = NametagGroup()
+        self._nametag.setFont(ToontownGlobals.getBuildingNametagFont())
         if TTLocalizer.BuildingNametagShadow:
-            self.nametag.setShadow(*TTLocalizer.BuildingNametagShadow)
-        self.nametag.setContents(Nametag.CName)
-        self.nametag.setColorCode(NametagGroup.CCHouseBuilding)
-        self.nametag.setActive(0)
-        self.nametag.setAvatar(self.house)
-        self.nametag.setObjectCode(self.doId)
-        self.nametag.setName(houseName)
-        self.nametag.manage(base.marginManager)
+            self._nametag.setShadow(*TTLocalizer.BuildingNametagShadow)
+        self._nametag.setContents(Nametag.CName)
+        self._nametag.setColorCode(NametagGroup.CCHouseBuilding)
+        self._nametag.setActive(0)
+        self._nametag.setAvatar(self.house)
+        self._nametag.setObjectCode(self.doId)
+        self._nametag.setName(houseName)
+        self._nametag.manage(base.marginManager)
 
     def unload(self):
         self.notify.debug("unload")
@@ -376,17 +376,17 @@ class DistributedHouse(DistributedObject.DistributedObject):
         return self.ownerId
 
     def setName(self, name):
-        self.name = name
+        self._name = name
         # name plate has changed, so change the name
-        if (self.nameText and
-            self.nameText.getText() != self.name):
-            if self.name == "":
-                self.nameText.setText("")
+        if (self._nameText and
+            self._nameText.getText() != self._name):
+            if self._name == "":
+                self._nameText.setText("")
             else:
-                self.nameText.setText(self.name+"'s\n House")
+                self._nameText.setText(self._name+"'s\n House")
 
     def getName(self):
-        return self.name
+        return self._name
 
     def b_setColor(self, colorInd):
         self.setColor(colorInd)
@@ -407,10 +407,10 @@ class DistributedHouse(DistributedObject.DistributedObject):
         self.notify.debug("__setupNamePlateCustom")
 
         # name plate above door
-        if self.namePlate:
-            self.namePlate.removeNode()
-            del self.namePlate
-            self.namePlate = None
+        if self._namePlate:
+            self._namePlate.removeNode()
+            del self._namePlate
+            self._namePlate = None
 
         nameText = TextNode('nameText')
         nameText.setCardAsMargin(0.1, 0.1, 0.1, 0.1)
@@ -430,15 +430,15 @@ class DistributedHouse(DistributedObject.DistributedObject):
         nameText.setWordwrap(16.0)
         xScale = 1.0
         numLines = 0
-        if (self.name == ""):
+        if (self._name == ""):
             # don't bother putting an empty string up
             return
         else:
             # make the name fit nicely on the floor mat
-            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(self.name)
+            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(self._name)
 
         nameText.setText(houseName)
-        self.nameText = nameText
+        self._nameText = nameText
 
         # Since the text is wordwrapped, it may flow over more
         # than one line.  Try to adjust the scale and position of
@@ -455,9 +455,9 @@ class DistributedHouse(DistributedObject.DistributedObject):
         #debugAxis.wrtReparentTo(render)
         pos = sign_origin.getPos()
         sign_origin.setPosHpr(pos[0],pos[1],pos[2]+.15*textHeight,90,0,0)
-        self.namePlate = sign_origin.attachNewNode(self.nameText)
-        self.namePlate.setDepthWrite(0)
-        self.namePlate.setPos(0,-0.05,0)
-        self.namePlate.setScale(xScale)
+        self._namePlate = sign_origin.attachNewNode(self._nameText)
+        self._namePlate.setDepthWrite(0)
+        self._namePlate.setPos(0,-0.05,0)
+        self._namePlate.setScale(xScale)
 
         return nameText

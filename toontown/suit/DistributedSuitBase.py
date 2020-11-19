@@ -259,6 +259,7 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
         is used after a suit is done with its flying anim
         """
         if self.prop:
+            self.prop.cleanup()
             self.prop.removeNode()
             self.prop = None
         if self.propInSound:
