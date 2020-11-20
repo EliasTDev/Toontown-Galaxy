@@ -802,6 +802,7 @@ class Toon(Avatar.Avatar, ToonHead):
 
         self.forwardSpeed = 0.0
         self.rotateSpeed = 0.0
+        self.newTask = None 
 
         # Set Avatar Type (Toon, Teen, or Pirate)
         self.avatarType = "toon"
@@ -2107,20 +2108,19 @@ class Toon(Avatar.Avatar, ToonHead):
         Emote.globalEmote.releaseAll(self, "exitSwim")
 
     def startBobSwimTask(self):
-        swimTaskName = self.taskName("swimBobTask")
-        taskMgr.remove("swimTask")
-        taskMgr.remove(swimTaskName)
+        if self.newTask:
+            self.newTask.finish()
         self.getGeomNode().setZ(4.0)
         self.nametag3d.setZ(5.0)
-        newTask = Sequence(
-            self.getGeomNode().posInterval(1, Point3(0, -3, 3), blendType="easeInOut"),
-            self.getGeomNode().posInterval(1, Point3(0, -3, 4), blendType="easeInOut")
+        self.newTask = Sequence(
+            self.getGeomNode().posInterval(1, Point3(0, -3, 3), startPos=Point3(0, -3, 4), blendType="easeInOut"),
+            self.getGeomNode().posInterval(1, Point3(0, -3, 4), startPos=Point3(0, -3, 3), blendType="easeInOut")
             )
-        taskMgr.add(newTask, swimTaskName)
-
+        self.newTask.loop()
     def stopBobSwimTask(self):
         swimTaskName = self.taskName("swimBobTask")
-        taskMgr.remove(swimTaskName)
+        if self.newTask:
+            self.newTask.finish()
         self.getGeomNode().setPos(0, 0, 0)
         self.nametag3d.setZ(1.0)
 

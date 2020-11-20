@@ -1290,9 +1290,8 @@ class DistributedTargetGame(DistributedMinigame):
         self.gravity = 4
         newHpr = Point3(0, -68, 0)
         newPos = Point3(0, self.CAMERA_Y + self.TOON_Y + 15, 15)
-        camera.lerpPosHpr(newPos, newHpr, 2.5,
-                          blendType = "easeInOut",
-                          task = self.FLY2FALL_CAM_TASK)
+        camera.posHprInterval(2.5, newPos, newHpr,
+                          blendType = "easeInOut").start()
                           
         open = self.umbrella.find('**/open_umbrella')
         open.show()
@@ -1396,9 +1395,9 @@ class DistributedTargetGame(DistributedMinigame):
         
         newHpr = Point3(180, 10, 0)
         newPos = Point3(0, -(self.CAMERA_Y + self.TOON_Y + 12), 1)
-        camera.lerpPosHpr(newPos, newHpr, 5.0,
+        camera.posHprInterval(5.0, newPos, newHpr,
                           blendType = "easeInOut",
-                          task = self.SCORE_CAM_TASK)
+                          )
                           
         self.help.hide()
         
@@ -1562,14 +1561,15 @@ class DistributedTargetGame(DistributedMinigame):
                 self.ticker = 0.0
                 powerDiv = 0.05
                 self.power -= (1.0 + (0.20 * ((self.power * powerDiv) * (self.power * powerDiv)))) 
-            if timeDiff > 0.5: #ttest
-                self.power = self.powerBar['value']
-                self.signalLaunch = 0
-                if self.power > 120:
-                    self.power = 120
-                if self.power < 40:
-                    self.power = 40
-                self.gameFSM.request("fly")
+            if timeDiff is not None:
+                if timeDiff > 0.5: #ttest
+                    self.power = self.powerBar['value']
+                    self.signalLaunch = 0
+                    if self.power > 120:
+                        self.power = 120
+                    if self.power < 40:
+                        self.power = 40
+                    self.gameFSM.request("fly")
                 
         self.stretchY = (0.9 * self.stretchY) + (0.1 * self.power)
         self.stretchX = (0.9 * self.stretchX) + (0.1 * self.launchLaterial)

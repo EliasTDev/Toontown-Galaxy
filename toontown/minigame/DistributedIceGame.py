@@ -15,6 +15,7 @@ from toontown.minigame import DistributedIceWorld
 from toontown.minigame import IceGameGlobals
 from toontown.minigame import MinigameAvatarScorePanel
 from toontown.minigame import IceTreasure
+import functools
 
 class DistributedIceGame(DistributedMinigame.DistributedMinigame,
                          DistributedIceWorld.DistributedIceWorld):
@@ -648,7 +649,7 @@ class DistributedIceGame(DistributedMinigame.DistributedMinigame,
                 return -1
             else:
                 return 0
-        sortedByDistance.sort(cmp = compareDistance)
+        sortedByDistance.sort(key=functools.cmp_to_key(cmp = compareDistance))
         self.scoreMovie = Sequence()
         curScale = 0.01
         curTime = 0
@@ -1426,8 +1427,8 @@ class DistributedIceGame(DistributedMinigame.DistributedMinigame,
         DistributedIceWorld.DistributedIceWorld.postStep(self)
 
         #self.notify.debug('in post step --------------------------')
-        for count in range(self.colCount):
-            c0, c1 = self.getOrderedContacts(count,)
+        for entry in self.colEntries:
+            c0, c1 = self.getOrderedContacts(entry)
             #self.notify.debug('c0=%s c1=%s' % (c0, c1))
             if c1 in self.tireCollideIds:
                 # a tire hit something

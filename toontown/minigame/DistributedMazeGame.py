@@ -22,7 +22,7 @@ from direct.showbase import RandomNumGen
 from . import MinigameAvatarScorePanel
 from . import MinigameGlobals
 from direct.task.Task import Task
-
+import functools 
 class DistributedMazeGame(DistributedMinigame):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedMazeGame')
     # define constants that you won't want to tweak here
@@ -154,9 +154,9 @@ class DistributedMazeGame(DistributedMinigame):
                         # there must be an even number of suits
                         assert not numSuits % 2
                         speeds = []
-                        for i in range(numSuits/2):
+                        for i in range(numSuits//2):
                             if fasterSuits:
-                                i += numSuits/2
+                                i += numSuits//2
                             t = i / float(numSuits-1)
                             # map t into 0..1
                             if fasterSuits:
@@ -1156,7 +1156,7 @@ class DistributedMazeGame(DistributedMinigame):
             updateTics = self.suits[i].getThinkTimestampTics(curTic)
             suitUpdates.extend(list(zip(updateTics, [i]*len(updateTics))))
         # sort the list in-place
-        suitUpdates.sort(lambda a,b: a[0]-b[0])
+        suitUpdates.sort(key=functools.cmp_to_key(lambda a,b: a[0]-b[0]))
 
         if len(suitUpdates) > 0:
             # see below

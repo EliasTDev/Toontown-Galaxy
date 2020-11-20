@@ -3,10 +3,10 @@
 from direct.showbase.DirectObject import DirectObject
 from toontown.toonbase.ToontownGlobals import *
 from direct.directnotify import DirectNotifyGlobal
-from pandac.PandaModules import *
+from panda3d.core import *
 from . import VineGameGlobals
 
-class VineSpider(NodePath):
+class VineSpider(NodePath, DirectObject):
     """
     Treasures toons can pickup swinging from vine to vine.  Based on MazeTreasure
     """
@@ -31,7 +31,7 @@ class VineSpider(NodePath):
         #self.gameAssets =  loader.loadModel("phase_4/models/minigames/swimming_game_ring")
         spider2 = gameAssets.find('**/spider_3')
         spider1 = gameAssets.find('**/spider_2')
-        seqNode = SequenceNode.SequenceNode('spider')
+        seqNode = SequenceNode('spider')
         seqNode.addChild(spider1.node())
         seqNode.addChild(spider2.node())
         seqNode.setFrameRate(2)

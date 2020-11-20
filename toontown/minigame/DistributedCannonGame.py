@@ -184,6 +184,8 @@ class DistributedCannonGame(DistributedMinigame):
         self.cannonMoving = 0
 
         self.modelCount = 14
+        self.introCameraSequence = None
+
 
     def getTitle(self):
         return TTLocalizer.CannonGameTitle
@@ -1610,7 +1612,9 @@ class DistributedCannonGame(DistributedMinigame):
 
     def __stopIntro(self):
         taskMgr.remove(self.INTRO_TASK_NAME)
-        taskMgr.remove(self.INTRO_TASK_NAME_CAMERA_LERP)
+        if self.introCameraSequence:
+            self.introCameraSequence.finish()
+            self.introCameraSequence = None
         # reclaim the camera
         camera.wrtReparentTo(render)
 
@@ -1627,16 +1631,16 @@ class DistributedCannonGame(DistributedMinigame):
         camera.lookAt(targetLookAt)
 
         # get the target HPR
-        targetHpr = camera.getHpr()
+        targetQuat = Quat()
+        targetQuat.setHpr(camera.getHpr())
 
         # put the camera back where we found it
         camera.setPos(oldPos)
         camera.setHpr(oldHpr)
 
         # spawn a camera LERP task
-        camera.lerpPosHpr(Point3(targetPos), targetHpr, duration,
-                          blendType = "easeInOut",
-                          task = self.INTRO_TASK_NAME_CAMERA_LERP)
+        self.introCameraSequence = camera.posQuatInterval(duration, Point3(targetPos), targetQuat, blendType='easeInOut', name=self.INTRO_TASK_NAME_CAMERA_LERP)
+        self.introCameraSequence.start()
 
     def __taskLookInWater(self, task):
         # place the camera a little above the tower, looking into the water
@@ -1707,12 +1711,7 @@ class DistributedCannonGame(DistributedMinigame):
         camera.setHpr(relCamHpr)
 
         # rotate the rotation node
-        lerpNode.lerpHpr(endRotation, self.T_TOONHEAD2CANNONBACK,
-                         blendType = "easeInOut",
-                         task = self.INTRO_TASK_NAME_CAMERA_LERP)
-        # lerp the camera position
-        camera.lerpPos(endPos, self.T_TOONHEAD2CANNONBACK,
-                       blendType = "easeInOut",
-                       task = self.INTRO_TASK_NAME_CAMERA_LERP)
+        self.introCameraSequence = Parallel(lerpNode.hprInterval(self.T_TOONHEAD2CANNONBACK, endRotation, blendType='easeInOut', name=self.INTRO_TASK_NAME_CAMERA_LERP), camera.posInterval(self.T_TOONHEAD2CANNONBACK, endPos, blendType='easeInOut', name=self.INTRO_TASK_NAME_CAMERA_LERP))
+        self.introCameraSequence.start()
         return Task.done
 

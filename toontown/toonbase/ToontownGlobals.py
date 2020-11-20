@@ -648,7 +648,7 @@ MinigameNames = {
 # the minigame template; not used in final game
 MinigameTemplateId = -1
 
-
+                #1          #2            #3         #4          #5            #6           #7                 #8            #9          #10            #11           #12         #13        #14          #15           #16           #17
 MinigameIDs = ( RaceGameId, CannonGameId, TagGameId, PatternGameId, RingGameId, MazeGameId, TugOfWarGameId, CatchGameId, DivingGameId, TargetGameId, PairingGameId, VineGameId, IceGameId, CogThiefGameId, TwoDGameId, PhotoGameId, TravelGameId,)
 
 

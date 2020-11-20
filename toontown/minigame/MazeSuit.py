@@ -7,7 +7,7 @@ from direct.directnotify import DirectNotifyGlobal
 from . import Maze
 from . import MazeData
 from . import MazeGameGlobals
-from direct.showbase import RandomNumGen
+from direct.showbase.RandomNumGen import RandomNumGen
 from toontown.suit import Suit
 from toontown.suit import SuitDNA
 

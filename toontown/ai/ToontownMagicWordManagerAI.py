@@ -2544,7 +2544,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     response = "minigame ID '%s' is out of range" % mgId
                     mgId = None
             except:
-                name = string.lower(name)
+                name = name.lower()
                 if name[-4:] == "game":
                     name = name[:-4]
                 if name[:11] == "distributed":
@@ -2556,7 +2556,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             argIndex = 2
             while argIndex < len(args):
                 arg = args[argIndex]
-                arg = string.lower(arg)
+                arg = arg.lower()
                 argIndex += 1
 
                 # it's either a difficulty (float), 'keep',
@@ -2747,7 +2747,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
 
         # Strip of the "~dna" part; everything else is parameters to
         # AvatarDNA.updateToonProperties.
-        parms = string.strip(word[4:])
+        parms = str.strip(word[4:])
 
         # Get a copy of the avatar's current DNA.
         dna = ToonDNA.ToonDNA(av.dna.makeNetString())
@@ -3254,7 +3254,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             args = word.split()
             import string
             for i in range(2, len(args)):
-                avList.append(string.atoi(args[i]))
+                avList.append(str.atoi(args[i]))
             manager = GolfManagerAI.GolfManagerAI()
             #simbase.golfGoer.generateWithRequired(OTPGlobals.UberZone)
             courseId = 0
@@ -3356,7 +3356,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 argIndex = 2
                 while argIndex < len(args):
                     arg = args[argIndex]
-                    arg = string.lower(arg)
+                    arg = arg.lower()
                     argIndex += 1
 
                     # it's either a difficulty (float), 'keep',

@@ -64,7 +64,10 @@ class MinigamePhysicsWorldBase:
         self.useQuickStep = False # child classes can override this
         self.deterministic = True # child classes can override this
         self.numStepsInSimulateTask = 0
-        
+        self.collisionEventName = 'ode-collision-%s' % id(self)
+        self.space.setCollisionEvent(self.collisionEventName)
+        self.accept(self.collisionEventName, self.__handleCollision)  
+
     def delete(self):
         """cleanup the MinigamePhysicsWorldBase."""
         self.notify.debug("Max Collision Count was %s" % (self.maxColCount))
@@ -112,7 +115,8 @@ class MinigamePhysicsWorldBase:
         self.space.destroy()
         self.world = None
         self.space = None
-        
+        self.ignore(self.collisionEventName)
+
     def setupSimulation(self):
         """Meant to be overridden by the child classes.
 
@@ -178,7 +182,10 @@ class MinigamePhysicsWorldBase:
     
     def simulate(self):
         """Do one physics step."""
-        self.colCount = self.space.autoCollide() # Detect collisions and create contact joints
+        self.colEntries = []
+        self.space.autoCollide() # Detect collisions and create contact joints
+        eventMgr.doEvents()
+        self.colCount = len(self.colEntries)
         if self.maxColCount < self.colCount:
             self.maxColCount = self.colCount
             self.notify.debug("New Max Collision Count %s" % (self.maxColCount))
@@ -206,12 +213,14 @@ class MinigamePhysicsWorldBase:
                 pandaNodePathGeom.setQuat(Quat(odeBody.getQuaternion()[0],odeBody.getQuaternion()[1],odeBody.getQuaternion()[2],odeBody.getQuaternion()[3]))
 
         
-    def getOrderedContacts(self, count):
+    def getOrderedContacts(self, entry):
         """Return the two collide ids of a collision."""
-        c0 = self.space.getContactId(count,0 ) 
-        c1 = self.space.getContactId(count,1 )
+        c0 = self.space.getCollideId(entry.getGeom1())
+        c1 = self.space.getCollideId(entry.getGeom2())
         if c0 > c1:
-            chold = c1
-            c1 = c0
-            c0 = chold
-        return c0, c1            
+            return c1, c0
+        else:
+            return c0, c1        
+
+    def __handleCollision(self, entry):
+        self.colEntries.append(entry)
