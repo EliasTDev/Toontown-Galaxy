@@ -7,7 +7,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.PythonUtil import Functor
 from toontown.minigame import TravelGameGlobals
 from toontown.distributed import DelayDelete
-from libotp import NametagFloat2d, Nametag
+from libotp import NametagFloat2d, Nametag, NametagGlobals
 
 COUNT_UP_RATE = 0.15
 DELAY_BEFORE_COUNT_UP = 1.25

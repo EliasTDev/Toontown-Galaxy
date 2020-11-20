@@ -16,7 +16,7 @@ from toontown.toontowngui import TTDialog
 from direct.interval.IntervalGlobal import *
 from . import VoteResultsPanel
 from . import VoteResultsTrolleyPanel
-
+from libotp import *
 # For each minigame, what's the corresponding icon
 IconDict = {
     ToontownGlobals.RaceGameId : 'mg_trolley_sign_race',
