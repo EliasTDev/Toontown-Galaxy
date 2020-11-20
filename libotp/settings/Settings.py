@@ -128,7 +128,7 @@ class Settings:
 
     @staticmethod
     def doSavedSettingsExist():
-        return os.path.exists('./useropt')
+        return os.path.exists('user/ttgsettings.json')
 
     @staticmethod
     def setAcceptingNewFriends(acceptingNewFriends):

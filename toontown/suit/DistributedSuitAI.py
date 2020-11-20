@@ -593,7 +593,6 @@ class DistributedSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
         else:
             door.requestSuitExit(self.getDoId())
 
-
     def startTakeOver(self):
         """
         Begins the process of taking over a toon building by a suit.
