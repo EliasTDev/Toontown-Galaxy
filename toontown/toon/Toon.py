@@ -2114,7 +2114,7 @@ class Toon(Avatar.Avatar, ToonHead):
         self.nametag3d.setZ(5.0)
         newTask = Sequence(
             self.getGeomNode().posInterval(1, Point3(0, -3, 3), blendType="easeInOut"),
-            self.getGeomNode().posInterval(1, Point3(0, -3, 4, 1), blendType="easeInOut")
+            self.getGeomNode().posInterval(1, Point3(0, -3, 4), blendType="easeInOut")
             )
         taskMgr.add(newTask, swimTaskName)
 

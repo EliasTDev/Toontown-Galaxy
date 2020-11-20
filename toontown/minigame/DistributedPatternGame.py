@@ -19,6 +19,8 @@ from toontown.toonbase import ToontownGlobals
 import string
 from toontown.toonbase import TTLocalizer
 
+
+#TODO change minnie to a toon npc, could be a staff member or a popular community member.
 class DistributedPatternGame(DistributedMinigame):
 
     phase4snd = "phase_4/audio/sfx/"
@@ -766,7 +768,7 @@ class DistributedPatternGame(DistributedMinigame):
     def __setMinnieChat(self, str, giggle):
         # there may or may not be a %s in the string; replace with
         # toon name
-        str = str.replace(str, "%s",
+        str = str.replace("%s",
                              self.getAvatar(self.localAvId).getName())
         self.minnie.setChatAbsolute(str, CFSpeech)
         if giggle:
