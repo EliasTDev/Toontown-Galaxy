@@ -400,15 +400,15 @@ CalcOtherCourseBest = False
 
 TrophyRequirements = {
     CoursesCompleted :   (2, 20, 100),
-    CoursesUnderPar :    (1, 5, 75),
-    HoleInOneShots :     (1, 5, 25),
-    EagleOrBetterShots : (1, 7, 40),
-    BirdieOrBetterShots :(1, 10, 50),
+    CoursesUnderPar :    (1, 5, 50),
+    HoleInOneShots :     (1, 5, 50),
+    EagleOrBetterShots : (1, 7, 60),
+    BirdieOrBetterShots :(1, 10, 70),
     ParOrBetterShots :   (1, 12, 75),
     MultiPlayerCoursesCompleted :    (1, 10, 100),
     CourseZeroWins :     (1, 10, 75),
     CourseOneWins :      (1, 7, 50),
-    CourseTwoWins :      (1, 5, 25),
+    CourseTwoWins :      (1, 5, 25)
     #TwoPlayerWins :    (1, 10, 100),
     #ThreePlayerWins :    (1, 10, 100),
     #FourPlayerWins :     (1, 10, 100),
