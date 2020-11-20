@@ -58,7 +58,8 @@ from toontown.uberdog.DistributedPartyManagerAI import DistributedPartyManagerAI
 from toontown.parties.ToontownTimeManager import ToontownTimeManager
 from toontown.coderedemption.TTCodeRedemptionMgrAI import TTCodeRedemptionMgrAI
 import time
-
+from direct.distributed.PyDatagram import PyDatagram
+from toontown.ai.ToontownAIMsgTypes import *
 class ToontownAIRepository(ToontownInternalRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory('ToontownAIRepository')
 

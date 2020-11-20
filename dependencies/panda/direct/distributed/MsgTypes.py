@@ -97,6 +97,7 @@ MsgName2Id = {
     'DBSS_OBJECT_DELETE_DISK':                   2232,
 
     # Database Server control messages:
+    'DBSERVER_GET_ESTATE':                          1040,
     'DBSERVER_CREATE_OBJECT':                       3000,
     'DBSERVER_CREATE_OBJECT_RESP':                  3001,
     'DBSERVER_OBJECT_GET_FIELD':                    3010,

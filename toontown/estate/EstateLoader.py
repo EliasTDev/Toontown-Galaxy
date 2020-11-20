@@ -60,8 +60,8 @@ class EstateLoader(SafeZoneLoader.SafeZoneLoader):
                            # Final State
                            'final',
                            )
-        self.musicFile = "phase_4/audio/bgm/TC_nbrhood.mid"
-        self.activityMusicFile = "phase_3.5/audio/bgm/TC_SZ_activity.mid"
+        self.musicFile = "phase_4/audio/bgm/TC_nbrhood.ogg"
+        self.activityMusicFile = "phase_3.5/audio/bgm/TC_SZ_activity.ogg"
         self.dnaFile = "phase_5.5/dna/estate_1.dna"
         # There is no safe zone specific DNA Storage for the estate
         # storage_estate.dna gets loaded by the hood
@@ -90,7 +90,7 @@ class EstateLoader(SafeZoneLoader.SafeZoneLoader):
         assert(self.notify.debug("load()"))
         SafeZoneLoader.SafeZoneLoader.load(self)
         # create music and sound effects
-        self.music = base.loader.loadMusic("phase_4/audio/bgm/TC_nbrhood.mid")
+        self.music = base.loader.loadMusic("phase_4/audio/bgm/TC_nbrhood.ogg")
         self.underwaterSound = base.loader.loadSfx('phase_4/audio/sfx/AV_ambient_water.ogg')
         self.swimSound = base.loader.loadSfx('phase_4/audio/sfx/AV_swim_single_stroke.ogg')
         self.submergeSound = base.loader.loadSfx('phase_5.5/audio/sfx/AV_jump_in_water.ogg')

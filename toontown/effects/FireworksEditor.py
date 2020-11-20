@@ -747,8 +747,8 @@ class FireworksEditor(AppShell):
         # Load music
         # Set duration of show based on fireworks
         musicFilename = askopenfilename(
-            defaultextension = '.mid',
-            filetypes = (('MIDI Files', '*.mid'),('All files', '*')),
+            defaultextension = '.ogg',
+            filetypes = (('Ogg Files', '*.ogg'),('All files', '*')),
             initialdir = ttmodelsDirectory,
             title = 'Load Music File',
             parent = self.parent)

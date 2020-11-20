@@ -22,12 +22,14 @@ class Settings:
                (800, 600),
                (1024, 768),
                (1280, 1024),
-               (1600, 1200)]
+               (1600, 1200),
+               (1920, 1080)]
+
 
     @staticmethod
     def readSettings():
         if Settings.doSavedSettingsExist():
-            settingsFile = open('./useropt')
+            settingsFile = open('user/ttgsettings.json')
             settingsData = settingsFile.read()
             del settingsFile
             try:
@@ -48,7 +50,7 @@ class Settings:
     @staticmethod
     def writeSettings():
         if Settings.doSavedSettingsExist():
-            settingsFile = open('./useropt')
+            settingsFile = open('user/ttgsettings.json')
             settingsData = settingsFile.read()
             del settingsFile
             try:
@@ -69,7 +71,7 @@ class Settings:
         settings['UserSettings']['windowedMode'] = Settings.getWindowedMode()
         settings['UserSettings']['embeddedMode'] = Settings.getEmbeddedMode()
 
-        with open('./useropt', 'w') as f:
+        with open('user/ttgsettings.json', 'w') as f:
             f.write(json.dumps(settings))
 
     @staticmethod

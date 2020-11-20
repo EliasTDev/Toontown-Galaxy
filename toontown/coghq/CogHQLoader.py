@@ -69,7 +69,7 @@ class CogHQLoader(StateData.StateData):
         # Prepare the state machine
         self.parentFSMState.addChild(self.fsm)
         self.music = base.loader.loadMusic(self.musicFile)
-        self.battleMusic = base.loader.loadMusic('phase_9/audio/bgm/encntr_suit_winning.mid')
+        self.battleMusic = base.loader.loadMusic('phase_9/audio/bgm/encntr_suit_winning.ogg')
         # Load the battle UI:
         self.townBattle = TownBattle.TownBattle(self.townBattleDoneEvent)
         self.townBattle.load()
