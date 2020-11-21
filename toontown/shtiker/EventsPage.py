@@ -507,6 +507,9 @@ class EventsPage(ShtikerPage.ShtikerPage):
         elif activityBase.activityId == PartyGlobals.ActivityIds.PartyDance20:
             iconString = PartyGlobals.ActivityIds.getString(PartyGlobals.ActivityIds.PartyDance)
         else:
+            if activityBase.activityId not in PartyGlobals.ActivityIds:
+                self.notify.warning('Unknown activity: {0}'.format(activityBase.activityId))
+                return 
             iconString = PartyGlobals.ActivityIds.getString(activityBase.activityId)
             
         geom = getPartyActivityIcon(self.activityIconsModel, iconString)
@@ -785,6 +788,9 @@ class EventsPage(ShtikerPage.ShtikerPage):
                 countDict[activityBase.activityId] +=1
         idsUsed = []
         for activityBase in self.hostedPartyInfo.activityList:
+            if activityBase.activityId not in PartyGlobals.ActivityIds:
+                self.notify.warning('loadActivites: activity{0} not in activity ids continuing to next one'.format(activityBase.activityId))
+                continue 
             if activityBase.activityId not in idsUsed:
                 idsUsed.append(activityBase.activityId)
                 count = countDict[activityBase.activityId]

@@ -649,7 +649,7 @@ class DistributedIceGame(DistributedMinigame.DistributedMinigame,
                 return -1
             else:
                 return 0
-        sortedByDistance.sort(key=functools.cmp_to_key(cmp = compareDistance))
+        sortedByDistance.sort(key=functools.cmp_to_key(compareDistance))
         self.scoreMovie = Sequence()
         curScale = 0.01
         curTime = 0

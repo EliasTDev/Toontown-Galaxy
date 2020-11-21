@@ -200,11 +200,20 @@ Some handy magic words you can type at the Toontown chat prompt:
     1: Race
     2: Cannon
     3: Tag
-    4: Minnie Dance game (simon)
+    4:Minnie Dance game (simon)
     5: Ring game
     6: Maze game
     7: Tug-o-war
     8: Catching game
+    9: Diving game
+10:  Target game
+11: Pairing game
+12: Vine Game
+13: Ice Game
+14: Cog thief 
+15: Toon Escape
+16: Photo fun #ewww
+17: Travel Game
 
 ~treasures
     Reports the number of treasures in the playground.

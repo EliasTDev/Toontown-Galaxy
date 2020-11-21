@@ -55,7 +55,7 @@ class PartyEditorGridElement(DirectButton):
         # DirectButton work... that and the initializeoptions below... without
         # those two calls, strange... and I mean hard to debug, stuff happens.
         self.defineoptions(kw, optiondefs)
-        DirectButton.__init__(self, self.partyEditor.parent)
+        DirectButton.__init__(self, self.partyEditor._parent)
         self.initialiseoptions(PartyEditorGridElement)
         self.setName("%sGridElement"%self._name)
 

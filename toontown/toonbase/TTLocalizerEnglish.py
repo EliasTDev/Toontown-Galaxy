@@ -6239,6 +6239,12 @@ PartyActivityNameDict = {
         "editor" : "Cog Trampoline",
         "description" : "Jump on a Cog's face!"
     },
+    98: {
+        'generic': 'unknown',
+        'invite': 'unknown',
+        'editor': 'unknown',
+        'description': 'Unknown party activity. Please contact developers.'
+    }
 }
 
 # Note : This dictionary is used to show the names of the decorations in various
