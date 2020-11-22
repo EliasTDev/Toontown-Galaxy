@@ -3461,8 +3461,8 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                         # Not a problem with center>=2 in this example:
                         #   The range without rounding: range(int(3.5), int(0.5), -1)
                         #   The range with rounding:    range(int(3.5), int(0), -1)
-                        result =  list(range(int(centerGrid + size/2.0),
-                                        int(centerGrid - (size/2.0)), -1))
+                        result =  list(range(int(centerGrid + size/2),
+                                        int(centerGrid - (size/2)), -1))
 
                     # The result list should be the same size as given.
                     assert len(result) == size, "Bad result range: c=%s s=%s result=%s" % (centerGrid, size, result)
