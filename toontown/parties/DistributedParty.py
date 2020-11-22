@@ -86,8 +86,8 @@ class DistributedParty(DistributedObject.DistributedObject):
 
         # This uses essentially the same functionality as computeGridYRange and computeGridXRange.
         def fillGrid(x, y, size):
-            for i in range(-size[1]/2+1, size[1]/2+1):
-                for j in range(-size[0]/2+1, size[0]/2+1):
+            for i in range(int(-size[1]/2+1), int(size[1]/2+1)):
+                for j in range(int(-size[0]/2+1, size[0]/2+1)):
                     self.grid[i+y][j+x] = False
         
         for activityBase in self.partyInfo.activityList:
