@@ -3194,7 +3194,7 @@ class OTPClientRepository(ClientRepositoryBase):
         # Special handler for quiet zone generates -- we need to filter
         parentId = di.getUint32()
         zoneId = di.getUint32()
-        assert parentId in self.doId2do
+        #assert parentId in self.doId2do
         # Get the class Id
         classId = di.getUint16()
         # Get the DO Id
@@ -3209,7 +3209,7 @@ class OTPClientRepository(ClientRepositoryBase):
         # Special handler for quiet zone generates -- we need to filter
         parentId = di.getUint32()
         zoneId = di.getUint32()
-        assert parentId in self.doId2do
+        #assert parentId in self.doId2do
         # Get the class Id
         classId = di.getUint16()
         # Get the DO Id

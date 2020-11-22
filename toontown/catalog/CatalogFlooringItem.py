@@ -211,24 +211,24 @@ def getFloorings(*indexList):
     # have a color chosen by the user.  Until customization, 
     # use a default color index of 0 (if the pattern has a color
     # list) or CT_WHITE if the pattern has no color list
-    list = []
+    _list = []
     for index in indexList:
-        list.append(CatalogFlooringItem(index))
-    return list
+        _list.append(CatalogFlooringItem(index))
+    return _list
 
 def getAllFloorings(*indexList):
     # This function returns a list of all possible
     # CatalogFlooringItems (that is, all color variants) for the
     # indicated type index(es).
-    list = []
+    _list = []
     for index in indexList:
         colors = FlooringTypes[index][FTColor]
         if colors:
             for n in range(len(colors)):
-                list.append(CatalogFlooringItem(index, n))
+                _list.append(CatalogFlooringItem(index, n))
         else:
-            list.append(CatalogFlooringItem(index, 0))
-    return list
+            _list.append(CatalogFlooringItem(index, 0))
+    return _list
 
 def getFlooringRange(fromIndex, toIndex, *otherRanges):
     # This function returns a list of all possible
@@ -238,7 +238,7 @@ def getFlooringRange(fromIndex, toIndex, *otherRanges):
     # Make sure we got an even number of otherRanges
     assert(len(otherRanges)%2 == 0)
 
-    list = []
+    _list = []
 
     froms = [fromIndex,]
     tos = [toIndex,]
@@ -255,7 +255,7 @@ def getFlooringRange(fromIndex, toIndex, *otherRanges):
                 colors = FlooringTypes[patternIndex][FTColor]
                 if colors:
                     for n in range(len(colors)):
-                        list.append(CatalogFlooringItem(patternIndex, n))
+                        _list.append(CatalogFlooringItem(patternIndex, n))
                 else:
-                    list.append(CatalogFlooringItem(patternIndex, 0))
-    return list
+                    _list.append(CatalogFlooringItem(patternIndex, 0))
+    return _list

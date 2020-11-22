@@ -49,17 +49,21 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
     epochHourInSeconds = timeToEpoch * 60 * 60
     dayInSeconds = 24 * 60 * 60
 
-    def __init__(self, air, avId, zoneId, ts, dawn, valDict = None):
+    def __init__(self, air):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
 
         # the avatar currently in charge of the estate
-        self.notify.debug("created with avId = %d and zoneId = %d" % (avId, zoneId))
-        self.avId = avId
-        self.zoneId = zoneId
+        #self.notify.debug("created with avId = %d and zoneId = %d" % (avId, zoneId))
+        #self.avId = 0
+        #self.zoneId = 0
 
         #simbase.air.lastEstate = self inable to check the estate.
-
+        self.houses = [None] * 6
         self.estateType = 0
+        if not hasattr(self, 'avId'):
+            self.avId = 0
+        if not hasattr(self, 'zoneId'):
+            self.zoneId = 0
         self.estateButterflies = None
         self.fishingSpots = None
         self.fishingPonds = None
@@ -72,13 +76,13 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
         self.gardenList = [[],[],[],[],[],[]]
         self.gardenBoxList = [[],[],[],[],[],[]]
         self.houseList = []
-
+        self.idList = []
         #if not hasattr(self, "decorData"):
         #    self.decorData = []
 
-        self.cannonsEnabled = 0#simbase.config.GetBool('estate-cannons', 0)
-        self.fireworksEnabled = simbase.config.GetBool('estate-fireworks', 0)
-        self.goonEnabled = simbase.config.GetBool('estate-goon', 0)
+        self.cannonsEnabled = simbase.config.GetBool('estate-cannons', 1)
+        self.fireworksEnabled = simbase.config.GetBool('estate-fireworks', 1)
+        self.goonEnabled = simbase.config.GetBool('estate-goon', 0) #what is this 
         self.goons = None
         self.gagBarrels = None
         self.crate = None
@@ -87,14 +91,14 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
         self.gameTableFlag = False
 
         # for day/night
-        self.serverTime = ts
-        self.dawnTime = dawn
+        #self.serverTime = ts
+        self.dawnTime = 0
 
         #here we load in all the database fields
-        if valDict:
-            for key in valDict:
-                if hasattr(self, key):
-                    self.dclass.directUpdate(self, key, valDict[key])
+        #if valDict:
+          #  for key in valDict:
+           #     if hasattr(self, key):
+           #         self.dclass.directUpdate(self, key, valDict[key])
 
         # keep track of generation/deletion from stateserver
         self.Estate_generated = 0
@@ -252,6 +256,14 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
 
         self.gardenTable = []
 
+    def destroy(self):
+        for house in self.houses:
+            if house is not None:
+                house.requestDelete()
+
+        del self.houses[:]
+        self.requestDelete()
+        
     def initEstateData(self, estateVal=None, numHouses=0, houseId=None, houseVal=None):
         # these parameters have just been read from the database..
         # now we have to do something with them.
@@ -506,6 +518,15 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
         self.notify.info("Next epoch to happen at %s" % (tupleNextEpoch))
 
 
+    def setIdList(self, idList):
+        self.idList = idList
+
+    def d_setIdList(self, idList):
+        self.sendUpdate('setIdList', [idList])
+
+    def b_setIdList(self, idList):
+        self.setIdList(idList)
+        self.d_setIdList(idList)
 
 
     def gardenInit(self, avIdList):

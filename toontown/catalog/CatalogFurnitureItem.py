@@ -1089,10 +1089,10 @@ def nextAvailableBank(avatar, duplicateItems):
     return item
 
 def getAllBanks():
-    list = []
+    _list = []
     for bankId in list(BankToMoney.keys()):
-        list.append(CatalogFurnitureItem(bankId))
-    return list
+        _list.append(CatalogFurnitureItem(bankId))
+    return _list
 
 def nextAvailableCloset(avatar, duplicateItems):
     # detemine which closet index in the tuple to use
@@ -1127,17 +1127,17 @@ def nextAvailableCloset(avatar, duplicateItems):
     return item
 
 def getAllClosets():
-    list = []
+    _list = []
     for closetId in list(ClosetsToClothes.keys()):
-        list.append(CatalogFurnitureItem(closetId))
-    return list
+        _list.append(CatalogFurnitureItem(closetId))
+    return _list
 
 def getAllFurnitures(index):
     # This function returns a list of all possible
     # CatalogFurnitureItems (that is, all color variants)
     # for the indicated type index(es).
-    list = []
+    _list = []
     colors = FurnitureTypes[index][FTColorOptions]
     for n in range(len(colors)):
-        list.append(CatalogFurnitureItem(index, n))
-    return list
+        _list.append(CatalogFurnitureItem(index, n))
+    return _list

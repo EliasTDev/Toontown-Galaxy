@@ -157,25 +157,25 @@ def getMouldings(*indexList):
     # have a color chosen by the user.  Until customization, 
     # use a default color index of 0 (if the pattern has a color
     # list) or CT_WHITE if the pattern has no color list
-    list = []
+    _list = []
     for index in indexList:
-        list.append(CatalogMouldingItem(index))
-    return list
+        _list.append(CatalogMouldingItem(index))
+    return _list
     
 
 def getAllMouldings(*indexList):
     # This function returns a list of all possible
     # CatalogMouldingItems (that is, all color variants) for the
     # indicated type index(es).
-    list = []
+    _list = []
     for index in indexList:
         colors = MouldingTypes[index][MTColor]
         if colors:
             for n in range(len(colors)):
-                list.append(CatalogMouldingItem(index, n))
+                _list.append(CatalogMouldingItem(index, n))
         else:
-            list.append(CatalogMouldingItem(index, 0))
-    return list
+            _list.append(CatalogMouldingItem(index, 0))
+    return _list
     
 
 def getMouldingRange(fromIndex, toIndex, *otherRanges):

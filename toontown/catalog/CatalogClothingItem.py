@@ -673,13 +673,13 @@ def getAllClothes(*clothingTypes):
     # CatalogClothingItems (that is, all color variants) for the
     # indicated type index(es).
 
-    list = []
+    _list = []
     for clothingType in clothingTypes:
         base = CatalogClothingItem(clothingType, 0)
 
-        list.append(base)
+        _list.append(base)
         for n in range(1, len(base.getColorChoices())):
-            list.append(CatalogClothingItem(clothingType, n))
+            _list.append(CatalogClothingItem(clothingType, n))
 
-    return list
+    return _list
     

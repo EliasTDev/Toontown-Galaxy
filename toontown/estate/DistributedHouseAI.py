@@ -5,6 +5,7 @@ from toontown.ai.ToontownAIMsgTypes import *
 from direct.distributed import DistributedObjectAI
 from . import DistributedHouseAI
 # import DistributedGardenAI
+
 from . import DistributedCannonAI
 from . import DistributedHouseInteriorAI
 from . import DistributedHouseDoorAI
@@ -44,14 +45,15 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
 
     HouseModel = None
 
-    def __init__(self, air, doId, estateId, zoneId, posIndex):
+    def __init__(self, air):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
-        self.doId = doId
-        self.estateId = estateId
-        self.zoneId = zoneId
+        self.doId = 0
+        self.estateId = 0
+        self.zoneId = 0
+        self.housePos = 0
         # self.garden = None
         self.cannon = None
-        self.housePosInd = posIndex
+        self.housePosInd = 0
 
         # these members are stored in the db and initialized in the
         # initFromServerResponse function (called by the estateAI).
@@ -61,9 +63,11 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
 
         self.houseType = HouseGlobals.HOUSE_DEFAULT
         self.gardenPosInd = 0
+        self.gardenPos = self.gardenPosInd
+
         self.ownerId = 0
         self.name = ""
-        self.colorIndex = posIndex
+        self.colorIndex = 0
         self.atticItems = CatalogItemList.CatalogItemList()
         self.interiorItems = CatalogItemList.CatalogItemList()
         self.atticWallpaper = CatalogItemList.CatalogItemList()
@@ -77,6 +81,8 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         self.interior = None
         self.interiorManager = None
         self.mailbox = None
+
+
 
     def delete(self):
         self.notify.debug("delete")
@@ -116,6 +122,9 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
                 self.interiorManager = None
             DistributedObjectAI.DistributedObjectAI.delete(self)
 
+    def announceGenerate(self):
+        DistributedObjectAI.DistributedObjectAI.announceGenerate(self)
+        self.setupEnvirons()
     def setupEnvirons(self):
         # This method is called by the EstateManager as it is creating
         # the house.  It sets up the doors, mailbox, furniture, etc.,
@@ -161,11 +170,11 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         # self.garden_created = 1
 
         # create a cannon
-        #if self.cannonEnabled and simbase.config.GetBool('estate-cannons', 0):
-        #    posHpr = CannonGlobals.cannonDrops[self.housePosInd]
-        #    self.cannon = DistributedCannonAI.DistributedCannonAI(self.air, self.estateId,
-        #                                                         *posHpr)
-        #    self.cannon.generateWithRequired(self.zoneId)
+        if self.cannonEnabled and simbase.config.GetBool('estate-cannons', 1):
+            posHpr = CannonGlobals.cannonDrops[self.housePosInd]
+            self.cannon = DistributedCannonAI.DistributedCannonAI(self.air, self.estateId,
+                                                                 *posHpr)
+            self.cannon.generateWithRequired(self.zoneId)
 
         if self.interior != None:
             self.interior.requestDelete()
@@ -191,11 +200,10 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         self.resetFurniture()
 
         if simbase.wantPets:
-            if 0:#__dev__:
-                from pandac.PandaModules import ProfileTimer
-                pt = ProfileTimer()
-                pt.init('house model load')
-                pt.on()
+            #if 0:#__dev__:
+                #pt = ProfileTimer()
+                #pt.init('house model load')
+                #pt.on()
 
             # add ourselves to the estate model
             if not DistributedHouseAI.HouseModel:
@@ -208,10 +216,10 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
                 *HouseGlobals.houseDrops[self.housePosInd])
             DistributedHouseAI.HouseModel.instanceTo(self.houseNode)
 
-            if 0:#__dev__:
-                pt.mark('loaded house model')
-                pt.off()
-                pt.printTo()
+            #if 0:#__dev__:
+               # pt.mark('loaded house model')
+                #pt.off()
+                #pt.printTo()
 
     def __hasPhone(self):
         for item in self.interiorItems:
@@ -612,6 +620,57 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
                 self.interiorManager.d_setDeletedItems(self.deletedItems)
 
         return extracted
+
+    def placeStarterGarden(self):
+        if not config.GetBool('want-gardening', True):
+            return
+
+        if not self.estate:
+            return
+
+        av = self.air.doId2do.get(self.getAvatarId())
+        if av is None:
+            return
+
+        if av.getGardenStarted():
+            self.notify.warning('Avatar %s tried to start their garden twice!' % self.getAvatarId())
+            return
+
+        # Set the avatar's garden to started:
+        av.b_setGardenStarted(1)
+
+        # Create the GardenManagerAI:
+        self.gardenManager = GardenManagerAI(self.air, self.estate)
+        self.gardenManager.loadGarden(av.doId)
+
+    def createGardenManager(self):
+        if not config.GetBool('want-gardening', True):
+            return
+
+        if not self.estate:
+            return
+
+        if not self.getAvatarId():
+            return
+
+        av = self.air.doId2do.get(self.getAvatarId())
+        if av is not None:
+            if av.getGardenStarted():
+                self.gardenManager = GardenManagerAI(self.air, self.estate)
+                self.gardenManager.loadGarden(av.doId)
+
+            return
+
+        def __gotOwner(dclass, fields, self=self):
+            if dclass != self.air.dclassesByName['DistributedToonAI']:
+                return
+
+            gardenStarted = fields['setGardenStarted'][0]
+            if gardenStarted:
+                self.gardenManager = GardenManagerAI(self.air, self.estate)
+                self.gardenManager.loadGarden(self.getAvatarId())
+
+        self.air.dbInterface.queryObject(self.air.dbId, self.getAvatarId(), __gotOwner)
 
     def addWindow(self, item):
         # Called when a new window item has been purchased, this

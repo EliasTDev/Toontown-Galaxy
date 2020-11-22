@@ -6,12 +6,13 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.PythonUtil import Functor
 from . import DistributedEstateAI
 from direct.task.Task import Task
-from . import DistributedHouseAI
 from . import HouseGlobals
 import random
 import functools 
 from direct.fsm.FSM import FSM
 from toontown.toon import ToonDNA
+from toontown.estate.DistributedHouseAI import DistributedHouseAI
+from toontown.estate.GardenManagerAI import GardenManagerAI
 
 #Other classes from toontown school house
 class LoadHouseOperation(FSM):
@@ -100,7 +101,7 @@ class LoadHouseOperation(FSM):
 
         self.house = house
         self.estate.houses[self.index] = self.house
-        if config.GetBool('want-gardening', False):
+        if config.GetBool('want-gardening', True):
             # Initialize our garden:
             self.house.createGardenManager()
 
@@ -230,6 +231,7 @@ class LoadEstateOperation(FSM):
         # Set the estate's ID list:
         self.estate.b_setIdList(self.avIds)
 
+
         # Load houses:
         self.demand('LoadHouses')
 
@@ -238,7 +240,7 @@ class LoadEstateOperation(FSM):
 
     def enterLoadHouses(self):
         self.houseOperations = []
-        for houseIndex in xrange(6):
+        for houseIndex in range(6):
             houseOperation = LoadHouseOperation(self.mgr, self.estate, houseIndex, self.avatars[houseIndex],
                                                 self.__handleHouseLoaded)
             self.houseOperations.append(houseOperation)
@@ -258,7 +260,7 @@ class LoadEstateOperation(FSM):
 
     def enterLoadPets(self):
         self.petOperations = []
-        for houseIndex in xrange(6):
+        for houseIndex in range(6):
             av = self.avatars[houseIndex]
             if av and av['setPetId'][0] != 0:
                 petOperation = LoadPetOperation(self.mgr, self.estate, av, self.__handlePetLoaded)
@@ -314,6 +316,7 @@ class LoadPetOperation(FSM):
             self.acceptOnce('generate-%d' % self.petId, self.__generated)
         else:
             self.__generated(self.mgr.air.doId2do[self.petId])
+        estateAI.createPetCollisions()
 
     def __generated(self, pet):
         self.pet = pet
@@ -492,9 +495,10 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
                                 extraArgs=[senderAv, estateLoaded, accId, zoneId])
                 pet.requestDelete()
                 return
-
         self.__handleLoadEstate(senderAv, estateLoaded, accId, zoneId)
 
+
+        
     def getAvEnterEvent(self):
         return 'avatarEnterEstate'
 
@@ -655,7 +659,7 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
         #self.sendUpdateToAvatarId(avId, "setEstateZone", [avId, zoneId])
 
         # create the estate and generate the zone
-        callback = PythonUtil.Functor(self.handleGetEstate, avId, ownerId)
+        #callback = PythonUtil.Functor(self.handleGetEstate, avId, ownerId)
         #self.air.getEstate(avId, zoneId, callback)
 
     def __removeReferences(self, avId, zoneId):
