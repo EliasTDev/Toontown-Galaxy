@@ -7,7 +7,8 @@ PBPTonscreenText = 0.15
 RPdirectFrame = (2.15,1,0.75)
 RPtrackLabels = 0.043
 RPmeritBarLabels = 0.13
-
+RPskipScale = 0.2
+RPskipPos = (0, -.28)
 #battle/RewardPanel.py
 RPmeritLabelXPosition = 0.55
 RPmeritBarsXPosition = 0.825

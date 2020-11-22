@@ -42,7 +42,7 @@ class DistributedMintBattle(DistributedLevelBattle.DistributedLevelBattle):
             if self.bossBattle:
                 messenger.send('localToonConfrontedMintBoss')
         self.movie.playReward(ts, self.uniqueName('building-reward'),
-                              self.__handleMintRewardDone)
+                              self.__handleMintRewardDone, noSkip=True)
 
     def __handleMintRewardDone(self):
         self.notify.debug('mint reward done')

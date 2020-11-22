@@ -6,7 +6,8 @@ PBPTonscreenText = 0.15
 #battle/RewardPanel.py
 RPdirectFrame = (1.95,1,0.75)
 RPtrackLabels = 0.05
-
+RPskipScale = 0.2
+RPskipPos = (0, -.28)
 #building/DistributedHQInterior.py
 DHtoonName = 0.75
 DHtoonNamePos = (-6, 0, 0)

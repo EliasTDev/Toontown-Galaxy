@@ -42,7 +42,7 @@ class DistributedStageBattle(DistributedLevelBattle.DistributedLevelBattle):
             if self.bossBattle:
                 messenger.send('localToonConfrontedStageBoss')
         self.movie.playReward(ts, self.uniqueName('building-reward'),
-                              self.__handleStageRewardDone)
+                              self.__handleStageRewardDone, noSkip=True)
 
     def __handleStageRewardDone(self):
         self.notify.debug('stage reward done')

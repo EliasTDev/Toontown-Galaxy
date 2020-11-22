@@ -34,6 +34,8 @@ class DistributedBattle(DistributedBattleBase.DistributedBattleBase):
 
     def generate(self):
         DistributedBattleBase.DistributedBattleBase.generate(self)
+        self._skippingRewardMovie = False
+
         #dbgBattleMarkers = loader.loadModel("dbgBattleMarkers.egg")
         #dbgBattleMarkers.reparentTo(self)
 
@@ -330,6 +332,7 @@ class DistributedBattle(DistributedBattleBase.DistributedBattleBase):
     def exitResume(self):
         pass
 
+
     #########################
     ##### LocalToon ClassicFSM #####
     #########################
@@ -354,3 +357,4 @@ class DistributedBattle(DistributedBattleBase.DistributedBattleBase):
 
     def exitWaitForServer(self):
         pass
+

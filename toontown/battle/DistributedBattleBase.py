@@ -180,6 +180,7 @@ class DistributedBattleBase(DistributedNode.DistributedNode, BattleBase):
         DistributedNode.DistributedNode.generate(self)
         self.__battleCleanedUp = 0
         self.reparentTo(render)
+        self._skippingRewardMovie = False
 
     def storeInterval(self, interval, name):
         if name in self.activeIntervals:
@@ -961,6 +962,8 @@ class DistributedBattleBase(DistributedNode.DistributedNode, BattleBase):
 
     def removeLocalToon(self):
         assert(self.notify.debug('removeLocalToon()'))
+        if self._skippingRewardMovie:
+            return
         if base.cr.playGame.getPlace() != None:
             base.cr.playGame.getPlace().setState('walk')
         base.localAvatar.earnedExperience = None
@@ -1952,7 +1955,8 @@ class DistributedBattleBase(DistributedNode.DistributedNode, BattleBase):
 
         if not base.localAvatar.wantBattles:
             return
-
+        if self._skippingRewardMovie:
+            return
         base.cr.playGame.getPlace().setState('WaitForBattle')
         toon = base.localAvatar
         self.d_toonRequestJoin(toon.doId, toon.getPos(self))
@@ -1988,3 +1992,5 @@ class DistributedBattleBase(DistributedNode.DistributedNode, BattleBase):
     def getCollisionName(self):
         return 'enter' + self.lockoutNodePath.getName()
 
+    def setSkippingRewardMovie(self):
+        self._skippingRewardMovie = True
