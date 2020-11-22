@@ -62,6 +62,7 @@ from . import LaffMeter
 from libotp.settings.Settings import Settings
 from libotp import CFThought, CFTimeout
 from libotp import WhisperPopup
+from toontown.quest import QuestMap
 
 # Checks whether we want to display the news page
 # which uses Awesomium to render HTML
@@ -206,7 +207,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
                 # simulate doing ~idTags
                 messenger.send('nameTagShowAvId', [])
                 base.idTags = 1
-
+            self.questMap = None
             self.glitchX = 0
             self.glitchY = 0
             self.glitchZ = 0
@@ -362,7 +363,8 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         """
         self.laffMeter.destroy()
         del self.laffMeter
-
+        self.questMap.destroy()
+        self.questMap = None
         if hasattr(self, 'purchaseButton'):
             self.purchaseButton.destroy()
             del self.purchaseButton
@@ -543,7 +545,8 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         else:
             self.laffMeter.setPos(-1.2, 0., -0.87)
         self.laffMeter.stop()
-
+        self.questMap = QuestMap.QuestMap(self)
+        self.questMap.stop()
         # make a purchase button for non-paid players
         if not base.cr.isPaid():
             guiButton = loader.loadModel("phase_3/models/gui/quit_button")
@@ -2825,3 +2828,12 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
                     if self.book.isOnPage(self.newsPage):
                         result = True
         return result
+
+
+    def startQuestMap(self):
+        if self.questMap:
+            self.questMap.start()
+
+    def stopQuestMap(self):
+        if self.questMap:
+            self.questMap.stop()

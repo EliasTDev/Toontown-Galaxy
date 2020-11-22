@@ -109,7 +109,7 @@ class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
 
     # how many more buildings (suit & cogdo) do we want now that there
     # are cogdos in the Tooniverse?
-    CogdoPopFactor = config.GetFloat('cogdo-pop-factor', 0.75) #TODO should probably reduce this people complained about spawn rate of field offices
+    CogdoPopFactor = config.GetFloat('cogdo-pop-factor', 0.5) 
     CogdoRatio = min(1., max(0., config.GetFloat('cogdo-ratio', .5)))
     MinimumOfOne = config.GetBool('minimum-of-one-building', 0)
     SuitHoodInfo = [

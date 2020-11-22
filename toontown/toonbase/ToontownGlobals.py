@@ -6,8 +6,10 @@ may have meaning to several classes.
 from . import TTLocalizer
 from otp.otpbase.OTPGlobals import *
 from direct.showbase.PythonUtil import Enum, invertDict
-from pandac.PandaModules import BitMask32, Vec4
-
+from panda3d.core import BitMask32, Vec4
+MapHotkeyOn = 'alt'
+MapHotkeyOff = 'alt-up'
+MapHotkey = 'alt'
 AccountDatabaseChannelId = 4008
 ToonDatabaseChannelId = 4021
 DoodleDatabaseChannelId = 4023

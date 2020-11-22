@@ -38,6 +38,7 @@ class SuitBase:
     ////////////////////////////////////////////////////////////////////////
     """
     notify = DirectNotifyGlobal.directNotify.newCategory('SuitBase')
+   
     def __init__(self):
         self.dna = None
         self.level = 0

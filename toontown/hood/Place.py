@@ -2,6 +2,8 @@
 
 from pandac.PandaModules import *
 from toontown.toonbase.ToonBaseGlobal import *
+from direct.showbase.PythonUtil import PriorityCallbacks
+from toontown.toon.Toon import teleportDebug
 
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import StateData
@@ -37,6 +39,11 @@ class Place(StateData.StateData,
         self.trialerFADoneEvent = 'trialerFADoneEvent'
         self.zoneId = None
         self.trialerFA = None
+        self._tiToken = None
+        self._leftQuietZoneLocalCallbacks = PriorityCallbacks()
+        self._leftQuietZoneSubframeCall = None
+        self._setZoneCompleteLocalCallbacks = PriorityCallbacks()
+        self._setZoneCompleteSubframeCall = None
         # We don't keep a pointer to the FriendInvitee panel, since we
         # expect that to remain onscreen until the user deals with it,
         # even when switching hoods etc.
@@ -218,6 +225,7 @@ class Place(StateData.StateData,
         base.localAvatar.setTeleportAvailable(1)
         base.localAvatar.questPage.acceptOnscreenHooks()
         base.localAvatar.invPage.acceptOnscreenHooks()
+        base.localAvatar.questMap.acceptOnscreenHooks()
         #*#base.localAvatar.setActiveShadow(1)
         self.walkStateData.fsm.request('walking')
         self.enablePeriodTimer()
@@ -248,7 +256,8 @@ class Place(StateData.StateData,
         base.localAvatar.questPage.ignoreOnscreenHooks()
         base.localAvatar.invPage.ignoreOnscreenHooks()
         base.localAvatar.invPage.hideInventoryOnscreen()
-
+        base.localAvatar.questMap.hide()
+        base.localAvatar.questMap.ignoreOnscreenHooks()
     # this is no longer private as we need to call it from
     # other functions
     def handleWalkDone(self, doneStatus):
@@ -732,6 +741,7 @@ class Place(StateData.StateData,
         #    VBase3(1, 1, 1),
         #    other=door_origin)
         base.localAvatar.obscureMoveFurnitureButton(1)
+        base.localAvatar.startQuestMap()
 
     def exitDoorIn(self):
         assert(self.notify.debug("exitDoorIn()"))
@@ -750,6 +760,7 @@ class Place(StateData.StateData,
     def exitDoorOut(self):
         assert(self.notify.debug("exitDoorOut()"))
         base.localAvatar.obscureMoveFurnitureButton(-1)
+        base.localAvatar.stopQuestMap()
 
     def handleDoorDoneEvent(self, requestStatus):
         assert(self.notify.debug("handleDoorDoneEvent(requestStatus="
@@ -773,7 +784,8 @@ class Place(StateData.StateData,
         self.accept("tunnelInMovieDone", self.__tunnelInMovieDone)
         base.localAvatar.reconsiderCheesyEffect()
         base.localAvatar.tunnelIn(tunnelOrigin)
-        
+        base.localAvatar.stopQuestMap()
+
     def __tunnelInMovieDone(self):
         self.ignore("tunnelInMovieDone")
         self.fsm.request('walk')
@@ -808,6 +820,7 @@ class Place(StateData.StateData,
                            }
         self.accept("tunnelOutMovieDone", self.__tunnelOutMovieDone)
         base.localAvatar.tunnelOut(tunnelOrigin)
+        base.localAvatar.stopQuestMap()
 
     def __tunnelOutMovieDone(self):
         self.ignore("tunnelOutMovieDone")
@@ -829,6 +842,8 @@ class Place(StateData.StateData,
         assert(self.notify.debug("exitTeleportOut()"))
         base.localAvatar.laffMeter.stop()
         base.localAvatar.obscureMoveFurnitureButton(-1)
+        base.localAvatar.stopQuestMap()
+
         # It is a bad idea to broadcast these messages; first, it
         # shouldn't be necessary (since the server will send a disable
         # message to anyone around anyway); and second, it is possible
@@ -984,18 +999,21 @@ class Place(StateData.StateData,
         
 
     def enterTeleportIn(self, requestStatus):
-        assert(self.notify.debug("enterTeleportIn()"))
+        self._tiToken = self.addSetZoneCompleteCallback(Functor(self._placeTeleportInPostZoneComplete, requestStatus), 100)
 
-        # Turn off the little red arrows while we teleport in.
+    def _placeTeleportInPostZoneComplete(self, requestStatus):
+        teleportDebug(requestStatus, '_placeTeleportInPostZoneComplete(%s)' % (requestStatus,))
+ # Turn off the little red arrows while we teleport in.
         NametagGlobals.setMasterArrowsOn(0)
         base.localAvatar.laffMeter.start()
+        base.localAvatar.startQuestMap()
         base.localAvatar.reconsiderCheesyEffect()
         base.localAvatar.obscureMoveFurnitureButton(1)
-
-        avId = requestStatus.get("avId", -1)
+        avId = requestStatus.get('avId', -1)
         if avId != -1:
             if avId in base.cr.doId2do:
-                # Teleport to avatar
+                 # Teleport to avatar
+                teleportDebug(requestStatus, 'teleport to avatar')
                 avatar = base.cr.doId2do[avId]
                 avatar.forceToTruePosition()
                 base.localAvatar.gotoNode(avatar)
@@ -1004,23 +1022,19 @@ class Place(StateData.StateData,
                 # The avatar isn't here!
                 friend = base.cr.identifyAvatar(avId)
                 if friend != None:
-                    base.localAvatar.setSystemMessage(
-                        avId,
-                        OTPLocalizer.WhisperTargetLeftVisit % (friend.getName(),))
+                    teleportDebug(requestStatus, 'friend not here, giving up')
+                    base.localAvatar.setSystemMessage(avId, OTPLocalizer.WhisperTargetLeftVisit % (friend.getName(),))
                     friend.d_teleportGiveup(base.localAvatar.doId)
-            
         base.transitions.irisIn()
         # We might be going to "popup" state if it's a newbie
         self.nextState = requestStatus.get('nextState', 'walk')
-
-        # Start the smart camera, to put it in the right place, but be
+         # Start the smart camera, to put it in the right place, but be
         # prepared to stop it again in exitTeleportIn.
         base.localAvatar.attachCamera()
-        base.localAvatar.startUpdateSmartCamera()
 
+        base.localAvatar.startUpdateSmartCamera()
         # Similarly with the posHprBroacast task.
         base.localAvatar.startPosHprBroadcast()
-
         # We'll cheat here, and tick the clock by hand.  This pretends
         # this is the beginning of the frame, and will sync up the
         # frame time with the real time to compensate for any long
@@ -1028,11 +1042,12 @@ class Place(StateData.StateData,
         # This way, the teleport-in animation will be played in its
         # entirety.
         globalClock.tick()
-        base.localAvatar.b_setAnimState('TeleportIn', 1, 
-                                          callback=self.teleportInDone)
+        base.localAvatar.b_setAnimState('TeleportIn', 1, callback=self.teleportInDone)
         base.localAvatar.d_broadcastPositionNow()
         base.localAvatar.b_setParent(ToontownGlobals.SPRender)
         #import pdb; pdb.set_trace()
+
+        return
 
     def teleportInDone(self):
         """
@@ -1267,3 +1282,60 @@ class Place(StateData.StateData,
         how = base.cr.handlerArgs["how"]
         assert(how=="teleportIn")# Please tell skyler if this assert fails.
         self.fsm.request(how, [base.cr.handlerArgs])
+
+    def addSetZoneCompleteCallback(self, callback, priority = None):
+        qzsd = self._getQZState()
+        if qzsd:
+            return qzsd.addSetZoneCompleteCallback(callback, priority)
+        else:
+            token = self._setZoneCompleteLocalCallbacks.add(callback, priority=priority)
+            if not self._setZoneCompleteSubframeCall:
+                self._setZoneCompleteSubframeCall = SubframeCall(self._doSetZoneCompleteLocalCallbacks, taskMgr.getCurrentTask().getPriority() - 1)
+            return token
+
+    def removeSetZoneCompleteCallback(self, token):
+        if token is not None:
+            if any(token == x[1] for x in self._setZoneCompleteLocalCallbacks._callbacks):
+                self._setZoneCompleteLocalCallbacks.remove(token)
+            qzsd = self._getQZState()
+            if qzsd:
+                qzsd.removeSetZoneCompleteCallback(token)
+        return
+
+    def _doSetZoneCompleteLocalCallbacks(self):
+        self._setZoneCompleteSubframeCall = None
+        localCallbacks = self._setZoneCompleteLocalCallbacks
+        self._setZoneCompleteLocalCallbacks()
+        localCallbacks.clear()
+        return
+
+    def _getQZState(self):
+        if hasattr(base, 'cr') and hasattr(base.cr, 'playGame'):
+            if hasattr(base.cr.playGame, 'quietZoneStateData') and base.cr.playGame.quietZoneStateData:
+                return base.cr.playGame.quietZoneStateData
+        return None
+
+    def addLeftQuietZoneCallback(self, callback, priority = None):
+        qzsd = self._getQZState()
+        if qzsd:
+            return qzsd.addLeftQuietZoneCallback(callback, priority)
+        else:
+            token = self._leftQuietZoneLocalCallbacks.add(callback, priority=priority)
+            if not self._leftQuietZoneSubframeCall:
+                self._leftQuietZoneSubframeCall = SubframeCall(self._doLeftQuietZoneCallbacks, taskMgr.getCurrentTask().getPriority() - 1)
+            return token
+
+    def removeLeftQuietZoneCallback(self, token):
+        if token is not None:
+            if token in self._leftQuietZoneLocalCallbacks:
+                self._leftQuietZoneLocalCallbacks.remove(token)
+            qzsd = self._getQZState()
+            if qzsd:
+                qzsd.removeLeftQuietZoneCallback(token)
+        return
+
+    def _doLeftQuietZoneCallbacks(self):
+        self._leftQuietZoneLocalCallbacks()
+        self._leftQuietZoneLocalCallbacks.clear()
+        self._leftQuietZoneSubframeCall = None
+        return
