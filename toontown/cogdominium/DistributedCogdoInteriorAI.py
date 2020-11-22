@@ -182,7 +182,9 @@ class DistributedCogdoInteriorAI(DistributedObjectAI, FSM.FSM):
         elif self.FOType == "l":
             self.game = DistCogdoFlyingGameAI.DistCogdoFlyingGameAI(self.air)
         elif self.FOType == "m":
-            self.game = DistCogdoCraneGameAI.DistCogdoCraneGameAI(self.air)
+           # self.game = DistCogdoGameAI.DistCogdoCraneGameAI(self.air)
+            self.game = DistCogdoMazeGameAI.DistCogdoMazeGameAI(self.air)
+            self.game.setNumSuits(CogdoMazeGameGlobals.NumSuits)
 
         self.sendUpdate("setSOSNpcId", [self.sosNPC])
         self.sendUpdate("setFOType", [ord(self.FOType)])
@@ -310,14 +312,15 @@ class DistributedCogdoInteriorAI(DistributedObjectAI, FSM.FSM):
         self.request('Elevator')
 
     def enterGame(self):
-        self.game.setToons(self.toons)
-        self.game.setInteriorId(self.doId)
-        self.game.setExteriorZone(self.exterior.zoneId)
-        self.game.setDifficultyOverrides(2147483647, -1)
-        self.game.generateWithRequired(self.zoneId)
-        self.game.d_startIntro()
-        self.accept(self.game.finishEvent, self.__handleGameDone)
-        self.accept(self.game.gameOverEvent, self.__handleGameOver)
+        if self.game:
+            self.game.setToons(self.toons)
+            self.game.setInteriorId(self.doId)
+            self.game.setExteriorZone(self.exterior.zoneId)
+            self.game.setDifficultyOverrides(2147483647, -1)
+            self.game.generateWithRequired(self.zoneId)
+            self.game.d_startIntro()
+            self.accept(self.game.finishEvent, self.__handleGameDone)
+            self.accept(self.game.gameOverEvent, self.__handleGameOver)
 
     def __handleGameDone(self, toons):
         self.game.requestDelete()

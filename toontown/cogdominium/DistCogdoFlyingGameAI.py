@@ -2,12 +2,15 @@ import random
 from direct.distributed.ClockDelta import globalClockDelta
 from .DistCogdoGameAI import DistCogdoGameAI
 from . import CogdoFlyingGameGlobals as Globals
+from toontown.battle import BattleBase
+from toontown.building.ElevatorConstants import *
 
 class DistCogdoFlyingGameAI(DistCogdoGameAI):
     notify = directNotify.newCategory('DistCogdoFlyingGameAI')
     EagleExitCooldownTaskName = 'CFG_EagleExitCooldownTask-%s'
     InvulBuffRemoveTaskName = 'CFG_InvulBuffRemoveTask-%s'
     AnnounceGameDoneTimerTaskName = 'CFG_AnnounceGameDoneTimerTask'
+    delayIntro = BattleBase.ELEVATOR_T + ElevatorData[ELEVATOR_NORMAL]['openTime']
 
     def __init__(self, air):
         DistCogdoGameAI.__init__(self, air)
