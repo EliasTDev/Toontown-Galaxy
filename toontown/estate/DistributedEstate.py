@@ -504,7 +504,7 @@ class DistributedEstate(DistributedObject.DistributedObject):
         sfx = random.choice(base.cr.playGame.hood.loader.cricketSound)
         track = Sequence(Func(base.playSfx, sfx),
                          Wait(1))
-        track.play()
+        track.start()
         t = (random.random() * 20.0) + 1
         taskMgr.doMethodLater(t, self.__crickets, 'estate-crickets')
         return Task.done
