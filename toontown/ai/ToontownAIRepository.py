@@ -1,5 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
+from direct.task.Task import Task
 from panda3d.core import *
+from otp.ai import BanManagerAI
 
 from libpandadna import *
 from otp.ai.AIZoneData import AIZoneDataStore
@@ -60,6 +62,7 @@ from toontown.coderedemption.TTCodeRedemptionMgrAI import TTCodeRedemptionMgrAI
 import time
 from direct.distributed.PyDatagram import PyDatagram
 from toontown.ai.ToontownAIMsgTypes import *
+from libpandadna import *
 class ToontownAIRepository(ToontownInternalRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory('ToontownAIRepository')
 
@@ -68,6 +71,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.districtName = districtName
         self.doLiveUpdates = config.GetBool('want-live-updates', True)
         self.wantCogdominiums = config.GetBool('want-cogdominiums', True)
+        self.wantBanManager = config.GetBool('want-ban-manager', False) #change to true once we have a working one
         self.useAllMinigames = config.GetBool('want-all-minigames', True)
         self.districtId = None
         self.district = None
@@ -145,6 +149,16 @@ class ToontownAIRepository(ToontownInternalRepository):
         # Make our district available, and we're done.
         self.district.b_setAvailable(True)
         self.notify.info('Done.')
+        # Now that everything's created, start checking the leader
+        # boards for correctness.  We only need to check every 30
+        # seconds or so.
+        self.__leaderboardFlush(None)
+        taskMgr.doMethodLater(30, self.__leaderboardFlush,
+                              'leaderboardFlush', appendTask = True)
+                              
+    def __leaderboardFlush(self, task):
+        messenger.send('leaderboardFlush')
+        return Task.again
 
     def createFirstObjs(self):
         # Generate our news manager...
@@ -207,6 +221,8 @@ class ToontownAIRepository(ToontownInternalRepository):
         # Create our Toontown time manager...
         self.toontownTimeManager = ToontownTimeManager()
         self.toontownTimeManager.updateLoginTimes(time.time(), time.time(), globalClock.getRealTime())
+        if self.wantBanManager:
+            self.banManager = BanManagerAI.BanManagerAI()
 
     def createGlobals(self):
         """
@@ -569,6 +585,30 @@ class ToontownAIRepository(ToontownInternalRepository):
 
         return leaderBoards
 
+    def loadDNAFileAI(self, dnaStore, dnaFile):
+        return loadDNAFileAI(dnaStore, dnaFile, CSDefault)
+
+    #AIGEOM
+    def loadDNAFile(self, dnaStore, dnaFile, cs=CSDefault):
+        """
+        load everything, including geometry
+        """
+        return loadDNAFile(dnaStore, dnaFile, cs)
+
+    def loadDNA(self):
+        """
+        Return a dictionary of zoneId to DNAStorage objects
+        """
+        self.dnaStoreMap = {}
+        self.dnaDataMap = {}
+        for zones in self.zoneTable.values():
+            for zone in zones:
+                zoneId=zone[0]
+                dnaStore = DNAStorage()
+                dnaFileName = self.genDNAFileName(zoneId)
+                dnaData = self.loadDNAFileAI(dnaStore, dnaFileName)
+                self.dnaStoreMap[zoneId] = dnaStore
+                self.dnaDataMap[zoneId] = dnaData
     def getTrackClsends(self):
         return False
 

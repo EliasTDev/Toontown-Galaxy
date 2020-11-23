@@ -18,6 +18,7 @@ class BanManagerAI:
     # http://qnhspapp02.wdig.com:8005/dis-hold/action/event
     # live
     # https://vapps.disl.starwave.com:8005/dis-hold/action/event
+    #TODO change to our own site eventually
     BanUrl = simbase.config.GetString("ban-base-url", "https://vapps.disl.starwave.com:8005/dis-hold/action/event")
     App = simbase.config.GetString("ban-app-name", "TTWorldAI")
     Product = simbase.config.GetString("ban-product", "Toontown")

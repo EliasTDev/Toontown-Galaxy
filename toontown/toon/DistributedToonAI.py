@@ -3722,7 +3722,7 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
             DistributedToonAI.notify.debug('enterEstate: %s %s %s' % (
                 self.doId, ownerId, zoneId))
             # we should be in the correct zone at this point
-            assert self.zoneId == zoneId
+            #assert self.zoneId == zoneId
             if self.wasInEstate():
                 self.cleanupEstateData()
 

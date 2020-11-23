@@ -439,7 +439,7 @@ class CatalogItem:
         # (according to the bits indicated in store).
         result = ""
         if (store & Location) and self.posHpr != None:
-            result += ", posHpr = (%s)" % (self.posHpr)
+            result += ", posHpr = (%s, %s, %s, %s, %s, %s)" % (self.posHpr)
         return result
     
     def __str__(self):
@@ -490,9 +490,9 @@ class CatalogItem:
                 p = 0.0
                 r = 0.0
             elif versionNumber < 5:
-                h = di.getArg(STInt8, 256.0//360.0)
-                p = di.getArg(STInt8, 256.0//360.0)
-                r = di.getArg(STInt8, 256.0//360.0)
+                h = di.getArg(STInt8, 256.0/360.0)
+                p = di.getArg(STInt8, 256.0/360.0)
+                r = di.getArg(STInt8, 256.0/360.0)
                 hpr = oldToNewHpr(VBase3(h, p, r))
                 h = hpr[0]
                 p = hpr[1]
@@ -513,7 +513,7 @@ class CatalogItem:
     def encodeDatagram(self, dg, store):
         if store & DeliveryDate:
             dg.addUint32(self.deliveryDate)
-        if store & Location:
+        if store & Location and self.posHpr != None :
             dg.putArg(self.posHpr[0], STInt16, 10)
             dg.putArg(self.posHpr[1], STInt16, 10)
             dg.putArg(self.posHpr[2], STInt16, 100)

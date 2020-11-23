@@ -97,7 +97,7 @@ class LoadHouseOperation(FSM):
 
         # Initialize our interior:
         house.interior.gender = self.gender
-        house.interior.start()
+        #house.interior.start()
 
         self.house = house
         self.estate.houses[self.index] = self.house
@@ -349,6 +349,9 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
         # Number of seconds between spontaneous heals
         self.healFrequency = 30 # seconds
         self.toon2estate = {}
+        self.estate2toons = {}
+        self.estate2timeout = {}
+        self.zone2toons = {}
 
 
         self.randomGenerator = random.Random()
@@ -862,7 +865,7 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
         return None
 
     def __exitEstate(self, avId):
-        self.notify.debug("__exitEstate(%d)" % avId)
+       # self.notify.debug("__exitEstate(%d)" % avId)
         # This is called whenever avId leaves an estate.
         # Determine if avId is the owner.  If so, set
         # a timer to cleanup all of the estate resources

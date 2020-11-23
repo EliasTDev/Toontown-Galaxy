@@ -33,6 +33,7 @@ from toontown.toonbase import ToontownGlobals
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 
+
 class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
 
     """
@@ -48,7 +49,7 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
     def __init__(self, air):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
         self.doId = 0
-        self.estateId = 0
+        #self.estateId = 0
         self.zoneId = 0
         self.housePos = 0
         # self.garden = None
@@ -125,6 +126,7 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
     def announceGenerate(self):
         DistributedObjectAI.DistributedObjectAI.announceGenerate(self)
         self.setupEnvirons()
+
     def setupEnvirons(self):
         self.doId = self.getDoId()
         # This method is called by the EstateManager as it is creating
@@ -171,11 +173,6 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         # self.garden_created = 1
 
         # create a cannon
-        if self.cannonEnabled and simbase.config.GetBool('estate-cannons', 1):
-            posHpr = CannonGlobals.cannonDrops[self.housePosInd]
-            self.cannon = DistributedCannonAI.DistributedCannonAI(self.air, self.estateId,
-                                                                 *posHpr)
-            self.cannon.generateWithRequired(self.zoneId)
 
         if self.interior != None:
             self.interior.requestDelete()
@@ -192,7 +189,9 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         # It's only necessary because some players on the test server
         # started playing before we had a phone as one of the
         # furniture items.
-        if self.ownerId != 0 and not self.__hasPhone():
+        # Removing this as we do not need it anymore because as default we give the user a phone
+        #if self.ownerId != 0 and self.__hasPhone()
+        if self.ownerId != 0 :
             self.notify.info("Creating default phone for %s." % (self.ownerId))
             item = CatalogFurnitureItem.CatalogFurnitureItem(1399, posHpr = (-12, 3, 0.025, 180, 0, 0))
             self.interiorItems.append(item)
@@ -200,28 +199,20 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
 
         self.resetFurniture()
 
-        if simbase.wantPets:
+        #if simbase.wantPets:
             #if 0:#__dev__:
                 #pt = ProfileTimer()
                 #pt.init('house model load')
                 #pt.on()
 
             # add ourselves to the estate model
-            if not DistributedHouseAI.HouseModel:
-                DistributedHouseAI.HouseModel = loader.loadModel(
-                    HouseGlobals.houseModels[self.houseType])
-            estate = simbase.air.doId2do[self.estateId]
-            self.houseNode = estate.geom.attachNewNode(
-                'esHouse_%s' % self.housePosInd)
-            self.houseNode.setPosHpr(
-                *HouseGlobals.houseDrops[self.housePosInd])
-            DistributedHouseAI.HouseModel.instanceTo(self.houseNode)
+
 
             #if 0:#__dev__:
                # pt.mark('loaded house model')
                 #pt.off()
                 #pt.printTo()
-
+        self.d_setHouseReady()
     def __hasPhone(self):
         for item in self.interiorItems:
             if (item.getFlags() & CatalogFurnitureItem.FLPhone) != 0:
@@ -825,7 +816,7 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         if  self.cannonEnabled and not self.cannon:
             # create the cannon now
             posHpr = CannonGlobals.cannonDrops[self.housePosInd]
-            estate = simbase.air.doId2do[self.estateId]
+            estate = simbase.air.doId2do[self.doId]
             targetId = estate.target.doId
             self.cannon = DistributedCannonAI.DistributedCannonAI(self.air, self.estateId,
                                                                   targetId, *posHpr)
@@ -842,3 +833,4 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
     def d_setHouseReady(self):
         self.notify.debug("setHouseReady: %s" % (self.doId))
         self.sendUpdate("setHouseReady", [])
+

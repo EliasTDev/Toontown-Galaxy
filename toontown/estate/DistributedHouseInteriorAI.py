@@ -7,6 +7,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObjectAI
 from toontown.catalog import CatalogItemList
 from toontown.catalog import CatalogItem
+from toontown.estate.DistributedFurnitureManagerAI import DistributedFurnitureManagerAI
 
 class DistributedHouseInteriorAI(DistributedObjectAI.DistributedObjectAI):
     """
@@ -26,7 +27,8 @@ class DistributedHouseInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.wallpaper = self.house.interiorWallpaper
         self.windows = self.house.interiorWindows
         self.houseIndex = house.housePosInd
-        
+        self.furnitureManager = None
+
         
         assert(self.debugPrint(
                 "DistributedHouseInteriorAI(air=%s, zoneId=%s, house=%s)"
@@ -82,3 +84,22 @@ class DistributedHouseInteriorAI(DistributedObjectAI.DistributedObjectAI):
             return self.notify.debug(
                     str(self.__dict__.get('zoneId', '?'))+' '+message)
 
+
+    def start(self):
+        return
+        if self.house.getAvatarId() == 0:
+            # Blank houses do not need interiors.
+            return
+
+        # Generate the furniture manager:
+        #self.furnitureManager = DistributedFurnitureManagerAI(self.air, self.house, self)
+        #self.furnitureManager.setOwnerId(self.house.getAvatarId())
+        #self.furnitureManager.setOwnerName(self.house.getName())
+       # self.furnitureManager.setInteriorId(self.doId)
+       # self.furnitureManager.generateWithRequired(self.zoneId)
+
+        # We either need to load existing furniture, or create new furniture if none exists:
+        #if self.furnitureManager.getNumItems() == 0:
+         #   self.createInterior()
+       # else:
+        #    self.furnitureManager.loadFurniture()

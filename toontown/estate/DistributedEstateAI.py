@@ -29,7 +29,11 @@ from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import ToontownBattleGlobals
 from toontown.estate import DistributedChangingStatuaryAI
 from toontown.estate import DistributedToonStatuaryAI
-
+from toontown.fishing.DistributedFishingPondAI import DistributedFishingPondAI
+from toontown.safezone.DistributedFishingSpotAI import DistributedFishingSpotAI
+from toontown.safezone import EFlyingTreasurePlannerAI
+from . import DistributedCannonAI
+from libpandadna import *
 class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
 
     """
@@ -80,8 +84,8 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
         #if not hasattr(self, "decorData"):
         #    self.decorData = []
 
-        self.cannonsEnabled = simbase.config.GetBool('estate-cannons', 1)
-        self.fireworksEnabled = simbase.config.GetBool('estate-fireworks', 1)
+        self.cannonsEnabled = simbase.config.GetBool('estate-cannons', 0)
+        self.fireworksEnabled = simbase.config.GetBool('estate-fireworks', 0)
         self.goonEnabled = simbase.config.GetBool('estate-goon', 0) #what is this 
         self.goons = None
         self.gagBarrels = None
@@ -128,6 +132,11 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
         for count in range(self.toonsPerAccount):
 
             self.gardenTable.append([0] * self.maxSlots) #ACCOUNT HAS 6 TOONS
+
+    def announceGenerate(self):
+        DistributedObjectAI.DistributedObjectAI.announceGenerate(self)
+        self.initEstateData()
+        self.createPetCollisions()
 
     def generate(self):
         DistributedEstateAI.notify.debug("DistEstate generate: %s" % self.doId)
@@ -307,11 +316,6 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
             self.notify.warning("loadDNAFileAI failed for 'estate_1.dna'")
 
         if simbase.wantPets:
-            if 0:#__dev__:
-                from pandac.PandaModules import ProfileTimer
-                pt = ProfileTimer()
-                pt.init('estate model load')
-                pt.on()
 
             if not DistributedEstateAI.EstateModel:
                 # load up the estate model for the pets
@@ -392,9 +396,6 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
     def startCannons(self, fool = 0):
         if self.cannonFlag:
             return
-        from toontown.safezone import EFlyingTreasurePlannerAI
-        from . import DistributedCannonAI
-
         # create flying treasures
         if not self.estateFlyingTreasurePlanner:
             self.estateFlyingTreasurePlanner = EFlyingTreasurePlannerAI.EFlyingTreasurePlannerAI(self, self.zoneId)
