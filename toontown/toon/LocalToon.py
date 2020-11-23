@@ -153,6 +153,8 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
             friendsGui.removeNode()
 
             self.__furnitureGui = None
+            self.lerpFurnitureButton = None
+
             self.__clarabelleButton = None
             self.__clarabelleFlash = None
             # These flags are set by setFurnitureDirector().
@@ -427,7 +429,8 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
                 self.__piePowerMeter = None
             ### LOCAL AVATAR ###########################
             taskMgr.remove("unlockGardenButtons")
-            taskMgr.remove('lerpFurnitureButton')
+            if self.lerpFurnitureButton:
+                self.lerpFurnitureButton.finish()
             if self.__furnitureGui:
                 self.__furnitureGui.destroy()
             del self.__furnitureGui
@@ -1766,13 +1769,17 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
                 self.showFurnitureGui()
 
                 # Scale down button to default size.
-                taskMgr.remove('lerpFurnitureButton')
-                self.__furnitureGui.lerpPosHprScale(
+                if self.lerpFurnitureButton:
+                    self.lerpFurnitureButton.finish()
+                
+                self.lerpFurnitureButton = self.__furnitureGui.posHprScaleInterval(
+                    1.0,
                     pos = Point3(-1.19, 0.00, 0.33),
                     hpr = Vec3(0.00, 0.00, 0.00),
                     scale = Vec3(0.04, 0.04, 0.04),
-                    time = 1.0, blendType = 'easeInOut',
-                    task = 'lerpFurnitureButton')
+                    blendType = 'easeInOut',
+                    name='lerpFurnitureButton')
+                self.lerpFurnitureButton.start()
         #print ("End refreshOnscreenButtons")
 
         if hasattr(self,'inEstate') and self.inEstate:

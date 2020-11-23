@@ -905,7 +905,7 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
                 except:
                     self.notify.debug("wasn't in refcount: %s, %s" % (avZone[0], avId))
         else:
-            self.notify.debug("__exitEstate can't find zone for %d" % avId)
+            self.notify.debug("__exitEstate can't find zone for {0}".format(avId))
 
         # stop the healing
         if avId in self.air.doId2do:

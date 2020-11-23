@@ -144,10 +144,11 @@ class DistributedPhone(DistributedFurnitureItem.DistributedFurnitureItem):
     def setupCamera(self, mode):
         camera.wrtReparentTo(render)
         if (mode == PhoneGlobals.PHONE_MOVIE_PICKUP):
-            camera.lerpPosHpr(4, -4, base.localAvatar.getHeight()-0.5, 35, -8, 0, 1,
-                              other=base.localAvatar,
+            quat = Quat()
+            quat.setHpr((35, -8, 0))
+            LerpPosQuatInterval(camera, 1, (4, -4, base.localAvatar.getHeight()-0.5), quat,
                               blendType="easeOut",
-                              task=self.uniqueName("lerpCamera"))
+                              other=base.localAvatar).start()
 
     def setupCord(self):
         if self.cord:
