@@ -151,15 +151,15 @@ class CatalogItemList:
     def __makeList(self, store):
         # Construct a new list and populate it with the items decoded
         # from the blob.
-        list = []
+        _list = []
         if self.__blob:  # empty string or None means nothing on the list.
             dg = PyDatagram(self.__blob)
             di = PyDatagramIterator(dg)
             versionNumber = di.getUint8()
             while di.getRemainingSize() > 0:
                 item = CatalogItem.decodeCatalogItem(di, versionNumber, store)
-                list.append(item)
-        return list
+                _list.append(item)
+        return _list
 
 
     # Functions to make this act just like a Python list.

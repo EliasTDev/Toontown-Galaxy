@@ -126,6 +126,7 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         DistributedObjectAI.DistributedObjectAI.announceGenerate(self)
         self.setupEnvirons()
     def setupEnvirons(self):
+        self.doId = self.getDoId()
         # This method is called by the EstateManager as it is creating
         # the house.  It sets up the doors, mailbox, furniture, etc.,
         # for the house.

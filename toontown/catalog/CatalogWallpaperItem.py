@@ -449,10 +449,10 @@ def getWallpapers(*typeList):
     # have a color chosen by the user.  Until customization, 
     # use a default color index of 0 (if the pattern has a color
     # list) or CT_WHITE if the pattern has no color list
-    list = []
+    _list = []
     for type in typeList:
-        list.append(CatalogWallpaperItem(type))
-    return list
+        _list.append(CatalogWallpaperItem(type))
+    return _list
     
 
 def getAllWallpapers(*typeList):
@@ -462,7 +462,7 @@ def getAllWallpapers(*typeList):
     # If the specified type index is in the group dictionary
     # get all corresponding patterns from the wallpaperTypes dictionary
     # This returns an item that has already been customized
-    list = []
+    _list = []
     for type in typeList:
         # If its a group, return a list of all associated textures,
         # otherwise, return a simple list of the type itself
@@ -478,9 +478,9 @@ def getAllWallpapers(*typeList):
                 for borderColorIndex in range(numBorderColors):
                     colors = WallpaperTypes[index][WTColor]
                     for n in range(len(colors)):
-                        list.append(CatalogWallpaperItem(
+                        _list.append(CatalogWallpaperItem(
                             index, n, borderKey, borderColorIndex))
-    return list
+    return _list
     
 def getWallpaperRange(fromIndex, toIndex, *otherRanges):
     # This function returns a list of all possible
@@ -516,4 +516,4 @@ def getWallpaperRange(fromIndex, toIndex, *otherRanges):
                         for n in range(len(colors)):
                             _list.append(CatalogWallpaperItem(
                                 patternIndex, n, borderKey, borderColorIndex))
-    return +list
+    return _list

@@ -186,7 +186,7 @@ def getMouldingRange(fromIndex, toIndex, *otherRanges):
     # Make sure we got an even number of otherRanges
     assert(len(otherRanges)%2 == 0)
 
-    list = []
+    _list = []
 
     froms = [fromIndex,]
     tos = [toIndex,]
@@ -203,7 +203,7 @@ def getMouldingRange(fromIndex, toIndex, *otherRanges):
                 colors = MouldingTypes[patternIndex][MTColor]
                 if colors:
                     for n in range(len(colors)):
-                        list.append(CatalogMouldingItem(patternIndex, n))
+                        _list.append(CatalogMouldingItem(patternIndex, n))
                 else:
-                    list.append(CatalogMouldingItem(patternIndex, 0))
-    return list
+                    _list.append(CatalogMouldingItem(patternIndex, 0))
+    return _list

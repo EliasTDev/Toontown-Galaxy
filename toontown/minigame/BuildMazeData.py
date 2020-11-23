@@ -178,7 +178,7 @@ def calcMazeTopology(mazeNode):
 
 def calcTreasurePosList(collisionTable, mazeWidth, mazeHeight,
                         originX, originY):
-    list = []
+    _list = []
     DEADZONE_X_RADIUS = int((mazeWidth/6.)/2)
     DEADZONE_Y_RADIUS = int((mazeHeight/5.)/2)
     y = 0
@@ -191,14 +191,14 @@ def calcTreasurePosList(collisionTable, mazeWidth, mazeHeight,
                    (not collisionTable[y+1][x  ]) and \
                    (not collisionTable[y  ][x+1]) and \
                    (not collisionTable[y+1][x+1]):
-                    list.append(
+                    _list.append(
                         ((x+1-originX)*CELL_WIDTH,
                          (y+1-originY)*CELL_WIDTH,
                          0.1))
             x += 1
         y += 1
 
-    return list
+    return _list
 
 
 f = open(outputFile, "wb")
