@@ -172,12 +172,13 @@ class DistributedNPCFisherman(DistributedNPCToonBase):
 
             if (self.isLocalToon):
                 camera.wrtReparentTo(render)
-                camera.lerpPosHpr(-5, 9, base.localAvatar.getHeight()-0.5,
-                                  -150, -2, 0,
+                quat = Quat()
+                quat.setHpr((-150, -2, 0))
+                camera.posQuatInterval(1, Point3(-5, 9, base.localAvatar.getHeight()-0.5),
+                                  quat,
                                   1,
                                   other=self,
-                                  blendType="easeOut",
-                                  task=self.uniqueName('lerpCamera'))
+                                  blendType="easeOut").start()
 
             if (self.isLocalToon):
                 taskMgr.doMethodLater(1.0, self.popupFishGUI,
