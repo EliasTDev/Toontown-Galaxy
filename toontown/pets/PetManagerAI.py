@@ -9,14 +9,18 @@ from direct.showbase.PythonUtil import Functor
 from toontown.pets import PetUtil
 from toontown.pets import PetNameGenerator
 
+
+
 class PetManagerAI(DirectObject.DirectObject):
 
     notify = DirectNotifyGlobal.directNotify.newCategory("PetManagerAI")
     #notify.setDebug(1)
-    
+    petPath = config.GetString('air-pet-cache', 'backups/pets')
     def __init__(self, air):
+
         self.air = air
         self.serialNum = 0
+
 
         # this table holds petId->zoneId of pets that have already requested
         # deletion, but are not yet deleted, that need to show up in a
@@ -266,9 +270,11 @@ class PetManagerAI(DirectObject.DirectObject):
         correct pet doId.
         """
         doneEvent = 'readPet-%s' % self._getNextSerialNum()
-        dbo = DatabaseObject.DatabaseObject(
-            self.air, petId, doneEvent=doneEvent)
-        pet = dbo.readPet()
+       # dbo = DatabaseObject.DatabaseObject(
+          #  self.air, petId, doneEvent=doneEvent)
+        
+        dbo =  self.air.dbInterface(self.air)
+        pet = dbo.queryObject(self.air.dbId,petId, doneEvent, self.air.dclassesByName['DistributedPetAI'])
 
         def handlePetRead(dbo, retCode, callback=callback, pet=pet):
             success = (retCode == 0)
@@ -326,54 +332,57 @@ class PetManagerAI(DirectObject.DirectObject):
             toon.b_setPetId(petId)
 
     def createNewPetFromSeed(self, toonId, seed, gender = -1, nameIndex = -1, safeZoneId = ToontownGlobals.ToontownCentral):
-        def handleCreate(success, petId):
+        def handleCreate(petId):
+            if not petId:
+                self.notify.warning('Cannot create pet for {0}'.format(toonId))
+                return 
             def summonPet(petId, callback):
-                def handleGetPet(success, pet, petId=petId):
-                    if success:
+                def handleGetPet(pet, petId=petId):
                         # we don't want our pet to start examining his
                         # environment, etc., we just want to initialize his
                         # DB fields
-                        pet.setInactive()
-                        pet._beingCreatedInDB = True
-                        pet.dbObject = 1
-                        pet.generateWithRequiredAndId(petId, 
-                                                  self.air.districtId,
-                                                  ToontownGlobals.QuietZone)
-                        simbase.air.setAIReceiver(petId)
-                    callback(success, pet)
+                    pet.setInactive()
+                    pet._beingCreatedInDB = True
+                    pet.dbObject = 1
+                    pet.generateWithRequiredAndId(petId, 
+                                                self.air.districtId,
+                                                ToontownGlobals.QuietZone)
+                    simbase.air.setAIReceiver(petId)
+                    callback(pet)
                 simbase.air.petMgr.getPetObject(petId, handleGetPet)
 
-            if success:
-                def handlePetGenerated(success, pet):
-                    if success:
-                        name, dna, traitSeed = PetUtil.getPetInfoFromSeed(seed, safeZoneId)
-                        if gender != -1:
-                            #make sure the size of the dna array hasn't changed
-                            assert(len(dna) == 9)
-                            dna[8] = gender
-                        if nameIndex != -1:
-                            name = PetNameGenerator.PetNameGenerator().getName(nameIndex)
-                        pet._initDBVals(toonId, name, traitSeed, dna,
-                                        safeZoneId)
-                        self.assignPetToToon(petId, toonId)
-                        message = '%s|%s|%s|%s|%s' % (
-                            petId, name, pet.getSafeZone(), dna,
-                            pet.traits.getValueList())
-                        self.air.writeServerEvent('adoptPet', toonId, message)
-                        pet.requestDelete()
-                    else:
-                        PetManagerAI.notify.warning('error summoning pet %s' % petId)
-                # since this is the first time the pet is being
-                # created, and we're going to be setting properties
-                # on the pet, generate it in the Quiet zone first,
-                # then move it to the requested zone.
-                summonPet(petId, callback=handlePetGenerated)
-            else:
-                PetManagerAI.notify.warning('error creating pet for %s' % toonId)
+
+            def handlePetGenerated(pet):
+                name, dna, traitSeed = PetUtil.getPetInfoFromSeed(seed, safeZoneId)
+                if gender != -1:
+                    #make sure the size of the dna array hasn't changed
+                    assert(len(dna) == 9)
+                    dna[8] = gender
+                if nameIndex != -1:
+                    name = PetNameGenerator.PetNameGenerator().getName(nameIndex)
+                pet._initDBVals(toonId, name, traitSeed, dna,
+                                safeZoneId)
+                self.assignPetToToon(petId, toonId)
+                message = '%s|%s|%s|%s|%s' % (
+                    petId, name, pet.getSafeZone(), dna,
+                    pet.traits.getValueList())
+                self.air.writeServerEvent('adoptPet', toonId, message)
+                pet.requestDelete()
+               # else:
+               #     PetManagerAI.notify.warning('error summoning pet %s' % petId)
+            # since this is the first time the pet is being
+            # created, and we're going to be setting properties
+            # on the pet, generate it in the Quiet zone first,
+            # then move it to the requested zone.
+            summonPet(petId, callback=handlePetGenerated)
+        #else:
+         #   PetManagerAI.notify.warning('error creating pet for %s' % toonId)
+    
+
         name = PetNameGenerator.PetNameGenerator().getName(nameIndex)
         _, dna, traitSeed = PetUtil.getPetInfoFromSeed(seed, safeZoneId)
         head, ears, nose, tail, bodyTexture, color, colorScale, eyeColor, _ = dna
-        fields = {'setOwnerId': toonId, 'setPetName': name, 'setTraitSeed': traitSeed, 'setSafeZoneId': safeZone,
+        fields = {'setOwnerId': toonId, 'setPetName': name, 'setTraitSeed': traitSeed, 'setSafeZone': safeZoneId,
                   'setHead': head, 'setEars': ears, 'setNose': nose, 'setTail': tail, 'setBodyTexture': bodyTexture,
                   'setColor': color, 'setColorScale': colorScale, 'setEyeColor': eyeColor, 'setGender': gender}
         self.air.dbInterface.createObject(self.air.dbId, self.air.dclassesByName['DistributedPetAI'], {key: (value,) for key, value in fields.items()}, handleCreate)
@@ -402,7 +411,7 @@ class PetManagerAI(DirectObject.DirectObject):
 
         self.air.writeServerEvent('deleteToonsPet', toonId, '%s' % curPetId)
         toon.b_setPetId(0)
-        self.deletePetObject(curPetId)
+        #self.deletePetObject(curPetId)
         return 0
 
     def getAvailablePets(self, numDaysPetAvailable, numPetsPerDay):
