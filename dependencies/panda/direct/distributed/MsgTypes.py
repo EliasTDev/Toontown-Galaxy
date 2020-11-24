@@ -5,6 +5,7 @@ from direct.showbase.PythonUtil import invertDictLossless
 MsgName2Id = {
     'CLIENT_HELLO':                                  1,
     'CLIENT_HELLO_RESP':                             2,
+    'CLIENT_GET_AVATAR_DETAILS':                     14,
 
     # Sent by the client when it's leaving.
     'CLIENT_DISCONNECT':                             3,

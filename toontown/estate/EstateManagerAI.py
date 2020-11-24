@@ -8,7 +8,7 @@ from . import DistributedEstateAI
 from direct.task.Task import Task
 from . import HouseGlobals
 import random
-import functools 
+import functools
 from direct.fsm.FSM import FSM
 from toontown.toon import ToonDNA
 from toontown.estate.DistributedHouseAI import DistributedHouseAI
@@ -344,7 +344,7 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
         self.zone2owner = {}    # get the owner of a zone
         self.houseZone2estateZone = {}
         self.avId2pendingEnter = {} # table of avatars that are on their way to an estate
-        self.petOperations  = {} 
+        self.petOperations  = {}
         # Number of seconds between spontaneous heals
         self.healFrequency = 30 # seconds
         self.toon2estate = {}
@@ -499,8 +499,6 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
                 return
         self.__handleLoadEstate(senderAv, estateLoaded, accId, zoneId)
 
-
-        
     def getAvEnterEvent(self):
         return 'avatarEnterEstate'
 
@@ -850,10 +848,14 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
 
     def exitEstate(self):
         avId = self.air.getAvatarIdFromSender()
+        av = self.air.doId2do.get(avId)
         self.notify.debug("exitEstate(%s)" % avId)
         # This function is called from client in the normal case,
         # such as teleporting out, door out, exiting the game, etc
         self.__exitEstate(avId)
+
+        self._unmapFromEstate(av)
+        self._unloadEstate(av)
 
     def __handleUnexpectedExit(self, avId):
         self.notify.debug("we got an unexpected exit on av: %s:  deleting." % avId)
@@ -1081,6 +1083,33 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
         self._unmapFromEstate(av)
         av.loadEstateOperation = LoadEstateOperation(self, callback)
         av.loadEstateOperation.start(accId, zoneId)
+
+    def _unloadEstate(self, av):
+        if getattr(av, 'estate', None):
+            estate = av.estate
+            if estate not in self.estate2timeout:
+                self.estate2timeout[estate] = taskMgr.doMethodLater(HouseGlobals.BOOT_GRACE_PERIOD, self._cleanupEstate,
+                                                                    estate.uniqueName('unload-estate'),
+                                                                    extraArgs=[estate])
+
+            # Send warning:
+            self._sendToonsToPlayground(av.estate, 0)
+
+        if getattr(av, 'loadEstateOperation', None):
+            self.air.deallocateZone(av.loadEstateOperation.zoneId)
+            av.loadEstateOperation.cancel()
+            av.loadEstateOperation = None
+
+        if av and hasattr(av, 'exitEstate') and hasattr(av, 'isInEstate') and av.isInEstate():
+            av.exitEstate()
+
+        if av and av.getPetId() != 0:
+            self.ignore(self.air.getAvatarExitEvent(av.getPetId()))
+            pet = self.air.doId2do.get(av.getPetId())
+            if pet:
+                pet.requestDelete()
+
+        self.ignore(self.air.getAvatarExitEvent(av.doId))
 
     def _mapToEstate(self, av, estate):
         self._unmapFromEstate(av)
