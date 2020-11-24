@@ -2,7 +2,8 @@
 #from toontown.toonbase import ToontownGlobals
 from direct.directnotify import DirectNotifyGlobal
 #from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
+
 from direct.interval.IntervalGlobal import *
 from toontown.fishing import FishGlobals
 from . import GardenGlobals
@@ -43,7 +44,7 @@ class DirectRegion(NodePath):
         assert self.notify.debugStateCall(self)
 
     def hide(self):
-        NodePath.NodePath.hide(self)
+        NodePath.hide(self)
         assert self.notify.debugStateCall(self)
 
     def load(self):
@@ -169,10 +170,12 @@ class SpecialsPhoto(NodePath):
         scale = rotate.attachNewNode('scale')
         actor.reparentTo(scale)
         # Translate actor to the center.
-        bMin,bMax = actor.getTightBounds()
-        center = (bMin + bMax)/2.0
-        actor.setPos(-center[0], -center[1], -center[2])
-
+        if actor.getTightBounds():
+            bMin,bMax = actor.getTightBounds()
+            center = (bMin + bMax)/2.0
+            actor.setPos(-center[0], -center[1], -center[2])
+        else:
+            actor.setPos(0, 0, 0)
         pitch.setY(2.5)
 
 
@@ -244,7 +247,7 @@ class SpecialsPhoto(NodePath):
 
 
     def hide(self):
-        NodePath.NodePath.hide(self)
+        NodePath.hide(self)
         assert self.notify.debugStateCall(self)
         if hasattr(self, "specialsDisplayRegion"):
             self.specialsDisplayRegion.unload()

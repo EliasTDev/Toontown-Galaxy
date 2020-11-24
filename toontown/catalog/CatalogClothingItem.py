@@ -247,7 +247,7 @@ ClothingTypes = {
     }
 
 # A list of clothes that are loyalty items, needed by award manager
-LoyaltyClothingItems = (1600, 1601, 1602, 1603, 1604, 1605, 1606, 1607, 1608)
+LoyaltyClothingItems = ()
 
 class CatalogClothingItem(CatalogItem.CatalogItem):
     """CatalogClothingItem
@@ -259,10 +259,11 @@ class CatalogClothingItem(CatalogItem.CatalogItem):
 
     """
     
-    def makeNewItem(self, clothingType, colorIndex, loyaltyDays = 0):
+    def makeNewItem(self, clothingType, colorIndex, special=False):
         self.clothingType = clothingType
         self.colorIndex = colorIndex
-        self.loyaltyDays = loyaltyDays
+        #self.loyaltyDays = loyaltyDays
+        self.special = special
         CatalogItem.CatalogItem.makeNewItem(self)
 
     def storedInCloset(self):
@@ -635,11 +636,12 @@ class CatalogClothingItem(CatalogItem.CatalogItem):
         CatalogItem.CatalogItem.decodeDatagram(self, di, versionNumber, store)
         self.clothingType = di.getUint16()
         self.colorIndex = di.getUint8()
-        if versionNumber >= 6:
-            self.loyaltyDays = di.getUint16()
-        else:
+        self.special = di.getBool()
+        #if versionNumber >= 6:
+            #self.loyaltyDays = di.getUint16()
+        #else:
             #RAU this seeems safe, as an old user would never have the new loyalty items
-            self.loyaltyDays = 0
+            #self.loyaltyDays = 0
 
         # Now validate the indices by assigning into a variable,
         # color, which we don't care about other than to prove the
@@ -655,18 +657,11 @@ class CatalogClothingItem(CatalogItem.CatalogItem):
         CatalogItem.CatalogItem.encodeDatagram(self, dg, store)
         dg.addUint16(self.clothingType)
         dg.addUint8(self.colorIndex)
-        dg.addUint16(self.loyaltyDays)
+        dg.addBool(self.special)
+        #dg.addUint16(self.loyaltyDays)
         
     def isGift(self):
-        if (self.loyaltyRequirement() > 0):            
-            return 0
-        else:
-            if self.clothingType in LoyaltyClothingItems:
-                # we can get this case through award manager
-                # catalog generator is not creating the catalog item, hence no loyalty days
-                return 0
-            else:
-                return 1
+        return 1
 
 def getAllClothes(*clothingTypes):
     # This function returns a list of all possible

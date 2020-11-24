@@ -354,22 +354,23 @@ MonthlySchedule = (
       CatalogNametagItem(0),
       
       # Loyalty Items # WARNING update CatalogClothingItem.LoyaltyItems if you add more
-      CatalogClothingItem(1608, 0, 720),  # Purple Pajama girl pants
-      CatalogClothingItem(1605, 0, 720),  # Purple Pajama boy pants
-      CatalogClothingItem(1602, 0, 720),  # Purple Glasses Pajama
-      CatalogClothingItem(1607, 0, 540),  # Red Pajama girl pants
-      CatalogClothingItem(1604, 0, 540),  # Red Pajama boy pants
-      CatalogClothingItem(1601, 0, 540),  # Red Horn Pajama
-      CatalogClothingItem(1606, 0, 360),  # Blue Pajama girl pants
-      CatalogClothingItem(1603, 0, 360),  # Blue Pajama boy pants
-      CatalogClothingItem(1600, 0, 360),  # Blue Banana Pajama
+      CatalogClothingItem(1608, 0, True),  # Purple Pajama girl pants
+      CatalogClothingItem(1605, 0, True),  # Purple Pajama boy pants
+      CatalogClothingItem(1602, 0, True),  # Purple Glasses Pajama
+      CatalogClothingItem(1607, 0, True),  # Red Pajama girl pants
+      CatalogClothingItem(1604, 0, True),  # Red Pajama boy pants
+      CatalogClothingItem(1601, 0, True),  # Red Horn Pajama
+      CatalogClothingItem(1606, 0, True),  # Blue Pajama girl pants
+      CatalogClothingItem(1603, 0, True),  # Blue Pajama boy pants
+      CatalogClothingItem(1600, 0, True),  # Blue Banana Pajama
 
       # WARNING update CatalogEmoteItem.LoyaltyItems if you add more loyalty emotes
-      CatalogEmoteItem(20, 90), # surprise
-      CatalogEmoteItem(21, 180), # cry
-      CatalogEmoteItem(22, 360), # delighted
-      CatalogEmoteItem(23, 540), # furious
-      CatalogEmoteItem(24, 720), # laugh
+      # no disney fuck your loyalty shit
+      CatalogEmoteItem(20, True), # surprise
+      CatalogEmoteItem(21, True), # cry
+      CatalogEmoteItem(22, True), # delighted
+      CatalogEmoteItem(23, True), # furious
+      CatalogEmoteItem(24, True), # laugh
       )
      ),
     )

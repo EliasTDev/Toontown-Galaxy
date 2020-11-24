@@ -97,3 +97,9 @@ class OTPInternalRepository(AstronInternalRepository):
             dg = dclass.aiFormatUpdate(
                     fieldName, doId, channelId, self.ourChannel, args)
             self.send(dg)
+
+    def allocateContext(self):
+        self.context+=1
+        if self.context >= (1<<32):
+            self.context=self.InitialContext
+        return self.context

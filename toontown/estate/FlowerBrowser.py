@@ -28,7 +28,7 @@ class FlowerBrowser(DirectScrolledList):
         gui = loader.loadModel("phase_3.5/models/gui/friendslist_gui")
         
         optiondefs = (
-            ('parent', self.parent,    None),
+            ('parent', self._parent,    None),
             ('relief', None,    None),
             # inc and dec are DirectButtons
             ('incButton_image', (
@@ -69,7 +69,7 @@ class FlowerBrowser(DirectScrolledList):
     def destroy(self):
         assert self.notify.debugStateCall(self)
         DirectScrolledList.destroy(self)
-        self.parent = None
+        self._parent = None
 
     #def load(self):
     #    assert self.notify.debugStateCall(self)

@@ -167,6 +167,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         # we only have to change this flag and also add a hook to
         # call self.clickedNametag.
         self.setPickable(0)
+        self.cameraLerp = None
 
     def useSwimControls(self):
         self.controlManager.use("swim", self)
@@ -252,7 +253,9 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         del self.soundWalk
         if hasattr(self, "soundWhisper"):
             del self.soundWhisper
-
+        if self.cameraLerp:
+            self.cameraLerp.finish()
+            self.cameraLerp = None
         DistributedAvatar.DistributedAvatar.delete(self)
 
     def shadowReach(self, state):
@@ -971,8 +974,11 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             camera.setPos(savePos)
             camera.setHpr(saveHpr)
 
-            taskMgr.remove("posCamera")
-            camera.lerpPosHpr(x, y, z, h, p, r, time, task="posCamera")
+            if self.cameraLerp:
+                self.cameraLerp.finish()
+                self.cameraLerp = None
+            self.cameraLerp = LerpPosHprInterval(camera, time, Point3(x, y, z), Point3(h, p, r), other=self, name='posCamera')
+            self.cameraLerp.start()
 
     def getClampedAvatarHeight(self):
         return max(self.getHeight(), 3.0)

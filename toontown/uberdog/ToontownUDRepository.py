@@ -26,6 +26,8 @@ from toontown.coderedemption import TTCodeRedemptionConsts
 import time
 
 class ToontownUDRepository(ToontownInternalRepository):
+    InitialContext = 100000
+
     notify = DirectNotifyGlobal.directNotify.newCategory('ToontownUDRepository')
 
     def __init__(self, baseChannel, serverId):
@@ -49,6 +51,8 @@ class ToontownUDRepository(ToontownInternalRepository):
        # self.isInGameNewsMgr = isManagerFor('ingamenews')
        # self.isCpuInfoMgr = isManagerFor('cpuinfo')
        # self.isRandomSourceManager = False # isManagerFor('randomsource')
+        self.context=self.InitialContext
+        self.contextToClassName={}
 
       # We're responsible for keeping track of who's online with which avatar
         self.onlineAccountDetails = {}
@@ -150,12 +154,19 @@ class ToontownUDRepository(ToontownInternalRepository):
         return DatabaseIdFromClassName.get(
             className, DefaultDatabaseChannelId)
 
+
     if __debug__:
         def status(self):
             if self.isGiftingManager:
                 print("deliveryManager is", self.deliveryManager)
             if self.isFriendsManager:
                 print("playerFriendsManager is ",self.playerFriendsManager)
+
+    def allocateContext(self):
+        self.context+=1
+        if self.context >= (1<<32):
+            self.context=self.InitialContext
+        return self.context
 
     def dispatchUpdateToDoId(self, dclassName, fieldName, doId, args, channelId=None):
         # dispatch immediately to local object if it's local, otherwise send

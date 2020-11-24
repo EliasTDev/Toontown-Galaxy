@@ -716,7 +716,7 @@ class CatalogScreen(DirectFrame):
                 continue
 
             #check for loyalty program
-            if item.loyaltyRequirement() != 0:
+            if item.getSpecial():
                 self.loyaltyPanelList.append(
                     CatalogItemPanel.CatalogItemPanel(
                     parent = hidden,
@@ -744,7 +744,7 @@ class CatalogScreen(DirectFrame):
                 continue
 
             #check for loyalty program
-            if item.loyaltyRequirement() != 0:
+            if item.getSpecial():
                 self.loyaltyPanelList.append(
                     CatalogItemPanel.CatalogItemPanel(
                     parent = hidden,
@@ -990,7 +990,7 @@ class CatalogScreen(DirectFrame):
         itemList.sort(lambda a,b: priceSort(a,b,CatalogItem.CatalogTypeWeekly))
         itemList.reverse()
         for item in itemList:
-            if item.loyaltyRequirement() != 0:
+            if item.getSpecial():
                 self.loyaltyPanelList.append(
                     CatalogItemPanel.CatalogItemPanel(
                     parent = hidden,
@@ -1011,7 +1011,7 @@ class CatalogScreen(DirectFrame):
             lambda a,b: priceSort(a,b,CatalogItem.CatalogTypeBackorder))
         itemList.reverse()
         for item in itemList:
-            if item.loyaltyRequirement() != 0:
+            if item.getSpecial():
                 self.loyaltyPanelList.append(
                     CatalogItemPanel.CatalogItemPanel(
                     parent = hidden,

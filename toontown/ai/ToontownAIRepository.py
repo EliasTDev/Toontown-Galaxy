@@ -171,6 +171,15 @@ class ToontownAIRepository(ToontownInternalRepository):
 
         self.dataStoreManager = self.generateGlobalObject(OTP_DO_ID_TOONTOWN_TEMP_STORE_MANAGER, 'DistributedDataStoreManager')
 
+        #Generate our delivery manager
+        self.deliveryManager = self.generateGlobalObject(
+            OTP_DO_ID_TOONTOWN_DELIVERY_MANAGER,
+            "DistributedDeliveryManager")
+        #Generate our mail manager
+        self.mailManager = self.generateGlobalObject(
+            OTP_DO_ID_TOONTOWN_MAIL_MANAGER,
+            "DistributedMailManager")
+            
         # Create our suit invasion manager...
         self.suitInvasionManager = SuitInvasionManagerAI(self)
 
@@ -223,6 +232,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.toontownTimeManager.updateLoginTimes(time.time(), time.time(), globalClock.getRealTime())
         if self.wantBanManager:
             self.banManager = BanManagerAI.BanManagerAI()
+
 
     def createGlobals(self):
         """

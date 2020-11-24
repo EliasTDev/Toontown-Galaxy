@@ -14,9 +14,12 @@ class CatalogEmoteItem(CatalogItem.CatalogItem):
 
     sequenceNumber = 0
     pictureToon = None
-    def makeNewItem(self, emoteIndex, loyaltyDays = 0):
+    
+    def makeNewItem(self, emoteIndex, special=False):
         self.emoteIndex = emoteIndex
-        self.loyaltyDays = loyaltyDays
+        #self.loyaltyDays = loyaltyDays
+        self.special = special
+
         CatalogItem.CatalogItem.makeNewItem(self)
 
     def getPurchaseLimit(self):
@@ -167,25 +170,20 @@ class CatalogEmoteItem(CatalogItem.CatalogItem):
     def decodeDatagram(self, di, versionNumber, store):
         CatalogItem.CatalogItem.decodeDatagram(self, di, versionNumber, store)
         self.emoteIndex = di.getUint8()
-        if versionNumber >= 6:
-            self.loyaltyDays = di.getUint16()
-        else:
+        self.special = di.getBool()
+        #if versionNumber >= 6:
+           # self.loyaltyDays = di.getUint16()
+       # else:
             #RAU this seeems safe, as an old user would never have the new loyalty items
-            self.loyaltyDays = 0
+           # self.loyaltyDays = 0
         if self.emoteIndex > len(OTPLocalizer.EmoteList):
             raise ValueError
         
     def encodeDatagram(self, dg, store):
         CatalogItem.CatalogItem.encodeDatagram(self, dg, store)
         dg.addUint8(self.emoteIndex)
-        dg.addUint16(self.loyaltyDays)
+        dg.addBool(self.special)
+        #dg.addUint16(self.loyaltyDays)
         
     def isGift(self):
-        if (self.loyaltyRequirement() > 0):
-            return 0
-        else:
-            if self.emoteIndex in LoyaltyEmoteItems:
-                return 0
-            else:
-                return 1
-        
+        return 1

@@ -1,4 +1,5 @@
 from .CatalogSurfaceItem import *
+from panda3d.core import Texture
 
 # Indicies into Wainscoting Textures Dictionary
 WSTTextureName = 0
@@ -94,7 +95,6 @@ class CatalogWainscotingItem(CatalogSurfaceItem):
         return WainscotingTypes[self.patternIndex][WSTBasePrice]
 
     def loadTexture(self):
-        from pandac.PandaModules import Texture
         filename = WainscotingTypes[self.patternIndex][WSTTextureName]
         texture = loader.loadTexture(filename)
         texture.setMinfilter(Texture.FTLinearMipmapLinear)

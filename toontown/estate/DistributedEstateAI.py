@@ -34,6 +34,7 @@ from toontown.safezone.DistributedFishingSpotAI import DistributedFishingSpotAI
 from toontown.safezone import EFlyingTreasurePlannerAI
 from . import DistributedCannonAI
 from libpandadna import *
+
 class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
 
     """
@@ -441,14 +442,15 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
 
     def bootStrapEpochs(self):
         #first update the graden data based on how much time has based
-        #print ("last time %s" % (self.lastEpochTimeStamp))
+        print ("last time %s" % (self.lastEpochTimeStamp))
         currentTime = time.time()
-        #print ("current time %s" % (currentTime))
+        print ("current time %s" % (currentTime))
         timeDiff = currentTime - self.lastEpochTimeStamp
-        #print ("time diff %s" % (timeDiff))
-
+        print ("time diff %s" % (timeDiff))
+        
         #self.lastEpochTimeStamp = time.mktime((2006, 8, 24, 10, 50, 31, 4, 237, 1))
-
+        if self.lastEpochTimeStamp == 0:
+            self.lastEpochTimeStamp = time.time()
         tupleNewTime = time.localtime(currentTime - self.epochHourInSeconds)
         tupleOldTime = time.localtime(self.lastEpochTimeStamp)
 
@@ -462,10 +464,9 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
         tupleLastDay = tuple(listLastDay)
 
         randomDelay = random.random() * 5 * 60 # random five minute range
-
-        secondsNextEpoch = (time.mktime(tupleLastDay) + self.epochHourInSeconds + self.dayInSeconds + randomDelay) - currentTime
-
-
+        #this isnt even used wth disney
+        #secondsNextEpoch = ((time.mktimetupleLastDay) + self.epochHourInSeconds + self.dayInSeconds + randomDelay) - currentTime
+        
         #should we do the epoch for the current day?
         #beforeEpoch = 1
         #if  tupleNewTime[3] >= self.timeToEpoch:
@@ -516,7 +517,7 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
 
         tupleNextEpoch = time.localtime(whenNextEpoch)
 
-        self.notify.info("Next epoch to happen at %s" % (tupleNextEpoch))
+        self.notify.info("Next epoch to happen at %s %s %s %s %s %s %s %s %s" % (tupleNextEpoch))
 
 
     def setIdList(self, idList):

@@ -101,9 +101,9 @@ class LoadHouseOperation(FSM):
 
         self.house = house
         self.estate.houses[self.index] = self.house
-        if config.GetBool('want-gardening', True):
-            # Initialize our garden:
-            self.house.createGardenManager()
+        #if config.GetBool('want-gardening', True):
+            #Have distributedestateai take care of it like tto
+            #self.house.createGardenManager()
 
         self.demand('Off')
 
@@ -230,6 +230,8 @@ class LoadEstateOperation(FSM):
 
         # Set the estate's ID list:
         self.estate.b_setIdList(self.avIds)
+        #start the garden process
+        self.estate.gardenInit(self.avIds)
 
 
         # Load houses:
@@ -915,7 +917,7 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
             # Stop healing them
             av.stopToonUp()
 
-    def __cleanupEstate(self, avId, zoneId, task):
+    def _cleanupEstate(self, avId, zoneId, task):
         self.notify.debug("cleanupEstate avId = %s, zoneId = %s" % (avId, zoneId))
         # we should always be cleaning up things from the toBeDeleted list,
         # not directly from estateZone
@@ -1024,7 +1026,7 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
             # refCount might have already gotten deleted
             pass
         taskMgr.doMethodLater(HouseGlobals.CLEANUP_DELAY_AFTER_BOOT,
-                              PythonUtil.Functor(self.__cleanupEstate, ownerId, zoneId),
+                              PythonUtil.Functor(self._cleanupEstate, ownerId, zoneId),
                               "cleanupEstate-"+str(ownerId))
         return Task.done
 

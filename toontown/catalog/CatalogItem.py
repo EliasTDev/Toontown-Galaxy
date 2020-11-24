@@ -73,6 +73,8 @@ class CatalogItem:
         self.giftTag = None
         self.giftCode = 0
         self.hasPicture = False
+        self.special = False
+
         self.volume = 0
         self.specialEventId = 0 # Code assumes that if non zero, then this item is an award
         if (len(args) >= 1 and isinstance(args[0], DatagramIterator)):
@@ -232,16 +234,16 @@ class CatalogItem:
     def forGirlsOnly(self):
         return 0
 
-    def setLoyaltyRequirement(self, days):
-        self.loyaltyDays = days
+    #def setLoyaltyRequirement(self, days):
+        #self.loyaltyDays = days
 
     def loyaltyRequirement(self):
         """Return. the number of days an account must have to purchase."""
-        if not hasattr(self, "loyaltyDays"):
-            return 0
-        else:
-            return self.loyaltyDays
+        return 0
 
+    def getSpecial(self):
+        return self.special
+        
     def getPrice(self, catalogType):
         assert(catalogType != CatalogTypeUnspecified)
         if catalogType == CatalogTypeBackorder:
