@@ -316,7 +316,6 @@ class LoadPetOperation(FSM):
             self.acceptOnce('generate-%d' % self.petId, self.__generated)
         else:
             self.__generated(self.mgr.air.doId2do[self.petId])
-        estateAI.createPetCollisions()
 
     def __generated(self, pet):
         self.pet = pet
