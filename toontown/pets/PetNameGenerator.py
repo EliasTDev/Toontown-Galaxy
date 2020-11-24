@@ -35,7 +35,7 @@ class PetNameGenerator:
             searchPath.appendDirectory(Filename.expandFrom('$TT_3_ROOT/phase_3/etc'))
         else:
             # In other environments, including the dev environment, look here:
-            searchPath.appendDirectory(Filename('phase_3/etc'))
+            searchPath.appendDirectory(Filename('resources/phase_3/etc'))
             if os.path.expandvars('$TOONTOWN') != '':
                 searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$TOONTOWN/src/configfiles')))
             else:
@@ -51,14 +51,15 @@ class PetNameGenerator:
 
         input = StreamReader(vfs.openReadFile(filename, 1), 1)
 
-        currentLine = input.readline()
+        currentLine = input.readline().strip()
         while currentLine:
+            currentLine = currentLine.decode()
             if currentLine.lstrip()[0:1] != '#':
                 a1 = currentLine.find('*')
                 a2 = currentLine.find('*', a1+1)
                 self.nameDictionary[int(currentLine[0:a1])]=(int(currentLine[a1+1:a2]),
                                                              currentLine[a2+1:len(currentLine)-1].strip())
-            currentLine = input.readline()
+            currentLine = input.readline().strip()
 
         masterList = [self.boyFirsts, self.girlFirsts, self.neutralFirsts]
         for tu in list(self.nameDictionary.values()):

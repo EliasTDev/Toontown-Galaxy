@@ -252,7 +252,6 @@ class DatabaseObject:
 
         dg = PyDatagram()
         dg.addServerHeader(DBSERVER_ID, self.air.ourChannel, DBSERVER_CREATE_STORED_OBJECT)
-        
         dg.addUint32(context)
         dg.addString('')
         dg.addUint16(objectType)

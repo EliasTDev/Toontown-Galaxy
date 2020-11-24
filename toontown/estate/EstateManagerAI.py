@@ -1141,3 +1141,7 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
             self.zone2toons[estate.zoneId].remove(av.doId)
         except (KeyError, ValueError):
             pass
+        
+    def _sendToonsToPlayground(self, estate, reason):
+        for toon in self.estate2toons.get(estate, []):
+            self.sendUpdateToAvatarId(toon.doId, 'sendAvToPlayground', [toon.doId, reason])

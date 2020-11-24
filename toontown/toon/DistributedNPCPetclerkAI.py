@@ -27,9 +27,9 @@ class DistributedNPCPetclerkAI(DistributedNPCToonBaseAI):
             self.notify.warning("Avatar: %s not found" % (avId))
             return
 
-        if (self.isBusy()):
-            self.freeAvatar(avId)
-            return
+        #if (self.isBusy()):
+         #   self.freeAvatar(avId)
+          #  return
 
         self.petSeeds = simbase.air.petMgr.getAvailablePets(3, 2)
         # 'fix' pet seeds so there are two of each (female/male)

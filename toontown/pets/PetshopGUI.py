@@ -781,7 +781,7 @@ class PetshopGUI(DirectObject):
 
                 descList.append(TTLocalizer.PetshopDescCost % cost)
 
-                self.petDesc.append( string.join(descList, "\n") )
+                self.petDesc.append("\n".join(descList))
                 
                 self.petCost.append(cost)
                 

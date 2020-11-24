@@ -17,6 +17,7 @@ from toontown.parties import ToontownTimeManager
 from toontown.uberdog import TTSpeedchatRelayUD
 from toontown.uberdog import DistributedInGameNewsMgrUD
 from toontown.uberdog import DistributedCpuInfoMgrUD
+from direct.distributed.PyDatagram import PyDatagram
 
 from otp.uberdog.RejectCode import RejectCode
 #from direct.fsm.ClassicFSM import ClassicFSM
@@ -302,3 +303,140 @@ class ToontownUDRepository(ToontownInternalRepository):
     def setConnectionUrl(self):
         #TODO
         pass
+
+    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    def queryObjectFieldId(self, doId, fieldId, context=0):
+        """
+        Get a one-time snapshot look at the object.
+        """
+        assert self.notify.debugStateCall(self)
+        # Create a message
+        datagram = PyDatagram()
+        datagram.addServerHeader(
+            doId, self.ourChannel, STATESERVER_OBJECT_QUERY_FIELD)           
+        datagram.addUint32(doId)
+        datagram.addUint16(fieldId)
+        # A context that can be used to index the response if needed
+        datagram.addUint32(context)
+        self.send(datagram)
+        # Make sure the message gets there.
+        self.flush()
+
+    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    def queryObjectFieldIds(self, doId, fieldIds, context=0):
+        """
+        Get a one-time snapshot look at the object.
+        Query multiple field IDs from the same object.
+        """
+        assert self.notify.debugStateCall(self)
+        # Create a message
+        datagram = PyDatagram()
+        datagram.addServerHeader(
+            doId, self.ourChannel, STATESERVER_OBJECT_QUERY_FIELDS)           
+        datagram.addUint32(doId)
+        datagram.addUint32(context)
+        for x in fieldIds:
+            datagram.addUint16(x)
+        self.send(datagram)
+        # Make sure the message gets there.
+        self.flush()
+
+    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    def queryObjectStringFieldIds(self, dbId, objString, fieldIds, context=0):
+        """
+        Get a one-time snapshot look at the object.
+        Query multiple field IDs from the same object, by object string.
+        """
+        assert self.notify.debugStateCall(self)
+        # Create a message
+        dg = PyDatagram()
+        dg.addServerHeader(
+            dbId, self.ourChannel, STATESERVER_OBJECT_QUERY_FIELDS_STRING)           
+        dg.addString(objString)
+        dg.addUint32(context)
+        for x in fieldIds:
+            dg.addUint16(x)
+        self.send(dg)
+        # Make sure the message gets there.
+        self.flush()
+
+    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    def queryObjectStringFields(
+            self, dbId, dclassName, objString, fieldNames, context=0):
+        """
+        Get a one-time snapshot look at the object.
+        Query multiple field names from the same object, by object string.
+        """
+        assert self.notify.debugStateCall(self)
+        assert len(dclassName) > 0
+        for fn in fieldNames:
+            assert len(fn) > 0
+        dclass = self.dclassesByName.get(dclassName)
+        assert dclass is not None
+        if not dclass:
+            self.notify.error(
+                "queryObjectStringFields invalid dclassName %s"%(dclassName))
+            return
+        if dclass is not None:
+            fieldIds = []
+            for fn in fieldNames:
+                id = dclass.getFieldByName(fn).getNumber()
+                assert id
+                if not id:
+                    self.notify.error(
+                        "queryObjectStrongFields invalid field %s, %s"%(doId,fn))
+                    return
+                fieldIds.append(id)
+            self.queryObjectStringFieldIds(dbId,objString,fieldIds,context)
+
+    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    def queryObjectField(self, dclassName, fieldName, doId, context=0):
+        """
+        See Also: def sendUpdateToDoId
+        """
+        assert self.notify.debugStateCall(self)
+        assert len(dclassName) > 0
+        assert len(fieldName) > 0
+        assert doId > 0
+        dclass = self.dclassesByName.get(dclassName)
+        assert dclass is not None
+        if not dclass:
+            self.notify.error(
+                "queryObjectField invalid dclassName %s, %s"%(doId, fieldName))
+            return
+        if dclass is not None:
+            fieldId = dclass.getFieldByName(fieldName).getNumber()
+            assert fieldId # is 0 a valid value?
+            if not fieldId:
+                self.notify.error(
+                    "queryObjectField invalid field %s, %s"%(doId, fieldName))
+                return
+            self.queryObjectFieldId(doId, fieldId, context)
+
+    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    def queryObjectFields(self, dclassName, fieldNames, doId, context=0):
+        """
+        See Also: def sendUpdateToDoId
+        """
+        assert self.notify.debugStateCall(self)
+        assert len(dclassName) > 0
+        assert len(fieldNames) > 0
+        for fieldName in fieldNames:
+            assert len(fieldName) > 0
+        assert doId > 0
+        dclass = self.dclassesByName.get(dclassName)
+        assert dclass is not None
+        if not dclass:
+            self.notify.error(
+                "queryObjectField invalid dclassName %s, %s"%(doId, fieldName))
+            return
+        if dclass is not None:
+            fieldIds = [dclass.getFieldByName(fieldName).getNumber() \
+                        for fieldName in fieldNames]
+            # is 0 a valid value?
+            assert 0 not in fieldIds
+            if 0 not in fieldIds:
+                self.queryObjectFieldIds(doId, fieldIds, context)
+            else:
+                assert self.notify.error(
+                        "queryObjectFields invalid field in %s, %s"%(doId,fieldNames))

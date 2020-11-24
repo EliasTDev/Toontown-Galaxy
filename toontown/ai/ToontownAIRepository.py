@@ -122,6 +122,10 @@ class ToontownAIRepository(ToontownInternalRepository):
         # the client.
         self._avatarDisconnectReasons = {}
 
+        # These are used to query database objects directly; currently
+        # used only for offline utilities.
+        self.dbObjContext = 0
+        self.dbObjMap = {}
     def handleConnected(self):
         ToontownInternalRepository.handleConnected(self)
 

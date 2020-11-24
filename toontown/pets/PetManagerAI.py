@@ -370,7 +370,13 @@ class PetManagerAI(DirectObject.DirectObject):
                 summonPet(petId, callback=handlePetGenerated)
             else:
                 PetManagerAI.notify.warning('error creating pet for %s' % toonId)
-        self.createNewPetObject(handleCreate)
+        name = PetNameGenerator.PetNameGenerator().getName(nameIndex)
+        _, dna, traitSeed = PetUtil.getPetInfoFromSeed(seed, safeZoneId)
+        head, ears, nose, tail, bodyTexture, color, colorScale, eyeColor, _ = dna
+        fields = {'setOwnerId': toonId, 'setPetName': name, 'setTraitSeed': traitSeed, 'setSafeZoneId': safeZone,
+                  'setHead': head, 'setEars': ears, 'setNose': nose, 'setTail': tail, 'setBodyTexture': bodyTexture,
+                  'setColor': color, 'setColorScale': colorScale, 'setEyeColor': eyeColor, 'setGender': gender}
+        self.air.dbInterface.createObject(self.air.dbId, self.air.dclassesByName['DistributedPetAI'], {key: (value,) for key, value in fields.items()}, handleCreate)
     
     def deleteToonsPet(self, toonId):
         """ delete the toon's current pet. Pet objects (like all DB objects)
