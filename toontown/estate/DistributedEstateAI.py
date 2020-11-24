@@ -276,12 +276,12 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
     def initEstateData(self, estateVal=None, numHouses=0, houseId=None, houseVal=None):
         # these parameters have just been read from the database..
         # now we have to do something with them.
-        self.numHouses = numHouses
-        self.houseType = [None] * self.numHouses
-        self.housePos = [None] * self.numHouses
-        self.houseId = houseId
-        self.houseVal = houseVal
-        self.estateVal = estateVal
+       # self.numHouses = numHouses
+        #self.houseType = [None] * self.numHouses
+       # self.housePos = [None] * self.numHouses
+       # self.houseId = houseId
+       # self.houseVal = houseVal
+       # self.estateVal = estateVal
 
         # start treasure planner
         self.estateTreasurePlanner = ETreasurePlannerAI.ETreasurePlannerAI(self.zoneId)
@@ -372,7 +372,7 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
         #self.testPlant = DistributedPlantAI.DistributedPlantAI(self.air)
         #self.testPlant.generateWithRequired(self.zoneId)
         #self.placeOnGround(self.testPlant.doId)
-        simbase.estate = self
+        #simbase.estate = self
         #self.b_setDecorData([[2,[0,42,42,1],[512,1024,2048]],[1,[2,3],[512,1024,2048]]])
         #self.air.queryObjectField("DistributedEstate", "setDecorData", self.doId, None)
         #self.b_setDecorData([[1,0,16,16,0]])
