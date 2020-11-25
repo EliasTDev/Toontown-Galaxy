@@ -25,7 +25,7 @@ import time
 import string
 import copy
 from direct.showbase.PythonUtil import StackTrace
-
+from libtoontown import CPetBrain, CPetChase, CPetFlee
 
 class DistributedPetAI(DistributedSmoothNodeAI.DistributedSmoothNodeAI,
                        PetLookerAI.PetLookerAI, PetBase.PetBase):

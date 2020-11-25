@@ -332,13 +332,14 @@ class PetManagerAI(DirectObject.DirectObject):
 
     def createNewPetFromSeed(self, toonId, seed, gender = -1, nameIndex = -1, safeZoneId = ToontownGlobals.ToontownCentral):
       
-"""
-        def handleCreate(petId):
-            if not petId:
-                self.notify.warning('Cannot create pet for {0}'.format(toonId))
-                return 
-            def summonPet(petId, callback):
-                def handleGetPet(pet, petId=petId):
+    
+        #def handleCreate(petId):
+        
+         #   if not petId:
+          #      self.notify.warning('Cannot create pet for {0}'.format(toonId))
+           #     return 
+         #   def summonPet(petId, callback):
+          #      def handleGetPet(pet, petId=petId):
                         # we don't want our pet to start examining his
                         # environment, etc., we just want to initialize his
                         # DB fields
@@ -346,40 +347,40 @@ class PetManagerAI(DirectObject.DirectObject):
                     #pet._beingCreatedInDB = True
                     #pet.dbObject = 1
                     #pet.generateWithRequiredAndId(petId, 
-                                                self.air.districtId,
-                                                ToontownGlobals.QuietZone)
-                    simbase.air.setAIReceiver(petId)
-                    callback(pet)
-                simbase.air.petMgr.getPetObject(petId, handleGetPet)
+           #                                     self.air.districtId,
+            #                                    ToontownGlobals.QuietZone)
+             #       simbase.air.setAIReceiver(petId)
+              #      callback(pet)
+               # simbase.air.petMgr.getPetObject(petId, handleGetPet)
 
 
-            def handlePetGenerated(pet):
-                name, dna, traitSeed = PetUtil.getPetInfoFromSeed(seed, safeZoneId)
-                if gender != -1:
-                    #make sure the size of the dna array hasn't changed
-                    assert(len(dna) == 9)
-                    dna[8] = gender
-                if nameIndex != -1:
-                    name = PetNameGenerator.PetNameGenerator().getName(nameIndex)
-                pet._initDBVals(toonId, name, traitSeed, dna,
-                                safeZoneId)
-                self.assignPetToToon(petId, toonId)
-                message = '%s|%s|%s|%s|%s' % (
-                    petId, name, pet.getSafeZone(), dna,
-                    pet.traits.getValueList())
-                self.air.writeServerEvent('adoptPet', toonId, message)
-                pet.requestDelete()
+            #def handlePetGenerated(pet):
+             #   name, dna, traitSeed = PetUtil.getPetInfoFromSeed(seed, safeZoneId)
+              #  if gender != -1:
+               #     #make sure the size of the dna array hasn't changed
+                #    assert(len(dna) == 9)
+                 #   dna[8] = gender
+               # if nameIndex != -1:
+                #    name = PetNameGenerator.PetNameGenerator().getName(nameIndex)
+                #pet._initDBVals(toonId, name, traitSeed, dna,
+                 #               safeZoneId)
+                #self.assignPetToToon(petId, toonId)
+                #message = '%s|%s|%s|%s|%s' % (
+                 #   petId, name, pet.getSafeZone(), dna,
+                  #  pet.traits.getValueList())
+                #self.air.writeServerEvent('adoptPet', toonId, message)
+                #pet.requestDelete()
                # else:
                #     PetManagerAI.notify.warning('error summoning pet %s' % petId)
             # since this is the first time the pet is being
             # created, and we're going to be setting properties
             # on the pet, generate it in the Quiet zone first,
             # then move it to the requested zone.
-            summonPet(petId, callback=handlePetGenerated)
+            #summonPet(petId, callback=handlePetGenerated)
         #else:
          #   PetManagerAI.notify.warning('error creating pet for %s' % toonId)
     
-"""
+
         toon = self.air.doId2do.get(toonId)
 
         name = PetNameGenerator.PetNameGenerator().getName(nameIndex)
@@ -393,8 +394,8 @@ class PetManagerAI(DirectObject.DirectObject):
                 self.air.notify.warning('Cannot create pet for {0}'.format(petId))
                 return
             message = '%s|%s|%s|%s|%s' % (
-                    petId, name, pet.getSafeZone(), dna,
-                    pet.traits.getValueList())
+                    petId, name, safeZoneId, dna,
+                    traitSeed)
             self.air.writeServerEvent('adoptPet', toonId, message)
             toon.b_setPetId(petId)
             

@@ -180,6 +180,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
             self.codeRedemptionManager = self.generateGlobalObject(
                 OtpDoGlobals.OTP_DO_ID_TOONTOWN_CODE_REDEMPTION_MANAGER,
                 "TTCodeRedemptionMgr")
+        self.ttFriendsManager = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_TT_FRIENDS_MANAGER, 'TTFriendsManager')
 
         # This one is a little different, because it doesn't live in
         # the Uber zone; a different one lives in the zone for each
@@ -663,7 +664,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         pad.delayDelete = DelayDelete.DelayDelete(avatar, 'getAvatarDetails')
         avId = avatar.doId
         self.__queryAvatarMap[avId] = pad
-        self.__sendGetAvatarDetails(avId)
+        self.__sendGetAvatarDetails(avatar.doId, pet=(args[0].endswith("Pet")))
 
     def cancelAvatarDetailsRequest(self, avatar):
         """
@@ -682,21 +683,26 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
             pad = self.__queryAvatarMap.pop(avId)
             pad.delayDelete.destroy()
 
-    def __sendGetAvatarDetails(self, avId):
+    def __sendGetAvatarDetails(self, avId, pet=False):
         """
         Sends the query-object message to the server.  The return
         message will be handled by handleGetAvatarDetailsResp().
         See getAvatarDetails().
         """
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
-        datagram = PyDatagram()
-        avatar = self.__queryAvatarMap[avId].avatar
+        #assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
+        #datagram = PyDatagram()
+        #avatar = self.__queryAvatarMap[avId].avatar
 
-        datagram.addUint16(avatar.getRequestID())
+        #datagram.addUint16(avatar.getRequestID())
 
         # The avId we are querying.
-        datagram.addUint32(avId)
-        self.send(datagram)
+        #datagram.addUint32(avId)
+        #self.send(datagram)
+        if not pet:
+            self.ttFriendsManager.d_getAvatarDetails(avId)
+        else:
+            self.ttFriendsManager.d_getPetDetails(avId)
+
 
     def handleGetAvatarDetailsResp(self, di):
         assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
@@ -1303,32 +1309,33 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         # First, send a message to the one we're de-friending.  We do
         # this by sending a message via the LocalToon, to the actual
         # destination avatar--a little bit of indirection.
-        base.localAvatar.sendUpdate("friendsNotify", [base.localAvatar.doId, 1], sendToId = avatarId)
+        #base.localAvatar.sendUpdate("friendsNotify", [base.localAvatar.doId, 1], sendToId = avatarId)
 
         # Now actually end the friendship.
-        datagram = PyDatagram()
+        #datagram = PyDatagram()
         # Add message type
-        datagram.addUint16(CLIENT_REMOVE_FRIEND)
+        #datagram.addUint16(CLIENT_REMOVE_FRIEND)
         # Add the avatar to remove
-        datagram.addUint32(avatarId)
+        #datagram.addUint32(avatarId)
         # send the message
-        self.send(datagram)
+       # self.send(datagram)
 
         # If the toon is at his estate went he de-friends someone, we check
         # if the ex-friend is also at his estate.  If so, the AI needs to
         # kick him out.
-        self.estateMgr.removeFriend(base.localAvatar.doId, avatarId)
+        #self.estateMgr.removeFriend(base.localAvatar.doId, avatarId)
 
         # Explicitly remove the friend from our friends list now.
         # This will be done eventually by the server, but we'll do it
         # now so we'll be current.
 
-        for pair in base.localAvatar.friendsList:
-            friendId = pair[0]
-            if friendId == avatarId:
+        #for pair in base.localAvatar.friendsList:
+         #   friendId = pair[0]
+          #  if friendId == avatarId:
                 # Here's our friend entry; remove it.
-                base.localAvatar.friendsList.remove(pair)
-                return
+           #     base.localAvatar.friendsList.remove(pair)
+            #    return
+        self.ttFriendsManager.d_removeFriend(avatarId)
 
     def clearFriendState(self):
         """
@@ -1349,6 +1356,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         """
         self.friendsMapPending = 1
         self.friendsListError = 0
+        self.ttFriendsManager.d_getFriendsListRequest()
 
         # TODO
 
@@ -1755,16 +1763,19 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
                 return 1
         return 0
 
+
     def requestAvatarInfo(self, avId):
-        if avId == 0:
-            return
-        datagram = PyDatagram()
+        return #TODO
+     #   if avId == 0:
+      #      return
+        #datagram = PyDatagram()
         # Add message type
-        datagram.addUint16(CLIENT_GET_FRIEND_LIST_EXTENDED)
-        datagram.addUint16(1) #number of avIds
-        datagram.addUint32(avId)
+        #datagram.addUint16(CLIENT_GET_FRIEND_LIST_EXTENDED)
+        #datagram.addUint16(1) #number of avIds
+        #datagram.addUint32(avId)
         # send the message
-        base.cr.send(datagram)
+        #base.cr.send(datagram)
+        return
 
     def queueRequestAvatarInfo(self, avId):
         removeTask = 0
@@ -1785,14 +1796,17 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
             return
         if len(self.avatarInfoRequests) == 0:
             return
-        datagram = PyDatagram()
+        #datagram = PyDatagram()
         # Add message type
-        datagram.addUint16(CLIENT_GET_FRIEND_LIST_EXTENDED)
-        datagram.addUint16(len(self.avatarInfoRequests)) #number of avIds
-        for avId in self.avatarInfoRequests:
-            datagram.addUint32(avId)
+        #datagram.addUint16(CLIENT_GET_FRIEND_LIST_EXTENDED)
+        #datagram.addUint16(len(self.avatarInfoRequests)) #number of avIds
+        #for avId in self.avatarInfoRequests:
+         #   datagram.addUint32(avId)
         # send the message
-        base.cr.send(datagram)
+        #base.cr.send(datagram)
+        if hasattr(base, "cr"):
+            #base.cr.requestAvatarInfo(avId) 
+            base.cr.queueRequestAvatarInfo(self.avatarInfoRequests) 
 
     def handleGenerateWithRequiredOtherOwner(self, di):
         # OwnerViews are only used for LocalToon in Toontown.

@@ -29,7 +29,8 @@ uberdogs:
     - class: GlobalPartyManager
       id: 4477
       anonymous: false
-
+    - class: TTFriendsManager
+      id: 4697
 roles:
     - type: clientagent
       bind: 0.0.0.0:6667

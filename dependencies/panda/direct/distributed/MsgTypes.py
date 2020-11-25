@@ -15,6 +15,8 @@ MsgName2Id = {
 
     'CLIENT_HEARTBEAT':                              5,
 
+    'CLIENT_GET_PET_DETAILS':                        81,
+    'CLIENT_GET_PET_DETAILS_RESP':                   82,
     'CLIENT_OBJECT_SET_FIELD':                       120,
     'CLIENT_OBJECT_SET_FIELDS':                      121,
     'CLIENT_OBJECT_LEAVING':                         132,

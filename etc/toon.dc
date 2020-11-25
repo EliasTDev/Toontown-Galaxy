@@ -251,6 +251,7 @@ from toontown.parties import DistributedPartyJukebox40Activity/AI
 //from toontown.friends import TTAvatarFriendsManager/UD
 from toontown.friends import TTPlayerFriendsManager/UD
 from toontown.uberdog import TTSpeedchatRelay/UD
+from toontown.friends import TTFriendsManager/UD
 
 from toontown.safezone import DistributedGolfKart/AI
 from toontown.safezone import DistributedPicnicBasket/AI
@@ -3918,6 +3919,54 @@ dclass TTAvatarFriendsManager: AvatarFriendsManager {};
 
 dclass TTPlayerFriendsManager: PlayerFriendsManager {};
 
+dclass TTFriendsManager : DistributedObjectGlobal {
+  removeFriend(uint32) clsend;
+
+  getFriendsListRequest() clsend;
+
+  friendList(Friend []);
+
+  friendOnline(uint32);
+  friendOffline(uint32);
+
+  goingOffline(uint32 avId);
+
+  getAvatarDetails(uint32) clsend;
+  friendDetails(uint32, blob, uint16[], int16, int16, uint32, uint32, blob, blob, int8[], FriendEntry[]);
+
+  getPetDetails(uint32) clsend;
+  petDetails(uint32, uint32, string, uint32, uint32, uint16/1000[], PetTrait[], int8[], uint32);
+
+  routeTeleportQuery(uint32 toId) clsend;
+  teleportQuery(uint32 fromId);
+
+  teleportResponse(uint32 fromId, uint8 tpAvailable, uint32 defaultShard, uint32 hoodId, uint32 zoneId) clsend;
+  setTeleportResponse(uint32 toId, uint8 tpAvailable, uint32 defaultShard, uint32 hoodId, uint32 zoneId);
+
+  whisperSCTo(uint32 toId, uint16 msgIndex) clsend;
+  setWhisperSCFrom(uint32 fromId, uint16 msgIndex);
+
+  whisperSCCustomTo(uint32 toId, uint16 msgIndex) clsend;
+  setWhisperSCCustomFrom(uint32 fromId, uint16 msgIndex);
+
+  whisperSCEmoteTo(uint32 toId, uint16 emoteId) clsend;
+  setWhisperSCEmoteFrom(uint32 fromId, uint16 emoteId);
+
+  sendTalkWhisper(uint32 toId, string message) clsend;
+  receiveTalkWhisper(uint32 fromId, string message);
+
+  battleSOS(uint32 toId) clsend;
+  setBattleSOS(uint32 fromId);
+
+  teleportGiveup(uint32 toId) clsend;
+  setTeleportGiveup(uint32 fromId);
+
+  whisperSCToontaskTo(uint32, uint32, uint32, uint32, uint8) clsend;
+  setWhisperSCToontaskFrom(uint32, uint32, uint32, uint32, uint8);
+
+  sleepAutoReply(uint32 toId) clsend;
+  setSleepAutoReply(uint32 fromId);
+};
 dclass TTSpeedchatRelay: SpeedchatRelay {};
 
 dclass DistributedGolfKart: DistributedObject {

@@ -22,3 +22,6 @@ uberdogs:
     - class: GlobalGroupTracker
       id: 4479
       anonymous: false
+      
+    - class: TTFriendsManager
+      id: 4697

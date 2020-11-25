@@ -1,6 +1,6 @@
 """DistributedPet module: contains the DistributedPet class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import *

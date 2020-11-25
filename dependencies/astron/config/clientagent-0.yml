@@ -32,6 +32,8 @@ uberdogs:
       id: 4477
       anonymous: false
 
+    - class: TTFriendsManager
+      id: 4697
 messagedirector:
     connect: 127.0.0.1:7100
 
