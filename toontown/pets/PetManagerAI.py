@@ -273,10 +273,9 @@ class PetManagerAI(DirectObject.DirectObject):
        # dbo = DatabaseObject.DatabaseObject(
           #  self.air, petId, doneEvent=doneEvent)
         
-        dbo =  self.air.dbInterface(self.air)
-        pet = dbo.queryObject(self.air.dbId,petId, doneEvent, self.air.dclassesByName['DistributedPetAI'])
+        pet = self.air.dbInterface.queryObject(self.air.dbId,petId, callback, self.air.dclassesByName['DistributedPetAI'])
 
-        def handlePetRead(dbo, retCode, callback=callback, pet=pet):
+        def handlePetRead(retCode, callback=callback, pet=pet):
             success = (retCode == 0)
             if not success:
                 PetManagerAI.notify.warning('pet DB read failed')
@@ -332,6 +331,8 @@ class PetManagerAI(DirectObject.DirectObject):
             toon.b_setPetId(petId)
 
     def createNewPetFromSeed(self, toonId, seed, gender = -1, nameIndex = -1, safeZoneId = ToontownGlobals.ToontownCentral):
+      
+"""
         def handleCreate(petId):
             if not petId:
                 self.notify.warning('Cannot create pet for {0}'.format(toonId))
@@ -341,10 +342,10 @@ class PetManagerAI(DirectObject.DirectObject):
                         # we don't want our pet to start examining his
                         # environment, etc., we just want to initialize his
                         # DB fields
-                    pet.setInactive()
-                    pet._beingCreatedInDB = True
-                    pet.dbObject = 1
-                    pet.generateWithRequiredAndId(petId, 
+                   # pet.setInactive()
+                    #pet._beingCreatedInDB = True
+                    #pet.dbObject = 1
+                    #pet.generateWithRequiredAndId(petId, 
                                                 self.air.districtId,
                                                 ToontownGlobals.QuietZone)
                     simbase.air.setAIReceiver(petId)
@@ -378,6 +379,8 @@ class PetManagerAI(DirectObject.DirectObject):
         #else:
          #   PetManagerAI.notify.warning('error creating pet for %s' % toonId)
     
+"""
+        toon = self.air.doId2do.get(toonId)
 
         name = PetNameGenerator.PetNameGenerator().getName(nameIndex)
         _, dna, traitSeed = PetUtil.getPetInfoFromSeed(seed, safeZoneId)
@@ -385,6 +388,19 @@ class PetManagerAI(DirectObject.DirectObject):
         fields = {'setOwnerId': toonId, 'setPetName': name, 'setTraitSeed': traitSeed, 'setSafeZone': safeZoneId,
                   'setHead': head, 'setEars': ears, 'setNose': nose, 'setTail': tail, 'setBodyTexture': bodyTexture,
                   'setColor': color, 'setColorScale': colorScale, 'setEyeColor': eyeColor, 'setGender': gender}
+        def handleCreate(petId):
+            if not petId:
+                self.air.notify.warning('Cannot create pet for {0}'.format(petId))
+                return
+            message = '%s|%s|%s|%s|%s' % (
+                    petId, name, pet.getSafeZone(), dna,
+                    pet.traits.getValueList())
+            self.air.writeServerEvent('adoptPet', toonId, message)
+            toon.b_setPetId(petId)
+            
+
+            
+
         self.air.dbInterface.createObject(self.air.dbId, self.air.dclassesByName['DistributedPetAI'], {key: (value,) for key, value in fields.items()}, handleCreate)
     
     def deleteToonsPet(self, toonId):
