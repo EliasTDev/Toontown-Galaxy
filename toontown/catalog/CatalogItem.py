@@ -567,7 +567,7 @@ class CatalogItem:
             if (color == None):
                 matches.hide()
 
-            elif isinstance(color, str):
+            elif isinstance(color, (str, bytes)):
                 tex = loader.loadTexture(color)
                 tex.setMinfilter(Texture.FTLinearMipmapLinear)
                 tex.setMagfilter(Texture.FTLinear)

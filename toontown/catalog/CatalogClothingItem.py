@@ -447,7 +447,7 @@ class CatalogClothingItem(CatalogItem.CatalogItem):
         # must run on the AI.
         from toontown.toon import Toon
 
-        assert (not self.hasPicture)
+        #assert (not self.hasPicture)
         self.hasPicture=True
 
         # Make an ToonDNA suitable for showing this clothing.

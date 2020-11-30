@@ -32,7 +32,7 @@ class CatalogItemList:
         self.__blob = None
         self.__list = None
 
-        if isinstance(source, str):
+        if isinstance(source, (str, bytes)):
             self.__blob = source
         elif isinstance(source, list):
             self.__list = source[:]
