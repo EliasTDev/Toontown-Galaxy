@@ -4640,7 +4640,7 @@
 @@ -64,7 +64,7 @@
                  self.warp = 1
                  self.namelessPotAv = av
-             self.nameList.append(av.name)
+             self.nameList.append(av._name)
 -            
 +
          self.fsm = ClassicFSM.ClassicFSM('MakeAToon',

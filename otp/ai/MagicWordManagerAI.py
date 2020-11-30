@@ -79,7 +79,7 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
 
         if wordIs("~rename"):
             if (not self.supportRename):
-                self.notify.warning("Rename is not supported for %s, requested by %d" % (av.name, senderId))
+                self.notify.warning("Rename is not supported for %s, requested by %d" % (av._name, senderId))
             else:
                 name = word[8:].strip()
                 if name == "":
@@ -88,29 +88,29 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
                     av.d_setName(name)
 
         elif wordIs("~badname"):
-            self.notify.warning("Renaming inappropriately named toon %s (doId %d)." % (av.name, av.doId))
+            self.notify.warning("Renaming inappropriately named toon %s (doId %d)." % (av._name, av.doId))
             name = "toon%d" % (av.doId % 1000000)
             av.d_setName(name)
 
         elif wordIs("~chat"):
             if (not self.supportSuperchat) and (senderId != av.doId):
-                self.notify.warning("Super chat is not supported for %s, requested by %d" % (av.name, senderId))
+                self.notify.warning("Super chat is not supported for %s, requested by %d" % (av._name, senderId))
             else:
                 av.d_setCommonChatFlags(OTPGlobals.CommonChat)
-                self.notify.debug("Giving common chat permission to " + av.name)
+                self.notify.debug("Giving common chat permission to " + av._name)
         elif wordIs("~superchat"):
             if not self.supportSuperchat:
-                self.notify.warning("Super chat is not supported for " + av.name)
+                self.notify.warning("Super chat is not supported for " + av._name)
             else:
                 av.d_setCommonChatFlags(OTPGlobals.SuperChat)
-                self.notify.debug("Giving super chat permission to " + av.name)
+                self.notify.debug("Giving super chat permission to " + av._name)
         elif wordIs("~nochat"):
             av.d_setCommonChatFlags(0)
-            self.notify.debug("Removing special chat permissions for " + av.name)
+            self.notify.debug("Removing special chat permissions for " + av._name)
 
         elif wordIs("~listen"):
             if (not self.supportSuperchat) and (senderId != av.doId):
-                self.notify.warning("Listen is not supported for %s, requested by %d" % (av.name, senderId))
+                self.notify.warning("Listen is not supported for %s, requested by %d" % (av._name, senderId))
             else:
                 # This is a client-side word.
                 if (senderId != av.doId):
@@ -141,20 +141,20 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
                 av.toonUp(1)
             else:
                 av.b_setHp(1)
-            self.notify.debug("Only 1 hp for " + av.name)
+            self.notify.debug("Only 1 hp for " + av._name)
         elif wordIs("~sad"):
             av.b_setHp(0)
-            self.notify.debug("Only 0 hp for " + av.name)
+            self.notify.debug("Only 0 hp for " + av._name)
         elif wordIs("~dead"):
             av.takeDamage(av.hp)
-            self.notify.debug(av.name + " is dead")
+            self.notify.debug(av._name + " is dead")
         elif wordIs("~waydead"):
             av.takeDamage(av.hp)
             av.b_setHp(-100)
-            self.notify.debug(av.name + " is way dead")
+            self.notify.debug(av._name + " is way dead")
         elif wordIs("~toonup"):
             av.toonUp(av.maxHp)
-            self.notify.debug("Full heal for " + av.name)
+            self.notify.debug("Full heal for " + av._name)
 
         elif wordIs('~maxtoon'):
 
@@ -229,7 +229,7 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
             args = word.split()
             hp = int(args[1])
             av.b_setHp(hp)
-            self.notify.debug('Set hp to %s for %s' % (hp, av.name))
+            self.notify.debug('Set hp to %s for %s' % (hp, av._name))
         elif wordIs('~skipFly'):
             if not hasattr(simbase.air, 'cogdoGame'):
                 response = 'There are no lawbot field office minigames on this district!'

@@ -424,7 +424,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
                 avatarChoice = av
                 self.notify.info("================")
                 self.notify.info("Chose avatar id: %s" % (av.id))
-                self.notify.info("Chose avatar name: %s" % (av.name))
+                self.notify.info("Chose avatar name: %s" % (av._name))
                 dna = ToonDNA.ToonDNA()
                 dna.makeFromNetString(av.dna)
                 self.notify.info("Chose avatar dna: %s" % (dna.asTuple(),))
@@ -749,7 +749,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
             pad.avatar.updateAllRequiredFields(dclass, di)
             gotData = 1
 
-        if isinstance(pad.func, bytes):
+        if isinstance(pad.func, str):
             # If the pad "function" is actually a string, send an
             # event instead of calling the function.
             messenger.send(pad.func, list((gotData, pad.avatar) + pad.args))

@@ -186,7 +186,7 @@ class DistributedNPCToon(DistributedNPCToonBase):
         # Reject is simpler, so lets get that out of the way
         if (mode == NPCToons.QUEST_MOVIE_REJECT):
             rejectString = Quests.chooseQuestDialogReject()
-            rejectString = Quests.fillInQuestNames(rejectString, avName = av.name)
+            rejectString = Quests.fillInQuestNames(rejectString, avName = av._name)
             # No need for page chat here, just setChatAbsolute
             self.setChatAbsolute(rejectString, CFSpeech | CFTimeout)
             if isLocalToon:
@@ -198,7 +198,7 @@ class DistributedNPCToon(DistributedNPCToonBase):
         # Reject is simpler, so lets get that out of the way
         if (mode == NPCToons.QUEST_MOVIE_TIER_NOT_DONE):
             rejectString = Quests.chooseQuestDialogTierNotDone()
-            rejectString = Quests.fillInQuestNames(rejectString, avName = av.name)
+            rejectString = Quests.fillInQuestNames(rejectString, avName = av._name)
             # No need for page chat here, just setChatAbsolute
             self.setChatAbsolute(rejectString, CFSpeech | CFTimeout)
             if isLocalToon:
@@ -316,7 +316,7 @@ class DistributedNPCToon(DistributedNPCToonBase):
             return
 
         fullString = Quests.fillInQuestNames(fullString,
-                                             avName = av.name,
+                                             avName = av._name,
                                              fromNpcId = npcId,
                                              toNpcId = toNpcId)
 

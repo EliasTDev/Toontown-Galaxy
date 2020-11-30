@@ -7,7 +7,7 @@ class PotentialAvatar:
                  wishState = "CLOSED", wishName = "",
                  defaultShard = 0, lastLogout = 0):
         self.id = id
-        self.name = names[0]
+        self._name = names[0]
         self.dna = dna
         self.avatarType = None
         self.position = position

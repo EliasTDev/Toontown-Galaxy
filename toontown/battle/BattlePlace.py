@@ -1,7 +1,8 @@
 from pandac.PandaModules import *
 from toontown.toon import Toon
 from toontown.hood import Place
-
+from toontown.hood import ZoneUtil
+from toontown.toonbase import ToontownGlobals
 class BattlePlace(Place.Place):
     def __init__(self, loader, doneEvent):
         assert(self.notify.debug("__init__()"))
@@ -133,6 +134,15 @@ class BattlePlace(Place.Place):
 
         self.doEnterZone(newZoneId)
 
+    def genDNAFileName(self, zoneId):
+            zoneId = ZoneUtil.getCanonicalZoneId(zoneId)
+            hoodId = ZoneUtil.getCanonicalHoodId(zoneId)
+            hood = ToontownGlobals.dnaMap[hoodId]
+            phase = ToontownGlobals.streetPhaseMap[hoodId]
+            if hoodId == zoneId:
+                zoneId = 'sz'
+
+            return 'phase_%s/dna/%s_%s.dna' % (phase, hood, zoneId)
     def doEnterZone(self, newZoneId):
         """
         Puts the Toon in the indicated zone, which is an integer
@@ -142,9 +152,15 @@ class BattlePlace(Place.Place):
         if newZoneId != self.zoneId:
             # Tell the server that we changed zones
             if newZoneId != None:
-                base.cr.sendSetZoneMsg(newZoneId)
-                self.notify.debug("Entering Zone %d" % (newZoneId))
+                    if hasattr(self, 'zoneVisDict'):
+                        visList = self.zoneVisDict[newZoneId]
+                    else:
+                        visList = base.cr.playGame.getPlace().loader.zoneVisDict[newZoneId]
+
+            self.notify.debug("Entering Zone %d" % (newZoneId))
                 
             # The new zone is now old
             self.zoneId = newZoneId
         assert(self.notify.debug("  newZoneId="+str(newZoneId)))
+
+

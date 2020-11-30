@@ -32,7 +32,7 @@ class CatalogItemList:
         self.__blob = None
         self.__list = None
 
-        if isinstance(source, bytes):
+        if isinstance(source, str):
             self.__blob = source
         elif isinstance(source, list):
             self.__list = source[:]
@@ -48,8 +48,8 @@ class CatalogItemList:
             else:
                 # If the store types are different, we must copy the list.
                 self.__list = source[:]
-        else:
-            assert(source == None)
+        #else:
+           # assert(source == None)
 
     def markDirty(self):
         # Call this whenever you know one of the items has changed
@@ -130,7 +130,7 @@ class CatalogItemList:
     
     def __encodeList(self):
         # We shouldn't try to call this function twice.
-        assert(self.__blob == None)
+        #assert(self.__blob == None)
         self.__blob = self.__makeBlob(self.store)
 
     def __makeBlob(self, store):
@@ -145,7 +145,7 @@ class CatalogItemList:
         
     def __decodeList(self):
         # We shouldn't try to call this function twice.
-        assert(self.__list == None)
+      #  assert(self.__list == None)
         self.__list = self.__makeList(self.store)
 
     def __makeList(self, store):

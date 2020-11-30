@@ -136,8 +136,8 @@ class FactoryExterior(BattlePlace.BattlePlace):
         # Add hooks for the linktunnels
         self.tunnelOriginList = base.cr.hoodMgr.addLinkTunnelHooks(self, self.nodeList, self.zoneId)
         how=requestStatus["how"]
-        #if self.zoneId != ToontownGlobals.LawbotOfficeExt:
-         #   self.handleInterests()
+        if self.zoneId != ToontownGlobals.LawbotOfficeExt:
+         self.handleInterests()
         self.fsm.request(how, [requestStatus])
         
     def exit(self):

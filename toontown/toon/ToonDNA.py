@@ -1577,7 +1577,10 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         return True
 
     def makeFromNetString(self, string):
-        dg=PyDatagram(string)
+        if type(string) == bytes:
+            dg = PyDatagram(string)
+        else:
+            dg = PyDatagram(string.encode('utf-8'))
         dgi=PyDatagramIterator(dg)
         self.type = dgi.getFixedString(1)
         if (self.type == 't'):  # Toon

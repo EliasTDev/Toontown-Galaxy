@@ -150,7 +150,8 @@ class InGameEditor(AppShell):
         # a choice dialog with a list of entity types, or something
         permanentTypes = self.level.entTypeReg.getPermanentTypeNames()
         entTypes = list(self.level.entTypes)
-        list(map(entTypes.remove, permanentTypes))
+        for x in permanentTypes:
+            entTypes.remove(x)
         entTypes.sort()
         numEntities = len(entTypes)
         cascadeMenu = ''
@@ -565,7 +566,7 @@ class InGameEditor(AppShell):
         label.pack(side = LEFT, expand = 0)
         # Add radio buttons
         for choice in params.get('choiceSet', []):
-            if type(choice) is bytes:
+            if type(choice) is str:
                 choiceStr = choice
             else:
                 choiceStr = repr(choice)
@@ -631,7 +632,7 @@ class InGameEditor(AppShell):
                 print('SENDING', value)
                 self.level.setAttribEdit(entId, attribName, value)
             # Create check button
-            if type(choice) is bytes:
+            if type(choice) is str:
                 labelStr = choice
             else:
                 labelStr = repr(choice)

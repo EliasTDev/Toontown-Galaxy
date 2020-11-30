@@ -1814,7 +1814,7 @@ class ObjectManager(NodePath, DirectObject):
         # Add the item to the end of our attic list (since that's what
         # the AI did).
         itemIndex = len(self.atticItemPanels)
-        assert(item == self.furnitureManager.atticItems[itemIndex])
+        #assert(item == self.furnitureManager.atticItems[itemIndex])
         panel = FurnitureItemPanel(item, itemIndex,
                                    command = self.bringItemFromAttic,
                                    deleteMode = self.deleteMode,
@@ -1920,7 +1920,7 @@ class ObjectManager(NodePath, DirectObject):
 
     def bringItemFromAttic(self, item, itemIndex):
         messenger.send('wakeup')
-        assert(item == self.furnitureManager.atticItems[itemIndex])
+        #assert(item == self.furnitureManager.atticItems[itemIndex])
 
         # Make sure we can't press the button again until we hear from the AI
         self.__enableItemButtons(0)
@@ -2007,7 +2007,7 @@ class ObjectManager(NodePath, DirectObject):
 
     def deleteItemFromAttic(self, item, itemIndex):
         messenger.send('wakeup')
-        assert(item == self.furnitureManager.atticItems[itemIndex])
+        #assert(item == self.furnitureManager.atticItems[itemIndex])
 
         self.furnitureManager.deleteItemFromAttic(
             item, itemIndex,
@@ -2528,7 +2528,7 @@ class ObjectManager(NodePath, DirectObject):
             bringCommand = self.bringWindowFromAttic
         else:
             itemIndex = len(self.atticItemPanels)
-            assert(item == self.furnitureManager.atticItems[itemIndex])
+            #assert(item == self.furnitureManager.atticItems[itemIndex])
             bringCommand = self.bringItemFromAttic
         panel = FurnitureItemPanel(item, itemIndex,
                                    command = bringCommand,
