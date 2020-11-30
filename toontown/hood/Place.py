@@ -784,7 +784,7 @@ class Place(StateData.StateData,
         self.accept("tunnelInMovieDone", self.__tunnelInMovieDone)
         base.localAvatar.reconsiderCheesyEffect()
         base.localAvatar.tunnelIn(tunnelOrigin)
-        base.localAvatar.stopQuestMap()
+        base.localAvatar.startQuestMap()
 
     def __tunnelInMovieDone(self):
         self.ignore("tunnelInMovieDone")
