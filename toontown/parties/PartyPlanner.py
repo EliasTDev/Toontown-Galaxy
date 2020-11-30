@@ -1211,6 +1211,8 @@ class PartyPlanner(DirectFrame,FSM):
         """
         PartyPlanner.notify.debug("__acceptExit")
         if hasattr(self,'frame'):
+            print('Exiting')
+            print('doneEvent: {0}'.format(self.doneEvent))
             self.hide()
             messenger.send(self.doneEvent)
 

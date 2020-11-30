@@ -97,9 +97,9 @@ class DistributedPartyAI(DistributedObjectAI):
         #     PartyGlobals.ActivityIds.PartyCatch would load
         #     DistributedPartyCatchActivityAI
         for activity in self.partyInfo.activityList:
-            if activity not in  ActivityIdsToClasses:
-                self.notify.warning('DistributedPartyAI: unknown activity: {0} continuing to next one'.format(activity))
-                continue
+           # if activity not in  ActivityIdsToClasses:
+            #    self.notify.warning('DistributedPartyAI: unknown activity: {0} continuing to next one'.format(activity))
+             #   continue
             # Location and heading in the activityList is in party space, so
             # we convert them to Panda space before passing them into the
             # activities

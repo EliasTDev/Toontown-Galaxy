@@ -800,9 +800,9 @@ class MiniInviteVisual(DirectFrame):
 
     def show(self):
         # we do this weirdness so it doesn't get clipped by the PlaneNode
-        self.reparentTo(self.parent)
+        self.reparentTo(self._parent)
         self.setPos(0.1,0,-0.018)
-        newParent = self.parent.getParent().getParent()
+        newParent = self._parent.getParent().getParent()
         self.wrtReparentTo(newParent)
         if self.whosePartyLabel["text"] == " ":
             host = base.cr.identifyAvatar(self.partyInfo.hostId)
@@ -830,7 +830,7 @@ class MiniInviteVisual(DirectFrame):
     def destroy(self):
         del self.checkedHeight
         del self.partyInfo
-        del self.parent
+        del self._parent
         del self.background
         del self.whosePartyLabel
         del self.whenTextLabel

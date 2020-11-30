@@ -24,6 +24,8 @@ from toontown.toon import GMUtils
 from toontown.parties import PartyGlobals
 from toontown.parties.Decoration import Decoration
 from . import PartyUtils
+from direct.interval.IntervalGlobal import *
+
 
 class DistributedParty(DistributedObject.DistributedObject):
     notify = directNotify.newCategory("DistributedParty")
@@ -37,7 +39,8 @@ class DistributedParty(DistributedObject.DistributedObject):
         # Needed by Party.py
         base.distributedParty = self
         self.titleText = "" 
-        
+        self.titleTextSequence = None
+
         self.isPartyEnding = False       
 
     def setPartyState(self, partyState):
@@ -435,6 +438,15 @@ class DistributedParty(DistributedObject.DistributedObject):
             self.attachHostNameToSign(self.partyClockSignBack)
 
     def spawnTitleText(self):
+        if self.titleTextSequence and self.titleTextSequence.isPlaying():
+            self.titleTextSequence.pause()
+
+        if self.titleText:
+            self.titleText.cleanup()
+
+        self.titleText = None
+        self.titleTextSequence = None
+
         """Spawn the title text."""
         if not self.hostName:
             # potentially we don't have the host name yet
@@ -461,17 +473,17 @@ class DistributedParty(DistributedObject.DistributedObject):
         self.titleText.setColor(Vec4(*self.titleColor))
         self.titleText.clearColorScale()
         self.titleText.setFg(self.titleColor)
-        seq = Task.sequence(
+        self.titleTextSequence = Sequence(
             # HACK! Let a pause go by to cover the loading pause
             # This tricks the taskMgr
-            Task.pause(0.1),
-            Task.pause(6.0),
-            self.titleText.lerpColorScale(
-            Vec4(1.0, 1.0, 1.0, 1.0),
+            Wait(0.1),
+            Wait(6.0),
+            self.titleText.colorScaleInterval( 0.5,
             Vec4(1.0, 1.0, 1.0, 0.0),
-            0.5),
-            Task(self.hideTitleTextTask))
-        taskMgr.add(seq, "titleText")
+            Vec4(1.0, 1.0, 1.0, 1.0)),
+            Func(self.hideTitleText))
+        self.titleTextSequence.start()
+        
 
     def hideTitleTextTask(self, task):
         assert(self.notify.debug("hideTitleTextTask()"))
