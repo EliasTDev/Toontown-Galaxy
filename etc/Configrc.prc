@@ -60,5 +60,5 @@ gc-save-all 0
 want-magic-words #t
 want-code-redemption-init-db true
 support-rename 1
-teleport-all 1 //disable during production
+teleport-all 0 //disable during production
 want-cogdominiums #t

@@ -63,6 +63,7 @@ import time
 from direct.distributed.PyDatagram import PyDatagram
 from toontown.ai.ToontownAIMsgTypes import *
 from libpandadna import *
+from toontown.fishing import FishManagerAI
 class ToontownAIRepository(ToontownInternalRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory('ToontownAIRepository')
 
@@ -206,6 +207,9 @@ class ToontownAIRepository(ToontownInternalRepository):
 
         # Create our quest manager...
         self.questManager = QuestManagerAI(self)
+
+        #create our fish manager
+        self.fishManager = FishManagerAI.FishManagerAI(self)
 
         # Create our promotion manager...
         self.promotionMgr = PromotionManagerAI(self)
@@ -826,3 +830,24 @@ class ToontownAIRepository(ToontownInternalRepository):
                      petIds, estateVal)
         else:
             print("ret code != 0, something went wrong with estate creation")
+
+    def handleAvCatch(self, avId, zoneId, catch):
+        """
+        avId - ID of avatar to update
+        zoneId - zoneId of the pond the catch was made in.
+                This is used by the BingoManagerAI to
+                determine which PBMgrAI needs to update
+                the catch.
+        catch - a fish tuple of (genus, species)
+        returns: None
+        
+        This method instructs the BingoManagerAI to
+        tell the appropriate PBMgrAI to update the
+        catch of an avatar at the particular pond. This
+        method is called in the FishManagerAI's
+        RecordCatch method.
+        """
+        # Guard for publish
+        if simbase.wantBingo:
+            if self.bingoMgr:
+                self.bingoMgr.setAvCatchForPondMgr(avId, zoneId, catch)
