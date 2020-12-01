@@ -142,7 +142,7 @@ class FireworkShowMixin:
                     return
                 else:
                     place.halloweenLights = base.cr.playGame.getPlace().loader.geom.findAllMatches("**/*light*")
-                    place.halloweenLights.extend(base.cr.playGame.getPlace().loader.geom.findAllMatches("**/*lamp*")
+                    place.halloweenLights.extend(base.cr.playGame.getPlace().loader.geom.findAllMatches("**/*lamp*"))
                     for light in place.halloweenLights:
                         light.setColorScaleOff(0)
             else:
@@ -150,7 +150,7 @@ class FireworkShowMixin:
                     return
                 else:
                     place.loader.hood.halloweenLights = base.cr.playGame.hood.loader.geom.findAllMatches("**/*light*")
-                    place.loader.hood.halloweenLights.extend(base.cr.playGame.hood.loader.geom.findAllMatches("**/*lamp*")
+                    place.loader.hood.halloweenLights.extend(base.cr.playGame.hood.loader.geom.findAllMatches("**/*lamp*"))
                     for light in base.cr.playGame.hood.halloweenLights:
                         light.setColorScaleOff(0)
             
