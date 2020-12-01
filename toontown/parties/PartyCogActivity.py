@@ -27,6 +27,7 @@ from .PartyCog import PartyCogManager
 from .PartyCogActivityPlayer import PartyCogActivityPlayer
 from .PartyCogActivityPlayer import PartyCogActivityLocalPlayer
 from .StretchingArrow import StretchingArrow
+from panda3d.core import LVecBase3f
 
 class PartyCogActivity(DirectObject):
     notify = directNotify.newCategory("PartyCogActivity")
@@ -339,10 +340,9 @@ class PartyCogActivity(DirectObject):
             ival.pause()
             
         if not opening:
-            pos = self._doorStartPos[team]
+            pos = LVecBase3f(tuple(self._doorStartPos[team]))
         else:
-            pos = self._doorStartPos[team] + Point3(0, 0, -7.0),
-
+            pos = LVecBase3f(tuple(self._doorStartPos[team])) + LVecBase3f(Point3(0, 0, -7.0))
         ival = self._arenaDoors[team].posInterval(
             0.75,
             pos,

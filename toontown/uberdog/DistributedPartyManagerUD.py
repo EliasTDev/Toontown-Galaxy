@@ -893,9 +893,11 @@ class DistributedPartyManagerUD(DistributedObjectGlobalUD):
         self.informInviteesPartyHasStarted(partyId)
 
     def sendUpdateToAllAis(self, message, args):
-        dg = self.dclass.aiFormatUpdateMsgType(
-                message, self.doId, self.doId, self.air.ourChannel, PARTY_MANAGER_UD_TO_ALL_AI, args)
-        self.air.send(dg)
+        pass 
+    #TODO figure out alternative for PARTY_MANAGER_UD_TO_ALL_AI
+        #dg = self.dclass.aiFormatUpdateMsgType(
+               # message, self.doId, self.doId, self.air.ourChannel, PARTY_MANAGER_UD_TO_ALL_AI, args)
+        #self.air.send(dg)
 
     def sendTestMsg(self):
         """Send a test msg to all AIs to prove it can be done."""
