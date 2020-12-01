@@ -88,9 +88,10 @@ class RocketExplosion(NodePath):
         self.endSeq.start()
 
     def destroy(self):
-        if self.endSeq:
-            self.endSeq.pause()
-            self.endSeq = None
+        if hasattr(self, 'endSeq'):
+            if self.endSeq:
+                self.endSeq.pause()
+                self.endSeq = None
         self.stop()
         if not self.cleanupCompleted:
             self.effect.cleanup()
