@@ -118,6 +118,7 @@ class DistributedPartyCannonActivity(DistributedPartyActivity):
         self.flyColNodePath = None
 
         self._flyingCollisionTaskName = None
+        self.trajectory = None
         
     def generateInit(self):
         DistributedPartyActivity.generateInit(self)
@@ -400,9 +401,10 @@ class DistributedPartyCannonActivity(DistributedPartyActivity):
             for key in flightResults:
                 exec("%s = flightResults['%s']" % (key, key))
             
-            self.notify.debug("start position: " + str(startPos))
-            self.notify.debug("start velocity: " + str(startVel))
-            self.notify.debug("time of launch: " + str(launchTime))
+            #self.notify.debug("start position: " + str(startPos))
+            #self.notify.debug("start velocity: " + str(startVel))
+            #self.notify.debug("time of launch: " + str(launchTime))
+            #these arent defined in this function ^
         
         cannon.removeToonReadyToFire()
         
@@ -423,6 +425,7 @@ class DistributedPartyCannonActivity(DistributedPartyActivity):
             self.camNode.setPos(self.localFlyingToon.getPos())
             self.camNode.setHpr(self.localFlyingToon.getHpr())
             self.camNode.reparentTo(render)
+            startVel = cannon.getToonFireVel()
             self.lastStartVel = startVel
             
             place = base.cr.playGame.getPlace()
@@ -436,7 +439,7 @@ class DistributedPartyCannonActivity(DistributedPartyActivity):
             self.localFlyingToon.wrtReparentTo(render)
             info = {}
             info['toonId'] = toonId
-            info['trajectory'] = trajectory
+            info['trajectory'] = self.trajectory
             info['launchTime'] = launchTime
             info['toon'] = self.localFlyingToon
             info['hRot'] = cannon.getRotation()

@@ -296,7 +296,7 @@ class DistributedPartyJukeboxActivityBase(DistributedPartyActivity):
             if self.__checkPartyValidity() and hasattr(base.cr.playGame.getPlace().loader, "music") and base.cr.playGame.getPlace().loader.music:
                 base.cr.playGame.getPlace().loader.music.stop()
             self.music.setTime(0.0)
-            self.music.setLoopCount(getMusicRepeatTimes(length))
+            self.music.setLoopCount(int(getMusicRepeatTimes(length)))
             self.music.play()
             jukeboxAnimControl = self.jukebox.getAnimControl("dance")
             if not jukeboxAnimControl.isPlaying():
