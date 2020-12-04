@@ -813,6 +813,13 @@ ShirtStyles = {
     # Halloween pumpkin
     'hw_ss2' : [ 30, 21, [(27, 27), ]],
 
+    'hw_ss3': [114, 101, [(27, 27)]],
+    'hw_ss4': [115, 102, [(27, 27)]],
+    'hw_ss5': [122, 109, [(27, 27)]],
+    'hw_ss6': [123, 110, [(27, 27)]],
+    'hw_ss7': [124, 111, [(27, 27)]],
+    'hw_ss8': [125, 112, [(27, 27)]],
+    'hw_ss9': [126, 113, [(27, 27)]],
     # Winter Holiday
     'wh_ss1' : [ 31, 22, [(27, 27), ]],
     # Winter Holiday
@@ -915,6 +922,15 @@ ShirtStyles = {
     'sil_7' : [ 107, 94, [(27, 27),]],   # Victory Party Shirt 1
     'sil_8' : [ 108, 95, [(27, 27),]],   # Victory Party Shirt 2
     # name : [ shirtIdx, sleeveIdx, [(ShirtColorIdx, sleeveColorIdx), ... ]]
+
+ 'emb_us1': [103, 90, [(27, 27)]],
+ 'emb_us2': [100, 87, [(27, 27)]],
+ 'emb_us3': [101, 88, [(27, 27)]],
+ 'sb_1': [109, 96, [(27, 27)]],
+ 'jb_1': [112, 99, [(27, 27)]],
+ 'jb_2': [113, 100, [(27, 27)]],
+ 'ugcms': [117, 104, [(27, 27)]],
+ 'lb_1': [119, 106, [(27, 27)]]}
     }
 
 # If you add to this, please add to TTLocalizer.BottomStylesDescriptions
@@ -1109,6 +1125,16 @@ BottomStyles = {
     
     'sil_bs1' : [ 40, [27, ]], # Silly Cogbuster Shorts
     'sil_gs1' : [44, [27, ]], # Silly Cogbuster Shorts
+ 'hw_bs3': [42, [27]],
+ 'hw_gs3': [46, [27]],
+ 'hw_bs4': [43, [27]],
+ 'hw_gs4': [47, [27]],
+ 'hw_gs1': [51, [27]],
+ 'hw_gs2': [52, [27]],
+ 'hw_gs5': [54, [27]],
+ 'hw_gs6': [55, [27]],
+ 'hw_gs7': [56, [27]],
+ 'hw_gsk1': [53, [27]]
     }
 
 # Define MakeAToon to be Tailor 1
@@ -1141,7 +1167,10 @@ BOY_SHIRTS = 0
 GIRL_SHIRTS = 1
 BOY_SHORTS = 2
 GIRL_BOTTOMS = 3
-
+HAT = 1
+GLASSES = 2
+BACKPACK = 4
+SHOES = 8
 
 # Make a list of the girl bottoms in MakeAToon
 # This is used in the body shop when switching genders
@@ -1399,7 +1428,423 @@ defaultGirlColorList = [
     1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12,
     13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24
     ]
+HatModels = [None,
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_baseball',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_safari',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_ribbon',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_heart',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_topHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_anvil',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_flowerPot',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_sandbag',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_weight',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_fez',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_golfHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_partyHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_pillBox',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_crown',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_cowboyHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_pirateHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_propellerHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_fishingHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_sombreroHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_strawHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_sunHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_antenna',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_beeHiveHairdo',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_bowler',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_chefsHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_detective',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_feathers',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_fedora',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_mickeysBandConductorHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_nativeAmericanFeather',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_pompadorHairdo',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_princess',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_robinHoodHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_romanHelmet',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_spiderAntennaThingy',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_tiara',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_vikingHelmet',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_witch',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_wizard',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_conquistadorHelmet',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_firefighterHelmet',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_foilPyramid',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_minersHardhatWithLight',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_napoleonHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_pilotsCap',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_policeHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_rainbowAfroWig',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_sailorHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_carmenMirandaFruitHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_bobbyHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_jugheadHat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_winter',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_bandana',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_dinosaur',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_band',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_hat_birdNest']
+HatTextures = [None,
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_ribbonRed.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_ribbonPurple.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_heartYellow.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_topHatBlue.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_safariBrown.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_safariGreen.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_baseballBlue.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_baseballOrange.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_ribbonYellow.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_ribbonChecker.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_ribbonLtRed.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_ribbonRainbow.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_baseballYellow.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_baseballRed.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_baseballTeal.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_ribbonPinkDots.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_baseballPurple.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_ribbonCheckerGreen.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_hat_partyToon.jpg']
+GlassesModels = [None,
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_roundGlasses',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_miniblinds',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_narrowGlasses',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_starGlasses',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_3dGlasses',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_aviator',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_catEyeGlasses',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_dorkGlasses',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_jackieOShades',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_scubaMask',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_goggles',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_grouchoMarxEyebrow',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_heartGlasses',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_insectEyeGlasses',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_masqueradeTypeMask',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_masqueradeTypeMask3',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_monocle',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_mouthGlasses',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_squareRims',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_eyepatch',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_msk_alienGlasses']
+GlassesTextures = [None,
+ 'phase_4/maps/tt_t_chr_avt_acc_msk_masqueradeTypeMask2.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_msk_masqueradeTypeMask4.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_msk_masqueradeTypeMask5.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_msk_eyepatchGems.jpg']
+BackpackModels = [None,
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_backpack',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_batWings',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_beeWings',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_dragonFlyWings',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_scubaTank',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_sharkFin',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_angelWings',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_backpackWithToys',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_butterflyWings',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_dragonWing',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_jetPack',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_spiderLegs',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_stuffedAnimalBackpackA',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_birdWings',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_stuffedAnimalBackpackCat',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_stuffedAnimalBackpackDog',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_airplane',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_woodenSword',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_supertoonCape',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_vampireCape',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_dinosaurTail',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_band',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_gags',
+ 'phase_4/models/accessories/tt_m_chr_avt_acc_pac_flunky']
+BackpackTextures = [None,
+ 'phase_4/maps/tt_t_chr_avt_acc_pac_backpackOrange.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_pac_backpackPurple.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_pac_backpackPolkaDotRed.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_pac_backpackPolkaDotYellow.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_pac_angelWingsMultiColor.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_pac_butterflyWingsStyle2.jpg']
+ShoesModels = ['feet',
+ 'shoes',
+ 'boots_short',
+ 'boots_long']
+ShoesTextures = ['phase_3/maps/tt_t_chr_avt_acc_sho_athleticGreen.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_athleticRed.jpg',
+ 'phase_3/maps/tt_t_chr_avt_acc_sho_docMartinBootsGreen.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_converseStyleGreen.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_wingtips.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_maryJaneShoes.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_deckShoes.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_athleticYellow.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_converseStyleBlack.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_converseStyleWhite.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_converseStylePink.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_cowboyBoots.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_fashionBootsPurple.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_hiTopSneakers.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_maryJaneShoesBrown.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_maryJaneShoesRed.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_superToonRedBoots.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_tennisShoesGreen.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_tennisShoesPink.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_converseStyleRed.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_docMartinBootsAqua.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_docMartinBootsBrown.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_docMartinBootsYellow.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_fashionBootsBlueSquares.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_fashionBootsGreenHearts.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_fashionBootsGreyDots.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_fashionBootsOrangeStars.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_fashionBootsPinkStars.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_loafers.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_maryJaneShoesPurple.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_motorcycleBoots.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_oxfords.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_rainBootsPink.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_santaBoots.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_winterBootsBeige.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_winterBootsPink.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_workBoots.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_converseStyleYellow.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_docMartinBootsPink.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_hiTopSneakersPink.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_rainBootsRedDots.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_tennisShoesPurple.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_tennisShoesViolet.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_tennisShoesYellow.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_rainBootsBlue.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_rainBootsYellow.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_athleticBlack.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_pirate.jpg',
+ 'phase_4/maps/tt_t_chr_avt_acc_sho_dinosaur.jpg']
+HatStyles = {'none': [0, 0, 0],
+ 'hbb1': [1, 0, 0],
+ 'hsf1': [2, 0, 0],
+ 'hsf2': [2, 5, 0],
+ 'hsf3': [2, 6, 0],
+ 'hht1': [4, 0, 0],
+ 'hht2': [4, 3, 0],
+ 'htp1': [5, 0, 0],
+ 'htp2': [5, 4, 0],
+ 'hav1': [6, 0, 0],
+ 'hfp1': [7, 0, 0],
+ 'hsg1': [8, 0, 0],
+ 'hwt1': [9, 0, 0],
+ 'hfz1': [10, 0, 0],
+ 'hgf1': [11, 0, 0],
+ 'hpt1': [12, 0, 0],
+ 'hpt2': [12, 19, 0],
+ 'hpb1': [13, 0, 0],
+ 'hcr1': [14, 0, 0],
+ 'hbb2': [1, 7, 0],
+ 'hbb3': [1, 8, 0],
+ 'hcw1': [15, 0, 0],
+ 'hpr1': [16, 0, 0],
+ 'hpp1': [17, 0, 0],
+ 'hfs1': [18, 0, 0],
+ 'hsb1': [19, 0, 0],
+ 'hst1': [20, 0, 0],
+ 'hat1': [22, 0, 0],
+ 'hhd1': [23, 0, 0],
+ 'hbw1': [24, 0, 0],
+ 'hch1': [25, 0, 0],
+ 'hdt1': [26, 0, 0],
+ 'hft1': [27, 0, 0],
+ 'hfd1': [28, 0, 0],
+ 'hmk1': [29, 0, 0],
+ 'hft2': [30, 0, 0],
+ 'hhd2': [31, 0, 0],
+ 'hrh1': [33, 0, 0],
+ 'hhm1': [34, 0, 0],
+ 'hat2': [35, 0, 0],
+ 'htr1': [36, 0, 0],
+ 'hhm2': [37, 0, 0],
+ 'hwz1': [38, 0, 0],
+ 'hwz2': [39, 0, 0],
+ 'hhm3': [40, 0, 0],
+ 'hhm4': [41, 0, 0],
+ 'hfp2': [42, 0, 0],
+ 'hhm5': [43, 0, 0],
+ 'hnp1': [44, 0, 0],
+ 'hpc2': [45, 0, 0],
+ 'hph1': [46, 0, 0],
+ 'hwg1': [47, 0, 0],
+ 'hbb4': [1, 13, 0],
+ 'hbb5': [1, 14, 0],
+ 'hbb6': [1, 15, 0],
+ 'hsl1': [48, 0, 0],
+ 'hfr1': [49, 0, 0],
+ 'hby1': [50, 0, 0],
+ 'hjh1': [51, 0, 0],
+ 'hbb7': [1, 17, 0],
+ 'hwt2': [52, 0, 0],
+ 'hhw2': [54, 0, 0],
+ 'hob1': [55, 0, 0],
+ 'hbn1': [56, 0, 0],
+ 'hrb1': [3, 0, 0],
+ 'hrb2': [3, 1, 0],
+ 'hrb3': [3, 2, 0],
+ 'hsu1': [21, 0, 0],
+ 'hrb4': [3, 9, 0],
+ 'hrb5': [3, 10, 0],
+ 'hrb6': [3, 11, 0],
+ 'hrb7': [3, 12, 0],
+ 'hpc1': [32, 0, 0],
+ 'hrb8': [3, 16, 0],
+ 'hrb9': [3, 18, 0],
+ 'hhw1': [53, 0, 0]}
+GlassesStyles = {'none': [0, 0, 0],
+ 'grd1': [1, 0, 0],
+ 'gmb1': [2, 0, 0],
+ 'gnr1': [3, 0, 0],
+ 'gst1': [4, 0, 0],
+ 'g3d1': [5, 0, 0],
+ 'gav1': [6, 0, 0],
+ 'gjo1': [9, 0, 0],
+ 'gsb1': [10, 0, 0],
+ 'ggl1': [11, 0, 0],
+ 'ggm1': [12, 0, 0],
+ 'ghg1': [13, 0, 0],
+ 'gie1': [14, 0, 0],
+ 'gmt1': [15, 0, 0],
+ 'gmt2': [15, 1, 0],
+ 'gmt3': [16, 0, 0],
+ 'gmt4': [16, 2, 0],
+ 'gmt5': [16, 3, 0],
+ 'gmn1': [17, 0, 0],
+ 'gmo1': [18, 0, 0],
+ 'gsr1': [19, 0, 0],
+ 'gce1': [7, 0, 0],
+ 'gdk1': [8, 0, 0],
+ 'gag1': [21, 0, 0],
+ 'ghw1': [20, 0, 0],
+ 'ghw2': [20, 4, 0]}
+BackpackStyles = {'none': [0, 0, 0],
+ 'bpb1': [1, 0, 0],
+ 'bpb2': [1, 1, 0],
+ 'bpb3': [1, 2, 0],
+ 'bpd1': [1, 3, 0],
+ 'bpd2': [1, 4, 0],
+ 'bwg1': [2, 0, 0],
+ 'bwg2': [3, 0, 0],
+ 'bwg3': [4, 0, 0],
+ 'bst1': [5, 0, 0],
+ 'bfn1': [6, 0, 0],
+ 'baw1': [7, 0, 0],
+ 'baw2': [7, 5, 0],
+ 'bwt1': [8, 0, 0],
+ 'bwg4': [9, 0, 0],
+ 'bwg5': [9, 6, 0],
+ 'bwg6': [10, 0, 0],
+ 'bjp1': [11, 0, 0],
+ 'blg1': [12, 0, 0],
+ 'bsa1': [13, 0, 0],
+ 'bwg7': [14, 0, 0],
+ 'bsa2': [15, 0, 0],
+ 'bsa3': [16, 0, 0],
+ 'bap1': [17, 0, 0],
+ 'bhw1': [18, 0, 0],
+ 'bhw2': [19, 0, 0],
+ 'bhw3': [20, 0, 0],
+ 'bhw4': [21, 0, 0],
+ 'bob1': [22, 0, 0],
+ 'bfg1': [23, 0, 0],
+ 'bfl1': [24, 0, 0]}
+ShoesStyles = {'none': [0, 0, 0],
+ 'sat1': [1, 0, 0],
+ 'sat2': [1, 1, 0],
+ 'smb1': [3, 2, 0],
+ 'scs1': [2, 3, 0],
+ 'sdk1': [1, 6, 0],
+ 'sat3': [1, 7, 0],
+ 'scs2': [2, 8, 0],
+ 'scs3': [2, 9, 0],
+ 'scs4': [2, 10, 0],
+ 'scb1': [3, 11, 0],
+ 'sht1': [2, 13, 0],
+ 'ssb1': [3, 16, 0],
+ 'sts1': [1, 17, 0],
+ 'sts2': [1, 18, 0],
+ 'scs5': [2, 19, 0],
+ 'smb2': [3, 20, 0],
+ 'smb3': [3, 21, 0],
+ 'smb4': [3, 22, 0],
+ 'slf1': [1, 28, 0],
+ 'smt1': [3, 30, 0],
+ 'sox1': [1, 31, 0],
+ 'srb1': [3, 32, 0],
+ 'sst1': [3, 33, 0],
+ 'swb1': [3, 34, 0],
+ 'swb2': [3, 35, 0],
+ 'swk1': [2, 36, 0],
+ 'scs6': [2, 37, 0],
+ 'smb5': [3, 38, 0],
+ 'sht2': [2, 39, 0],
+ 'srb2': [3, 40, 0],
+ 'sts3': [1, 41, 0],
+ 'sts4': [1, 42, 0],
+ 'sts5': [1, 43, 0],
+ 'srb3': [3, 44, 0],
+ 'srb4': [3, 45, 0],
+ 'sat4': [1, 46, 0],
+ 'shw1': [3, 47, 0],
+ 'shw2': [3, 48, 0],
+ 'swt1': [1, 4, 0],
+ 'smj1': [2, 5, 0],
+ 'sfb1': [3, 12, 0],
+ 'smj2': [2, 14, 0],
+ 'smj3': [2, 15, 0],
+ 'sfb2': [3, 23, 0],
+ 'sfb3': [3, 24, 0],
+ 'sfb4': [3, 25, 0],
+ 'sfb5': [3, 26, 0],
+ 'sfb6': [3, 27, 0],
+ 'smj4': [2, 29, 0]}
 
+def isValidHat(itemIdx, textureIdx, colorIdx):
+    for style in list(HatStyles.values()):
+        if itemIdx == style[0] and textureIdx == style[1] and colorIdx == style[2]:
+            return True
+
+    return False
+
+
+def isValidGlasses(itemIdx, textureIdx, colorIdx):
+    for style in list(GlassesStyles.values()):
+        if itemIdx == style[0] and textureIdx == style[1] and colorIdx == style[2]:
+            return True
+
+    return False
+
+
+def isValidBackpack(itemIdx, textureIdx, colorIdx):
+    for style in list(BackpackStyles.values()):
+        if itemIdx == style[0] and textureIdx == style[1] and colorIdx == style[2]:
+            return True
+
+    return False
+
+
+def isValidShoes(itemIdx, textureIdx, colorIdx):
+    for style in list(ShoesStyles.values()):
+        if itemIdx == style[0] and textureIdx == style[1] and colorIdx == style[2]:
+            return True
+
+    return False
+
+
+def isValidAccessory(itemIdx, textureIdx, colorIdx, which):
+    if which == HAT:
+        return isValidHat(itemIdx, textureIdx, colorIdx)
+    elif which == GLASSES:
+        return isValidGlasses(itemIdx, textureIdx, colorIdx)
+    elif which == BACKPACK:
+        return isValidBackpack(itemIdx, textureIdx, colorIdx)
+    elif which == SHOES:
+        return isValidShoes(itemIdx, textureIdx, colorIdx)
+    else:
+        return False
+        
 class ToonDNA(AvatarDNA.AvatarDNA):
     """ToonDNA class: contains methods for describing avatars with a
     simple class. The ToonDNA class may be converted to lists of strings

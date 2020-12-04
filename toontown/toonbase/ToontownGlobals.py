@@ -85,6 +85,9 @@ MaxMailboxContents = 30
 # all, including in the attic.  This includes windows and wallpaper in
 # the attic, but not those windows and wallpaper which are installed.
 MaxHouseItems = 45
+#the max number of accessories you can have in a trunk
+MaxAccessories = 50
+
 
 # How many extra items, over the above limit, can we keep on the
 # deletedItems list?
@@ -108,6 +111,9 @@ PetPanelProximityPriority = 6 # must run after pet floor collisions
 # purchase codes returned by DistributedMailbox.acceptItem(), -15 and up extended for award manager
 # DistributedPhone.requestPurchase, and CatalogItem.recordPurchase().
 # In general, positive codes are success, negative codes are failure.
+P_NoTrunk = -28
+P_AlreadyOwnBiggerCloset = -27
+P_ItemAlreadyRented = -26
 P_OnAwardOrderListFull = -25 # unlikely, but just in case, he won 30 awards and their still in his onAwardOrder list
 P_AwardMailboxFull = -24 # the award mailbox is full and can't take more
 P_ItemInPetTricks= -23 # trying to give a pet trick award but the toon has it in his pet tricks

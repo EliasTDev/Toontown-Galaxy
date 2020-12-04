@@ -164,7 +164,10 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
 
         self.clothesTopsList = []
         self.clothesBottomsList = []
-
+        self.hatList = []
+        self.glassesList = []
+        self.backpackList = []
+        self.shoesList = []
         # tunnel
         self.tunnelTrack = None
         self.tunnelPivotPos = [-14, -6, 0]
@@ -321,8 +324,41 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         Toon.Toon.setDNAString(self, dnaString)
 
     def setDNA(self, dna):
+        if base.cr.newsManager:
+            if base.cr.newsManager.isHolidayRunning(ToontownGlobals.SPOOKY_BLACK_CAT):
+                black = 26
+                heads = ['cls',
+                 'css',
+                 'csl',
+                 'cll']
+                dna.setTemporary(random.choice(heads), black, black, black)
+            else:
+                dna.restoreTemporary(self.style)
+        oldHat = self.getHat()
+        oldGlasses = self.getGlasses()
+        oldBackpack = self.getBackpack()
+        oldShoes = self.getShoes()
+        self.setHat(0, 0, 0)
+        self.setGlasses(0, 0, 0)
+        self.setBackpack(0, 0, 0)
+        self.setShoes(0, 0, 0)
         Toon.Toon.setDNA(self, dna)
+        self.setHat(*oldHat)
+        self.setGlasses(*oldGlasses)
+        self.setBackpack(*oldBackpack)
+        self.setShoes(*oldShoes)
 
+    def setHat(self, idx, textureIdx, colorIdx):
+        Toon.Toon.setHat(self, idx, textureIdx, colorIdx)
+
+    def setGlasses(self, idx, textureIdx, colorIdx):
+        Toon.Toon.setGlasses(self, idx, textureIdx, colorIdx)
+
+    def setBackpack(self, idx, textureIdx, colorIdx):
+        Toon.Toon.setBackpack(self, idx, textureIdx, colorIdx)
+
+    def setShoes(self, idx, textureIdx, colorIdx):
+        Toon.Toon.setShoes(self, idx, textureIdx, colorIdx)
     ### setExperience ###
 
     def setExperience(self, experience):
@@ -743,6 +779,39 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
             NPCFriendsDict[friendPair[0]] = friendPair[1]
         self.NPCFriendsDict = NPCFriendsDict
 
+    def setMaxAccessories(self, max):
+        self.maxAccessories = max
+
+    def getMaxAccessories(self):
+        return self.maxAccessories
+
+    def setHatList(self, clothesList):
+        self.hatList = clothesList
+
+    def getHatList(self):
+        return self.hatList
+
+    def setGlassesList(self, clothesList):
+        self.glassesList = clothesList
+
+    def getGlassesList(self):
+        return self.glassesList
+
+    def setBackpackList(self, clothesList):
+        self.backpackList = clothesList
+
+    def getBackpackList(self):
+        return self.backpackList
+
+    def setShoesList(self, clothesList):
+        self.shoesList = clothesList
+
+    def getShoesList(self):
+        return self.shoesList
+
+    def isTrunkFull(self, extraAccessories = 0):
+        numAccessories = (len(self.hatList) + len(self.glassesList) + len(self.backpackList) + len(self.shoesList)) / 3
+        return numAccessories + extraAccessories >= self.maxAccessories
     def setMaxClothes(self, max):
         self.maxClothes = max
 
@@ -3617,3 +3686,4 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         if hasattr(self, 'gmIcon') and self.gmIcon:
             self.gmIcon.detachNode()
             del self.gmIcon
+

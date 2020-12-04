@@ -7995,6 +7995,7 @@ NametagFrilly = "Frilly Name Tag"
 
 FurnitureYourOldCloset = "your old wardrobe"
 FurnitureYourOldBank = "your old bank"
+FurnitureYourOldTrunk = "your old trunk"
 
 # How to put quotation marks around chat items--don't translate yet.
 ChatItemQuotes = '"%s"'
@@ -8591,6 +8592,7 @@ HDNonDeletableBank = "You can't delete your bank!"
 HDNonDeletableCloset = "You can't delete your wardrobe!"
 HDNonDeletablePhone = "You can't delete your phone!"
 HDNonDeletableNotOwner = "You can't delete %s's things!"
+HDNonDeletableTrunk = "You can't delete your trunk!"
 HDHouseFull = "Your house is full.  You have to delete something else from your house or attic before you can return this item from the trash."
 
 HDHelpDict = {

@@ -838,7 +838,13 @@ class Toon(Avatar.Avatar, ToonHead):
         self.pieType = 0
         self.pieModel = None
         self.__pieModelType = None
-
+        self.hatNodes = []
+        self.glassesNodes = []
+        self.backpackNodes = []
+        self.hat = (0, 0, 0)
+        self.glasses = (0, 0, 0)
+        self.backpack = (0, 0, 0)
+        self.shoes = (0, 0, 0)
         # Stunned if recently hit by stomper
         self.isStunned = 0
 
@@ -1531,6 +1537,200 @@ class Toon(Avatar.Avatar, ToonHead):
                 caps.setColor(darkBottomColor)
         return swappedTorso
 
+
+    def generateHat(self, fromRTM = False):
+        hat = self.getHat()
+        if hat[0] >= len(ToonDNA.HatModels):
+            self.sendLogSuspiciousEvent('tried to put a wrong hat idx %d' % hat[0])
+            return
+        if len(self.hatNodes) > 0:
+            for hatNode in self.hatNodes:
+                hatNode.removeNode()
+
+            self.hatNodes = []
+        self.showEars()
+        if hat[0] != 0:
+            hatGeom = loader.loadModel(ToonDNA.HatModels[hat[0]], okMissing=True)
+            if hatGeom:
+                if hat[0] == 54:
+                    self.hideEars()
+                if hat[1] != 0:
+                    texName = ToonDNA.HatTextures[hat[1]]
+                    tex = loader.loadTexture(texName, okMissing=True)
+                    if tex is None:
+                        self.sendLogSuspiciousEvent('failed to load texture %s' % texName)
+                    else:
+                        tex.setMinfilter(Texture.FTLinearMipmapLinear)
+                        tex.setMagfilter(Texture.FTLinear)
+                        hatGeom.setTexture(tex, 1)
+                if fromRTM:
+                    importlib.reload(AccessoryGlobals)
+                transOffset = None
+                if AccessoryGlobals.ExtendedHatTransTable.get(hat[0]):
+                    transOffset = AccessoryGlobals.ExtendedHatTransTable[hat[0]].get(self.style.head[:2])
+                if transOffset is None:
+                    transOffset = AccessoryGlobals.HatTransTable.get(self.style.head[:2])
+                    if transOffset is None:
+                        return
+                hatGeom.setPos(transOffset[0][0], transOffset[0][1], transOffset[0][2])
+                hatGeom.setHpr(transOffset[1][0], transOffset[1][1], transOffset[1][2])
+                hatGeom.setScale(transOffset[2][0], transOffset[2][1], transOffset[2][2])
+                headNodes = self.findAllMatches('**/__Actor_head')
+                for headNode in headNodes:
+                    hatNode = headNode.attachNewNode('hatNode')
+                    self.hatNodes.append(hatNode)
+                    hatGeom.instanceTo(hatNode)
+
+        return
+
+    def generateGlasses(self, fromRTM = False):
+        glasses = self.getGlasses()
+        if glasses[0] >= len(ToonDNA.GlassesModels):
+            self.sendLogSuspiciousEvent('tried to put a wrong glasses idx %d' % glasses[0])
+            return
+        if len(self.glassesNodes) > 0:
+            for glassesNode in self.glassesNodes:
+                glassesNode.removeNode()
+
+            self.glassesNodes = []
+        self.showEyelashes()
+        if glasses[0] != 0:
+            glassesGeom = loader.loadModel(ToonDNA.GlassesModels[glasses[0]], okMissing=True)
+            if glassesGeom:
+                if glasses[0] in [15, 16]:
+                    self.hideEyelashes()
+                if glasses[1] != 0:
+                    texName = ToonDNA.GlassesTextures[glasses[1]]
+                    tex = loader.loadTexture(texName, okMissing=True)
+                    if tex is None:
+                        self.sendLogSuspiciousEvent('failed to load texture %s' % texName)
+                    else:
+                        tex.setMinfilter(Texture.FTLinearMipmapLinear)
+                        tex.setMagfilter(Texture.FTLinear)
+                        glassesGeom.setTexture(tex, 1)
+                if fromRTM:
+                    importlib.reload(AccessoryGlobals)
+                transOffset = None
+                if AccessoryGlobals.ExtendedGlassesTransTable.get(glasses[0]):
+                    transOffset = AccessoryGlobals.ExtendedGlassesTransTable[glasses[0]].get(self.style.head[:2])
+                if transOffset is None:
+                    transOffset = AccessoryGlobals.GlassesTransTable.get(self.style.head[:2])
+                    if transOffset is None:
+                        return
+                glassesGeom.setPos(transOffset[0][0], transOffset[0][1], transOffset[0][2])
+                glassesGeom.setHpr(transOffset[1][0], transOffset[1][1], transOffset[1][2])
+                glassesGeom.setScale(transOffset[2][0], transOffset[2][1], transOffset[2][2])
+                headNodes = self.findAllMatches('**/__Actor_head')
+                for headNode in headNodes:
+                    glassesNode = headNode.attachNewNode('glassesNode')
+                    self.glassesNodes.append(glassesNode)
+                    glassesGeom.instanceTo(glassesNode)
+
+        return
+
+    def generateBackpack(self, fromRTM = False):
+        backpack = self.getBackpack()
+        if backpack[0] >= len(ToonDNA.BackpackModels):
+            self.sendLogSuspiciousEvent('tried to put a wrong backpack idx %d' % backpack[0])
+            return
+        if len(self.backpackNodes) > 0:
+            for backpackNode in self.backpackNodes:
+                backpackNode.removeNode()
+
+            self.backpackNodes = []
+        if backpack[0] != 0:
+            geom = loader.loadModel(ToonDNA.BackpackModels[backpack[0]], okMissing=True)
+            if geom:
+                if backpack[1] != 0:
+                    texName = ToonDNA.BackpackTextures[backpack[1]]
+                    tex = loader.loadTexture(texName, okMissing=True)
+                    if tex is None:
+                        self.sendLogSuspiciousEvent('failed to load texture %s' % texName)
+                    else:
+                        tex.setMinfilter(Texture.FTLinearMipmapLinear)
+                        tex.setMagfilter(Texture.FTLinear)
+                        geom.setTexture(tex, 1)
+                if fromRTM:
+                    importlib.reload(AccessoryGlobals)
+                transOffset = None
+                if AccessoryGlobals.ExtendedBackpackTransTable.get(backpack[0]):
+                    transOffset = AccessoryGlobals.ExtendedBackpackTransTable[backpack[0]].get(self.style.torso[:1])
+                if transOffset is None:
+                    transOffset = AccessoryGlobals.BackpackTransTable.get(self.style.torso[:1])
+                    if transOffset is None:
+                        return
+                geom.setPos(transOffset[0][0], transOffset[0][1], transOffset[0][2])
+                geom.setHpr(transOffset[1][0], transOffset[1][1], transOffset[1][2])
+                geom.setScale(transOffset[2][0], transOffset[2][1], transOffset[2][2])
+                nodes = self.findAllMatches('**/def_joint_attachFlower')
+                for node in nodes:
+                    theNode = node.attachNewNode('backpackNode')
+                    self.backpackNodes.append(theNode)
+                    geom.instanceTo(theNode)
+
+        return
+
+    def generateShoes(self):
+        shoes = self.getShoes()
+        if shoes[0] >= len(ToonDNA.ShoesModels):
+            self.sendLogSuspiciousEvent('tried to put a wrong shoes idx %d' % shoes[0])
+            return
+        self.findAllMatches('**/feet;+s').stash()
+        self.findAllMatches('**/boots_short;+s').stash()
+        self.findAllMatches('**/boots_long;+s').stash()
+        self.findAllMatches('**/shoes;+s').stash()
+        geoms = self.findAllMatches('**/%s;+s' % ToonDNA.ShoesModels[shoes[0]])
+        for geom in geoms:
+            geom.unstash()
+
+        if shoes[0] != 0:
+            for geom in geoms:
+                texName = ToonDNA.ShoesTextures[shoes[1]]
+                if self.style.legs == 'l' and shoes[0] == 3:
+                    texName = texName[:-4] + 'LL.jpg'
+                tex = loader.loadTexture(texName, okMissing=True)
+                if tex is None:
+                    self.sendLogSuspiciousEvent('failed to load texture %s' % texName)
+                else:
+                    tex.setMinfilter(Texture.FTLinearMipmapLinear)
+                    tex.setMagfilter(Texture.FTLinear)
+                    geom.setTexture(tex, 1)
+
+        return
+
+    def generateToonAccessories(self):
+        self.generateHat()
+        self.generateGlasses()
+        self.generateBackpack()
+        self.generateShoes()
+
+    def setHat(self, hatIdx, textureIdx, colorIdx, fromRTM = False):
+        self.hat = (hatIdx, textureIdx, colorIdx)
+        self.generateHat(fromRTM=fromRTM)
+
+    def getHat(self):
+        return self.hat
+
+    def setGlasses(self, glassesIdx, textureIdx, colorIdx, fromRTM = False):
+        self.glasses = (glassesIdx, textureIdx, colorIdx)
+        self.generateGlasses(fromRTM=fromRTM)
+
+    def getGlasses(self):
+        return self.glasses
+
+    def setBackpack(self, backpackIdx, textureIdx, colorIdx, fromRTM = False):
+        self.backpack = (backpackIdx, textureIdx, colorIdx)
+        self.generateBackpack(fromRTM=fromRTM)
+
+    def getBackpack(self):
+        return self.backpack
+
+    def setShoes(self, shoesIdx, textureIdx, colorIdx):
+        self.shoes = (shoesIdx, textureIdx, colorIdx)
+        self.generateShoes()
+
+    def getShoes(self):
+        return self.shoes
 
     # dialog methods
     def getDialogueArray(self):

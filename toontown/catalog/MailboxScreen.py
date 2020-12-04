@@ -437,8 +437,11 @@ class MailboxScreen(DirectObject.DirectObject):
         if retcode < 0:
             # There was some error with the accept.  Pop up an
             # appropriate dialog.
-            self.notify.info("Could not take item %s: retcode %s" % (item, retcode))
-            self.dialogBox = TTDialog.TTDialog(
+            self.notify.info('Could not take item %s: retcode %s' % (item, retcode))
+            if retcode == ToontownGlobals.P_NoTrunk:
+                self.dialogBox = TTDialog.TTDialog(style=TTDialog.Acknowledge, text=TTLocalizer.CatalogAcceptNoTrunk, text_wordwrap=15, command=self.__acceptError)
+            else:
+                self.dialogBox = TTDialog.TTDialog(
                 style = TTDialog.TwoChoiceCustom, #TwoChoice YesNo
                 text = item.getAcceptItemErrorText(retcode), #what happens when you try to take chat from the mailbox
                 text_wordwrap = 15,

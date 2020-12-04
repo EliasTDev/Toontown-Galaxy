@@ -2424,6 +2424,8 @@ class ObjectManager(NodePath, DirectObject):
                 message = TTLocalizer.HDNonDeletableCloset
             elif item.getFlags() & CatalogFurnitureItem.FLPhone:
                 message = TTLocalizer.HDNonDeletablePhone
+            elif item.getFlags() & CatalogFurnitureItem.FLTrunk:
+                message = TTLocalizer.HDNonDeletableTrunk
 
         if self.furnitureManager.ownerId != base.localAvatar.doId:
             message = TTLocalizer.HDNonDeletableNotOwner % (self.furnitureManager.ownerName)

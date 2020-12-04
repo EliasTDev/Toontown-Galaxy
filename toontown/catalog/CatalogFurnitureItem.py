@@ -10,15 +10,15 @@ FTBasePrice = 3
 FTFlags = 4
 FTScale = 5
 
-FLBank     = 0x0001
-FLCloset   = 0x0002
-FLRug      = 0x0004
-FLPainting = 0x0008
-FLOnTable  = 0x0010
-FLIsTable  = 0x0020
-FLPhone    = 0x0040
-FLBillboard = 0x0080
-
+FLBank = 1
+FLCloset = 2
+FLRug = 4
+FLPainting = 8
+FLOnTable = 16
+FLIsTable = 32
+FLPhone = 64
+FLBillboard = 128
+FLTrunk = 256
 # this is essentially the same as HouseGlobals.houseColors2 with the addition of alpha = 1
 furnitureColors = [
     (0.792, 0.353, 0.290, 1.0), # red
@@ -55,16 +55,16 @@ MaxBankId = 1340
 
 # This table maps the various closet ID's to the amount of clothes
 # they hold.
-ClosetToClothes = {
-    500 : 10,
-    502 : 15,
-    504 : 20,
-    506 : 25,
-    510 : 10,
-    512 : 15,
-    514 : 20,
-    516 : 25,
-    }
+ClosetToClothes = {500: 10,
+ 502: 15,
+ 504: 20,
+ 506: 25,
+ 508: 50,
+ 510: 10,
+ 512: 15,
+ 514: 20,
+ 516: 25,
+ 518: 50}
 ClothesToCloset = {}
 for closetId, maxClothes in list(ClosetToClothes.items()):
     # There is not a 1-to-1 mapping like the banks since there are boys
@@ -73,7 +73,8 @@ for closetId, maxClothes in list(ClosetToClothes.items()):
         ClothesToCloset[maxClothes] = (closetId,)
     else:
         ClothesToCloset[maxClothes] += (closetId,)
-MaxClosetIds = (506, 516)
+MaxClosetIds = (508, 518)
+MaxTrunkIds = (4000, 4010)
 
 
 # These index numbers are written to the database.  Don't mess with them.
@@ -287,8 +288,13 @@ FurnitureTypes = {
     # Boy's Wardrobe, 25 items
     506 : ("phase_5.5/models/estate/closetBoy",
            None, None, 500, FLCloset, 1.3),
-
-
+    # Boy's Wardrobe, 50 items
+ 508: ('phase_5.5/models/estate/closetBoy',
+       None,
+       None,
+       500,
+       FLCloset,
+       1.3),
     # Girl's Wardrobe, 10 items - Initial Furniture
     510 : ("phase_5.5/models/estate/closetGirl",
            None, None, 500, FLCloset, 0.85),
@@ -305,6 +311,13 @@ FurnitureTypes = {
     516 : ("phase_5.5/models/estate/closetGirl",
            None, None, 500, FLCloset, 1.3),
 
+    #Girl's Wardrobe, 50 items
+    518: ('phase_5.5/models/estate/closetGirl',
+       None,
+       None,
+       500,
+       FLCloset,
+       1.3),
     ## LAMPS ##
     # Short lamp - Series 1
     600 : ("phase_3.5/models/modules/lamp_short",
@@ -779,7 +792,22 @@ FurnitureTypes = {
     3000 : ("phase_5.5/models/estate/BanannaSplitShower",
             None, None, 400),
 
+ # boy's 50 trunk
+ 4000: ('phase_5.5/models/estate/tt_m_ara_est_accessoryTrunkBoy',
+        None,
+        None,
+        5,
+        FLTrunk,
+        0.9),
 
+# girl's 50 trunk
+
+ 4010: ('phase_5.5/models/estate/tt_m_ara_est_accessoryTrunkGirl',
+        None,
+        None,
+        5,
+        FLTrunk,
+        0.9),
     ## SPECIAL HOLIDAY THEMED ITEMS FOLLOW ##
     # short pumpkin - Halloween
     10000 : ("phase_4/models/estate/pumpkin_short",
@@ -835,7 +863,7 @@ class CatalogFurnitureItem(CatalogAtticItem.CatalogAtticItem):
         # Returns true if an item of this type will, when purchased,
         # replace an existing item of the same type, or false if items
         # accumulate.
-        return (self.getFlags() & (FLCloset | FLBank)) != 0
+        return (self.getFlags() & (FLCloset | FLBank | FLTrunk)) != 0
 
     def hasExisting(self):
         # If replacesExisting returns true, this returns true if an
@@ -855,15 +883,17 @@ class CatalogFurnitureItem(CatalogAtticItem.CatalogAtticItem):
             return TTLocalizer.FurnitureYourOldCloset
         elif (self.getFlags() & FLBank):
             return TTLocalizer.FurnitureYourOldBank
+        elif (self.getFlags() & FLTrunk):
+            return TTLocalizer.FurnitureYourOldTrunk
         else:
             return None
 
     def notOfferedTo(self, avatar):
-        if (self.getFlags() & FLCloset):
+        if (self.getFlags() & FLCloset or self.getFlags() & FLTrunk):
             # Boys can only buy boy wardrobes, and girls can only buy
             # girl wardrobes.  Sorry.
             decade = self.furnitureType - (self.furnitureType % 10)
-            forBoys = (decade == 500)
+            forBoys = (decade == 500 or decade == 4000)
             if avatar.getStyle().getGender() == 'm':
                 return not forBoys
             else:
@@ -875,8 +905,12 @@ class CatalogFurnitureItem(CatalogAtticItem.CatalogAtticItem):
     def isDeletable(self):
         # Returns true if the item can be deleted from the attic,
         # false otherwise.
-        return (self.getFlags() & (FLBank | FLCloset | FLPhone)) == 0
+        return (self.getFlags() & (FLBank | FLCloset | FLTrunk | FLPhone)) == 0
 
+
+    def getMaxAccessories(self):
+        return ToontownGlobals.MaxAccessories
+        
     def getMaxBankMoney(self):
         # This special method is only defined for bank type items,
         # and returns the capacity of the bank in jellybeans.
@@ -894,6 +928,8 @@ class CatalogFurnitureItem(CatalogAtticItem.CatalogAtticItem):
             return 20
         elif index == 6:
             return 25
+        elif index == 8:
+            return 50
         else:
             return None
 
@@ -919,6 +955,13 @@ class CatalogFurnitureItem(CatalogAtticItem.CatalogAtticItem):
             # another one.
             if self in avatar.onOrder or self in avatar.mailboxContents:
                 return 1
+        if self.getFlags() & FLTrunk:
+            if self.getMaxAccessories() <= avatar.getMaxAccessories():
+                return 1
+            if self in avatar.onOrder or self in avatar.mailboxContents:
+                return 1
+
+            
             
         return 0
 
@@ -947,7 +990,7 @@ class CatalogFurnitureItem(CatalogAtticItem.CatalogAtticItem):
             return 0
             
     def isGift(self):
-        if self.getFlags() & (FLCloset | FLBank):
+        if self.getFlags() & (FLCloset | FLBank | FLTrunk):
             return 0
         else:
             return 1
@@ -966,12 +1009,15 @@ class CatalogFurnitureItem(CatalogAtticItem.CatalogAtticItem):
                 # is stored on the toon.
                 avatar.b_setMaxBankMoney(self.getMaxBankMoney())
             if (self.getFlags() & FLCloset):
+                if avatar.getMaxClothes() > self.getMaxClothes():
+                    return ToontownGlobals.P_AlreadyOwnBiggerCloset
                 # Another special case: if we just bought a new
                 # wardrobe, change our maximum clothing items
                 # accordingly.  This property is also stored on the
                 # toon.
                 avatar.b_setMaxClothes(self.getMaxClothes())
-                
+            if self.getFlags() & FLTrunk:
+                avatar.b_setMaxAccessories(self.getMaxAccessories())                
         return retcode
 
     def getDeliveryTime(self):
@@ -1125,6 +1171,36 @@ def nextAvailableCloset(avatar, duplicateItems):
         item = CatalogFurnitureItem(closetId)
 
     return item
+
+def get50ItemCloset(avatar, duplicateItems):
+    if avatar.getStyle().getGender() == 'm':
+        index = 0
+    else:
+        index = 1
+    closetId = MaxClosetIds[index]
+    item = CatalogFurnitureItem(closetId)
+    if item in avatar.onOrder or item in avatar.mailboxContents:
+        return None
+    return item
+
+def get50ItemTrunk(avatar, duplicateItems):
+    if avatar.getStyle().getGender() == 'm':
+        index = 0
+    else:
+        index = 1
+    trunkId = MaxTrunkIds[index]
+    item = CatalogFurnitureItem(trunkId)
+    if item in avatar.onOrder or item in avatar.mailboxContents:
+        return None
+    return item
+
+
+def getMaxTrunks():
+    list = []
+    for trunkId in MaxTrunkIds:
+        list.append(CatalogFurnitureItem(trunkId))
+
+    return list
 
 def getAllClosets():
     _list = []

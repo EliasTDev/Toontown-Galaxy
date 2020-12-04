@@ -12,6 +12,7 @@ from .CatalogWainscotingItem import getAllWainscotings
 from .CatalogFurnitureItem import getAllFurnitures
 from toontown.toontowngui.TeaserPanel import TeaserPanel
 from otp.otpbase import OTPGlobals
+from .CatalogFurnitureItem import FLTrunk
 
 CATALOG_PANEL_WORDWRAP = 10
 CATALOG_PANEL_CHAT_WORDWRAP = 9
@@ -481,17 +482,17 @@ class CatalogItemPanel(DirectFrame):
     def __handlePurchaseRequest(self):
         # prompt the user to verify purchase
         if self['item'].replacesExisting() and self['item'].hasExisting():
-            message = TTLocalizer.CatalogOnlyOnePurchase % {
-                'old' : self['item'].getYourOldDesc(),
-                'item' : self['item'].getName(),
-                'price' : self['item'].getPrice(self['type']),
+            if self['item'].getFlags() & FLTrunk:
+                message = TTLocalizer.CatalogVerifyPurchase % {'item': self['item'].getName(),
+                 'price': self['item'].getPrice(self['type'])}
+            else:
+                message = TTLocalizer.CatalogOnlyOnePurchase % {'old': self['item'].getYourOldDesc(),
+                 'item': self['item'].getName(),
+                 'price': self['item'].getPrice(self['type'])}
+        elif self['item'].isRental():
+            message = TTLocalizer.CatalogVerifyRent % {'item': self['item'].getName(),
+             'price': self['item'].getPrice(self['type'])}
                 }
-        else:
-            if self['item'].isRental():
-                message = TTLocalizer.CatalogVerifyRent % {
-                    'item' : self['item'].getName(),
-                    'price' : self['item'].getPrice(self['type']),
-                    }
             else:
                 message = TTLocalizer.CatalogVerifyPurchase % {
                     'item' : self['item'].getName(),
