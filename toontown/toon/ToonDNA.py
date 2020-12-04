@@ -2403,3 +2403,19 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             return allColorsList[0]
 
 
+    def setTemporary(self, newHead, newArmColor, newLegColor, newHeadColor):
+        if not self.cache and self.getArmColor != newArmColor:
+            self.cache = (self.head,
+             self.armColor,
+             self.legColor,
+             self.headColor)
+            self.updateToonProperties(head=newHead, armColor=newArmColor, legColor=newLegColor, headColor=newHeadColor)
+
+    def restoreTemporary(self, oldStyle):
+        cache = ()
+        if oldStyle:
+            cache = oldStyle.cache
+        if cache:
+            self.updateToonProperties(head=cache[0], armColor=cache[1], legColor=cache[2], headColor=cache[3])
+            if oldStyle:
+                oldStyle.cache = ()

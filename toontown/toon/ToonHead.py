@@ -734,6 +734,26 @@ class ToonHead(Actor.Actor):
                     self.__eyelashClosed.unstash()
                 self.snowMen.stash()
 
+    def hideEars(self):
+        self.findAllMatches('**/ears*;+s').stash()
+
+    def showEars(self):
+        self.findAllMatches('**/ears*;+s').unstash()
+
+    def hideEyelashes(self):
+        if self.__eyelashOpen:
+            self.__eyelashOpen.stash()
+        if self.__eyelashClosed:
+            self.__eyelashClosed.stash()
+        self.__eyelashesHiddenByGlasses = True
+
+    def showEyelashes(self):
+        if self.__eyelashOpen:
+            self.__eyelashOpen.unstash()
+        if self.__eyelashClosed:
+            self.__eyelashClosed.unstash()
+        self.__eyelashesHiddenByGlasses = False
+        
     def generateToonColor(self, style):
         """generateToonColor(self, AvatarDNA style)
         Color the toon's parts as specified by the dna.

@@ -492,9 +492,8 @@ class CatalogItemPanel(DirectFrame):
         elif self['item'].isRental():
             message = TTLocalizer.CatalogVerifyRent % {'item': self['item'].getName(),
              'price': self['item'].getPrice(self['type'])}
-                }
-            else:
-                message = TTLocalizer.CatalogVerifyPurchase % {
+        else:
+            message = TTLocalizer.CatalogVerifyPurchase % {
                     'item' : self['item'].getName(),
                     'price' : self['item'].getPrice(self['type']),
                     }
