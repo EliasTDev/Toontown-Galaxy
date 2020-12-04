@@ -92,6 +92,7 @@ CatalogItemType2multipleAllowed = {
     NAMETAG_ITEM : False,
     TOON_STATUE_ITEM : False,
     ANIMATED_FURNITURE_ITEM : True,
+    ACCESSORY_ITEM: False
     }
 
 assert len(CatalogItemType2multipleAllowed) == len(CatalogItemTypes)

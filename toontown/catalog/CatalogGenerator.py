@@ -355,7 +355,7 @@ MonthlySchedule = (
       CatalogClothingItem(1735, 0),
       CatalogClothingItem(1723, 0),
       CatalogClothingItem(1724, 0),
-      CatalogClothingItem(1801, 0))),
+      CatalogClothingItem(1801, 0),
       CatalogWallpaperItem(10100),
       CatalogWallpaperItem(10200),
       CatalogFurnitureItem(10000),
@@ -542,7 +542,7 @@ MonthlySchedule = (
     
     # Items - on sale 1/1 through 12/31, always available
     (1, 1, 12, 31,
-     (
+    (
       # Gardening Items
       CatalogGardenItem(100, 1),
       CatalogGardenItem(101, 1),
@@ -579,7 +579,7 @@ MonthlySchedule = (
       CatalogEmoteItem(22, True), # delighted
       CatalogEmoteItem(23, True), # furious
       CatalogEmoteItem(24, True), # laugh
-      )
+      )),
  (5,
   26,
   6,
@@ -634,8 +634,7 @@ MonthlySchedule = (
    CatalogAccessoryItem(449),
    CatalogClothingItem(1801, 0),
    CatalogAccessoryItem(175))),
-     ),
-    )
+     )
 
 WeeklySchedule = (
 

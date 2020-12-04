@@ -930,8 +930,9 @@ ShirtStyles = {
  'jb_1': [112, 99, [(27, 27)]],
  'jb_2': [113, 100, [(27, 27)]],
  'ugcms': [117, 104, [(27, 27)]],
- 'lb_1': [119, 106, [(27, 27)]]}
-    }
+ 'lb_1': [119, 106, [(27, 27)]]
+ }
+
 
 # If you add to this, please add to TTLocalizer.BottomStylesDescriptions
 BottomStyles = {
@@ -1844,7 +1845,7 @@ def isValidAccessory(itemIdx, textureIdx, colorIdx, which):
         return isValidShoes(itemIdx, textureIdx, colorIdx)
     else:
         return False
-        
+
 class ToonDNA(AvatarDNA.AvatarDNA):
     """ToonDNA class: contains methods for describing avatars with a
     simple class. The ToonDNA class may be converted to lists of strings

@@ -7,7 +7,7 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
 
 
     def __init__(self, air, house , furnitureMgr, catalogItem):
-        DistributedClosetAI.DistributedClosetAI.__init__(self, air, house, furnitureMgr, catalogItem):
+        DistributedClosetAI.DistributedClosetAI.__init__(self, air, house, furnitureMgr, catalogItem)
         self.hatList = []
         self.glassesList = []
         self.backpackList = []
@@ -66,7 +66,7 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
                 self.ownerAv = self.air.doId2do[self.ownerId]
                 self.__openTrunk()
             else:
-            self.air.dbInterface.queryObject(self.air.dbId, self.ownerId, self.__handleOwnerQuery,
+                self.air.dbInterface.queryObject(self.air.dbId, self.ownerId, self.__handleOwnerQuery,
                                              self.air.dclassesByName['DistributedToonAI'])
         else:
             self.notify.warning("this house has no owner, therefore we can't use the closet")
@@ -100,8 +100,8 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
         
         self.sendUpdate("setState", [ClosetGlobals.OPEN,
                                      self.customerId, self.ownerAv.doId,
-                                     self.gender),
-                                     self.hatList, self.glassesList
+                                     self.gender,
+                                     self.hatList, self.glassesList,
                                      self.backpackList, self.shoesList])
                                     
 
@@ -214,10 +214,10 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
                     if av.replaceItemInAccessoriesList(ToonDNA.SHOES, *oldToNew[3]):
                         av.b_setShoes(*shoes)
                 
-                for item in self.removedItems[:]:
-                self.removedItems.remove(item)
-                if not av.removeItemInAccessoriesList(*item):
-                    self.air.writeServerEvent('suspicious', avId, 'av tried to delete accessory they don\'t own!')
+                for item in self.removedAccessories[:]:
+                    self.removedAccessories.remove(item)
+                    if not av.removeItemInAccessoriesList(*item):
+                        self.air.writeServerEvent('suspicious', avId, 'av tried to delete accessory they don\'t own!')
  
                 av.b_setHatList(av.getHatList())
                 av.b_setGlassesList(av.getGlassesList())
@@ -254,6 +254,6 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
         self.glassesList = []
         self.backpackList = []
         self.shoesList = []
-        self.removedItems = []
+        self.removedAccessories = []
 
 
