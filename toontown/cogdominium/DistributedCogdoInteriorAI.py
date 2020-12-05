@@ -280,7 +280,7 @@ class DistributedCogdoInteriorAI(DistributedObjectAI.DistributedObjectAI):
         return self.bldg.getDoId()
 
     def getNumFloors(self):
-        if self.bldg.track == 'l' and  self._wantBarrelRoom:
+        if self.bldg.track == 'l':
             return 2
         else:
             return 1
@@ -904,7 +904,7 @@ class DistributedCogdoInteriorAI(DistributedObjectAI.DistributedObjectAI):
 
         self.d_setToons()
         if not self._CogdoGameRepeat:
-            if self.currentFloor >= 2 and self.bldg.track in ('s', 'l') :
+            if self.currentFloor != 2 and self.bldg.track in ('s', 'l') :
                 self.currentFloor += 1
         if self.bldg.track == 'l' and self.currentFloor != 2:
             self.b_setState('BarrelRoomIntro')

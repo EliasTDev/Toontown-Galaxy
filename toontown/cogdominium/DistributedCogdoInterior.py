@@ -460,7 +460,7 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
         else:
             if self._wantBarrelRoom:
                 self.barrelRoom.load()
-                self.barrelRoom.hide(False)
+                self.barrelRoom.hide()
             SuitHs = self.Cubicle_SuitHs
             SuitPositions = self.Cubicle_SuitPositions
         if self.floorModel:

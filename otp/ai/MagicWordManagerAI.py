@@ -225,6 +225,20 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
 
             av.b_setGolfHistory([600] * (GolfGlobals.MaxHistoryIndex * 2))
 
+        elif wordIs('~skipMaze'):
+             mazeGame = None
+             from toontown.cogdominium.DistCogdoMazeGameAI import DistCogdoMazeGameAI
+             for do in simbase.air.doId2do.values():
+                if isinstance(do, DistCogdoMazeGameAI):
+                    if invoker.doId in do.getToonIds():
+                        mazeGame = do
+                        break
+
+             if mazeGame:
+                 mazeGame.openDoor()
+                 return "Skipped SBFO Maze Minigame!"
+
+             return "You are not in the SBFO maze minigame!"
         elif wordIs('~hp'):
             args = word.split()
             hp = int(args[1])
