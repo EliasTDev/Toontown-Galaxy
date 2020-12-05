@@ -82,14 +82,14 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
             # send a reset message to the client.  same as a completed purchase
             self.completePurchase(avId)
 
-        self.d_setState(ClosetGlobals.OPEN, avId, self.ownerId, self.gender, self.hatList, self.glassesList,
-                        self.backpackList, self.shoesList)
+        self.sendUpdate('setState', [ClosetGlobals.OPEN, avId, self.ownerId, self.gender, self.hatList, self.glassesList,
+                        self.backpackList, self.shoesList])
 
 
 
 
-        self.d_setState(ClosetGlobals.OPEN, avId, self.ownerId, self.gender, self.hatList, self.glassesList,
-                        self.backpackList, self.shoesList)
+        self.sendUpdate('setState', [ClosetGlobals.OPEN, avId, self.ownerId, self.gender, self.hatList, self.glassesList,
+                        self.backpackList, self.shoesList])
 
         # Add a 200 second timeout that'll kick the avatar out:
         taskMgr.doMethodLater(ClosetGlobals.TIMEOUT_TIME, self.sendTimeoutMovie,  self.uniqueName('clearMovie'))
@@ -128,9 +128,9 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
         style.makeFromNetString(fields['setDNAString'][0])
         self.gender = style.gender
 
-        self.d_setMovie(ClosetGlobals.CLOSET_MOVIE_CLEAR, self.customerId)
-        self.d_setState(ClosetGlobals.OPEN, self.customerId, self.ownerId, self.gender, self.hatList, self.glassesList,
-                        self.backpackList, self.shoesList)
+        self.sendUpdate('setMovie', [ClosetGlobals.CLOSET_MOVIE_CLEAR, self.customerId, ClockDelta.globalClockDelta.getRealNetworkTime()])
+        self.sendUpdate('setState', [ClosetGlobals.OPEN, self.customerId, self.ownerId, self.gender, self.hatList, self.glassesList,
+                        self.backpackList, self.shoesList])
 
         taskMgr.doMethodLater(ClosetGlobals.TIMEOUT_TIME, self.__handleClosetTimeout,
                               'closet-timeout-%d' % self.customerId, extraArgs=[self.customerId])
@@ -179,6 +179,7 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
                             [avId, hatIdx, hatTexture, hatColor, glassesIdx, glassesTexture, glassesColor, backpackIdx,
                              backpackTexture, backpackColor, shoesIdx, shoesTexture, shoesColor, which])
                 return
+
             elif finished == 1:
                 av.b_setHat(*self.customerDNA[0])
                 av.b_setGlasses(*self.customerDNA[1])
@@ -195,11 +196,11 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
                 self.glassesList = []
                 self.backpackList = []
                 self.shoesList = []
-                self.d_setMovie(ClosetGlobals.CLOSET_MOVIE_COMPLETE, avId)
-                self.d_setMovie(ClosetGlobals.CLOSET_MOVIE_CLEAR, 0)
+                self.sendUpdate('setMovie', [ClosetGlobals.CLOSET_MOVIE_COMPLETE, avId, ClockDelta.globalClockDelta.getRealNetworkTime()])
+                self.sendUpdate('setMovie', [ClosetGlobals.CLOSET_MOVIE_CLEAR, 0, ClockDelta.globalClockDelta.getRealNetworkTime()])
                 self.sendUpdate('setCustomerDNA', [0 for i in range(14)])
-                self.d_setState(ClosetGlobals.CLOSED, 0, self.ownerId, self.gender, self.hatList, self.glassesList,
-                            self.backpackList, self.shoesList)
+                self.sendUpdate('setState', [ClosetGlobals.CLOSED, 0, self.ownerId, self.gender, self.hatList, self.glassesList,
+                            self.backpackList, self.shoesList])
 
             elif finished == 2:
 
@@ -223,8 +224,8 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
                     if av.replaceItemInAccessoriesList(ToonDNA.SHOES, *oldToNew[3]):
                         av.b_setShoes(*shoes)
                 
-                for item in self.removedAccessories[:]:
-                    self.removedAccessories.remove(item)
+                for item in self.deletedAccessories[:]:
+                    self.deletedAccessories.remove(item)
                     if not av.removeItemInAccessoriesList(*item):
                         self.air.writeServerEvent('suspicious', avId, 'av tried to delete accessory they don\'t own!')
  
@@ -236,11 +237,11 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
                 self.customerDNA = None
                 self.gender = ''
                 self.__finalizeDelete()
-                self.d_setMovie(ClosetGlobals.CLOSET_MOVIE_COMPLETE, avId)
-                self.d_setMovie(ClosetGlobals.CLOSET_MOVIE_CLEAR, 0)
+                self.sendUpdate('setMovie', [ClosetGlobals.CLOSET_MOVIE_COMPLETE, avId, ClockDelta.globalClockDelta.getRealNetworkTime()])
+                self.sendUpdate('setMovie', [ClosetGlobals.CLOSET_MOVIE_CLEAR, 0, ClockDelta.globalClockDelta.getRealNetworkTime()])
                 self.sendUpdate('setCustomerDNA', [0 for x in range(14)])
-                self.d_setState(ClosetGlobals.CLOSED, 0, self.ownerId, self.gender, self.hatList, self.glassesList,
-                            self.backpackList, self.shoesList)
+                self.sendUpdate('setState', [ClosetGlobals.CLOSED, 0, self.ownerId, self.gender, self.hatList, self.glassesList,
+                            self.backpackList, self.shoesList])
             else:
                 self.notify.warning('no av for avId: %d' % avId)
         if (self.timedOut == 1 or finished == 0 or finished == 4):
@@ -252,7 +253,7 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
         else:
             self.air.writeServerEvent('suspicious', avId, 'DistributedCloset.setDNA busy with %s' % (self.busy))
             self.notify.warning('setDNA from unknown avId: %s busy: %s' % (avId, self.busy))
-        taskMgr.remove('closet-timeout-%d' % avId)
+        taskMgr.remove(self.uniqueName('clearMovie'))
         self.ignore(self.air.getAvatarExitEvent(avId))       
 
 
@@ -263,7 +264,7 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
         self.glassesList = []
         self.backpackList = []
         self.shoesList = []
-        self.removedAccessories = []
+        self.deletedAccessories = []
 
 
     def __handleUnexpectedExit(self, avId):
@@ -349,9 +350,9 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
         self.sendUpdate("setMovie", [ClosetGlobals.CLOSET_MOVIE_CLEAR,
                                      0,
                                      ClockDelta.globalClockDelta.getRealNetworkTime()])
-        self.d_setState(ClosetGlobals.CLOSED, avId, self.ownerId, self.gender, self.hatList, self.glassesList,
-                        self.backpackList, self.shoesList)
-        self.sendUpdate("setCustomerDNA", [0, ''])
+        self.sendUpdate('setState', [ClosetGlobals.CLOSED, avId, self.ownerId, self.gender, self.hatList, self.glassesList,
+                        self.backpackList, self.shoesList])
+        self.sendUpdate("setCustomerDNA", [0 for i in range(14)])
 
         #RAU kill mem leak when opening closet that's not yours
         if self.dummyToonAI:
@@ -366,5 +367,3 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
     def getOwnerId(self):
         return self.ownerId
         
-    def d_setState(self, mode, avId, ownerId, gender, hatList, glassesList, backpackList, shoesList):
-        self.sendUpdate('setState', [mode, avId, ownerId, gender, hatList, glassesList, backpackList, shoesList])
