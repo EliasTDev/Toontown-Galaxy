@@ -359,24 +359,25 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
 
         return None
 
-    def delete(self):
-        self.notify.debug("BASE: delete: deleting EstateManagerAI object")
-        self.ignoreAll()
-        DistributedObjectAI.DistributedObjectAI.delete(self)
-        for estate in list(self.estate.values()):
-            estate.requestDelete()
+    #def delete(self):
+        #self.notify.debug("BASE: delete: deleting EstateManagerAI object")
+       # self.ignoreAll()
+       # DistributedObjectAI.DistributedObjectAI.delete(self)
+        #for estate in list(self.estate.values()):
+         #   estate.requestDelete()
             # This automatically gets called by the server
             # estate.delete()
-        for hList in list(self.house.values()):
-            for house in hList:
-                house.requestDelete()
+        #for hList in list(self.house.values()):
+          #  for house in hList:
+         #       house.requestDelete()
                 # This automatically gets called by the server
                 # house.delete()
-        del self.account2avId
-        del self.avId2pendingEnter
-        del self.refCount
-        del self.estateZone
-        del self.randomGenerator
+        #del self.account2avId
+        #del self.avId2pendingEnter
+        #del self.refCount
+        #del self.estateZone
+        #del self.randomGenerator
+
 
     def getOwnerFromZone(self, zoneId):
         # returns doId of estate owner given a zoneId
@@ -1089,11 +1090,12 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
     def _unloadEstate(self, av):
         if getattr(av, 'estate', None):
             estate = av.estate
+            avId = estate.owner.doId
+            zoneId = estate.zoneId
             if estate not in self.estate2timeout:
-                self.estate2timeout[estate] = taskMgr.doMethodLater(HouseGlobals.BOOT_GRACE_PERIOD, self._cleanupEstate,
-                                                                    estate.uniqueName('unload-estate'),
-                                                                    extraArgs=[estate])
-
+                self.estate2timeout[estate] = taskMgr.doMethodLater(HouseGlobals.CLEANUP_DELAY_AFTER_BOOT,
+                              PythonUtil.Functor(self._cleanupEstate, avId, zoneId),
+                              "cleanupEstate-"+str(avId))
             # Send warning:
             self._sendToonsToPlayground(av.estate, 0)
 
@@ -1145,3 +1147,13 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
     def _sendToonsToPlayground(self, estate, reason):
         for toon in self.estate2toons.get(estate, []):
             self.sendUpdateToAvatarId(toon.doId, 'sendAvToPlayground', [toon.doId, reason])
+
+    def __handleLoadPet(self, estate, av):
+        petOperation = LoadPetOperation(self, estate, av, self.__handlePetLoaded)
+        self.petOperations.append(petOperation)
+        petOperation.start()
+
+    def __handlePetLoaded(self, _):
+        # A pet operation just finished! Let's see if all of them are done:
+        if all(petOperation.done for petOperation in self.petOperations):
+            self.petOperations = []

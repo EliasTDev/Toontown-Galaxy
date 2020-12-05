@@ -189,13 +189,11 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         # It's only necessary because some players on the test server
         # started playing before we had a phone as one of the
         # furniture items.
-        # Removing this as we do not need it anymore because as default we give the user a phone
-        #if self.ownerId != 0 and self.__hasPhone()
-        if self.ownerId != 0 :
-            self.notify.info("Creating default phone for %s." % (self.ownerId))
-            item = CatalogFurnitureItem.CatalogFurnitureItem(1399, posHpr = (-12, 3, 0.025, 180, 0, 0))
-            self.interiorItems.append(item)
-            self.d_setInteriorItems(self.interiorItems)
+        #if self.ownerId != 0 and not self.__hasPhone():
+         #   self.notify.info("Creating default phone for %s." % (self.ownerId))
+          #  item = CatalogFurnitureItem.CatalogFurnitureItem(1399, posHpr = (-12, 3, 0.025, 180, 0, 0))
+           # self.interiorItems.append(item)
+            #self.d_setInteriorItems(self.interiorItems)
 
         self.resetFurniture()
 
@@ -213,6 +211,7 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
                 #pt.off()
                 #pt.printTo()
         self.d_setHouseReady()
+
     def __hasPhone(self):
         for item in self.interiorItems:
             if (item.getFlags() & CatalogFurnitureItem.FLPhone) != 0:
@@ -254,13 +253,18 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
 
         # Boys are given the boy wardrobe initially, while girls are
         # given the girl wardrobe.
+
+        trunkItem = 4000
         wardrobeItem = 500
         if avatar and avatar.getStyle().getGender() == 'f':
             wardrobeItem = 510
+            trunkItem = 4010
+        
 
         InitialFurnitureA = CatalogItemList.CatalogItemList([
             CatalogFurnitureItem.CatalogFurnitureItem(200, posHpr = (-23.618, 16.1823, 0.025, 90, 0, 0)),
             CatalogFurnitureItem.CatalogFurnitureItem(wardrobeItem, posHpr = (-22.5835, 21.8784, 0.025, 90, 0, 0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(trunkItem, posHpr = (-18.5835, 21.8784, 0.025, 90, 0, 0)),
             CatalogFurnitureItem.CatalogFurnitureItem(1300, posHpr = (-21.4932, 5.76027, 0.025, 120, 0, 0)),
             CatalogFurnitureItem.CatalogFurnitureItem(400, posHpr = (-18.6, -12.0, 0.025, 90.0, 0.0, 0.0)),
             CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr = (-18.9, -20.5, 0.025, 90.0, 0.0, 0.0)),
@@ -278,6 +282,7 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
             CatalogFurnitureItem.CatalogFurnitureItem(710, posHpr = (-16.6, -19.1, 0.025, 90.0, 0.0, 0.0)),
             CatalogFurnitureItem.CatalogFurnitureItem(700, posHpr = (-1.8, -23.6, 0.025, 179.9, 0.0, 0.0)),
             CatalogFurnitureItem.CatalogFurnitureItem(wardrobeItem, posHpr = (-20.1, 4.4, 0.025, -180.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(trunkItem, posHpr = (-15, 4.4, 0.025, -180.0, 0.0, 0.0)),
             CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr = (-1.1, 22.4, 0.025, -90.2, 0.0, 0.0)),
             CatalogFurnitureItem.CatalogFurnitureItem(1300, posHpr = (-21.7, 19.5, 0.025, 90.0, 0.0, 0.0)),
             CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr = (4.0, 1.9, 0.025, -0.1, 0.0, 0.0)),
@@ -289,6 +294,8 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
             CatalogFurnitureItem.CatalogFurnitureItem(400, posHpr = (-0.2, -25.7, 0.025, 179.9, 0.0, 0.0)),
             CatalogFurnitureItem.CatalogFurnitureItem(710, posHpr = (-16.6, -12.2, 0.025, 90.0, 0.0, 0.0)),
             CatalogFurnitureItem.CatalogFurnitureItem(wardrobeItem, posHpr = (-4.7, 24.5, 0.025, 0.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(trunkItem, posHpr = (-10.7, 24.5, 0.025, 0.0, 0.0, 0.0)),
+
             CatalogFurnitureItem.CatalogFurnitureItem(1300, posHpr = (-20.5, 22.3, 0.025, 45.0, 0.0, 0.0)),
             CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr = (-12.0, 25.9, 0.025, 0.0, 0.0, 0.0)),
             CatalogFurnitureItem.CatalogFurnitureItem(700, posHpr = (9.4, -8.6, 0.025, 67.5, 0.0, 0.0)),

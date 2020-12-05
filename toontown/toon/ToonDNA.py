@@ -1883,6 +1883,8 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         float=None, float=None)
         AvatarDNA contructor - see class comment for usage
         """
+        self.cache = ()
+
         # have they passed in a stringified DNA object?
         if (str != None):
             self.makeFromNetString(str)

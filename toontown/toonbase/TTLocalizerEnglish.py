@@ -1,4 +1,5 @@
 from toontown.toonbase.TTLocalizerEnglishProperty import *
+from toontown.catalog import CatalogAccessoryItemGlobals
 
 InterfaceFont = 'phase_3/models/fonts/ImpressBT.ttf'
 ToonFont = 'phase_3/models/fonts/ImpressBT.ttf'
@@ -7665,6 +7666,7 @@ GardenTypeName = "Garden Supplies"
 RentalTypeName = "Rental Item"
 GardenStarterTypeName = "Gardening Kit"
 NametagTypeName = "Name tag"
+AccessoryTypeName = 'Accessory'
 
 
 # Make sure numbers match up to CatalogItemTypes.py
@@ -7688,6 +7690,7 @@ CatalogItemTypeNames = {
     16: NametagTypeName,
     17: "TOON_STATUE",
     18: "ANIMATED FURNITURE",
+    19: AccessoryTypeName
 }
 
 
@@ -7952,6 +7955,213 @@ BottomStylesDescriptions = {
     'sil_gs1' : "Silly Cog-Crusher Shorts female",
     }
 
+AccessoryNamePrefix = {0: 'hat unisex ',
+ 1: 'glasses unisex ',
+ 2: 'backpack unisex ',
+ 3: 'shoes unisex ',
+ 4: 'hat boy ',
+ 5: 'glasses boy ',
+ 6: 'backpack boy ',
+ 7: 'shoes boy ',
+ 8: 'hat girl ',
+ 9: 'glasses girl ',
+ 10: 'backpack girl ',
+ 11: 'shoes girl '}
+
+HatStylesDescriptions = {'hbb1': 'Green Baseball Cap',
+ 'hbb2': 'Blue Baseball Cap',
+ 'hbb3': 'Orange Baseball Cap',
+ 'hsf1': 'Beige Safari Hat',
+ 'hsf2': 'Brown Safari Hat',
+ 'hsf3': 'Green Safari Hat',
+ 'hrb1': 'Pink Bow',
+ 'hrb2': 'Red Bow',
+ 'hrb3': 'Purple Bow',
+ 'hht1': 'Pink Heart',
+ 'hht2': 'Yellow Heart',
+ 'htp1': 'Black Top Hat',
+ 'htp2': 'Blue Top Hat',
+ 'hav1': 'Anvil Hat',
+ 'hfp1': 'Flower Hat',
+ 'hsg1': 'Sandbag Hat',
+ 'hwt1': 'Weight Hat',
+ 'hfz1': 'Fez Hat',
+ 'hgf1': 'Golf Hat',
+ 'hpt1': 'Party Hat',
+ 'hpt2': 'Toon Party Hat',
+ 'hpb1': 'Fancy Hat',
+ 'hcr1': 'Crown',
+ 'hcw1': 'Cowboy Hat',
+ 'hpr1': 'Pirate Hat',
+ 'hpp1': 'Propeller Hat',
+ 'hfs1': 'Fishing Hat',
+ 'hsb1': 'Sombrero Hat',
+ 'hst1': 'Straw Hat',
+ 'hsu1': 'Sun Hat',
+ 'hrb4': 'Yellow Bow',
+ 'hrb5': 'Checker Bow',
+ 'hrb6': 'Light Red Bow',
+ 'hrb7': 'Rainbow Bow',
+ 'hat1': 'Antenna Thingy',
+ 'hhd1': 'Beehive Hairdo',
+ 'hbw1': 'Bowler Hat',
+ 'hch1': 'Chef Hat',
+ 'hdt1': 'Detective Hat',
+ 'hft1': 'Fancy Feathers Hat',
+ 'hfd1': 'Fedora',
+ 'hmk1': "Mickey's Band Hat",
+ 'hft2': 'Feather Headband',
+ 'hhd2': 'Pompadour Hairdo',
+ 'hpc1': 'Princess Hat',
+ 'hrh1': 'Archer Hat',
+ 'hhm1': 'Roman Helmet',
+ 'hat2': 'Spider Antenna Thingy',
+ 'htr1': 'Tiara',
+ 'hhm2': 'Viking Helmet',
+ 'hwz1': 'Witch Hat',
+ 'hwz2': 'Wizard Hat',
+ 'hhm3': 'Conquistador Helmet',
+ 'hhm4': 'Firefighter Helmet',
+ 'hfp2': 'Anti-Cog Control Hat',
+ 'hhm5': 'Miner Hat',
+ 'hnp1': 'Napoleon Hat',
+ 'hpc2': 'Pilot Cap',
+ 'hph1': 'Cop Hat',
+ 'hwg1': 'Rainbow Wacky Wig',
+ 'hbb4': 'Yellow Baseball Cap',
+ 'hbb5': 'Red Baseball Cap',
+ 'hbb6': 'Aqua Baseball Cap',
+ 'hsl1': 'Sailor Hat',
+ 'hfr1': 'Samba Hat',
+ 'hby1': 'Bobby Hat',
+ 'hrb8': 'Pink Dots Bow',
+ 'hjh1': 'Jester Hat',
+ 'hbb7': 'Purple Baseball Cap',
+ 'hrb9': 'Green Checker Bow',
+ 'hwt2': 'Winter Hat',
+ 'hhw1': 'Bandana',
+ 'hhw2': 'Toonosaur Hat',
+ 'hob1': 'Jamboree Hat',
+ 'hbn1': 'Bird Hat by Brianna'}
+GlassesStylesDescriptions = {'grd1': 'Round Glasses',
+ 'gmb1': 'White Mini Blinds',
+ 'gnr1': 'Purple Narrow Glasses',
+ 'gst1': 'Yellow Star Glasses',
+ 'g3d1': 'Movie Glasses',
+ 'gav1': 'Aviator',
+ 'gce1': 'Cateye Glasses',
+ 'gdk1': 'Nerd Glasses',
+ 'gjo1': 'Celebrity Shades',
+ 'gsb1': 'Scuba Mask',
+ 'ggl1': 'Goggles',
+ 'ggm1': 'Groucho Glasses',
+ 'ghg1': 'Heart Glasses',
+ 'gie1': 'Bug Eye Glasses',
+ 'gmt1': 'Black Secret ID Mask',
+ 'gmt2': 'Blue Secret ID Mask',
+ 'gmt3': 'Blue Carnivale Mask',
+ 'gmt4': 'Purple Carnivale Mask',
+ 'gmt5': 'Aqua Carnivale Mask',
+ 'gmn1': 'Monocle',
+ 'gmo1': 'Smooch Glasses',
+ 'gsr1': 'Square Frame Glasses',
+ 'ghw1': 'Skull Eyepatch',
+ 'ghw2': 'Gem Eyepatch',
+ 'gag1': 'Alien Eyes by Alexandra'}
+BackpackStylesDescriptions = {'bpb1': 'Blue Backpack',
+ 'bpb2': 'Orange Backpack',
+ 'bpb3': 'Purple BackPack',
+ 'bpd1': 'Red Dot Backpack',
+ 'bpd2': 'Yellow Dot Backpack',
+ 'bwg1': 'Bat Wings',
+ 'bwg2': 'Bee Wings',
+ 'bwg3': 'DragonFly Wings',
+ 'bst1': 'Scuba Tank',
+ 'bfn1': 'Shark Fin',
+ 'baw1': 'White Angel Wings',
+ 'baw2': 'Rainbow Angel Wings',
+ 'bwt1': 'Toys Backpack',
+ 'bwg4': 'Butterfly Wings',
+ 'bwg5': 'Pixie Wings',
+ 'bwg6': 'Dragon Wings',
+ 'bjp1': 'Jet Pack',
+ 'blg1': 'Bug Backpack',
+ 'bsa1': 'Plush Bear Pack',
+ 'bwg7': 'Bird wings',
+ 'bsa2': 'Plush Cat Pack',
+ 'bsa3': 'Plush Dog Pack',
+ 'bap1': 'Airplane Wings',
+ 'bhw1': 'Pirate Sword',
+ 'bhw2': 'Super Toon Cape',
+ 'bhw3': 'Vampire Cape',
+ 'bhw4': 'Toonosaur Backpack',
+ 'bob1': 'Jamboree Pack',
+ 'bfg1': 'Gag Attack Pack',
+ 'bfl1': 'Cog Pack by Savanah'}
+ShoesStylesDescriptions = {'sat1': 'Green Athletic Shoes',
+ 'sat2': 'Red Athletic Shoes',
+ 'smb1': 'Green Toon Boots',
+ 'scs1': 'Green Sneakers',
+ 'swt1': 'Wingtips',
+ 'smj1': 'Black Fancy Shoes',
+ 'sdk1': 'Boat Shoes',
+ 'sat3': 'Yellow Athletic Shoes',
+ 'scs2': 'Black Sneakers',
+ 'scs3': 'White Sneakers',
+ 'scs4': 'Pink Sneakers',
+ 'scb1': 'Cowboy Boots',
+ 'sfb1': 'Purple Boots',
+ 'sht1': 'Green Hi Top Sneakers',
+ 'smj2': 'Brown Fancy Shoes',
+ 'smj3': 'Red Fancy Shoes',
+ 'ssb1': 'Red Super Toon Boots',
+ 'sts1': 'Green Tennis Shoes',
+ 'sts2': 'Pink Tennis Shoes',
+ 'scs5': 'Red Sneakers',
+ 'smb2': 'Aqua Toon Boots',
+ 'smb3': 'Brown Toon Boots',
+ 'smb4': 'Yellow Toon Boots',
+ 'sfb2': 'Blue Square Boots',
+ 'sfb3': 'Green Hearts Boots',
+ 'sfb4': 'Grey Dots Boots',
+ 'sfb5': 'Orange Stars Boots',
+ 'sfb6': 'Pink Stars Boots',
+ 'slf1': 'Loafers',
+ 'smj4': 'Purple Fancy Shoes',
+ 'smt1': 'Motorcycle Boots',
+ 'sox1': 'Oxfords',
+ 'srb1': 'Pink Rain Boots',
+ 'sst1': 'Jolly Boots',
+ 'swb1': 'Beige Winter Boots',
+ 'swb2': 'Pink Winter Boots',
+ 'swk1': 'Work Boots',
+ 'scs6': 'Yellow Sneakers',
+ 'smb5': 'Pink Toon Boots',
+ 'sht2': 'Pink Hi Top Sneakers',
+ 'srb2': 'Red Dots Rain Boots',
+ 'sts3': 'Purple Tennis Shoes',
+ 'sts4': 'Violet Tennis Shoes',
+ 'sts5': 'Yellow Tennis Shoes',
+ 'srb3': 'Blue Rain Boots',
+ 'srb4': 'Yellow Rain Boots',
+ 'sat4': 'Black Athletic Shoes',
+ 'shw1': 'Pirate Shoes',
+ 'shw2': 'Toonosaur Feet'}
+AwardManagerAccessoryNames = {}
+AccessoryTypeNames = {}
+for accessoryId in list(CatalogAccessoryItemGlobals.AccessoryTypes.keys()):
+    accessoryInfo = CatalogAccessoryItemGlobals.AccessoryTypes[accessoryId]
+    if accessoryInfo[0] % 4 == 0:
+        accessoryStyleDescription = HatStylesDescriptions
+    elif accessoryInfo[0] % 4 == 1:
+        accessoryStyleDescription = GlassesStylesDescriptions
+    elif accessoryInfo[0] % 4 == 2:
+        accessoryStyleDescription = BackpackStylesDescriptions
+    else:
+        accessoryStyleDescription = ShoesStylesDescriptions
+    if accessoryInfo[3]:
+        AwardManagerAccessoryNames[accessoryId] = AccessoryNamePrefix[accessoryInfo[0]] + accessoryStyleDescription[accessoryInfo[1]]
+    AccessoryTypeNames[accessoryId] = accessoryStyleDescription[accessoryInfo[1]]
 AwardMgrBoy = "boy"
 AwardMgrGirl = "girl"
 AwardMgrUnisex = "unisex"
@@ -7996,7 +8206,10 @@ NametagFrilly = "Frilly Name Tag"
 FurnitureYourOldCloset = "your old wardrobe"
 FurnitureYourOldBank = "your old bank"
 FurnitureYourOldTrunk = "your old trunk"
-
+TrunkHatGUI = 'Hats'
+TrunkGlassesGUI = 'Glasses'
+TrunkBackpackGUI = 'Backpacks'
+TrunkShoesGUI = 'Shoes'
 # How to put quotation marks around chat items--don't translate yet.
 ChatItemQuotes = '"%s"'
 

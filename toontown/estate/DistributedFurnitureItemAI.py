@@ -10,8 +10,7 @@ from . import HouseGlobals
 from . import DistributedHouseItemAI
 from direct.distributed import DistributedSmoothNodeAI
 
-class DistributedFurnitureItemAI(DistributedHouseItemAI.DistributedHouseItemAI,
-                                 DistributedSmoothNodeAI.\
+class DistributedFurnitureItemAI(DistributedSmoothNodeAI.\
                                  DistributedSmoothNodeAI):
 
     """
@@ -21,7 +20,6 @@ class DistributedFurnitureItemAI(DistributedHouseItemAI.DistributedHouseItemAI,
     notify = DirectNotifyGlobal.directNotify.newCategory("DistributedFurnitureItemAI")
 
     def __init__(self, air, furnitureMgr, item):
-        DistributedHouseItemAI.DistributedHouseItemAI.__init__(self, air)
         DistributedSmoothNodeAI.DistributedSmoothNodeAI.__init__(self, air)
         self.furnitureMgr = furnitureMgr
         self.item = item

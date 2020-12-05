@@ -24,6 +24,8 @@ class DistributedCloset(DistributedFurnitureItem.DistributedFurnitureItem):
     def __init__(self, cr):
         DistributedFurnitureItem.DistributedFurnitureItem.__init__(self, cr)
         self.notify.debug("__init__")
+        self.cameraLerp = None
+
         self.lastAvId = 0
         self.hasLocalAvatar = 0
         self.lastTime = 0
@@ -144,7 +146,6 @@ class DistributedCloset(DistributedFurnitureItem.DistributedFurnitureItem):
         self.ignore(self.closetSphereEnterEvent)
         self.ignoreAll()
         taskMgr.remove(self.uniqueName('popupChangeClothesGUI'))
-        taskMgr.remove(self.uniqueName('lerpCamera'))
         taskMgr.remove(self.uniqueName('lerpToon'))
         if self.closetTrack:
             self.closetTrack.finish()
@@ -156,7 +157,9 @@ class DistributedCloset(DistributedFurnitureItem.DistributedFurnitureItem):
             self.freeAvatar()
         self.ignoreAll()
         DistributedFurnitureItem.DistributedFurnitureItem.disable(self)
-
+        if self.cameraLerp:
+            self.cameraLerp.finish()
+            self.cameraLerp = None
     def delete(self):
         self.notify.debug("delete")
         DistributedFurnitureItem.DistributedFurnitureItem.delete(self)
@@ -194,15 +197,19 @@ class DistributedCloset(DistributedFurnitureItem.DistributedFurnitureItem):
             if self.customerId == base.localAvatar.doId:
                 # move camera to the back left
                 camera.wrtReparentTo(self)
-                camera.lerpPosHpr(
-                    -7.58, -6.02, 6.90, 286.3, 336.8, 0, 1,
-                    #other=render,
-                    other = self,
-                    blendType="easeOut",
-                    task=self.uniqueName('lerpCamera'))
+                quat = Quat()
+                quat.setHpr((286.3, 336.8, 0))
                 camera.setPosHpr(
                     self,
                     -7.58, -6.02, 6.90, 286.3, 336.8, 0)
+                self.cameraLerp = LerpPosQuatInterval( camera, 1, 
+                    (-7.58, -6.02, 6.90),quat,
+                    #other=render,
+                    other = self,
+                    name=self.uniqueName('lerpCamera'))
+
+                self.cameraLerp.start()
+
                 
             # Move the avatar:
             if self.av:
@@ -364,6 +371,7 @@ class DistributedCloset(DistributedFurnitureItem.DistributedFurnitureItem):
         return Task.done
 
     def resetCloset(self):
+
         assert(self.notify.debug('resetCloset'))
         self.ignoreAll()
         taskMgr.remove(self.uniqueName('popupChangeClothesGUI'))
@@ -383,7 +391,9 @@ class DistributedCloset(DistributedFurnitureItem.DistributedFurnitureItem):
         self.oldStyle.makeFromNetString(style.makeNetString())
         self.topDeleted = 0
         self.bottomDeleted = 0
-        
+        if self.cameraLerp:
+            self.cameraLerp.finish()
+            self.cameraLerp = None       
         return Task.done
 
     def __handleButton(self):
@@ -560,8 +570,10 @@ class DistributedCloset(DistributedFurnitureItem.DistributedFurnitureItem):
                 return
         elif (mode == ClosetGlobals.CLOSET_MOVIE_TIMEOUT):
             assert(self.notify.debug('CLOSET_MOVIE_TIMEOUT'))
+            if self.cameraLerp:
+                self.cameraLerp.finish()
+                self.cameraLerp = None
             # In case the GUI hasn't popped up yet
-            taskMgr.remove(self.uniqueName('lerpCamera'))
             taskMgr.remove(self.uniqueName('lerpToon'))
             # Stop listening for the GUI
             if (self.isLocalToon):
@@ -758,10 +770,13 @@ class DistributedCloset(DistributedFurnitureItem.DistributedFurnitureItem):
         rightHpr = Vec3(110,0,0)
 
         self.closetTrack = Parallel()
-        if self.rightDoor:
-            self.closetTrack.append(self.rightDoor.hprInterval(.5, rightHpr))
-        if self.leftDoor:
-            self.closetTrack.append(self.leftDoor.hprInterval(.5, leftHpr))
+        if hasattr(self, 'rightDoor'):
+            if self.rightDoor:
+                self.closetTrack.append(self.rightDoor.hprInterval(.5, rightHpr))
+        if hasattr(self, 'leftDoor'):
+
+            if self.leftDoor:
+                self.closetTrack.append(self.leftDoor.hprInterval(.5, leftHpr))
         self.closetTrack.start()
 
     def __closeDoors(self):
@@ -771,9 +786,11 @@ class DistributedCloset(DistributedFurnitureItem.DistributedFurnitureItem):
         rightHpr = Vec3(0,0,0)
 
         self.closetTrack = Parallel()
-        if self.rightDoor:
-            self.closetTrack.append(self.rightDoor.hprInterval(.5, rightHpr))
-        if self.leftDoor:
-            self.closetTrack.append(self.leftDoor.hprInterval(.5, leftHpr))
+        if hasattr(self, 'rightDoor'):
+            if self.rightDoor:
+                self.closetTrack.append(self.rightDoor.hprInterval(.5, rightHpr))
+        if hasattr(self, 'leftDoor'):
+            if self.leftDoor:
+                self.closetTrack.append(self.leftDoor.hprInterval(.5, leftHpr))
         self.closetTrack.start()
     
