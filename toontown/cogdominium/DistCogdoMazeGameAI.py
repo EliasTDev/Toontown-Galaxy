@@ -1,4 +1,4 @@
-from pandac.PandaModules import Vec3, NodePath
+from panda3d.core import Vec3, NodePath
 from direct.distributed.ClockDelta import globalClockDelta
 from otp.avatar.SpeedMonitor import SpeedMonitor
 from toontown.cogdominium.CogdoMaze import CogdoMazeFactory
@@ -13,7 +13,7 @@ cogdoMazePerfectTime = 90
 cogdoMazeMaxTime = 210
 cogdoMazePickupScoreRatio = 0.7
 
-class DistCogdoMazeGameAI(DistCogdoGameAI):
+class DistCogdoMazeGameAI(DistCogdoGameAI, DistCogdoMazeGameBase):
     notify = directNotify.newCategory('DistCogdoMazeGameAI')
     TimerExpiredTaskName = 'CMG_TimerExpiredTask'
     TimeoutTimerTaskName = 'CMG_timeoutTimerTask'
@@ -22,8 +22,8 @@ class DistCogdoMazeGameAI(DistCogdoGameAI):
     SkipCogdoGames = simbase.config.GetBool('skip-cogdo-game', 0)
     delayIntro = BattleBase.ELEVATOR_T + ElevatorData[ELEVATOR_NORMAL]['openTime']
 
-    def __init__(self, air):
-        DistCogdoGameAI.__init__(self, air)
+    def __init__(self, air, id):
+        DistCogdoGameAI.__init__(self, air, id)
         self.doorIsOpen = False
         self.toonsInDoor = []
         self.pickups = []

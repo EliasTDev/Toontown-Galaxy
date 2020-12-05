@@ -131,7 +131,9 @@ if 1:   # flip this as necessary
     # property of seeking to the end of the output stream before actually
     # writing to the file. 'w' mode does not do this, so you will see Panda
     # output and Python output not interlaced properly.
-    log = open(logfile, 'a')
+    if not os.path.exists('user/logs/'):
+        os.mkdir('user/logs/')    
+    log = open(os.path.join('user/logs', logfile), 'a')
     logOut = LogAndOutput(sys.__stdout__, log)
     logErr = LogAndOutput(sys.__stderr__, log)
     sys.stdout = logOut

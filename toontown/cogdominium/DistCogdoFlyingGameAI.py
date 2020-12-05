@@ -12,8 +12,8 @@ class DistCogdoFlyingGameAI(DistCogdoGameAI):
     AnnounceGameDoneTimerTaskName = 'CFG_AnnounceGameDoneTimerTask'
     delayIntro = BattleBase.ELEVATOR_T + ElevatorData[ELEVATOR_NORMAL]['openTime']
 
-    def __init__(self, air):
-        DistCogdoGameAI.__init__(self, air)
+    def __init__(self, air, id):
+        DistCogdoGameAI.__init__(self, air, id)
         self.toonsOnEndPlatform = []
         self.toonsInWinState = []
         self.eagleId2targetIds = {}

@@ -231,12 +231,21 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
             av.b_setHp(hp)
             self.notify.debug('Set hp to %s for %s' % (hp, av._name))
         elif wordIs('~skipFly'):
-            if not hasattr(simbase.air, 'cogdoGame'):
-                response = 'There are no lawbot field office minigames on this district!'
-            game = simbase.air.cogdoGame
-            game.requestAction(CogdoFlyingGameGlobals.AI.GameActions.WinStateFinished, 0)
-            response = 'Finished field office flying game!'
+            from toontown.cogdominium.DistCogdoFlyingGameAI import DistCogdoFlyingGameAI
+            flyingGame = None
+            for do in simbase.air.doId2do.values():
+                if isinstance(do, DistCogdoFlyingGameAI):
+                    if av.doId in do.getToonIds():
+                        flyingGame = do
+                        break
+
+            if flyingGame:
+                flyingGame._handleGameFinished()
+                response = 'Finished field office flying game!'
+            else:
+                response = 'Not in a legal eagle field office'
             self.down_setMagicWordResponse(senderId, response)
+
 
         elif wordIs("~ainotify"):
             args = word.split()

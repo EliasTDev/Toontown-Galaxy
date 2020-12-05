@@ -6,13 +6,13 @@ from toontown.cogdominium import CogdoBarrelRoomConsts
 class DistributedCogdoBarrelAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCogdoBarrelAI')
 
-    def __init__(self, air, index):
+    def __init__(self, air, index, collectedCallback):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
         self.grabbedBy = []
         self.index = index
         self.state = CogdoBarrelRoomConsts.StateAvailable
         self.interactive = True
-        #self.collectedCallback = collectedCallback
+        self.collectedCallback = collectedCallback
         self.laff = random.randint(*CogdoBarrelRoomConsts.ToonUp)
 
     def generate(self):
@@ -51,7 +51,7 @@ class DistributedCogdoBarrelAI(DistributedObjectAI.DistributedObjectAI):
         return self.state == CogdoBarrelRoomConsts.StateAvailable and self.interactive and not av.isToonedUp() and av.doId not in self.grabbedBy
 
     def d_setGrab(self, avId):
-        #self.collectedCallback(self, avId)
+        self.collectedCallback(self, avId)
         self.grabbedBy.append(avId)
         self.state = CogdoBarrelRoomConsts.StateUsed
         self.sendUpdate("setState", [self.state])
@@ -60,6 +60,7 @@ class DistributedCogdoBarrelAI(DistributedObjectAI.DistributedObjectAI):
         av = self.air.doId2do.get(avId)
         if av:
             av.toonUp(self.laff)
+        self.d_setState(CogdoBarrelRoomConsts.StateUsed)
 
     def d_setReject(self):
         self.sendUpdate('setReject', [])

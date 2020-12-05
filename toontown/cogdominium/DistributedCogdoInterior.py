@@ -23,7 +23,8 @@ from toontown.distributed import DelayDelete
 from toontown.toonbase import TTLocalizer
 from .CogdoExecutiveSuiteMovies import CogdoExecutiveSuiteIntro
 from .CogdoElevatorMovie import CogdoElevatorMovie
-from .CogdoBarrelRoomIntro import CogdoBarrelRoomIntro
+from .CogdoBarrelRoomMovies import CogdoBarrelRoomIntro
+
 PAINTING_DICT = {'s': 'tt_m_ara_crg_paintingMoverShaker',
  'l': 'tt_m_ara_crg_paintingLegalEagle',
  'm': 'tt_m_ara_crg_paintingMoverShaker',
@@ -83,7 +84,7 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
         self.elevatorMusic = base.loader.loadMusic('phase_7/audio/bgm/tt_elevator.ogg')
         self.fsm = ClassicFSM.ClassicFSM('DistributedCogdoInterior', [State.State('WaitForAllToonsInside', self.enterWaitForAllToonsInside, self.exitWaitForAllToonsInside, ['Elevator']),
          State.State('Elevator', self.enterElevator, self.exitElevator, ['Game', 'BattleIntro', 'BarrelRoomIntro']),
-         State.State('Game', self.enterGame, self.exitGame, ['Resting', 'Failed', 'BattleIntro', 'BarrelRoomIntro', 'Elevator']),
+         State.State('Game', self.enterGame, self.exitGame, ['Resting', 'Failed', 'BattleIntro']),
          State.State('BarrelRoomIntro', self.enterBarrelRoomIntro, self.exitBarrelRoomIntro, ['CollectBarrels', 'Off']),
          State.State('CollectBarrels', self.enterCollectBarrels, self.exitCollectBarrels, ['BarrelRoomReward', 'Off']),
          State.State('BarrelRoomReward', self.enterBarrelRoomReward, self.exitBarrelRoomReward, ['Battle',
@@ -93,7 +94,7 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
          State.State('BattleIntro', self.enterBattleIntro, self.exitBattleIntro, ['Battle', 'ReservesJoining', 'Off']),
          State.State('Battle', self.enterBattle, self.exitBattle, ['Resting', 'Reward', 'ReservesJoining']),
          State.State('ReservesJoining', self.enterReservesJoining, self.exitReservesJoining, ['Battle']),
-         State.State('Resting', self.enterResting, self.exitResting, ['Elevator']),
+         State.State('Resting', self.enterResting, self.exitResting, ['Elevator', 'BarrelRoomIntro']),
          State.State('Reward', self.enterReward, self.exitReward, ['Off']),
          State.State('Failed', self.enterFailed, self.exitFailed, ['Off']),
          State.State('Off', self.enterOff, self.exitOff, ['Elevator', 'WaitForAllToonsInside', 'Battle'])], 'Off', 'Off')
@@ -156,7 +157,7 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
             floor = int(np.getName()[-1:]) - 1
             if floor == self.currentFloor:
                 np.setColor(LIGHT_ON_COLOR)
-            elif floor < self.layout.getNumGameFloors() + (1 if self .FOType != 's' else 0):
+            elif floor < self.layout.getNumGameFloors():
                 if self.isBossFloor(self.currentFloor):
                     np.setColor(LIGHT_ON_COLOR)
                 else:
@@ -459,7 +460,7 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
         else:
             if self._wantBarrelRoom:
                 self.barrelRoom.load()
-                self.barrelRoom.hide()
+                self.barrelRoom.hide(False)
             SuitHs = self.Cubicle_SuitHs
             SuitPositions = self.Cubicle_SuitPositions
         if self.floorModel:
@@ -478,12 +479,6 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
             else:
                 elevIn = self.floorModel.find('**/elevator-in')
                 elevOut = self.floorModel.find('**/elevator-out')
-        elif self._wantBarrelRoom and self.currentFloor == 2 and self.FOType == 'l' and self.barrelRoom.isLoaded():
-            elevIn = self.barrelRoom.model.find(CogdoBarrelRoomConsts.BarrelRoomElevatorInPath)
-            elevOut = self.barrelRoom.model.find(CogdoBarrelRoomConsts.BarrelRoomElevatorOutPath)
-            y = elevOut.getY(render)
-            elevOut = elevOut.copyTo(render)
-            elevOut.setY(render, y - 0.75)
         else:
             floorModel = loader.loadModel('phase_7/models/modules/boss_suit_office')
             elevIn = floorModel.find('**/elevator-in').copyTo(render)
@@ -555,12 +550,18 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
         return None
 
     def __setupBarrelRoom(self):
-        self.currentFloor += 1
+        base.cr.playGame.getPlace().fsm.request('stopped')
         base.transitions.irisOut(0.0)
-        self.elevatorModelOut.setY(-12)
         self.elevatorModelIn.reparentTo(self.barrelRoom.model.find(CogdoBarrelRoomConsts.BarrelRoomElevatorInPath))
         self.leftDoorIn.setPos(3.5, 0, 0)
         self.rightDoorIn.setPos(-3.5, 0, 0)
+        elevatorIn = self.barrelRoom.model.find(CogdoBarrelRoomConsts.BarrelRoomElevatorInPath)
+        elevatorOut = self.barrelRoom.model.find(CogdoBarrelRoomConsts.BarrelRoomElevatorOutPath)
+        y = elevatorOut.getY(render)
+        elevatorOut = elevatorOut.copyTo(render)
+        elevatorOut.setY(render, y - 0.75)
+        self.elevatorIn = elevatorIn
+        self.elevatorOut = elevatorOut
         self._showExitElevator()
         self.barrelRoom.show()
         self.barrelRoom.placeToonsAtEntrance(self.toons)
