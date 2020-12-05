@@ -346,7 +346,7 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
         self.zone2owner = {}    # get the owner of a zone
         self.houseZone2estateZone = {}
         self.avId2pendingEnter = {} # table of avatars that are on their way to an estate
-        self.petOperations  = {}
+        self.petOperations  = []
         # Number of seconds between spontaneous heals
         self.healFrequency = 30 # seconds
         self.toon2estate = {}
