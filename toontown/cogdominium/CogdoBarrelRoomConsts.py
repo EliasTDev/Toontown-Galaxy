@@ -92,8 +92,8 @@ BarrelCollParams = (0,
  2.0)
 BarrelBumpSound = 'phase_4/audio/sfx/Golf_Hit_Barrier_2.ogg'
 BarrelGrabSound = 'phase_4/audio/sfx/SZ_DD_treasure.ogg'
-BarrelAvailableTexture = 'phase_5/maps/tt_t_ara_cbr_Barrel_notUsed.jpg'
-BarrelUsedTexture = 'phase_5/maps/tt_t_ara_cbr_Barrel_Used.jpg'
+BarrelAvailableTexture = 'phase_5/maps/tt_t_ara_cbr_Barrel_notUsed.png'
+BarrelUsedTexture = 'phase_5/maps/tt_t_ara_cbr_Barrel_Used.png'
 BarrelPathName = 'CogdoBarrel_'
 
 StateHidden, StateAvailable, StateUsed, StateCrushed = list(range(4))
