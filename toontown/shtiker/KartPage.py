@@ -1229,7 +1229,7 @@ class ItemSelector( DirectFrame ):
             """
             """
             self.uiImagePlane.component( 'geom0' ).setColorScale( 1.0, 1.0, 1.0, 1.0 )
-            self.uiImagePlane.component( 'geom0' ).setTexture( loader.loadTexture( 'phase_6/maps/NoAccessoryIcon3.png', self.texCount )
+            self.uiImagePlane.component( 'geom0' ).setTexture( loader.loadTexture( 'phase_6/maps/NoAccessoryIcon3.png', self.texCount ))
             #self.uiImagePlane.component('geom0').setColorScale( 1.0, 1.0, 0.8, 1.0 )
             #self.uiImagePlane.setTextureOff( self.texCount )
             self.texCount += 1

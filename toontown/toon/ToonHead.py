@@ -92,7 +92,7 @@ class ToonHead(Actor.Actor):
     EyesAngryClosed = loader.loadTexture('phase_3/maps/eyesAngryClosed.png')
     EyesAngryClosed.setMinfilter(Texture.FTLinear)
     EyesAngryClosed.setMagfilter(Texture.FTLinear)
-    EyesSurprised = loader.loadTexture('phase_3/maps/eyesSurprised.png',
+    EyesSurprised = loader.loadTexture('phase_3/maps/eyesSurprised.png')
     EyesSurprised.setMinfilter(Texture.FTLinear)
     EyesSurprised.setMagfilter(Texture.FTLinear)
     Muzzle = loader.loadTexture('phase_3/maps/muzzleShrtGeneric.png')
