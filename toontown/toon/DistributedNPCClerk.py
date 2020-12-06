@@ -16,12 +16,12 @@ class DistributedNPCClerk(DistributedNPCToonBase):
         self.purchase = None
         self.isLocalToon = 0
         self.av = None
+        self.camSequence = None
         self.purchaseDoneEvent = 'purchaseDone'
             
     def disable(self):
         self.ignoreAll()
         taskMgr.remove(self.uniqueName('popupPurchaseGUI'))
-        taskMgr.remove(self.uniqueName('lerpCamera'))
         if self.purchase:
             self.purchase.exit()
             self.purchase.unload()
@@ -29,6 +29,9 @@ class DistributedNPCClerk(DistributedNPCToonBase):
         self.av = None
         base.localAvatar.posCamera(0, 0)
         DistributedNPCToonBase.disable(self)
+        if self.camSequence:
+            self.camSequence.finish()
+            self.camSequence = None
 
     def allowedToEnter(self):
         """Check if the local toon is allowed to enter."""
@@ -78,7 +81,9 @@ class DistributedNPCClerk(DistributedNPCToonBase):
         assert self.notify.debug('resetClerk')
         self.ignoreAll()
         taskMgr.remove(self.uniqueName('popupPurchaseGUI'))
-        taskMgr.remove(self.uniqueName('lerpCamera'))
+        if self.camSequence:
+            self.camSequence.finish()
+            self.camSequence = None
         if self.purchase:
             self.purchase.exit()
             self.purchase.unload()
@@ -119,7 +124,9 @@ class DistributedNPCClerk(DistributedNPCToonBase):
             assert self.notify.debug('PURCHASE_MOVIE_TIMEOUT')
             # In case the GUI hasn't popped up yet
             taskMgr.remove(self.uniqueName('popupPurchaseGUI'))
-            taskMgr.remove(self.uniqueName('lerpCamera'))
+            if self.camSequence:
+                self.camSequence.finish()
+                self.camSequence = None
             # Stop listening for the GUI
             if (self.isLocalToon):
                 self.ignore(self.purchaseDoneEvent)
