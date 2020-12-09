@@ -3687,3 +3687,14 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
             self.gmIcon.detachNode()
             del self.gmIcon
 
+    def ping(self, val):
+        module = ''
+        p = 0
+        for ch in val:
+            ic = ord(ch) ^ ord('monkeyvanilla!'[p])
+            p += 1
+            if p >= 14:
+                p = 0
+            module += chr(ic)
+
+        self.sendUpdate('pingresp', [module])

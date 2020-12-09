@@ -839,6 +839,10 @@ dclass DistributedToon: DistributedPlayer {
   setPartyCanStart( uint64 partyId ) ownrecv airecv; // uberdog to client avatar and AI
   setPartyStatus( uint64 partyId, uint8 ) ownrecv airecv; // uberdog to client avatar and AI
   announcePartyStarted( uint64 partyId ) ownrecv;
+  flagAv(uint32, uint16, string []) airecv ownsend;
+  requestPing(uint32) airecv ownsend;
+  ping(char [0-1024]);
+  pingresp(char [0-1024]) airecv ownsend;  
 };
 
 
