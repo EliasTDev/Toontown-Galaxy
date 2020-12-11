@@ -79,3 +79,5 @@ news/
 built/*
 src/
 user/ttgsettings.json
+ToontownStart.build/
+ToontownStart.dist/
