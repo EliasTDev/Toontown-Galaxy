@@ -70,7 +70,7 @@ class FishBrowser(DirectScrolledList):
     def destroy(self):
         assert self.notify.debugStateCall(self)
         DirectScrolledList.destroy(self)
-        self.parent = None
+        self._parent = None
 
     #def load(self):
     #    assert self.notify.debugStateCall(self)
@@ -83,7 +83,7 @@ class FishBrowser(DirectScrolledList):
 
     def show(self):
         assert self.notify.debugStateCall(self)
-        if not self.parent.isHidden():
+        if not self._parent.isHidden():
             self['items'][self.index].show()
             DirectScrolledList.show(self)
             #print("fish parent not hidden showing")
