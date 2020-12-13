@@ -994,14 +994,22 @@ class TalkAssistant(DirectObject.DirectObject):
         return error
 
     def sendWhisperTalk(self, message, receiverAvId):
+        #TODO open chat whisper message(true friends)
+
         error = None
-        base.cr.chatRouter.sendWhisperMessage(message, receiverAvId)
+        receiver = base.cr.doId2do.get(receiverAvId)
+        if receiver:
+            receiver.sendUpdate("setTalkWhisper", [0, 0, "", message, [], 0])
+        else:
+            receiver = base.cr.identifyAvatar(receiverAvId)
+            if receiver:
+                base.localAvatar.sendUpdate("setTalkWhisper", [0, 0, "", message, [], 0], sendToId = receiverAvId)
+            else:
+                pass
         return error
 
-    def sendAccountTalk(self, message, receiverAccount):
-        error = None
-        base.cr.playerFriendsManager.sendUpdate("setTalkAccount", [receiverAccount,0, "",message, [], 0])
-        return error
+
+
 
     def sendGuildTalk(self, message):
         error = None

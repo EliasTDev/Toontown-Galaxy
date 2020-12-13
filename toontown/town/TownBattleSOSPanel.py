@@ -168,8 +168,8 @@ class TownBattleSOSPanel(DirectFrame, StateData.StateData):
     def makeFriendButton(self, friendPair):
         friendId, flags = friendPair
         
-        #handle = base.cr.identifyFriend(friendId)
-        handle = base.cr.playerFriendsManager.identifyFriend(friendId)
+        handle = base.cr.identifyFriend(friendId)
+       # handle = base.cr.playerFriendsManager.identifyFriend(friendId)
         if handle == None:
             # If we don't know who this friend is, we can't make a
             # button.  We'll find out later; for now, leave it out.
@@ -371,7 +371,7 @@ class TownBattleSOSPanel(DirectFrame, StateData.StateData):
             self.title['text'] = TTLocalizer.TownBattleSOSWhichFriend
 
 
-    def __friendOnline(self, doId, commonChatFlags, whitelistChatFlags):
+    def __friendOnline(self, doId):
         """__friendOnline(self, int doId):
 
         Called when a friend comes online, this should update the

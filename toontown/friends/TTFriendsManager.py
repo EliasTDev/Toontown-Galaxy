@@ -1,4 +1,3 @@
-#credit to toontown empire 
 from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 from otp.otpbase import OTPLocalizer, OTPGlobals
 from toontown.hood import ZoneUtil
@@ -10,25 +9,25 @@ class TTFriendsManager(DistributedObjectGlobal):
         DistributedObjectGlobal.__init__(self, cr)
         self.nextTeleportFail = 0
     
-    def d_removeFriend(self, friendId):
-        self.sendUpdate('removeFriend', [friendId])
+    def d_deleteFriend(self, friendId):
+        self.sendUpdate('deleteFriend', [friendIdid])
 
-    def d_getFriendsListRequest(self):
-        self.sendUpdate('getFriendsListRequest', [])
+    def d_requestFriends(self):
+        self.sendUpdate('requestFriends', [])
 
-    def friendList(self, resp):
+    def friendsList(self, resp):
         base.cr.handleGetFriendsList(resp)
 
-    def friendOnline(self, id):
-        base.cr.handleFriendOnline(id)
+    def friendIsOnline(self, friendId):
+        base.cr.handleFriendOnline(friendId)
 
-    def friendOffline(self, id):
-        base.cr.handleFriendOffline(id)
+    def friendIsOffline(self, friendId):
+        base.cr.handleFriendOffline(friendId)
 
-    def d_getAvatarDetails(self, avId):
-        self.sendUpdate('getAvatarDetails', [avId])
+    def d_getToonDetails(self, toonId):
+        self.sendUpdate('getToonDetails', [toonId])
 
-    def friendDetails(self, avId, inventory, trackAccess, hp, maxHp, defaultShard, lastHood, dnaString, experience, trackBonusLevel, npcFriends):
+    def friendDetails(self, friendId, inventory, trackAccess, hp, maxHp, defaultShard, lastHood, dnaString, experience, trackBonusLevel, NPCFriendsDict):
         fields = [
             ['setExperience' , experience],
             ['setTrackAccess' , trackAccess],
@@ -39,14 +38,14 @@ class TTFriendsManager(DistributedObjectGlobal):
             ['setDefaultShard' , defaultShard],
             ['setLastHood' , lastHood],
             ['setDNAString' , dnaString],
-            ['setNPCFriendsDict', npcFriends]
+            ['setNPCFriendsDict', NPCFriendsDict] 
         ]
-        base.cr.n_handleGetAvatarDetailsResp(avId, fields=fields)
+        base.cr.n_handleGetAvatarDetailsResp(friendId, fields=fields)
 
-    def d_getPetDetails(self, avId):
-        self.sendUpdate('getPetDetails', [avId])
+    def d_getPetInfo(self, petId):
+        self.sendUpdate('getPetInfo', [petId])
 
-    def petDetails(self, avId, ownerId, petName, traitSeed, sz, traits, moods, dna, lastSeen):
+    def petInfo(self, petId, owner, name, seed, safezone, traits, moods, dna, lastSeen):
         fields = list(zip(("setHead", "setEars", "setNose", "setTail", "setBodyTexture", "setColor", "setColorScale", "setEyeColor", "setGender"), dna))
         fields.extend(zip(("setBoredom", "setRestlessness", "setPlayfulness", "setLoneliness",
                            "setSadness", "setAffection", "setHunger", "setConfusion", "setExcitement",
@@ -56,115 +55,108 @@ class TTFriendsManager(DistributedObjectGlobal):
                            "setFatigueThreshold", "setHungerThreshold", "setConfusionThreshold",
                            "setExcitementThreshold", "setAngerThreshold", "setSurpriseThreshold",
                            "setAffectionThreshold"), traits))
-        fields.append(("setOwnerId", ownerId))
-        fields.append(("setPetName", petName))
-        fields.append(("setTraitSeed", traitSeed))
-        fields.append(("setSafeZone", sz))
+        fields.append(("setOwnerId", owner))
+        fields.append(("setPetName", name))
+        fields.append(("setTraitSeed", seed))
+        fields.append(("setSafeZone", safezone))
         fields.append(("setLastSeenTimestamp", lastSeen))
-        base.cr.n_handleGetAvatarDetailsResp(avId, fields=fields)
+        base.cr.n_handleGetAvatarDetailsResp(petId, fields=fields)
 
-    def d_teleportQuery(self, toId):
-        self.sendUpdate('routeTeleportQuery', [toId])
+    def d_teleportQuery(self, id):
+        self.sendUpdate('routeTeleportQuery', [id])
 
-    def teleportQuery(self, fromId):
+    def teleportQuery(self, id):
         if not hasattr(base, 'localAvatar'):
-            self.sendUpdate('teleportResponse', [ fromId, 0, 0, 0, 0 ])
+            self.sendUpdate('teleportResponse', [ id, 0, 0, 0, 0 ])
             return
-        if not hasattr(base.localAvatar, 'getTeleportAvailable') or not hasattr(base.localAvatar, 'ghostMode'):
-            self.sendUpdate('teleportResponse', [ fromId, 0, 0, 0, 0 ])
-            return
-        if not base.localAvatar.acceptingTeleport:
-            self.sendUpdate('teleportResponse', [ fromId, 3, 0, 0, 0 ])
-            return
-        if base.localAvatar.isIgnored(fromId):
-            self.sendUpdate('teleportResponse', [ fromId, 2, 0, 0, 0 ])
+        if not hasattr(base.localAvatar, 'ghostMode' or hasattr(base.localAvatar, 'getTeleportAvailable')):
+            self.sendUpdate('teleportResponse', [ id, 0, 0, 0, 0 ])
             return
 
-        friend = base.cr.identifyFriend(fromId)
 
-        if not base.localAvatar.getTeleportAvailable() or base.localAvatar.ghostMode:
-            if hasattr(friend, 'getName') and self.nextTeleportFail < time.time():
-                self.nextTeleportFail = time.time() + OTPGlobals.TeleportFailCooldown
-                base.localAvatar.setSystemMessage(fromId, OTPLocalizer.WhisperFailedVisit % friend.getName())
-            self.sendUpdate('teleportResponse', [ fromId, 0, 0, 0, 0 ])
+        avatar = base.cr.identifyFriend(id)
+
+        if base.localAvatar.ghostMode or not base.localAvatar.getTeleportAvailable():
+            if hasattr(avatar, 'getName'):
+                base.localAvatar.setSystemMessage(id, OTPLocalizer.WhisperFailedVisit % avatar.getName())
+            self.sendUpdate('teleportResponse', [ id, 0, 0, 0, 0 ])
             return
 
         hoodId = base.cr.playGame.getPlaceId()
-        if hasattr(friend, 'getName'):
-            base.localAvatar.setSystemMessage(fromId, OTPLocalizer.WhisperComingToVisit % friend.getName())
+        if hasattr(avatar, 'getName'):
+            base.localAvatar.setSystemMessage(id, OTPLocalizer.WhisperComingToVisit % avatar.getName())
         self.sendUpdate('teleportResponse', [
-            fromId,
+            id,
             base.localAvatar.getTeleportAvailable(),
             base.localAvatar.defaultShard,
             hoodId,
             base.localAvatar.getZoneId()
         ])
 
-    def d_teleportResponse(self, toId, available, shardId, hoodId, zoneId):
-        self.sendUpdate('teleportResponse', [toId, available, shardId,
+    def d_teleportResponse(self, id, available, shardId, hoodId, zoneId):
+        self.sendUpdate('teleportResponse', [id, available, shardId,
             hoodId, zoneId]
         )
 
-    def setTeleportResponse(self, fromId, available, shardId, hoodId, zoneId):
-        base.localAvatar.teleportResponse(fromId, available, shardId, hoodId, zoneId)
+    def setTeleportResponse(self, id, available, district, hoodId, zoneId):
+        base.localAvatar.teleportResponse(id, available, district, hoodId, zoneId)
 
-    def d_whisperSCTo(self, toId, msgIndex):
-        self.sendUpdate('whisperSCTo', [toId, msgIndex])
+    def d_whisperSCTo(self, id, msgIndex):
+        self.sendUpdate('whisperSCTo', [id, msgIndex])
 
-    def setWhisperSCFrom(self, fromId, msgIndex):
+    def setWhisperSCFrom(self, id, msgIndex):
         if not hasattr(base, 'localAvatar'):
             return
         if not hasattr(base.localAvatar, 'setWhisperSCFrom'):
             return
-        base.localAvatar.setWhisperSCFrom(fromId, msgIndex)
+        base.localAvatar.setWhisperSCFrom(id, msgIndex)
 
-    def d_whisperSCCustomTo(self, toId, msgIndex):
-        self.sendUpdate('whisperSCCustomTo', [toId, msgIndex])
+    def d_whisperSCCustomTo(self, id, msgIndex):
+        self.sendUpdate('whisperSCCustomTo', [id, msgIndex])
 
-    def setWhisperSCCustomFrom(self, fromId, msgIndex):
+    def setWhisperSCCustomFrom(self, id, msgIndex):
         if not hasattr(base, 'localAvatar'):
             return
         if not hasattr(base.localAvatar, 'setWhisperSCCustomFrom'):
             return
-        base.localAvatar.setWhisperSCCustomFrom(fromId, msgIndex)
+        base.localAvatar.setWhisperSCCustomFrom(id, msgIndex)
 
-    def d_whisperSCEmoteTo(self, toId, emoteId):
-        self.sendUpdate('whisperSCEmoteTo', [toId, emoteId])
+    def d_whisperSCEmoteTo(self, id, emoteId):
+        self.sendUpdate('whisperSCEmoteTo', [id, emoteId])
 
-    def setWhisperSCEmoteFrom(self, fromId, emoteId):
+    def setWhisperSCEmoteFrom(self, id, emoteId):
         if not hasattr(base, 'localAvatar'):
             return
         if not hasattr(base.localAvatar, 'setWhisperSCEmoteFrom'):
             return
-        base.localAvatar.setWhisperSCEmoteFrom(fromId, emoteId)
+        base.localAvatar.setWhisperSCEmoteFrom(id, emoteId)
 
-    def receiveTalkWhisper(self, fromId, message):
-        base.localAvatar.setTalkWhisper(fromId, message)
 
-    def d_battleSOS(self, toId):
-        self.sendUpdate('battleSOS', [toId])
 
-    def setBattleSOS(self, fromId):
-        base.localAvatar.battleSOS(fromId)
+    def d_battleSOS(self, id):
+        self.sendUpdate('battleSOS', [id])
 
-    def d_teleportGiveup(self, toId):
-        self.sendUpdate('teleportGiveup', [toId])
+    def setBattleSOS(self, id):
+        base.localAvatar.battleSOS(id)
 
-    def setTeleportGiveup(self, fromId):
-        base.localAvatar.teleportGiveup(fromId)
+    def d_teleportGiveup(self, id):
+        self.sendUpdate('teleportGiveup', [id])
 
-    def d_whisperSCToontaskTo(self, toId, taskId, toNpcId, toonProgress, msgIndex):
-        self.sendUpdate('whisperSCToontaskTo', [toId, taskId, toNpcId,
+    def setTeleportGiveup(self, id):
+        base.localAvatar.teleportGiveup(id)
+
+    def d_whisperSCToontaskTo(self, id, taskId, toNpcId, toonProgress, msgIndex):
+        self.sendUpdate('whisperSCToontaskTo', [id, taskId, toNpcId,
             toonProgress, msgIndex]
         )
 
-    def setWhisperSCToontaskFrom(self, fromId, taskId, toNpcId, toonProgress, msgIndex):
-        base.localAvatar.setWhisperSCToontaskFrom(fromId, taskId, toNpcId,
+    def setWhisperSCToontaskFrom(self, id, taskId, toNpcId, toonProgress, msgIndex):
+        base.localAvatar.setWhisperSCToontaskFrom(id, taskId, toNpcId,
             toonProgress, msgIndex
         )
 
-    def d_sleepAutoReply(self, toId):
-        self.sendUpdate('sleepAutoReply', [toId])
+    def d_sleepAutoReply(self, id):
+        self.sendUpdate('sleepAutoReply', [id])
 
-    def setSleepAutoReply(self, fromId):
-        base.localAvatar.setSleepAutoReply(fromId)
+    def setSleepAutoReply(self, id):
+        base.localAvatar.setSleepAutoReply(id)

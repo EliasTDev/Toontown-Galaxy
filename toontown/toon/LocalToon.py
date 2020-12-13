@@ -799,15 +799,11 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         if not self.cr.allowAnyTypedChat():
             return 0
 
-        if self.commonChatFlags & (ToontownGlobals.CommonChat | ToontownGlobals.SuperChat):
-            return 1
-
         if base.cr.whiteListChatEnabled:
             return 1
 
-        for friendId, flags in self.friendsList:
-            if flags & ToontownGlobals.FriendChat:
-                return 1
+        if base.localAvatar.getTrueFriend(self.doId):
+            return 2
 
         return 0
 

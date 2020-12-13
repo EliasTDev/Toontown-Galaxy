@@ -94,7 +94,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         # Initially, we have no common chat flags.  The server
         # might or might not assign us some special flags based on
         # our "green" from login.
-        self.commonChatFlags = 0
+        #self.commonChatFlags = 0
         self.garbleChat = 1
 
         # This is normally 1, but some funny states may set this
@@ -138,8 +138,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.accept('friendOnline', self.__friendOnline)
         self.accept('friendOffline', self.__friendOffline)
         self.accept('clickedWhisper', self.clickedWhisper)
-        self.accept('playerOnline', self.__playerOnline)
-        self.accept('playerOffline', self.__playerOffline)
+       # self.accept('playerOnline', self.__playerOnline)
+        #self.accept('playerOffline', self.__playerOffline)
 
         # We listen for this event all the time, not just while
         # we're sleeping.  This event serves not just to wake us
@@ -1598,12 +1598,12 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         base.playSfx(sfx)
 
     # Whisper
-    def displayWhisperPlayer(self, fromId, chatString, whisperType):
-        """displayWhisper(self, int fromId, string chatString, int whisperType)
+    """def displayWhisperPlayer(self, fromId, chatString, whisperType):
+        #displayWhisper(self, int fromId, string chatString, int whisperType)
 
-        Displays the whisper message in whatever capacity makes sense.
-        This function overrides a similar function in DistributedAvatar.
-        """
+        #Displays the whisper message in whatever capacity makes sense.
+        #This function overrides a similar function in DistributedAvatar.
+        
         sender = None
         playerInfo = None
         sfx = self.soundWhisper
@@ -1629,7 +1629,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
         whisper.manage(base.marginManager)
         base.playSfx(sfx)
-        #base.chatAssistant.receivePlayerWhisperTypedChat(chatString, fromId)
+        #base.chatAssistant.receivePlayerWhisperTypedChat(chatString, fromId)"""
 
     # animation
     def setAnimMultiplier(self, value):
@@ -1908,7 +1908,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         #self.accept("whisperUpdateSC", self.whisperSCTo)
         #self.accept("whisperUpdateSCCustom", self.whisperSCCustomTo)
         #self.accept("whisperUpdateSCEmote", self.whisperSCEmoteTo)
-        self.accept(OTPGlobals.WhisperIncomingEvent, self.handlePlayerFriendWhisper)
+        #self.accept(OTPGlobals.WhisperIncomingEvent, self.handlePlayerFriendWhisper)
         self.accept(OTPGlobals.ThinkPosHotkey, self.thinkPos)
         self.accept(OTPGlobals.PrintCamPosHotkey, self.printCamPos)
         if self.__enableMarkerPlacement:
@@ -1964,7 +1964,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.ccPusherTrav.traverse(n)
 
 
-    def __friendOnline(self, doId, commonChatFlags=0, whitelistChatFlags = 0):
+    def __friendOnline(self, doId, alert=False):
         """
         Called when a friend comes online, this should report this
         news to the user.
@@ -1972,9 +1972,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         # The first "online" message we get immediately after adding a
         # new friend is suspect.
         friend = base.cr.identifyFriend(doId)
-        if (friend != None) and hasattr(friend,'setCommonAndWhitelistChatFlags'):
-            friend.setCommonAndWhitelistChatFlags(commonChatFlags, whitelistChatFlags)
-
         if self.oldFriendsList != None:
             now = globalClock.getFrameTime()
             elapsed = now - self.timeFriendsListChanged
@@ -1996,10 +1993,10 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         if friend != None:
             self.setSystemMessage(0, OTPLocalizer.WhisperFriendLoggedOut % (friend.getName()))
 
-    def __playerOnline(self, playerId):
-        playerInfo = base.cr.playerFriendsManager.playerId2Info[playerId]
-        if playerInfo:
-            self.setSystemMessage(playerId, OTPLocalizer.WhisperPlayerOnline % (playerInfo.playerName, playerInfo.location))
+    #def __playerOnline(self, playerId):
+        #playerInfo = base.cr.playerFriendsManager.playerId2Info[playerId]
+        #if playerInfo:
+         #   self.setSystemMessage(playerId, OTPLocalizer.WhisperPlayerOnline % (playerInfo.playerName, playerInfo.location))
 
     def __playerOffline(self, playerId):
         playerInfo = base.cr.playerFriendsManager.playerId2Info[playerId]
@@ -2021,11 +2018,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
                 # the whisper-to panel just in case.
                 messenger.send("clickedNametag", [friend])
                 self.chatMgr.whisperTo(friend.getName(), doId)
-        else:
-            friend = base.cr.playerFriendsManager.getFriendInfo(doId)
-            if friend:
-                messenger.send("clickedNametagPlayer", [None, doId])
-                self.chatMgr.whisperTo(friend.getName(), None, doId)
 
 
 
@@ -2040,12 +2032,12 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             return self.notify.debug(
                     str(id(self))+' '+message)
 
-    def handlePlayerFriendWhisper(self, playerId, charMessage):
+  #def handlePlayerFriendWhisper(self, playerId, charMessage):
         """
         handle player friend message.
         """
-        print("handlePlayerFriendWhisper")
-        self.displayWhisperPlayer(playerId, charMessage, WhisperPopup.WTNormal)
+   #     print("handlePlayerFriendWhisper")
+    #    self.displayWhisperPlayer(playerId, charMessage, WhisperPopup.WTNormal)
 
     def canChat(self):
         """

@@ -202,7 +202,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         # We can get the friend online message before the friend list message
         # here's a hack to store it, key is avId, value is
         # (commonChatFlags, whitelistChatFlags)
-        self.friendPendingChatSettings = {}
+        #self.friendPendingChatSettings = {}
 
         # Create a map to track progress of elder quests that require
         # a Toon to make friends
@@ -247,7 +247,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         state.addTransition('skipTutorialRequest')
 
         self.wantCogdominiums = base.config.GetBool('want-cogdominiums', 0)
-
+        self.wantSpeedChatPlus = base.config.GetBool('want-speedchat-plus', 1)
         if base.config.GetBool('tt-node-check', 0):
             # check for nodes in the models
             for species in ToonDNA.toonSpeciesTypes:
@@ -664,7 +664,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         pad.delayDelete = DelayDelete.DelayDelete(avatar, 'getAvatarDetails')
         avId = avatar.doId
         self.__queryAvatarMap[avId] = pad
-        self.__sendGetAvatarDetails(avatar.doId, pet=(args[0].endswith("Pet")))
+        self.__sendGetAvatarDetails(avatar.doId)
 
     def cancelAvatarDetailsRequest(self, avatar):
         """
@@ -683,35 +683,62 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
             pad = self.__queryAvatarMap.pop(avId)
             pad.delayDelete.destroy()
 
-    def __sendGetAvatarDetails(self, avId, pet=False):
+    def __sendGetAvatarDetails(self, avId, pet=0):
         """
         Sends the query-object message to the server.  The return
         message will be handled by handleGetAvatarDetailsResp().
         See getAvatarDetails().
         """
         #assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
-        #datagram = PyDatagram()
+       # datagram = PyDatagram()
         #avatar = self.__queryAvatarMap[avId].avatar
 
-        #datagram.addUint16(avatar.getRequestID())
+       # datagram.addUint16(avatar.getRequestID())
 
         # The avId we are querying.
         #datagram.addUint32(avId)
         #self.send(datagram)
-        if not pet:
-            self.ttFriendsManager.d_getAvatarDetails(avId)
+        if pet:
+            self.ttFriendsManager.d_getPetInfo(avId)
         else:
-            self.ttFriendsManager.d_getPetDetails(avId)
+            self.ttFriendsManager.d_getToonDetails(avId)
 
+    def n_handleGetAvatarDetailsResp(self, avId, fields):
+        self.notify.info('Query reponse for avId %d' % avId)
+        try:
+            pad = self.__queryAvatarMap[avId]
+        except:
+            self.notify.warning('Received unexpected or outdated details for avatar %d.' % avId)
+            return
+
+        del self.__queryAvatarMap[avId]
+        gotData = 0
+
+        dclassName = pad.args[0]
+        dclass = self.dclassesByName[dclassName]
+        #pad.avatar.updateAllRequiredFields(dclass, fields)
+
+
+
+        for currentField in fields:
+            getattr(pad.avatar, currentField[0])(currentField[1])
+
+        gotData = 1
+
+
+        if isinstance(pad.func, (str, bytes)):
+            messenger.send(pad.func, list((gotData, pad.avatar) + pad.args))
+        else:
+            pad.func(*(gotData, pad.avatar) + pad.args)
+
+        pad.delayDelete.destroy()
 
     def handleGetAvatarDetailsResp(self, di):
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
-        # This should be the avatar Id that we had sent
         avId = di.getUint32()
-        # Check for a valid avatar
-        returnCode = di.getUint8()
+        returncode = di.getUint8()
+        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
 
-        self.notify.info("Got query response for avatar %d, code = %d." % (avId, returnCode))
+        self.notify.info("Got query response for avatar %d, code = %d." % (avId, returncode))
 
         # Get the function we originally passed to queryAvatar().
         try:
@@ -725,31 +752,14 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         del self.__queryAvatarMap[avId]
 
         gotData = 0
-        if returnCode != 0:
-            self.notify.warning("No information available for avatar %d." % (avId))
-        else:
-            # The avatar information that we have is valid.  Look up
-            # the context and update the DistributedToon we were
-            # given to getAvatarDetails().
-            dclassName = pad.args[0]
-            dclass = self.dclassesByName[dclassName]
-            """
-            if str(pad.avatar.__class__) == "toontown.toon.DistributedToon.DistributedToon":
-                dclass = self.dclassesByName["DistributedToon"]
-            elif str(pad.avatar.__class__) == "toontown.pets.DistributedPet.DistributedPet":
-                dclass = self.dclassesByName["DistributedPet"]
-            else:
-                self.notify.warning("This avatar type is invalid: %s" % pad.avatar.__class__)
-                return
-            """
+        dclassName = pad.args[0]
+        dclass = self.dclassesByName[dclassName]
+        for x in fields:
+            getattr(pad.avatar, x[0])(*x[1:])
+        
+        gotData = 1
 
-            # We don't call generate() on this avatar, since it's not
-            # a real avatar; instead, it's just an empty placeholder
-            # for all of the fields.
-            pad.avatar.updateAllRequiredFields(dclass, di)
-            gotData = 1
-
-        if isinstance(pad.func, str):
+        if isinstance(pad.func, (str, bytes)):
             # If the pad "function" is actually a string, send an
             # event instead of calling the function.
             messenger.send(pad.func, list((gotData, pad.avatar) + pad.args))
@@ -1157,7 +1167,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
             return 1
 
         if not self.friendsMapPending and not self.friendsListError:
-            self.notify.warning('Friends list stale; fetching new list.')
+            self.notify.info('Friends list stale; fetching new list.')
             self.sendGetFriendsListRequest()
         return 0
 
@@ -1166,19 +1176,21 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         Returns true if the indicated avatar is a friend of the
         LocalToon, false otherwise.
         """
+        if doId in base.localAvatar.friendsList:
         # Check in the LocalToon's friends list.  The friendsMap is
         # not the authority on this; it might be incomplete, or it
         # might include extra toons that are no longer our friends.
-        for friendId, flags in base.localAvatar.friendsList:
-            if friendId == doId:
+        #for friendId, flags in base.localAvatar.friendsList:
+         #   if friendId == doId:
                 # It *is* in the friends list.  Make sure it's in the
                 # friendsMap too.
-                self.identifyFriend(doId)
-                return 1
+            self.identifyFriend(doId)
+            return 1
 
         return 0
 
     def isAvatarFriend(self, doId):
+        self.isFriend(doId) #call the function we already have defined
         """
         Returns true if the indicated avatar is a friend of the
         LocalToon, false otherwise.
@@ -1186,16 +1198,16 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         # Check in the LocalToon's friends list.  The friendsMap is
         # not the authority on this; it might be incomplete, or it
         # might include extra toons that are no longer our friends.
-        for friendId, flags in base.localAvatar.friendsList:
-            if friendId == doId:
+        #for friendId, flags in base.localAvatar.friendsList:
+         #   if friendId == doId:
                 # It *is* in the friends list.  Make sure it's in the
                 # friendsMap too.
-                self.identifyFriend(doId)
-                return 1
+          #      self.identifyFriend(doId)
+           #     return 1
 
-        return 0
+        #return 0
 
-    def getFriendFlags(self, doId):
+    #def getFriendFlags(self, doId):
         """
         Returns the uint8 associated with the indicated friend, or 0
         if the doId is not a friend of the LocalToon.
@@ -1204,11 +1216,11 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         associated with friends.  Presently, only bit 1 is used, to
         specify that we can chat freely with the given friend.
         """
-        for friendId, flags in base.localAvatar.friendsList:
-            if friendId == doId:
-                return flags
+       # for friendId, flags in base.localAvatar.friendsList:
+         #   if friendId == doId:
+         #       return flags
 
-        return 0
+        #return 0
 
     def isFriendOnline(self, doId):
         """
@@ -1241,12 +1253,12 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
             avatar = self.doId2do[doId]
         elif self.cache.contains(doId):
             avatar = self.cache.dict[doId]
-        elif self.playerFriendsManager.getAvHandleFromId(doId):
-            avatar = base.cr.playerFriendsManager.getAvHandleFromId(doId)
+        #elif self.playerFriendsManager.getAvHandleFromId(doId):
+         #   avatar = base.cr.playerFriendsManager.getAvHandleFromId(doId)
         else:
             # Haven't got a clue.
             self.notify.warning("Don't know who friend %s is." % (doId))
-            return None
+            return
 
         if not (isinstance(avatar, DistributedToon.DistributedToon) or
                 isinstance(avatar, DistributedPet.DistributedPet)):
@@ -1268,8 +1280,6 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         self.friendsMap[doId] = handle
         return handle
 
-    def identifyPlayer(self, pId):
-        return base.cr.playerFriendsManager.getFriendInfo(pId)
 
     def identifyAvatar(self, doId):
         """
@@ -1286,15 +1296,14 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         Returns true if every avatar on our friends list is also
         listed in the friends map, false otherwise.
         """
-        for friendId, flags in base.localAvatar.friendsList:
-            if self.identifyFriend(friendId) == None:
+        for friendId in base.localAvatar.friendsList:
+            if self.identifyFriend(friendId) is None:
                 return 0
-
-        if base.wantPets and base.localAvatar.hasPet():
-            print(str(self.friendsMap))
-            print(str(base.localAvatar.getPetId() in self.friendsMap))
-            if (base.localAvatar.getPetId() in self.friendsMap) == None:
-                return 0
+            if base.wantPets and base.localAvatar.hasPet():
+            #print(str(self.friendsMap))
+            #print(str(base.localAvatar.getPetId() in self.friendsMap))
+                if (base.localAvatar.getPetId() not in self.friendsMap):
+                    return 0
 
         return 1
 
@@ -1335,7 +1344,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
                 # Here's our friend entry; remove it.
            #     base.localAvatar.friendsList.remove(pair)
             #    return
-        self.ttFriendsManager.d_removeFriend(avatarId)
+        self.ttFriendsManager.d_deleteFriend(avatarId)
 
     def clearFriendState(self):
         """
@@ -1356,9 +1365,8 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         """
         self.friendsMapPending = 1
         self.friendsListError = 0
-        self.ttFriendsManager.d_getFriendsListRequest()
+        self.ttFriendsManager.d_requestFriends()
 
-        # TODO
 
     def cleanPetsFromFriendsMap(self):
         #this looks through the friends list for any DistributedPet
@@ -1380,7 +1388,8 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
     def addPetToFriendsMap(self, callback=None):
         #need to add the pet to the list
         doId = base.localAvatar.getPetId()
-
+        if hasattr(base, 'localAvatar') and base.localAvatar:
+            doId = base.localAvatar.getPetId()
         if (not doId) or doId in self.friendsMap:
             #toon does not have a pet or the pet has already been added
             if callback:
@@ -1400,9 +1409,23 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
 
         PetDetail.PetDetail(doId, petDetailsCallback)
 
-    def handleGetFriendsList(self, di):
+    def handleGetFriendsList(self, resp):
+        for friend in resp:
+            doId = friend[0]
+            name = friend[1]
+            dnaString = friend[2]
+            dna = ToonDNA.ToonDNA()
+            dna.makeFromNetString(dnaString)
+            petId = friend[3]
+            handle = FriendHandle.FriendHandle(doId, name, dna, petId)
+            self.friendsMap[doId] = handle
+            if doId in self.friendsOnline:
+                self.friendsOnline[doId] = handle
+
+
+
         # Is this record in error?
-        error = di.getUint8()
+        """error = di.getUint8()
         if error:
             self.notify.warning("Got error return from friends list.")
             self.friendsListError = 1
@@ -1414,26 +1437,16 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
                 dnaString = di.getString()
                 dna = ToonDNA.ToonDNA()
                 dna.makeFromNetString(dnaString)
-                petId = di.getUint32()
-
-                handle = FriendHandle.FriendHandle(doId, name, dna, petId)
-                self.friendsMap[doId] = handle
+                petId = di.getUint32()"""
 
                 # Make sure our list of online friends has the most
                 # current info.
-                if doId in self.friendsOnline:
-                    self.friendsOnline[doId] = handle
 
-                if doId in self.friendPendingChatSettings:
-                    self.notify.debug('calling setCommonAndWL %s' %
-                                     str(self.friendPendingChatSettings[doId]))
-                    handle.setCommonAndWhitelistChatFlags(
-                        * self.friendPendingChatSettings[doId])
 
-            if base.wantPets and base.localAvatar.hasPet():
-                def handleAddedPet():
-                    self.friendsMapPending = 0
-                    messenger.send('friendsMapComplete')
+        if base.wantPets and base.localAvatar.hasPet():
+            def handleAddedPet():
+                self.friendsMapPending = 0
+                messenger.send('friendsMapComplete')
                 self.addPetToFriendsMap(handleAddedPet)
                 return  #don't signal 'done' until we have the pet details
 
@@ -1441,6 +1454,8 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         messenger.send('friendsMapComplete')
 
     def handleGetFriendsListExtended(self, di):
+        return #not used
+        """
         avatarHandleList = []
         # Is this record in error?
         error = di.getUint8()
@@ -1467,37 +1482,24 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
                     avatarHandleList.append(handle)
 
         if avatarHandleList:
-            messenger.send('gotExtraFriendHandles', [avatarHandleList])
+            messenger.send('gotExtraFriendHandles', [avatarHandleList])"""
 
 
 
-    def handleFriendOnline(self, di):
-        doId = di.getUint32()
-        commonChatFlags=0
-        whitelistChatFlags=0
-        if di.getRemainingSize() > 0:
-            commonChatFlags = di.getUint8()
-        if di.getRemainingSize() > 0:
-            whitelistChatFlags = di.getUint8()
-        self.notify.debug("Friend %d now online. common=%d whitelist=%d" %
-                         (doId, commonChatFlags, whitelistChatFlags))
-
+    def handleFriendOnline(self, doId):
         if doId not in self.friendsOnline:
-            self.friendsOnline[doId] = self.identifyFriend(doId)
-            messenger.send('friendOnline', [doId, commonChatFlags, whitelistChatFlags])
-            if not self.friendsOnline[doId]:
-                # we haven't received the friends list message yet
-                self.friendPendingChatSettings[doId] = (commonChatFlags, whitelistChatFlags)
+            self.friendsOnline[doId] = self.identifyAvatar(doId)
+            messenger.send('friendOnline', [doId])
 
-    def handleFriendOffline(self, di):
-        doId = di.getUint32()
+
+    def handleFriendOffline(self, doId):
         self.notify.debug("Friend %d now offline." % (doId))
-
-        try:
+        if doId not in self.friendsOnline:
+            self.notify.info('doId {0} is not in friends online'.format(doId))
+            return
+        if doId in self.friendsOnline:
             del self.friendsOnline[doId]
             messenger.send('friendOffline', [doId])
-        except:
-            pass
 
     ##################################################
     # Toontown Specific Functionality
@@ -1765,9 +1767,11 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
 
 
     def requestAvatarInfo(self, avId):
-        return #TODO
-     #   if avId == 0:
-      #      return
+        if avId == 0:
+            self.notify.warning('avId is 0 skipping requestAvatarInfo')
+            return 
+        self.ttFriendsManager.d_requestAvatarInfo([avId])
+
         #datagram = PyDatagram()
         # Add message type
         #datagram.addUint16(CLIENT_GET_FRIEND_LIST_EXTENDED)
@@ -1796,6 +1800,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
             return
         if len(self.avatarInfoRequests) == 0:
             return
+        self.ttFriendsManager.d_requestAvatarInfo(self.avatarInfoRequests)
         #datagram = PyDatagram()
         # Add message type
         #datagram.addUint16(CLIENT_GET_FRIEND_LIST_EXTENDED)
@@ -1804,9 +1809,9 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
          #   datagram.addUint32(avId)
         # send the message
         #base.cr.send(datagram)
-        if hasattr(base, "cr"):
+        # hasattr(base, "cr"):
             #base.cr.requestAvatarInfo(avId) 
-            base.cr.queueRequestAvatarInfo(self.avatarInfoRequests) 
+           # base.cr.queueRequestAvatarInfo(self.avatarInfoRequests) 
 
     def handleGenerateWithRequiredOtherOwner(self, di):
         # OwnerViews are only used for LocalToon in Toontown.

@@ -16,7 +16,7 @@ class AvatarFriendsDB(DBInterface):
     notify = directNotify.newCategory('AvatarFriendsDB')
         
     def __init__(self,host,port,user,passwd,dbname):
-        self.sqlAvailable = uber.sqlAvailable
+        self.sqlAvailable = True 
         if not self.sqlAvailable:
             return
         

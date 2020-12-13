@@ -76,11 +76,12 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
               #           allowUnfilteredChat=self.allowUnfilteredChat,
                #          bwDictPath=self.bwDictPath)
 
-        def CheckSBWedge(task):
-            self.handleRequests(0)
-            return Task.cont
+        #def CheckSBWedge(task):
+            #self.handleRequests(0)
+#            return Task.cont
 
-        uber.taskMgr.add(CheckSBWedge,'checkSBwedge')
+
+       # uber.taskMgr.add(CheckSBWedge,'checkSBwedge')
 
 
     def announceGenerate(self):
@@ -110,7 +111,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
         if accountId in [-1, 0]:
             return
 
-        self.log.debug("Account online.  Info: %d, %d, %s, %s, %s, %s, %s"%(avatarId,
+        self.notify.debug("Account online.  Info: %d, %d, %s, %s, %s, %s, %s"%(avatarId,
                                                                             accountId,
                                                                             playerName,
                                                                             playerNameApproved,
@@ -147,12 +148,12 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
         accountInfo.avatarName = name[0]
 
         # asynchronous request to SB which will tell everyone we're here and fetch our friends
-        if self.sbConnected:
-            self.enterPlayer(accountId,accountInfo)
+       # if self.sbConnected:
+        #self.enterPlayer(accountId,accountInfo)
 
 
     def recvFriendsUpdate(self,accountId,accountInfo,friends):
-        self.log.debug("recvFriendsUpdate on %d -> %s"%(accountId,str(friends)))
+        self.notify.debug("recvFriendsUpdate on %d -> %s"%(accountId,str(friends)))
         for friend in friends:
             friendId = friend[0]
             friendInfo = friend[1]
@@ -184,7 +185,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
     def avatarOffline(self,avatarId):
         assert self.notify.debugCall()
 
-        self.exitAvatar(avatarId)
+        #self.exitAvatar(avatarId)
 
 
 #----------------------------------------------------------------------
@@ -194,13 +195,13 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
 
     def requestInvite(self, senderId, otherPlayerId, secretYesNo=True):
         assert self.notify.debugCall()
-        self.sendOpenInvite(senderId,otherPlayerId,secretYesNo)
+        #self.sendOpenInvite(senderId,otherPlayerId,secretYesNo)
 
     def requestDecline(self, senderId, otherId):
         """
         Call this function to retract an invite to or decline an invite from another player.
         """
-        self.sendDeclineInvite(senderId,otherId)
+        #self.sendDeclineInvite(senderId,otherId)
 
     def requestRemove(self, senderId, otherAccountId):
         """
@@ -212,7 +213,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
         self.air.writeServerEvent('requestFriendRemove', accountId, '%s' % otherAccountId)
 
         # update DISL friends list through Switchboard
-        self.removeFriendship(accountId,otherAccountId)
+        #self.removeFriendship(accountId,otherAccountId)
 
     def recvInviteNotice(self, inviteeId, inviterId, inviterAvName):
         self.sendUpdateToChannel((3<<32)+inviteeId, "invitationFrom", [inviterId,inviterAvName])
@@ -233,17 +234,19 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
     # SECRETS
     def requestUnlimitedSecret(self,senderId):
         print("# got unlimited secret request")
-        self.sendSecretRequest(senderId)
+        #self.sendSecretRequest(senderId)
 
     def requestLimitedSecret(self,senderId,parentUsername,parentPassword):
         print("# got limited secret request")
-        self.sendSecretRequest(senderId,parentUsername,parentPassword)
+        #self.sendSecretRequest(senderId,parentUsername,parentPassword)
 
     def requestUseUnlimitedSecret(self,senderId,secret):
-        self.sendSecretRedeem(senderId,secret)
+        pass #TODO
+       # self.sendSecretRedeem(senderId,secret)
 
     def requestUseLimitedSecret(self,senderId,secret,parentUsername,parentPassword):
-        self.sendSecretRedeem(senderId,secret,parentUsername,parentPassword)
+        pass #TODO
+        #self.sendSecretRedeem(senderId,secret,parentUsername,parentPassword)
 
     def recvAddFriendshipError(self,playerId,error):
         self.sendUpdateToChannel((3<<32)+playerId,"rejectInvite",[error])
@@ -263,7 +266,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
     def whisperTo(self,senderId,playerId,msg):
         assert self.sbConnected
 
-        self.log.debug("PFMUD whisper - %d to %d: %s" % (senderId,playerId,msg))
+        self.notify.debug("PFMUD whisper - %d to %d: %s" % (senderId,playerId,msg))
 
         if senderId == -1 or playerId == -1:
             return
@@ -275,7 +278,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
     def whisperWLTo(self,senderId,playerId,msg):
         assert self.sbConnected
 
-        self.log.debug("PFMUD WLwhisper - %d to %d: %s" % (senderId,playerId,msg))
+        self.notify.debug("PFMUD WLwhisper - %d to %d: %s" % (senderId,playerId,msg))
 
         if senderId == -1 or playerId == -1:
             return
@@ -288,7 +291,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
     def whisperSCTo(self,senderId,playerId,msgId):
         assert self.sbConnected
 
-        self.log.debug("PFMUD SCwhisper - %d to %d: %s" % (senderId,playerId,msgId))
+        self.notify.debug("PFMUD SCwhisper - %d to %d: %s" % (senderId,playerId,msgId))
 
         if senderId == -1 or playerId == -1:
             return
@@ -296,7 +299,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
         msgText = self._translateWhisper(msgId)
 
         if msgText is None:
-            self.log.security("Invalid SC index: %d to %d: %d" % (senderId,playerId,msgId))
+            self.notify.security("Invalid SC index: %d to %d: %d" % (senderId,playerId,msgId))
             return
 
         if self._validateChatMessage(playerId,senderId,msgText):
@@ -307,7 +310,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
     def whisperSCCustomTo(self,senderId,playerId,msgId):
         assert self.sbConnected
 
-        self.log.debug("PFMUD SCCustomwhisper - %d to %d: %s" % (senderId,playerId,msgId))
+        self.notify.debug("PFMUD SCCustomwhisper - %d to %d: %s" % (senderId,playerId,msgId))
 
         if senderId == -1:
             return
@@ -315,7 +318,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
         msgText = self._translateWhisperCustom(msgId)
 
         if msgText is None:
-            self.log.security("Invalid SC custom index: %d to %d: %d" % (senderId,playerId,msgId))
+            self.notify.security("Invalid SC custom index: %d to %d: %d" % (senderId,playerId,msgId))
             return
 
         if self._validateChatMessage(playerId,senderId,msgText):
@@ -325,7 +328,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
     def whisperSCEmoteTo(self,senderId,playerId,msgId):
         assert self.sbConnected
 
-        self.log.debug("PFMUD SCEmotewhisper - %d to %d: %s" % (senderId,playerId,msgId))
+        self.notify.debug("PFMUD SCEmotewhisper - %d to %d: %s" % (senderId,playerId,msgId))
 
         if senderId == -1:
             return
@@ -333,7 +336,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
         msgText = self._translateWhisperEmote(msgId)
 
         if msgText is None:
-            self.log.security("Invalid SC emote index: %d to %d: %d" % (senderId,playerId,msgId))
+            self.notify.security("Invalid SC emote index: %d to %d: %d" % (senderId,playerId,msgId))
             return
 
         # XXX Temporarily broken--where does the avatarname come from if we're stateless?
@@ -352,7 +355,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
         '''
         assert self.sbConnected
 
-        self.log.debug("PFMUD SCQuestwhisper - %d to %d: %s" % (senderId,playerId,msgData))
+        self.notify.debug("PFMUD SCQuestwhisper - %d to %d: %s" % (senderId,playerId,msgData))
 
         if senderId == -1:
             return
@@ -360,7 +363,7 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
         msgText = self._translateWhisperQuest(msgData)
 
         if msgText is None:
-            self.log.security("Invalid SC quest data: %d to %d: %d" % (senderId,playerId,msgData))
+            self.notify.security("Invalid SC quest data: %d to %d: %d" % (senderId,playerId,msgData))
             return
 
         if self._validateChatMessage(playerId,senderId,msgText):
@@ -370,20 +373,20 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
     #WEDGE -> UD functions
 
     def recvWhisper(self,recipientId,senderId,msgText):
-        self.log.debug("Received open whisper from %d to %d: %s" % (senderId,recipientId,msgText))
+        self.notify.debug("Received open whisper from %d to %d: %s" % (senderId,recipientId,msgText))
         self.sendUpdateToChannel((3<<32)+recipientId,"whisperFrom",[senderId,msgText])
 
     def recvWLWhisper(self,recipientId,senderId,msgText):
-        self.log.debug("Received WLwhisper from %d to %d: %s" % (senderId,recipientId,msgText))
+        self.notify.debug("Received WLwhisper from %d to %d: %s" % (senderId,recipientId,msgText))
         self.sendUpdateToChannel((3<<32)+recipientId,"whisperWLFrom",[senderId,msgText])
 
     def recvSCWhisper(self,recipientId,senderId,msgText):
-        self.log.debug("Received SCwhisper from %d to %d: %s" % (senderId,recipientId,msgText))
+        self.notify.debug("Received SCwhisper from %d to %d: %s" % (senderId,recipientId,msgText))
         self.sendUpdateToChannel((3<<32)+recipientId,"whisperSCFrom",[senderId,msgText])
 
     def recvEnterPlayer(self,playerId,playerInfo,friendsList):
-        self.log.debug("Saw player %d enter."%playerId)
-        self.log.debug("friends list: %s"%friendsList)
+        self.notify.debug("Saw player %d enter."%playerId)
+        self.notify.debug("friends list: %s"%friendsList)
 
         for friend in friendsList:
             self.notify.debug("update to %d saying that %d is online" % (friend,playerId))
@@ -398,8 +401,8 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
 
 
     def recvExitPlayer(self,playerId,playerInfo,friendsList):
-        self.log.debug("Saw player %d exit."%playerId)
-        self.log.debug("friends list: %s"%friendsList)
+        self.notify.debug("Saw player %d exit."%playerId)
+        self.notify.debug("friends list: %s"%friendsList)
 
         for friend in friendsList:
             self.notify.debug("update to %d saying that %d is offline" % (friend,playerId))

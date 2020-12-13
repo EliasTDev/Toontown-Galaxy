@@ -117,7 +117,7 @@ class Avatar(Actor, ShadowCaster):
 
         # commonChatFlags is a bitmask that may include the CommonChat
         # and SuperChat bits.
-        self.commonChatFlags = 0
+        #self.commonChatFlags = 0
 
         # This is either CCNonPlayer, CCSuit, or CCNormal,
         # according to whether there's a human behind the avatar
@@ -143,7 +143,7 @@ class Avatar(Actor, ShadowCaster):
         self.__currentDialogue = None
 
         # since whiteListChatFlags is not a required field, init it just in case
-        self.whitelistChatFlags = 0
+       # self.whitelistChatFlags = 0
 
 
     def delete(self):
@@ -200,30 +200,7 @@ class Avatar(Actor, ShadowCaster):
             self.nametag.setColorCode(NametagGroup.CCNoChat)
 
 
-    def setCommonChatFlags(self, commonChatFlags):
-        """setCommonChatFlags(self, uint8)
-        Reset the common chat flags.
-        """
 
-        self.commonChatFlags = commonChatFlags
-        self.considerUnderstandable()
-
-        if self == base.localAvatar:
-            # If we change the common chat flags on localtoon, that
-            # affects everyone.
-            reconsiderAllUnderstandable()
-
-    def setWhitelistChatFlags(self, whitelistChatFlags):
-        """setCommonChatFlags(self, uint8)
-        Reset the common chat flags.
-        """
-        self.whitelistChatFlags = whitelistChatFlags
-        self.considerUnderstandable()
-
-        if self == base.localAvatar:
-            # If we change the common chat flags on localtoon, that
-            # affects everyone.
-            reconsiderAllUnderstandable()
 
 
     def considerUnderstandable(self):
@@ -251,39 +228,17 @@ class Avatar(Actor, ShadowCaster):
             # It's not a player character.
             self.understandable = 1
             self.setPlayerType(NametagGroup.CCNoChat)
-        elif hasattr(base,'localAvatar') and (self.commonChatFlags & base.localAvatar.commonChatFlags & OTPGlobals.CommonChat):
+        elif hasattr(base,'localAvatar') and base.cr.wantSpeedChatPlus:
             # Both this avatar and the local toon have common chat
             # permission.  OK.
             self.understandable = 1
             self.setPlayerType(NametagGroup.CCFreeChat)
-        elif self.commonChatFlags & OTPGlobals.SuperChat:
+        elif base.localAvatar.getTrueFriend(self.doId):
             # This avatar has "super chat" permission, so anyone
             # can understand him.  OK.
-            self.understandable = 1
+            self.understandable = 2
             self.setPlayerType(NametagGroup.CCFreeChat)
-        elif hasattr(base,'localAvatar') and (base.localAvatar.commonChatFlags & OTPGlobals.SuperChat):
-            # Local toon has "super chat" permission, so we can
-            # understand everyone.  OK.
-            self.understandable = 1
-            self.setPlayerType(NametagGroup.CCFreeChat)
-        elif base.cr.getFriendFlags(self.doId) & OTPGlobals.FriendChat:
-            # This avatar is a special friend of the local toon.  OK.
-            self.understandable = 1
-            self.setPlayerType(NametagGroup.CCFreeChat)
-        elif base.cr.playerFriendsManager.findPlayerIdFromAvId(self.doId) is not None:
-            # This is the avatar of my player friend.  Is the player friendship open chat?
-            playerInfo = base.cr.playerFriendsManager.findPlayerInfoFromAvId(self.doId)
-            if playerInfo.openChatFriendshipYesNo:
-                self.understandable = 1
-                self.nametag.setColorCode(NametagGroup.CCFreeChat)
-            elif playerInfo.isUnderstandable():
-                self.understandable = 1
-            else:
-                self.understandable = 0
-        elif hasattr(base,'localAvatar') and (self.whitelistChatFlags & base.localAvatar.whitelistChatFlags):
-             # Both this avatar and the local toon have whitelist chat
-             # permission.  OK.
-             self.understandable = 1
+
         else:
             # Too bad.
             self.understandable = 0

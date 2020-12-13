@@ -175,14 +175,14 @@ class DistributedPlayer(DistributedAvatar.DistributedAvatar,
         print("Whisper type %s from %s: %s" % (whisperType, fromId, chatString))
         
         
-    def displayWhisperPlayer(self, playerId, chatString, whisperType):
+   # def displayWhisperPlayer(self, playerId, chatString, whisperType):
         """
         Displays the whisper message in whatever capacity makes sense.
         This is separate from setWhisper so we can safely call it by
         name from within setWhisper and expect the derived function to
         override it.
         """
-        print("WhisperPlayer type %s from %s: %s" % (whisperType, playerId, chatString))
+    #    print("WhisperPlayer type %s from %s: %s" % (whisperType, playerId, chatString))
 
     ### setWhisperSC ###
 
@@ -191,11 +191,11 @@ class DistributedPlayer(DistributedAvatar.DistributedAvatar,
         Sends a speedchat whisper message to the indicated
         avatar/player.
         """
-        if toPlayer:
-            base.cr.playerFriendsManager.sendSCWhisper(sendToId, msgIndex)
-        else:
+        #if toPlayer:
+         #   base.cr.playerFriendsManager.sendSCWhisper(sendToId, msgIndex)
+        if not toPlayer:
             messenger.send("wakeup")
-            self.sendUpdate("setWhisperSCFrom", [self.doId, msgIndex], sendToId)
+            base.cr.ttFriendsManager.whisperScTo(sendToId, msgIndex)
 
     def setWhisperSCFrom(self, fromId, msgIndex):
         """
@@ -227,13 +227,13 @@ class DistributedPlayer(DistributedAvatar.DistributedAvatar,
         Sends a speedchat whisper message to the indicated
         toon, prefixed with our own name.
         """
-        if toPlayer:
-            base.cr.playerFriendsManager.sendSCCustomWhisper(sendToId, msgIndex)
-            return
+       # if toPlayer:
+        #    base.cr.playerFriendsManager.sendSCCustomWhisper(sendToId, msgIndex)
+         #   return
     
         messenger.send("wakeup")
-        self.sendUpdate("setWhisperSCCustomFrom", [self.doId, msgIndex],
-                        sendToId)
+        base.cr.ttFriendsManager.d_whisperSCCustomTo(sendToId, msgIndex
+                        )
 
     def _isValidWhisperSource(self, source):
         return True
@@ -274,12 +274,12 @@ class DistributedPlayer(DistributedAvatar.DistributedAvatar,
         toon, prefixed with our own name.
         """
         print(("whisperSCEmoteTo %s %s %s" % (emoteId, sendToId, toPlayer)))
-        if toPlayer:
-            base.cr.playerFriendsManager.sendSCEmoteWhisper(sendToId, emoteId)
-            return
+        #if toPlayer:
+         #   base.cr.playerFriendsManager.sendSCEmoteWhisper(sendToId, emoteId)
+          #  return
         messenger.send("wakeup")
-        self.sendUpdate("setWhisperSCEmoteFrom", [self.doId, emoteId],
-                        sendToId)
+        base.cr.ttFriendsManager.d_whisperSCEmoteTo(sendToId, emoteId
+                        )
 
     def setWhisperSCEmoteFrom(self, fromId, emoteId):
         """
@@ -504,8 +504,8 @@ class DistributedPlayer(DistributedAvatar.DistributedAvatar,
     ### teleportQuery ###
 
     def d_teleportQuery(self, requesterId, sendToId = None):
-        self.sendUpdate("teleportQuery", [requesterId], sendToId)
         #print("sending teleportQuery %s %s" % (requesterId, sendToId))
+        base.cr.ttFriendsManager.d_teleportQuery(sendToId)
 
     def teleportQuery(self, requesterId):
         """teleportQuery(self, int requesterId)
@@ -520,9 +520,10 @@ class DistributedPlayer(DistributedAvatar.DistributedAvatar,
         # Only consider teleport requests from toons who are on our
         # friends list, or who are somewhere nearby.
         #print("received teleportQuery %s" % (requesterId))
-        #avatar = base.cr.identifyAvatar(requesterId)
-        avatar = base.cr.playerFriendsManager.identifyFriend(requesterId)
-            
+        avatar = base.cr.identifyAvatar(requesterId)
+       # avatar = base.cr.playerFriendsManager.identifyFriend(requesterId)
+        if avatar is None:
+            self.d_teleportResponse(self.doId, 0, 0, 0, 0, sendToId=requesterId)
         if avatar != None:
             # new ignore list is handled by the Friends manager's, there are now two types, avatar and player.
             if base.cr.avatarFriendsManager.checkIgnored(requesterId):
@@ -593,7 +594,7 @@ class DistributedPlayer(DistributedAvatar.DistributedAvatar,
 
     def d_teleportResponse(self, avId, available, shardId, hoodId, zoneId,
                            sendToId = None):
-        self.sendUpdate("teleportResponse", [avId, available, shardId, hoodId, zoneId], sendToId)
+        base.cr.ttFriendsManager.d_teleportResponse(avId, available, shardId, hoodId, zoneId, sendToId)
 
     def teleportResponse(self, avId, available, shardId, hoodId, zoneId):
         messenger.send('teleportResponse', [avId, available, shardId, hoodId, zoneId])
@@ -601,7 +602,7 @@ class DistributedPlayer(DistributedAvatar.DistributedAvatar,
     ### teleportGiveup ###
 
     def d_teleportGiveup(self, requesterId, sendToId = None):
-        self.sendUpdate("teleportGiveup", [requesterId], sendToId)
+        base.cr.ttFriendsManager.d_teleportGiveup(sendToId)
 
     def teleportGiveup(self, requesterId):
         """teleportGiveup(self, int requesterId)

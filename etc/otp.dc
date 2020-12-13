@@ -324,6 +324,10 @@ dclass AvatarHandle: TalkPath_whisper {
 };
 
 
+struct Friend {
+  uint32 friendId;
+  uint8 friendCode;
+}
 
 // Base class for DistributedToon, DistributedSuit, etc.
 dclass DistributedAvatar: DistributedSmoothNode,  TalkPath_owner, TalkPath_whisper {
@@ -341,7 +345,10 @@ dclass DistributedAvatar: DistributedSmoothNode,  TalkPath_owner, TalkPath_whisp
   checkAvOnShard(uint32 avId) clsend airecv;
   confirmAvOnShard(uint32 avId, int8 onShard);
 };
-
+struct FriendEntry {
+  uint32 friendId;
+  uint8 friendType;
+}
 // This is the base class for distributed classes (e.g. DistributedToon)
 // that might represent player avatars.  It excludes non-player avatar
 // types like DistributedSuit.
@@ -371,10 +378,8 @@ dclass DistributedPlayer: DistributedAvatar {
   // This is an onscreen message sent by the system.
   setSystemMessage(uint32 aboutId, string) ownrecv;
 
-  setCommonChatFlags(uint8) broadcast ownrecv ram airecv;
 
   // RAU weird, I had to add ownrecv to make sure localAvatar and other clients get this message
-  setWhitelistChatFlags(uint8) broadcast ownrecv ram airecv;
 
   setSC(uint16 msgIndex) broadcast ownsend airecv;
   setSCCustom(uint16 msgIndex) broadcast ownsend airecv;
@@ -384,7 +389,7 @@ dclass DistributedPlayer: DistributedAvatar {
   // This field is airecv so we hear about friend making
   // for the questManager. Perhaps there is a better way to do
   // this when Roger gets back to help.
-  setFriendsList(uint32uint8array = {}) ownrecv required db airecv;
+  setFriendsList(uint32[] = []) ownrecv required db airecv;
 
   // Added for new friend make/break flows
   setDISLname(string="unknown") broadcast ownrecv ram;
@@ -766,7 +771,7 @@ dclass PlayerFriendsManager: DistributedObject, TalkPath_account {
   secretResponse(string secret);
   rejectSecret(string reason);
 
-  //requestUseUnlimitedSecret(uint32 senderId,string secret) airecv clsend; // no codes for player friends
+  requestUseUnlimitedSecret(uint32 senderId,string secret) airecv clsend; // no codes for player friends
   //requestUseLimitedSecret(uint32 senderId,string secret,string parentUser,string parentPass) airecv clsend; // no codes for player friends
   rejectUseSecret(string reason);
 

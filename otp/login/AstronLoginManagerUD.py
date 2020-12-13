@@ -558,6 +558,7 @@ class RemoveAvatarOperation(GetAvatarsOperation):
                                                            {'setSlot%sToonId' % index: [0],
                                                             'setSlot%sItems' % index: [[]]})
 
+            #self.loginManager.air.send(datagram)
         self.loginManager.air.dbInterface.updateObject(self.loginManager.air.dbId, self.sender,
                                                        self.loginManager.air.dclassesByName['AccountUD'],
                                                        {'ACCOUNT_AV_SET': self.avList,
@@ -642,7 +643,7 @@ class UnloadAvatarOperation(GameOperation):
 
     def __handleUnloadAvatar(self):
         channel = self.loginManager.GetAccountConnectionChannel(self.sender)
-
+        self.loginManager.air.ttFriendsManager.goingOffline(self.avId)
         datagram = PyDatagram()
         datagram.addServerHeader(channel, self.loginManager.air.ourChannel, CLIENTAGENT_CLEAR_POST_REMOVES)
         self.loginManager.air.send(datagram)

@@ -28,9 +28,9 @@ class AvatarPanelBase(AvatarPanel.AvatarPanel):
     
     def handleIgnore(self):
         isAvatarFriend = base.cr.isFriend(self.avatar.doId)
-        isPlayerFriend = base.cr.playerFriendsManager.isAvatarOwnerPlayerFriend(self.avatar.doId)
+        #isPlayerFriend = base.cr.playerFriendsManager.isAvatarOwnerPlayerFriend(self.avatar.doId)
         
-        isFriend = isAvatarFriend or isPlayerFriend
+        isFriend = isAvatarFriend
         
 
         if isFriend:
@@ -179,7 +179,7 @@ class AvatarPanelBase(AvatarPanel.AvatarPanel):
             
     def confirmReport(self):
         # determine if we are friends already
-        if base.cr.isFriend(self.avId) or base.cr.playerFriendsManager.isPlayerFriend(self.avId):
+        if base.cr.isFriend(self.avId):
             string = TTLocalizer.ReportPanelBodyFriends
             titlePos = 0.410
         else:

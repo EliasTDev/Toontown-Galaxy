@@ -498,6 +498,7 @@ dclass DistributedAnimatedProp: DistributedObject {
 typedef int16 pair16[2];
 
 dclass DistributedToon: DistributedPlayer {
+  setTrueFriends(uint32[] = []) required ownrecv db;
   setDNAString(blob) required broadcast ownrecv db;
   setMaxBankMoney(int16 = 30000) required broadcast ownrecv db;
   setBankMoney(int16 = 0) required broadcast ownrecv db;
@@ -3938,23 +3939,31 @@ dclass TTAvatarFriendsManager: AvatarFriendsManager {};
 
 dclass TTPlayerFriendsManager: PlayerFriendsManager {};
 
-dclass TTFriendsManager : DistributedObjectGlobal {
-  removeFriend(uint32) clsend;
+struct Friends
+{
+  uint32 doId;
+  string name;
+  blob dna;
+  uint32 petId;
+};
 
-  getFriendsListRequest() clsend;
+dclass TTFriendsManager: DistributedObject {
+  deleteFriend(uint32) clsend;
 
-  friendList(Friend []);
+  requestFriends() clsend;
 
-  friendOnline(uint32);
-  friendOffline(uint32);
+  friendsList(Friends []);
+
+  friendIsOnline(uint32);
+  friendIsOffline(uint32);
 
   goingOffline(uint32 avId);
 
-  getAvatarDetails(uint32) clsend;
-  friendDetails(uint32, blob, uint16[], int16, int16, uint32, uint32, blob, blob, int8[], FriendEntry[]);
+  getToonDetails(uint32) clsend;
+  friendDetails(uint32, blob, uint16[], int16, int16, uint32, uint32, blob, blob, int8[], uint32uint8array = {});
 
-  getPetDetails(uint32) clsend;
-  petDetails(uint32, uint32, string, uint32, uint32, uint16/1000[], PetTrait[], int8[], uint32);
+  getPetInfo(uint32) clsend;
+  petInfo(uint32, uint32, string, uint32, uint32, uint16/1000[], PetTrait[], int8[], uint32);
 
   routeTeleportQuery(uint32 toId) clsend;
   teleportQuery(uint32 fromId);
@@ -3971,8 +3980,6 @@ dclass TTFriendsManager : DistributedObjectGlobal {
   whisperSCEmoteTo(uint32 toId, uint16 emoteId) clsend;
   setWhisperSCEmoteFrom(uint32 fromId, uint16 emoteId);
 
-  sendTalkWhisper(uint32 toId, string message) clsend;
-  receiveTalkWhisper(uint32 fromId, string message);
 
   battleSOS(uint32 toId) clsend;
   setBattleSOS(uint32 fromId);

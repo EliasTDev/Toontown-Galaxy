@@ -64,6 +64,7 @@ from direct.distributed.PyDatagram import PyDatagram
 from toontown.ai.ToontownAIMsgTypes import *
 from libpandadna import *
 from toontown.fishing import FishManagerAI
+from otp.friends.FriendManagerAI import FriendManagerAI
 class ToontownAIRepository(ToontownInternalRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory('ToontownAIRepository')
 
@@ -104,6 +105,8 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.magicWordManager = None
         self.partyManager = None
         self.codeRedemptionManager = None
+        self.friendManager = None
+
         self.zoneTable = {}
         self.dnaStoreMap = {}
         self.dnaDataMap = {}
@@ -294,7 +297,10 @@ class ToontownAIRepository(ToontownInternalRepository):
         # Generate our code redemption manager...
         self.codeRedemptionManager = TTCodeRedemptionMgrAI(self)
         self.codeRedemptionManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
-
+        
+        # Generate our friend manager...
+        self.friendManager = FriendManagerAI(self)
+        self.friendManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
     def generateHood(self, hoodConstructor, zoneId):
         # Bossbot HQ doesn't use DNA, so we skip over that.
         if zoneId != ToontownGlobals.BossbotHQ:

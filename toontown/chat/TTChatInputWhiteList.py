@@ -209,16 +209,16 @@ class TTChatInputWhiteList(ChatInputWhiteListFrame):
     def sendChatByData(self, text):
         assert self.notify.debug('sendChatByData desc=%s tfChat=%s' % (self.desc,self.trueFriendChat))
         if self.trueFriendChat:            
-            for friendId, flags in base.localAvatar.friendsList:
-                if flags & ToontownGlobals.FriendChat:
+            for friendId in base.localAvatar.friendsList:
+                if base.localAvatar.getTrueFriend(friendId):
                     self.sendWhisperByFriend(friendId, text)
         elif not self.receiverId:
             base.talkAssistant.sendOpenTalk(text)
-        elif self.receiverId and not self.toPlayer:
+        elif self.receiverId:
             base.talkAssistant.sendWhisperTalk(text, self.receiverId)
-        elif self.receiverId and self.toPlayer:
-            base.talkAssistant.sendAccountTalk(text, self.receiverId)
-            
+        else:
+            #shouldn't be able to get here but just in case
+            return 
     def sendWhisperByFriend(self, avatarId, text):
         """
         Check whether it is appropriate to send a message to the true
@@ -322,10 +322,8 @@ class TTChatInputWhiteList(ChatInputWhiteListFrame):
             self.okayToSubmit = True
             
             # If we are true friends then we should italacize bad text
-            flag = 0
-            for friendId, flags in base.localAvatar.friendsList:
-                if flags & ToontownGlobals.FriendChat:
-                    flag = 1
+                #TODO
+ 
 
             for word in words:
                 if word == "" or self.whiteList.isWord(word) or (not base.cr.whiteListChatEnabled):
@@ -335,10 +333,10 @@ class TTChatInputWhiteList(ChatInputWhiteListFrame):
                         self.okayToSubmit = False
                     else:
                         self.okayToSubmit = True
-                    if flag:
-                        newwords.append("\1WLDisplay\1" + word + "\2")
-                    else:
-                        newwords.append("\1WLEnter\1" + word + "\2")
+                   # if flag:
+                    #    newwords.append("\1WLDisplay\1" + word + "\2")
+                    #else:
+                    newwords.append("\1WLEnter\1" + word + "\2")
 
             if not strict:
                 lastword = words[-1]
@@ -346,10 +344,10 @@ class TTChatInputWhiteList(ChatInputWhiteListFrame):
                 if lastword == "" or self.whiteList.isPrefix(lastword) or (not base.cr.whiteListChatEnabled):
                     newwords[-1] = lastword
                 else:
-                    if flag:
-                        newwords[-1] = "\1WLDisplay\1" + lastword + "\2"
-                    else:
-                        newwords[-1] = "\1WLEnter\1" + lastword + "\2"
+                   # if flag:
+                    #    newwords[-1] = "\1WLDisplay\1" + lastword + "\2"
+                    #else:
+                    newwords[-1] = "\1WLEnter\1" + lastword + "\2"
 
             newtext = " ".join(newwords)
             self.chatEntry.set(newtext)

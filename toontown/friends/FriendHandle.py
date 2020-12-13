@@ -16,8 +16,6 @@ class FriendHandle:
     def __init__(self, doId, name, style, petId, isAPet = False):
         self.doId = doId
         self.style = style
-        self.commonChatFlags = 0
-        self.whitelistChatFlags = 0
         self.petId = petId
         self.isAPet = isAPet
         self.chatGarbler = ToonChatGarbler.ToonChatGarbler()
@@ -57,22 +55,19 @@ class FriendHandle:
         return (idString + "-" + str(self.getDoId()))
 
     def d_battleSOS(self, requesterId):
-        base.localAvatar.sendUpdate("battleSOS", [requesterId],
-                                      sendToId = self.doId)
+        base.cr.ttFriendsManager.d_battleSOS(self.getDoId())
 
     def d_teleportQuery(self, requesterId):
-        base.localAvatar.sendUpdate("teleportQuery", [requesterId],
-                                      sendToId = self.doId)
+        base.cr.ttFriendsManager.d_teleportQuery(self.getDoId())
+
 
     def d_teleportResponse(self, avId, available, shardId, hoodId, zoneId):
-        base.localAvatar.sendUpdate("teleportResponse",
-                                      [avId, available, shardId, hoodId, zoneId],
-                                      sendToId = self.doId)
+        base.cr.ttFriendsManager.d_teleportResponse(
+                                      avId, available, shardId, hoodId, zoneId
+                                      )
 
     def d_teleportGiveup(self, requesterId):
-        base.localAvatar.sendUpdate("teleportGiveup",
-                                      [requesterId],
-                                      sendToId = self.doId)
+        base.cr.ttFriendsManager.d_teleportGiveup(self.getDoId())
 
 
     def isUnderstandable(self):
@@ -82,35 +77,39 @@ class FriendHandle:
         false otherwise.
         """
 
+        if base.localAvatar.getTrueFriend(self.doId):
+            return 2
+        elif base.cr.wantSpeedChatPlus:
+            return 1  
         # For the moment, commonChatFlags is always 0 for a
         # FriendHandle.  We need to get this information from the
         # server in order for this to work as generally as possible;
         # in the meantime, whispering to distant friends won't respect
         # their common chat flags.
 
-        if self.commonChatFlags & base.localAvatar.commonChatFlags & ToontownGlobals.CommonChat:
+       # if self.commonChatFlags & base.localAvatar.commonChatFlags & ToontownGlobals.CommonChat:
             # Both this avatar and the local toon have common chat
             # permission.  OK.
-            understandable = 1
+        #    understandable = 1
             
-        elif self.commonChatFlags & ToontownGlobals.SuperChat:
+        #elif self.commonChatFlags & ToontownGlobals.SuperChat:
             # This avatar has "super chat" permission, so anyone
             # can understand him.  OK.
-            understandable = 1
+            #understandable = 1
             
-        elif base.localAvatar.commonChatFlags & ToontownGlobals.SuperChat:
+        #elif base.localAvatar.commonChatFlags & ToontownGlobals.SuperChat:
             # Local toon has "super chat" permission, so we can
             # understand everyone.  OK.
-            understandable = 1
+          #  understandable = 1
 
-        elif base.cr.getFriendFlags(self.doId) & ToontownGlobals.FriendChat:
+        #elif base.cr.getFriendFlags(self.doId) & ToontownGlobals.FriendChat:
             # This avatar is a special friend of the local toon.  OK.
-            understandable = 1
+            #understandable = 1
             
-        elif self.whitelistChatFlags & base.localAvatar.whitelistChatFlags:
+       # elif self.whitelistChatFlags & base.localAvatar.whitelistChatFlags:
              # Both this avatar and the local toon have whitelist chat
              # permission.  OK.
-             understandable = 1
+            # understandable = 1
         else:
             # Too bad.
             understandable = 0
@@ -162,7 +161,7 @@ class FriendHandle:
         newText = " ".join(newwords)
         return newText
     
-    def setCommonAndWhitelistChatFlags(self, commonChatFlags, whitelistChatFlags):
+    #def setCommonAndWhitelistChatFlags(self, commonChatFlags, whitelistChatFlags):
         """Friend came online and otp_server told us his common and whitelist settings."""
-        self.commonChatFlags = commonChatFlags
-        self.whitelistChatFlags = whitelistChatFlags
+        #self.commonChatFlags = commonChatFlags
+       # self.whitelistChatFlags = whitelistChatFlags

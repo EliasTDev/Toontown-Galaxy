@@ -227,6 +227,7 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         self.gmNameTagEnabled = 0
         self.gmNameTagColor = 'whiteGM'
         self.gmNameTagString = ''
+        self.trueFriends = None 
 
     def disable(self):
         for soundSequence in self.soundSequenceList:
@@ -632,7 +633,7 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         if base.config.GetBool('want-sleep-reply-on-regular-chat', 0):
             if base.localAvatar.sleepFlag == 1:
                 # I am sleeping so I send an autoreply message
-                self.sendUpdate("setSleepAutoReply" , [base.localAvatar.doId], fromAV)
+                base.cr.ttFriendsManager.d_sleepAutoReply(avId)
 
         newText,scrubbed = self.scrubTalk(chat, mods)
         self.displayTalk(newText)
@@ -658,7 +659,7 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         if base.localAvatar.sleepFlag == 1:
             # I am sleeping so I send an autoreply message
             if not base.cr.identifyAvatar(fromAV) == base.localAvatar:
-                self.sendUpdate("setSleepAutoReply" , [base.localAvatar.doId], fromAV)
+                base.cr.ttFriendsManager.d_sleepAutoReply(avId)
 
         newText, scrubbed = self.scrubTalk(chat, mods)
         self.displayTalkWhisper(fromAV, avatarName, chat, mods)
@@ -693,7 +694,7 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         if base.localAvatar.sleepFlag == 1:
             # I am sleeping so I send an autoreply message
             if not base.cr.identifyAvatar(fromId) == base.localAvatar:
-                self.sendUpdate("setSleepAutoReply" , [base.localAvatar.doId], fromId)
+                base.cr.ttFriendsManager.d_sleepAutoReply(avId)
 
         chatString = SCDecoders.decodeSCEmoteWhisperMsg(emoteId,
                                                         handle.getName())
@@ -726,7 +727,7 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         if base.localAvatar.sleepFlag == 1:
             # I am sleeping so I send an autoreply message
             if not base.cr.identifyAvatar(fromId) == base.localAvatar:
-                self.sendUpdate("setSleepAutoReply" , [base.localAvatar.doId], fromId)
+                base.cr.ttFriendsManager.d_sleepAutoReply(avId)
 
         chatString = SCDecoders.decodeSCStaticTextMsg(msgIndex)
         if chatString:
@@ -742,9 +743,9 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         toon, prefixed with our own name.
         """
         messenger.send("wakeup")
-        self.sendUpdate("setWhisperSCToontaskFrom",
-                        [self.doId, taskId, toNpcId, toonProgress, msgIndex],
-                        sendToId)
+        base.cr.ttFriendsManager.d_whisperSCToontaskTo(sendToId,
+                        taskId, toNpcId, toonProgress, msgIndex
+                        )
 
     def setWhisperSCToontaskFrom(self, fromId,
                                  taskId, toNpcId, toonProgress, msgIndex):
@@ -3608,6 +3609,23 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
             # TODO: Put in the sound effect!
             pass
 
+
+
+    def getFriendsList(self):
+        return self.friendsList 
+
+    def setFriendsList(self, friendsList):
+        self.friendsList = friendsList
+        messenger.send('friendsListChanged')
+
+    def setTrueFriends(self, trueFriends):
+        self.trueFriends = trueFriends
+        messenger.send('friendsListChanged')
+
+    def getTrueFriend(self, friendId):
+        if hasattr(self, 'trueFriends'):
+            if self.trueFriends:
+                return friendId in self.trueFriends
     def setName(self, name = "unknownDistributedAvatar"):
         if GMUtils.testGMIdentity(name):
             self.__handleGMName(name)

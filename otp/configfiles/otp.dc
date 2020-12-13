@@ -374,7 +374,6 @@ dclass DistributedPlayer: DistributedAvatar {
   setCommonChatFlags(uint8) broadcast ownrecv ram airecv;
 
   // RAU weird, I had to add ownrecv to make sure localAvatar and other clients get this message
-  setWhitelistChatFlags(uint8) broadcast ownrecv ram airecv;
 
   setSC(uint16 msgIndex) broadcast ownsend airecv;
   setSCCustom(uint16 msgIndex) broadcast ownsend airecv;

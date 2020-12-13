@@ -298,76 +298,31 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
         del self.friends
         DirectFrame.destroy(self)
 
-    def makeFriendButton(self, friendTuple, colorChoice = None, bold = 0):
+    def makeFriendButton(self, friendId, colorChoice = None, bold = 0):
 
-        playerName = None
-        toonName = None
-        if len(friendTuple) == 2:
-            avId, flags = friendTuple
-            playerId = None
-            showType = 0
-        elif len(friendTuple) == 3:
-            avId, flags, playerId = friendTuple
-            showType = 0
-        elif len(friendTuple) == 4:
-            avId, flags, playerId, showType = friendTuple
 
         command = self.__choseFriend
 
-        # look up player name (if id given)
-        playerName = None
-        if playerId:
-            playerInfo = base.cr.playerFriendsManager.playerId2Info.get(playerId, None)
-            if playerInfo:
-                playerName = playerInfo.playerName
 
-        # look up toon name
-        toonName = None
-        hasManager = hasattr(base.cr, "playerFriendsManager")
-        handle = base.cr.identifyFriend(avId)
-        if not handle and hasManager:
-            handle = base.cr.playerFriendsManager.getAvHandleFromId(avId)
-        if handle:
-            toonName =  handle.getName()
+        handle = base.cr.identifyFriend(friendId)
+        if not handle:
+ 
+         # If we don't know who this friend is, we can't make a
+                # button.  We'll find out later; for now, leave it out.
+
+            base.cr.fillUpFriendsMap()
+            return
+
 
         #print("makeFriendButton %s %s" % (playerName, toonName))
 
-        if showType == 1 and playerId:
-            # we need a player name and didn't get one
-            if not playerName:
-                return None
-                print("ABORTING!!!")
-            friendName = playerName
-            rolloverName = toonName
-        else:
-            if not toonName:
-                # If we don't know who this friend is, we can't make a
-                # button.  We'll find out later; for now, leave it out.
-                base.cr.fillUpFriendsMap()
-                return None
-            friendName = toonName
-            if playerName:
-                rolloverName = playerName
-            else:
-                rolloverName = "Unknown"
 
-        if playerId:
-            command = self.__chosePlayerFriend
-            thing = playerId
-        else:
-            thing = avId
 
         # What color should we display the name in?  Use the
         # appropriate nametag color, according to whether we are
         # "special friends" or not.
         #colorCode = NametagGroup.CCNoChat
         fg = ToontownGlobals.ColorNoChat
-        if (flags & ToontownGlobals.FriendChat):
-            #colorCode = NametagGroup.CCNormal
-            fg = ToontownGlobals.ColorAvatar
-        if playerId:
-            fg = ToontownGlobals.ColorPlayer
-
         if colorChoice:
             fg = colorChoice
 
@@ -385,7 +340,10 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
         #fg = NametagGlobals.getNameFg(colorCode, PGButton.SInactive)
 
         #import pdb; pdb.set_trace()
-
+        if handle:
+            friendName = handle.getName()
+        else:
+            friendName = 'unknown'
         db = DirectButton(
             relief = None,
             text = friendName,
@@ -399,21 +357,10 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
             text_font = fontChoice,
             textMayChange = 0,
             command = command,
-            extraArgs = [thing, showType],
+            extraArgs = [friendId],
             )
 
-        if playerId:
-            accountName = DirectLabel(
-                parent = db,
-                pos = Vec3(-0.02, 0, 0),
-                text = rolloverName,
-                text_fg = (0, 0, 0, 1),
-                text_bg = (1, 1, 1, 1),
-                text_pos = (0, 0),
-                text_scale = 0.045,
-                text_align = TextNode.ARight,
-            )
-            accountName.reparentTo(db.stateNodePath[2])
+
 
         return db
 
@@ -510,82 +457,118 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
         # the user to indicate the friend of choice.
         messenger.send("friendAvatar", [None, None, None])
 
-    def __choseFriend(self, friendId, showType = 0):
+    def __choseFriend(self, friendId):
         messenger.send('wakeup')
         # Picking a friend from your friends list has exactly the same
         # effect as clicking on his or her name in the world.
         hasManager = hasattr(base.cr, "playerFriendsManager")
         handle = base.cr.identifyFriend(friendId)
-        if not handle and hasManager:
-                handle = base.cr.playerFriendsManager.getAvHandleFromId(friendId)
         if handle != None:
             self.notify.info("Clicked on name in friend's list. doId = %s" % handle.doId)
             messenger.send("clickedNametag", [handle])
 
-    def __chosePlayerFriend(self, friendId, showType = 1):
-        messenger.send('wakeup')
-        # Picking a friend from your friends list has exactly the same
-        # effect as clicking on his or her name in the world.
-        hasManager = hasattr(base.cr, "playerFriendsManager")
-        handle = None
-        playerFriendInfo = base.cr.playerFriendsManager.playerId2Info.get(friendId)
-        handle = base.cr.identifyFriend(playerFriendInfo.avatarId)
-        if not handle and hasManager:
-            handle = base.cr.playerFriendsManager.getAvHandleFromId(playerFriendInfo.avatarId)
-        #import pdb; pdb.set_trace()
-        if playerFriendInfo != None:
-            self.notify.info("Clicked on name in player friend's list. Id = %s" % friendId)
-            messenger.send("clickedNametagPlayer", [handle, friendId, showType])
 
 
     def __updateScrollList(self):
         # newFriends is a list of 2-item tuples (friendId, flags)
         #print("updating scroll list")
-        newFriends = []
 
         petFriends = []
-
+        trueFriends = []
+        newFriends = []
         # Double means both avatar AND player are online, OneRef means Player OR Avatar online
 
-        freeChatOneRef = []
-        speedChatOneRef = []
+        #freeChatOneRef = []
+        #speedChatOneRef = []
 
-        freeChatDouble = []
-        speedChatDouble = []
+       # freeChatDouble = []
+        #speedChatDouble = []
 
-        offlineFriends = []
+        #offlineFriends = []
         #print ("scroll %s %s" % (self.panelType, self.scrollList.index))
         #print self.listScrollIndex
         #self.listScrollIndex[self.panelType] = self.scrollList.index # store how far down the list has scrolled
 
+        if self.panelType == FLPAll or self.panelType == FLPOnline:
+            if base.wantPets and base.localAvatar.hasPet():
+                petFriends.insert(0, base.localAvatar.getPetId())
+            for friend in base.localAvatar.friendsList:
+                if self.panelType != FLPOnline or base.cr.isFriendOnline(friend):
+                    handle = base.cr.identifyFriend(friend)
+                    if not handle:
+                    #    base.cr.fillUpFriendsMap()
+                        return
 
+                    if base.localAvatar.getTrueFriend(friend):
+                        trueFriends.insert(0, friend)
+                    else:
+                        newFriends.insert(0, friend)
+        elif self.panelType == FLPPets and base.wantPets:
+            for avId, av in list(base.cr.doId2do.items()):
+                from toontown.pets import DistributedPet
+                if isinstance(av, DistributedPet.DistributedPet):
+                    petFriends.append(avId)
+
+        for friend in list(self.friends.keys()):
+            friendButton = self.friends[friend]
+            self.scrollList.removeItem(friendButton, refresh=0)
+            friendButton.destroy()
+            del self.friends[friend]
+
+        newFriends.sort(key=functools.cmp_to_key(compareFriends))
+        petFriends.sort(key=functools.cmp_to_key(compareFriends))
+        trueFriends.sort(key=functools.cmp_to_key(compareFriends))
+        # Add new friends
+        for friendPair in newFriends:
+            if friendPair not in self.friends:
+                friendButton = self.makeFriendButton(friendPair)
+                if friendButton:
+                    self.scrollList.addItem(friendButton, refresh=0)
+                    self.friends[friendPair] = friendButton
+
+        # Add Pet Friends
+        for friendPair in petFriends:
+            if friendPair not in self.friends:
+                friendButton = self.makeFriendButton(friendPair, ToontownGlobals.ColorNoChat, 0)
+                if friendButton:
+                    self.scrollList.addItem(friendButton, refresh=0)
+                    self.friends[friendPair] = friendButton
+        #add true friends
+        for friendPair in trueFriends:
+            if friendPair not in self.friends:
+                friendButton = self.makeFriendButton(friendPair, ToontownGlobals.ColorFreeChat, 1)
+
+        self.scrollList.index = self.listScrollIndex[self.panelType]
+        self.scrollList.refresh()
+
+        return 
         # ALL PLAYER FRIENDS
 
-        if self.panelType == FLPPlayers:# or self.panelType == FLPAll:
-            playerFriendList = base.cr.playerFriendsManager.playerFriendsList
+       # if self.panelType == FLPPlayers:# or self.panelType == FLPAll:
+        #    playerFriendList = base.cr.playerFriendsManager.playerFriendsList
 
             #print playerFriendList
 
-            for playerFriendId in playerFriendList:
-                if playerFriendId in base.cr.playerFriendsManager.playerId2Info:
-                    playerFriendInfo = base.cr.playerFriendsManager.playerId2Info.get(playerFriendId)
+          #  for playerFriendId in playerFriendList:
+           #     if playerFriendId in base.cr.playerFriendsManager.playerId2Info:
+            #        playerFriendInfo = base.cr.playerFriendsManager.playerId2Info.get(playerFriendId)
                     #print("playerFriendInfo.avatarId %s" % (playerFriendInfo.avatarId))
-                    if playerFriendInfo.onlineYesNo:
-                        if playerFriendInfo.understandableYesNo:
-                            if playerFriendInfo.avatarId:
-                                freeChatDouble.insert(0, ( playerFriendInfo.avatarId, 0,playerFriendId, 1))
-                            else:
-                                freeChatOneRef.insert(0, (0, 0,playerFriendId, 1))
-                        else:
-                            if playerFriendInfo.avatarId:
-                                speedChatDouble.insert(0, ( playerFriendInfo.avatarId, 0,playerFriendId, 1))
-                            else:
-                                speedChatOneRef.insert(0, (0, 0,playerFriendId, 1))
-                    else:
-                        if playerFriendInfo.understandableYesNo:
-                                freeChatOneRef.insert(0, (0, 0,playerFriendId, 1))
-                        else:
-                                speedChatOneRef.insert(0, (0, 0,playerFriendId, 1))
+             #       if playerFriendInfo.onlineYesNo:
+              #          if playerFriendInfo.understandableYesNo:
+               #             if playerFriendInfo.avatarId:
+                #                freeChatDouble.insert(0, ( playerFriendInfo.avatarId, 0,playerFriendId, 1))
+                 #           else:
+                  #              freeChatOneRef.insert(0, (0, 0,playerFriendId, 1))
+                   #     else:
+                    #        if playerFriendInfo.avatarId:
+                     #           speedChatDouble.insert(0, ( playerFriendInfo.avatarId, 0,playerFriendId, 1))
+                      #      else:
+                       #         speedChatOneRef.insert(0, (0, 0,playerFriendId, 1))
+                    #else:
+                     #   if playerFriendInfo.understandableYesNo:
+                      #          freeChatOneRef.insert(0, (0, 0,playerFriendId, 1))
+                       # else:
+                                #speedChatOneRef.insert(0, (0, 0,playerFriendId, 1))
 
         # ONLINE PLAYER FRIENDS
 
@@ -653,7 +636,7 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
             elif base.friendMode == 1:
                 for friendId in base.cr.avatarFriendsManager.avatarFriendsList:
                     playerId = base.cr.playerFriendsManager.findPlayerIdFromAvId(friendId)
-                    newFriends.append((friendId, 0, playerId, 0))
+                    newFriends.append((friendId, 0, 0))
 
         # ONLINE TOONS FRIENDS
 
@@ -668,9 +651,9 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
                         if playerId:
                             #print("adding friend from old %s" % (friendPair[0]))
                             if (friendPair[1] & ToontownGlobals.FriendChat): #freechat
-                                freeChatDouble.insert(0, (friendPair[0], friendPair[1], playerId, 0))
+                                freeChatDouble.insert(0, (friendPair[0], friendPair[1], 0))
                             else: #speed chat
-                                speedChatDouble.insert(0, (friendPair[0], friendPair[1], playerId, 0))
+                                speedChatDouble.insert(0, (friendPair[0], friendPair[1], 0))
                         else:
                             if (friendPair[1] & ToontownGlobals.FriendChat): #freechat
                                 freeChatOneRef.insert(0, (friendPair[0], friendPair[1], 0, 0))
@@ -682,16 +665,15 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
                 #next do the transient avatars
                 if hasattr(base.cr, "playerFriendsManager"):
                     for avatarId in base.cr.playerFriendsManager.getAllOnlinePlayerAvatars():
-                        playerId = base.cr.playerFriendsManager.findPlayerIdFromAvId(avatarId)
                         playerFriendInfo = base.cr.playerFriendsManager.playerId2Info.get(playerId)
                         #handle = base.cr.playerFriendsManager[avatarId]
                         #print("adding friend from new %s" % (avatarId))
                         if not base.cr.playerFriendsManager.askAvatarKnownElseWhere(avatarId):
                             #print ("toon %s knownelsewhere? %s" % (avatarId, base.cr.playerFriendsManager.askAvatarKnownElseWhere(avatarId)))
                             if playerFriendInfo.understandableYesNo:
-                                freeChatDouble.insert(0, (avatarId, 0, playerId, 0))
+                                freeChatDouble.insert(0, (avatarId, 0, 0))
                             else:
-                                speedChatDouble.insert(0, (avatarId, 0, playerId, 0))
+                                speedChatDouble.insert(0, (avatarId, 0, 0))
 
             # TODO: ALL THE SORTING CRUD
             elif base.friendMode == 1:
@@ -699,7 +681,7 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
                     friendInfo = base.cr.avatarFriendsManager.avatarId2Info[friendId]
                     playerId = base.cr.playerFriendsManager.findPlayerIdFromAvId(friendPair[0])
                     if friendInfo.onlineYesNo:
-                        newFriends.insert(0,(friendId, 0, playerId, 0))
+                        newFriends.insert(0,(friendId, 0, 0))
             #print(newFriends)
 
         #PETS
@@ -732,8 +714,6 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
 
         #sort the lists
 
-        newFriends.sort(key=functools.cmp_to_key(compareFriends))
-        petFriends.sort(key=functools.cmp_to_key(compareFriends))
         freeChatOneRef.sort(key=functools.cmp_to_key(compareFriends))
 
         speedChatOneRef.sort(key=functools.cmp_to_key(compareFriends))
@@ -752,21 +732,7 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
         #print "speedChatOneRef"
         #print speedChatOneRef
 
-        # Add new friends
-        for friendPair in newFriends:
-            if friendPair not in self.friends:
-                friendButton = self.makeFriendButton(friendPair)
-                if friendButton:
-                    self.scrollList.addItem(friendButton, refresh=0)
-                    self.friends[friendPair] = friendButton
 
-        # Add Pet Friends
-        for friendPair in petFriends:
-            if friendPair not in self.friends:
-                friendButton = self.makeFriendButton(friendPair, ToontownGlobals.ColorNoChat, 0)
-                if friendButton:
-                    self.scrollList.addItem(friendButton, refresh=0)
-                    self.friends[friendPair] = friendButton
 
         # Add Secret Friends
         for friendPair in freeChatDouble:
@@ -850,7 +816,7 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
             self.right['state'] = 'normal'
 
 
-    def __friendOnline(self, doId, commonChatFlags, whitelistChatFlags):
+    def __friendOnline(self, doId):
         """__friendOnline(self, int doId):
 
         Called when a friend comes online, this should update the

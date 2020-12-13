@@ -777,23 +777,22 @@ class MailboxScreen(DirectObject.DirectObject):
         nameOfSender = ""
         if sender:
             nameOfSender = sender.getName()
-        else:
-            sender = self.checkFamily(avId) # check family
-            if sender: 
-                nameOfSender = sender.name # careful a family member returns a PotentialAvatar not a handle
-            elif hasattr(base.cr, "playerFriendsManager"): # check transient toons
-                sender = base.cr.playerFriendsManager.getAvHandleFromId(avId)
-                if sender: 
-                    nameOfSender = sender.getName()
+            #sender = self.checkFamily(avId) # check family
+           # if sender: 
+            #    nameOfSender = sender.name # careful a family member returns a PotentialAvatar not a handle
+            #elif hasattr(base.cr, "playerFriendsManager"): # check transient toons
+             #   sender = base.cr.playerFriendsManager.getAvHandleFromId(avId)
+              #  if sender: 
+               #     nameOfSender = sender.getName()
                     
         if GMUtils.testGMIdentity(nameOfSender):
             nameOfSender = GMUtils.handleGMName(nameOfSender)
 
         if not sender:
             nameOfSender = TTLocalizer.MailboxGiftTagAnonymous
-            if hasattr(base.cr, "playerFriendsManager"): # request the info
-                base.cr.playerFriendsManager.requestAvatarInfo(avId)
-                self.accept('friendsListChanged', self.__showCurrentItem) # accepts this as long as it stays up
+           # if hasattr(base.cr, "playerFriendsManager"): # request the info
+            #    base.cr.playerFriendsManager.requestAvatarInfo(avId)
+             #   self.accept('friendsListChanged', self.__showCurrentItem) # accepts this as long as it stays up
         return nameOfSender
 
     

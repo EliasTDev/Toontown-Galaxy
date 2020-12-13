@@ -1652,27 +1652,7 @@ class OTPClientRepository(ClientRepositoryBase):
         # Inheritors should overwrite
         pass
 
-    @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
-    def handleWaitForSetAvatarResponse(self, msgType, di):
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
-        if msgType == CLIENT_GET_AVATAR_DETAILS_RESP:
-            self.handleAvatarResponseMsg(di)
-        elif msgType == CLIENT_GET_PET_DETAILS_RESP:
-            self.handleAvatarResponseMsg(di)
-        elif msgType == CLIENT_GET_FRIEND_LIST_RESP:
-            self.handleGetFriendsList(di)
-        elif msgType == CLIENT_GET_FRIEND_LIST_EXTENDED_RESP:
-            self.handleGetFriendsListExtended(di)
-        elif msgType == CLIENT_FRIEND_ONLINE:
-            self.handleFriendOnline(di)
-        elif msgType == CLIENT_FRIEND_OFFLINE:
-            self.handleFriendOffline(di)
-        #Roger wants to remove this elif msgType == CLIENT_SERVER_UP:
-        #Roger wants to remove this     self.handleServerUp(di)
-        #Roger wants to remove this elif msgType == CLIENT_SERVER_DOWN:
-        #Roger wants to remove this     self.handleServerDown(di)
-        else:
-            self.handleMessageType(msgType, di)
+
 
     @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
     def enterPlayingGame(self):

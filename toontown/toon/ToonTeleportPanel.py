@@ -230,17 +230,7 @@ class ToonTeleportPanel(DirectFrame):
             else:
                 self.fsm.request('notOnline')
                 
-        elif hasManager and base.cr.playerFriendsManager.getAvHandleFromId(self.avId):
-            # The avatar is a transient friend of ours.  Is she online?
-            id = base.cr.playerFriendsManager.findPlayerIdFromAvId(self.avId)
-            info = base.cr.playerFriendsManager.getFriendInfo(id)
-            if info:
-                if info.onlineYesNo:
-                    self.fsm.request('checkAvailability')
-                else:
-                    self.fsm.request('notOnline')
-            else:
-                self.fsm.request('wentAway')
+
             
         else:
             # The avatar is not our friend and isn't around.
@@ -257,7 +247,7 @@ class ToonTeleportPanel(DirectFrame):
     def enterCheckAvailability(self):
 
         myId = base.localAvatar.getDoId()
-        base.localAvatar.d_teleportQuery(myId, sendToId = self.avId)
+        base.localAvatar.d_teleportQuery(myId, sendToId=self.avId)
         self['text'] = TTLocalizer.TeleportPanelCheckAvailability % (self.avName)
         self.accept('teleportResponse', self.__teleportResponse)
         self.bCancel.show()

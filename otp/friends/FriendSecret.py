@@ -729,25 +729,24 @@ class FriendSecret(DirectFrame, StateData.StateData):
         self.accountButton.hide()
         self.ok1.hide()
         self.cancel.show()
-        if self.requestedSecretType == AvatarSecret:
             # If we don't have a FriendManager, something's badly wrong.
             # Most likely we're running in a development environment
             # without an AI client.
-            if not base.cr.friendManager:
-                self.notify.warning("No FriendManager available.")
-                self.exit()
-                return
-            base.cr.friendManager.up_requestSecret()
-            self.accept('requestSecretResponse', self.__gotAvatarSecret)
-        else:
-            if base.cr.needParentPasswordForSecretChat():
-                self.notify.info("### requestLimitedSecret")
-                base.cr.playerFriendsManager.sendRequestLimitedSecret(base.cr.parentUsername, base.cr.parentPassword)
-            else:
-                base.cr.playerFriendsManager.sendRequestUnlimitedSecret()
-                self.notify.info("### requestUnlimitedSecret")
-            self.accept(OTPGlobals.PlayerFriendNewSecretEvent, self.__gotAccountSecret)
-            self.accept(OTPGlobals.PlayerFriendRejectNewSecretEvent, self.__rejectAccountSecret)
+        if not base.cr.friendManager:
+            self.notify.warning("No FriendManager available.")
+            self.exit()
+            return
+        base.cr.friendManager.up_requestSecret()
+        self.accept('requestSecretResponse', self.__gotAvatarSecret)
+        #else:
+         #   if base.cr.needParentPasswordForSecretChat():
+          #      self.notify.info("### requestLimitedSecret")
+           #     base.cr.playerFriendsManager.sendRequestLimitedSecret(base.cr.parentUsername, base.cr.parentPassword)
+            #else:
+             #   base.cr.playerFriendsManager.sendRequestUnlimitedSecret()
+              #  self.notify.info("### requestUnlimitedSecret")
+            #self.accept(OTPGlobals.PlayerFriendNewSecretEvent, self.__gotAccountSecret)
+            #self.accept(OTPGlobals.PlayerFriendRejectNewSecretEvent, self.__rejectAccountSecret)
 
     def __gotAvatarSecret(self, result, secret):
         assert self.notify.debugCall()
@@ -756,11 +755,11 @@ class FriendSecret(DirectFrame, StateData.StateData):
         if result == 1:
             self.nextText['text'] = OTPLocalizer.FriendSecretGotSecret
             self.nextText.setPos(*OTPLocalizer.FSgotSecretPos)
-            if self.prefix:
-                # if desired, prepend a prefix to differentiate from other products
-                self.secretText['text'] = self.prefix + ' ' + secret
-            else:
-                self.secretText['text'] = secret
+                # always append the prefix
+            self.secretText['text'] = self.prefix + ' ' + secret
+        elif result == 2:
+            self.nextText['text'] = OTPLocalizer.FriendSecretTooManyFriends
+            
         else:
             # Oops, too many secrets.
             self.nextText['text'] = OTPLocalizer.FriendSecretTooMany
@@ -770,34 +769,9 @@ class FriendSecret(DirectFrame, StateData.StateData):
         self.ok1.hide()
         self.ok2.show()
 
-    def __gotAccountSecret(self, secret):
-        assert self.notify.debugCall()
-        self.ignore(OTPGlobals.PlayerFriendNewSecretEvent)
-        self.ignore(OTPGlobals.PlayerFriendRejectNewSecretEvent)
 
-        self.nextText['text'] = OTPLocalizer.FriendSecretGotSecret
-        self.nextText.setPos(0, 0, 0.47)
-        # for now Account friends (i.e. XD Friends) have no unique prefix
-        self.secretText['text'] = secret
-        self.nextText.show()
-        self.secretText.show()
-        self.cancel.hide()
-        self.ok1.hide()
-        self.ok2.show()
 
-    def __rejectAccountSecret(self, reason):
-        assert self.notify.debugCall()
-        print("## rejectAccountSecret: reason = ", reason)
-        self.ignore(OTPGlobals.PlayerFriendNewSecretEvent)
-        self.ignore(OTPGlobals.PlayerFriendRejectNewSecretEvent)
-        # TODO: handle more reasons
-        # Oops, too many secrets.
-        self.nextText['text'] = OTPLocalizer.FriendSecretTooMany
-        self.nextText.show()
-        self.secretText.show()
-        self.cancel.hide()
-        self.ok1.hide()
-        self.ok2.show()
+
 
     def __enterSecret(self, secret):
         assert self.notify.debugCall()
@@ -828,16 +802,6 @@ class FriendSecret(DirectFrame, StateData.StateData):
                 self.notify.info("### use TT secret")
                 self.accept('submitSecretResponse', self.__enteredSecret)
                 base.cr.friendManager.up_submitSecret(secret)
-            else:
-                # this is not a code for this product, they must want to make player true friends
-                self.accept(OTPGlobals.PlayerFriendUpdateEvent, self.__useAccountSecret)
-                self.accept(OTPGlobals.PlayerFriendRejectUseSecretEvent, self.__rejectUseAccountSecret)
-                if base.cr.needParentPasswordForSecretChat():
-                    self.notify.info("### useLimitedSecret")
-                    base.cr.playerFriendsManager.sendRequestUseLimitedSecret(secret, base.cr.parentUsername, base.cr.parentPassword)
-                else:
-                    self.notify.info("### useUnlimitedSecret")
-                    base.cr.playerFriendsManager.sendRequestUseUnlimitedSecret(secret)
 
         self.nextText['text'] = OTPLocalizer.FriendSecretTryingSecret
         self.nextText.setPos(0, 0, 0.30)

@@ -699,12 +699,11 @@ class FriendInviter(DirectFrame):
     # We are no longer friends with the avatar.
 
     def enterFriendsNoMore(self):
-        if self.playerFriend:
-            self.notify.info("### send player remove")
-            base.cr.playerFriendsManager.sendRequestRemove(self.playerId)
-        else:
-            self.notify.info("### send avatar remove")
-            base.cr.removeFriend(self.avId)
+        #if self.playerFriend:
+          #  self.notify.info("### send player remove")
+           # base.cr.playerFriendsManager.sendRequestRemove(self.playerId)
+        self.notify.info("### send avatar remove")
+        base.cr.removeFriend(self.avId)
             
         self['text'] = OTPLocalizer.FriendInviterFriendsNoMore % (self.getName())
         self.bOk.show()

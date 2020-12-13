@@ -23,9 +23,9 @@ def showAvatarDetail(avId, avName, playerId = None):
         globalAvatarDetail = None
         
  
-    playerId = base.cr.playerFriendsManager.findPlayerIdFromAvId(avId)
+    #playerId = base.cr.playerFriendsManager.findPlayerIdFromAvId(avId)
         
-    globalAvatarDetail = ToonAvatarDetailPanel(avId, avName, playerId)
+    globalAvatarDetail = ToonAvatarDetailPanel(avId, avName)
 
 def hideAvatarDetail():
     # A module function to close the global avatar detail if it is open.
@@ -50,25 +50,25 @@ class ToonAvatarDetailPanel(DirectFrame):
     """
     notify = DirectNotifyGlobal.directNotify.newCategory("ToonAvatarDetailPanel")
 
-    def __init__(self, avId, avName,  playerId = None, parent = aspect2dp, **kw):
+    def __init__(self, avId, avName, parent = aspect2dp, **kw):
         # Inherits from DirectFrame
         # Must specify avId and avName on creation
-        print(("ToonAvatarDetailPanel %s" % (playerId)))
+        #print(("ToonAvatarDetailPanel %s" % (playerId)))
         
         # Load required models
         buttons = loader.loadModel(
             'phase_3/models/gui/dialog_box_buttons_gui')
         gui = loader.loadModel('phase_3.5/models/gui/avatar_panel_gui')
         detailPanel = gui.find('**/avatarInfoPanel')
-        self.playerId = playerId
+       # self.playerId = playerId
         textScale = 0.095
         textWrap = 16.4
-        self.playerInfo = None
-        if self.playerId:
+       #self.playerInfo = None
+        #if self.playerId:
            #textScale = 0.100
            #textWrap = 18.0
            #self.isPlayer = 1
-           self.playerInfo = base.cr.playerFriendsManager.playerId2Info.get(playerId)
+           #self.playerInfo = base.cr.playerFriendsManager.playerId2Info.get(playerId)
         # Specify default options
         optiondefs = (
             ('pos',           (0.525, 0.0, 0.525),   None),
@@ -302,28 +302,7 @@ class ToonAvatarDetailPanel(DirectFrame):
             hoodName = base.cr.hoodMgr.getFullnameFromId(av.lastHood)
             if ZoneUtil.isWelcomeValley(av.lastHood):
                 shardName = "%s (%s)" % (TTLocalizer.WelcomeValley[-1], shardName)
-            if self.playerInfo:
-                guiButton = loader.loadModel("phase_3/models/gui/quit_button")
-                self.gotoAvatarButton = DirectButton(
-                        parent = self,
-                        relief = None,
-                        image = (guiButton.find("**/QuitBtn_UP"),
-                                 guiButton.find("**/QuitBtn_DN"),
-                                 guiButton.find("**/QuitBtn_RLVR"),
-                                 ),
-                        image_scale = 1.1,
-                        text = TTLocalizer.AvatarShowPlayer,
-                        text_scale = 0.07,
-                        text_pos = (0.0, -0.02),
-                        textMayChange = 0,
-                        pos = (0.44, 0, 0.41),
-                        command = self.__showAvatar,
-                        )
-                
-                text = (TTLocalizer.AvatarDetailPanelOnlinePlayer %
-                    {"district": shardName, "location": hoodName, "player" : self.playerInfo.playerName})
-            else:
-                text = (TTLocalizer.AvatarDetailPanelOnline %
+            text = (TTLocalizer.AvatarDetailPanelOnline %
                     {"district": shardName, "location": hoodName})
                 
         else:
@@ -335,17 +314,7 @@ class ToonAvatarDetailPanel(DirectFrame):
         self.__updateLaffInfo()
         
     def __showAvatar(self):
-        messenger.send('wakeup')
-        # Picking a friend from your friends list has exactly the same
-        # effect as clicking on his or her name in the world.
-        hasManager = hasattr(base.cr, "playerFriendsManager")
-        handle = base.cr.identifyFriend(self.avId)
-        if not handle and hasManager:
-            handle = base.cr.playerFriendsManager.getAvHandleFromId(self.avId)
-        if handle != None:
-            self.notify.info("Clicked on name in friend's list. doId = %s" % handle.doId)
-            messenger.send("clickedNametagPlayer", [handle, self.playerId, 1])
-
+        return #Not needed 
     def __updateLaffInfo(self):
         # Send a message to force the avatar panel to display the laff meter
         avatar = self.avatar

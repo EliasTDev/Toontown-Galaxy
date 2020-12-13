@@ -1,14 +1,14 @@
-import Pyro4.core
-import Pyro4.naming
-import Pyro4.errors
+import Pyro5.core
+import Pyro5.naming
+import Pyro5.errors
 import sys
 import time
 
 from .sbLog import sbLog
 from . import sbConfig
 
-from Pyro4.errors import ConnectionClosedError
-from Pyro4.errors import ProtocolError
+from Pyro5.errors import ConnectionClosedError
+from Pyro5.errors import ProtocolError
 
 #from otp.switchboard.xd.ChannelManager import ChannelListener
 #from otp.switchboard.xd.ChannelManager import ChannelMessage
@@ -17,7 +17,7 @@ if sbConfig.scrubMessages:
     import badwordpy
     badwordpy.init("","")
 
-class sbNode(Pyro4.core.SynchronizedObjBase):#,ChannelListener):
+class sbNode(Pyro5.core.SynchronizedObjBase):#,ChannelListener):
     pass #TODO FIX and replace channel listener
     def __init__(self,
                  nodeName,

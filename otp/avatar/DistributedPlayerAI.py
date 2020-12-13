@@ -102,11 +102,11 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI,
     def d_setSystemMessage(self, aboutId, chatString):
         self.sendUpdate("setSystemMessage", [aboutId, chatString])
 
-    def d_setCommonChatFlags(self, flags):
-        self.sendUpdate("setCommonChatFlags", [flags])
+    #def d_setCommonChatFlags(self, flags):
+      #  self.sendUpdate("setCommonChatFlags", [flags])
 
-    def setCommonChatFlags(self, flags):
-        pass
+    #def setCommonChatFlags(self, flags):
+       # pass
 
     def d_friendsNotify(self, avId, status):
         self.sendUpdate("friendsNotify", [avId, status])
@@ -133,7 +133,7 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI,
     def getFriendsList(self):
         return self.friendsList
 
-    def extendFriendsList(self, friendId, friendCode):
+    def extendFriendsList(self, friendId):
         # This is called only by the friend manager when a new friend
         # transaction is successfully completed.  Its purpose is
         # simply to update the AI's own copy of the avatar's friends
@@ -145,11 +145,11 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI,
             friendPair = self.friendsList[i]
             if friendPair[0] == friendId:
                 # We did.  Update the code.
-                self.friendsList[i] = (friendId, friendCode)
+                self.friendsList[i] = friendId
                 return
 
         # We didn't already have this friend; tack it on.
-        self.friendsList.append((friendId, friendCode))
+        self.friendsList.append(friendId)
 
         # Note that if an avatar *breaks* a friendship, the AI never
         # hears about it.  So our friends list will not be 100%

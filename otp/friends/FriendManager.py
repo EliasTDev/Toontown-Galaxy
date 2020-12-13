@@ -18,6 +18,7 @@ class FriendManager(DistributedObject.DistributedObject):
         # in toontown we are keeping a queue of friends requests and processing them
         # once the avatar is available again
         self.gameSpecificFunction = None
+        self.friend = 0
 
     ### Interface methods ###
 
@@ -86,6 +87,7 @@ class FriendManager(DistributedObject.DistributedObject):
         Sent by the inviter to the AI to initiate a friendship
         request.
         """
+        self.friend = inviteeId
         self.sendUpdate('friendQuery', [inviteeId])
         self.notify.debug("Client: friendQuery(%d)" % (inviteeId))
 
@@ -131,7 +133,8 @@ class FriendManager(DistributedObject.DistributedObject):
           2 - unable to answer; e.g. entered a minigame or something.
           3 - the invitee has too many friends already.
         """
-
+        if yesNoMaybe == 1:
+            base.cr.ttFriendsManager.friendIsOnline(self.friend )
         self.sendUpdate('inviteeFriendResponse', [yesNoMaybe, context])
         self.notify.debug("Client: inviteeFriendResponse(%d, %d)" % (yesNoMaybe, context))
 
@@ -183,8 +186,10 @@ class FriendManager(DistributedObject.DistributedObject):
           2 - unable to answer; e.g. entered a minigame or something.
           3 - the invitee has too many friends already.
         """
-
+        if yesNoMaybe == 1:
+            base.cr.ttFriendsManager.friendIsOnline(self.friend)
         self.notify.debug("Client: friendResponse(%d, %d)" % (yesNoMaybe, context))
+
         messenger.send('friendResponse', [yesNoMaybe, context])
 
 
@@ -227,7 +232,7 @@ class FriendManager(DistributedObject.DistributedObject):
         if self.__available:
             messenger.send('friendInvitation', [inviterId, inviterName,
                                                 inviterDna, context])
-
+        self.friend = inviterId 
     def inviteeCancelFriendQuery(self, context):
         """inviteeCancelFriendQuery(self, int context)
 
@@ -259,6 +264,7 @@ class FriendManager(DistributedObject.DistributedObject):
 
           0 - Too many secrets outstanding.  Try again later.
           1 - Success.  The new secret is supplied.
+          2 - Too many friends
 
         """
         messenger.send('requestSecretResponse', [result, secret])

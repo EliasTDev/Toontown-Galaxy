@@ -51,7 +51,7 @@ class BingoManagerAI(object):
     notify = DirectNotifyGlobal.directNotify.newCategory("BingoManagerAI")
     #notify.setDebug(True)
     #notify.setInfo(True)
-    serverDataFolder = simbase.config.GetString('server-data-folder', "")
+    serverDataFolder = simbase.config.GetString('server-data-folder', "dependencies/backups/bingo")
 
     DefaultReward = { TTG.DonaldsDock: [BG.MIN_SUPER_JACKPOT, 1],
                       TTG.ToontownCentral: [BG.MIN_SUPER_JACKPOT, 1],
@@ -454,6 +454,7 @@ class BingoManagerAI(object):
             backup = fileName+ '.jbu'
             if os.path.exists(fileName):
                 os.rename(fileName, backup)
+            
             file = open(fileName, 'wb')
             file.seek(0)
             self.saveTo(file)

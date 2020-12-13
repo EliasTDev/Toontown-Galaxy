@@ -472,10 +472,10 @@ class ChatManager(DirectObject.DirectObject):
             # The avatar is a friend of ours.  Is she online?
             online = self.cr.isFriendOnline(avatarId)
             
-        hasManager = hasattr(base.cr, "playerFriendsManager")
-        if hasManager:
-            if base.cr.playerFriendsManager.askAvatarOnline(avatarId):
-               online = 1
+       # hasManager = hasattr(base.cr, "playerFriendsManager")
+        #if hasManager:
+           # if base.cr.playerFriendsManager.askAvatarOnline(avatarId):
+              # online = 1
 
         # Do we have chat permission with the other avatar?
         avatarUnderstandable = 0
