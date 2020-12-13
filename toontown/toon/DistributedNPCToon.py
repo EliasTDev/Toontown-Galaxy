@@ -221,8 +221,9 @@ class DistributedNPCToon(DistributedNPCToonBase):
                 self.curQuestMovie.play()
                 return
 
-            if isLocalToon:
-                self.setupCamera(mode)
+            #if isLocalToon:
+                #self.setupCamera(mode)
+                #disabled till we fix where the camera goes (or if we even need it to do this)
             greetingString = Quests.chooseQuestDialog(questId, Quests.GREETING)
             if greetingString:
                 fullString += greetingString + "\a"
@@ -235,6 +236,7 @@ class DistributedNPCToon(DistributedNPCToonBase):
 
         elif (mode == NPCToons.QUEST_MOVIE_QUEST_CHOICE_CANCEL):
             fullString = TTLocalizer.QuestMovieQuestChoiceCancel
+            self.setPageChat(avId, 0, fullString, 1)
 
         elif (mode == NPCToons.QUEST_MOVIE_TRACK_CHOICE_CANCEL):
             fullString = TTLocalizer.QuestMovieTrackChoiceCancel
@@ -277,9 +279,8 @@ class DistributedNPCToon(DistributedNPCToonBase):
                 self.curQuestMovie = QuestParser.NPCMoviePlayer(scriptId, av, self)
                 self.curQuestMovie.play()
                 return
-
-            if isLocalToon:
-                self.setupCamera(mode)
+            #if isLocalToon:
+                #self.setupCamera(mode)
             #greetingString = Quests.chooseQuestDialog(questId, Quests.GREETING)
             #if greetingString:
             #    fullString += greetingString + "\a"
@@ -287,6 +288,8 @@ class DistributedNPCToon(DistributedNPCToonBase):
             leavingString = Quests.chooseQuestDialog(questId, Quests.LEAVING)
             if leavingString:
                 fullString += "\a" + leavingString
+            self.setPageChat(avId, 0, fullString, 1)
+
 
         elif (mode == NPCToons.QUEST_MOVIE_QUEST_CHOICE):
             # Quest choice movie
