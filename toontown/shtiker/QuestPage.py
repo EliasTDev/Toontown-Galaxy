@@ -59,6 +59,8 @@ class QuestPage(ShtikerPage.ShtikerPage):
             frame.setPosHpr(*questFramePlaceList[i])
             frame.setScale(1.06)
             self.questFrames.append(frame)
+        self.accept('questsUpdated', self.updatePage)
+        self.updatePage()
 
     def acceptOnscreenHooks(self):        
         self.accept(ToontownGlobals.QuestsHotkeyOn, self.showQuestsOnscreen)
@@ -123,6 +125,15 @@ class QuestPage(ShtikerPage.ShtikerPage):
                 questId = questDesc[0]
                 if (Quests.getQuestClass(questId) == Quests.FriendQuest):
                     self.questFrames[i].update(questDesc)
+        for i, questDesc in list(self.quests.items()):
+            if questDesc:
+                if self.isDeletable(questDesc):
+                    self.questFrames[i].setDeleteCallback(self.deleteQuest)
+                else:
+                    self.questFrames[i].setDeleteCallback(None)
+                self.questFrames[i].update(questDesc)
+            else:
+                self.questFrames[i].unbindMouseEnter()
 
     def enter(self):
         """enter(self)
@@ -165,3 +176,9 @@ class QuestPage(ShtikerPage.ShtikerPage):
         self.title.show()
         self.hide()
               
+
+    def isDeletable(self, questDesc):
+        return Quests.isJustForFun(questDesc[0], questDesc[3])
+
+    def deleteQuest(self, questDesc):
+        base.localAvatar.d_deleteQuest(questDesc)

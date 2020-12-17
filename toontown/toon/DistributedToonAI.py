@@ -1793,16 +1793,16 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
                     self.b_setRewardHistory(self.rewardTier, newRewardHistory)
 
     def removeAllTracesOfQuest(self, questId, rewardId):
-        self.notify.warning('removeAllTracesOfQuest: questId: %s rewardId: %s' % (questId, rewardId))
-        self.notify.warning('removeAllTracesOfQuest: quests before: %s' % (self.quests))
+        self.notify.debug('removeAllTracesOfQuest: questId: %s rewardId: %s' % (questId, rewardId))
+        self.notify.debug('removeAllTracesOfQuest: quests before: %s' % (self.quests))
         self.removeQuest(questId)
-        self.notify.warning('removeAllTracesOfQuest: quests after: %s' % (self.quests))
-        self.notify.warning('removeAllTracesOfQuest: questHistory before: %s' % (self.questHistory))
+        self.notify.debug('removeAllTracesOfQuest: quests after: %s' % (self.quests))
+        self.notify.debug('removeAllTracesOfQuest: questHistory before: %s' % (self.questHistory))
         self.removeQuestFromHistory(questId)
-        self.notify.warning('removeAllTracesOfQuest: questHistory after: %s' % (self.questHistory))
-        self.notify.warning('removeAllTracesOfQuest: reward history before: %s' % (self.rewardHistory))
+        self.notify.debug('removeAllTracesOfQuest: questHistory after: %s' % (self.questHistory))
+        self.notify.debug('removeAllTracesOfQuest: reward history before: %s' % (self.rewardHistory))
         self.removeRewardFromHistory(rewardId)
-        self.notify.warning('removeAllTracesOfQuest: reward history after: %s' % (self.rewardHistory))
+        self.notify.debug('removeAllTracesOfQuest: reward history after: %s' % (self.rewardHistory))
 
     # The number of quests you can carry at once
     def b_setQuestCarryLimit(self, limit):
@@ -5524,3 +5524,14 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
                             av.handleHacking(response, 'collision and position hacking', [otherAv])
                         del DistributedToonAI.flagCounts[avPairKey]
         return
+
+    def deleteQuest(self, questDesc):
+        avId = self.air.getAvatarIdFromSender()
+
+        questId = questDesc[0]
+        rewardId = questDesc[3]
+        try:
+            self.removeAllTracesOfQuest(questId, rewardId)
+        except:
+            self.notify.warning('User {0} failed to remove quest: {1}'.format(avId, questId))
+        

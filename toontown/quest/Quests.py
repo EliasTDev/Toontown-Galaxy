@@ -2174,6 +2174,20 @@ DefaultDialog = {GREETING : DefaultGreeting,
 
 
 
+def isJustForFun(questId, rewardId):
+        questEntry = QuestDict.get(questId)
+        #if quest entry exists
+        if questEntry:
+            #set tier variable to the tier index of the quest entry
+            tier = questEntry[QuestDictTierIndex]
+            #ask function if its optional it will prove 
+            # if its just for fun
+            return isRewardOptional(tier, rewardId)
+        else:
+            #quest entry does not exist return False
+            self.notify.warning('isJustForFun: Quest entry does no exist')
+            return False
+
 def getQuestFromNpcId(id):
     return QuestDict.get(id)[QuestDictFromNpcIndex]
 
@@ -6629,4 +6643,3 @@ def assertAllQuestsValid():
         if start:
             # check the end reward(s)
             checkReward(questId)
-

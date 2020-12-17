@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from . import Quests
 from toontown.toon import NPCToons
 from toontown.toon import ToonHead
@@ -13,7 +13,7 @@ import string, types
 from toontown.toon import LaffMeter
 from toontown.toonbase.ToontownBattleGlobals import AvPropsNew
 from toontown.toontowngui.TeaserPanel import TeaserPanel
-
+from toontown.toontowngui import TTDialog
 IMAGE_SCALE_LARGE = 0.2
 IMAGE_SCALE_SMALL = 0.15
 POSTER_WIDTH = 0.7
@@ -35,12 +35,14 @@ class QuestPoster(DirectFrame):
     normalTextColor = (0.3,0.25,0.2,1)
 
     def __init__(self, parent = aspect2d, **kw):
+        
         # NOTE: Quest card has about +/- 0.35 units of usable space (0.7 units total)
         # Need to calc width of quest info string width = font.calcWidth(string)
         # text scale is equal to 0.7/width
         # wordwrap should be set to width + pad (0.05)
         # For text at scale 0.045, max width = 15.55, set wordwrap to 15.5
         # Load gui images
+        self._deleteCallback = None 
         bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
         questCard = bookModel.find("**/questCard")
         # Define options
@@ -195,7 +197,13 @@ class QuestPoster(DirectFrame):
             pos = (0,0,-0.195),
             )
         self.questProgress.hide()
-
+        if hasattr(self, 'deleteButton'):
+            self.deleteButton.destroy()
+            del self.deleteButton
+        self.ignore('areYouSureDeleteButtonEvent')
+        if hasattr(self, 'areYouSureDeleteButton'):
+            self.areYouSureDeleteButton.cleanup()
+            del self.areYouSureDeleteButton
         # Optional quest indicator
         self.funQuest = DirectLabel(
             parent = self.questFrame,
@@ -462,6 +470,12 @@ class QuestPoster(DirectFrame):
             self.funQuest.show()
         else:
             self.funQuest.hide()
+        if self._deleteCallback:
+            #show the trash can
+            self.showDeleteBtn(questDesc)
+        else:
+            #hide the trash can
+            self.hideDeleteBtn()
         # Is quest complete?
         fComplete = (quest.getCompletionStatus(base.localAvatar, questDesc) == Quests.COMPLETE)
         # Names and IDs
@@ -1261,3 +1275,48 @@ class QuestPoster(DirectFrame):
                 textScale = POSTER_WIDTH/lineWidth
                 label['text_scale'] = min(TEXT_SCALE, textScale)
                 label['text_wordwrap'] = max(TEXT_WORDWRAP, lineWidth + 0.05)
+
+    def setDeleteCallback(self, deleteCallback):
+        self._deleteCallback = deleteCallback
+
+    def showDeleteBtn(self, questDesc):
+        if hasattr(self, 'deleteButton'):
+            self.deleteButton.destroy()
+            del self.deleteButton
+        #show the delete gui
+        deleteGui = loader.loadModel('phase_3/models/gui/trashcan_gui')
+        self.deleteButton = DirectButton(parent=self.questFrame, image=(deleteGui.find('**/TrashCan_CLSD'), deleteGui.find('**/TrashCan_OPEN'), deleteGui.find('**/TrashCan_RLVR')), text=('', TTLocalizer.AvatarChoiceDelete, TTLocalizer.AvatarChoiceDelete), text_fg=(1, 1, 1, 1), text_shadow=(0, 0, 0, 1), text_scale=0.18, text_pos=(0, -0.12), relief=None, pos=(0.3, 0, 0.015), scale=0.2, command=self.commandDelete, extraArgs=[questDesc])
+        deleteGui.removeNode()
+        return
+
+    def hideDeleteBtn(self):
+        #destroy the delete button
+        if hasattr(self, 'deleteButton'):
+            self.deleteButton.destroy()
+            del self.deleteButton
+        
+    def commandDelete(self, questDesc):
+        self.deleteButton['state'] = DGG.DISABLED
+        self.accept('areYouSureDeleteButtonEvent', self.commandAreYouSureDeleteButton)
+        self.areYouSureDeleteButton = TTDialog.TTGlobalDialog(doneEvent='areYouSureDeleteButtonEvent', message='Are you sure you want to delete this task?', style=TTDialog.YesNo, okButtonText='Yes', cancelButtonText='No')
+        self.areYouSureDeleteButton.quest = questDesc
+        self.areYouSureDeleteButton.doneStatus = ''
+        return
+
+    def commandAreYouSureDeleteButton(self):
+        questDesc = self.areYouSureDeleteButton.quest
+        self.ignore('areYouSureDeleteButtonEvent')
+        if self.areYouSureDeleteButton.doneStatus == 'ok':
+            if self._deleteCallback:
+                self._deleteCallback(questDesc)
+                self.hideDeleteBtn()
+            else:
+                self.deleteButton['state'] = DGG.NORMAL
+        self.areYouSureDeleteButton.cleanup()
+        del self.areYouSureDeleteButton
+
+
+
+    def unbindMouseEnter(self):
+        #credit to toontown rewritten
+        self.unbind(DGG.WITHIN)

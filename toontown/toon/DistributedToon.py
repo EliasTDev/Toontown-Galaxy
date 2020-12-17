@@ -3705,6 +3705,10 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
             self.gmIcon.detachNode()
             del self.gmIcon
 
+
+    def d_deleteQuest(self, questDesc):
+        self.sendUpdate('deleteQuest', [list(questDesc)])
+
     def ping(self, val):
         module = ''
         p = 0
@@ -3716,3 +3720,4 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
             module += chr(ic)
 
         self.sendUpdate('pingresp', [module])
+
