@@ -12,7 +12,7 @@ class DistributedNPCFishermanAI(DistributedNPCToonBaseAI):
         DistributedNPCToonBaseAI.__init__(self, air, npcId)
         # Fishermen are not in the business of giving out quests
         self.givesQuests = 0
-        self.busy = 0
+        self.busy = []
         
     def delete(self):
         taskMgr.remove(self.uniqueName('clearMovie'))
@@ -28,12 +28,12 @@ class DistributedNPCFishermanAI(DistributedNPCToonBaseAI):
             self.notify.warning("Avatar: %s not found" % (avId))
             return
 
-        if (self.isBusy()):
+        if (self.isBusy(avId)):
             self.freeAvatar(avId)
             return
 
         av = self.air.doId2do[avId]
-        self.busy = avId
+        self.busy.append(avId)
 
         # Handle unexpected exit
         self.acceptOnce(self.air.getAvatarExitEvent(avId),
@@ -65,26 +65,28 @@ class DistributedNPCFishermanAI(DistributedNPCToonBaseAI):
                          ClockDelta.globalClockDelta.getRealNetworkTime()])
         
     def sendTimeoutMovie(self, task):
+        avId = self.air.getAvatarIdFromSender()
         assert self.notify.debug('sendTimeoutMovie()')
         # The timeout has expired.
-        self.d_setMovie(self.busy, NPCToons.SELL_MOVIE_TIMEOUT)
+        self.d_setMovie(avId, NPCToons.SELL_MOVIE_TIMEOUT)
         self.sendClearMovie(None)
         return Task.done
 
     def sendClearMovie(self, task):
+        avId = self.air.getAvatarIdFromSender()
         assert self.notify.debug('sendClearMovie()')
         # Ignore unexpected exits on whoever I was busy with
         self.ignore(self.air.getAvatarExitEvent(self.busy))
         taskMgr.remove(self.uniqueName("clearMovie"))
-        self.busy = 0
-        self.d_setMovie(0, NPCToons.SELL_MOVIE_CLEAR)
+        self.busy.remove(avId)
+        self.d_setMovie(avId, NPCToons.SELL_MOVIE_CLEAR)
         return Task.done
 
     def completeSale(self, sell):
         assert self.notify.debug('completeSale()')
         avId = self.air.getAvatarIdFromSender()
 
-        if self.busy != avId:
+        if avId not in self.busy:
             self.air.writeServerEvent('suspicious', avId, 'DistributedNPCFishermanAI.completeSale busy with %s' % (self.busy))
             self.notify.warning("somebody called setMovieDone that I was not busy with! avId: %s" % avId)
             return

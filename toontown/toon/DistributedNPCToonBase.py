@@ -158,7 +158,7 @@ class DistributedNPCToonBase(DistributedToon.DistributedToon):
         """
         assert self.notify.warning("Don't call me - I'm a base class!")
         # Tell the server
-        # self.sendUpdate("avatarEnter", [])
+        self.sendUpdate("avatarEnter", [])
 
     def setupAvatars(self, av):
         """

@@ -120,32 +120,36 @@ class DistributedNPCSpecialQuestGiverAI(DistributedNPCToonBaseAI):
 
 
     def sendTimeoutMovie(self, task):
+        avId = self.air.getAvatarIdFromSender()
+
         # Clear the movie
         self.pendingAvId = None
         self.pendingQuests = None
         self.pendingTracks = None
         self.pendingTrackQuest = None
         self.sendUpdate("setMovie", [NPCToons.QUEST_MOVIE_TIMEOUT,
-                                     self.npcId, self.busy, [],
+                                     self.npcId, avId, [],
                                      ClockDelta.globalClockDelta.getRealNetworkTime()])
         self.sendClearMovie(None)
-        self.busy = 0
+        self.busy.remove(avId)
         return Task.done
 
     def sendClearMovie(self, task):
+        avId = self.air.getAvatarIdFromSender()        
         # Clear the movie
         self.pendingAvId = None
         self.pendingQuests = None
         self.pendingTracks = None
         self.pendingTrackQuest = None
-        self.busy = 0
+        self.busy.remove(avId)
         self.sendUpdate("setMovie", [NPCToons.QUEST_MOVIE_CLEAR,
                                      self.npcId, 0, [],
                                      ClockDelta.globalClockDelta.getRealNetworkTime()])
         return Task.done
 
     def rejectAvatar(self, avId):
-        self.busy = avId
+        if avId not in self.busy:
+            self.busy.append(avId)
         # Send a movie to reject the avatar with time stamp
         self.sendUpdate("setMovie", [NPCToons.QUEST_MOVIE_REJECT,
                                      self.npcId, avId, [],
@@ -160,7 +164,8 @@ class DistributedNPCSpecialQuestGiverAI(DistributedNPCToonBaseAI):
         return
         
     def rejectAvatarTierNotDone(self, avId):
-        self.busy = avId
+        if avId not in self.busy:
+            self.busy.append(avId)
         # Send a movie to reject the avatar with time stamp
         self.sendUpdate("setMovie", [NPCToons.QUEST_MOVIE_TIER_NOT_DONE,
                                      self.npcId, avId, [],
@@ -175,7 +180,8 @@ class DistributedNPCSpecialQuestGiverAI(DistributedNPCToonBaseAI):
         return
 
     def completeQuest(self, avId, questId, rewardId):
-        self.busy = avId
+        if avId not in self.busy:
+            self.busy.append(avId)
         # nextQuestId will be the npc for the next visiting quest (visitNpcId)
         self.sendUpdate("setMovie", [NPCToons.QUEST_MOVIE_COMPLETE,
                                      self.npcId, avId, [questId, rewardId, 0],
@@ -186,7 +192,8 @@ class DistributedNPCSpecialQuestGiverAI(DistributedNPCToonBaseAI):
         return
 
     def incompleteQuest(self, avId, questId, completeStatus, toNpcId):
-        self.busy = avId
+        if avId not in self.busy:
+            self.busy.append(avId)
         self.sendUpdate("setMovie", [NPCToons.QUEST_MOVIE_INCOMPLETE,
                                      self.npcId, avId, [questId, completeStatus, toNpcId],
                                      ClockDelta.globalClockDelta.getRealNetworkTime()])
@@ -196,7 +203,8 @@ class DistributedNPCSpecialQuestGiverAI(DistributedNPCToonBaseAI):
         return
 
     def assignQuest(self, avId, questId, rewardId, toNpcId):
-        self.busy = avId
+        if avId not in self.busy:
+            self.busy.append(avId)
         # Call the quest callback now. We could wait until the movie
         # is over, but I don't think we need to.
         if self.questCallback:
@@ -211,7 +219,8 @@ class DistributedNPCSpecialQuestGiverAI(DistributedNPCToonBaseAI):
         return
 
     def presentQuestChoice(self, avId, quests):
-        self.busy = avId
+        if avId not in self.busy:
+            self.busy.append(avId)
         self.pendingAvId = avId
         self.pendingQuests = quests
         flatQuests = []
@@ -226,7 +235,8 @@ class DistributedNPCSpecialQuestGiverAI(DistributedNPCToonBaseAI):
         return
 
     def presentTrackChoice(self, avId, questId, tracks):
-        self.busy = avId
+        if avId not in self.busy:
+            self.busy.append(avId)
         self.pendingAvId = avId
         self.pendingTracks = tracks
         self.pendingTrackQuest = questId
@@ -252,7 +262,8 @@ class DistributedNPCSpecialQuestGiverAI(DistributedNPCToonBaseAI):
         return
 
     def cancelChoseTrack(self, avId):
-        self.busy = avId
+        if avId not in self.busy:
+            self.busy.append(avId)
         self.sendUpdate("setMovie", [NPCToons.QUEST_MOVIE_TRACK_CHOICE_CANCEL,
                                      self.npcId, avId, [],
                                      ClockDelta.globalClockDelta.getRealNetworkTime()])
@@ -264,10 +275,10 @@ class DistributedNPCSpecialQuestGiverAI(DistributedNPCToonBaseAI):
     def setMovieDone(self):
         avId = self.air.getAvatarIdFromSender()
         self.notify.debug("setMovieDone busy: %s avId: %s" % (self.busy, avId))
-        if self.busy == avId:
+        if avId in self.busy:
             # Kill all pending doLaters that will clear the movie 
             taskMgr.remove(self.uniqueName("clearMovie"))
             self.sendClearMovie(None)
-        elif self.busy:
+        else:
             self.air.writeServerEvent('suspicious', avId, 'DistributedNPCToonAI.setMovieDone busy with %s' % (self.busy))
             self.notify.warning("somebody called setMovieDone that I was not busy with! avId: %s" % avId)

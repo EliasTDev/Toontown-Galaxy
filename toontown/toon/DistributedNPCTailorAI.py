@@ -38,7 +38,7 @@ class DistributedNPCTailorAI(DistributedNPCToonBaseAI):
             self.notify.warning("Avatar: %s not found" % (avId))
             return
 
-        if (self.isBusy()):
+        if (self.isBusy(avId)):
             self.freeAvatar(avId)
             return
 
@@ -78,7 +78,8 @@ class DistributedNPCTailorAI(DistributedNPCToonBaseAI):
 
     def sendShoppingMovie(self, avId, flag):
         assert self.notify.debug('sendShoppingMovie()')
-        self.busy = avId
+        if avId not in self.busy:
+            self.busy.append(avId)
         self.sendUpdate("setMovie", [flag,
                         self.npcId, avId,
                         ClockDelta.globalClockDelta.getRealNetworkTime()])
@@ -98,7 +99,8 @@ class DistributedNPCTailorAI(DistributedNPCToonBaseAI):
         # The timeout has expired.  Restore the client back to his
         # original DNA automatically (instead of waiting for the
         # client to request this).
-        
+        avId = self.air.getAvatarIdFromSender()
+
         toon = self.air.doId2do.get(self.customerId)
         # On second thought, we're better off not asserting this.
         #assert(self.busy == self.customerId)
@@ -110,29 +112,32 @@ class DistributedNPCTailorAI(DistributedNPCToonBaseAI):
 
         self.timedOut = 1
         self.sendUpdate("setMovie", [NPCToons.PURCHASE_MOVIE_TIMEOUT,
-                        self.npcId, self.busy,
+                        self.npcId, avId,
                         ClockDelta.globalClockDelta.getRealNetworkTime()])
         
         self.sendClearMovie(None)
         return Task.done
 
     def sendClearMovie(self, task):
+        avId = self.air.getAvatarIdFromSender()
+
         assert self.notify.debug('sendClearMovie()')
         # Ignore unexpected exits on whoever I was busy with
-        self.ignore(self.air.getAvatarExitEvent(self.busy))
+        self.ignore(self.air.getAvatarExitEvent(avId))
         self.customerDNA = None
         self.customerId = None
-        self.busy = 0
+        self.busy.remove(avId)
         self.timedOut = 0
         self.sendUpdate("setMovie", [NPCToons.PURCHASE_MOVIE_CLEAR,
-                        self.npcId, 0,
+                        self.npcId, avId,
                         ClockDelta.globalClockDelta.getRealNetworkTime()])
         self.sendUpdate("setCustomerDNA", [0,''])
         return Task.done
 
     def completePurchase(self, avId):
         assert self.notify.debug('completePurchase()')
-        self.busy = avId
+        if avId not in self.busy:
+            self.busy.append(avId)
         # Send a movie to reward the avatar
         self.sendUpdate("setMovie", [NPCToons.PURCHASE_MOVIE_COMPLETE,
                         self.npcId, avId,
@@ -206,10 +211,10 @@ class DistributedNPCTailorAI(DistributedNPCToonBaseAI):
             self.notify.warning('no av for avId: %d' % avId)
         if (self.timedOut == 1 or finished == 0):
             return
-        if (self.busy == avId):
+        if (avId in self.busy):
             taskMgr.remove(self.uniqueName('clearMovie'))
             self.completePurchase(avId)
-        elif self.busy:
+        else:
             self.air.writeServerEvent('suspicious', avId, 'DistributedNPCTailorAI.setDNA busy with %s' % (self.busy))
             self.notify.warning('setDNA from unknown avId: %s busy: %s' % (avId, self.busy))
 
@@ -235,7 +240,7 @@ class DistributedNPCTailorAI(DistributedNPCToonBaseAI):
         # Only do busy work with the busy id
         # Warning: send the clear movie at the end of this transaction because
         # it clears out all the useful values needed here
-        if (self.busy == avId):
+        if (avId in self.busy):
             self.sendClearMovie(None)
         else:
             self.notify.warning('not busy with avId: %s, busy: %s ' % (avId, self.busy))

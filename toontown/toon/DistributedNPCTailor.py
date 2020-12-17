@@ -67,6 +67,8 @@ class DistributedNPCTailor(DistributedNPCToonBase):
         self.oldStyle = None
 
     def resetTailor(self):
+        if not self.localToon:
+            return 
         assert self.notify.debug('resetTailor')
         self.ignoreAll()
         taskMgr.remove(self.uniqueName('popupPurchaseGUI'))

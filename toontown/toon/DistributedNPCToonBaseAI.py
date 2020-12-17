@@ -18,7 +18,7 @@ class DistributedNPCToonBaseAI(DistributedToonAI.DistributedToonAI):
         self.air = air
         self.npcId = npcId
         # busy will be replaced with the toon this npc is talking to
-        self.busy = 0
+        self.busy = []
         self.questCallback = questCallback
         # Does this NPC give out quests?
         self.givesQuests = 1
@@ -62,8 +62,11 @@ class DistributedNPCToonBaseAI(DistributedToonAI.DistributedToonAI):
         # Base class behavior
         pass
 
-    def isBusy(self):
-        return self.busy > 0
+    def isBusy(self, avId):
+        if avId in self.busy:
+            return True
+        else:
+            return False 
 
     def getNpcId(self):
         return self.npcId

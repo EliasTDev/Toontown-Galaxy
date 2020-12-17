@@ -13,7 +13,7 @@ class DistributedNPCBlocker(DistributedNPCToonBase):
         DistributedNPCToonBase.__init__(self, cr)
         # Make collision sphere wide enough to block a tunnel
         self.cSphereNodePath.setScale(4.5, 1.0, 6.0)
-        self.isLocalToon = 1
+        self.isLocalToon = 0
         self.movie = None
 
     def announceGenerate(self):
@@ -53,6 +53,8 @@ class DistributedNPCBlocker(DistributedNPCToonBase):
         self.notify.warning('unexpected exit')
 
     def resetBlocker(self):
+        if not isLocalToon:
+            return 
         assert self.notify.debug('resetBlocker')
         # Make blocker non-collideable
         self.cSphereNode.setCollideMask(BitMask32())

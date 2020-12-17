@@ -75,6 +75,8 @@ class DistributedNPCKartClerk(DistributedNPCToonBase):
         self.av = None
 
     def resetKartShopClerk(self):
+        if not self.isLocalToon:
+            return 
         assert self.notify.debug('resetKartShopClerk')
         self.ignoreAll()
         taskMgr.remove(self.uniqueName('popupKartShopGUI'))

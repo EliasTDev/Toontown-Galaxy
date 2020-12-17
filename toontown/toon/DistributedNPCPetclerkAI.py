@@ -11,7 +11,7 @@ class DistributedNPCPetclerkAI(DistributedNPCToonBaseAI):
         DistributedNPCToonBaseAI.__init__(self, air, npcId)
         # Fishermen are not in the business of giving out quests
         self.givesQuests = 0
-        self.busy = 0
+        self.busy = []
         
     def delete(self):
         taskMgr.remove(self.uniqueName('clearMovie'))
@@ -27,9 +27,9 @@ class DistributedNPCPetclerkAI(DistributedNPCToonBaseAI):
             self.notify.warning("Avatar: %s not found" % (avId))
             return
 
-        #if (self.isBusy()):
-         #   self.freeAvatar(avId)
-          #  return
+        if (self.isBusy(avId)):
+            self.freeAvatar(avId)
+            return
 
         self.petSeeds = simbase.air.petMgr.getAvailablePets(3, 2)
         # 'fix' pet seeds so there are two of each (female/male)
@@ -41,7 +41,7 @@ class DistributedNPCPetclerkAI(DistributedNPCToonBaseAI):
         self.transactionType = ""
         
         av = self.air.doId2do[avId]
-        self.busy = avId
+        self.busy.append(avId)
 
         # Handle unexpected exit
         self.acceptOnce(self.air.getAvatarExitEvent(avId),
@@ -67,25 +67,30 @@ class DistributedNPCPetclerkAI(DistributedNPCToonBaseAI):
         
     def sendTimeoutMovie(self, task):
         assert self.notify.debug('sendTimeoutMovie()')
+        avId = self.air.getAvatarIdFromSender()
+
         # The timeout has expired.
-        self.d_setMovie(self.busy, NPCToons.SELL_MOVIE_TIMEOUT)
-        self.sendClearMovie(None)
+        self.d_setMovie(avId, NPCToons.SELL_MOVIE_TIMEOUT)
+        if self.busy == []:
+            self.sendClearMovie(None)
         return Task.done
 
     def sendClearMovie(self, task):
         assert self.notify.debug('sendClearMovie()')
+        avId = self.air.getAvatarIdFromSender()
+
         # Ignore unexpected exits on whoever I was busy with
-        self.ignore(self.air.getAvatarExitEvent(self.busy))
+        self.ignore(self.air.getAvatarExitEvent(avId))
         taskMgr.remove(self.uniqueName("clearMovie"))
-        self.busy = 0
-        self.d_setMovie(0, NPCToons.SELL_MOVIE_CLEAR)
+        self.busy.remove(avId)
+        self.d_setMovie(avId, NPCToons.SELL_MOVIE_CLEAR)
         return Task.done
 
     def fishSold(self):
         assert self.notify.debug('fishSold()')
         avId = self.air.getAvatarIdFromSender()
 
-        if self.busy != avId:
+        if avId not in self.busy:
             self.air.writeServerEvent('suspicious', avId, 'DistributedNPCPetshopAI.fishSold busy with %s' % (self.busy))
             self.notify.warning("somebody called fishSold that I was not busy with! avId: %s" % avId)
             return
@@ -116,7 +121,7 @@ class DistributedNPCPetclerkAI(DistributedNPCToonBaseAI):
         assert self.notify.debug('petAdopted()')
         avId = self.air.getAvatarIdFromSender()
 
-        if self.busy != avId:
+        if avId not in self.busy:
             self.air.writeServerEvent('suspicious', avId, 'DistributedNPCPetshopAI.petAdopted busy with %s' % (self.busy))
             self.notify.warning("somebody called petAdopted that I was not busy with! avId: %s" % avId)
             return
@@ -161,7 +166,7 @@ class DistributedNPCPetclerkAI(DistributedNPCToonBaseAI):
         assert self.notify.debug('petReturned()')
         avId = self.air.getAvatarIdFromSender()
 
-        if self.busy != avId:
+        if avId not in self.busy:
             self.air.writeServerEvent('suspicious', avId, 'DistributedNPCPetshopAI.petReturned busy with %s' % (self.busy))
             self.notify.warning("somebody called petReturned that I was not busy with! avId: %s" % avId)
             return
@@ -179,7 +184,7 @@ class DistributedNPCPetclerkAI(DistributedNPCToonBaseAI):
     def transactionDone(self):
         avId = self.air.getAvatarIdFromSender()
 
-        if self.busy != avId:
+        if avId not in self.busy:
             self.air.writeServerEvent('suspicious', avId, 'DistributedNPCPetshopAI.transactionDone busy with %s' % (self.busy))
             self.notify.warning("somebody called transactionDone that I was not busy with! avId: %s" % avId)
             return
@@ -193,7 +198,6 @@ class DistributedNPCPetclerkAI(DistributedNPCToonBaseAI):
                 self.d_setMovie(avId, NPCToons.SELL_MOVIE_PETRETURNED)
             elif self.transactionType == "":
                 self.d_setMovie(avId, NPCToons.SELL_MOVIE_PETCANCELED)
-
         self.sendClearMovie(None)
         return
 

@@ -52,7 +52,8 @@ class DistributedNPCSpecialQuestGiver(DistributedNPCToonBase):
             self.camSequence.finish()
             self.camSequence = None 
 
-    def cleanupMovie(self):        
+    def cleanupMovie(self):
+         
         self.clearChat()
         # Kill any quest choice guis that may be active
         self.ignore("chooseQuest")
@@ -123,7 +124,8 @@ class DistributedNPCSpecialQuestGiver(DistributedNPCToonBase):
         """
         Final cleanup for a movie that has finished
         """
-        self.cleanupMovie()
+        if isLocalToon:
+            self.cleanupMovie()
         av.startLookAround()
         self.startLookAround()
         self.detectAvatars()
@@ -171,7 +173,8 @@ class DistributedNPCSpecialQuestGiver(DistributedNPCToonBase):
         # Just return and do nothing
         if (mode == NPCToons.QUEST_MOVIE_CLEAR):
             assert self.notify.debug("setMovie: movie cleared")
-            self.cleanupMovie()
+            if isLocalToon:
+                self.cleanupMovie()
             return
 
         # This is an old movie in the server ram that has been cleared.
@@ -181,7 +184,8 @@ class DistributedNPCSpecialQuestGiver(DistributedNPCToonBase):
             if self.cameraSequence:
                 self.cameraSequence.finish()
                 self.cameraSequence = None
-            self.cleanupMovie()
+            if isLocalToon:
+                self.cleanupMovie()
             # If we are the local toon and we have simply taken too long
             # to read through the chat balloons, just free us
             if isLocalToon:

@@ -18,7 +18,7 @@ class DistributedNPCKartClerkAI(DistributedNPCToonBaseAI):
         DistributedNPCToonBaseAI.__init__(self, air, npcId)
         # should kart clerks give out quests? not for now...
         self.givesQuests = 0
-        self.busy = 0
+        self.busy = []
         
     def delete(self):
         taskMgr.remove(self.uniqueName('clearMovie'))
@@ -34,14 +34,14 @@ class DistributedNPCKartClerkAI(DistributedNPCToonBaseAI):
             self.notify.warning("Avatar: %s not found" % (avId))
             return
 
-        if (self.isBusy()):
+        if (self.isBusy(avId)):
             self.freeAvatar(avId)
             return
 
         self.transactionType = ""
         
         av = self.air.doId2do[avId]
-        self.busy = avId
+        self.busy.append(avId)
 
         # Handle unexpected exit
         self.acceptOnce(self.air.getAvatarExitEvent(avId),
@@ -66,26 +66,29 @@ class DistributedNPCKartClerkAI(DistributedNPCToonBaseAI):
                          ClockDelta.globalClockDelta.getRealNetworkTime()])
         
     def sendTimeoutMovie(self, task):
+        avId = self.air.getAvatarIdFromSender()
+
         assert self.notify.debug('sendTimeoutMovie()')
         # The timeout has expired.
-        self.d_setMovie(self.busy, NPCToons.SELL_MOVIE_TIMEOUT)
+        self.d_setMovie(avId, NPCToons.SELL_MOVIE_TIMEOUT)
         self.sendClearMovie(None)
         return Task.done
 
     def sendClearMovie(self, task):
+        avId = self.air.getAvatarIdFromSender()
         assert self.notify.debug('sendClearMovie()')
         # Ignore unexpected exits on whoever I was busy with
-        self.ignore(self.air.getAvatarExitEvent(self.busy))
+        self.ignore(self.air.getAvatarExitEvent(avId))
         taskMgr.remove(self.uniqueName("clearMovie"))
-        self.busy = 0
-        self.d_setMovie(0, NPCToons.SELL_MOVIE_CLEAR)
+        self.busy.remove(avId)
+        self.d_setMovie(avId, NPCToons.SELL_MOVIE_CLEAR)
         return Task.done
 
     def buyKart(self, whichKart):
         assert self.notify.debug('buyKart()')
         avId = self.air.getAvatarIdFromSender()
 
-        if self.busy != avId:
+        if avId not in self.busy:
             self.air.writeServerEvent('suspicious', avId, 'DistributedNPCKartClerkAI.buyKart busy with %s' % (self.busy))
             self.notify.warning("somebody called buyKart that I was not busy with! avId: %s" % avId)
             return    
@@ -129,7 +132,7 @@ class DistributedNPCKartClerkAI(DistributedNPCToonBaseAI):
             
         avId = self.air.getAvatarIdFromSender()
         av = simbase.air.doId2do.get(avId)
-        if self.busy != avId:
+        if avId not in self.busy:
             self.air.writeServerEvent('suspicious', avId, 'DistributedNPCKartClerkAI.buyAccessory busy with %s' % (self.busy))
             self.notify.warning("somebody called buyAccessory that I was not busy with! avId: %s" % avId)
             return
@@ -181,7 +184,7 @@ class DistributedNPCKartClerkAI(DistributedNPCToonBaseAI):
     def transactionDone(self):
         avId = self.air.getAvatarIdFromSender()
 
-        if self.busy != avId:
+        if avId not in self.busy:
             self.air.writeServerEvent('suspicious', avId, 'DistributedNPCKartClerkAI.transactionDone busy with %s' % (self.busy))
             self.notify.warning("somebody called transactionDone that I was not busy with! avId: %s" % avId)
             return

@@ -99,6 +99,9 @@ class DistributedNPCPetclerk(DistributedNPCToonBase):
         self.av = None
 
     def resetPetshopClerk(self):
+        if not self.isLocalToon:
+            return 
+        
         assert self.notify.debug('resetPetshopClerk')
         self.ignoreAll()
         taskMgr.remove(self.uniqueName('popupPetshopGUI'))

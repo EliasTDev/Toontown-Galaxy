@@ -78,6 +78,8 @@ class DistributedNPCClerk(DistributedNPCToonBase):
         self.av = None
 
     def resetClerk(self):
+        if not self.isLocalToon:
+            return 
         assert self.notify.debug('resetClerk')
         self.ignoreAll()
         taskMgr.remove(self.uniqueName('popupPurchaseGUI'))
