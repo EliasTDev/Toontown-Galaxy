@@ -1,6 +1,6 @@
 import math
 from direct.directutil import Mopath
-from pandac.PandaModules import NodePath, Point3, Vec4
+from panda3d.core import NodePath, Point3, Vec4
 from .CogdoFlyingObjects import CogdoFlyingPlatform
 from . import CogdoFlyingGameGlobals as Globals
 
@@ -52,8 +52,9 @@ class CogdoFlyingLevelQuadrant:
         for np in self._model.findAllMatches('**/*LayerStack*'):
             np.wrtReparentTo(self._model)
 
-        for np in self._model.find('**/static').getChildren():
-            np.wrtReparentTo(self._model)
+        if not self._model.find('**/static').isEmpty():
+            for np in self._model.find('**/static').getChildren():
+                np.wrtReparentTo(self._model)
 
         self._model.flattenMedium()
 

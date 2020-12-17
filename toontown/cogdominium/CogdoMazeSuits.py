@@ -1,4 +1,4 @@
-from pandac.PandaModules import Point3, VBase4
+from panda3d.core import Point3, VBase4
 from direct.fsm.FSM import FSM
 from direct.interval.IntervalGlobal import Sequence, Parallel, ActorInterval, Func, Wait, ParticleInterval, Track, LerpColorScaleInterval, LerpScaleInterval, LerpHprInterval
 from direct.task.Task import Task
@@ -181,7 +181,7 @@ class CogdoMazeBossSuit(CogdoMazeSuit):
     def __init__(self, serialNum, maze, randomNumGen, difficulty, startTile = None):
         CogdoMazeSuit.__init__(self, serialNum, maze, randomNumGen, difficulty, startTile, Globals.SuitTypes.Boss, walkAnimName='stomp')
         self.dropTimer = 0
-        self._walkSpeed = (float(self.maze.cellWidth) / self.cellWalkDuration * 0.5) * 1.5 #(faster bc of toon speed being faster)
+        self._walkSpeed = float(self.maze.cellWidth) / self.cellWalkDuration * 0.5
 
     def _initSfx(self):
         CogdoMazeSuit._initSfx(self)

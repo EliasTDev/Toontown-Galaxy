@@ -6,7 +6,7 @@ from direct.task.Task import Task
 from direct.interval.IntervalGlobal import Sequence, Parallel, LerpScaleInterval, LerpFunctionInterval, Func, Wait, LerpFunc, SoundInterval, ParallelEndTogether, LerpPosInterval, ActorInterval, LerpPosHprInterval, LerpHprInterval
 from direct.directutil import Mopath
 from direct.showbase.PythonUtil import bound as clamp
-from pandac.PandaModules import CollisionSphere, CollisionNode, CollisionTube, CollisionPolygon, Vec3, Point3
+from panda3d.core import CollisionSphere, CollisionNode, CollisionTube, CollisionPolygon, Vec3, Point3
 from toontown.suit import Suit
 from toontown.suit import SuitDNA
 from toontown.toonbase import ToontownGlobals
@@ -15,7 +15,7 @@ from .CogdoFlyingUtil import swapAvatarShadowPlacer
 from . import CogdoUtil
 from . import CogdoFlyingGameGlobals as Globals
 
-class CogdoFlyingLegalEagle(FSM, DirectObject):
+class CogdoFlyingLegalEagle(FSM):
     CollSphereName = 'CogdoFlyingLegalEagleSphere'
     CollisionEventName = 'CogdoFlyingLegalEagleCollision'
     InterestCollName = 'CogdoFlyingLegalEagleInterestCollision'
@@ -368,7 +368,7 @@ class CogdoFlyingLegalEagle(FSM, DirectObject):
         return
 
     def enterRoost(self):
-        self.notify.info("enter%s: '%s' -> '%s'" % (self.newState, self.oldState, self.newState))
+        self.notify.debug("enter%s: '%s' -> '%s'" % (self.newState, self.oldState, self.newState))
         self.hoverOverNestSeq.loop()
         self.propTrack.loop()
         self.setCollSphereToNest()
@@ -389,7 +389,7 @@ class CogdoFlyingLegalEagle(FSM, DirectObject):
         self.setCollSphereToTargeting()
 
     def enterTakeOff(self, elapsedTime = 0.0):
-        self.notify.info("enter%s: '%s' -> '%s', elapsedTime:%s" % (self.newState,
+        self.notify.debug("enter%s: '%s' -> '%s', elapsedTime:%s" % (self.newState,
          self.oldState,
          self.newState,
          elapsedTime))
@@ -415,7 +415,7 @@ class CogdoFlyingLegalEagle(FSM, DirectObject):
         self.hoverOverNestSeq.pause()
 
     def enterLockOnToon(self, elapsedTime = 0.0):
-        self.notify.info("enter%s: '%s' -> '%s', elapsedTime:%s" % (self.newState,
+        self.notify.debug("enter%s: '%s' -> '%s', elapsedTime:%s" % (self.newState,
          self.oldState,
          self.newState,
          elapsedTime))
@@ -451,7 +451,7 @@ class CogdoFlyingLegalEagle(FSM, DirectObject):
         taskMgr.remove('exitLockOnToon-%i' % self.index)
 
     def enterChargeUpAttack(self, elapsedTime = 0.0):
-        self.notify.info("enter%s: '%s' -> '%s', elapsedTime:%s" % (self.newState,
+        self.notify.debug("enter%s: '%s' -> '%s', elapsedTime:%s" % (self.newState,
          self.oldState,
          self.newState,
          elapsedTime))
@@ -476,7 +476,7 @@ class CogdoFlyingLegalEagle(FSM, DirectObject):
         self.chargeUpAttackSeq.clearToInitial()
 
     def enterAttack(self, elapsedTime = 0.0):
-        self.notify.info("enter%s: '%s' -> '%s', elapsedTime:%s" % (self.newState,
+        self.notify.debug("enter%s: '%s' -> '%s', elapsedTime:%s" % (self.newState,
          self.oldState,
          self.newState,
          elapsedTime))
@@ -506,7 +506,7 @@ class CogdoFlyingLegalEagle(FSM, DirectObject):
         taskMgr.remove('updateAttackPosTask-%i' % self.index)
 
     def enterRetreatToSky(self, elapsedTime = 0.0):
-        self.notify.info("enter%s: '%s' -> '%s', elapsedTime:%s" % (self.newState,
+        self.notify.debug("enter%s: '%s' -> '%s', elapsedTime:%s" % (self.newState,
          self.oldState,
          self.newState,
          elapsedTime))
@@ -530,7 +530,7 @@ class CogdoFlyingLegalEagle(FSM, DirectObject):
         if self.target != None:
             messenger.send(CogdoFlyingLegalEagle.CooldownEventName, [self.target.doId])
         self.suit.stash()
-        self.notify.info("enter%s: '%s' -> '%s'" % (self.newState, self.oldState, self.newState))
+        self.notify.debug("enter%s: '%s' -> '%s'" % (self.newState, self.oldState, self.newState))
         return
 
     def filterCooldown(self, request, args):
@@ -563,7 +563,7 @@ class CogdoFlyingLegalEagle(FSM, DirectObject):
                 self.suit.setPos(attackPos)
 
     def enterRetreatToNest(self, elapsedTime = 0.0):
-        self.notify.info("enter%s: '%s' -> '%s', elapsedTime:%s" % (self.newState,
+        self.notify.debug("enter%s: '%s' -> '%s', elapsedTime:%s" % (self.newState,
          self.oldState,
          self.newState,
          elapsedTime))
@@ -583,7 +583,7 @@ class CogdoFlyingLegalEagle(FSM, DirectObject):
         self.retreatToNestSeq.clearToInitial()
 
     def enterLandOnNest(self, elapsedTime = 0.0):
-        self.notify.info("enter%s: '%s' -> '%s', elapsedTime:%s" % (self.newState,
+        self.notify.debug("enter%s: '%s' -> '%s', elapsedTime:%s" % (self.newState,
          self.oldState,
          self.newState,
          elapsedTime))

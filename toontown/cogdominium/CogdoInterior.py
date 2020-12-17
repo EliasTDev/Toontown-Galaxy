@@ -1,4 +1,4 @@
-from pandac.PandaModules import ModelPool, TexturePool
+from panda3d.core import ModelPool, TexturePool
 from direct.task.Task import Task
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM, State
@@ -23,7 +23,8 @@ class CogdoInterior(Place.Place):
          State.State('Game', self.enterGame, self.exitGame, ['battle',
           'died',
           'crane',
-          'walk']),
+          'walk',
+          'stopped']),
          State.State('battle', self.enterBattle, self.exitBattle, ['walk', 'died']),
          State.State('crane', self.enterCrane, self.exitCrane, ['walk',
           'battle',

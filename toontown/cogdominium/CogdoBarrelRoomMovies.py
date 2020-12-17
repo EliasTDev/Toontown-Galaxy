@@ -81,7 +81,7 @@ class CogdoBarrelRoomIntro(CogdoGameMovie):
         self._toonDialogueSfx = loader.loadSfx('phase_3.5/audio/dial/AV_dog_long.ogg')
         self._camHelperNode = NodePath('CamHelperNode')
         self._camHelperNode.reparentTo(render)
-        dialog = TTLocalizer.CogdoBarrelRoomIntroMovieDialog
+        dialogue = TTLocalizer.CogdoBarrelRoomIntroMovieDialog
 
         def start():
             self.frame.show()
@@ -94,7 +94,7 @@ class CogdoBarrelRoomIntro(CogdoGameMovie):
             base.setCellsAvailable(base.bottomCells + base.leftCells + base.rightCells, 1)
             self._stopUpdateTask()
 
-        self._ival = Sequence(Func(start), Func(self.displayLine, dialog), Wait(CogdoBarrelRoomConsts.BarrelRoomIntroTimeout), Func(end))
+        self._ival = Sequence(Func(start), Func(self.displayLine, dialogue), Wait(CogdoBarrelRoomConsts.BarrelRoomIntroTimeout), Func(end))
         self._startUpdateTask()
         return
 

@@ -1,9 +1,10 @@
-from pandac.PandaModules import Point3, CollisionSphere, CollisionNode
+from panda3d.core import Point3, CollisionSphere, CollisionNode
 from direct.showbase.DirectObject import DirectObject
 from direct.showbase.PythonUtil import Functor
 from direct.showbase.RandomNumGen import RandomNumGen
 from direct.task.Task import Task
 from toontown.minigame.MazeSuit import MazeSuit
+from toontown.toonbase import ToontownGlobals
 from .CogdoGameGatherable import CogdoMemo
 from .CogdoMazePlayer import CogdoMazePlayer
 from .CogdoMazeLocalPlayer import CogdoMazeLocalPlayer
@@ -169,6 +170,7 @@ class CogdoMazeGame(DirectObject):
         self._movie.end()
         self._movie.unload()
         del self._movie
+        base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov / (4. / 3.))
         for player in self.players:
             self.placePlayer(player)
             if player.toon is localAvatar:

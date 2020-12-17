@@ -1,4 +1,4 @@
-from pandac.PandaModules import Point3, PlaneNode
+from panda3d.core import Point3, PlaneNode
 from direct.showbase.ShowBase import Plane
 from direct.showbase.RandomNumGen import RandomNumGen
 from direct.interval.MetaInterval import Sequence, Parallel
@@ -23,6 +23,10 @@ class CogdoFlyingGameIntro(CogdoGameMovie):
 
     def displayLine(self, who, text):
         self._dialogueLabel.node().setText(text)
+        if text in TTLocalizer.CogdoFlyingIntroMovieDialogue[1]:
+            self._dialogueLabel.setPos(0.32, 0, -0.724)
+        else:
+            self._dialogueLabel.setPos(0.32, 0, -0.75)
         if who == 'toon':
             self.toonHead.reparentTo(aspect2d)
             self.cogHead.reparentTo(hidden)
@@ -46,8 +50,6 @@ class CogdoFlyingGameIntro(CogdoGameMovie):
         suit.reparentTo(self.toonHead)
         for part in suit.getHeadParts():
             part.hide()
-
-        suit.loop('neutral')
 
     def load(self):
         CogdoGameMovie.load(self)

@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.gui.DirectGui import *
 from toontown.toonbase import ToontownGlobals, TTLocalizer
 from toontown.cogdominium import CogdoBarrelRoomConsts
@@ -6,7 +6,7 @@ from toontown.cogdominium import CogdoBarrelRoomConsts
 class CogdoBarrelRoomRewardPanel(DirectFrame):
 
     def __init__(self):
-        DirectFrame.__init__(self, relief=None, geom=DGG.getDefaultDialogGeom(), geom_color=ToontownGlobals.GlobalDialogColor, geom_scale=TTLocalizer.RPdirectFrame, pos=(0, 0, 0.587))
+        DirectFrame.__init__(self, relief=None, geom=DGG.getDefaultDialogGeom(), geom_color=ToontownGlobals.GlobalDialogColor, geom_scale=TTLocalizer.RPdirectFrame, pos=(0, 0, -0.587))
         self.initialiseoptions(CogdoBarrelRoomRewardPanel)
         self.avNameLabel = DirectLabel(parent=self, relief=None, pos=(0, 0, 0.3), text='Toon Ups', text_scale=0.08)
         self.rewardLines = []

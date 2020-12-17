@@ -1,8 +1,8 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 CollectionTime = 30
-BarrelRoomIntroTimeout = 12.0
+BarrelRoomIntroTimeout = 11.0
 RewardUiTime = 5.0
-EndWithAllBarrelsCollected = True 
+EndWithAllBarrelsCollected = False
 ShowRewardUI = True
 AllBarrelsCollectedTime = 5.0
 ToonUp = (2, 4)
@@ -92,10 +92,6 @@ BarrelCollParams = (0,
  2.0)
 BarrelBumpSound = 'phase_4/audio/sfx/Golf_Hit_Barrier_2.ogg'
 BarrelGrabSound = 'phase_4/audio/sfx/SZ_DD_treasure.ogg'
-BarrelAvailableTexture = 'phase_5/maps/tt_t_ara_cbr_Barrel_notUsed.jpg'
-BarrelUsedTexture = 'phase_5/maps/tt_t_ara_cbr_Barrel_Used.jpg'
-BarrelPathName = 'CogdoBarrel_'
-
 StateHidden, StateAvailable, StateUsed, StateCrushed = list(range(4))
 
 def numBarrels():

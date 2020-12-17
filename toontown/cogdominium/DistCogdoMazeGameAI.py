@@ -5,9 +5,6 @@ from toontown.cogdominium.CogdoMaze import CogdoMazeFactory
 from toontown.cogdominium.DistCogdoMazeGameBase import DistCogdoMazeGameBase
 from .DistCogdoGameAI import DistCogdoGameAI
 from . import CogdoMazeGameGlobals as Globals
-from toontown.battle import BattleBase
-from toontown.building.ElevatorConstants import *
-
 cogdoMazeTimeScoreRatio = 0.5
 cogdoMazePerfectTime = 90
 cogdoMazeMaxTime = 210
@@ -20,7 +17,6 @@ class DistCogdoMazeGameAI(DistCogdoGameAI, DistCogdoMazeGameBase):
     CountdownTimerTaskName = 'CMG_countdownTimerTask'
     AnnounceGameDoneTimerTaskName = 'CMG_AnnounceGameDoneTimerTask'
     SkipCogdoGames = simbase.config.GetBool('skip-cogdo-game', 0)
-    delayIntro = BattleBase.ELEVATOR_T + ElevatorData[ELEVATOR_NORMAL]['openTime']
 
     def __init__(self, air, id):
         DistCogdoGameAI.__init__(self, air, id)
@@ -31,14 +27,12 @@ class DistCogdoMazeGameAI(DistCogdoGameAI, DistCogdoMazeGameBase):
         self.maxPickups = 0
         self.numPickedUp = 0
         self.suits = {}
-        self.numSuits = 0
         self.lastRequestId = None
         self.requestStartTime = globalClock.getFrameTime()
         self.requestCount = None
         self.jokeLastRequestId = None
         self.jokeRequestStartTime = globalClock.getFrameTime()
         self.jokeRequestCount = None
-
         if __debug__ and simbase.config.GetBool('schellgames-dev', True):
             self.accept('onCodeReload', self.__sgOnCodeReload)
 
@@ -46,9 +40,6 @@ class DistCogdoMazeGameAI(DistCogdoGameAI, DistCogdoMazeGameBase):
         DistCogdoGameAI.setExteriorZone(self, exteriorZone)
         self.difficulty = self.getDifficulty()
         self.createSuits()
-
-    def setNumSuits(self, num):
-        self.numSuits = num
 
     def createSuits(self):
         serialNum = 0

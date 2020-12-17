@@ -1,5 +1,5 @@
 import random
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import ToontownGlobals, ToontownTimer
@@ -37,6 +37,8 @@ class CogdoBarrelRoom:
         self.model.setPos(*CogdoBarrelRoomConsts.BarrelRoomModelPos)
         self.model.reparentTo(render)
         self.model.stash()
+        self.dummyElevInNode = self.model.attachNewNode('elevator-in')
+        self.dummyElevInNode.hide()
         self.entranceNode = self.model.attachNewNode('door-entrance')
         self.entranceNode.setPos(0, -65, 0)
         self.nearBattleNode = self.model.attachNewNode('near-battle')
@@ -47,13 +49,7 @@ class CogdoBarrelRoom:
         self.fog = Fog('barrel-room-fog')
         self.fog.setColor(CogdoBarrelRoomConsts.BarrelRoomFogColor)
         self.fog.setLinearRange(*CogdoBarrelRoomConsts.BarrelRoomFogLinearRange)
-        self.barrel = render.attachNewNode('@@CogdoBarrels')
-        for i in range(len(CogdoBarrelRoomConsts.BarrelProps)):
-            self.barrelPath = self.barrel.attachNewNode('%s%s'% (CogdoBarrelRoomConsts.BarrelPathName, i))
-            self.barrelPath.setPos(CogdoBarrelRoomConsts.BarrelProps[i]['pos'])
-            self.barrelPath.setH(CogdoBarrelRoomConsts.BarrelProps[i]['heading'])
         self._isLoaded = True
-
 
     def unload(self):
         if self.model:
@@ -65,9 +61,10 @@ class CogdoBarrelRoom:
         if self.rewardUi:
             self.rewardUi.destroy()
             self.rewardUi = None
-        if self.fog:
-            render.setFogOff()
-            del self.fog
+        if hasattr(self, 'fog'):
+            if self.fog:
+                render.setFogOff()
+                del self.fog
         taskMgr.remove(self.rewardUiTaskName)
         taskMgr.remove(self.rewardCameraTaskName)
         self._isLoaded = False
@@ -79,18 +76,19 @@ class CogdoBarrelRoom:
     def show(self):
         if not self.cogdoBarrelsNode:
             self.cogdoBarrelsNode = render.find('**/@@CogdoBarrels')
-            if not self.cogdoBarrelsNode.isEmpty():
-                self.cogdoBarrelsNode.reparentTo(self.model)
-                self.cogdoBarrelsNode.unstash()
+            self.cogdoBarrelsNode.reparentTo(self.model)
+            self.cogdoBarrelsNode.unstash()
         self.defaultFar = base.camLens.getFar()
         base.camLens.setFar(CogdoBarrelRoomConsts.BarrelRoomCameraFar)
+        base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov / (4. / 3.))
         self.showBattleAreaLight(True)
         render.setFog(self.fog)
         self.model.unstash()
 
-    def hide(self):
+    def hide(self, fogOff=True):
         self.model.stash()
-        render.setFogOff()
+        if fogOff:
+            render.setFogOff()
         if self.defaultFar is not None:
             base.camLens.setFar(self.defaultFar)
         return

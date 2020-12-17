@@ -1,7 +1,5 @@
 import math
-from pandac.PandaModules import NodePath, Vec3
-from pandac.PandaModules import CollisionTraverser, CollisionHandlerQueue
-from pandac.PandaModules import CollisionRay, CollisionNode
+from panda3d.core import NodePath, Vec3, CollisionTraverser, CollisionHandlerQueue, CollisionRay, CollisionNode
 from math import pi, sin, cos
 from direct.showbase.PythonUtil import bound as clamp
 from otp.otpbase import OTPGlobals
@@ -171,16 +169,20 @@ class CogdoFlyingCameraManager:
                 np.setTransparency(True)
                 np.wrtReparentTo(self._transNP)
                 if np.getName().find('lightFixture') >= 0:
-                    np.find('**/*floor_mesh').hide()
+                    if not np.find('**/*floor_mesh').isEmpty():
+                        np.find('**/*floor_mesh').hide()
                 elif np.getName().find('platform') >= 0:
-                    np.find('**/*Floor').hide()
+                    if not np.find('**/*Floor').isEmpty():
+                        np.find('**/*Floor').hide()
 
         for np, parent in list(self._betweenCamAndToon.items()):
             np.wrtReparentTo(parent)
             np.setTransparency(False)
             if np.getName().find('lightFixture') >= 0:
-                np.find('**/*floor_mesh').show()
+                if not np.find('**/*floor_mesh').isEmpty():
+                    np.find('**/*floor_mesh').show()
             elif np.getName().find('platform') >= 0:
-                np.find('**/*Floor').show()
+                if not np.find('**/*Floor').isEmpty():
+                    np.find('**/*Floor').show()
 
         self._betweenCamAndToon = nodesInBetween

@@ -1,5 +1,6 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
+from panda3d.physics import *
 from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
 from direct.fsm import FSM
@@ -13,6 +14,7 @@ from otp.otpbase import OTPGlobals
 from toontown.cogdominium import CogdoCraneGameConsts as GameConsts
 import random
 from libotp import *
+
 class DistCogdoCrane(DistributedObject.DistributedObject, FSM.FSM):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistCogdoCrane')
     firstMagnetBit = 21

@@ -16,7 +16,7 @@ from . import DistributedAnimatedProp
 from toontown.distributed import DelayDelete
 from toontown.toonbase import TTLocalizer
 from toontown.hood import ZoneUtil
-from libotp import NametagGroup
+from libotp import (CFSpeech, CFTimeout, NametagGroup)
 
 class DistributedKnockKnockDoor(DistributedAnimatedProp.DistributedAnimatedProp):
     """

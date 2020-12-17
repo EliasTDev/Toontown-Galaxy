@@ -1,4 +1,4 @@
-from pandac.PandaModules import NodePath, Point3, PlaneNode, TextNode
+from panda3d.core import NodePath, Point3, PlaneNode, TextNode
 from direct.interval.IntervalGlobal import *
 from direct.showbase.ShowBase import Plane
 from direct.directnotify import DirectNotifyGlobal
@@ -111,9 +111,6 @@ class CogdoExecutiveSuiteIntro(CogdoGameMovie):
         self._camOffset = offset
         self._camAngle = angle
         self._camDistance = distance
-        if self._camTarget is None:
-            self.notify.warning("_camTarget is none can't set cam target")
-            return
         self._camHelperNode.setPos(self._camTarget, self._camOffset)
         self._camHelperNode.setHpr(self._camTarget, 180 + self._camAngle[0], self._camAngle[1], self._camAngle[2])
         self._camHelperNode.setPos(self._camHelperNode, 0, self._camDistance, 0)

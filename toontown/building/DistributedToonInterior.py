@@ -305,8 +305,7 @@ class DistributedToonInterior(DistributedObject.DistributedObject):
         assert self.notify.debugStateCall(self)
         frame = loader.loadModel('phase_3.5/models/modules/trophy_frame')
 
-        dna = ToonDNA.ToonDNA()
-        dna.newToonFromProperties(*dnaTuple)
+        dna = ToonDNA.ToonDNA(dnaTuple)
 
         head = ToonHead.ToonHead()
         head.setupHead(dna)

@@ -5,6 +5,7 @@ from direct.interval.FunctionInterval import Wait
 from direct.interval.IntervalGlobal import Func
 from direct.interval.MetaInterval import Sequence, Parallel
 from toontown.toonbase import TTLocalizer
+from toontown.toonbase import ToontownGlobals
 from . import CogdoFlyingGameGlobals as Globals
 from .CogdoFlyingLocalPlayer import CogdoFlyingLocalPlayer
 from .CogdoGameAudioManager import CogdoGameAudioManager
@@ -122,6 +123,7 @@ class CogdoFlyingGame(DirectObject):
         self._movie.end()
         self._movie.unload()
         del self._movie
+        base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov / (4. / 3.))
         self.localPlayer.ready()
         self.level.update(0.0)
 
@@ -175,7 +177,7 @@ class CogdoFlyingGame(DirectObject):
 
         self.guiMgr.onstage()
         if not Globals.Dev.InfiniteTimeLimit:
-            self.guiMgr.startTimer(Globals.Gameplay.SecondsUntilGameOver, self._handleTimerExpired, keepHidden=True)
+            self.guiMgr.startTimer(Globals.Gameplay.SecondsUntilGameOver, self._handleTimerExpired, keepHidden=False)
 
     def exit(self):
         self.ignore(CogdoFlyingObstacle.EnterEventName)
@@ -305,14 +307,15 @@ class CogdoFlyingGame(DirectObject):
 
     def debuffPowerup(self, toonId, pickupType, elapsedTime):
         self.notify.debugCall()
-        player = self.toonId2Player[toonId]
-        if player.isBuffActive(pickupType):
-            if pickupType in [Globals.Level.GatherableTypes.InvulPowerup]:
-                if self.guiMgr.isTimeRunningOut():
-                    self.audioMgr.playMusic('timeRunningOut')
-                else:
-                    self.audioMgr.playMusic('normal')
-                player.handleDebuffPowerup(pickupType, elapsedTime)
+        if toonId in self.toonId2Player:
+            player = self.toonId2Player[toonId]
+            if player.isBuffActive(pickupType):
+                if pickupType in [Globals.Level.GatherableTypes.InvulPowerup]:
+                    if self.guiMgr.isTimeRunningOut():
+                        self.audioMgr.playMusic('timeRunningOut')
+                    else:
+                        self.audioMgr.playMusic('normal')
+                    player.handleDebuffPowerup(pickupType, elapsedTime)
 
     def handleLocalToonEnterLegalEagle(self, eagle, collEntry):
         if not self.localPlayer.isEnemyHitting() and not self.localPlayer.isInvulnerable():

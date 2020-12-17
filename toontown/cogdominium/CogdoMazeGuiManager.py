@@ -1,4 +1,4 @@
-from pandac.PandaModules import NodePath
+from panda3d.core import NodePath
 from direct.interval.MetaInterval import Sequence
 from direct.interval.FunctionInterval import Func
 from toontown.toonbase.ToontownTimer import ToontownTimer
@@ -102,6 +102,7 @@ class CogdoMazeGuiManager:
             self._initTimer()
         self._timer.setTime(duration)
         self._timer.countdown(duration, timerExpiredCallback)
+        self._timer.show()
         self._presentTimerIval = ToontownIntervals.start(ToontownIntervals.getPresentGuiIval(self._timer, 'present_timer', startPos=(0, 0, 0.35)))
         return
 

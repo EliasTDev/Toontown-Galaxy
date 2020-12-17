@@ -3,6 +3,7 @@ from toontown.toontowngui import TTDialog
 from toontown.toonbase import TTLocalizer
 from direct.showbase import Transitions
 from direct.gui.DirectGui import *
+from direct.gui.DirectGuiGlobals import FADE_SORT_INDEX
 from pandac.PandaModules import *
 from . import LaffMeter
 

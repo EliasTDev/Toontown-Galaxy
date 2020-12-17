@@ -347,7 +347,7 @@ class Street(BattlePlace.BattlePlace):
         # We throw this event to tell the building that we are ready
         # to exit the building now.
         messenger.send("insideVictorElevator")
-        assert bldg
+        #assert bldg
 
     def exitElevatorIn(self):
         assert self.notify.debug("exitElevatorIn()")

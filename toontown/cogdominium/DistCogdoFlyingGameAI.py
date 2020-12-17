@@ -2,15 +2,12 @@ import random
 from direct.distributed.ClockDelta import globalClockDelta
 from .DistCogdoGameAI import DistCogdoGameAI
 from . import CogdoFlyingGameGlobals as Globals
-from toontown.battle import BattleBase
-from toontown.building.ElevatorConstants import *
 
 class DistCogdoFlyingGameAI(DistCogdoGameAI):
     notify = directNotify.newCategory('DistCogdoFlyingGameAI')
     EagleExitCooldownTaskName = 'CFG_EagleExitCooldownTask-%s'
     InvulBuffRemoveTaskName = 'CFG_InvulBuffRemoveTask-%s'
     AnnounceGameDoneTimerTaskName = 'CFG_AnnounceGameDoneTimerTask'
-    delayIntro = BattleBase.ELEVATOR_T + ElevatorData[ELEVATOR_NORMAL]['openTime']
 
     def __init__(self, air, id):
         DistCogdoGameAI.__init__(self, air, id)
@@ -109,39 +106,24 @@ class DistCogdoFlyingGameAI(DistCogdoGameAI):
 
     def requestAction(self, action, data):
         senderId = self.air.getAvatarIdFromSender()
-        #if not self._validateSenderId(senderId) or not self._isPlayingGame(senderId):
-         #   return False
+        if not self._validateSenderId(senderId) or not self._isPlayingGame(senderId):
+            return False
 
         av = simbase.air.doId2do.get(senderId)
-        if not av:
-            return 
         if action == Globals.AI.GameActions.LandOnWinPlatform:
-            if config.GetBool('want-magic-words', 0):
+            if senderId not in self.toonsOnEndPlatform:
                 self.toonsOnEndPlatform.append(senderId)
                 self.d_broadcastDoAction(action, senderId)
                 self.updateGotoWinState()
             else:
-                if senderId not in self.toonsOnEndPlatform:
-                    self.toonsOnEndPlatform.append(senderId)
-                    self.d_broadcastDoAction(action, senderId)
-                    self.updateGotoWinState()
-
-                else:
-                    self._reportSuspiciousEvent(senderId, 'Client %s has landed on the win platform twice.' % senderId)
-
-                    
+                self._reportSuspiciousEvent(senderId, 'Client %s has landed on the win platform twice.' % senderId)
         elif action == Globals.AI.GameActions.WinStateFinished:
-            if config.GetBool('want-magic-words', 0):
+            if senderId not in self.toonsInWinState:
                 self.toonsInWinState.append(senderId)
                 self.d_broadcastDoAction(action, senderId)
                 self.updateGameFinished()
             else:
-                if senderId not in self.toonsInWinState:
-                    self.toonsInWinState.append(senderId)
-                    self.d_broadcastDoAction(action, senderId)
-                    self.updateGameFinished()
-                else:
-                    self._reportSuspiciousEvent(senderId, 'Client %s wants to exit from the win state multiple times.' % senderId)
+                self._reportSuspiciousEvent(senderId, 'Client %s wants to exit from the win state multiple times.' % senderId)
         elif action == Globals.AI.GameActions.HitWhirlwind:
             if Globals.Dev.Invincibility != True:
                 self.damageToon(av, Globals.AI.SafezoneId2WhirlwindDamage)
@@ -184,12 +166,8 @@ class DistCogdoFlyingGameAI(DistCogdoGameAI):
 
     def requestPickUp(self, pickupNum, pickupType):
         senderId = self.air.getAvatarIdFromSender()
-        #if not self._validateSenderId(senderId) or not self._isPlayingGame(senderId):
-         #   return False
-        av = self.air.doId2do.get(senderId)
-        if not av:
-            return
-        
+        if not self._validateSenderId(senderId) or not self._isPlayingGame(senderId):
+            return False
 
         if pickupType not in Globals.Level.GatherableTypes:
             self._reportSuspiciousEvent(senderId, 'Client %s has requested an illegal pickup type: %s.' % (senderId, pickupType))
@@ -368,5 +346,3 @@ class DistCogdoFlyingGameAI(DistCogdoGameAI):
         DistCogdoGameAI.exitFinish(self)
         taskMgr.remove(self._announceGameDoneTask)
         del self._announceGameDoneTask
-
-    

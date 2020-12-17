@@ -9607,7 +9607,27 @@ NPCToonNames = {
     9235 : lHQOfficerM,
     9236 : lHQOfficerM,
     9237 : "Fisherman Jung",
-
+    9301: 'Phil Bettur',
+    9302: 'Emma Phatic',
+    9303: 'GiggleMesh',
+    9304: 'Anne Ville',
+    9305: 'Bud Erfingerz',
+    9306: 'J.S. Bark',
+    9307: 'Bea Sharpe',
+    9308: 'Otto Toon',
+    9309: 'Al Capella',
+    9310: 'Des Traction',
+    9311: 'Dee Version',
+    9312: 'Bo Nanapeel',
+    7001: 'N. Prisoned',
+    7002: 'R.E. Leaseme',
+    7003: 'Lemmy Owte',
+    7004: 'T. Rapped',
+    7005: 'Little Helphere',
+    7006: 'Gimmy Ahand',
+    7007: 'Dewin Tymme',
+    7008: 'Ima Cagedtoon',
+    7009: 'Jimmy Thelock'
     # Tutorial IDs start at 20000, and are not part of this table.
     # Don't add any Toon id's at 20000 or above, for this reason!
     # Look in TutorialBuildingAI.py for more details.

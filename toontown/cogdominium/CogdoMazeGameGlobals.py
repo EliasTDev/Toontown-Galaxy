@@ -1,5 +1,5 @@
 from direct.showbase import PythonUtil
-from pandac.PandaModules import VBase4
+from panda3d.core import VBase4
 GameActions = PythonUtil.Enum(('EnterDoor',
  'RevealDoor',
  'OpenDoor',
@@ -69,7 +69,7 @@ MazeBarriers = ([(7, 34),
   (34, 8),
   (34, 9),
   (34, 10)])
-ToonRunSpeed = 11.2 * 1.5
+ToonRunSpeed = 11.2
 CameraAngle = 60
 CameraRemoteToonRadius = 6
 CameraMinDistance = 40
@@ -201,7 +201,7 @@ MapGuiFgColor = (0.5,
  0.5,
  0.5,
  1)
-MapGuiPos = (1.05, 0.0, -0.71)
+MapGuiPos = (-0.283, 0, 0.290)
 MapGuiScale = 0.225
 MapGuiSuitMarkerFlashColor = (1.0, 0.0, 0.0)
 MapGuiSuitMarkerSize = 0.075

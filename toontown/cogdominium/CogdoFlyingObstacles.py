@@ -4,7 +4,8 @@ from direct.interval.IntervalGlobal import LerpFunc, ActorInterval, LerpPosInter
 from direct.interval.MetaInterval import Sequence
 from direct.directutil import Mopath
 from direct.showbase import PythonUtil
-from pandac.PandaModules import *
+from panda3d.core import *
+from panda3d.physics import *
 from toontown.toonbase import ToontownGlobals
 from toontown.suit import Suit
 from toontown.suit import SuitDNA
@@ -16,7 +17,7 @@ from direct.particles import ParticleEffect
 from direct.particles import Particles
 from direct.particles import ForceGroup
 
-class CogdoFlyingObtacleFactory:
+class CogdoFlyingObstacleFactory:
 
     def __init__(self):
         self._index = -1
@@ -29,8 +30,9 @@ class CogdoFlyingObtacleFactory:
         self._fanModel.removeNode()
         del self._fanModel
         if Globals.Level.AddParticlesToStreamers:
-            self.f.cleanup()
-            del self.f
+            if hasattr(self, 'f'):
+                self.f.cleanup()
+                del self.f
 
     def createFan(self):
         self._index += 1
@@ -191,7 +193,7 @@ class CogdoFlyingObstacle(DirectObject):
         messenger.send(CogdoFlyingObstacle.ExitEventName, [self, collEntry])
 
 
-from pandac.PandaModules import TransformState
+from panda3d.core import TransformState
 
 class CogdoFlyingWhirlwind(CogdoFlyingObstacle):
 

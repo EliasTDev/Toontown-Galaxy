@@ -230,7 +230,7 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
              from toontown.cogdominium.DistCogdoMazeGameAI import DistCogdoMazeGameAI
              for do in simbase.air.doId2do.values():
                 if isinstance(do, DistCogdoMazeGameAI):
-                    if invoker.doId in do.getToonIds():
+                    if av.doId in do.getToonIds():
                         mazeGame = do
                         break
 

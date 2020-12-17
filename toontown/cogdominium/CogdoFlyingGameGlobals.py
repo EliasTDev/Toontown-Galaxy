@@ -1,8 +1,14 @@
 from direct.showbase import PythonUtil
-from pandac.PandaModules import VBase4, Vec3, Point3
+from panda3d.core import VBase4, Vec3, Point3
 from .CogdoUtil import VariableContainer, DevVariableContainer
 AI = VariableContainer()
-AI.GameActions = PythonUtil.Enum(('LandOnWinPlatform', 'WinStateFinished', 'GotoWinState', 'HitWhirlwind', 'HitLegalEagle', 'HitMinion', 'DebuffInvul', 'RequestEnterEagleInterest', 'RequestExitEagleInterest', 'RanOutOfTimePenalty', 'Died', 'Spawn', 'SetBlades', 'BladeLost'))
+
+AI.GameActions = PythonUtil.Enum(('LandOnWinPlatform', 'WinStateFinished',
+    'GotoWinState', 'HitWhirlwind', 'HitLegalEagle', 'HitMinion', 'DebuffInvul',
+    'RequestEnterEagleInterest', 'RequestExitEagleInterest', 'RanOutOfTimePenalty',
+    'Died', 'Spawn', 'SetBlades', 'BladeLost')
+)
+
 AI.BroadcastPeriod = 0.3
 AI.SafezoneId2DeathDamage = {2000: 1,
  1000: 2,
@@ -41,6 +47,7 @@ Camera.AlphaBetweenToon = 0.35
 Camera.SpinRadius = 9.0
 Camera.MaxSpinAngle = 20.0
 Camera.MaxSpinX = 16.0
+Camera.GameCameraFar = 400.0
 Gameplay = VariableContainer()
 Gameplay.SecondsUntilGameOver = 60.0 * 3.0
 Gameplay.TimeRunningOutSeconds = 45.0
@@ -127,7 +134,7 @@ Gameplay.MinionScale = 0.8
 Gui = VariableContainer()
 Gui.FuelNumBladesPos2D = (-0.005, -0.017)
 Gui.FuelNumBladesScale = 0.07
-Gui.FuelPos2D = (-1.19, -0.24)
+Gui.FuelPos2D = (0.143, 0.760)
 Gui.NumBlades2FuelColor = {0: (0.9, 0.15, 0.15, 1.0),
  1: (0.9, 0.15, 0.15, 1.0),
  2: (0.9, 0.9, 0.15, 1.0),
@@ -135,7 +142,7 @@ Gui.NumBlades2FuelColor = {0: (0.9, 0.15, 0.15, 1.0),
 Gui.FuelNormalColor = (0.25, 0.65, 0.25, 1.0)
 Gui.FuelLowColor = (0.9, 0.9, 0.15, 1.0)
 Gui.FuelVeryLowColor = (0.9, 0.15, 0.15, 1.0)
-Gui.ProgressPos2D = (1.15, -0.15)
+Gui.ProgressPos2D = (-0.183, 0.85)
 Gui.ProgressHPos2D = (0, 0.82)
 Gui.MarkerScale = 0.03
 Gui.LocalMarkerScale = 0.0425
@@ -172,10 +179,10 @@ Dev.Invincibility = False
 Dev.NoLegalEagleAttacks = False
 Audio = VariableContainer()
 Audio.Cutoff = 75.0
-Audio.MusicFiles = {'normal': 'phase_4/audio/bgm/MG_cannon_game.ogg',
- 'end': 'phase_4/audio/bgm/FF_safezone.ogg',
- 'waiting': 'phase_4/audio/bgm/m_match_bg2.ogg',
- 'invul': 'phase_4/audio/bgm/MG_CogThief.ogg',
+Audio.MusicFiles = {'normal': 'phase_9/audio/bgm/CHQ_FACT_bg.ogg',
+ 'end': 'phase_7/audio/bgm/encntr_toon_winning_indoor.ogg',
+ 'waiting': 'phase_7/audio/bgm/encntr_toon_winning_indoor.ogg',
+ 'invul': 'phase_9/audio/bgm/encntr_toon_winning.ogg',
  'timeRunningOut': 'phase_7/audio/bgm/encntr_suit_winning_indoor.ogg'}
 Audio.SfxFiles = {'propeller': 'phase_4/audio/sfx/TB_propeller.ogg',
  'propeller_damaged': 'phase_5/audio/sfx/tt_s_ara_cfg_propellers_damaged.ogg',
@@ -229,8 +236,8 @@ Level.DifficultyOrder = {2000: (1, 1, 1, 2, 1),
  9000: (2, 3, 2, 3, 2, 3, 2)}
 Dev.WantTempLevel = True
 Dev.DevQuadsOrder = (1, 2, 3, 4, 5, 6, 7, 8)
-Level.AddSparkleToPowerups = True
-Level.AddParticlesToStreamers = True
+Level.AddSparkleToPowerups = config.GetBool('want-cogdo-particles', True)
+Level.AddParticlesToStreamers = config.GetBool('want-cogdo-particles', True)
 Level.IgnoreLaffPowerups = False
 Level.SpawnLaffPowerupsInNests = True
 Level.LaffPowerupNestOffset = Point3(0.0, 2.0, 3.0)

@@ -397,14 +397,14 @@ class TalkAssistant(DirectObject.DirectObject):
 # CHAT PERMISSIONS
 
     def checkOpenTypedChat(self):
-        if base.localAvatar.commonChatFlags & OTPGlobals.CommonChat:
+       if base.localAvatar.canChat():
             return True
-        return False
+       else:
+            return False
 
     def checkAnyTypedChat(self):
         """Return True if we have any form of typed chat, whitelist, truefriend or open."""
-        if base.localAvatar.commonChatFlags & OTPGlobals.CommonChat:
-            return True
+
         if base.localAvatar.canChat():
             return True
         return False

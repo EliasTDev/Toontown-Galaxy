@@ -3,7 +3,7 @@ from direct.gui.DirectGui import DirectFrame, DGG
 from direct.task.Task import Task
 from direct.interval.MetaInterval import Sequence, Parallel
 from direct.interval.FunctionInterval import Wait, Func
-from pandac.PandaModules import TextNode, NodePath, Point3, CardMaker
+from panda3d.core import TextNode, NodePath, Point3, CardMaker
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 from toontown.toonbase import ToontownIntervals
@@ -17,6 +17,7 @@ class CogdoMazeMapGui(MazeMapGui):
         MazeMapGui.__init__(self, mazeCollTable, bgColor=Globals.MapGuiBgColor, fgColor=Globals.MapGuiFgColor)
         self._suit2marker = {}
         self._initModel()
+        self.reparentTo(base.a2dBottomRight)
         self.setPos(*Globals.MapGuiPos)
         self.setScale(Globals.MapGuiScale)
 
