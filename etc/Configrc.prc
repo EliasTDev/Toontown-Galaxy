@@ -63,3 +63,4 @@ support-rename 1
 teleport-all 0 //disable during production
 want-cogdominiums #t
 
+is-winter-running #t

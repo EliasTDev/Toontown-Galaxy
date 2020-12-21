@@ -49,7 +49,8 @@ class NewsManager(DistributedObject.DistributedObject):
         self.holidayIdList = []
 
         # Attach myself to the cr so others can access
-        base.cr.newsManager = self
+        if hasattr(base, 'cr' ):
+            base.cr.newsManager = self
 
         # Reset battle mult in case localToon just switched districts
         base.localAvatar.inventory.setInvasionCreditMultiplier(1)

@@ -149,13 +149,17 @@ DirectGuiGlobals.setDefaultDialogGeom(loader.loadModel('phase_3/models/gui/dialo
 from . import TTLocalizer
 from otp.otpbase import OTPGlobals
 OTPGlobals.setDefaultProductPrefix(TTLocalizer.ProductPrefix)
-
+#TODO check if winter holiday is running, this is quite difficult as newsmanager can't be initalized yet 
+winter = base.config.GetBool('is-winter-running', 0)
 # Play music at startup
 # This is a bit strange because the music is created here, then
 # handed off to the cr to control. This is done so keep the music
 # from skipping (if we stopped it and restarted it).
 if base.musicManagerIsValid:
-    music = base.musicManager.getSound("phase_3/audio/bgm/tt_theme.ogg")
+    if winter:
+        music = base.musicManager.getSound('phase_3/audio/bgm/TTG_winter.ogg')
+    else:
+        music = base.musicManager.getSound("phase_3/audio/bgm/TTGIntro.mp3")
     if music:
         music.setLoop(1)
         music.setVolume(0.9)
