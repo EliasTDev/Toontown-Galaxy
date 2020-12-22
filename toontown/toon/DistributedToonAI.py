@@ -5538,3 +5538,4 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
 
     def d_sprint(self):
         self.sendUpdate('sprint', [])
+        

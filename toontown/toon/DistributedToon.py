@@ -619,8 +619,6 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
 
     def setTalk(self, fromAV, fromAC, avatarName, chat, mods, flags):
         """ Overridden from Distributed player becase pirates ignores players a different way"""
-        if fromAV == 0:
-            avatarName = self.name
         if base.cr.avatarFriendsManager.checkIgnored(fromAV):
             # We're ignoring this jerk.
             self.d_setWhisperIgnored(fromAV)
@@ -642,8 +640,9 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
 
     def setTalkWhisper(self, fromAV, fromAC, avatarName, chat, mods, flags):
         """ Overridden from Distributed player becase pirates ignores players a different way"""
-        if fromAV == 0:
-            avatarName = self.name
+        _fromAV = base.cr.identifyAvatar(fromAV)
+        if avatarName == '':
+            avatarName = _fromAV.name 
         if GMUtils.testGMIdentity(avatarName):
             avatarName  = GMUtils.handleGMName(avatarName)
 

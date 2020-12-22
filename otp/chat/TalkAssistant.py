@@ -995,17 +995,8 @@ class TalkAssistant(DirectObject.DirectObject):
 
     def sendWhisperTalk(self, message, receiverAvId):
         #TODO open chat whisper message(true friends)
-
         error = None
-        receiver = base.cr.doId2do.get(receiverAvId)
-        if receiver:
-            receiver.sendUpdate("setTalkWhisper", [0, 0, "", message, [], 0])
-        else:
-            receiver = base.cr.identifyAvatar(receiverAvId)
-            if receiver:
-                base.localAvatar.sendUpdate("setTalkWhisper", [0, 0, "", message, [], 0], sendToId = receiverAvId)
-            else:
-                pass
+        base.cr.chatRouter.sendWhisperMessage(message, receiverAvId)
         return error
 
 
