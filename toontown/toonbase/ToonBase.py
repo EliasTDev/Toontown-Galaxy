@@ -15,7 +15,7 @@ import os
 from toontown.toonbase import TTLocalizer
 from toontown.toonbase import ToontownBattleGlobals
 from toontown.launcher import ToontownDownloadWatcher
-
+from otp.otpbase import OTPGlobals 
 from libotp import *
 class ToonBase(OTPBase.OTPBase):
     """ToonBase class"""
@@ -272,7 +272,9 @@ class ToonBase(OTPBase.OTPBase):
         self.canScreenShot = 1
         self.glitchCount = 0
         self.walking = 0
-
+        self.isSprinting = 0
+        self.accept('shift', self.startSprint)
+        self.accept('shift-up', self.stopSprint)
         #self.resetMusic = self.loader.loadMusic("phase_3/audio/bgm/MIDI_Events_16channels.ogg")
 
     def disableShowbaseMouse(self):
@@ -619,3 +621,21 @@ class ToonBase(OTPBase.OTPBase):
         if self.win != None:
             return self.win.isValid()
         return 0
+
+    def startSprint(self):
+        if hasattr(base, 'localAvatar'):
+            base.localAvatar.currentSpeed = OTPGlobals.ToonForwardSprintSpeed
+            base.localAvatar.currentReverseSpeed = OTPGlobals.ToonReverseSprintSpeed
+            base.localAvatar.controlManager.setSpeeds(OTPGlobals.ToonForwardSprintSpeed, OTPGlobals.ToonJumpForce, OTPGlobals.ToonReverseSprintSpeed, OTPGlobals.ToonRotateSpeed)
+            self.isSprinting = 1
+        else:
+            if self.isSprinting == 1:
+                self.stopSprint()
+
+    def stopSprint(self):
+        if hasattr(base, 'localAvatar'):
+            base.localAvatar.currentSpeed = OTPGlobals.ToonForwardSpeed
+            base.localAvatar.currentReverseSpeed = OTPGlobals.ToonReverseSpeed
+            base.localAvatar.controlManager.setSpeeds(OTPGlobals.ToonForwardSpeed, OTPGlobals.ToonJumpForce, OTPGlobals.ToonReverseSpeed, OTPGlobals.ToonRotateSpeed)
+            self.isSprinting = 0
+

@@ -5535,3 +5535,6 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
         except:
             self.notify.warning('User {0} failed to remove quest: {1}'.format(avId, questId))
         
+
+    def d_sprint(self):
+        self.sendUpdate('sprint', [])

@@ -63,7 +63,7 @@ if base.wantKarts:
 
 from libotp import CFSpeech, CFTimeout, CFThought
 from libotp import WhisperPopup
-
+from direct.showbase.InputStateGlobal import inputState
 if( __debug__ ):
     import pdb
 
@@ -619,7 +619,8 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
 
     def setTalk(self, fromAV, fromAC, avatarName, chat, mods, flags):
         """ Overridden from Distributed player becase pirates ignores players a different way"""
-
+        if fromAV == 0:
+            avatarName = self.name
         if base.cr.avatarFriendsManager.checkIgnored(fromAV):
             # We're ignoring this jerk.
             self.d_setWhisperIgnored(fromAV)
@@ -641,7 +642,8 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
 
     def setTalkWhisper(self, fromAV, fromAC, avatarName, chat, mods, flags):
         """ Overridden from Distributed player becase pirates ignores players a different way"""
-
+        if fromAV == 0:
+            avatarName = self.name
         if GMUtils.testGMIdentity(avatarName):
             avatarName  = GMUtils.handleGMName(avatarName)
 
@@ -3721,3 +3723,7 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
 
         self.sendUpdate('pingresp', [module])
 
+
+    def sprint(self):
+        if self.isLocal():
+            inputState.set('debugRunning', inputState.isSet('debugRunning') is not True)
