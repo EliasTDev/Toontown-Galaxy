@@ -49,7 +49,7 @@ class DistributedPlayerUD(DistributedAvatarUD):
     def setAccountName(self, name):
         pass
 
-    def setAccessLevel(self, access):
+    def setStaffAccess(self, access):
         pass
 
     def OwningAccount(self, doId):

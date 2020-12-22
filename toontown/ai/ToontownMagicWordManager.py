@@ -90,33 +90,17 @@ class ToontownMagicWordManager(MagicWordManager.MagicWordManager):
         if (MagicWordManager.MagicWordManager.doMagicWord(self, word, avId,
                                                           zoneId) == 1):
             pass
-        elif wordIs("~fanfare"):
-            go = Fanfare.makeFanfareWithMessageImage(0, base.localAvatar, 1, "You just did a ~fanfare.  Here's a rake.", Vec2(0,0.2), 0.08, base.localAvatar.inventory.buttonLookup(1, 1), Vec3(0,0,0), 4)
-            Sequence(go[0],Func(go[1].show),
-                     LerpColorScaleInterval(go[1],duration=.5,startColorScale=Vec4(1,1,1,0),colorScale=Vec4(1,1,1,1)),Wait(2),
-                     LerpColorScaleInterval(go[1],duration=.5,startColorScale=Vec4(1,1,1,1),colorScale=Vec4(1,1,1,0)),
-                     Func(go[1].remove)).start()
-            #go[0].start()
-            #Fanfare.makeFanfareWithMessageImage(0, base.localAvatar, 1, "This is the message", Vec2(0,0.2), 0.08, base.localAvatar.inventory.buttonLookup(1, 1), Vec3(0,0,0), 4)[0].start()
-            #Fanfare.makeFanfare(0, base.localAvatar).start()
-        elif wordIs("~endgame"):
-            print("Requesting minigame abort...")
-            messenger.send("minigameAbort")
-        elif wordIs("~wingame"):
-            print("Requesting minigame victory...")
-            messenger.send("minigameVictory")
+
+
+
         elif wordIs("~walk"):
             try:
                 fsm = base.cr.playGame.getPlace().fsm
                 fsm.forceTransition('walk')
             except:
                 pass
-        elif wordIs("~movie"):
-            try:
-                fsm = base.cr.playGame.getPlace().fsm
-                fsm.forceTransition('movie')
-            except:
-                pass
+
+
         elif wordIs("~sit"):
             try:
                 base.cr.playGame.getPlace().fsm.request('sit')
@@ -133,28 +117,12 @@ class ToontownMagicWordManager(MagicWordManager.MagicWordManager):
             self.acceptOnce('mouse1', self.exit_rogues)
             # no longer keep rogues obj around after creation, so we can make a different one
 
-        elif wordIs("~showPaths"):
-            for obj in list(self.cr.doId2do.values()):
-                if isinstance(obj, DistributedSuitPlanner.DistributedSuitPlanner):
-                    obj.showPaths()
-            place = base.cr.playGame.getPlace()
-            if hasattr(place, "showPaths"):
-                place.showPaths()
 
-        elif wordIs("~hidePaths"):
-            for obj in list(self.cr.doId2do.values()):
-                if isinstance(obj, DistributedSuitPlanner.DistributedSuitPlanner):
-                    obj.hidePaths()
-            place = base.cr.playGame.getPlace()
-            if hasattr(place, "hidePaths"):
-                place.hidePaths()
+
+
         elif wordIs("~raceForever"):
             base.raceForever=True
-        elif wordIs("~listen"):
-            base.localAvatar.garbleChat = 0
 
-        elif wordIs("~nochat") or wordIs("~chat") or wordIs("~superchat"):
-            base.localAvatar.garbleChat = 1
 
         elif wordIs("~exec"):
             # Enable execChat.
@@ -177,11 +145,7 @@ class ToontownMagicWordManager(MagicWordManager.MagicWordManager):
             # Reveal the attack panel again.
             TownBattleAttackPanel.hideAttackPanel(0)
 
-        elif wordIs("~collisions_on"):
-            base.localAvatar.collisionsOn()
 
-        elif wordIs("~collisions_off"):
-            base.localAvatar.collisionsOff()
 
         elif wordIs('~battle_detect_off'):
             from toontown.suit import DistributedSuit
@@ -200,13 +164,7 @@ class ToontownMagicWordManager(MagicWordManager.MagicWordManager):
                 response = 'battles OFF'
             self.setMagicWordResponse(response)
 
-        elif wordIs('~skipBattleMovie') or wordIs('~sbm'):
-            ToontownBattleGlobals.SkipMovie = not ToontownBattleGlobals.SkipMovie
-            if ToontownBattleGlobals.SkipMovie:
-                response = "battle movies will be skipped"
-            else:
-                response = "battle movies will be played"
-            self.setMagicWordResponse(response)
+
 
         elif wordIs('~addCameraPosition'):
             base.localAvatar.addCameraPosition()
@@ -347,29 +305,9 @@ class ToontownMagicWordManager(MagicWordManager.MagicWordManager):
                 else:
                     bboard.post(postName, id)
 
-        elif wordIs('~mintWarp'):
-            args=word.split()
-            if len(args) < 2:
-                self.setMagicWordResponse('Usage: ~mintWarp roomId')
-                return
-            try:
-                roomNum = int(args[1])
-            except:
-                self.setMagicWordResponse('roomId not found: %s' % args[1])
-                return
-            if not bboard.has('mint'):
-                self.setMagicWordResponse('not in a mint')
-                return
-            mint = bboard.get('mint')
-            if not mint.warpToRoom(roomNum):
-                self.setMagicWordResponse(
-                    'invalid roomId or roomId not in this mint: %s' % args[1])
-                return
 
-        elif wordIs('~mintLayouts'):
-            from toontown.coghq import MintLayout
-            MintLayout.printAllCashbotInfo()
-            self.setMagicWordResponse('logged mint layouts')
+
+
 
         elif wordIs("~edit"):
             if not __dev__:
@@ -415,24 +353,7 @@ class ToontownMagicWordManager(MagicWordManager.MagicWordManager):
                 return
             factory.setColorZones(not factory.fColorZones)
             
-        elif wordIs('~fzone'):
-            args = word.split()
-            if len(args) < 2:
-                self.setMagicWordResponse('Usage: ~fzone <zoneNum>')
-                return
-            zoneId = int(args[1])
-            
-            from toontown.coghq import DistributedFactory
-            factories = base.cr.doFindAll("DistributedFactory")
-            factory = None
-            for f in factories:
-                if isinstance(f, DistributedFactory.DistributedFactory):
-                    factory = f
-                    break
-            if factory is None:
-                self.setMagicWordResponse('factory not found')
-                return
-            factory.warpToZone(zoneId)
+)
             
         elif wordIs("~undead"):
             # regenerate dead goons
@@ -510,8 +431,7 @@ class ToontownMagicWordManager(MagicWordManager.MagicWordManager):
                 self.setMagicWordResponse(response)
             else:
                 self.setMagicWordResponse("Enable wantKarts in Config.prc")
-        elif wordIs('~leaveRace'):
-            messenger.send('leaveRace')
+
         elif wordIs('~kartParticles'):
             b = ConfigVariableBool('want-kart-particles', 0)
             b.setValue(not b)

@@ -70,7 +70,7 @@ latencyTolerance = 10.
 # it might take to load resources for a minigame on a low-end machine
 MaxLoadTime = 40.
 
-rulesDuration = 16
+rulesDuration = 20
 
 DifficultyOverrideMult = int(1 << 16)
 def QuantizeDifficultyOverride(diffOverride):

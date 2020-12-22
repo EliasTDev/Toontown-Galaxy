@@ -66,6 +66,7 @@ dclass Account {
   string CREATED db;
   string LAST_LOGIN db;
   string ACCOUNT_ID db;
+  string STAFF_ACCESS db;
 };
 
 
@@ -406,16 +407,17 @@ dclass DistributedPlayer: DistributedAvatar {
   //Access Contorl for velvet rope
   setPreviousAccess(uint8 access = 0) required db airecv;
   setAccess(uint8 access = 2) broadcast ownrecv required ram airecv;
+  setStaffAccess(uint16 = 0) ownrecv required airecv;
 
   setAsGM(bool isGM = 0) required ram broadcast ownrecv airecv;
 };
-
 dclass MagicWordManager: DistributedObject {
   setMagicWord(string, uint32 avId, uint32 zoneId,
                string signature) airecv clsend;
   setMagicWordResponse(string) airecv;
   setWho(uint32array avIds) airecv clsend;
 };
+
 
 // See Also:
 //     "otp/src/uberdog/OtpAvatarManager.py"

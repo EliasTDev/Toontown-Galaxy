@@ -92,7 +92,6 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
                 # Final State
                 'frameworkOff',
                 )
-            
             self.frameworkFSM.enterInitialState()
 
             # Actual avatars that will play the game
@@ -106,6 +105,8 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
 
             self.metagameRound = -1
             self.startingVotes = {} #the votes that carry over 
+            self.canSkip = True
+            self.toonsSkipped = [] #toons that voted to skip
 
     def addChildGameFSM(self, gameFSM):
         """ inheritors should call this with their game ClassicFSM """
@@ -432,6 +433,8 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
         self.notify.debug("difficulty: %s" % self.getDifficulty())
 
     def setAvatarReady(self):
+        self.canSkip = False
+
         """
         This is a distributed update that gets called from the clients
         when they are ready. Usually this means they have finished reading
@@ -557,10 +560,10 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
 
         # create a score list that parallels the avIdList
         scoreList = []
-        if not self.normalExit:
+       # if not self.normalExit:
             # if game exited abnormally, pick a uniform number of points
             # for all toons
-            randReward = random.randrange(DEFAULT_POINTS, MAX_POINTS+1)
+           # randReward = random.randrange(DEFAULT_POINTS, MAX_POINTS+1)
         for avId in self.avIdList:
             assert avId not in [0, None]
             # put in some bogus points if we have requested abort
@@ -578,7 +581,10 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
                     score = 0
                 scoreList.append(score)
             else:
-                scoreList.append(randReward)
+                #set score to 0 if we dont exit normally 
+                #TODO check if state is skipped or exited through magic word if not do random amount
+                score = 0
+                scoreList.append(score)
 
         # Delete yourself
         self.requestDelete()
@@ -794,3 +800,21 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
 
     def getMetagameRound(self):
         return self.metagameRound
+
+    def checkSkip(self):
+        #check if we can skip
+        if len(self.toonsSkipped) >= len(self.avIdList):
+            self.canSkip = False
+            #exit minigame
+            self.setGameAbort()
+        else:
+            #tell the client the amount of toons skipped
+            self.sendUpdate('setSkipAmount', [len(self.toonsSkipped)])
+
+    def requestSkip(self):
+        toon = self.air.getAvatarIdFromSender()
+        #some safety checks
+        if  (toon not in self.avIdList) or (not self.canSkip)  or (toon in self.toonsSkipped):
+            return 
+        self.toonsSkipped.append(toon)
+        self.checkSkip()

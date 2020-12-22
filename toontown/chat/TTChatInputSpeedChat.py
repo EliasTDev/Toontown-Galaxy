@@ -190,7 +190,13 @@ class TTChatInputSpeedChat(DirectObject.DirectObject):
         self.sillyPhaseThreeMenu = None
         self.sillyPhaseFourMenu = None
         self.sillyPhaseFiveMenu = None
-                
+        self.sellbotNerfMenu = None
+        self.jellybeanJamMenu = None
+        self.halloweenMenu = None
+        self.winterMenu = None
+        self.sellbotInvasionMenu = None
+        self.sellbotFieldOfficeMenu = None
+        self.idesOfMarchMenu = None                
         if __debug__:
             base.speedChat = self.speedChat
 
@@ -678,19 +684,7 @@ class TTChatInputSpeedChat(DirectObject.DirectObject):
             self.sillyPhaseFiveMenu.destroy()
             self.sillyPhaseFiveMenu = None
          
-    def addCarolMenu(self):
-        if (self.carolMenu == None):
-            if base.cr.isPaid():
-                menu = TTSCCarolMenu()
-                self.carolMenu = SCMenuHolder(OTPLocalizer.SCMenuCarol, menu = menu)
-                self.speedChat[3:3] = [self.carolMenu]
-                
-    def removeCarolMenu(self):
-        if self.carolMenu:
-            i = self.speedChat.index(self.carolMenu)
-            del self.speedChat[i]
-            self.carolMenu.destroy()
-            self.carolMenu = None                
+              
             
     def addVictoryPartiesMenu(self):
         if self.victoryPartiesMenu == None:
@@ -704,7 +698,74 @@ class TTChatInputSpeedChat(DirectObject.DirectObject):
             del self.speedChat[i]
             self.victoryPartiesMenu.destroy()
             self.victoryPartiesMenu = None
-            
+
+    def addSellbotNerfMenu(self):
+        if self.sellbotNerfMenu == None:
+            menu = TTSCSellbotNerfMenu()
+            self.sellbotNerfMenu = SCMenuHolder(OTPLocalizer.SCMenuSellbotNerf, menu=menu)
+            self.speedChat[2:2] = [self.sellbotNerfMenu]
+        return
+
+    def removeSellbotNerfMenu(self):
+        if self.sellbotNerfMenu:
+            i = self.speedChat.index(self.sellbotNerfMenu)
+            del self.speedChat[i]
+            self.sellbotNerfMenu.destroy()
+            self.sellbotNerfMenu = None
+        return
+
+    def addJellybeanJamMenu(self, phase):
+        if self.jellybeanJamMenu == None:
+            menu = TTSCJellybeanJamMenu(phase)
+            self.jellybeanJamMenu = SCMenuHolder(OTPLocalizer.SCMenuJellybeanJam, menu=menu)
+            self.speedChat[2:2] = [self.jellybeanJamMenu]
+        return
+
+    def removeJellybeanJamMenu(self):
+        if self.jellybeanJamMenu:
+            i = self.speedChat.index(self.jellybeanJamMenu)
+            del self.speedChat[i]
+            self.jellybeanJamMenu.destroy()
+            self.jellybeanJamMenu = None
+        return
+
+    def addHalloweenMenu(self):
+        if self.halloweenMenu == None:
+            menu = TTSCHalloweenMenu()
+            self.halloweenMenu = SCMenuHolder(OTPLocalizer.SCMenuHalloween, menu=menu)
+            self.speedChat[2:2] = [self.halloweenMenu]
+        return
+
+    def removeHalloweenMenu(self):
+        if self.halloweenMenu:
+            i = self.speedChat.index(self.halloweenMenu)
+            del self.speedChat[i]
+            self.halloweenMenu.destroy()
+            self.halloweenMenu = None
+        return
+
+    def addWinterMenu(self, carol = False):
+        if self.winterMenu == None:
+            menu = TTSCWinterMenu(carol)
+            self.winterMenu = SCMenuHolder(OTPLocalizer.SCMenuWinter, menu=menu)
+            self.speedChat[2:2] = [self.winterMenu]
+        return
+
+    def removeWinterMenu(self):
+        if self.winterMenu:
+            i = self.speedChat.index(self.winterMenu)
+            del self.speedChat[i]
+            self.winterMenu.destroy()
+            self.winterMenu = None
+        return
+
+    def addCarolMenu(self):
+        self.removeWinterMenu()
+        self.addWinterMenu(carol=True)
+
+    def removeCarolMenu(self):
+        pass
+
     # methods for creating White List chat menus
     def addWhiteList(self):
         if self.whiteList == None:
@@ -720,3 +781,47 @@ class TTChatInputSpeedChat(DirectObject.DirectObject):
             del self.speedChat[i] 
             self.whiteList.destroy()
             self.whiteList = None
+    def addSellbotInvasionMenu(self):
+        if self.sellbotInvasionMenu == None:
+            menu = TTSCSellbotInvasionMenu()
+            self.sellbotInvasionMenu = SCMenuHolder(OTPLocalizer.SCMenuSellbotInvasion, menu=menu)
+            self.speedChat[2:2] = [self.sellbotInvasionMenu]
+        return
+
+    def removeSellbotInvasionMenu(self):
+        if self.sellbotInvasionMenu:
+            i = self.speedChat.index(self.sellbotInvasionMenu)
+            del self.speedChat[i]
+            self.sellbotInvasionMenu.destroy()
+            self.sellbotInvasionMenu = None
+        return
+
+    def addSellbotFieldOfficeMenu(self):
+        if self.sellbotFieldOfficeMenu == None:
+            menu = TTSCSellbotFieldOfficeMenu()
+            self.sellbotFieldOfficeMenu = SCMenuHolder(OTPLocalizer.SCMenuFieldOffice, menu=menu)
+            self.speedChat[2:2] = [self.sellbotFieldOfficeMenu]
+        return
+
+    def removeSellbotFieldOfficeMenu(self):
+        if self.sellbotFieldOfficeMenu:
+            i = self.speedChat.index(self.sellbotFieldOfficeMenu)
+            del self.speedChat[i]
+            self.sellbotFieldOfficeMenu.destroy()
+            self.sellbotFieldOfficeMenu = None
+        return
+
+    def addIdesOfMarchMenu(self):
+        if self.idesOfMarchMenu == None:
+            menu = TTSCIdesOfMarchMenu()
+            self.idesOfMarchMenu = SCMenuHolder(OTPLocalizer.SCMenuIdesOfMarch, menu=menu)
+            self.speedChat[2:2] = [self.idesOfMarchMenu]
+        return
+
+    def removeIdesOfMarchMenu(self):
+        if self.idesOfMarchMenu:
+            i = self.speedChat.index(self.idesOfMarchMenu)
+            del self.speedChat[i]
+            self.idesOfMarchMenu.destroy()
+            self.idesOfMarchMenu = None
+        return

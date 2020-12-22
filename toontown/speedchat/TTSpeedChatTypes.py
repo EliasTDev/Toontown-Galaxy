@@ -4,7 +4,7 @@ from .TTSCToontaskMenu import TTSCToontaskMenu
 from .TTSCFactoryMenu import TTSCFactoryMenu
 from .TTSCCogMenu import TTSCCogMenu
 if hasattr(base, 'wantPets') and base.wantPets:
-    from .TTSCPetTrickMenu import TTSCPetTrickMenu  
+    from .TTSCPetTrickMenu import TTSCPetTrickMenu
 from .TTSCPromotionalMenu import TTSCPromotionalMenu
 from .TTSCToontaskTerminal import TTSCToontaskTerminal
 from .TTSCResistanceMenu import TTSCResistanceMenu
@@ -19,5 +19,11 @@ from .TTSCSillyPhaseTwoMenu import TTSCSillyPhaseTwoMenu
 from .TTSCSillyPhaseThreeMenu import TTSCSillyPhaseThreeMenu
 from .TTSCSillyPhaseFourMenu import TTSCSillyPhaseFourMenu
 from .TTSCSillyPhaseFiveMenu import TTSCSillyPhaseFiveMenu
-from .TTSCCarolMenu import TTSCCarolMenu
 from .TTSCVictoryPartiesMenu import TTSCVictoryPartiesMenu
+from .TTSCSellbotNerfMenu import TTSCSellbotNerfMenu
+from .TTSCJellybeanJamMenu import TTSCJellybeanJamMenu
+from .TTSCHalloweenMenu import TTSCHalloweenMenu
+from .TTSCWinterMenu import TTSCWinterMenu
+from .TTSCSellbotInvasionMenu import TTSCSellbotInvasionMenu
+from .TTSCSellbotFieldOfficeMenu import TTSCSellbotFieldOfficeMenu
+from .TTSCIdesOfMarchMenu import TTSCIdesOfMarchMenu

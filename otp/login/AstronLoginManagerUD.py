@@ -10,6 +10,7 @@ from direct.distributed.PyDatagram import *
 from toontown.makeatoon.NameGenerator import NameGenerator
 from toontown.toon.ToonDNA import ToonDNA
 from toontown.toonbase import TTLocalizer
+from otp.otpbase import OTPGlobals
 
 
 class AccountDB:
@@ -45,13 +46,16 @@ class DeveloperAccountDB(AccountDB):
             # It is not, so we'll associate them with a brand new account object.
             callback({'success': True,
                       'accountId': 0,
-                      'databaseId': playToken})
+                      'databaseId': playToken,
+                      'staffAccess': 'SYSTEM ADMIN'})
         else:
+            def handleAccountInfo(dclass, fields):
             # We already have an account object, so we'll just return what we have.
-            callback({'success': True,
+                callback({'success': True,
                       'accountId': int(self.dbm[playToken]),
-                      'databaseId': playToken})
-
+                      'databaseId': playToken,
+                      'staffAccess': fields.get('STAFF_ACCESS', 'USER')})
+            self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, int(self.dbm[playToken]), handleAccountInfo)
 
 class GameOperation:
 
@@ -90,6 +94,7 @@ class LoginOperation(GameOperation):
 
         self.databaseId = result.get('databaseId', 0)
         accountId = result.get('accountId', 0)
+        self.staffAccess = result.get('staffAccess', 'USER')
         if accountId:
             self.accountId = accountId
             self.__handleRetrieveAccount()
@@ -114,7 +119,8 @@ class LoginOperation(GameOperation):
                         'ACCOUNT_AV_SET_DEL': [],
                         'CREATED': time.ctime(),
                         'LAST_LOGIN': time.ctime(),
-                        'ACCOUNT_ID': str(self.databaseId)}
+                        'ACCOUNT_ID': str(self.databaseId),
+                        'STAFF_ACCESS': self.staffAccess}
 
         self.loginManager.air.dbInterface.createObject(self.loginManager.air.dbId,
                                                        self.loginManager.air.dclassesByName['AccountUD'],
@@ -611,8 +617,9 @@ class LoadAvatarOperation(AvatarOperation):
         datagram.addUint16(cleanupDatagram.getLength())
         datagram.appendData(cleanupDatagram.getMessage())
         self.loginManager.air.send(datagram)
-
-        self.loginManager.air.sendActivate(self.avId, 0, 0, self.loginManager.air.dclassesByName['DistributedToonUD'])
+        staffAccess = self.account.get('STAFF_ACCESS', 'USER')
+        staffAccess = OTPGlobals.AccessLevelName2Int.get(staffAccess, 100)
+        self.loginManager.air.sendActivate(self.avId, 0, 0, self.loginManager.air.dclassesByName['DistributedToonUD'], {'setStaffAccess': [staffAccess]})
 
         datagram = PyDatagram()
         datagram.addServerHeader(channel, self.loginManager.air.ourChannel, CLIENTAGENT_OPEN_CHANNEL)

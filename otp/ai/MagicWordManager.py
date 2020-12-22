@@ -73,21 +73,15 @@ class MagicWordManager(DistributedObject.DistributedObject):
         return Functor(self.wordIs, word)
 
     def doMagicWord(self, word, avId, zoneId):
-        wordIs = self.getWordIs(word)
+        """wordIs = self.getWordIs(word)
 
         print(word)
-        if wordIs("~oobe"):
-            base.oobe()
-        elif wordIs("~oobeCull"):
-            base.oobeCull()
-        elif wordIs("~tex"):
-            self.doTex(word)
-        elif wordIs("~texmem"):
-            base.toggleTexMem()
-        elif wordIs("~verts"):
-            base.toggleShowVertices()
-        elif wordIs("~wire"):
-            base.toggleWireframe()
+
+
+
+
+
+
         elif wordIs("~stereo"):
             base.toggleStereo()
         elif wordIs("~showfont"):
@@ -724,7 +718,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
             # Not a magic word I know!
             return 0
 
-        return 1
+        return 1"""
 
     # MPG need a generic version of this
     def toggleRun(self):

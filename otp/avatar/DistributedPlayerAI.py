@@ -11,6 +11,7 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI,
         DistributedAvatarAI.DistributedAvatarAI.__init__(self, air)
         PlayerBase.PlayerBase.__init__(self)
         self.friendsList = []
+        self.staffAccess = 0
 
     if __dev__:
         def generate(self):
@@ -156,3 +157,8 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI,
         # up-to-date, but it will at least be good enough for the
         # quest manager.
 
+    def setStaffAccess(self, staffAccess):
+        self.staffAccess = staffAccess
+    
+    def getStaffAccess(self):
+        return self.staffAccess

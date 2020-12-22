@@ -68,7 +68,7 @@ from toontown.estate import DistributedHouse/AI
 from toontown.estate import DistributedHouseInterior/AI
 from toontown.estate import DistributedGarden/AI
 from toontown.shtiker import DeleteManager/AI
-from toontown.ai import ToontownMagicWordManager/AI
+//from toontown.ai import ToontownMagicWordManager/AI
 from toontown.ai import NewsManager/AI
 from toontown.shtiker import PurchaseManager/AI
 from toontown.shtiker import NewbiePurchaseManager/AI
@@ -318,6 +318,7 @@ from toontown.cogdominium import DistCogdoFlyingGame/AI
 from toontown.cogdominium import DistCogdoCrane/AI
 from toontown.cogdominium import DistCogdoCraneMoneyBag/AI
 from toontown.cogdominium import DistCogdoCraneCog/AI
+from toontown.spellbook import ToontownMagicWordManager/AI
 
 
 
@@ -1599,7 +1600,7 @@ dclass DistributedMinigame: DistributedObject {
 
   // Messages sent from client to AI
   setAvatarJoined() airecv clsend; //appears safe, some kind of state check is done
-  setAvatarReady() airecv clsend;  //appears safe, some kind of state check is done
+  setAvatarReady() broadcast airecv clsend;  //appears safe, some kind of state check is done
   setAvatarExited() airecv clsend; //appears safe, some kind of state check is done
 
   // For debugging only... terminates a minigame.
@@ -1608,6 +1609,8 @@ dclass DistributedMinigame: DistributedObject {
   setGameStart(int16 timestamp) broadcast;
   setGameExit() broadcast;
   setGameAbort() broadcast;
+  setSkipAmount(uint8) broadcast;
+  requestSkip() airecv clsend;
 };
 
 dclass DistributedMinigameTemplate: DistributedMinigame {
@@ -2079,10 +2082,7 @@ dclass DeleteManager: DistributedObject {
   setInventory(blob) airecv clsend;        //possible security breach: not sure how to validate blob...need help = JOE/DROSE
 };
 
-dclass ToontownMagicWordManager: MagicWordManager {
-  requestTeleport(string loaderId, string whereId,
-                  uint32 hoodId, uint32 zoneId, uint32 avId);
-};
+
 
 struct weeklyCalendarHoliday {
   uint8 holidayId;
@@ -4551,4 +4551,10 @@ dclass DistributedTrashcanZeroMgr : DistributedPhaseEventMgr{
 };
 
 dclass DistributedSillyMeterMgr : DistributedPhaseEventMgr {
+};
+
+dclass ToontownMagicWordManager : DistributedObject {
+  requestExecuteMagicWord(int8, int8, int16, uint32, string) airecv clsend;
+  executeMagicWord(string, string, uint32[], blob, int8, int8, int16, uint32);
+  generateResponse(string, string, blob, string, int8, int8, int16, uint32, string);
 };

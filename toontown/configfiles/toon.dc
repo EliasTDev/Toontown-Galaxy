@@ -2372,9 +2372,10 @@ dclass DistributedCogdoInterior: DistributedObject {
 dclass DistCogdoGame: DistributedObject {
   setInteriorId(uint32 interiorId) required broadcast ram;
   setIntroStart() broadcast;
-  setAvatarReady() airecv clsend;
+  setAvatarReady() broadcast airecv clsend;
   setGameStart(int16 timestamp) broadcast;
   setGameFinish(int16 timestamp) broadcast;
+
 };
 
 dclass DistCogdoLevelGame: DistCogdoGame, DistributedLevel {

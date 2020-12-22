@@ -116,7 +116,8 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         # Play Game's minigame state data throws this when the local toon
         # is done reading the rules
         self.rulesDoneEvent = "rulesDone"
-
+        #when messenger sends minigameSkip request to skip
+        self.acceptOnce('minigameSkip', self.requestSkip)
         # A hook for debugging, so we can exit minigames quickly
         self.acceptOnce("minigameAbort", self.d_requestExit)
 
@@ -412,6 +413,7 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         for avId in self.avIdList:
             if avId != self.localAvId:
                 self.remoteAvIdList.append(avId)
+        self.setSkipAmount(0)
 
     def setTrolleyZone(self, trolleyZone):
         """
@@ -624,7 +626,9 @@ class DistributedMinigame(DistributedObject.DistributedObject):
             "MinigameRulesPanel",
             self.getTitle(),
             self.getInstructions(),
-            self.rulesDoneEvent)
+            self.rulesDoneEvent,
+            toons=len(self.avIdList))
+
         self.rulesPanel.load()
         self.rulesPanel.enter()
 
@@ -801,3 +805,12 @@ class DistributedMinigame(DistributedObject.DistributedObject):
 
     def setMetagameRound(self, metagameRound):
         self.metagameRound = metagameRound
+
+    def setAvatarReady(self):
+        messenger.send('disableSkipMinigame')
+    
+    def setSkipAmount(self, amount):
+        messenger.send('minigameSkipAmountChange', [amount, len(self.avIdList)])
+    
+    def requestSkip(self):
+        self.sendUpdate('requestSkip')

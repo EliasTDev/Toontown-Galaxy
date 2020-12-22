@@ -22,7 +22,7 @@ class MinigameRulesPanel(StateData.StateData):
     in advance. When you create it, it will appear onscreen immediately
     """
     
-    def __init__(self, panelName, gameTitle, instructions, doneEvent, timeout = MinigameGlobals.rulesDuration):
+    def __init__(self, panelName, gameTitle, instructions, doneEvent, timeout = MinigameGlobals.rulesDuration, toons=0):
         """
         panelName: no longer used
         gameTitle: title string of the game, shown at top of panel
@@ -32,6 +32,7 @@ class MinigameRulesPanel(StateData.StateData):
         self.gameTitle = gameTitle
         self.instructions = instructions
         self.TIMEOUT=timeout
+        self.toons = toons 
     def load(self):
         # make the av choice panel
         minigameGui = loader.loadModel("phase_4/models/gui/minigame_rules_gui")
@@ -74,7 +75,25 @@ class MinigameRulesPanel(StateData.StateData):
             scale = 1.05,
             command = self.playCallback,
             )
-
+        if self.toons:
+            self.skipButton = DirectButton(
+            parent = self.frame,
+            relief = None,
+            image = (buttonGui.find("**/InventoryButtonUp"),
+                     buttonGui.find("**/InventoryButtonDown"),
+                     buttonGui.find("**/InventoryButtonRollover"),
+                     ),
+            image_color = Vec4(1,0,0,1),
+            text = TTLocalizer.MinigameRulesPanelSkip.format(0, self.toons),
+            text_fg = (0,0,0,1),
+            text_pos = (0, 0.01, 0),
+            text_scale = TTLocalizer.MRPplayButton,
+            pos = (0.6, 0, 0.12),
+            scale = 1.05,
+            command = self.skipCallback,
+            )
+            self.acceptOnce('disableSkipMinigame', self.skipButton.hide)
+            self.accept('minigameSkipAmountChange', self.updateSkipButton)
         minigameGui.removeNode()
         buttonGui.removeNode()
 
@@ -92,6 +111,10 @@ class MinigameRulesPanel(StateData.StateData):
         self.playButton.destroy()
         del self.playButton
         del self.timer
+        self.ignoreAll()
+        if hasattr(self, 'skipButton'):
+            self.skipButton.destroy()
+            del self.skipButton
     
     def enter(self):
         self.frame.show()
@@ -117,3 +140,15 @@ class MinigameRulesPanel(StateData.StateData):
         messenger.send(self.doneEvent)
 
         
+    def updateSkipButton(self, minimum, maximum):
+        """
+        Updates the skip button text to match the votes.
+        """
+        self.skipButton['text'] = TTLocalizer.MinigameRulesPanelSkip.format(minimum, maximum)
+
+    def skipCallback(self):
+        """
+        This called when user clicks the skip button.
+        Clean ourselves up and send the skip event
+        """
+        messenger.send('minigameSkip')

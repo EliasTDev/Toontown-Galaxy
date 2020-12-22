@@ -33,8 +33,6 @@ class NewsManagerAI(DistributedObjectAI.DistributedObjectAI):
         # let them know about all holidays actually...
         self.sendUpdateToAvatarId(avatar.getDoId(), "holidayNotify", [])
         
-        if self.everyoneChats:
-            avatar.d_setCommonChatFlags(ToontownGlobals.CommonChat)
 
     def __handleAvatarExited(self, avatar = None):
         pass

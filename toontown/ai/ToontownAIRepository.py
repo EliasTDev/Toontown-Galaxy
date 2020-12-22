@@ -55,7 +55,7 @@ from toontown.tutorial.TutorialManagerAI import TutorialManagerAI
 from toontown.fishing import DistributedFishingPondAI
 from toontown.safezone import DistributedFishingSpotAI
 from toontown.safezone import DistributedPartyGateAI
-from toontown.ai.ToontownMagicWordManagerAI import ToontownMagicWordManagerAI
+from toontown.spellbook.ToontownMagicWordManagerAI import ToontownMagicWordManagerAI
 from toontown.uberdog.DistributedPartyManagerAI import DistributedPartyManagerAI
 from toontown.parties.ToontownTimeManager import ToontownTimeManager
 from toontown.coderedemption.TTCodeRedemptionMgrAI import TTCodeRedemptionMgrAI

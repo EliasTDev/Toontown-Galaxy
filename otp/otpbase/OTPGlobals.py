@@ -2,8 +2,8 @@
 #from pandac.PandaModules import BitMask32, Point3, TextNode
 
 # Several other files that import this file assume we will import all
-# of PandaModules.
-from pandac.PandaModules import *
+# of Panda3d.core.
+from panda3d.core import *
 
 #### ZONE IDs ####
 # Quiet zone ... The zone you go to when you transition between neighborhoods
@@ -513,3 +513,40 @@ AccessInvalid = 3 #use this for the default value of setAccess to detect when it
 AvatarPendingCreate = -1
 AvatarSlotUnavailable = -2
 AvatarSlotAvailable = -3
+
+AccessLevelName2Int = {
+ 'RESTRICTED': -100,
+ 'NO_ACCESS': 0,
+ 'USER': 100,
+ 'COMMUNITY': 200,
+ 'CREATIVE': 300,
+ 'MODERATOR': 400,
+ 'DEVELOPER': 500,
+ 'ADMIN': 600,
+ 'SYSTEM ADMIN': 700
+
+}
+
+AccessLevelInt2Name = {
+ -100: 'RESTRICTED',
+ 0: 'NO_ACCESS',
+ 100: 'USER',
+ 200: 'COMMUNITY',
+ 300: 'CREATIVE',
+ 400: 'MODERATOR',
+ 500: 'DEVELOPER',
+ 600: 'ADMIN',
+ 700: 'SYSTEM ADMIN'
+}
+
+AccessLevelDebug2Name = {
+    'RESTRICTED': 'Banned',
+    'NO_ACCESS': 'Player',
+    'USER': 'User',
+    'COMMUNTY': 'Community',
+    'CREATIVE': 'Creative',
+    'MODERATOR': 'Mod',
+    'DEVELOPER': 'Dev',
+    'ADMIN': 'Admin',
+    'SYSTEM ADMIN': 'Sys Admin'
+}

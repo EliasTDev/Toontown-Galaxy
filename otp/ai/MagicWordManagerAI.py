@@ -75,238 +75,19 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
         return Functor(self.wordIs, word)
 
     def doMagicWord(self, word, av, zoneId, senderId):
+        return 
+        """
         wordIs = self.getWordIs(word)
 
-        if wordIs("~rename"):
-            if (not self.supportRename):
-                self.notify.warning("Rename is not supported for %s, requested by %d" % (av._name, senderId))
-            else:
-                name = word[8:].strip()
-                if name == "":
-                    response = "No name."
-                else:
-                    av.d_setName(name)
-
-        elif wordIs("~badname"):
-            self.notify.warning("Renaming inappropriately named toon %s (doId %d)." % (av._name, av.doId))
-            name = "toon%d" % (av.doId % 1000000)
-            av.d_setName(name)
-
-        elif wordIs("~chat"):
-            if (not self.supportSuperchat) and (senderId != av.doId):
-                self.notify.warning("Super chat is not supported for %s, requested by %d" % (av._name, senderId))
-            else:
-                av.d_setCommonChatFlags(OTPGlobals.CommonChat)
-                self.notify.debug("Giving common chat permission to " + av._name)
-        elif wordIs("~superchat"):
-            if not self.supportSuperchat:
-                self.notify.warning("Super chat is not supported for " + av._name)
-            else:
-                av.d_setCommonChatFlags(OTPGlobals.SuperChat)
-                self.notify.debug("Giving super chat permission to " + av._name)
-        elif wordIs("~nochat"):
-            av.d_setCommonChatFlags(0)
-            self.notify.debug("Removing special chat permissions for " + av._name)
-
-        elif wordIs("~listen"):
-            if (not self.supportSuperchat) and (senderId != av.doId):
-                self.notify.warning("Listen is not supported for %s, requested by %d" % (av._name, senderId))
-            else:
-                # This is a client-side word.
-                if (senderId != av.doId):
-                    self.sendUpdateToAvatarId(av.doId, 'setMagicWord', [word, av.doId, zoneId])
-
-        elif wordIs("~fix"):
-            anyChanged = av.fixAvatar()
-            if anyChanged:
-                response = "avatar fixed."
-            else:
-                response = "avatar does not need fixing."
-            self.down_setMagicWordResponse(senderId, response)
-
-            self.down_setMagicWordResponse(senderId, response)
-
-        elif wordIs("~who all"):
-            str = ''
-            for obj in list(self.air.doId2do.values()):
-                if hasattr(obj, "accountName"):
-                    str += '%s %s\n' % (obj.accountName, obj.name)
-            if not str:
-                str = "No avatars."
-            self.down_setMagicWordResponse(senderId, str)
-
-        elif wordIs("~ouch"):
-            if av.hp < 1:
-                av.b_setHp(0)
-                av.toonUp(1)
-            else:
-                av.b_setHp(1)
-            self.notify.debug("Only 1 hp for " + av._name)
-        elif wordIs("~sad"):
-            av.b_setHp(0)
-            self.notify.debug("Only 0 hp for " + av._name)
-        elif wordIs("~dead"):
-            av.takeDamage(av.hp)
-            self.notify.debug(av._name + " is dead")
-        elif wordIs("~waydead"):
-            av.takeDamage(av.hp)
-            av.b_setHp(-100)
-            self.notify.debug(av._name + " is way dead")
-        elif wordIs("~toonup"):
-            av.toonUp(av.maxHp)
-            self.notify.debug("Full heal for " + av._name)
-
-        elif wordIs('~maxtoon'):
-
-            av.b_setTrackAccess([1,1,1,1,1,1,1])
-            av.b_setMaxCarry(ToontownGlobals.MaxCarryLimit)
-
-            experience = Experience.Experience(av.getExperience(),av)
-            for i, track in enumerate(av.getTrackAccess()):
-                if track:
-                    experience.experience[i] = (
-                            Experience.MaxSkill - Experience.UberSkill)
-            av.b_setExperience(experience.makeNetString())
-
-            av.inventory.zeroInv()
-            av.inventory.maxOutInv(filterUberGags=0, filterPaidGags=0)
-            av.b_setInventory(av.inventory.makeNetString())
-
-            av.b_setMaxMoney(Quests.RewardDict[707][1])
-            av.b_setMoney(av.getMaxMoney())
-            av.b_setBankMoney(30000)
-
-            av.b_setMaxHp(137)
-            laff = av.getMaxHp() - av.getHp()
-            if laff < 15:
-                laff = 15
-            av.toonUp(laff)
-
-            av.b_setHoodsVisited(ToontownGlobals.Hoods)
-            av.b_setTeleportAccess(ToontownGlobals.HoodsForTeleportAll)
-
-            av.b_setCogParts([
-                CogDisguiseGlobals.PartsPerSuitBitmasks[0],
-                CogDisguiseGlobals.PartsPerSuitBitmasks[1],
-                CogDisguiseGlobals.PartsPerSuitBitmasks[2],
-                CogDisguiseGlobals.PartsPerSuitBitmasks[3],
-            ])
-            av.b_setCogLevels([ToontownGlobals.MaxCogSuitLevel] * 4 + [0])
-            av.b_setCogTypes([7] * 4 + [0])
-
-            av.b_setCogCount(list(CogPageGlobals.COG_QUOTAS[1]) * 4)
-            cogStatus = [CogPageGlobals.COG_COMPLETE2] * SuitDNA.suitsPerDept
-            av.b_setCogStatus(cogStatus * 4)
-            av.b_setCogRadar([1] * 4)
-            av.b_setBuildingRadar([1] * 4)
-
-            for id in av.getQuests():
-                av.removeQuest(id)
-            av.b_setQuestCarryLimit(ToontownGlobals.MaxQuestCarryLimit)
-            av.b_setRewardHistory(Quests.LOOPING_FINAL_TIER, av.getRewardHistory()[1])
-
-            allFish = TTLocalizer.FishSpeciesNames
-            fishLists = [[], [], []]
-            for genus in allFish.keys():
-                for species in range(len(allFish[genus])):
-                    fishLists[0].append(genus)
-                    fishLists[1].append(species)
-                    fishLists[2].append(FishGlobals.getRandomWeight(genus, species))
-            av.b_setFishCollection(*fishLists)
-            av.b_setFishingRod(FishGlobals.MaxRodId)
-            av.b_setFishingTrophies(list(FishGlobals.TrophyDict.keys()))
-
-            if not av.hasKart():
-                av.b_setKartBodyType(list(KartDict.keys())[1])
-            av.b_setTickets(RaceGlobals.MaxTickets)
-            maxTrophies = RaceGlobals.NumTrophies + RaceGlobals.NumCups
-            av.b_setKartingTrophies(range(1, maxTrophies + 1))
-            av.b_setTickets(99999)
-
-            av.b_setGolfHistory([600] * (GolfGlobals.MaxHistoryIndex * 2))
-
-        elif wordIs('~skipMaze'):
-             mazeGame = None
-             from toontown.cogdominium.DistCogdoMazeGameAI import DistCogdoMazeGameAI
-             for do in simbase.air.doId2do.values():
-                if isinstance(do, DistCogdoMazeGameAI):
-                    if av.doId in do.getToonIds():
-                        mazeGame = do
-                        break
-
-             if mazeGame:
-                 mazeGame.openDoor()
-                 return "Skipped SBFO Maze Minigame!"
-
-             return "You are not in the SBFO maze minigame!"
-        elif wordIs('~hp'):
-            args = word.split()
-            hp = int(args[1])
-            av.b_setHp(hp)
-            self.notify.debug('Set hp to %s for %s' % (hp, av._name))
-        elif wordIs('~skipFly'):
-            from toontown.cogdominium.DistCogdoFlyingGameAI import DistCogdoFlyingGameAI
-            flyingGame = None
-            for do in simbase.air.doId2do.values():
-                if isinstance(do, DistCogdoFlyingGameAI):
-                    if av.doId in do.getToonIds():
-                        flyingGame = do
-                        break
-
-            if flyingGame:
-                flyingGame._handleGameFinished()
-                response = 'Finished field office flying game!'
-            else:
-                response = 'Not in a legal eagle field office'
-            self.down_setMagicWordResponse(senderId, response)
 
 
-        elif wordIs("~ainotify"):
-            args = word.split()
-            n = Notify.ptr().getCategory(args[1])
-            n.setSeverity(
-                {'error': NSError,
-                 'warning': NSWarning,
-                 'info': NSInfo,
-                 'debug': NSDebug,
-                 'spam': NSSpam,}[args[2]])
 
-        elif wordIs("~ghost"):
-            # Toggle ghost mode.  Ghost mode == 2 indicates a magic
-            # word was the source.
-            if av.ghostMode:
-                av.b_setGhostMode(0)
-            else:
-                av.b_setGhostMode(2)
 
-        elif wordIs('~immortal'):
-            # ~immortal toggles immortal mode on and off
-            # ~immortal 0/1 and ~immortal on/off sets the mode explicitly
-            args = word.split()
-            invalid = False
-            if len(args) > 1 and args[1] in ('0', 'off'):
-                immortal = False
-            elif len(args) > 1 and args[1] in ('1', 'on'):
-                immortal = True
-            elif len(args) > 1:
-                invalid = True
-            else:
-                immortal = not av.immortalMode
 
-            if invalid:
-                self.down_setMagicWordResponse(senderId, 'unknown argument %s' % args[1])
-            else:
-                # immortality
-                av.setImmortalMode(immortal)
-                if av.immortalMode:
-                    response = 'immortality ON'
-                else:
-                    response = 'immortality OFF'
-                self.down_setMagicWordResponse(senderId, response)
 
-        elif wordIs("~dna"):
-            # Fiddle with your dna.
-            self.doDna(word, av, zoneId, senderId)
+
+ 
+
 
         elif wordIs('~ai'):
             # Execute an arbitrary Python command on the AI.
@@ -329,27 +110,7 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
                 except:
                     pass
 
-        elif wordIs('~aiobjects'):
-            args = word.split()
-            from direct.showbase import ObjectReport
-            report = ObjectReport.ObjectReport('AI ~objects')
 
-            if 'all' in args:
-                self.notify.info('printing full object set...')
-                report.getObjectPool().printObjsByType(printReferrers='ref' in args)
-
-            if hasattr(self, 'baselineObjReport'):
-                self.notify.info('calculating diff from baseline ObjectReport...')
-                self.lastDiff = self.baselineObjReport.diff(report)
-                self.lastDiff.printOut(full=('diff' in args or 'dif' in args))
-
-            if 'baseline' in args or not hasattr(self, 'baselineObjReport'):
-                self.notify.info('recording baseline ObjectReport...')
-                if hasattr(self, 'baselineObjReport'):
-                    self.baselineObjReport.destroy()
-                self.baselineObjReport = report
-
-            self.down_setMagicWordResponse(senderId, 'objects logged')
 
         elif wordIs('~aiobjecthg'):
             import gc
@@ -559,24 +320,8 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
             taskMgr.setTaskDurationWarningThreshold(threshold)
             self.down_setMagicWordResponse(senderId, response)
 
-        elif wordIs('~aimessenger'):
-            print(messenger)
-            self.down_setMagicWordResponse(senderId, 'logging AI messenger...')
 
-        elif wordIs('~requestdeleted'):
-            requestDeletedDOs = self.air.getRequestDeletedDOs()
-            response = '%s requestDeleted AI objects%s' % (
-                len(requestDeletedDOs), choice(len(requestDeletedDOs), ', logging...', ''))
-            s = '~requestDeleted: ['
-            for do, age in requestDeletedDOs:
-                s += '[%s, %s]' % (do.__class__.__name__, age)
-            s += ']'
-            self.notify.info(s)
-            if len(requestDeletedDOs):
-                response += '\noldest: %s, %s' % (
-                    requestDeletedDOs[0][0].__class__.__name__,
-                    formatTimeCompact(requestDeletedDOs[0][1]))
-            self.down_setMagicWordResponse(senderId, response)
+
 
         elif wordIs('~aigptc'):
             args = word.split()
@@ -603,7 +348,9 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
             #if (senderId != av.doId):
             #    self.sendUpdateToAvatarId(av.doId, 'setMagicWord', [word, av.doId, zoneId])
             return 0
-        return 1
+        return 1"""
+
+
 
     # MPG define in child class
     """

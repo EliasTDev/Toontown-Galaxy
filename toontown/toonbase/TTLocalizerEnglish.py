@@ -7254,7 +7254,7 @@ CogThiefPerfect = "PERFECT!"
 
 # MinigameRulesPanel.py
 MinigameRulesPanelPlay = "PLAY"
-
+MinigameRulesPanelSkip = 'SKIP\n{0}/{1}'
 # Purchase.py
 GagShopName = "Goofy's Gag Shop"
 GagShopPlayAgain = "PLAY\nAGAIN"
