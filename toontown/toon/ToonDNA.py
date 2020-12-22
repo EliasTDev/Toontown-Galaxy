@@ -8,7 +8,7 @@ import random
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from otp.avatar import AvatarDNA
-
+from otp.otpbase.PythonUtil import *
 notify = directNotify.newCategory("ToonDNA")
 
 # Warning!  DNA values are stored in the server database by indexing
@@ -292,7 +292,48 @@ Shirts = [
     "phase_4/maps/tt_t_chr_avt_shirt_mostCogsDefeated01.jpg",  # 106 Most Cogs Defeated Shirt
     "phase_4/maps/tt_t_chr_avt_shirt_victoryParty01.jpg",  # 107 Victory Party Shirt 1
     "phase_4/maps/tt_t_chr_avt_shirt_victoryParty02.jpg",  # 108 Victory Party Shirt 2
-    ]
+    'phase_4/maps/tt_t_chr_avt_shirt_sellbotIcon.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_sellbotVPIcon.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_sellbotCrusher.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_jellyBeans.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_doodle.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_halloween5.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_halloweenTurtle.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_greentoon1.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_getConnectedMoverShaker.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_racingGrandPrix.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_lawbotIcon.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_lawbotVPIcon.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_lawbotCrusher.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_bee.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_pirate.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_supertoon.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_vampire.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_dinosaur.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_fishing04.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_golf03.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_mostCogsDefeated02.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_racing03.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_saveBuilding3.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_trolley03.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_fishing05.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_golf04.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_halloween06.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_winter03.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_halloween07.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_winter02.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_fishing06.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_fishing07.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_golf05.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_racing04.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_racing05.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_mostCogsDefeated03.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_mostCogsDefeated04.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_trolley04.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_trolley05.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_saveBuilding4.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_saveBuilding05.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirt_anniversary.jpg']
 
 # These are deemed safe for MakeAToon
 BoyShirts = [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (8, 8), (9, 9), (10, 0), (11, 0), (14, 10), (16, 0), (17, 0), (18, 12), (19, 13)]
@@ -444,7 +485,48 @@ Sleeves = [
     "phase_4/maps/tt_t_chr_avt_shirtSleeve_mostCogsDefeated01.jpg",# 93 Most Cogs Defeated Sleeves
     "phase_4/maps/tt_t_chr_avt_shirtSleeve_victoryParty01.jpg",    # 94 Victory Party Sleeves 1
     "phase_4/maps/tt_t_chr_avt_shirtSleeve_victoryParty02.jpg",    # 95 Victory Party Sleeves 2
-    ]
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_sellbotIcon.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_sellbotVPIcon.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_sellbotCrusher.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_jellyBeans.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_doodle.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_halloween5.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_halloweenTurtle.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_greentoon1.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_getConnectedMoverShaker.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_racingGrandPrix.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_lawbotIcon.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_lawbotVPIcon.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_lawbotCrusher.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_bee.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_pirate.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_supertoon.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_vampire.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_dinosaur.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_fishing04.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_golf03.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_mostCogsDefeated02.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_racing03.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_saveBuilding3.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_trolley03.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_fishing05.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_golf04.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_halloween06.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_winter03.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_halloween07.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_winter02.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_fishing06.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_fishing07.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_golf05.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_racing04.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_racing05.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_mostCogsDefeated03.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_mostCogsDefeated04.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_trolley04.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_trolley05.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_saveBuilding4.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_saveBuilding05.jpg',
+    'phase_4/maps/tt_t_chr_avt_shirtSleeve_anniversary.jpg']
 
 # len = 9 
 BoyShorts = [
@@ -511,7 +593,23 @@ BoyShorts = [
     "phase_4/maps/tt_t_chr_shorts_scientistC.jpg",   # 39
     
     "phase_4/maps/tt_t_chr_avt_shorts_cogbuster.jpg",  # 40 Silly Cogbuster Shorts     
-    ]
+    'phase_4/maps/tt_t_chr_avt_shorts_sellbotCrusher.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_halloween5.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_halloweenTurtle.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_greentoon1.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_racingGrandPrix.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_lawbotCrusher.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_bee.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_pirate.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_supertoon.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_vampire.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_dinosaur.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_golf03.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_racing03.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_golf04.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_golf05.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_racing04.jpg',
+    'phase_4/maps/tt_t_chr_avt_shorts_racing05.jpg']
 
 SHORTS = 0
 SKIRT = 1
@@ -588,7 +686,24 @@ GirlBottoms = [
     ("phase_4/maps/tt_t_chr_shorts_scientistC.jpg", SHORTS),   # 43
     
     ("phase_4/maps/tt_t_chr_avt_shorts_cogbuster.jpg", SHORTS),   # 44 Silly Cogbuster Shorts 
-    ]
+    ('phase_4/maps/tt_t_chr_avt_shorts_sellbotCrusher.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_shorts_halloween5.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_shorts_halloweenTurtle.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_skirt_greentoon1.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_skirt_racingGrandPrix.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_shorts_lawbotCrusher.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_shorts_bee.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_shorts_pirate.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_skirt_pirate.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_shorts_supertoon.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_shorts_vampire.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_shorts_dinosaur.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_skirt_golf02.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_skirt_racing03.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_skirt_golf03.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_skirt_golf04.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_skirt_racing04.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_skirt_racing05.jpg', SKIRT)]
 
 # len = 28
 ClothesColors = [
@@ -847,6 +962,7 @@ ShirtStyles = {
     'sd_ss1' : [ 47, 36, [(27, 27), ]],
     # St Pat's Day, pot o gold shirt
     'sd_ss2' : [ 48, 37, [(27, 27), ]],
+    'sd_ss3': [116, 103, [(27, 27)]],
 
     # T-Shirt Contest, Fishing Vest
     'tc_ss1' : [ 49, 38, [(27, 27), ]],
@@ -906,7 +1022,35 @@ ShirtStyles = {
     'sa_ss24' : [ 94, 83, [(27, 27),]],
     'sa_ss25' : [ 95, 84, [(27, 27),]],
     'sa_ss26' : [ 106, 93, [(27, 27), ]], # Most Cogs Defeated Shirt
-    
+    'sa_ss27': [110, 97, [(27, 27)]],
+    'sa_ss28': [111, 98, [(27, 27)]],
+    'sa_ss29': [120, 107, [(27, 27)]],
+    'sa_ss30': [121, 108, [(27, 27)]],
+    'sa_ss31': [118, 105, [(27, 27)]],
+    'sa_ss32': [127, 114, [(27, 27)]],
+    'sa_ss33': [128, 115, [(27, 27)]],
+    'sa_ss34': [129, 116, [(27, 27)]],
+    'sa_ss35': [130, 117, [(27, 27)]],
+    'sa_ss36': [131, 118, [(27, 27)]],
+    'sa_ss37': [132, 119, [(27, 27)]],
+    'sa_ss38': [133, 120, [(27, 27)]],
+    'sa_ss39': [134, 121, [(27, 27)]],
+    'sa_ss40': [135, 122, [(27, 27)]],
+    'sa_ss41': [136, 123, [(27, 27)]],
+    'sa_ss42': [137, 124, [(27, 27)]],
+    'sa_ss43': [138, 125, [(27, 27)]],
+    'sa_ss44': [139, 126, [(27, 27)]],
+    'sa_ss45': [140, 127, [(27, 27)]],
+    'sa_ss46': [141, 128, [(27, 27)]],
+    'sa_ss47': [142, 129, [(27, 27)]],
+    'sa_ss48': [143, 130, [(27, 27)]],
+    'sa_ss49': [144, 116, [(27, 27)]],
+    'sa_ss50': [145, 131, [(27, 27)]],
+    'sa_ss51': [146, 133, [(27, 27)]],
+    'sa_ss52': [147, 134, [(27, 27)]],
+    'sa_ss53': [148, 135, [(27, 27)]],
+    'sa_ss54': [149, 136, [(27, 27)]],
+    'sa_ss55': [150, 137, [(27, 27)]],
     # Scientists
     'sc_1' : [ 97, 86, [(27, 27),]],
     'sc_2' : [ 98, 86, [(27, 27),]],
@@ -983,7 +1127,8 @@ BottomStyles = {
     
     # St. Pats leprechaun shorts
     'sd_bs1' : [ 11, [27, ]],
-    
+    'sd_bs2': [44, [27]],
+
     # Pajama shorts
     'pj_bs1' : [ 16, [27, ]], # Blue Banana Pajama pants
     'pj_bs2' : [ 17, [27, ]], # Red Horn Pajama pants
@@ -994,7 +1139,14 @@ BottomStyles = {
     'wh_bs2' : [ 20, [27, ]], # Winter Holiday Shorts Style 2
     'wh_bs3' : [ 21, [27, ]], # Winter Holiday Shorts Style 3
     'wh_bs4' : [ 22, [27, ]], # Winter Holiday Shorts Style 4
-    
+
+   # Halloween Holiday Shorts
+    'hw_bs1': [47, [27]],
+    'hw_bs2': [48, [27]],
+    'hw_bs5': [49, [27]],
+    'hw_bs6': [50, [27]],
+    'hw_bs7': [51, [27]],
+
     # -------------------------------------------------------------------------
     # Girl styles (shorts and skirts)
     # -------------------------------------------------------------------------
@@ -1058,6 +1210,7 @@ BottomStyles = {
 
     # St. Pats day shorts
     'sd_gs1' : [ 15, [ 27, ]],
+    'sd_gs2': [48, [27]],
 
     # Western skirts
     'c_gsk5' : [ 16, [ 27, ]],
@@ -1086,7 +1239,7 @@ BottomStyles = {
     'wh_gsk2' : [ 24, [27, ]], # Winter Holiday Skirt Style 2
     'wh_gsk3' : [ 25, [27, ]], # Winter Holiday Skirt Style 3
     'wh_gsk4' : [ 26, [27, ]], # Winter Holiday Skirt Style 4
-    
+
     # Special award clothes
     'sa_bs1' : [25, [27, ]],
     'sa_bs2' : [26, [27, ]],
@@ -1100,7 +1253,15 @@ BottomStyles = {
     'sa_bs10' : [34, [27, ]],    
     'sa_bs11' : [35, [27, ]],
     'sa_bs12' : [36, [27, ]],
-    
+    'sa_bs13': [41, [27]],
+    'sa_bs14': [46, [27]],
+    'sa_bs15': [45, [27]],
+    'sa_bs16': [52, [27]],
+    'sa_bs17': [53, [27]],
+    'sa_bs18': [54, [27]],
+    'sa_bs19': [55, [27]],
+    'sa_bs20': [56, [27]],
+    'sa_bs21': [57, [27]],   
     # Special award clothes
     'sa_gs1' : [29, [27, ]],
     'sa_gs2' : [30, [27, ]],
@@ -1114,7 +1275,15 @@ BottomStyles = {
     'sa_gs10' : [38, [27, ]],
     'sa_gs11' : [39, [27, ]],
     'sa_gs12' : [40, [27, ]],
-    
+    'sa_gs13': [45, [27]],
+    'sa_gs14': [50, [27]],
+    'sa_gs15': [49, [27]],
+    'sa_gs16': [57, [27]],
+    'sa_gs17': [58, [27]],
+    'sa_gs18': [59, [27]],
+    'sa_gs19': [60, [27]],
+    'sa_gs20': [61, [27]],
+    'sa_gs21': [62, [27]],
     # Scientists
     'sc_bs1' : [37, [27, ]],
     'sc_bs2' : [38, [27, ]],
@@ -1421,13 +1590,20 @@ allColorsList = [
 
 # *This* is the list of color choices presented by make-a-toon.  It
 # indexes into the above array.
-defaultBoyColorList = [
+defaultBoyColorList = [0, 1,
     2, 3, 4, 5, 6, 7, 8, 9, 10, 12,
-    13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+    13, 14, 15, 16, 17, 18, 19, 20,
+    21, 22,23, 24, 25, 26
     ]
-defaultGirlColorList = [
+defaultGirlColorList = [0,
     1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12,
-    13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24
+    13, 14, 15, 16, 17, 18, 19, 21, 22,
+    23, 24, 25, 26
+    ]
+defaultGloveColorList =  [0,
+    1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12,
+    13, 14, 15, 16, 17, 18, 19, 21, 22,
+    23, 24, 25, 26
     ]
 HatModels = [None,
  'phase_4/models/accessories/tt_m_chr_avt_acc_hat_baseball',
