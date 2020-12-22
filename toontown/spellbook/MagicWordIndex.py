@@ -1309,12 +1309,12 @@ class DoMinigame(MagicWord):
                 # is it 'keep'?
                 mgKeep = 1
                 # is it a difficulty?
-            if len(args > 2):
+            if args[2] != 0:
                 try:
                     mgDiff = args[2]
                 except:
                     pass
-            if len(args > 3):
+            if args[3] != 0:
                 mgSzId = self.Str2szId.get(args[3])
             if mgId != None:
                 # mdId must be the first element
