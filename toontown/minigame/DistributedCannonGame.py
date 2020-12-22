@@ -1185,7 +1185,7 @@ class DistributedCannonGame(DistributedMinigame):
         # figure out what will be hit, and when
         timeOfImpact, hitWhat = self.__calcToonImpact(trajectory, towerList)
 
-        return startPos, startHpr, startVel, trajectory, 3 * timeOfImpact, hitWhat
+        return startPos, startHpr, startVel, trajectory, timeOfImpact, hitWhat
 
     def __fireCannonTask(self, task):
         """
