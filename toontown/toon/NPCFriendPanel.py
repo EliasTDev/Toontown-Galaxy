@@ -8,6 +8,8 @@ from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import ToontownBattleGlobals
 
 class NPCFriendPanel(DirectFrame):
+
+    SOS_PER_PAGE = 8
     def __init__(self, parent = aspect2d, **kw):
         # Define options
         optiondefs = (
@@ -18,41 +20,103 @@ class NPCFriendPanel(DirectFrame):
         self.defineoptions(kw, optiondefs)
         # Initialize superclass
         DirectFrame.__init__(self, parent = parent)
-        self.cardList = [None, None, None, None,
-                         None, None, None, None]
+        self.cardList = []
         xOffset = -5.25
         yOffset = 2.3
         count = 0
+        self.pos = 0
+        for card in self.cardList:
+                card.destroy()
+        self.cardList = []
         for i in range(8):
             card = NPCFriendCard(parent = self, doneEvent = self['doneEvent'])
-            self.cardList[count] = card
+            self.cardList.append(card)
+            #card.setScale(0.7)
             card.setPos(xOffset, 1, yOffset)
             xOffset += 3.5
             count += 1
             if count == 4:
                 xOffset = -5.25
                 yOffset = -2.3
-        # Initialize instance
-        self.initialiseoptions(NPCFriendPanel)
-        
+        #check if scroll wheel is used (or trackpad scrolling)
+        self.accept('wheel_up', self.scrollDown)
+        self.accept('wheel_down', self.scrollUp)
+        arrow = loader.loadModel('phase_3/models/gui/scroll_arrows_gui.bam')
+        arrowImage = (arrow.find('**/FndsLst_ScrollUp'),
+                      arrow.find('**/FndsLst_ScrollDN'),
+                      arrow.find('**/FndsLst_ScrollUp_Rllvr'))
+        self.arrowUp = DirectButton(parent=self, relief = None,
+                                    image = arrowImage,
+                                    pos = (0, 0, 5),
+                                    command = self.scrollDown,
+                                    scale = 2,
+                                    image_scale = 3,
+                                    suppressMouse=False
+
+                                    )
+        self.arrowDown = DirectButton(parent=self, relief = None,
+                                    image = arrowImage,
+                                    pos = (0, 0, -5),
+                                    scale = -2,
+                                    command = self.scrollUp,
+                                    image_scale = 3,
+                                    suppressMouse=False
+                                    )
+        arrow.removeNode()
+        self.arrowUp.hide()
+
     def update(self, friendDict, fCallable = 0):
         friendList = list(friendDict.keys())
-        for i in range(8):
-            card = self.cardList[i]
-            try:
+        cardNumber = 0
+        for i in range(self.pos, self.pos + self.SOS_PER_PAGE):
+            card = self.cardList[cardNumber]
+            if len(friendList) <= i:
+                card.update(None, 0, fCallable)
+                self.arrowDown.hide()
+            else:
                 NPCID = friendList[i]
-                count = friendDict[NPCID]
-            except IndexError:
-                NPCID = None
-                count = 0
-            card.update(NPCID, count, fCallable)
+                card.update(NPCID, friendDict[NPCID], fCallable)
+                self.arrowDown.show()
+            cardNumber += 1
+
+    def destroy(self):
+        self.ignore('scrollUp')
+        self.ignore('scrollDown')
+        DirectFrame.destroy(self)
+
+    def addToIndex(self, index):
+        self.pos += (self.SOS_PER_PAGE * index)
+        self.posTask()
+    
+    def subtractToIndex(self, index):
+        self.pos -= (self.SOS_PER_PAGE * index)
+        self.posTask()
+
+
+
+    def posTask(self):
+        if self.pos <= 0:
+            self.arrowUp.hide()
+        else:
+            self.arrowUp.show()
+        self.update(base.localAvatar.NPCFriendsDict)
+
+    def scrollUp(self):
+        #check if down arrow is hidden if its not addtoindex
+        if not self.arrowDown.isHidden():
+            self.addToIndex(1)
+        
+    def scrollDown(self):
+        #check if up arrow is hidden if its not subtracttoindex
+        if not self.arrowUp.isHidden():
+            self.subtractToIndex(1)
+    
 
 class NPCFriendCard(DirectFrame):
     normalTextColor = (0.3,0.25,0.2,1)
     maxRarity = 5
     sosTracks = (ToontownBattleGlobals.Tracks +
                  ToontownBattleGlobals.NPCTracks)
-    
     def __init__(self, parent = aspect2dp, **kw):
         # Define options
         optiondefs = (
@@ -78,8 +142,9 @@ class NPCFriendCard(DirectFrame):
         # Back side of the card
         self.back = DirectFrame(
             parent = self, relief = None,
-            image = cardModel.find('**/card_back'),
-            geom = cardModel.find('**/logo')
+            image = cardModel.find('**/card_back')#,
+            #TODO use TTG logo
+            #geom = cardModel.find('**/logo')
             )
 
         # Detail information about the quest
@@ -107,7 +172,7 @@ class NPCFriendCard(DirectFrame):
             text_scale = 0.34,
             text_align = TextNode.ACenter,
             text_wordwrap = 8.0,
-            pos = (0, 0, -0.78)
+            pos = (0, 0, -0.58)
             )
 
         # Call button (only show during battle
@@ -150,7 +215,7 @@ class NPCFriendCard(DirectFrame):
             text_scale = 0.4,
             text_align = TextNode.ALeft,
             textMayChange = 1,
-            pos = (0.0, 0, -1.5)
+            pos = (0.0, 0, -0.9)
             )
 
         star = loader.loadModel('phase_3.5/models/gui/name_star')
@@ -162,7 +227,7 @@ class NPCFriendCard(DirectFrame):
                 image = star,
                 image_scale = 0.2,
                 image_color = Vec4(0.502, 0.251, 0.251, 1.000),
-                pos = (1.1 - i * 0.24, 0, -1.8)
+                pos = (1.1 - i * 0.24, 0, -1.1)
                 )
             label.hide()
             self.rarityStars.append(label)
@@ -235,7 +300,7 @@ class NPCFriendCard(DirectFrame):
             self.sosCountInfo['text_align'] = TextNode.ALeft
         else:
             self.sosCallButton.hide()
-            self.sosCountInfo.setPos(0, 0, -1.5)
+            self.sosCountInfo.setPos(0, 0, -0.9)
             self.sosCountInfo['text_scale'] = 0.4
             self.sosCountInfo['text_align'] = TextNode.ACenter
 
@@ -294,3 +359,7 @@ class NPCFriendCard(DirectFrame):
                                  s, s, s)
         geomXform.reparentTo(geom)
     
+
+
+        
+

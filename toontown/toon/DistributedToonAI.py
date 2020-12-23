@@ -709,8 +709,8 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
         if (npcFriend in self.NPCFriendsDict):
             self.NPCFriendsDict[npcFriend] += numCalls
         elif (npcFriend in npcFriends):
-            if (len(list(self.NPCFriendsDict.keys())) >= self.maxNPCFriends):
-                return 0
+            #if (len(list(self.NPCFriendsDict.keys())) >= self.maxNPCFriends):
+             #   return 0
             self.NPCFriendsDict[npcFriend] = numCalls
         else:
             self.notify.warning("invalid NPC: %d" % npcFriend)
