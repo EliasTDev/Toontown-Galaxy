@@ -41,7 +41,7 @@ class ChatLog(DirectFrame, DirectObject):
     def addToLog(self, msg, toonId=0):
         msg = msg.replace('\n', ' ')
         messageButton = DirectButton(relief = None, text = msg, 
-                                           text_scale =0.035, text_pos = (-0.44, 0),
+                                           text_scale =0.035, text_pos = (-0.40, 0),
                                            text_style=3,text_align=TextNode.ALeft,
                                            text_wordwrap=25, text_shadow=(0, 0, 0, 1),
                                            command=self.buttonizeIt, extraArgs = [toonId])

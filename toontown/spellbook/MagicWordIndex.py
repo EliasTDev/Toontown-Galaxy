@@ -727,10 +727,18 @@ class SetTrophyScore(MagicWord):
         return response 
 
 class SetCheesyEffect(MagicWord):
-    aliases = ['setce', 'ce', 'effect']
+    aliases = ['setce', 'ce', 'effect', 'cheesyeffect']
     desc = 'Sets the cheesy effect of the target.'
+    advancedDesc = """These are the list of effects:Normal, BigHead,
+     SmallHead, BigLegs,
+      SmallLegs, BigToon, 
+      SmallToon, FlatPortrait,
+       FlatProfile, Transparent,
+        NoColor, Invisible,
+         Pumpkin, BigWhite, 
+         SnowMan"""
     execLocation = MagicWordConfig.EXEC_LOC_SERVER
-    arguments = [('ce', int, True), ('zoneId', int, False, 0), ('expiretime', int, False, 0)]
+    arguments = [('ce', str, True), ('zoneId', int, False, 0), ('expiretime', int, False, 0)]
     accessLevel = 'DEVELOPER'  
     def handleWord(self, invoker, avId, toon, *args):
         effect = None
