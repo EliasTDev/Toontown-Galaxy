@@ -1144,7 +1144,9 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
                     base.playSfx(self.soundChatBubble, node=self)
             elif (self.nametag.getChatStomp() > 0 ):
                 self.playDialogueForString(self.nametag.getStompText(), self.nametag.getStompDelay())
-
+                if hasattr(base.cr, 'chatLog'):
+                    base.cr.chatLog.addToLog('\1cogGray\1{0}\2: {1}'.format(self.name, self.nametag.getChatText()))
+   
     def playDialogueForString(self, chatString, delay = 0.0):
         """
         Play dialogue samples to match the given chat string

@@ -817,6 +817,9 @@ class Avatar(Actor, ShadowCaster):
                         dialogue = self.__chatDialogueList[0]
                     else:
                         dialogue = None
+                    if hasattr(base.cr, 'chatLog'):
+                        base.cr.chatLog.addToLog('{0}: {1}'.format(self.name, self.__chatMessage))
+
                     self.setChatAbsolute(self.__chatMessage, self.__chatFlags,
                                          dialogue)
                     self.__chatSet = 1

@@ -619,6 +619,9 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
 
     def setTalk(self, fromAV, fromAC, avatarName, chat, mods, flags):
         """ Overridden from Distributed player becase pirates ignores players a different way"""
+        if self.isLocal():
+            if avatarName == '':
+                avatarName = self.name
         if base.cr.avatarFriendsManager.checkIgnored(fromAV):
             # We're ignoring this jerk.
             self.d_setWhisperIgnored(fromAV)

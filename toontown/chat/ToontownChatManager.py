@@ -96,6 +96,29 @@ class ToontownChatManager(ChatManager.ChatManager):
             command = self.__scButtonPressed,
             clickSound = self.openScSfx,
             )
+        self.clButton = DirectButton(
+            image = (gui.find("**/ChtBx_ChtBtn_UP"),
+                     gui.find("**/ChtBx_ChtBtn_DN"),
+                     gui.find("**/ChtBx_ChtBtn_RLVR"),
+                     ),
+            pos = TTLocalizer.CMclButtonPos,
+            scale = 1.179,
+            relief = None,
+            image_color = Vec4(1,0,0, 1),
+            #image_color = Vec4(1.00,0.75,0.50,1),
+            text = ("",
+                    OTPLocalizer.GlobalChatLogName,
+                    OTPLocalizer.GlobalChatLogName),
+            text_scale = TTLocalizer.CMclButton,
+            text_fg = Vec4(1,1,1,1),
+            text_shadow = Vec4(0,0,0,1),
+            text_pos = (0,-0.09),
+            textMayChange = 0,
+            sortOrder = DGG.FOREGROUND_SORT_INDEX,
+            command = self.__clButtonPressed,
+            clickSound = self.openScSfx,
+            )
+        self.clButton.hide()
         self.scButton.hide()
 
         self.whisperFrame = DirectFrame(
@@ -219,7 +242,9 @@ class ToontownChatManager(ChatManager.ChatManager):
         del self.whisperCancelButton
         self.chatInputWhiteList.destroy()
         del self.chatInputWhiteList
-
+        if hasattr(self, 'clButton'):
+            self.clButton.destroy()
+            del self.clButton
 
     def sendSCResistanceChatMessage(self, textId):
         """
@@ -1203,3 +1228,7 @@ class ToontownChatManager(ChatManager.ChatManager):
     def deactivateChat(self):
         pass
         
+    def __clButtonPressed(self):
+        if hasattr(base.localAvatar, 'chatLog'):
+            if base.localAvatar.chatLog:
+                base.localAvatar.chatLog.toggle()

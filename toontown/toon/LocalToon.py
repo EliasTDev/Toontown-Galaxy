@@ -48,6 +48,7 @@ from toontown.toonbase import TTLocalizer
 from toontown.catalog import CatalogNotifyDialog
 from toontown.chat import ToontownChatManager
 from toontown.chat import TTTalkAssistant
+from toontown.chat import ChatLog 
 from toontown.estate import GardenGlobals
 #from toontown.estate import GardenProgressMeter
 from toontown.battle.BattleSounds import *
@@ -241,6 +242,8 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
 
             self.lastElevatorLeft = 0
 
+            self.chatLog = None
+
             self.elevatorNotifier = ElevatorNotifier.ElevatorNotifier()
 
             # switchboard friends messages
@@ -388,6 +391,8 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         del self.trackPage
         #del self.buildingPage
         del self.book
+        if self.chatLog:
+            self.chatLog.stop()
 
         if base.wantKarts:
             if( hasattr( self, "kartPage" ) ):
@@ -491,7 +496,9 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         #self.achievePage.load()
         #self.book.addPage(
         # self.achievePage, pageName = TTLocalizer.AchievePageTitle)
-
+        self.chatLog = ChatLog.ChatLog()
+        self.chatLog.reparentTo(base.a2dLeftCenter)
+        self.chatLog.setPos(-1, 0, 0.2)
         self.suitPage = SuitPage.SuitPage()
         self.suitPage.load()
         self.book.addPage(self.suitPage, pageName = TTLocalizer.SuitPageTitle)

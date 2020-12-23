@@ -218,7 +218,7 @@ class Place(StateData.StateData,
         if ((base.cr.productName in ["DisneyOnline-US", "ES"]) and
             (not base.cr.isPaid()) and
             (base.localAvatar.tutorialAck)):
-            base.localAvatar.chatMgr.obscure(0,0)
+            base.localAvatar.chatMgr.obscure(0,0, 0 )
             base.localAvatar.chatMgr.normalButton.show()
         # People can teleport to us in walk mode.
         self.accept("teleportQuery", self.handleTeleportQuery)
@@ -238,7 +238,7 @@ class Place(StateData.StateData,
         if ((base.cr.productName in ["DisneyOnline-US", "ES"]) and
             (not base.cr.isPaid()) and
             (base.localAvatar.tutorialAck) and (not base.cr.whiteListChatEnabled)):
-            base.localAvatar.chatMgr.obscure(1,0)
+            base.localAvatar.chatMgr.obscure(1,0, 1)
         # If we aren't in walk, we can't be sleeping
         self.disablePeriodTimer()
         messenger.send("wakeup")

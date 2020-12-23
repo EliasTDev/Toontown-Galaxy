@@ -521,6 +521,11 @@ class TalkAssistant(DirectObject.DirectObject):
             self.historyOpen.append(newMessage)
 
             messenger.send("NewOpenMessage", [newMessage])
+            if hasattr(base.cr, 'chatLog'):
+                if not self.isThought(message):
+                    base.cr.chatLog.addToLog('{0}: {1}'.format(avatarName, message), avatarId)
+                else:
+                    base.cr.chatLog.addToLog('{0} thinks: {1}'.format(avatarName, message), avatarId)
 
         return error
 
@@ -559,6 +564,8 @@ class TalkAssistant(DirectObject.DirectObject):
         if accountId:
             self.addToHistoryDISLId(newMessage, accountId)
         messenger.send("NewOpenMessage", [newMessage])
+        if hasattr(base.cr, 'chatLog'):
+            base.cr.chatLog.addToLog('{0} whispered: {1}'.format(avatarName, message), avatarId)
 
         return error
 
@@ -624,6 +631,11 @@ class TalkAssistant(DirectObject.DirectObject):
                 self.historyComplete.append(newMessage)
                 self.historyGuild.append(newMessage)
                 messenger.send("NewOpenMessage", [newMessage])
+                if hasattr(base.cr, 'chatLog'):
+                    if not self.isThought(message):
+                        base.cr.chatLog.addToLog('{0}: {1}'.format(avatarName, message), fromAv)
+                    else:
+                        base.cr.chatLog.addToLog('{0} thinks: {1}'.format(avatarName, message), fromAv)
 
         return error
 
@@ -655,6 +667,12 @@ class TalkAssistant(DirectObject.DirectObject):
         if accountId:
             self.addToHistoryDISLId(newMessage, accountId)
         messenger.send("NewOpenMessage", [newMessage])
+        if hasattr(base.cr, 'chatLog'):
+            if not self.isThought(message):
+                base.cr.chatLog.addToLog('{0}: {1}'.format(avatarName, message), avatarId)
+            else:
+                base.cr.chatLog.addToLog('{0} thinks: {1}'.format(avatarName, message), avatarId)
+
 
         return error
 
@@ -694,6 +712,8 @@ class TalkAssistant(DirectObject.DirectObject):
             self.historyOpen.append(newMessage)
 
             messenger.send("NewOpenMessage", [newMessage])
+        if hasattr(base.cr, 'chatLog'):
+            base.cr.chatLog.addToLog('{0} thinks: {1}'.format(avatarName, message), avatarId)
 
         return error
 
@@ -720,6 +740,8 @@ class TalkAssistant(DirectObject.DirectObject):
             self.historyComplete.append(newMessage)
             self.historyUpdates.append(newMessage)
         messenger.send("NewOpenMessage", [newMessage])
+        if hasattr(base.cr, 'chatHistory'):
+            base.cr.chatHistory.addToHistory('Game Message: {0}'.format(message))
         return error
 
     def receiveSystemMessage(self, message):
@@ -743,6 +765,8 @@ class TalkAssistant(DirectObject.DirectObject):
             self.historyComplete.append(newMessage)
             self.historyUpdates.append(newMessage)
         messenger.send("NewOpenMessage", [newMessage])
+        if hasattr(base.cr, 'chatHistory'):
+            base.cr.chatHistory.addToHistory('System Message: {0}'.format(message))
         return error
 
     def receiveDeveloperMessage(self, message):
@@ -766,6 +790,8 @@ class TalkAssistant(DirectObject.DirectObject):
         self.historyComplete.append(newMessage)
         self.historyUpdates.append(newMessage)
         messenger.send("NewOpenMessage", [newMessage])
+        if hasattr(base.cr, 'chatHistory'):
+            base.cr.chatHistory.addToHistory('Dev Message: {0}'.format(message))     
         return error
 
     def receiveGuildMessage(self, message, senderId, senderName):
@@ -790,6 +816,8 @@ class TalkAssistant(DirectObject.DirectObject):
             self.historyComplete.append(newMessage)
             self.historyGuild.append(newMessage)
         messenger.send("NewOpenMessage", [newMessage])
+        if hasattr(base.cr, 'chatHistory'):
+            base.cr.chatHistory.addToHistory('Guild Message: {0}'.format(message))
         return error
 
 
@@ -908,6 +936,8 @@ class TalkAssistant(DirectObject.DirectObject):
         self.historyOpen.append(newMessage)
         self.addToHistoryDoId(newMessage, senderId)
         messenger.send("NewOpenMessage", [newMessage])
+        if hasattr(base.cr, 'chatHistory'):
+            base.cr.chatHistory.addToHistory('{0}: {1}'.format(name, message), senderId)
         return error
 
     def receiveAvatarWhisperSpeedChat(self,  type, messageIndex, senderId, name = None):
@@ -941,6 +971,8 @@ class TalkAssistant(DirectObject.DirectObject):
         self.historyOpen.append(newMessage)
         self.addToHistoryDoId(newMessage, senderId)
         messenger.send("NewOpenMessage", [newMessage])
+        if hasattr(base.cr, 'chatHistory'):
+            base.cr.chatHistory.addToHistory('{0} whispered: {1}'.format(name, message), senderId)
         return error
 
     def receivePlayerWhisperSpeedChat(self, type, messageIndex, senderId, name = None):

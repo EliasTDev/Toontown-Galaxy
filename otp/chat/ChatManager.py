@@ -84,6 +84,7 @@ class ChatManager(DirectObject.DirectObject):
 
         self.__scObscured = 0
         self.__normalObscured = 0
+        self.__clObscured = 0
 
         self.openChatWarning = None
         self.unpaidChatWarning = None
@@ -233,7 +234,7 @@ class ChatManager(DirectObject.DirectObject):
         del self.localAvatar
         del self.cr
 
-    def obscure(self, normal, sc):
+    def obscure(self, normal, sc, cl= False):
         assert self.notify.debugStateCall(self)
         self.__scObscured = sc
         if (self.__scObscured):
@@ -241,11 +242,14 @@ class ChatManager(DirectObject.DirectObject):
         self.__normalObscured = normal
         if (self.__normalObscured):
             self.normalButton.hide()
+        self.__clObscured =  cl
+        if self.__clObscured:
+            self.clButton.hide()
 
 
     def isObscured(self):
         assert self.notify.debugStateCall(self)
-        return self.__normalObscured, self.__scObscured
+        return self.__normalObscured, self.__scObscured, self.__clObscured 
 
     # chat methods
     def stop(self):
@@ -374,6 +378,7 @@ class ChatManager(DirectObject.DirectObject):
         assert self.notify.debugStateCall(self)
         self.scButton.hide()
         self.normalButton.hide()
+        self.clButton.hide()
         self.ignoreAll()
 
     def exitOff(self):
@@ -398,12 +403,15 @@ class ChatManager(DirectObject.DirectObject):
             self.scButton.show()
         if not self.__normalObscured:
             self.normalButton.show()
+        if not self.__clObscured:
+            self.clButton.show()
         
         
     def exitMainMenu(self):
         assert self.notify.debugStateCall(self)
         self.scButton.hide()
         self.normalButton.hide()
+        self.clButton.hide()
         self.ignore('enterNormalChat')
         if self.wantBackgroundFocus:
             self.chatInputNormal.chatEntry['backgroundFocus'] = 0
@@ -649,6 +657,7 @@ class ChatManager(DirectObject.DirectObject):
         self.scButton.hide()
         self.normalButton.hide()
         self.chatInputSpeedChat.hide()
+        self.clButton.hide()
         
     def enterNormalChat(self):
         assert self.notify.debugStateCall(self)

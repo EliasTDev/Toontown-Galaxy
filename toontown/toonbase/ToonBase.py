@@ -264,7 +264,10 @@ class ToonBase(OTPBase.OTPBase):
 
         tpMgr.setProperties('WLDisplay', WLDisplay)
         tpMgr.setProperties('WLEnter', WLEnter)
-
+        cogGray = TextProperties()
+        cogGray.setTextColor(0, 0.2, 0.2, 1)
+        cogGray.setShadow(0.01)
+        tpMgr.setProperties('cogGray', cogGray)
         del tpMgr
 
         self.lastScreenShotTime = globalClock.getRealTime()

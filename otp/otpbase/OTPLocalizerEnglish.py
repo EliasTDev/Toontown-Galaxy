@@ -339,7 +339,7 @@ DialogLength3 = 20
 # Used several places in the game. Defined globally because
 # we keep changing the name
 GlobalSpeedChatName = "SpeedChat"
-
+GlobalChatLogName = 'Chat Log'
 # Toontown Speedchat
 SCMenuPromotion  = "PROMOTIONAL"
 SCMenuElection  = "ELECTION"

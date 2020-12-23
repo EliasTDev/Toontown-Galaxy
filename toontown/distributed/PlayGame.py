@@ -515,7 +515,7 @@ class PlayGame(StateData.StateData):
         # Hide the laff meter until awarded by Tutorial Tom
         base.localAvatar.laffMeter.obscure(1)
         # Hide the chat buttons and friends list
-        base.localAvatar.chatMgr.obscure(1, 1)
+        base.localAvatar.chatMgr.obscure(1, 1, 1)
         base.localAvatar.obscureFriendsListButton(1)
         # Replace teleport in with tutorial mode
         requestStatus["how"] = "tutorial"
@@ -531,7 +531,7 @@ class PlayGame(StateData.StateData):
         base.localAvatar.book.obscureButton(0)
         base.localAvatar.book.setSafeMode(0)
         base.localAvatar.laffMeter.obscure(0)
-        base.localAvatar.chatMgr.obscure(0, 0)
+        base.localAvatar.chatMgr.obscure(0, 0, 0)
         base.localAvatar.obscureFriendsListButton(-1)
 
     def enterEstateHood(self, requestStatus):
