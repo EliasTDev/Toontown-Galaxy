@@ -26,7 +26,10 @@ has another way to reference private data (besides global variables).
 import time
 import heapq
 from collections import namedtuple
-import threading
+try:
+    import threading
+except ImportError:
+    import dummy_threading as threading
 from time import monotonic as _time
 
 __all__ = ["scheduler"]

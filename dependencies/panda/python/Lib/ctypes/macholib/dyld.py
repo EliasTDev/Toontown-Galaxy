@@ -149,8 +149,6 @@ def framework_find(fn, executable_path=None, env=None):
         return dyld_find(fn, executable_path=executable_path, env=env)
     except ValueError:
         raise error
-    finally:
-        error = None
 
 def test_dyld_find():
     env = {}

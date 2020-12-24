@@ -83,12 +83,10 @@ XXX To do:
 __version__ = "0.6"
 
 __all__ = [
-    "HTTPServer", "ThreadingHTTPServer", "BaseHTTPRequestHandler",
+    "HTTPServer", "BaseHTTPRequestHandler",
     "SimpleHTTPRequestHandler", "CGIHTTPRequestHandler",
 ]
 
-import copy
-import datetime
 import email.utils
 import html
 import http.client
@@ -103,8 +101,8 @@ import socketserver
 import sys
 import time
 import urllib.parse
-import contextlib
-from functools import partial
+import copy
+import argparse
 
 from http import HTTPStatus
 
@@ -139,10 +137,6 @@ class HTTPServer(socketserver.TCPServer):
         host, port = self.server_address[:2]
         self.server_name = socket.getfqdn(host)
         self.server_port = port
-
-
-class ThreadingHTTPServer(socketserver.ThreadingMixIn, HTTPServer):
-    daemon_threads = True
 
 
 class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
@@ -273,8 +267,8 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
         are in self.command, self.path, self.request_version and
         self.headers.
 
-        Return True for success, False for failure; on failure, any relevant
-        error response has already been sent back.
+        Return True for success, False for failure; on failure, an
+        error is sent back.
 
         """
         self.command = None  # set in case of error on the first line
@@ -284,13 +278,10 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
         requestline = requestline.rstrip('\r\n')
         self.requestline = requestline
         words = requestline.split()
-        if len(words) == 0:
-            return False
-
-        if len(words) >= 3:  # Enough to determine protocol version
-            version = words[-1]
+        if len(words) == 3:
+            command, path, version = words
             try:
-                if not version.startswith('HTTP/'):
+                if version[:5] != 'HTTP/':
                     raise ValueError
                 base_version_number = version.split('/', 1)[1]
                 version_number = base_version_number.split(".")
@@ -315,22 +306,22 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
                     HTTPStatus.HTTP_VERSION_NOT_SUPPORTED,
                     "Invalid HTTP version (%s)" % base_version_number)
                 return False
-            self.request_version = version
-
-        if not 2 <= len(words) <= 3:
-            self.send_error(
-                HTTPStatus.BAD_REQUEST,
-                "Bad request syntax (%r)" % requestline)
-            return False
-        command, path = words[:2]
-        if len(words) == 2:
+        elif len(words) == 2:
+            command, path = words
             self.close_connection = True
             if command != 'GET':
                 self.send_error(
                     HTTPStatus.BAD_REQUEST,
                     "Bad HTTP/0.9 request type (%r)" % command)
                 return False
-        self.command, self.path = command, path
+        elif not words:
+            return False
+        else:
+            self.send_error(
+                HTTPStatus.BAD_REQUEST,
+                "Bad request syntax (%r)" % requestline)
+            return False
+        self.command, self.path, self.request_version = command, path, version
 
         # Examine the headers and look for a Connection directive.
         try:
@@ -640,12 +631,6 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
     server_version = "SimpleHTTP/" + __version__
 
-    def __init__(self, *args, directory=None, **kwargs):
-        if directory is None:
-            directory = os.getcwd()
-        self.directory = directory
-        super().__init__(*args, **kwargs)
-
     def do_GET(self):
         """Serve a GET request."""
         f = self.send_head()
@@ -693,55 +678,17 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             else:
                 return self.list_directory(path)
         ctype = self.guess_type(path)
-        # check for trailing "/" which should return 404. See Issue17324
-        # The test for this was added in test_httpserver.py
-        # However, some OS platforms accept a trailingSlash as a filename
-        # See discussion on python-dev and Issue34711 regarding
-        # parseing and rejection of filenames with a trailing slash
-        if path.endswith("/"):
-            self.send_error(HTTPStatus.NOT_FOUND, "File not found")
-            return None
         try:
             f = open(path, 'rb')
         except OSError:
             self.send_error(HTTPStatus.NOT_FOUND, "File not found")
             return None
-
         try:
-            fs = os.fstat(f.fileno())
-            # Use browser cache if possible
-            if ("If-Modified-Since" in self.headers
-                    and "If-None-Match" not in self.headers):
-                # compare If-Modified-Since and time of last file modification
-                try:
-                    ims = email.utils.parsedate_to_datetime(
-                        self.headers["If-Modified-Since"])
-                except (TypeError, IndexError, OverflowError, ValueError):
-                    # ignore ill-formed values
-                    pass
-                else:
-                    if ims.tzinfo is None:
-                        # obsolete format with no timezone, cf.
-                        # https://tools.ietf.org/html/rfc7231#section-7.1.1.1
-                        ims = ims.replace(tzinfo=datetime.timezone.utc)
-                    if ims.tzinfo is datetime.timezone.utc:
-                        # compare to UTC datetime of last modification
-                        last_modif = datetime.datetime.fromtimestamp(
-                            fs.st_mtime, datetime.timezone.utc)
-                        # remove microseconds, like in If-Modified-Since
-                        last_modif = last_modif.replace(microsecond=0)
-
-                        if last_modif <= ims:
-                            self.send_response(HTTPStatus.NOT_MODIFIED)
-                            self.end_headers()
-                            f.close()
-                            return None
-
             self.send_response(HTTPStatus.OK)
             self.send_header("Content-type", ctype)
+            fs = os.fstat(f.fileno())
             self.send_header("Content-Length", str(fs[6]))
-            self.send_header("Last-Modified",
-                self.date_time_string(fs.st_mtime))
+            self.send_header("Last-Modified", self.date_time_string(fs.st_mtime))
             self.end_headers()
             return f
         except:
@@ -826,7 +773,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         path = posixpath.normpath(path)
         words = path.split('/')
         words = filter(None, words)
-        path = self.directory
+        path = os.getcwd()
         for word in words:
             if os.path.dirname(word) or word in (os.curdir, os.pardir):
                 # Ignore components that are not a simple file/directory name
@@ -1225,34 +1172,20 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
                 self.log_message("CGI script exited OK")
 
 
-def _get_best_family(*address):
-    infos = socket.getaddrinfo(
-        *address,
-        type=socket.SOCK_STREAM,
-        flags=socket.AI_PASSIVE,
-    )
-    family, type, proto, canonname, sockaddr = next(iter(infos))
-    return family, sockaddr
-
-
 def test(HandlerClass=BaseHTTPRequestHandler,
-         ServerClass=ThreadingHTTPServer,
-         protocol="HTTP/1.0", port=8000, bind=None):
+         ServerClass=HTTPServer, protocol="HTTP/1.0", port=8000, bind=""):
     """Test the HTTP request handler class.
 
     This runs an HTTP server on port 8000 (or the port argument).
 
     """
-    ServerClass.address_family, addr = _get_best_family(bind, port)
+    server_address = (bind, port)
 
     HandlerClass.protocol_version = protocol
-    with ServerClass(addr, HandlerClass) as httpd:
-        host, port = httpd.socket.getsockname()[:2]
-        url_host = f'[{host}]' if ':' in host else host
-        print(
-            f"Serving HTTP on {host} port {port} "
-            f"(http://{url_host}:{port}/) ..."
-        )
+    with ServerClass(server_address, HandlerClass) as httpd:
+        sa = httpd.socket.getsockname()
+        serve_message = "Serving HTTP on {host} port {port} (http://{host}:{port}/) ..."
+        print(serve_message.format(host=sa[0], port=sa[1]))
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
@@ -1260,17 +1193,12 @@ def test(HandlerClass=BaseHTTPRequestHandler,
             sys.exit(0)
 
 if __name__ == '__main__':
-    import argparse
-
     parser = argparse.ArgumentParser()
     parser.add_argument('--cgi', action='store_true',
                        help='Run as CGI Server')
-    parser.add_argument('--bind', '-b', metavar='ADDRESS',
+    parser.add_argument('--bind', '-b', default='', metavar='ADDRESS',
                         help='Specify alternate bind address '
                              '[default: all interfaces]')
-    parser.add_argument('--directory', '-d', default=os.getcwd(),
-                        help='Specify alternative directory '
-                        '[default:current directory]')
     parser.add_argument('port', action='store',
                         default=8000, type=int,
                         nargs='?',
@@ -1279,21 +1207,5 @@ if __name__ == '__main__':
     if args.cgi:
         handler_class = CGIHTTPRequestHandler
     else:
-        handler_class = partial(SimpleHTTPRequestHandler,
-                                directory=args.directory)
-
-    # ensure dual-stack is not disabled; ref #38907
-    class DualStackServer(ThreadingHTTPServer):
-        def server_bind(self):
-            # suppress exception when protocol is IPv4
-            with contextlib.suppress(Exception):
-                self.socket.setsockopt(
-                    socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 0)
-            return super().server_bind()
-
-    test(
-        HandlerClass=handler_class,
-        ServerClass=DualStackServer,
-        port=args.port,
-        bind=args.bind,
-    )
+        handler_class = SimpleHTTPRequestHandler
+    test(HandlerClass=handler_class, port=args.port, bind=args.bind)

@@ -23,7 +23,10 @@ class netrc:
     def __init__(self, file=None):
         default_netrc = file is None
         if file is None:
-            file = os.path.join(os.path.expanduser("~"), ".netrc")
+            try:
+                file = os.path.join(os.environ['HOME'], ".netrc")
+            except KeyError:
+                raise OSError("Could not find .netrc: $HOME is not set")
         self.hosts = {}
         self.macros = {}
         with open(file) as fp:

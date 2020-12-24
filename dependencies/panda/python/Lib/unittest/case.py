@@ -10,7 +10,6 @@ import warnings
 import collections
 import contextlib
 import traceback
-import types
 
 from . import result
 from .util import (strclass, safe_repr, _count_diff_all_purpose,
@@ -85,30 +84,6 @@ class _Outcome(object):
 def _id(obj):
     return obj
 
-
-_module_cleanups = []
-def addModuleCleanup(function, /, *args, **kwargs):
-    """Same as addCleanup, except the cleanup items are called even if
-    setUpModule fails (unlike tearDownModule)."""
-    _module_cleanups.append((function, args, kwargs))
-
-
-def doModuleCleanups():
-    """Execute all module cleanup functions. Normally called for you after
-    tearDownModule."""
-    exceptions = []
-    while _module_cleanups:
-        function, args, kwargs = _module_cleanups.pop()
-        try:
-            function(*args, **kwargs)
-        except Exception as exc:
-            exceptions.append(exc)
-    if exceptions:
-        # Swallows all but first exception. If a multi-exception handler
-        # gets written we should use that here instead.
-        raise exceptions[0]
-
-
 def skip(reason):
     """
     Unconditionally skip a test.
@@ -123,10 +98,6 @@ def skip(reason):
         test_item.__unittest_skip__ = True
         test_item.__unittest_skip_why__ = reason
         return test_item
-    if isinstance(reason, types.FunctionType):
-        test_item = reason
-        reason = ''
-        return decorator(test_item)
     return decorator
 
 def skipIf(condition, reason):
@@ -186,11 +157,16 @@ class _AssertRaisesBaseContext(_BaseTestCaseContext):
             if not _is_subtype(self.expected, self._base_type):
                 raise TypeError('%s() arg 1 must be %s' %
                                 (name, self._base_type_str))
+            if args and args[0] is None:
+                warnings.warn("callable is None",
+                              DeprecationWarning, 3)
+                args = ()
             if not args:
                 self.msg = kwargs.pop('msg', None)
                 if kwargs:
-                    raise TypeError('%r is an invalid keyword argument for '
-                                    'this function' % (next(iter(kwargs)),))
+                    warnings.warn('%r is an invalid keyword argument for '
+                                  'this function' % next(iter(kwargs)),
+                                  DeprecationWarning, 3)
                 return self
 
             callable_obj, *args = args
@@ -362,16 +338,6 @@ class _AssertLogsContext(_BaseTestCaseContext):
                 .format(logging.getLevelName(self.level), self.logger.name))
 
 
-class _OrderedChainMap(collections.ChainMap):
-    def __iter__(self):
-        seen = set()
-        for mapping in self.maps:
-            for k in mapping:
-                if k not in seen:
-                    seen.add(k)
-                    yield k
-
-
 class TestCase(object):
     """A class whose instances are single test cases.
 
@@ -418,8 +384,6 @@ class TestCase(object):
     # Attribute used by TestSuite for classSetUp
 
     _classSetupFailed = False
-
-    _class_cleanups = []
 
     def __init__(self, methodName='runTest'):
         """Create an instance of the class that will use the named test
@@ -468,36 +432,13 @@ class TestCase(object):
         """
         self._type_equality_funcs[typeobj] = function
 
-    def addCleanup(*args, **kwargs):
+    def addCleanup(self, function, *args, **kwargs):
         """Add a function, with arguments, to be called when the test is
         completed. Functions added are called on a LIFO basis and are
         called after tearDown on test failure or success.
 
         Cleanup items are called even if setUp fails (unlike tearDown)."""
-        if len(args) >= 2:
-            self, function, *args = args
-        elif not args:
-            raise TypeError("descriptor 'addCleanup' of 'TestCase' object "
-                            "needs an argument")
-        elif 'function' in kwargs:
-            function = kwargs.pop('function')
-            self, *args = args
-            import warnings
-            warnings.warn("Passing 'function' as keyword argument is deprecated",
-                          DeprecationWarning, stacklevel=2)
-        else:
-            raise TypeError('addCleanup expected at least 1 positional '
-                            'argument, got %d' % (len(args)-1))
-        args = tuple(args)
-
         self._cleanups.append((function, args, kwargs))
-    addCleanup.__text_signature__ = '($self, function, /, *args, **kwargs)'
-
-    @classmethod
-    def addClassCleanup(cls, function, /, *args, **kwargs):
-        """Same as addCleanup, except the cleanup items are called even if
-        setUpClass fails (unlike tearDownClass)."""
-        cls._class_cleanups.append((function, args, kwargs))
 
     def setUp(self):
         "Hook method for setting up the test fixture before exercising it."
@@ -529,7 +470,7 @@ class TestCase(object):
         the specified test method's docstring.
         """
         doc = self._testMethodDoc
-        return doc.strip().split("\n")[0].strip() if doc else None
+        return doc and doc.split("\n")[0].strip() or None
 
 
     def id(self):
@@ -573,7 +514,7 @@ class TestCase(object):
             return
         parent = self._subtest
         if parent is None:
-            params_map = _OrderedChainMap(params)
+            params_map = collections.ChainMap(params)
         else:
             params_map = parent.params.new_child(params)
         self._subtest = _SubTest(self, msg, params_map)
@@ -626,18 +567,6 @@ class TestCase(object):
         else:
             addUnexpectedSuccess(self)
 
-    def _callSetUp(self):
-        self.setUp()
-
-    def _callTestMethod(self, method):
-        method()
-
-    def _callTearDown(self):
-        self.tearDown()
-
-    def _callCleanup(self, function, /, *args, **kwargs):
-        function(*args, **kwargs)
-
     def run(self, result=None):
         orig_result = result
         if result is None:
@@ -669,14 +598,14 @@ class TestCase(object):
             self._outcome = outcome
 
             with outcome.testPartExecutor(self):
-                self._callSetUp()
+                self.setUp()
             if outcome.success:
                 outcome.expecting_failure = expecting_failure
                 with outcome.testPartExecutor(self, isTest=True):
-                    self._callTestMethod(testMethod)
+                    testMethod()
                 outcome.expecting_failure = False
                 with outcome.testPartExecutor(self):
-                    self._callTearDown()
+                    self.tearDown()
 
             self.doCleanups()
             for test, reason in outcome.skipped:
@@ -714,23 +643,11 @@ class TestCase(object):
         while self._cleanups:
             function, args, kwargs = self._cleanups.pop()
             with outcome.testPartExecutor(self):
-                self._callCleanup(function, *args, **kwargs)
+                function(*args, **kwargs)
 
         # return this for backwards compatibility
-        # even though we no longer use it internally
+        # even though we no longer us it internally
         return outcome.success
-
-    @classmethod
-    def doClassCleanups(cls):
-        """Execute all class cleanup functions. Normally called for you after
-        tearDownClass."""
-        cls.tearDown_exceptions = []
-        while cls._class_cleanups:
-            function, args, kwargs = cls._class_cleanups.pop()
-            try:
-                function(*args, **kwargs)
-            except Exception as exc:
-                cls.tearDown_exceptions.append(sys.exc_info())
 
     def __call__(self, *args, **kwds):
         return self.run(*args, **kwds)
@@ -940,28 +857,23 @@ class TestCase(object):
         if delta is not None and places is not None:
             raise TypeError("specify delta or places not both")
 
-        diff = abs(first - second)
         if delta is not None:
-            if diff <= delta:
+            if abs(first - second) <= delta:
                 return
 
-            standardMsg = '%s != %s within %s delta (%s difference)' % (
-                safe_repr(first),
-                safe_repr(second),
-                safe_repr(delta),
-                safe_repr(diff))
+            standardMsg = '%s != %s within %s delta' % (safe_repr(first),
+                                                        safe_repr(second),
+                                                        safe_repr(delta))
         else:
             if places is None:
                 places = 7
 
-            if round(diff, places) == 0:
+            if round(abs(second-first), places) == 0:
                 return
 
-            standardMsg = '%s != %s within %r places (%s difference)' % (
-                safe_repr(first),
-                safe_repr(second),
-                places,
-                safe_repr(diff))
+            standardMsg = '%s != %s within %r places' % (safe_repr(first),
+                                                          safe_repr(second),
+                                                          places)
         msg = self._formatMessage(msg, standardMsg)
         raise self.failureException(msg)
 
@@ -979,19 +891,16 @@ class TestCase(object):
         """
         if delta is not None and places is not None:
             raise TypeError("specify delta or places not both")
-        diff = abs(first - second)
         if delta is not None:
-            if not (first == second) and diff > delta:
+            if not (first == second) and abs(first - second) > delta:
                 return
-            standardMsg = '%s == %s within %s delta (%s difference)' % (
-                safe_repr(first),
-                safe_repr(second),
-                safe_repr(delta),
-                safe_repr(diff))
+            standardMsg = '%s == %s within %s delta' % (safe_repr(first),
+                                                        safe_repr(second),
+                                                        safe_repr(delta))
         else:
             if places is None:
                 places = 7
-            if not (first == second) and round(diff, places) != 0:
+            if not (first == second) and round(abs(second-first), places) != 0:
                 return
             standardMsg = '%s == %s within %r places' % (safe_repr(first),
                                                          safe_repr(second),
@@ -999,6 +908,7 @@ class TestCase(object):
 
         msg = self._formatMessage(msg, standardMsg)
         raise self.failureException(msg)
+
 
     def assertSequenceEqual(self, seq1, seq2, msg=None, seq_type=None):
         """An equality assertion for ordered sequences (like lists and tuples).
@@ -1240,8 +1150,9 @@ class TestCase(object):
 
 
     def assertCountEqual(self, first, second, msg=None):
-        """Asserts that two iterables have the same elements, the same number of
-        times, without regard to order.
+        """An unordered sequence comparison asserting that the same elements,
+        regardless of order.  If the same element occurs more than once,
+        it verifies that the elements occur the same number of times.
 
             self.assertEqual(Counter(list(first)),
                              Counter(list(second)))
@@ -1346,7 +1257,7 @@ class TestCase(object):
 
         Args:
             expected_exception: Exception class expected to be raised.
-            expected_regex: Regex (re.Pattern object or string) expected
+            expected_regex: Regex (re pattern object or string) expected
                     to be found in error message.
             args: Function to be called and extra positional args.
             kwargs: Extra kwargs.
@@ -1365,7 +1276,7 @@ class TestCase(object):
 
         Args:
             expected_warning: Warning class expected to be triggered.
-            expected_regex: Regex (re.Pattern object or string) expected
+            expected_regex: Regex (re pattern object or string) expected
                     to be found in error message.
             args: Function to be called and extra positional args.
             kwargs: Extra kwargs.
@@ -1501,7 +1412,7 @@ class _SubTest(TestCase):
         if self.params:
             params_desc = ', '.join(
                 "{}={!r}".format(k, v)
-                for (k, v) in self.params.items())
+                for (k, v) in sorted(self.params.items()))
             parts.append("({})".format(params_desc))
         return " ".join(parts) or '(<subtest>)'
 

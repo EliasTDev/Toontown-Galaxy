@@ -106,15 +106,13 @@ server.handle_request()
 
 from xmlrpc.client import Fault, dumps, loads, gzip_encode, gzip_decode
 from http.server import BaseHTTPRequestHandler
-from functools import partial
-from inspect import signature
-import html
 import http.server
 import socketserver
 import sys
 import os
 import re
 import pydoc
+import inspect
 import traceback
 try:
     import fcntl
@@ -206,21 +204,16 @@ class SimpleXMLRPCDispatcher:
         self.instance = instance
         self.allow_dotted_names = allow_dotted_names
 
-    def register_function(self, function=None, name=None):
+    def register_function(self, function, name=None):
         """Registers a function to respond to XML-RPC requests.
 
         The optional name argument can be used to set a Unicode name
         for the function.
         """
-        # decorator factory
-        if function is None:
-            return partial(self.register_function, name=name)
 
         if name is None:
             name = function.__name__
         self.funcs[name] = function
-
-        return function
 
     def register_introspection_functions(self):
         """Registers the XML-RPC introspection methods in the system
@@ -772,8 +765,24 @@ class ServerHTMLDoc(pydoc.HTMLDoc):
         title = '<a name="%s"><strong>%s</strong></a>' % (
             self.escape(anchor), self.escape(name))
 
-        if callable(object):
-            argspec = str(signature(object))
+        if inspect.ismethod(object):
+            args = inspect.getfullargspec(object)
+            # exclude the argument bound to the instance, it will be
+            # confusing to the non-Python user
+            argspec = inspect.formatargspec (
+                    args.args[1:],
+                    args.varargs,
+                    args.varkw,
+                    args.defaults,
+                    annotations=args.annotations,
+                    formatvalue=self.formatvalue
+                )
+        elif inspect.isfunction(object):
+            args = inspect.getfullargspec(object)
+            argspec = inspect.formatargspec(
+                args.args, args.varargs, args.varkw, args.defaults,
+                annotations=args.annotations,
+                formatvalue=self.formatvalue)
         else:
             argspec = '(...)'
 
@@ -895,7 +904,7 @@ class XMLRPCDocGenerator:
                                 methods
                             )
 
-        return documenter.page(html.escape(self.server_title), documentation)
+        return documenter.page(self.server_title, documentation)
 
 class DocXMLRPCRequestHandler(SimpleXMLRPCRequestHandler):
     """XML-RPC and documentation request handler class.

@@ -19,7 +19,7 @@ __author__ = "Guilherme Polo <ggpolo@gmail.com>"
 __all__ = ["Button", "Checkbutton", "Combobox", "Entry", "Frame", "Label",
            "Labelframe", "LabelFrame", "Menubutton", "Notebook", "Panedwindow",
            "PanedWindow", "Progressbar", "Radiobutton", "Scale", "Scrollbar",
-           "Separator", "Sizegrip", "Spinbox", "Style", "Treeview",
+           "Separator", "Sizegrip", "Style", "Treeview",
            # Extensions
            "LabeledScale", "OptionMenu",
            # functions
@@ -27,6 +27,8 @@ __all__ = ["Button", "Checkbutton", "Combobox", "Entry", "Frame", "Label",
 
 import tkinter
 from tkinter import _flatten, _join, _stringify, _splitdict
+
+_sentinel = object()
 
 # Verify if Tk is new enough to not need the Tile package
 _REQUIRE_TILE = True if tkinter.TkVersion < 8.5 else False
@@ -1084,12 +1086,11 @@ class Scale(Widget, tkinter.Scale):
 
         Setting a value for any of the "from", "from_" or "to" options
         generates a <<RangeChanged>> event."""
-        retval = Widget.configure(self, cnf, **kw)
-        if not isinstance(cnf, (type(None), str)):
+        if cnf:
             kw.update(cnf)
+        Widget.configure(self, **kw)
         if any(['from' in kw, 'from_' in kw, 'to' in kw]):
             self.event_generate('<<RangeChanged>>')
-        return retval
 
 
     def get(self, x=None, y=None):
@@ -1148,33 +1149,6 @@ class Sizegrip(Widget):
             class, cursor, state, style, takefocus
         """
         Widget.__init__(self, master, "ttk::sizegrip", kw)
-
-
-class Spinbox(Entry):
-    """Ttk Spinbox is an Entry with increment and decrement arrows
-
-    It is commonly used for number entry or to select from a list of
-    string values.
-    """
-
-    def __init__(self, master=None, **kw):
-        """Construct a Ttk Spinbox widget with the parent master.
-
-        STANDARD OPTIONS
-
-            class, cursor, style, takefocus, validate,
-            validatecommand, xscrollcommand, invalidcommand
-
-        WIDGET-SPECIFIC OPTIONS
-
-            to, from_, increment, values, wrap, format, command
-        """
-        Entry.__init__(self, master, "ttk::spinbox", **kw)
-
-
-    def set(self, value):
-        """Sets the value of the Spinbox to value."""
-        self.tk.call(self._w, "set", value)
 
 
 class Treeview(Widget, tkinter.XView, tkinter.YView):
@@ -1422,9 +1396,26 @@ class Treeview(Widget, tkinter.XView, tkinter.YView):
         self.tk.call(self._w, "see", item)
 
 
-    def selection(self):
+    def selection(self, selop=_sentinel, items=None):
         """Returns the tuple of selected items."""
-        return self.tk.splitlist(self.tk.call(self._w, "selection"))
+        if selop is _sentinel:
+            selop = None
+        elif selop is None:
+            import warnings
+            warnings.warn(
+                "The selop=None argument of selection() is deprecated "
+                "and will be removed in Python 3.8",
+                DeprecationWarning, 3)
+        elif selop in ('set', 'add', 'remove', 'toggle'):
+            import warnings
+            warnings.warn(
+                "The selop argument of selection() is deprecated "
+                "and will be removed in Python 3.8, "
+                "use selection_%s() instead" % (selop,),
+                DeprecationWarning, 3)
+        else:
+            raise TypeError('Unsupported operation')
+        return self.tk.splitlist(self.tk.call(self._w, "selection", selop, items))
 
 
     def _selection(self, selop, items):
@@ -1587,15 +1578,18 @@ class LabeledScale(Frame):
         self.label['text'] = newval
         self.after_idle(adjust_label)
 
-    @property
-    def value(self):
+
+    def _get_value(self):
         """Return current scale value."""
         return self._variable.get()
 
-    @value.setter
-    def value(self, val):
+
+    def _set_value(self, val):
         """Set new scale value."""
         self._variable.set(val)
+
+
+    value = property(_get_value, _set_value)
 
 
 class OptionMenu(Menubutton):

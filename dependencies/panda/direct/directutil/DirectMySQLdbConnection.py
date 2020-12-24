@@ -1,16 +1,14 @@
 import MySQLdb
 from MySQLdb.connections import *
-
+from MySQLdb.constants import CLIENT, FIELD_TYPE
+from MySQLdb.converters import conversions
+from weakref import proxy, WeakValueDictionary
+        
+import types
 class DirectMySQLdbConnection(Connection):
     ### DCR: from MySQLdb connections.py Connection.__init__
     def __init__(self, *args, **kwargs):
         ### DCR: fixed up relative imports
-        from MySQLdb.constants import CLIENT, FIELD_TYPE
-        from MySQLdb.converters import conversions
-        from weakref import proxy, WeakValueDictionary
-        
-        import types
-
         kwargs2 = kwargs.copy()
         
         if 'conv' in kwargs:

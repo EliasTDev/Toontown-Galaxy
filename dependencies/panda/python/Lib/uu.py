@@ -26,8 +26,8 @@
 
 """Implementation of the UUencode and UUdecode functions.
 
-encode(in_file, out_file [,name, mode], *, backtick=False)
-decode(in_file [, out_file, mode, quiet])
+encode(in_file, out_file [,name, mode])
+decode(in_file [, out_file, mode])
 """
 
 import binascii
@@ -39,7 +39,7 @@ __all__ = ["Error", "encode", "decode"]
 class Error(Exception):
     pass
 
-def encode(in_file, out_file, name=None, mode=None, *, backtick=False):
+def encode(in_file, out_file, name=None, mode=None):
     """Uuencode file"""
     #
     # If in_file is a pathname open it and change defaults
@@ -73,25 +73,15 @@ def encode(in_file, out_file, name=None, mode=None, *, backtick=False):
             name = '-'
         if mode is None:
             mode = 0o666
-
-        #
-        # Remove newline chars from name
-        #
-        name = name.replace('\n','\\n')
-        name = name.replace('\r','\\r')
-
         #
         # Write the data
         #
         out_file.write(('begin %o %s\n' % ((mode & 0o777), name)).encode("ascii"))
         data = in_file.read(45)
         while len(data) > 0:
-            out_file.write(binascii.b2a_uu(data, backtick=backtick))
+            out_file.write(binascii.b2a_uu(data))
             data = in_file.read(45)
-        if backtick:
-            out_file.write(b'`\nend\n')
-        else:
-            out_file.write(b' \nend\n')
+        out_file.write(b' \nend\n')
     finally:
         for f in opened_files:
             f.close()
@@ -140,7 +130,10 @@ def decode(in_file, out_file=None, mode=None, quiet=False):
             out_file = sys.stdout.buffer
         elif isinstance(out_file, str):
             fp = open(out_file, 'wb')
-            os.chmod(out_file, mode)
+            try:
+                os.path.chmod(out_file, mode)
+            except AttributeError:
+                pass
             out_file = fp
             opened_files.append(out_file)
         #

@@ -60,7 +60,6 @@ menudefs = [
    ]),
 
  ('format', [
-   ('F_ormat Paragraph', '<<format-paragraph>>'),
    ('_Indent Region', '<<indent-region>>'),
    ('_Dedent Region', '<<dedent-region>>'),
    ('Comment _Out Region', '<<comment-region>>'),
@@ -69,22 +68,19 @@ menudefs = [
    ('Untabify Region', '<<untabify-region>>'),
    ('Toggle Tabs', '<<toggle-tabs>>'),
    ('New Indent Width', '<<change-indentwidth>>'),
+   ('F_ormat Paragraph', '<<format-paragraph>>'),
    ('S_trip Trailing Whitespace', '<<do-rstrip>>'),
    ]),
 
  ('run', [
-   ('R_un Module', '<<run-module>>'),
-   ('Run... _Customized', '<<run-custom>>'),
-   ('C_heck Module', '<<check-module>>'),
    ('Python Shell', '<<open-python-shell>>'),
+   ('C_heck Module', '<<check-module>>'),
+   ('R_un Module', '<<run-module>>'),
    ]),
 
  ('shell', [
    ('_View Last Restart', '<<view-restart>>'),
    ('_Restart Shell', '<<restart-shell>>'),
-   None,
-   ('_Previous History', '<<history-previous>>'),
-   ('_Next History', '<<history-next>>'),
    None,
    ('_Interrupt Execution', '<<interrupt-execution>>'),
    ]),
@@ -98,13 +94,11 @@ menudefs = [
 
  ('options', [
    ('Configure _IDLE', '<<open-config-dialog>>'),
-   None,
-   ('Show _Code Context', '<<toggle-code-context>>'),
-   ('Show _Line Numbers', '<<toggle-line-numbers>>'),
-   ('_Zoom Height', '<<zoom-height>>'),
+   ('_Code Context', '<<toggle-code-context>>'),
    ]),
 
  ('window', [
+   ('Zoom Height', '<<zoom-height>>'),
    ]),
 
  ('help', [

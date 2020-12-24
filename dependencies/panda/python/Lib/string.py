@@ -52,14 +52,12 @@ def capwords(s, sep=None):
 import re as _re
 from collections import ChainMap as _ChainMap
 
-_sentinel_dict = {}
-
 class _TemplateMetaclass(type):
     pattern = r"""
     %(delim)s(?:
       (?P<escaped>%(delim)s) |   # Escape sequence of two delimiters
       (?P<named>%(id)s)      |   # delimiter and a Python identifier
-      {(?P<braced>%(bid)s)}  |   # delimiter and a braced identifier
+      {(?P<braced>%(id)s)}   |   # delimiter and a braced identifier
       (?P<invalid>)              # Other ill-formed delimiter exprs
     )
     """
@@ -72,7 +70,6 @@ class _TemplateMetaclass(type):
             pattern = _TemplateMetaclass.pattern % {
                 'delim' : _re.escape(cls.delimiter),
                 'id'    : cls.idpattern,
-                'bid'   : cls.braceidpattern or cls.idpattern,
                 }
         cls.pattern = _re.compile(pattern, cls.flags | _re.VERBOSE)
 
@@ -81,12 +78,11 @@ class Template(metaclass=_TemplateMetaclass):
     """A string class for supporting $-substitutions."""
 
     delimiter = '$'
-    # r'[a-z]' matches to non-ASCII letters when used with IGNORECASE, but
-    # without the ASCII flag.  We can't add re.ASCII to flags because of
-    # backward compatibility.  So we use the ?a local flag and [a-z] pattern.
+    # r'[a-z]' matches to non-ASCII letters when used with IGNORECASE,
+    # but without ASCII flag.  We can't add re.ASCII to flags because of
+    # backward compatibility.  So we use local -i flag and [a-zA-Z] pattern.
     # See https://bugs.python.org/issue31672
-    idpattern = r'(?a:[_a-z][_a-z0-9]*)'
-    braceidpattern = None
+    idpattern = r'(?-i:[_a-zA-Z][_a-zA-Z0-9]*)'
     flags = _re.IGNORECASE
 
     def __init__(self, template):
@@ -106,11 +102,19 @@ class Template(metaclass=_TemplateMetaclass):
         raise ValueError('Invalid placeholder in string: line %d, col %d' %
                          (lineno, colno))
 
-    def substitute(self, mapping=_sentinel_dict, /, **kws):
-        if mapping is _sentinel_dict:
+    def substitute(*args, **kws):
+        if not args:
+            raise TypeError("descriptor 'substitute' of 'Template' object "
+                            "needs an argument")
+        self, *args = args  # allow the "self" keyword be passed
+        if len(args) > 1:
+            raise TypeError('Too many positional arguments')
+        if not args:
             mapping = kws
         elif kws:
-            mapping = _ChainMap(kws, mapping)
+            mapping = _ChainMap(kws, args[0])
+        else:
+            mapping = args[0]
         # Helper function for .sub()
         def convert(mo):
             # Check the most common path first.
@@ -125,11 +129,19 @@ class Template(metaclass=_TemplateMetaclass):
                              self.pattern)
         return self.pattern.sub(convert, self.template)
 
-    def safe_substitute(self, mapping=_sentinel_dict, /, **kws):
-        if mapping is _sentinel_dict:
+    def safe_substitute(*args, **kws):
+        if not args:
+            raise TypeError("descriptor 'safe_substitute' of 'Template' object "
+                            "needs an argument")
+        self, *args = args  # allow the "self" keyword be passed
+        if len(args) > 1:
+            raise TypeError('Too many positional arguments')
+        if not args:
             mapping = kws
         elif kws:
-            mapping = _ChainMap(kws, mapping)
+            mapping = _ChainMap(kws, args[0])
+        else:
+            mapping = args[0]
         # Helper function for .sub()
         def convert(mo):
             named = mo.group('named') or mo.group('braced')
@@ -159,7 +171,22 @@ class Template(metaclass=_TemplateMetaclass):
 # The field name parser is implemented in _string.formatter_field_name_split
 
 class Formatter:
-    def format(self, format_string, /, *args, **kwargs):
+    def format(*args, **kwargs):
+        if not args:
+            raise TypeError("descriptor 'format' of 'Formatter' object "
+                            "needs an argument")
+        self, *args = args  # allow the "self" keyword be passed
+        try:
+            format_string, *args = args # allow the "format_string" keyword be passed
+        except ValueError:
+            if 'format_string' in kwargs:
+                format_string = kwargs.pop('format_string')
+                import warnings
+                warnings.warn("Passing 'format_string' as keyword argument is "
+                              "deprecated", DeprecationWarning, stacklevel=2)
+            else:
+                raise TypeError("format() missing 1 required positional "
+                                "argument: 'format_string'") from None
         return self.vformat(format_string, args, kwargs)
 
     def vformat(self, format_string, args, kwargs):

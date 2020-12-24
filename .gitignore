@@ -82,3 +82,6 @@ user/ttgsettings.json
 ToontownStart.build/
 ToontownStart.dist/
 config/spellbook.json
+build.py
+pypperoni/
+python/

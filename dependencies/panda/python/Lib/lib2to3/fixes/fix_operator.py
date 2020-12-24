@@ -1,15 +1,15 @@
 """Fixer for operator functions.
 
-operator.isCallable(obj)       -> callable(obj)
+operator.isCallable(obj)       -> hasattr(obj, '__call__')
 operator.sequenceIncludes(obj) -> operator.contains(obj)
-operator.isSequenceType(obj)   -> isinstance(obj, collections.abc.Sequence)
-operator.isMappingType(obj)    -> isinstance(obj, collections.abc.Mapping)
+operator.isSequenceType(obj)   -> isinstance(obj, collections.Sequence)
+operator.isMappingType(obj)    -> isinstance(obj, collections.Mapping)
 operator.isNumberType(obj)     -> isinstance(obj, numbers.Number)
 operator.repeat(obj, n)        -> operator.mul(obj, n)
 operator.irepeat(obj, n)       -> operator.imul(obj, n)
 """
 
-import collections.abc
+import collections
 
 # Local imports
 from lib2to3 import fixer_base
@@ -49,10 +49,11 @@ class FixOperator(fixer_base.BaseFix):
     def _sequenceIncludes(self, node, results):
         return self._handle_rename(node, results, "contains")
 
-    @invocation("callable(%s)")
+    @invocation("hasattr(%s, '__call__')")
     def _isCallable(self, node, results):
         obj = results["obj"]
-        return Call(Name("callable"), [obj.clone()], prefix=node.prefix)
+        args = [obj.clone(), String(", "), String("'__call__'")]
+        return Call(Name("hasattr"), args, prefix=node.prefix)
 
     @invocation("operator.mul(%s)")
     def _repeat(self, node, results):
@@ -62,13 +63,13 @@ class FixOperator(fixer_base.BaseFix):
     def _irepeat(self, node, results):
         return self._handle_rename(node, results, "imul")
 
-    @invocation("isinstance(%s, collections.abc.Sequence)")
+    @invocation("isinstance(%s, collections.Sequence)")
     def _isSequenceType(self, node, results):
-        return self._handle_type2abc(node, results, "collections.abc", "Sequence")
+        return self._handle_type2abc(node, results, "collections", "Sequence")
 
-    @invocation("isinstance(%s, collections.abc.Mapping)")
+    @invocation("isinstance(%s, collections.Mapping)")
     def _isMappingType(self, node, results):
-        return self._handle_type2abc(node, results, "collections.abc", "Mapping")
+        return self._handle_type2abc(node, results, "collections", "Mapping")
 
     @invocation("isinstance(%s, numbers.Number)")
     def _isNumberType(self, node, results):
@@ -87,7 +88,7 @@ class FixOperator(fixer_base.BaseFix):
 
     def _check_method(self, node, results):
         method = getattr(self, "_" + results["method"][0].value)
-        if isinstance(method, collections.abc.Callable):
+        if isinstance(method, collections.Callable):
             if "module" in results:
                 return method
             else:

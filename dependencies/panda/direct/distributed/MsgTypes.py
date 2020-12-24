@@ -5,7 +5,6 @@ from direct.showbase.PythonUtil import invertDictLossless
 MsgName2Id = {
     'CLIENT_HELLO':                                  1,
     'CLIENT_HELLO_RESP':                             2,
-    'CLIENT_GET_AVATAR_DETAILS':                     14,
 
     # Sent by the client when it's leaving.
     'CLIENT_DISCONNECT':                             3,
@@ -15,8 +14,6 @@ MsgName2Id = {
 
     'CLIENT_HEARTBEAT':                              5,
 
-    'CLIENT_GET_PET_DETAILS':                        81,
-    'CLIENT_GET_PET_DETAILS_RESP':                   82,
     'CLIENT_OBJECT_SET_FIELD':                       120,
     'CLIENT_OBJECT_SET_FIELDS':                      121,
     'CLIENT_OBJECT_LEAVING':                         132,
@@ -100,7 +97,6 @@ MsgName2Id = {
     'DBSS_OBJECT_DELETE_DISK':                   2232,
 
     # Database Server control messages:
-    'DBSERVER_GET_ESTATE':                          1040,
     'DBSERVER_CREATE_OBJECT':                       3000,
     'DBSERVER_CREATE_OBJECT_RESP':                  3001,
     'DBSERVER_OBJECT_GET_FIELD':                    3010,

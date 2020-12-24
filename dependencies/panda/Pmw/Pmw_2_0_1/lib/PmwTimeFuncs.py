@@ -145,10 +145,10 @@ def jdntoymd(jdn, julian = -1, papal = 1):
 
 def stringtoreal(text, separator = '.'):
     if separator != '.':
-        #Py3 if str.find(text, '.') >= 0:
+        #Py3 if string.find(text, '.') >= 0:
         if text.find('.') >= 0:
             raise ValueError('invalid value: ' + text)
-        #Py3 index = str.find(text, separator)
+        #Py3 index = string.find(text, separator)
         index = text.find(separator)
         if index >= 0:
             text = text[:index] + '.' + text[index + 1:]

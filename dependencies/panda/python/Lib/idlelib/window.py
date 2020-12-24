@@ -1,5 +1,4 @@
-from tkinter import Toplevel, TclError
-import sys
+from tkinter import *
 
 
 class WindowList:

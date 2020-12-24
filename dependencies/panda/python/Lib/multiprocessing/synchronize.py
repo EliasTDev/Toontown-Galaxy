@@ -76,16 +76,16 @@ class SemLock(object):
             # We only get here if we are on Unix with forking
             # disabled.  When the object is garbage collected or the
             # process shuts down we unlink the semaphore name
-            from .resource_tracker import register
-            register(self._semlock.name, "semaphore")
+            from .semaphore_tracker import register
+            register(self._semlock.name)
             util.Finalize(self, SemLock._cleanup, (self._semlock.name,),
                           exitpriority=0)
 
     @staticmethod
     def _cleanup(name):
-        from .resource_tracker import unregister
+        from .semaphore_tracker import unregister
         sem_unlink(name)
-        unregister(name, "semaphore")
+        unregister(name)
 
     def _make_methods(self):
         self.acquire = self._semlock.acquire
@@ -267,21 +267,35 @@ class Condition(object):
             for i in range(count):
                 self._lock.acquire()
 
-    def notify(self, n=1):
+    def notify(self):
         assert self._lock._semlock._is_mine(), 'lock is not owned'
-        assert not self._wait_semaphore.acquire(
-            False), ('notify: Should not have been able to acquire'
-                     + '_wait_semaphore')
+        assert not self._wait_semaphore.acquire(False)
+
+        # to take account of timeouts since last notify() we subtract
+        # woken_count from sleeping_count and rezero woken_count
+        while self._woken_count.acquire(False):
+            res = self._sleeping_count.acquire(False)
+            assert res
+
+        if self._sleeping_count.acquire(False): # try grabbing a sleeper
+            self._wait_semaphore.release()      # wake up one sleeper
+            self._woken_count.acquire()         # wait for the sleeper to wake
+
+            # rezero _wait_semaphore in case a timeout just happened
+            self._wait_semaphore.acquire(False)
+
+    def notify_all(self):
+        assert self._lock._semlock._is_mine(), 'lock is not owned'
+        assert not self._wait_semaphore.acquire(False)
 
         # to take account of timeouts since last notify*() we subtract
         # woken_count from sleeping_count and rezero woken_count
         while self._woken_count.acquire(False):
             res = self._sleeping_count.acquire(False)
-            assert res, ('notify: Bug in sleeping_count.acquire'
-                         + '- res should not be False')
+            assert res
 
         sleepers = 0
-        while sleepers < n and self._sleeping_count.acquire(False):
+        while self._sleeping_count.acquire(False):
             self._wait_semaphore.release()        # wake up one sleeper
             sleepers += 1
 
@@ -292,9 +306,6 @@ class Condition(object):
             # rezero wait_semaphore in case some timeouts just happened
             while self._wait_semaphore.acquire(False):
                 pass
-
-    def notify_all(self):
-        self.notify(n=sys.maxsize)
 
     def wait_for(self, predicate, timeout=None):
         result = predicate()

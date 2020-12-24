@@ -257,7 +257,8 @@ class FrameSummary:
         self._line = line
         if lookup_line:
             self.line
-        self.locals = {k: repr(v) for k, v in locals.items()} if locals else None
+        self.locals = \
+            dict((k, repr(v)) for k, v in locals.items()) if locals else None
 
     def __eq__(self, other):
         if isinstance(other, FrameSummary):
@@ -278,9 +279,6 @@ class FrameSummary:
     def __repr__(self):
         return "<FrameSummary file {filename}, line {lineno} in {name}>".format(
             filename=self.filename, lineno=self.lineno, name=self.name)
-
-    def __len__(self):
-        return 4
 
     @property
     def line(self):

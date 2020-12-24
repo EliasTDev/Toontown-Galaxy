@@ -104,7 +104,6 @@ is destroyed.
 """
 
 from collections import namedtuple
-import warnings
 
 _sunau_params = namedtuple('_sunau_params',
                            'nchannels sampwidth framerate nframes comptype compname')
@@ -208,8 +207,6 @@ class Au_read:
             raise Error('unknown encoding')
         self._framerate = int(_read_u32(file))
         self._nchannels = int(_read_u32(file))
-        if not self._nchannels:
-            raise Error('bad # of channels')
         self._framesize = self._framesize * self._nchannels
         if self._hdr_size > 24:
             self._info = file.read(self._hdr_size - 24)
@@ -525,7 +522,4 @@ def open(f, mode=None):
     else:
         raise Error("mode must be 'r', 'rb', 'w', or 'wb'")
 
-def openfp(f, mode=None):
-    warnings.warn("sunau.openfp is deprecated since Python 3.7. "
-                  "Use sunau.open instead.", DeprecationWarning, stacklevel=2)
-    return open(f, mode=mode)
+openfp = open

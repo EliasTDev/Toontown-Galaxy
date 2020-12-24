@@ -59,7 +59,7 @@ else:
 
 
 class _ResourceSharer(object):
-    '''Manager for resources using background thread.'''
+    '''Manager for resouces using background thread.'''
     def __init__(self):
         self._key = 0
         self._cache = {}
@@ -125,7 +125,7 @@ class _ResourceSharer(object):
 
     def _start(self):
         from .connection import Listener
-        assert self._listener is None, "Already have Listener"
+        assert self._listener is None
         util.debug('starting listener and thread for sending handles')
         self._listener = Listener(authkey=process.current_process().authkey)
         self._address = self._listener.address
@@ -136,7 +136,7 @@ class _ResourceSharer(object):
 
     def _serve(self):
         if hasattr(signal, 'pthread_sigmask'):
-            signal.pthread_sigmask(signal.SIG_BLOCK, signal.valid_signals())
+            signal.pthread_sigmask(signal.SIG_BLOCK, range(1, signal.NSIG))
         while 1:
             try:
                 with self._listener.accept() as conn:

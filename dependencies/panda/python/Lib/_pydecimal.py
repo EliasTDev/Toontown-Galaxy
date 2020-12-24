@@ -431,34 +431,80 @@ _rounding_modes = (ROUND_DOWN, ROUND_HALF_UP, ROUND_HALF_EVEN, ROUND_CEILING,
 ##### Context Functions ##################################################
 
 # The getcontext() and setcontext() function manage access to a thread-local
-# current context.
+# current context.  Py2.4 offers direct support for thread locals.  If that
+# is not available, use threading.current_thread() which is slower but will
+# work for older Pythons.  If threads are not part of the build, create a
+# mock threading object with threading.local() returning the module namespace.
 
-import contextvars
+try:
+    import threading
+except ImportError:
+    # Python was compiled without threads; create a mock object instead
+    class MockThreading(object):
+        def local(self, sys=sys):
+            return sys.modules[__xname__]
+    threading = MockThreading()
+    del MockThreading
 
-_current_context_var = contextvars.ContextVar('decimal_context')
+try:
+    threading.local
 
-def getcontext():
-    """Returns this thread's context.
+except AttributeError:
 
-    If this thread does not yet have a context, returns
-    a new context and sets this thread's context.
-    New contexts are copies of DefaultContext.
-    """
-    try:
-        return _current_context_var.get()
-    except LookupError:
-        context = Context()
-        _current_context_var.set(context)
-        return context
+    # To fix reloading, force it to create a new context
+    # Old contexts have different exceptions in their dicts, making problems.
+    if hasattr(threading.current_thread(), '__decimal_context__'):
+        del threading.current_thread().__decimal_context__
 
-def setcontext(context):
-    """Set this thread's context to context."""
-    if context in (DefaultContext, BasicContext, ExtendedContext):
-        context = context.copy()
-        context.clear_flags()
-    _current_context_var.set(context)
+    def setcontext(context):
+        """Set this thread's context to context."""
+        if context in (DefaultContext, BasicContext, ExtendedContext):
+            context = context.copy()
+            context.clear_flags()
+        threading.current_thread().__decimal_context__ = context
 
-del contextvars        # Don't contaminate the namespace
+    def getcontext():
+        """Returns this thread's context.
+
+        If this thread does not yet have a context, returns
+        a new context and sets this thread's context.
+        New contexts are copies of DefaultContext.
+        """
+        try:
+            return threading.current_thread().__decimal_context__
+        except AttributeError:
+            context = Context()
+            threading.current_thread().__decimal_context__ = context
+            return context
+
+else:
+
+    local = threading.local()
+    if hasattr(local, '__decimal_context__'):
+        del local.__decimal_context__
+
+    def getcontext(_local=local):
+        """Returns this thread's context.
+
+        If this thread does not yet have a context, returns
+        a new context and sets this thread's context.
+        New contexts are copies of DefaultContext.
+        """
+        try:
+            return _local.__decimal_context__
+        except AttributeError:
+            context = Context()
+            _local.__decimal_context__ = context
+            return context
+
+    def setcontext(context, _local=local):
+        """Set this thread's context to context."""
+        if context in (DefaultContext, BasicContext, ExtendedContext):
+            context = context.copy()
+            context.clear_flags()
+        _local.__decimal_context__ = context
+
+    del threading, local        # Don't contaminate the namespace
 
 def localcontext(ctx=None):
     """Return a context manager for a copy of the supplied context
@@ -688,23 +734,18 @@ class Decimal(object):
 
         """
         if isinstance(f, int):                # handle integer inputs
-            sign = 0 if f >= 0 else 1
-            k = 0
-            coeff = str(abs(f))
-        elif isinstance(f, float):
-            if _math.isinf(f) or _math.isnan(f):
-                return cls(repr(f))
-            if _math.copysign(1.0, f) == 1.0:
-                sign = 0
-            else:
-                sign = 1
-            n, d = abs(f).as_integer_ratio()
-            k = d.bit_length() - 1
-            coeff = str(n*5**k)
-        else:
+            return cls(f)
+        if not isinstance(f, float):
             raise TypeError("argument must be int or float.")
-
-        result = _dec_from_triple(sign, coeff, -k)
+        if _math.isinf(f) or _math.isnan(f):
+            return cls(repr(f))
+        if _math.copysign(1.0, f) == 1.0:
+            sign = 0
+        else:
+            sign = 1
+        n, d = abs(f).as_integer_ratio()
+        k = d.bit_length() - 1
+        result = _dec_from_triple(sign, str(n*5**k), -k)
         if cls is Decimal:
             return result
         else:
@@ -1628,13 +1669,13 @@ class Decimal(object):
 
     __trunc__ = __int__
 
-    @property
     def real(self):
         return self
+    real = property(real)
 
-    @property
     def imag(self):
         return Decimal(0)
+    imag = property(imag)
 
     def conjugate(self):
         return self
@@ -5630,6 +5671,8 @@ class _WorkRep(object):
 
     def __repr__(self):
         return "(%r, %r, %r)" % (self.sign, self.int, self.exp)
+
+    __str__ = __repr__
 
 
 

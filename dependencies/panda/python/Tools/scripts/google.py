@@ -1,25 +1,23 @@
 #! /usr/bin/env python3
 
-"""Script to search with Google
+import sys, webbrowser
 
-Usage:
-    python3 google.py [search terms]
-"""
-
-import sys
-import urllib.parse
-import webbrowser
-
-
-def main(args):
-    def quote(arg):
+def main():
+    args = sys.argv[1:]
+    if not args:
+        print("Usage: %s querystring" % sys.argv[0])
+        return
+    list = []
+    for arg in args:
+        if '+' in arg:
+            arg = arg.replace('+', '%2B')
         if ' ' in arg:
             arg = '"%s"' % arg
-        return urllib.parse.quote_plus(arg)
-
-    qstring = '+'.join(quote(arg) for arg in args)
-    url = urllib.parse.urljoin('https://www.google.com/search', '?q=' + qstring)
+        arg = arg.replace(' ', '+')
+        list.append(arg)
+    s = '+'.join(list)
+    url = "http://www.google.com/search?q=%s" % s
     webbrowser.open(url)
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main()

@@ -6,7 +6,7 @@ Worse, this can cause IDLE to become very slow, even to the point of being
 completely unusable.
 
 This extension will automatically replace long texts with a small button.
-Double-clicking this button will remove it and insert the original text instead.
+Double-cliking this button will remove it and insert the original text instead.
 Middle-clicking will copy the text to the clipboard. Right-clicking will open
 the text in a separate viewing window.
 
@@ -17,6 +17,7 @@ messages and their tracebacks.
 import re
 
 import tkinter as tk
+from tkinter.font import Font
 import tkinter.messagebox as tkMessageBox
 
 from idlelib.config import idleConf
@@ -25,7 +26,7 @@ from idlelib.tooltip import Hovertip
 from idlelib import macosx
 
 
-def count_lines_with_wrapping(s, linewidth=80):
+def count_lines_with_wrapping(s, linewidth=80, tabwidth=8):
     """Count the number of lines in a given string.
 
     Lines are counted as if the string was wrapped so that lines are never over
@@ -33,49 +34,50 @@ def count_lines_with_wrapping(s, linewidth=80):
 
     Tabs are considered tabwidth characters long.
     """
-    tabwidth = 8  # Currently always true in Shell.
     pos = 0
     linecount = 1
     current_column = 0
 
     for m in re.finditer(r"[\t\n]", s):
-        # Process the normal chars up to tab or newline.
+        # process the normal chars up to tab or newline
         numchars = m.start() - pos
         pos += numchars
         current_column += numchars
 
-        # Deal with tab or newline.
+        # deal with tab or newline
         if s[pos] == '\n':
-            # Avoid the `current_column == 0` edge-case, and while we're
-            # at it, don't bother adding 0.
-            if current_column > linewidth:
-                # If the current column was exactly linewidth, divmod
-                # would give (1,0), even though a new line hadn't yet
-                # been started. The same is true if length is any exact
-                # multiple of linewidth. Therefore, subtract 1 before
-                # dividing a non-empty line.
-                linecount += (current_column - 1) // linewidth
             linecount += 1
             current_column = 0
         else:
             assert s[pos] == '\t'
             current_column += tabwidth - (current_column % tabwidth)
 
-            # If a tab passes the end of the line, consider the entire
-            # tab as being on the next line.
+            # if a tab passes the end of the line, consider the entire tab as
+            # being on the next line
             if current_column > linewidth:
                 linecount += 1
                 current_column = tabwidth
 
-        pos += 1 # After the tab or newline.
+        pos += 1 # after the tab or newline
 
-    # Process remaining chars (no more tabs or newlines).
+        # avoid divmod(-1, linewidth)
+        if current_column > 0:
+            # If the length was exactly linewidth, divmod would give (1,0),
+            # even though a new line hadn't yet been started. The same is true
+            # if length is any exact multiple of linewidth. Therefore, subtract
+            # 1 before doing divmod, and later add 1 to the column to
+            # compensate.
+            lines, column = divmod(current_column - 1, linewidth)
+            linecount += lines
+            current_column = column + 1
+
+    # process remaining chars (no more tabs or newlines)
     current_column += len(s) - pos
-    # Avoid divmod(-1, linewidth).
+    # avoid divmod(-1, linewidth)
     if current_column > 0:
         linecount += (current_column - 1) // linewidth
     else:
-        # Text ended with newline; don't count an extra line after it.
+        # the text ended with a newline; don't count an extra line after it
         linecount -= 1
 
     return linecount
@@ -99,11 +101,12 @@ class ExpandingButton(tk.Button):
         self.squeezer = squeezer
         self.editwin = editwin = squeezer.editwin
         self.text = text = editwin.text
-        # The base Text widget is needed to change text before iomark.
+
+        # the base Text widget of the PyShell object, used to change text
+        # before the iomark
         self.base_text = editwin.per.bottom
 
-        line_plurality = "lines" if numoflines != 1 else "line"
-        button_text = f"Squeezed text ({numoflines} {line_plurality})."
+        button_text = "Squeezed text (%d lines)." % self.numoflines
         tk.Button.__init__(self, text, text=button_text,
                            background="#FFFFC0", activebackground="#FFFFE0")
 
@@ -118,7 +121,7 @@ class ExpandingButton(tk.Button):
             self.bind("<Button-2>", self.context_menu_event)
         else:
             self.bind("<Button-3>", self.context_menu_event)
-        self.selection_handle(  # X windows only.
+        self.selection_handle(
             lambda offset, length: s[int(offset):int(offset) + int(length)])
 
         self.is_dangerous = None
@@ -181,7 +184,7 @@ class ExpandingButton(tk.Button):
                   modal=False, wrap='none')
 
     rmenu_specs = (
-        # Item structure: (label, method_name).
+        # item structure: (label, method_name)
         ('copy', 'copy'),
         ('view', 'view'),
     )
@@ -222,55 +225,44 @@ class Squeezer:
         self.editwin = editwin
         self.text = text = editwin.text
 
-        # Get the base Text widget of the PyShell object, used to change
-        # text before the iomark. PyShell deliberately disables changing
-        # text before the iomark via its 'text' attribute, which is
-        # actually a wrapper for the actual Text widget. Squeezer,
-        # however, needs to make such changes.
+        # Get the base Text widget of the PyShell object, used to change text
+        # before the iomark. PyShell deliberately disables changing text before
+        # the iomark via its 'text' attribute, which is actually a wrapper for
+        # the actual Text widget. Squeezer, however, needs to make such changes.
         self.base_text = editwin.per.bottom
 
-        # Twice the text widget's border width and internal padding;
-        # pre-calculated here for the get_line_width() method.
-        self.window_width_delta = 2 * (
-            int(text.cget('border')) +
-            int(text.cget('padx'))
-        )
-
         self.expandingbuttons = []
+        from idlelib.pyshell import PyShell  # done here to avoid import cycle
+        if isinstance(editwin, PyShell):
+            # If we get a PyShell instance, replace its write method with a
+            # wrapper, which inserts an ExpandingButton instead of a long text.
+            def mywrite(s, tags=(), write=editwin.write):
+                # only auto-squeeze text which has just the "stdout" tag
+                if tags != "stdout":
+                    return write(s, tags)
 
-        # Replace the PyShell instance's write method with a wrapper,
-        # which inserts an ExpandingButton instead of a long text.
-        def mywrite(s, tags=(), write=editwin.write):
-            # Only auto-squeeze text which has just the "stdout" tag.
-            if tags != "stdout":
-                return write(s, tags)
+                # only auto-squeeze text with at least the minimum
+                # configured number of lines
+                numoflines = self.count_lines(s)
+                if numoflines < self.auto_squeeze_min_lines:
+                    return write(s, tags)
 
-            # Only auto-squeeze text with at least the minimum
-            # configured number of lines.
-            auto_squeeze_min_lines = self.auto_squeeze_min_lines
-            # First, a very quick check to skip very short texts.
-            if len(s) < auto_squeeze_min_lines:
-                return write(s, tags)
-            # Now the full line-count check.
-            numoflines = self.count_lines(s)
-            if numoflines < auto_squeeze_min_lines:
-                return write(s, tags)
+                # create an ExpandingButton instance
+                expandingbutton = ExpandingButton(s, tags, numoflines,
+                                                  self)
 
-            # Create an ExpandingButton instance.
-            expandingbutton = ExpandingButton(s, tags, numoflines, self)
+                # insert the ExpandingButton into the Text widget
+                text.mark_gravity("iomark", tk.RIGHT)
+                text.window_create("iomark", window=expandingbutton,
+                                   padx=3, pady=5)
+                text.see("iomark")
+                text.update()
+                text.mark_gravity("iomark", tk.LEFT)
 
-            # Insert the ExpandingButton into the Text widget.
-            text.mark_gravity("iomark", tk.RIGHT)
-            text.window_create("iomark", window=expandingbutton,
-                               padx=3, pady=5)
-            text.see("iomark")
-            text.update()
-            text.mark_gravity("iomark", tk.LEFT)
+                # add the ExpandingButton to the Squeezer's list
+                self.expandingbuttons.append(expandingbutton)
 
-            # Add the ExpandingButton to the Squeezer's list.
-            self.expandingbuttons.append(expandingbutton)
-
-        editwin.write = mywrite
+            editwin.write = mywrite
 
     def count_lines(self, s):
         """Count the number of lines in a given text.
@@ -283,7 +275,25 @@ class Squeezer:
 
         Tabs are considered tabwidth characters long.
         """
-        return count_lines_with_wrapping(s, self.editwin.width)
+        # Tab width is configurable
+        tabwidth = self.editwin.get_tk_tabwidth()
+
+        # Get the Text widget's size
+        linewidth = self.editwin.text.winfo_width()
+        # Deduct the border and padding
+        linewidth -= 2*sum([int(self.editwin.text.cget(opt))
+                            for opt in ('border', 'padx')])
+
+        # Get the Text widget's font
+        font = Font(self.editwin.text, name=self.editwin.text.cget('font'))
+        # Divide the size of the Text widget by the font's width.
+        # According to Tk8.5 docs, the Text widget's width is set
+        # according to the width of its font's '0' (zero) character,
+        # so we will use this as an approximation.
+        # see: http://www.tcl.tk/man/tcl8.5/TkCmd/text.htm#M-width
+        linewidth //= font.measure('0')
+
+        return count_lines_with_wrapping(s, linewidth, tabwidth)
 
     def squeeze_current_text_event(self, event):
         """squeeze-current-text event handler
@@ -293,29 +303,29 @@ class Squeezer:
         If the insert cursor is not in a squeezable block of text, give the
         user a small warning and do nothing.
         """
-        # Set tag_name to the first valid tag found on the "insert" cursor.
+        # set tag_name to the first valid tag found on the "insert" cursor
         tag_names = self.text.tag_names(tk.INSERT)
         for tag_name in ("stdout", "stderr"):
             if tag_name in tag_names:
                 break
         else:
-            # The insert cursor doesn't have a "stdout" or "stderr" tag.
+            # the insert cursor doesn't have a "stdout" or "stderr" tag
             self.text.bell()
             return "break"
 
-        # Find the range to squeeze.
+        # find the range to squeeze
         start, end = self.text.tag_prevrange(tag_name, tk.INSERT + "+1c")
         s = self.text.get(start, end)
 
-        # If the last char is a newline, remove it from the range.
+        # if the last char is a newline, remove it from the range
         if len(s) > 0 and s[-1] == '\n':
             end = self.text.index("%s-1c" % end)
             s = s[:-1]
 
-        # Delete the text.
+        # delete the text
         self.base_text.delete(start, end)
 
-        # Prepare an ExpandingButton.
+        # prepare an ExpandingButton
         numoflines = self.count_lines(s)
         expandingbutton = ExpandingButton(s, tag_name, numoflines, self)
 
@@ -323,9 +333,9 @@ class Squeezer:
         self.text.window_create(start, window=expandingbutton,
                                 padx=3, pady=5)
 
-        # Insert the ExpandingButton to the list of ExpandingButtons,
-        # while keeping the list ordered according to the position of
-        # the buttons in the Text widget.
+        # insert the ExpandingButton to the list of ExpandingButtons, while
+        # keeping the list ordered according to the position of the buttons in
+        # the Text widget
         i = len(self.expandingbuttons)
         while i > 0 and self.text.compare(self.expandingbuttons[i-1],
                                           ">", expandingbutton):

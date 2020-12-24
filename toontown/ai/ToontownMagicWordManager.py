@@ -353,7 +353,7 @@ class ToontownMagicWordManager(MagicWordManager.MagicWordManager):
                 return
             factory.setColorZones(not factory.fColorZones)
             
-)
+
             
         elif wordIs("~undead"):
             # regenerate dead goons

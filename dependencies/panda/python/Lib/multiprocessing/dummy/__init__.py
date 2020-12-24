@@ -41,10 +41,7 @@ class DummyProcess(threading.Thread):
         self._parent = current_process()
 
     def start(self):
-        if self._parent is not current_process():
-            raise RuntimeError(
-                "Parent is {0!r} but current_process is {1!r}".format(
-                    self._parent, current_process()))
+        assert self._parent is current_process()
         self._start_called = True
         if hasattr(self._parent, '_children'):
             self._parent._children[self] = None
@@ -80,7 +77,7 @@ def freeze_support():
 #
 
 class Namespace(object):
-    def __init__(self, /, **kwds):
+    def __init__(self, **kwds):
         self.__dict__.update(kwds)
     def __repr__(self):
         items = list(self.__dict__.items())
@@ -101,15 +98,11 @@ class Value(object):
     def __init__(self, typecode, value, lock=True):
         self._typecode = typecode
         self._value = value
-
-    @property
-    def value(self):
+    def _get(self):
         return self._value
-
-    @value.setter
-    def value(self, value):
+    def _set(self, value):
         self._value = value
-
+    value = property(_get, _set)
     def __repr__(self):
         return '<%s(%r, %r)>'%(type(self).__name__,self._typecode,self._value)
 

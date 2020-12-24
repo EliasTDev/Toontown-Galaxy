@@ -93,13 +93,10 @@ def _maybe_compile(compiler, source, filename, symbol):
     except SyntaxError as e:
         err2 = e
 
-    try:
-        if code:
-            return code
-        if not code1 and repr(err1) == repr(err2):
-            raise err1
-    finally:
-        err1 = err2 = None
+    if code:
+        return code
+    if not code1 and repr(err1) == repr(err2):
+        raise err1
 
 def _compile(source, filename, symbol):
     return compile(source, filename, symbol, PyCF_DONT_IMPLY_DEDENT)

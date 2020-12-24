@@ -237,7 +237,6 @@ class AstronInternalRepository(ConnectionRepository):
             self.handleObjLocation(di)
         elif msgType in (DBSERVER_CREATE_OBJECT_RESP,
                          DBSERVER_OBJECT_GET_ALL_RESP,
-                         DBSERVER_GET_ESTATE,
                          DBSERVER_OBJECT_GET_FIELDS_RESP,
                          DBSERVER_OBJECT_GET_FIELD_RESP,
                          DBSERVER_OBJECT_SET_FIELD_IF_EQUALS_RESP,
@@ -753,16 +752,4 @@ class AstronInternalRepository(ConnectionRepository):
         dg = PyDatagram()
         dg.addServerHeader(doId, self.ourChannel, STATESERVER_OBJECT_SET_OWNER)
         dg.add_uint64(newOwner)
-        self.send(dg)
-
-    def sendUpdateToDoId(self, dclassName, fieldName, doId, args=[]):
-        """
-        Send an object field update to a specific doId by its fieldName.
-
-        This is useful for AI to UD (and vice versa) field updates.
-        """
-
-        dclass = self.dclassesByName[dclassName + self.dcSuffix]
-        field = dclass.getFieldByName(fieldName)
-        dg = field.aiFormatUpdate(doId, doId, self.ourChannel, args)
         self.send(dg)

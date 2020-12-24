@@ -3605,7 +3605,7 @@ SharedChatterGoodbyes = [
 MickeyChatter = (
         [ # Greetings specific to Mickey
         "Bienvenue à "+lToontownCentral+".",
-        "Salut, je m'appelle ""+Mickey+". Et toi?",
+        "Salut, je m'appelle "+Mickey+". Et toi?",
         ],
         [ # Comments
         "Dis donc, as-tu vu "+Donald+"?",

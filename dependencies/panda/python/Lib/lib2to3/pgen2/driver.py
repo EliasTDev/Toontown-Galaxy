@@ -16,6 +16,7 @@ __author__ = "Guido van Rossum <guido@python.org>"
 __all__ = ["Driver", "load_grammar"]
 
 # Python imports
+import codecs
 import io
 import os
 import logging
@@ -94,8 +95,11 @@ class Driver(object):
 
     def parse_file(self, filename, encoding=None, debug=False):
         """Parse a file and return the syntax tree."""
-        with io.open(filename, "r", encoding=encoding) as stream:
+        stream = codecs.open(filename, "r", encoding)
+        try:
             return self.parse_stream(stream, debug)
+        finally:
+            stream.close()
 
     def parse_string(self, text, debug=False):
         """Parse a string and return the syntax tree."""

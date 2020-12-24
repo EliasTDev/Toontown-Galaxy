@@ -142,9 +142,8 @@ class NPCFriendCard(DirectFrame):
         # Back side of the card
         self.back = DirectFrame(
             parent = self, relief = None,
-            image = cardModel.find('**/card_back')#,
-            #TODO use TTG logo
-            #geom = cardModel.find('**/logo')
+            image = cardModel.find('**/card_back'),
+            geom = cardModel.find('**/logo')
             )
 
         # Detail information about the quest

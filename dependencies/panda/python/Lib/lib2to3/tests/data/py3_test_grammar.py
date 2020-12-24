@@ -147,8 +147,6 @@ jumps over\n\
 the \'lazy\' dog.\n\
 '
         self.assertEquals(x, y)
-        x = rf"hello \{True}"; y = f"hello \\{True}"
-        self.assertEquals(x, y)
 
     def testEllipsis(self):
         x = ...

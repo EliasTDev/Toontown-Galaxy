@@ -160,7 +160,7 @@ def test_wav(h, f):
         return None
     f.seek(0)
     try:
-        w = wave.open(f, 'r')
+        w = wave.openfp(f, 'r')
     except (EOFError, wave.Error):
         return None
     return ('wav', w.getframerate(), w.getnchannels(),

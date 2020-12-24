@@ -87,7 +87,7 @@ class ColorDB:
         try:
             return self.__byrgb[rgbtuple]
         except KeyError:
-            raise BadColor(rgbtuple) from None
+            raise BadColor(rgbtuple)
 
     def find_byname(self, name):
         """Return (red, green, blue) for name"""
@@ -95,7 +95,7 @@ class ColorDB:
         try:
             return self.__byname[name]
         except KeyError:
-            raise BadColor(name) from None
+            raise BadColor(name)
 
     def nearest(self, red, green, blue):
         """Return the name of color nearest (red, green, blue)"""
@@ -128,7 +128,7 @@ class ColorDB:
         try:
             name, aliases = self.__byrgb[(red, green, blue)]
         except KeyError:
-            raise BadColor((red, green, blue)) from None
+            raise BadColor((red, green, blue))
         return [name] + aliases
 
 

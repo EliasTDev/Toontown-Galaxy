@@ -2,8 +2,10 @@ import collections
 import subprocess
 import warnings
 
+from . import compat
 from . import protocols
 from . import transports
+from .coroutines import coroutine
 from .log import logger
 
 
@@ -57,9 +59,9 @@ class BaseSubprocessTransport(transports.SubprocessTransport):
         if self._closed:
             info.append('closed')
         if self._pid is not None:
-            info.append(f'pid={self._pid}')
+            info.append('pid=%s' % self._pid)
         if self._returncode is not None:
-            info.append(f'returncode={self._returncode}')
+            info.append('returncode=%s' % self._returncode)
         elif self._pid is not None:
             info.append('running')
         else:
@@ -67,19 +69,19 @@ class BaseSubprocessTransport(transports.SubprocessTransport):
 
         stdin = self._pipes.get(0)
         if stdin is not None:
-            info.append(f'stdin={stdin.pipe}')
+            info.append('stdin=%s' % stdin.pipe)
 
         stdout = self._pipes.get(1)
         stderr = self._pipes.get(2)
         if stdout is not None and stderr is stdout:
-            info.append(f'stdout=stderr={stdout.pipe}')
+            info.append('stdout=stderr=%s' % stdout.pipe)
         else:
             if stdout is not None:
-                info.append(f'stdout={stdout.pipe}')
+                info.append('stdout=%s' % stdout.pipe)
             if stderr is not None:
-                info.append(f'stderr={stderr.pipe}')
+                info.append('stderr=%s' % stderr.pipe)
 
-        return '<{}>'.format(' '.join(info))
+        return '<%s>' % ' '.join(info)
 
     def _start(self, args, shell, stdin, stdout, stderr, bufsize, **kwargs):
         raise NotImplementedError
@@ -103,13 +105,12 @@ class BaseSubprocessTransport(transports.SubprocessTransport):
                 continue
             proto.pipe.close()
 
-        if (self._proc is not None and
-                # has the child process finished?
-                self._returncode is None and
-                # the child process has finished, but the
-                # transport hasn't been notified yet?
-                self._proc.poll() is None):
-
+        if (self._proc is not None
+        # the child process finished?
+        and self._returncode is None
+        # the child process finished but the transport was not notified yet?
+        and self._proc.poll() is None
+        ):
             if self._loop.get_debug():
                 logger.warning('Close running child process: kill %r', self)
 
@@ -120,10 +121,15 @@ class BaseSubprocessTransport(transports.SubprocessTransport):
 
             # Don't clear the _proc reference yet: _post_init() may still run
 
-    def __del__(self, _warn=warnings.warn):
-        if not self._closed:
-            _warn(f"unclosed transport {self!r}", ResourceWarning, source=self)
-            self.close()
+    # On Python 3.3 and older, objects with a destructor part of a reference
+    # cycle are never destroyed. It's not more the case on Python 3.4 thanks
+    # to the PEP 442.
+    if compat.PY34:
+        def __del__(self):
+            if not self._closed:
+                warnings.warn("unclosed transport %r" % self, ResourceWarning,
+                              source=self)
+                self.close()
 
     def get_pid(self):
         return self._pid
@@ -153,25 +159,26 @@ class BaseSubprocessTransport(transports.SubprocessTransport):
         self._check_proc()
         self._proc.kill()
 
-    async def _connect_pipes(self, waiter):
+    @coroutine
+    def _connect_pipes(self, waiter):
         try:
             proc = self._proc
             loop = self._loop
 
             if proc.stdin is not None:
-                _, pipe = await loop.connect_write_pipe(
+                _, pipe = yield from loop.connect_write_pipe(
                     lambda: WriteSubprocessPipeProto(self, 0),
                     proc.stdin)
                 self._pipes[0] = pipe
 
             if proc.stdout is not None:
-                _, pipe = await loop.connect_read_pipe(
+                _, pipe = yield from loop.connect_read_pipe(
                     lambda: ReadSubprocessPipeProto(self, 1),
                     proc.stdout)
                 self._pipes[1] = pipe
 
             if proc.stderr is not None:
-                _, pipe = await loop.connect_read_pipe(
+                _, pipe = yield from loop.connect_read_pipe(
                     lambda: ReadSubprocessPipeProto(self, 2),
                     proc.stderr)
                 self._pipes[2] = pipe
@@ -182,9 +189,7 @@ class BaseSubprocessTransport(transports.SubprocessTransport):
             for callback, data in self._pending_calls:
                 loop.call_soon(callback, *data)
             self._pending_calls = None
-        except (SystemExit, KeyboardInterrupt):
-            raise
-        except BaseException as exc:
+        except Exception as exc:
             if waiter is not None and not waiter.cancelled():
                 waiter.set_exception(exc)
         else:
@@ -208,7 +213,8 @@ class BaseSubprocessTransport(transports.SubprocessTransport):
         assert returncode is not None, returncode
         assert self._returncode is None, self._returncode
         if self._loop.get_debug():
-            logger.info('%r exited with return code %r', self, returncode)
+            logger.info('%r exited with return code %r',
+                        self, returncode)
         self._returncode = returncode
         if self._proc.returncode is None:
             # asyncio uses a child watcher: copy the status into the Popen
@@ -223,7 +229,8 @@ class BaseSubprocessTransport(transports.SubprocessTransport):
                 waiter.set_result(returncode)
         self._exit_waiters = None
 
-    async def _wait(self):
+    @coroutine
+    def _wait(self):
         """Wait until the process exit and return the process return code.
 
         This method is a coroutine."""
@@ -232,7 +239,7 @@ class BaseSubprocessTransport(transports.SubprocessTransport):
 
         waiter = self._loop.create_future()
         self._exit_waiters.append(waiter)
-        return await waiter
+        return (yield from waiter)
 
     def _try_finish(self):
         assert not self._finished
@@ -264,7 +271,8 @@ class WriteSubprocessPipeProto(protocols.BaseProtocol):
         self.pipe = transport
 
     def __repr__(self):
-        return f'<{self.__class__.__name__} fd={self.fd} pipe={self.pipe!r}>'
+        return ('<%s fd=%s pipe=%r>'
+                % (self.__class__.__name__, self.fd, self.pipe))
 
     def connection_lost(self, exc):
         self.disconnected = True

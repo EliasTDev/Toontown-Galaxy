@@ -299,8 +299,7 @@ class AstronDatabaseInterface:
             self.handleCreateObjectResp(di)
         elif msgType in (DBSERVER_OBJECT_GET_ALL_RESP,
                          DBSERVER_OBJECT_GET_FIELDS_RESP,
-                         DBSERVER_OBJECT_GET_FIELD_RESP,
-                         DBSERVER_GET_ESTATE):
+                         DBSERVER_OBJECT_GET_FIELD_RESP):
             self.handleQueryObjectResp(msgType, di)
         elif msgType == DBSERVER_OBJECT_SET_FIELD_IF_EQUALS_RESP:
             self.handleUpdateObjectResp(di, False)

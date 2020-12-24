@@ -176,8 +176,8 @@ class JSONEncoder(object):
                 return JSONEncoder.default(self, o)
 
         """
-        raise TypeError(f'Object of type {o.__class__.__name__} '
-                        f'is not JSON serializable')
+        raise TypeError("Object of type '%s' is not JSON serializable" %
+                        o.__class__.__name__)
 
     def encode(self, o):
         """Return a JSON string representation of a Python data structure.
@@ -268,7 +268,7 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
         list=list,
         str=str,
         tuple=tuple,
-        _intstr=int.__repr__,
+        _intstr=int.__str__,
     ):
 
     if _indent is not None and not isinstance(_indent, str):
@@ -307,7 +307,7 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
             elif value is False:
                 yield buf + 'false'
             elif isinstance(value, int):
-                # Subclasses of int/float may override __repr__, but we still
+                # Subclasses of int/float may override __str__, but we still
                 # want to encode them as integers/floats in JSON. One example
                 # within the standard library is IntEnum.
                 yield buf + _intstr(value)
@@ -350,7 +350,7 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
             item_separator = _item_separator
         first = True
         if _sort_keys:
-            items = sorted(dct.items())
+            items = sorted(dct.items(), key=lambda kv: kv[0])
         else:
             items = dct.items()
         for key, value in items:
@@ -373,8 +373,7 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
             elif _skipkeys:
                 continue
             else:
-                raise TypeError(f'keys must be str, int, float, bool or None, '
-                                f'not {key.__class__.__name__}')
+                raise TypeError("key " + repr(key) + " is not a string")
             if first:
                 first = False
             else:

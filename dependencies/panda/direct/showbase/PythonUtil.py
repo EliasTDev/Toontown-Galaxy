@@ -21,7 +21,7 @@ __all__ = [
     'listToItem2index', 'formatTimeCompact', 'deeptype', 'StdoutCapture',
     'StdoutPassthrough', 'Averager', 'getRepository', 'formatTimeExact',
     'startSuperLog', 'endSuperLog', 'typeName', 'safeTypeName',
-    'histogramDict', 'unescapeHtmlString', 'describeException'
+    'histogramDict', 'unescapeHtmlString',
 ]
 
 if __debug__:
@@ -44,6 +44,7 @@ import functools
 __report_indent = 3
 
 from panda3d.core import ConfigVariableBool
+
 
 """
 # with one integer positional arg, this uses about 4/5 of the memory of the Functor class below
@@ -2647,44 +2648,6 @@ class PriorityCallbacks:
         for priority, callback in self._callbacks:
             callback()
 
-def describeException(backTrace=4):
-
-    def byteOffsetToLineno(code, byte):
-        import array
-        lnotab = array.array('B', code.co_lnotab)
-        line = code.co_firstlineno
-        for i in range(0, len(lnotab), 2):
-            byte -= lnotab[i]
-            if byte <= 0:
-                return line
-            line += lnotab[(i + 1)]
-
-        return line
-
-    infoArr = sys.exc_info()
-    exception = infoArr[0]
-    exceptionName = getattr(exception, '__name__', None)
-    extraInfo = infoArr[1]
-    trace = infoArr[2]
-    stack = []
-    while trace.tb_next:
-        frame = trace.tb_frame
-        module = frame.f_globals.get('__name__', None)
-        lineno = byteOffsetToLineno(frame.f_code, frame.f_lasti)
-        stack.append('%s:%s, ' % (module, lineno))
-        trace = trace.tb_next
-
-    frame = trace.tb_frame
-    module = frame.f_globals.get('__name__', None)
-    lineno = byteOffsetToLineno(frame.f_code, frame.f_lasti)
-    stack.append('%s:%s, ' % (module, lineno))
-    description = ''
-    for i in range(len(stack) - 1, max(len(stack) - backTrace, 0) - 1, -1):
-        description += stack[i]
-
-    description += '%s: %s' % (exceptionName, extraInfo)
-    return description
-
 builtins.Functor = Functor
 builtins.Stack = Stack
 builtins.Queue = Queue
@@ -2735,4 +2698,3 @@ builtins.configIsToday = configIsToday
 builtins.typeName = typeName
 builtins.safeTypeName = safeTypeName
 builtins.histogramDict = histogramDict
-builtins.describeException = describeException

@@ -470,7 +470,7 @@ class MegaArchetype:
 	    keywords = {}
 	for alias, component in componentAliases:
 	    # Create aliases to the component and its sub-components.
-	    index = str.find(component, '_')
+	    index = string.find(component, '_')
 	    if index < 0:
 		self.__componentAliases[alias] = (component, None)
 	    else:
@@ -505,7 +505,7 @@ class MegaArchetype:
 		# keyword argument as being used, but do not remove it
 		# since it may be required when creating another
 		# component.
-		index = str.find(option, '_')
+		index = string.find(option, '_')
 		if index >= 0 and componentGroup == option[:index]:
 		    rest = option[(index + 1):]
 		    kw[rest] = keywords[option][0]
@@ -580,7 +580,7 @@ class MegaArchetype:
                     # This keyword argument has not been used.  If it
                     # does not refer to a dynamic group, mark it as
                     # unused.
-                    index = str.find(name, '_')
+                    index = string.find(name, '_')
                     if index < 0 or name[:index] not in self._dynamicGroups:
                         unusedOptions.append(name)
 	    if len(unusedOptions) > 0:
@@ -673,7 +673,7 @@ class MegaArchetype:
 		optionInfo[option][VALUE] = value
 		directOptions.append(option)
 	    else:
-		index = str.find(option, '_')
+		index = string.find(option, '_')
 		if index >= 0:
 		    # This option may be of the form <component>_<option>.
 		    component = option[:index]
@@ -741,7 +741,7 @@ class MegaArchetype:
 	# widget components directly.
 
 	# Find the main component and any subcomponents
-	index = str.find(name, '_')
+	index = string.find(name, '_')
 	if index < 0:
 	    component = name
 	    remainingComponents = None
@@ -782,7 +782,7 @@ class MegaArchetype:
 	if self._optionInfo.has_key(option):
 	    return self._optionInfo[option][_OPT_VALUE]
 	else:
-	    index = str.find(option, '_')
+	    index = string.find(option, '_')
 	    if index >= 0:
 		component = option[:index]
 		componentOption = option[(index + 1):]
@@ -1093,7 +1093,7 @@ class MegaToplevel(MegaArchetype):
 	# Position the window at the same place it was last time.
 
 	geometry = self.geometry()
-	index = str.find(geometry, '+')
+	index = string.find(geometry, '+')
 	if index >= 0:
 	    return geometry[index:]
         else:
@@ -1883,7 +1883,7 @@ class _ErrorWindow:
 		geom = None
 	    else:
                 geometry = self._top.geometry()
-                index = str.find(geometry, '+')
+                index = string.find(geometry, '+')
                 if index >= 0:
                     geom = geometry[index:]
                 else:
