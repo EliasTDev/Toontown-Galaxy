@@ -2,7 +2,7 @@
 from direct.showbase.ShowBase import ShowBase
 from pandac.PandaModules import *
 from panda3d.core import *
-import os, sys, math, random, time, __builtin__
+import os, sys, math, random, time, builtins
 from direct.task import Task
 from direct.fsm import FSM
 from direct.directnotify import DirectNotifyGlobal

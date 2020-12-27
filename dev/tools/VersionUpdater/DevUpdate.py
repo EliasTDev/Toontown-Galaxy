@@ -1,8 +1,8 @@
 import os
 
-MainPathRequest = raw_input("Enter Path Here For Dev [Must not use frontslashes, Instead use the /.]: ")
+MainPathRequest = input("Enter Path Here For Dev [Must not use frontslashes, Instead use the /.]: ")
 DevPath = MainPathRequest + "dev.prc"
-VersionRequest = raw_input("Enter the version you want it to be: ")
+VersionRequest = input("Enter the version you want it to be: ")
 Version = VersionRequest
 
 data = []

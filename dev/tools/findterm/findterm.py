@@ -10,10 +10,10 @@ def processFile(f,t):
 
     return lines_found
 
-term = raw_input('> ')
+term = input('> ')
 for x in glob.glob('../../../toontown/*/*.py'):
     r = processFile(x,term)
     if r:
-        print x,r
+        print(x,r)
 
-raw_input('*****')
+input('*****')

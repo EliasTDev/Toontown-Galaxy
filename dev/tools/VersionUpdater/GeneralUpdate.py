@@ -1,7 +1,7 @@
 import os
 
-MainPathRequest = raw_input("Enter Path Here For General Config [Must not use frontslashes, Instead use the /.]: ")
-VersionRequest = raw_input("Enter the version you want it to be: ")
+MainPathRequest = input("Enter Path Here For General Config [Must not use frontslashes, Instead use the /.]: ")
+VersionRequest = input("Enter the version you want it to be: ")
 Version = VersionRequest
 GeneralPath = MainPathRequest + "general.prc"
 

@@ -10,7 +10,7 @@ parser.add_argument('modules', nargs='*', default=['otp', 'toontown'],
                     help='The Toontown Offline modules to be included in the build.')
 args = parser.parse_args()
 
-print 'Building the client...'
+print('Building the client...')
 
 os.chdir('build')
 
@@ -27,4 +27,4 @@ cmd += ' {0}'.format(args.main_module)
 
 os.system(cmd)
 
-print 'Done building the client.'
+print('Done building the client.')

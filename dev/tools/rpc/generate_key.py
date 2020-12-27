@@ -27,8 +27,8 @@ cipher = AES.new( secret, AES.MODE_CBC, secret )
 
 # encode a string
 encoded = EncodeAES(cipher, 'tterpclib691256')
-print 'Encrypted string:', encoded
+print('Encrypted string:', encoded)
 
 # decode the encoded string
 decoded = DecodeAES(cipher, encoded)
-print 'Decrypted string:', decoded
+print('Decrypted string:', decoded)

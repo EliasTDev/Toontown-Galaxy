@@ -1,8 +1,8 @@
 import os
 
-MainPathRequest = raw_input("Enter Path Here For Public Client [Must not use frontslashes, Instead use the /.]: ")
+MainPathRequest = input("Enter Path Here For Public Client [Must not use frontslashes, Instead use the /.]: ")
 PublicPath = MainPathRequest + "public_client.prc"
-VersionRequest = raw_input("Enter the version you want it to be: ")
+VersionRequest = input("Enter the version you want it to be: ")
 Version = VersionRequest
 
 

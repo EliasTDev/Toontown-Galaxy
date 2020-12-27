@@ -85,3 +85,4 @@ config/spellbook.json
 build.py
 pypperoni/
 python/
+panda3d/
