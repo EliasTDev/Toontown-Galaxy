@@ -181,7 +181,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
                 OtpDoGlobals.OTP_DO_ID_TOONTOWN_CODE_REDEMPTION_MANAGER,
                 "TTCodeRedemptionMgr")
         self.ttFriendsManager = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_TT_FRIENDS_MANAGER, 'TTFriendsManager')
-
+        self.winter = base.config.GetBool('is-winter-running', 0)
         # This one is a little different, because it doesn't live in
         # the Uber zone; a different one lives in the zone for each
         # house.  But still it is similar.
@@ -376,8 +376,13 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         # have killed the music when it started
 
         if (self.music == None) and base.musicManagerIsValid:
+            #TODO check if winter holiday is running
+            if self.winter:
+                self.music = base.musicManager.getSound('phase_3/audio/bgm/TTG_winter.ogg')
+            else:
+                self.music = base.musicManager.getSound('phase_3/audio/bgm/TTGIntro.ogg')
+
             # Reload the music if we don't have it already.
-            self.music = base.musicManager.getSound("phase_3/audio/bgm/TTGIntro.mp3")
             # Set the music to play immediately after we load it.  It
             # is not clear why we need to do this even though we are
             # about to call base.playMusic() below, but it appears we

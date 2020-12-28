@@ -22,7 +22,7 @@ collections.namedtuple = lambda *x: tuple
 import builtins
 
 # Load all of the packaged PRC config page(s):
-from pandac.PandaModules import *
+from panda3d.core import *
 #for i, config in enumerate(game_data.CONFIG):
  #   name = 'GameData config page #' + str(i)
   #  loadPrcFileData(name, config)

@@ -33,9 +33,9 @@ else:
     checkLanguage = 1 
     _languageModule = "toontown.toonbase.TTLocalizer_" + language
 
-print(("from " + _languageModule + " import *"))
-exec("from " + _languageModule + " import *")
-
+print("from " + _languageModule + " import *")
+#exec("from " + _languageModule + " import *")
+from toontown.toonbase.TTLocalizerEnglish import *
 if checkLanguage:
     l = {}
     g = {}

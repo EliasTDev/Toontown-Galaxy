@@ -926,7 +926,7 @@ PhaseToMusicData = {
     },
     3 : {
         "create_a_toon.ogg" : [TTLocalizer.MusicCreateAToon, 175],
-        "TTGIntro.mp3" : [TTLocalizer.MusicTtTheme, 51],
+        "TTGIntro.ogg" : [TTLocalizer.MusicTtTheme, 51],
     },
     4 : {
         # "minigame_race.ogg" : [TTLocalizer.MusicMinigameRace, 77],
@@ -1014,7 +1014,7 @@ PhaseToMusicData40 = {
     },
     3 : {
         "create_a_toon.ogg" : [TTLocalizer.MusicCreateAToon, 175],
-        "TTGIntro.mp3" : [TTLocalizer.MusicTtTheme, 51],
+        "TTGIntro.ogg" : [TTLocalizer.MusicTtTheme, 51],
     },
     4 : {
         "minigame_race.ogg" : [TTLocalizer.MusicMinigameRace, 77],
