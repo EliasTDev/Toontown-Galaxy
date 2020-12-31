@@ -150,3 +150,11 @@ class Settings:
     @staticmethod
     def setResolutionDimensions(x, y):
         Settings.resolutionDimensions = (x, y)
+    
+    def getOption():
+        #TODO for control settings
+        pass
+    def updateSettings():
+        #TODO for control settings 
+        pass
+
