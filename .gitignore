@@ -85,3 +85,6 @@ config/spellbook.json
 pypperoni/
 python/
 panda3d/
+nirai/
+dist/
+*.spec
