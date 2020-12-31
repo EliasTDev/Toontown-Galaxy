@@ -496,7 +496,7 @@ class BingoManagerAI(object):
                 os.remove(fileName)
         except IOError:
             try:
-                file = open(fileName)
+                file = open(fileName).encode()
             except IOError:
                 # Default Jackpot Amount
                 return self.DefaultReward
