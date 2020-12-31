@@ -475,7 +475,7 @@ class BingoManagerAI(object):
         # Default Jackpot Amount
         jackpots = self.DefaultReward
         try:
-            jackpots = pickle.load(file)
+            jackpots = pickle.loads(file)
         except EOFError:
             pass
         return jackpots
