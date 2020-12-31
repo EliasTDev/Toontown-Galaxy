@@ -2316,7 +2316,7 @@ class DistributedSuitPlannerAI(DistributedObjectAI.DistributedObjectAI,
         else:
             # if our type is already specified, we might need to
             # constrain the level to fit.
-            level = min(max(level, type), type + 4)
+            level = min(max(level, type), type + 21)
 
         # now randomly choose a suit 'department', or track, or whatever
         # we are calling it.

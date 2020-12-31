@@ -75,7 +75,7 @@ class DistributedSuitBaseAI(DistributedAvatarAI.DistributedAvatarAI,
         # be sure to set the hp to proper values based on the suit's
         # new level
         #
-        hp = attributes['hp'][self.level]
+        hp = SuitBattleGlobals.calculateHealth(attributes, self.level + 1)
         self.maxHP = hp
         self.currHP = hp
         assert self.notify.debug("Assigning hp " + str(self.currHP))
