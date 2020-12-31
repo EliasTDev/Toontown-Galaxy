@@ -475,7 +475,7 @@ class BingoManagerAI(object):
         # Default Jackpot Amount
         jackpots = self.DefaultReward
         try:
-            jackpots = pickle.loads(file)
+            jackpots = pickle.loads(file.encode())
         except EOFError:
             pass
         return jackpots
@@ -496,13 +496,13 @@ class BingoManagerAI(object):
                 os.remove(fileName)
         except IOError:
             try:
-                file = open(fileName).encode()
+                file = open(fileName)
             except IOError:
                 # Default Jackpot Amount
                 return self.DefaultReward
 
         file.seek(0)
-        jackpots = self.loadFrom(file)
+        jackpots = self.loadFrom(str(file))
         file.close()
         return jackpots
 
