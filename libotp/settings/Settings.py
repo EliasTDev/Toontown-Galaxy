@@ -47,6 +47,9 @@ class Settings:
                                              Settings.resList[settings.get('resolution', 1)][1])
             Settings.setWindowedMode(settings.get('windowedMode', 1))
             Settings.setEmbeddedMode(settings.get('embeddedMode', 0))
+            Settings.setMusicVolume(settings.get('musicVolume', 1.0))
+            Settings.setSfxVolume(settings.get('sfxVolume', 1.0))
+
 
     @staticmethod
     def writeSettings():
@@ -64,13 +67,17 @@ class Settings:
             settings['UserSettings'] = {}
 
         settings['UserSettings']['music'] = Settings.getMusic()
+        settings['UserSettings']['musicVolume'] = Settings.getMusicVolume()
         settings['UserSettings']['sfx'] = Settings.getSfx()
+        settings['UserSettings']['sfxVolume'] = Settings.getSfxVolume()
+
         settings['UserSettings']['toonChatSounds'] = Settings.getToonChatSounds()
         settings['UserSettings']['acceptingNewFriends'] = Settings.getAcceptingNewFriends()
         settings['UserSettings']['acceptingNonFriendWhispers'] = Settings.getAcceptingNonFriendWhispers()
         settings['UserSettings']['resolution'] = Settings.getResolution()
         settings['UserSettings']['windowedMode'] = Settings.getWindowedMode()
         settings['UserSettings']['embeddedMode'] = Settings.getEmbeddedMode()
+
 
         with open('user/ttgsettings.json', 'w') as f:
             f.write(json.dumps(settings))
@@ -86,6 +93,10 @@ class Settings:
     @staticmethod
     def setMusic(music):
         Settings.music = music
+    
+    @staticmethod
+    def setMusicVolume(musicVolume):
+        Settings.musicVolume = musicVolume
 
     @staticmethod
     def getMusic():
@@ -94,6 +105,10 @@ class Settings:
     @staticmethod
     def setSfx(sfx):
         Settings.sfx = sfx
+        
+    @staticmethod
+    def setSfxVolume(sfxVolume):
+        Settings.sfxVolume = sfxVolume
 
     @staticmethod
     def getSfx():

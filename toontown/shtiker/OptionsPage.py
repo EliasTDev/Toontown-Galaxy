@@ -66,7 +66,7 @@ speedChatStyles = (
 ##########################################################################
 # Global Variables and Enumerations
 ##########################################################################
-PageMode = PythonUtil.Enum("Options, Codes")
+PageMode = PythonUtil.Enum("Options, Codes, AnotherOptions")
 
 class OptionsPage(ShtikerPage.ShtikerPage):
     """OptionsPage class"""
@@ -82,6 +82,8 @@ class OptionsPage(ShtikerPage.ShtikerPage):
 
         if __debug__:
             base.op = self
+        self.moreOptionsTabPage = None
+        self.moreOptionsTab = None 
 
     def load(self):
         assert self.notify.debugStateCall(self)
@@ -94,6 +96,11 @@ class OptionsPage(ShtikerPage.ShtikerPage):
         # Create the CodesTabPage
         self.codesTabPage = CodesTabPage(self)
         self.codesTabPage.hide()
+        self.anotherOptionsTabPage = None
+
+        #creates the other options page
+        self.anotherOptionsTabPage = AnotherOptionsTabPage(self)
+        self.anotherOptionsTabPage.hide()
 
         titleHeight = 0.61 # bigger number means higher the title
         self.title = DirectLabel(
@@ -155,6 +162,25 @@ class OptionsPage(ShtikerPage.ShtikerPage):
             extraArgs = [PageMode.Codes],
             pos = (0.11, 0, 0.77),
             )
+        self.anotherOptionsTab = DirectButton(
+            parent = self,
+            relief = None,
+            text = "Other",
+            text_scale = TTLocalizer.OPoptionsTab,
+            text_align = TextNode.ALeft,
+            text_pos = (-0.035, 0.0, 0.0),
+            image = gui.find("**/tabs/polySurface2"),
+            image_pos = (0.12,1,-0.91),
+            image_hpr = (0,0,-90),
+            image_scale = (0.033,0.033,0.035),
+            image_color = normalColor,
+            image1_color = clickColor,
+            image2_color = rolloverColor,
+            image3_color = diabledColor,
+            text_fg = Vec4(0.2,0.1,0,1),
+            command = self.setMode,
+            extraArgs = [PageMode.AnotherOptions],
+            pos = (0.51, 0, 0.77))
 
     def enter(self):
         assert self.notify.debugStateCall(self)
@@ -204,6 +230,8 @@ class OptionsPage(ShtikerPage.ShtikerPage):
             self.optionsTabPage.enter()
             self.codesTab['state'] = DGG.NORMAL
             self.codesTabPage.exit()
+            self.anotherOptionsTab['state'] = DGG.NORMAL
+            self.anotherOptionsTabPage.exit()
 
         elif(mode == PageMode.Codes):
             self.mode = PageMode.Codes
@@ -212,6 +240,16 @@ class OptionsPage(ShtikerPage.ShtikerPage):
             self.optionsTabPage.exit()
             self.codesTab['state'] = DGG.DISABLED
             self.codesTabPage.enter()
+            self.anotherOptionsTab['state'] = DGG.NORMAL
+            self.anotherOptionsTabPage.exit()
+        elif(mode == PageMode.AnotherOptions):
+            self.title['text'] = "Other"
+            self.optionsTab['state'] = DGG.NORMAL
+            self.optionsTabPage.exit()
+            self.codesTab['state'] = DGG.NORMAL
+            self.codesTabPage.exit()
+            self.anotherOptionsTab['state'] = DGG.DISABLED
+            self.anotherOptionsTabPage.enter()
 
         else:
             raise Exception("OptionsPage::setMode - Invalid Mode %s" % (mode))
@@ -1089,7 +1127,6 @@ class CodesTabPage(DirectFrame):
         assert self.notify.debugStateCall(self)
         self.resultPanel.hide()
         self.hide()
-
         # Restore the background focus on the chat entry.
         localAvatar.chatMgr.fsm.request("mainMenu")
 
@@ -1261,3 +1298,185 @@ class CodesTabPage(DirectFrame):
         self.codeInput['state'] = DGG.NORMAL
         self.codeInput['focus'] = 1
         self.submitButton['state'] = DGG.NORMAL
+
+
+
+class AnotherOptionsTabPage(DirectFrame):
+    notify = directNotify.newCategory('AnotherOptionsTabPage')
+
+    def __init__(self, parent=aspect2d):
+        self._parent = parent
+        self.currentSizeIndex = None
+        self.settingsChanged = 0
+        DirectFrame.__init__(
+            self, parent=self._parent, relief=None, pos=(
+                0.0, 0.0, 0.0), scale=(
+                1.0, 1.0, 1.0))
+        self.load()
+
+    def destroy(self):
+        self._parent = None
+        DirectFrame.destroy(self)
+
+    def load(self):
+        guiButton = loader.loadModel('phase_3/models/gui/quit_button')
+        gui = loader.loadModel('phase_3.5/models/gui/friendslist_gui')
+        titleHeight = 0.61
+        textStartHeight = 0.45
+        textRowHeight = 0.145
+        leftMargin = -0.72
+        buttonbase_xcoord = 0.16
+        buttonbase_ycoord = 0.45
+        button_image_scale = (0.7, 1, 1)
+        button_textpos = (0, -0.02)
+        options_text_scale = 0.052
+        disabled_arrow_color = Vec4(0.6, 0.6, 0.6, 1.0)
+        self.speed_chat_scale = 0.055
+        cdrGui = loader.loadModel(
+            'phase_3.5/models/gui/tt_m_gui_sbk_codeRedemptionGui')
+        instructionGui = cdrGui.find('**/tt_t_gui_sbk_cdrPresent')
+        flippyGui = cdrGui.find('**/tt_t_gui_sbk_cdrFlippy')
+        musicBoxGui = cdrGui.find('**/tt_t_gui_sbk_cdrCodeBox')
+        self.musicVolumeLabel = DirectLabel(parent=self, relief=None, text='', 
+                                            text_align = TextNode.ALeft, text_scale = options_text_scale,
+                                            text_wordwrap=16, pos=(leftMargin, 0, textStartHeight))
+        #self.musicBox = DirectFrame(parent=self, relief=None,
+         #                           pos = (buttonbase_xcoord, 0, buttonbase_ycoord),
+          #                          image=musicBoxGui)
+
+        self.musicVolumeEntry = DirectEntry(text = '',  initialText = '',
+                                            parent=self, relief= DGG.GROOVE,
+                                            pos = (buttonbase_xcoord, 0, buttonbase_ycoord),
+                                            borderWidth=(0.05,
+                                                  0.05),
+                                            frameColor=((1,
+                                                  1,
+                                                  1,
+                                                  1),
+                                                 (1,
+                                                  1,
+                                                  1,
+                                                  1),
+                                                 (0.5,
+                                                  0.5,
+                                                  0.5,
+                                                  0.5)),
+                                            state=DGG.NORMAL, text_align=TextNode.ALeft,
+                                            text_scale=TTLocalizer.OPCodesInputTextScale, width=10.5,
+                                            numLines=1, focus=1,
+                                            backgroundFocus=0, cursorKeys=1,
+                                            text_fg=(0,
+                                              0,
+                                              0,
+                                              1),
+                                            suppressMouse=1,  autoCapitalize=0,
+                                            command=self.setMusicVolume)
+        self.musicVolumeEntry.setScale(0.08)
+        self.sfxVolumeLabel = DirectLabel(parent=self, relief=None, text='', 
+                                            text_align = TextNode.ALeft, text_scale = options_text_scale,
+                                            text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.1))
+        #self.musicBox = DirectFrame(parent=self, relief=None,
+         #                           pos = (buttonbase_xcoord, 0, buttonbase_ycoord),
+          #                          image=musicBoxGui)
+
+        self.sfxVolumeEntry = DirectEntry(text = '',  initialText = '',
+                                            parent=self, relief= DGG.GROOVE,
+                                            pos = (buttonbase_xcoord, 0, buttonbase_ycoord - 0.1),
+                                            borderWidth=(0.05,
+                                                  0.05),
+                                            frameColor=((1,
+                                                  1,
+                                                  1,
+                                                  1),
+                                                 (1,
+                                                  1,
+                                                  1,
+                                                  1),
+                                                 (0.5,
+                                                  0.5,
+                                                  0.5,
+                                                  0.5)),
+                                            state=DGG.NORMAL, text_align=TextNode.ALeft,
+                                            text_scale=TTLocalizer.OPCodesInputTextScale, width=10.5,
+                                            numLines=1, focus=1,
+                                            backgroundFocus=0, cursorKeys=1,
+                                            text_fg=(0,
+                                              0,
+                                              0,
+                                              1),
+                                            suppressMouse=1,  autoCapitalize=0,
+                                            command=self.setSfxVolume)
+        self.sfxVolumeEntry.setScale(0.08)
+
+    def setMusicVolume(self, input=None):
+        if input is None:
+            input = self.musicVolumeEntry.get()
+        self.musicVolumeEntry['focus'] = 1
+        messenger.send('wakeup')
+        self.settingsChanged = 1
+
+        try:
+            volume = float(input) / 100.
+        except:
+            self.notify.warning('volume is not a number, volume: {0}'.format(input))
+            return 
+        if volume > 1.0:
+            volume = 1.
+        if volume < 0.0:
+            volume = 0.
+        Settings.setMusicVolume(volume)
+        base.musicManager.setVolume(volume)
+        base.musicActive = volume > 0.0
+        self.__setMusicLabel()
+        self.musicVolumeEntry.enterText('')
+
+    def setSfxVolume(self, input=None):
+        if input is None:
+            input = self.sfxVolumeEntry.get()
+        self.sfxVolumeEntry['focus'] = 1
+        messenger.send('wakeup')
+        self.settingsChanged = 1
+        try:
+            volume = float(input) / 100.
+        except:
+            self.notify.warning('volume is not a number, volume: {0}'.format(input))
+            return 
+        if volume > 1.0:
+            volume = 1.
+        if volume < 0.0:
+            volume = 0.
+        Settings.setSfxVolume(volume)
+        for x in base.sfxManagerList:
+            x.setVolume(volume)
+        base.sfxActive = volume > 0.0
+        self.__setSfxLabel()
+        self.sfxVolumeEntry.enterText('')
+    def __setMusicLabel(self):
+        self.musicVolumeLabel['text'] = 'Music Volume: ' + str(Settings.getMusicVolume() * 100) + "%"
+        
+    def __setSfxLabel(self):
+        self.sfxVolumeLabel['text'] = 'Sfx Volume: ' + str(Settings.getSfxVolume() * 100) + "%"
+        
+    def enter(self):
+        localAvatar.chatMgr.fsm.request("otherDialog")
+        self.show()
+        self.settingsChanged = 0
+        self.__setMusicLabel()
+        self.__setSfxLabel()
+
+    def exit(self):
+        self.ignore('confirmDone')
+        self.hide()
+        if(self.settingsChanged != 0):
+            Settings.writeSettings()
+    def unload(self):
+        self.musicVolumeLabel.destroy()
+        del self.musicVolumeLabel
+        self.musicVolumeEntry.destroy()
+        del self.musicVolumeEntry
+    
+        self.sfxVolumeLabel.destroy()
+        del self.sfxVolumeLabel
+        self.sfxVolumeEntry.destroy()
+        del self.sfxVolumeEntry
+
