@@ -31,7 +31,7 @@ class ShtikerBook(DirectFrame, StateData.StateData):
                                         pos = (0.93, 1, 0.575),
                                         scale = 1.25)
         self.pageTabFrame.hide()
-        self.currPageIndex = None
+        self.currPageIndex = 0
         # what was the last shtiker page he was on before he went to news
         self.pageBeforeNews = None 
         self.entered = 0
@@ -59,7 +59,8 @@ class ShtikerBook(DirectFrame, StateData.StateData):
             TTLocalizer.GardenPageTitle,
             TTLocalizer.GolfPageTitle,
             TTLocalizer.EventsPageName,
-            TTLocalizer.NewsPageName
+            TTLocalizer.NewsPageName,
+            'Magic Words Help Page'
         ]
         
         if __debug__:
@@ -349,6 +350,12 @@ class ShtikerBook(DirectFrame, StateData.StateData):
             iconModels = loader.loadModel(
                 "phase_3.5/models/gui/sos_textures")
             iconGeom = iconModels.find('**/switch')
+            iconModels.detachNode()
+        elif pageName == 'Magic Words Help Page':
+            iconModels = loader.loadModel(
+                'phase_3.5/models/gui/playingCard')
+            iconImage = iconModels.find('**/logo')
+            iconScale = 0.5
             iconModels.detachNode()
         elif pageName == TTLocalizer.ShardPageTitle:
             iconModels = loader.loadModel(

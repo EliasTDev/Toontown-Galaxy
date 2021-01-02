@@ -301,6 +301,7 @@ class OptionsTabPage(DirectFrame):
         """
         self._parent = parent
         self.currentSizeIndex = None
+        self.settingsChanged = 0
         # Construct the super class object from which the selector derives.
         DirectFrame.__init__(
             self,

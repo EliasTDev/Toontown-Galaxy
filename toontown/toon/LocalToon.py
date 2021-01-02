@@ -64,6 +64,7 @@ from libotp.settings.Settings import Settings
 from libotp import CFThought, CFTimeout
 from libotp import WhisperPopup
 from toontown.quest import QuestMap
+from toontown.shtiker.MagicWordHelpPage import MagicWordsHelpPage
 
 # Checks whether we want to display the news page
 # which uses Awesomium to render HTML
@@ -390,6 +391,8 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         del self.gardenPage
         del self.trackPage
         #del self.buildingPage
+        if self.magicWordHelpPage:
+            del self.magicWordHelpPage
         del self.book
         if self.chatLog:
             self.chatLog.stop()
@@ -539,6 +542,13 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
             self.addNewsPage()
 
         # self.addTIPPage()
+        #TODO have a check on the ai server to make sure they aren't hacking this value
+        if self.getStaffAccess() >= 200:
+            self.magicWordHelpPage = MagicWordsHelpPage()
+            self.magicWordHelpPage.load()
+            self.book.addPage(self.magicWordHelpPage, pageName='Magic Words Help Page')
+
+
 
         self.book.setPage(self.mapPage, enterPage = False)
 
