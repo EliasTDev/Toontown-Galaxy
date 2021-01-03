@@ -150,6 +150,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         self.distributedDistrict = None
         self.partyManager = None
         self.inGameNewsMgr = None
+        self.defaultShard = None 
         self.toontownTimeManager = ToontownTimeManager.ToontownTimeManager()
 
         self.avatarFriendsManager = self.generateGlobalObject(
@@ -786,7 +787,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         # We make zoneId and hoodId the same because we are entering
         # into the safe zone.
         self.gameFSM.request("waitOnEnterResponses",
-                             [None,                                # shard
+                             [self.defaultShard,                                # shard
                               base.localAvatar.defaultZone,        # hood
                               base.localAvatar.defaultZone,        # zone
                               -1                              # avId

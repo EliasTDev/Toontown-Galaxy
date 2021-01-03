@@ -7,7 +7,7 @@ set STATESERVER=4002
 set ASTRON_IP=127.0.0.1:7100
 set EVENTLOGGER_IP=127.0.0.1:7198
 
-set DISTRICT_NAME=Gravity Falls
+set DISTRICT_NAME=Nutty River
 set BASE_CHANNEL=401000000
 
 echo ===============================

@@ -1,45 +1,33 @@
-"""ShardPage module: contains the ShardPage class"""
+
+"""DistrictSelector module: contains the DistrictSelector class
+   based on ShardPage"""
 
 from panda3d.core import *
-from . import ShtikerPage
+
+from toontown.shtiker import ShtikerPage
 from direct.task.Task import Task
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase import TTLocalizer
 from direct.directnotify import DirectNotifyGlobal
 from toontown.hood import ZoneUtil
 from toontown.toonbase import ToontownGlobals
 from toontown.distributed import ToontownDistrictStats
 from toontown.toontowngui import TTDialog
+from toontown.shtiker.ShardPage import POP_COLORS
 import functools
+import random
+class DistrictSelector(ShtikerPage.ShtikerPage):
+    """DistrictSelector class"""
 
-POP_COLORS_NTT = (
-    Vec4(0.,1.,0.,1.),
-    Vec4(1.,1.,0.,1.),
-    Vec4(1.,0.,0.,1.),
-    )
+    notify = DirectNotifyGlobal.directNotify.newCategory("DistrictSelector")
 
-POP_COLORS = (
-    Vec4(0.4,0.4,1.,1.),
-    Vec4(0.4,1.,0.4,1.),
-    Vec4(1.,0.4,0.4,1.),
-    )
-
-class ShardPage(ShtikerPage.ShtikerPage):
-    """ShardPage class"""
-
-    notify = DirectNotifyGlobal.directNotify.newCategory("ShardPage")
-
-    # special methods
     def __init__(self):
-        """__init__(self)
-        ShardPage constructor: create the shard selector page
-        """
         ShtikerPage.ShtikerPage.__init__(self)
-
         self.shardButtonMap = {}
         self.shardButtons = []
         self.scrollList = None
+        self.gui = None 
 
         self.textRolloverColor = Vec4(1,1,0,1)
         self.textDownColor = Vec4(0.5,0.9,1,1)
@@ -49,36 +37,19 @@ class ShardPage(ShtikerPage.ShtikerPage):
         self.lowPop, self.oggPop, self.highPop = base.getShardPopLimits()
         self.showPop = config.GetBool("show-total-population", 1)
         self.noTeleport = config.GetBool("shard-page-disable", 0)
+        self.load()
 
+    def showSelector(self):
+        self.enter()
+    
+    def hideSelector(self):
+        self.exit()
+    
     def load(self):
         main_text_scale = 0.06
-        title_text_scale = 0.12
-
-        self.title = DirectLabel(
-            parent = self,
-            relief = None,
-            text = TTLocalizer.ShardPageTitle,
-            text_scale = title_text_scale,
-            textMayChange = 0,
-            pos = (0,0,0.6),
-            )
-
         helpText_ycoord = 0.403
-
-        self.helpText = DirectLabel(
-            parent = self,
-            relief = None,
-            text = "",
-            text_scale = main_text_scale,
-            text_wordwrap = 12,
-            text_align = TextNode.ALeft,
-            textMayChange = 1,
-            pos = (0.058, 0, helpText_ycoord),
-            )
-
         shardPop_ycoord = helpText_ycoord - 0.523
         totalPop_ycoord = shardPop_ycoord - 0.26
-
         self.totalPopulationText = DirectLabel(
             parent = self,
             relief = None,
@@ -87,16 +58,15 @@ class ShardPage(ShtikerPage.ShtikerPage):
             text_wordwrap = 8,
             textMayChange = 1,
             text_align = TextNode.ACenter,
-            pos = (0.38, 0, totalPop_ycoord),
+            pos = (0.6, 0, totalPop_ycoord),
             )
-
         if self.showPop:
             self.totalPopulationText.show()
+            self.totalPopulationText.setBin('gui-popup', 0)
         else:
             self.totalPopulationText.hide()
 
         self.gui = loader.loadModel("phase_3.5/models/gui/friendslist_gui")
-
         self.listXorigin = -0.02
         self.listFrameSizeX = 0.67
         self.listZorigin = -0.96
@@ -105,24 +75,20 @@ class ShardPage(ShtikerPage.ShtikerPage):
         self.itemFrameXorigin = -0.237
         self.itemFrameZorigin = 0.365
         self.buttonXstart = self.itemFrameXorigin + 0.293
-
         self.regenerateScrollList()
-
-        scrollTitle = DirectFrame(
-            parent = self.scrollList,
-            text = TTLocalizer.ShardPageScrollTitle,
-            text_scale = main_text_scale,
-            text_align = TextNode.ACenter,
-            relief = None,
-            pos = (self.buttonXstart, 0, self.itemFrameZorigin+0.127),
-            )
+        self.reparentTo(base.a2dBottomLeft)
+        self.setPos(0.5, 0, 1.1)
 
     def unload(self):
-        self.gui.removeNode()
-        del self.title
-        self.scrollList.destroy()
-        del self.scrollList
-        del self.shardButtons
+        if self.gui:
+            self.gui.removeNode()
+        if self.scrollList:
+            self.scrollList.destroy()
+            del self.scrollList
+        if self.totalPopulationText:
+            self.totalPopulationText.hide()
+        if self.shardButtons:
+            del self.shardButtons
         taskMgr.remove('ShardPageUpdateTask-doLater')
         ShtikerPage.ShtikerPage.unload(self)
 
@@ -138,7 +104,7 @@ class ShardPage(ShtikerPage.ShtikerPage):
         self.scrollList = DirectScrolledList(
             parent = self,
             relief = None,
-            pos = (-0.5,0,0),
+            pos = (0,0,0),
             # inc and dec are DirectButtons
             # incButton is on the bottom of page, decButton is on the top!
             incButton_image = (self.gui.find("**/FndsLst_ScrollUp"),
@@ -159,7 +125,7 @@ class ShardPage(ShtikerPage.ShtikerPage):
             decButton_relief = None,
             decButton_scale = (self.arrowButtonScale,self.arrowButtonScale,self.arrowButtonScale),
             #decButton_pos = (self.buttonXstart,0,self.itemFrameZorigin+0.127),
-            decButton_pos = (self.buttonXstart,0,self.itemFrameZorigin+0.227),
+            decButton_pos = (self.buttonXstart,0,self.itemFrameZorigin+0.125),
             # Make the disabled button fade out
             decButton_image3_color = Vec4(1,1,1,0.2),
 
@@ -179,9 +145,12 @@ class ShardPage(ShtikerPage.ShtikerPage):
             forceHeight = 0.065,
             items = self.shardButtons,
             )
+        self.scrollList.setBin('gui-popup', 0)
         self.scrollList.scrollTo(selectedIndex)
 
+
     def askForShardInfoUpdate(self, task=None):
+
         ToontownDistrictStats.refresh('shardInfoUpdated')
         # repeat request several seconds in the future
         taskMgr.doMethodLater(self.ShardInfoUpdateInterval, self.askForShardInfoUpdate, 'ShardPageUpdateTask-doLater')
@@ -311,10 +280,6 @@ class ShardPage(ShtikerPage.ShtikerPage):
             else:
                 handler = self.choseShard
         else:
-            if self.showPop:
-                # we are a dev - allow the teleport
-                handler = self.choseShard
-            else:
                 # deny
                 handler = self.shardChoiceReject
         return handler
@@ -324,7 +289,7 @@ class ShardPage(ShtikerPage.ShtikerPage):
             zoneId = base.cr.playGame.getPlace().getZoneId()
         except:
             zoneId = None
-        return zoneId
+        return zoneId   
 
     def getCurrentShardId(self):
         # Returns the user's current shard if we are not in
@@ -334,7 +299,10 @@ class ShardPage(ShtikerPage.ShtikerPage):
         if zoneId != None and ZoneUtil.isWelcomeValley(zoneId):
             return ToontownGlobals.WelcomeValleyToken
         else:
-            return base.localAvatar.defaultShard
+            if not base.cr.defaultShard:
+                base.cr.defaultShard = random.choice(base.cr.listActiveShards())
+            return base.cr.defaultShard
+
 
     def updateScrollList(self):
         # curShardTuples is a list of 3-item tuples (shardId, shardName, shardPopulation)
@@ -386,9 +354,6 @@ class ShardPage(ShtikerPage.ShtikerPage):
         #print "self.shardButtns.keys=",self.shardButtons.keys()
 
         currentShardId = self.getCurrentShardId()
-        actualShardId = base.localAvatar.defaultShard
-        actualShardName = None
-
         anyChanges = 0
         totalPop = 0
         totalWVPop = 0
@@ -396,8 +361,6 @@ class ShardPage(ShtikerPage.ShtikerPage):
         self.shardButtons = []
         for i in range(len(curShardTuples)):
             shardId, name, pop, WVPop = curShardTuples[i]
-            if shardId == actualShardId:
-                actualShardName = name
 
             totalPop += pop
             totalWVPop += WVPop
@@ -427,7 +390,7 @@ class ShardPage(ShtikerPage.ShtikerPage):
             self.shardButtons.append(buttonTuple[0])
 
             # Enable or disable the button appropriately.
-            if (shardId == currentShardId or self.book.safeMode):
+            if (shardId == currentShardId):
                 buttonTuple[1]['state'] = DGG.DISABLED
                 buttonTuple[2]['state'] = DGG.DISABLED
             else:
@@ -461,20 +424,8 @@ class ShardPage(ShtikerPage.ShtikerPage):
 
         self.totalPopulationText["text"] = TTLocalizer.ShardPagePopulationTotal % (totalPop)
 
-        helpText = TTLocalizer.ShardPageHelpIntro
 
-        # Is the current shard on the list?  It should be, but
-        # something might have gone wrong.
-        if actualShardName:
-            if currentShardId == ToontownGlobals.WelcomeValleyToken:
-                helpText += (TTLocalizer.ShardPageHelpWelcomeValley % (actualShardName))
-            else:
-                helpText += (TTLocalizer.ShardPageHelpWhere % (actualShardName))
 
-        if (not self.book.safeMode):
-            helpText += TTLocalizer.ShardPageHelpMove
-
-        self.helpText["text"] = helpText
 
     def enter(self):
         self.askForShardInfoUpdate()
@@ -512,42 +463,6 @@ class ShardPage(ShtikerPage.ShtikerPage):
         del self.confirm
 
     def choseShard(self, shardId):
-        zoneId = self.getCurrentZoneId()
-        canonicalHoodId = ZoneUtil.getCanonicalHoodId(base.localAvatar.lastHood)
-        currentShardId = self.getCurrentShardId()
-
-        if shardId == currentShardId:
-            return
-
-        elif shardId == ToontownGlobals.WelcomeValleyToken:
-            # This is a special case: it's really more like
-            # teleporting to a neighborhood, rather than actually
-            # switching shards.
-            self.doneStatus = {"mode" : "teleport",
-                               "hood" : ToontownGlobals.WelcomeValleyToken,
-                               }
-            messenger.send(self.doneEvent)
-
-        elif shardId == base.localAvatar.defaultShard:
-            # Also, going back to our original real shard is just a
-            # teleport back to our canonical zone.
-
-            self.doneStatus = {"mode" : "teleport",
-                               "hood" : canonicalHoodId,
-                               }
-            messenger.send(self.doneEvent)
-
-        else:
-            try:
-                place = base.cr.playGame.getPlace()
-            except:
-                try:
-                    place = base.cr.playGame.hood.loader.place
-                except:
-                    place = base.cr.playGame.hood.place
-
-            # Switching to a real shard takes you out of WelcomeValley
-            # (and hence into your canonical hoodId).
-            place.requestTeleport(canonicalHoodId, canonicalHoodId, shardId, -1)
-        return
+        base.cr.defaultShard = shardId
+        self.updateScrollList()
 
