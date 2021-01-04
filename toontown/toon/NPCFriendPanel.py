@@ -10,7 +10,8 @@ from toontown.toonbase import ToontownBattleGlobals
 class NPCFriendPanel(DirectFrame):
 
     SOS_PER_PAGE = 8
-    def __init__(self, parent = aspect2d, **kw):
+    def __init__(self, parent = aspect2d, fCallable = 0, **kw):
+        self.fCallable = fCallable
         # Define options
         optiondefs = (
             ('relief',        None,                   None),
@@ -31,7 +32,7 @@ class NPCFriendPanel(DirectFrame):
         for i in range(8):
             card = NPCFriendCard(parent = self, doneEvent = self['doneEvent'])
             self.cardList.append(card)
-            card.setScale(0.7)
+            card.setScale(0.8)
             card.setPos(xOffset, 1, yOffset)
             xOffset += 3.5
             count += 1
@@ -67,7 +68,8 @@ class NPCFriendPanel(DirectFrame):
         arrow.removeNode()
         self.arrowUp.hide()
 
-    def update(self, friendDict, fCallable = 0):
+    def update(self, friendDict):
+        fCallable = self.fCallable
         friendList = list(friendDict.keys())
         cardNumber = 0
         for i in range(self.pos, self.pos + self.SOS_PER_PAGE):
