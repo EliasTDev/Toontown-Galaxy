@@ -31,13 +31,15 @@ class NPCFriendPanel(DirectFrame):
         for i in range(8):
             card = NPCFriendCard(parent = self, doneEvent = self['doneEvent'])
             self.cardList.append(card)
-            #card.setScale(0.7)
+            card.setScale(0.7)
             card.setPos(xOffset, 1, yOffset)
             xOffset += 3.5
             count += 1
             if count == 4:
                 xOffset = -5.25
                 yOffset = -2.3
+        # Initialize instance
+        self.initialiseoptions(NPCFriendPanel)
         #check if scroll wheel is used (or trackpad scrolling)
         self.accept('wheel_up', self.scrollDown)
         self.accept('wheel_down', self.scrollUp)
