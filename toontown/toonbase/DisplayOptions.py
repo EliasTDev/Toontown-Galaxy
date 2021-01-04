@@ -4,7 +4,7 @@ import os
 import sys
 import datetime
 from panda3d.core import loadPrcFileData, WindowProperties
-from libotp import Settings 
+from settings import Settings 
 from otp.otpgui import OTPDialog
 from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPRender

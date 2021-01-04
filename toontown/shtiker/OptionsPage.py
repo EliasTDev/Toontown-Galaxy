@@ -15,6 +15,7 @@ from direct.showbase import PythonUtil
 from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import ToontownGlobals
 from libotp import *
+from settings import *
 # array of the possible speedChatStyles and colors to use
 # R,G,B for arrow, rollover, and frame color if we want to specify it
 # the first parameter refers to the key in the SpeedChatStaticText variable

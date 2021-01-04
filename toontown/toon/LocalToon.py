@@ -60,7 +60,7 @@ from . import DistributedToon
 from . import Toon
 from . import LaffMeter
 
-from libotp.settings.Settings import Settings
+from settings.Settings import Settings
 from libotp import CFThought, CFTimeout
 from libotp import WhisperPopup
 from toontown.quest import QuestMap
