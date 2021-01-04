@@ -82,6 +82,7 @@ class ToonBase(OTPBase.OTPBase):
 
         # Music should be a bit quieter in toontown
         self.musicManager.setVolume(0.65)
+        base.musicManager.setVolume(Settings.getMusicVolume())
 
         # Set the default background color.
         self.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
