@@ -2,7 +2,7 @@
 PlayGame module: contains the PlayGame class
 """
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase.ToonBaseGlobal import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import StateData
@@ -29,7 +29,7 @@ from toontown.hood import EstateHood
 from toontown.hood import PartyHood
 from toontown.toonbase import TTLocalizer
 from toontown.parties.PartyGlobals import GoToPartyStatus
-from libpandadna import DNAStorage
+from libtoontown import DNAStorage
 
 class PlayGame(StateData.StateData):
     """PlayGame class"""

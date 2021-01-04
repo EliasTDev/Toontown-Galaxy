@@ -3,7 +3,7 @@ from . import HoodDataAI, ZoneUtil
 from toontown.toonbase import ToontownGlobals
 from toontown.safezone import OZTreasurePlannerAI
 from toontown.racing import DistributedStartingBlockAI
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.racing.RaceGlobals import *
 from toontown.classicchars import DistributedGoofySpeedwayAI
 from toontown.safezone import DistributedPicnicBasketAI
@@ -16,7 +16,7 @@ from toontown.safezone import DistributedPicnicTableAI
 from toontown.safezone import DistributedChineseCheckersAI
 from toontown.safezone import DistributedCheckersAI
 
-from libpandadna import DNAData, DNAGroup, DNAVisGroup
+from libtoontown import DNAData, DNAGroup, DNAVisGroup
 
 if( __debug__ ):
     import pdb

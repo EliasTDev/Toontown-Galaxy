@@ -1,7 +1,7 @@
 """ DistributedToonInterior module"""
 
 from toontown.toonbase.ToonBaseGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
 
@@ -17,7 +17,7 @@ from . import ToonInteriorColors
 from toontown.hood import ZoneUtil
 from toontown.toon import ToonDNA
 from toontown.toon import ToonHead
-from libpandadna import DNADoor
+from libtoontown import DNADoor
 
 # These four coordinates define the region we have available to fit
 # the sign from the front of the building.  Signs will be scaled down

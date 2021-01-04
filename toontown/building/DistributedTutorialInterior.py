@@ -1,5 +1,5 @@
 from toontown.toonbase.ToonBaseGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
 
@@ -14,7 +14,7 @@ from toontown.char import Char
 from toontown.suit import SuitDNA
 from toontown.suit import Suit
 from toontown.quest import QuestParser
-from libpandadna import DNAStorage, DNADoor
+from libtoontown import DNAStorage, DNADoor
 
 class DistributedTutorialInterior(DistributedObject.DistributedObject):
 

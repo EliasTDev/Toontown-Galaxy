@@ -1,5 +1,5 @@
 from toontown.toonbase.ToonBaseGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase.ToontownGlobals import *
 
 import random
@@ -8,7 +8,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.actor import Actor
 from . import ToonInteriorColors
 from toontown.hood import ZoneUtil
-from libpandadna import DNADoor
+from libtoontown import DNADoor
 
 class DistributedPetshopInterior(DistributedObject.DistributedObject):
     if __debug__:

@@ -2,7 +2,7 @@
 
 # AI code should not import ShowBaseGlobal because it creates a graphics window
 # from ShowBaseGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed.ClockDelta import *
 
 import math
@@ -13,7 +13,7 @@ from toontown.battle import SuitBattleGlobals
 from . import SuitTimings
 from . import SuitDNA
 from toontown.toonbase import TTLocalizer
-from libpandadna import SuitLegList
+from libtoontown import SuitLegList
 
 # extra time to add (in seconds) to any time calculations for path movement
 # for each leg

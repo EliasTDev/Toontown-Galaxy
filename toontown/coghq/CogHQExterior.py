@@ -4,9 +4,9 @@ from toontown.battle import BattlePlace
 from direct.fsm import ClassicFSM, State
 from direct.fsm import State
 from toontown.toonbase import ToontownGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 from libotp import *
-from libpandadna import *
+from libtoontown import *
 from toontown.hood import ZoneUtil
 
 class CogHQExterior(BattlePlace.BattlePlace):

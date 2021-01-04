@@ -33,7 +33,7 @@ from toontown.fishing.DistributedFishingPondAI import DistributedFishingPondAI
 from toontown.safezone.DistributedFishingSpotAI import DistributedFishingSpotAI
 from toontown.safezone import EFlyingTreasurePlannerAI
 from . import DistributedCannonAI
-from libpandadna import *
+from libtoontown import *
 
 class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
 

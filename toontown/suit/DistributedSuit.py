@@ -23,7 +23,7 @@ import copy
 from . import DistributedSuitBase
 from otp.otpbase import OTPLocalizer
 import random
-from libpandadna import SuitLeg
+from libtoontown import SuitLeg
 from libotp import CFSpeech
 
 # how far outside of a door to stop in WalkFromStreet mode before

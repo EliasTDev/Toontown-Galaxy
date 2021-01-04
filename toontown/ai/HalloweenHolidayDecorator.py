@@ -13,8 +13,8 @@ from toontown.toonbase import ToontownGlobals
 from toontown.safezone import Playground
 from toontown.town import Street
 from toontown.estate import Estate
-from pandac.PandaModules import Vec4, CSDefault, TransformState, NodePath, TransparencyAttrib
-from libpandadna import loadDNAFile
+from panda3d.core import Vec4, CSDefault, TransformState, NodePath, TransparencyAttrib
+from libtoontown import loadDNAFile
 
 class HalloweenHolidayDecorator(HolidayDecorator.HolidayDecorator):
 
