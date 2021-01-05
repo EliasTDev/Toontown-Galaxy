@@ -280,6 +280,10 @@ class ToonBase(OTPBase.OTPBase):
         self.isSprinting = 0
         self.accept('shift', self.startSprint)
         self.accept('shift-up', self.stopSprint)
+        if Settings.getFrameRateMeter():
+            base.setFrameRateMeter(True)
+        else:
+            base.setFrameRateMeter(False)
         #self.resetMusic = self.loader.loadMusic("phase_3/audio/bgm/MIDI_Events_16channels.ogg")
 
     def disableShowbaseMouse(self):

@@ -52,6 +52,8 @@ loadPrcFileData('Settings: sfx', 'audio-sfx-active %s' % sfx)
 loadPrcFileData('Settings: musicVol', 'audio-master-music-volume %s' % musicVol)
 loadPrcFileData('Settings: sfxVol', 'audio-master-sfx-volume %s' % sfxVol)
 loadPrcFileData('Settings: toonChatSounds', 'toon-chat-sounds %s' % toonChatSounds)
+
+
 import time
 import os
 import sys

@@ -1377,6 +1377,7 @@ class AnotherOptionsTabPage(DirectFrame):
         self.sfxVolumeLabel = DirectLabel(parent=self, relief=None, text='', 
                                             text_align = TextNode.ALeft, text_scale = options_text_scale,
                                             text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.1))
+        
         #self.musicBox = DirectFrame(parent=self, relief=None,
          #                           pos = (buttonbase_xcoord, 0, buttonbase_ycoord),
           #                          image=musicBoxGui)
@@ -1409,6 +1410,25 @@ class AnotherOptionsTabPage(DirectFrame):
                                             suppressMouse=1,  autoCapitalize=0,
                                             command=self.setSfxVolume)
         self.sfxVolumeEntry.setScale(0.08)
+
+        self.FPSLabel = DirectLabel(parent=self, relief=None, text='', 
+                                            text_align = TextNode.ALeft, text_scale = options_text_scale,
+                                            text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.2))
+                                        
+        self.FPSButton = DirectButton(
+            parent = self,
+            relief = None,
+            image = (guiButton.find("**/QuitBtn_UP"),
+                     guiButton.find("**/QuitBtn_DN"),
+                     guiButton.find("**/QuitBtn_RLVR"),
+                     ),
+            image_scale = button_image_scale,
+            text = "",
+            text_scale = options_text_scale,
+            text_pos = button_textpos,
+            pos = (buttonbase_xcoord, 0, buttonbase_ycoord - 0.2),
+            command = self.toggleFPS,
+            )
 
     def setMusicVolume(self, input=None):
         if input is None:
@@ -1453,6 +1473,18 @@ class AnotherOptionsTabPage(DirectFrame):
         base.sfxActive = volume > 0.0
         self.__setSfxLabel()
         self.sfxVolumeEntry.enterText('')
+
+    def __setFPSLabel(self):
+        if base.frameRateMeter:
+            self.FPSLabel['text'] = ['FPS: On']
+            self.FPSButton['text'] = ['Toggle fps off']
+        else:
+            self.FPSLabel['text'] = ['FPS: Off']
+            self.FPSButton['text'] = ['Toggle fps on']
+
+
+
+        
     def __setMusicLabel(self):
         self.musicVolumeLabel['text'] = 'Music Volume: ' + str(Settings.getMusicVolume() * 100) + "%"
         
@@ -1465,12 +1497,14 @@ class AnotherOptionsTabPage(DirectFrame):
         self.settingsChanged = 0
         self.__setMusicLabel()
         self.__setSfxLabel()
+        self.__setFPSLabel()
 
     def exit(self):
         self.ignore('confirmDone')
         self.hide()
         if(self.settingsChanged != 0):
             Settings.writeSettings()
+
     def unload(self):
         self.musicVolumeLabel.destroy()
         del self.musicVolumeLabel
@@ -1481,4 +1515,18 @@ class AnotherOptionsTabPage(DirectFrame):
         del self.sfxVolumeLabel
         self.sfxVolumeEntry.destroy()
         del self.sfxVolumeEntry
+        self.FPSLabel.destroy()
+        del self.FPSLabel
+        self.FPSButton.destroy()
+        del self.FPSButton
+    
+
+
+    def toggleFPS(self):
+        self.settingsChanged = 1
+        Settings.setFrameRateMeter(not base.frameRateMeter)
+        base.setFrameRateMeter(not base.frameRateMeter)
+        self.__setFPSLabel()
+
+
 

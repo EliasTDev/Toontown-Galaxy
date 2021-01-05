@@ -25,6 +25,7 @@ class Settings:
                (1600, 1200),
                (1920, 1080),
                (4096, 2160)]
+    frameRateMeter = False
 
 
     @staticmethod
@@ -49,6 +50,7 @@ class Settings:
             Settings.setEmbeddedMode(settings.get('embeddedMode', 0))
             Settings.setMusicVolume(settings.get('musicVolume', 1.0))
             Settings.setSfxVolume(settings.get('sfxVolume', 1.0))
+            Settings.setFrameRateMeter(settings.get('frameRateMeter', False))
 
 
     @staticmethod
@@ -77,6 +79,7 @@ class Settings:
         settings['UserSettings']['resolution'] = Settings.getResolution()
         settings['UserSettings']['windowedMode'] = Settings.getWindowedMode()
         settings['UserSettings']['embeddedMode'] = Settings.getEmbeddedMode()
+        settings['UserSettings']['frameRateMeter'] = Settings.getFrameRateMeter()
 
 
         with open('user/ttgsettings.json', 'w') as f:
@@ -165,3 +168,10 @@ class Settings:
     @staticmethod
     def setResolutionDimensions(x, y):
         Settings.resolutionDimensions = (x, y)
+    @staticmethod
+    def getFrameRateMeter():
+        return Settings.frameRateMeter
+
+    @staticmethod
+    def setFrameRateMeter(frameRateMeter):
+        Settings.frameRateMeter = frameRateMeter
