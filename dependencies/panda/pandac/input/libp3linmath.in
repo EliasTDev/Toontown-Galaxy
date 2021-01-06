@@ -1,4 +1,4 @@
-1608787306
+1609527400
 3 3
 12 libp3linmath 4 Ns0b 12 panda3d.core 
 1576
@@ -8290,9 +8290,9 @@ inline bool LMatrix4f::invert_affine_from(LMatrix4f const &other);
 45
 inline bool LMatrix4f::invert_in_place(void);
 
-3205 10 accumulate 0 4 3620 21 LMatrix4f::accumulate 0 1 1424 46
+3205 10 accumulate 0 4 3620 21 LMatrix4f::accumulate 0 1 1424 48
 /**
- * Computes (*this) += other * weight.
+ * Computes `(*this) += other * weight`.
  */
 72
 inline void LMatrix4f::accumulate(LMatrix4f const &other, float weight);
@@ -9896,9 +9896,9 @@ inline bool LMatrix4d::invert_affine_from(LMatrix4d const &other);
 45
 inline bool LMatrix4d::invert_in_place(void);
 
-3397 10 accumulate 0 4 3630 21 LMatrix4d::accumulate 0 1 1668 46
+3397 10 accumulate 0 4 3630 21 LMatrix4d::accumulate 0 1 1668 48
 /**
- * Computes (*this) += other * weight.
+ * Computes `(*this) += other * weight`.
  */
 73
 inline void LMatrix4d::accumulate(LMatrix4d const &other, double weight);
@@ -14877,8 +14877,8 @@ ConfigVariableColor::~ConfigVariableColor(void);
  * Inverts the current matrix.  Returns true if the inverse is successful,
  * false if the matrix was singular.
  */ 1 4 this 3 3836  
-1424 0 0 4 1348 3722 0 0 46 /**
- * Computes (*this) += other * weight.
+1424 0 0 4 1348 3722 0 0 48 /**
+ * Computes `(*this) += other * weight`.
  */ 3 4 this 3 3836  5 other 1 3830  6 weight 1 3572  
 1425 0 0 6 1349 3830 0 0 147 /**
  * Returns an identity matrix.
@@ -15626,8 +15626,8 @@ ConfigVariableColor::~ConfigVariableColor(void);
  * Inverts the current matrix.  Returns true if the inverse is successful,
  * false if the matrix was singular.
  */ 1 4 this 3 3857  
-1668 0 0 4 1561 3722 0 0 46 /**
- * Computes (*this) += other * weight.
+1668 0 0 4 1561 3722 0 0 48 /**
+ * Computes `(*this) += other * weight`.
  */ 3 4 this 3 3857  5 other 1 3851  6 weight 1 3575  
 1669 0 0 6 1562 3851 0 0 147 /**
  * Returns an identity matrix.

@@ -1,3 +1,4 @@
 mysqlclient
 pytz
 panda3d-1.11.0-cp36-cp36m-win_amd64.whl
+pypresence

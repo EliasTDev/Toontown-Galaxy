@@ -1,4 +1,4 @@
-1608787708
+1609527744
 3 3
 9 libp3text 4 z_GL 12 panda3d.core 
 409
@@ -2496,8 +2496,8 @@ inline LVecBase4 TextNode::get_frame_as_set(void) const;
  * If the text has no frame at all, this returns the dimensions of the text
  * itself, as if the frame were set with a margin of 0, 0, 0, 0.
  */
-56
-inline LVecBase4 TextNode::get_frame_actual(void) const;
+49
+LVecBase4 TextNode::get_frame_actual(void) const;
 
 686 20 set_frame_line_width 0 4 854 30 TextNode::set_frame_line_width 0 1 292 84
 /**
@@ -2610,8 +2610,8 @@ inline LVecBase4 TextNode::get_card_as_set(void) const;
  * If the text has no card at all, this returns the dimensions of the text
  * itself, as if the card were set with a margin of 0, 0, 0, 0.
  */
-55
-inline LVecBase4 TextNode::get_card_actual(void) const;
+48
+LVecBase4 TextNode::get_card_actual(void) const;
 
 699 20 get_card_transformed 0 4 854 30 TextNode::get_card_transformed 0 1 305 251
 /**
