@@ -36,7 +36,7 @@ class MakeAToon(StateData.StateData):
     def __init__(self, parentFSM, avList, doneEvent, index, isPaid):
         """
         MakeAToon constructor: create a toon and let the guest customize it
-        """
+        """ 
         self.isPaid = 1
         StateData.StateData.__init__(self, doneEvent)
         # download phase
@@ -140,6 +140,8 @@ class MakeAToon(StateData.StateData):
 
     def enter(self):
         self.notify.debug('Starting Make A Toon.')
+        Discord.making()
+
         base.cr.centralLogger.writeClientEvent('MAT - startingMakeAToon')
         base.camLens.setFov(ToontownGlobals.MakeAToonCameraFov)
         base.playMusic(self.music, looping = 1, volume = self.musicVolume)

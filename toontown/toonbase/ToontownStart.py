@@ -61,6 +61,9 @@ import random
 # Need to import __builtin__ and use the __builtin__.foo = x
 # technique here in case you start toontown from the command line
 import builtins
+from toontown.discord.DiscordRPC import DiscordRPC
+builtins.Discord = DiscordRPC()
+Discord.launching()
 
 # See if we have a launcher, if we do not, make an empty one
 try:
@@ -270,7 +273,7 @@ base.loader = base.loader
 builtins.loader = base.loader
 
 autoRun = ConfigVariableBool('toontown-auto-run', 1)
-
+Discord.startTasks()
 if autoRun and launcher.isDummy():
     # This try .. except block exists solely to test the logic of
     # PythonUtil.describeException.  It's not at all necessary, and is

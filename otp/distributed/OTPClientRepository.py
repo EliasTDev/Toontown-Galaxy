@@ -1271,6 +1271,7 @@ class OTPClientRepository(ClientRepositoryBase):
         # toon while we wait for the player to click "ok"
         self.sendSetAvatarIdMsg(0)
         msg = OTPLocalizer.AfkForceAcknowledgeMessage
+        Discord.setData(details='Sleeping', image='toontown-logo', imageTxt='AFK')
         dialogClass = OTPGlobals.getDialogClass()
         self.afkDialog = dialogClass(
             text = msg, command = self.__handleAfkOk,
@@ -2324,6 +2325,8 @@ class OTPClientRepository(ClientRepositoryBase):
         self._switchShardParams = [shardId, hoodId, zoneId, avId]
         # remove any interests in the old shard
         localAvatar.setLeftDistrict()
+        Discord.setDistrict(base.cr.activeDistrictMap[shardId].name)
+
         self.removeShardInterest(self._handleOldShardGone)
 
     @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
@@ -2562,6 +2565,7 @@ class OTPClientRepository(ClientRepositoryBase):
 
         if district is not None:
             self.notify.debug('chose %s: pop %s' % (district.name, district.avatarCount))
+            Discord.setDistrict(district.name)
         return district
 
     def getShardName(self, shardId):
