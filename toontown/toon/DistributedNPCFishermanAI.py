@@ -76,7 +76,7 @@ class DistributedNPCFishermanAI(DistributedNPCToonBaseAI):
         avId = self.air.getAvatarIdFromSender()
         assert self.notify.debug('sendClearMovie()')
         # Ignore unexpected exits on whoever I was busy with
-        self.ignore(self.air.getAvatarExitEvent(self.busy))
+        self.ignore(self.air.getAvatarExitEvent(avId))
         taskMgr.remove(self.uniqueName("clearMovie"))
         self.busy.remove(avId)
         self.d_setMovie(avId, NPCToons.SELL_MOVIE_CLEAR)
