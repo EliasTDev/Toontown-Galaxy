@@ -976,6 +976,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     ##### Elevator state #####
 
     def enterElevator(self):
+        Discord.vp()
         DistributedBossCog.DistributedBossCog.enterElevator(self)
 
         # Make sure the side ramps are extended and the back ramp is

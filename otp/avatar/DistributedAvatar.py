@@ -229,6 +229,7 @@ class DistributedAvatar(DistributedActor, Avatar):
                 messenger.send(self.uniqueName("hpChange"), [self.hp, self.maxHp, quietly])
             if self.hp != None and self.hp > 0:
                 messenger.send(self.uniqueName("positiveHP"))
+        Discord.setLaff(self.hp, self.maxHp)
         
     def died(self):
         """

@@ -104,6 +104,8 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
         self.experience = None
         self.quests = []
         self.cogs = []
+        self._isGM = False
+        self._gmType = None 
         self.cogCounts = []
 
         self.NPCFriendsDict = {}
@@ -222,7 +224,14 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
         #    self.notify.info('---- __del__ DistributedToonAI %d ' % self.doId)
         #    import pdb; pdb.set_trace()
         #pass
-
+        
+    def _nameIsPrefixed(self, prefix):
+        if len(self.name) > len(prefix):
+            if self.name[:len(prefix)] == prefix:
+                return True
+        return False
+        
+        
     def setLocation(self, parentId, zoneId):
         DistributedPlayerAI.DistributedPlayerAI.setLocation(self, parentId, zoneId)
 
@@ -2851,6 +2860,9 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
 
     def setGhostMode(self, flag):
         self.ghostMode = flag
+        
+    def getImmortalMode(self):
+        return self.immortalMode 
 
     def setImmortalMode(self, flag):
         self.immortalMode = flag
@@ -5539,3 +5551,31 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
     def d_sprint(self):
         self.sendUpdate('sprint', [])
         
+    def restockAllResistanceMessages(self, charges=1):
+        msgs = []
+        for menuIndex in ResistanceChat.resistanceMenu:
+            for itemIndex in ResistanceChat.getItems(menuIndex):
+                textId = ResistanceChat.encodeId(menuIndex, itemIndex)
+                msgs.append([textId, charges])
+
+        self.b_setResistanceMessages(msgs)
+
+    def b_setGM(self, _type):
+        self.sendUpdate('setGM', [_type])
+        self.setGM(_type)
+
+    def setGM(self, _type):
+        wasGM = self._isGM
+        formerType = self._gmType
+        self._isGM = _type != 0
+        self._gmType = None
+        if self._isGM:
+            self._gmType = _type - 1
+            MaxGMType = len(TTLocalizer.GM_NAMES) - 1
+            if self._gmType > MaxGMType:
+                self.notify.warning('toon {0} has invalid GM type: {1}'.format(self.doId, self._gmType))
+                self._gmType = MaxGMType
+        return
+
+    def isGM(self):
+        return self._isGM

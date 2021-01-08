@@ -1290,6 +1290,7 @@ class OTPClientRepository(ClientRepositoryBase):
             self.afkDialog.cleanup()
             self.afkDialog = None
         self.handler = None
+        Discord.setData()
 
     ##### LoginFSM: periodTimeout #####
 

@@ -111,6 +111,8 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         self.track = None
         self.effect = None
         self.maxCarry = 0
+        self._isGM = False
+        self._gmType = None
         self.disguisePageFlag = 0
 
         # These are initialized to None here, but for a LocalToon with
@@ -3636,36 +3638,50 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
             return
         DistributedPlayer.DistributedPlayer.setName(self, name)
 
-    def __handleGMName(self, name):
+    def __handleGMName(self):
         """ Parse the name for symbols that will get replaced by prefixes and icons """
 
-        gmName = GMUtils.handleGMName(name)
-        # self.setDisplayName(gmName)
-        DistributedPlayer.DistributedPlayer.setName(self, gmName)
-        self.setNametagStyle(5)
+        name = self.name
+        self.setDisplayName(name)
+        DistributedPlayer.DistributedPlayer.setName(self, name)
+        if self._isGM:
+            self.setNametagStyle(5)
+            self.gmToonLockStyle = False
 
         # Now setup the icon
-        self.setGMIcon(GMUtils.getGMType(name))
-        self.gmToon = True
+            self.setGMIcon(self._gmType)
+        else:
+            self.gmToonLockStyle = False
+            self.removeGMIcon()
 
-    def setGMIcon(self, prefix=None):
+        
+    def setGM(self, _type):
+        wasGM = self._isGM
+        self._isGM = _type != 0
+        self._gmType = None
+        if self._isGM:
+            self._gmType = _type
+        if self._isGM != wasGM:
+            self.__handleGMName()
 
+
+    def setGMIcon(self, gmType=None):
         if hasattr(self, 'gmIcon') and self.gmIcon:             # Probably has the party gm icon
             return
-        if not prefix:
-            prefix = GMUtils.getGMType(self.getName())
+        if not gmType:
+            gmType = self._gmType
 
-        if prefix == TTLocalizer.GM_1:
-            icons = loader.loadModel('phase_3.5/models/gui/tt_m_gui_trp_toontroop001')
-            self.gmIcon = icons.find("**/*whistleIcon*")
-            self.gmIcon.setScale(4)
-        elif prefix == TTLocalizer.GM_2:
-            icons = loader.loadModel('phase_3.5/models/gui/tt_m_gui_trp_toontroop001')
-            self.gmIcon = icons.find("**/*whistleIcon*")
-            self.gmIcon.setScale(4)
-        else:
+        iconInfo = (('phase_3.5/models/gui/tt_m_gui_gm_toontroop_whistle', '**/*whistleIcon*', 4),
+         ('phase_3.5/models/gui/tt_m_gui_gm_toontroop_whistle', '**/*whistleIcon*', 4),
+         ('phase_3.5/models/gui/tt_m_gui_gm_toonResistance_fist', '**/*fistIcon*', 4),
+         ('phase_3.5/models/gui/tt_m_gui_gm_toontroop_getConnected', '**/*whistleIcon*', 4))
+        if gmType > len(iconInfo) - 1:
             # Shouldn't be a GM
             return
+        modelName, searchString, scale = iconInfo[gmType]
+        icons = loader.loadModel(modelName)
+        self.gmIcon = icons.find(searchString)
+        self.gmIcon.setScale(scale)
         #r = self.nametag.getNametag3d().getBounds().getRadius()
         self.gmIcon.reparentTo(self.nametag.getNameIcon())
 
@@ -3682,8 +3698,12 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         self.gmIconInterval.loop()
 
     def setGMPartyIcon(self):
+        gmType = self._gmType
+        iconInfo = ('phase_3.5/models/gui/tt_m_gui_gm_toonResistance_fist', 'phase_3.5/models/gui/tt_m_gui_gm_toontroop_whistle', 'phase_3.5/models/gui/tt_m_gui_gm_toonResistance_fist', 'phase_3.5/models/gui/tt_m_gui_gm_toontroop_getConnected')
+        if gmType > len(iconInfo) - 1:
+            return
 
-        self.gmIcon = loader.loadModel('phase_3.5/models/gui/tt_m_gui_trp_toontroop001')
+        self.gmIcon = loader.loadModel(iconInfo[gmType])
         self.gmIcon.reparentTo(self.nametag.getNameIcon())
         self.gmIcon.setScale(3.25)
 
@@ -3729,3 +3749,4 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
     def sprint(self):
         if self.isLocal():
             inputState.set('debugRunning', inputState.isSet('debugRunning') is not True)
+

@@ -114,6 +114,7 @@ class SafeZoneLoader(StateData.StateData):
         self.fsm.request(stateName, [requestStatus])
     
     def createSafeZone(self, dnaFile):
+        Discord.setZone(self.hood.id)
         assert(self.notify.debug("createSafeZone()"))
         # Load the safe zone specific models and textures
         # The estate has no safeZoneStorageDNAFile

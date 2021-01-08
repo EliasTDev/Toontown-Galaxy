@@ -185,7 +185,7 @@ if base.musicManagerIsValid:
     if winter:
         music = base.musicManager.getSound('phase_3/audio/bgm/TTG_winter.ogg')
     else:
-        music = base.musicManager.getSound("phase_3/audio/bgm/TTGIntro.mogg")
+        music = base.musicManager.getSound("phase_3/audio/bgm/TTGIntro.ogg")
     if music:
         music.setLoop(1)
         music.setVolume(0.9)

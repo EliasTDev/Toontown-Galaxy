@@ -240,6 +240,7 @@ class MagicWord:
             return depts
         else:
             return [0, 1, 2, 3]
+            
 class SetHP(MagicWord):
     aliases = ["hp", "setlaff", "laff"]
     desc = "Sets the target's current laff."
@@ -257,11 +258,69 @@ class SetHP(MagicWord):
             return "Can't set {0}'s laff to {1}! Specify a value between -100 and {0}'s max laff ({2}).".format(
                 toon.getName(), hp, toon.getMaxHp())
 
-        if hp <= 0 and (toon.getImmortalMode() or toon.getTempImmortalMode()):
+        if hp <= 0 and (toon.getImmortalMode()):
             return "Can't set {0}'s laff to {1} because they are in Immortal Mode!".format(toon.getName(), hp)
 
         toon.b_setHp(hp)
         return "{}'s laff has been set to {}.".format(toon.getName(), hp)
+
+class SetGMIcon(MagicWord):
+    aliases = ['gm', 'gmicon', 'setgm']
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    arguments = [("id", int, True)]
+    accessLevel = 'MODERATOR'
+    desc = "Sets the target's GM Icon."
+
+    def handleWord(self, invoker, avId, toon, *args):
+        id = args[0]
+        if not 0 <= id <= 8:
+            return "Invalid GM Icon given."
+
+        staffAccess = toon.getStaffAccess()
+        if id > 3 and staffAccess < 600:
+            return "Your access level is too low to use this GM icon."
+        else:
+            if (staffAccess < 400 and id > 2) or (staffAccess < 500 and id > 3):
+                return "Your access level is too low to use this GM icon."
+
+        if toon.isGM() and id != 0:
+            toon.b_setGM(0)
+        elif toon.isGM() and id == 0:
+            toon.b_setGM(0)
+
+        toon.b_setGM(id)
+
+    
+
+        return "You have set {0} to GM type {1}".format(toon.getName(), id)
+
+
+class ToggleGM(MagicWord):
+    desc = 'Toggles GM icon.'
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    accessLevel = 'COMMUNITY'
+    def handleWord(self, invoker, avId, toon, *args):
+        access = invoker.getStaffAccess()
+        if invoker.isGM():
+            invoker.b_setGM(0)
+            return "You have disabled your GM icon."
+        else:
+            if access >= 700:
+                invoker.b_setGM(1)
+            elif access >= 600:
+                invoker.b_setGM(1)
+            elif access >= 500:
+                invoker.b_setGM(1)
+            elif access >= 400:
+                invoker.b_setGM(2)
+            elif access >= 200:
+                invoker.b_setGM(3)
+            return 'You have enabled your GM icon.'
+            
+            
+            
+            
+        
 
 
 class SetMaxHP(MagicWord):
@@ -435,7 +494,7 @@ class Rename(MagicWord):
 
     def handleWord(self, invoker, avId, toon, *args):
         word = args[0]
-        name = word[8:].strip()
+        name = word.strip()
         pastName = toon.getName()
         if name == "":
             response = "Invalid name: Name can't be blank."
@@ -445,6 +504,7 @@ class Rename(MagicWord):
             toon.d_setName(name)
             response = 'Changed {0} name to {1}'.format(pastName, name)
         return response 
+
 class BadName(MagicWord):
     aliases = ['setbad', 'setbadname']
     desc = "Set's the target's name back to color + animal."
@@ -2381,6 +2441,18 @@ class ToggleCollisionsOff(MagicWord):
 
     def handleWord(self, invoker, avId, toon, *args):
         toon.collisionsOff()
+class SetUnites(MagicWord):
+    aliases = ['unites']
+    desc = 'Restock all resistance messages.'
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    arguments=[("amount", int, False, 32767)]
+    accessLevel = 'MODERATOR'
+
+    def handleWord(self, invoker, avId, toon, *args):
+        value = min(args[0], 32767)
+        invoker.restockAllResistanceMessages(value)
+        return "Restocked {0} unites!".format(value)
+        
 # Instantiate all classes defined here to register them.
 # A bit hacky, but better than the old system
 for item in list(globals().values()):
