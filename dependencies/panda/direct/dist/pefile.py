@@ -10,7 +10,7 @@ from collections import namedtuple
 from array import array
 import time
 from io import BytesIO
-
+import sys 
 
 # Define some internally used structures.
 RVASize = namedtuple('RVASize', ('addr', 'size'))
