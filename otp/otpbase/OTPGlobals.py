@@ -66,7 +66,7 @@ AICollMovePriority = 8
 
 # The maximum number of toon (avatar) friends you can have at any one time on your
 # friends list.  This must match a number that the server also keeps.
-MaxFriends = 50
+MaxFriends = 150
 
 # The maximum number of player (account) friends you can have at any one time on your
 # friends list.  This must match a number that the server also keeps.
