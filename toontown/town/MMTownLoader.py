@@ -2,13 +2,7 @@
 from . import TownLoader
 from . import MMStreet
 from toontown.suit import Suit
-if __debug__:
-    from direct.directnotify import DirectNotifyGlobal
-
 class MMTownLoader(TownLoader.TownLoader):
-    if __debug__:
-        notify = DirectNotifyGlobal.directNotify.newCategory("MMTownLoader")
-    
     def __init__(self, hood, parentFSM, doneEvent):
         assert self.notify.debug("__init__()")
         TownLoader.TownLoader.__init__(self, hood, parentFSM, doneEvent)

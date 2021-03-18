@@ -21,7 +21,7 @@ from toontown.building import ToonInterior
 from toontown.hood import QuietZoneState
 from toontown.hood import ZoneUtil
 from direct.interval.IntervalGlobal import *
-
+from toontown.hood import GenericAnimatedBuilding
 class TownLoader(StateData.StateData):
     """
     TownLoader class
@@ -524,7 +524,6 @@ class TownLoader(StateData.StateData):
                 className = 'GenericAnimatedBuilding'
 
                 symbols = {}
-                base.cr.importModule(symbols, 'toontown.hood', [className])
 
                 classObj = getattr(symbols[className], className)
                 animatedBuildingObj = classObj(animatedBuildingNode)

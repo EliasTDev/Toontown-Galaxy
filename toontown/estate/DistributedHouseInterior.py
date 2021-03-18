@@ -47,10 +47,6 @@ class DistributedHouseInterior(DistributedObject.DistributedObject):
     """
     """
 
-    if __debug__:
-        notify = DirectNotifyGlobal.directNotify.newCategory(
-                'DistributedHouseInterior')
-    
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
 
@@ -65,27 +61,27 @@ class DistributedHouseInterior(DistributedObject.DistributedObject):
         This method is called when the DistributedObject is reintroduced
         to the world, either for the first time or from the cache.
         """
-        assert(self.debugPrint("generate()"))
+        #("generate()"))
         DistributedObject.DistributedObject.generate(self)
     
     def announceGenerate(self):
-        assert(self.debugPrint("announceGenerate()"))
+        #("announceGenerate()"))
         DistributedObject.DistributedObject.announceGenerate(self)
         self.setup()
 
     def disable(self):
-        assert(self.debugPrint("disable()"))
+        #("disable()"))
         self.interior.removeNode()
         del self.interior
         DistributedObject.DistributedObject.disable(self)
 
     def delete(self):
-        assert(self.debugPrint("delete()"))
+        #("delete()"))
         self.ignore(self.uniqueName('enterclosetSphere'))
         DistributedObject.DistributedObject.delete(self)
     
     def setup(self):
-        assert(self.debugPrint("setup()"))
+        #("setup()"))
 
         dnaStore=base.cr.playGame.dnaStore
 
@@ -259,7 +255,7 @@ class DistributedHouseInterior(DistributedObject.DistributedObject):
         
 
     def setHouseId(self, index):
-        assert(self.debugPrint("exitToon()"))
+        #("exitToon()"))
         self.houseId = index
         
     def setHouseIndex(self, index):
@@ -293,10 +289,6 @@ class DistributedHouseInterior(DistributedObject.DistributedObject):
         if self.interior:
             self.__colorWalls()
         
-    if __debug__:
-        def debugPrint(self, message):
-            """for debugging"""
-            return self.notify.debug(str(message))
 
 
 

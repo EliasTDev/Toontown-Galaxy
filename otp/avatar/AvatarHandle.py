@@ -1,18 +1,14 @@
 class AvatarHandle:
     dclassName = "AvatarHandle" 
     def getName(self):
-        if __dev__:
-            assert False, 'Must override this in inheriting class'
         return ''
 
     def isOnline(self):
-        if __dev__:
-            assert False, 'Must override this in inheriting class'
+
         return False
     
     def isUnderstandable(self):
-        if __dev__:
-            assert False, 'Must override this in inheriting class'
+
         return True
         
     def setTalkWhisper(self, fromAV, fromAC, avatarName, chat, mods, flags):

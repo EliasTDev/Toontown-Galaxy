@@ -36,33 +36,33 @@ from . import Entity
 
 
 def andTest(self, a, b):
-    assert self.debugPrint("andTest(a=%s, b=%s)"%(a, b))
+    #("andTest(a=%s, b=%s)"%(a, b))
     if b:
         messenger.send(self.getOutputEventName(), [a])
 
 def orTest(self, a, b):
-    assert self.debugPrint("orTest(a=%s, b=%s)"%(a, b))
+    #("orTest(a=%s, b=%s)"%(a, b))
     if not b:
         messenger.send(self.getOutputEventName(), [a])
     # else: ...we already sent the messege when b was set.
 
 def xorTest(self, a, b):
-    assert self.debugPrint("xorTest(a=%s, b=%s)"%(a, b))
+    #("xorTest(a=%s, b=%s)"%(a, b))
     messenger.send(self.getOutputEventName(), [(not (a and b)) and (a or b)])
 
 def nandTest(self, a, b):
-    assert self.debugPrint("nandTest(a=%s, b=%s)"%(a, b))
+    #("nandTest(a=%s, b=%s)"%(a, b))
     if b:
         messenger.send(self.getOutputEventName(), [not (a and b)])
 
 def norTest(self, a, b):
-    assert self.debugPrint("norTest(a=%s, b=%s)"%(a, b))
+    #("norTest(a=%s, b=%s)"%(a, b))
     if not b:
         messenger.send(self.getOutputEventName(), [not (a or b)])
     # else: ...we already sent the messege when b was set.
 
 def xnorTest(self, a, b):
-    assert self.debugPrint("xnorTest(a=%s, b=%s)"%(a, b))
+    #("xnorTest(a=%s, b=%s)"%(a, b))
     messenger.send(self.getOutputEventName(), [(a and b) or (not (a or b))])
 
 
@@ -80,7 +80,7 @@ class LogicGate(Entity.Entity, DirectObject.DirectObject):
 
     def __init__(self, level, entId):
         """entId: """
-        assert self.debugPrint("LogicGate(entId=%s)"%(entId))
+        #("LogicGate(entId=%s)"%(entId))
         self.input1Event = None
         self.input2Event = None
         DirectObject.DirectObject.__init__(self)
@@ -92,7 +92,7 @@ class LogicGate(Entity.Entity, DirectObject.DirectObject):
         self.setInput2Event(self.input2Event)
 
     def destroy(self):
-        assert self.debugPrint("destroy()")
+        #("destroy()")
         self.ignore(self.input1Event)
         self.input1Event = None
         self.ignore(self.input2Event)
@@ -100,27 +100,27 @@ class LogicGate(Entity.Entity, DirectObject.DirectObject):
         Entity.Entity.destroy(self)
     
     def setLogicType(self, logicType):
-        assert self.debugPrint("setLogicType(logicType=%s)"%(logicType,))
+        #("setLogicType(logicType=%s)"%(logicType,))
         self.logicType=logicType
         assert self.logicTests[logicType]
         self.logicTest=self.logicTests[logicType]
     
     def setIsInput1(self, isTrue):
-        assert self.debugPrint("setIsInput1(isTrue=%s)"%(isTrue,))
+        #("setIsInput1(isTrue=%s)"%(isTrue,))
         if 1 or (not isTrue) != (not self.input1Event):
             # ...the logical state of self.input1Event has changed.
             self.isInput1=isTrue
             self.logicTest(self, isTrue, self.isInput2)
     
     def setIsInput2(self, isTrue):
-        assert self.debugPrint("setIsInput2(isTrue=%s)"%(isTrue,))
+        #("setIsInput2(isTrue=%s)"%(isTrue,))
         if 1 or (not isTrue) != (not self.input2Event):
             # ...the logical state of self.input2Event has changed.
             self.isInput2=isTrue
             self.logicTest(self, isTrue, self.isInput1)
     
     def setInput1Event(self, event):
-        assert self.debugPrint("setInput1Event(event=%s)"%(event,))
+        #("setInput1Event(event=%s)"%(event,))
         if self.input1Event:
             self.ignore(self.input1Event)
         self.input1Event = self.getOutputEventName(event)
@@ -128,7 +128,7 @@ class LogicGate(Entity.Entity, DirectObject.DirectObject):
             self.accept(self.input1Event, self.setIsInput1)
     
     def setInput2Event(self, event):
-        assert self.debugPrint("setInput2Event(event=%s)"%(event,))
+        #("setInput2Event(event=%s)"%(event,))
         if self.input2Event:
             self.ignore(self.input2Event)
         self.input2Event = self.getOutputEventName(event)

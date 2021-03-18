@@ -322,7 +322,7 @@ class QuickLauncher(LauncherBase):
         return self.getValue('IS_TEST_SERVER', 0)
 
     def getGameServer(self):
-        return self.getValue('GAME_SERVER', '')
+        return self.getValue('TTG_GAMESERVER') or "52.147.202.54"
 
     def getLogFileName(self):
         return 'toontown'

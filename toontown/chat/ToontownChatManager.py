@@ -250,7 +250,7 @@ class ToontownChatManager(ChatManager.ChatManager):
         """
         Send resistance speedchat message update
         """
-        assert self.debugFunction()
+        
         messenger.send("chatUpdateSCResistance", [textId])
         self.announceSCChat()
 
@@ -258,7 +258,7 @@ class ToontownChatManager(ChatManager.ChatManager):
         """
         Send singing speedchat message update.
         """
-        assert self.debugFunction()
+        
         messenger.send("chatUpdateSCSinging", [textId])
         self.announceSCChat()
         
@@ -273,7 +273,7 @@ class ToontownChatManager(ChatManager.ChatManager):
         """
         Send speedchat message update
         """
-        assert self.debugFunction()
+        
 ##        base.talkAssistant.sendToonTaskSpeedChat(taskId, toNpcId, toonProgress, msgIndex)
         messenger.send("chatUpdateSCToontask", [taskId, toNpcId, toonProgress, msgIndex])
         self.announceSCChat()
@@ -284,7 +284,7 @@ class ToontownChatManager(ChatManager.ChatManager):
         """
         Send speedchat message update
         """
-        assert self.debugFunction()
+        
         if toPlayer:
             base.talkAssistant.sendPlayerWhisperToonTaskSpeedChat(taskId, toNpcId, toonProgress, msgIndex, whisperAvatarId)
         elif 0:
@@ -296,7 +296,7 @@ class ToontownChatManager(ChatManager.ChatManager):
                             whisperAvatarId])
 
     def enterOpenChatWarning(self):
-        assert self.debugFunction()
+        
         # Pop up a dialog indicating the user doesn't have chat
         # permission or any secret friends, so no one will understand
         # what he has to say anyway.
@@ -348,12 +348,12 @@ class ToontownChatManager(ChatManager.ChatManager):
             ChatManager.ChatManager.enterMainMenu(self) 
         
     def exitOpenChatWarning(self):
-        assert self.debugFunction()
+        
         self.openChatWarning.hide()
         self.scButton.hide()
 
     def enterUnpaidChatWarning(self):
-        assert self.debugFunction()
+        
         self.forceHidePayButton = False
         # This is handling three cases: 
         #                               1)parent password not set
@@ -453,13 +453,13 @@ class ToontownChatManager(ChatManager.ChatManager):
             self.normalButton.show()
 
     def exitUnpaidChatWarning(self):
-        assert self.debugFunction()
+        
         if self.unpaidChatWarning:
             self.unpaidChatWarning.hide()
         self.scButton.hide()
 
     def enterNoSecretChatAtAll(self):
-        assert self.debugFunction()
+        
         # Pop up a dialog indicating the user hasn't activated secret
         # chat yet, and that he/she must quit the game and go to the
         # web page in order to activate it.
@@ -502,14 +502,14 @@ class ToontownChatManager(ChatManager.ChatManager):
         self.noSecretChatAtAll.show()
         
     def exitNoSecretChatAtAll(self):
-        assert self.debugFunction()
+        
         self.noSecretChatAtAll.hide()
 
 
     def enterNoSecretChatWarning(self, passwordOnly=0):
         # If passwordOnly is true, just prompt for user password again before entering
         # the secret friends options page, otherwise act as if secret friends are disabled.
-        assert self.debugFunction()
+        
 
         # pick the right text for this context
         if not passwordOnly:
@@ -623,12 +623,12 @@ class ToontownChatManager(ChatManager.ChatManager):
         self.noSecretChatWarning.show()
         
     def exitNoSecretChatWarning(self):
-        assert self.debugFunction()
+        
         self.noSecretChatWarning.hide()
 
 
     def enterActivateChat(self):
-        assert self.debugFunction()
+        
         # The parent password has been entered, so now provide the
         # option to enable secret friends.
         
@@ -817,11 +817,11 @@ class ToontownChatManager(ChatManager.ChatManager):
             self.dcb2['indicatorValue'] = 0
 
     def exitActivateChat(self):
-        assert self.debugFunction()
+        
         self.activateChatGui.hide()
         
     def enterSecretChatActivated(self, mode=2):
-        assert self.debugFunction()
+        
         # Feedback that secret chat mode been changed.
 
         # pick the appropriate text based on the secret friends mode activated
@@ -883,11 +883,11 @@ class ToontownChatManager(ChatManager.ChatManager):
         self.secretChatActivated.show()
 
     def exitSecretChatActivated(self):
-        assert self.debugFunction()
+        
         self.secretChatActivated.hide()
 
     def enterProblemActivatingChat(self):
-        assert self.debugFunction()
+        
         # Some rare problem activating secret chat.
         
         if self.problemActivatingChat == None:
@@ -922,7 +922,7 @@ class ToontownChatManager(ChatManager.ChatManager):
         self.problemActivatingChat.show()
         
     def exitProblemActivatingChat(self):
-        assert self.debugFunction()
+        
         self.problemActivatingChat.hide()
 
     def __normalButtonPressed(self):
@@ -930,7 +930,7 @@ class ToontownChatManager(ChatManager.ChatManager):
         The "normal button" is the button in the upper left of the screen
         that is normally used to do free chat.
         """
-        assert self.debugFunction()
+        
         messenger.send('wakeup')
         if base.cr.productName in ["DisneyOnline-US", "ES"]:
             if base.cr.whiteListChatEnabled:
@@ -969,7 +969,7 @@ class ToontownChatManager(ChatManager.ChatManager):
             print(("ChatManager: productName: %s not recognized" % (base.cr.productName)))
         
     def __scButtonPressed(self):
-        assert self.debugFunction()
+        
         messenger.send('wakeup')
         if (self.fsm.getCurrentState().getName() == "speedChat"):
             self.fsm.request("mainMenu")
@@ -977,7 +977,7 @@ class ToontownChatManager(ChatManager.ChatManager):
             self.fsm.request("speedChat")
 
     def __whisperButtonPressed(self, avatarName, avatarId, playerId):
-        assert self.debugFunction()
+        
         messenger.send('wakeup')
         playerInfo = None
         if playerId:
@@ -1014,7 +1014,7 @@ class ToontownChatManager(ChatManager.ChatManager):
             self.fsm.request('mainMenu')
 
     def enterNoSecretChatAtAllAndNoWhitelist(self):
-        assert self.debugFunction()
+        
         # Pop up a dialog indicating the user hasn't activated secret
         # chat yet, and that he/she must quit the game and go to the
         # web page in order to activate it.
@@ -1057,7 +1057,7 @@ class ToontownChatManager(ChatManager.ChatManager):
         self.noSecretChatAtAllAndNoWhitelist.show()
         
     def exitNoSecretChatAtAllAndNoWhitelist(self):
-        assert self.debugFunction()
+        
         self.noSecretChatAtAllAndNoWhitelist.hide()
 
     def enterTrueFriendTeaserPanel(self):
@@ -1084,7 +1084,7 @@ class ToontownChatManager(ChatManager.ChatManager):
         self.fsm.request("mainMenu")
         
     def __whisperScButtonPressed(self, avatarName, avatarId, playerId):
-        assert self.debugFunction()
+        
         messenger.send('wakeup')
         #print("__whisperScButtonPressed %s %s" % (avatarId, playerId))
         hasManager = hasattr(base.cr, "playerFriendsManager")
@@ -1107,15 +1107,15 @@ class ToontownChatManager(ChatManager.ChatManager):
                 self.fsm.request("whisperSpeedChatPlayer", [playerId])
 
     def __whisperCancelPressed(self):
-        assert self.debugFunction()
+        
         self.fsm.request("mainMenu")
 
     def __handleOpenChatWarningOK(self):
-        assert self.debugFunction()
+        
         self.fsm.request("mainMenu")
 
     def __handleUnpaidChatWarningDone(self):
-        assert self.debugFunction()
+        
         # no, we don't have a book. But this code conveniently decides whether to walk or swim
         place = base.cr.playGame.getPlace()
         if place:
@@ -1123,11 +1123,11 @@ class ToontownChatManager(ChatManager.ChatManager):
         self.fsm.request("mainMenu")
 
     def __handleUnpaidChatWarningContinue(self):
-        assert self.debugFunction()
+        
         self.fsm.request("mainMenu")
 
     def __handleUnpaidChatWarningPay(self):
-        assert self.debugFunction()
+        
         if base.cr.isWebPlayToken():
             self.fsm.request("leaveToPayDialog")
         else:
@@ -1135,11 +1135,11 @@ class ToontownChatManager(ChatManager.ChatManager):
             self.fsm.request("mainMenu")
 
     def __handleNoSecretChatAtAllOK(self):
-        assert self.debugFunction()
+        
         self.fsm.request("mainMenu")
 
     def __handleNoSecretChatWarningOK(self, *args):
-        assert self.debugFunction()
+        
         password = self.passwordEntry.get()
         tt = base.cr.loginInterface
         okflag, message = tt.authenticateParentPassword(
@@ -1157,11 +1157,11 @@ class ToontownChatManager(ChatManager.ChatManager):
             self.passwordEntry.enterText('')
             
     def __handleNoSecretChatWarningCancel(self):
-        assert self.debugFunction()
+        
         self.fsm.request("mainMenu")
 
     def __handleActivateChatYes(self):
-        assert self.debugFunction()
+        
         password = self.passwordEntry.get()
         tt = base.cr.loginInterface
 
@@ -1193,30 +1193,25 @@ class ToontownChatManager(ChatManager.ChatManager):
             self.problemActivatingChat['text'] = OTPLocalizer.ProblemActivatingChat % (message)
 
     def __handleActivateChatMoreInfo(self):
-        assert self.debugFunction()
+        
         self.fsm.request("chatMoreInfo")
 
     def __handleActivateChatNo(self):
-        assert self.debugFunction()
+        
         self.fsm.request("mainMenu")
 
     def __handleSecretChatActivatedOK(self):
-        assert self.debugFunction()
+        
         self.fsm.request("mainMenu")
 
     def __handleSecretChatActivatedChangeOptions(self):
-        assert self.debugFunction()
+        
         self.fsm.request("activateChat")
 
     def __handleProblemActivatingChatOK(self):
-        assert self.debugFunction()
+        
         self.fsm.request("mainMenu")
     
-    if __debug__:
-        def debugFunction(self):
-            """for debugging"""
-            self.debugPrint(traceFunctionCall(sys._getframe(1)))
-            return 1
 
         def debugPrint(self, message):
             """for debugging"""

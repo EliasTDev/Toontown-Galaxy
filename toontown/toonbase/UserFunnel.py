@@ -272,6 +272,7 @@ class UserFunnel:
     # This will go out to the download server and get the current Disney Funnel logging URL
 
     def getFunnelURL(self):
+        return
         # print 'VRS URL: ' + self.dynamicVRFunnel
         if (patcherVer() == ['OFFLINE']):
             # print "Funnel System Offline"
@@ -558,10 +559,6 @@ def logSubmit(setHostID, setMileStone):
          # print "UserFunnel: Game running in Dev Mode. Not logging to Hitbox or VRS Collector."
         assert notify.debug('UserFunnel: Game running in Dev Mode. Not logging to Hitbox or VRS Collector.')
         return
-    if __debug__:
-        # print "UserFunnel: Game running in Debug Mode. Not logging to Hitbox or VRS Collector"
-        assert notify.debug('UserFunnel: Game running in Debug Mode. Not logging to Hitbox or VRS Collector.')
-        return
 
     trackItem = UserFunnel()
     trackItem.setmilestone(quote_plus(setMileStone))
@@ -833,8 +830,6 @@ def convertHitBoxIEtoPython():
         print("Cookie Converter: Warning: System is not MS-Windows. I have not been setup to work with other systems yet. Sorry " + sys.platform + " user. The game client will create a cookie.")
         return
     if __dev__:
-        return
-    if __debug__:
         return
     # There are two IE cookie files that we need to extract from
     # username@ehg-dig.hitbox[n].txt and username@hitbox[n].txt

@@ -100,10 +100,7 @@ if 1:   # flip this as necessary
     # want this fmt so log files can be sorted oldest first based on name,
     # and so old open handles to logs dont prevent game from starting
     ltime = time.localtime()
-    if __debug__:
-        logSuffix = 'dev'
-    else:
-        logSuffix = "%02d%02d%02d_%02d%02d%02d" % (ltime[0]-2000,ltime[1],ltime[2],ltime[3],ltime[4],ltime[5])
+    logSuffix = "%02d%02d%02d_%02d%02d%02d" % (ltime[0]-2000,ltime[1],ltime[2],ltime[3],ltime[4],ltime[5])
     logfile = 'toontownD-' + logSuffix + '.log'
 
     # Redirect Python output and err to the same file
@@ -132,7 +129,8 @@ if 1:   # flip this as necessary
     # writing to the file. 'w' mode does not do this, so you will see Panda
     # output and Python output not interlaced properly.
     if not os.path.exists('user/logs/'):
-        os.mkdir('user/logs/')    
+        os.mkdir('user')
+        os.mkdir('user/logs')    
     log = open(os.path.join('user/logs', logfile), 'a')
     logOut = LogAndOutput(sys.__stdout__, log)
     logErr = LogAndOutput(sys.__stderr__, log)
@@ -241,7 +239,7 @@ class ToontownLauncher(LauncherBase):
         return self.testServerFlag
 
     def getGameServer(self):
-        return self.gameServer
+        return self.getValue('TTG_GAMESERVER') or "52.147.202.54"
 
     def getLogFileName(self):
         return 'toontown'

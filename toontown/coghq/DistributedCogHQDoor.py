@@ -47,7 +47,7 @@ class DistributedCogHQDoor(DistributedDoor.DistributedDoor):
     # change the timing on the closeSfx. Perhaps there is a more elegant
     # way to handle this
     def enterClosing(self, ts):
-        assert(self.debugPrint("enterClosing()"))
+        #("enterClosing()"))
         # Start animation:
         # The right hole doorway:
         doorFrameHoleRight=self.findDoorNode("doorFrameHoleRight")
@@ -97,7 +97,7 @@ class DistributedCogHQDoor(DistributedDoor.DistributedDoor):
     # change the timing on the closeSfx. Perhaps there is a more elegant
     # way to handle this
     def exitDoorEnterClosing(self, ts):
-        assert(self.debugPrint("exitDoorEnterClosing()"))
+        #("exitDoorEnterClosing()"))
         # Start animation:
         # The left hole doorway:
         doorFrameHoleLeft=self.findDoorNode("doorFrameHoleLeft")
@@ -149,7 +149,7 @@ class DistributedCogHQDoor(DistributedDoor.DistributedDoor):
 
 
     def enterDoor(self):
-        assert(self.debugPrint("enterDoor()"))
+        #("enterDoor()"))
         if self.allowedToEnter():
             messenger.send("DistributedDoor_doorTrigger")
             self.sendUpdate("requestEnter") # calls back with a avatarEnter.

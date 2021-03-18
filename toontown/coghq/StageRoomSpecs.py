@@ -11,7 +11,10 @@ from toontown.coghq import LawbotOfficeLobby_Trap00_Cogs
 from toontown.coghq import LawbotOfficeDiamondRoom_Trap00_Cogs
 from toontown.coghq import LawbotOfficeDiamondRoom_Battle00_Cogs
 from toontown.coghq import LawbotOfficeGearRoom_Battle00_Cogs
-
+from toontown.coghq import LawbotOfficeEntrance_Action00, LawbotOfficeOilRoom_Battle00, LawbotOfficeOilRoom_Battle01, LawbotOfficeBoilerRoom_Security00
+from toontown.coghq import LawbotOfficeBoilerRoom_Battle00, LawbotOfficeGearRoom_Action00, LawbotOfficeLobby_Action00, LawbotOfficeGearRoom_Security00, LawbotOfficeLobby_Trap00
+from toontown.coghq import LawbotOfficeDiamondRoom_Security00, LawbotOfficeDiamondRoom_Trap00, LawbotOfficeGearRoom_Platform00, LawbotOfficeLobby_Lights00, LawbotOfficeBoilerRoom_Action01
+from toontown.coghq import LawbotOfficeLobby_Action01, LawbotOfficeDiamondRoom_Battle00, LawbotOfficeGearRoom_Battle00, LawbotOfficeDiamondRoom_Action00, LawbotOfficeDiamondRoom_Action01
 def getStageRoomSpecModule(roomId):
     return CashbotStageSpecModules[roomId]
 

@@ -32,8 +32,8 @@ class MovingPlatform(DirectObject.DirectObject, NodePath):
                        parentingNode=None):
         """parentingNode is the node that avatars will be parented to when
         they are on this MovingPlatform; defaults to self"""
-        assert(self.debugPrint("setupCopyModel(token=%s, model=%s, floorNodeName=%s)"%(
-            parentToken, model, floorNodeName)))
+        #("setupCopyModel(token=%s, model=%s, floorNodeName=%s)"%(
+            #parentToken, model, floorNodeName)))
         if floorNodeName is None:
             floorNodeName = 'floor'
         if type(parentToken) == int:
@@ -59,7 +59,7 @@ class MovingPlatform(DirectObject.DirectObject, NodePath):
 
     """ this doesn't appear to be used
     def setupEntity(self, entityId, parent, floorNodeName=None):
-        assert(self.debugPrint("setupEntity(entityId=%s, parent=%s, floorNodeName=%s)"%(
+        #("setupEntity(entityId=%s, parent=%s, floorNodeName=%s)"%(
                 entityId, parent, floorNodeName)))
         self.parentToken = ToontownGlobals.SPDynamic + entityId
         self.assign(parent)
@@ -121,11 +121,6 @@ class MovingPlatform(DirectObject.DirectObject, NodePath):
             base.localAvatar.controlManager.currentControls.doDeltaPos()
         self.hasLt = 0
     
-    if __debug__:
-        def debugPrint(self, message):
-            """for debugging"""
-            return self.notify.debug(
-                    str(self.__dict__.get('name', '?'))+' '+message)
 
 """
 platformModel = loader.loadModel("phase_4/models/minigames/block")

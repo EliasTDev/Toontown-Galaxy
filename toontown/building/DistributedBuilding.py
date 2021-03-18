@@ -38,8 +38,6 @@ class DistributedBuilding(DistributedObject.DistributedObject):
     owned' or 'bad guy owned'.
     """
 
-    if __debug__:
-        notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBuilding')
 
     # the initial height of suit buildings when a toon building is taken over
     #
@@ -51,7 +49,6 @@ class DistributedBuilding(DistributedObject.DistributedObject):
     def __init__(self, cr):
         """constructor for the DistributedBuilding"""
         DistributedObject.DistributedObject.__init__(self, cr)
-        assert(self.debugPrint("__init()"))
         self.interactiveProp = None
 
         self.suitDoorOrigin = None
@@ -163,7 +160,6 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         This method is called when the DistributedObject is reintroduced
         to the world, either for the first time or from the cache.
         """
-        assert(self.debugPrint("generate()"))
         DistributedObject.DistributedObject.generate(self)
         self.mode = 'toon'
         # (the default is to be a toon building, so toonTakeOver()
@@ -172,7 +168,6 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         assert(not self.townTopLevel.isEmpty())
     
     def disable(self):
-        assert(self.debugPrint("disable()"))
         # Go to the off state when the object is put in the cache
         self.fsm.request("off")
         del self.townTopLevel
@@ -181,7 +176,6 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         # self.delete() will automatically be called.
     
     def delete(self):
-        assert(self.debugPrint("delete()"))
         if self.elevatorNodePath:
             self.elevatorNodePath.removeNode()
             del self.elevatorNodePath
@@ -201,13 +195,11 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         self.interiorZoneId = interiorZoneId
     
     def setSuitData(self, suitTrack, difficulty, numFloors):
-        assert(self.debugPrint("setSuitData(%s, %d, %d)" %(suitTrack, difficulty, numFloors)))
         self.track=suitTrack
         self.difficulty=difficulty
         self.numFloors=numFloors
     
     def setState(self, state, timestamp):
-        assert(self.debugPrint("setState(%s, %d)" % (state, timestamp)))
         self.fsm.request(state, [globalClockDelta.localElapsedTime(timestamp)])
 
     def getSuitElevatorNodePath(self):
@@ -256,10 +248,12 @@ class DistributedBuilding(DistributedObject.DistributedObject):
     ##### off state #####
     
     def enterOff(self):
-        assert(self.debugPrint("enterOff()"))
+        return
+        #("enterOff()"))
     
     def exitOff(self):
-        assert(self.debugPrint("exitOff()"))
+        return
+        #("exitOff()"))
 
     ##### waitForVictors state #####
     def enterWaitForVictors(self, ts):
@@ -382,103 +376,112 @@ class DistributedBuilding(DistributedObject.DistributedObject):
     ##### becomingToon state #####
     
     def enterBecomingToon(self, ts):
-        assert(self.debugPrint("enterBecomingToon() %s" %(str(self.getDoId()))))
+        #("enterBecomingToon() %s" %(str(self.getDoId()))))
         # Start animation:
         self.animToToon(ts)
     
     def exitBecomingToon(self):
-        assert(self.debugPrint("exitBecomingToon()"))
+        return
+        #("exitBecomingToon()"))
         # Stop animation:
     
     ##### becomingToonFromCogdo state #####
     
     def enterBecomingToonFromCogdo(self, ts):
-        assert(self.debugPrint("enterBecomingToonFromCogdo() %s" %(str(self.getDoId()))))
+        #("enterBecomingToonFromCogdo() %s" %(str(self.getDoId()))))
         # Start animation:
         self.animToToonFromCogdo(ts)
     
     def exitBecomingToonFromCogdo(self):
-        assert(self.debugPrint("exitBecomingToonFromCogdo()"))
+        return
+        #("exitBecomingToonFromCogdo()"))
         # Stop animation:
     
     ##### toon state #####
     
     def enterToon(self, ts):
-        assert(self.debugPrint("enterToon()"))
+        #("enterToon()"))
         if self.getInteractiveProp():
             self.getInteractiveProp().buildingLiberated(self.doId)
         self.setToToon()
     
     def exitToon(self):
-        assert(self.debugPrint("exitToon()"))
+        return
+        #("exitToon()"))
     
     ##### ClearOutToonInterior state #####
     
     def enterClearOutToonInterior(self, ts):
-        assert(self.debugPrint("enterClearOutToonInterior()"))
+        return
+        #("enterClearOutToonInterior()"))
 
     def exitClearOutToonInterior(self):
-        assert(self.debugPrint("exitClearOutToonInterior()"))
+        return
+        #("exitClearOutToonInterior()"))
     
     ##### becomingSuit state #####
     
     def enterBecomingSuit(self, ts):
-        assert(self.debugPrint("enterBecomingSuit()"))
+        #("enterBecomingSuit()"))
         # Start animation:
         #print "enterBecomingSuit %s" %(str(self.getDoId()))
         self.animToSuit(ts)
 
     def exitBecomingSuit(self):
-        assert(self.debugPrint("exitBecomingSuit()"))
+        #("exitBecomingSuit()"))
         # Stop animation:
         pass
     
     ##### suit state #####
     
     def enterSuit(self, ts):
-        assert(self.debugPrint("enterSuit()"))
+        #("enterSuit()"))
         #print "enterSuit %s" %(str(self.getDoId()))
         self.makePropSad()
         self.setToSuit()
     
     def exitSuit(self):
-        assert(self.debugPrint("exitSuit()"))
+        return
+        #("exitSuit()"))
     
     ##### ClearOutToonInterior state #####
     
     def enterClearOutToonInteriorForCogdo(self, ts):
-        assert(self.debugPrint("enterClearOutToonInteriorForCogdo()"))
+        return
+        #("enterClearOutToonInteriorForCogdo()"))
 
     def exitClearOutToonInteriorForCogdo(self):
-        assert(self.debugPrint("exitClearOutToonInteriorForCogdo()"))
+        return
+        #("exitClearOutToonInteriorForCogdo()"))
     
     ##### becomingCogdo state #####
     
     def enterBecomingCogdo(self, ts):
-        assert(self.debugPrint("enterBecomingCogdo()"))
+        #("enterBecomingCogdo()"))
         # Start animation:
         #print "enterBecomingCogdo %s" %(str(self.getDoId()))
         self.animToCogdo(ts)
 
     def exitBecomingCogdo(self):
-        assert(self.debugPrint("exitBecomingCogdo()"))
+        #("exitBecomingCogdo()"))
         # Stop animation:
         pass
     
     ##### cogdo state #####
     
     def enterCogdo(self, ts):
-        assert(self.debugPrint("enterCogdo()"))
+        #("enterCogdo()"))
         #print "enterCogdo %s" %(str(self.getDoId()))
         self.setToCogdo()
     
     def exitCogdo(self):
-        assert(self.debugPrint("exitCogdo()"))
+        return
+        #("exitCogdo()"))
     
     #####
     
     def getNodePaths(self):
-        assert(self.debugPrint("getNodePaths()"))
+        #("getNodePaths()"))
         # Toon flat buildings:
         nodePath=[]
         # Find all tb or sb of this block, even stashed (";+s") ones:
@@ -491,7 +494,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
 
     def loadElevator(self, newNP, cogDo=False):
 
-        assert(self.debugPrint("loadElevator(newNP=%s)"%(newNP,)))
+        #("loadElevator(newNP=%s)"%(newNP,)))
         self.floorIndicator=[None, None, None, None, None]
         # Load up an elevator
         self.elevatorNodePath = hidden.attachNewNode("elevatorNodePath")
@@ -600,7 +603,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         // Changes:
         ////////////////////////////////////////////////////////////////////
         """
-        assert(self.debugPrint("animToSuit(timeStamp=%s)"%(timeStamp,)))
+        #("animToSuit(timeStamp=%s)"%(timeStamp,)))
         self.stopTransition()
         if self.mode != 'toon':
             self.setToToon()
@@ -719,7 +722,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         self.transitionTrack.start(timeStamp)
     
     def setupSuitBuilding(self, nodePath):
-        assert(self.debugPrint("setupSuitBuilding(nodePath=%s)"%(nodePath,)))
+        #("setupSuitBuilding(nodePath=%s)"%(nodePath,)))
         dnaStore=self.cr.playGame.dnaStore
         level = int(self.difficulty / 2) + 1
         suitNP=dnaStore.findNode("suit_landmark_"
@@ -802,7 +805,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         node.setColorScale(scale, scale, scale, 1)
 
     def animToCogdo(self, timeStamp):
-        assert(self.debugPrint("animToCogdo(timeStamp=%s)"%(timeStamp,)))
+        #("animToCogdo(timeStamp=%s)"%(timeStamp,)))
         self.stopTransition()
         if self.mode != 'toon':
             self.setToToon()
@@ -925,7 +928,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         self.transitionTrack.start(timeStamp)
 
     def setupCogdo(self, nodePath):
-        assert(self.debugPrint("setupCogdo(nodePath=%s)"%(nodePath,)))
+        #("setupCogdo(nodePath=%s)"%(nodePath,)))
         dnaStore=self.cr.playGame.dnaStore
         level = int(self.difficulty / 2) + 1
         suitNP = dnaStore.findNode(FO_DICT[chr(self.track)])
@@ -1527,7 +1530,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             self._deleteTransitionTrack()
         
     def setToSuit(self):
-        assert(self.debugPrint("setToSuit()"))
+        #("setToSuit()"))
         self.stopTransition()
         if self.mode == 'suit':
             return
@@ -1570,7 +1573,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             self.setupSuitBuilding(nodePath)
     
     def setToCogdo(self):
-        assert(self.debugPrint("setToCogdo()"))
+        #("setToCogdo()"))
         self.stopTransition()
         if self.mode == 'cogdo':
             return
@@ -1620,7 +1623,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             self.setupCogdo(nodePath)
     
     def setToToon(self):
-        assert(self.debugPrint("setToToon() mode=%s" % (self.mode)))
+        #("setToToon() mode=%s" % (self.mode)))
         self.stopTransition()
         if self.mode == 'toon':
             return
@@ -1663,11 +1666,6 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         self.elevatorNodePath.setPosHpr(0, 0, 0, 0, 0, 0)
         return
     
-    if __debug__:
-        def debugPrint(self, message):
-            """for debugging"""
-            return self.notify.debug(
-                    str(self.__dict__.get('block', '?'))+' '+message)
 
     def getSbSearchString(self):
         """Return a string to use when looking for the suit building nodepath."""

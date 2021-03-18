@@ -18,15 +18,11 @@ from direct.fsm import ClassicFSM
 # effects #
 
 def nothing(self, track, subjectNodePath, duration):
-    assert self.debugPrint(
-        "nothing(track=%s, subjectNodePath=%s, duration=%s)"%(
-        track, subjectNodePath, duration))
+
     return track
 
 def irisInOut(self, track, subjectNodePath, duration):
-    assert self.debugPrint(
-        "irisInOut(track=%s, subjectNodePath=%s, duration=%s)"%(
-        track, subjectNodePath, duration))
+
     track.append(Sequence(
         Func(base.transitions.irisOut, 0.5),
         Func(base.transitions.irisIn, 1.5),
@@ -37,9 +33,7 @@ def irisInOut(self, track, subjectNodePath, duration):
     return track
 
 def letterBox(self, track, subjectNodePath, duration):
-    assert self.debugPrint(
-        "letterBox(track=%s, subjectNodePath=%s, duration=%s)"%(
-        track, subjectNodePath, duration))
+
     track.append(Sequence(
         #Func(base.transitions.letterBox, 0.5),
         Wait(duration),
@@ -50,9 +44,7 @@ def letterBox(self, track, subjectNodePath, duration):
 # motions #
 
 def foo1(self, track, subjectNodePath, duration):
-    assert self.debugPrint(
-        "foo1(track=%s, subjectNodePath=%s, duration=%s)"%(
-        track, subjectNodePath, duration))
+
     track.append(Sequence(
         Func(base.localAvatar.stopUpdateSmartCamera),
         PosHprInterval(
@@ -77,9 +69,6 @@ def foo1(self, track, subjectNodePath, duration):
     return track
 
 def doorUnlock(self, track, subjectNodePath, duration):
-    assert self.debugPrint(
-        "doorUnlock(track=%s, subjectNodePath=%s, duration=%s)"%(
-        track, subjectNodePath, duration))
     track.append(Sequence(
         Func(base.localAvatar.stopUpdateSmartCamera),
         PosHprInterval(
@@ -119,8 +108,7 @@ class CutScene(BasicEntities.NodePathEntity, DirectObject.DirectObject):
     }
 
     def __init__(self, level, entId):
-        assert self.debugPrint(
-            "CutScene(level=%s, entId=%s)"%(level, entId))
+
         DirectObject.DirectObject.__init__(self)
         BasicEntities.NodePathEntity.__init__(self, level, entId)
         self.track = None
@@ -133,31 +121,26 @@ class CutScene(BasicEntities.NodePathEntity, DirectObject.DirectObject):
         self.setStartStop(self.startStopEvent)
 
     def destroy(self):
-        assert self.debugPrint("destroy()")
         self.ignore(self.startStopEvent)
         self.startStopEvent = None
         BasicEntities.NodePathEntity.destroy(self)
         #DirectObject.DirectObject.destroy(self)
     
     def setEffect(self, effect):
-        assert self.debugPrint("setEffect(effect=%s)"%(effect,))
         self.effect=effect
         assert self.effects[effect]
         self.getEffect=self.effects[effect]
     
     def setMotion(self, motion):
-        assert self.debugPrint("setMotion(motion=%s)"%(motion,))
         self.motionType=motion
         assert self.motions[motion]
         self.getMotion=self.motions[motion]
     
     def setSubjectNodePath(self, subjectNodePath):
-        assert self.debugPrint(
-            "setSubjectNodePath(subjectNodePath=%s)"%(subjectNodePath,))
+
         self.subjectNodePath=subjectNodePath
     
     def startOrStop(self, start):
-        assert self.debugPrint("startOrStop(start=%s)"%(start,))
         trackName = "cutSceneTrack-%d" % (id(self),)
         if start:
             if self.track:
@@ -168,7 +151,6 @@ class CutScene(BasicEntities.NodePathEntity, DirectObject.DirectObject):
             track = self.getMotion(self, track, self.subjectNodePath, self.duration)
             track = Sequence(Wait(0.4), track)
             track.start(0.0)
-            assert self.debugPrint("starting track=%s"%(track,))
             self.track = track
         else:
             if self.track:
@@ -177,7 +159,6 @@ class CutScene(BasicEntities.NodePathEntity, DirectObject.DirectObject):
                 base.localAvatar.startUpdateSmartCamera()
     
     def setStartStop(self, event):
-        assert self.debugPrint("setStartStop(event=%s)"%(event,))
         if self.startStopEvent:
             self.ignore(self.startStopEvent)
         self.startStopEvent = self.getOutputEventName(event)

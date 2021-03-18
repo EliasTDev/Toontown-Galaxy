@@ -71,7 +71,6 @@ class PartyPlanner(DirectFrame,FSM):
                                                      PartyGlobals.PartyPlannerAsapMinuteRounding)
 
         # This is hiding mem leaks
-        #if __debug__:
         #    base.pplanner = self
 
         self.load()

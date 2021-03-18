@@ -317,15 +317,16 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
         del self.okButton
         del self.acceptedText
         del self.acceptedBanner
+        base.cr.astronLoginManager.sendAcknowledgeAvatarName(avatarChoice.id, lambda: self.loginFSM.request('waitForSetAvatarResponse', [avatarChoice]))
         # Send an acception confirmed message to the server!
-        datagram = PyDatagram()
+      #  datagram = PyDatagram()
         # Add message type
-        datagram.addUint16(CLIENT_SET_WISHNAME_CLEAR)
-        datagram.addUint32(avatarChoice.id)
-        datagram.addUint8(1)
+       # datagram.addUint16(CLIENT_SET_WISHNAME_CLEAR)
+       # datagram.addUint32(avatarChoice.id)
+      #  datagram.addUint8(1)
         # Send the message
-        self.send(datagram)
-        self.loginFSM.request("waitForSetAvatarResponse", [avatarChoice])
+       # self.send(datagram)
+        #self.loginFSM.request("waitForSetAvatarResponse", [avatarChoice])
 
     def betterlucknexttime(self, avList, index):
         self.rejectDoneEvent = "rejectDone"
@@ -864,7 +865,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
 
     def enterGameOff(self):
         OTPClientRepository.OTPClientRepository.enterGameOff(self)
-        assert self.allSubShardObjectsGone()
+        #assert self.allSubShardObjectsGone()
 
     ##### gameFSM: waitOnEnterResponses #####
 
@@ -1094,16 +1095,8 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
             self.notify.error(s)
         if isNotLive:
             self.notify.info('dumpAllSubShardObjects: doIds left: %s' % list(self.doId2do.keys()))
-        assert self.allSubShardObjectsGone()
+        #assert self.allSubShardObjectsGone()
 
-    if __debug__:
-        def allSubShardObjectsGone(self):
-            for doId, obj in list(self.doId2do.items()):
-                if not ((obj is localAvatar) or
-                        (obj.parentId != localAvatar.defaultShard) or
-                        ((obj.parentId == localAvatar.defaultShard) and obj.neverDisable)):
-                    return False
-            return True
 
     # internal func, do not call. See OTPClientRepository.removeShardInterest()
     def _removeCurrentShardInterest(self, callback):
@@ -1126,7 +1119,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
             ToontownClientRepository.ClearInterestDoneEvent)
     # internal func, do not call
     def _tcrRemoveShardInterestDone(self, callback):
-        assert self.allSubShardObjectsGone()
+        #assert self.allSubShardObjectsGone()
         self.uberZoneInterest = None
         callback()
 

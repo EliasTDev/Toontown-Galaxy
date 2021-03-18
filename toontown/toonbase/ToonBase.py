@@ -477,14 +477,7 @@ class ToonBase(OTPBase.OTPBase):
         else:
             self.acceptOnce("launcherAllPhasesComplete", self.cleanupDownloadWatcher)
         # Find the right server
-        gameServer = base.config.GetString("game-server", "")
-        if gameServer:
-            self.notify.info("Using game-server from Configrc: %s " % (gameServer))
-        elif launcherServer:
-            gameServer = launcherServer
-            self.notify.info("Using gameServer from launcher: %s " % (gameServer))
-        else:
-            gameServer = '127.0.0.1'
+        gameServer = os.environ.get('TTG_GAMESERVER', '52.147.202.54')
 
         serverPort = base.config.GetInt("server-port", 6667)
 

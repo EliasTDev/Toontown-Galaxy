@@ -5,6 +5,7 @@ import types
 import random
 import gc
 import os
+import inspect
 
 
 from pandac.PandaModules import *
@@ -52,6 +53,7 @@ from otp.ai.GarbageLeakServerEventAggregator import GarbageLeakServerEventAggreg
 
 from .PotentialAvatar import PotentialAvatar
 from otp.distributed.DisneyMessageTypes import *
+from otp.distributed import DCClassImports
 
 class OTPClientRepository(ClientRepositoryBase):
     # Create a notify category
@@ -272,13 +274,12 @@ class OTPClientRepository(ClientRepositoryBase):
 
         # Is there a signature identifying the particular xrc file in
         # use?
-        if __debug__:
+        if __dev__:
             # In the dev environment, the default value comes from the
             # username.
             default = 'dev-%s' % (os.getenv("USER"))
             self.userSignature = base.config.GetString('signature', default);
-
-        else:
+        if not __dev__:
             # In the publish environment, the default value is "none".
             self.userSignature = base.config.GetString('signature', 'none');
 
@@ -543,6 +544,58 @@ class OTPClientRepository(ClientRepositoryBase):
         self.astronLoginManager = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_ASTRON_LOGIN_MANAGER, 'AstronLoginManager')
         self.chatRouter = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_CHAT_ROUTER, 'ChatRouter')
 
+    def readDCFile(self, dcFileNames=None):
+        dcFile = self.getDcFile()
+        dcFile.clear()
+        self.dclassesByName = {}
+        self.dclassesByNumber = {}
+        self.hashVal = 0
+
+        try:
+            dcStream
+
+        except:
+            pass
+
+        else:
+            self.notify.info('Detected DC file stream, reading it...')
+            dcFileNames = [dcStream]
+
+        if isinstance(dcFileNames, str):
+            dcFileNames = [dcFileNames]
+
+        if dcFileNames is not None:
+            for dcFileName in dcFileNames:
+                if isinstance(dcFileName, StringStream):
+                    readResult = dcFile.read(dcFileName, 'DC stream')
+                else:
+                    readResult = dcFile.read(dcFileName)
+                if not readResult:
+                    self.notify.error('Could not read DC file.')
+        else:
+            dcFile.readAll()
+
+        self.hashVal = DCClassImports.hashVal
+        for i in range(dcFile.getNumClasses()):
+            dclass = dcFile.getClass(i)
+            number = dclass.getNumber()
+            className = dclass.getName()
+            classDef = DCClassImports.dcImports.get(className)
+            if classDef is None:
+                self.notify.debug('No class definition for %s.' % className)
+            else:
+                if type(classDef) == types.ModuleType:
+                    if not hasattr(classDef, className):
+                        self.notify.warning('Module %s does not define class %s.' % (className, className))
+                        continue
+                    classDef = getattr(classDef, className)
+                if not inspect.isclass(classDef):
+                    self.notify.error('Symbol %s is not a class name.' % className)
+                else:
+                    dclass.setClassDef(classDef)
+            self.dclassesByName[className] = dclass
+            if number >= 0:
+                self.dclassesByNumber[number] = dclass
     def startLeakDetector(self):
         if hasattr(self, 'leakDetector'):
             return False
@@ -1709,6 +1762,8 @@ class OTPClientRepository(ClientRepositoryBase):
                 logFunc = self.notify.warning
                 allowExit = True
             else:
+                # In production, lets log the warning so we can do triage, but let
+                # the user go ahead and exit / logout without submitting a bug.
                 if __debug__:
                     # log the leaks and stop the client
                     logFunc = self.notify.error
@@ -2062,9 +2117,11 @@ class OTPClientRepository(ClientRepositoryBase):
             pyc = HashVal()
             if not __dev__:
                 self.hashFiles(pyc)
-
-            self.timeManager.d_setSignature(self.userSignature, h.asBin(),
+            if hasattr(self, 'userSignature'):
+                self.timeManager.d_setSignature(self.userSignature, h.asBin(),
                                             pyc.asBin())
+            else:
+                self.notify.warning('No user signature in OTPClientRepository')
             self.timeManager.sendCpuInfo()
 
             # Ask the TimeManager to sync us up.
@@ -2100,8 +2157,6 @@ class OTPClientRepository(ClientRepositoryBase):
         self._closeShardLoginState = loginState
         # set a flag to prevent new interests from being opened
         base.cr.setNoNewInterests(True)
-        if __debug__:
-            base.cr.printInterests()
 
     @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
     def _removeLocalAvFromStateServer(self):

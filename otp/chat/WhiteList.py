@@ -9,15 +9,10 @@ class WhiteList:
     filtering functions performed against that list.
     """
     def __init__(self,wordlist):
-        self.words = []
-
-        for line in wordlist:
-            self.words.append(line.strip(b"\n\r").lower())
-
+        self.words = wordlist
         self.words.sort()
 
         self.numWords = len(self.words)
-        assert self.numWords > 2
 
     def cleanText(self,text):
         if isinstance(text, bytes):
@@ -25,16 +20,16 @@ class WhiteList:
         else:
             text = text.strip('.,?!')
 
-        text = text.lower().encode()
+        text = text.lower()
         return text
 
     def isWord(self,text):
         text = self.cleanText(text)
-        i = bisect_left(self.words,text)
-
+        i = bisect_left(str(self.words),str(text))
+        if i not in self.words:
+            return False
         if i == self.numWords:
             return False
-
         return self.words[i] == text
 
     def isPrefix(self,text):

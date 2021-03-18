@@ -371,11 +371,6 @@ class DistributedCannonGame(DistributedMinigame):
         self.DEBUG_TOWER_NEAR = 1
         self.DEBUG_TOWER_FAR_LEFT = 1
 
-        if __debug__:
-            # this flag will show whether or not you'll win if you shoot
-            # with the current cannon orientation
-            self.cheat = config.GetBool('cannon-game-cheat', 0)
-            
     def unload(self):
         self.notify.debug("unload")
         DistributedMinigame.unload(self)
@@ -1006,23 +1001,6 @@ class DistributedCannonGame(DistributedMinigame):
         return max(0, control-1)
 
 
-    if __debug__:
-        ###################
-        # CHEAT: shows you whether you'll win if you fire with the
-        # current cannon orientation
-        def __doCheat(self):
-            if self.cheat:
-                # prevent tons of log spam
-                savedDebug = self.notify.debug
-                def fakeDebug(str):
-                    pass
-                self.notify.debug = fakeDebug
-                results = self.__calcFlightResults(self.localAvId, 0)
-                self.notify.debug = savedDebug
-                if results['hitWhat'] == self.HIT_WATER:
-                    self.aimPad.setColor(.5,.5,.5,1)
-                else:
-                    self.aimPad.setColor(1,1,1,1)
 
         def __clearCheat(self):
             self.aimPad.setColor(1,1,1,1)
@@ -1044,8 +1022,6 @@ class DistributedCannonGame(DistributedMinigame):
         taskMgr.remove(self.LOCAL_CANNON_MOVE_TASK)
         if self.cannonMoving:
             self.sndCannonMove.stop()
-            if __debug__:
-                self.__clearCheat()
 
     def __localCannonMoveTask(self, task):
         """ this task moves the cannon
@@ -1099,8 +1075,6 @@ class DistributedCannonGame(DistributedMinigame):
                 # make sure everyone has the correct final position
                 self.__broadcastLocalCannonPosition()
 
-        if __debug__:
-            self.__doCheat()
 
         return Task.cont
 

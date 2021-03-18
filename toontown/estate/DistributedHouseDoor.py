@@ -24,8 +24,6 @@ class DistributedHouseDoor(DistributedDoor.DistributedDoor):
     house that owns it.
     """
 
-    if __debug__:
-        notify = DirectNotifyGlobal.directNotify.newCategory('DistributedHouseDoor')
 
     def __init__(self, cr):
         """constructor for the DistributedHouseDoor"""
@@ -127,10 +125,10 @@ class DistributedHouseDoor(DistributedDoor.DistributedDoor):
         return 0
                 
     def getDoorNodePath(self):
-        assert(self.debugPrint("getDoorNodePath()"))
+        #("getDoorNodePath()"))
         if self.doorType == DoorTypes.INT_STANDARD:
             # ...interior door.
-            assert(self.debugPrint("getDoorNodePath() -- isInterior"))
+            #("getDoorNodePath() -- isInterior"))
             otherNP=render.find("**/door_origin")
             assert(not otherNP.isEmpty())
         elif self.doorType == DoorTypes.EXT_STANDARD:
@@ -145,7 +143,7 @@ class DistributedHouseDoor(DistributedDoor.DistributedDoor):
         return otherNP
         
     def enterClosing(self, ts):
-        assert(self.debugPrint("enterClosing()"))
+        #("enterClosing()"))
         # Start animation:
         #building=self.getBuilding()
         # The right hole (aka doorway):
@@ -184,7 +182,7 @@ class DistributedHouseDoor(DistributedDoor.DistributedDoor):
                 name = trackName)
         self.doorTrack.start(ts)
         if hasattr(self, "done"):
-            assert(self.debugPrint("exiting the estate, to a house"))
+            #("exiting the estate, to a house"))
             base.cr.playGame.hood.loader.setHouse(self.houseId)
             zoneId=self.otherZoneId
             if self.doorType == DoorTypes.EXT_STANDARD:
@@ -206,13 +204,3 @@ class DistributedHouseDoor(DistributedDoor.DistributedDoor):
                     "doorDoId":self.otherDoId}
             messenger.send("doorDoneEvent", [request])
 
-    if __debug__:
-        def debugPrint(self, message):
-            """for debugging""" 
-            type=self.__dict__.get('doorType', '?')
-            if type == DoorTypes.INT_STANDARD:
-                type="INT_ST"
-            elif type == DoorTypes.EXT_STANDARD:
-                type="EXT_ST"
-            return self.notify.debug(
-                    str(self.__dict__.get('houseId', '?'))+' '+type+' '+message)
