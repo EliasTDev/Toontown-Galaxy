@@ -2,10 +2,8 @@ direct-wtext 0
 ime-aware 1
 ime-hide 1
 collect-tcp 1
-server-version sv1.0.47.38
+server-version staff-build-1.0
 model-path
-dc-file etc/toon.dc
-dc-file etc/otp.dc
 window-title Toontown Galaxy
 verify-ssl 0
 require-window 0
@@ -58,7 +56,6 @@ schellgames-dev 0
 text-minfilter linear_mipmap_linear
 gc-save-all 0
 want-magic-words #t
-want-code-redemption-init-db true
 want-cogdominiums #t
 
 is-winter-running #f
