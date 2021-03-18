@@ -3,7 +3,7 @@ from . import ZoneUtil
 from toontown.building import DistributedBuildingMgrAI
 from toontown.suit import DistributedSuitPlannerAI
 from toontown.safezone import ButterflyGlobals
-from toontown.safezone import DistributedButterflyAI
+#from toontown.safezone import DistributedButterflyAI
 from panda3d.core import *
 from toontown.toon import NPCToons
 from libtoontown import DNAData
@@ -146,6 +146,7 @@ class HoodDataAI:
                 self.air.suitPlanners[zoneId] = sp
 
     def createButterflies(self, playground):
+        return
         ButterflyGlobals.generateIndexes(self.zoneId, playground)
         for i in range(0, ButterflyGlobals.NUM_BUTTERFLY_AREAS[playground]):
             for j in range(0, ButterflyGlobals.NUM_BUTTERFLIES[playground]):

@@ -13,7 +13,7 @@ from direct.task import Task
 import random
 import pickle
 from . import HouseGlobals
-from toontown.safezone import DistributedButterflyAI
+#from toontown.safezone import DistributedButterflyAI
 from toontown.safezone import ButterflyGlobals
 from toontown.safezone import ETreasurePlannerAI
 from toontown.safezone import DistributedPicnicTableAI
@@ -290,17 +290,17 @@ class DistributedEstateAI(DistributedObjectAI.DistributedObjectAI):
 
         # start butterflies
         self.estateButterflies = []
-        if simbase.config.GetBool('want-estate-butterflies', 0):
-            ButterflyGlobals.generateIndexes(self.avId, ButterflyGlobals.ESTATE)
-            for i in range(0,
-                    ButterflyGlobals.NUM_BUTTERFLY_AREAS[ButterflyGlobals.ESTATE]):
-                for j in range(0,
-                    ButterflyGlobals.NUM_BUTTERFLIES[ButterflyGlobals.ESTATE]):
-                    bfly = DistributedButterflyAI.DistributedButterflyAI(self.air,
-                                         ButterflyGlobals.ESTATE, i, self.avId)
-                    bfly.generateWithRequired(self.zoneId)
-                    bfly.start()
-                    self.estateButterflies.append(bfly)
+       # if simbase.config.GetBool('want-estate-butterflies', 0):
+       #     ButterflyGlobals.generateIndexes(self.avId, ButterflyGlobals.ESTATE)
+       #     for i in range(0,
+       #             ButterflyGlobals.NUM_BUTTERFLY_AREAS[ButterflyGlobals.ESTATE]):
+               # for j in range(0,
+        #            ButterflyGlobals.NUM_BUTTERFLIES[ButterflyGlobals.ESTATE]):
+                    #bfly = DistributedButterflyAI.DistributedButterflyAI(self.air,
+                    #                     ButterflyGlobals.ESTATE, i, self.avId)
+                    #bfly.generateWithRequired(self.zoneId)
+                    #bfly.start()
+                    #self.estateButterflies.append(bfly)
 
         # Create fishing docks
         dnaStore = DNAStorage()
