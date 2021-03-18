@@ -1808,7 +1808,7 @@ class ToggleWireframe(MagicWord):
     desc = 'Toggles the wireframe'
     advancedDesc ="""Toggles between `wireframeOn()` and `wireframeOff()"""
     accessLevel = 'COMMUNITY'
-    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    execLocation = MagicWordConfig.EXEC_LOC_CLIENT
     affectRange = [MagicWordConfig.AFFECT_SELF]
   
     def handleWord(self, invoker, avId, toon, *args):
