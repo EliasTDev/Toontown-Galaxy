@@ -1,6 +1,6 @@
 """TownLoader module: contains the TownLoader class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.battle.BattleProps import *
 from toontown.battle.BattleSounds import *
 from toontown.distributed.ToontownMsgTypes import *
@@ -22,6 +22,7 @@ from toontown.hood import QuietZoneState
 from toontown.hood import ZoneUtil
 from direct.interval.IntervalGlobal import *
 from toontown.hood import GenericAnimatedBuilding
+from toontown.hood import MailboxInteractiveProp
 class TownLoader(StateData.StateData):
     """
     TownLoader class
