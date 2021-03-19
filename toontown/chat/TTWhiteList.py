@@ -7,7 +7,6 @@ from otp.chat import WhiteListData
 
 class TTWhiteList(WhiteList):
     def __init__(self):
-        vfs = VirtualFileSystem.getGlobalPtr()
 
 
         WhiteList.__init__(self, WhiteListData.WHITELIST)

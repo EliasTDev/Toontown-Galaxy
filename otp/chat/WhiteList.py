@@ -10,27 +10,18 @@ class WhiteList:
     """
     def __init__(self,wordlist):
         self.words = wordlist
-        self.words.sort()
-
         self.numWords = len(self.words)
 
     def cleanText(self,text):
-        if isinstance(text, bytes):
-            text = text.decode().strip('.,?!')
-        else:
-            text = text.strip('.,?!')
+
+        text = str(text,'utf-8').strip('.,?!')
 
         text = text.lower()
         return text
 
     def isWord(self,text):
-        text = self.cleanText(text)
-        i = bisect_left(str(self.words),str(text))
-        if i not in self.words:
-            return False
-        if i == self.numWords:
-            return False
-        return self.words[i] == text
+
+        return self.cleanText(text) in self.words
 
     def isPrefix(self,text):
         text = self.cleanText(text)

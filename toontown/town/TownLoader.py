@@ -524,7 +524,7 @@ class TownLoader(StateData.StateData):
                 className = 'GenericAnimatedBuilding'
 
                 symbols = {}
-
+                base.cr.importModule(symbols, 'toontown.hood', [className])
                 classObj = getattr(symbols[className], className)
                 animatedBuildingObj = classObj(animatedBuildingNode)
                 # [gjeon] I think we can use animPropList to store interactive props
