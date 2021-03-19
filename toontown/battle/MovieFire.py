@@ -454,7 +454,7 @@ def __throwPie(throw, delay, hitCount, showCannon = 1):
         soundCannonAdjust = base.loader.loadSfx("phase_4/audio/sfx/MG_cannon_adjust.ogg")
         playSoundCannonAdjust = SoundInterval(soundCannonAdjust, duration = 0.6 ,node=cannonHolder)
         
-        soundCogPanic = base.loader.loadSfx("resources/phase_5/audio/sfx/ENC_cogafssm.ogg")
+        soundCogPanic = base.loader.loadSfx("phase_5/audio/sfx/ENC_cogafssm.ogg")
         playSoundCogPanic = SoundInterval(soundCogPanic,node=cannonHolder)
     
     

@@ -139,11 +139,12 @@ class CogHQExterior(BattlePlace.BattlePlace):
         # Turn on the little red arrows.
         NametagGlobals.setMasterArrowsOn(1)
 
-        self.handleInterests()
         # Add hooks for the linktunnels
         self.tunnelOriginList = base.cr.hoodMgr.addLinkTunnelHooks(self, self.nodeList, self.zoneId)
         how=requestStatus["how"]
         self.fsm.request(how, [requestStatus])
+        if self.zoneId != ToontownGlobals.BossbotHQ:
+            self.handleInterests()
 
     def exit(self):
         self.fsm.requestFinalState()
@@ -238,7 +239,11 @@ class CogHQExterior(BattlePlace.BattlePlace):
             for i in range(dnaStore.getNumDNAVisGroupsAI()):
                 groupFullName = dnaStore.getDNAVisGroupName(i)
                 visGroup = dnaStore.getDNAVisGroupAI(i)
-                visZoneId = int(base.cr.hoodMgr.extractGroupName(groupFullName))
+                try:
+                    visZoneId = int(base.cr.hoodMgr.extractGroupName(groupFullName))
+                except:
+                    self.notify.warning('visZoneId is an invalid number , skipping...')
+                    continue
                 visZoneId = ZoneUtil.getTrueZoneId(visZoneId, self.zoneId)
                 visibles = []
                 for i in range(visGroup.getNumVisibles()):
