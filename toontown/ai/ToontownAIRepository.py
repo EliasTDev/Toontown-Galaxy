@@ -197,7 +197,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         # holidayId. Pass in fourth of july as default.  To do: override 
         # holiday ID with a magic word
         self.fireworkManager = FireworkManagerAI.FireworkManagerAI(
-            self, NEWYEARS_FIREWORKS)
+            self, ToontownGlobals.NEWYEARS_FIREWORKS)
         # Create our holiday manager...
         self.holidayManager = HolidayManagerAI(self)
 
