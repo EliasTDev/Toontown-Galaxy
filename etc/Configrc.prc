@@ -53,7 +53,7 @@ audio-library-name p3fmod_audio
 cursor-filename phase_3/models/gui/toonmono.cur
 audio-sfx-active #t
 audio-music-active #t
-want-dev 0
+want-dev 1
 schellgames-dev 0
 text-minfilter linear_mipmap_linear
 gc-save-all 0

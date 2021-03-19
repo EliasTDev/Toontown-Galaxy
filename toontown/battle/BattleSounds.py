@@ -35,8 +35,6 @@ class BattleSounds:
         self.sfxSearchPath = DSearchPath()
 
         if __dev__:
- 
-
             # In other environments, including the dev environment, look here:
 
             self.sfxSearchPath.appendDirectory(Filename('resources/phase_3/audio/sfx'))
