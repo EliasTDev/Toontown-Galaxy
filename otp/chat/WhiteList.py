@@ -14,7 +14,7 @@ class WhiteList:
 
     def cleanText(self,text):
 
-        text = str(text,'utf-8').strip('.,?!')
+        text = text.strip('.,?!')
 
         text = text.lower()
         return text
