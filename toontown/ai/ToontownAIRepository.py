@@ -308,6 +308,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         # Generate our friend manager...
         self.friendManager = FriendManagerAI(self)
         self.friendManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+
     def generateHood(self, hoodConstructor, zoneId):
         # Bossbot HQ doesn't use DNA, so we skip over that.
         if zoneId != ToontownGlobals.BossbotHQ:
@@ -616,8 +617,6 @@ class ToontownAIRepository(ToontownInternalRepository):
 
         return leaderBoards
 
-    def loadDNAFileAI(self, dnaStore, dnaFile):
-        return loadDNAFileAI(dnaStore, dnaFile, CSDefault)
 
     #AIGEOM
     def loadDNAFile(self, dnaStore, dnaFile, cs=CSDefault):

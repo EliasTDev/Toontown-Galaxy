@@ -6,9 +6,8 @@ from direct.fsm import State
 from toontown.toonbase import ToontownGlobals
 from panda3d.core import *
 from libotp import *
-from libtoontown import *
 from toontown.hood import ZoneUtil
-
+from libtoontown import *
 class CogHQExterior(BattlePlace.BattlePlace):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("CogHQExterior")
@@ -144,7 +143,28 @@ class CogHQExterior(BattlePlace.BattlePlace):
         how=requestStatus["how"]
         self.fsm.request(how, [requestStatus])
         if self.zoneId != ToontownGlobals.BossbotHQ:
-            self.handleInterests()
+            self.loadDNA()
+           
+    def loadDNA(self):
+        dnaFile = self.genDNAFileName(self.zoneId)
+        dnaStorage = DNAStorage()
+        loadDNAFile(dnaStorage, dnaFile)
+
+        self.zoneVisGroupDict = {}
+        numVisGroups = dnaStorage.getNumDNAVisGroups()
+
+        for visGroup in range(numVisGroups):
+            groupName = dnaStorage.getDNAVisGroupName(visGroup)
+            visGroupClient= dnaStorage.getDNAVisGroup(visGroup)
+            visGroupZoneId = int(base.cr.hoodMgr.extractGroupName(groupName))
+            visGroupZoneId = ZoneUtil.getTrueZoneId(visGroupZoneId, self.zoneId)
+            visibles = []
+            for j in range(visGroupClient.getNumVisibles()):
+                visibles.append(int(visGroupClient.getVisibleName(j)))
+            visibles.append(ZoneUtil.getBranchZone(visGroupZoneId))
+            self.zoneVisGroupDict[visGroupZoneId] = visibles
+
+        base.cr.sendSetZoneMsg(self.zoneId, list(self.zoneVisGroupDict.values())[0])
 
     def exit(self):
         self.fsm.requestFinalState()
@@ -228,29 +248,4 @@ class CogHQExterior(BattlePlace.BattlePlace):
         base.localAvatar.laffMeter.stop()
     
 
-    def handleInterests(self):
-            # First, we need to load the DNA file for this Cog HQ.
-            dnaStore = DNAStorage()
-            dnaFileName = self.genDNAFileName(self.zoneId)
-            loadDNAFileAI(dnaStore, dnaFileName)
-
-            # Next, we need to collect all of the visgroup zone IDs.
-            self.zoneVisDict = {}
-            for i in range(dnaStore.getNumDNAVisGroups()):
-                groupFullName = dnaStore.getDNAVisGroupName(i)
-                visGroup = dnaStore.getDNAVisGroupAI(i)
-                try:
-                    visZoneId = int(base.cr.hoodMgr.extractGroupName(groupFullName))
-                except:
-                    self.notify.warning('visZoneId is an invalid number , skipping...')
-                    continue
-                visZoneId = ZoneUtil.getTrueZoneId(visZoneId, self.zoneId)
-                visibles = []
-                for i in range(visGroup.getNumVisibles()):
-                    visibles.append(int(visGroup.getVisibleName(i)))
-
-                visibles.append(ZoneUtil.getBranchZone(visZoneId))
-                self.zoneVisDict[visZoneId] = visibles
-
-            # Finally, we want interest in all visgroups due to this being a Cog HQ.
-            base.cr.sendSetZoneMsg(self.zoneId, list(self.zoneVisDict.values())[0])
+  
