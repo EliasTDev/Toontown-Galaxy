@@ -236,7 +236,7 @@ class CogHQExterior(BattlePlace.BattlePlace):
 
             # Next, we need to collect all of the visgroup zone IDs.
             self.zoneVisDict = {}
-            for i in range(dnaStore.getNumDNAVisGroupsAI()):
+            for i in range(dnaStore.getNumDNAVisGroups()):
                 groupFullName = dnaStore.getDNAVisGroupName(i)
                 visGroup = dnaStore.getDNAVisGroupAI(i)
                 try:

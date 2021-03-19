@@ -496,7 +496,7 @@ class SuitPlannerBase:
         self.battlePosDict = {}
         self.cellToGagBonusDict = {}
         #self.dnaStore.printSuitPointStorage()
-        for i in range(self.dnaStore.getNumDNAVisGroupsAI()):
+        for i in range(self.dnaStore.getNumDNAVisGroups()):
             vg = self.dnaStore.getDNAVisGroupAI(i)
             zoneId = int(self.extractGroupName(vg.getName()))
             # There is only 1 battle cell per zone

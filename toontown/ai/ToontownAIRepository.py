@@ -64,6 +64,8 @@ from direct.distributed.PyDatagram import PyDatagram
 from toontown.ai.ToontownAIMsgTypes import *
 from toontown.fishing import FishManagerAI
 from otp.friends.FriendManagerAI import FriendManagerAI
+from toontown.effects import FireworkManagerAI
+
 class ToontownAIRepository(ToontownInternalRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory('ToontownAIRepository')
 
@@ -189,7 +191,13 @@ class ToontownAIRepository(ToontownInternalRepository):
             
         # Create our suit invasion manager...
         self.suitInvasionManager = SuitInvasionManagerAI(self)
-
+        # The Firework Manager: This object really only exists so we can
+        # fire off fireworks with magic words. Normally this is a holiday
+        # manager driven event and therefore the constructor needs a
+        # holidayId. Pass in fourth of july as default.  To do: override 
+        # holiday ID with a magic word
+        self.fireworkManager = FireworkManagerAI.FireworkManagerAI(
+            self, NEWYEARS_FIREWORKS)
         # Create our holiday manager...
         self.holidayManager = HolidayManagerAI(self)
 
