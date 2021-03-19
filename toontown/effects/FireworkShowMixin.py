@@ -15,7 +15,7 @@ from direct.interval.IntervalGlobal import *
 from toontown.toonbase.ToontownGlobals import *
 from toontown.toonbase import TTLocalizer
 from toontown.parties import PartyGlobals
-from toontown.hood import *
+from toontown.hood import TTHood, BRHood, MMHood, DDHood, OZHood,DGHood, DLHood, GSHood, PartyHood
 
 # effects imports
 from . import Fireworks
