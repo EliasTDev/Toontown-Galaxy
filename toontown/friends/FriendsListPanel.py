@@ -515,9 +515,9 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
             friendButton.destroy()
             del self.friends[friend]
 
-        newFriends.sort(key=functools.cmp_to_key(compareFriends))
-        petFriends.sort(key=functools.cmp_to_key(compareFriends))
-        trueFriends.sort(key=functools.cmp_to_key(compareFriends))
+        newFriends.sort(key=lambda a, b: a[0] - b[0])
+        petFriends.sort(key=lambda a, b: a[0] - b[0])
+        trueFriends.sort(key=lambda a, b: a[0] - b[0])
         # Add new friends
         for friendPair in newFriends:
             if friendPair not in self.friends:

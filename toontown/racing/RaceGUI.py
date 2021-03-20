@@ -174,8 +174,8 @@ class RaceGUI:
 ##         card = self.mapScene.attachNewNode(self.cardMaker.generate())
 
         #setup the 'map' display region
-        self.mapScene = self.raceModeRoot.attachNewNode('MapScene')
-        self.mapScene.setPos(1.1, 0, 0.75)
+        self.mapScene = base.a2dTopRight.attachNewNode('MapScene')
+        self.mapScene.setPos(-0.2, 0, -0.2)
         self.mapScene.setScale(0.25,0.001,0.25)
         
         maxT = self.race.curve.getMaxT()
@@ -209,8 +209,8 @@ class RaceGUI:
             text_fg = (0.95, 0.95, 0, 1),
             text_font = ToontownGlobals.getSignFont(),
             )
-        self.placeLabelNum.reparentTo(self.raceModeRoot)
-        self.directObjList.append(self.placeLabelNum)
+        self.placeLabelNum.reparentTo(base.a2dBottomLeft)
+        self.directObjList.append(base.a2dBottomLeft)
             
         self.placeLabelStr = DirectLabel(
             relief = None,
@@ -220,19 +220,19 @@ class RaceGUI:
             text_fg = (0.95, 0.95, 0, 1),
             text_font = ToontownGlobals.getSignFont(),
             )
-        self.placeLabelStr.reparentTo(self.raceModeRoot)
+        self.placeLabelStr.reparentTo(base.a2dBottomLeft)
         self.directObjList.append(self.placeLabelStr)
         
         #setup lap reporting        
         self.lapLabel = DirectLabel(
             relief = None,
-            pos = (1.1, 0, 0.45),
+            pos = (-0.22, 0, -0.5),
             text = '1/'+str(self.race.lapCount),
             text_scale = 0.1,          
             text_fg = (0.95, 0.95, 0, 1),
             text_font = ToontownGlobals.getSignFont(),
             )
-        self.lapLabel.reparentTo(self.raceModeRoot)
+        self.lapLabel.reparentTo(base.a2dTopRight)
         self.directObjList.append(self.lapLabel)
 
         #setup photo finish label
@@ -250,13 +250,13 @@ class RaceGUI:
         #setup wrong way reporting
         self.wrongWayLabel = DirectLabel(
             relief = None,
-            pos = (1.1,0,0.85),
+            pos = (-0.22,0,-0.2),
             text = TTLocalizer.KartRace_WrongWay,
             text_scale = 0.1,
             text_fg = (0.95, 0, 0, 1),
             text_font = ToontownGlobals.getSignFont(),
             )
-        self.wrongWayLabel.reparentTo(self.raceModeRoot)
+        self.wrongWayLabel.reparentTo(base.a2dTopRight)
         self.directObjList.append(self.wrongWayLabel)
         self.wrongWayLabel.setColorScale(Vec4(1,1,1,0))
 
@@ -311,11 +311,11 @@ class RaceGUI:
         self.cardMaker.setColor(1,1,1,1)
 
         self.gagPanel = DirectFrame(
-            parent = self.raceModeRoot,
+            parent = self.base.a2dBottomLeft,
             relief = None,
             image = loader.loadModel('phase_6/models/karting/gag_panel'),
             image_scale = 0.25,
-            pos = (-1.13,0,-0.5),            
+            pos = (0.2,0,0.6),            
             )
         self.directObjList.append(self.gagPanel)
 

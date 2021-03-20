@@ -582,6 +582,8 @@ class ChatManager(DirectObject.DirectObject):
         using this to abstract out the message so 
         that other gui structures can be supported
         """
+        if len(newText) > 24:
+            self.whisperFrame['text_pos'] = (0.18, 0.042)
         self.whisperFrame["text"] = newText
         
     def exitWhisper(self):

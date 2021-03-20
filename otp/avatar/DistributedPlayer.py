@@ -195,7 +195,7 @@ class DistributedPlayer(DistributedAvatar.DistributedAvatar,
          #   base.cr.playerFriendsManager.sendSCWhisper(sendToId, msgIndex)
         if not toPlayer:
             messenger.send("wakeup")
-            base.cr.ttFriendsManager.whisperScTo(sendToId, msgIndex)
+            base.cr.ttFriendsManager.d_whisperSCTo(sendToId, msgIndex)
 
     def setWhisperSCFrom(self, fromId, msgIndex):
         """

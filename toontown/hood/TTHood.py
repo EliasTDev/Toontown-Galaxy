@@ -27,7 +27,8 @@ class TTHood(ToonHood.ToonHood):
                                       HALLOWEEN_PROPS : ['phase_4/dna/halloween_props_storage_TT.dna',
                                                       'phase_4/dna/halloween_props_storage_TT_sz.dna'  ],
                                       }
-        self.skyFile = "phase_3.5/models/props/TT_sky"
+        #self.skyFile = "phase_3.5/models/props/TT_sky"
+        self.skyFile = "phase_8/models/props/DL_sky"
         self.spookySkyFile = "phase_3.5/models/props/BR_sky"
         self.titleColor = (1.0, 0.5, 0.4, 1.0)
 

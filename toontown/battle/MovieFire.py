@@ -91,7 +91,7 @@ def doFires(fires):
         elif (len(a) < len(b)):
             return -1
         return 0
-    suitFires.sort(compFunc)
+    suitFires.sort(key=compFunc)
 
     #since we have group throws now, we calculate how
     #many times each suit gets hit over here

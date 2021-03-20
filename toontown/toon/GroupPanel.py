@@ -2,11 +2,11 @@ from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase import DirectObject
 from toontown.toon import ToonAvatarPanel
 from toontown.toontowngui import TTDialog
-
+from libotp import *
 class GroupPanel(DirectObject.DirectObject):
     """GroupPanel:
     Tells you who is in your boarding party/group and provides an interface for leaving.
@@ -89,11 +89,12 @@ class GroupPanel(DirectObject.DirectObject):
         guiButtons = loader.loadModel('phase_9/models/gui/tt_m_gui_brd_status')
         self.frame = DirectFrame(
             relief = None,
+            parent = base.a2dLeftCenter,
             image = bgImage,
             image_scale = (0.5, 1, 0.5),
             image_pos = (0, 0, bgImageZPos),
             textMayChange = 1,
-            pos = (-1.044, 0, frameZPos),
+            pos = (0.32, 0, frameZPos),
             )
         self.frameBounds = self.frame.getBounds()
                                 
@@ -140,6 +141,7 @@ class GroupPanel(DirectObject.DirectObject):
         
         self.hideButton = DirectButton(
             relief = None,
+            parent = base.a2dLeftCenter,
             text_pos = (0, 0.15),
             text_scale = 0.06,
             text_align = TextNode.ALeft,
@@ -154,6 +156,7 @@ class GroupPanel(DirectObject.DirectObject):
             
         self.showButton = DirectButton(
             relief = None,
+            parent = base.a2dLeftCenter,
             text = ("", TTLocalizer.BoardingGroupShow, TTLocalizer.BoardingGroupShow),
             text_pos = (0.03, 0),
             text_scale = 0.06,
