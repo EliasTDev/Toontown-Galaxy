@@ -1427,7 +1427,7 @@ class SummonSuit(MagicWord):
                 name = args[0]
                 if name == 'x':
                     name = None
-                if name not in SuitDNA.HeadTypes:
+                if name not in SuitDNA.suitHeadTypes:
                     return 'Not a valid cog head type.'
 
         if len(args) > 1:
