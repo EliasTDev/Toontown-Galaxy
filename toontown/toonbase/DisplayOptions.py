@@ -9,7 +9,7 @@ from otp.otpgui import OTPDialog
 from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPRender
 from direct.directnotify import DirectNotifyGlobal
-
+from libotp import *
 try:        
     import embedded
 except:

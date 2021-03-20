@@ -128,9 +128,9 @@ class ToontownChatManager(ChatManager.ChatManager):
             parent = base.a2dTopLeft,
             relief = None,
             image = DGG.getDefaultDialogGeom(),
-            image_scale = (0.70, 0.70, 0.20),
+            image_scale = (0.45, 0.45, 0.45),
             image_color = OTPGlobals.GlobalDialogColor,
-            pos = (0.37, 0, -0.105),
+            pos = (1.25, 0, -0.269),
             text = OTPLocalizer.ChatManagerWhisperTo,
             text_wordwrap = 7.0,
             text_scale = TTLocalizer.CMwhisperFrame,
@@ -212,9 +212,9 @@ class ToontownChatManager(ChatManager.ChatManager):
         self.defaultToWhiteList = base.config.GetBool('white-list-is-default', 1)
         self.chatInputSpeedChat = TTChatInputSpeedChat(self)
         
-        self.normalPos = Vec3(-1.083, 0, 0.804)
-        self.whisperPos = Vec3(0.25, 0, -0.28)
-        self.speedChatPlusPos = Vec3(-0.35, 0, 0.71)
+        self.normalPos = Vec3(0.25, 0, -0.196)
+        self.whisperPos = Vec3(0, 0, -0.296)
+        self.speedChatPlusPos = Vec3(0, 0, 0)
         
         if self.defaultToWhiteList:
             self.chatInputNormal = TTChatInputWhiteList()
@@ -224,7 +224,7 @@ class ToontownChatManager(ChatManager.ChatManager):
             self.chatInputNormal = TTChatInputNormal(self)
         self.chatInputWhiteList = TTChatInputWhiteList()
         self.chatInputWhiteList.setPos(self.speedChatPlusPos)
-        #self.chatInputWhiteList.reparentTo(base.a2dTopLeft)
+        self.chatInputWhiteList.reparentTo(base.a2dTopLeft)
         self.chatInputWhiteList.desc = "chatInputWhiteList"
 
     def delete(self):
@@ -345,6 +345,7 @@ class ToontownChatManager(ChatManager.ChatManager):
             
     def enterMainMenu(self):
         self.chatInputNormal.setPos(self.normalPos)
+        self.chatInputNormal.reparentTo(base.a2dTopLeft)
         if self.chatInputWhiteList.isActive():
             self.notify.debug('enterMainMenu calling checkObscured')
             ChatManager.ChatManager.checkObscurred(self)
