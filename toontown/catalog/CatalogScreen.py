@@ -1277,7 +1277,10 @@ class CatalogScreen(DirectFrame):
             if familyMember.id != base.localAvatar.doId:
                 newFF = (familyMember.id, familyMember.name, NametagGroup.CCNonPlayer)
                 self.ffList.append(newFF)
-        for friendPair in base.localAvatar.friendsList:
+        if not isinstance(base.localAvatar.friendsList, list):
+            self.notify.warning('friends list is not list '.format(base.localAvatar.friendsList))
+            newFriendsList = list(base.localAvatar.friendsList)
+        for friendPair in newFriendsList:
             friendId, flags = friendPair
             #print "adding friend"
             handle = base.cr.identifyFriend(friendId)

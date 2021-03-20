@@ -30,7 +30,7 @@ from direct.distributed.PyDatagramIterator import PyDatagramIterator
 
 from otp.avatar import Avatar
 from otp.avatar.DistributedPlayer import DistributedPlayer
-from otp.login import TTAccount
+#from otp.login import TTAccount
 from otp.login import LoginTTSpecificDevAccount
 from otp.login import AccountServerConstants
 from otp.login.CreateAccountScreen import CreateAccountScreen
@@ -218,7 +218,7 @@ class OTPClientRepository(ClientRepositoryBase):
         else:
             self.notify.error("The required-login was not recognized.")
 
-        self.computeValidateDownload()
+        #self.computeValidateDownload()
 
         # Has the user provided a password to enable magic words?
         self.wantMagicWords = base.config.GetString('want-magic-words', '')
@@ -237,26 +237,11 @@ class OTPClientRepository(ClientRepositoryBase):
         # allow toontown-account-old-auth
         self.accountOldAuth = config.GetBool('%s-account-old-auth' % game.name,
                                              self.accountOldAuth)
-        self.useNewTTDevLogin = base.config.GetBool('use-tt-specific-dev-login', False)
+        #self.useNewTTDevLogin = base.config.GetBool('use-tt-specific-dev-login', False)
         # create a global login/account server interface
-        if self.useNewTTDevLogin:
-            self.loginInterface = LoginTTSpecificDevAccount.LoginTTSpecificDevAccount(self)
-            self.notify.info("loginInterface: LoginTTSpecificDevAccount")
-        elif self.accountOldAuth:
-            self.loginInterface = LoginGSAccount.LoginGSAccount(self)
-            self.notify.info("loginInterface: LoginGSAccount")
-        elif self.blue:
-            self.loginInterface = LoginGoAccount.LoginGoAccount(self)
-            self.notify.info("loginInterface: LoginGoAccount")
-        elif self.playToken:
-            self.loginInterface = LoginAstronAccount.LoginAstronAccount(self)
-            self.notify.info("loginInterface: LoginAstronAccount")
-        elif self.DISLToken:
-            self.loginInterface = LoginDISLTokenAccount(self)
-            self.notify.info("loginInterface: LoginDISLTokenAccount")
-        else:
-            self.loginInterface = LoginTTAccount.LoginTTAccount(self)
-            self.notify.info("loginInterface: LoginTTAccount")
+       
+        self.loginInterface = LoginAstronAccount.LoginAstronAccount(self)
+        self.notify.info("loginInterface: LoginAstronAccount")
 
         # This value comes in from the server
         self.secretChatAllowed = base.config.GetBool("allow-secret-chat", 0)
