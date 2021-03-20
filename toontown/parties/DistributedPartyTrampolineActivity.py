@@ -241,8 +241,7 @@ class DistributedPartyTrampolineActivity(DistributedPartyActivity):
                                       mayChange=True,)
 
         self.timer = PartyUtils.getNewToontownTimer()
-        self.timer.reparentTo(self.screenPlaneElements)
-
+        self.timer.posInTopRightCorner()
     def loadSounds( self ):
         self.jellyBeanSound = base.loader.loadSfx("phase_4/audio/sfx/sparkly.ogg")
         self.boingSound = base.loader.loadSfx("phase_4/audio/sfx/target_trampoline_2.ogg")

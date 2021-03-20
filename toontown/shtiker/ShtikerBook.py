@@ -1,6 +1,6 @@
 """ShtikerBook module: contains the ShtikerBook class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase import ToontownGlobals
 from direct.showbase import DirectObject
 from direct.fsm import StateData
@@ -202,7 +202,8 @@ class ShtikerBook(DirectFrame, StateData.StateData):
                      bookModel.find("**/BookIcon_RLVR"),
                      ),
             relief = None,
-            pos = (1.175, 0, -0.83),
+            pos = (-0.16, 0, 0.17),
+            parent = base.a2dBottomRight,
             scale = 0.305,
             command = self.__open,
             )
@@ -213,7 +214,8 @@ class ShtikerBook(DirectFrame, StateData.StateData):
                      bookModel.find("**/BookIcon_RLVR2"),
                      ),
             relief = None,
-            pos = (1.175, 0, -0.83),
+            pos = (-0.16, 0, 0.17),
+            parent = base.a2dBottomRight,
             scale = 0.305,
             command = self.__close,
             )

@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 from direct.gui.DirectScrolledList import *
@@ -853,8 +853,9 @@ class CatalogScreen(DirectFrame):
         hangupGui = guiItems.find('**/hangup')
         hangupRolloverGui = guiItems.find('**/hangup_rollover')
         self.hangup = DirectButton(
-            self, relief = None,
-            pos = (1.78, 0, -1.3),
+            base.a2dBottomRight, relief = None,
+            pos = (-0.158, 0, 0.14),
+            scale= (0.7, 0.7, 0.7),
             image = [hangupGui, hangupRolloverGui,
                      hangupRolloverGui, hangupGui],
             text = ["", TTLocalizer.CatalogHangUp, TTLocalizer.CatalogHangUp],

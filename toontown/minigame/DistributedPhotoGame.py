@@ -230,7 +230,7 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
         self.filmPanel = DirectLabel(
             parent = hidden,
             relief = None,
-            pos = (1.16, 0.0, 0.45),
+            pos = (-0.23, -1.2, -0.55),
             scale = .65,
             text = str(self.filmCount),
             text_scale = 0.2,
@@ -1282,7 +1282,7 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
             self.timer.countdown(self.data["TIME"],
                                  self.__gameTimerExpired)
 
-        self.filmPanel.reparentTo(aspect2d)
+        self.filmPanel.reparentTo(base.a2dTopRight)
         self.scoreMult = MinigameGlobals.getScoreMult(self.cr.playGame.hood.id)
 
         self.clockStopTime = None
@@ -1295,8 +1295,8 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
         self.generateAssignmentPanels()
         
         self.scorePanel = self.makeScoreFrame()
-        self.scorePanel.reparentTo(aspect2d)
-        self.scorePanel.setPos(1.05,0.0,-0.725)
+        self.scorePanel.reparentTo(base.a2dBottomRight)
+        self.scorePanel.setPos(-0.3, 0, 0.3)
         
         self.updateAssignmentPanels()
         

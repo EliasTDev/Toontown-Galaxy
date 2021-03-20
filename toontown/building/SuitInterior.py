@@ -1,8 +1,8 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase.ToonBaseGlobal import *
 
 from direct.directnotify import DirectNotifyGlobal
-from toontown.hood import Place
+from toontown.hood.Place import Place
 from direct.showbase import DirectObject
 from direct.fsm import StateData
 from direct.fsm import ClassicFSM, State
@@ -14,7 +14,7 @@ from direct.task.Task import Task
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import ToontownBattleGlobals
 
-class SuitInterior(Place.Place):
+class SuitInterior(Place):
     """SuitInterior class"""
 
     # create a notify category
@@ -26,7 +26,7 @@ class SuitInterior(Place.Place):
         """
         SuitInterior constructor: create a play game ClassicFSM
         """
-        Place.Place.__init__(self, loader, doneEvent)
+        Place.__init__(self, loader, doneEvent)
 
         self.fsm = ClassicFSM.ClassicFSM('SuitInterior',
                            [State.State('entrance',

@@ -1,6 +1,6 @@
 """DistributedTargetGame module: contains the DistributedTargetGame class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase.ToonBaseGlobal import *
 from direct.interval.IntervalGlobal import *
 from .DistributedMinigame import *
@@ -1012,7 +1012,7 @@ class DistributedTargetGame(DistributedMinigame):
 
         render.clearFog()
         base.camLens.setFar(ToontownGlobals.DefaultCameraFar)
-        base.camLens.setFov(ToontownGlobals.DefaultCameraFov)
+        base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov/(4/3))
         camera.setHpr(0,90,0)
 
         # Restore the background color

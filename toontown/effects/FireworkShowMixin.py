@@ -15,7 +15,7 @@ from direct.interval.IntervalGlobal import *
 from toontown.toonbase.ToontownGlobals import *
 from toontown.toonbase import TTLocalizer
 from toontown.parties import PartyGlobals
-from toontown.hood import TTHood, BRHood, MMHood, DDHood, OZHood,DGHood, DLHood, GSHood, PartyHood
+from toontown.hood import *
 
 # effects imports
 from . import Fireworks
@@ -265,6 +265,7 @@ class FireworkShowMixin:
             self.fireworkShow = None
             
     def beginFireworkShow(self, timeStamp, root):
+        from toontown.hood import TTHood, BRHood, MMHood, DDHood, OZHood,DGHood, DLHood, GSHood, PartyHood
         if self.fireworkShow and not self.fireworkShow.isPlaying():
             self.fireworkShow.begin(timeStamp)
             self.fireworkShow.reparentTo(root)

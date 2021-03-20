@@ -1717,22 +1717,22 @@ class DNA(MagicWord):
 
         return 'Invalid part: ' + part
 
-class WhoAll(MagicWord):
-    aliases = ['allonline', 'alltoons']
-    desc = 'Reports everyone online.'
-    advancedDesc = """Reports everyone online.  Listed with accountName and avatarName."""
-    execLocation = MagicWordConfig.EXEC_LOC_SERVER
-    accessLevel = 'MODERATOR'
+#class WhoAll(MagicWord):
+ #   aliases = ['allonline', 'alltoons']
+  #  desc = 'Reports everyone online.'
+   # advancedDesc = """Reports everyone online.  Listed with accountName and avatarName."""
+   # execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    #accessLevel = 'MODERATOR'
 
-    def handleWord(self, invoker, avId, toon, *args):
-        str = ''
-        for obj in list(self.air.doId2do.values()):
-            if hasattr(obj, "accountName"):
-                str += '%s %s\n' % (obj.accountName, obj.name)
-        if not str:
-            str = "No avatars."
+    #def handleWord(self, invoker, avId, toon, *args):
+      #  str = ''
+       # for obj in list(self.air.doId2do.values()):
+      #      if hasattr(obj, "accountName"):
+    #            str += '%s %s\n' % (obj.accountName, obj.name)
+      #  if not str:
+    #        str = "No avatars."
 
-        return str     
+    #    return str     
 
 
 
@@ -1752,11 +1752,10 @@ class ToggleOobe(MagicWord):
 
 class ToggleOobeCull(MagicWord):
     aliases = ['oobecull']
-     #TODO add simple description
     desc = "Toggles out of body experience view with culling debugging"
     advancedDesc = """While in OOBE mode , cull the viewing frustum as if
         it were still attached to our original camera.  This allows us
-        to visualize the effectiveness of our bounding volumes.""" #TODO 
+        to visualize the effectiveness of our bounding volumes.""" 
     execLocation = MagicWordConfig.EXEC_LOC_CLIENT
     accessLevel = 'COMMUNITY'
     affectRange = [MagicWordConfig.AFFECT_SELF]
@@ -1784,7 +1783,7 @@ class ToggleTexMemory(MagicWord):
     desc = 'Toggles a handy texture memory watcher utility.' 
     advancedDesc = 'Toggles a handy texture memory watcher utility.' 
     accessLevel = 'COMMUNITy'
-    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    execLocation = MagicWordConfig.EXEC_LOC_CLIENT
     affectRange = [MagicWordConfig.AFFECT_SELF]
 
     def handleWord(self, invoker, avId, toon, *args):
@@ -1797,7 +1796,7 @@ class ToggleShowVertices(MagicWord):
     advancedDesc ="""Toggles a mode that visualizes vertex density per screen
         area."""
     accessLevel = 'COMMUNITY'
-    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    execLocation = MagicWordConfig.EXEC_LOC_CLIENT
     affectRange = [MagicWordConfig.AFFECT_SELF]
    
     def handleWord(self, invoker, avId, toon, *args):
@@ -2048,7 +2047,7 @@ class ResetFurniture(MagicWord):
 class SetFishingRod(MagicWord):
     desc = "Sets the target's fishing rod."
     aliases = ['rod', 'fishingrod']
-    acccessLevel = 'MODERATOR'
+    accessLevel = 'MODERATOR'
     execLocation = MagicWordConfig.EXEC_LOC_SERVER
 
     def handleWord(self, invoker, avId, av, *args):
@@ -2064,20 +2063,25 @@ class SetFishingRod(MagicWord):
 class SetNPCFriend(MagicWord):
     aliases = ['setsoscard', 'sos', 'setsos']
     desc = "Modifies the target's specified sos card amount"
-    arguments = [('npcId', int, True), ('amount', int, False, 1)]
-    acccessLevel = 'DEVELOPER'
+    advancedDesc = 'List of sos cards ids to names will be in discord.'
+    arguments = [('npcName', str, True), ('amount', int, False, 1)]
+    accessLevel = 'DEVELOPER'
     execLocation = MagicWordConfig.EXEC_LOC_SERVER
 
 
     def handleWord(self, invoker, avId, av, *args):
-            npcId = int(args[0])
+            npcName = str(args[0])
             numCalls = int(args[1])
+            npcId = NPCToons.getNPCId(npcName)
+            if npcId is None:
+                return 'invalid SOS name'
             if numCalls > 100 or numCalls <= 0:
                 return 'Invalid amount for sos card'
             if self.doNpcFriend(av, npcId, numCalls):
-                return "added NPC friend"
+                return "Added sos card {0}".format(npcName)
             else:
                 return "invalid NPC name"
+                
 class GiveBessies(MagicWord):
     aliases = ['uberdrop', 'pianos', 'bessies', 'barnaclebessies']
     desc = 'Gives 100 barnacle bessies to invoker.'

@@ -127,7 +127,7 @@ class DistributedNPCToonAI(DistributedNPCToonBaseAI):
                                      self.npcId, self.busy, [],
                                      ClockDelta.globalClockDelta.getRealNetworkTime()])
         self.sendClearMovie(None)
-        self.busy = 0
+        self.busy = []
         return Task.done
 
     def sendClearMovie(self, task):
@@ -136,7 +136,7 @@ class DistributedNPCToonAI(DistributedNPCToonBaseAI):
         self.pendingQuests = None
         self.pendingTracks = None
         self.pendingTrackQuest = None
-        self.busy = 0
+        self.busy = []
         self.sendUpdate("setMovie", [NPCToons.QUEST_MOVIE_CLEAR,
                                      self.npcId, 0, [],
                                      ClockDelta.globalClockDelta.getRealNetworkTime()])

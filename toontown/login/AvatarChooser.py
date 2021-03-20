@@ -1,6 +1,6 @@
 """AvatarChooser module: contains the AvatarChooser class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase import ToontownGlobals
 from . import AvatarChoice
 from direct.fsm import StateData
@@ -89,12 +89,9 @@ class AvatarChooser(StateData.StateData):
         #if base.cr.loginInterface.supportsRelogin():
          #   self.logoutButton.show()
 
-        # We need to put *something* in the 3-d scene graph to keep
-        # the Voodoo drivers from crashing.  We'll use the background
-        # panel, cleverly parenting it to the camera (instead of
-        # aspect2d) at a suitable distance.
-        self.pickAToonBG.reparentTo(base.camera)
-
+    #reparent to aspect2d for widescreen support
+        self.pickAToonBG.reparentTo(aspect2d)
+        self.pickAToonBG.setBin('background', 1)
         choice = base.config.GetInt("auto-avatar-choice", -1)
         
         # hang the choice panel hooks

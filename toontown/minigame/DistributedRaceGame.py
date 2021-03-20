@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase.ToonBaseGlobal import *
 from direct.distributed.ClockDelta import *
 from .DistributedMinigame import *
@@ -183,7 +183,8 @@ class DistributedRaceGame(DistributedMinigame):
             diceButton = DirectButton(
                 image = (button, button_down, button_ro, None),
                 relief = None,
-                pos = (-0.9 + ((i-1)*0.2), 0.0, -0.85),
+                pos = (0.43 + ((i-1)*0.2), 0.0, 0.15),
+                parent=base.a2dBottomLeft,
                 scale = 0.25,
                 command = self.handleInputChoice,
                 extraArgs = [i],

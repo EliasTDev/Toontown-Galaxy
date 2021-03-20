@@ -14,7 +14,7 @@ from direct.showbase import PythonUtil
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui import DirectGuiGlobals
 
-from pandac.PandaModules import *
+from panda3d.core import *
 
 from otp.avatar import LocalAvatar
 from otp.login import LeaveToPayDialog
@@ -137,7 +137,8 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
                      friendsButtonPressed,
                      friendsButtonRollover),
                 relief = None,
-                pos = (1.192, 0, 0.875),
+                pos = (-0.14, 0, -0.13),
+                parent=base.a2dTopRight,
                 scale = newScale,
                 text = ("", TTLocalizer.FriendsListLabel, TTLocalizer.FriendsListLabel),
                 text_scale = 0.09,
@@ -557,13 +558,14 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
                                              self.hp,
                                              self.maxHp)
         self.laffMeter.setAvatar(self)
+        self.laffMeter.reparentTo(base.a2dBottomLeft)
         self.laffMeter.setScale(0.075)
         if self.style.getAnimal() == "monkey":
             # The monkey laff meter is slightly bigger because the
             # ears hang off to the side, so slide it over to the right
-            self.laffMeter.setPos(-1.18, 0., -0.87)
+            self.laffMeter.setPos(0.15, 0., 0.13)
         else:
-            self.laffMeter.setPos(-1.2, 0., -0.87)
+            self.laffMeter.setPos(0.13, 0., 0.13)
         self.laffMeter.stop()
         self.questMap = QuestMap.QuestMap(self)
         self.questMap.stop()

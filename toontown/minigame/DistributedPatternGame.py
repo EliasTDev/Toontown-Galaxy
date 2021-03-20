@@ -1,6 +1,6 @@
 """DistributedPatternGame module: contains the DistributedPatternGame class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase.ToonBaseGlobal import *
 from direct.interval.IntervalGlobal import *
 from .DistributedMinigame import *
@@ -415,7 +415,7 @@ class DistributedPatternGame(DistributedMinigame):
         # Stop music
         self.music.stop()
         
-        base.camLens.setFov(ToontownGlobals.DefaultCameraFov)
+        base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov/(4/3))
         NametagGlobals.setGlobalNametagScale(1.0)
         
         self.arrowKeys.destroy()

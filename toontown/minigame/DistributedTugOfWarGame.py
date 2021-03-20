@@ -1,6 +1,6 @@
 """DistributedTugOfWarGame module: contains the DistributedTugOfWarGame class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase.ToonBaseGlobal import *
 from direct.interval.IntervalGlobal import *
 from .DistributedMinigame import *
@@ -409,7 +409,7 @@ class DistributedTugOfWarGame(DistributedMinigame):
             del self.setupTrack
             self.setupTrack = None
 
-        base.camLens.setFov(ToontownGlobals.DefaultCameraFov)
+        base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov/(4/3))
         base.camLens.setNearFar(ToontownGlobals.DefaultCameraNear,
                                 ToontownGlobals.DefaultCameraFar)
         NametagGlobals.setGlobalNametagScale(1.0)

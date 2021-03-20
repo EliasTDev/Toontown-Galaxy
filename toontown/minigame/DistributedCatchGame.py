@@ -1,6 +1,6 @@
 """DistributedCatchGame module: contains the DistributedCatchGame class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase.ToonBaseGlobal import *
 from .DistributedMinigame import *
 from direct.interval.IntervalGlobal import *
@@ -913,7 +913,8 @@ class DistributedCatchGame(DistributedMinigame):
                        MinigameAvatarScorePanel.MinigameAvatarScorePanel(avId,
                                                                          avName)
             scorePanel.setScale(.9)
-            scorePanel.setPos(.75 - spacing*((self.numPlayers-1)-i), 0.0, .85)
+            scorePanel.setPos(-0.58 - spacing*((self.numPlayers-1)-i), 0.0, -0.15)
+            scorePanel.reparentTo(base.a2dTopRight)
             # make the panels slightly transparent
             scorePanel.makeTransparent(.75)
             self.scorePanels.append(scorePanel)
