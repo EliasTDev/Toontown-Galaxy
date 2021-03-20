@@ -1666,7 +1666,7 @@ class DistributedBattleBase(DistributedNode.DistributedNode, BattleBase):
                     self.interactivePropTrackBonus)
         # Establish battle camera parameters
         camera.wrtReparentTo(self)
-        base.camLens.setMin(self.camFov/(4/3))
+        base.camLens.setMinFov(self.camFov/(4/3))
         return None
 
     def exitHasLocalToon(self):

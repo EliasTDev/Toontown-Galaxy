@@ -732,20 +732,13 @@ class OTPClientRepository(ClientRepositoryBase):
         self.gotoFirstScreen()
 
     def gotoFirstScreen(self):
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
-        # attempt to grab the account server constants
-        try:
-            self.accountServerConstants = AccountServerConstants.AccountServerConstants(self)
-        except TTAccount.TTAccountException as e:
-            self.notify.debug(str(e))
-            self.loginFSM.request('failedToGetServerConstants', [e])
-            return
+      
 
         self.startReaderPollTask()
 
         # is this a new installation?
-        newInstall = launcher.getIsNewInstallation()
-        newInstall = base.config.GetBool("new-installation", newInstall)
+        #newInstall = launcher.getIsNewInstallation()
+       # newInstall = base.config.GetBool("new-installation", newInstall)
 
         self.loginFSM.request("login")
 
