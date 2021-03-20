@@ -1399,7 +1399,7 @@ class DoMinigame(MagicWord):
         return response 
 class SummonSuit(MagicWord):
     aliases = ['call', 'summoncog']
-    arguments = [('type', str, False, 'x'), ('level', int, True), ('skelecog', bool, False, False ), ('revives', int, False, 0)]
+    arguments = [('type', str, True, 'x'), ('level', int, True), ('skelecog', bool, False, False ), ('revives', int, False, 0)]
     accessLevel = 'DEVELOPER'
     desc = 'Summons a suit.'
     advancedDesc = """Calls in a cog from the sky.  If type is specified, it should be a
@@ -1418,13 +1418,22 @@ class SummonSuit(MagicWord):
         revives = None
 
         if len(args) > 0:
-            name = args[0]
-            if name == 'x':
-                name = None
+            try:
+                int(name)
+                return 'Argument 1 cannot be an integer.'
+            except:
+
+
+                name = args[0]
+                if name == 'x':
+                    name = None
+                if name not in SuitDNA.HeadTypes:
+                    return 'Not a valid cog head type.'
 
         if len(args) > 1:
             level = int(args[1])
-
+            if level > 25 or level <= 0:
+                return 'Invalid level specified.'
         if len(args) > 2:
             skelecog = args[2]
 
