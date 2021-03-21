@@ -100,7 +100,7 @@ class TTFriendsManager(DistributedObjectGlobal):
 
     def setTeleportResponse(self, id, available, district, hoodId, zoneId):
         base.localAvatar.teleportResponse(id, available, district, hoodId, zoneId)
-
+        
     def d_whisperSCTo(self, id, msgIndex):
         self.sendUpdate('whisperSCTo', [id, msgIndex])
 

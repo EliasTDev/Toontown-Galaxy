@@ -44,6 +44,9 @@ SalesTrack = ['ColdCaller',
 
 debugAttackSequence = {}
 
+def calculateHealth(stats, level):
+    return (stats['level'] + 1 + level) * (stats['level'] + 2 + level)
+
 def pickFromFreqList(freqList):
     """
     Function:    randomly choose an entry from the specified list
@@ -95,7 +98,7 @@ def getSuitVitals(name, level=-1):
     dict['level'] = getActualFromRelativeLevel(name, level)
     if dict['level'] == 11:
         level = 0
-    dict['hp'] = data['hp'][level]
+    dict['hp'] = calculateHealth(data, level)
     dict['def'] = data['def'][level]
     attacks = data['attacks']
     alist = []
@@ -406,28 +409,32 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitTheBigCheeseS,
             'pluralname': TTLocalizer.SuitTheBigCheeseP,
             'level': 7,
-            'hp': (90, 110, 132, 156, 200),  # actual suit level * 4
-            'def': (35, 40, 45, 50, 55),
-            'freq': (50, 30, 10, 5, 5),
-            'acc': (35, 40, 45, 50, 55),
-            'attacks': (('CigarSmoke',   (10, 12, 15, 18, 20),        # dmg
-                                         (55, 65, 75, 85, 95),   # acc 
-                                         (20, 20, 20, 20, 20)),  # freq
-                                         # not implemented defaults to glower power
+            #'hp': (90, 110, 132, 156, 200),  # actual suit level * 4
+            'def': (35, 40, 45, 50, 55, 60, 65, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70), 
+            'freq': (50, 30, 10, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5), 
+            'acc': (35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 95, 95, 95, 95, 95), 
+            'attacks': (('CigarSmoke',
+                      (10, 12, 15, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46), #dmg
+                      (55, 65, 75, 85, 90, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95), #acc
+                      (20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 95, 95, 95, 95, 95)), #freq
+                                         # not implemented defaults to glower power 
                                          # cringe, sidestep-left/right
-                        ('FloodTheMarket', (14, 16, 18, 20, 22),
-                                         (70, 75, 85, 90, 95), 
-                                         (10, 10, 10, 10, 10)),
+                        ('FloodTheMarket',
+                      (14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48),
+                      (70, 75, 85, 90, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95),
+                      (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 95, 95, 95, 95, 95)),
                                          # not implemented defaults to glower power
                                          # slip-backward&jump, sidestep-l/r
-                        ('SongAndDance', (14, 15, 17, 19, 20),
-                                         (60, 65, 70, 75, 80),
-                                         (20, 20, 20, 20, 20)),
+                        ('SongAndDance',
+                      (14, 15, 17, 19, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46),
+                      (60, 65, 70, 75, 80, 85, 90, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95),
+                      (20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20)),
                                          # not implemented defaults to glower power
                                          # bounce&slip-backward, sidestep-l/r
-                        ('TeeOff',       (8, 11, 14, 17, 20),
-                                         (55, 65, 70, 75, 80),
-                                         (50, 50, 50, 50, 50))) },
+                        ('TeeOff',
+                      (8, 11, 14, 17, 20, 22, 24, 26, 28, 30, 32, 35, 38, 41, 44, 47, 50, 53), #dmg
+                      (55, 65, 70, 75, 80, 85, 90, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95), #acc
+                      (50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50)))}, #freq
                                          # conked&slip-backward, duck
 
     #### Sales ####
@@ -436,7 +443,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitColdCallerS,
             'pluralname': TTLocalizer.SuitColdCallerP,
             'level': 0,
-            'hp': (6, 12, 20, 30, 42),  # actual suit level * 4
             'def': (2, 5, 10, 12, 15),
             'freq': (50, 30, 10, 5, 5),
             'acc': (35, 40, 45, 50, 55),
@@ -461,7 +467,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitTelemarketerS,
             'pluralname': TTLocalizer.SuitTelemarketerP,
             'level': 1,
-            'hp': (12, 20, 30, 42, 56),  # actual suit level * 4
             'def': (5, 10, 15, 20, 25),
             'freq': (50, 30, 10, 5, 5),
             'acc': (45, 50, 55, 60, 65),
@@ -485,7 +490,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitNameDropperS,
             'pluralname': TTLocalizer.SuitNameDropperP,
             'level': 2,
-            'hp': (20, 30, 42, 56, 72),  # actual suit level * 4
             'def': (10, 15, 20, 25, 30),
             'freq': (50, 30, 10, 5, 5),
             'acc': (65, 70, 75, 80, 85),
@@ -510,7 +514,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitGladHanderS,
             'pluralname': TTLocalizer.SuitGladHanderP,
             'level': 3,
-            'hp': (30, 42, 56, 72, 90),  # actual suit level * 4
             'def': (15, 20, 25, 30, 35),
             'freq': (50, 30, 10, 5, 5),
             'acc': (70, 75, 80, 82, 85),
@@ -535,7 +538,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitMoverShakerS,
             'pluralname': TTLocalizer.SuitMoverShakerP,
             'level': 4,
-            'hp': (42, 56, 72, 90, 110),  # actual suit level * 4
             'def': (20, 25, 30, 35, 40),
             'freq': (50, 30, 10, 5, 5),
             'acc': (35, 40, 45, 50, 55),
@@ -565,7 +567,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitTwoFaceS,
             'pluralname': TTLocalizer.SuitTwoFaceP,
             'level': 5,
-            'hp': (56, 72, 90, 110, 132),  # actual suit level * 4
             'def': (25, 30, 35, 40, 45),
             'freq': (50, 30, 10, 5, 5),
             'acc': (35, 40, 45, 50, 55),
@@ -591,7 +592,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitTheMinglerS,
             'pluralname': TTLocalizer.SuitTheMinglerP,
             'level': 6,
-            'hp': (72, 90, 110, 132, 156),  # actual suit level * 4
             'def': (30, 35, 40, 45, 50),
             'freq': (50, 30, 10, 5, 5),
             'acc': (35, 40, 45, 50, 55),
@@ -621,17 +621,20 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitMrHollywoodS,
             'pluralname': TTLocalizer.SuitMrHollywoodP,
             'level': 7,
-            'hp': (90, 110, 132, 156, 200),  # actual suit level * 4
-            'def': (35, 40, 45, 50, 55),
-            'freq': (50, 30, 10, 5, 5),
-            'acc': (35, 40, 45, 50, 55),
-            'attacks': (('PowerTrip',    (10, 12, 15, 18, 20),   # dmg
-                                         (55, 65, 75, 85, 95),   # acc 
-                                         (50, 50, 50, 50, 50)),  # freq
+            'def': (35, 40, 45, 50, 55, 60, 65, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70), 
+            'freq': (50, 30, 10, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5), 
+            'acc': (35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 95, 95, 95, 95, 95), 
+          'attacks': (
+                     (
+                     'PowerTrip',
+                     (10, 12, 15, 18, 20, 22, 24, 26, 28, 30, 33, 36, 40, 42, 44, 46, 48, 50),
+                     (55, 65, 75, 85, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95),
+                     (50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50)),
                                          # slip-forward, jump
-                        ('RazzleDazzle', (8, 11, 14, 17, 20),
-                                         (70, 75, 85, 90, 95), 
-                                         (50, 50, 50, 50, 50)),
+                     ('RazzleDazzle',
+                     (8, 11, 14, 17, 20, 24, 28, 32, 36, 40, 44, 48, 52, 54, 56, 58, 60, 62),
+                     (70, 75, 85, 90, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95),
+                     (50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50)))}, 
                                          # conked&slip-backward, sidestep-l/r
                         #('SandTrap',     (14, 15, 17, 19, 20),
                         #                 (60, 65, 70, 75, 80),
@@ -642,7 +645,6 @@ SuitAttributes = {
                         #                 (65, 75, 80, 85, 95),
                         #                 (0, 0, 0, 0, 0)),
                                          # not implemented defaults to razzle dazzle
-                        ) },
                                          # bounce&slip-backward, sidestep-l/r
 
     #### Money ####
@@ -651,7 +653,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitShortChangeS,
             'pluralname': TTLocalizer.SuitShortChangeP,
             'level': 0,
-            'hp': (6, 12, 20, 30, 42),  # actual suit level * 4
             'def': (2, 5, 10, 12, 15),
             'freq': (50, 30, 10, 5, 5),
             'acc': (35, 40, 45, 50, 55),
@@ -675,7 +676,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitPennyPincherS,
             'pluralname': TTLocalizer.SuitPennyPincherP,
             'level': 1,
-            'hp': (12, 20, 30, 42, 56),  # actual suit level * 4
             'def': (5, 10, 15, 20, 25),
             'freq': (50, 30, 10, 5, 5),
             'acc': (45, 50, 55, 60, 65),
@@ -701,7 +701,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitTightwadS,
             'pluralname': TTLocalizer.SuitTightwadP,
             'level': 2,
-            'hp': (20, 30, 42, 56, 72),  # actual suit level * 4
             'def': (10, 15, 20, 25, 30),
             'freq': (50, 30, 10, 5, 5),
             'acc': (65, 70, 75, 80, 85),
@@ -730,7 +729,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitBeanCounterS,
             'pluralname': TTLocalizer.SuitBeanCounterP,
             'level': 3,
-            'hp': (30, 42, 56, 72, 90),  # actual suit level * 4
             'def': (15, 20, 25, 30, 35),
             'freq': (50, 30, 10, 5, 5),
             'acc': (70, 75, 80, 82, 85),
@@ -755,7 +753,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitNumberCruncherS,
             'pluralname': TTLocalizer.SuitNumberCruncherP,
             'level': 4,
-            'hp': (42, 56, 72, 90, 110),  # actual suit level * 4
             'def': (20, 25, 30, 35, 40),
             'freq': (50, 30, 10, 5, 5),
             'acc': (35, 40, 45, 50, 55),
@@ -781,7 +778,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitMoneyBagsS,
             'pluralname': TTLocalizer.SuitMoneyBagsP,
             'level': 5,
-            'hp': (56, 72, 90, 110, 132),  # actual suit level * 4
             'def': (25, 30, 35, 40, 45),
             'freq': (50, 30, 10, 5, 5),
             'acc': (35, 40, 45, 50, 55),
@@ -803,7 +799,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitLoanSharkS,
             'pluralname': TTLocalizer.SuitLoanSharkP,
             'level': 6,
-            'hp': (72, 90, 110, 132, 156),  # actual suit level * 4
             'def': (30, 35, 40, 45, 50),
             'freq': (50, 30, 10, 5, 5),
             'acc': (35, 40, 45, 50, 55),
@@ -829,10 +824,9 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitRobberBaronS,
             'pluralname': TTLocalizer.SuitRobberBaronP,
             'level': 7,
-            'hp': (90, 110, 132, 156, 200),  # actual suit level * 4
-            'def': (35, 40, 45, 50, 55),
-            'freq': (50, 30, 10, 5, 5),
-            'acc': (35, 40, 45, 50, 55),
+            'def': (35, 40, 45, 50, 55, 60, 65, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70), 
+            'freq': (50, 30, 10, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5), 
+            'acc': (35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 95, 95, 95, 95, 95), 
             'attacks': (
                         #('FiveOClockShadow', (14, 17, 19, 21, 24),   # dmg
                         #                 (55, 65, 75, 85, 95),   # acc 
@@ -844,13 +838,15 @@ SuitAttributes = {
                         #                 (0, 0, 0, 0, 0)),
                                          # not implemented defaults to tee off
                                          # slip-backward&jump, sidestep-l/r
-                        ('PowerTrip',    (11, 14, 16, 18, 21),
-                                         (60, 65, 70, 75, 80),
-                                         (50, 50, 50, 50, 50)),
+                        ('PowerTrip',
+                     (11, 14, 16, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60),
+                     (60, 65, 70, 75, 80, 85, 90, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95),
+                     (50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50)),
                                          # slip-forward, jump
-                        ('TeeOff',       (10, 12, 14, 16, 18),
-                                         (60, 65, 75, 85, 90),
-                                         (50, 50, 50, 50, 50))) },
+                        ('TeeOff',
+                     (10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44),
+                     (60, 65, 75, 85, 90, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95),
+                     (50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50)))},
                                          # conked&slip-backward, duck
 
     #### Legal ####
@@ -859,7 +855,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitBottomFeederS,
             'pluralname': TTLocalizer.SuitBottomFeederP,
             'level': 0,
-            'hp': (6, 12, 20, 30, 42),  # actual suit level * 4
             'def': (2, 5, 10, 12, 15),
             'freq': (50, 30, 10, 5, 5),
             'acc': (35, 40, 45, 50, 55),
@@ -883,7 +878,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitBloodsuckerS,
             'pluralname': TTLocalizer.SuitBloodsuckerP,
             'level': 1,
-            'hp': (12, 20, 30, 42, 56),  # actual suit level * 4
             'def': (5, 10, 15, 20, 25),
             'freq': (50, 30, 10, 5, 5),
             'acc': (45, 50, 55, 60, 65),
@@ -907,7 +901,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitDoubleTalkerS,
             'pluralname': TTLocalizer.SuitDoubleTalkerP,
             'level': 2,
-            'hp': (20, 30, 42, 56, 72),  # actual suit level * 4
             'def': (10, 15, 20, 25, 30),
             'freq': (50, 30, 10, 5, 5),
             'acc': (65, 70, 75, 80, 85),
@@ -940,7 +933,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitAmbulanceChaserS,
             'pluralname': TTLocalizer.SuitAmbulanceChaserP,
             'level': 3,
-            'hp': (30, 42, 56, 72, 90),  # actual suit level * 4
             'def': (15, 20, 25, 30, 35),
             'freq': (50, 30, 10, 5, 5),
             'acc': (65, 70, 75, 80, 85),
@@ -966,7 +958,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitBackStabberS,
             'pluralname': TTLocalizer.SuitBackStabberP,
             'level': 4,
-            'hp': (42, 56, 72, 90, 110),  # actual suit level * 4
             'def': (20, 25, 30, 35, 40),
             'freq': (50, 30, 10, 5, 5),
             'acc': (35, 40, 45, 50, 55),
@@ -988,7 +979,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitSpinDoctorS,
             'pluralname': TTLocalizer.SuitSpinDoctorP,
             'level': 5,
-            'hp': (56, 72, 90, 110, 132),  # actual suit level * 4
             'def': (25, 30, 35, 40, 45),
             'freq': (50, 30, 10, 5, 5),
             'acc': (35, 40, 45, 50, 55),
@@ -1014,7 +1004,6 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitLegalEagleS,
             'pluralname': TTLocalizer.SuitLegalEagleP,
             'level': 6,
-            'hp': (72, 90, 110, 132, 156),  # actual suit level * 4
             'def': (30, 35, 40, 45, 50),
             'freq': (50, 30, 10, 5, 5),
             'acc': (35, 40, 45, 50, 55),
@@ -1040,10 +1029,9 @@ SuitAttributes = {
             'singularname': TTLocalizer.SuitBigWigS,
             'pluralname': TTLocalizer.SuitBigWigP,
             'level': 7,
-            'hp': (90, 110, 132, 156, 200),  # actual suit level * 4
-            'def': (35, 40, 45, 50, 55),
-            'freq': (50, 30, 10, 5, 5),
-            'acc': (35, 40, 45, 50, 55),
+            'def': (35, 40, 45, 50, 55, 60, 65, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70), 
+            'freq': (50, 30, 10, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5), 
+             'acc': (35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 95, 95, 95, 95, 95), 
             'attacks': (
                         #('CigarSmoke',   (12, 14, 16, 18, 20),   # dmg
                         #                 (65, 75, 85, 90, 95),   # acc 
@@ -1055,13 +1043,16 @@ SuitAttributes = {
                         #                 (0, 0, 0, 0, 0)),
                                          # not implemented defaults to finger wag
                                          # slip-backward, sidestep-l/r
-                        ('PowerTrip',    (10, 11, 13, 15, 16),
-                                         (75, 80, 85, 90, 95),
-                                         (50, 50, 50, 50, 50)),
+                        ('PowerTrip',
+                     (10, 11, 13, 15, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42),
+                     (75, 80, 85, 90, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95),
+                     (50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50)),
+
                                          # slip-forward, jump
-                        ('ThrowBook',    (13, 15, 17, 19, 21),
-                                         (80, 85, 85, 85, 90),
-                                         (50, 50, 50, 50, 50))) },
+                        ('ThrowBook',
+                     (13, 15, 17, 19, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60),
+                     (80, 85, 85, 85, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90),
+                     (50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50))) },
                                          # not implemented defaults to finger wag
                                          # conked&neutral, sidestep-l/r
 

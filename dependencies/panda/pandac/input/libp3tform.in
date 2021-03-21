@@ -1,4 +1,4 @@
-1608787790
+1609527812
 3 3
 10 libp3tform 4 v_mB 12 panda3d.core 
 258
@@ -3628,10 +3628,11 @@ Transform2SG::~Transform2SG(void);
 
 634 27 MouseWatcherParameter const 0 8832 27 MouseWatcherParameter const 27 MouseWatcherParameter const 0 0 551 0 0 0 0 0 0 0 0 0 0
 
-635 8 Encoding 0 794624 21 TextEncoder::Encoding 21 TextEncoder::Encoding 636 0 0 0 0 0 0 0 0 0 4 9 E_iso8859 22 TextEncoder::E_iso8859 0
+635 8 Encoding 0 794624 21 TextEncoder::Encoding 21 TextEncoder::Encoding 636 0 0 0 0 0 0 0 0 0 5 9 E_iso8859 22 TextEncoder::E_iso8859 0
 0 6 E_utf8 19 TextEncoder::E_utf8 0
 1 9 E_utf16be 22 TextEncoder::E_utf16be 0
-2 9 E_unicode 22 TextEncoder::E_unicode 33
+2 7 E_cp437 20 TextEncoder::E_cp437 0
+3 9 E_unicode 22 TextEncoder::E_unicode 33
 // Deprecated alias for E_utf16be
 2 0 0
 

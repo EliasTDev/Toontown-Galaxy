@@ -19,7 +19,7 @@ set /P INPUT=Selection:
 if %INPUT%==1 (
     set TTG_GAMESERVER=127.0.0.1
 ) else if %INPUT%==2 (
-    set TTG_GAMESERVER=13.80.121.157
+    set TTG_GAMESERVER=52.147.202.54
 ) else if %INPUT%==4 (
     set TTG_GAMESERVER=127.0.0.1
 ) else if %INPUT%==5 (

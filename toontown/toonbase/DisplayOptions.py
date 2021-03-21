@@ -4,12 +4,12 @@ import os
 import sys
 import datetime
 from panda3d.core import loadPrcFileData, WindowProperties
-from libotp import Settings 
+from settings import Settings 
 from otp.otpgui import OTPDialog
 from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPRender
 from direct.directnotify import DirectNotifyGlobal
-
+from libotp import *
 try:        
     import embedded
 except:
@@ -33,7 +33,7 @@ class DisplayOptions:
         toonChatSounds = Settings.getToonChatSounds()
         musicVol = Settings.getMusicVolume()
         sfxVol = Settings.getSfxVolume()
-        resList = [(640, 480),(800,600),(1024,768),(1280,1024),(1600,1200)] #copied from Resolution in settingsFile.h
+        resList = [(640, 480),(800,600), (1024,768), (1280, 720), (1280,1024), (1440, 900), (1600,1200), (1920, 1080), (4096, 2160)] #copied from Resolution in settingsFile.h
         res = resList[Settings.getResolution()]
         embed = Settings.getEmbeddedMode()
         self.notify.debug("before prc settings embedded mode=%s" % str(embed))

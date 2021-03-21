@@ -31,6 +31,29 @@ class game:
     process = "client"
 builtins.game = game()
 
+from settings import Settings 
+mode = not Settings.getWindowedMode()
+music = Settings.getMusic()
+sfx = Settings.getSfx()
+toonChatSounds = Settings.getToonChatSounds()
+musicVol = Settings.getMusicVolume()
+sfxVol = Settings.getSfxVolume()
+resList = [(640, 480),(800,600),(1024,768),(1280,1024),(1600,1200), (1920, 1080), (4096, 2160)] #copied from Resolution in settingsFile.h
+res = resList[Settings.getResolution()]
+embed = Settings.getEmbeddedMode()
+if mode == None:
+    mode = 1
+if res == None:
+    res = (800,600)
+loadPrcFileData('Settings: res', 'win-size %d %d' % (res[0], res[1]))
+loadPrcFileData('Settings: fullscreen', 'fullscreen %s' % mode)
+loadPrcFileData('Settings: music', 'audio-music-active %s' % music)
+loadPrcFileData('Settings: sfx', 'audio-sfx-active %s' % sfx)
+loadPrcFileData('Settings: musicVol', 'audio-master-music-volume %s' % musicVol)
+loadPrcFileData('Settings: sfxVol', 'audio-master-sfx-volume %s' % sfxVol)
+loadPrcFileData('Settings: toonChatSounds', 'toon-chat-sounds %s' % toonChatSounds)
+
+
 import time
 import os
 import sys
@@ -38,6 +61,9 @@ import random
 # Need to import __builtin__ and use the __builtin__.foo = x
 # technique here in case you start toontown from the command line
 import builtins
+from toontown.discord.DiscordRPC import DiscordRPC
+builtins.Discord = DiscordRPC()
+Discord.launching()
 
 # See if we have a launcher, if we do not, make an empty one
 try:
@@ -159,7 +185,7 @@ if base.musicManagerIsValid:
     if winter:
         music = base.musicManager.getSound('phase_3/audio/bgm/TTG_winter.ogg')
     else:
-        music = base.musicManager.getSound("phase_3/audio/bgm/TTGIntro.mogg")
+        music = base.musicManager.getSound("phase_3/audio/bgm/TTGIntro.ogg")
     if music:
         music.setLoop(1)
         music.setVolume(0.9)
@@ -247,7 +273,7 @@ base.loader = base.loader
 builtins.loader = base.loader
 
 autoRun = ConfigVariableBool('toontown-auto-run', 1)
-
+Discord.startTasks()
 if autoRun and launcher.isDummy():
     # This try .. except block exists solely to test the logic of
     # PythonUtil.describeException.  It's not at all necessary, and is

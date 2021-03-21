@@ -51,9 +51,9 @@ class DistributedDoorEntityLock(DistributedDoorEntityBase.LockBase, FourState.Fo
         self.rightNodePath = rightNodePath
         self.initialStateIndex = stateIndex
 
-        assert(self.debugPrint(
-            "Lock(door=%s, lockIndex=%s, lockedNodePath=%s, leftNodePath=%s, rightNodePath=%s, stateIndex=%s)"%
-            (door, lockIndex, lockedNodePath, leftNodePath, rightNodePath, stateIndex)))
+        #(
+            #"Lock(door=%s, lockIndex=%s, lockedNodePath=%s, leftNodePath=%s, rightNodePath=%s, stateIndex=%s)"%
+            #(door, lockIndex, lockedNodePath, leftNodePath, rightNodePath, stateIndex)))
         FourState.FourState.__init__(self, self.stateNames, self.stateDurations)
 
     def delete(self):
@@ -63,12 +63,12 @@ class DistributedDoorEntityLock(DistributedDoorEntityBase.LockBase, FourState.Fo
         #DistributedDoorEntityBase.LockBase.delete(self)
             
     def setup(self):
-        assert(self.debugPrint("setup()"))
+        #("setup()"))
         self.setLockState(self.initialStateIndex)
         del self.initialStateIndex
             
     def takedown(self):
-        assert(self.debugPrint("takedown()"))
+        #("takedown()"))
         if self.track is not None:
             self.track.pause()
             self.track = None
@@ -78,7 +78,7 @@ class DistributedDoorEntityLock(DistributedDoorEntityBase.LockBase, FourState.Fo
         self.fsm = None           
 
     def setLockState(self, stateIndex):
-        assert(self.debugPrint("setLockState(stateIndex=%s)"%(stateIndex,)))
+        #("setLockState(stateIndex=%s)"%(stateIndex,)))
         assert 0 <= stateIndex <= 4
         #self.stateTime = globalClockDelta.localElapsedTime(timeStamp)
         if self.stateIndex != stateIndex:
@@ -86,20 +86,20 @@ class DistributedDoorEntityLock(DistributedDoorEntityBase.LockBase, FourState.Fo
             if state is not None:
                 self.fsm.request(state)
                 #messenger.send(self.getName(), [self.isUnlocked()])
-            else:
-                assert(self.debugPrint("setLockState() ...State Not Found!"))
+            #else:
+                #("setLockState() ...State Not Found!"))
         #else:
-        #    assert(self.debugPrint("setLockState() ...already in that state."))
+        #    #("setLockState() ...already in that state."))
 
     def isUnlocked(self):
-        assert(self.debugPrint("isUnlocked() returning %s"%(self.isOn(),)))
+        #("isUnlocked() returning %s"%(self.isOn(),)))
         return self.isOn()
 
     def enterState1(self):
         """
         Animate the lock locking.
         """
-        assert self.debugPrint("lockingTrack()")
+        #("lockingTrack()")
         FourState.FourState.enterState1(self)
         beat=self.duration*0.05
         slideSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_arms_retracting.ogg")
@@ -142,7 +142,7 @@ class DistributedDoorEntityLock(DistributedDoorEntityBase.LockBase, FourState.Fo
         
         Setup the animation in the locked position.
         """
-        assert self.debugPrint("locked()")
+        #("locked()")
         FourState.FourState.enterState2(self)
         self.setTrack(None)
         self.leftNodePath.setPos(self.lockedNodePath, Vec3(0.0))
@@ -155,7 +155,7 @@ class DistributedDoorEntityLock(DistributedDoorEntityBase.LockBase, FourState.Fo
         """
         Animate the lock unlocking.
         """
-        assert self.debugPrint("unlockingTrack()")
+        #("unlockingTrack()")
         FourState.FourState.enterState3(self)
         unlockSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_door_unlock.ogg")
         slideSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_arms_retracting.ogg")
@@ -201,7 +201,7 @@ class DistributedDoorEntityLock(DistributedDoorEntityBase.LockBase, FourState.Fo
         
         Setup the animation in the unlocked position.
         """
-        assert self.debugPrint("unlocked()")
+        #("unlocked()")
         FourState.FourState.enterState4(self)
         self.setTrack(None)
         self.leftNodePath.setPos(self.lockedNodePath, self.slideLeft)
@@ -210,13 +210,6 @@ class DistributedDoorEntityLock(DistributedDoorEntityBase.LockBase, FourState.Fo
         self.rightNodePath.hide()
         self.lockedNodePath.hide()
 
-    if __debug__:
-        def debugPrint(self, message):
-            """for debugging"""
-            return self.door.notify.debug(
-                    "%s (%s) %s"%(self.door.__dict__.get('entId', '?'), 
-                                  self.lockIndex,
-                                  message))
 
 
 
@@ -232,15 +225,12 @@ class DistributedDoorEntity(
     
     See Also: "FactoryEntityTypes.py", class DistributedDoorEntityLock
     """
-    if __debug__:
-        notify = DirectNotifyGlobal.directNotify.newCategory(
-                'DistributedDoorEntity')
 
     def __init__(self, cr):
         """
         constructor for the DistributedDoorEntity
         """
-        assert(self.debugPrint("DistributedDoorEntity()"))
+        #("DistributedDoorEntity()"))
         self.innerDoorsTrack = None
         self.isVisReady = 0
         self.isOuterDoorOpen = 0
@@ -255,18 +245,18 @@ class DistributedDoorEntity(
         This method is called when the DistributedDoorEntity is reintroduced
         to the world, either for the first time or from the cache.
         """
-        assert(self.debugPrint("generate()"))
+        #("generate()"))
         DistributedEntity.DistributedEntity.generate(self)
     
     def announceGenerate(self):
-        assert(self.debugPrint("announceGenerate()"))
+        #("announceGenerate()"))
         self.doorNode = hidden.attachNewNode('door-%s' % self.entId)
         DistributedEntity.DistributedEntity.announceGenerate(self)
         BasicEntities.NodePathAttribsProxy.initNodePathAttribs(self)
         self.setup()
     
     def disable(self):
-        assert(self.debugPrint("disable()"))
+        #("disable()"))
         self.takedown()
         self.doorNode.removeNode()
         del self.doorNode
@@ -275,7 +265,7 @@ class DistributedDoorEntity(
         # self.delete() will automatically be called.
     
     def delete(self):
-        assert(self.debugPrint("delete()"))
+        #("delete()"))
         DistributedEntity.DistributedEntity.delete(self)
 
     def setup(self):
@@ -333,7 +323,7 @@ class DistributedDoorEntity(
         self.acceptAvatar()
     
     def enterTrigger(self, args=None):
-        assert(self.debugPrint("enterTrigger(args="+str(args)+")"))
+        #("enterTrigger(args="+str(args)+")"))
         messenger.send("DistributedInteractiveEntity_enterTrigger")
         # This might be a good spot to add a door sound effect.
         self.sendUpdate("requestOpen")
@@ -341,17 +331,17 @@ class DistributedDoorEntity(
         # state that could be a result of this call or something else.
     
     def exitTrigger(self, args=None):
-        assert(self.debugPrint("exitTrigger(args="+str(args)+")"))
+        #("exitTrigger(args="+str(args)+")"))
         messenger.send("DistributedInteractiveEntity_exitTrigger")
 
     def okToUnblockVis(self):
-        assert(self.debugPrint("okToUnblockVis()"))
+        #("okToUnblockVis()"))
         VisibilityBlocker.VisibilityBlocker.okToUnblockVis(self)
         self.isVisReady = 1
         self.openInnerDoors()
     
     def changedOnState(self, isOn):
-        assert(self.debugPrint("changedOnState(isOn=%s)"%(isOn,)))
+        #("changedOnState(isOn=%s)"%(isOn,)))
         # The open state is the inverse of the FourState's On value.
         messenger.send(self.getOutputEventName(), [not isOn])
     
@@ -366,7 +356,7 @@ class DistributedDoorEntity(
         Set the state for all four locks.
         Required dc field.
         """
-        assert(self.debugPrint("setLocksState(stateBits=0x%x)"%(stateBits)))
+        #("setLocksState(stateBits=0x%x)"%(stateBits)))
         lock0 =  stateBits & 0x0000000f
         lock1 = (stateBits & 0x000000f0) >>  4
         lock2 = (stateBits & 0x00000f00) >>  8
@@ -386,7 +376,7 @@ class DistributedDoorEntity(
         """
         Required dc field.
         """
-        assert(self.debugPrint("setDoorState(stateIndex=%s, timeStamp=%s)"%(stateIndex, timeStamp)))
+        #("setDoorState(stateIndex=%s, timeStamp=%s)"%(stateIndex, timeStamp)))
         assert 0 <= stateIndex <= 4
         self.stateTime = globalClockDelta.localElapsedTime(timeStamp)
         if self.isGenerated():
@@ -394,10 +384,10 @@ class DistributedDoorEntity(
                 state = self.states.get(stateIndex)
                 if state is not None:
                     self.fsm.request(state)
-                else:
-                    assert(self.debugPrint("setDoorState() ...invalid state (stateIndex=%s)"%(stateIndex,)))
+                #else:
+                    #("setDoorState() ...invalid state (stateIndex=%s)"%(stateIndex,)))
             #else:
-            #    assert(self.debugPrint("setDoorState() ...already in that state."))
+            #    #("setDoorState() ...already in that state."))
         else:
             self.initialState=stateIndex
             self.initialStateTimestamp=timeStamp
@@ -411,7 +401,7 @@ class DistributedDoorEntity(
         return None
     
     def setupDoor(self):
-        assert(self.debugPrint("setupDoor()"))
+        #("setupDoor()"))
         model=loader.loadModel("phase_9/models/cogHQ/CogDoorHandShake")
         assert not model.isEmpty()
         if model:
@@ -605,7 +595,7 @@ class DistributedDoorEntity(
         del self.initialStateTimestamp
     
     def setInnerDoorsTrack(self, track):
-        assert(self.debugPrint("setTrack(track=%s)"%(track,)))
+        #("setTrack(track=%s)"%(track,)))
         if self.innerDoorsTrack is not None:
             self.innerDoorsTrack.pause()
             self.innerDoorsTrack = None
@@ -618,8 +608,8 @@ class DistributedDoorEntity(
         Animate the door opening.
         """
         print("openInnerDoors")
-        assert(self.debugPrint("openInnerDoors() self.isVisBlocker=%s, self.isVisReady=%s, self.isOuterDoorOpen=%s"%(
-            self.isVisBlocker, self.isVisReady, self.isOuterDoorOpen)))
+        #("openInnerDoors() self.isVisBlocker=%s, self.isVisReady=%s, self.isOuterDoorOpen=%s"%(
+            #self.isVisBlocker, self.isVisReady, self.isOuterDoorOpen)))
         if (not self.level.complexVis()) or (self.isOuterDoorOpen and (not self.isVisBlocker or self.isVisReady)):
             print("openInnerDoors stage Two")
             duration=self.duration
@@ -663,7 +653,7 @@ class DistributedDoorEntity(
         """
         Animate the door opening.
         """
-        assert(self.debugPrint("closeInnerDoors()"))
+        #("closeInnerDoors()"))
         duration=self.duration
         slideSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_door_open_sliding.ogg")
         finalSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_door_open_final.ogg")
@@ -706,7 +696,7 @@ class DistributedDoorEntity(
         """
         Animate the outer door opening.
         """
-        assert(self.debugPrint("openingTrack()"))
+        #("openingTrack()"))
         FourState.FourState.enterState1(self)
         self.isOuterDoorOpen = 0
         if self.isVisBlocker:
@@ -753,7 +743,7 @@ class DistributedDoorEntity(
         """
         Setup the animation in the open position.
         """
-        assert(self.debugPrint("openTrack()"))
+        #("openTrack()"))
         FourState.FourState.enterState2(self)
         self.isOuterDoorOpen = 1
         self.setTrack(None)
@@ -764,7 +754,7 @@ class DistributedDoorEntity(
         self.doorBottom.stash()
 
         if not self.isVisBlocker or not self.isWaitingForUnblockVis():
-            assert(self.debugPrint("openTrack() ...forcing inner doors open."))
+            #("openTrack() ...forcing inner doors open."))
             self.setInnerDoorsTrack(None)
             self.doorLeft.setPos(Vec3(-moveDistance, 0.0, 0.0))
             self.doorRight.setPos(Vec3(moveDistance, 0.0, 0.0))
@@ -773,7 +763,7 @@ class DistributedDoorEntity(
         # else: let the pending unblock handle the doors.
     
     def exitState2(self):
-        assert(self.debugPrint("exitOpenTrack()"))
+        #("exitOpenTrack()"))
         FourState.FourState.exitState2(self)
         self.cancelUnblockVis()
     
@@ -781,7 +771,7 @@ class DistributedDoorEntity(
         """
         Animate the door closing.
         """
-        assert(self.debugPrint("closingTrack()"))
+        #("closingTrack()"))
         FourState.FourState.enterState3(self)
         duration=self.duration
         slideSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_door_open_sliding.ogg")
@@ -823,7 +813,7 @@ class DistributedDoorEntity(
         """
         Setup the animation in the closed position.
         """
-        assert(self.debugPrint("closedTrack()"))
+        #("closedTrack()"))
         FourState.FourState.enterState4(self)
         self.setisOuterDoorOpen(0)
         self.isVisReady = 0
@@ -841,11 +831,6 @@ class DistributedDoorEntity(
         self.doorLeft.setPos(Vec3(0.0))
         self.doorRight.setPos(Vec3(0.0))
 
-    if __debug__:
-        def debugPrint(self, message):
-            """for debugging"""
-            return self.notify.debug(
-                    str(self.__dict__.get('entId', '?'))+' '+message)
 
     if __dev__:
         def initWantDoors(self):

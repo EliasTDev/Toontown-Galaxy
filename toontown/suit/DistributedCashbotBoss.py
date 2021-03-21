@@ -1018,6 +1018,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     ##### Elevator state #####
 
     def enterElevator(self):
+        Discord.cfo()
         DistributedBossCog.DistributedBossCog.enterElevator(self)
 
         # The CFO himself is offstage at this point.

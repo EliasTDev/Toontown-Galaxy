@@ -70,7 +70,7 @@ class TownBattleSOSPanel(DirectFrame, StateData.StateData):
             )
 
         self.NPCFriendPanel = NPCFriendPanel.NPCFriendPanel(
-            parent = self, doneEvent = self.doneEvent)
+            parent = self, doneEvent = self.doneEvent, fCallable=1)
         self.NPCFriendPanel.setPos(-0.75,0,-0.15)
         self.NPCFriendPanel.setScale(0.325)
 
@@ -359,7 +359,7 @@ class TownBattleSOSPanel(DirectFrame, StateData.StateData):
             else:
                 self.NPCFriends[friend] = count
 
-        self.NPCFriendPanel.update(self.NPCFriends, fCallable = 1)
+        self.NPCFriendPanel.update(self.NPCFriends)
 
     def __updateTitleText(self):
         # Change the top text according to whether anyone's

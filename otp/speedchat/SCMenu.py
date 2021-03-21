@@ -461,11 +461,6 @@ class SCMenu(SCObject, NodePath):
 
         SCObject.finalize(self)
 
-        if __debug__:
-            # make sure all of our members know that we are their parent menu
-            # (who's yo daddy?)
-            for member in self:
-                assert member.getParentMenu() is self
 
         # we aren't interested in members that aren't viewable.
         # build a list of viewable members. Also parent viewable

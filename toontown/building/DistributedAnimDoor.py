@@ -18,9 +18,6 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
     Too much stuff has changed to put them in DistributedDoor.py
     """
 
-    if __debug__:
-        notify = DirectNotifyGlobal.directNotify.newCategory('DistributedAnimDoor')
-        #notify.setDebug(True)
 
     def __init__(self, cr):
         """constructor for the DistributedDoor"""
@@ -51,7 +48,6 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
             else:
                 # tempDoorNodePath gets removed in disable
                 # ...exterior door.                
-                assert(self.debugPrint("getDoorNodePath() -- exterior"))
                 building = self.getBuilding()
                 doorNP = building.find("**/door_origin")
                 self.notify.debug("creating doorOrigin at %s %s" % (str(doorNP.getPos()),
@@ -118,7 +114,6 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
         #if( __debug__ ):
         #    import pdb
         #    pdb.set_trace()
-        assert(self.debugPrint("enterOpening()"))
 
         # Right door:
         bldgActor = self.getBuildingActor()
@@ -160,7 +155,6 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
     ##### closing state #####
 
     def enterClosing(self, ts):
-        assert(self.debugPrint("enterClosing()"))
         # Right door:
         bldgActor = self.getBuildingActor()
         rightDoor = bldgActor.controlJoint(None, "modelRoot", "def_right_door")
@@ -197,7 +191,6 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
     ##### Exit Door opening state #####
 
     def exitDoorEnterOpening(self, ts):
-        assert(self.debugPrint("exitDoorEnterOpening()"))
         bldgActor = self.getBuildingActor()
         leftDoor = bldgActor.controlJoint(None, "modelRoot", "def_left_door")
         if self.leftSwing:
@@ -229,7 +222,6 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
     ##### Exit Door closing state #####
     
     def exitDoorEnterClosing(self, ts):
-        assert(self.debugPrint("exitDoorEnterClosing()"))
         # Start animation:
 
         bldgActor = self.getBuildingActor()

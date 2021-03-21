@@ -1227,6 +1227,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         """
         The first state, toons are riding the elevator
         """
+        Discord.cj()
         self.notify.debug("----- enterElevator")
         DistributedBossCog.DistributedBossCog.enterElevator(self)
 

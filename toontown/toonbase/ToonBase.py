@@ -9,13 +9,14 @@ from direct.directnotify import DirectNotifyGlobal
 from . import ToontownLoader
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 import sys
 import os
 from toontown.toonbase import TTLocalizer
 from toontown.toonbase import ToontownBattleGlobals
 from toontown.launcher import ToontownDownloadWatcher
 from otp.otpbase import OTPGlobals 
+from settings import *
 from libotp import *
 class ToonBase(OTPBase.OTPBase):
     """ToonBase class"""
@@ -36,7 +37,7 @@ class ToonBase(OTPBase.OTPBase):
             toonChatSounds = Settings.getToonChatSounds()
             musicVol = Settings.getMusicVolume()
             sfxVol = Settings.getSfxVolume()
-            resList = [(640, 480),(800,600),(1024,768),(1280,1024),(1600,1200)] #copied from Resolution in settingsFile.h
+            resList = [(640, 480),(800,600),(1024,768),(1280,1024),(1600,1200), (1920, 1080), (4096, 2160)] #copied from Resolution in settingsFile.h
             res = resList[Settings.getResolution()]
 
             if mode == None:
@@ -81,6 +82,7 @@ class ToonBase(OTPBase.OTPBase):
 
         # Music should be a bit quieter in toontown
         self.musicManager.setVolume(0.65)
+        base.musicManager.setVolume(Settings.getMusicVolume())
 
         # Set the default background color.
         self.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
@@ -278,6 +280,10 @@ class ToonBase(OTPBase.OTPBase):
         self.isSprinting = 0
         self.accept('shift', self.startSprint)
         self.accept('shift-up', self.stopSprint)
+        if Settings.getFrameRateMeter():
+            base.setFrameRateMeter(True)
+        else:
+            base.setFrameRateMeter(False)
         #self.resetMusic = self.loader.loadMusic("phase_3/audio/bgm/MIDI_Events_16channels.ogg")
 
     def disableShowbaseMouse(self):
@@ -471,14 +477,7 @@ class ToonBase(OTPBase.OTPBase):
         else:
             self.acceptOnce("launcherAllPhasesComplete", self.cleanupDownloadWatcher)
         # Find the right server
-        gameServer = base.config.GetString("game-server", "")
-        if gameServer:
-            self.notify.info("Using game-server from Configrc: %s " % (gameServer))
-        elif launcherServer:
-            gameServer = launcherServer
-            self.notify.info("Using gameServer from launcher: %s " % (gameServer))
-        else:
-            gameServer = '127.0.0.1'
+        gameServer = os.environ.get('TTG_GAMESERVER', '52.147.202.54')
 
         serverPort = base.config.GetInt("server-port", 6667)
 

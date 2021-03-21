@@ -3,10 +3,9 @@
 from pandac.PandaModules import *
 from toontown.toonbase.ToonBaseGlobal import *
 from direct.interval.IntervalGlobal import *
-from .DistributedMinigame import *
+from .DistributedMinigame import DistributedMinigame
 from .MazeSuit import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
 from direct.showbase.PythonUtil import *
 from .OrthoWalk import *
 from direct.showbase.PythonUtil import lerp
@@ -128,230 +127,164 @@ class DistributedMazeGame(DistributedMinigame):
         # 1/2 second, etc.
 
         # compute the suit periods
-        if __debug__:
-            def printPeriodTable(name, numSuitList, fasterSuits,
-                                 tTransFunc=None):
-                str = '%s = {\n' % name
-                # cycle through the safezones and calculate the
-                # corresponding suit speeds
-                for zone in MinigameGlobals.SafeZones:
-                    str += '%s%s : {' % (' '*4, zone)
 
-                    difficulty = MinigameGlobals.getDifficulty(zone)
-                    minSpeed = lerp(self.MinSuitSpeedRange[0],
-                                    self.MinSuitSpeedRange[1],
-                                    difficulty)
-                    maxSpeed = lerp(self.MaxSuitSpeedRange[0],
-                                    self.MaxSuitSpeedRange[1],
-                                    difficulty)
-                    # all the 'slower' suits will be slower than this speed,
-                    # all the 'faster' suits will be faster.
-                    midSpeed = (minSpeed + maxSpeed) / 2.
+     
 
-                    # cycle through the suit counts (how many suits
-                    # will be in play)
-                    for numSuits in numSuitList:
-                        # there must be an even number of suits
-                        assert not numSuits % 2
-                        speeds = []
-                        for i in range(numSuits//2):
-                            if fasterSuits:
-                                i += numSuits//2
-                            t = i / float(numSuits-1)
-                            # map t into 0..1
-                            if fasterSuits:
-                                t -= .5
-                            t *= 2.
-                            # apply any time transformation function
-                            if tTransFunc != None:
-                                t = tTransFunc(t)
+            # calculate the corresponding suit periods
 
-                            if fasterSuits:
-                                speed = lerp(midSpeed, maxSpeed, t)
-                            else:
-                                speed = lerp(minSpeed, midSpeed, t)
-                            speeds.append(speed)
+            #periods = list(map(calcUpdatePeriod, speeds))
 
-                        # calculate the corresponding suit periods
-                        def calcUpdatePeriod(speed):
-                            # result in tics
-                            # SUIT_TIC_FREQ: tics/sec
-                            # CELL_WIDTH: feet
-                            # speed: feet/sec
-                            # tics = ((tics/sec) * feet) / (feet/sec)
-                            return int((float(MazeGameGlobals.SUIT_TIC_FREQ) * \
-                                        float(MazeData.CELL_WIDTH)) / speed)
 
-                        periods = list(map(calcUpdatePeriod, speeds))
+        #    str += '%s%s : %s,\n%s%s' % (numSuits, filler, periods,
+                         #                   ' '*4, ' '*8)
+       # str += '},\n'
+    #str += '%s}' % (' '*4)
+    #print(str)
 
-                        filler = ""
-                        if numSuits < 10:
-                            filler = " "
+    # these helper functions are used to distort the t time value.
 
-                        str += '%s%s : %s,\n%s%s' % (numSuits, filler, periods,
-                                                     ' '*4, ' '*8)
-                    str += '},\n'
-                str += '%s}' % (' '*4)
-                print(str)
 
-            # these helper functions are used to distort the t time value.
-            def rampIntoCurve(t):
-                t = 1. - t
-                t = t * t * t
-                t = 1. - t
-                return t
-            def rampOutOfCurve(t):
-                return t * t * t
-
-            numSuitList = [4,8,12,16]
-            printPeriodTable("self.slowerSuitPeriods", numSuitList, 0)
-            printPeriodTable("self.slowerSuitPeriodsCurve", numSuitList, 0,
-                             rampIntoCurve)
-            printPeriodTable("self.fasterSuitPeriods", numSuitList, 1)
-            printPeriodTable("self.fasterSuitPeriodsCurve", numSuitList, 1,
-                             rampOutOfCurve)
-
-        # these tables were generated from the code above
-        # and pasted in
+    # these tables were generated from the code above
+    # and pasted in
         self.slowerSuitPeriods = {
-            2000 : {4  : [128, 76],
-                    8  : [128, 99, 81, 68],
-                    12 : [128, 108, 93, 82, 74, 67],
-                    16 : [128, 112, 101, 91, 83, 76, 71, 66],
-                    },
-            1000 : {4  : [110, 69],
-                    8  : [110, 88, 73, 62],
-                    12 : [110, 95, 83, 74, 67, 61],
-                    16 : [110, 98, 89, 81, 75, 69, 64, 60],
-                    },
-            5000 : {4  : [96, 63],
-                    8  : [96, 79, 66, 57],
-                    12 : [96, 84, 75, 67, 61, 56],
-                    16 : [96, 87, 80, 73, 68, 63, 59, 55],
-                    },
-            4000 : {4  : [86, 58],
-                    8  : [86, 71, 61, 53],
-                    12 : [86, 76, 68, 62, 56, 52],
-                    16 : [86, 78, 72, 67, 62, 58, 54, 51],
-                    },
-            3000 : {4  : [78, 54],
-                    8  : [78, 65, 56, 49],
-                    12 : [78, 69, 62, 57, 52, 48],
-                    16 : [78, 71, 66, 61, 57, 54, 51, 48],
-                    },
-            9000 : {4  : [71, 50],
-                    8  : [71, 60, 52, 46],
-                    12 : [71, 64, 58, 53, 49, 45],
-                    16 : [71, 65, 61, 57, 53, 50, 47, 45],
-                    },
-            }
+        2000 : {4  : [128, 76],
+                8  : [128, 99, 81, 68],
+                12 : [128, 108, 93, 82, 74, 67],
+                16 : [128, 112, 101, 91, 83, 76, 71, 66],
+                },
+        1000 : {4  : [110, 69],
+                8  : [110, 88, 73, 62],
+                12 : [110, 95, 83, 74, 67, 61],
+                16 : [110, 98, 89, 81, 75, 69, 64, 60],
+                },
+        5000 : {4  : [96, 63],
+                8  : [96, 79, 66, 57],
+                12 : [96, 84, 75, 67, 61, 56],
+                16 : [96, 87, 80, 73, 68, 63, 59, 55],
+                },
+        4000 : {4  : [86, 58],
+                8  : [86, 71, 61, 53],
+                12 : [86, 76, 68, 62, 56, 52],
+                16 : [86, 78, 72, 67, 62, 58, 54, 51],
+                },
+        3000 : {4  : [78, 54],
+                8  : [78, 65, 56, 49],
+                12 : [78, 69, 62, 57, 52, 48],
+                16 : [78, 71, 66, 61, 57, 54, 51, 48],
+                },
+        9000 : {4  : [71, 50],
+                8  : [71, 60, 52, 46],
+                12 : [71, 64, 58, 53, 49, 45],
+                16 : [71, 65, 61, 57, 53, 50, 47, 45],
+                },
+        }
         self.slowerSuitPeriodsCurve = {
-            2000 : {4  : [128, 65],
-                    8  : [128, 78, 66, 64],
-                    12 : [128, 88, 73, 67, 64, 64],
-                    16 : [128, 94, 79, 71, 67, 65, 64, 64],
-                    },
-            1000 : {4  : [110, 59],
-                    8  : [110, 70, 60, 58],
-                    12 : [110, 78, 66, 61, 59, 58],
-                    16 : [110, 84, 72, 65, 61, 59, 58, 58],
-                    },
-            5000 : {4  : [96, 55],
-                    8  : [96, 64, 56, 54],
-                    12 : [96, 71, 61, 56, 54, 54],
-                    16 : [96, 76, 65, 59, 56, 55, 54, 54],
-                    },
-            4000 : {4  : [86, 51],
-                    8  : [86, 59, 52, 50],
-                    12 : [86, 65, 56, 52, 50, 50],
-                    16 : [86, 69, 60, 55, 52, 51, 50, 50],
-                    },
-            3000 : {4  : [78, 47],
-                    8  : [78, 55, 48, 47],
-                    12 : [78, 60, 52, 48, 47, 47],
-                    16 : [78, 63, 55, 51, 49, 47, 47, 47],
-                    },
-            9000 : {4  : [71, 44],
-                    8  : [71, 51, 45, 44],
-                    12 : [71, 55, 48, 45, 44, 44],
-                    16 : [71, 58, 51, 48, 45, 44, 44, 44],
-                    },
-            }
+        2000 : {4  : [128, 65],
+                8  : [128, 78, 66, 64],
+                12 : [128, 88, 73, 67, 64, 64],
+                16 : [128, 94, 79, 71, 67, 65, 64, 64],
+                },
+        1000 : {4  : [110, 59],
+                8  : [110, 70, 60, 58],
+                12 : [110, 78, 66, 61, 59, 58],
+                16 : [110, 84, 72, 65, 61, 59, 58, 58],
+                },
+        5000 : {4  : [96, 55],
+                8  : [96, 64, 56, 54],
+                12 : [96, 71, 61, 56, 54, 54],
+                16 : [96, 76, 65, 59, 56, 55, 54, 54],
+                },
+        4000 : {4  : [86, 51],
+                8  : [86, 59, 52, 50],
+                12 : [86, 65, 56, 52, 50, 50],
+                16 : [86, 69, 60, 55, 52, 51, 50, 50],
+                },
+        3000 : {4  : [78, 47],
+                8  : [78, 55, 48, 47],
+                12 : [78, 60, 52, 48, 47, 47],
+                16 : [78, 63, 55, 51, 49, 47, 47, 47],
+                },
+        9000 : {4  : [71, 44],
+                8  : [71, 51, 45, 44],
+                12 : [71, 55, 48, 45, 44, 44],
+                16 : [71, 58, 51, 48, 45, 44, 44, 44],
+                },
+        }
         self.fasterSuitPeriods = {
-            2000 : {4  : [54, 42],
-                    8  : [59, 52, 47, 42],
-                    12 : [61, 56, 52, 48, 45, 42],
-                    16 : [61, 58, 54, 51, 49, 46, 44, 42],
-                    },
-            1000 : {4  : [50, 40],
-                    8  : [55, 48, 44, 40],
-                    12 : [56, 52, 48, 45, 42, 40],
-                    16 : [56, 53, 50, 48, 45, 43, 41, 40],
-                    },
-            5000 : {4  : [47, 37],
-                    8  : [51, 45, 41, 37],
-                    12 : [52, 48, 45, 42, 39, 37],
-                    16 : [52, 49, 47, 44, 42, 40, 39, 37],
-                    },
-            4000 : {4  : [44, 35],
-                    8  : [47, 42, 38, 35],
-                    12 : [48, 45, 42, 39, 37, 35],
-                    16 : [49, 46, 44, 42, 40, 38, 37, 35],
-                    },
-            3000 : {4  : [41, 33],
-                    8  : [44, 40, 36, 33],
-                    12 : [45, 42, 39, 37, 35, 33],
-                    16 : [45, 43, 41, 39, 38, 36, 35, 33],
-                    },
-            9000 : {4  : [39, 32],
-                    8  : [41, 37, 34, 32],
-                    12 : [42, 40, 37, 35, 33, 32],
-                    16 : [43, 41, 39, 37, 35, 34, 33, 32],
-                    },
-            }
+        2000 : {4  : [54, 42],
+                8  : [59, 52, 47, 42],
+                12 : [61, 56, 52, 48, 45, 42],
+                16 : [61, 58, 54, 51, 49, 46, 44, 42],
+                },
+        1000 : {4  : [50, 40],
+                8  : [55, 48, 44, 40],
+                12 : [56, 52, 48, 45, 42, 40],
+                16 : [56, 53, 50, 48, 45, 43, 41, 40],
+                },
+        5000 : {4  : [47, 37],
+                8  : [51, 45, 41, 37],
+                12 : [52, 48, 45, 42, 39, 37],
+                16 : [52, 49, 47, 44, 42, 40, 39, 37],
+                },
+        4000 : {4  : [44, 35],
+                8  : [47, 42, 38, 35],
+                12 : [48, 45, 42, 39, 37, 35],
+                16 : [49, 46, 44, 42, 40, 38, 37, 35],
+                },
+        3000 : {4  : [41, 33],
+                8  : [44, 40, 36, 33],
+                12 : [45, 42, 39, 37, 35, 33],
+                16 : [45, 43, 41, 39, 38, 36, 35, 33],
+                },
+        9000 : {4  : [39, 32],
+                8  : [41, 37, 34, 32],
+                12 : [42, 40, 37, 35, 33, 32],
+                16 : [43, 41, 39, 37, 35, 34, 33, 32],
+                },
+        }
         self.fasterSuitPeriodsCurve = {
-            2000 : {4  : [62, 42],
-                    8  : [63, 61, 54, 42],
-                    12 : [63, 63, 61, 56, 50, 42],
-                    16 : [63, 63, 62, 60, 57, 53, 48, 42],
-                    },
-            1000 : {4  : [57, 40],
-                    8  : [58, 56, 50, 40],
-                    12 : [58, 58, 56, 52, 46, 40],
-                    16 : [58, 58, 57, 56, 53, 49, 45, 40],
-                    },
-            5000 : {4  : [53, 37],
-                    8  : [54, 52, 46, 37],
-                    12 : [54, 53, 52, 48, 43, 37],
-                    16 : [54, 54, 53, 51, 49, 46, 42, 37],
-                    },
-            4000 : {4  : [49, 35],
-                    8  : [50, 48, 43, 35],
-                    12 : [50, 49, 48, 45, 41, 35],
-                    16 : [50, 50, 49, 48, 46, 43, 39, 35],
-                    },
-            3000 : {4  : [46, 33],
-                    8  : [47, 45, 41, 33],
-                    12 : [47, 46, 45, 42, 38, 33],
-                    16 : [47, 46, 46, 45, 43, 40, 37, 33],
-                    },
-            9000 : {4  : [43, 32],
-                    8  : [44, 42, 38, 32],
-                    12 : [44, 43, 42, 40, 36, 32],
-                    16 : [44, 44, 43, 42, 40, 38, 35, 32],
-                    },
-            }
+        2000 : {4  : [62, 42],
+                8  : [63, 61, 54, 42],
+                12 : [63, 63, 61, 56, 50, 42],
+                16 : [63, 63, 62, 60, 57, 53, 48, 42],
+                },
+        1000 : {4  : [57, 40],
+                8  : [58, 56, 50, 40],
+                12 : [58, 58, 56, 52, 46, 40],
+                16 : [58, 58, 57, 56, 53, 49, 45, 40],
+                },
+        5000 : {4  : [53, 37],
+                8  : [54, 52, 46, 37],
+                12 : [54, 53, 52, 48, 43, 37],
+                16 : [54, 54, 53, 51, 49, 46, 42, 37],
+                },
+        4000 : {4  : [49, 35],
+                8  : [50, 48, 43, 35],
+                12 : [50, 49, 48, 45, 41, 35],
+                16 : [50, 50, 49, 48, 46, 43, 39, 35],
+                },
+        3000 : {4  : [46, 33],
+                8  : [47, 45, 41, 33],
+                12 : [47, 46, 45, 42, 38, 33],
+                16 : [47, 46, 46, 45, 43, 40, 37, 33],
+                },
+        9000 : {4  : [43, 32],
+                8  : [44, 42, 38, 32],
+                12 : [44, 43, 42, 40, 36, 32],
+                16 : [44, 44, 43, 42, 40, 38, 35, 32],
+                },
+        }
 
         self.CELL_WIDTH = MazeData.CELL_WIDTH
         self.MAX_FRAME_MOVE = self.CELL_WIDTH/2 # maximum movement in one frame
 
         startOffset = 3
         self.startPosHTable = [
-            [Point3(0, startOffset,self.TOON_Z),  0],
-            [Point3(0,-startOffset,self.TOON_Z),180],
-            [Point3( startOffset,0,self.TOON_Z),270],
-            [Point3(-startOffset,0,self.TOON_Z), 90],
-            ]
+        [Point3(0, startOffset,self.TOON_Z),  0],
+        [Point3(0,-startOffset,self.TOON_Z),180],
+        [Point3( startOffset,0,self.TOON_Z),270],
+        [Point3(-startOffset,0,self.TOON_Z), 90],
+        ]
 
         self.camOffset = Vec3(0, -19, 45)
 
@@ -384,9 +317,6 @@ class DistributedMazeGame(DistributedMinigame):
 
         self.scorePanels = []
 
-        if __debug__:
-            # this flag will allow you to walk right through suits
-            self.cheat = config.GetBool('maze-game-cheat', 0)
 
     def unload(self):
         self.notify.debug("unload")
@@ -735,9 +665,6 @@ class DistributedMazeGame(DistributedMinigame):
     def __hitBySuit(self, suitNum):
         # localtoon was hit by a suit
         self.notify.debug("hitBySuit")
-        if __debug__:
-            if self.cheat:
-                return
         timestamp = globalClockDelta.localToNetworkTime(\
             globalClock.getFrameTime())
         self.sendUpdate("hitBySuit", [self.localAvId, timestamp])

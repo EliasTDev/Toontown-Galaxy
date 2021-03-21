@@ -137,8 +137,6 @@ class LauncherBase(DirectObject):
         self.started = False
 
         # This line is to ensure that Python is running in opt mode -OO.
-        if __debug__:
-            print("WARNING: Client should run Python optimized -OO")
 
         self.taskMgrStarted = False
 

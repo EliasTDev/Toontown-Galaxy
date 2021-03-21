@@ -67,7 +67,7 @@ class QuestManagerAI:
             return
 
         # If this NPC is busy, free the avatar
-        if npc.isBusy():
+        if npc.isBusy(avId):
             self.notify.debug("freeing avatar %s because NPC is busy" % (avId))
             npc.freeAvatar(avId)
             return

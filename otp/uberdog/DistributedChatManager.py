@@ -7,11 +7,6 @@ from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 from pandac.PandaModules import *
 from otp.otpbase import OTPGlobals
 
-if __debug__:
-    from direct.directnotify.DirectNotifyGlobal import directNotify
-    notify = directNotify.newCategory('ChatManager')
-    
-
 class DistributedChatManager(DistributedObjectGlobal):
     """
     The Chat Manager is a global object.
@@ -20,8 +15,6 @@ class DistributedChatManager(DistributedObjectGlobal):
         "otp/src/guild/DistributedChatManagerAI.py"
         "otp/src/configfiles/otp.dc"
     """
-    if __debug__:
-        notify = notify
 
     def __init__(self, cr):
         assert self.notify.debugCall()
@@ -59,16 +52,6 @@ class DistributedChatManager(DistributedObjectGlobal):
         
 
     # AI to UD
-    if __debug__:
-        def setAvatarLocation(self, avatarId, parentId, zoneId):
-            assert 0, "Please don't call this on the client"
-            
-        def setAvatarCrew(self, avatarId, zoneId):
-            assert 0, "Please don't call this on the client"
-            
-        def setAvatarGuild(self, avatarId, zoneId):
-            assert 0, "Please don't call this on the client"
-        
   
     # Client to location (zone)
     def sendChatTo(self, message, chatFlags):

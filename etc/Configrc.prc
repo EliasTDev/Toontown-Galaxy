@@ -2,7 +2,7 @@ direct-wtext 0
 ime-aware 1
 ime-hide 1
 collect-tcp 1
-server-version sv1.0.47.38
+server-version staff-build-1.0
 model-path resources
 dc-file etc/toon.dc
 dc-file etc/otp.dc
@@ -53,7 +53,7 @@ audio-library-name p3fmod_audio
 cursor-filename phase_3/models/gui/toonmono.cur
 audio-sfx-active #t
 audio-music-active #t
-want-dev 0
+want-dev 1
 schellgames-dev 0
 text-minfilter linear_mipmap_linear
 gc-save-all 0
@@ -63,4 +63,4 @@ support-rename 1
 teleport-all 0 //disable during production
 want-cogdominiums #t
 
-is-winter-running #t
+is-winter-running #f

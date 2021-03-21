@@ -1,6 +1,6 @@
 """Place module: contains the Place class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase.ToonBaseGlobal import *
 from direct.showbase.PythonUtil import PriorityCallbacks
 from toontown.toon.Toon import teleportDebug
@@ -21,6 +21,7 @@ from direct.task import Task
 from . import QuietZoneState
 from toontown.distributed import ToontownDistrictStats
 from libotp import *
+
 class Place(StateData.StateData,
             FriendsListManager.FriendsListManager):
     """

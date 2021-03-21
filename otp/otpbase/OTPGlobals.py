@@ -66,7 +66,7 @@ AICollMovePriority = 8
 
 # The maximum number of toon (avatar) friends you can have at any one time on your
 # friends list.  This must match a number that the server also keeps.
-MaxFriends = 50
+MaxFriends = 150
 
 # The maximum number of player (account) friends you can have at any one time on your
 # friends list.  This must match a number that the server also keeps.
@@ -301,7 +301,7 @@ ToonForwardSlowSpeed = 6.0
 ToonJumpSlowForce = 4.0 # feet per second
 ToonReverseSlowSpeed = 2.5
 ToonRotateSlowSpeed = 33.0
-ToonForwardSprintSpeed = 30 * ToonSpeedFactor
+ToonForwardSprintSpeed = 35 * ToonSpeedFactor
 ToonReverseSprintSpeed = 15 * ToonSpeedFactor
 MickeySpeed = 5.0 # feet per second
 MinnieSpeed = 3.2 # feet per second

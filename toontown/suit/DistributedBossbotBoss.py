@@ -340,6 +340,7 @@ class DistributedBossbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
     def enterElevator(self):
         """Handle entering the elevator state."""
+        Discord.ceo()
         DistributedBossCog.DistributedBossCog.enterElevator(self)
 
         # Disable the resistance toon's nametag while we're in the

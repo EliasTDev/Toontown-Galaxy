@@ -1,6 +1,6 @@
 """AvatarChooser module: contains the AvatarChooser class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase import ToontownGlobals
 from . import AvatarChoice
 from direct.fsm import StateData
@@ -15,6 +15,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 #import pdb
 import random
+from toontown.login.DistrictSelector import DistrictSelector
 
 
 MAX_AVATARS = 6              
@@ -43,6 +44,8 @@ class AvatarChooser(StateData.StateData):
         self.choice = None
         self.avatarList = avatarList
         self.displayOptions = None
+        self.districtSelector = DistrictSelector()
+
         self.fsm = ClassicFSM.ClassicFSM('AvatarChooser',
                         [State.State('Choose',
                                 self.enterChoose,
@@ -83,15 +86,12 @@ class AvatarChooser(StateData.StateData):
         # set-up screen title
         self.title.reparentTo(aspect2d)
         self.quitButton.show()
-        if base.cr.loginInterface.supportsRelogin():
-            self.logoutButton.show()
+        #if base.cr.loginInterface.supportsRelogin():
+         #   self.logoutButton.show()
 
-        # We need to put *something* in the 3-d scene graph to keep
-        # the Voodoo drivers from crashing.  We'll use the background
-        # panel, cleverly parenting it to the camera (instead of
-        # aspect2d) at a suitable distance.
-        self.pickAToonBG.reparentTo(base.camera)
-
+    #reparent to aspect2d for widescreen support
+        self.pickAToonBG.reparentTo(aspect2d)
+        self.pickAToonBG.setBin('background', 1)
         choice = base.config.GetInt("auto-avatar-choice", -1)
         
         # hang the choice panel hooks
@@ -118,7 +118,7 @@ class AvatarChooser(StateData.StateData):
         # reset display
         self.title.reparentTo(hidden)
         self.quitButton.hide()
-        self.logoutButton.hide()
+        #self.logoutButton.hide()
         
         self.pickAToonBG.reparentTo(hidden)
 
@@ -168,7 +168,7 @@ class AvatarChooser(StateData.StateData):
             command = self.__handleQuit,
             )
 
-        self.logoutButton = DirectButton(
+        """self.logoutButton = DirectButton(
             relief = None,
             image = (quitHover, quitHover, quitHover),
 ##            image_scale = 1.15,
@@ -187,11 +187,30 @@ class AvatarChooser(StateData.StateData):
             image2_scale = 1.18,
             scale = 0.5,
             command = self.__handleLogoutWithoutConfirm,
-            )
+            )"""
+        self.districtsButton =  DirectButton(
+            relief = None,
+            image = (quitHover, quitHover, quitHover),
+##            image_scale = 1.15,
+            text = 'Districts',
+            text_font = ToontownGlobals.getSignFont(),
+            text_fg = (0.977, 0.816, 0.133, 1),
+##            text0_fg = (0.152, 0.750, 0.258, 1),
+##            text1_fg = (0.152, 0.750, 0.258, 1),
+##            text2_fg = (0.977, 0.816, 0.133, 1),
+            text_scale = TTLocalizer.AClogoutButton,
+            text_pos = (0,-0.035),
+##            pos = (1.105,0,-0.924),
+            pos = (-1.17,0,-0.914),
+            image_scale = 1.15,
+            image1_scale = 1.15,
+            image2_scale = 1.18,
+            scale = 0.5,
+            command = self.openDistrictSelectorCommand)
         # initially this is hidden since it might be invisible if we
         # are logging in with a "blue" (and therefore can't log out to
         # a different user).
-        self.logoutButton.hide()
+        #self.logoutButton.hide()
         
         gui.removeNode()
         gui2.removeNode()
@@ -356,8 +375,8 @@ class AvatarChooser(StateData.StateData):
         self.quitButton.destroy()
         del self.quitButton
 
-        self.logoutButton.destroy()
-        del self.logoutButton
+        #self.logoutButton.destroy()
+        #del self.logoutButton
 
         self.pickAToonBG.removeNode()
         del self.pickAToonBG
@@ -367,7 +386,9 @@ class AvatarChooser(StateData.StateData):
         self.parentFSM.getCurrentState().removeChild(self.fsm)
         del self.parentFSM
         del self.fsm
-
+        self.districtsButton.destroy()
+        del self.districtsButton 
+        self.districtSelector.unload()
         self.ignoreAll()
         self.isLoaded = 0
 
@@ -455,3 +476,20 @@ class AvatarChooser(StateData.StateData):
     def __handleLogoutWithoutConfirm(self):
         # For exiting from the avatar chooser to the login screen.
         base.cr.loginFSM.request("login")
+
+    def openDistrictSelectorCommand(self):
+        self.districtSelector.showSelector()
+        self.districtsButton['command'] = self.closeDistrictSelectorCommand
+        self.districtsButton['text'] = 'Back'
+        for panel in self.panelList:
+            panel.hide()
+    
+    def closeDistrictSelectorCommand(self):
+        self.districtSelector.hideSelector()
+        self.districtsButton['command'] = self.openDistrictSelectorCommand
+        self.districtsButton['text'] = 'Districts'
+        for panel in self.panelList:
+            panel.show()
+
+
+

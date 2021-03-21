@@ -1,6 +1,6 @@
 """ShardPage module: contains the ShardPage class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from . import ShtikerPage
 from direct.task.Task import Task
 from direct.gui.DirectGui import *

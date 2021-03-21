@@ -184,17 +184,23 @@ class Purchase(PurchaseBase):
         self.foreground = loader.loadModel("phase_3.5/models/modules/TT_A1")
         self.foreground.setPos(12.5, -20, -5.5)
         self.foreground.setHpr(180, 0, 0)
-        self.backgroundL = loader.loadModel("phase_3.5/models/modules/TT_A1")
+        self.backgroundL = self.foreground.copyTo(hidden)
         self.backgroundL.setPos(-12.5, -25, -5)
         self.backgroundL.setHpr(180, 0, 0)
         self.backgroundR = self.backgroundL.copyTo(hidden)
-        self.backgroundR.setPos(20, -25, -5)
+        self.backgroundR.setPos(25, -25, -5)
 
         streets = loader.loadModel("phase_3.5/models/modules/street_modules")
         sidewalk = streets.find("**/street_sidewalk_40x40")
         self.sidewalk = sidewalk.copyTo(hidden)
         self.sidewalk.setPos(-20, -25, -5.5)
         self.sidewalk.setColor(0.9, 0.6, 0.4)
+        self.sidewalkR = sidewalk.copyTo(hidden)
+        self.sidewalkL = sidewalk.copyTo(hidden)
+        self.sidewalkL.setPos(-40, -25, -5.5)
+        self.sidewalkL.setColor(0.9, 0.6, 0.4)
+        self.sidewalkR.setPos(0, -25, -5.5)
+        self.sidewalkR.setColor(0.9, 0.6, 0.4)
         streets.removeNode()
 
         doors = loader.loadModel("phase_4/models/modules/doors")
@@ -264,6 +270,10 @@ class Purchase(PurchaseBase):
         del self.celebrateSound
         self.convertingVotesToBeansLabel.removeNode()
         del self.convertingVotesToBeansLabel
+        self.sidewalkL.removeNode()
+        self.sidewalkR.removeNode()
+        del self.sidewalkL
+        del self.sidewalkR
         return
 
     def showStatusText(self, text):
@@ -348,17 +358,19 @@ class Purchase(PurchaseBase):
 
         # put the camera in a reasonable position
         camera.reparentTo(render)
-        base.camLens.setFov(ToontownGlobals.DefaultCameraFov)
         camera.setPos(0, 16.0, 2.0)
         camera.lookAt(0, 0, 0.75)
         base.transitions.irisIn(0.4)
-
+        base.camLens.setFov(60)
+        base.camLens.setFar(150)
         # show background elements
         self.title.reparentTo(aspect2d)
         self.foreground.reparentTo(render)
         self.backgroundL.reparentTo(render)
         self.backgroundR.reparentTo(render)
         self.sidewalk.reparentTo(render)
+        self.sidewalkL.reparentTo(render)
+        self.sidewalkR.reparentTo(render)
         self.door.reparentTo(render)
 
         # The backdrop in this scene is not really under our feet - it is a
@@ -720,6 +732,8 @@ class Purchase(PurchaseBase):
         self.sidewalk.reparentTo(hidden)
         self.door.reparentTo(hidden)
         self.title.reparentTo(self.frame)
+        self.sidewalkL.reparentTo(hidden)
+        self.sidewalkR.reparentTo(hidden)
         self.convertingVotesToBeansLabel.hide()
         # free the whisper bubbles
         NametagGlobals.setOnscreenChatForced(0)

@@ -476,7 +476,8 @@ class BingoManagerAI(object):
         jackpots = self.DefaultReward
         try:
             jackpots = pickle.load(file)
-        except EOFError:
+        except :
+            self.notify.warning('Jackpot file failed to load, returning default reward.')
             pass
         return jackpots
 

@@ -514,7 +514,7 @@ class ChatManager(DirectObject.DirectObject):
         else:
             chatName = playerName
             
-        normalButtonObscured, scButtonObscured = self.isObscured()
+        normalButtonObscured, scButtonObscured, clButtonObscured = self.isObscured()
         
         if (avatarUnderstandable or playerUnderstandable) and online and not normalButtonObscured:
             self.whisperButton['state'] = 'normal'
@@ -582,6 +582,8 @@ class ChatManager(DirectObject.DirectObject):
         using this to abstract out the message so 
         that other gui structures can be supported
         """
+        if len(newText) > 24:
+            self.whisperFrame['text_pos'] = (0.18, 0.042)
         self.whisperFrame["text"] = newText
         
     def exitWhisper(self):

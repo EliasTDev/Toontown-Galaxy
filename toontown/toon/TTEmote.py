@@ -580,7 +580,7 @@ EmoteFunc = [
 ##    [singNoteEmpty, 0], #33 sing blank note of toon species
     ]
 
-assert(len(EmoteFunc) == len(OTPLocalizer.EmoteList))
+#assert(len(EmoteFunc) == len(OTPLocalizer.EmoteList))
 
 class TTEmote(Emote.Emote):
     notify = DirectNotifyGlobal.directNotify.newCategory('TTEmote')
@@ -763,9 +763,6 @@ class TTEmote(Emote.Emote):
 
         return track, duration
 
-    def printEmoteState(self, action, msg):
-        if __debug__:
-            print("%s(%s), body(%s), head(%s)" % (action, msg, EmoteFunc[0][1], EmoteFunc[2][1]))
+
 
 Emote.globalEmote = TTEmote()
-

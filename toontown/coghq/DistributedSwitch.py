@@ -24,15 +24,12 @@ class DistributedSwitch(
     
     See Also: DistributedSwitchAI
     """
-    if __debug__:
-        notify = DirectNotifyGlobal.directNotify.newCategory(
-                'DistributedSwitch')
 
     def __init__(self, cr):
         """
         constructor for the DistributedSwitch
         """
-        assert(self.debugPrint("DistributedSwitch()"))
+        #("DistributedSwitch()"))
         BasicEntities.DistributedNodePathEntity.__init__(self, cr)
         #assert self.this
 
@@ -82,18 +79,18 @@ class DistributedSwitch(
         This method is called when the DistributedSwitch is reintroduced
         to the world, either for the first time or from the cache.
         """
-        assert(self.debugPrint("generate()"))
+        #("generate()"))
         BasicEntities.DistributedNodePathEntity.generate(self)
         self.track = None
     
     def announceGenerate(self):
-        assert(self.debugPrint("announceGenerate()"))
+        #("announceGenerate()"))
         BasicEntities.DistributedNodePathEntity.announceGenerate(self)
         assert self.this
         self.setup()
     
     def disable(self):
-        assert(self.debugPrint("disable()"))
+        #("disable()"))
         #self.ignore("exit%s"%(self.getName(),))
         #self.ignore("enter%s"%(self.getName(),))
         self.ignoreAll()
@@ -106,7 +103,7 @@ class DistributedSwitch(
         # self.delete() will automatically be called.
 
     def delete(self):
-        assert(self.debugPrint("delete()"))
+        #("delete()"))
         del self.fsm
         BasicEntities.DistributedNodePathEntity.delete(self)
     
@@ -120,12 +117,12 @@ class DistributedSwitch(
         self.acceptAvatar()
     
     #def setIsOn(self, isOn):
-    #    assert(self.debugPrint("setIsOn(isOn=%s)"%(isOn,)))
+    #    #("setIsOn(isOn=%s)"%(isOn,)))
     #    self.isOn=isOn
     #    messenger.send(self.getName(), [isOn])
     #
     #def getIsOn(self):
-    #    assert(self.debugPrint("setIsOn() returning %s"%(self.isOn,)))
+    #    #("setIsOn() returning %s"%(self.isOn,)))
     #    return self.isOn
     
     def getName(self):
@@ -155,7 +152,7 @@ class DistributedSwitch(
         """
         required dc field.
         """
-        assert(self.debugPrint("setAvatarInteract(%s)"%(avatarId,)))
+        #("setAvatarInteract(%s)"%(avatarId,)))
         assert(avatarId not in self.__dict__)
         self.avatarId=avatarId
 
@@ -163,7 +160,7 @@ class DistributedSwitch(
         """
         required dc field.
         """
-        assert(self.debugPrint("setState(%s, %d)" % (state, timestamp)))
+        #("setState(%s, %d)" % (state, timestamp)))
         if self.isGenerated():
             self.fsm.request(state, [globalClockDelta.localElapsedTime(timestamp)])
         else:
@@ -171,36 +168,36 @@ class DistributedSwitch(
             self.initialStateTimestamp = timestamp
     
     def enterTrigger(self, args=None):
-        assert(self.debugPrint("enterTrigger(args="+str(args)+")"))
+        #("enterTrigger(args="+str(args)+")"))
         self.sendUpdate("requestInteract")
         # the AI server will reply with avatarInteract or rejectInteract.
     
     def exitTrigger(self, args=None):
-        assert(self.debugPrint("exitTrigger(args="+str(args)+")"))
+        #("exitTrigger(args="+str(args)+")"))
         self.sendUpdate("requestExit")
         # the AI server will reply with avatarExit.
 
     ##### off state #####
     
     def enterOff(self):
-        #assert(self.debugPrint("enterOff()"))
+        ##("enterOff()"))
         pass
     
     def exitOff(self):
-        #assert(self.debugPrint("exitOff()"))
+        ##("exitOff()"))
         pass
 
     ##### attract state #####
     
     def enterAttract(self, ts):
-        assert(self.debugPrint("enterAttract()"))
+        #("enterAttract()"))
         track=self.switchOffTrack()
         if track is not None:
             track.start(ts)
             self.track = track
     
     def exitAttract(self):
-        assert(self.debugPrint("exitAttract()"))
+        #("exitAttract()"))
         if self.track:
             self.track.finish()
         self.track = None
@@ -208,7 +205,7 @@ class DistributedSwitch(
     ##### playing state #####
     
     def enterPlaying(self, ts):
-        assert(self.debugPrint("enterPlaying()"))
+        #("enterPlaying()"))
         # Start animation at time stamp:
         track=self.switchOnTrack()
         if track is not None:
@@ -216,7 +213,7 @@ class DistributedSwitch(
             self.track = track
     
     def exitPlaying(self):
-        assert(self.debugPrint("exitPlaying()"))
+        #("exitPlaying()"))
         if self.track:
             self.track.finish()
         self.track = None

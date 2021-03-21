@@ -6,7 +6,7 @@ reload(TTChatInputSpeedChat);reload(OTPLocalizerEnglish);reload(OTPLocalizer);re
 """
 
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.speedchat.SpeedChatTypes import *
 from toontown.speedchat.TTSpeedChatTypes import *
 from otp.speedchat.SpeedChat import SpeedChat
@@ -301,9 +301,9 @@ class TTChatInputSpeedChat(DirectObject.DirectObject):
             self.accept(self.terminalSelectedEvent, selectionMade)
 
         # set up the menu
-        self.speedChat.reparentTo(aspect2dp, DGG.FOREGROUND_SORT_INDEX)
-        scZ = .96
-        self.speedChat.setPos(-1.05, 0, scZ)
+        self.speedChat.reparentTo(base.a2dpTopLeft, DGG.FOREGROUND_SORT_INDEX)
+        scZ = -0.04
+        self.speedChat.setPos(0.28, 0, scZ)
         self.speedChat.setWhisperMode(self.whisperAvatarId != None)
         self.speedChat.enter()
 

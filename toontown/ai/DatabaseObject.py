@@ -219,7 +219,6 @@ class DatabaseObject:
             else:
                 dg = PyDatagram()
                 packOk = dclass.packRequiredField(dg, do, field)
-                assert(packOk)
                 self.values[fieldName] = dg
             
     def createObject(self, objectType):
@@ -240,7 +239,6 @@ class DatabaseObject:
 
         # objectType is an integer that the DB uses to distinguish object
         # types, i.e. ToontownAIMsgTypes.DBSERVER_PET_OBJECT_TYPE
-        assert type(objectType) is int
 
         # Get a unique context for this query and associate ourselves
         # in the map.

@@ -21,7 +21,7 @@ class DistributedButton(DistributedSwitch.DistributedSwitch):
     countdownSeconds = 3.0
 
     def __init__(self, cr):
-        assert(self.debugPrint("DistributedButton()"))
+        #("DistributedButton()"))
         self.countdownTrack = None
         DistributedSwitch.DistributedSwitch.__init__(self, cr)
 
@@ -29,7 +29,7 @@ class DistributedButton(DistributedSwitch.DistributedSwitch):
         self.secondsOn = secondsOn
 
     def avatarExit(self, avatarId):
-        assert(self.debugPrint("DistributedButton.avatarExit(avatarId=%s)"%(avatarId,)))
+        #("DistributedButton.avatarExit(avatarId=%s)"%(avatarId,)))
         DistributedSwitch.DistributedSwitch.avatarExit(self, avatarId)
         if (self.secondsOn != -1.0
                 and self.secondsOn > 0.0
@@ -43,7 +43,7 @@ class DistributedButton(DistributedSwitch.DistributedSwitch):
                 self.countdownTrack = track
     
     def setupSwitch(self):
-        assert(self.debugPrint("setupSwitch()"))
+        #("setupSwitch()"))
         model=loader.loadModel('phase_9/models/cogHQ/CogDoor_Button')
         assert not model.isEmpty()
         if model:
@@ -143,18 +143,18 @@ class DistributedButton(DistributedSwitch.DistributedSwitch):
         #del self.platform
     
     def enterTrigger(self, args=None):
-        assert(self.debugPrint("enterTrigger(args="+str(args)+")"))
+        #("enterTrigger(args="+str(args)+")"))
         DistributedSwitch.DistributedSwitch.enterTrigger(self, args)
     
     def exitTrigger(self, args=None):
-        assert(self.debugPrint("exitTrigger(args="+str(args)+")"))
+        #("exitTrigger(args="+str(args)+")"))
         DistributedSwitch.DistributedSwitch.exitTrigger(self, args)
         
     def switchOnTrack(self):
         """
         Animate the button turning on.
         """
-        assert self.debugPrint("switchOnTrack()")
+        #("switchOnTrack()")
         onSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_switch_pressed.ogg")
         duration = 0.8
         halfDur = duration*0.5
@@ -187,7 +187,7 @@ class DistributedButton(DistributedSwitch.DistributedSwitch):
         """
         Animate the button turning off.
         """
-        assert self.debugPrint("switchCountdownTrack()")
+        #("switchCountdownTrack()")
         wait = self.secondsOn - self.countdownSeconds
         countDownSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_switch_depressed.ogg")
         track=Parallel(
@@ -268,7 +268,7 @@ class DistributedButton(DistributedSwitch.DistributedSwitch):
         """
         Animate the button turning off.
         """
-        assert self.debugPrint("switchOffTrack()")
+        #("switchOffTrack()")
         offSfx = base.loader.loadSfx("phase_9/audio/sfx/CHQ_FACT_switch_popup.ogg")
         duration = 1.0
         halfDur = duration*0.5

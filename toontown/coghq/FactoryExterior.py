@@ -5,9 +5,9 @@ from direct.fsm import ClassicFSM, State
 from direct.fsm import State
 from toontown.toonbase import ToontownGlobals
 from toontown.building import Elevator
-from pandac.PandaModules import *
+from panda3d.core import *
 from libotp import *
-from libpandadna import *
+from libtoontown import *
 from toontown.hood import ZoneUtil
 
 class FactoryExterior(BattlePlace.BattlePlace):
@@ -136,10 +136,31 @@ class FactoryExterior(BattlePlace.BattlePlace):
         # Add hooks for the linktunnels
         self.tunnelOriginList = base.cr.hoodMgr.addLinkTunnelHooks(self, self.nodeList, self.zoneId)
         how=requestStatus["how"]
-        if self.zoneId != ToontownGlobals.LawbotOfficeExt:
-         self.handleInterests()
         self.fsm.request(how, [requestStatus])
-        
+        if self.zoneId != ToontownGlobals.LawbotOfficeExt:
+            self.loadDNA()
+
+    def loadDNA(self):
+        dnaFile = self.genDNAFileName(self.zoneId)
+        dnaStorage = DNAStorage()
+        loadDNAFile(dnaStorage, dnaFile)
+
+        self.zoneVisGroupDict = {}
+        numVisGroups = dnaStorage.getNumDNAVisGroups()
+
+        for visGroup in range(numVisGroups):
+            groupName = dnaStorage.getDNAVisGroupName(visGroup)
+            visGroupClient= dnaStorage.getDNAVisGroup(visGroup)
+            visGroupZoneId = int(base.cr.hoodMgr.extractGroupName(groupName))
+            visGroupZoneId = ZoneUtil.getTrueZoneId(visGroupZoneId, self.zoneId)
+            visibles = []
+            for j in range(visGroupClient.getNumVisibles()):
+                visibles.append(int(visGroupClient.getVisibleName(j)))
+            visibles.append(ZoneUtil.getBranchZone(visGroupZoneId))
+            self.zoneVisGroupDict[visGroupZoneId] = visibles
+
+        base.cr.sendSetZoneMsg(self.zoneId, list(self.zoneVisGroupDict.values())[0])
+
     def exit(self):
         # Turn the sky off
         self.loader.hood.stopSky()
@@ -252,3 +273,5 @@ class FactoryExterior(BattlePlace.BattlePlace):
         else:
             self.notify.error("Unknown mode: " + where +
                               " in handleElevatorDone")
+
+  

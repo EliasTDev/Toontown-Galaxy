@@ -2,11 +2,11 @@ from direct.directnotify import DirectNotifyGlobal
 from . import HoodDataAI, ZoneUtil
 from toontown.toonbase import ToontownGlobals
 from toontown.racing import DistributedStartingBlockAI
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.racing.RaceGlobals import *
 from toontown.classicchars import DistributedGoofySpeedwayAI
 
-from libpandadna import DNAData, DNAStorage
+from libtoontown import DNAData, DNAStorage
 
 if( __debug__):
     import pdb

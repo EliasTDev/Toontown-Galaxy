@@ -30,9 +30,9 @@ class PetNameGenerator:
 
         # Look for the name master file and read it in.
         searchPath = DSearchPath()
-        if AppRunnerGlobal.appRunner:
-            # In the web-publish runtime, it will always be here:
-            searchPath.appendDirectory(Filename.expandFrom('$TT_3_ROOT/phase_3/etc'))
+        if not __dev__:
+            searchPath.appendDirectory(Filename('phase_3/etc'))
+
         else:
             # In other environments, including the dev environment, look here:
             searchPath.appendDirectory(Filename('resources/phase_3/etc'))

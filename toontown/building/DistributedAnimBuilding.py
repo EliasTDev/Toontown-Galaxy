@@ -8,8 +8,6 @@ class DistributedAnimBuilding(DistributedBuilding.DistributedBuilding):
     DistributedAnimBuilding class:  The client side representation of a
     single ANIMATED building.
     """    
-    if __debug__:
-        notify = DirectNotifyGlobal.directNotify.newCategory('DistributedAnimBuilding')
 
     def __init__(self, cr):
         """blockNumber: the landmark building number (from the name)"""
@@ -44,7 +42,6 @@ class DistributedAnimBuilding(DistributedBuilding.DistributedBuilding):
                         sign.wrtReparentTo(sign_joint)
 
     def setupNametag(self):
-        assert(self.debugPrint("setupNametag()"))
         if not self.wantsNametag():
             return
         DistributedBuilding.DistributedBuilding.setupNametag(self)

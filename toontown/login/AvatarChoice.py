@@ -39,6 +39,7 @@ class AvatarChoice(DirectButton):
         Set-up the avatar choice panel. If no av is passed in, offer the
         user the opportunity to create a new one
         """
+        Discord.avChoice()
         DirectButton.__init__(self,
                               relief = None,
                               text = "",

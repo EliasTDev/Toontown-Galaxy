@@ -19,7 +19,6 @@ class DistributedInteractiveEntity(DistributedEntity.DistributedEntity):
     def __init__(self, cr):
         """constructor for the DistributedInteractiveEntity"""
         DistributedEntity.DistributedEntity.__init__(self, cr)
-        assert self.debugPrint("DistributedInteractiveEntity()")
 
         self.fsm = ClassicFSM.ClassicFSM('DistributedInteractiveEntity',
                            [State.State('off',
@@ -48,18 +47,15 @@ class DistributedInteractiveEntity(DistributedEntity.DistributedEntity):
         This method is called when the DistributedEntity is introduced
         to the world, either for the first time or from the cache.
         """
-        assert self.debugPrint("generate()")
         DistributedEntity.DistributedEntity.generate(self)
 
     def disable(self):
-        assert self.debugPrint("disable()")
         # Go to the off state when the object is put in the cache
         self.fsm.request("off")
         DistributedEntity.DistributedEntity.disable(self)
         # self.delete() will automatically be called.
     
     def delete(self):
-        assert self.debugPrint("delete()")
         del self.fsm
         DistributedEntity.DistributedEntity.delete(self)
     
@@ -67,7 +63,6 @@ class DistributedInteractiveEntity(DistributedEntity.DistributedEntity):
         """
         required dc field.
         """
-        assert self.debugPrint("setAvatarInteract(%s)"%(avatarId,))
         assert avatarId not in self.__dict__
         self.avatarId=avatarId
     
@@ -75,12 +70,10 @@ class DistributedInteractiveEntity(DistributedEntity.DistributedEntity):
         """
         required dc field.
         """
-        assert self.debugPrint("setOwnerDoId(%s)"%(ownerDoId,))
         assert "ownerDoId" not in self.__dict__
         self.ownerDoId=ownerDoId
         
     def setState(self, state, timestamp):
-        assert self.debugPrint("setState(%s, %d)" % (state, timestamp))
         if self.isGenerated():
             self.fsm.request(state, [globalClockDelta.localElapsedTime(timestamp)])
         else:
@@ -88,20 +81,20 @@ class DistributedInteractiveEntity(DistributedEntity.DistributedEntity):
             self.initialStateTimestamp = timestamp
     
     #def __getPropNodePath(self):
-    #    assert self.debugPrint("__getPropNodePath()")
+    #    #("__getPropNodePath()")
     #    if (not self.__dict__.has_key('propNodePath')):
     #        self.propNodePath=self.cr.playGame.hood.loader.geom.find(
     #                "**/prop"+self.entID+":*_DNARoot")
     #    return self.propNodePath
     
     def enterTrigger(self, args=None):
-        assert self.debugPrint("enterTrigger(args="+str(args)+")")
+        #("enterTrigger(args="+str(args)+")")
         messenger.send("DistributedInteractiveEntity_enterTrigger")
         self.sendUpdate("requestInteract")
         # the AI server will reply with toonInteract or rejectInteract.
     
     def exitTrigger(self, args=None):
-        assert self.debugPrint("exitTrigger(args="+str(args)+")")
+        #("exitTrigger(args="+str(args)+")")
         messenger.send("DistributedInteractiveEntity_exitTrigger")
         self.sendUpdate("requestExit")
         # the AI server will reply with avatarExit.
@@ -110,38 +103,40 @@ class DistributedInteractiveEntity(DistributedEntity.DistributedEntity):
         """
         Server doesn't let the avatar interact with prop.
         """
-        assert self.debugPrint("rejectInteract()")
+        #("rejectInteract()")
         self.cr.playGame.getPlace().setState('walk')
         
     def avatarExit(self, avatarId):
-        assert self.debugPrint("avatarExit(avatarId=%s)"%(avatarId,))
+        return
+        #("avatarExit(avatarId=%s)"%(avatarId,))
     
     ##### off state #####
     
     def enterOff(self):
-        assert self.debugPrint("enterOff()")
+        return
+        #("enterOff()")
     
     def exitOff(self):
-        assert self.debugPrint("exitOff()")
+        return
+        #("exitOff()")
     
     ##### attract state #####
     
     def enterAttract(self, ts):
-        assert self.debugPrint("enterAttract()")
+        return
+        #("enterAttract()")
     
     def exitAttract(self):
-        assert self.debugPrint("exitAttract()")
+        return
+        #("exitAttract()")
     
     ##### playing state #####
     
     def enterPlaying(self, ts):
-        assert self.debugPrint("enterPlaying()")
+        return
+        #("enterPlaying()")
     
     def exitPlaying(self):
-        assert self.debugPrint("exitPlaying()")
+        return
+        #("exitPlaying()")
     
-    if __debug__:
-        def debugPrint(self, message):
-            """for debugging"""
-            return self.notify.debug(
-                    str(self.__dict__.get('entId', '?'))+' '+message)

@@ -19,7 +19,7 @@ class NPCFriendPage(ShtikerPage.ShtikerPage):
             textMayChange = 0,            
             pos = (0,0,0.6),
             )
-        self.friendPanel = NPCFriendPanel.NPCFriendPanel(parent = self)
+        self.friendPanel = NPCFriendPanel.NPCFriendPanel(parent = self, fCallable=0)
         self.friendPanel.setScale(0.1225)
         self.friendPanel.setZ(-0.03)
 
@@ -30,8 +30,7 @@ class NPCFriendPage(ShtikerPage.ShtikerPage):
         del self.friendPanel
 
     def updatePage(self):
-        self.friendPanel.update(base.localAvatar.NPCFriendsDict,
-                                fCallable = 0)
+        self.friendPanel.update(base.localAvatar.NPCFriendsDict)
 
     def enter(self):
         """enter(self)

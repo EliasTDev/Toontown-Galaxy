@@ -23,7 +23,7 @@ import copy
 from . import DistributedSuitBase
 from otp.otpbase import OTPLocalizer
 import random
-from libpandadna import SuitLeg
+from libtoontown import SuitLeg
 from libotp import CFSpeech
 
 # how far outside of a door to stop in WalkFromStreet mode before
@@ -1145,7 +1145,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
             elif (self.nametag.getChatStomp() > 0 ):
                 self.playDialogueForString(self.nametag.getStompText(), self.nametag.getStompDelay())
                 if hasattr(base.cr, 'chatLog'):
-                    base.cr.chatLog.addToLog('\1cogGray\1{0}\2: {1}'.format(self.name, self.nametag.getChatText()))
+                    base.cr.chatLog.addToLog('\1cogGray\1{0}\2: {1}'.format(self.name, self.nametag.getStompText()))
    
     def playDialogueForString(self, chatString, delay = 0.0):
         """

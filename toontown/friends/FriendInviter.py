@@ -1,8 +1,7 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.task.Task import Task
 from toontown.toonbase.ToontownGlobals import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
 from direct.showbase import DirectObject
 from direct.fsm import ClassicFSM, State
 from direct.fsm import State
@@ -60,7 +59,8 @@ class FriendInviter(DirectFrame):
         # initialize our base class.
         DirectFrame.__init__(
             self,
-            pos = (0.3, 0.1, 0.65),
+            pos = (-1.03, 0.1, -0.35),
+            parent=base.a2dTopRight,
             image_color = GlobalDialogColor,
             image_scale = (1.0, 1.0, 0.6),
             text = '',

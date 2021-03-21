@@ -2723,7 +2723,8 @@ class Toon(Avatar.Avatar, ToonHead):
         self.show()
 
         self.playingAnim = "teleport"
-        Emote.globalEmote.disableAll(self, "enterTeleportIn")
+        if Emote.globalEmote:
+            Emote.globalEmote.disableAll(self, "enterTeleportIn")
 
         # Start by posing to the last frame of the "teleport"
         # animation, which has the toon below the floor.  That way we
@@ -2755,7 +2756,8 @@ class Toon(Avatar.Avatar, ToonHead):
         if not self.ghostMode and not self.isDisguised:
             self.getGeomNode().show()
             self.nametag3d.show()
-        Emote.globalEmote.releaseAll(self, "exitTeleportIn")
+        if Emote.globalEmote:
+            Emote.globalEmote.releaseAll(self, "exitTeleportIn")
 
     def enterSitStart(self, animMultiplier=1, ts=0, callback=None, extraArgs=[]):
         Emote.globalEmote.disableBody(self)

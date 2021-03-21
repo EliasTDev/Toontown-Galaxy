@@ -30,9 +30,6 @@ from direct.controls.ObserverWalker import ObserverWalker
 from direct.controls.PhysicsWalker import PhysicsWalker
 from direct.controls.SwimWalker import SwimWalker
 from direct.controls.TwoDWalker import TwoDWalker
-if __debug__:
-    from direct.controls.DevWalker import DevWalker
-
 class LocalAvatar(DistributedAvatar.DistributedAvatar,
                   DistributedSmoothNode.DistributedSmoothNode):
     """
@@ -117,10 +114,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.soundRun = None
         self.soundWalk = None
 
-        if __debug__:
-            if base.config.GetBool('want-dev-walker', 1):
-                self.accept('f4', self.useDevControls)
-                self.accept('f4-up', self.useWalkControls)
 
         # Is the toon sleeping?
         self.sleepFlag = 0
@@ -181,9 +174,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
     def useTwoDControls(self):
         self.controlManager.use("twoD", self)
 
-    if __debug__:
-        def useDevControls(self):
-            self.controlManager.use("dev", self)
 
     def isLockedDown(self):
         return self.lockedDown
@@ -337,14 +327,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.controlManager.add(observerControls, "observer")
 
         # Develpment Debug Walker (fly, walk through walls, run, etc.):
-        if __debug__:
-                devControls=DevWalker()
-                devControls.setWallBitMask(wallBitmask)
-                devControls.setFloorBitMask(floorBitmask)
-                devControls.initializeCollisions(self.cTrav, self,
-                        avatarRadius, floorOffset, reach)
-                devControls.setAirborneHeightFunc(self.getAirborneHeight)
-                self.controlManager.add(devControls, "dev")
 
         # Default to the standard avatar walk controls:
         self.controlManager.use("walk", self)
@@ -683,7 +665,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         """
         assert self.notify.debugStateCall(self)
         if self.avatarControlsEnabled:
-            assert self.debugPrint("  avatarControlsEnabled=true")
+           
             return
         self.avatarControlsEnabled=1
         self.setupAnimationEvents()
@@ -695,7 +677,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         """
         assert self.notify.debugStateCall(self)
         if not self.avatarControlsEnabled:
-            assert self.debugPrint("  avatarControlsEnabled=false")
             return
         self.avatarControlsEnabled=0
         self.ignoreAnimationEvents()
@@ -2026,11 +2007,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         DistributedSmoothNode.DistributedSmoothNode.d_setParent(
                 self, parentToken)
 
-    if __debug__:
-        def debugPrint(self, message):
-            """for debugging"""
-            return self.notify.debug(
-                    str(id(self))+' '+message)
 
   #def handlePlayerFriendWhisper(self, playerId, charMessage):
         """

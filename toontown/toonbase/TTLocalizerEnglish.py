@@ -46,6 +46,10 @@ UnpaidNameTag = "Basic"
 GM_1 = "TOON COUNCIL"
 GM_2 = "TOON TROOP"
 
+GM_NAMES = ('TOON COUNCIL',
+ 'TOON TROOP',
+ 'RESISTANCE RANGER',
+ 'GC')
 BuildingNametagFont = 'phase_3/models/fonts/MickeyFont'
 BuildingNametagShadow = None
 

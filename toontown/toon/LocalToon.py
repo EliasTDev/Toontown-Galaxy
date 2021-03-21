@@ -14,7 +14,7 @@ from direct.showbase import PythonUtil
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui import DirectGuiGlobals
 
-from pandac.PandaModules import *
+from panda3d.core import *
 
 from otp.avatar import LocalAvatar
 from otp.login import LeaveToPayDialog
@@ -60,10 +60,11 @@ from . import DistributedToon
 from . import Toon
 from . import LaffMeter
 
-from libotp.settings.Settings import Settings
+from settings.Settings import Settings
 from libotp import CFThought, CFTimeout
 from libotp import WhisperPopup
 from toontown.quest import QuestMap
+from toontown.shtiker.MagicWordHelpPage import MagicWordsHelpPage
 
 # Checks whether we want to display the news page
 # which uses Awesomium to render HTML
@@ -136,7 +137,8 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
                      friendsButtonPressed,
                      friendsButtonRollover),
                 relief = None,
-                pos = (1.192, 0, 0.875),
+                pos = (-0.14, 0, -0.13),
+                parent=base.a2dTopRight,
                 scale = newScale,
                 text = ("", TTLocalizer.FriendsListLabel, TTLocalizer.FriendsListLabel),
                 text_scale = 0.09,
@@ -390,6 +392,8 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         del self.gardenPage
         del self.trackPage
         #del self.buildingPage
+        if self.magicWordHelpPage:
+            del self.magicWordHelpPage
         del self.book
         if self.chatLog:
             self.chatLog.stop()
@@ -539,6 +543,13 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
             self.addNewsPage()
 
         # self.addTIPPage()
+        #TODO have a check on the ai server to make sure they aren't hacking this value
+        if self.getStaffAccess() >= 200:
+            self.magicWordHelpPage = MagicWordsHelpPage()
+            self.magicWordHelpPage.load()
+            self.book.addPage(self.magicWordHelpPage, pageName='Magic Words Help Page')
+
+
 
         self.book.setPage(self.mapPage, enterPage = False)
 
@@ -547,13 +558,14 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
                                              self.hp,
                                              self.maxHp)
         self.laffMeter.setAvatar(self)
+        self.laffMeter.reparentTo(base.a2dBottomLeft)
         self.laffMeter.setScale(0.075)
         if self.style.getAnimal() == "monkey":
             # The monkey laff meter is slightly bigger because the
             # ears hang off to the side, so slide it over to the right
-            self.laffMeter.setPos(-1.18, 0., -0.87)
+            self.laffMeter.setPos(0.15, 0., 0.13)
         else:
-            self.laffMeter.setPos(-1.2, 0., -0.87)
+            self.laffMeter.setPos(0.13, 0., 0.13)
         self.laffMeter.stop()
         self.questMap = QuestMap.QuestMap(self)
         self.questMap.stop()

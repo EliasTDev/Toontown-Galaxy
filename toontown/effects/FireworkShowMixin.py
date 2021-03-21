@@ -265,6 +265,7 @@ class FireworkShowMixin:
             self.fireworkShow = None
             
     def beginFireworkShow(self, timeStamp, root):
+        from toontown.hood import TTHood, BRHood, MMHood, DDHood, OZHood,DGHood, DLHood, GSHood, PartyHood
         if self.fireworkShow and not self.fireworkShow.isPlaying():
             self.fireworkShow.begin(timeStamp)
             self.fireworkShow.reparentTo(root)

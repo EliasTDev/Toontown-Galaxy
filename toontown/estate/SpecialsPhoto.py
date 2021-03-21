@@ -22,7 +22,7 @@ class DirectRegion(NodePath):
     def destroy(self):
         assert self.notify.debugStateCall(self)
         self.unload()
-        self.parent = None
+        self._parent = None
 
     def setBounds(self, *bounds):
         """
@@ -130,7 +130,7 @@ class SpecialsPhoto(NodePath):
         self.type = None
         del self.soundTrack
         del self.track
-        self.parent = None
+        self._parent = None
 
     def update(self, type):
         assert self.notify.debugStateCall(self)

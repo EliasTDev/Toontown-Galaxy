@@ -4,11 +4,10 @@ from toontown.battle import BattlePlace
 from direct.fsm import ClassicFSM, State
 from direct.fsm import State
 from toontown.toonbase import ToontownGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 from libotp import *
-from libpandadna import *
 from toontown.hood import ZoneUtil
-
+from libtoontown import *
 class CogHQExterior(BattlePlace.BattlePlace):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("CogHQExterior")
@@ -139,11 +138,33 @@ class CogHQExterior(BattlePlace.BattlePlace):
         # Turn on the little red arrows.
         NametagGlobals.setMasterArrowsOn(1)
 
-        self.handleInterests()
         # Add hooks for the linktunnels
         self.tunnelOriginList = base.cr.hoodMgr.addLinkTunnelHooks(self, self.nodeList, self.zoneId)
         how=requestStatus["how"]
         self.fsm.request(how, [requestStatus])
+        if self.zoneId != ToontownGlobals.BossbotHQ:
+            self.loadDNA()
+           
+    def loadDNA(self):
+        dnaFile = self.genDNAFileName(self.zoneId)
+        dnaStorage = DNAStorage()
+        loadDNAFile(dnaStorage, dnaFile)
+
+        self.zoneVisGroupDict = {}
+        numVisGroups = dnaStorage.getNumDNAVisGroups()
+
+        for visGroup in range(numVisGroups):
+            groupName = dnaStorage.getDNAVisGroupName(visGroup)
+            visGroupClient= dnaStorage.getDNAVisGroup(visGroup)
+            visGroupZoneId = int(base.cr.hoodMgr.extractGroupName(groupName))
+            visGroupZoneId = ZoneUtil.getTrueZoneId(visGroupZoneId, self.zoneId)
+            visibles = []
+            for j in range(visGroupClient.getNumVisibles()):
+                visibles.append(int(visGroupClient.getVisibleName(j)))
+            visibles.append(ZoneUtil.getBranchZone(visGroupZoneId))
+            self.zoneVisGroupDict[visGroupZoneId] = visibles
+
+        base.cr.sendSetZoneMsg(self.zoneId, list(self.zoneVisGroupDict.values())[0])
 
     def exit(self):
         self.fsm.requestFinalState()
@@ -227,25 +248,4 @@ class CogHQExterior(BattlePlace.BattlePlace):
         base.localAvatar.laffMeter.stop()
     
 
-    def handleInterests(self):
-            # First, we need to load the DNA file for this Cog HQ.
-            dnaStore = DNAStorage()
-            dnaFileName = self.genDNAFileName(self.zoneId)
-            loadDNAFileAI(dnaStore, dnaFileName)
-
-            # Next, we need to collect all of the visgroup zone IDs.
-            self.zoneVisDict = {}
-            for i in range(dnaStore.getNumDNAVisGroupsAI()):
-                groupFullName = dnaStore.getDNAVisGroupName(i)
-                visGroup = dnaStore.getDNAVisGroupAI(i)
-                visZoneId = int(base.cr.hoodMgr.extractGroupName(groupFullName))
-                visZoneId = ZoneUtil.getTrueZoneId(visZoneId, self.zoneId)
-                visibles = []
-                for i in range(visGroup.getNumVisibles()):
-                    visibles.append(int(visGroup.getVisibleName(i)))
-
-                visibles.append(ZoneUtil.getBranchZone(visZoneId))
-                self.zoneVisDict[visZoneId] = visibles
-
-            # Finally, we want interest in all visgroups due to this being a Cog HQ.
-            base.cr.sendSetZoneMsg(self.zoneId, list(self.zoneVisDict.values())[0])
+  

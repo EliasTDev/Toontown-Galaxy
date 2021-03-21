@@ -104,7 +104,7 @@ class DummyLauncherBase:
         self.paidUserLoggedIn = 1
 
     def getGameServer(self):
-        return '206.16.11.19'
+        return self.getValue('TTG_GAMESERVER') or "52.147.202.54"
 
     def getAccountServer(self):
         return ''

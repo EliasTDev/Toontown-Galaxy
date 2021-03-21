@@ -20,7 +20,7 @@ class DistributedTrigger(DistributedSwitch.DistributedSwitch):
     """
     
     def setupSwitch(self):
-        assert(self.debugPrint("setupSwitch()"))
+        #("setupSwitch()"))
         #DistributedSwitch.DistributedSwitch.setupSwitch(self)
         radius = 1.0
         cSphere = CollisionSphere(0.0, 0.0, 0.0, radius)
@@ -34,18 +34,18 @@ class DistributedTrigger(DistributedSwitch.DistributedSwitch):
         self.flattenMedium()
 
     def delete(self):
-        assert(self.debugPrint("delete()"))
+        #("delete()"))
         self.cSphereNodePath.removeNode()
         del self.cSphereNodePath
         DistributedSwitch.DistributedSwitch.delete(self)
     
     def enterTrigger(self, args=None):
-        assert(self.debugPrint("enterTrigger(args="+str(args)+")"))
+        #("enterTrigger(args="+str(args)+")"))
         DistributedSwitch.DistributedSwitch.enterTrigger(self, args)
         self.setIsOn(1)
     
     def exitTrigger(self, args=None):
-        assert(self.debugPrint("exitTrigger(args="+str(args)+")"))
+        #("exitTrigger(args="+str(args)+")"))
         DistributedSwitch.DistributedSwitch.exitTrigger(self, args)
         self.setIsOn(0)
 

@@ -2,8 +2,8 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.task.Task import Task
 from panda3d.core import *
 from otp.ai import BanManagerAI
-
-from libpandadna import *
+from libotp import CImpulse
+from libtoontown import *
 from otp.ai.AIZoneData import AIZoneDataStore
 from otp.ai.TimeManagerAI import TimeManagerAI
 from otp.distributed.OtpDoGlobals import *
@@ -62,9 +62,10 @@ from toontown.coderedemption.TTCodeRedemptionMgrAI import TTCodeRedemptionMgrAI
 import time
 from direct.distributed.PyDatagram import PyDatagram
 from toontown.ai.ToontownAIMsgTypes import *
-from libpandadna import *
 from toontown.fishing import FishManagerAI
 from otp.friends.FriendManagerAI import FriendManagerAI
+from toontown.effects import FireworkManagerAI
+
 class ToontownAIRepository(ToontownInternalRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory('ToontownAIRepository')
 
@@ -190,7 +191,13 @@ class ToontownAIRepository(ToontownInternalRepository):
             
         # Create our suit invasion manager...
         self.suitInvasionManager = SuitInvasionManagerAI(self)
-
+        # The Firework Manager: This object really only exists so we can
+        # fire off fireworks with magic words. Normally this is a holiday
+        # manager driven event and therefore the constructor needs a
+        # holidayId. Pass in fourth of july as default.  To do: override 
+        # holiday ID with a magic word
+        self.fireworkManager = FireworkManagerAI.FireworkManagerAI(
+            self, ToontownGlobals.NEWYEARS_FIREWORKS)
         # Create our holiday manager...
         self.holidayManager = HolidayManagerAI(self)
 
@@ -301,6 +308,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         # Generate our friend manager...
         self.friendManager = FriendManagerAI(self)
         self.friendManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+
     def generateHood(self, hoodConstructor, zoneId):
         # Bossbot HQ doesn't use DNA, so we skip over that.
         if zoneId != ToontownGlobals.BossbotHQ:
@@ -609,8 +617,6 @@ class ToontownAIRepository(ToontownInternalRepository):
 
         return leaderBoards
 
-    def loadDNAFileAI(self, dnaStore, dnaFile):
-        return loadDNAFileAI(dnaStore, dnaFile, CSDefault)
 
     #AIGEOM
     def loadDNAFile(self, dnaStore, dnaFile, cs=CSDefault):

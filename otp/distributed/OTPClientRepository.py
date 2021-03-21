@@ -5,6 +5,7 @@ import types
 import random
 import gc
 import os
+import inspect
 
 
 from pandac.PandaModules import *
@@ -29,7 +30,7 @@ from direct.distributed.PyDatagramIterator import PyDatagramIterator
 
 from otp.avatar import Avatar
 from otp.avatar.DistributedPlayer import DistributedPlayer
-from otp.login import TTAccount
+#from otp.login import TTAccount
 from otp.login import LoginTTSpecificDevAccount
 from otp.login import AccountServerConstants
 from otp.login.CreateAccountScreen import CreateAccountScreen
@@ -52,6 +53,7 @@ from otp.ai.GarbageLeakServerEventAggregator import GarbageLeakServerEventAggreg
 
 from .PotentialAvatar import PotentialAvatar
 from otp.distributed.DisneyMessageTypes import *
+from otp.distributed import DCClassImports
 
 class OTPClientRepository(ClientRepositoryBase):
     # Create a notify category
@@ -216,7 +218,7 @@ class OTPClientRepository(ClientRepositoryBase):
         else:
             self.notify.error("The required-login was not recognized.")
 
-        self.computeValidateDownload()
+        #self.computeValidateDownload()
 
         # Has the user provided a password to enable magic words?
         self.wantMagicWords = base.config.GetString('want-magic-words', '')
@@ -235,26 +237,11 @@ class OTPClientRepository(ClientRepositoryBase):
         # allow toontown-account-old-auth
         self.accountOldAuth = config.GetBool('%s-account-old-auth' % game.name,
                                              self.accountOldAuth)
-        self.useNewTTDevLogin = base.config.GetBool('use-tt-specific-dev-login', False)
+        #self.useNewTTDevLogin = base.config.GetBool('use-tt-specific-dev-login', False)
         # create a global login/account server interface
-        if self.useNewTTDevLogin:
-            self.loginInterface = LoginTTSpecificDevAccount.LoginTTSpecificDevAccount(self)
-            self.notify.info("loginInterface: LoginTTSpecificDevAccount")
-        elif self.accountOldAuth:
-            self.loginInterface = LoginGSAccount.LoginGSAccount(self)
-            self.notify.info("loginInterface: LoginGSAccount")
-        elif self.blue:
-            self.loginInterface = LoginGoAccount.LoginGoAccount(self)
-            self.notify.info("loginInterface: LoginGoAccount")
-        elif self.playToken:
-            self.loginInterface = LoginAstronAccount.LoginAstronAccount(self)
-            self.notify.info("loginInterface: LoginAstronAccount")
-        elif self.DISLToken:
-            self.loginInterface = LoginDISLTokenAccount(self)
-            self.notify.info("loginInterface: LoginDISLTokenAccount")
-        else:
-            self.loginInterface = LoginTTAccount.LoginTTAccount(self)
-            self.notify.info("loginInterface: LoginTTAccount")
+       
+        self.loginInterface = LoginAstronAccount.LoginAstronAccount(self)
+        self.notify.info("loginInterface: LoginAstronAccount")
 
         # This value comes in from the server
         self.secretChatAllowed = base.config.GetBool("allow-secret-chat", 0)
@@ -272,13 +259,12 @@ class OTPClientRepository(ClientRepositoryBase):
 
         # Is there a signature identifying the particular xrc file in
         # use?
-        if __debug__:
+        if __dev__:
             # In the dev environment, the default value comes from the
             # username.
             default = 'dev-%s' % (os.getenv("USER"))
             self.userSignature = base.config.GetString('signature', default);
-
-        else:
+        if not __dev__:
             # In the publish environment, the default value is "none".
             self.userSignature = base.config.GetString('signature', 'none');
 
@@ -543,6 +529,58 @@ class OTPClientRepository(ClientRepositoryBase):
         self.astronLoginManager = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_ASTRON_LOGIN_MANAGER, 'AstronLoginManager')
         self.chatRouter = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_CHAT_ROUTER, 'ChatRouter')
 
+    def readDCFile(self, dcFileNames=None):
+        dcFile = self.getDcFile()
+        dcFile.clear()
+        self.dclassesByName = {}
+        self.dclassesByNumber = {}
+        self.hashVal = 0
+
+        try:
+            dcStream
+
+        except:
+            pass
+
+        else:
+            self.notify.info('Detected DC file stream, reading it...')
+            dcFileNames = [dcStream]
+
+        if isinstance(dcFileNames, str):
+            dcFileNames = [dcFileNames]
+
+        if dcFileNames is not None:
+            for dcFileName in dcFileNames:
+                if isinstance(dcFileName, StringStream):
+                    readResult = dcFile.read(dcFileName, 'DC stream')
+                else:
+                    readResult = dcFile.read(dcFileName)
+                if not readResult:
+                    self.notify.error('Could not read DC file.')
+        else:
+            dcFile.readAll()
+
+        self.hashVal = DCClassImports.hashVal
+        for i in range(dcFile.getNumClasses()):
+            dclass = dcFile.getClass(i)
+            number = dclass.getNumber()
+            className = dclass.getName()
+            classDef = DCClassImports.dcImports.get(className)
+            if classDef is None:
+                self.notify.debug('No class definition for %s.' % className)
+            else:
+                if type(classDef) == types.ModuleType:
+                    if not hasattr(classDef, className):
+                        self.notify.warning('Module %s does not define class %s.' % (className, className))
+                        continue
+                    classDef = getattr(classDef, className)
+                if not inspect.isclass(classDef):
+                    self.notify.error('Symbol %s is not a class name.' % className)
+                else:
+                    dclass.setClassDef(classDef)
+            self.dclassesByName[className] = dclass
+            if number >= 0:
+                self.dclassesByNumber[number] = dclass
     def startLeakDetector(self):
         if hasattr(self, 'leakDetector'):
             return False
@@ -694,20 +732,13 @@ class OTPClientRepository(ClientRepositoryBase):
         self.gotoFirstScreen()
 
     def gotoFirstScreen(self):
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
-        # attempt to grab the account server constants
-        try:
-            self.accountServerConstants = AccountServerConstants.AccountServerConstants(self)
-        except TTAccount.TTAccountException as e:
-            self.notify.debug(str(e))
-            self.loginFSM.request('failedToGetServerConstants', [e])
-            return
+      
 
         self.startReaderPollTask()
 
         # is this a new installation?
-        newInstall = launcher.getIsNewInstallation()
-        newInstall = base.config.GetBool("new-installation", newInstall)
+        #newInstall = launcher.getIsNewInstallation()
+       # newInstall = base.config.GetBool("new-installation", newInstall)
 
         self.loginFSM.request("login")
 
@@ -1271,6 +1302,7 @@ class OTPClientRepository(ClientRepositoryBase):
         # toon while we wait for the player to click "ok"
         self.sendSetAvatarIdMsg(0)
         msg = OTPLocalizer.AfkForceAcknowledgeMessage
+        Discord.setData(details='Sleeping', image='toontown-logo', imageTxt='AFK')
         dialogClass = OTPGlobals.getDialogClass()
         self.afkDialog = dialogClass(
             text = msg, command = self.__handleAfkOk,
@@ -1289,6 +1321,7 @@ class OTPClientRepository(ClientRepositoryBase):
             self.afkDialog.cleanup()
             self.afkDialog = None
         self.handler = None
+        Discord.setData()
 
     ##### LoginFSM: periodTimeout #####
 
@@ -1707,6 +1740,8 @@ class OTPClientRepository(ClientRepositoryBase):
                 logFunc = self.notify.warning
                 allowExit = True
             else:
+                # In production, lets log the warning so we can do triage, but let
+                # the user go ahead and exit / logout without submitting a bug.
                 if __debug__:
                     # log the leaks and stop the client
                     logFunc = self.notify.error
@@ -2060,9 +2095,11 @@ class OTPClientRepository(ClientRepositoryBase):
             pyc = HashVal()
             if not __dev__:
                 self.hashFiles(pyc)
-
-            self.timeManager.d_setSignature(self.userSignature, h.asBin(),
+            if hasattr(self, 'userSignature'):
+                self.timeManager.d_setSignature(self.userSignature, h.asBin(),
                                             pyc.asBin())
+            else:
+                self.notify.warning('No user signature in OTPClientRepository')
             self.timeManager.sendCpuInfo()
 
             # Ask the TimeManager to sync us up.
@@ -2098,8 +2135,6 @@ class OTPClientRepository(ClientRepositoryBase):
         self._closeShardLoginState = loginState
         # set a flag to prevent new interests from being opened
         base.cr.setNoNewInterests(True)
-        if __debug__:
-            base.cr.printInterests()
 
     @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
     def _removeLocalAvFromStateServer(self):
@@ -2324,6 +2359,8 @@ class OTPClientRepository(ClientRepositoryBase):
         self._switchShardParams = [shardId, hoodId, zoneId, avId]
         # remove any interests in the old shard
         localAvatar.setLeftDistrict()
+        Discord.setDistrict(base.cr.activeDistrictMap[shardId].name)
+
         self.removeShardInterest(self._handleOldShardGone)
 
     @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
@@ -2562,6 +2599,7 @@ class OTPClientRepository(ClientRepositoryBase):
 
         if district is not None:
             self.notify.debug('chose %s: pop %s' % (district.name, district.avatarCount))
+            Discord.setDistrict(district.name)
         return district
 
     def getShardName(self, shardId):

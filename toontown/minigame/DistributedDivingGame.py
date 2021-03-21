@@ -462,14 +462,14 @@ class DistributedDivingGame(DistributedMinigame):
         #self.borderModel.hide()
         
         self.mapScaleRatio = 40
-        self.mapModel.reparentTo(aspect2d)
+        self.mapModel.reparentTo(base.a2dTopRight)
         self.mapModel.setScale((1.0 / self.mapScaleRatio))
         self.mapModel.setTransparency(1)
-        self.mapModel.setPos(1.15,-0.5,-0.125)
+        self.mapModel.setPos(-0.22,-0.5,-0.130)
         self.mapModel.setColorScale(1,1,1,.7)
         self.mapModel.hide()
-        
-        if None != self.sndAmbience:
+        #Disney you're coding sucks looool
+        if self.sndAmbience is not None:
             #base.playSfx(self.sndAmbience, looping = 1, volume = 0.8)
             self.sndAmbience.setLoop(True)
             self.sndAmbience.play()
@@ -490,7 +490,7 @@ class DistributedDivingGame(DistributedMinigame):
             
         # Restore camera
         base.camLens.setFar(ToontownGlobals.DefaultCameraFar)
-        base.camLens.setFov(ToontownGlobals.DefaultCameraFov)
+        base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov/(4/3))
 
         # Restore the background color
         base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
@@ -792,9 +792,9 @@ class DistributedDivingGame(DistributedMinigame):
 
         # score panel in the upper left
         self.treasurePanel = TreasureScorePanel.TreasureScorePanel()
-        self.treasurePanel.setPos(-1.19,0,.75)
+        self.treasurePanel.setPos(0.15,0, -0.27)
         self.treasurePanel.makeTransparent(.7)
-        
+        self.treasurePanel.reparentTo(base.a2dTopLeft)
         # make sure intro is finished
         self.introMovie.finish()
         

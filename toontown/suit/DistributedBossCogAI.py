@@ -489,12 +489,9 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
 
         numToons = min(len(toons), 8)
 
-        # The odd toon ends up randomly on one side or the other,
-        # unless there are fewer than four toons (in which case the
-        # odd toon always ends up on side A, to give the boss someone
-        # to address in the movies).
-        if (numToons < 4):
-            numToonsB = numToons // 2
+        #if number of toons is less than or equal to 4 than put them on the same side
+        if (numToons <= 4):
+            numToonsB = numToons
         else:
             numToonsB = (numToons + random.choice([0, 1])) // 2
         

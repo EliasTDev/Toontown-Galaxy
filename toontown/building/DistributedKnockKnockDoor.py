@@ -22,16 +22,13 @@ class DistributedKnockKnockDoor(DistributedAnimatedProp.DistributedAnimatedProp)
     """
     The client side representation of a knock, knock door.
     """
-    if __debug__:
-        notify = DirectNotifyGlobal.directNotify.newCategory(
-                'DistributedKnockKnockDoor')
 
     def __init__(self, cr):
         """
         cr is a ClientRepository.
         constructor for the DistributedKnockKnockDoor
         """
-        assert(self.debugPrint("__init()"))
+        #("__init()"))
         DistributedAnimatedProp.DistributedAnimatedProp.__init__(self, cr)
         self.fsm.setName('DistributedKnockKnockDoor')
         # self.generate will be called automatically.
@@ -43,20 +40,20 @@ class DistributedKnockKnockDoor(DistributedAnimatedProp.DistributedAnimatedProp)
         This method is called when the DistributedAnimatedProp is reintroduced
         to the world, either for the first time or from the cache.
         """
-        assert(self.debugPrint("generate()"))
+        #("generate()"))
         DistributedAnimatedProp.DistributedAnimatedProp.generate(self)
         self.avatarTracks=[]
         self.avatarId=0
 
     def announceGenerate(self):
-        assert(self.debugPrint("announceGenerate()"))
+        #("announceGenerate()"))
         DistributedAnimatedProp.DistributedAnimatedProp.announceGenerate(self)
         self.accept("exitKnockKnockDoorSphere_"+str(self.propId),
                     self.exitTrigger)
         self.acceptAvatar()
 
     def disable(self):
-        assert(self.debugPrint("disable()"))
+        #("disable()"))
         self.ignore("exitKnockKnockDoorSphere_"+str(self.propId))
         self.ignore("enterKnockKnockDoorSphere_"+str(self.propId))
         DistributedAnimatedProp.DistributedAnimatedProp.disable(self)
@@ -64,7 +61,7 @@ class DistributedKnockKnockDoor(DistributedAnimatedProp.DistributedAnimatedProp)
         # self.delete() will automatically be called.
 
     def delete(self):
-        assert(self.debugPrint("delete()"))
+        #("delete()"))
         DistributedAnimatedProp.DistributedAnimatedProp.delete(self)
         if self.rimshot:
             self.rimshot = None
@@ -77,11 +74,11 @@ class DistributedKnockKnockDoor(DistributedAnimatedProp.DistributedAnimatedProp)
             self.enterTrigger)
 
     def setAvatarInteract(self, avatarId):
-        assert(self.debugPrint("setAvatarInteract(avatarId=%s)" %(avatarId,)))
+        #("setAvatarInteract(avatarId=%s)" %(avatarId,)))
         DistributedAnimatedProp.DistributedAnimatedProp.setAvatarInteract(self, avatarId)
 
     def avatarExit(self, avatarId):
-        assert(self.debugPrint("avatarExit(avatarId=%s)"%(avatarId,)))
+        #("avatarExit(avatarId=%s)"%(avatarId,)))
         if avatarId == self.avatarId:
             for track in self.avatarTracks:
                 track.finish()
@@ -181,28 +178,28 @@ class DistributedKnockKnockDoor(DistributedAnimatedProp.DistributedAnimatedProp)
     ##### off state #####
 
     def enterOff(self):
-        assert(self.debugPrint("enterOff()"))
+        #("enterOff()"))
         DistributedAnimatedProp.DistributedAnimatedProp.enterOff(self)
 
     def exitOff(self):
-        assert(self.debugPrint("exitOff()"))
+        #("exitOff()"))
         DistributedAnimatedProp.DistributedAnimatedProp.exitOff(self)
 
     ##### attract state #####
 
     def enterAttract(self, ts):
-        assert(self.debugPrint("enterAttract()"))
+        #("enterAttract()"))
         DistributedAnimatedProp.DistributedAnimatedProp.enterAttract(self, ts)
         self.acceptAvatar()
 
     def exitAttract(self):
-        assert(self.debugPrint("exitAttract()"))
+        #("exitAttract()"))
         DistributedAnimatedProp.DistributedAnimatedProp.exitAttract(self)
 
     ##### playing state #####
 
     def enterPlaying(self, ts):
-        assert(self.debugPrint("enterPlaying()"))
+        #("enterPlaying()"))
         DistributedAnimatedProp.DistributedAnimatedProp.enterPlaying(self, ts)
         if self.avatarId:
             # Start animation at time stamp:
@@ -213,7 +210,7 @@ class DistributedKnockKnockDoor(DistributedAnimatedProp.DistributedAnimatedProp)
                 self.avatarTracks.append(track)
 
     def exitPlaying(self):
-        assert(self.debugPrint("exitPlaying()"))
+        #("exitPlaying()"))
         DistributedAnimatedProp.DistributedAnimatedProp.exitPlaying(self)
         for track in self.avatarTracks:
             track.finish()

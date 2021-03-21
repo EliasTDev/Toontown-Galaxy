@@ -1293,12 +1293,13 @@ class DistributedPetAI(DistributedSmoothNodeAI.DistributedSmoothNodeAI,
                          ClockDelta.globalClockDelta.getRealNetworkTime()])
 
     def sendClearMovie(self, task=None):
+        avId = self.air.getAvatarIdFromSender()
         assert(self.notify.debug('sendClearMovie()'))
         # Ignore unexpected exits on whoever I was busy with
         if self.air != None:
-            self.ignore(self.air.getAvatarExitEvent(self.busy))
+            self.ignore(self.air.getAvatarExitEvent(avId))
         taskMgr.remove(self.uniqueName("clearMovie"))
-        self.busy = 0
+        self.busy.remove(avId)
         self.d_setMovie(0, PetConstants.PET_MOVIE_CLEAR)
         return Task.done
         

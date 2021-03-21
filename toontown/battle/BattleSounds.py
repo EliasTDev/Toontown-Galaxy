@@ -33,24 +33,19 @@ class BattleSounds:
         to find battle sound effects. """
         
         self.sfxSearchPath = DSearchPath()
-        if AppRunnerGlobal.appRunner:
-            # In the web-publish runtime, look here:
-            self.sfxSearchPath.appendDirectory(Filename.expandFrom('$TT_3_ROOT/phase_3/audio/sfx'))
-            self.sfxSearchPath.appendDirectory(Filename.expandFrom('$TT_3_5_ROOT/phase_3.5/audio/sfx'))
-            self.sfxSearchPath.appendDirectory(Filename.expandFrom('$TT_4_ROOT/phase_4/audio/sfx'))
-            self.sfxSearchPath.appendDirectory(Filename.expandFrom('$TT_5_ROOT/phase_5/audio/sfx'))
-        else:
+
+        if __dev__:
             # In other environments, including the dev environment, look here:
+
             self.sfxSearchPath.appendDirectory(Filename('resources/phase_3/audio/sfx'))
             self.sfxSearchPath.appendDirectory(Filename('resources/phase_3.5/audio/sfx'))
             self.sfxSearchPath.appendDirectory(Filename('resources/phase_4/audio/sfx'))
             self.sfxSearchPath.appendDirectory(Filename('resources/phase_5/audio/sfx'))
-            self.sfxSearchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$TTMODELS/built/phase_3/audio/sfx')))
-            self.sfxSearchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$TTMODELS/built/phase_3.5/audio/sfx')))
-            self.sfxSearchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$TTMODELS/built/phase_4/audio/sfx')))
-            self.sfxSearchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$TTMODELS/built/phase_5/audio/sfx')))
-        
-
+        else:
+            self.sfxSearchPath.appendDirectory(Filename('phase_3/audio/sfx'))
+            self.sfxSearchPath.appendDirectory(Filename('phase_3.5/audio/sfx'))
+            self.sfxSearchPath.appendDirectory(Filename('phase_4/audio/sfx'))
+            self.sfxSearchPath.appendDirectory(Filename('phase_5/audio/sfx'))
     def clear(self):
         assert(self.notify.debug("clear()"))
         if self.isValid:

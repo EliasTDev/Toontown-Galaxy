@@ -17,6 +17,19 @@ from toontown.tutorial import TutorialForceAcknowledge
 from toontown.toonbase.ToontownGlobals import *
 from toontown.building import ToonInterior
 from toontown.hood import QuietZoneState
+from toontown.hood import HQTelescopeAnimatedProp
+from toontown.hood import HQPeriscopeAnimatedProp 
+from toontown.hood import HydrantInteractiveProp 
+from toontown.hood import MailboxOneAnimatedProp
+from toontown.hood import MailboxTwoAnimatedProp
+from toontown.hood import MailboxZeroAnimatedProp
+from toontown.hood import PetShopFishAnimatedProp
+from toontown.hood import SleepingHydrantAnimatedProp
+from toontown.hood import TrashcanInteractiveProp
+from toontown.hood import TrashcanOneAnimatedProp
+from toontown.hood import TrashcanTwoAnimatedProp
+from toontown.hood import TrashcanZeroAnimatedProp
+
 
 class SafeZoneLoader(StateData.StateData):
     """SafeZoneLoader class"""
@@ -114,6 +127,7 @@ class SafeZoneLoader(StateData.StateData):
         self.fsm.request(stateName, [requestStatus])
     
     def createSafeZone(self, dnaFile):
+        Discord.setZone(self.hood.id)
         assert(self.notify.debug("createSafeZone()"))
         # Load the safe zone specific models and textures
         # The estate has no safeZoneStorageDNAFile

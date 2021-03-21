@@ -1,4 +1,4 @@
-1608787995
+1609527959
 3 3
 8 libp3egg 4 hhEq 11 panda3d.egg 
 985
@@ -12814,7 +12814,7 @@ EggXfmAnimData::~EggXfmAnimData(void);
 3 11 TT_cube_map 23 EggTexture::TT_cube_map 0
 4 0 0
 
-2059 6 Format 0 794624 18 EggTexture::Format 18 EggTexture::Format 2056 0 0 0 0 0 0 0 0 0 19 13 F_unspecified 25 EggTexture::F_unspecified 0
+2059 6 Format 0 794624 18 EggTexture::Format 18 EggTexture::Format 2056 0 0 0 0 0 0 0 0 0 21 13 F_unspecified 25 EggTexture::F_unspecified 0
 0 6 F_rgba 18 EggTexture::F_rgba 0
 1 6 F_rgbm 18 EggTexture::F_rgbm 0
 2 8 F_rgba12 20 EggTexture::F_rgba12 0
@@ -12833,7 +12833,11 @@ EggXfmAnimData::~EggXfmAnimData(void);
 15 11 F_luminance 23 EggTexture::F_luminance 0
 16 17 F_luminance_alpha 29 EggTexture::F_luminance_alpha 0
 17 21 F_luminance_alphamask 33 EggTexture::F_luminance_alphamask 0
-18 0 0
+18 6 F_srgb 18 EggTexture::F_srgb 56
+// Only for compatibility with .bam, use is discouraged!
+19 12 F_srgb_alpha 24 EggTexture::F_srgb_alpha 56
+// Only for compatibility with .bam, use is discouraged!
+20 0 0
 
 2060 15 CompressionMode 0 794624 27 EggTexture::CompressionMode 27 EggTexture::CompressionMode 2056 0 0 0 0 0 0 0 0 0 9 10 CM_default 22 EggTexture::CM_default 0
 0 6 CM_off 18 EggTexture::CM_off 0
@@ -12872,7 +12876,7 @@ EggXfmAnimData::~EggXfmAnimData(void);
 // "mipmap trilinear"
 6 0 0
 
-2063 7 EnvType 0 794624 19 EggTexture::EnvType 19 EggTexture::EnvType 2056 0 0 0 0 0 0 0 0 0 16 14 ET_unspecified 26 EggTexture::ET_unspecified 0
+2063 7 EnvType 0 794624 19 EggTexture::EnvType 19 EggTexture::EnvType 2056 0 0 0 0 0 0 0 0 0 17 14 ET_unspecified 26 EggTexture::ET_unspecified 0
 0 11 ET_modulate 23 EggTexture::ET_modulate 0
 1 8 ET_decal 20 EggTexture::ET_decal 0
 2 8 ET_blend 20 EggTexture::ET_blend 0
@@ -12888,7 +12892,8 @@ EggXfmAnimData::~EggXfmAnimData(void);
 12 9 ET_height 21 EggTexture::ET_height 0
 13 11 ET_selector 23 EggTexture::ET_selector 0
 14 15 ET_normal_gloss 27 EggTexture::ET_normal_gloss 0
-15 0 0
+15 11 ET_emission 23 EggTexture::ET_emission 0
+16 0 0
 
 2064 11 CombineMode 0 794624 23 EggTexture::CombineMode 23 EggTexture::CombineMode 2056 0 0 0 0 0 0 0 0 0 9 14 CM_unspecified 26 EggTexture::CM_unspecified 0
 0 10 CM_replace 22 EggTexture::CM_replace 0

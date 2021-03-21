@@ -11,8 +11,6 @@ from otp.guild import DistributedGuildBase
 from otp.guild import DistributedGuildAI
 
 class UberDogServer(DistributedObjectAI.DistributedObjectAI):
-    if __debug__:
-        notify = DirectNotifyGlobal.directNotify.newCategory('UberDog')
 
     def __init__(self, air):
         assert self.notify.debugCall()

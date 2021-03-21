@@ -26,13 +26,11 @@ class DistributedHydrantZeroMgr(DistributedPhaseEventMgr.DistributedPhaseEventMg
         
     def setCurPhase(self, newPhase):
         """We've gotten a new phase lets, tell the hydrants."""
-        assert self.notify.debugStateCall(self)
         DistributedPhaseEventMgr.DistributedPhaseEventMgr.setCurPhase(self,newPhase)
         messenger.send('hydrantZeroPhase', [newPhase])
 
     def setIsRunning(self, isRunning):
         """We've gotten a new phase lets, tell the hydrants."""
-        assert self.notify.debugStateCall(self)
         DistributedPhaseEventMgr.DistributedPhaseEventMgr.setIsRunning(self, isRunning )
         messenger.send('hydrantZeroIsRunning', [isRunning])        
 

@@ -55,7 +55,7 @@ class Avatar(Actor, ShadowCaster):
         Create the toon, suit, or char specified by the dna array
         """
         self._name = "" # name is used in debugPrint.
-        assert self.debugPrint("Avatar()")
+        
         try:
             self.Avatar_initialized
             return
@@ -848,7 +848,7 @@ class Avatar(Actor, ShadowCaster):
         # If the shadow where not pointed strait down, we would need to
         # get magnitude of the vector.  Since it is strait down, we'll
         # just get the z:
-        #spammy --> assert self.debugPrint("getAirborneHeight() returning %s"%(height.getZ(),))
+        #spammy --> #("getAirborneHeight() returning %s"%(height.getZ(),))
         return height.getZ() + 0.025
 
     def initializeNametag3d(self):
@@ -966,10 +966,6 @@ class Avatar(Actor, ShadowCaster):
             self.nametag.unmanage(base.marginManager)
             self.ignore(self.nametag.getUniqueId())
 
-    if __debug__:
-        def debugPrint(self, message):
-            """for debugging"""
-            return self.notify.debug("%s %s %s"%(id(self), self._name, message))
 
     def loop(self, animName, restart=1, partName=None,fromFrame=None, toFrame=None):
         return Actor.loop(self,animName,restart,partName,fromFrame,toFrame)

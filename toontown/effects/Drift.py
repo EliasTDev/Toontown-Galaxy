@@ -18,9 +18,14 @@ class Drift(NodePath):
         self.effect = ParticleEffect.ParticleEffect()
 
         particleSearchPath = DSearchPath()
-        if AppRunnerGlobal.appRunner:
-            # In the web-publish runtime, it will always be here:
-            particleSearchPath.appendDirectory(Filename.expandFrom('$TT_3_5_ROOT/phase_3.5/etc'))
+        if not __dev__:
+            particleSearchPath.appendDirectory(Filename('phase_3.5/etc'))
+            particleSearchPath.appendDirectory(Filename('phase_4/etc'))
+            particleSearchPath.appendDirectory(Filename('phase_5/etc'))
+            particleSearchPath.appendDirectory(Filename('phase_6/etc'))
+            particleSearchPath.appendDirectory(Filename('phase_7/etc'))
+            particleSearchPath.appendDirectory(Filename('phase_8/etc'))
+            particleSearchPath.appendDirectory(Filename('phase_9/etc'))
         else:
             # In other environments, including the dev environment, look here:
             basePath = os.path.expandvars('$TOONTOWN') or './toontown'

@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 from toontown.toonbase import ToontownGlobals
@@ -51,7 +51,8 @@ class ToonTeleportPanel(DirectFrame):
 
         # initialize our base class.
         DirectFrame.__init__(self,
-                             pos = (0.3, 0.1, 0.65),
+                             pos = (-1, 0.1, -0.4),
+                             parent = base.a2dTopRight,
                              image_color = ToontownGlobals.GlobalDialogColor,
                              image_scale = (1.0, 1.0, 0.6),
                              text = '',

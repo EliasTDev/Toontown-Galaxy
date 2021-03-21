@@ -12,9 +12,6 @@
         ## "otp/src/configfiles/otp.dc"
         ## "otp/src/guild/DistributedGuildMembershipAI.py"
     ## """
-    ## if __debug__:
-        ## notify = DirectNotifyGlobal.directNotify.newCategory(
-                ## 'DistributedGuildMembership')
 
     ## def __init__(self, air):
         ## assert self.notify.debugCall()

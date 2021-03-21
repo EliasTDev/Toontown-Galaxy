@@ -16,6 +16,7 @@ from direct.showbase import RandomNumGen
 import random
 
 class DistributedButterfly(DistributedObject.DistributedObject): 
+    return
 
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedButterfly')
 

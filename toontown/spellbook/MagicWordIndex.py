@@ -240,6 +240,7 @@ class MagicWord:
             return depts
         else:
             return [0, 1, 2, 3]
+            
 class SetHP(MagicWord):
     aliases = ["hp", "setlaff", "laff"]
     desc = "Sets the target's current laff."
@@ -257,11 +258,69 @@ class SetHP(MagicWord):
             return "Can't set {0}'s laff to {1}! Specify a value between -100 and {0}'s max laff ({2}).".format(
                 toon.getName(), hp, toon.getMaxHp())
 
-        if hp <= 0 and (toon.getImmortalMode() or toon.getTempImmortalMode()):
+        if hp <= 0 and (toon.getImmortalMode()):
             return "Can't set {0}'s laff to {1} because they are in Immortal Mode!".format(toon.getName(), hp)
 
         toon.b_setHp(hp)
         return "{}'s laff has been set to {}.".format(toon.getName(), hp)
+
+class SetGMIcon(MagicWord):
+    aliases = ['gm', 'gmicon', 'setgm']
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    arguments = [("id", int, True)]
+    accessLevel = 'MODERATOR'
+    desc = "Sets the target's GM Icon."
+
+    def handleWord(self, invoker, avId, toon, *args):
+        id = args[0]
+        if not 0 <= id <= 8:
+            return "Invalid GM Icon given."
+
+        staffAccess = toon.getStaffAccess()
+        if id > 3 and staffAccess < 600:
+            return "Your access level is too low to use this GM icon."
+        else:
+            if (staffAccess < 400 and id > 2) or (staffAccess < 500 and id > 3):
+                return "Your access level is too low to use this GM icon."
+
+        if toon.isGM() and id != 0:
+            toon.b_setGM(0)
+        elif toon.isGM() and id == 0:
+            toon.b_setGM(0)
+
+        toon.b_setGM(id)
+
+    
+
+        return "You have set {0} to GM type {1}".format(toon.getName(), id)
+
+
+class ToggleGM(MagicWord):
+    desc = 'Toggles GM icon.'
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    accessLevel = 'COMMUNITY'
+    def handleWord(self, invoker, avId, toon, *args):
+        access = invoker.getStaffAccess()
+        if invoker.isGM():
+            invoker.b_setGM(0)
+            return "You have disabled your GM icon."
+        else:
+            if access >= 700:
+                invoker.b_setGM(1)
+            elif access >= 600:
+                invoker.b_setGM(1)
+            elif access >= 500:
+                invoker.b_setGM(1)
+            elif access >= 400:
+                invoker.b_setGM(2)
+            elif access >= 200:
+                invoker.b_setGM(3)
+            return 'You have enabled your GM icon.'
+            
+            
+            
+            
+        
 
 
 class SetMaxHP(MagicWord):
@@ -435,7 +494,7 @@ class Rename(MagicWord):
 
     def handleWord(self, invoker, avId, toon, *args):
         word = args[0]
-        name = word[8:].strip()
+        name = word.strip()
         pastName = toon.getName()
         if name == "":
             response = "Invalid name: Name can't be blank."
@@ -445,6 +504,7 @@ class Rename(MagicWord):
             toon.d_setName(name)
             response = 'Changed {0} name to {1}'.format(pastName, name)
         return response 
+
 class BadName(MagicWord):
     aliases = ['setbad', 'setbadname']
     desc = "Set's the target's name back to color + animal."
@@ -1339,7 +1399,7 @@ class DoMinigame(MagicWord):
         return response 
 class SummonSuit(MagicWord):
     aliases = ['call', 'summoncog']
-    arguments = [('type', str, False, 'x'), ('level', int, True), ('skelecog', bool, False, False ), ('revives', int, False, 0)]
+    arguments = [('type', str, True, 'x'), ('level', int, True), ('skelecog', bool, False, False ), ('revives', int, False, 0)]
     accessLevel = 'DEVELOPER'
     desc = 'Summons a suit.'
     advancedDesc = """Calls in a cog from the sky.  If type is specified, it should be a
@@ -1358,13 +1418,22 @@ class SummonSuit(MagicWord):
         revives = None
 
         if len(args) > 0:
-            name = args[0]
-            if name == 'x':
-                name = None
+            try:
+                int(name)
+                return 'Argument 1 cannot be an integer.'
+            except:
+
+
+                name = args[0]
+                if name == 'x':
+                    name = None
+                if name not in SuitDNA.suitHeadTypes:
+                    return 'Not a valid cog head type.'
 
         if len(args) > 1:
             level = int(args[1])
-
+            if level > 25 or level <= 0:
+                return 'Invalid level specified.'
         if len(args) > 2:
             skelecog = args[2]
 
@@ -1657,22 +1726,22 @@ class DNA(MagicWord):
 
         return 'Invalid part: ' + part
 
-class WhoAll(MagicWord):
-    aliases = ['allonline', 'alltoons']
-    desc = 'Reports everyone online.'
-    advancedDesc = """Reports everyone online.  Listed with accountName and avatarName."""
-    execLocation = MagicWordConfig.EXEC_LOC_SERVER
-    accessLevel = 'MODERATOR'
+#class WhoAll(MagicWord):
+ #   aliases = ['allonline', 'alltoons']
+  #  desc = 'Reports everyone online.'
+   # advancedDesc = """Reports everyone online.  Listed with accountName and avatarName."""
+   # execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    #accessLevel = 'MODERATOR'
 
-    def handleWord(self, invoker, avId, toon, *args):
-        str = ''
-        for obj in list(self.air.doId2do.values()):
-            if hasattr(obj, "accountName"):
-                str += '%s %s\n' % (obj.accountName, obj.name)
-        if not str:
-            str = "No avatars."
+    #def handleWord(self, invoker, avId, toon, *args):
+      #  str = ''
+       # for obj in list(self.air.doId2do.values()):
+      #      if hasattr(obj, "accountName"):
+    #            str += '%s %s\n' % (obj.accountName, obj.name)
+      #  if not str:
+    #        str = "No avatars."
 
-        return str     
+    #    return str     
 
 
 
@@ -1692,11 +1761,10 @@ class ToggleOobe(MagicWord):
 
 class ToggleOobeCull(MagicWord):
     aliases = ['oobecull']
-     #TODO add simple description
     desc = "Toggles out of body experience view with culling debugging"
     advancedDesc = """While in OOBE mode , cull the viewing frustum as if
         it were still attached to our original camera.  This allows us
-        to visualize the effectiveness of our bounding volumes.""" #TODO 
+        to visualize the effectiveness of our bounding volumes.""" 
     execLocation = MagicWordConfig.EXEC_LOC_CLIENT
     accessLevel = 'COMMUNITY'
     affectRange = [MagicWordConfig.AFFECT_SELF]
@@ -1724,7 +1792,7 @@ class ToggleTexMemory(MagicWord):
     desc = 'Toggles a handy texture memory watcher utility.' 
     advancedDesc = 'Toggles a handy texture memory watcher utility.' 
     accessLevel = 'COMMUNITy'
-    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    execLocation = MagicWordConfig.EXEC_LOC_CLIENT
     affectRange = [MagicWordConfig.AFFECT_SELF]
 
     def handleWord(self, invoker, avId, toon, *args):
@@ -1737,7 +1805,7 @@ class ToggleShowVertices(MagicWord):
     advancedDesc ="""Toggles a mode that visualizes vertex density per screen
         area."""
     accessLevel = 'COMMUNITY'
-    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    execLocation = MagicWordConfig.EXEC_LOC_CLIENT
     affectRange = [MagicWordConfig.AFFECT_SELF]
    
     def handleWord(self, invoker, avId, toon, *args):
@@ -1748,7 +1816,7 @@ class ToggleWireframe(MagicWord):
     desc = 'Toggles the wireframe'
     advancedDesc ="""Toggles between `wireframeOn()` and `wireframeOff()"""
     accessLevel = 'COMMUNITY'
-    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    execLocation = MagicWordConfig.EXEC_LOC_CLIENT
     affectRange = [MagicWordConfig.AFFECT_SELF]
   
     def handleWord(self, invoker, avId, toon, *args):
@@ -1988,7 +2056,7 @@ class ResetFurniture(MagicWord):
 class SetFishingRod(MagicWord):
     desc = "Sets the target's fishing rod."
     aliases = ['rod', 'fishingrod']
-    acccessLevel = 'MODERATOR'
+    accessLevel = 'MODERATOR'
     execLocation = MagicWordConfig.EXEC_LOC_SERVER
 
     def handleWord(self, invoker, avId, av, *args):
@@ -2004,20 +2072,25 @@ class SetFishingRod(MagicWord):
 class SetNPCFriend(MagicWord):
     aliases = ['setsoscard', 'sos', 'setsos']
     desc = "Modifies the target's specified sos card amount"
-    arguments = [('npcId', int, True), ('amount', int, False, 1)]
-    acccessLevel = 'DEVELOPER'
+    advancedDesc = 'List of sos cards ids to names will be in discord.'
+    arguments = [('npcName', str, True), ('amount', int, False, 1)]
+    accessLevel = 'DEVELOPER'
     execLocation = MagicWordConfig.EXEC_LOC_SERVER
 
 
     def handleWord(self, invoker, avId, av, *args):
-            npcId = int(args[0])
+            npcName = str(args[0])
             numCalls = int(args[1])
+            npcId = NPCToons.getNPCId(npcName)
+            if npcId is None:
+                return 'invalid SOS name'
             if numCalls > 100 or numCalls <= 0:
                 return 'Invalid amount for sos card'
             if self.doNpcFriend(av, npcId, numCalls):
-                return "added NPC friend"
+                return "Added sos card {0}".format(npcName)
             else:
                 return "invalid NPC name"
+                
 class GiveBessies(MagicWord):
     aliases = ['uberdrop', 'pianos', 'bessies', 'barnaclebessies']
     desc = 'Gives 100 barnacle bessies to invoker.'
@@ -2381,6 +2454,18 @@ class ToggleCollisionsOff(MagicWord):
 
     def handleWord(self, invoker, avId, toon, *args):
         toon.collisionsOff()
+class SetUnites(MagicWord):
+    aliases = ['unites']
+    desc = 'Restock all resistance messages.'
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    arguments=[("amount", int, False, 32767)]
+    accessLevel = 'MODERATOR'
+
+    def handleWord(self, invoker, avId, toon, *args):
+        value = min(args[0], 32767)
+        invoker.restockAllResistanceMessages(value)
+        return "Restocked {0} unites!".format(value)
+        
 # Instantiate all classes defined here to register them.
 # A bit hacky, but better than the old system
 for item in list(globals().values()):

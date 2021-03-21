@@ -3,7 +3,7 @@
 # AI code should not import ShowBaseGlobal because it creates a graphics window
 # Use AIBaseGlobal instead
 from otp.ai.AIBaseGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed.ClockDelta import *
 
 from otp.avatar import DistributedAvatarAI
@@ -19,7 +19,7 @@ from toontown.building import FADoorCodes
 from . import DistributedSuitBaseAI
 from toontown.hood import ZoneUtil
 import random
-from libpandadna import SuitLeg
+from libtoontown import SuitLeg
 
 class DistributedSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
     """

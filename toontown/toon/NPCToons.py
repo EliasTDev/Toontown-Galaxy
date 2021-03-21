@@ -1386,6 +1386,17 @@ def getNPCName(npcId):
     else:
         return None
 
+def getNPCId(npcName):
+    """
+    get the id of the NPC based on name given
+    """
+    _list = TTLocalizer.NPCToonNames
+    for id, name in _list.items():
+        if name == npcName:
+            return id
+    return None
+
+
 def npcFriendsMinMaxStars(minStars, maxStars):
     return [ id for id in list(npcFriends.keys()) if getNPCTrackLevelHpRarity(id)[3] >= minStars and getNPCTrackLevelHpRarity(id)[3] <= maxStars ]
 

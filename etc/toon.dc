@@ -40,7 +40,7 @@ from toontown.tutorial import DistributedBattleTutorial/AI
 from toontown.coghq import DistributedBattleFactory/AI
 from toontown.battle import DistributedBattleFinal/AI
 from toontown.safezone import DistributedBoat/AI
-from toontown.safezone import DistributedButterfly/AI
+//from toontown.safezone import DistributedButterfly/AI
 from toontown.safezone import DistributedMMPiano/AI
 from toontown.safezone import DistributedDGFlower/AI
 from toontown.fishing import DistributedFishingPond/AI
@@ -499,6 +499,7 @@ dclass DistributedAnimatedProp: DistributedObject {
 typedef int16 pair16[2];
 
 dclass DistributedToon: DistributedPlayer {
+  setGM(uint8 = 0) required broadcast ownrecv db;
   setTrueFriends(uint32[] = []) required ownrecv db;
   setDNAString(blob) required broadcast ownrecv db;
   setMaxBankMoney(int16 = 30000) required broadcast ownrecv db;
@@ -1434,11 +1435,11 @@ dclass DistributedBoat: DistributedObject {
   setState(string state, int16 timestamp) required broadcast ram;
 };
 
-dclass DistributedButterfly: DistributedObject {
-  setArea(int16 playground, int16 area) required broadcast ram;
-  setState(int8 stateIndex, uint8 curIndex, uint8 destIndex, uint16 time / 10, int16 timestamp) required broadcast ram;
-  avatarEnter() airecv clsend;     //appears safe.
-};
+//dclass DistributedButterfly: DistributedObject {
+  //setArea(int16 playground, int16 area) required broadcast ram;
+  //setState(int8 stateIndex, uint8 curIndex, uint8 destIndex, uint16 time / 10, int16 timestamp) required broadcast ram;
+  //avatarEnter() airecv clsend;     //appears safe.
+//};
 
 dclass DistributedMMPiano: DistributedObject {
   // Messages from clients to AI

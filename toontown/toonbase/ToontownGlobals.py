@@ -484,10 +484,6 @@ MintNumRooms = {
     CashbotMintIntB : 3*( 8,) + 6*( 9,) + 6*(10,) + 5*(11,),
     CashbotMintIntC : 4*(10,) +10*(11,) + 6*(12,),
     }
-if __debug__:
-    for mintId in MintNumRooms:
-        assert len(MintNumRooms[mintId]) == MintNumFloors[mintId]
-
 # Country Club
 BossbotCountryClubCogLevel      = 11
 BossbotCountryClubSkelecogLevel = 12
@@ -548,11 +544,6 @@ StageNumRooms = {
     LawbotStageIntC : 4*(10,) +10*(11,) + 6*(12,),
     LawbotStageIntD : 4*(10,) +10*(11,) + 6*(12,),
     }
-"""
-if __debug__:
-    for stageId in StageNumRooms:
-        assert len(StageNumRooms[stageId]) == StageNumFloors[stageId]
-        """
 
 # CogHQ factory types
 # these are internal, do not localize
@@ -690,7 +681,7 @@ MinigameReleaseDates = {
     }
 
 # Moved to OTPGlobals
-"""
+
 # Hotkeys
 ThinkPosHotkey = "f1-up"
 PlaceMarkerHotkey = "f2-up"
@@ -704,7 +695,7 @@ QuestsHotkeyOff = "end-up"
 InventoryHotkeyOn = "home"
 InventoryHotkeyOff = "home-up"
 PrintCamPosHotkey = "f12-up"   # just for dbging
-"""
+
 
 # Keyboard inactivity timeout
 KeyboardTimeout = 300
@@ -865,7 +856,7 @@ TrophyStarColors = (
     )
 
 # OTPGlobals
-"""
+
 ToonStandableGround = 0.707 # if ToonStandableGround > angle: toon is on ground.
 
 ToonForwardSpeed = 16.0 # feet per second
@@ -878,7 +869,7 @@ ToonForwardSlowSpeed = 6.0
 ToonJumpSlowForce = 4.0 # feet per second
 ToonReverseSlowSpeed = 2.5
 ToonRotateSlowSpeed = 33.0
-"""
+
 
 MickeySpeed = 5.0 # feet per second
 VampireMickeySpeed = 1.15

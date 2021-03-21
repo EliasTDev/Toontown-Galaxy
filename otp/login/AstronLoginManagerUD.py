@@ -47,7 +47,7 @@ class DeveloperAccountDB(AccountDB):
             callback({'success': True,
                       'accountId': 0,
                       'databaseId': playToken,
-                      'staffAccess': 'SYSTEM ADMIN'})
+                      'staffAccess': 'USER'})
         else:
             def handleAccountInfo(dclass, fields):
             # We already have an account object, so we'll just return what we have.

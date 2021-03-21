@@ -14,7 +14,7 @@ CLICKED_NAMETAG_MESSAGE_NAME = 'clickedNametag'
 FOCUS_OUT_MESSAGE_NAME = 'focusOut'
 
 PREFIX_DEFAULT = '~'
-PREFIX_ALLOWED = ['~', '?', '/', '<', ':', ';']
+PREFIX_ALLOWED = ['~', '?', '/', '<', ':', ';',]
 if config.GetBool('exec-chat', False):
     PREFIX_ALLOWED.append('>')
 
