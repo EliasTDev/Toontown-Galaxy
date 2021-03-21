@@ -4,6 +4,7 @@ from direct.showbase.DirectObject import DirectObject
 from toontown.toonbase import ToontownGlobals
 
 import string
+from settings import Settings
 
 
 class ControlManager(DirectObject):
@@ -17,20 +18,22 @@ class ControlManager(DirectObject):
         self.activeHotkeys = []
         self.changedHotkeys = {ToontownGlobals.HotkeyMovement: [],
                                ToontownGlobals.HotkeyInteraction: [],
-                               ToontownGlobals.HotkeyDebug: [],
                                ToontownGlobals.HotkeyMisc: []}
         self.disableAlphaNumericHotkeys = False
         self.reloadHotkeys(True)
-        base.settings = base.Settings
+        
 
     def reloadHotkeys(self, realtime=False):
         self.ignoreAll()
         disableChat = 1
         activeHotkeys = []
         for category in ToontownGlobals.Hotkeys:
-            controlCategory = base.settings.getOption('controls', category, {})
+            controlCategory = Settings.getOption('controls', category, {})
+            if controlCategory is None:
+                controlCategory = {}
             if controlCategory == {}:
                 continue
+            
             for key in controlCategory.keys():
                 hotkey = controlCategory.get(key)
                 alphaNumeric = self.isAlphaNumericHotkey(hotkey)
@@ -47,7 +50,9 @@ class ControlManager(DirectObject):
         self.activeHotkeys = activeHotkeys
 
         for category in ToontownGlobals.Hotkeys:
-            controlCategory = base.settings.getOption('controls', category, {})
+            controlCategory = Settings.getOption('controls', category, {})
+            if controlCategory is None:
+                controlCategory = {}
             if controlCategory == {}:
                 continue
             for key in controlCategory.keys():
@@ -59,12 +64,12 @@ class ControlManager(DirectObject):
                         self.accept(failSafeKey + '-up', self.hotkeyPressed, extraArgs=[self.getHotkeyName(category, key, True), hotkey, key])
 
         self.disableChat = disableChat
-        if hasattr(base, 'localAvatar') and hasattr(base.localAvatar, 'chatMgr') and base.localAvatar.chatMgr:
-            base.localAvatar.chatMgr.setBackgroundFocus(disableChat, realtime)
-            if not disableChat:
-                base.localAvatar.chatMgr.chatLog.enableHotkey()
-            else:
-                base.localAvatar.chatMgr.chatLog.disableHotkey()
+        #if hasattr(base, 'localAvatar') and hasattr(base.localAvatar, 'chatMgr') and base.localAvatar.chatMgr:
+            #base.localAvatar.chatMgr.setBackgroundFocus(disableChat, realtime)
+           # if not disableChat:
+            #    base.localAvatar.chatMgr.chatLog.enableHotkey()
+           # else:
+             #   base.localAvatar.chatMgr.chatLog.disableHotkey()
 
     def getHotkeyName(self, category, id, released=False):
         hotkey = 'hotkey-' + category + '-' + str(id)
@@ -93,6 +98,9 @@ class ControlManager(DirectObject):
             messenger.send(hotkeyName)
 
     def getControlName(self, name, label=False):
+        if name is None:
+            name = ''
+
         if ToontownGlobals.Separater in name:
             name = name.replace(ToontownGlobals.Separater, ' + ')
 
@@ -119,7 +127,7 @@ class ControlManager(DirectObject):
             category = int(info[:2])
             index = int(info[2:4])
             categoryName = ToontownGlobals.Hotkeys[category]
-            controlCategory = base.settings.getOption('controls', categoryName, {})
+            controlCategory = Settings.getOption('controls', categoryName, {})
             hotkey = self.getControlName(controlCategory.get(str(index)), True)
             dialog = first + hotkey + info[4:]
 

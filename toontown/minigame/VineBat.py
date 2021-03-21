@@ -6,7 +6,7 @@ from direct.directnotify import DirectNotifyGlobal
 from pandac.PandaModules import *
 from . import VineGameGlobals
 from direct.interval.SoundInterval import SoundInterval
-
+from settings import *
 
 class VineBat(NodePath, DirectObject):
     """
@@ -96,7 +96,7 @@ class VineBat(NodePath, DirectObject):
         self.soundInterval = SoundInterval(self.flySfx, node=self,
                                            listenerNode = base.localAvatar,
                                            seamlessLoop = True,
-                                           volume = 0.5,
+                                           volume = 0.5 * Settings.getSfxVolume(),
                                            cutOff = 240)
         self.reparentTo(render)
 

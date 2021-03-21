@@ -19,7 +19,7 @@ from toontown.coghq import BanquetTableBase
 from toontown.coghq import DinerStatusIndicator
 from toontown.battle import MovieUtil
 
-
+from settings import *
 class DistributedBanquetTable(DistributedObject.DistributedObject, FSM.FSM, BanquetTableBase.BanquetTableBase):
     """ This class represents a banquet table and the associated chairs,
     The DistributedBossbotBoss creates several of these of these for the CEO
@@ -226,7 +226,7 @@ class DistributedBanquetTable(DistributedObject.DistributedObject, FSM.FSM, Banq
         self.squirtSfx = loader.loadSfx('phase_4/audio/sfx/AA_squirt_seltzer_miss.ogg')
         self.hitBossSfx = loader.loadSfx('phase_5/audio/sfx/SA_watercooler_spray_only.ogg')
         self.hitBossSoundInterval = SoundInterval(self.hitBossSfx, node=self.boss,
-                                                  volume = 1.0,
+                                                  volume = Settings.getSfxVolume(),
                                                   )
         self.serveFoodSfx = loader.loadSfx('phase_4/audio/sfx/MG_sfx_travel_game_bell_for_trolley.ogg')
         self.pitcherMoveSfx = base.loader.loadSfx(
@@ -492,7 +492,7 @@ class DistributedBanquetTable(DistributedObject.DistributedObject, FSM.FSM, Banq
             Wait(0.8),
             SoundInterval(spinningSound, duration=1.2, startTime = 1.5, volume=0.2, node=deathSuit),
             SoundInterval(spinningSound, duration=3.0, startTime = 0.6, volume=0.8, node=deathSuit),
-            SoundInterval(deathSound, volume = 0.32, node=deathSuit),
+            SoundInterval(deathSound, volume = 0.32 * Settings.getSfxVolume(), node=deathSuit),
             )        
         intervalName = "dinerDie-%d-%d" % (self.index, chairIndex)
         deathIval = Parallel(ival, deathSoundTrack)
@@ -1645,4 +1645,4 @@ class DistributedBanquetTable(DistributedObject.DistributedObject, FSM.FSM, Banq
                 self.moveSound.stop()
             self.moveSound = sfx
             if self.moveSound:
-                base.playSfx(self.moveSound, looping=1, volume = 0.5)
+                base.playSfx(self.moveSound, looping=1, volume = 0.5 )

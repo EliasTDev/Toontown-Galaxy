@@ -3462,3 +3462,73 @@ def timeElapsedString(timeDelta):
             return "%s minutes ago" % (timeDelta.seconds / 60)
 
 
+
+HotkeyCategoryNames = {
+       "movement": "movement",
+       "interaction": "interaction",
+      "misc": "misc",
+}
+
+
+HotkeyUp = 0
+HotkeyDown = 1
+HotkeyLeft = 2
+HotkeyRight = 3
+HotkeyJump = 4
+HotkeyThrow = 5
+
+HotkeyBook = 0
+HotkeyBookSecondary = 1
+HotkeyTasks = 2
+HotkeyTasksClose = 3
+HotkeyInventory = 4
+HotkeyInventoryClose = 5
+HotkeyFriends = 6
+HotkeyMap = 7
+HotkeyMapClose = 8
+HotkeyScreenshot = 9
+HotkeyChat = 10
+
+HotkeyCameraForward = 0
+HotkeyCameraBackward = 1
+HotkeyCameraFirstPerson = 2
+HotkeyPageUp = 3
+HotkeyPageDown = 4
+HotkeyNames = {
+    0: {
+           HotkeyUp: 'Move Forward',
+           HotkeyDown: 'Move Backwards',
+           HotkeyLeft: 'Move Left',
+           HotkeyRight: 'Move Right',
+           HotkeyJump: 'Jump',
+           HotkeyThrow: 'Throw'
+
+    },
+    1: {
+           HotkeyBook: 'Open Book',
+           HotkeyBookSecondary: 'Open Book Secondary',
+           HotkeyTasks: 'Open Tasks',
+           HotkeyTasksClose: 'Close Tasks',
+           HotkeyInventory: 'Open Inventory',
+           HotkeyInventoryClose: 'Close inventory',
+           HotkeyFriends: 'Open Friends',
+           HotkeyMap: 'Open map',
+           HotkeyMapClose: 'Close map',
+           HotkeyScreenshot: 'screenshot',
+           HotkeyChat: 'chat'
+    },
+    2:
+    {
+           HotkeyCameraForward: 'Move Camera Forward',
+           HotkeyCameraBackward: 'Move Camera Backwards',
+           HotkeyCameraFirstPerson: 'First Person Camera',
+           HotkeyPageUp: 'Look Up',
+           HotkeyPageDown: 'Look Down'
+    }
+   
+
+
+
+
+}
+

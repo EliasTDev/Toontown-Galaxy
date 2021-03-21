@@ -58,7 +58,21 @@ class Settings:
 
 
     @staticmethod
-    def writeSettings():
+    def getOption(category=None, attribute=None, default=None):
+        if Settings.doSavedSettingsExist():
+            settingsFile = open('user/ttgsettings.json')
+            settingsData = settingsFile.read()
+            try:
+                settings = json.loads(settingsData).get('UserSettings')
+            except:
+                settings = {}
+            return settings.get(category, {}).get(attribute, default)
+        else:
+            settings = {}
+            settings['UserSettings'] = {}
+            settings['controls'] = {}
+    @staticmethod
+    def writeSettings(category=None, attribute= None, value=None):
         if Settings.doSavedSettingsExist():
             settingsFile = open('user/ttgsettings.json')
             settingsData = settingsFile.read()
@@ -68,10 +82,13 @@ class Settings:
             except:
                 settings = {}
                 settings['UserSettings'] = {}
+                settings['controls'] = {}
         else:
             settings = {}
             settings['UserSettings'] = {}
-
+            settings['controls'] = {}
+        if 'controls' not in settings:
+            settings['controls'] = {}
         settings['UserSettings']['music'] = Settings.getMusic()
         settings['UserSettings']['musicVolume'] = Settings.getMusicVolume()
         settings['UserSettings']['sfx'] = Settings.getSfx()
@@ -85,7 +102,8 @@ class Settings:
         settings['UserSettings']['embeddedMode'] = Settings.getEmbeddedMode()
         settings['UserSettings']['frameRateMeter'] = Settings.getFrameRateMeter()
 
-
+        if category and attribute and value:
+            settings[category][attribute] = value
         with open('user/ttgsettings.json', 'w') as f:
             f.write(json.dumps(settings))
 
@@ -172,11 +190,21 @@ class Settings:
     @staticmethod
     def setResolutionDimensions(x, y):
         Settings.resolutionDimensions = (x, y)
-    
-    def getOption():
-        #TODO for control settings
-        pass
-    def updateSettings():
-        #TODO for control settings 
-        pass
+    @staticmethod
+    def getFrameRateMeter():
+        return Settings.frameRateMeter
+    @staticmethod
+    def setFrameRateMeter(frameRateMeter):
+        Settings.frameRateMeter = frameRateMeter
 
+
+        
+
+
+    @staticmethod
+    def updateSetting(category, attribute, value):
+        """
+        Given a category, an attribute, and a value, will attempt to update the settings
+        dictionary with the given data.
+        """
+        Settings.writeSettings(category, attribute, value)

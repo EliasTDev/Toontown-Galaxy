@@ -21,7 +21,7 @@ from .CogdoFlyingCameraManager import CogdoFlyingCameraManager
 from .CogdoFlyingObjects import CogdoFlyingPlatform, CogdoFlyingGatherable
 from .CogdoFlyingLegalEagle import CogdoFlyingLegalEagle
 from . import CogdoFlyingGameGlobals as Globals
-
+from settings import *
 class CogdoFlyingLocalPlayer(CogdoFlyingPlayer):
     notify = DirectNotifyGlobal.directNotify.newCategory('CogdoFlyingLocalPlayer')
     BroadcastPosTask = 'CogdoFlyingLocalPlayerBroadcastPos'
@@ -195,8 +195,8 @@ class CogdoFlyingLocalPlayer(CogdoFlyingPlayer):
     def resetToonFunc(self):
         self.resetToon(resetFuel=self.hasPickedUpFirstPropeller)
 
-    def _loopPropellerSfx(self, playRate = 1.0, volume = 1.0):
-        self._propellerSfx.loop(playRate=playRate, volume=1.0)
+    def _loopPropellerSfx(self, playRate = 1.0, volume = Settings.getSfxVolume()):
+        self._propellerSfx.loop(playRate=playRate, volume=Settings.getSfxVolume())
 
     def initCollisions(self):
         avatarRadius = 2.0

@@ -8,7 +8,7 @@ from panda3d.core import *
 from toontown.toonbase import TTLocalizer
 from toontown.toonbase import ToontownGlobals
 
-
+from settings import Settings
 class ControlSettingsDialog(DirectFrame):
     notify = DirectNotifyGlobal.directNotify.newCategory('ControlSettingsDialog')
 
@@ -25,6 +25,9 @@ class ControlSettingsDialog(DirectFrame):
         self.controls = {}
         self.queuedKey = None
         self.button = None
+        self.load()
+
+        self.enter()
         return
 
     def unload(self):
@@ -85,7 +88,9 @@ class ControlSettingsDialog(DirectFrame):
             num = 0
             hotkeys = ToontownGlobals.AllHotkeys[index].keys()
             categoryName = ToontownGlobals.Hotkeys[index]
-            controlCategory = base.settings.getOption('controls', categoryName, {})
+            controlCategory = Settings.getOption('controls', categoryName, {})
+            if controlCategory is None:
+                controlCategory = {}
             self.controls[categoryName] = controlCategory
             for hotkey in hotkeys:
                 hotkeyName = names.get(hotkey)
@@ -118,16 +123,16 @@ class ControlSettingsDialog(DirectFrame):
     def enter(self):
         base.controlManager.setChanging(True)
         base.transitions.fadeScreen(0.5)
-        if hasattr(base, 'localAvatar') and hasattr(base.localAvatar, 'chatMgr') and base.localAvatar.chatMgr:
-            base.localAvatar.chatMgr.setBackgroundFocus(False, True)
+        #if hasattr(base, 'localAvatar') and hasattr(base.localAvatar, 'chatMgr') and base.localAvatar.chatMgr:
+            #base.localAvatar.chatMgr.setBackgroundFocus(False, True)
         self.show()
         return
 
     def exit(self):
         base.controlManager.setChanging(False)
         base.transitions.noTransitions()
-        if hasattr(base, 'localAvatar') and hasattr(base.localAvatar, 'chatMgr') and base.localAvatar.chatMgr:
-            base.localAvatar.chatMgr.setBackgroundFocus(base.localAvatar.chatMgr.wantBackgroundFocus, True)
+        #if hasattr(base, 'localAvatar') and hasattr(base.localAvatar, 'chatMgr') and base.localAvatar.chatMgr:
+            #base.localAvatar.chatMgr.setBackgroundFocus(base.localAvatar.chatMgr.wantBackgroundFocus, True)
         self.__changeCategory(0)
         self.infoLabel['text'] = TTLocalizer.ControlSettingsInfoLabelDefault
         if self.button:
@@ -161,7 +166,8 @@ class ControlSettingsDialog(DirectFrame):
         hotkeys = ToontownGlobals.AllHotkeys[index].values()
         for hotkey in hotkeys:
             if hotkey.endswith('-up'):
-                hotkeys.remove(hotkey)
+
+                list(hotkeys).remove(hotkey)
         coord = -0.125 * len(hotkeys)
         self.hotkeysList['canvasSize'] = (-1, 0, coord, 1)
 
@@ -244,6 +250,6 @@ class ControlSettingsDialog(DirectFrame):
     def applyChanges(self):
         for category in self.controls.keys():
             categoryInfo = self.controls.get(category)
-            base.settings.updateSetting('controls', category, categoryInfo)
+            Settings.updateSetting('controls', category, categoryInfo)
 
         base.controlManager.reloadHotkeys()

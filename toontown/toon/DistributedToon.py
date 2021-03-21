@@ -3140,7 +3140,7 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
                             SoundInterval(dialogueArray[sfxIndex], node = None,
                                            listenerNode = base.localAvatar,
                                            loop = 0,
-                                           volume = 1.0),
+                                           volume = 1.0 * Settings.getSfxVolume()),
                                            )
             self.soundSequenceList.append(soundSequence)
             soundSequence.start()

@@ -3835,7 +3835,7 @@ class Toon(Avatar.Avatar, ToonHead):
         ival = Parallel(
             Func(splat.reparentTo, render),
             Func(splat.setPos, x, y, z),
-            SoundInterval(sound, node = splat, volume = vol),
+            SoundInterval(sound, node = splat, volume = vol * Settings.getSfxVolume()),
             Sequence(ActorInterval(splat, splatName),
                      Func(splat.detachNode)),
             )

@@ -18,6 +18,7 @@ from toontown.launcher import ToontownDownloadWatcher
 from otp.otpbase import OTPGlobals 
 from settings import *
 from libotp import *
+from . import ControlManager
 class ToonBase(OTPBase.OTPBase):
     """ToonBase class"""
 
@@ -81,9 +82,9 @@ class ToonBase(OTPBase.OTPBase):
                                 ToontownGlobals.DefaultCameraFar)
 
         # Music should be a bit quieter in toontown
-        self.musicManager.setVolume(0.65)
-        base.musicManager.setVolume(Settings.getMusicVolume())
+        self.musicManager.setVolume(0.65 * (Settings.getMusicVolume()))
 
+        base.controlManager = ControlManager.ControlManager()
         # Set the default background color.
         self.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
 
@@ -614,10 +615,16 @@ class ToonBase(OTPBase.OTPBase):
                     config.GetInt("shard-mid-pop", ToontownGlobals.MID_POP),
                     config.GetInt("shard-high-pop", ToontownGlobals.HIGH_POP),)
 
-    def playMusic(self, music, looping = 0, interrupt = 1, volume = None, time = 0.0):
+    def playMusic(self, music, looping = 0, interrupt = 1, volume = 1, time = 0.0):
         # play the reset midi file to kill stuck notes
         #OTPBase.OTPBase.playMusic(self, self.resetMusic)
-        OTPBase.OTPBase.playMusic(self, music, looping, interrupt, volume, time)
+        OTPBase.OTPBase.playMusic(self, music, looping, interrupt, volume * Settings.getMusicVolume(), time)
+
+    def playSfx(
+            self, sfx, looping = 0, interrupt = 1, volume = 1,
+            time = 0.0, node = None, listener = None, cutoff = None):
+        # This goes through a special player for potential localization
+        return self.sfxPlayer.playSfx(sfx, looping, interrupt, volume * Settings.getSfxVolume() , time, node, listener, cutoff)
 
     def isMainWindowOpen(self):
         if self.win != None:

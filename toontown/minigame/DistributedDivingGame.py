@@ -29,7 +29,7 @@ from . import TreasureScorePanel
 
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
-
+from settings import *
 class DistributedDivingGame(DistributedMinigame):
 
     COLLISION_WATCH_TASK = "DivingGameCollisionWatchTask"
@@ -187,7 +187,7 @@ class DistributedDivingGame(DistributedMinigame):
         self.soundTable[name] = loader.loadSfx(soundSource)
         
     def playSound(self, name, volume = 1.0):
-        self.soundTable[name].setVolume(1.0)
+        self.soundTable[name].setVolume(volume * Settings.getSfxVolume())
         self.soundTable[name].play()
         
     def unload(self):
@@ -473,7 +473,7 @@ class DistributedDivingGame(DistributedMinigame):
             #base.playSfx(self.sndAmbience, looping = 1, volume = 0.8)
             self.sndAmbience.setLoop(True)
             self.sndAmbience.play()
-            self.sndAmbience.setVolume(0.01)
+            self.sndAmbience.setVolume(0.01 * Settings.getSfxVolume())
         
     def offstage(self):
         self.notify.debug("offstage")
@@ -1043,7 +1043,7 @@ class DistributedDivingGame(DistributedMinigame):
             self.localLerp = Sequence(Func(toonSD.fsm.request,'freeze'), Wait(3.0), Func(toonSD.fsm.request,'normal'))
             self.localLerp.start(ts)
             self.hitSound.play()
-            self.hitSound.setVolume(volume)
+            self.hitSound.setVolume(volume * Settings.getSfxVolume() )
     
     # called from the AI to make the toon freeze and have the fish respond
     # in a certain way (depending on the fish type)
@@ -1093,9 +1093,9 @@ class DistributedDivingGame(DistributedMinigame):
                 
             if fish.sound:
                 fish.sound.play()
-                fish.sound.setVolume(volume)
+                fish.sound.setVolume(volume * Settings.getSfxVolume())
                 self.hitSound.play()
-                self.hitSound.setVolume(volume)
+                self.hitSound.setVolume(volume * Settings.getSfxVolume())
                 
             
             # bears and nurses don't care about you and will go about their merry way
@@ -1302,7 +1302,7 @@ class DistributedDivingGame(DistributedMinigame):
                     loop = 0,
                     duration = 1.6,
                     startTime = 0.0,
-                    volume = crabVolume,)
+                    volume = crabVolume * Settings.getSfxVolume())
                 crabSoundInterval.start()
         
         
@@ -1371,7 +1371,7 @@ class DistributedDivingGame(DistributedMinigame):
                 self.zVel = -10
                 
         swimVolume = (abs(self.zVel) + abs(self.xVel)) / 15.0       
-        self.swimSound.setVolume(swimVolume)
+        self.swimSound.setVolume(swimVolume * Settings.getSfxVolume())
         
         pos[0] += (self.xVel * dt)
         pos[1] = -2
@@ -1438,7 +1438,7 @@ class DistributedDivingGame(DistributedMinigame):
         
         
         
-        self.sndAmbience.setVolume(ambVolume)
+        self.sndAmbience.setVolume(ambVolume * Settings.getSfxVolume())
             
         return Task.cont
 

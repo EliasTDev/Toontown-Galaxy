@@ -1,6 +1,6 @@
 """OptionsPage module: contains the OptionsPage class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from . import ShtikerPage
 from toontown.toontowngui import TTDialog
 from direct.gui.DirectGui import *
@@ -16,6 +16,7 @@ from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import ToontownGlobals
 from libotp import *
 from settings import *
+from toontown.shtiker.ControlSettingsDialog import ControlSettingsDialog
 # array of the possible speedChatStyles and colors to use
 # R,G,B for arrow, rollover, and frame color if we want to specify it
 # the first parameter refers to the key in the SpeedChatStaticText variable
@@ -1411,7 +1412,7 @@ class AnotherOptionsTabPage(DirectFrame):
                                             command=self.setSfxVolume)
         self.sfxVolumeEntry.setScale(0.08)
 
-        self.FPSLabel = DirectLabel(parent=self, relief=None, text='', 
+        self.FPSLabel = DirectLabel(parent=self, relief=None, text='FPS:', 
                                             text_align = TextNode.ALeft, text_scale = options_text_scale,
                                             text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.2))
                                         
@@ -1423,13 +1424,33 @@ class AnotherOptionsTabPage(DirectFrame):
                      guiButton.find("**/QuitBtn_RLVR"),
                      ),
             image_scale = button_image_scale,
-            text = "",
+            text = "Toggle FPS",
             text_scale = options_text_scale,
             text_pos = button_textpos,
             pos = (buttonbase_xcoord, 0, buttonbase_ycoord - 0.2),
             command = self.toggleFPS,
             )
 
+        self.customsControlsLabel = DirectLabel(parent=self, relief=None, text='Custom Controls:', 
+                                            text_align = TextNode.ALeft, text_scale = options_text_scale,
+                                            text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.3))
+        self.customControlsButton = DirectButton(
+            parent = self,
+            relief = None,
+            image = (guiButton.find("**/QuitBtn_UP"),
+                     guiButton.find("**/QuitBtn_DN"),
+                     guiButton.find("**/QuitBtn_RLVR"),
+                     ),
+            image_scale = button_image_scale,
+            text = "Custom Controls",
+            text_scale = options_text_scale,
+            text_pos = button_textpos,
+            pos = (buttonbase_xcoord, 0, buttonbase_ycoord - 0.3),
+            command = self.openCustomControlsGUI,
+            )
+
+    def openCustomControlsGUI(self):
+        ControlSettingsDialog()
     def setMusicVolume(self, input=None):
         if input is None:
             input = self.musicVolumeEntry.get()
@@ -1483,7 +1504,6 @@ class AnotherOptionsTabPage(DirectFrame):
             self.FPSButton['text'] = ['Toggle fps on']
 
 
-
         
     def __setMusicLabel(self):
         self.musicVolumeLabel['text'] = 'Music Volume: ' + str(Settings.getMusicVolume() * 100) + "%"
@@ -1519,6 +1539,10 @@ class AnotherOptionsTabPage(DirectFrame):
         del self.FPSLabel
         self.FPSButton.destroy()
         del self.FPSButton
+        self.customsControlsLabel.destroy()
+        del self.customsControlsLabel
+        self.customCfontrolsButton.destroy()
+        del self.customControlsButton
     
 
 

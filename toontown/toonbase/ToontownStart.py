@@ -31,7 +31,8 @@ class game:
     process = "client"
 builtins.game = game()
 
-from settings import Settings 
+from settings import Settings
+builtins.Settings = Settings
 mode = not Settings.getWindowedMode()
 music = Settings.getMusic()
 sfx = Settings.getSfx()
@@ -188,7 +189,7 @@ if base.musicManagerIsValid:
         music = base.musicManager.getSound("phase_3/audio/bgm/TTGIntro.ogg")
     if music:
         music.setLoop(1)
-        music.setVolume(0.9)
+        music.setVolume(musicVol * 0.9)
         music.play()
     # Update default sound
     print('ToontownStart: Loading default gui sounds')

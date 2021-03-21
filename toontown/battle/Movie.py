@@ -33,7 +33,7 @@ import copy
 from toontown.toonbase import TTLocalizer
 from toontown.toon import NPCToons
 import functools
-
+from settings import Settings
 camPos = Point3(14, 0, 10)
 camHpr = Vec3(89, -30, 0)
 
@@ -482,12 +482,12 @@ class Movie(DirectObject.DirectObject):
             self.tomDialogue04 = base.loader.loadSfx("phase_3.5/audio/dial/CC_tom_movie_tutorial_reward02.ogg")
             self.tomDialogue05 = base.loader.loadSfx("phase_3.5/audio/dial/CC_tom_movie_tutorial_reward03.ogg")
             self.musicVolume = base.config.GetFloat(
-                "tutorial-music-volume", 0.5)
+                "tutorial-music-volume", 0.5) * Settings.getMusicVolume()
         else:
             self.tomDialogue03 = None
             self.tomDialogue04 = None
             self.tomDialogue05 = None
-            self.musicVolume = 0.9
+            self.musicVolume = 0.9 * Settings.getMusicVolume()
 
         # Need to lower battle music during dialogue
         music = base.cr.playGame.place.loader.battleMusic

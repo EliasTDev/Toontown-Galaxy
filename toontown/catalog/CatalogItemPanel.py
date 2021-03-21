@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase import ToontownGlobals
 from toontown.toontowngui import TTDialog
 from toontown.toonbase import TTLocalizer
@@ -13,7 +13,7 @@ from .CatalogFurnitureItem import getAllFurnitures
 from toontown.toontowngui.TeaserPanel import TeaserPanel
 from otp.otpbase import OTPGlobals
 from .CatalogFurnitureItem import FLTrunk
-
+from settings import *
 CATALOG_PANEL_WORDWRAP = 10
 CATALOG_PANEL_CHAT_WORDWRAP = 9
 
@@ -648,7 +648,7 @@ class CatalogItemPanel(DirectFrame):
             if self.ival:
                 self.ival.finish()
                 self.ival = None
-            self.ival = item.changeIval(volume = 1)
+            self.ival = item.changeIval(volume = Settings.getSfxVolume())
             self.ival.loop()        
 
     def handleSoundOffButton(self):

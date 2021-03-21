@@ -28,6 +28,7 @@ from otp.otpbase import OTPGlobals
 from toontown.battle import BattleParticles
 from toontown.minigame import PhotoGameBase
 from libtoontown import *
+from settings import *
 # some constants
 
 WORLD_SCALE = 2.
@@ -2280,5 +2281,5 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
         
     def playSound(self, name, volume = 1.0):
         if hasattr(self, 'soundTable'):
-            self.soundTable[name].setVolume(volume)
+            self.soundTable[name].setVolume(Settings.getSfxVolume())
             self.soundTable[name].play()

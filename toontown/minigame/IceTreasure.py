@@ -6,7 +6,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.DirectObject import DirectObject
 from toontown.toonbase import ToontownGlobals
 from toontown.battle import BattleParticles
-
+from settings import * 
 class IceTreasure(DirectObject):
     """
     Treasures toons can pickup swinging from ice to ice.  Based on MazeTreasure
@@ -69,7 +69,7 @@ class IceTreasure(DirectObject):
             self.sparksEffect = sparks
             sparks.start(self.tip)
             self.penaltyGrabSound = loader.loadSfx("phase_4/audio/sfx/MG_cannon_fire_alt.ogg")
-            self.penaltyGrabSound.setVolume(0.75)
+            self.penaltyGrabSound.setVolume(0.75 * Settings.getSfxVolume())
             kaboomAttachPoint = self.nodePath.attachNewNode('kaboomAttach')
             kaboomAttachPoint.setZ(3)
             self.kaboom = loader.loadModel('phase_4/models/minigames/ice_game_kaboom')

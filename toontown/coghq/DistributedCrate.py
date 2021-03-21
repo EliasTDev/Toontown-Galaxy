@@ -1,5 +1,5 @@
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from toontown.toonbase.ToontownGlobals import *
 from .CrateGlobals import *
@@ -10,7 +10,7 @@ from direct.directnotify import DirectNotifyGlobal
 from . import MovingPlatform
 from direct.task.Task import Task
 from . import DistributedCrushableEntity
-
+from settings import Settings
 class DistributedCrate(DistributedCrushableEntity.DistributedCrushableEntity):
     notify = DirectNotifyGlobal.directNotify.newCategory("DistributedCrate")
     # keyboard controls
@@ -334,7 +334,7 @@ class DistributedCrate(DistributedCrushableEntity.DistributedCrushableEntity):
                                                            startPos=startPos,
                                                            fluid = 1)),
                                   SoundInterval(self.creakSound, node=self),
-                                  SoundInterval(self.pushSound, node=self, duration=T_PUSH, volume = .2),
+                                  SoundInterval(self.pushSound, node=self, duration=T_PUSH, volume = .2 * Settings.getSfxVolume()),
                                   )
         self.moveTrack.start()
 

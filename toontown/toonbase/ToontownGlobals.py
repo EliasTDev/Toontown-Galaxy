@@ -1612,9 +1612,8 @@ Control = 'control'
 Release = 'up'
 HotkeyMovement = 'movement'
 HotkeyInteraction = 'interaction'
-HotkeyDebug = 'debug'
 HotkeyMisc = 'misc'
-Hotkeys = (HotkeyMovement, HotkeyInteraction, HotkeyDebug, HotkeyMisc)
+Hotkeys = (HotkeyMovement, HotkeyInteraction, HotkeyMisc)
 HotkeyUp = 0
 HotkeyDown = 1
 HotkeyLeft = 2
@@ -1638,9 +1637,8 @@ HotkeyInventoryClose = 5
 HotkeyFriends = 6
 HotkeyMap = 7
 HotkeyMapClose = 8
-HotkeyScreenshot = 12
-HotkeyChat = 13
-HotkeyChatlog = 14
+HotkeyScreenshot = 9
+HotkeyChat = 10
 
 HotkeyInteractionDefaults = {
     HotkeyBook: 'escape',
@@ -1652,46 +1650,25 @@ HotkeyInteractionDefaults = {
     HotkeyFriends: 'f7',
     HotkeyMap: 'alt',
     HotkeyMapClose: 'alt' + Separater + Release,
-    HotkeyTeleport: 'f10',
-    HotkeyPropGenerator: 'f11',
-    HotkeyMountKart: 'insert',
     HotkeyScreenshot: 'f9',
     HotkeyChat: 'f5',
-    HotkeyChatlog: 'enter',
 }
-HotkeyDebugInfo = 0
-HotkeyFacilityDebug = 1
-HotkeyCameraDebug = 2
-HotkeyGarbage = 3
-HotkeySync = 4
-HotkeyMarker = 5
-HotkeyDebugDefaults = {
-    HotkeyDebugInfo: Shift + Separater + 'f1',
-    HotkeyFacilityDebug: Shift + Separater + 'f2',
-    HotkeyCameraDebug: Shift + Separater + 'f12',
-    HotkeyGarbage: Shift + Separater + 'f11',
-    HotkeySync: Shift + Separater + 'f6',
-    HotkeyMarker: Shift + Separater + 'f3'
-}
+
+
 HotkeyCameraForward = 0
 HotkeyCameraBackward = 1
 HotkeyCameraFirstPerson = 2
 HotkeyPageUp = 3
 HotkeyPageDown = 4
-HotkeyNametags = 5
-HotkeyMargins = 6
-HotkeyOobe = 7
+
 HotkeyMiscDefaults = {
     HotkeyCameraForward: 'tab',
     HotkeyCameraBackward: Shift + Separater + 'tab',
     HotkeyCameraFirstPerson: Shift + Separater + Control,
     HotkeyPageUp: 'page_up',
     HotkeyPageDown: 'page_down',
-    HotkeyNametags: 'f2',
-    HotkeyMargins: 'f3',
-    HotkeyOobe: 'f4'
 }
-AllHotkeys = (HotkeyMovementDefaults, HotkeyInteractionDefaults, HotkeyDebugDefaults, HotkeyMiscDefaults)
+AllHotkeys = (HotkeyMovementDefaults, HotkeyInteractionDefaults, HotkeyMiscDefaults)
 SpecialKeys = {
     'page_up': 'Page Up',
     'page_down': 'Page Down',
