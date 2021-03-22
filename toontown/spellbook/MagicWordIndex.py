@@ -1275,7 +1275,7 @@ class StartAllFireworks(MagicWord):
 class StartFireworks(MagicWord):
     accessLevel = 'ADMIN'
     desc = 'Starts a show in current zones'
-    arguments = [('showType', int, False, 0)]
+    arguments = [('showType', int, False, 1)]
     execLocation = MagicWordConfig.EXEC_LOC_SERVER
 
     def handleWord(self, invoker, avId, av, *args):

@@ -335,6 +335,8 @@ class FireworkShow(NodePath):
     
     def getDuration(self, startIndex=0, endIndex=None):
         duration = 0.0
+        if self.showType == 0:
+            self.showType = 1
         if endIndex == None:
             endIndex = len(self.showData.get(self.showType))
         for firework in self.showData.get(self.showType)[startIndex:endIndex]:
@@ -343,6 +345,8 @@ class FireworkShow(NodePath):
         
     def getShowDuration(self, eventId = None):
         duration = 0.0
+        if self.showType == 0:
+            self.showType = 1
         if eventId:
             for firework in self.showData[eventId]:
                 duration += firework[7]

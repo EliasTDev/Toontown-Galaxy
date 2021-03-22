@@ -14,6 +14,8 @@ from toontown.toon import ToonDNA
 from toontown.estate.DistributedHouseAI import DistributedHouseAI
 from toontown.estate.GardenManagerAI import GardenManagerAI
 
+#TODO rewrite this into our own code instead of using other code here
+
 #Other classes from toontown school house
 class LoadHouseOperation(FSM):
     def __init__(self, mgr, estate, index, avatar, callback):
