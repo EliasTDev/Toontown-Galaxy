@@ -5,7 +5,7 @@ from toontown.coghq.SpecImports import *
 
 class Entity(EntityTypeDesc):
     abstract = 1
-    type = 'entity'
+    _type = 'entity'
     attribs = (
         ('type', None, 'const'),
         ('name', '<unnamed>', 'string'),
@@ -14,7 +14,7 @@ class Entity(EntityTypeDesc):
         )
 
 class LevelMgr(Entity):
-    type = 'levelMgr'
+    _type = 'levelMgr'
     permanent = 1
     attribs = (
         ('name', 'LevelMgr', 'const'),
@@ -23,7 +23,7 @@ class LevelMgr(Entity):
         )
 
 class EditMgr(Entity):
-    type = 'editMgr'
+    _type = 'editMgr'
     permanent = 1
     blockAttribs = (
         'comment',
@@ -38,7 +38,7 @@ class EditMgr(Entity):
         )
 
 class AttribModifier(Entity):
-    type = 'attribModifier'
+    _type = 'attribModifier'
     attribs = (
         ('recursive', 0, 'bool'),
         ('typeName', '', 'string'),
@@ -47,13 +47,13 @@ class AttribModifier(Entity):
         )
 
 class Locator(Entity):
-    type='locator'
+    _type='locator'
     attribs = (
         ('searchPath', '', 'string'),
         )
 
 class Nodepath(Entity):
-    type = 'nodepath'
+    _type = 'nodepath'
     attribs = (
         ('parentEntId', 0, 'entId', {'type':'nodepath'}),
         ('pos', Point3(0,0,0), 'pos'),
@@ -62,7 +62,7 @@ class Nodepath(Entity):
         )
 
 class Zone(Nodepath):
-    type = 'zone'
+    _type = 'zone'
     permanent = 1
     blockAttribs = (
         'pos',
@@ -75,7 +75,7 @@ class Zone(Nodepath):
         )
 
 class EntrancePoint(Nodepath):
-    type = 'entrancePoint'
+    _type = 'entrancePoint'
     attribs = (
         ('entranceId', -1, 'int'),
         ('radius', 15, 'float', {'min':0}),
@@ -83,7 +83,7 @@ class EntrancePoint(Nodepath):
         )
 
 class LogicGate(Entity):
-    type = 'logicGate'
+    _type = 'logicGate'
     output = 'bool'
     attribs = (
         ('input1Event', 0, 'entId', {'output':'bool'}),
@@ -95,7 +95,7 @@ class LogicGate(Entity):
         )
 
 class CutScene(Entity):
-    type = 'cutScene'
+    _type = 'cutScene'
     output = 'bool'
     attribs = (
         ('pos', Point3(0,0,0), 'pos'),
@@ -107,7 +107,7 @@ class CutScene(Entity):
         )
 
 class CollisionSolid(Nodepath):
-    type = 'collisionSolid'
+    _type = 'collisionSolid'
     attribs = (
         ('solidType', 'sphere', 'choice', {'choiceSet':['sphere', 'tube']}),
         ('radius', 1., 'float'),
@@ -116,7 +116,7 @@ class CollisionSolid(Nodepath):
         )
 
 class Model(Nodepath):
-    type = 'model'
+    _type = 'model'
     attribs = (
         ('loadType', 'loadModelCopy', 'choice', {'choiceSet':['loadModelCopy','loadModel','loadModelOnce']}),
         ('modelPath', None, 'bamfilename'),
@@ -126,21 +126,21 @@ class Model(Nodepath):
         )
 
 class Path(Nodepath):
-    type = 'path'
+    _type = 'path'
     attribs = (
         ('pathIndex', 0, 'int'),
         ('pathScale', 1., 'float'),
         )
 
 class VisibilityExtender(Entity):
-    type = 'visibilityExtender'
+    _type = 'visibilityExtender'
     attribs = (
         ('event', None, 'entId', {'output':'bool'}),
         ('newZones', [], 'visZoneList'),
         )
 
 class AmbientSound(Nodepath):
-    type = 'ambientSound'
+    _type = 'ambientSound'
     attribs = (
         ('soundPath', '', 'bamfilename'),
         ('volume', 1, 'float', {'min':0,'max':1}),
@@ -148,7 +148,7 @@ class AmbientSound(Nodepath):
         )
 
 class PropSpinner(Entity):
-    type = 'propSpinner'
+    _type = 'propSpinner'
 
 class EntityGroup(Entity):
-    type = 'entityGroup'
+    _type = 'entityGroup'
