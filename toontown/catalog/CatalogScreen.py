@@ -1278,19 +1278,15 @@ class CatalogScreen(DirectFrame):
                 newFF = (familyMember.id, familyMember.name, NametagGroup.CCNonPlayer)
                 self.ffList.append(newFF)
         for friendPair in base.localAvatar.friendsList:
-            print(friendPair)
-            friendId, flags = friendPair
+            friendId = friendPair
             #print "adding friend"
             handle = base.cr.identifyFriend(friendId)
             if handle and not self.checkFamily(friendId):
-                if hasattr(handle, 'getName'):
-                    colorCode = NametagGroup.CCSpeedChat
-                    if (flags & ToontownGlobals.FriendChat):
-                        colorCode = NametagGroup.CCFreeChat
-                    newFF = (friendPair[0], handle.getName(), colorCode)
-                    self.ffList.append(newFF)
-                else:
-                    self.notify.warning("Bad Handle for getName in makeFFlist")
+                #TODO get the color of the friend for third argument
+                newFF = (friendPair, handle.getName(),  NametagGroup.CCNonPlayer)
+                self.ffList.append(newFF)
+            else:
+                self.notify.warning("Bad Handle for getName in makeFFlist")
     
 
     def __makeScrollList(self):
