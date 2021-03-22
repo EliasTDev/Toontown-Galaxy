@@ -1,5 +1,5 @@
 from otp.ai.AIBaseGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase import PythonUtil
 from direct.distributed import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
@@ -861,12 +861,8 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
         self._unloadEstate(av)
 
     def __handleUnexpectedExit(self, avId):
-        self.notify.debug("we got an unexpected exit on av: %s:  deleting." % avId)
-        taskMgr.remove("estateToonUp-" + str(avId))
-        if avId in self.avId2pendingEnter:
-            self._toonLeftBeforeArrival(avId)
-        self.__exitEstate(avId)
-        return None
+        self._unmapFromEstate(avId)
+        self._unloadEstate(avId)
 
     def __exitEstate(self, avId):
        # self.notify.debug("__exitEstate(%d)" % avId)
@@ -1123,6 +1119,7 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
             self.toon2estate[av] = estate
 
         self.zone2toons.setdefault(estate.zoneId, []).append(av.doId)
+        
     def _unmapFromEstate(self, av):
         estate = self.toon2estate.get(av)
         if not estate:

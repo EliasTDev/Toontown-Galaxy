@@ -1277,10 +1277,8 @@ class CatalogScreen(DirectFrame):
             if familyMember.id != base.localAvatar.doId:
                 newFF = (familyMember.id, familyMember.name, NametagGroup.CCNonPlayer)
                 self.ffList.append(newFF)
-        if not isinstance(base.localAvatar.friendsList, list):
-            self.notify.warning('friends list is not list '.format(base.localAvatar.friendsList))
-            newFriendsList = list(base.localAvatar.friendsList)
-        for friendPair in newFriendsList:
+        for friendPair in base.localAvatar.friendsList:
+            print(friendPair)
             friendId, flags = friendPair
             #print "adding friend"
             handle = base.cr.identifyFriend(friendId)
@@ -1293,23 +1291,7 @@ class CatalogScreen(DirectFrame):
                     self.ffList.append(newFF)
                 else:
                     self.notify.warning("Bad Handle for getName in makeFFlist")
-        hasManager = hasattr(base.cr, "playerFriendsManager")
-        if hasManager:
-            for avatarId in base.cr.playerFriendsManager.getAllOnlinePlayerAvatars():
-                handle = base.cr.playerFriendsManager.getAvHandleFromId(avatarId)
-                playerId = base.cr.playerFriendsManager.findPlayerIdFromAvId(avatarId)
-                playerInfo = base.cr.playerFriendsManager.getFriendInfo(playerId)
-                freeChat = playerInfo.understandableYesNo
-                if handle and not self.checkFamily(avatarId):
-                    if hasattr(handle, 'getName'):
-                        colorCode = NametagGroup.CCSpeedChat
-                        if freeChat:
-                            colorCode = NametagGroup.CCFreeChat
-                        newFF = (avatarId, handle.getName(), colorCode)
-                        self.ffList.append(newFF)
-                    else:
-                        self.notify.warning("Bad Handle for getName in makeFFlist")
-        #import pdb; pdb.set_trace()
+    
 
     def __makeScrollList(self):
         for ff in self.ffList:
