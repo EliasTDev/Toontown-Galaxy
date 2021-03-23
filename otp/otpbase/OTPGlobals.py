@@ -46,10 +46,10 @@ PathFindingBitmask = BitMask32.bit(29)
 
 # Determined empirically
 # Do not change this one
-OriginalCameraFov = 52.0 
+OriginalCameraFov = 70.0
 # Feel free to override this when you need to
 # But set it back to the original when you are done
-DefaultCameraFov = 52.0 
+DefaultCameraFov = 70.0
 
 # This should actually be 280, but the sky does not fit inside
 # so I am temporarily cranking it up
