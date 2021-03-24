@@ -507,7 +507,7 @@ class AcknowledgeNameOperation(AvatarOperation):
 
     def __handleGetTargetAvatar(self):
         if self.avId not in self.avList:
-            self.demand('Kill',"Tried to acknowledge name on a toon not in the account!"
+            self.demand('Kill',"Tried to acknowledge name on a toon not in the account!")
             return
 
         self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, self.avId,

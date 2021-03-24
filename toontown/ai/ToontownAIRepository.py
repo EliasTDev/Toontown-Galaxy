@@ -65,6 +65,7 @@ from toontown.ai.ToontownAIMsgTypes import *
 from toontown.fishing import FishManagerAI
 from otp.friends.FriendManagerAI import FriendManagerAI
 from toontown.effects import FireworkManagerAI
+from toontown.estate import DistributedBankMgrAI
 
 class ToontownAIRepository(ToontownInternalRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory('ToontownAIRepository')
@@ -309,6 +310,9 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.friendManager = FriendManagerAI(self)
         self.friendManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
+        self.bankMgr = DistributedBankMgrAI.DistributedBankMgrAI(self)
+        self.bankMgr.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+        
     def generateHood(self, hoodConstructor, zoneId):
         # Bossbot HQ doesn't use DNA, so we skip over that.
         if zoneId != ToontownGlobals.BossbotHQ:
