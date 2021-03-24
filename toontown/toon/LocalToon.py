@@ -1417,7 +1417,8 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         # This consists of an attic frame
         self.__furnitureGui = DirectFrame(
             relief = None,
-            pos = (-1.19, 0.00, 0.33),
+            parent=base.a2dTopLeft,
+            pos = (0.12, 0.00, -0.66),
             scale= 0.04,
             image = guiModels.find('**/attic')
             )
@@ -1774,7 +1775,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
                 # Make sure we are loaded
                 self.loadFurnitureGui()
 
-                self.__furnitureGui.setPos(-1.16,0,-0.03)
+                self.__furnitureGui.setPos(0.155,-0.6,-1.045)
                 self.__furnitureGui.setScale(0.06)
 
             elif self.cr.furnitureManager != None:
@@ -1790,7 +1791,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
                 
                 self.lerpFurnitureButton = self.__furnitureGui.posHprScaleInterval(
                     1.0,
-                    pos = Point3(-1.19, 0.00, 0.33),
+                    pos = Point3(0.12, 0.00, -0.66),
                     hpr = Vec3(0.00, 0.00, 0.00),
                     scale = Vec3(0.04, 0.04, 0.04),
                     blendType = 'easeInOut',
