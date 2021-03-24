@@ -18,7 +18,9 @@ if os.path.exists(localPrc):
 from otp.ai.AIBaseGlobal import *
 from toontown.ai.ToontownAIRepository import ToontownAIRepository
 from direct.showbase import PythonUtil
+import argparse
 
+parser = argparse.ArgumentParser()
 parser.add_argument('--base-channel', help='The base channel that the server may use.')
 parser.add_argument('--max-channels', help='The number of channels the server may use.')
 parser.add_argument('--stateserver', help="The control channel of this AI's designated State Server.")
