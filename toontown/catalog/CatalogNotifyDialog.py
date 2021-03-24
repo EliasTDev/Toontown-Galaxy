@@ -30,7 +30,8 @@ class CatalogNotifyDialog:
             text_wordwrap = 16,
             text_scale = 0.06,
             text_pos = (-0.1, 0.1),
-            pos = (framePosX, 0, 0.78),
+            parent = base.a2dTopRight,
+            pos = (framePosX, 0, 0),
             )
         
 

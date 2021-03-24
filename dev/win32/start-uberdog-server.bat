@@ -24,7 +24,6 @@ cd ../../
 "dependencies/panda/python/ppython.exe" ^
 	-m toontown.uberdog.UDStart
 
-pause
 goto main
 
 

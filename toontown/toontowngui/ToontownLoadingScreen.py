@@ -21,13 +21,11 @@ class ToontownLoadingScreen:
         self.banner.reparentTo(self.gui)
         self.banner.setScale(0.4,0.4,0.4)
         #load our logo
-        galaxyLogoScale = 0.4689675174
-        self.galaxyLogo = OnscreenImage('phase_3/maps/toontown-logo.png', 
-                                         scale = (galaxyLogoScale, 1, galaxyLogoScale))
+        self.galaxyLogo = OnscreenImage('phase_3/maps/toontown-logo.png')
 
         galaxyLogoScaleTuple = (galaxyLogoScale, 1, galaxyLogoScale)
         self.galaxyLogo.reparentTo(base.a2dpTopCenter)
-        #self.galaxyLogo.setScale(self.gui, (0.5, 1, 0.35))
+        self.galaxyLogo.setScale(self.gui, (0.6, 1.2, 0.4))
         self.galaxyLogo.setTransparency(TransparencyAttrib.MAlpha)
         self.galaxyLogo.setZ(0.61)
         #self.galaxyLogo.setPos(0, 0, -galaxyLogoScale)

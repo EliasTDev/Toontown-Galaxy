@@ -58,12 +58,17 @@ class DeveloperAccountDB(AccountDB):
             self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, int(self.dbm[playToken]), handleAccountInfo)
 
 class GameOperation:
-
+    CHOSEN_CONNECTION = False
     def __init__(self, loginManager, sender):
         self.loginManager = loginManager
         self.sender = sender
         self.callback = None
 
+    def enterKill(self, reason):
+        if self.CHOSEN_CONNECTION:
+            self.loginManager.killConnection(self.sender, reason)
+        else:
+            self.loginManager.killAccount(self.sender, reason)
     def setCallback(self, callback):
         self.callback = callback
 
@@ -75,7 +80,7 @@ class GameOperation:
 
 
 class LoginOperation(GameOperation):
-
+    CHOSEN_CONNECTION = True
     def __init__(self, loginManager, sender):
         GameOperation.__init__(self, loginManager, sender)
         self.playToken = ''
@@ -89,7 +94,7 @@ class LoginOperation(GameOperation):
 
     def __handleLookup(self, result):
         if not result.get('success'):
-            # TODO: Kill the connection
+            self.demand('Kill', result.get('reason', 'The database rejected your token.'))
             return
 
         self.databaseId = result.get('databaseId', 0)
@@ -107,7 +112,7 @@ class LoginOperation(GameOperation):
 
     def __handleAccountRetrieved(self, dclass, fields):
         if dclass != self.loginManager.air.dclassesByName['AccountUD']:
-            # TODO: Kill the connection
+            self.demand('Kill', result.get('reason', 'Account was not found in the database.'))
             return
 
         self.account = fields
@@ -128,7 +133,7 @@ class LoginOperation(GameOperation):
 
     def __handleAccountCreated(self, accountId):
         if not accountId:
-            # TODO: Kill the connection
+            self.demand('Kill', result.get('reason', 'Account could not be created.'))
             return
 
         self.accountId = accountId
@@ -139,7 +144,7 @@ class LoginOperation(GameOperation):
 
     def __handleAccountIdStored(self, success=True):
         if not success:
-            # TODO: Kill the connection
+            self.demand('Kill', result.get('reason', 'Could not store account id.'))
             return
 
         self.__handleSetAccount()
@@ -224,7 +229,7 @@ class AvatarOperation(GameOperation):
 
     def __handleAccountRetrieved(self, dclass, fields):
         if dclass != self.loginManager.air.dclassesByName['AccountUD']:
-            # TODO: Kill the connection
+            self.demand('Kill', result.get('reason', 'Account could not be retrieved.'))
             return
 
         # Set the account & avList:
@@ -257,7 +262,7 @@ class GetAvatarsOperation(AvatarOperation):
 
                 def response(dclass, fields, avId=avId):
                     if dclass != self.loginManager.air.dclassesByName['DistributedToonUD']:
-                        # TODO: Kill the connection
+                        self.demand('Kill', result.get('reason', 'One of the toons is invalid.'))
                         return
 
                     self.avatarFields[avId] = fields
@@ -307,13 +312,13 @@ class CreateAvatarOperation(GameOperation):
 
     def start(self, avDNA, avPosition):
         if avPosition >= 6:
-            # TODO: Kill the connection
+            self.demand('Kill', result.get('reason', "Can't have position at 6"))
             return
 
         dna = ToonDNA()
         valid = dna.isValidNetString(avDNA)
         if not valid:
-            # TODO: Kill the connection
+            self.demand('Kill', result.get('reason', "Toon's DNA is not valid."))
             return
 
         self.avPosition = avPosition
@@ -327,7 +332,8 @@ class CreateAvatarOperation(GameOperation):
 
     def __handleAccountRetrieved(self, dclass, fields):
         if dclass != self.loginManager.air.dclassesByName['AccountUD']:
-            # TODO: Kill the connection
+            self.demand('Kill', result.get('reason', 'Failed to retrieve account.'))
+
             return
 
         self.account = fields
@@ -335,7 +341,7 @@ class CreateAvatarOperation(GameOperation):
         self.avList = self.avList[:6]
         self.avList += [0] * (6 - len(self.avList))
         if self.avList[self.avPosition]:
-            # TODO: Kill the connection
+            self.demand('Kill', result.get('reason', 'Toon slot is already taken'))
             return
 
         self.__handleCreateAvatar()
@@ -358,7 +364,7 @@ class CreateAvatarOperation(GameOperation):
 
     def __handleToonCreated(self, avId):
         if not avId:
-            # TODO: Kill the connection
+            self.demand('Kill', result.get('reason', 'Failed to create a new toon.'))
             return
 
         self.avId = avId
@@ -374,7 +380,7 @@ class CreateAvatarOperation(GameOperation):
 
     def __handleAvatarStored(self, fields):
         if fields:
-            # TODO: Kill the connection
+            self.demand('Kill', 'Failed to associate new toon to your account!')
             return
 
         self.loginManager.sendUpdateToAccountId(self.sender, 'createAvatarResponse', [self.avId])
@@ -396,7 +402,7 @@ class SetNamePatternOperation(AvatarOperation):
 
     def __handleRetrieveAvatar(self):
         if self.avId and self.avId not in self.avList:
-            # TODO: Kill the connection
+            self.demand('Kill', 'Tried to name a toon not in the account.')
             return
 
         self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, self.avId,
@@ -404,11 +410,11 @@ class SetNamePatternOperation(AvatarOperation):
 
     def __handleAvatarRetrieved(self, dclass, fields):
         if dclass != self.loginManager.air.dclassesByName['DistributedToonUD']:
-            # TODO: Kill the connection
+            self.demand('Kill', 'One of the toons is invalid.')
             return
 
         if fields['WishNameState'][0] != 'OPEN':
-            # TODO: Kill the connection
+            self.demand('Kill', 'Toon is not in a nameable state.')
             return
 
         self.__handleSetName()
@@ -459,7 +465,7 @@ class SetNameTypedOperation(AvatarOperation):
 
     def __handleRetrieveAvatar(self):
         if self.avId and self.avId not in self.avList:
-            # TODO: Kill the connection
+            self.demand('Kill', 'Tried to set name of a toon not in the account.')
             return
 
         self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, self.avId,
@@ -467,11 +473,11 @@ class SetNameTypedOperation(AvatarOperation):
 
     def __handleAvatarRetrieved(self, dclass, fields):
         if dclass != self.loginManager.air.dclassesByName['DistributedToonUD']:
-            # TODO: Kill the connection
+            self.demand('Kill', 'One of the toons is invalid.')
             return
 
         if fields['WishNameState'][0] != 'OPEN':
-            # TODO: Kill the connection
+            self.demand('Kill', 'Toon is not in a nameable state!')
             return
 
         self.__handleJudgeName()
@@ -501,7 +507,7 @@ class AcknowledgeNameOperation(AvatarOperation):
 
     def __handleGetTargetAvatar(self):
         if self.avId not in self.avList:
-            # TODO: Kill the connection
+            self.demand('Kill',"Tried to acknowledge name on a toon not in the account!"
             return
 
         self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, self.avId,
@@ -550,7 +556,7 @@ class RemoveAvatarOperation(GetAvatarsOperation):
 
     def __handleRemoveAvatar(self):
         if self.avId not in self.avList:
-            # TODO: Kill the connection
+            self.demand('Kill', 'Tried to remove a toon not in the account.')
             return
 
         index = self.avList.index(self.avId)
@@ -575,7 +581,7 @@ class RemoveAvatarOperation(GetAvatarsOperation):
 
     def __handleAvatarRemoved(self, fields):
         if fields:
-            # TODO: Kill the connection
+            self.demand('Kill', 'Database failed to associate the new avatar to your account!')
             return
 
         self._handleQueryAvatars()
@@ -770,7 +776,7 @@ class AstronLoginManagerUD(DistributedObjectGlobalUD):
         currentAvId = self.air.getAvatarIdFromSender()
         accId = self.air.getAccountIdFromSender()
         if currentAvId and avId:
-            # todo: kill the connection
+            self.killAccount(accId, 'A Toon is already chosen!')
             return
         elif not currentAvId and not avId:
             # I don't think we need to do anything extra here
@@ -783,3 +789,13 @@ class AstronLoginManagerUD(DistributedObjectGlobalUD):
         else:
             # Otherwise, the client wants to unload the avatar; run an UnloadAvatarOperation.
             self.runGameOperation(UnloadAvatarOperation, currentAvId)
+
+    def killConnection(self, connectionId, reason):
+        dg = PyDatagram()
+        dg.addServerHeader(connectionId, self.air.ourChannel, CLIENTAGENT_EJECT)
+        dg.addUint16(122)
+        dg.addString(reason)
+        self.air.send(dg)
+
+    def killAccount(self, accId, reason):
+        self.killConnection(self.GetAccountConnectionChannel(accId), reason)
