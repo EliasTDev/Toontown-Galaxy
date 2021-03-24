@@ -23,7 +23,6 @@ class ToontownLoadingScreen:
         #load our logo
         self.galaxyLogo = OnscreenImage('phase_3/maps/toontown-logo.png')
 
-        galaxyLogoScaleTuple = (galaxyLogoScale, 1, galaxyLogoScale)
         self.galaxyLogo.reparentTo(base.a2dpTopCenter)
         self.galaxyLogo.setScale(self.gui, (0.6, 1.2, 0.4))
         self.galaxyLogo.setTransparency(TransparencyAttrib.MAlpha)
@@ -91,11 +90,15 @@ class ToontownLoadingScreen:
             self.title.reparentTo(self.gui)
             self.gui.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)
             self.galaxyLogo.reparentTo(self.gui)
+            base.setBackgroundColor((0, 0, 0, 0))
+
         else:
             self.waitBar.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)
             self.title.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)
             self.gui.reparentTo(hidden)
             self.galaxyLogo.reparentTo(hidden)
+            base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
+
         self.waitBar.update(self.__count)
 
     def end(self):
@@ -105,6 +108,8 @@ class ToontownLoadingScreen:
         self.title.reparentTo(self.gui)
         self.gui.reparentTo(hidden)
         self.galaxyLogo.reparentTo(hidden)
+        base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
+
         return (self.__expectedCount, self.__count)
 
     def abort(self):

@@ -17,7 +17,7 @@ class CatalogNotifyDialog:
         self.message = message
         self.messageIndex = 0
 
-        framePosX = 0.40
+        framePosX = -0.93
         from toontown.toon import LocalToon # import here to stop cyclic import
         if LocalToon.WantNewsPage:
             framePosX += LocalToon.AdjustmentForNewsButton
@@ -31,7 +31,7 @@ class CatalogNotifyDialog:
             text_scale = 0.06,
             text_pos = (-0.1, 0.1),
             parent = base.a2dTopRight,
-            pos = (framePosX, 0, 0),
+            pos = (framePosX, 0, -0.22),
             )
         
 

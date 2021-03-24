@@ -168,9 +168,7 @@ class ToontownMagicWordManager(DistributedObject.DistributedObject):
                 return
 
             # Like earlier, Magic Words are no good if used while moving between zones
-            if toon.getTransitioning():
-                self.generateResponse(responseType="OtherTeleporting")
-                return
+
 
         # Get how many activators were used in this Magic Word execution
         activatorLength = affectRange + 1

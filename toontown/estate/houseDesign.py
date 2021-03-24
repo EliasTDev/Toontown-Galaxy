@@ -542,8 +542,8 @@ class ObjectManager(NodePath, DirectObject):
         if self.guiInterval:
             self.guiInterval.finish()
         self.guiInterval = self.furnitureGui.posHprScaleInterval(
-            1.0, Point3(-1.16,1,-0.03), Vec3(0), Vec3(0.06),
-            startPos = Point3(-1.19, 1, 0.33),
+            1.0, Point3(0.16,-0.6,-1.045), Vec3(0), Vec3(0.06),
+            startPos = Point3(0.115, 0.0, -0.66),
             startHpr = Vec3(0),
             startScale = Vec3(0.04),
             blendType = 'easeInOut',
@@ -1343,7 +1343,8 @@ class ObjectManager(NodePath, DirectObject):
         # Main attic/stop button
         self.furnitureGui = DirectFrame(
             relief = None,
-            pos = (-1.19, 1, 0.33),
+            parent = base.a2dTopLeft,
+            pos = (0.155, -0.6, -1.045),
             scale= 0.04,
             image = attic)
         bMoveStopUp = guiModels.find('**/bu_atticX/bu_attic_up')

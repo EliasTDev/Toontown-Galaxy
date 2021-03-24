@@ -92,6 +92,7 @@ class AvatarChooser(StateData.StateData):
     #reparent to aspect2d for widescreen support
         self.pickAToonBG.reparentTo(aspect2d)
         self.pickAToonBG.setBin('background', 1)
+        base.setBackgroundColor(Vec4(0.145, 0.368, 0.78, 1))
         choice = base.config.GetInt("auto-avatar-choice", -1)
         
         # hang the choice panel hooks
@@ -119,7 +120,8 @@ class AvatarChooser(StateData.StateData):
         self.title.reparentTo(hidden)
         self.quitButton.hide()
         #self.logoutButton.hide()
-        
+        base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
+
         self.pickAToonBG.reparentTo(hidden)
 
     def load(self, isPaid):
@@ -394,6 +396,7 @@ class AvatarChooser(StateData.StateData):
 
         ModelPool.garbageCollect()
         TexturePool.garbageCollect()
+        base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
 
     def __handlePanelDone(self, panelDoneStatus, panelChoice=0):
         """

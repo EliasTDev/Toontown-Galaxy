@@ -141,7 +141,6 @@ class DistributedPartyTrampolineActivity(DistributedPartyActivity):
     def loadModels( self ):
         self.tramp = self.root.attachNewNode(self.uniqueName("tramp"))
 
-        self.screenPlaneElements = NodePath(self.uniqueName("screenPlane"))
 
         self.trampActor = Actor(
             "phase_13/models/parties/trampoline_model",
@@ -188,8 +187,11 @@ class DistributedPartyTrampolineActivity(DistributedPartyActivity):
 
     def loadGUI( self ):
         self.gui = loader.loadModel("phase_13/models/parties/trampolineGUI")
-        self.gui.setX(-1.15)
-        self.gui.reparentTo( self.screenPlaneElements )
+        self.gui.reparentTo(base.a2dTopLeft)
+        self.gui.setX(0.115)
+        self.gui.setY(0) 
+        self.gui.setZ(-1)
+        self.gui.hide()
 
         self.toonIndicator = self.gui.find( "**/trampolineGUI_MovingBar" )
         jumpLineLocator = self.gui.find( "**/jumpLine_locator" )
@@ -217,7 +219,7 @@ class DistributedPartyTrampolineActivity(DistributedPartyActivity):
         quitEarlyDown = self.quitEarlyButtonModels.find( "**/InventoryButtonDown" )
         quitEarlyRollover = self.quitEarlyButtonModels.find( "**/InventoryButtonRollover" )
         self.quitEarlyButton = DirectButton(
-            parent=self.screenPlaneElements,
+            parent=base.a2dTopRight,
             relief=None,
             text=TTLocalizer.PartyTrampolineQuitEarlyButton,
             text_fg=(1, 1, 0.65, 1),
@@ -226,7 +228,7 @@ class DistributedPartyTrampolineActivity(DistributedPartyActivity):
             image=(quitEarlyUp, quitEarlyDown, quitEarlyRollover),
             image_color=(1, 0, 0, 1),
             image_scale=(20, 1, 11),
-            pos=(1.15, 0, 0.6),
+            pos=(-0.183, 0, -0.4),
             scale=0.09,
             command=self.leaveTrampoline,
         )
@@ -290,9 +292,8 @@ class DistributedPartyTrampolineActivity(DistributedPartyActivity):
         # Unload gui stuff
         self.quitEarlyButton.destroy()
         del self.quitEarlyButton
-        if self.screenPlaneElements:
-            self.screenPlaneElements.removeNode()
-            self.screenPlaneElements = None
+        del self.gui
+
 
         # Unload fsms
         del self.activityFSM
@@ -322,6 +323,7 @@ class DistributedPartyTrampolineActivity(DistributedPartyActivity):
             self.trampB = self.leavingTrampB
             self.ignore( "control" )
             self.quitEarlyButton.stash()
+            self.gui.hide()
 
     def requestAnim( self, request ):
         self.animFSM.request( request )
@@ -453,7 +455,7 @@ class DistributedPartyTrampolineActivity(DistributedPartyActivity):
         self.timer.setTime(PartyGlobals.TrampolineDuration)
         self.timer.countdown(PartyGlobals.TrampolineDuration)
         self.timer.show()
-        
+        self.gui.show()
         self.quitEarlyButton.unstash()
 
         self.notify.debug("Accepting contorl")
@@ -486,7 +488,7 @@ class DistributedPartyTrampolineActivity(DistributedPartyActivity):
     def postHopOn( self ):
         self.toon.setH( self.toon.getH() + 90.0 ) # makes camera adjustment less jarring
         self.toon.dropShadow.reparentTo( self.surface )
-        self.screenPlaneElements.reparentTo( aspect2d )
+        
         self.timeLeftToSimulate = 0.0
         self.doSimulateStep = False
         taskMgr.add( self.updateTask, self.uniqueName("TrampolineActivity.updateTask") )
@@ -512,7 +514,6 @@ class DistributedPartyTrampolineActivity(DistributedPartyActivity):
         self.hopOffAnim.start()
 
     def postHopOff( self ):
-        self.screenPlaneElements.reparentTo( hidden )
         base.setCellsAvailable( base.leftCells, True )
         self.timer.stop()
         self.timer.hide()
