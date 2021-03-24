@@ -2297,9 +2297,12 @@ class SetPinkSlips(MagicWord):
 class ToggleHoliday(MagicWord):
     aliases = ['holiday']
     desc = 'Start or stop a holiday'
+    advancedDesc = """Specify a holiday id number. For the second argument use 
+                      a command like start, end or list.
+                   """
     accessLevel = 'ADMIN'
     execLocation = MagicWordConfig.EXEC_LOC_SERVER    
-    arguments = [('holidayId', int , False, 0), ('command', 'str', False, ''), ('extra', str, False, '')]
+    arguments = [('holidayId', int , True), ('command', 'str', False, ''), ('extra', str, False, '')]
 
 
     def handleWord(self, invoker, avId, av, *args):

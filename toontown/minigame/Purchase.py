@@ -122,7 +122,7 @@ class Purchase(PurchaseBase):
 
         # The timer
         self.timer = ToontownTimer.ToontownTimer()
-        self.timer.reparentTo(self.frame)
+        self.timer.hide()
         self.timer.posInTopRightCorner()
 
         # make the character panels
@@ -242,6 +242,7 @@ class Purchase(PurchaseBase):
         del self.backToPlayground
         # timer will get destroyed because it is in frame
         self.timer.stop()
+        self.timer.destroy()
         del self.timer
         for counter in self.counters:
             counter.destroy()
@@ -362,7 +363,7 @@ class Purchase(PurchaseBase):
         camera.lookAt(0, 0, 0.75)
         base.transitions.irisIn(0.4)
         base.camLens.setFov(60)
-        base.camLens.setFar(150)
+        #base.camLens.setFar(150)
         # show background elements
         self.title.reparentTo(aspect2d)
         self.foreground.reparentTo(render)
@@ -703,6 +704,8 @@ class Purchase(PurchaseBase):
 
 
     def exitReward(self):
+        base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov/(4./3.))
+
         self.ignore('clientCleanup')
         taskMgr.remove("countUpTask")
         taskMgr.remove("countVotesUpTask")
@@ -737,7 +740,6 @@ class Purchase(PurchaseBase):
         self.convertingVotesToBeansLabel.hide()
         # free the whisper bubbles
         NametagGlobals.setOnscreenChatForced(0)
-
     def _handleClientCleanup(self):
         """Handle the user unexpectedly closing the toontown window."""
         assert self.notify.debugStateCall(self)
@@ -782,7 +784,9 @@ class Purchase(PurchaseBase):
         if not self.tutorialMode:
             # Start the timer countdown
             if not config.GetBool('disable-purchase-timer', 0):
+                self.timer.show()
                 self.timer.countdown(self.remain, self.__timerExpired)
+                
 
             if config.GetBool('metagame-disable-playAgain',0):
                 if self.metagameRound > -1:

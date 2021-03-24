@@ -411,8 +411,8 @@ class ToonControlManager(ControlManager):
         self.visibilityOff()
         base.camera.wrtReparentTo(render)
         # Reset cam
-        base.camera.iPos(base.direct.cam)
-        base.direct.cam.iPosHpr()
+        base.camera.setPos(base.direct.cam, 0, 0, 0)
+        base.direct.cam.setPosHpr(0, 0, 0, 0, 0, 0)
         base.camLens.setFov(self.oldFov)
         # Renable mouse
         #self.editor.enableMouse()

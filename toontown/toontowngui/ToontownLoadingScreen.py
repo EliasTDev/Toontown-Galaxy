@@ -71,6 +71,7 @@ class ToontownLoadingScreen:
         self.banner.removeNode()
         self.galaxyLogo.destroy()
         self.gui.removeNode()
+        base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
 
     def getTip(self, tipCategory):
         return TTLocalizer.TipTitle + "\n" + random.choice(TTLocalizer.TipDict.get(tipCategory))
@@ -90,7 +91,7 @@ class ToontownLoadingScreen:
             self.title.reparentTo(self.gui)
             self.gui.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)
             self.galaxyLogo.reparentTo(self.gui)
-            base.setBackgroundColor((0, 0, 0, 0))
+            base.setBackgroundColor((0, 0, 46/255, 0))
 
         else:
             self.waitBar.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)
@@ -114,6 +115,7 @@ class ToontownLoadingScreen:
 
     def abort(self):
         self.gui.reparentTo(hidden)
+        base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
 
     def tick(self):
         self.__count = self.__count + 1

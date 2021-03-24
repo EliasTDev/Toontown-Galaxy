@@ -1442,7 +1442,7 @@ class DistributedCannonGame(DistributedMinigame):
                 self.toonIntervalDict[task.info['avId']] = s
                 s.start()
                 # But clear out avatar offset
-                avatar.iPos()
+                avatar.setPos(0, 0, 0)
                 # Put toon in 'splat' pose
                 avatar.pose('slip-forward', 25)
                 base.playSfx(self.sndHitTower)

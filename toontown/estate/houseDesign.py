@@ -267,7 +267,7 @@ class MovableObject(NodePath, DirectObject):
         # Special case fixes
         # Compute bounding box
         m = self.getTransform()
-        self.iPosHpr()
+        self.setPosHpr(0, 0, 0, 0, 0, 0)
         bMin,bMax = self.bounds = self.getTightBounds()
         bMin -= Vec3(.1,.1,0)
         bMax += Vec3(.1,.1,0)
@@ -766,7 +766,7 @@ class ObjectManager(NodePath, DirectObject):
             # Set init flag
             self.firstTime = 1
             # Init self
-            self.iPosHpr()
+            self.setPosHpr(0, 0, 0, 0, 0, 0)
             self.startPoseValid = 0
             # Adjust grab button
             self.centerMarker['image'] = self.grabDown
@@ -835,8 +835,8 @@ class ObjectManager(NodePath, DirectObject):
             self.firstTime = 0
         else:
             # Otherwise just reset auxiliary node paths
-            self.gridSnapNP.iPos()
-            self.collisionOffsetNP.iPosHpr()
+            self.gridSnapNP.setPos(0, 0, 0)
+            self.collisionOffsetNP.setPosHpr(0, 0, 0, 0, 0, 0)
 
         # If grid spacing is set snap gridSnapNP to grid
         if self.gridSpacing:
@@ -1198,8 +1198,8 @@ class ObjectManager(NodePath, DirectObject):
     def moveObjectInit(self):
         self.dragPointNP.setPosHpr(self.selectedObject,
                                    self.selectedObject.dragPoint, Vec3(0))
-        self.gridSnapNP.iPosHpr()
-        self.collisionOffsetNP.iPosHpr()
+        self.gridSnapNP.setPosHpr(0, 0, 0, 0, 0, 0)
+        self.collisionOffsetNP.setPosHpr(0, 0, 0, 0, 0, 0)
         self.selectedObject.wrtReparentTo(self.collisionOffsetNP)
 
     def resetFurniture(self):
@@ -1948,7 +1948,7 @@ class ObjectManager(NodePath, DirectObject):
             # Paintings are started out on a wall.
             for object in list(self.objectDict.values()):
                 object.stashBuiltInCollisionNodes()
-            self.gridSnapNP.iPosHpr()
+            self.gridSnapNP.setPosHpr(0, 0, 0, 0, 0, 0)
             target = self.targetNodePath
             self.iRay.setParentNP(base.localAvatar)
             entry = self.iRay.pickBitMask3D(

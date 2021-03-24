@@ -607,8 +607,8 @@ class LevelEditor(NodePath, DirectObject):
         self.visibilityOff()
         base.camera.wrtReparentTo(render)
         # Reset cam
-        base.camera.iPos(base.cam)
-        base.cam.iPosHpr()
+        base.camera.setPos(base.cam, 0, 0, 0)
+        base.cam.setPosHpr(0, 0, 0, 0, 0, 0)
         # Renable mouse
         self.enableMouse()
         base.direct.enable()
