@@ -1,6 +1,6 @@
 
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 import random
@@ -71,7 +71,6 @@ class ToontownLoadingScreen:
         self.banner.removeNode()
         self.galaxyLogo.destroy()
         self.gui.removeNode()
-        base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
 
     def getTip(self, tipCategory):
         return TTLocalizer.TipTitle + "\n" + random.choice(TTLocalizer.TipDict.get(tipCategory))

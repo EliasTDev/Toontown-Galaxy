@@ -1,5 +1,5 @@
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
@@ -501,8 +501,8 @@ class DistributedVehicle(DistributedSmoothNode.DistributedSmoothNode,
         for x in driftEffects:
             x.start()
         self.drifts = driftEffects
-
-        self.driftSeq = Sequence(
+        try:
+            self.driftSeq = Sequence(
             Func(backLeft.show),
             Func(backRight.show),
             Wait(1000000),
@@ -510,7 +510,10 @@ class DistributedVehicle(DistributedSmoothNode.DistributedSmoothNode,
             Func(self.drifts[1].effect.getParticlesNamed('particles-1').getRenderer().setColor,Vec4(1.0,1.0,1.0,1.0)),
             Func(backLeft.hide),
             Func(backRight.hide),
-            )
+             )
+        except:
+            self.notify.warning('Failed to setup drift particles.')
+            return 
 
         self.driftSeqStarted = False
         self.driftParticleForces = [ x.effect.getParticlesNamed('particles-1').getLinearForce(0) for x in self.drifts ]
@@ -705,7 +708,7 @@ class DistributedVehicle(DistributedSmoothNode.DistributedSmoothNode,
 
         # stop making all chat appear in the margins
         NametagGlobals.setOnscreenChatForced(0)
-
+        base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov/(4/3))
 
     def doHeadScale(self, model, scale):
         if scale == None:
@@ -927,9 +930,9 @@ class DistributedVehicle(DistributedSmoothNode.DistributedSmoothNode,
     def startTurbo(self):
         # set up some data for our turbo
         newCameraPos = Point3(0, -25, 16)
-        newCameraFov = 90
+        newCameraFov = 70
         turboDuration = 3
-        startFov = base.camLens.getFov().getX()
+        startFov = ToontownGlobals.DefaultCameraFov/(4/3)
 
         if self.cameraTrack:
             self.cameraTrack.pause()
@@ -937,7 +940,7 @@ class DistributedVehicle(DistributedSmoothNode.DistributedSmoothNode,
         # create a camera track... modify pos and fov
         cameraZoomIn = Parallel(
             LerpPosInterval(camera, 2, newCameraPos),
-            LerpFunc(base.camLens.setFov,
+            LerpFunc(base.camLens.setMinFov,
                      fromData = startFov,
                      toData = newCameraFov,
                      duration = 2,
@@ -945,9 +948,9 @@ class DistributedVehicle(DistributedSmoothNode.DistributedSmoothNode,
             )
         cameraToNormal = Parallel(
             LerpPosInterval(camera, 1, Point3(0,-33,16), newCameraPos),
-            LerpFunc(base.camLens.setFov,
+            LerpFunc(base.camLens.setMinFov,
                      fromData = newCameraFov,
-                     toData=ToontownGlobals.DefaultCameraFov,
+                     toData=startFov,
                      duration = 1,
                      ),
             )
@@ -1618,9 +1621,9 @@ class DistributedVehicle(DistributedSmoothNode.DistributedSmoothNode,
            self.cameraTrack.pause()
            cameraToNormal = Parallel(
             LerpPosInterval(camera, 0.05, Point3(0,-33,16),startPos=camera.getPos()),
-            LerpFunc(base.camLens.setFov,
+            LerpFunc(base.camLens.setMinFov,
                      fromData = base.camLens.getFov()[0],
-                     toData=ToontownGlobals.DefaultCameraFov,
+                     toData=base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov/(4/3)),
                      duration = 0.05,
                      ),
             )

@@ -19,24 +19,13 @@ class Drift(NodePath):
 
         particleSearchPath = DSearchPath()
         if not __dev__:
-            particleSearchPath.appendDirectory(Filename('phase_3.5/etc'))
-            particleSearchPath.appendDirectory(Filename('phase_4/etc'))
-            particleSearchPath.appendDirectory(Filename('phase_5/etc'))
             particleSearchPath.appendDirectory(Filename('phase_6/etc'))
-            particleSearchPath.appendDirectory(Filename('phase_7/etc'))
-            particleSearchPath.appendDirectory(Filename('phase_8/etc'))
-            particleSearchPath.appendDirectory(Filename('phase_9/etc'))
         else:
             # In other environments, including the dev environment, look here:
             basePath = os.path.expandvars('$TOONTOWN') or './toontown'
             particleSearchPath.appendDirectory(Filename.fromOsSpecific(basePath+'/src/effects'))
-            particleSearchPath.appendDirectory(Filename('resources/phase_3.5/etc'))
-            particleSearchPath.appendDirectory(Filename('resources/phase_4/etc'))
-            particleSearchPath.appendDirectory(Filename('resources/phase_5/etc'))
             particleSearchPath.appendDirectory(Filename('resources/phase_6/etc'))
-            particleSearchPath.appendDirectory(Filename('resources/phase_7/etc'))
-            particleSearchPath.appendDirectory(Filename('resources/phase_8/etc'))
-            particleSearchPath.appendDirectory(Filename('resources/phase_9/etc'))
+
             particleSearchPath.appendDirectory(Filename('.'))
         pfile = Filename('drift.ptf')
         found = vfs.resolveFilename(pfile, particleSearchPath)
