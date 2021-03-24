@@ -27,7 +27,6 @@ parser.add_argument('--stateserver', help="The control channel of this AI's desi
 parser.add_argument('--district-name', help="What this AI Server's district will be named.")
 parser.add_argument('--astron-ip', help="The IP address of the Astron Message Director to connect to.")
 parser.add_argument('--eventlogger-ip', help="The IP address of the Astron Event Logger to log to.")
-loadPrcFileData('AI Config', aiConfig)
 args = parser.parse_args()
 localconfig = ''
 if args.base_channel: localconfig += 'air-base-channel %s\n' % args.base_channel
