@@ -954,6 +954,7 @@ class FinishQuest(MagicWord):
     desc = 'Finishes specific quest magically.'
     accessLevel = 'DEVELOPER'
     arguments = [('index', int, True)]
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
 
     def handleWord(self, invoker, avId, toon, *args):
         index = int(args[0])
@@ -962,6 +963,7 @@ class FinishQuest(MagicWord):
             return ("Finished quest %s." % (index))
         else:
             return ("Quest %s not found." % (index))
+            
 class SetQuestTier(MagicWord):
     aliases = ['setqt', 'questtier', 'settasktier']
     desc = 'Sets the quest tier of the target'

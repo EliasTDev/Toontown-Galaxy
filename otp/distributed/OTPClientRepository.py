@@ -1767,6 +1767,8 @@ class OTPClientRepository(ClientRepositoryBase):
     def detectLeakedGarbage(self, callback=None):
         if not __debug__:
             return 0
+        if not __dev__:
+            return 0
         self.notify.info('checking for leaked garbage...')
         if gc.garbage:
             self.notify.warning("garbage already contains %d items" % len(gc.garbage))

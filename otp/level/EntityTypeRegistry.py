@@ -40,13 +40,13 @@ class EntityTypeRegistry:
         # avoid CR/LF issues by reading the file line by line
         # readlines() converts \r\n to \n
         fileLines = open(getPyExtVersion(EntityTypes.__file__)).readlines()
-        hv.hashString(string.join(fileLines, ''))
+        hv.hashString(''.join(fileLines))
         s = str(hv.asHex())
         s += '.'
         # avoid CR/LF issues by reading the file line by line
         # readlines() converts \r\n to \n
         fileLines = open(getPyExtVersion(self.entTypeModule.__file__)).readlines()
-        hv.hashString(string.join(fileLines, ''))
+        hv.hashString(''.join(fileLines))
         s += str(hv.asHex())
         self.hashStr = s
 

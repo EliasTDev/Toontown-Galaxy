@@ -403,7 +403,11 @@ class DistributedBanquetTable(DistributedObject.DistributedObject, FSM.FSM, Banq
             foodModel.setScale(newScale)
 
         def foodDetach(self=self, diner=diner):
-            foodModel = diner.getRightHand().getChild(0)
+            try:
+                foodModel = diner.getRightHand().getChild(0)
+            except:
+                self.notify.warning('Unable to get the right hand properly. Canceling detachment.')
+                return
             foodModel.reparentTo( serviceLoc),
             foodModel.setPosHpr( 0,0,0, 0,0,0),
             scaleAdj = 1

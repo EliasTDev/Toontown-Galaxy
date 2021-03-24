@@ -21,12 +21,17 @@ class ToontownLoadingScreen:
         self.banner.reparentTo(self.gui)
         self.banner.setScale(0.4,0.4,0.4)
         #load our logo
+        galaxyLogoScale = 0.4689675174
+        self.galaxyLogo = OnscreenImage('phase_3/maps/toontown-logo.png', 
+                                         scale = (galaxyLogoScale, 1, galaxyLogoScale))
 
-        self.galaxyLogo = OnscreenImage('phase_3/maps/toontown-logo.png')
-        self.galaxyLogo.reparentTo(self.gui)
-        self.galaxyLogo.setScale(self.gui, (0.5, 1, 0.35))
+        galaxyLogoScaleTuple = (galaxyLogoScale, 1, galaxyLogoScale)
+        self.galaxyLogo.reparentTo(base.a2dpTopCenter)
+        #self.galaxyLogo.setScale(self.gui, (0.5, 1, 0.35))
         self.galaxyLogo.setTransparency(TransparencyAttrib.MAlpha)
         self.galaxyLogo.setZ(0.61)
+        #self.galaxyLogo.setPos(0, 0, -galaxyLogoScale)
+        self.galaxyLogo.reparentTo(hidden)
 
         self.tip = DirectLabel(
             guiId = "ToontownLoadingScreenTip",
@@ -67,6 +72,7 @@ class ToontownLoadingScreen:
         self.title.destroy()
         self.waitBar.destroy()
         self.banner.removeNode()
+        self.galaxyLogo.destroy()
         self.gui.removeNode()
 
     def getTip(self, tipCategory):
@@ -86,10 +92,12 @@ class ToontownLoadingScreen:
             self.waitBar.reparentTo(self.gui)
             self.title.reparentTo(self.gui)
             self.gui.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)
+            self.galaxyLogo.reparentTo(self.gui)
         else:
             self.waitBar.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)
             self.title.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)
             self.gui.reparentTo(hidden)
+            self.galaxyLogo.reparentTo(hidden)
         self.waitBar.update(self.__count)
 
     def end(self):
@@ -98,6 +106,7 @@ class ToontownLoadingScreen:
         self.waitBar.reparentTo(self.gui)
         self.title.reparentTo(self.gui)
         self.gui.reparentTo(hidden)
+        self.galaxyLogo.reparentTo(hidden)
         return (self.__expectedCount, self.__count)
 
     def abort(self):

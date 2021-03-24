@@ -1,3 +1,4 @@
+win-origin -1 -1
 direct-wtext 0
 ime-aware 1
 ime-hide 1
