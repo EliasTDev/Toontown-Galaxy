@@ -1574,10 +1574,7 @@ class OTPClientRepository(ClientRepositoryBase):
 
     @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
     def enterWaitForDeleteAvatarResponse(self, potAv):
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
-        self.handler = self.handleWaitForDeleteAvatarResponse
-        # Send the delete avatar message
-        self.sendDeleteAvatarMsg(potAv.id)
+        self.astronLoginManager.sendRequestRemoveAvatar(potAv.id)
         self.waitForDatabaseTimeout(requestName='WaitForDeleteAvatarResponse')
 
     @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
@@ -1598,18 +1595,7 @@ class OTPClientRepository(ClientRepositoryBase):
         self.cleanupWaitingForDatabase()
         self.handler = None
 
-    @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
-    def handleWaitForDeleteAvatarResponse(self, msgType, di):
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
-        if msgType == CLIENT_DELETE_AVATAR_RESP:
-            # code re-use!
-            self.handleGetAvatarsRespMsg(di)
-        #Roger wants to remove this elif msgType == CLIENT_SERVER_UP:
-        #Roger wants to remove this     self.handleServerUp(di)
-        #Roger wants to remove this elif msgType == CLIENT_SERVER_DOWN:
-        #Roger wants to remove this     self.handleServerDown(di)
-        else:
-            self.handleMessageType(msgType, di)
+
 
     ##### LoginFSM: rejectRemoveAvatar #####
 

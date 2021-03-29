@@ -753,6 +753,7 @@ class AstronLoginManagerUD(DistributedObjectGlobalUD):
         # Someone wants to create a new avatar; run a CreateAvatarOperation:
         self.runGameOperation(CreateAvatarOperation, avDNA, avPosition)
 
+
     def setNamePattern(self, avId, p1, f1, p2, f2, p3, f3, p4, f4):
         # Someone wants to use a pattern name; run a SetNamePatternOperation:
         self.runGameOperation(SetNamePatternOperation, avId, [(p1, f1), (p2, f2),
