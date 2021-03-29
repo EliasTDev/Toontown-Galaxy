@@ -11,7 +11,6 @@ class OTPInternalRepository(AstronInternalRepository):
     def __init__(self, baseChannel, serverId, dcFileNames, dcSuffix, connectMethod, threadedNet):
         AstronInternalRepository.__init__(self, baseChannel, serverId=serverId, dcFileNames=dcFileNames,
                                           dcSuffix=dcSuffix, connectMethod=connectMethod, threadedNet=threadedNet)
-
     def handleConnected(self):
         AstronInternalRepository.handleConnected(self)
 

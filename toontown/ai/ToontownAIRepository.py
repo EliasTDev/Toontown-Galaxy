@@ -117,6 +117,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.suitPlanners = {}
         self.__queryEstateContext = 0
         self.__queryEstateFuncMap = {}
+        self.wantBingo = self.config.GetBool('want-fish-bingo', 1)
         # Guard for publish
         if simbase.wantBingo:
             self.bingoMgr = None

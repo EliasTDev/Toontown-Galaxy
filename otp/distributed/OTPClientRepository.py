@@ -2696,7 +2696,6 @@ class OTPClientRepository(ClientRepositoryBase):
         self.http.setClientCertificatePassphrase(hash.asHex())
 
     def lostConnection(self):
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
         ClientRepositoryBase.lostConnection(self)
         self.loginFSM.request("noConnection")
 
