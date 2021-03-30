@@ -78,8 +78,7 @@ class ToontownUDRepository(ToontownInternalRepository):
         self.ttFriendsManager = None 
         
     def handleConnected(self):
-        ToontownInternalRepository.handleConnected(self)
-
+        #ToontownInternalRepository.handleConnected(self)
         # Create our root object.
         self.notify.info('Creating root object (%d)...' % self.getGameDoId())
         rootObj = DistributedDirectoryAI(self)

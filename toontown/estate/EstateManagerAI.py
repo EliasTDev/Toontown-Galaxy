@@ -1,5 +1,5 @@
 from otp.ai.AIBaseGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase import PythonUtil
 from direct.distributed import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
@@ -13,6 +13,8 @@ from direct.fsm.FSM import FSM
 from toontown.toon import ToonDNA
 from toontown.estate.DistributedHouseAI import DistributedHouseAI
 from toontown.estate.GardenManagerAI import GardenManagerAI
+
+#TODO rewrite this into our own code instead of using other code here
 
 #Other classes from toontown school house
 class LoadHouseOperation(FSM):
@@ -855,18 +857,14 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
         self.notify.debug("exitEstate(%s)" % avId)
         # This function is called from client in the normal case,
         # such as teleporting out, door out, exiting the game, etc
-        self.__exitEstate(avId)
+        #self.__exitEstate(avId)
 
         self._unmapFromEstate(av)
         self._unloadEstate(av)
 
     def __handleUnexpectedExit(self, avId):
-        self.notify.debug("we got an unexpected exit on av: %s:  deleting." % avId)
-        taskMgr.remove("estateToonUp-" + str(avId))
-        if avId in self.avId2pendingEnter:
-            self._toonLeftBeforeArrival(avId)
-        self.__exitEstate(avId)
-        return None
+        self._unmapFromEstate(avId)
+        self._unloadEstate(avId)
 
     def __exitEstate(self, avId):
        # self.notify.debug("__exitEstate(%d)" % avId)
@@ -918,68 +916,48 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
             # Stop healing them
             av.stopToonUp()
 
-    def _cleanupEstate(self, avId, zoneId, task):
-        self.notify.debug("cleanupEstate avId = %s, zoneId = %s" % (avId, zoneId))
-        # we should always be cleaning up things from the toBeDeleted list,
-        # not directly from estateZone
+    def _cleanupEstate(self, estate):
+        #made by toontown school house
+        # Boot all avatars from estate:
+        self._sendToonsToPlayground(estate, 1)
 
-        # remove all 'hanging' entries left in estateZone
-        # this is caused by:
-        #   friend A is visting friend B
-        #   friend B exits his estate
-        #   friend C attempts to visit friend A at the same time
-        for someAvId, avZone in list(self.estateZone.items()):
-            if avZone[0] == zoneId:
-                # This may be a slow client that just hasn't reported back.
-                # If the toon is still in the zone, announce that they've
-                # left before cleaning up the tables. When they report in that
-                # they've left (client->AI: exitEstate), the code will not
-                # find the avatar in the tables and will ignore.
-                avatar = simbase.air.doId2do.get(someAvId)
-                if ((avatar) and
-                    (hasattr(avatar, "estateZones")) and
-                    (zoneId in avatar.estateZones) and
-                    (avatar.zoneId in avatar.estateZones)):
-                    ownerId = self.zone2owner[zoneId]
-                    self.notify.warning(
-                        "forcing announcement of toon %s exit from %s %s" %
-                        (someAvId, ownerId, zoneId))
-                    self.announceToonExitEstate(someAvId, ownerId, zoneId)
+        # Clean up avatar <-> estate mappings:
+        for av in self.estate2toons.get(estate, []):
+            try:
+                del self.estate[av.doId]
+                del self.toon2estate[av]
+            except KeyError:
+                pass
 
-                self.notify.warning(
-                    "Manually removing (bad) entry in estateZone: %s" %
-                    someAvId)
-                self.clearEstateZone(someAvId)
+        try:
+            del self.estate2toons[estate]
+        except KeyError:
+            pass
 
-        # give our zoneId back to the air
-        self.air.deallocateZone(zoneId)
-        avZone = self.toBeDeleted.get(avId)
-        if avZone:
-            if avZone[2] != "":
-                if avZone[2] in self.account2avId:
-                    self.notify.debug( "removing %s from account2avId" % avZone[2])
-                    del self.account2avId[avZone[2]]
-            del self.toBeDeleted[avId]
-            del self.zone2owner[avZone[0]]
+        try:
+            del self.zone2toons[estate.zoneId]
+        except KeyError:
+            pass
 
-        # delete estate and houses from state server
-        self.__deleteEstate(avId)
+        # Clean up timeout, if it exists:
+        if estate in self.estate2timeout:
+            del self.estate2timeout[estate]
 
-        # stop listening for unexpectedExit
-        self.ignore(self.air.getAvatarExitEvent(avId))
+        # Destroy estate and unmap from owner:
+        estate.destroy()
+        estate.owner.estate = None
 
-        # refcount should be empty, just delete
-        if zoneId in self.refCount:
-            del self.refCount[zoneId]
+        # Destroy pets:
+        for pet in estate.pets:
+            pet.requestDelete()
 
-        return Task.done
+        estate.pets = []
 
-    def __stopCleanupTask(self, avId):
-        self.notify.debug("stopCleanupTask %s" % avId)
-        taskMgr.remove("cleanupEstate-"+str(avId))
-        taskMgr.remove("bootVisitorsAndCleanup-"+str(avId))
-        self.acceptOnce(self.air.getAvatarExitEvent(avId),
-                        self.__handleUnexpectedExit, extraArgs=[avId])
+        # Free estate's zone:
+        self.air.deallocateZone(estate.zoneId)
+        del self.zone2owner[estate.zoneId]
+
+
 
 
     def __deleteEstate(self, avId):
@@ -1090,12 +1068,10 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
     def _unloadEstate(self, av):
         if getattr(av, 'estate', None):
             estate = av.estate
-            avId = estate.owner.doId
-            zoneId = estate.zoneId
             if estate not in self.estate2timeout:
                 self.estate2timeout[estate] = taskMgr.doMethodLater(HouseGlobals.CLEANUP_DELAY_AFTER_BOOT,
-                              PythonUtil.Functor(self._cleanupEstate, avId, zoneId),
-                              "cleanupEstate-"+str(avId))
+                              self._cleanupEstate, estate.uniqueName('unload-estate'),
+                                                                    extraArgs=[estate])
             # Send warning:
             self._sendToonsToPlayground(av.estate, 0)
 
@@ -1123,6 +1099,7 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
             self.toon2estate[av] = estate
 
         self.zone2toons.setdefault(estate.zoneId, []).append(av.doId)
+
     def _unmapFromEstate(self, av):
         estate = self.toon2estate.get(av)
         if not estate:

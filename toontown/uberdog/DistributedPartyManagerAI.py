@@ -336,7 +336,7 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                             -1))
 
         # The result list should be the same size as given.
-        assert len(result) == size, "Bad result range: c=%s s=%s result=%s" % (centerGridY, size, result)
+        #assert len(result) == size, "Bad result range: c=%s s=%s result=%s" % (centerGridY, size, result)
 
         return result
 
@@ -350,7 +350,7 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                            -1))
 
         # The result list should be the same size as given.
-        assert len(result) == size, "Bad result range: c=%s s=%s result=%s" % (centerGridX, size, result)
+        #assert len(result) == size, "Bad result range: c=%s s=%s result=%s" % (centerGridX, size, result)
 
         return result
 
@@ -1319,7 +1319,10 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                      hostName, activityIds, partyId]
                 )
 
-
+    def partyManagerUdDead(self):
+        # SHIT uberdog died :(
+        self.notify.warning("uberdog died!")
+        
     def magicWordEnd(self, senderId):
         """End the party prematurely as the sender said a magic word."""
         # first test if we are hosting a party

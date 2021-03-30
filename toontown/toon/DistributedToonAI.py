@@ -2505,8 +2505,12 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
         self.d_setCatalog(monthlyCatalog, weeklyCatalog, backCatalog)
 
     def d_setCatalog(self, monthlyCatalog, weeklyCatalog, backCatalog):
-        self.sendUpdate("setCatalog", [monthlyCatalog.getBlob(), weeklyCatalog.getBlob(), backCatalog.getBlob()])
-
+        try:
+            self.sendUpdate("setCatalog", [monthlyCatalog.getBlob(), weeklyCatalog.getBlob(), backCatalog.getBlob()])
+        except:
+            self.notify.warning('Unable to set catalog, one of the attributes is a list and not a catalogitemlist.')
+            return
+            
     def setCatalog(self, monthlyCatalog, weeklyCatalog, backCatalog):
         self.monthlyCatalog = CatalogItemList.CatalogItemList(monthlyCatalog)
         self.weeklyCatalog = CatalogItemList.CatalogItemList(weeklyCatalog)

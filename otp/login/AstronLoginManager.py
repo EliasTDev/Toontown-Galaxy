@@ -28,6 +28,8 @@ class AstronLoginManager(DistributedObjectGlobal):
     def sendCreateAvatar(self, avDNA, avName, avPosition):
         # avName isn't used. Sad!
         self.sendUpdate('createAvatar', [avDNA.makeNetString(), avPosition])
+    
+
 
     def createAvatarResponse(self, avId):
         messenger.send('nameShopCreateAvatarDone', [avId])

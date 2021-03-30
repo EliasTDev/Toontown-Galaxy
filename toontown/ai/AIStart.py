@@ -17,16 +17,25 @@ if os.path.exists(localPrc):
 
 from otp.ai.AIBaseGlobal import *
 from toontown.ai.ToontownAIRepository import ToontownAIRepository
+from direct.showbase import PythonUtil
+import argparse
 
-aiConfig = ''
-aiConfig += 'air-base-channel %s\n' % 101000000
-aiConfig += 'air-channel-allocation %s\n' % 999999
-aiConfig += 'air-stateserver %s\n' % 4002
-aiConfig += 'district-name %s\n' % os.getenv('DISTRICT_NAME', 'Toon Valley')
-aiConfig += 'air-connect %s\n' % '127.0.0.1:7100'
-aiConfig += 'eventlog-host %s\n' % '127.0.0.1:7197'
-loadPrcFileData('AI Config', aiConfig)
-
+parser = argparse.ArgumentParser()
+parser.add_argument('--base-channel', help='The base channel that the server may use.')
+parser.add_argument('--max-channels', help='The number of channels the server may use.')
+parser.add_argument('--stateserver', help="The control channel of this AI's designated State Server.")
+parser.add_argument('--district-name', help="What this AI Server's district will be named.")
+parser.add_argument('--astron-ip', help="The IP address of the Astron Message Director to connect to.")
+parser.add_argument('--eventlogger-ip', help="The IP address of the Astron Event Logger to log to.")
+args = parser.parse_args()
+localconfig = ''
+if args.base_channel: localconfig += 'air-base-channel %s\n' % args.base_channel
+if args.max_channels: localconfig += 'air-channel-allocation %s\n' % args.max_channels
+if args.stateserver: localconfig += 'air-stateserver %s\n' % args.stateserver
+if args.district_name: localconfig += 'district-name %s\n' % args.district_name
+if args.astron_ip: localconfig += 'air-connect %s\n' % args.astron_ip
+if args.eventlogger_ip: localconfig += 'eventlog-host %s\n' % args.eventlogger_ip
+loadPrcFileData('Command-line', localconfig)
 simbase.air = ToontownAIRepository(config.GetInt('air-base-channel', 1000000), config.GetInt('air-stateserver', 4002), config.GetString('district-name', 'Toon Valley'))
 
 host = config.GetString('air-connect', '127.0.0.1:7100')
@@ -42,6 +51,8 @@ try:
 except SystemExit:
     raise
 except Exception:
-    from otp.otpbase import PythonUtil
-    print(PythonUtil.describeException())
+    info = PythonUtil.describeException()
+    simbase.air.writeServerEvent('ai-exception', avId=simbase.air.getAvatarIdFromSender(), accId=simbase.air.getAccountIdFromSender(), exception=info)
+    with open(config.GetString('ai-crash-log-name', 'ai-crash.txt'), 'w+') as file:
+        file.write(info + "\n")
     raise

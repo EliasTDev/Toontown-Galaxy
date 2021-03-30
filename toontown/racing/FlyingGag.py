@@ -31,7 +31,7 @@ class FlyingGag(NodePath, ShadowCaster):
         
     def delete(self):
         ShadowCaster.delete(self)
-        NodePath.remove(self)
+        self.remove_node()
         self.gag = None
 
     def getGeomNode(self):

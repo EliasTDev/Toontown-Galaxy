@@ -366,24 +366,15 @@ class AvatarChoice(DirectButton):
 
     def verifyDeleteWithPassword(self):
 
-        tt = base.cr.loginInterface
-        # UK, INTL and AP don't support password delete
-        if (tt.supportsAuthenticateDelete() and
-            base.cr.productName not in ['DisneyOnline-UK',
-            'JP', 'FR', 'BR', 'DisneyOnline-AP'] ):
-            # If the login interface supports it, make the user
-            # type his/her password in order to delete the toon.
-            self.deleteWithPassword = 1
-            deleteText = TTLocalizer.AvatarChoiceDeletePasswordText % self.name
-        else:
+
             # Otherwise (for instance, maybe the user logged in
             # via a "blue" token, and we don't have any way of
             # checking his password), make him type "delete" in order
             # to delete the toon.
-            self.deleteWithPassword = 0
-            deleteText = TTLocalizer.AvatarChoiceDeleteConfirmText % \
-                         { "name" : self.name,
-                           "confirm" : TTLocalizer.AvatarChoiceDeleteConfirmUserTypes }
+        self.deleteWithPassword = 0
+        deleteText = TTLocalizer.AvatarChoiceDeleteConfirmText % \
+                        { "name" : self.name,
+                        "confirm" : TTLocalizer.AvatarChoiceDeleteConfirmUserTypes }
 
         if self.deleteWithPasswordFrame == None:
             buttons = loader.loadModel('phase_3/models/gui/dialog_box_buttons_gui')

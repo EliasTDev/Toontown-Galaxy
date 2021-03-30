@@ -954,6 +954,7 @@ class FinishQuest(MagicWord):
     desc = 'Finishes specific quest magically.'
     accessLevel = 'DEVELOPER'
     arguments = [('index', int, True)]
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
 
     def handleWord(self, invoker, avId, toon, *args):
         index = int(args[0])
@@ -962,6 +963,7 @@ class FinishQuest(MagicWord):
             return ("Finished quest %s." % (index))
         else:
             return ("Quest %s not found." % (index))
+            
 class SetQuestTier(MagicWord):
     aliases = ['setqt', 'questtier', 'settasktier']
     desc = 'Sets the quest tier of the target'
@@ -1275,7 +1277,7 @@ class StartAllFireworks(MagicWord):
 class StartFireworks(MagicWord):
     accessLevel = 'ADMIN'
     desc = 'Starts a show in current zones'
-    arguments = [('showType', int, False, 0)]
+    arguments = [('showType', int, False, 1)]
     execLocation = MagicWordConfig.EXEC_LOC_SERVER
 
     def handleWord(self, invoker, avId, av, *args):
@@ -2295,9 +2297,12 @@ class SetPinkSlips(MagicWord):
 class ToggleHoliday(MagicWord):
     aliases = ['holiday']
     desc = 'Start or stop a holiday'
+    advancedDesc = """Specify a holiday id number. For the second argument use 
+                      a command like start, end or list.
+                   """
     accessLevel = 'ADMIN'
     execLocation = MagicWordConfig.EXEC_LOC_SERVER    
-    arguments = [('holidayId', int , False, 0), ('command', 'str', False, ''), ('extra', str, False, '')]
+    arguments = [('holidayId', int , True), ('command', 'str', False, ''), ('extra', str, False, '')]
 
 
     def handleWord(self, invoker, avId, av, *args):

@@ -65,6 +65,7 @@ from toontown.ai.ToontownAIMsgTypes import *
 from toontown.fishing import FishManagerAI
 from otp.friends.FriendManagerAI import FriendManagerAI
 from toontown.effects import FireworkManagerAI
+from toontown.estate import DistributedBankMgrAI
 
 class ToontownAIRepository(ToontownInternalRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory('ToontownAIRepository')
@@ -116,6 +117,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.suitPlanners = {}
         self.__queryEstateContext = 0
         self.__queryEstateFuncMap = {}
+        self.wantBingo = self.config.GetBool('want-fish-bingo', 1)
         # Guard for publish
         if simbase.wantBingo:
             self.bingoMgr = None
@@ -132,7 +134,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.dbObjContext = 0
         self.dbObjMap = {}
     def handleConnected(self):
-        ToontownInternalRepository.handleConnected(self)
+        #ToontownInternalRepository.handleConnected(self)
 
         # Generate our district...
         self.districtId = self.allocateChannel()
@@ -170,6 +172,11 @@ class ToontownAIRepository(ToontownInternalRepository):
         return Task.again
 
     def createFirstObjs(self):
+        self.districtStats = ToontownDistrictStatsAI(self)
+        self.districtStats.toontownDistrictId = self.districtId
+        self.districtStats.generateWithRequiredAndId(self.allocateChannel(), self.district.getDoId(),
+                                                     OTP_ZONE_ID_DISTRICTS_STATS)
+
         # Generate our news manager...
         self.newsManager = NewsManagerAI(self)
         self.newsManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
@@ -258,10 +265,6 @@ class ToontownAIRepository(ToontownInternalRepository):
         """
 
         # Generate our district stats...
-        self.districtStats = ToontownDistrictStatsAI(self)
-        self.districtStats.toontownDistrictId = self.districtId
-        self.districtStats.generateWithRequiredAndId(self.allocateChannel(), self.district.getDoId(),
-                                                     OTP_ZONE_ID_DISTRICTS_STATS)
 
         # Generate our time manager...
         self.timeManager = TimeManagerAI(self)
@@ -309,6 +312,9 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.friendManager = FriendManagerAI(self)
         self.friendManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
+        self.bankMgr = DistributedBankMgrAI.DistributedBankMgrAI(self)
+        self.bankMgr.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+        
     def generateHood(self, hoodConstructor, zoneId):
         # Bossbot HQ doesn't use DNA, so we skip over that.
         if zoneId != ToontownGlobals.BossbotHQ:

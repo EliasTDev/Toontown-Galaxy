@@ -311,7 +311,7 @@ class RaceGUI:
         self.cardMaker.setColor(1,1,1,1)
 
         self.gagPanel = DirectFrame(
-            parent = self.base.a2dBottomLeft,
+            parent = base.a2dBottomLeft,
             relief = None,
             image = loader.loadModel('phase_6/models/karting/gag_panel'),
             image_scale = 0.25,
@@ -476,7 +476,10 @@ class RaceGUI:
         taskMgr.removeTasksMatching("clearRaceEndPanel")
         
         for obj in self.directObjList:
-            obj.destroy()
+            try:
+                obj.destroy()
+            except:
+                continue
             
         if hasattr(self, "mapScene"):
             self.mapScene.removeNode()

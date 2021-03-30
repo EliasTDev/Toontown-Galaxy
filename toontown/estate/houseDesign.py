@@ -267,7 +267,7 @@ class MovableObject(NodePath, DirectObject):
         # Special case fixes
         # Compute bounding box
         m = self.getTransform()
-        self.iPosHpr()
+        self.setPosHpr(0, 0, 0, 0, 0, 0)
         bMin,bMax = self.bounds = self.getTightBounds()
         bMin -= Vec3(.1,.1,0)
         bMax += Vec3(.1,.1,0)
@@ -542,8 +542,8 @@ class ObjectManager(NodePath, DirectObject):
         if self.guiInterval:
             self.guiInterval.finish()
         self.guiInterval = self.furnitureGui.posHprScaleInterval(
-            1.0, Point3(-1.16,1,-0.03), Vec3(0), Vec3(0.06),
-            startPos = Point3(-1.19, 1, 0.33),
+            1.0, Point3(0.16,-0.6,-1.045), Vec3(0), Vec3(0.06),
+            startPos = Point3(0.115, 0.0, -0.66),
             startHpr = Vec3(0),
             startScale = Vec3(0.04),
             blendType = 'easeInOut',
@@ -766,7 +766,7 @@ class ObjectManager(NodePath, DirectObject):
             # Set init flag
             self.firstTime = 1
             # Init self
-            self.iPosHpr()
+            self.setPosHpr(0, 0, 0, 0, 0, 0)
             self.startPoseValid = 0
             # Adjust grab button
             self.centerMarker['image'] = self.grabDown
@@ -835,8 +835,8 @@ class ObjectManager(NodePath, DirectObject):
             self.firstTime = 0
         else:
             # Otherwise just reset auxiliary node paths
-            self.gridSnapNP.iPos()
-            self.collisionOffsetNP.iPosHpr()
+            self.gridSnapNP.setPos(0, 0, 0)
+            self.collisionOffsetNP.setPosHpr(0, 0, 0, 0, 0, 0)
 
         # If grid spacing is set snap gridSnapNP to grid
         if self.gridSpacing:
@@ -1198,8 +1198,8 @@ class ObjectManager(NodePath, DirectObject):
     def moveObjectInit(self):
         self.dragPointNP.setPosHpr(self.selectedObject,
                                    self.selectedObject.dragPoint, Vec3(0))
-        self.gridSnapNP.iPosHpr()
-        self.collisionOffsetNP.iPosHpr()
+        self.gridSnapNP.setPosHpr(0, 0, 0, 0, 0, 0)
+        self.collisionOffsetNP.setPosHpr(0, 0, 0, 0, 0, 0)
         self.selectedObject.wrtReparentTo(self.collisionOffsetNP)
 
     def resetFurniture(self):
@@ -1343,7 +1343,8 @@ class ObjectManager(NodePath, DirectObject):
         # Main attic/stop button
         self.furnitureGui = DirectFrame(
             relief = None,
-            pos = (-1.19, 1, 0.33),
+            parent = base.a2dTopLeft,
+            pos = (0.155, -0.6, -1.045),
             scale= 0.04,
             image = attic)
         bMoveStopUp = guiModels.find('**/bu_atticX/bu_attic_up')
@@ -1947,7 +1948,7 @@ class ObjectManager(NodePath, DirectObject):
             # Paintings are started out on a wall.
             for object in list(self.objectDict.values()):
                 object.stashBuiltInCollisionNodes()
-            self.gridSnapNP.iPosHpr()
+            self.gridSnapNP.setPosHpr(0, 0, 0, 0, 0, 0)
             target = self.targetNodePath
             self.iRay.setParentNP(base.localAvatar)
             entry = self.iRay.pickBitMask3D(

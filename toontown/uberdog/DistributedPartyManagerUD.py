@@ -80,8 +80,7 @@ class DistributedPartyManagerUD(DistributedObjectGlobalUD):
         self.accept("avatarOffline", self.avatarOffline, [])
         # assuming we are restarting, tell all the AIs so they can reply back with their
         # currently running parties
-        self.sendUpdateToAllAis("partyManagerUdStartingUp", [])
-
+        self.sendUpdateToAllAis("partyManagerUdDead", [])
 
     def avatarLoggedIn(self, avatarId):
         """Handle an avatar just logging in."""
@@ -892,12 +891,15 @@ class DistributedPartyManagerUD(DistributedObjectGlobalUD):
         self.sendUpdateToAllAis("updateToPublicPartyInfoUdToAllAi", [partyInfo["hostId"], actualStartTime, shardId, zoneId, partyInfo["isPrivate"], 0, hostName, activityIds, partyId])
         self.informInviteesPartyHasStarted(partyId)
 
-    def sendUpdateToAllAis(self, message, args):
-        pass 
-    #TODO figure out alternative for PARTY_MANAGER_UD_TO_ALL_AI
-        #dg = self.dclass.aiFormatUpdateMsgType(
-               # message, self.doId, self.doId, self.air.ourChannel, PARTY_MANAGER_UD_TO_ALL_AI, args)
-        #self.air.send(dg)
+    def sendUpdateToAllAis(self, message, args, sender=None):
+        if sender is None:
+            sender = self.air.getAvatarIdFromSender()
+        dg = self._createMessageAI(message, args, sender)
+        self.air.send(dg)
+
+    def _createMessageAI(self, message, args, receiver):
+        return self.air.dclassesByName['DistributedPartyManagerUD'].getFieldByName(message).aiFormatUpdate(receiver, receiver, simbase.air.ourChannel, args)
+
 
     def sendTestMsg(self):
         """Send a test msg to all AIs to prove it can be done."""
@@ -1026,6 +1028,7 @@ class DistributedPartyManagerUD(DistributedObjectGlobalUD):
                 [hostId, publicInfo[6], publicInfo[0], publicInfo[1], publicInfo[2], numToons,
                  publicInfo[4], publicInfo[5], publicInfo[7]],
             )
+        self.air.addPostRemove(self._createMessageAI('partyManagerUdDead', [], shardId))
 
     def partyManagerAIGoingDown(self, pmDoId, shardId):
         """An AI server is going down, interupt parties appropriately"""

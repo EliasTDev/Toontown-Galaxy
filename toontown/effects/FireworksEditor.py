@@ -807,11 +807,11 @@ class FireworksEditor(AppShell):
                 self.posWidget.set([pos[0], pos[1], pos[2]])
 
     def moveSelectedToTarget(self, event = None):
-        self.axis.iPos(self.target)
+        self.axis.setPos(self.target, 0, 0, 0)
         self.manipulateObjectCleanup()
         
     def moveTargetToSelected(self, event = None):
-        self.target.iPos(self.axis)
+        self.target.setPos(self.axis, 0, 0, 0)
 
     def loadDNAFile(self, filename, fStorage = 0):
         node = loadDNAFile(self.DNASTORE, filename, CSDefault, 1)

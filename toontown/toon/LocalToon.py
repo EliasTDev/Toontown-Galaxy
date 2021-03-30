@@ -68,7 +68,7 @@ from toontown.shtiker.MagicWordHelpPage import MagicWordsHelpPage
 
 # Checks whether we want to display the news page
 # which uses Awesomium to render HTML
-WantNewsPage = base.config.GetBool('want-news-page', ToontownGlobals.DefaultWantNewsPageSetting)
+WantNewsPage = base.config.GetBool('want-news-page', 0)#ToontownGlobals.DefaultWantNewsPageSetting)
 from toontown.toontowngui import NewsPageButtonManager
 if WantNewsPage:
     from toontown.shtiker import NewsPage
@@ -1417,7 +1417,8 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         # This consists of an attic frame
         self.__furnitureGui = DirectFrame(
             relief = None,
-            pos = (-1.19, 0.00, 0.33),
+            parent=base.a2dTopLeft,
+            pos = (0.12, 0.00, -0.66),
             scale= 0.04,
             image = guiModels.find('**/attic')
             )
@@ -1472,14 +1473,15 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         # Prevent the picture of Clarabelle from changing colors as we
         # monkey with the color of the circle.
         icon.setColor(white)
-        claraXPos = 1.45
+        claraXPos = 0.12
+        
         newScale = oldScale = 0.5
-        newPos = (claraXPos, 1.0, 0.37)
+        newPos = (claraXPos, 0, -0.63)
         if WantNewsPage:
             claraXPos  += AdjustmentForNewsButton
             oldPos = (claraXPos, 1.0, 0.37),
             newScale = oldScale * ToontownGlobals.NewsPageScaleAdjust
-            newPos = (claraXPos - 0.1, 1.0, 0.45)
+            newPos = (claraXPos - 0.1, 0, -0.13)
 
         self.__clarabelleButton = DirectButton(
             relief = None,
@@ -1497,7 +1499,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
 
         # Give it a sort of 1 so it appears on top of the
         # CatalogNotifyDialog.
-        self.__clarabelleButton.reparentTo(aspect2d, 1)
+        self.__clarabelleButton.reparentTo(base.a2dTopRight, 1)
 
         # Set up an interval to flash the circle slowly to catch the
         # player's attention.
@@ -1773,7 +1775,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
                 # Make sure we are loaded
                 self.loadFurnitureGui()
 
-                self.__furnitureGui.setPos(-1.16,0,-0.03)
+                self.__furnitureGui.setPos(0.155,-0.6,-1.045)
                 self.__furnitureGui.setScale(0.06)
 
             elif self.cr.furnitureManager != None:
@@ -1789,7 +1791,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
                 
                 self.lerpFurnitureButton = self.__furnitureGui.posHprScaleInterval(
                     1.0,
-                    pos = Point3(-1.19, 0.00, 0.33),
+                    pos = Point3(0.12, 0.00, -0.66),
                     hpr = Vec3(0.00, 0.00, 0.00),
                     scale = Vec3(0.04, 0.04, 0.04),
                     blendType = 'easeInOut',

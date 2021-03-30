@@ -36,7 +36,7 @@ class Wake(NodePath):
         # Make a copy of the master tflip, inheriting its xform and rate
         ripple = self.ripples.copyTo(self)
         # Move it to the target
-        ripple.iPos(self.target)
+        ripple.setPos(self.target, 0, 0, 0)
         ripple.setZ(render,zPos + self.rippleCount * 0.001)
         # Adjust visibility
         ripple.setBin('fixed', self.sortBase + self.rippleCount, 1)

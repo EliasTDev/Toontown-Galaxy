@@ -1,6 +1,6 @@
 
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 import random
@@ -21,12 +21,14 @@ class ToontownLoadingScreen:
         self.banner.reparentTo(self.gui)
         self.banner.setScale(0.4,0.4,0.4)
         #load our logo
-
         self.galaxyLogo = OnscreenImage('phase_3/maps/toontown-logo.png')
-        self.galaxyLogo.reparentTo(self.gui)
-        self.galaxyLogo.setScale(self.gui, (0.5, 1, 0.35))
+
+        self.galaxyLogo.reparentTo(base.a2dpTopCenter)
+        self.galaxyLogo.setScale(self.gui, (0.6, 1.2, 0.4))
         self.galaxyLogo.setTransparency(TransparencyAttrib.MAlpha)
         self.galaxyLogo.setZ(0.61)
+        #self.galaxyLogo.setPos(0, 0, -galaxyLogoScale)
+        self.galaxyLogo.reparentTo(hidden)
 
         self.tip = DirectLabel(
             guiId = "ToontownLoadingScreenTip",
@@ -67,6 +69,7 @@ class ToontownLoadingScreen:
         self.title.destroy()
         self.waitBar.destroy()
         self.banner.removeNode()
+        self.galaxyLogo.destroy()
         self.gui.removeNode()
 
     def getTip(self, tipCategory):
@@ -86,10 +89,16 @@ class ToontownLoadingScreen:
             self.waitBar.reparentTo(self.gui)
             self.title.reparentTo(self.gui)
             self.gui.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)
+            self.galaxyLogo.reparentTo(self.gui)
+            base.setBackgroundColor((0, 0, 46/255, 0))
+
         else:
             self.waitBar.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)
             self.title.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)
             self.gui.reparentTo(hidden)
+            self.galaxyLogo.reparentTo(hidden)
+            base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
+
         self.waitBar.update(self.__count)
 
     def end(self):
@@ -98,10 +107,14 @@ class ToontownLoadingScreen:
         self.waitBar.reparentTo(self.gui)
         self.title.reparentTo(self.gui)
         self.gui.reparentTo(hidden)
+        self.galaxyLogo.reparentTo(hidden)
+        base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
+
         return (self.__expectedCount, self.__count)
 
     def abort(self):
         self.gui.reparentTo(hidden)
+        base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
 
     def tick(self):
         self.__count = self.__count + 1

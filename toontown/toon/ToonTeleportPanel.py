@@ -51,7 +51,7 @@ class ToonTeleportPanel(DirectFrame):
 
         # initialize our base class.
         DirectFrame.__init__(self,
-                             pos = (-1, 0.1, -0.4),
+                             pos = (-1.01, 0.1, -0.4),
                              parent = base.a2dTopRight,
                              image_color = ToontownGlobals.GlobalDialogColor,
                              image_scale = (1.0, 1.0, 0.6),

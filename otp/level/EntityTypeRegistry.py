@@ -1,6 +1,6 @@
 """EntityTypeRegistry module: contains the EntityTypeRegistry class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 import types
 from . import AttribDesc
@@ -39,14 +39,14 @@ class EntityTypeRegistry:
 
         # avoid CR/LF issues by reading the file line by line
         # readlines() converts \r\n to \n
-        fileLines = file(getPyExtVersion(EntityTypes.__file__)).readlines()
-        hv.hashString(string.join(fileLines, ''))
+        fileLines = open(getPyExtVersion(EntityTypes.__file__)).readlines()
+        hv.hashString(''.join(fileLines))
         s = str(hv.asHex())
         s += '.'
         # avoid CR/LF issues by reading the file line by line
         # readlines() converts \r\n to \n
-        fileLines = file(getPyExtVersion(self.entTypeModule.__file__)).readlines()
-        hv.hashString(string.join(fileLines, ''))
+        fileLines = open(getPyExtVersion(self.entTypeModule.__file__)).readlines()
+        hv.hashString(''.join(fileLines))
         s += str(hv.asHex())
         self.hashStr = s
 

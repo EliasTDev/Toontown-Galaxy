@@ -350,6 +350,7 @@ class OTPClientRepository(ClientRepositoryBase):
                   self.enterFailedToConnect, self.exitFailedToConnect,
                   ['connect',
                    'shutdown',
+                   'noConnection'
                    ]),
             State('failedToGetServerConstants',
                   self.enterFailedToGetServerConstants, self.exitFailedToGetServerConstants,
@@ -1115,8 +1116,6 @@ class OTPClientRepository(ClientRepositoryBase):
 
     @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
     def enterNoShards(self):
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
-        assert self.notify.warning("No shards are available.")
         messenger.send("connectionIssue")
         self.handler = self.handleMessageType
         # Create a dialog box
@@ -1131,7 +1130,6 @@ class OTPClientRepository(ClientRepositoryBase):
 
     @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
     def __handleNoShardsAck(self):
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
         doneStatus = self.noShardsBox.doneStatus
         # TODO: how should we wait for shards?
         if doneStatus == "ok":
@@ -1156,7 +1154,6 @@ class OTPClientRepository(ClientRepositoryBase):
     def enterNoShardsWait(self):
         # pretend that we're trying to reconnect for a while, to
         # cut down on traffic after an AI crash
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
         # Show a "connecting..." box
         dialogClass = OTPGlobals.getGlobalDialogClass()
         self.connectingBox = dialogClass(
@@ -1167,10 +1164,10 @@ class OTPClientRepository(ClientRepositoryBase):
         self.noShardsWaitTaskName = "noShardsWait"
         def doneWait(task, self=self):
             self.loginFSM.request('waitForShardList')
-        if __dev__:
-            delay = 0.
-        else:
-            delay = 6.5 + random.random()*2.
+        #if __dev__:
+         #   delay = 0.
+        #else:
+        delay = 6.5 + random.random()*2.
         taskMgr.doMethodLater(delay, doneWait,
                               self.noShardsWaitTaskName)
 
@@ -1186,7 +1183,6 @@ class OTPClientRepository(ClientRepositoryBase):
 
     @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
     def enterReject(self):
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
         self.handler = self.handleMessageType
 
         self.notify.warning("Connection Rejected")
@@ -1276,7 +1272,6 @@ class OTPClientRepository(ClientRepositoryBase):
 
     @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
     def __handleLostConnectionAck(self):
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
         if self.lostConnectionBox.doneStatus == "ok" and self.loginInterface.supportsRelogin():
             # Go log in again
             self.loginFSM.request("connect", [self.serverList])
@@ -1574,10 +1569,7 @@ class OTPClientRepository(ClientRepositoryBase):
 
     @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
     def enterWaitForDeleteAvatarResponse(self, potAv):
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
-        self.handler = self.handleWaitForDeleteAvatarResponse
-        # Send the delete avatar message
-        self.sendDeleteAvatarMsg(potAv.id)
+        self.astronLoginManager.sendRequestRemoveAvatar(potAv.id)
         self.waitForDatabaseTimeout(requestName='WaitForDeleteAvatarResponse')
 
     @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
@@ -1598,18 +1590,7 @@ class OTPClientRepository(ClientRepositoryBase):
         self.cleanupWaitingForDatabase()
         self.handler = None
 
-    @report(types = ['args', 'deltaStamp'], dConfigParam = 'teleport')
-    def handleWaitForDeleteAvatarResponse(self, msgType, di):
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
-        if msgType == CLIENT_DELETE_AVATAR_RESP:
-            # code re-use!
-            self.handleGetAvatarsRespMsg(di)
-        #Roger wants to remove this elif msgType == CLIENT_SERVER_UP:
-        #Roger wants to remove this     self.handleServerUp(di)
-        #Roger wants to remove this elif msgType == CLIENT_SERVER_DOWN:
-        #Roger wants to remove this     self.handleServerDown(di)
-        else:
-            self.handleMessageType(msgType, di)
+
 
     ##### LoginFSM: rejectRemoveAvatar #####
 
@@ -1766,6 +1747,8 @@ class OTPClientRepository(ClientRepositoryBase):
 
     def detectLeakedGarbage(self, callback=None):
         if not __debug__:
+            return 0
+        if not __dev__:
             return 0
         self.notify.info('checking for leaked garbage...')
         if gc.garbage:
@@ -2708,7 +2691,6 @@ class OTPClientRepository(ClientRepositoryBase):
         self.http.setClientCertificatePassphrase(hash.asHex())
 
     def lostConnection(self):
-        assert self.notify.debugStateCall(self, 'loginFSM', 'gameFSM')
         ClientRepositoryBase.lostConnection(self)
         self.loginFSM.request("noConnection")
 

@@ -853,8 +853,8 @@ class CatalogScreen(DirectFrame):
         hangupGui = guiItems.find('**/hangup')
         hangupRolloverGui = guiItems.find('**/hangup_rollover')
         self.hangup = DirectButton(
-            base.a2dBottomRight, relief = None,
-            pos = (-0.158, 0, 0.14),
+            self, relief = None,
+            pos = (1.78, 0, -1.3),
             scale= (0.7, 0.7, 0.7),
             image = [hangupGui, hangupRolloverGui,
                      hangupRolloverGui, hangupGui],
@@ -1277,39 +1277,17 @@ class CatalogScreen(DirectFrame):
             if familyMember.id != base.localAvatar.doId:
                 newFF = (familyMember.id, familyMember.name, NametagGroup.CCNonPlayer)
                 self.ffList.append(newFF)
-        if not isinstance(base.localAvatar.friendsList, list):
-            self.notify.warning('friends list is not list '.format(base.localAvatar.friendsList))
-            newFriendsList = list(base.localAvatar.friendsList)
-        for friendPair in newFriendsList:
-            friendId, flags = friendPair
+        for friendPair in base.localAvatar.friendsList:
+            friendId = friendPair
             #print "adding friend"
             handle = base.cr.identifyFriend(friendId)
             if handle and not self.checkFamily(friendId):
-                if hasattr(handle, 'getName'):
-                    colorCode = NametagGroup.CCSpeedChat
-                    if (flags & ToontownGlobals.FriendChat):
-                        colorCode = NametagGroup.CCFreeChat
-                    newFF = (friendPair[0], handle.getName(), colorCode)
-                    self.ffList.append(newFF)
-                else:
-                    self.notify.warning("Bad Handle for getName in makeFFlist")
-        hasManager = hasattr(base.cr, "playerFriendsManager")
-        if hasManager:
-            for avatarId in base.cr.playerFriendsManager.getAllOnlinePlayerAvatars():
-                handle = base.cr.playerFriendsManager.getAvHandleFromId(avatarId)
-                playerId = base.cr.playerFriendsManager.findPlayerIdFromAvId(avatarId)
-                playerInfo = base.cr.playerFriendsManager.getFriendInfo(playerId)
-                freeChat = playerInfo.understandableYesNo
-                if handle and not self.checkFamily(avatarId):
-                    if hasattr(handle, 'getName'):
-                        colorCode = NametagGroup.CCSpeedChat
-                        if freeChat:
-                            colorCode = NametagGroup.CCFreeChat
-                        newFF = (avatarId, handle.getName(), colorCode)
-                        self.ffList.append(newFF)
-                    else:
-                        self.notify.warning("Bad Handle for getName in makeFFlist")
-        #import pdb; pdb.set_trace()
+                #TODO get the color of the friend for third argument
+                newFF = (friendPair, handle.getName(),  NametagGroup.CCNonPlayer)
+                self.ffList.append(newFF)
+            else:
+                self.notify.warning("Bad Handle for getName in makeFFlist")
+    
 
     def __makeScrollList(self):
         for ff in self.ffList:

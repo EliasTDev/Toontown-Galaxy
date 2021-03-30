@@ -1716,7 +1716,7 @@ class DistributedCannon(DistributedObject.DistributedObject):
         # create a temp node with a y-axis that lines up with the roof normal
         # and a z-axis that is parallel to the slope of the roof
         temp = render.attachNewNode("temp")
-        temp.iPosHpr()
+        temp.setPosHpr(0, 0, 0, 0, 0, 0)
         temp.lookAt(Point3(normal))
         temp.reparentTo(roof)
         #temp.iPos(avatar)

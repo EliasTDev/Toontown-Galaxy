@@ -1280,6 +1280,8 @@ class Toon(Avatar.Avatar, ToonHead):
         self.removePart("legs", "1000")
         self.removePart("legs", "500")
         self.removePart("legs", "250")
+        if 'legs' in self._Actor__commonBundleHandles:
+            del self._Actor__commonBundleHandles['legs']
         # make the new legs part of the dna
         self.style.legs = legStyle
         # load the new legs
@@ -1337,6 +1339,8 @@ class Toon(Avatar.Avatar, ToonHead):
         self.removePart('torso', '1000')
         self.removePart('torso', '500')
         self.removePart('torso', '250')
+        if 'torso' in self._Actor__commonBundleHandles:
+            del self._Actor__commonBundleHandles['torso']
         # add the new torso to the dna
         self.style.torso = torsoStyle
         # load the new torso model
@@ -1379,6 +1383,8 @@ class Toon(Avatar.Avatar, ToonHead):
         self.removePart('head', '1000')
         self.removePart('head', '500')
         self.removePart('head', '250')
+        if 'head' in self._Actor__commonBundleHandles:
+            del self._Actor__commonBundleHandles['head']
         # add the new head to the dna
         self.style.head = headStyle
         # load the new head

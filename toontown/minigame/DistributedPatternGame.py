@@ -319,7 +319,7 @@ class DistributedPatternGame(DistributedMinigame):
         camera.reparentTo(render)
         camera.setPosHpr(0.00, -14.59, 10.56,
                          0.00, -16.39, 0.00)
-        base.camLens.setFov(24.66)
+        base.camLens.setMinFov(24.66/(4/3))
         NametagGlobals.setGlobalNametagScale(0.6)
 
         self.arrowKeys = ArrowKeys.ArrowKeys()

@@ -62,7 +62,7 @@ class ToonTownObjBase(NodePath):
 
     def remove(self):
         self.removeDNA()
-        NodePath.remove(self)
+        self.remove_node()
 
     def setName(self, newName):
         NodePath.setName(self, newName)

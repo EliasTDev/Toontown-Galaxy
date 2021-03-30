@@ -590,7 +590,7 @@ dclass DistributedToon: DistributedPlayer {
   setSleepAutoReply(uint32 fromId) broadcast clsend ownrecv;
 
   // Special resistance SpeedChat messages we have earned.
-  setResistanceMessages(pair16 resistanceMessages[] = {}) required ownrecv db;
+  setResistanceMessages(uint32[] = []) required ownrecv db;
 
   // Pet trick-training phrases
   setPetTrickPhrases(uint8array petTricks = {0,}) required ownrecv db;
@@ -4485,11 +4485,13 @@ dclass DistributedPartyManager: DistributedObject {
    sendShardIdZoneIdToAvatar(uint32 shardId, uint32 zoneId);   //ai to client
 
    partyManagerUdStartingUp() airecv; // ud to all AIs sent on DistributedPartyManagerUD.announceGenerate
+   partyManagerUdDead() airecv;
    // in response to UD starting up, tell the UD about parties running on this AI server
    updateAllPartyInfoToUd(uint32 hostId, uint64 time, uint32 shardId, uint32 zoneId, uint8 isPrivate, uint8 numberOfGuests, string hostName, uint8[] activityIds, uint64 partyId); // ai to UD
 
    // for magic words
    forceCheckStart(); // AI to UD
+
 };
 
 dclass RATManager : DistributedObjectGlobal {};
