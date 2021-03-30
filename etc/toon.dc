@@ -500,10 +500,10 @@ typedef int16 pair16[2];
 
 dclass DistributedToon: DistributedPlayer {
   setGM(uint8 = 0) required broadcast ownrecv db;
-  setTrueFriends(uint32[] = []) required ownrecv db;
+  setTrueFriends(uint32[] = [0]) required ownrecv db;
   setDNAString(blob) required broadcast ownrecv db;
-  setMaxBankMoney(int16 = 30000) required broadcast ownrecv db;
-  setBankMoney(int16 = 0) required broadcast ownrecv db;
+  setMaxBankMoney(int32 = 30000) required broadcast ownrecv db;
+  setBankMoney(int32 = 0) required broadcast ownrecv db;
   setMaxMoney(int16 = 40) required broadcast ownrecv db;
   setMoney(int16 = 0) required broadcast ownrecv db;
   setMaxHp(int16 = 15) required broadcast ownrecv db;
@@ -4429,6 +4429,7 @@ dclass DistributedPartyManager: DistributedObject {
    sendShardIdZoneIdToAvatar(uint32 shardId, uint32 zoneId);   //ai to client
 
    partyManagerUdStartingUp() airecv; // ud to all AIs sent on DistributedPartyManagerUD.announceGenerate
+   partyManagerUdDead() airecv;
    // in response to UD starting up, tell the UD about parties running on this AI server
    updateAllPartyInfoToUd(uint32 hostId, uint64 time, uint32 shardId, uint32 zoneId, uint8 isPrivate, uint8 numberOfGuests, string hostName, uint8[] 
    

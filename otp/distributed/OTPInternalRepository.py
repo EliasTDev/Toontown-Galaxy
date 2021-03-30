@@ -3,7 +3,9 @@ from direct.distributed.AstronInternalRepository import AstronInternalRepository
 from direct.distributed.PyDatagram import *
 from otp.ai import AIMsgTypes
 from direct.distributed import MsgTypes
-
+from toontown.distributed.ToontownNetMessengerAI import ToontownNetMessengerAI
+import traceback
+import sys 
 class OTPInternalRepository(AstronInternalRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory('OTPInternalRepository')
     dbId = 4003
@@ -13,7 +15,29 @@ class OTPInternalRepository(AstronInternalRepository):
                                           dcSuffix=dcSuffix, connectMethod=connectMethod, threadedNet=threadedNet)
     def handleConnected(self):
         AstronInternalRepository.handleConnected(self)
+        self.___messenger = ToontownNetMessengerAI(self)
 
+    def readerPollOnce(self):
+        try:
+            return AstronInternalRepository.readerPollOnce(self)
+            
+        except SystemExit:
+            raise
+            
+        except Exception as e:
+            if self.getAvatarIdFromSender() > 100000000:
+                dg = PyDatagram()
+                dg.addServerHeader(self.getMsgSender(), self.ourChannel, CLIENTAGENT_EJECT)
+                dg.addUint16(166)
+                dg.addString('You were kicked to prevent a district crash.')
+                self.send(dg)
+                
+            self.writeServerEvent('INTERNAL-EXCEPTION', self.getAvatarIdFromSender(), self.getAccountIdFromSender(), repr(e), traceback.format_exc())
+            self.notify.warning('INTERNAL-EXCEPTION: {0} ({1})'.format(repr(e), self.getAvatarIdFromSender()))
+            print(traceback.format_exc())
+            sys.exc_clear()
+            
+        return 1
     def getAccountIdFromSender(self):
         return (self.getMsgSender() >> 32) & 0xFFFFFFFF
 
@@ -102,3 +126,11 @@ class OTPInternalRepository(AstronInternalRepository):
         if self.context >= (1<<32):
             self.context=self.InitialContext
         return self.context
+
+    def sendNetEvent(self, message, sentArguments=[]):
+        self.___messenger.send(message, sentArguments)
+        
+    def addExitEvent(self, message):
+        dg = self.___messenger.prepare(message)
+        self.addPostRemove(dg)
+        

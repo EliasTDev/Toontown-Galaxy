@@ -1319,7 +1319,10 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                      hostName, activityIds, partyId]
                 )
 
-
+    def partyManagerUdDead(self):
+        # SHIT uberdog died :(
+        self.notify.warning("uberdog died!")
+        
     def magicWordEnd(self, senderId):
         """End the party prematurely as the sender said a magic word."""
         # first test if we are hosting a party

@@ -134,7 +134,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.dbObjContext = 0
         self.dbObjMap = {}
     def handleConnected(self):
-        ToontownInternalRepository.handleConnected(self)
+        #ToontownInternalRepository.handleConnected(self)
 
         # Generate our district...
         self.districtId = self.allocateChannel()
@@ -172,6 +172,11 @@ class ToontownAIRepository(ToontownInternalRepository):
         return Task.again
 
     def createFirstObjs(self):
+        self.districtStats = ToontownDistrictStatsAI(self)
+        self.districtStats.toontownDistrictId = self.districtId
+        self.districtStats.generateWithRequiredAndId(self.allocateChannel(), self.district.getDoId(),
+                                                     OTP_ZONE_ID_DISTRICTS_STATS)
+
         # Generate our news manager...
         self.newsManager = NewsManagerAI(self)
         self.newsManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
@@ -260,10 +265,6 @@ class ToontownAIRepository(ToontownInternalRepository):
         """
 
         # Generate our district stats...
-        self.districtStats = ToontownDistrictStatsAI(self)
-        self.districtStats.toontownDistrictId = self.districtId
-        self.districtStats.generateWithRequiredAndId(self.allocateChannel(), self.district.getDoId(),
-                                                     OTP_ZONE_ID_DISTRICTS_STATS)
 
         # Generate our time manager...
         self.timeManager = TimeManagerAI(self)
