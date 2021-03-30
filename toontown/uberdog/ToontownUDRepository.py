@@ -79,7 +79,6 @@ class ToontownUDRepository(ToontownInternalRepository):
         
     def handleConnected(self):
         ToontownInternalRepository.handleConnected(self)
-        self.registerForChannel(MESSENGER_CHANNEL_UD)
         # Create our root object.
         self.notify.info('Creating root object (%d)...' % self.getGameDoId())
         rootObj = DistributedDirectoryAI(self)
