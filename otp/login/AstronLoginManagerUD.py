@@ -12,7 +12,10 @@ from toontown.toon.ToonDNA import ToonDNA
 from toontown.toonbase import TTLocalizer
 from otp.otpbase import OTPGlobals
 
-
+REASONS = [
+    'MODERATION_FOUL_LANGUAGE', 'MODERATION_PERSONAL_INFO',
+    'MODERATION_RUDE_BEHAVIOR', 'MODERATION_BAD_NAME', 'MODERATION_EXPLOITING',
+]
 class AccountDB:
     """
     AccountDB is the base class for all account database interface implementations.
@@ -54,6 +57,7 @@ class DeveloperAccountDB(AccountDB):
                 callback({'success': True,
                       'accountId': int(self.dbm[playToken]),
                       'databaseId': playToken,
+                      'lastLogin': fields.get("LAST_LOGIN", time.ctime()),
                       'staffAccess': fields.get('STAFF_ACCESS', 'USER')})
             self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, int(self.dbm[playToken]), handleAccountInfo)
 
@@ -100,6 +104,7 @@ class LoginOperation(GameOperation):
         self.databaseId = result.get('databaseId', 0)
         accountId = result.get('accountId', 0)
         self.staffAccess = result.get('staffAccess', 'USER')
+        self.lastLogin = result.get('lastLogin', time.ctime())
         if accountId:
             self.accountId = accountId
             self.__handleRetrieveAccount()
@@ -172,7 +177,7 @@ class LoginOperation(GameOperation):
 
         # set client state to established, thus un-sandboxing the sender
         self.loginManager.air.setClientState(self.sender, 2)
-
+       
         responseData = {
             'returnCode': 0,
             'respString': '',
@@ -192,7 +197,7 @@ class LoginOperation(GameOperation):
         self._handleDone()
 
     def getLastLoggedInStr(self):
-        return ''  # TODO
+        return self.lastLogin
 
     def getAccountCreationDate(self):
         accountCreationDate = self.account.get('CREATED', '')
@@ -640,7 +645,6 @@ class LoadAvatarOperation(AvatarOperation):
         self.loginManager.air.send(datagram)
 
         self.loginManager.air.setOwner(self.avId, channel)
-
         self._handleDone()
 
 
@@ -681,6 +685,7 @@ class UnloadAvatarOperation(GameOperation):
         datagram.addUint32(self.avId)
         self.loginManager.air.send(datagram)
 
+
         self._handleDone()
 
 
@@ -704,18 +709,19 @@ class AstronLoginManagerUD(DistributedObjectGlobalUD):
         # TODO: In the future, add more database interfaces & make this configurable.
         self.accountDb = DeveloperAccountDB(self)
 
+
+
     def runLoginOperation(self, playToken):
         # Runs a login operation on the sender. First, get the sender:
         sender = self.air.getMsgSender()
 
         # Is the sender already logged in?
         if sender >> 32:
-            # TODO kill connection
-            return
+            self.demand('Kill', 'Sender is already logged in.')
 
         # Is the sender already logging in?
         if sender in list(self.sender2loginOperation.keys()):
-            # TODO kill connection
+            self.demand('Kill', 'Sender is already logging in.')
             return
 
         # Run the login operation:
@@ -728,12 +734,12 @@ class AstronLoginManagerUD(DistributedObjectGlobalUD):
         sender = self.air.getAccountIdFromSender()
         if not sender:
             # Sender doesn't exist; not logged in.
-            # TODO KILL CONNECTION
+            self.demand('Kill', "Sender doesn't exist")
             return
 
         if sender in self.account2operation:
             # Sender is already currently running a game operation.
-            # TODO KILL CONNECTION
+            self.demand('Kill', 'Sender is already currently running a game operation.')
             return
 
         # Run the game operation:
@@ -800,3 +806,13 @@ class AstronLoginManagerUD(DistributedObjectGlobalUD):
 
     def killAccount(self, accId, reason):
         self.killConnection(self.GetAccountConnectionChannel(accId), reason)
+
+    def reportAccount(self, avId, category):
+        reporterId = self.air.getAvatarIdFromSender()
+        if len(REASONS) <= category:
+            self.air.writeServerEvent("suspicious", avId=reporterId, issue="Invalid report reason index (%d) sent by avatar." % category)
+            return
+        self.air.writeServerEvent("player-reported", reporterId=reporterId, avId=avId, category=REASONS[category])
+
+        #TODO send report to the website for mods to look at
+

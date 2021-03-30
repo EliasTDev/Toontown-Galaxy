@@ -14,11 +14,12 @@ class DistributedDistrictAI(DistributedObjectAI):
         self.name=name
         self.available = 0
         
+   
     def delete(self):
         self.ignoreAll()
         self.b_setAvailable(0)
         DistributedObjectAI.delete(self)        
-    
+   
     def getAvailable(self):
         return self.available
     

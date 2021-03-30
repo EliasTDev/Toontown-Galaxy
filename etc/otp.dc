@@ -55,10 +55,10 @@ dclass Account {
   // the 6 avatars a person has
   string DcObjectType  db;
   //
-  uint32array ACCOUNT_AV_SET = [0,0,0,0,0,0] required db;
-  uint32array pirateAvatars = [0,0,0,0,0,0] required db;
+  uint32[] ACCOUNT_AV_SET = [0,0,0,0,0,0] required db;
+  uint32[] pirateAvatars = [0,0,0,0,0,0] required db;
   // the 6 houses a person has
-  uint32array HOUSE_ID_SET db;
+  uint32[] HOUSE_ID_SET db;
   uint32 ESTATE_ID db;
   AvatarPendingDel [] ACCOUNT_AV_SET_DEL db;
   string PLAYED_MINUTES db;
@@ -115,8 +115,8 @@ struct OSInfo {
 };
 
 struct CPUSpeed {
-  int32 maxSpeed / 1000;
-  int32 currentSpeed / 1000;
+  int32 maxSpeed;
+  int32 currentSpeed;
 };
 
 // The TimeManager should be created before all other objects, because
@@ -145,13 +145,13 @@ dclass TimeManager: DistributedObject {
 
   // This is the average frame rate reported by the client, along with
   // some relevant machine and game statistics.
-  setFrameRate(uint16 fps / 10, uint16 deviation / 1000, uint16 numAvs,
+  setFrameRate(uint16 fps , uint16 deviation, uint16 numAvs,
                string locationCode,
-               uint32 timeInLocation / 10, uint32 timeInGame / 10,
+               uint32 timeInLocation , uint32 timeInGame ,
                string gameOptionsCode,
                uint16 vendorId, uint16 deviceId,
-               uint32 processMemory / 10, uint32 pageFileUsage / 10,
-               uint32 physicalMemory / 10, uint32 pageFaultCount,
+               uint32 processMemory , uint32 pageFileUsage ,
+               uint32 physicalMemory , uint32 pageFaultCount,
                OSInfo osInfo, CPUSpeed cpuSpeed,
                uint16 num_cpu_cores, uint16 num_logical_cpus,
                string apiName) airecv clsend;
@@ -207,12 +207,12 @@ dclass DistributedNode: DistributedObject {
   setParentStr(blob token) broadcast ram ownsend airecv;
   setParent(uint32 token) broadcast ram ownsend airecv;
 
-  setX(int16 / 10) broadcast ram ownsend airecv;
-  setY(int16 / 10) broadcast ram ownsend airecv;
-  setZ(int16 / 10) broadcast ram ownsend airecv;
-  setH(int16 % 360 / 10) broadcast ram ownsend airecv;
-  setP(int16 % 360 / 10) broadcast ram ownsend airecv;
-  setR(int16 % 360 / 10) broadcast ram ownsend airecv;
+  setX(int16 ) broadcast ram ownsend airecv;
+  setY(int16 ) broadcast ram ownsend airecv;
+  setZ(int16 ) broadcast ram ownsend airecv;
+  setH(int16 % 360 ) broadcast ram ownsend airecv;
+  setP(int16 % 360 ) broadcast ram ownsend airecv;
+  setR(int16 % 360 ) broadcast ram ownsend airecv;
 
   setPos: setX, setY, setZ;
   setHpr: setH, setP, setR;
@@ -227,12 +227,12 @@ dclass DistributedSmoothNode: DistributedNode {
   // Component set pos and hpr functions.
 
   setComponentL(uint64) broadcast ram ownsend airecv;
-  setComponentX(int16 / 10) broadcast ram ownsend airecv;
-  setComponentY(int16 / 10) broadcast ram ownsend airecv;
-  setComponentZ(int16 / 10) broadcast ram ownsend airecv;
-  setComponentH(int16 % 360 / 10) broadcast ram ownsend airecv;
-  setComponentP(int16 % 360 / 10) broadcast ram ownsend airecv;
-  setComponentR(int16 % 360 / 10) broadcast ram ownsend airecv;
+  setComponentX(int16 ) broadcast ram ownsend airecv;
+  setComponentY(int16 ) broadcast ram ownsend airecv;
+  setComponentZ(int16 ) broadcast ram ownsend airecv;
+  setComponentH(int16 % 360 ) broadcast ram ownsend airecv;
+  setComponentP(int16 % 360 ) broadcast ram ownsend airecv;
+  setComponentR(int16 % 360 ) broadcast ram ownsend airecv;
   setComponentT(int16 timestamp) broadcast ram ownsend airecv;
 
   // Composite set pos and hpr functions.  These map to combinations
@@ -258,10 +258,10 @@ dclass DistributedSmoothNode: DistributedNode {
 
   suggestResync(uint32 avId, int16 timestampA, int16 timestampB,
                 int32 serverTimeSec, uint16 serverTimeUSec,
-                uint16 / 100 uncertainty) ownrecv clsend;
+                uint16 uncertainty) ownrecv clsend;
   returnResync(uint32 avId, int16 timestampB,
                int32 serverTimeSec, uint16 serverTimeUSec,
-               uint16 / 100 uncertainty) ownrecv clsend;
+               uint16 uncertainty) ownrecv clsend;
 };
 
 dclass DistributedCartesianGrid: DistributedNode {
@@ -273,18 +273,18 @@ dclass DistributedCartesianGrid: DistributedNode {
 };
 
 struct Fixture {
-  int32 x / 10;
-  int32 y / 10;
-  int32 z / 10;
-  int16 h / 10;
-  int16 p / 10;
-  int16 r / 10;
-  string state = 'Standby';
+  int32 x ;
+  int32 y ;
+  int32 z ;
+  int16 h ;
+  int16 p ;
+  int16 r ;
+  string state;
 };
 
 dclass DistributedCamera: DistributedNode {
   setCamParent(uint32 doId = 0) required broadcast ram ownsend airecv;
-  setFixtures(Fixture[] fixtures) required broadcast ram ownsend airecv;
+  setFixtures(Fixture[]) required broadcast ram ownsend airecv;
 };
 
 // dc base classes for autofiltered chat. now referred to as "talk"
@@ -415,7 +415,7 @@ dclass MagicWordManager: DistributedObject {
   setMagicWord(string, uint32 avId, uint32 zoneId,
                string signature) airecv clsend;
   setMagicWordResponse(string) airecv;
-  setWho(uint32array avIds) airecv clsend;
+  setWho(uint32[]) airecv clsend;
 };
 
 
@@ -632,25 +632,25 @@ struct leaderBoardRecord
 
 dclass LeaderBoardReceiver
 {
-    getTopTenResponce( string contest, leaderBoardRecord[]  details);
-    getValuesResponce(string  contest, leaderBoardRecordResponces[] out) ;
+    getTopTenResponce( string contest, leaderBoardRecord[]);
+    getValuesResponce(string  contest, leaderBoardRecordResponces[]) ;
 };
 
 dclass LeaderBoard : LeaderBoardReceiver{
     // SETTERS
-    setValue(string[] contest, uint32 id, string text, int32 value) ;
-    alterValue(string[] contest, uint32 id, string text, int32 delta) ;
-    setHighScore(string[] contest, uint32 id, string text, int32 value) ;
+    setValue(string[] , uint32 id, string text, int32 value) ;
+    alterValue(string[] , uint32 id, string text, int32 delta) ;
+    setHighScore(string[] , uint32 id, string text, int32 value) ;
     // ACCESSERS
     //
     // Used for normal DC responce .. as a distributed object...
-    getValues(string contest, uint32[] id);
+    getValues(string contest, uint32[] );
     getTopTen( string contest);
 
     // Used to enable to LeaderBoardReceiver functionality
     // the output update will be sent on the object doid passed as
     // a last input value...
-    getValuesRespondTo(string contest, uint32[] id, uint32 doid);
+    getValuesRespondTo(string contest, uint32[] , uint32 doid);
     getTopTenRespondTo( string contest, uint32 doid);
 };
 
@@ -678,7 +678,7 @@ dclass GuildManager: DistributedObject, LeaderBoardReceiver, TalkPath_group {
   guildAcceptInvite(uint32 avatarId);            // UD -> CL
   guildDeclineInvite(uint32 avatarId);           // UD -> CL
   updateRep(uint32 avatarId, uint32 rep);        // AI -> UD
-  leaderboardTopTen(leaderBoardRecord [] stuff); // UD -> CL
+  leaderboardTopTen(leaderBoardRecord []); // UD -> CL
 
   recvAvatarOnline(uint32 avatarId, string avatarName, uint32 bandManagerId, uint32 bandId); // UD -> CL
   recvAvatarOffline(uint32 avatarId, string avatarName); // UD -> CL
@@ -809,7 +809,7 @@ dclass SnapshotRenderer: DistributedObject {
 };
 
 dclass SpeedchatRelay : DistributedObject, TalkPath_account{
-    forwardSpeedchat(uint32 receiverDISLid, uint8 type, uint32 [] index, uint32 senderDISLId, string senderDISLName, uint8 flags)  clsend;
+    forwardSpeedchat(uint32 receiverDISLid, uint8 type, uint32 [] , uint32 senderDISLId, string senderDISLName, uint8 flags)  clsend;
 };
 
 
@@ -823,7 +823,7 @@ dclass SettingsMgr: DistributedObject {
 };
 
 dclass StatusDatabase : DistributedObject {
-  requestOfflineAvatarStatus(uint32[] avIds) airecv clsend;                 // CL -> UD
+  requestOfflineAvatarStatus(uint32[]) airecv clsend;                 // CL -> UD
   recvOfflineAvatarStatus(uint32 avId, uint32 lastOnline);                // UD -> CL
 };
 
