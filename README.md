@@ -11,4 +11,3 @@ The official repo for Toontown Galaxy, a new Toontown game based on Disney's Too
 When adding commits, don't push to master unless the code is tested and fully functional.
 
 
-[![Build Status](https://www.travis-ci.com/ToontownGalaxy/Galaxy.svg?token=nwGfbyDzkuRBAHQGp16L&branch=master)](https://www.travis-ci.com/ToontownGalaxy/Galaxy)
