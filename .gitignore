@@ -88,4 +88,3 @@ panda3d/
 nirai/
 dist/
 *.spec
-*.whl

@@ -150,14 +150,13 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             return
 
         npc = Toon.Toon()
-        npc.setName(TTLocalizer.ResistanceToonName)
         npc.setPickable(0)
         npc.setPlayerType(NametagGroup.CCNonPlayer)
         dna = ToonDNA.ToonDNA()
         dna.newToonRandom(11237, 'f', 1)
         dna.head = "pls"
         npc.setDNAString(dna.makeNetString())
-
+        npc.setName(TTLocalizer.ResistanceToonName)
         npc.animFSM.request("neutral")
 
         self.resistanceToon = npc
