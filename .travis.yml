@@ -1,4 +1,0 @@
-os: windows
-language: python
-script:
-- python -m setup build_apps"
