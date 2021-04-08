@@ -34,6 +34,7 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
     of it, DistributedDoorAI.
     """
 
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedDoor')
 
     def __init__(self, cr):
         """constructor for the DistributedDoor"""
