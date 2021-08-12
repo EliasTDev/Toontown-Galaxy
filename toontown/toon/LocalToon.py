@@ -392,8 +392,9 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         del self.gardenPage
         del self.trackPage
         #del self.buildingPage
-        if self.magicWordHelpPage:
-            del self.magicWordHelpPage
+        if hasattr(self, "magicWordHelpPage"):
+            if self.magicWordHelpPage:
+                del self.magicWordHelpPage
         del self.book
         if self.chatLog:
             self.chatLog.stop()
