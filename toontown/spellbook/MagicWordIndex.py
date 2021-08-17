@@ -1822,7 +1822,7 @@ class ToggleWireframe(MagicWord):
     affectRange = [MagicWordConfig.AFFECT_SELF]
   
     def handleWord(self, invoker, avId, toon, *args):
-        base.toggleWireframe
+        base.toggleWireframe()
         return 'Wireframe has been toggled.'
 
 
