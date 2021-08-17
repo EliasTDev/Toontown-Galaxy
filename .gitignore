@@ -88,3 +88,4 @@ panda3d/
 nirai/
 dist/
 *.spec
+dependencies/panda.zip
