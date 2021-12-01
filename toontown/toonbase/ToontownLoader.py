@@ -5,7 +5,7 @@ from direct.directnotify.DirectNotifyGlobal import *
 from direct.showbase import Loader
 from toontown.toontowngui import ToontownLoadingScreen
 from libotp import CImpulse
-from libtoontown import loadDNAFile, loadDNAFileAI
+from libpandadna import loadDNAFile, loadDNAFileAI
 
 class ToontownLoader(Loader.Loader):
     """ToontownLoader class"""

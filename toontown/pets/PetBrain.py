@@ -12,8 +12,8 @@ from toontown.toon import DistributedToonAI
 from toontown.pets import PetConstants, PetObserve, PetGoal, PetGoalMgr
 from toontown.pets import PetTricks, PetLookerAI
 import random, types
-from libtoontown import *
-
+from libpandadna import *
+from libtoontown import CPetBrain
 class PetBrain(DirectObject.DirectObject, CPetBrain):
     """This class handles the thought processes of Pets. It collects
     observations of the pet's environment, and controls the pet based

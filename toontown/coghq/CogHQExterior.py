@@ -7,7 +7,7 @@ from toontown.toonbase import ToontownGlobals
 from panda3d.core import *
 from libotp import *
 from toontown.hood import ZoneUtil
-from libtoontown import *
+from libpandadna import *
 class CogHQExterior(BattlePlace.BattlePlace):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("CogHQExterior")
@@ -146,6 +146,7 @@ class CogHQExterior(BattlePlace.BattlePlace):
             self.loadDNA()
            
     def loadDNA(self):
+        return #TODO fix
         dnaFile = self.genDNAFileName(self.zoneId)
         dnaStorage = DNAStorage()
         loadDNAFile(dnaStorage, dnaFile)

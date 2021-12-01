@@ -27,7 +27,7 @@ from toontown.makeatoon import NameGenerator
 from otp.otpbase import OTPGlobals
 from toontown.battle import BattleParticles
 from toontown.minigame import PhotoGameBase
-from libtoontown import *
+from libpandadna import *
 # some constants
 
 WORLD_SCALE = 2.

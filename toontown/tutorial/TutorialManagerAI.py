@@ -10,7 +10,7 @@ from toontown.toon import NPCToons
 from toontown.toonbase import TTLocalizer
 from toontown.ai import BlackCatHolidayMgrAI
 from toontown.ai import DistributedBlackCatMgrAI
-from libtoontown import DNAStorage
+from libpandadna import DNAStorage
 
 class TutorialManagerAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("TutorialManagerAI")

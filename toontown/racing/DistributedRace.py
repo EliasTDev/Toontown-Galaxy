@@ -27,7 +27,7 @@ from toontown.minigame import MinigameRulesPanel
 from toontown.racing import Piejectile
 from toontown.racing import EffectManager
 from toontown.racing import PiejectileManager
-from libtoontown import *
+from libpandadna import *
 class DistributedRace(DistributedObject.DistributedObject):
 
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedRace')
