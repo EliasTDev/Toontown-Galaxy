@@ -244,6 +244,9 @@ class ToonBase(OTPBase.OTPBase):
         # cloud platforms in estates
         self.cloudPlatformsEnabled = self.config.GetBool(
             'estate-clouds', 0)
+        
+        # Tutorial at the beginning of the game 
+        self.wantTutorial = self.config.GetBool('want-tutorial', 0)
 
         # greySpacing Allowed?
         self.greySpacing = self.config.GetBool(
