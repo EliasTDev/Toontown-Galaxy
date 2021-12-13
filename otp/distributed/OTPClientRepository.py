@@ -1699,6 +1699,8 @@ class OTPClientRepository(ClientRepositoryBase):
 #################################################
 
     def detectLeaks(self, okTasks=None, okEvents=None):
+        #This breaks the game upon logging out so don't run for now
+        return
         if (not __dev__) or \
            configIsToday("allow-unclean-exit"):
             assert self.notify.warning("Not enforcing clean exit.")
