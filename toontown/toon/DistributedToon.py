@@ -231,6 +231,12 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         self.gmNameTagString = ''
         self.trueFriends = None 
 
+        # Bosses
+        self.sellbotCutsceneFirstTime = False
+        self.cashbotCutsceneFirstTime = False
+        self.lawbotCutsceneFirstTime = False
+        self.bossbotCutsceneFirstTime = False
+
     def disable(self):
         for soundSequence in self.soundSequenceList:
             soundSequence.finish()
@@ -2097,7 +2103,70 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         self.pieType = pieType
         if self.isLocal():
             self.updatePieButton()
+    def setSellbotCutSceneFirstTime(self, cutscene):
+        """
+        sets the boolean value for seeing the VP cutscene for the first time
+        by default this is false
+        """
+        self.sellbotCutsceneFirstTime = cutscene
 
+    def setCashbotCutSceneFirstTime(self, cutscene):
+        """
+        sets the boolean value for seeing the CFO cutscene for the first time
+        by default this is false
+        """
+        self.cashbotCutsceneFirstTime = cutscene
+
+    def setLawbotCutSceneFirstTime(self, cutscene):
+        """
+        sets the boolean value for seeing the CJ cutscene for the first time
+        by default this is false
+        """
+        self.lawbotCutsceneFirstTime = cutscene
+    def setBossbotCutSceneFirstTime(self, cutscene):
+        """
+        sets the boolean value for seeing the CEO cutscene for the first time
+        by default this is false
+        """
+        self.bossbotCutsceneFirstTime = cutscene
+
+    #TODO for the get functions return these values from the server side or do a check
+    # Not very important atm because hacking these values doesn't really impact gameplay
+    def getSellbotCutSceneFirstTime(self):
+        """
+        Purpose: The getSellbotCutSceneFirstTime Method tells us whether
+         the toon has seen the VP cutscene or not
+            Params: None
+            Return: true or false
+        """
+        return self.sellbotCutsceneFirstTime
+
+    def getCashbotCutSceneFirstTime(self):
+        """
+        Purpose: The getCashbotCutSceneFirstTime Method tells us whether
+         the toon has seen the CFO  cutscene or not
+            Params: None
+            Return: true or false
+        """
+        return self.cashbotCutsceneFirstTime
+
+   def getLawbotCutSceneFirstTime(self):
+        """
+        Purpose: The getLawbotCutSceneFirstTime Method tells us whether
+         the toon has seen the CJ  cutscene or not
+            Params: None
+            Return: true or false
+        """
+        return self.lawbotCutsceneFirstTime
+
+    def getBossbotCutSceneFirstTime(self):
+        """
+        Purpose: The getBossbotCutSceneFirstTime Method tells us whether
+         the toon has seen the CEO  cutscene or not
+            Params: None
+            Return: true or false
+        """
+        return self.bossBotCutsceneFirstTime   
     def setTrophyScore(self, score):
         self.trophyScore = score
 

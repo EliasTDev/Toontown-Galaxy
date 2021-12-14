@@ -219,6 +219,14 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
         self.partiesInvitedTo = []
         self.partyReplyInfoBases = []
         self.trueFriends = []
+
+        # boss stuff
+        self.sellbotCutsceneFirstTime = False
+        self.cashbotCutsceneFirstTime = False
+        self.lawbotCutsceneFirstTime = False
+        self.bossbotCutsceneFirstTime = False
+
+
     #def __del__(self):
         #if hasattr(simbase, 'trackDistributedToonAI'):
         #    self.notify.info('---- __del__ DistributedToonAI %d ' % self.doId)
@@ -667,6 +675,7 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
 
     def getMaxNPCFriends(self):
         return self.maxNPCFriends
+
 
     def getBattleId(self):
         if self.battleId >= 0:
@@ -3015,7 +3024,101 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
     def d_setTrophyScore(self, score):
         self.sendUpdate("setTrophyScore", [score])
 
+    def setSellbotCutSceneFirstTime(self, cutscene):
+        """
+        sets the boolean value for seeing the VP cutscene for the first time
+        by default this is false
+        """
+        self.sellbotCutsceneFirstTime = cutscene
 
+    def b_setSellbotCutSceneFirstTime(self, cutscene):
+        self.setSellbotCutSceneFirstTime(cutscene)
+        self.d_setSellbotCutSceneFirstTime(cutscene)
+
+    def d_setSellbotCutSceneFirstTime(self, cutscene):
+         # Sends update to astron
+        self.sendUpdate('setSellbotCutSceneFirstTime', [cutscene])
+
+    def getSellbotCutSceneFirstTime(self):
+        """
+        Purpose: The getSellbotCutSceneFirstTime Method tells us whether
+         the toon has seen the VP cutscene or not
+            Params: None
+            Return: true or false
+        """
+        return self.sellbotCutsceneFirstTime
+
+    def setCashbotCutSceneFirstTime(self, cutscene):
+        """
+        sets the boolean value for seeing the CFO cutscene for the first time
+        by default this is false
+        """
+        self.cashbotCutsceneFirstTime = cutscene
+
+    def b_setCashbotCutSceneFirstTime(self, cutscene):
+        self.setCashbotCutSceneFirstTime(cutscene)
+        self.d_setCashbotCutSceneFirstTime(cutscene)
+
+    def d_setCashbotCutSceneFirstTime(self, cutscene):
+         # Sends update to astron
+        self.sendUpdate('setCashbotCutSceneFirstTime', [cutscene])
+
+    def getCashbotCutSceneFirstTime(self):
+        """
+        Purpose: The getCashbotCutSceneFirstTime Method tells us whether
+         the toon has seen the CFO  cutscene or not
+            Params: None
+            Return: true or false
+        """
+        return self.cashbotCutsceneFirstTime
+
+    def setLawbotCutSceneFirstTime(self, cutscene):
+        """
+        sets the boolean value for seeing the CJ cutscene for the first time
+        by default this is false
+        """
+        self.lawbotCutsceneFirstTime = cutscene
+
+    def b_setLawbotCutSceneFirstTime(self, cutscene):
+        self.setLawbotCutSceneFirstTime(cutscene)
+        self.d_setLawbotCutSceneFirstTime(cutscene)
+
+    def d_setLawbotCutSceneFirstTime(self, cutscene):
+         # Sends update to astron
+        self.sendUpdate('setLawbotCutSceneFirstTime', [cutscene])
+
+    def getLawbotCutSceneFirstTime(self):
+        """
+        Purpose: The getLawbotCutSceneFirstTime Method tells us whether
+         the toon has seen the CJ  cutscene or not
+            Params: None
+            Return: true or false
+        """
+        return self.lawbotCutsceneFirstTime
+
+    def setBossbotCutSceneFirstTime(self, cutscene):
+        """
+        sets the boolean value for seeing the CEO cutscene for the first time
+        by default this is false
+        """
+        self.bossbotCutsceneFirstTime = cutscene
+
+    def b_setBossbotCutSceneFirstTime(self, cutscene):
+        self.setBossbotCutSceneFirstTime(cutscene)
+        self.d_setBossbotCutSceneFirstTime(cutscene)
+
+    def d_setBossbotCutSceneFirstTime(self, cutscene):
+        # Sends update to astron
+        self.sendUpdate('setBossbotCutSceneFirstTime', [cutscene])
+
+    def getBossbotCutSceneFirstTime(self):
+        """
+        Purpose: The getBossbotCutSceneFirstTime Method tells us whether
+         the toon has seen the CEO  cutscene or not
+            Params: None
+            Return: true or false
+        """
+        return self.bossBotCutsceneFirstTime   
     ### Auto toon-up functions ###
 
     def stopToonUp(self):

@@ -508,7 +508,10 @@ dclass DistributedToon: DistributedPlayer {
   setMoney(int16 = 0) required broadcast ownrecv db;
   setMaxHp(int16 = 16) required broadcast ownrecv db;
   setHp(int16 = 16) required broadcast ownrecv db;
-
+  setSellbotCutSceneFirstTime(bool = false) required broadcast ownrecv db;
+  setCashbotCutSceneFirstTime(bool = false) required broadcast ownrecv db;
+  setLawbotCutSceneFirstTime(bool = false) required broadcast ownrecv db;
+  setBossbotCutSceneFirstTime(bool = false) required broadcast ownrecv db;
   toonUp(uint16 hpGained) broadcast ownrecv;
   takeDamage(uint16 hpLost) broadcast ownrecv;
 
