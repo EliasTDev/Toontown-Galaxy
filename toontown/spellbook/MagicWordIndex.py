@@ -969,6 +969,7 @@ class SetQuestTier(MagicWord):
     desc = 'Sets the quest tier of the target'
     accessLevel = 'DEVELOPER'
     arguments = [('tier', int, True)]
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
     
     def handleWord(self, invoker, avId, av, *args):
         tier = int(args[0])

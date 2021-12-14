@@ -506,8 +506,8 @@ dclass DistributedToon: DistributedPlayer {
   setBankMoney(int16 = 0) required broadcast ownrecv db;
   setMaxMoney(int16 = 40) required broadcast ownrecv db;
   setMoney(int16 = 0) required broadcast ownrecv db;
-  setMaxHp(int16 = 15) required broadcast ownrecv db;
-  setHp(int16 = 15) required broadcast ownrecv db;
+  setMaxHp(int16 = 16) required broadcast ownrecv db;
+  setHp(int16 = 16) required broadcast ownrecv db;
 
   toonUp(uint16 hpGained) broadcast ownrecv;
   takeDamage(uint16 hpLost) broadcast ownrecv;
@@ -673,7 +673,7 @@ dclass DistributedToon: DistributedPlayer {
   setHouseId(uint32 id = 0) required ownrecv db;
   setQuests(uint32array = {}) required broadcast ownrecv db;
   setQuestHistory(uint16array = {}) required ownrecv db;
-  setRewardHistory(uint8 tier = 0, uint16array = {}) required ownrecv db;
+  setRewardHistory(uint8 tier = 1, uint16array = {}) required ownrecv db;
   setQuestCarryLimit(uint8 = 1) required ownrecv db;
   deleteQuest(uint32 questDesc[]) ownsend airecv;
 
