@@ -334,23 +334,33 @@ class Street(BattlePlace.BattlePlace):
     # elevatorIn state
     # (for coming off of an elevator for a victory dance)
     def enterElevatorIn(self, requestStatus):
-        assert self.notify.debug("enterElevatorIn()")
+        self._elevatorWaitBuildingTask = taskMgr.add(Functor(self._startElevatorWaitBuildingTask, requestStatus['bldgDoId']), uniqueName('elevatorInWaitBuilding'))
+    def _startElevatorWaitBuildingTask(self, bldgDoId, task):
+
         # Whew! Where did bldgDoId get set?
         # Look in DistributedSuitInterior.py, in the enterReward state.
         # Hey! That's funny... We don't even seem to need this, unless
         # we want to use it to place ourselves inside the elevator while
         # we wait for the building to start the movie...
-        bldg = base.cr.doId2do.get(requestStatus['bldgDoId'])
+        bldg = base.cr.doId2do.get(bldgDoId)
         # TODO: Place us in the elevator while we wait for the building
         # to start the movie.
 
         # We throw this event to tell the building that we are ready
         # to exit the building now.
-        messenger.send("insideVictorElevator")
+        if bldg:
+            if bldg.elevatorNodePath is not None:
+                if self._enterElevatorGotElevator():
+                    return Task.done
+        return Task.cont
         #assert bldg
-
+    def _enterElevatorGotElevator(self):
+        if not messenger.whoAccepts('insideVictorElevator'):
+            return False
+        messenger.send('insideVictorElevator')
+        return True
     def exitElevatorIn(self):
-        assert self.notify.debug("exitElevatorIn()")
+       taskMgr.remove(self._elevatorWaitBuildingTask)
 
 
     # elevator state
