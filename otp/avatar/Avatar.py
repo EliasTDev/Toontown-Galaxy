@@ -355,9 +355,9 @@ class Avatar(Actor, ShadowCaster):
         Set the avatar's name
         """
         # if we are disguised, don't mess up our custom nametag
-        if hasattr(self, "isDisguised"):
-            if self.isDisguised:
-                return
+        #if hasattr(self, "isDisguised"):
+         #   if self.isDisguised:
+          #      return
 
         self.name = name
         if hasattr(self, "nametag"):
@@ -368,9 +368,9 @@ class Avatar(Actor, ShadowCaster):
         # but not the name that is used to prefix chat messages.
 
         # if we are disguised, don't mess up our custom nametag
-        if hasattr(self, "isDisguised"):
-            if self.isDisguised:
-                return
+       # if hasattr(self, "isDisguised"):
+        #    if self.isDisguised:
+         #       return
 
         self.nametag.setDisplayName(str)
 
