@@ -146,7 +146,7 @@ class CogHQExterior(BattlePlace.BattlePlace):
             self.loadDNA()
            
     def loadDNA(self):
-        return #TODO fix
+        #return #TODO fix
         dnaFile = self.genDNAFileName(self.zoneId)
         dnaStorage = DNAStorage()
         loadDNAFile(dnaStorage, dnaFile)
@@ -156,7 +156,7 @@ class CogHQExterior(BattlePlace.BattlePlace):
 
         for visGroup in range(numVisGroups):
             groupName = dnaStorage.getDNAVisGroupName(visGroup)
-            visGroupClient= dnaStorage.getDNAVisGroup(visGroup)
+            visGroupClient= dnaStorage.getDNAVisGroupAI(visGroup)
             visGroupZoneId = int(base.cr.hoodMgr.extractGroupName(groupName))
             visGroupZoneId = ZoneUtil.getTrueZoneId(visGroupZoneId, self.zoneId)
             visibles = []
