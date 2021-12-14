@@ -259,6 +259,7 @@ def __doSmooch(attack, hp = 0):
                       __getSoundTrack(level, 2, node=toon),
                       Sequence(ActorInterval(toon, 'smooch')),
                       Sequence(Wait(delay), ActorInterval(target, 'conked')),
+                      
                       Sequence(Wait(delay), Func(__healToon, target, hp)),
                       )
         effectTrack.append(mtrack)
@@ -269,22 +270,94 @@ def __doSmooch(attack, hp = 0):
     track.append(Func(target.clearChat))
     return track
 
+def __doJuggleRestock(attack, hp):
+
+    toon = NPCToons.createLocalNPC(attack['npcId'])
+    if toon is None:
+        print('toon is none')
+        return
+
+    targets = attack['toons']
+    level = 5
+    battle = attack['battle']
+    track = Sequence(teleportIn(attack, toon))
+    delay = 4.0
+    first = 1
+    targetTrack = Sequence()
+    for target in targets:
+        reactIval = Func(__healToon, target, hp)
+        if first == 1:
+            targetTrack.append(Wait(delay))
+            first = 0
+        targetTrack.append(reactIval)
+    cube = globalPropPool.getProp('cubes')
+    cube2 = MovieUtil.copyProp(cube)
+    cubes = [cube, cube2]
+    hips = [toon.getLOD(toon.getLODNames()[0]).find('**/joint_hips'), toon.getLOD(toon.getLODNames()[1]).find('**/joint_hips')]
+    cubeTrack = Sequence(Func(MovieUtil.showProps, cubes, hips),
+                         MovieUtil.getActorIntervals(cubes, 'cubes'),
+                        Func(MovieUtil.removeProps, cubes))
+    mtrack = Parallel(cubeTrack, __getSoundTrack(level, 0.7, duration=7.7, node=toon),
+                                 ActorInterval(toon, 'juggle'),
+                                  targetTrack)
+                                  
+    track.append(mtrack)
+    track.append(Func(toon.setHpr, Vec3(180.0, 0.0, 0.0)))
+    track.append(teleportOut(attack, toon))
+    return track
+def __doJuggle(attack, recipients, hp):
+
+    toon = NPCToons.createLocalNPC(attack['npcId'])
+    if toon is None:
+        return
+
+    targets = attack[recipients]
+    level = 5
+    battle = attack['battle']
+    track = Sequence(teleportIn(attack, toon))
+    def face180(target, toon, battle):
+        # turn the toon so that it faces the target
+        if recipients == 'suits':
+            toon.setHpr(Vec3(360.0, 0.0, 0.0))
+        else:
+            pass
+    delay = 4.0
+    first = 1
+    targetTrack = Sequence()
+    for target in targets:
+        reactIval = Func(__healToon, target, hp)
+        if first == 1:
+            targetTrack.append(Wait(delay))
+            first = 0
+        targetTrack.append(reactIval)
+    cube = globalPropPool.getProp('cubes')
+    cube2 = MovieUtil.copyProp(cube)
+    cubes = [cube, cube2]
+    hips = [toon.getLOD(toon.getLODNames()[0]).find('**/joint_hips'), toon.getLOD(toon.getLODNames()[1]).find('**/joint_hips')]
+    cubeTrack = Sequence(Func(MovieUtil.showProps, cubes, hips), MovieUtil.getActorIntervals(cubes, 'cubes'), Func(MovieUtil.removeProps, cubes))
+    mtrack = Parallel(cubeTrack, __getSoundTrack(level, 0.7, duration=7.7, node=toon),
+                        Sequence(Func(face180, target, toon, battle)),
+                        ActorInterval(toon, 'juggle'), targetTrack)
+    track.append(mtrack)
+    track.append(Func(toon.setHpr, Vec3(180.0, 0.0, 0.0)))
+    track.append(teleportOut(attack, toon))
+    return track
 def __doToonsHit(attack, level, hp):
-    track = __doSprinkle(attack, 'toons', hp)
+    track = __doJuggle(attack, 'toons', hp)
     pbpText = attack['playByPlayText']
     pbpTrack = pbpText.getShowInterval(TTLocalizer.MovieNPCSOSToonsHit, 
                                        track.getDuration())
     return track, pbpTrack
 
 def __doCogsMiss(attack, level, hp):
-    track = __doSprinkle(attack, 'suits', hp)
+    track = __doJuggle(attack, 'suits', hp)
     pbpText = attack['playByPlayText']
     pbpTrack = pbpText.getShowInterval(TTLocalizer.MovieNPCSOSCogsMiss, 
                                        track.getDuration())
     return track, pbpTrack
 
 def __doRestockGags(attack, level, hp):
-    track = __doSmooch(attack, hp)
+    track = __doJuggleRestock(attack, hp)
     pbpText = attack['playByPlayText']
     if (level == ToontownBattleGlobals.HEAL_TRACK):
         text = TTLocalizer.MovieNPCSOSHeal

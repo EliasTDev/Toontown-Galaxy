@@ -38,7 +38,7 @@ from toontown.suit import SuitDNA
 from direct.showbase.InputStateGlobal import inputState
 from toontown.toonbase import ToontownBattleGlobals
 from toontown.hood import ZoneUtil
-from toontown.toon import ToonDNA
+from toontown.toon import ToonDNA, NPCToons
 from toontown.parties import PartyGlobals
 #from toontown.suit import DistributedBossCog
 
@@ -2084,15 +2084,22 @@ class SetNPCFriend(MagicWord):
     def handleWord(self, invoker, avId, av, *args):
             npcName = str(args[0])
             numCalls = int(args[1])
-            npcId = NPCToons.getNPCId(npcName)
-            if npcId is None:
-                return 'invalid SOS name'
             if numCalls > 100 or numCalls <= 0:
                 return 'Invalid amount for sos card'
-            if self.doNpcFriend(av, npcId, numCalls):
-                return "Added sos card {0}".format(npcName)
+            for npcId, sosName in TTLocalizer.NPCToonNames.items():
+                if sosName.lower() == npcName.lower():
+                    if npcId not in NPCToons.npcFriends:
+                        continue
+                    break
             else:
-                return "invalid NPC name"
+                return 'Invalid sos name'
+
+            if (numCalls == 0) and (npcId in av.NPCFriendsDict):
+                del av.NPCFriendsDict[npcId]
+            else:
+                av.NPCFriendsDict[npcId] = numCalls
+            av.d_setNPCFriendsDict(av.NPCFriendsDict)
+            return "Added sos card {0}".format(npcName)
                 
 class GiveBessies(MagicWord):
     aliases = ['uberdrop', 'pianos', 'bessies', 'barnaclebessies']
