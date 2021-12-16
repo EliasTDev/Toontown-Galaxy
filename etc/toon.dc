@@ -1139,6 +1139,9 @@ dclass DistributedBossCog: DistributedNode {
 
   // The boss decides to attack.
   setAttackCode(uint8 attackCode, uint32 avId) broadcast;
+  setSkipAmount(uint8) broadcast;
+  requestSkip() airecv clsend;
+  setToonsFirstTime(bool) broadcast;
 };
 
 dclass DistributedSellbotBoss: DistributedBossCog {

@@ -556,6 +556,17 @@ class DistributedCashbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
         # Clean up battle objects until we need them again later.
         self.__deleteBattleThreeObjects()
 
+    ##### Elevator state #####
+
+    def exitElevator(self):
+        for toonId in self.involvedToons:
+            toon = self.air.doId2do.get(toonId)
+            #If it's one of the toon's first time
+            if toon.getCashbotCutSceneFirstTime():
+                self.canSkip = False 
+                self.toonsFirstTime = True
+                break
+
     ##### PrepareBattleThree state #####
 
     def enterPrepareBattleThree(self):
@@ -693,6 +704,7 @@ class DistributedCashbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
             if toon:
                 toon.addResistanceMessage(self.rewardId)
                 toon.b_promote(self.deptIndex)
+                toon.b_setCashbotCutSceneFirstTime(True)
 
     def exitVictory(self):
         self.__deleteBattleThreeObjects()

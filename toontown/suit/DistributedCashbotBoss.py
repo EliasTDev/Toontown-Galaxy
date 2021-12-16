@@ -594,6 +594,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             
         # We need to protect our movie against any of the toons
         # disconnecting while the movie plays.
+        
         for toonId in self.involvedToons:
             toon = self.cr.doId2do.get(toonId)
             if toon:
@@ -1080,6 +1081,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     ##### PrepareBattleThree state #####
 
     def enterPrepareBattleThree(self):
+        self.accept('cutsceneSkip', self.requestSkip)
         assert self.notify.debug('enterPrepareBattleThree()')
 
         self.controlToons()
@@ -1118,6 +1120,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.doneBarrier('PrepareBattleThree')
         
     def exitPrepareBattleThree(self):
+        self.disableSkipCutscene()
         intervalName = "PrepareBattleThreeMovie"
         self.clearInterval(intervalName)
         self.unstickToons()

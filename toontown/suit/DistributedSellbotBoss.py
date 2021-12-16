@@ -1012,6 +1012,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     def enterIntroduction(self):
         # Set the boss up in the middle of the floor, actively
         # promoting some doobers.
+
         self.reparentTo(render)
         self.setPosHpr(*ToontownGlobals.SellbotBossBattleOnePosHpr)
         self.stopAnimate()
@@ -1028,6 +1029,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.setCageIndex(0)
 
         base.playMusic(self.promotionMusic, looping=1, volume=0.9)
+        
         
     def exitIntroduction(self):
         DistributedBossCog.DistributedBossCog.exitIntroduction(self)
@@ -1062,6 +1064,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     ##### RollToBattleTwo state #####
 
     def enterRollToBattleTwo(self):
+        self.accept('cutsceneSkip', self.requestSkip)
         assert self.notify.debug('enterRollToBattleTwo()')
         # Disable collision on the toon, there is a collision issue where the boss was 
         # hitting the toons right after the first battle, so we turn off their collision briefly
@@ -1106,6 +1109,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.doneBarrier('RollToBattleTwo')
 
     def exitRollToBattleTwo(self):
+        self.disableSkipCutscene()
         self.unstickBoss()
         intervalName = "RollToBattleTwo"
         self.clearInterval(intervalName)

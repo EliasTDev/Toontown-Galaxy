@@ -68,8 +68,8 @@ class DistributedBossCog(DistributedAvatar.DistributedAvatar,
 
         self.activeIntervals = {}
         self.flashInterval = None
-
         self.elevatorType = ElevatorConstants.ELEVATOR_VP
+
 
     def announceGenerate(self):
         DistributedAvatar.DistributedAvatar.announceGenerate(self)
@@ -154,6 +154,17 @@ class DistributedBossCog(DistributedAvatar.DistributedAvatar,
         self.bubbleF = self.rotateNode.attachNewNode(bubbleFNode)
         self.bubbleF.setTag('attackCode', str(ToontownGlobals.BossCogFrontAttack))
         self.bubbleF.stash()
+
+    def requestSkip(self):
+        self.sendUpdate('requestSkip')
+
+    def setSkipAmount(self, amount):
+        messenger.send('cutsceneSkipAmountChange', [amount, len(self.involvedToons)])
+
+    def disableSkipCutscene(self):
+        messenger.send('disableSkipCutscene')
+        self.ignore('cutsceneSkip')
+
 
     def disable(self):
         """
@@ -1394,7 +1405,7 @@ class DistributedBossCog(DistributedAvatar.DistributedAvatar,
 
     def enterIntroduction(self):
         assert self.notify.debug('enterIntroduction()')
-
+        self.accept('cutsceneSkip', self.requestSkip)
         self.controlToons()
 
         # The elevator doors are open now.
@@ -1423,6 +1434,7 @@ class DistributedBossCog(DistributedAvatar.DistributedAvatar,
         self.doneBarrier('Introduction')
 
     def exitIntroduction(self):
+        self.disableSkipCutscene()
         self.notify.debug("DistributedBossCog.exitIntroduction:")
         intervalName = "IntroductionMovie"
         self.clearInterval(intervalName)

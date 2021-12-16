@@ -91,6 +91,15 @@ class DistributedBossbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
         # we must make the battle now, since the suits will be immediately seen
         self.makeBattleOneBattles()
 
+    def exitElevator(self):
+        for toonId in self.involvedToons:
+            toon = self.air.doId2do.get(toonId)
+            #If it's one of the toon's first time
+            if toon.getBossbotCutSceneFirstTime():
+                self.canSkip = False 
+                self.toonsFirstTime = True
+                break
+
     def enterIntroduction(self):
         """Handle enterint the introduction state.
         Copied and pasted to just avoid the call to reset battles.
@@ -288,7 +297,7 @@ class DistributedBossbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
 
         # The Clients will see the toons donning waiter disguise.
         # CEO will make brief appearing demanding food.
-        # Mata Hairy says give them food till they explode.
+        # Good o'l Giggles says give them food till they explode.
         # Walk toons through door
         # Close door
 
@@ -874,6 +883,7 @@ class DistributedBossbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
             if toon:
                 self.givePinkSlipReward(toon)
                 toon.b_promote(self.deptIndex)
+                toon.b_setBossbotCutSceneFirstTime(True)
                 
     def givePinkSlipReward(self, toon):
         """Give a pink slip reward to the toon."""

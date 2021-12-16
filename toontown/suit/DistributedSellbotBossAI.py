@@ -309,8 +309,19 @@ class DistributedSellbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
         DistributedBossCogAI.DistributedBossCogAI.enterElevator(self)
         self.b_setBossDamage(0, 0, 0)
 
-    ##### Introduction state #####
+    def exitElevator(self):
+        for toonId in self.involvedToons:
+            toon = self.air.doId2do.get(toonId)
+            #If it's one of the toon's first time
+            if toon.getSellbotCutSceneFirstTime():
+                self.canSkip = False 
+                self.toonsFirstTime = True
+                break
 
+           
+            
+    ##### Introduction state #####
+    
     def enterIntroduction(self):
         DistributedBossCogAI.DistributedBossCogAI.enterIntroduction(self)
 
@@ -549,6 +560,7 @@ class DistributedSellbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
                 if not toon.attemptAddNPCFriend(self.cagedToonNpcId, numCalls = 1):
                     self.notify.info("%s.unable to add NPCFriend %s to %s." % (self.doId, self.cagedToonNpcId, toonId))
                 toon.b_promote(self.deptIndex)
+                toon.b_setSellbotCutSceneFirstTime(True)
 
     def exitVictory(self):
         self.takeAwayPies()

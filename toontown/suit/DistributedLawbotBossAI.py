@@ -489,6 +489,15 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         DistributedBossCogAI.DistributedBossCogAI.enterElevator(self)
         self.b_setBossDamage(ToontownGlobals.LawbotBossInitialDamage, 0, 0)
 
+    def exitElevator(self):
+        for toonId in self.involvedToons:
+            toon = self.air.doId2do.get(toonId)
+            #If it's one of the toon's first time
+            if toon.getLawbotCutSceneFirstTime():
+                self.canSkip = False 
+                self.toonsFirstTime = True
+                break
+
     ##### Introduction state #####
 
     def enterIntroduction(self):
@@ -1087,6 +1096,7 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
             if toon:
                 self.giveCogSummonReward(toon, preferredDept, preferredSummonType)
                 toon.b_promote(self.deptIndex)
+                toon.b_setLawbotCutSceneFirstTime(True)
                 
     def giveCogSummonReward(self, toon, prefDeptIndex, prefSummonType):
         """

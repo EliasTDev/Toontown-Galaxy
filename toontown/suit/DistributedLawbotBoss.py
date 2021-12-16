@@ -1372,6 +1372,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         """
         Rolling to the podium.
         """
+        self.accept('cutsceneSkip', self.requestSkip)
         self.notify.debug("----- enterRollToBattleTwo")
         assert self.notify.debug('enterRollToBattleTwo()')
 
@@ -1411,6 +1412,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         """
         Exit the roll to battle two state.
         """
+        self.disableSkipCutscene()
         self.notify.debug("----- exitRollToBattleTwo")
         self.unstickBoss()
         intervalName = "RollToBattleTwo"

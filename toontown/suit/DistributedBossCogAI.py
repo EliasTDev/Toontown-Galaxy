@@ -65,6 +65,11 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
         # The number of times we are hit during one dizzy spell.
         self.hitCount = 0
 
+        #Cutscene skip variables
+        self.canSkip = True
+        self.toonsSkipped = []
+        self.toonsFirstTime = False
+        #---------------------
         AllBossCogs.append(self)
 
     def delete(self):
@@ -325,6 +330,7 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
 
     def __doneElevator(self, avIds):
         assert self.notify.debug('%s.__doneElevator()' % (self.doId))
+
         self.b_setState("Introduction")
         
     def exitElevator(self):
@@ -333,6 +339,7 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
     ##### Introduction state #####
 
     def enterIntroduction(self):
+
         assert self.notify.debug('%s.enterIntroduction()' % (self.doId))
 
         self.resetBattles()
@@ -928,3 +935,38 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
         # boss's attacks in battle three.
         self.b_setAttackCode(ToontownGlobals.BossCogNoAttack)
 
+    def checkSkip(self):
+        #check if we can skip
+        if self.toonsFirstTime:
+            self.sendToonsFirstTime()
+            #Just in case
+            self.canSkip = False
+            return
+        if len(self.toonsSkipped) >= len(self.involvedToons) - 1:
+            #exit cutscene
+            if self.state == 'Introduction':
+                self.exitIntroduction()
+            elif self.state == 'RollToBattleTwo':
+                self.exitRollToBattleTwo()
+            elif self.state == 'PrepareBattleTwo':
+                self.exitPrepareBattleTwo()
+            elif self.state == 'PrepareBattleThree':
+                self.exitPrepareBattleThree()
+            elif self.state == 'PrepareBattleFour':
+                self.exitPrepareBattleFour()
+        else:
+            #tell the client the amount of toons skipped
+            self.sendUpdate('setSkipAmount', [len(self.toonsSkipped)])
+
+    def requestSkip(self):
+        toon = self.air.getAvatarIdFromSender()
+        if (toon not in self.involvedToons) or (not self.canSkip) or (toon in self.toonsSkipped):
+            return
+        self.toonsSkipped.append(toon)
+        self.checkSkip()
+
+    def sendToonsFirstTime(self):
+        """
+        Tell the client it's one of the toon's first time
+        """
+        self.sendUpdate('setToonsFirstTime', [self.toonsFirstTime])

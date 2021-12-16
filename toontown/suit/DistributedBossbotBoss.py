@@ -461,6 +461,7 @@ class DistributedBossbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         Walk toons through door
         Close door        
         """
+        self.accept('cutsceneSkip', self.requestSkip)
         self.controlToons()
         self.setToonsToNeutral(self.involvedToons)
         # remove the disguise, so we can quickly get here riding up the elevator
@@ -619,7 +620,8 @@ class DistributedBossbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
     def exitPrepareBattleTwo(self):
         """Cleanup PrepareBattleTwo state."""
-        assert self.notify.debugStateCall(self)
+        self.disableSkipCutscene()
+
         self.clearInterval( "PrepareBattleTwoMovie")
         self.betweenPhaseMusic.stop()
         pass
@@ -894,7 +896,7 @@ class DistributedBossbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     ##### PrepareBattleFour state #####
     def enterPrepareBattleFour(self):
         """Handle entering the Prepare Battle Four State."""
-        assert self.notify.debug('%s.enterPrepareBattleFour()' % (self.doId))
+        self.accept('cutsceneSkip', self.requestSkip)
         self.controlToons()
         intervalName = "PrepareBattleFourMovie"                
         seq = Sequence(self.makePrepareBattleFourMovie(),
@@ -906,12 +908,14 @@ class DistributedBossbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
     def exitPrepareBattleFour(self):
         """Handle exiting the Prepare Battle Four State."""
+        self.disableSkipCutscene()
         self.clearInterval( "PrepareBattleFourMovie")
         self.phaseFourMusic.stop()
         pass
 
     def makePrepareBattleFourMovie(self):
         """Create and return the pre battle four movie."""
+       
         rToon = self.resistanceToon
         offsetZ = rToon.suit.getHeight() / 2.0
         track = Sequence(

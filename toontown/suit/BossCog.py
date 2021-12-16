@@ -78,6 +78,14 @@ class BossCog(Avatar.Avatar):
         # BossCog on a client at any given time.
         self.animDoneEvent = 'BossCogAnimDone'
         self.animIvalName = 'BossCogAnimIval'
+        
+
+    def setToonsFirstTime(self):
+        """
+        Tell the gui it's one of the toon's first time
+        """
+        pass
+        #
 
     def delete(self):
         Avatar.Avatar.delete(self)
