@@ -169,7 +169,7 @@ class DistributedBattleBldg(DistributedBattleBase.DistributedBattleBase):
         # Put the camera somewhere
         camTrack = Sequence()
         def setCamFov(fov):
-            base.camLens.setFov(fov)
+            base.camLens.setMinFov(fov/(4.0/3.0))
         camTrack.append(Func(camera.wrtReparentTo, suitLeader))
 
         camTrack.append(Func(setCamFov, self.camFOFov))

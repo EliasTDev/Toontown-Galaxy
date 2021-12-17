@@ -362,7 +362,7 @@ class Purchase(PurchaseBase):
         camera.setPos(0, 16.0, 2.0)
         camera.lookAt(0, 0, 0.75)
         base.transitions.irisIn(0.4)
-        base.camLens.setFov(60)
+        base.camLens.setMinFov(60/(4.0/3.0))
         #base.camLens.setFar(150)
         # show background elements
         self.title.reparentTo(aspect2d)

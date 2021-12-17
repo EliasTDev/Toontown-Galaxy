@@ -489,7 +489,7 @@ class DistributedTugOfWarGame(DistributedMinigame):
                                      
 
         # mave FOV wider if there are more toons
-        base.camLens.setFov(60 + 2*self.numPlayers)
+        base.camLens.setMinFov(60 + 2*self.numPlayers / (4.0/3.0))
 
         # prevent sky from getting clipped
         base.camLens.setFar(450.)

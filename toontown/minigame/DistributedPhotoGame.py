@@ -925,7 +925,7 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
             hMove = hMDegree * (1.0 - ZOOMRATIO)
             vMove = vMDegree * (1.0 - ZOOMRATIO)
             self.currentFov = self.zoomFov
-            base.camLens.setFov(self.zoomFov)
+            base.camLens.setMinFov(self.zoomFov/(4.0/3.0))
             self.blackoutNode.show()
             self.swivel.setHpr(self.swivel, (hMove * -self.zoomFlip), (vMove * self.zoomFlip), 0)
             #self.swivel.setH(hCam + (hMove * -self.zoomFlip))
@@ -937,7 +937,7 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
             hMove = hMDegree * ((1.0 - ZOOMRATIO) / ZOOMRATIO)
             vMove = vMDegree * ((1.0 - ZOOMRATIO) / ZOOMRATIO)
             self.currentFov = self.outFov
-            base.camLens.setFov(self.outFov)
+            base.camLens.setMinFov(self.outFov/(4.0/3.0))
             self.blackoutNode.hide()
             self.swivel.setHpr(self.swivel, (hMove * self.zoomFlip), (vMove * -self.zoomFlip), 0)
             #self.swivel.setH(hCam + (hMove * self.zoomFlip))
@@ -980,7 +980,7 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
             hMove = hMDegree * (1.0 - ZOOMRATIO)
             vMove = vMDegree * (1.0 - ZOOMRATIO)
             self.currentFov = self.zoomFov
-            base.camLens.setFov(self.zoomFov)
+            base.camLens.setMinFov(self.zoomFov/(4.0/3.0))
             self.blackoutNode.show()
             #self.swivel.setHpr(self.swivel, (hMove * -self.zoomFlip), (vMove * self.zoomFlip), 0)
             #self.swivel.setH(hCam + (hMove * -self.zoomFlip))
@@ -1008,7 +1008,7 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
             hMove = hMDegree * ((1.0 - ZOOMRATIO) / ZOOMRATIO)#* ZOOMRATIO
             vMove = vMDegree * ((1.0 - ZOOMRATIO) / ZOOMRATIO)#* ZOOMRATIO
             self.currentFov = self.outFov
-            base.camLens.setFov(self.outFov)
+            base.camLens.setMinFov(self.outFov/(4.0/3.0))
             #self.blackoutNode.hide()
             #self.swivel.setHpr(self.swivel, (hMove * self.zoomFlip), (vMove * -self.zoomFlip), 0)
             #self.swivel.setH(hCam + (hMove * self.zoomFlip))
