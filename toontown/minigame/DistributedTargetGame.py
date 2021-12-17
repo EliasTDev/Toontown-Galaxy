@@ -842,7 +842,7 @@ class DistributedTargetGame(DistributedMinigame):
         camera.reparentTo(render)
         toonPos = self.getAvatar(self.localAvId).getPos()
         camera.setPosHpr(toonPos[0],toonPos[1] - 18,toonPos[2] + 10,0,-15,0)
-        base.camLens.setFov(80)
+        base.camLens.setMinFov(80/(4.0/3.0))
         
 
         # set the far plane
@@ -974,7 +974,7 @@ class DistributedTargetGame(DistributedMinigame):
         camera.setPosHpr(toonPos[0],toonPos[1] - 26,toonPos[2] + 10,0,-15,0)
         #camera.setPosHpr(0, self.CAMERA_Y + self.TOON_Y + 12, 5,
         #                 0, -15, 0)
-        base.camLens.setFov(80)
+        base.camLens.setMinFov(80/(4.0/3.0))
         self.resetNums()
         
     def resetNums(self):
@@ -1012,7 +1012,7 @@ class DistributedTargetGame(DistributedMinigame):
 
         render.clearFog()
         base.camLens.setFar(ToontownGlobals.DefaultCameraFar)
-        base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov/(4/3))
+        base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov/(4.0/3.0))
         camera.setHpr(0,90,0)
 
         # Restore the background color
@@ -1173,7 +1173,7 @@ class DistributedTargetGame(DistributedMinigame):
                 closed.node().setEffect(ce)
                 closed.setHpr(0.0,90.0,35.0)
                 
-                umbrella.reparentTo(hand)
+                #umbrella.reparentTo(hand)
                 # Start the smoothing task.
                 toon.startSmooth()
 
@@ -1218,7 +1218,7 @@ class DistributedTargetGame(DistributedMinigame):
         self.cameraWork =  camera.posHprInterval(2.5, newPos, newHpr,
                           blendType = "easeInOut")#,
         self.cameraWork.start()
-        base.camLens.setFov(80)
+        base.camLens.setMinFov(80/(4.0/3.0))
         self.stretchY = self.startPower
         self.power = self.startPower
         self.scoreboard.hide() 
@@ -1265,7 +1265,7 @@ class DistributedTargetGame(DistributedMinigame):
         camera.reparentTo(base.localAvatar)
         camera.setPosHpr(0, self.CAMERA_Y + self.TOON_Y + 12, 5,
                          0, -15, 0)
-        base.camLens.setFov(80)
+        base.camLens.setMinFov(80/(4.0/3.0))
         self.help.show()
         self.help['text'] = TTLocalizer.TargetGameFlyHelp
         self.rubberSound.setVolume(0.0)
