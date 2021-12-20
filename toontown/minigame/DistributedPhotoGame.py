@@ -345,6 +345,7 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
         #del self.textureBuffer
             
     def unload(self):
+        self.music.stop()
         self.notify.debug("unload")
         DistributedMinigame.unload(self)
         
