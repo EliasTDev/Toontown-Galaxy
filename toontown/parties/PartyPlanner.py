@@ -69,7 +69,6 @@ class PartyPlanner(DirectFrame,FSM):
         self.partyInfo = None
         self.asapMinuteRounding = base.config.GetInt("party-asap-minute-rounding",
                                                      PartyGlobals.PartyPlannerAsapMinuteRounding)
-
         # This is hiding mem leaks
         #    base.pplanner = self
 
@@ -1133,8 +1132,18 @@ class PartyPlanner(DirectFrame,FSM):
             self.friendList.destroy()
             self.calendarGuiMonth.destroy()
             self.frame.destroy()
+        else:
+            self.notify.warning("Close function: frame is empty or we dont have a frame")
+            messenger.send(self.doneEvent)
+            self.hide()
+            self.cleanup()
+            self.friendList.removeAndDestroyAllItems()
+            self.friendList.destroy()
+            self.calendarGuiMonth.destroy()
+            
         self.partyPlannerHead.delete()
-        self.partyPlannerHead.removeNode()
+        #self.partyPlannerHead.removeNode()
+        self.partyPlannerHead.cleanup()
         self.clearNametag()
         self.partyEditor.request("Cleanup")
         # break the cycle to clean up properly
@@ -1210,10 +1219,15 @@ class PartyPlanner(DirectFrame,FSM):
         """
         PartyPlanner.notify.debug("__acceptExit")
         if hasattr(self,'frame'):
-            print('Exiting')
-            print('doneEvent: {0}'.format(self.doneEvent))
+            self.notify.debug('Exiting')
+            self.notify.debug('doneEvent: {0}'.format(self.doneEvent))
             self.hide()
             messenger.send(self.doneEvent)
+        else:
+            self.notify.warning("__acceptExit: PartyPlanner has No frame, skipping exit...")
+
+            
+
 
     def __nextItem(self):
         messenger.send('wakeup')
