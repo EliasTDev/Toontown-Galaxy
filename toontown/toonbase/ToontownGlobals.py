@@ -1512,13 +1512,13 @@ ColorNoChat    = (0.8, 0.5, 0.1, 1)
 
 FactoryLaffMinimums = [
     # sellbot
-    (0, 31),
+    (0, 0),
     # cashbot
-    (0, 66, 71),
+    (0, 0, 0),
     # lawbot
-    (0, 81, 86, 96),
+    (0, 0, 0, 0),
     # bossbot
-    (0, 101, 106),
+    (0, 0, 0),
     ]
 
 # Picnic table sitting ime
