@@ -98,7 +98,7 @@ MaxSkill = UberSkill + regMaxSkill
 UnpaidMaxSkill = 1999
 # This is the maximum amount of experience per track that may be
 # earned in one battle (or in one building).
-ExperienceCap = 200
+ExperienceCap = 300
 
 # This accuracy (a percentage) is the highest that can ever be attained.
 MaxToonAcc = 95
@@ -116,13 +116,13 @@ CarryLimits = (
       ( 30, 25, 20, 15, 7, 3, 0),  # lvl 6
       ( 30, 25, 20, 15, 7, 3, 1) ), # lvl 7
     # Trap
-    ( (  5,  0,  0,  0, 0, 0, 0),   # lvl 1
-      (  7,  3,  0,  0, 0, 0, 0),   # lvl 2
-      ( 10,  7,  3,  0, 0, 0, 0),   # lvl 3
-      ( 15, 10,  7,  3, 0, 0, 0),   # lvl 4
-      ( 15, 15, 10,  5, 3, 0, 0),   # lvl 5
-      ( 20, 15, 15, 10, 5, 2, 0),   # lvl 6
-      ( 20, 15, 15, 10, 5, 2, 1) ),  # lvl 7
+    ( ( 10,  0,  0,  0, 0, 0, 0),  # lvl 1
+      ( 10,  5,  0,  0, 0, 0, 0),  # lvl 2
+      ( 15, 10,  5,  0, 0, 0, 0),  # lvl 3
+      ( 20, 15, 10,  5, 0, 0, 0),  # lvl 4
+      ( 25, 20, 15, 10, 3, 0, 0),  # lvl 5
+      ( 30, 25, 20, 15, 7, 3, 0),  # lvl 6
+      ( 30, 25, 20, 15, 7, 3, 1) ), # lvl 7
     # Lure
     ( ( 10,  0,  0,  0, 0, 0, 0),  # lvl 1
       ( 10,  5,  0,  0, 0, 0, 0),  # lvl 2
