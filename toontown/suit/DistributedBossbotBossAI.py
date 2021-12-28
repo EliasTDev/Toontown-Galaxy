@@ -656,9 +656,11 @@ class DistributedBossbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
         # we honor the strange bossDamage value, partly to make it
         # convenient for testing, and partly to help trap greedy
         # hackers into revealing themselves repeatedly.
-        self.validate(avId, bossDamage <= 3,
+        self.validate(avId, bossDamage <= TontownGlobals.maxBossbotBossDamage,
                       'invalid bossDamage %s' % (bossDamage))
         if bossDamage < 1:
+            return
+        if bossDamage > ToontownGlobals.maxBossbotBossDamage:
             return
 
         currState = self.getCurrentOrNextState()

@@ -1605,3 +1605,12 @@ AnimPropTypes = Enum(("Unknown",
 
 MaxCarryLimit = 80
 ALLOWED_FIELD_OFFICES = ['s', 'l']
+#A pie splat
+maxSellbotBossDamage = 1
+#Craning with safe
+maxCashbotBossDamage = 50
+#Before bonus time is applied
+maxLawbotBossDamage = 1
+#Before 2x is applied
+#So max damage is actually 6
+maxBossbotBossDamage = 3

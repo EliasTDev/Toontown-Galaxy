@@ -74,11 +74,19 @@ class DistributedSellbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
         # we honor the strange bossDamage value, partly to make it
         # convenient for testing, and partly to help trap greedy
         # hackers into revealing themselves repeatedly.
-        self.validate(avId, bossDamage == 1,
-                      'invalid bossDamage %s' % (bossDamage))
+        self.validate(avId, bossDamage <= ToontownGlobals.maxSellbotBossDamage,
+                      'invalid bossDamage in VP %s' % (bossDamage))
+
+            
         if bossDamage < 1:
             return
 
+            #I know for testing reasons it be convenient
+            # maybe in the future can add an "and" check that checks if toon is staff 
+            # This way we write a suspicious event and we stop it from happening 
+
+        if bossDamage > ToontownGlobals.maxSellbotBossDamage:
+            return
         currState = self.getCurrentOrNextState()
         if currState != 'BattleThree':
             # This was just a late hit; ignore it.
@@ -109,7 +117,6 @@ class DistributedSellbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
         if not self.validate(avId, avId in self.involvedToons,
                              'hitBossInsides from unknown avatar'):
             return
-
         currState = self.getCurrentOrNextState()
         if currState != 'BattleThree':
             # This was just a late hit; ignore it.

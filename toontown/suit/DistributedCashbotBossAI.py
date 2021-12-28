@@ -485,6 +485,15 @@ class DistributedCashbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
 
         if self.state != 'BattleThree':
             return
+        if damage > ToontownGlobals.maxCashbotBossDamage:
+            #Impossible to do this unless your staff 
+            #  For now dont allow it to prevent hackers
+            #Max damage when throwing safe
+            #In future check if staff
+            self.validate(avId, avId in self.involvedToons, damage <= ToontownGlobals.maxCashbotBossDamage , f"Invalid boss damage in CFO {damage}")
+            return
+
+        #TODO check if toon is at a crane to do damage to prevent hacking
 
         # Record a successful hit in battle three.
         self.b_setBossDamage(self.bossDamage + damage)

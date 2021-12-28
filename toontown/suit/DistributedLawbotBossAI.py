@@ -129,11 +129,14 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
         # we honor the strange bossDamage value, partly to make it
         # convenient for testing, and partly to help trap greedy
         # hackers into revealing themselves repeatedly.
-        self.validate(avId, bossDamage == 1,
+        self.validate(avId, bossDamage <= ToontownGlobals.maxLawbotBossDamage,
                       'invalid bossDamage %s' % (bossDamage))
+        # Check comment in DistributedSellbotBossAI for hitBoss on why we
+        #  are changing this for now to prevent hacking 
         if bossDamage < 1:
             return
-
+        if bossDamage > ToontownGlobals.maxLawbotBossDamage:
+            return
         currState = self.getCurrentOrNextState()
         if currState != 'BattleThree':
             # This was just a late hit; ignore it.
