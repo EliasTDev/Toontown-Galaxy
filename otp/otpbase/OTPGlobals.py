@@ -53,7 +53,7 @@ DefaultCameraFov = 52.0
 
 # This should actually be 280, but the sky does not fit inside
 # so I am temporarily cranking it up
-DefaultCameraFar = 400.0
+DefaultCameraFar = 800.0
 
 # note: camera collision sphere is assumed to be 1.0 currently
 DefaultCameraNear = 1.0
