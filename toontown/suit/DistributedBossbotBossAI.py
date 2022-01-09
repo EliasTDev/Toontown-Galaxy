@@ -644,6 +644,8 @@ class DistributedBossbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
         # battle three.  We have to take the client's word for it here.
         """
         avId = self.air.getAvatarIdFromSender()
+        toon = self.air.doId2do.get(avId)
+
         assert self.notify.debug('%s.hitBoss(%s, %s)' % (self.doId, avId, bossDamage))
 
         if not self.validate(avId, avId in self.involvedToons,
@@ -656,13 +658,15 @@ class DistributedBossbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
         # we honor the strange bossDamage value, partly to make it
         # convenient for testing, and partly to help trap greedy
         # hackers into revealing themselves repeatedly.
-        self.validate(avId, bossDamage <= TontownGlobals.maxBossbotBossDamage,
+        if  toon.getStaffAccess() < 200:
+            # They are a not staff member so dont allow insane damage
+            self.validate(avId, bossDamage <= ToontownGlobals.maxBossbotBossDamage,
                       'invalid bossDamage %s' % (bossDamage))
-        if bossDamage < 1:
-            return
-        if bossDamage > ToontownGlobals.maxBossbotBossDamage:
-            return
 
+            if bossDamage > ToontownGlobals.maxBossbotBossDamage:
+                return
+        if bossDamage < 1:
+                return
         currState = self.getCurrentOrNextState()
         if currState != 'BattleFour':
             # This was just a late hit; ignore it.

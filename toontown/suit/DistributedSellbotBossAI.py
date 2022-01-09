@@ -62,6 +62,8 @@ class DistributedSellbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
         # This is sent when the client successfully hits the boss during
         # battle three.  We have to take the client's word for it here.
         avId = self.air.getAvatarIdFromSender()
+        toon = self.air.doId2do.get(avId)
+
         assert self.notify.debug('%s.hitBoss(%s, %s)' % (self.doId, avId, bossDamage))
 
         if not self.validate(avId, avId in self.involvedToons,
@@ -74,26 +76,24 @@ class DistributedSellbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
         # we honor the strange bossDamage value, partly to make it
         # convenient for testing, and partly to help trap greedy
         # hackers into revealing themselves repeatedly.
-        self.validate(avId, bossDamage <= ToontownGlobals.maxSellbotBossDamage,
+        if  toon.getStaffAccess() < 200:
+            # They are a not staff member so dont allow insane damage
+            self.validate(avId, bossDamage <= ToontownGlobals.maxSellbotBossDamage,
                       'invalid bossDamage in VP %s' % (bossDamage))
 
-            
+            if bossDamage > ToontownGlobals.maxSellbotBossDamage:
+                return
+            if self.attackCode != ToontownGlobals.BossCogDizzyNow:
+            # The boss wasn't in his vulnerable state, so it doesn't count.
+                return
         if bossDamage < 1:
             return
 
-            #I know for testing reasons it be convenient
-            # maybe in the future can add an "and" check that checks if toon is staff 
-            # This way we write a suspicious event and we stop it from happening 
 
-        if bossDamage > ToontownGlobals.maxSellbotBossDamage:
-            return
+
         currState = self.getCurrentOrNextState()
         if currState != 'BattleThree':
             # This was just a late hit; ignore it.
-            return
-
-        if self.attackCode != ToontownGlobals.BossCogDizzyNow:
-            # The boss wasn't in his vulnerable state, so it doesn't count.
             return
 
         bossDamage = min(self.getBossDamage() + bossDamage, self.bossMaxDamage)
