@@ -2,26 +2,37 @@
 from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
-from direct.showbase.PythonUtil import reduceAngle, fitSrcAngle2Dest
-from direct.showbase.PythonUtil import clampScalar, getSetter
-from direct.showbase.PythonUtil import ParamObj
+from otp.otpbase.PythonUtil import reduceAngle, fitSrcAngle2Dest
+from otp.otpbase.PythonUtil import clampScalar, getSetter, ScratchPad
+from otp.otpbase.PythonUtil import ParamObj
 from direct.task import Task
 from otp.otpbase import OTPGlobals
-from pirates.pirate import CameraMode
-from pirates.piratesbase import PiratesGlobals
+from toontown.toon import CameraMode
+from toontown.toonbase import ToontownGlobals
 import math
+from direct.showbase.InputStateGlobal import inputState
 
 class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
     notify = DirectNotifyGlobal.directNotify.newCategory('OrbitCamera')
 
     class ParamSet(ParamObj.ParamSet):
-        Params = {'lookAtOffset': Vec3(0, 0, 0),'escapement': 10.0,'rotation': 0.0,'fadeGeom': False,'idealDistance': ToontownGlobals.DefaultCameraFov,'minDistance': 3.0,'maxDistance': 100.0,'minEsc': -20.0,'maxEsc': 25.0,'minDomeEsc': 0.0,'maxCamtiltEsc': 0.0,'autoFaceForward': True,'autoFaceForwardMaxDur': 14.0}
+        Params = {'lookAtOffset': Vec3(0, 0, 0),'escapement': 10.0,'rotation': 0.0,'fadeGeom': False,'idealDistance': ToontownGlobals.DefaultCameraFov,'minDistance': ToontownGlobals.DefaultCameraFov,'maxDistance': 72.0,'minEsc': -20.0,'maxEsc': 25.0,'minDomeEsc': 0.0,'maxCamtiltEsc': 0.0,'autoFaceForward': True,'autoFaceForwardMaxDur': 14.0, 
+                  'camOffset': Vec3(0, -14, 5.5)}
 
     UpdateTaskName = 'OrbitCamUpdateTask'
     CollisionCheckTaskName = 'OrbitCamCollisionTask'
     GeomFadeLerpDur = 1.0
     PullFwdDist = 2.0
-
+    ReadMouseTaskName = 'OrbitCamReadMouseTask'
+    CollisionCheckTaskName = 'OrbitCamCollisionTask'
+    MinP = -50
+    MaxP = 20
+    baseH = None
+    minH = None
+    maxH = None
+    #TODO add this to settings
+    SensitivityH = base.config.GetFloat('fps-cam-sensitivity-x', 0.2)
+    SensitivityP = base.config.GetFloat('fps-cam-sensitivity-y', 0.1)
     def __init__(self, subject, params=None):
         ParamObj.__init__(self)
         NodePath.__init__(self, self._getTopNodeName())
@@ -38,6 +49,11 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self._isAtRear = True
         self._rotateToRearIval = None
         self._lockAtRear = False
+        #We arent in pirates so we dont need this
+        base.wantEnviroDR = False
+        self.forceMaxDistance = True
+        self.avFacingScreen = False
+
         return
 
     def destroy(self):
@@ -237,6 +253,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         camera.reparentTo(self.camParent)
         camera.clearTransform()
         base.camNode.setLodCenter(self.subject)
+        
         if base.wantEnviroDR:
             base.enviroCamNode.setLodCenter(self.subject)
         self.lookAtNode.reparentTo(self.subject)
@@ -253,10 +270,60 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self._zoomIval = None
         self._escLerpIval = None
         self._practicalDistance = None
+        self.acceptWheel()
+        self.reparentTo(self.subject)
+        self.setPos(0, 0, self.camOffset[2])
+        camera.reparentTo(self)
+        camera.setPosHpr(self.camOffset[0], self.camOffset[1], 0, 0, 0, 0)
+        self._initMaxDistance()
+
         self._startUpdateTask()
         self._startCollisionCheck()
+
         return
 
+    def _initMaxDistance(self):
+        self._maxDistance = abs(self.camOffset[1])
+    def acceptWheel(self):
+        self.accept('wheel_up', self._handleWheelUp)
+        self.accept('wheel_down', self._handleWheelDown)
+        self._resetWheel()
+
+    def ignoreWheel(self):
+        self.ignore('wheel_up')
+        self.ignore('wheel_down')
+        self._resetWheel()
+
+    def _handleWheelUp(self):
+        y = self.camOffset[1]
+        y = max(-14, min(-2, y + 1.0))
+        self._collSolid.setPointB(0, y + 1, 0)
+        self.camOffset.setY(y)
+        inZ = localAvatar.headNode.getZ()
+        outZ = self.camOffset[2]
+        t = (-14 - y) / -12
+        z = lerp(outZ, inZ, t)
+        self.setZ(z)
+
+    def _handleWheelDown(self):
+        y = self.camOffset[1]
+        y = max(-14, min(-2, y - 1.0))
+        self._collSolid.setPointB(0, y + 1, 0)
+        self.camOffset.setY(y)
+        inZ = localAvatar.headNode.getZ()
+        outZ = self.camOffset[2]
+        t = (-14 - y) / -12
+        z = lerp(outZ, inZ, t)
+        self.setZ(z)
+    def _resetWheel(self):
+        if not self.isActive():
+            return
+
+        self.camOffset = Vec3(0, -14, 5.5)
+        y = self.camOffset[1]
+        z = self.camOffset[2]
+        self._collSolid.setPointB(0, y + 1, 0)
+        self.setZ(z)
     def exitActive(self):
         taskMgr.remove(OrbitCamera.UpdateTaskName)
         self.ignoreAll()
@@ -271,7 +338,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         if base.wantEnviroDR:
             base.enviroCamNode.setLodCenter(NodePath())
         CameraMode.CameraMode.exitActive(self)
-
+        self.ignoreWheel()
     def _startUpdateTask(self):
         self.lastSubjectH = self.subject.getH(render)
         taskMgr.add(self._updateTask, OrbitCamera.UpdateTaskName, priority=40)
@@ -432,6 +499,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         del self._cTrav
         self._collSolidNp.detachNode()
         del self._collSolidNp
+        self.subject.getGeomNode().show()
 
     def _fadeGeom(self, np):
         if np in self._fadeInIvals:
@@ -453,3 +521,143 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
             del self._hiddenGeoms[np]
             self._fadeInIvals[np] = fadeIval
             fadeIval.start()
+
+    def enableMouseControl(self):
+        CameraMode.CameraMode.enableMouseControl(self)
+        self.subject.controlManager.setWASDTurn(0)
+
+    def disableMouseControl(self):
+        CameraMode.CameraMode.disableMouseControl(self)
+        self.subject.controlManager.setWASDTurn(1)
+
+    def _avatarFacingTask(self, task):
+        if hasattr(base, 'oobeMode') and base.oobeMode:
+            return task.cont
+
+        if self.avFacingScreen:
+            return task.cont
+
+        if self.isSubjectMoving():
+            camH = self.getH(render)
+            subjectH = self.subject.getH(render)
+            if abs(camH - subjectH) > 0.01:
+                self.subject.setH(render, camH)
+                self.setH(0)
+        return task.cont
+
+    def isSubjectMoving(self):
+       # if 'localAvatar' in __builtins__:
+        #    autoRun = localAvatar.getAutoRun()
+      #  else:
+         #   autoRun = False
+
+        return (inputState.isSet('forward') or inputState.isSet('reverse') or inputState.isSet('turnRight') or inputState.isSet('turnLeft') or inputState.isSet('slideRight') or inputState.isSet('slideLeft') ) and self.subject.controlManager.isEnabled
+
+    def _mouseUpdateTask(self, task):
+        if hasattr(base, 'oobeMode') and base.oobeMode:
+            return task.cont
+        subjectMoving = self.isSubjectMoving()
+        subjectTurning = (inputState.isSet('turnRight') or inputState.isSet('turnLeft')) and self.subject.controlManager.isEnabled
+        if subjectMoving:
+            hNode = self.subject
+        else:
+            hNode = self
+
+        if self.mouseDelta[0] or self.mouseDelta[1]:
+            dx, dy = self.mouseDelta
+            if subjectTurning:
+                dx = 0
+
+            if hasattr(base, 'options') and base.options.mouse_look:
+                dy = -dy
+
+            hNode.setH(hNode, -dx * self.SensitivityH)
+            curP = self.getP()
+            newP = curP + -dy * self.SensitivityP
+            newP = min(max(newP, self.MinP), self.MaxP)
+            self.setP(newP)
+            if self.baseH:
+                self._checkHBounds(hNode)
+
+            self.setR(render, 0)
+
+        return task.cont
+
+    def setHBounds(self, baseH, minH, maxH):
+        self.baseH = baseH
+        self.minH = minH
+        self.maxH = maxH
+        if self.isSubjectMoving():
+            hNode = self.subject
+        else:
+            hNode = self
+
+        hNode.setH(maxH)
+
+    def clearHBounds(self):
+        self.baseH = self.minH = self.maxH = None
+
+    def _checkHBounds(self, hNode):
+        currH = fitSrcAngle2Dest(hNode.getH(), 180)
+        if currH < self.minH:
+            hNode.setH(reduceAngle(self.minH))
+        elif currH > self.maxH:
+            hNode.setH(reduceAngle(self.maxH))
+
+    def _collisionCheckTask(self, task=None):
+       #From FPSCamera Potco
+        if hasattr(base, 'oobeMode') and base.oobeMode:
+            return Task.cont
+
+        self._cTrav.traverse(render)
+        try:
+            self._cHandlerQueue.sortEntries()
+        except AssertionError:
+            return Task.cont
+
+        cNormal = (0, -1, 0)
+        collEntry = None
+        for i in range(self._cHandlerQueue.getNumEntries()):
+            collEntry = self._cHandlerQueue.getEntry(i)
+            cNormal = collEntry.getSurfaceNormal(self)
+            if cNormal[1] < 0:
+                break
+
+        if not collEntry:
+            if self.forceMaxDistance:
+                camera.setPos(self.camOffset)
+                camera.setZ(0)
+
+            self.subject.getGeomNode().show()
+            return task.cont
+
+        cPoint = collEntry.getSurfacePoint(self)
+        offset = 0.9
+        camera.setPos(cPoint + cNormal * offset)
+        distance = camera.getDistance(self)
+        if distance < 1.8:
+            self.subject.getGeomNode().hide()
+        else:
+            self.subject.getGeomNode().show()
+
+        localAvatar.ccPusherTrav.traverse(render)
+        return Task.cont
+
+    def avFaceCamera(self):
+        if not self.mouseControl or self.avFacingScreen:
+            self.avFacingScreen = False
+            camH = self.getH(render)
+            subjectH = self.subject.getH(render)
+            if abs(camH - subjectH) > 0.01:
+                self.subject.setH(render, camH)
+                self.setH(0)
+
+    def getCamOffset(self):
+        return self.camOffset
+
+    def setCamOffset(self, camOffset):
+        self.camOffset = Vec3(camOffset)
+
+    def applyCamOffset(self):
+        if self.isActive():
+            camera.setPos(self.camOffset)

@@ -1151,6 +1151,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         Spawn a task to update the smart camera every frame
         """
         self.orbitalCamera.start()
+        return
         if self._smartCamEnabled:
             LocalAvatar.notify.warning(
                 'redundant call to startUpdateSmartCamera')
@@ -1222,6 +1223,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
     def stopUpdateSmartCamera(self):
         self.orbitalCamera.stop()
+        return
         if not self._smartCamEnabled:
             LocalAvatar.notify.warning(
                 'redundant call to stopUpdateSmartCamera')
@@ -1830,7 +1832,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         else:
             self.lastNeedH = None
 
-        action = self.setSpeed(speed, rotSpeed)
+        action = self.setSpeed(speed, rotSpeed, slideSpeed)
         if action != self.lastAction:
             self.lastAction = action
             if self.emoteTrack:

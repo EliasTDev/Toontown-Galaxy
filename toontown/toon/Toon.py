@@ -2061,7 +2061,7 @@ class Toon(Avatar.Avatar, ToonHead):
             ("run", 1.0),
             ("walk", -1.0)
             )
-        self.setSpeed(self.forwardSpeed, self.rotateSpeed)
+        self.setSpeed(self.forwardSpeed, self.rotateSpeed, self.slideSpeed)
         self.setActiveShadow(1)
 
     def exitHappy(self):
@@ -2104,7 +2104,7 @@ class Toon(Avatar.Avatar, ToonHead):
             ("catch-run", 1.0),
             ("catch-run", -1.0)
             )
-        self.setSpeed(self.forwardSpeed, self.rotateSpeed)
+        self.setSpeed(self.forwardSpeed, self.rotateSpeed, self.slideSpeed)
         self.setActiveShadow(1)
 
     def exitCatching(self):
@@ -2124,7 +2124,7 @@ class Toon(Avatar.Avatar, ToonHead):
             ("catch-eatnrun", 1.0),
             ("catch-eatnrun", -1.0)
             )
-        self.setSpeed(self.forwardSpeed, self.rotateSpeed)
+        self.setSpeed(self.forwardSpeed, self.rotateSpeed, self.slideSpeed)
         self.setActiveShadow(0)
 
     def exitCatchEating(self):
@@ -2877,7 +2877,7 @@ class Toon(Avatar.Avatar, ToonHead):
             ("run", 1.0),
             ("walk", -1.0)
             )
-        self.setSpeed(self.forwardSpeed, self.rotateSpeed)
+        self.setSpeed(self.forwardSpeed, self.rotateSpeed, self.slideSpeed)
 
         # Wake the toon up
         if (self.isLocal() and emoteIndex != Emote.globalEmote.EmoteSleepIndex):
@@ -3941,7 +3941,7 @@ class Toon(Avatar.Avatar, ToonHead):
             ("run", 1.0),
             ("run", -1.0)
             )
-        self.setSpeed(self.forwardSpeed, self.rotateSpeed)
+        self.setSpeed(self.forwardSpeed, self.rotateSpeed, self.slideSpeed)
         self.setActiveShadow(1)
 
     def exitCogThiefRunning(self):
