@@ -1145,13 +1145,14 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
     def setGeom(self, geom):
         # optimization 1
         self.__geom = geom
+    
+    def getGeom(self):
+        return self.__geom
 
     def startUpdateSmartCamera(self, push = 1):
         """
         Spawn a task to update the smart camera every frame
         """
-        self.orbitalCamera.start()
-        return
         if self._smartCamEnabled:
             LocalAvatar.notify.warning(
                 'redundant call to startUpdateSmartCamera')
@@ -1159,11 +1160,9 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
         # We use getKey() as a temporary workaround for problem with
         # inherited ==.
-        assert camera.getParent().getKey() == self.getKey(), \
-               "camera must be parented to localToon before calling " \
-               "startUpdateSmartCamera"
 
-        self._smartCamEnabled = True
+
+       # self._smartCamEnabled = True
 
         # this flag is needed in cases where the camera is created before
         # it's put into the world. When the world suddenly shows up, we
@@ -1189,6 +1188,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         # is NOT set by the time initializeSmartCamera() is called
         self.initCameraPositions()
         self.setCameraPositionByIndex(self.cameraIndex)
+        self.orbitalCamera.start()
+        return
         # slam the camera to its destination
         self.posCamera(0, 0.)
         # self.__instantaneousCamPos holds the current "instantaneous"
