@@ -30,6 +30,7 @@ from direct.controls.ObserverWalker import ObserverWalker
 from direct.controls.PhysicsWalker import PhysicsWalker
 from direct.controls.SwimWalker import SwimWalker
 from direct.controls.TwoDWalker import TwoDWalker
+from toontown.toon.OrbitalCamera import OrbitCamera
 class LocalAvatar(DistributedAvatar.DistributedAvatar,
                   DistributedSmoothNode.DistributedSmoothNode):
     """
@@ -161,6 +162,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         # call self.clickedNametag.
         self.setPickable(0)
         self.cameraLerp = None
+        self.orbitalCamera = OrbitCamera(self)
 
     def useSwimControls(self):
         self.controlManager.use("swim", self)
@@ -1148,6 +1150,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         """
         Spawn a task to update the smart camera every frame
         """
+        self.orbitalCamera.start()
         if self._smartCamEnabled:
             LocalAvatar.notify.warning(
                 'redundant call to startUpdateSmartCamera')
@@ -1218,6 +1221,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.enableSmartCameraViews()
 
     def stopUpdateSmartCamera(self):
+        self.orbitalCamera.stop()
         if not self._smartCamEnabled:
             LocalAvatar.notify.warning(
                 'redundant call to stopUpdateSmartCamera')

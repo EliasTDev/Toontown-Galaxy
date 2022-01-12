@@ -808,6 +808,7 @@ class Toon(Avatar.Avatar, ToonHead):
 
         self.forwardSpeed = 0.0
         self.rotateSpeed = 0.0
+        self.slideSpeed = 0.0
         self.newTask = None 
 
         # Set Avatar Type (Toon, Teen, or Pirate)
@@ -1927,12 +1928,13 @@ class Toon(Avatar.Avatar, ToonHead):
             self.jar = None
 
 
-    def setSpeed(self, forwardSpeed, rotateSpeed):
+    def setSpeed(self, forwardSpeed, rotateSpeed, slideSpeed):
         """setSpeed(self, float forwardSpeed, float rotateSpeed)
 
-        Sets the indicated forward velocity and rotational velocities
+        Sets the indicated forward velocity, strafe velocity,  and rotational velocities
         of the toon.  This is used when in the Happy and Sad states to
         determine which animation to play.
+        
 
         The return value is one of RUN_INDEX, WALK_INDEX, etc., or
         None if the animation does not specialize for the various
@@ -1940,7 +1942,7 @@ class Toon(Avatar.Avatar, ToonHead):
         """
         self.forwardSpeed = forwardSpeed
         self.rotateSpeed = rotateSpeed
-
+        self.slideSpeed = slideSpeed
         action = None
 
         if self.standWalkRunReverse != None:
@@ -1949,6 +1951,7 @@ class Toon(Avatar.Avatar, ToonHead):
             if (forwardSpeed >= ToontownGlobals.RunCutOff):
                 # Running
                 action = OTPGlobals.RUN_INDEX
+            #TODO implement strafing when wasd support is added
             elif (forwardSpeed > ToontownGlobals.WalkCutOff):
                 # Walking
                 action = OTPGlobals.WALK_INDEX

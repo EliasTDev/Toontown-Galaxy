@@ -15,7 +15,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
     notify = DirectNotifyGlobal.directNotify.newCategory('OrbitCamera')
 
     class ParamSet(ParamObj.ParamSet):
-        Params = {'lookAtOffset': Vec3(0, 0, 0),'escapement': 10.0,'rotation': 0.0,'fadeGeom': False,'idealDistance': 25.0,'minDistance': 3.0,'maxDistance': 40.0,'minEsc': -20.0,'maxEsc': 25.0,'minDomeEsc': 0.0,'maxCamtiltEsc': 0.0,'autoFaceForward': True,'autoFaceForwardMaxDur': 14.0}
+        Params = {'lookAtOffset': Vec3(0, 0, 0),'escapement': 10.0,'rotation': 0.0,'fadeGeom': False,'idealDistance': ToontownGlobals.DefaultCameraFov,'minDistance': 3.0,'maxDistance': 100.0,'minEsc': -20.0,'maxEsc': 25.0,'minDomeEsc': 0.0,'maxCamtiltEsc': 0.0,'autoFaceForward': True,'autoFaceForwardMaxDur': 14.0}
 
     UpdateTaskName = 'OrbitCamUpdateTask'
     CollisionCheckTaskName = 'OrbitCamCollisionTask'
@@ -363,14 +363,12 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
             self._zoomIval = None
         return
 
-    def _startCollisionCheck(self, shipBarrier=0):
+    def _startCollisionCheck(self):
         self._collSolid = CollisionSegment(0, 0, 0, 0, -(self._maxDistance + OrbitCamera.PullFwdDist), 0)
         collSolidNode = CollisionNode('OrbitCam.CollSolid')
         collSolidNode.addSolid(self._collSolid)
-        if shipBarrier:
-            collSolidNode.setFromCollideMask(PiratesGlobals.ShipCameraBarrierBitmask)
-        else:
-            collSolidNode.setFromCollideMask(OTPGlobals.CameraBitmask | OTPGlobals.CameraTransparentBitmask | OTPGlobals.FloorBitmask)
+
+        collSolidNode.setFromCollideMask(OTPGlobals.CameraBitmask | OTPGlobals.CameraTransparentBitmask | OTPGlobals.FloorBitmask)
         collSolidNode.setIntoCollideMask(BitMask32.allOff())
         self._collSolidNp = self.escapementNode.attachNewNode(collSolidNode)
         self._cHandlerQueue = CollisionHandlerQueue()

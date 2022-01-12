@@ -91,13 +91,19 @@ class CameraMode(FSM):
         self.mouseControl = True
         mouseData = base.win.getPointer(0)
         self.origMousePos = (mouseData.getX(), mouseData.getY())
-        if 'localAvatar' in __builtins__:
-            localAvatar.guiMgr._hideCursor()
+        self._hideCursor()
 
         base.win.movePointer(0, base.win.getXSize() / 2, base.win.getYSize() / 2)
         self.lastMousePos = (base.win.getXSize() / 2, base.win.getYSize() / 2)
         if self.getCurrentOrNextState() == 'Active':
             self._startMouseControlTasks()
+
+    def _hideCursor(self):
+        #From pirates guimanager
+        wp = WindowProperties()
+        wp.setCursorHidden(1)
+        base.win.requestProperties(wp)
+        base.graphicsEngine.openWindows()
 
     def disableMouseControl(self):
         if hasattr(base, 'oobeMode') and base.oobeMode:
@@ -106,10 +112,16 @@ class CameraMode(FSM):
         if self.mouseControl:
             self.mouseControl = False
             self._stopMouseControlTasks()
-            if 'localAvatar' in __builtins__:
-                localAvatar.guiMgr._showCursor()
+            self._showCursor()
 
             base.win.movePointer(0, int(self.origMousePos[0]), int(self.origMousePos[1]))
+
+    def _showCursor(self):
+        #From pirates guimanager
+        wp = WindowProperties()
+        wp.setCursorHidden(0)
+        base.win.requestProperties(wp)
+        base.graphicsEngine.openWindows()
 
     def _startMouseControlTasks(self):
         if self.mouseControl:
