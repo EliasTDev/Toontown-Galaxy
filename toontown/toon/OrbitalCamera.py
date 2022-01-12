@@ -16,7 +16,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
     notify = DirectNotifyGlobal.directNotify.newCategory('OrbitCamera')
 
     class ParamSet(ParamObj.ParamSet):
-        Params = {'lookAtOffset': Vec3(0, 0, 0),'escapement': 10.0,'rotation': 0.0,'fadeGeom': False,'idealDistance': ToontownGlobals.DefaultCameraFov,'minDistance': ToontownGlobals.DefaultCameraFov,'maxDistance': 72.0,'minEsc': -20.0,'maxEsc': 25.0,'minDomeEsc': 0.0,'maxCamtiltEsc': 0.0,'autoFaceForward': False,'autoFaceForwardMaxDur': 14.0, 
+        Params = {'lookAtOffset': Vec3(0, 0, 0),'escapement': 10.0,'rotation': 0.0,'fadeGeom': False,'idealDistance': ToontownGlobals.DefaultCameraFov,'minDistance': ToontownGlobals.DefaultCameraFov,'maxDistance': 72.0,'minEsc': -20.0,'maxEsc': 25.0,'minDomeEsc': 0.0,'maxCamtiltEsc': 0.0,'autoFaceForward': True,'autoFaceForwardMaxDur': 14.0, 
                   'camOffset': Vec3(0, -9, 0)}
 
     UpdateTaskName = 'OrbitCamUpdateTask'
@@ -247,9 +247,9 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         CameraMode.CameraMode.enterActive(self)
         self.reparentTo(render)
         self.clearTransform()
-        #self.setH(self.subject, self._rotation)
-        #self.setP(0)
-        #self.setR(0)
+        self.setH(self.subject, self._rotation)
+        self.setP(0)
+        self.setR(0)
         self.camParent.clearTransform()
         camera.reparentTo(self.camParent)
         camera.clearTransform()
@@ -376,7 +376,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
                     self._rotateToRearIval.start()
         self.lastSubjectH = curSubjectH
         self.setP(0)
-        #self.setR(0)
+        self.setR(0)
         camera.clearMat()
         return Task.cont
 
