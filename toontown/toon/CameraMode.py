@@ -61,11 +61,11 @@ class CameraMode(FSM):
         del self.cTravOnFloor
         del self.ccRay2
         del self.ccRay2Node
-        self.ccRay2NodePath.removeNode()
+        self.ccRay2NodePath.remove_node()
         del self.ccRay2NodePath
-        self.ccRay2MoveNodePath.removeNode()
+        self.ccRay2MoveNodePath.remove_node()
         del self.ccRay2MoveNodePath
-        self.camFloorRayNode.removeNode()
+        self.camFloorRayNode.remove_node()
         del self.camFloorRayNode
 
     def enableInput(self):

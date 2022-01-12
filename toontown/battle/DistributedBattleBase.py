@@ -1698,7 +1698,6 @@ class DistributedBattleBase(DistributedNode.DistributedNode, BattleBase):
         else:
             # Otherwise, reparent the camera back to the toon where it
             # belongs (most of the time).
-            camera.wrtReparentTo(base.localAvatar)
             messenger.send('localToonLeftBattle')
 
         base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov/(4/3))

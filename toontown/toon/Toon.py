@@ -1969,7 +1969,7 @@ class Toon(Avatar.Avatar, ToonHead):
             # change the motion state before we proceed
             self.motion.enter()
             self.motion.setState(anim, rate)
-
+            self.orbitalCamera.setGeomNodeH(0)
             if (anim != self.playingAnim):
                 self.playingAnim = anim
                 self.playingRate = rate

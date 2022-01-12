@@ -4,7 +4,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from otp.otpbase.PythonUtil import reduceAngle, fitSrcAngle2Dest
 from otp.otpbase.PythonUtil import clampScalar, getSetter, ScratchPad
-from otp.otpbase.PythonUtil import ParamObj
+from otp.otpbase.PythonUtil import ParamObj, lerp
 from direct.task import Task
 from otp.otpbase import OTPGlobals
 from toontown.toon import CameraMode
@@ -17,7 +17,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
 
     class ParamSet(ParamObj.ParamSet):
         Params = {'lookAtOffset': Vec3(0, 0, 0),'escapement': 10.0,'rotation': 0.0,'fadeGeom': False,'idealDistance': ToontownGlobals.DefaultCameraFov,'minDistance': ToontownGlobals.DefaultCameraFov,'maxDistance': 72.0,'minEsc': -20.0,'maxEsc': 25.0,'minDomeEsc': 0.0,'maxCamtiltEsc': 0.0,'autoFaceForward': True,'autoFaceForwardMaxDur': 14.0, 
-                  'camOffset': Vec3(0, -9, 0)}
+                  'camOffset': Vec3(0, -9, 5.5)}
 
     UpdateTaskName = 'OrbitCamUpdateTask'
     CollisionCheckTaskName = 'OrbitCamCollisionTask'
@@ -42,10 +42,8 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self.escapementNode = self.attachNewNode('orbitCamEscapement')
         self.camParent = self.escapementNode.attachNewNode('orbitCamParent')
         self._paramStack = []
-        if params is None:
-            self.setDefaultParams()
-        else:
-            params.applyTo(self)
+        self.setDefaultParams()
+
         self._isAtRear = True
         self._rotateToRearIval = None
         self._lockAtRear = False
@@ -274,12 +272,11 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self.acceptWheel()
         self.reparentTo(self.subject)
         self.setPos(0, 0, self.subject.getHeight())
-        camera.reparentTo(self)
+        base.camera.reparentTo(self)
         camera.setPosHpr(self.camOffset[0], self.camOffset[1], 0, 0, 0, 0)
         self._initMaxDistance()
-
-       # self._startUpdateTask()
         self._startCollisionCheck()
+        self.setCameraPos(-10, 0, 0)
 
         return
 
@@ -321,6 +318,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         t = (-15 - y) / -12
         z = lerp(inZ, inZ, t)
         self.setZ(z)
+
     def _resetWheel(self):
         if not self.isActive():
             return
@@ -334,18 +332,15 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
     def exitActive(self):
         taskMgr.remove(OrbitCamera.UpdateTaskName)
         self.ignoreAll()
-        self._stopZoomIval()
-        self._stopEscapementLerp()
         self._stopRotateToRearIval()
         self._stopCollisionCheck()
-        self._stopUpdateTask()
         self.lookAtNode.detachNode()
         self.detachNode()
         base.camNode.setLodCenter(NodePath())
         if base.wantEnviroDR:
             base.enviroCamNode.setLodCenter(NodePath())
         CameraMode.CameraMode.exitActive(self)
-        self.ignoreWheel()
+        
     def _startUpdateTask(self):
         self.lastSubjectH = self.subject.getH(render)
         taskMgr.add(self._updateTask, OrbitCamera.UpdateTaskName, priority=40)
@@ -445,7 +440,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
 
         collSolidNode.setFromCollideMask(OTPGlobals.CameraBitmask | OTPGlobals.CameraTransparentBitmask | OTPGlobals.FloorBitmask)
         collSolidNode.setIntoCollideMask(BitMask32.allOff())
-        self._collSolidNp = self.attachNewNode(collSolidNode)
+        self._collSolidNp  = self.attachNewNode(collSolidNode)
         self._cHandlerQueue = CollisionHandlerQueue()
         self._cTrav = CollisionTraverser('OrbitCam.cTrav')
         self._cTrav.addCollider(self._collSolidNp, self._cHandlerQueue)
@@ -454,45 +449,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self._fadeInIvals = {}
         taskMgr.add(self._collisionCheckTask, OrbitCamera.CollisionCheckTaskName, priority=45)
 
-    def _collisionCheckTask(self, task=None):
-        self._cTrav.traverse(render)
-        self.cTravOnFloor.traverse(render)
-        if self._fadeGeom:
-            nonObstrGeoms = dict(self._hiddenGeoms)
-            numEntries = self._cHandlerQueue.getNumEntries()
-            if numEntries > 0:
-                self._cHandlerQueue.sortEntries()
-                i = 0
-                while i < numEntries:
-                    collEntry = self._cHandlerQueue.getEntry(i)
-                    intoNode = collEntry.getIntoNodePath()
-                    cMask = intoNode.node().getIntoCollideMask()
-                    if not (cMask & OTPGlobals.CameraTransparentBitmask).isZero():
-                        if intoNode in nonObstrGeoms:
-                            del nonObstrGeoms[intoNode]
-                        self._fadeGeom(intoNode)
-                    else:
-                        cPoint = collEntry.getSurfacePoint(self.escapementNode)
-                        distance = Vec3(cPoint).length()
-                        self.setPracticalDistance(distance - OrbitCamera.PullFwdDist)
-                        break
-                    i += 1
 
-            else:
-                self.setPracticalDistance(None)
-            for np in nonObstrGeoms.keys():
-                self._unfadeGeom(np)
-
-        else:
-            if self._cHandlerQueue.getNumEntries() > 0:
-                self._cHandlerQueue.sortEntries()
-                collEntry = self._cHandlerQueue.getEntry(0)
-                cPoint = collEntry.getSurfacePoint(self.escapementNode)
-                distance = Vec3(cPoint).length()
-                self.setPracticalDistance(distance - OrbitCamera.PullFwdDist)
-            self.setPracticalDistance(None)
-        distance = self._getCurDistance()
-        return Task.cont
 
     def _stopCollisionCheck(self):
         while len(self._hiddenGeoms):
@@ -574,10 +531,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         if self.mouseDelta[0] or self.mouseDelta[1]:
             dx, dy = self.mouseDelta
             if subjectTurning:
-                dx = 0
-
-            if hasattr(base, 'options') and base.options.mouse_look:
-                dy = -dy
+                dx += dx
 
             hNode.setH(hNode, -dx * self.SensitivityH)
             curP = self.getP()
@@ -617,9 +571,8 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         if hasattr(base, 'oobeMode') and base.oobeMode:
             return Task.cont
         self.collisionTaskCountNum = (self.collisionTaskCountNum + 1) % 5 
-        if not self.collisionTaskCountNum:
-            yield Task.cont 
         self._cTrav.traverse(self.subject.getGeom())
+        self.subject.getGeomNode().show()
         if self._cHandlerQueue.getNumEntries() == 0:
             for i in range(self._cHandlerQueue.getNumEntries()):
                 if not self._cHandlerQueue.getEntry(i).hasSurfacePoint():
@@ -636,35 +589,28 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
 
         if collEntry is not None:
             if not collEntry and collEntry.hasSurfacePoint():
-                if self.forceMaxDistance:
-                    camera.setPos(self.camOffset)
-                    camera.setZ(0)
+                camera.setPos(self.camOffset)
+                camera.setZ(0)
 
             self.subject.getGeomNode().show()
             return task.cont
-        else:
-            return
 
-        cPoint = collEntry.getSurfacePoint()
-        offset = 0.9
-        camera.setPos(cPoint + cNormal * offset)
+        
+            
+        if collEntry is not None:
+            cPoint = collEntry.getSurfacePoint(self)
+            offset = 0.9
+            camera.setPos(cPoint + cNormal * offset)
         distance = camera.getDistance(self)
         if distance < 1.8:
             self.subject.getGeomNode().hide()
         else:
             self.subject.getGeomNode().show()
 
-        localAvatar.ccPusherTrav.traverse(render)
+        self.subject.ccPusherTrav.traverse(render)
         return Task.cont
 
-    def avFaceCamera(self):
-        if not self.mouseControl or self.avFacingScreen:
-            self.avFacingScreen = False
-            camH = self.getH(render)
-            subjectH = self.subject.getH(render)
-            if abs(camH - subjectH) > 0.01:
-                self.subject.setH(render, camH)
-                self.setH(0)
+
 
     def getCamOffset(self):
         return self.camOffset
@@ -675,3 +621,14 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
     def applyCamOffset(self):
         if self.isActive():
             camera.setPos(self.camOffset)
+
+    def setGeomNodeH(self, h):
+        self.subject.getGeomNode().setH(h)
+        
+    def setCameraPos(self, y, h, p, transition=True):
+        t = (-14 - y) / -12
+        z = lerp(self.subject.getHeight(), self.subject.getHeight(), t)
+        self._collSolid.setPointB(0, y + 1, 0)
+        self.camOffset.setY(y)
+        self.setPos(self.getX(), self.getY(), z)
+        self.setHpr(h, p, 0)
