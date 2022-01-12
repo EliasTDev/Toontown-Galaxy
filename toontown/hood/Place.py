@@ -333,7 +333,6 @@ class Place(StateData.StateData,
 
         # Start the smart camera, to put it in the right place, but be
         # prepared to stop it again in exitPush
-        base.localAvatar.attachCamera()
         base.localAvatar.startUpdateSmartCamera()
 
         # Specifically start posHpr broadcast since we aren't

@@ -1754,9 +1754,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.scaleNodePath.unstash()
         
         localAvatar.setPos(-3,0,0)        
-        camera.reparentTo( localAvatar)
-        camera.setPos( localAvatar.cameraPositions[0][0])
-        camera.setHpr( 0, 0, 0)
+        base.localAvatar.orbitalCamera.start()
 
         self.clearChat()
         self.witnessToon.clearChat()

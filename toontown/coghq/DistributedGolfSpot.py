@@ -343,9 +343,7 @@ class DistributedGolfSpot(DistributedObject.DistributedObject, FSM.FSM):
             #self.__deactivatePhysics()
             #self.tube.unstash()
             if not self.goingToReward:
-                camera.reparentTo(base.localAvatar)
-                camera.setPos(base.localAvatar.cameraPositions[0][0])
-                camera.setHpr(0, 0, 0)
+                base.localAvatar.orbitalCamera.start()
 
 
         #self.__straightenCable()
