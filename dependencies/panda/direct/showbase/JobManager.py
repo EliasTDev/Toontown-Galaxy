@@ -1,10 +1,9 @@
-from panda3d.core import ConfigVariableBool, ConfigVariableDouble
+from panda3d.core import ConfigVariableBool, ConfigVariableDouble, ClockObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.task.TaskManagerGlobal import taskMgr
 from direct.showbase.Job import Job
 from direct.showbase.PythonUtil import flywheel
 from direct.showbase.MessengerGlobal import messenger
-
 
 class JobManager:
     """

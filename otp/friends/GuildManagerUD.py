@@ -56,7 +56,7 @@ class GuildManagerUD(DistributedObjectGlobalUD):
         self.db = GuildDB(host=self.DBhost,
                           port=self.DBport,
                           user=self.DBuser,
-                          passwd=self.DBpasswd,
+                          password=self.DBpasswd,
                           dbname=self.DBname)
 
         self.asyncRequests = {}
