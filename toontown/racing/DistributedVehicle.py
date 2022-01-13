@@ -22,7 +22,7 @@ import random
 from direct.showbase.PythonUtil import randFloat
 from direct.task.Task import Task
 import math
-from libotp import *
+from panda3d.otp import *
 if __debug__:
     import pdb
 

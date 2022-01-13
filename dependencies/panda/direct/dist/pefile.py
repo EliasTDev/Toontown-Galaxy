@@ -10,7 +10,7 @@ from collections import namedtuple
 from array import array
 import time
 from io import BytesIO
-import sys 
+
 
 # Define some internally used structures.
 RVASize = namedtuple('RVASize', ('addr', 'size'))
@@ -242,10 +242,7 @@ class VersionInfoResource(object):
         length, value_length = unpack('<HH', data[0:4])
         offset = 40 + value_length + (value_length & 1)
         dwords = array('I')
-        if sys.version_info >= (3, 2):
-            dwords.frombytes(bytes(data[40:offset]))
-        else:
-            dwords.fromstring(bytes(data[40:offset]))
+        dwords.frombytes(bytes(data[40:offset]))
 
         if len(dwords) > 0:
             self.signature = dwords[0]
@@ -489,6 +486,8 @@ class ResourceTable(object):
             entry = DataResource()
             entry.data = data
             entry.code_page = code_page
+
+        return entry
 
 
 class PEFile(object):

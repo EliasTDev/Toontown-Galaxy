@@ -1,0 +1,2899 @@
+1641927158
+3 3
+12 libp3nametag 4 sHPB 11 panda3d.otp 
+170
+165 11 ChatBalloon 0 4 335 24 ChatBalloon::ChatBalloon 0 2 1 2 223
+////////////////////////////////////////////////////////////////////
+//     Function: ChatBalloon::Constructor
+//       Access: Published
+//  Description:
+////////////////////////////////////////////////////////////////////
+111
+ChatBalloon::ChatBalloon(PandaNode *root_node);
+inline ChatBalloon::ChatBalloon(ChatBalloon const &) = default;
+
+166 8 generate 0 4 335 21 ChatBalloon::generate 0 1 3 224
+//               If has_draw_order is true, the geometry will be
+//               assigned to the fixed bin with the indicated
+//               draw_order.
+////////////////////////////////////////////////////////////////////
+298
+PointerTo< PandaNode > ChatBalloon::generate(std::string const &text, TextFont *font, float wordwrap, LColorf const &text_color, LColorf const &balloon_color, bool for_3d, bool has_draw_order, int draw_order, NodePath const &page_button, bool space_for_button, bool reversed, NodePath &new_button);
+
+167 15 ~ClickablePopup 0 6 338 31 ClickablePopup::~ClickablePopup 0 0 231
+////////////////////////////////////////////////////////////////////
+//     Function: ClickablePopup::Destructor
+//       Access: Public, Virtual
+//  Description:
+////////////////////////////////////////////////////////////////////
+46
+virtual ClickablePopup::~ClickablePopup(void);
+
+168 14 get_class_type 0 4 338 30 ClickablePopup::get_class_type 0 1 5 0
+55
+static TypeHandle ClickablePopup::get_class_type(void);
+
+169 8 get_type 0 6 338 24 ClickablePopup::get_type 0 1 6 192
+// We define get_type() even though we don't inherit from
+// TypedObject.  We can't actually inherit from TypedObject because
+// of the whole multiple-inheritance thing in our derived classes.
+56
+virtual TypeHandle ClickablePopup::get_type(void) const;
+
+170 14 ClickablePopup 0 4 338 30 ClickablePopup::ClickablePopup 0 1 4 223
+////////////////////////////////////////////////////////////////////
+//     Function: ClickablePopup::Constructor
+//       Access: Public
+//  Description:
+////////////////////////////////////////////////////////////////////
+72
+inline ClickablePopup::ClickablePopup(ClickablePopup const &) = default;
+
+171 10 is_managed 0 4 339 23 MarginPopup::is_managed 0 1 8 403
+////////////////////////////////////////////////////////////////////
+//     Function: MarginPopup::is_managed
+//       Access: Published
+//  Description: Returns true if this popup is currently managed
+//               (that is, available to be made visible), or false if
+//               it is not managed (it will never be visible).
+////////////////////////////////////////////////////////////////////
+48
+inline bool MarginPopup::is_managed(void) const;
+
+172 10 is_visible 0 4 339 23 MarginPopup::is_visible 0 1 9 386
+////////////////////////////////////////////////////////////////////
+//     Function: MarginPopup::is_visible
+//       Access: Published
+//  Description: Returns true if this popup is currently visible
+//               or false if it is invisible (which may mean that it
+//               is managed, but not visible).
+////////////////////////////////////////////////////////////////////
+48
+inline bool MarginPopup::is_visible(void) const;
+
+173 14 get_class_type 0 4 339 27 MarginPopup::get_class_type 0 1 10 0
+52
+static TypeHandle MarginPopup::get_class_type(void);
+
+174 11 MarginPopup 0 4 339 24 MarginPopup::MarginPopup 0 1 7 220
+////////////////////////////////////////////////////////////////////
+//     Function: MarginPopup::Constructor
+//       Access: Public
+//  Description:
+////////////////////////////////////////////////////////////////////
+63
+inline MarginPopup::MarginPopup(MarginPopup const &) = default;
+
+175 13 MarginManager 0 4 341 28 MarginManager::MarginManager 0 2 11 12 225
+////////////////////////////////////////////////////////////////////
+//     Function: MarginManager::Constructor
+//       Access: Published
+//  Description:
+////////////////////////////////////////////////////////////////////
+105
+MarginManager::MarginManager(void);
+inline MarginManager::MarginManager(MarginManager const &) = default;
+
+176 13 add_grid_cell 0 4 341 28 MarginManager::add_grid_cell 0 1 13 252
+//               The return value is the index number associated with
+//               this cell, which may be passed to get_cell_available()
+//               or set_cell_available().
+////////////////////////////////////////////////////////////////////
+129
+int MarginManager::add_grid_cell(float x, float y, float screen_left, float screen_right, float screen_bottom, float screen_top);
+
+177 8 add_cell 0 4 341 23 MarginManager::add_cell 0 1 14 252
+//               The return value is the index number associated with
+//               this cell, which may be passed to get_cell_available()
+//               or set_cell_available().
+////////////////////////////////////////////////////////////////////
+78
+int MarginManager::add_cell(float left, float right, float bottom, float top);
+
+178 18 set_cell_available 0 4 341 33 MarginManager::set_cell_available 0 1 15 339
+////////////////////////////////////////////////////////////////////
+//     Function: MarginManager::set_cell_available
+//       Access: Published
+//  Description: Sets whether the indicated cell may be used to
+//               display popups.  See get_cell_available().
+////////////////////////////////////////////////////////////////////
+71
+void MarginManager::set_cell_available(int cell_index, bool available);
+
+179 18 get_cell_available 0 4 341 33 MarginManager::get_cell_available 0 1 16 457
+////////////////////////////////////////////////////////////////////
+//     Function: MarginManager::get_cell_available
+//       Access: Published
+//  Description: Returns true if the indicated cell number is
+//               currently available, false if not.  If the cell is
+//               available, it may be used to display popups; otherwise,
+//               it must remain empty.
+////////////////////////////////////////////////////////////////////
+61
+bool MarginManager::get_cell_available(int cell_index) const;
+
+180 10 show_cells 0 4 341 25 MarginManager::show_cells 0 1 17 307
+////////////////////////////////////////////////////////////////////
+//     Function: MarginManager::show_cells
+//       Access: Published
+//  Description: Draws a frame around each cell to make it visible,
+//               for debugging.
+////////////////////////////////////////////////////////////////////
+37
+void MarginManager::show_cells(void);
+
+181 10 hide_cells 0 4 341 25 MarginManager::hide_cells 0 1 18 302
+////////////////////////////////////////////////////////////////////
+//     Function: MarginManager::hide_cells
+//       Access: Published
+//  Description: Removes the frames drawn in a previous call to
+//               show_cells().
+////////////////////////////////////////////////////////////////////
+37
+void MarginManager::hide_cells(void);
+
+182 14 get_class_type 0 4 341 29 MarginManager::get_class_type 0 1 19 0
+54
+static TypeHandle MarginManager::get_class_type(void);
+
+183 12 set_contents 0 4 342 21 Nametag::set_contents 0 1 20 325
+//               This mask is defined both for NametagGroup as well as
+//               for the individual Nametags within the group; the
+//               actual mask in effect for a particular Nametag is the
+//               intersection of the two masks.
+////////////////////////////////////////////////////////////////////
+45
+inline void Nametag::set_contents(int flags);
+
+184 12 get_contents 0 4 342 21 Nametag::get_contents 0 1 21 357
+////////////////////////////////////////////////////////////////////
+//     Function: Nametag::get_contents
+//       Access: Published
+//  Description: Returns the bitmask that indicates the set of
+//               contents the Nametag may represent.  See
+//               set_contents().
+////////////////////////////////////////////////////////////////////
+45
+inline int Nametag::get_contents(void) const;
+
+185 10 set_active 0 4 342 19 Nametag::set_active 0 1 22 496
+////////////////////////////////////////////////////////////////////
+//     Function: Nametag::set_active
+//       Access: Published
+//  Description: Changes the active flag.  When the Nametag is active,
+//               it can be clicked on; when it is not active, it
+//               cannot be clicked on.  The active flag may be set
+//               either on the individual Nametag, or on the entire
+//               group.
+////////////////////////////////////////////////////////////////////
+45
+inline void Nametag::set_active(bool active);
+
+186 9 is_active 0 4 342 18 Nametag::is_active 0 1 23 217
+////////////////////////////////////////////////////////////////////
+//     Function: Nametag::is_active
+//       Access: Published
+//  Description:
+////////////////////////////////////////////////////////////////////
+43
+inline bool Nametag::is_active(void) const;
+
+187 17 display_as_active 0 4 342 26 Nametag::display_as_active 0 1 24 574
+////////////////////////////////////////////////////////////////////
+//     Function: Nametag::display_as_active
+//       Access: Published
+//  Description: Returns true if the nametag is effectively active,
+//               false otherwise.  This includes all the things that
+//               affect nametags, including whether it has been
+//               explicitly set inactive, whether global nametags have
+//               been set inactive, and whether the group has a page
+//               button.
+////////////////////////////////////////////////////////////////////
+44
+bool Nametag::display_as_active(void) const;
+
+188 9 has_group 0 4 342 18 Nametag::has_group 0 1 25 388
+////////////////////////////////////////////////////////////////////
+//     Function: Nametag::has_group
+//       Access: Published
+//  Description: Returns true if the Nametag is associated with a
+//               NametagGroup, false otherwise.  A Nametag must be
+//               associated with a group to be useful.
+////////////////////////////////////////////////////////////////////
+43
+inline bool Nametag::has_group(void) const;
+
+189 9 get_group 0 4 342 18 Nametag::get_group 0 1 26 361
+////////////////////////////////////////////////////////////////////
+//     Function: Nametag::get_group
+//       Access: Published
+//  Description: Returns the NametagGroup that the Nametag is
+//               associated with, or NULL if it is not associated with
+//               any group.
+////////////////////////////////////////////////////////////////////
+52
+inline NametagGroup *Nametag::get_group(void) const;
+
+190 14 set_draw_order 0 4 342 23 Nametag::set_draw_order 0 1 27 466
+////////////////////////////////////////////////////////////////////
+//     Function: Nametag::set_draw_order
+//       Access: Published
+//  Description: Causes the Nametag to be rendered in the fixed bin
+//               with the indicated sort order.  This is only relevant
+//               if the Nametag will be parented in a scene graph
+//               where the cull traversal is in effect.
+////////////////////////////////////////////////////////////////////
+52
+inline void Nametag::set_draw_order(int draw_order);
+
+191 16 clear_draw_order 0 4 342 25 Nametag::clear_draw_order 0 1 28 308
+////////////////////////////////////////////////////////////////////
+//     Function: Nametag::clear_draw_order
+//       Access: Published
+//  Description: Removes the sort order previously specified with
+//               set_draw_order().
+////////////////////////////////////////////////////////////////////
+44
+inline void Nametag::clear_draw_order(void);
+
+192 17 set_chat_wordwrap 0 4 342 26 Nametag::set_chat_wordwrap 0 1 29 671
+////////////////////////////////////////////////////////////////////
+//     Function: Nametag::set_chat_wordwrap
+//       Access: Published
+//  Description: Specifies the width at which the Nametag will
+//               wordwrap the text in its chat balloons.  For
+//               Nametag2d type nametags, this will indirectly affect
+//               the scale of the text, since the text will be scaled
+//               so that this width fills the cell it is assigned to.
+//               For in-the-world type nametags, this only affects how
+//               wide the chat balloon is allowed to be.
+////////////////////////////////////////////////////////////////////
+55
+inline void Nametag::set_chat_wordwrap(float wordwrap);
+
+193 17 get_chat_wordwrap 0 4 342 26 Nametag::get_chat_wordwrap 0 1 30 326
+////////////////////////////////////////////////////////////////////
+//     Function: Nametag::get_chat_wordwrap
+//       Access: Published
+//  Description: Returns the width at which the Nametag will
+//               wordwrap the text in its chat balloons.
+////////////////////////////////////////////////////////////////////
+52
+inline float Nametag::get_chat_wordwrap(void) const;
+
+194 10 set_avatar 0 4 342 19 Nametag::set_avatar 0 1 31 182
+//               This should be some node in the 3-d scene graph,
+//               never a node in the 2-d graph.
+////////////////////////////////////////////////////////////////////
+54
+inline void Nametag::set_avatar(NodePath const &node);
+
+195 12 clear_avatar 0 4 342 21 Nametag::clear_avatar 0 1 32 381
+////////////////////////////////////////////////////////////////////
+//     Function: Nametag::clear_avatar
+//       Access: Published
+//  Description: Removes the node previously specified with
+//               set_avatar(), and allows the node specified by
+//               NametagGroup::set_avatar() to apply.
+////////////////////////////////////////////////////////////////////
+40
+inline void Nametag::clear_avatar(void);
+
+196 10 get_avatar 0 4 342 19 Nametag::get_avatar 0 1 33 492
+////////////////////////////////////////////////////////////////////
+//     Function: Nametag::get_avatar
+//       Access: Published
+//  Description: Returns the node that represents the Avatar for this
+//               Nametag.  This is either the node set by
+//               set_avatar() on this nametag, or if no node was
+//               set, the one specified by set_avatar() on this
+//               nametag's group.
+////////////////////////////////////////////////////////////////////
+48
+NodePath const &Nametag::get_avatar(void) const;
+
+197 14 get_class_type 0 4 342 23 Nametag::get_class_type 0 1 34 0
+48
+static TypeHandle Nametag::get_class_type(void);
+
+198 17 upcast_to_Nametag 0 12 344 28 Nametag2d::upcast_to_Nametag 0 1 36 32
+upcast from Nametag2d to Nametag
+44
+Nametag *Nametag2d::upcast_to_Nametag(void);
+
+199 21 downcast_to_Nametag2d 0 12 342 30 Nametag::downcast_to_Nametag2d 0 0 34
+downcast from Nametag to Nametag2d
+48
+Nametag2d *Nametag::downcast_to_Nametag2d(void);
+
+200 21 upcast_to_MarginPopup 0 12 344 32 Nametag2d::upcast_to_MarginPopup 0 1 37 36
+upcast from Nametag2d to MarginPopup
+52
+MarginPopup *Nametag2d::upcast_to_MarginPopup(void);
+
+201 21 downcast_to_Nametag2d 0 12 339 34 MarginPopup::downcast_to_Nametag2d 0 0 38
+downcast from MarginPopup to Nametag2d
+52
+Nametag2d *MarginPopup::downcast_to_Nametag2d(void);
+
+202 10 ~Nametag2d 0 6 344 21 Nametag2d::~Nametag2d 0 0 226
+////////////////////////////////////////////////////////////////////
+//     Function: Nametag2d::Destructor
+//       Access: Public, Virtual
+//  Description:
+////////////////////////////////////////////////////////////////////
+36
+virtual Nametag2d::~Nametag2d(void);
+
+203 14 get_class_type 0 4 344 25 Nametag2d::get_class_type 0 1 35 0
+50
+static TypeHandle Nametag2d::get_class_type(void);
+
+204 17 upcast_to_Nametag 0 12 345 28 Nametag3d::upcast_to_Nametag 0 1 41 32
+upcast from Nametag3d to Nametag
+44
+Nametag *Nametag3d::upcast_to_Nametag(void);
+
+205 21 downcast_to_Nametag3d 0 12 342 30 Nametag::downcast_to_Nametag3d 0 0 34
+downcast from Nametag to Nametag3d
+48
+Nametag3d *Nametag::downcast_to_Nametag3d(void);
+
+206 19 upcast_to_PandaNode 0 12 345 30 Nametag3d::upcast_to_PandaNode 0 1 42 34
+upcast from Nametag3d to PandaNode
+48
+PandaNode *Nametag3d::upcast_to_PandaNode(void);
+
+207 21 downcast_to_Nametag3d 0 12 340 32 PandaNode::downcast_to_Nametag3d 0 0 36
+downcast from PandaNode to Nametag3d
+50
+Nametag3d *PandaNode::downcast_to_Nametag3d(void);
+
+208 10 ~Nametag3d 0 6 345 21 Nametag3d::~Nametag3d 0 0 226
+////////////////////////////////////////////////////////////////////
+//     Function: Nametag3d::Destructor
+//       Access: Public, Virtual
+//  Description:
+////////////////////////////////////////////////////////////////////
+36
+virtual Nametag3d::~Nametag3d(void);
+
+209 20 set_billboard_offset 0 4 345 31 Nametag3d::set_billboard_offset 0 1 38 185
+//               The default value is set in NametagGlobals, but this
+//               may be overridden at runtime.
+////////////////////////////////////////////////////////////////////
+68
+inline void Nametag3d::set_billboard_offset(float billboard_offset);
+
+210 20 get_billboard_offset 0 4 345 31 Nametag3d::get_billboard_offset 0 1 39 389
+////////////////////////////////////////////////////////////////////
+//     Function: Nametag3d::get_billboard_offset
+//       Access: Published
+//  Description: Returns the offset distance by which the Nametag is
+//               slid towards the camera after billboarding.  See
+//               set_billboard_offset().
+////////////////////////////////////////////////////////////////////
+57
+inline float Nametag3d::get_billboard_offset(void) const;
+
+211 14 get_class_type 0 4 345 25 Nametag3d::get_class_type 0 1 40 0
+50
+static TypeHandle Nametag3d::get_class_type(void);
+
+212 14 NametagFloat2d 0 4 346 30 NametagFloat2d::NametagFloat2d 0 1 43 226
+////////////////////////////////////////////////////////////////////
+//     Function: NametagFloat2d::Constructor
+//       Access: Published
+//  Description:
+////////////////////////////////////////////////////////////////////
+37
+NametagFloat2d::NametagFloat2d(void);
+
+213 14 get_class_type 0 4 346 30 NametagFloat2d::get_class_type 0 1 44 0
+55
+static TypeHandle NametagFloat2d::get_class_type(void);
+
+214 14 NametagFloat3d 0 4 347 30 NametagFloat3d::NametagFloat3d 0 1 45 226
+////////////////////////////////////////////////////////////////////
+//     Function: NametagFloat3d::Constructor
+//       Access: Published
+//  Description:
+////////////////////////////////////////////////////////////////////
+37
+NametagFloat3d::NametagFloat3d(void);
+
+215 14 get_class_type 0 4 347 30 NametagFloat3d::get_class_type 0 1 46 0
+55
+static TypeHandle NametagFloat3d::get_class_type(void);
+
+216 12 NametagGroup 0 4 348 26 NametagGroup::NametagGroup 0 2 47 48 224
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::Constructor
+//       Access: Published
+//  Description:
+////////////////////////////////////////////////////////////////////
+100
+NametagGroup::NametagGroup(void);
+inline NametagGroup::NametagGroup(NametagGroup const &) = default;
+
+217 13 ~NametagGroup 0 4 348 27 NametagGroup::~NametagGroup 0 0 223
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::Destructor
+//       Access: Published
+//  Description:
+////////////////////////////////////////////////////////////////////
+34
+NametagGroup::~NametagGroup(void);
+
+218 13 get_nametag2d 0 4 348 27 NametagGroup::get_nametag2d 0 1 49 441
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_nametag2d
+//       Access: Published
+//  Description: Returns the default Nametag2d object associated with
+//               the group.  This is the Nametag that is displayed
+//               along the edge of the screen when the avatar is not
+//               visible.
+////////////////////////////////////////////////////////////////////
+52
+inline Nametag2d *NametagGroup::get_nametag2d(void);
+
+219 13 get_nametag3d 0 4 348 27 NametagGroup::get_nametag3d 0 1 50 394
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_nametag3d
+//       Access: Published
+//  Description: Returns the default Nametag3d object associated with
+//               the group.  This is the Nametag that floats over the
+//               avatar's head in the world.
+////////////////////////////////////////////////////////////////////
+52
+inline Nametag3d *NametagGroup::get_nametag3d(void);
+
+220 11 add_nametag 0 4 348 25 NametagGroup::add_nametag 0 1 51 345
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::add_nametag
+//       Access: Published
+//  Description: Adds the indicated Nametag to the group.  The Nametag
+//               must not already be a member of any NametagGroup.
+////////////////////////////////////////////////////////////////////
+45
+void NametagGroup::add_nametag(Nametag *tag);
+
+221 14 remove_nametag 0 4 348 28 NametagGroup::remove_nametag 0 1 52 501
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::remove_nametag
+//       Access: Published
+//  Description: Removes the indicated Nametag to the group.  The
+//               Nametag must have previously been added to the
+//               NametagGroup.  It is an error to attempt to remove
+//               either of the two default nametags created with the
+//               group.
+////////////////////////////////////////////////////////////////////
+48
+void NametagGroup::remove_nametag(Nametag *tag);
+
+222 18 clear_aux_nametags 0 4 348 32 NametagGroup::clear_aux_nametags 0 1 53 384
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::clear_aux_nametags
+//       Access: Published
+//  Description: Removes any Nametags from the group except the
+//               default Nametag2d and Nametag3d that are created with
+//               the group itself.
+////////////////////////////////////////////////////////////////////
+44
+void NametagGroup::clear_aux_nametags(void);
+
+223 16 get_num_nametags 0 4 348 30 NametagGroup::get_num_nametags 0 1 54 379
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_num_nametags
+//       Access: Published
+//  Description: Returns the number of Nametags in to the group.
+//               Originally, this is 2, but there may be more added by
+//               user control.
+////////////////////////////////////////////////////////////////////
+47
+int NametagGroup::get_num_nametags(void) const;
+
+224 11 get_nametag 0 4 348 25 NametagGroup::get_nametag 0 1 55 262
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_nametag
+//       Access: Published
+//  Description: Returns the nth Nametag in the group.
+////////////////////////////////////////////////////////////////////
+48
+Nametag *NametagGroup::get_nametag(int n) const;
+
+225 8 set_font 0 4 348 22 NametagGroup::set_font 0 1 56 296
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_font
+//       Access: Published
+//  Description: Simultaneously sets both the name font and the chat
+//               font.
+////////////////////////////////////////////////////////////////////
+51
+inline void NametagGroup::set_font(TextFont *font);
+
+226 13 set_name_font 0 4 348 27 NametagGroup::set_name_font 0 1 57 317
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_name_font
+//       Access: Published
+//  Description: Redefines the TextFont used by this group to
+//               generate text for the names.
+////////////////////////////////////////////////////////////////////
+56
+inline void NametagGroup::set_name_font(TextFont *font);
+
+227 13 get_name_font 0 4 348 27 NametagGroup::get_name_font 0 1 58 315
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_name_font
+//       Access: Published
+//  Description: Returns the TextFont used by this group to
+//               generate text for the names.
+////////////////////////////////////////////////////////////////////
+57
+inline TextFont *NametagGroup::get_name_font(void) const;
+
+228 13 set_chat_font 0 4 348 27 NametagGroup::set_chat_font 0 1 59 325
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_chat_font
+//       Access: Published
+//  Description: Redefines the TextFont used by this group to
+//               generate text for the chat messages.
+////////////////////////////////////////////////////////////////////
+56
+inline void NametagGroup::set_chat_font(TextFont *font);
+
+229 13 get_chat_font 0 4 348 27 NametagGroup::get_chat_font 0 1 60 323
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_chat_font
+//       Access: Published
+//  Description: Returns the TextFont used by this group to
+//               generate text for the chat messages.
+////////////////////////////////////////////////////////////////////
+57
+inline TextFont *NametagGroup::get_chat_font(void) const;
+
+230 10 set_avatar 0 4 348 24 NametagGroup::set_avatar 0 1 61 246
+//               It is the responsibility of the user to ensure that
+//               the avatar node does not destruct during the lifetime
+//               of the NametagGroup.
+////////////////////////////////////////////////////////////////////
+59
+inline void NametagGroup::set_avatar(NodePath const &node);
+
+231 10 get_avatar 0 4 348 24 NametagGroup::get_avatar 0 1 62 336
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_avatar
+//       Access: Published
+//  Description: Returns the node that indicates the avatar that
+//               corresponds to this Nametag.  See set_avatar().
+////////////////////////////////////////////////////////////////////
+60
+inline NodePath const &NametagGroup::get_avatar(void) const;
+
+232 13 get_name_icon 0 4 348 27 NametagGroup::get_name_icon 0 1 63 389
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_name_icon
+//       Access: Published
+//  Description: Returns a NodePath to which geometry may be parented
+//               to draw stuff behind the name (but in front of the
+//               name's background card).
+////////////////////////////////////////////////////////////////////
+51
+inline NodePath &NametagGroup::get_name_icon(void);
+
+233 17 set_name_wordwrap 0 4 348 31 NametagGroup::set_name_wordwrap 0 1 64 129
+//               Set this to -1 to use the default wordwrap.
+////////////////////////////////////////////////////////////////////
+58
+void NametagGroup::set_name_wordwrap(float name_wordwrap);
+
+234 17 get_name_wordwrap 0 4 348 31 NametagGroup::get_name_wordwrap 0 1 65 374
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_name_wordwrap
+//       Access: Published
+//  Description: Returns either the value set by set_name_wordwrap(),
+//               or the default wordwrap value for nametags of this
+//               type.
+////////////////////////////////////////////////////////////////////
+50
+float NametagGroup::get_name_wordwrap(void) const;
+
+235 14 set_color_code 0 4 348 28 NametagGroup::set_color_code 0 1 66 439
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_color_code
+//       Access: Published
+//  Description: Sets the color code of this particular avatar.  This
+//               indicates which of a family of colors the nametag
+//               should be drawn in, according to the avatar's
+//               properties.
+////////////////////////////////////////////////////////////////////
+64
+void NametagGroup::set_color_code(NametagGroup::ColorCode code);
+
+236 14 get_color_code 0 4 348 28 NametagGroup::get_color_code 0 1 67 322
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_color_code
+//       Access: Published
+//  Description: Returns the color code set for this particular
+//               avatar.  See set_color_code().
+////////////////////////////////////////////////////////////////////
+72
+inline NametagGroup::ColorCode NametagGroup::get_color_code(void) const;
+
+237 12 set_qt_color 0 4 348 26 NametagGroup::set_qt_color 0 1 68 323
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_qt_color
+//       Access: Published
+//  Description: Sets the background color for quicktalker (SpeedChat)
+//               messages from this avatar.
+////////////////////////////////////////////////////////////////////
+61
+inline void NametagGroup::set_qt_color(LColorf const &color);
+
+238 12 get_qt_color 0 4 348 26 NametagGroup::get_qt_color 0 1 69 330
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_qt_color
+//       Access: Published
+//  Description: Returns the background color set for quicktalker
+//               (SpeedChat) messages from this avatar.
+////////////////////////////////////////////////////////////////////
+61
+inline LColorf const &NametagGroup::get_qt_color(void) const;
+
+239 28 get_balloon_modulation_color 0 4 348 42 NametagGroup::get_balloon_modulation_color 0 1 70 279
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_balloon_modulation_color
+//       Access: Published
+//  Description: Returns the balloon modulation color.
+////////////////////////////////////////////////////////////////////
+77
+inline LColorf const &NametagGroup::get_balloon_modulation_color(void) const;
+
+240 10 set_shadow 0 4 348 24 NametagGroup::set_shadow 0 1 71 395
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_shadow
+//       Access: Published
+//  Description: Specifies that the name should be drawn with a
+//               shadow, by creating a second copy of the name and
+//               offsetting it slightly behind the first.
+////////////////////////////////////////////////////////////////////
+67
+inline void NametagGroup::set_shadow(float xoffset, float yoffset);
+
+241 12 clear_shadow 0 4 348 26 NametagGroup::clear_shadow 0 1 72 301
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::clear_shadow
+//       Access: Published
+//  Description: Specifies that a shadow will not be drawn behind the
+//               name.
+////////////////////////////////////////////////////////////////////
+45
+inline void NametagGroup::clear_shadow(void);
+
+242 10 has_shadow 0 4 348 24 NametagGroup::has_shadow 0 1 73 223
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::has_shadow
+//       Access: Published
+//  Description:
+////////////////////////////////////////////////////////////////////
+49
+inline bool NametagGroup::has_shadow(void) const;
+
+243 10 get_shadow 0 4 348 24 NametagGroup::get_shadow 0 1 74 369
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_shadow
+//       Access: Published
+//  Description: Returns the offset of the shadow as set by
+//               set_shadow().  It is an error to call this if
+//               has_shadow() is false.
+////////////////////////////////////////////////////////////////////
+55
+inline LVecBase2f NametagGroup::get_shadow(void) const;
+
+244 8 set_name 0 4 348 22 NametagGroup::set_name 0 1 75 191
+//               See also set_display_name(), which sets only the name
+//               that is displayed on the Nametags.
+////////////////////////////////////////////////////////////////////
+60
+inline void NametagGroup::set_name(std::string const &name);
+
+245 8 get_name 0 4 348 22 NametagGroup::get_name 0 1 76 266
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_name
+//       Access: Published
+//  Description: Returns the name that was set on this group.
+////////////////////////////////////////////////////////////////////
+61
+inline std::string const &NametagGroup::get_name(void) const;
+
+246 16 set_display_name 0 4 348 30 NametagGroup::set_display_name 0 1 77 445
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_display_name
+//       Access: Published
+//  Description: Changes the name displayed by all the nametags in
+//               this group.  This does not change the name that is
+//               printed within the Nametag2d's for this avatar; see
+//               set_name().
+////////////////////////////////////////////////////////////////////
+61
+void NametagGroup::set_display_name(std::string const &name);
+
+247 16 get_display_name 0 4 348 30 NametagGroup::get_display_name 0 1 78 282
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_display_name
+//       Access: Published
+//  Description: Returns the display_name that was set on this group.
+////////////////////////////////////////////////////////////////////
+69
+inline std::string const &NametagGroup::get_display_name(void) const;
+
+248 8 set_chat 0 4 348 22 NametagGroup::set_chat 0 1 79 308
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_chat
+//       Access: Published
+//  Description: Changes the chat message displayed by all the
+//               nametags in this group.
+////////////////////////////////////////////////////////////////////
+90
+void NametagGroup::set_chat(std::string const &chat, int chat_flags, int page_number = 0);
+
+249 10 clear_chat 0 4 348 24 NametagGroup::clear_chat 0 1 80 273
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::clear_chat
+//       Access: Published
+//  Description: Removes the current chat message from this group.
+////////////////////////////////////////////////////////////////////
+43
+inline void NametagGroup::clear_chat(void);
+
+250 8 get_chat 0 4 348 22 NametagGroup::get_chat 0 2 81 82 532
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_chat
+//       Access: Published
+//  Description: Returns the current page of the chat message.
+////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_chat
+//       Access: Published
+//  Description: Returns the nth page of the chat message.
+////////////////////////////////////////////////////////////////////
+127
+inline std::string NametagGroup::get_chat(void) const;
+inline std::string const &NametagGroup::get_chat(int page_number) const;
+
+251 14 get_stomp_text 0 4 348 28 NametagGroup::get_stomp_text 0 1 83 273
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_stomp_text
+//       Access: Published
+//  Description: Returns the current page of the chat message.
+////////////////////////////////////////////////////////////////////
+60
+inline std::string NametagGroup::get_stomp_text(void) const;
+
+252 14 get_chat_flags 0 4 348 28 NametagGroup::get_chat_flags 0 1 84 279
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_chat_flags
+//       Access: Published
+//  Description: Returns the chat flags that were set on this group.
+////////////////////////////////////////////////////////////////////
+52
+inline int NametagGroup::get_chat_flags(void) const;
+
+253 15 set_page_number 0 4 348 29 NametagGroup::set_page_number 0 1 85 307
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_page_number
+//       Access: Published
+//  Description: Sets the page that is displayed for multi-page chat
+//               messages.
+////////////////////////////////////////////////////////////////////
+52
+void NametagGroup::set_page_number(int page_number);
+
+254 15 get_page_number 0 4 348 29 NametagGroup::get_page_number 0 1 86 301
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_page_number
+//       Access: Published
+//  Description: Returns the current page number on multi-page
+//               messages.
+////////////////////////////////////////////////////////////////////
+53
+inline int NametagGroup::get_page_number(void) const;
+
+255 18 get_num_chat_pages 0 4 348 32 NametagGroup::get_num_chat_pages 0 1 87 315
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_num_chat_pages
+//       Access: Published
+//  Description: Returns the number of pages available in the current
+//               chat message.
+////////////////////////////////////////////////////////////////////
+56
+inline int NametagGroup::get_num_chat_pages(void) const;
+
+256 14 get_chat_stomp 0 4 348 28 NametagGroup::get_chat_stomp 0 1 88 311
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_chat_stomp
+//       Access: Published
+//  Description: Returns the number of pages available in the current
+//               chat message.
+////////////////////////////////////////////////////////////////////
+52
+inline int NametagGroup::get_chat_stomp(void) const;
+
+257 15 get_stomp_delay 0 4 348 29 NametagGroup::get_stomp_delay 0 1 89 312
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_stomp_delay
+//       Access: Published
+//  Description: Returns the number of pages available in the current
+//               chat message.
+////////////////////////////////////////////////////////////////////
+55
+inline float NametagGroup::get_stomp_delay(void) const;
+
+258 13 set_unique_id 0 4 348 27 NametagGroup::set_unique_id 0 1 90 503
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_unique_id
+//       Access: Published
+//  Description: Changes the event which will be thrown in response to
+//               the user's clicking on any of the nametags in this
+//               group.  This is arbitrarily defined to a unique
+//               string by default, but it may be redefined by the
+//               user.
+////////////////////////////////////////////////////////////////////
+66
+inline void NametagGroup::set_unique_id(std::string const &event);
+
+259 13 get_unique_id 0 4 348 27 NametagGroup::get_unique_id 0 1 91 503
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_unique_id
+//       Access: Published
+//  Description: Returns the event which will be thrown in response to
+//               the user's clicking on any of the nametags in this
+//               group.  This is arbitrarily defined to a unique
+//               string by default, but it may be redefined by the
+//               user.
+////////////////////////////////////////////////////////////////////
+66
+inline std::string const &NametagGroup::get_unique_id(void) const;
+
+260 15 set_object_code 0 4 348 29 NametagGroup::set_object_code 0 1 92 655
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_object_code
+//       Access: Published
+//  Description: Associates a code number with the nametags in this
+//               group.  If the code number is nonzero, and any two
+//               nametags with the same code would be onscreen
+//               simultaneously, only the nearest one is displayed.
+//               This is intended to prevent redundant display of
+//               multiple nametags for the same object (e.g. a
+//               building with multiple doors).
+////////////////////////////////////////////////////////////////////
+52
+inline void NametagGroup::set_object_code(int code);
+
+261 15 get_object_code 0 4 348 29 NametagGroup::get_object_code 0 1 93 337
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_object_code
+//       Access: Published
+//  Description: Returns the code number associated with the nametags
+//               in this group.  See set_object_code().
+////////////////////////////////////////////////////////////////////
+53
+inline int NametagGroup::get_object_code(void) const;
+
+262 5 click 0 4 348 19 NametagGroup::click 0 1 94 247
+//               This throws the unique ID of this group as an event.
+//               This ID can be queried or changed via get_unique_id()
+//               and set_unique_id().
+////////////////////////////////////////////////////////////////////
+31
+void NametagGroup::click(void);
+
+263 6 manage 0 4 348 20 NametagGroup::manage 0 1 95 185
+//               This should be called whenever an avatar with a
+//               Nametag is brought into the world.
+////////////////////////////////////////////////////////////////////
+50
+void NametagGroup::manage(MarginManager *manager);
+
+264 8 unmanage 0 4 348 22 NametagGroup::unmanage 0 1 96 450
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::unmanage
+//       Access: Published
+//  Description: Deactivates the Nametags in the group and ensures
+//               their MouseWatcherRegions are removed, etc.  This
+//               should be called whenever an avatar with a Nametag is
+//               removed from the world.
+////////////////////////////////////////////////////////////////////
+52
+void NametagGroup::unmanage(MarginManager *manager);
+
+265 10 is_managed 0 4 348 24 NametagGroup::is_managed 0 1 97 469
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::is_managed
+//       Access: Published
+//  Description: Returns the managed flag.  This flag indicates that
+//               the Nametags associated with this group are attached
+//               to an active avatar in the world, and they should be
+//               given live MouseWatcherRegions, etc.
+////////////////////////////////////////////////////////////////////
+49
+inline bool NametagGroup::is_managed(void) const;
+
+266 12 set_contents 0 4 348 26 NametagGroup::set_contents 0 1 98 325
+//               This mask is defined both for NametagGroup as well as
+//               for the individual Nametags within the group; the
+//               actual mask in effect for a particular Nametag is the
+//               intersection of the two masks.
+////////////////////////////////////////////////////////////////////
+50
+inline void NametagGroup::set_contents(int flags);
+
+267 12 get_contents 0 4 348 26 NametagGroup::get_contents 0 1 99 362
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_contents
+//       Access: Published
+//  Description: Returns the bitmask that indicates the set of
+//               contents the Nametag may represent.  See
+//               set_contents().
+////////////////////////////////////////////////////////////////////
+50
+inline int NametagGroup::get_contents(void) const;
+
+268 10 set_active 0 4 348 24 NametagGroup::set_active 0 1 100 501
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_active
+//       Access: Published
+//  Description: Changes the active flag.  When the Nametag is active,
+//               it can be clicked on; when it is not active, it
+//               cannot be clicked on.  The active flag may be set
+//               either on the individual Nametag, or on the entire
+//               group.
+////////////////////////////////////////////////////////////////////
+50
+inline void NametagGroup::set_active(bool active);
+
+269 9 is_active 0 4 348 23 NametagGroup::is_active 0 1 101 222
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::is_active
+//       Access: Published
+//  Description:
+////////////////////////////////////////////////////////////////////
+48
+inline bool NametagGroup::is_active(void) const;
+
+270 15 has_page_button 0 4 348 29 NametagGroup::has_page_button 0 1 102 348
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::has_page_button
+//       Access: Published
+//  Description: Returns true if the group should be displaying a page
+//               button at the end of each page, false otherwise.
+////////////////////////////////////////////////////////////////////
+54
+inline bool NametagGroup::has_page_button(void) const;
+
+271 15 has_quit_button 0 4 348 29 NametagGroup::has_quit_button 0 1 103 352
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::has_quit_button
+//       Access: Published
+//  Description: Returns true if the group should be displaying a quit
+//               button at the end of the last page, false otherwise.
+////////////////////////////////////////////////////////////////////
+54
+inline bool NametagGroup::has_quit_button(void) const;
+
+272 18 has_no_quit_button 0 4 348 32 NametagGroup::has_no_quit_button 0 1 104 487
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::has_no_quit_button
+//       Access: Published
+//  Description: Returns true if the group not display any button at
+//               all on the final page of a multi-page chat.  If
+//               neither this nor has_quit_button is true, the group
+//               will display a page-advance arrow on the final page.
+////////////////////////////////////////////////////////////////////
+57
+inline bool NametagGroup::has_no_quit_button(void) const;
+
+273 10 has_button 0 4 348 24 NametagGroup::has_button 0 1 105 299
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::has_button
+//       Access: Published
+//  Description: Returns true if the group should be displaying any
+//               button.
+////////////////////////////////////////////////////////////////////
+49
+inline bool NametagGroup::has_button(void) const;
+
+274 16 will_have_button 0 4 348 30 NametagGroup::will_have_button 0 1 106 438
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::will_have_button
+//       Access: Published
+//  Description: Returns true if the group should be displaying a
+//               page-advance or quit button now, or will eventually
+//               be displaying a button, once the button timeout
+//               expires.
+////////////////////////////////////////////////////////////////////
+55
+inline bool NametagGroup::will_have_button(void) const;
+
+275 17 display_as_active 0 4 348 31 NametagGroup::display_as_active 0 1 107 575
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::display_as_active
+//       Access: Published
+//  Description: Returns true if the group is effectively active,
+//               false otherwise.  This includes all the things that
+//               affect groups, including whether it has been
+//               explicitly set inactive, whether global nametags have
+//               been set inactive, and whether the group has a page
+//               button.
+////////////////////////////////////////////////////////////////////
+49
+bool NametagGroup::display_as_active(void) const;
+
+276 21 upcast_to_MarginPopup 0 12 350 35 WhisperPopup::upcast_to_MarginPopup 0 1 114 39
+upcast from WhisperPopup to MarginPopup
+55
+MarginPopup *WhisperPopup::upcast_to_MarginPopup(void);
+
+277 24 downcast_to_WhisperPopup 0 12 339 37 MarginPopup::downcast_to_WhisperPopup 0 0 41
+downcast from MarginPopup to WhisperPopup
+58
+WhisperPopup *MarginPopup::downcast_to_WhisperPopup(void);
+
+278 24 upcast_to_ClickablePopup 0 12 350 38 WhisperPopup::upcast_to_ClickablePopup 0 1 115 42
+upcast from WhisperPopup to ClickablePopup
+61
+ClickablePopup *WhisperPopup::upcast_to_ClickablePopup(void);
+
+279 24 downcast_to_WhisperPopup 0 12 338 40 ClickablePopup::downcast_to_WhisperPopup 0 0 44
+downcast from ClickablePopup to WhisperPopup
+61
+WhisperPopup *ClickablePopup::downcast_to_WhisperPopup(void);
+
+280 12 WhisperPopup 0 4 350 26 WhisperPopup::WhisperPopup 0 2 108 109 224
+////////////////////////////////////////////////////////////////////
+//     Function: WhisperPopup::Constructor
+//       Access: Published
+//  Description:
+////////////////////////////////////////////////////////////////////
+175
+WhisperPopup::WhisperPopup(std::string const &text, TextFont *font, WhisperPopup::WhisperType whisper_type);
+inline WhisperPopup::WhisperPopup(WhisperPopup const &) = default;
+
+281 13 ~WhisperPopup 0 6 350 27 WhisperPopup::~WhisperPopup 0 0 232
+////////////////////////////////////////////////////////////////////
+//     Function: WhisperPopup::Destructor
+//       Access: Published, Virtual
+//  Description:
+////////////////////////////////////////////////////////////////////
+42
+virtual WhisperPopup::~WhisperPopup(void);
+
+282 13 set_clickable 0 4 350 27 WhisperPopup::set_clickable 0 1 110 397
+////////////////////////////////////////////////////////////////////
+//     Function: WhisperPopup::set_clickable
+//       Access: Published
+//  Description: Makes the popup clickable.  When the user clicks on
+//               the popup, an event named "whisperTo" is generated
+//               with the two supplied parameters.
+////////////////////////////////////////////////////////////////////
+102
+void WhisperPopup::set_clickable(std::string const &avatar_name, int avatar_id, int is_player_id = 0);
+
+283 6 manage 0 4 350 20 WhisperPopup::manage 0 1 111 373
+////////////////////////////////////////////////////////////////////
+//     Function: WhisperPopup::manage
+//       Access: Published
+//  Description: Adds the popup to the pool of available popups to be
+//               made visible when appropriate (i.e. when there is
+//               room available).
+////////////////////////////////////////////////////////////////////
+50
+void WhisperPopup::manage(MarginManager *manager);
+
+284 8 unmanage 0 4 350 22 WhisperPopup::unmanage 0 1 112 310
+////////////////////////////////////////////////////////////////////
+//     Function: WhisperPopup::unmanage
+//       Access: Published
+//  Description: Removes the popup from the pool of available popups
+//               to be made visible.
+////////////////////////////////////////////////////////////////////
+52
+void WhisperPopup::unmanage(MarginManager *manager);
+
+285 14 get_class_type 0 4 350 28 WhisperPopup::get_class_type 0 1 113 0
+53
+static TypeHandle WhisperPopup::get_class_type(void);
+
+286 17 get_name_wordwrap 0 4 352 33 NametagGlobals::get_name_wordwrap 0 1 118 325
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_name_wordwrap
+//       Access: Published, Static
+//  Description: Returns the width at which all avatar nametags will
+//               be wordwrapped.
+////////////////////////////////////////////////////////////////////
+60
+static inline float NametagGlobals::get_name_wordwrap(void);
+
+287 12 get_card_pad 0 4 352 28 NametagGlobals::get_card_pad 0 1 119 386
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_card_pad
+//       Access: Published, Static
+//  Description: Returns the amount of padding applied to the card
+//               behind the nametags, in each direction (left, right,
+//               bottom, top).
+////////////////////////////////////////////////////////////////////
+67
+static inline LVecBase4f const &NametagGlobals::get_card_pad(void);
+
+288 10 set_camera 0 4 352 26 NametagGlobals::set_camera 0 1 120 453
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_camera
+//       Access: Published, Static
+//  Description: Sets the node that indicates the camera.  The
+//               Nametags will rotate and scale (or spin their little
+//               arrows around) according to the relative position of
+//               the camera node.
+////////////////////////////////////////////////////////////////////
+68
+static inline void NametagGlobals::set_camera(NodePath const &node);
+
+289 10 get_camera 0 4 352 26 NametagGlobals::get_camera 0 1 121 317
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_camera
+//       Access: Published, Static
+//  Description: Returns the node that indicates the camera.  See
+//               See set_camera().
+////////////////////////////////////////////////////////////////////
+63
+static inline NodePath const &NametagGlobals::get_camera(void);
+
+290 8 set_toon 0 4 352 24 NametagGlobals::set_toon 0 1 122 396
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_toon
+//       Access: Published, Static
+//  Description: Sets the node that indicates the LocalToon.  This is
+//               important for 2-d Nametags to determine how to rotate
+//               their arrows correctly.
+////////////////////////////////////////////////////////////////////
+66
+static inline void NametagGlobals::set_toon(NodePath const &node);
+
+291 8 get_toon 0 4 352 24 NametagGlobals::get_toon 0 1 123 316
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_toon
+//       Access: Published, Static
+//  Description: Returns the node that indicates the LocalToon.  See
+//               See set_toon().
+////////////////////////////////////////////////////////////////////
+61
+static inline NodePath const &NametagGlobals::get_toon(void);
+
+292 15 set_arrow_model 0 4 352 31 NametagGlobals::set_arrow_model 0 1 124 334
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_arrow_model
+//       Access: Published, Static
+//  Description: Sets the node that will be instanced to each
+//               Nametag2d to draw a little arrow.
+////////////////////////////////////////////////////////////////////
+73
+static inline void NametagGlobals::set_arrow_model(NodePath const &node);
+
+293 15 get_arrow_model 0 4 352 31 NametagGlobals::get_arrow_model 0 1 125 337
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_arrow_model
+//       Access: Published, Static
+//  Description: Returns the node that will be instanced to each
+//               Nametag2d to draw a little arrow.
+////////////////////////////////////////////////////////////////////
+68
+static inline NodePath const &NametagGlobals::get_arrow_model(void);
+
+294 15 set_page_button 0 4 352 31 NametagGlobals::set_page_button 0 1 126 454
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_page_button_ready
+//       Access: Published, Static
+//  Description: Sets the node that will be used to draw a
+//               page-advance button in the bottom corner of chat
+//               balloons when CF_page_button is set, in the indicated
+//               button state.
+////////////////////////////////////////////////////////////////////
+84
+static inline void NametagGlobals::set_page_button(int state, NodePath const &node);
+
+295 15 get_page_button 0 4 352 31 NametagGlobals::get_page_button 0 1 127 357
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_page_button_ready
+//       Access: Published, Static
+//  Description: Returns the node that will be used to draw a
+//               page-advance button in the indicated button state.
+////////////////////////////////////////////////////////////////////
+73
+static inline NodePath const &NametagGlobals::get_page_button(int state);
+
+296 15 set_quit_button 0 4 352 31 NametagGlobals::set_quit_button 0 1 128 446
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_quit_button_ready
+//       Access: Published, Static
+//  Description: Sets the node that will be used to draw a
+//               quit button in the bottom corner of chat balloons
+//               when CF_page_button is set, in the indicated button
+//               state.
+////////////////////////////////////////////////////////////////////
+84
+static inline void NametagGlobals::set_quit_button(int state, NodePath const &node);
+
+297 15 get_quit_button 0 4 352 31 NametagGlobals::get_quit_button 0 1 129 349
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_quit_button_ready
+//       Access: Published, Static
+//  Description: Returns the node that will be used to draw a
+//               quit button in the indicated button state.
+////////////////////////////////////////////////////////////////////
+73
+static inline NodePath const &NametagGlobals::get_quit_button(int state);
+
+298 16 set_nametag_card 0 4 352 32 NametagGlobals::set_nametag_card 0 1 130 407
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_nametag_card
+//       Access: Published, Static
+//  Description: Sets the geometry that will be parented behind each
+//               Nametag as a background card, and simultaneously
+//               specifies the size of the model.
+////////////////////////////////////////////////////////////////////
+99
+static inline void NametagGlobals::set_nametag_card(NodePath const &node, LVecBase4f const &frame);
+
+299 16 get_nametag_card 0 4 352 32 NametagGlobals::get_nametag_card 0 1 131 341
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_nametag_card
+//       Access: Published, Static
+//  Description: Returns the geometry that will be parented behind
+//               each Nametag as a background card.
+////////////////////////////////////////////////////////////////////
+69
+static inline NodePath const &NametagGlobals::get_nametag_card(void);
+
+300 22 get_nametag_card_frame 0 4 352 38 NametagGlobals::get_nametag_card_frame 0 1 132 327
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_nametag_card_frame
+//       Access: Published, Static
+//  Description: Returns the size of the geometry returned by
+//               get_nametag_card().
+////////////////////////////////////////////////////////////////////
+77
+static inline LVecBase4f const &NametagGlobals::get_nametag_card_frame(void);
+
+301 18 set_rollover_sound 0 4 352 34 NametagGlobals::set_rollover_sound 0 1 133 396
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_rollover_sound
+//       Access: Published, Static
+//  Description: Sets the sound effect that will be played whenever
+//               the mouse rolls over a Nametag, either in the world
+//               or on the screen.
+////////////////////////////////////////////////////////////////////
+73
+static inline void NametagGlobals::set_rollover_sound(AudioSound *sound);
+
+302 18 get_rollover_sound 0 4 352 34 NametagGlobals::get_rollover_sound 0 1 134 344
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_rollover_sound
+//       Access: Published, Static
+//  Description: Returns the sound effect that will be played whenever
+//               the mouse rolls over a Nametag.
+////////////////////////////////////////////////////////////////////
+67
+static inline AudioSound *NametagGlobals::get_rollover_sound(void);
+
+303 15 set_click_sound 0 4 352 31 NametagGlobals::set_click_sound 0 1 135 392
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_click_sound
+//       Access: Published, Static
+//  Description: Sets the sound effect that will be played whenever
+//               the mouse clicks on a Nametag, either in the world
+//               or on the screen.
+////////////////////////////////////////////////////////////////////
+70
+static inline void NametagGlobals::set_click_sound(AudioSound *sound);
+
+304 15 get_click_sound 0 4 352 31 NametagGlobals::get_click_sound 0 1 136 340
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_click_sound
+//       Access: Published, Static
+//  Description: Returns the sound effect that will be played whenever
+//               the mouse clicks on a Nametag.
+////////////////////////////////////////////////////////////////////
+64
+static inline AudioSound *NametagGlobals::get_click_sound(void);
+
+305 17 set_mouse_watcher 0 4 352 33 NametagGlobals::set_mouse_watcher 0 1 137 291
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_mouse_watcher
+//       Access: Published, Static
+//  Description: Sets a pointer to the MouseWatcher node in effect.
+////////////////////////////////////////////////////////////////////
+76
+static inline void NametagGlobals::set_mouse_watcher(MouseWatcher *watcher);
+
+306 17 get_mouse_watcher 0 4 352 33 NametagGlobals::get_mouse_watcher 0 1 138 294
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_mouse_watcher
+//       Access: Published, Static
+//  Description: Returns a pointer to the MouseWatcher node in effect.
+////////////////////////////////////////////////////////////////////
+68
+static inline MouseWatcher *NametagGlobals::get_mouse_watcher(void);
+
+307 21 set_speech_balloon_2d 0 4 352 37 NametagGlobals::set_speech_balloon_2d 0 1 139 366
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_speech_balloon_2d
+//       Access: Published, Static
+//  Description: Sets the ChatBalloon geometry that will be used for
+//               rendering speech chat messages by Nametag2d objects.
+////////////////////////////////////////////////////////////////////
+79
+static inline void NametagGlobals::set_speech_balloon_2d(ChatBalloon *balloon);
+
+308 21 get_speech_balloon_2d 0 4 352 37 NametagGlobals::get_speech_balloon_2d 0 1 140 386
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_speech_balloon_2d
+//       Access: Published, Static
+//  Description: Returns the ChatBalloon geometry that will be used
+//               for rendering speech chat messages by Nametag2d
+//               objects.
+////////////////////////////////////////////////////////////////////
+71
+static inline ChatBalloon *NametagGlobals::get_speech_balloon_2d(void);
+
+309 22 set_thought_balloon_2d 0 4 352 38 NametagGlobals::set_thought_balloon_2d 0 1 141 368
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_thought_balloon_2d
+//       Access: Published, Static
+//  Description: Sets the ChatBalloon geometry that will be used for
+//               rendering thought chat messages by Nametag2d objects.
+////////////////////////////////////////////////////////////////////
+80
+static inline void NametagGlobals::set_thought_balloon_2d(ChatBalloon *balloon);
+
+310 22 get_thought_balloon_2d 0 4 352 38 NametagGlobals::get_thought_balloon_2d 0 1 142 388
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_thought_balloon_2d
+//       Access: Published, Static
+//  Description: Returns the ChatBalloon geometry that will be used
+//               for rendering thought chat messages by Nametag2d
+//               objects.
+////////////////////////////////////////////////////////////////////
+72
+static inline ChatBalloon *NametagGlobals::get_thought_balloon_2d(void);
+
+311 21 set_speech_balloon_3d 0 4 352 37 NametagGlobals::set_speech_balloon_3d 0 1 143 366
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_speech_balloon_3d
+//       Access: Published, Static
+//  Description: Sets the ChatBalloon geometry that will be used for
+//               rendering speech chat messages by Nametag3d objects.
+////////////////////////////////////////////////////////////////////
+79
+static inline void NametagGlobals::set_speech_balloon_3d(ChatBalloon *balloon);
+
+312 21 get_speech_balloon_3d 0 4 352 37 NametagGlobals::get_speech_balloon_3d 0 1 144 386
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_speech_balloon_3d
+//       Access: Published, Static
+//  Description: Returns the ChatBalloon geometry that will be used
+//               for rendering speech chat messages by Nametag3d
+//               objects.
+////////////////////////////////////////////////////////////////////
+71
+static inline ChatBalloon *NametagGlobals::get_speech_balloon_3d(void);
+
+313 22 set_thought_balloon_3d 0 4 352 38 NametagGlobals::set_thought_balloon_3d 0 1 145 368
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_thought_balloon_3d
+//       Access: Published, Static
+//  Description: Sets the ChatBalloon geometry that will be used for
+//               rendering thought chat messages by Nametag3d objects.
+////////////////////////////////////////////////////////////////////
+80
+static inline void NametagGlobals::set_thought_balloon_3d(ChatBalloon *balloon);
+
+314 22 get_thought_balloon_3d 0 4 352 38 NametagGlobals::get_thought_balloon_3d 0 1 146 388
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_thought_balloon_3d
+//       Access: Published, Static
+//  Description: Returns the ChatBalloon geometry that will be used
+//               for rendering thought chat messages by Nametag3d
+//               objects.
+////////////////////////////////////////////////////////////////////
+72
+static inline ChatBalloon *NametagGlobals::get_thought_balloon_3d(void);
+
+315 26 set_master_nametags_active 0 4 352 42 NametagGlobals::set_master_nametags_active 0 1 147 538
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_master_nametags_active
+//       Access: Published, Static
+//  Description: Changes the global flag to disable all Nametags at
+//               once.  Setting this flag to false makes all Nametags
+//               in the world inactive (i.e. not pickable); setting
+//               this to true allows individual Nametags to be active
+//               or inactive.
+////////////////////////////////////////////////////////////////////
+75
+static inline void NametagGlobals::set_master_nametags_active(bool active);
+
+316 26 get_master_nametags_active 0 4 352 42 NametagGlobals::get_master_nametags_active 0 1 148 249
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_master_nametags_active
+//       Access: Published, Static
+//  Description:
+////////////////////////////////////////////////////////////////////
+68
+static inline bool NametagGlobals::get_master_nametags_active(void);
+
+317 27 set_master_nametags_visible 0 4 352 43 NametagGlobals::set_master_nametags_visible 0 1 149 569
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_master_nametags_visible
+//       Access: Published, Static
+//  Description: Changes the global flag to hide all Nametags at
+//               once.  Setting this flag to false makes all Nametags
+//               in the world invisible, including onscreen nametags.
+//               It affects only the display of names; it does not
+//               affect chat bubbles or onscreen chat balloons.
+////////////////////////////////////////////////////////////////////
+77
+static inline void NametagGlobals::set_master_nametags_visible(bool visible);
+
+318 27 get_master_nametags_visible 0 4 352 43 NametagGlobals::get_master_nametags_visible 0 1 150 250
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_master_nametags_visible
+//       Access: Published, Static
+//  Description:
+////////////////////////////////////////////////////////////////////
+69
+static inline bool NametagGlobals::get_master_nametags_visible(void);
+
+319 20 set_master_arrows_on 0 4 352 36 NametagGlobals::set_master_arrows_on 0 1 151 611
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_master_arrows_on
+//       Access: Published, Static
+//  Description: Changes the global flag to disable all Nametag2d
+//               names & arrows at once.  Setting this flag to false
+//               makes all Nametag2ds in the world not display a name
+//               or arrow (but they will still display speech for
+//               nearby avatars).  Setting this true lets the
+//               Nametag2ds display what they want.
+////////////////////////////////////////////////////////////////////
+69
+static inline void NametagGlobals::set_master_arrows_on(bool active);
+
+320 20 get_master_arrows_on 0 4 352 36 NametagGlobals::get_master_arrows_on 0 1 152 243
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_master_arrows_on
+//       Access: Published, Static
+//  Description:
+////////////////////////////////////////////////////////////////////
+62
+static inline bool NametagGlobals::get_master_arrows_on(void);
+
+321 24 set_onscreen_chat_forced 0 4 352 40 NametagGlobals::set_onscreen_chat_forced 0 1 153 618
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_onscreen_chat_forced
+//       Access: Published, Static
+//  Description: Changes the global flag force all chat messages to
+//               also be displayed as onscreen chat messages, even if
+//               their corresponding 3-d nametag appears to be
+//               onscreen.  This can be used when we're confident that
+//               that 3-d nametag is obscured by some large onscreen
+//               panel (like the battle menu).
+////////////////////////////////////////////////////////////////////
+73
+static inline void NametagGlobals::set_onscreen_chat_forced(bool active);
+
+322 24 get_onscreen_chat_forced 0 4 352 40 NametagGlobals::get_onscreen_chat_forced 0 1 154 247
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_onscreen_chat_forced
+//       Access: Published, Static
+//  Description:
+////////////////////////////////////////////////////////////////////
+66
+static inline bool NametagGlobals::get_onscreen_chat_forced(void);
+
+323 16 set_max_2d_alpha 0 4 352 32 NametagGlobals::set_max_2d_alpha 0 1 155 467
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_max_2d_alpha
+//       Access: Published, Static
+//  Description: Sets the highest level of alpha that is allowed for a
+//               Nametag2d background.  The Nametag2d will never be
+//               more opaque than this, despite its color setting in
+//               NametagGlobals.cxx.
+////////////////////////////////////////////////////////////////////
+65
+static inline void NametagGlobals::set_max_2d_alpha(float alpha);
+
+324 16 get_max_2d_alpha 0 4 352 32 NametagGlobals::get_max_2d_alpha 0 1 156 360
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_max_2d_alpha
+//       Access: Published, Static
+//  Description: Returns the highest level of alpha that is allowed
+//               for a Nametag2d background.  See set_max_2d_alpha().
+////////////////////////////////////////////////////////////////////
+59
+static inline float NametagGlobals::get_max_2d_alpha(void);
+
+325 16 set_min_2d_alpha 0 4 352 32 NametagGlobals::set_min_2d_alpha 0 1 157 466
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_min_2d_alpha
+//       Access: Published, Static
+//  Description: Sets the lowest level of alpha that is allowed for a
+//               Nametag2d background.  The Nametag2d will never be
+//               less opaque than this, despite its color setting in
+//               NametagGlobals.cxx.
+////////////////////////////////////////////////////////////////////
+65
+static inline void NametagGlobals::set_min_2d_alpha(float alpha);
+
+326 16 get_min_2d_alpha 0 4 352 32 NametagGlobals::get_min_2d_alpha 0 1 158 359
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_min_2d_alpha
+//       Access: Published, Static
+//  Description: Returns the lowest level of alpha that is allowed
+//               for a Nametag2d background.  See set_min_2d_alpha().
+////////////////////////////////////////////////////////////////////
+59
+static inline float NametagGlobals::get_min_2d_alpha(void);
+
+327 24 set_global_nametag_scale 0 4 352 40 NametagGlobals::set_global_nametag_scale 0 1 159 426
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_global_nametag_scale
+//       Access: Published, Static
+//  Description: Specifies a global scale factor on all the 3-d
+//               nametags in the world.  This is in addition to the
+//               scaling to match the distance from the camera.
+////////////////////////////////////////////////////////////////////
+73
+static inline void NametagGlobals::set_global_nametag_scale(float scale);
+
+328 24 get_global_nametag_scale 0 4 352 40 NametagGlobals::get_global_nametag_scale 0 1 160 456
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_global_nametag_scale
+//       Access: Published, Static
+//  Description: Returns the global scale factor on all the 3-d
+//               nametags in the world.  Normally, this will be 1.0,
+//               but it might be temporarily adjusted for special
+//               purposes.
+////////////////////////////////////////////////////////////////////
+67
+static inline float NametagGlobals::get_global_nametag_scale(void);
+
+329 11 get_name_fg 0 4 352 27 NametagGlobals::get_name_fg 0 1 161 286
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_name_fg
+//       Access: Published, Static
+//  Description: Returns the color of the indicated type of nametag.
+////////////////////////////////////////////////////////////////////
+116
+static inline LColorf const &NametagGlobals::get_name_fg(NametagGroup::ColorCode color_code, PGButton::State state);
+
+330 11 get_name_bg 0 4 352 27 NametagGlobals::get_name_bg 0 1 162 286
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_name_bg
+//       Access: Published, Static
+//  Description: Returns the color of the indicated type of nametag.
+////////////////////////////////////////////////////////////////////
+116
+static inline LColorf const &NametagGlobals::get_name_bg(NametagGroup::ColorCode color_code, PGButton::State state);
+
+331 28 get_balloon_modulation_color 0 4 352 44 NametagGlobals::get_balloon_modulation_color 0 1 163 286
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_balloon_modulation_color
+//       Access: Public, Static
+//  Description: Returns the balloon modulation color.
+////////////////////////////////////////////////////////////////////
+80
+static inline LColorf const &NametagGlobals::get_balloon_modulation_color(void);
+
+332 28 set_balloon_modulation_color 0 4 352 44 NametagGlobals::set_balloon_modulation_color 0 1 164 283
+////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_balloon_modulation_color
+//       Access: Public, Static
+//  Description: Sets the balloon modulation color.
+////////////////////////////////////////////////////////////////////
+86
+static inline void NametagGlobals::set_balloon_modulation_color(LColorf const &color);
+
+333 14 NametagGlobals 0 4 352 30 NametagGlobals::NametagGlobals 0 2 116 117 0
+127
+inline NametagGlobals::NametagGlobals(void) = default;
+inline NametagGlobals::NametagGlobals(NametagGlobals const &) = default;
+
+334 15 ~NametagGlobals 0 4 352 31 NametagGlobals::~NametagGlobals 0 0 0
+38
+NametagGlobals::~NametagGlobals(void);
+
+164
+1 0 0 7 3 355 0 0 0 1 6 param0 0 353  
+2 0 0 7 3 355 0 0 223 ////////////////////////////////////////////////////////////////////
+//     Function: ChatBalloon::Constructor
+//       Access: Published
+//  Description:
+//////////////////////////////////////////////////////////////////// 1 9 root_node 1 356  
+3 0 0 7 4 356 0 0 224 //               If has_draw_order is true, the geometry will be
+//               assigned to the fixed bin with the indicated
+//               draw_order.
+//////////////////////////////////////////////////////////////////// 13 4 this 3 355  4 text 1 357  4 font 1 358  8 wordwrap 1 360  10 text_color 1 361  13 balloon_color 1 361  6 for_3d 1 365  14 has_draw_order 1 365  10 draw_order 1 366  11 page_button 1 367  16 space_for_button 1 365  8 reversed 1 365  10 new_button 1 370  
+4 0 0 7 10 373 167 0 0 1 6 param0 0 371  
+5 0 0 7 8 375 0 0 0 0 
+6 0 0 7 9 375 0 0 192 // We define get_type() even though we don't inherit from
+// TypedObject.  We can't actually inherit from TypedObject because
+// of the whole multiple-inheritance thing in our derived classes. 1 4 this 3 371  
+7 0 0 7 16 378 0 0 0 1 6 param0 0 376  
+8 0 0 6 13 365 0 0 403 ////////////////////////////////////////////////////////////////////
+//     Function: MarginPopup::is_managed
+//       Access: Published
+//  Description: Returns true if this popup is currently managed
+//               (that is, available to be made visible), or false if
+//               it is not managed (it will never be visible).
+//////////////////////////////////////////////////////////////////// 1 4 this 3 376  
+9 0 0 6 14 365 0 0 386 ////////////////////////////////////////////////////////////////////
+//     Function: MarginPopup::is_visible
+//       Access: Published
+//  Description: Returns true if this popup is currently visible
+//               or false if it is invisible (which may mean that it
+//               is managed, but not visible).
+//////////////////////////////////////////////////////////////////// 1 4 this 3 376  
+10 0 0 7 15 375 0 0 0 0 
+11 0 0 7 18 379 0 0 225 ////////////////////////////////////////////////////////////////////
+//     Function: MarginManager::Constructor
+//       Access: Published
+//  Description:
+//////////////////////////////////////////////////////////////////// 0 
+12 0 0 7 18 379 0 0 0 1 6 param0 0 380  
+13 0 0 6 19 366 0 0 252 //               The return value is the index number associated with
+//               this cell, which may be passed to get_cell_available()
+//               or set_cell_available().
+//////////////////////////////////////////////////////////////////// 7 4 this 3 379  1 x 1 360  1 y 1 360  11 screen_left 1 360  12 screen_right 1 360  13 screen_bottom 1 360  10 screen_top 1 360  
+14 0 0 6 20 366 0 0 252 //               The return value is the index number associated with
+//               this cell, which may be passed to get_cell_available()
+//               or set_cell_available().
+//////////////////////////////////////////////////////////////////// 5 4 this 3 379  4 left 1 360  5 right 1 360  6 bottom 1 360  3 top 1 360  
+15 0 0 4 21 382 0 0 339 ////////////////////////////////////////////////////////////////////
+//     Function: MarginManager::set_cell_available
+//       Access: Published
+//  Description: Sets whether the indicated cell may be used to
+//               display popups.  See get_cell_available().
+//////////////////////////////////////////////////////////////////// 3 4 this 3 379  10 cell_index 1 366  9 available 1 365  
+16 0 0 6 22 365 0 0 457 ////////////////////////////////////////////////////////////////////
+//     Function: MarginManager::get_cell_available
+//       Access: Published
+//  Description: Returns true if the indicated cell number is
+//               currently available, false if not.  If the cell is
+//               available, it may be used to display popups; otherwise,
+//               it must remain empty.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 380  10 cell_index 1 366  
+17 0 0 4 23 382 0 0 307 ////////////////////////////////////////////////////////////////////
+//     Function: MarginManager::show_cells
+//       Access: Published
+//  Description: Draws a frame around each cell to make it visible,
+//               for debugging.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 379  
+18 0 0 4 24 382 0 0 302 ////////////////////////////////////////////////////////////////////
+//     Function: MarginManager::hide_cells
+//       Access: Published
+//  Description: Removes the frames drawn in a previous call to
+//               show_cells().
+//////////////////////////////////////////////////////////////////// 1 4 this 3 379  
+19 0 0 7 25 375 0 0 0 0 
+20 0 0 4 28 382 0 0 325 //               This mask is defined both for NametagGroup as well as
+//               for the individual Nametags within the group; the
+//               actual mask in effect for a particular Nametag is the
+//               intersection of the two masks.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 383  5 flags 1 366  
+21 0 0 6 29 366 0 0 357 ////////////////////////////////////////////////////////////////////
+//     Function: Nametag::get_contents
+//       Access: Published
+//  Description: Returns the bitmask that indicates the set of
+//               contents the Nametag may represent.  See
+//               set_contents().
+//////////////////////////////////////////////////////////////////// 1 4 this 3 384  
+22 0 0 4 30 382 0 0 496 ////////////////////////////////////////////////////////////////////
+//     Function: Nametag::set_active
+//       Access: Published
+//  Description: Changes the active flag.  When the Nametag is active,
+//               it can be clicked on; when it is not active, it
+//               cannot be clicked on.  The active flag may be set
+//               either on the individual Nametag, or on the entire
+//               group.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 383  6 active 1 365  
+23 0 0 6 31 365 0 0 217 ////////////////////////////////////////////////////////////////////
+//     Function: Nametag::is_active
+//       Access: Published
+//  Description:
+//////////////////////////////////////////////////////////////////// 1 4 this 3 384  
+24 0 0 6 32 365 0 0 574 ////////////////////////////////////////////////////////////////////
+//     Function: Nametag::display_as_active
+//       Access: Published
+//  Description: Returns true if the nametag is effectively active,
+//               false otherwise.  This includes all the things that
+//               affect nametags, including whether it has been
+//               explicitly set inactive, whether global nametags have
+//               been set inactive, and whether the group has a page
+//               button.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 384  
+25 0 0 6 33 365 0 0 388 ////////////////////////////////////////////////////////////////////
+//     Function: Nametag::has_group
+//       Access: Published
+//  Description: Returns true if the Nametag is associated with a
+//               NametagGroup, false otherwise.  A Nametag must be
+//               associated with a group to be useful.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 384  
+26 0 0 6 34 386 0 0 361 ////////////////////////////////////////////////////////////////////
+//     Function: Nametag::get_group
+//       Access: Published
+//  Description: Returns the NametagGroup that the Nametag is
+//               associated with, or NULL if it is not associated with
+//               any group.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 384  
+27 0 0 4 35 382 0 0 466 ////////////////////////////////////////////////////////////////////
+//     Function: Nametag::set_draw_order
+//       Access: Published
+//  Description: Causes the Nametag to be rendered in the fixed bin
+//               with the indicated sort order.  This is only relevant
+//               if the Nametag will be parented in a scene graph
+//               where the cull traversal is in effect.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 383  10 draw_order 1 366  
+28 0 0 4 36 382 0 0 308 ////////////////////////////////////////////////////////////////////
+//     Function: Nametag::clear_draw_order
+//       Access: Published
+//  Description: Removes the sort order previously specified with
+//               set_draw_order().
+//////////////////////////////////////////////////////////////////// 1 4 this 3 383  
+29 0 0 4 37 382 0 0 671 ////////////////////////////////////////////////////////////////////
+//     Function: Nametag::set_chat_wordwrap
+//       Access: Published
+//  Description: Specifies the width at which the Nametag will
+//               wordwrap the text in its chat balloons.  For
+//               Nametag2d type nametags, this will indirectly affect
+//               the scale of the text, since the text will be scaled
+//               so that this width fills the cell it is assigned to.
+//               For in-the-world type nametags, this only affects how
+//               wide the chat balloon is allowed to be.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 383  8 wordwrap 1 360  
+30 0 0 6 38 360 0 0 326 ////////////////////////////////////////////////////////////////////
+//     Function: Nametag::get_chat_wordwrap
+//       Access: Published
+//  Description: Returns the width at which the Nametag will
+//               wordwrap the text in its chat balloons.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 384  
+31 0 0 4 39 382 0 0 182 //               This should be some node in the 3-d scene graph,
+//               never a node in the 2-d graph.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 383  4 node 1 367  
+32 0 0 4 40 382 0 0 381 ////////////////////////////////////////////////////////////////////
+//     Function: Nametag::clear_avatar
+//       Access: Published
+//  Description: Removes the node previously specified with
+//               set_avatar(), and allows the node specified by
+//               NametagGroup::set_avatar() to apply.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 383  
+33 0 0 6 41 367 0 0 492 ////////////////////////////////////////////////////////////////////
+//     Function: Nametag::get_avatar
+//       Access: Published
+//  Description: Returns the node that represents the Avatar for this
+//               Nametag.  This is either the node set by
+//               set_avatar() on this nametag, or if no node was
+//               set, the one specified by set_avatar() on this
+//               nametag's group.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 384  
+34 0 0 7 42 375 0 0 0 0 
+35 0 0 7 49 375 0 0 0 0 
+36 0 0 7 44 383 167 0 0 1 4 this 3 387  
+37 0 0 7 46 378 0 0 0 1 4 this 3 387  
+38 0 0 4 56 382 0 0 185 //               The default value is set in NametagGlobals, but this
+//               may be overridden at runtime.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 388  16 billboard_offset 1 360  
+39 0 0 6 57 360 0 0 389 ////////////////////////////////////////////////////////////////////
+//     Function: Nametag3d::get_billboard_offset
+//       Access: Published
+//  Description: Returns the offset distance by which the Nametag is
+//               slid towards the camera after billboarding.  See
+//               set_billboard_offset().
+//////////////////////////////////////////////////////////////////// 1 4 this 3 389  
+40 0 0 7 58 375 0 0 0 0 
+41 0 0 7 51 383 167 0 0 1 4 this 3 388  
+42 0 0 7 53 356 0 0 0 1 4 this 3 388  
+43 0 0 7 60 391 208 0 226 ////////////////////////////////////////////////////////////////////
+//     Function: NametagFloat2d::Constructor
+//       Access: Published
+//  Description:
+//////////////////////////////////////////////////////////////////// 0 
+44 0 0 7 61 375 0 0 0 0 
+45 0 0 7 63 392 208 0 226 ////////////////////////////////////////////////////////////////////
+//     Function: NametagFloat3d::Constructor
+//       Access: Published
+//  Description:
+//////////////////////////////////////////////////////////////////// 0 
+46 0 0 7 64 375 0 0 0 0 
+47 0 0 7 67 386 217 0 224 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::Constructor
+//       Access: Published
+//  Description:
+//////////////////////////////////////////////////////////////////// 0 
+48 0 0 7 67 386 217 0 0 1 6 param0 0 393  
+49 0 0 7 69 387 202 0 441 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_nametag2d
+//       Access: Published
+//  Description: Returns the default Nametag2d object associated with
+//               the group.  This is the Nametag that is displayed
+//               along the edge of the screen when the avatar is not
+//               visible.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 386  
+50 0 0 7 70 388 208 0 394 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_nametag3d
+//       Access: Published
+//  Description: Returns the default Nametag3d object associated with
+//               the group.  This is the Nametag that floats over the
+//               avatar's head in the world.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 386  
+51 0 0 4 71 382 0 0 345 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::add_nametag
+//       Access: Published
+//  Description: Adds the indicated Nametag to the group.  The Nametag
+//               must not already be a member of any NametagGroup.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  3 tag 1 383  
+52 0 0 4 72 382 0 0 501 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::remove_nametag
+//       Access: Published
+//  Description: Removes the indicated Nametag to the group.  The
+//               Nametag must have previously been added to the
+//               NametagGroup.  It is an error to attempt to remove
+//               either of the two default nametags created with the
+//               group.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  3 tag 1 383  
+53 0 0 4 73 382 0 0 384 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::clear_aux_nametags
+//       Access: Published
+//  Description: Removes any Nametags from the group except the
+//               default Nametag2d and Nametag3d that are created with
+//               the group itself.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 386  
+54 0 0 6 74 366 0 0 379 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_num_nametags
+//       Access: Published
+//  Description: Returns the number of Nametags in to the group.
+//               Originally, this is 2, but there may be more added by
+//               user control.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+55 0 0 7 75 383 167 0 262 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_nametag
+//       Access: Published
+//  Description: Returns the nth Nametag in the group.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 393  1 n 1 366  
+56 0 0 4 76 382 0 0 296 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_font
+//       Access: Published
+//  Description: Simultaneously sets both the name font and the chat
+//               font.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  4 font 1 358  
+57 0 0 4 77 382 0 0 317 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_name_font
+//       Access: Published
+//  Description: Redefines the TextFont used by this group to
+//               generate text for the names.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  4 font 1 358  
+58 0 0 7 78 358 0 0 315 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_name_font
+//       Access: Published
+//  Description: Returns the TextFont used by this group to
+//               generate text for the names.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+59 0 0 4 79 382 0 0 325 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_chat_font
+//       Access: Published
+//  Description: Redefines the TextFont used by this group to
+//               generate text for the chat messages.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  4 font 1 358  
+60 0 0 7 80 358 0 0 323 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_chat_font
+//       Access: Published
+//  Description: Returns the TextFont used by this group to
+//               generate text for the chat messages.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+61 0 0 4 81 382 0 0 246 //               It is the responsibility of the user to ensure that
+//               the avatar node does not destruct during the lifetime
+//               of the NametagGroup.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  4 node 1 367  
+62 0 0 6 82 367 0 0 336 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_avatar
+//       Access: Published
+//  Description: Returns the node that indicates the avatar that
+//               corresponds to this Nametag.  See set_avatar().
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+63 0 0 6 83 370 0 0 389 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_name_icon
+//       Access: Published
+//  Description: Returns a NodePath to which geometry may be parented
+//               to draw stuff behind the name (but in front of the
+//               name's background card).
+//////////////////////////////////////////////////////////////////// 1 4 this 3 386  
+64 0 0 4 84 382 0 0 129 //               Set this to -1 to use the default wordwrap.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  13 name_wordwrap 1 360  
+65 0 0 6 85 360 0 0 374 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_name_wordwrap
+//       Access: Published
+//  Description: Returns either the value set by set_name_wordwrap(),
+//               or the default wordwrap value for nametags of this
+//               type.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+66 0 0 4 86 382 0 0 439 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_color_code
+//       Access: Published
+//  Description: Sets the color code of this particular avatar.  This
+//               indicates which of a family of colors the nametag
+//               should be drawn in, according to the avatar's
+//               properties.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  4 code 1 349  
+67 0 0 6 87 349 0 0 322 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_color_code
+//       Access: Published
+//  Description: Returns the color code set for this particular
+//               avatar.  See set_color_code().
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+68 0 0 4 88 382 0 0 323 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_qt_color
+//       Access: Published
+//  Description: Sets the background color for quicktalker (SpeedChat)
+//               messages from this avatar.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  5 color 1 361  
+69 0 0 6 89 361 0 0 330 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_qt_color
+//       Access: Published
+//  Description: Returns the background color set for quicktalker
+//               (SpeedChat) messages from this avatar.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+70 0 0 6 90 361 0 0 279 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_balloon_modulation_color
+//       Access: Published
+//  Description: Returns the balloon modulation color.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+71 0 0 4 91 382 0 0 395 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_shadow
+//       Access: Published
+//  Description: Specifies that the name should be drawn with a
+//               shadow, by creating a second copy of the name and
+//               offsetting it slightly behind the first.
+//////////////////////////////////////////////////////////////////// 3 4 this 3 386  7 xoffset 1 360  7 yoffset 1 360  
+72 0 0 4 92 382 0 0 301 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::clear_shadow
+//       Access: Published
+//  Description: Specifies that a shadow will not be drawn behind the
+//               name.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 386  
+73 0 0 6 93 365 0 0 223 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::has_shadow
+//       Access: Published
+//  Description:
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+74 0 0 7 94 396 0 0 369 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_shadow
+//       Access: Published
+//  Description: Returns the offset of the shadow as set by
+//               set_shadow().  It is an error to call this if
+//               has_shadow() is false.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+75 0 0 4 95 382 0 0 191 //               See also set_display_name(), which sets only the name
+//               that is displayed on the Nametags.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  4 name 1 357  
+76 0 0 6 96 357 0 0 266 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_name
+//       Access: Published
+//  Description: Returns the name that was set on this group.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+77 0 0 4 97 382 0 0 445 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_display_name
+//       Access: Published
+//  Description: Changes the name displayed by all the nametags in
+//               this group.  This does not change the name that is
+//               printed within the Nametag2d's for this avatar; see
+//               set_name().
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  4 name 1 357  
+78 0 0 6 98 357 0 0 282 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_display_name
+//       Access: Published
+//  Description: Returns the display_name that was set on this group.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+79 0 0 4 99 382 0 0 308 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_chat
+//       Access: Published
+//  Description: Changes the chat message displayed by all the
+//               nametags in this group.
+//////////////////////////////////////////////////////////////////// 4 4 this 3 386  4 chat 1 357  10 chat_flags 1 366  11 page_number 1 366  
+80 0 0 4 100 382 0 0 273 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::clear_chat
+//       Access: Published
+//  Description: Removes the current chat message from this group.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 386  
+81 0 0 6 101 357 0 0 267 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_chat
+//       Access: Published
+//  Description: Returns the current page of the chat message.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+82 0 0 6 101 357 0 0 263 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_chat
+//       Access: Published
+//  Description: Returns the nth page of the chat message.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 393  11 page_number 1 366  
+83 0 0 6 102 357 0 0 273 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_stomp_text
+//       Access: Published
+//  Description: Returns the current page of the chat message.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+84 0 0 6 103 366 0 0 279 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_chat_flags
+//       Access: Published
+//  Description: Returns the chat flags that were set on this group.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+85 0 0 4 104 382 0 0 307 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_page_number
+//       Access: Published
+//  Description: Sets the page that is displayed for multi-page chat
+//               messages.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  11 page_number 1 366  
+86 0 0 6 105 366 0 0 301 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_page_number
+//       Access: Published
+//  Description: Returns the current page number on multi-page
+//               messages.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+87 0 0 6 106 366 0 0 315 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_num_chat_pages
+//       Access: Published
+//  Description: Returns the number of pages available in the current
+//               chat message.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+88 0 0 6 107 366 0 0 311 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_chat_stomp
+//       Access: Published
+//  Description: Returns the number of pages available in the current
+//               chat message.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+89 0 0 6 108 360 0 0 312 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_stomp_delay
+//       Access: Published
+//  Description: Returns the number of pages available in the current
+//               chat message.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+90 0 0 4 109 382 0 0 503 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_unique_id
+//       Access: Published
+//  Description: Changes the event which will be thrown in response to
+//               the user's clicking on any of the nametags in this
+//               group.  This is arbitrarily defined to a unique
+//               string by default, but it may be redefined by the
+//               user.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  5 event 1 357  
+91 0 0 6 110 357 0 0 503 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_unique_id
+//       Access: Published
+//  Description: Returns the event which will be thrown in response to
+//               the user's clicking on any of the nametags in this
+//               group.  This is arbitrarily defined to a unique
+//               string by default, but it may be redefined by the
+//               user.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+92 0 0 4 111 382 0 0 655 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_object_code
+//       Access: Published
+//  Description: Associates a code number with the nametags in this
+//               group.  If the code number is nonzero, and any two
+//               nametags with the same code would be onscreen
+//               simultaneously, only the nearest one is displayed.
+//               This is intended to prevent redundant display of
+//               multiple nametags for the same object (e.g. a
+//               building with multiple doors).
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  4 code 1 366  
+93 0 0 6 112 366 0 0 337 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_object_code
+//       Access: Published
+//  Description: Returns the code number associated with the nametags
+//               in this group.  See set_object_code().
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+94 0 0 4 113 382 0 0 247 //               This throws the unique ID of this group as an event.
+//               This ID can be queried or changed via get_unique_id()
+//               and set_unique_id().
+//////////////////////////////////////////////////////////////////// 1 4 this 3 386  
+95 0 0 4 114 382 0 0 185 //               This should be called whenever an avatar with a
+//               Nametag is brought into the world.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  7 manager 1 379  
+96 0 0 4 115 382 0 0 450 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::unmanage
+//       Access: Published
+//  Description: Deactivates the Nametags in the group and ensures
+//               their MouseWatcherRegions are removed, etc.  This
+//               should be called whenever an avatar with a Nametag is
+//               removed from the world.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  7 manager 1 379  
+97 0 0 6 116 365 0 0 469 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::is_managed
+//       Access: Published
+//  Description: Returns the managed flag.  This flag indicates that
+//               the Nametags associated with this group are attached
+//               to an active avatar in the world, and they should be
+//               given live MouseWatcherRegions, etc.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+98 0 0 4 117 382 0 0 325 //               This mask is defined both for NametagGroup as well as
+//               for the individual Nametags within the group; the
+//               actual mask in effect for a particular Nametag is the
+//               intersection of the two masks.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  5 flags 1 366  
+99 0 0 6 118 366 0 0 362 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::get_contents
+//       Access: Published
+//  Description: Returns the bitmask that indicates the set of
+//               contents the Nametag may represent.  See
+//               set_contents().
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+100 0 0 4 119 382 0 0 501 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::set_active
+//       Access: Published
+//  Description: Changes the active flag.  When the Nametag is active,
+//               it can be clicked on; when it is not active, it
+//               cannot be clicked on.  The active flag may be set
+//               either on the individual Nametag, or on the entire
+//               group.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 386  6 active 1 365  
+101 0 0 6 120 365 0 0 222 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::is_active
+//       Access: Published
+//  Description:
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+102 0 0 6 121 365 0 0 348 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::has_page_button
+//       Access: Published
+//  Description: Returns true if the group should be displaying a page
+//               button at the end of each page, false otherwise.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+103 0 0 6 122 365 0 0 352 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::has_quit_button
+//       Access: Published
+//  Description: Returns true if the group should be displaying a quit
+//               button at the end of the last page, false otherwise.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+104 0 0 6 123 365 0 0 487 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::has_no_quit_button
+//       Access: Published
+//  Description: Returns true if the group not display any button at
+//               all on the final page of a multi-page chat.  If
+//               neither this nor has_quit_button is true, the group
+//               will display a page-advance arrow on the final page.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+105 0 0 6 124 365 0 0 299 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::has_button
+//       Access: Published
+//  Description: Returns true if the group should be displaying any
+//               button.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+106 0 0 6 125 365 0 0 438 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::will_have_button
+//       Access: Published
+//  Description: Returns true if the group should be displaying a
+//               page-advance or quit button now, or will eventually
+//               be displaying a button, once the button timeout
+//               expires.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+107 0 0 6 126 365 0 0 575 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGroup::display_as_active
+//       Access: Published
+//  Description: Returns true if the group is effectively active,
+//               false otherwise.  This includes all the things that
+//               affect groups, including whether it has been
+//               explicitly set inactive, whether global nametags have
+//               been set inactive, and whether the group has a page
+//               button.
+//////////////////////////////////////////////////////////////////// 1 4 this 3 393  
+108 0 0 7 133 399 281 0 0 1 6 param0 0 397  
+109 0 0 7 133 399 281 0 224 ////////////////////////////////////////////////////////////////////
+//     Function: WhisperPopup::Constructor
+//       Access: Published
+//  Description:
+//////////////////////////////////////////////////////////////////// 3 4 text 1 357  4 font 1 358  12 whisper_type 1 351  
+110 0 0 4 135 382 0 0 397 ////////////////////////////////////////////////////////////////////
+//     Function: WhisperPopup::set_clickable
+//       Access: Published
+//  Description: Makes the popup clickable.  When the user clicks on
+//               the popup, an event named "whisperTo" is generated
+//               with the two supplied parameters.
+//////////////////////////////////////////////////////////////////// 4 4 this 3 399  11 avatar_name 1 357  9 avatar_id 1 366  12 is_player_id 1 366  
+111 0 0 4 136 382 0 0 373 ////////////////////////////////////////////////////////////////////
+//     Function: WhisperPopup::manage
+//       Access: Published
+//  Description: Adds the popup to the pool of available popups to be
+//               made visible when appropriate (i.e. when there is
+//               room available).
+//////////////////////////////////////////////////////////////////// 2 4 this 3 399  7 manager 1 379  
+112 0 0 4 137 382 0 0 310 ////////////////////////////////////////////////////////////////////
+//     Function: WhisperPopup::unmanage
+//       Access: Published
+//  Description: Removes the popup from the pool of available popups
+//               to be made visible.
+//////////////////////////////////////////////////////////////////// 2 4 this 3 399  7 manager 1 379  
+113 0 0 7 138 375 0 0 0 0 
+114 0 0 7 128 378 0 0 0 1 4 this 3 399  
+115 0 0 6 130 373 0 0 0 1 4 this 3 399  
+116 0 0 7 187 400 334 0 0 0 
+117 0 0 7 187 400 334 0 0 1 6 param0 0 401  
+118 0 0 6 140 360 0 0 325 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_name_wordwrap
+//       Access: Published, Static
+//  Description: Returns the width at which all avatar nametags will
+//               be wordwrapped.
+//////////////////////////////////////////////////////////////////// 0 
+119 0 0 6 141 403 0 0 386 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_card_pad
+//       Access: Published, Static
+//  Description: Returns the amount of padding applied to the card
+//               behind the nametags, in each direction (left, right,
+//               bottom, top).
+//////////////////////////////////////////////////////////////////// 0 
+120 0 0 4 142 382 0 0 453 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_camera
+//       Access: Published, Static
+//  Description: Sets the node that indicates the camera.  The
+//               Nametags will rotate and scale (or spin their little
+//               arrows around) according to the relative position of
+//               the camera node.
+//////////////////////////////////////////////////////////////////// 1 4 node 1 367  
+121 0 0 6 143 367 0 0 317 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_camera
+//       Access: Published, Static
+//  Description: Returns the node that indicates the camera.  See
+//               See set_camera().
+//////////////////////////////////////////////////////////////////// 0 
+122 0 0 4 144 382 0 0 396 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_toon
+//       Access: Published, Static
+//  Description: Sets the node that indicates the LocalToon.  This is
+//               important for 2-d Nametags to determine how to rotate
+//               their arrows correctly.
+//////////////////////////////////////////////////////////////////// 1 4 node 1 367  
+123 0 0 6 145 367 0 0 316 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_toon
+//       Access: Published, Static
+//  Description: Returns the node that indicates the LocalToon.  See
+//               See set_toon().
+//////////////////////////////////////////////////////////////////// 0 
+124 0 0 4 146 382 0 0 334 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_arrow_model
+//       Access: Published, Static
+//  Description: Sets the node that will be instanced to each
+//               Nametag2d to draw a little arrow.
+//////////////////////////////////////////////////////////////////// 1 4 node 1 367  
+125 0 0 6 147 367 0 0 337 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_arrow_model
+//       Access: Published, Static
+//  Description: Returns the node that will be instanced to each
+//               Nametag2d to draw a little arrow.
+//////////////////////////////////////////////////////////////////// 0 
+126 0 0 4 148 382 0 0 454 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_page_button_ready
+//       Access: Published, Static
+//  Description: Sets the node that will be used to draw a
+//               page-advance button in the bottom corner of chat
+//               balloons when CF_page_button is set, in the indicated
+//               button state.
+//////////////////////////////////////////////////////////////////// 2 5 state 1 366  4 node 1 367  
+127 0 0 6 149 367 0 0 357 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_page_button_ready
+//       Access: Published, Static
+//  Description: Returns the node that will be used to draw a
+//               page-advance button in the indicated button state.
+//////////////////////////////////////////////////////////////////// 1 5 state 1 366  
+128 0 0 4 150 382 0 0 446 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_quit_button_ready
+//       Access: Published, Static
+//  Description: Sets the node that will be used to draw a
+//               quit button in the bottom corner of chat balloons
+//               when CF_page_button is set, in the indicated button
+//               state.
+//////////////////////////////////////////////////////////////////// 2 5 state 1 366  4 node 1 367  
+129 0 0 6 151 367 0 0 349 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_quit_button_ready
+//       Access: Published, Static
+//  Description: Returns the node that will be used to draw a
+//               quit button in the indicated button state.
+//////////////////////////////////////////////////////////////////// 1 5 state 1 366  
+130 0 0 4 152 382 0 0 407 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_nametag_card
+//       Access: Published, Static
+//  Description: Sets the geometry that will be parented behind each
+//               Nametag as a background card, and simultaneously
+//               specifies the size of the model.
+//////////////////////////////////////////////////////////////////// 2 4 node 1 367  5 frame 1 403  
+131 0 0 6 153 367 0 0 341 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_nametag_card
+//       Access: Published, Static
+//  Description: Returns the geometry that will be parented behind
+//               each Nametag as a background card.
+//////////////////////////////////////////////////////////////////// 0 
+132 0 0 6 154 403 0 0 327 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_nametag_card_frame
+//       Access: Published, Static
+//  Description: Returns the size of the geometry returned by
+//               get_nametag_card().
+//////////////////////////////////////////////////////////////////// 0 
+133 0 0 4 155 382 0 0 396 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_rollover_sound
+//       Access: Published, Static
+//  Description: Sets the sound effect that will be played whenever
+//               the mouse rolls over a Nametag, either in the world
+//               or on the screen.
+//////////////////////////////////////////////////////////////////// 1 5 sound 1 405  
+134 0 0 7 156 405 0 0 344 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_rollover_sound
+//       Access: Published, Static
+//  Description: Returns the sound effect that will be played whenever
+//               the mouse rolls over a Nametag.
+//////////////////////////////////////////////////////////////////// 0 
+135 0 0 4 157 382 0 0 392 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_click_sound
+//       Access: Published, Static
+//  Description: Sets the sound effect that will be played whenever
+//               the mouse clicks on a Nametag, either in the world
+//               or on the screen.
+//////////////////////////////////////////////////////////////////// 1 5 sound 1 405  
+136 0 0 7 158 405 0 0 340 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_click_sound
+//       Access: Published, Static
+//  Description: Returns the sound effect that will be played whenever
+//               the mouse clicks on a Nametag.
+//////////////////////////////////////////////////////////////////// 0 
+137 0 0 4 159 382 0 0 291 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_mouse_watcher
+//       Access: Published, Static
+//  Description: Sets a pointer to the MouseWatcher node in effect.
+//////////////////////////////////////////////////////////////////// 1 7 watcher 1 407  
+138 0 0 7 160 407 0 0 294 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_mouse_watcher
+//       Access: Published, Static
+//  Description: Returns a pointer to the MouseWatcher node in effect.
+//////////////////////////////////////////////////////////////////// 0 
+139 0 0 4 161 382 0 0 366 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_speech_balloon_2d
+//       Access: Published, Static
+//  Description: Sets the ChatBalloon geometry that will be used for
+//               rendering speech chat messages by Nametag2d objects.
+//////////////////////////////////////////////////////////////////// 1 7 balloon 1 355  
+140 0 0 7 162 355 0 0 386 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_speech_balloon_2d
+//       Access: Published, Static
+//  Description: Returns the ChatBalloon geometry that will be used
+//               for rendering speech chat messages by Nametag2d
+//               objects.
+//////////////////////////////////////////////////////////////////// 0 
+141 0 0 4 163 382 0 0 368 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_thought_balloon_2d
+//       Access: Published, Static
+//  Description: Sets the ChatBalloon geometry that will be used for
+//               rendering thought chat messages by Nametag2d objects.
+//////////////////////////////////////////////////////////////////// 1 7 balloon 1 355  
+142 0 0 7 164 355 0 0 388 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_thought_balloon_2d
+//       Access: Published, Static
+//  Description: Returns the ChatBalloon geometry that will be used
+//               for rendering thought chat messages by Nametag2d
+//               objects.
+//////////////////////////////////////////////////////////////////// 0 
+143 0 0 4 165 382 0 0 366 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_speech_balloon_3d
+//       Access: Published, Static
+//  Description: Sets the ChatBalloon geometry that will be used for
+//               rendering speech chat messages by Nametag3d objects.
+//////////////////////////////////////////////////////////////////// 1 7 balloon 1 355  
+144 0 0 7 166 355 0 0 386 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_speech_balloon_3d
+//       Access: Published, Static
+//  Description: Returns the ChatBalloon geometry that will be used
+//               for rendering speech chat messages by Nametag3d
+//               objects.
+//////////////////////////////////////////////////////////////////// 0 
+145 0 0 4 167 382 0 0 368 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_thought_balloon_3d
+//       Access: Published, Static
+//  Description: Sets the ChatBalloon geometry that will be used for
+//               rendering thought chat messages by Nametag3d objects.
+//////////////////////////////////////////////////////////////////// 1 7 balloon 1 355  
+146 0 0 7 168 355 0 0 388 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_thought_balloon_3d
+//       Access: Published, Static
+//  Description: Returns the ChatBalloon geometry that will be used
+//               for rendering thought chat messages by Nametag3d
+//               objects.
+//////////////////////////////////////////////////////////////////// 0 
+147 0 0 4 169 382 0 0 538 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_master_nametags_active
+//       Access: Published, Static
+//  Description: Changes the global flag to disable all Nametags at
+//               once.  Setting this flag to false makes all Nametags
+//               in the world inactive (i.e. not pickable); setting
+//               this to true allows individual Nametags to be active
+//               or inactive.
+//////////////////////////////////////////////////////////////////// 1 6 active 1 365  
+148 0 0 6 170 365 0 0 249 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_master_nametags_active
+//       Access: Published, Static
+//  Description:
+//////////////////////////////////////////////////////////////////// 0 
+149 0 0 4 171 382 0 0 569 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_master_nametags_visible
+//       Access: Published, Static
+//  Description: Changes the global flag to hide all Nametags at
+//               once.  Setting this flag to false makes all Nametags
+//               in the world invisible, including onscreen nametags.
+//               It affects only the display of names; it does not
+//               affect chat bubbles or onscreen chat balloons.
+//////////////////////////////////////////////////////////////////// 1 7 visible 1 365  
+150 0 0 6 172 365 0 0 250 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_master_nametags_visible
+//       Access: Published, Static
+//  Description:
+//////////////////////////////////////////////////////////////////// 0 
+151 0 0 4 173 382 0 0 611 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_master_arrows_on
+//       Access: Published, Static
+//  Description: Changes the global flag to disable all Nametag2d
+//               names & arrows at once.  Setting this flag to false
+//               makes all Nametag2ds in the world not display a name
+//               or arrow (but they will still display speech for
+//               nearby avatars).  Setting this true lets the
+//               Nametag2ds display what they want.
+//////////////////////////////////////////////////////////////////// 1 6 active 1 365  
+152 0 0 6 174 365 0 0 243 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_master_arrows_on
+//       Access: Published, Static
+//  Description:
+//////////////////////////////////////////////////////////////////// 0 
+153 0 0 4 175 382 0 0 618 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_onscreen_chat_forced
+//       Access: Published, Static
+//  Description: Changes the global flag force all chat messages to
+//               also be displayed as onscreen chat messages, even if
+//               their corresponding 3-d nametag appears to be
+//               onscreen.  This can be used when we're confident that
+//               that 3-d nametag is obscured by some large onscreen
+//               panel (like the battle menu).
+//////////////////////////////////////////////////////////////////// 1 6 active 1 365  
+154 0 0 6 176 365 0 0 247 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_onscreen_chat_forced
+//       Access: Published, Static
+//  Description:
+//////////////////////////////////////////////////////////////////// 0 
+155 0 0 4 177 382 0 0 467 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_max_2d_alpha
+//       Access: Published, Static
+//  Description: Sets the highest level of alpha that is allowed for a
+//               Nametag2d background.  The Nametag2d will never be
+//               more opaque than this, despite its color setting in
+//               NametagGlobals.cxx.
+//////////////////////////////////////////////////////////////////// 1 5 alpha 1 360  
+156 0 0 6 178 360 0 0 360 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_max_2d_alpha
+//       Access: Published, Static
+//  Description: Returns the highest level of alpha that is allowed
+//               for a Nametag2d background.  See set_max_2d_alpha().
+//////////////////////////////////////////////////////////////////// 0 
+157 0 0 4 179 382 0 0 466 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_min_2d_alpha
+//       Access: Published, Static
+//  Description: Sets the lowest level of alpha that is allowed for a
+//               Nametag2d background.  The Nametag2d will never be
+//               less opaque than this, despite its color setting in
+//               NametagGlobals.cxx.
+//////////////////////////////////////////////////////////////////// 1 5 alpha 1 360  
+158 0 0 6 180 360 0 0 359 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_min_2d_alpha
+//       Access: Published, Static
+//  Description: Returns the lowest level of alpha that is allowed
+//               for a Nametag2d background.  See set_min_2d_alpha().
+//////////////////////////////////////////////////////////////////// 0 
+159 0 0 4 181 382 0 0 426 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_global_nametag_scale
+//       Access: Published, Static
+//  Description: Specifies a global scale factor on all the 3-d
+//               nametags in the world.  This is in addition to the
+//               scaling to match the distance from the camera.
+//////////////////////////////////////////////////////////////////// 1 5 scale 1 360  
+160 0 0 6 182 360 0 0 456 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_global_nametag_scale
+//       Access: Published, Static
+//  Description: Returns the global scale factor on all the 3-d
+//               nametags in the world.  Normally, this will be 1.0,
+//               but it might be temporarily adjusted for special
+//               purposes.
+//////////////////////////////////////////////////////////////////// 0 
+161 0 0 6 183 361 0 0 286 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_name_fg
+//       Access: Published, Static
+//  Description: Returns the color of the indicated type of nametag.
+//////////////////////////////////////////////////////////////////// 2 10 color_code 1 349  5 state 1 409  
+162 0 0 6 184 361 0 0 286 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_name_bg
+//       Access: Published, Static
+//  Description: Returns the color of the indicated type of nametag.
+//////////////////////////////////////////////////////////////////// 2 10 color_code 1 349  5 state 1 409  
+163 0 0 6 185 361 0 0 286 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::get_balloon_modulation_color
+//       Access: Public, Static
+//  Description: Returns the balloon modulation color.
+//////////////////////////////////////////////////////////////////// 0 
+164 0 0 4 186 382 0 0 283 ////////////////////////////////////////////////////////////////////
+//     Function: NametagGlobals::set_balloon_modulation_color
+//       Access: Public, Static
+//  Description: Sets the balloon modulation color.
+//////////////////////////////////////////////////////////////////// 1 5 color 1 361  
+76
+335 11 ChatBalloon 0 75777 11 ChatBalloon 11 ChatBalloon 0 0 0 1 165 0 0 1 166 0 0 1 0 336 0 0 0 0 189
+//               These nodes will be sized and translated
+//               appropriately to frame the text as generated.
+////////////////////////////////////////////////////////////////////
+
+336 14 ReferenceCount 0 2048 14 ReferenceCount 14 ReferenceCount 0 0 0 0 0 0 0 0 0 0 0 0 203
+/**
+ * A base class for all things that want to be reference-counted.
+ * ReferenceCount works in conjunction with PointerTo to automatically delete
+ * objects when the last pointer to them goes away.
+ */
+
+337 9 ChatFlags 0 532481 9 ChatFlags 9 ChatFlags 0 0 0 0 0 0 0 0 0 0 9 9 CF_speech 9 CF_speech 0
+1 10 CF_thought 10 CF_thought 0
+2 14 CF_quicktalker 14 CF_quicktalker 0
+4 10 CF_timeout 10 CF_timeout 0
+8 14 CF_page_button 14 CF_page_button 0
+16 14 CF_quit_button 14 CF_quit_button 0
+32 11 CF_reversed 11 CF_reversed 0
+64 15 CF_snd_openchat 15 CF_snd_openchat 0
+128 17 CF_no_quit_button 17 CF_no_quit_button 0
+256 0 292
+////////////////////////////////////////////////////////////////////
+//        Enum : ChatFlags
+// Description : This enumerated type defines the bits associated with
+//               the kinds of chat messages we may have.
+////////////////////////////////////////////////////////////////////
+
+338 14 ClickablePopup 0 26625 14 ClickablePopup 14 ClickablePopup 0 0 0 1 170 167 0 2 168 169 0 0 0 0 0 475
+////////////////////////////////////////////////////////////////////
+//       Class : ClickablePopup
+// Description : An abstract base class defining the interface to
+//               something other than a GUI button that appears
+//               onscreen and may be clicked on with the mouse.  This
+//               includes 2-d nametags, 3-d nametags, and margin
+//               messages like whispers.
+////////////////////////////////////////////////////////////////////
+
+339 11 MarginPopup 0 75777 11 MarginPopup 11 MarginPopup 0 0 0 1 174 0 0 3 171 172 173 0 0 1 0 340 0 0 0 0 421
+////////////////////////////////////////////////////////////////////
+//       Class : MarginPopup
+// Description : This is a special kind of Node that represents
+//               geometry that may appear along the edges of the
+//               screen during gameplay.  In particular, this will be
+//               a Nametag2d or a WhisperPopup message.
+////////////////////////////////////////////////////////////////////
+
+340 9 PandaNode 0 2048 9 PandaNode 9 PandaNode 0 0 0 0 0 0 0 0 0 0 0 0 175
+/**
+ * A basic node of the scene graph or data graph.  This is the base class of
+ * all specialized nodes, and also serves as a generic node with no special
+ * properties.
+ */
+
+341 13 MarginManager 0 75777 13 MarginManager 13 MarginManager 0 0 0 1 175 0 0 7 176 177 178 179 180 181 182 0 0 1 0 340 0 0 0 0 420
+////////////////////////////////////////////////////////////////////
+//       Class : MarginManager
+// Description : This class manages the collection of MarginPopup
+//               objects visible in the world.  It's responsible for
+//               parenting them and setting their initial transforms
+//               to place them properly margin.
+////////////////////////////////////////////////////////////////////
+
+342 7 Nametag 0 75777 7 Nametag 7 Nametag 0 0 0 0 167 0 15 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 0 0 1 0 338 0 0 0 1 343 541
+////////////////////////////////////////////////////////////////////
+//       Class : Nametag
+// Description : This is an abstract base class defining the interface
+//               to a nametag object.  This is an object that may be
+//               attached to a NametagGroup and is typically
+//               associated with an avatar; it displays the avatar's
+//               name and/or his chat messages, and can be clicked on
+//               to select the avatar.
+////////////////////////////////////////////////////////////////////
+
+343 8 Contents 0 794624 17 Nametag::Contents 17 Nametag::Contents 342 0 0 0 0 0 0 0 0 0 3 6 C_name 15 Nametag::C_name 0
+1 8 C_speech 17 Nametag::C_speech 0
+2 9 C_thought 18 Nametag::C_thought 0
+4 0 0
+
+344 9 Nametag2d 0 26625 9 Nametag2d 9 Nametag2d 0 0 0 0 202 0 1 203 0 0 2 3 342 198 199 3 339 200 201 0 0 372
+//               Unlike a Nametag3d, a Nametag2d need not be
+//               explicitly parented to any node.  Instead, it should
+//               be managed() by an MarginManager, which will be
+//               responsible for parenting it in an out of the scene
+//               graph as appropriate.
+////////////////////////////////////////////////////////////////////
+
+345 9 Nametag3d 0 26625 9 Nametag3d 9 Nametag3d 0 0 0 0 208 0 3 209 210 211 0 0 2 3 342 204 205 3 340 206 207 0 0 288
+////////////////////////////////////////////////////////////////////
+//       Class : Nametag3d
+// Description : This is a particular kind of Nametag that hovers over
+//               the avatar's head in the 3-d world.
+////////////////////////////////////////////////////////////////////
+
+346 14 NametagFloat2d 0 75777 14 NametagFloat2d 14 NametagFloat2d 0 0 0 1 212 208 0 1 213 0 0 1 0 345 0 0 0 0 340
+////////////////////////////////////////////////////////////////////
+//       Class : NametagFloat2d
+// Description : This is a user-created Nametag that can be parented
+//               to some object, not necessarily the avatar, in the
+//               3-d scene graph.
+////////////////////////////////////////////////////////////////////
+
+347 14 NametagFloat3d 0 75777 14 NametagFloat3d 14 NametagFloat3d 0 0 0 1 214 208 0 1 215 0 0 1 0 345 0 0 0 0 340
+////////////////////////////////////////////////////////////////////
+//       Class : NametagFloat3d
+// Description : This is a user-created Nametag that can be parented
+//               to some object, not necessarily the avatar, in the
+//               3-d scene graph.
+////////////////////////////////////////////////////////////////////
+
+348 12 NametagGroup 0 26625 12 NametagGroup 12 NametagGroup 0 0 0 1 216 217 0 58 218 219 220 221 222 223 224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239 240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255 256 257 258 259 260 261 262 263 264 265 266 267 268 269 270 271 272 273 274 275 0 0 0 0 1 349 370
+////////////////////////////////////////////////////////////////////
+//       Class : NametagGroup
+// Description : This is a collection of Nametags that are associated
+//               with a particular avatar.  The primary interface to
+//               all the nametags is through this Group object.
+////////////////////////////////////////////////////////////////////
+
+349 9 ColorCode 0 794624 23 NametagGroup::ColorCode 23 NametagGroup::ColorCode 348 0 0 0 0 0 0 0 0 0 9 9 CC_normal 23 NametagGroup::CC_normal 0
+0 10 CC_no_chat 24 NametagGroup::CC_no_chat 0
+1 13 CC_non_player 27 NametagGroup::CC_non_player 0
+2 7 CC_suit 21 NametagGroup::CC_suit 0
+3 16 CC_toon_building 30 NametagGroup::CC_toon_building 0
+4 16 CC_suit_building 30 NametagGroup::CC_suit_building 0
+5 17 CC_house_building 31 NametagGroup::CC_house_building 0
+6 13 CC_speed_chat 27 NametagGroup::CC_speed_chat 0
+7 12 CC_free_chat 26 NametagGroup::CC_free_chat 0
+8 0 0
+
+350 12 WhisperPopup 0 26625 12 WhisperPopup 12 WhisperPopup 0 0 0 1 280 281 0 4 282 283 284 285 0 0 2 3 339 276 277 3 338 278 279 0 1 351 426
+////////////////////////////////////////////////////////////////////
+//       Class : WhisperPopup
+// Description : This is a whisper message that pops up on the screen
+//               from someone else in the game.  It's not associated
+//               with a Nametag, but it occupies the same space in the
+//               screen that Nametag2d's occupy.
+////////////////////////////////////////////////////////////////////
+
+351 11 WhisperType 0 794624 25 WhisperPopup::WhisperType 25 WhisperPopup::WhisperType 350 0 0 0 0 0 0 0 0 0 6 9 WT_normal 23 WhisperPopup::WT_normal 0
+0 15 WT_quick_talker 29 WhisperPopup::WT_quick_talker 0
+1 9 WT_system 23 WhisperPopup::WT_system 0
+2 13 WT_battle_SOS 27 WhisperPopup::WT_battle_SOS 0
+3 8 WT_emote 22 WhisperPopup::WT_emote 0
+4 26 WT_toontown_boarding_group 40 WhisperPopup::WT_toontown_boarding_group 0
+5 0 29
+// Types of whisper messages.
+
+352 14 NametagGlobals 0 141313 14 NametagGlobals 14 NametagGlobals 0 0 0 1 333 334 0 47 286 287 288 289 290 291 292 293 294 295 296 297 298 299 300 301 302 303 304 305 306 307 308 309 310 311 312 313 314 315 316 317 318 319 320 321 322 323 324 325 326 327 328 329 330 331 332 0 0 0 0 0 478
+////////////////////////////////////////////////////////////////////
+//       Class : NametagGlobals
+// Description : This class serves primarily as a storage point for
+//               global parameters that affect Nametags, both of the
+//               2-d and 3-d variety.  Some of these can be (and must
+//               be!) defined at runtime by the Python code; others
+//               are compiled in.
+////////////////////////////////////////////////////////////////////
+
+353 19 ChatBalloon const * 0 8576 19 ChatBalloon const * 19 ChatBalloon const * 0 0 354 0 0 0 0 0 0 0 0 0 0
+
+354 17 ChatBalloon const 0 8832 17 ChatBalloon const 17 ChatBalloon const 0 0 335 0 0 0 0 0 0 0 0 0 0
+
+355 13 ChatBalloon * 0 8576 13 ChatBalloon * 13 ChatBalloon * 0 0 335 0 0 0 0 0 0 0 0 0 0
+
+356 11 PandaNode * 0 8576 11 PandaNode * 11 PandaNode * 0 0 340 0 0 0 0 0 0 0 0 0 0
+
+357 13 atomic string 0 2 13 atomic string 13 atomic string 0 7 0 0 0 0 0 0 0 0 0 0 0
+
+358 10 TextFont * 0 8576 10 TextFont * 10 TextFont * 0 0 359 0 0 0 0 0 0 0 0 0 0
+
+359 8 TextFont 0 2048 8 TextFont 8 TextFont 0 0 0 0 0 0 0 0 0 0 0 0 252
+/**
+ * An encapsulation of a font; i.e.  a set of glyphs that may be assembled
+ * together by a TextNode to represent a string of text.
+ *
+ * This is just an abstract interface; see StaticTextFont or DynamicTextFont
+ * for an actual implementation.
+ */
+
+360 5 float 0 8194 5 float 5 float 0 2 0 0 0 0 0 0 0 0 0 0 0
+
+361 15 LColorf const * 0 8576 15 LColorf const * 15 LColorf const * 0 0 362 0 0 0 0 0 0 0 0 0 0
+
+362 13 LColorf const 0 8832 13 LColorf const 13 LColorf const 0 0 363 0 0 0 0 0 0 0 0 0 0
+
+363 7 LColorf 0 2105344 7 LColorf 7 LColorf 0 0 364 0 0 0 0 0 0 0 0 0 0
+
+364 10 LVecBase4f 0 2048 10 LVecBase4f 10 LVecBase4f 0 0 0 0 0 0 0 0 0 0 0 0 77
+/**
+ * This is the base class for all three-component vectors and points.
+ */
+
+365 4 bool 0 8194 4 bool 4 bool 0 4 0 0 0 0 0 0 0 0 0 0 0
+
+366 3 int 0 8194 3 int 3 int 0 1 0 0 0 0 0 0 0 0 0 0 0
+
+367 16 NodePath const * 0 8576 16 NodePath const * 16 NodePath const * 0 0 368 0 0 0 0 0 0 0 0 0 0
+
+368 14 NodePath const 0 8832 14 NodePath const 14 NodePath const 0 0 369 0 0 0 0 0 0 0 0 0 0
+
+369 8 NodePath 0 2048 8 NodePath 8 NodePath 0 0 0 0 0 0 0 0 0 0 0 0 762
+/**
+ * NodePath is the fundamental system for disambiguating instances, and also
+ * provides a higher-level interface for manipulating the scene graph.
+ *
+ * A NodePath is a list of connected nodes from the root of the graph to any
+ * sub-node.  Each NodePath therefore uniquely describes one instance of a
+ * node.
+ *
+ * NodePaths themselves are lightweight objects that may easily be copied and
+ * passed by value.  Their data is stored as a series of NodePathComponents
+ * that are stored on the nodes.  Holding a NodePath will keep a reference
+ * count to all the nodes in the path.  However, if any node in the path is
+ * removed or reparented (perhaps through a different NodePath), the NodePath
+ * will automatically be updated to reflect the changes.
+ */
+
+370 10 NodePath * 0 8576 10 NodePath * 10 NodePath * 0 0 369 0 0 0 0 0 0 0 0 0 0
+
+371 22 ClickablePopup const * 0 8576 22 ClickablePopup const * 22 ClickablePopup const * 0 0 372 0 0 0 0 0 0 0 0 0 0
+
+372 20 ClickablePopup const 0 8832 20 ClickablePopup const 20 ClickablePopup const 0 0 338 0 0 0 0 0 0 0 0 0 0
+
+373 16 ClickablePopup * 0 8576 16 ClickablePopup * 16 ClickablePopup * 0 0 338 0 0 0 0 0 0 0 0 0 0
+
+374 10 TypeHandle 0 16779264 10 TypeHandle 10 TypeHandle 0 0 0 0 0 0 0 0 0 0 0 0 732
+/**
+ * TypeHandle is the identifier used to differentiate C++ class types.  Any
+ * C++ classes that inherit from some base class, and must be differentiated
+ * at run time, should store a static TypeHandle object that can be queried
+ * through a static member function named get_class_type().  Most of the time,
+ * it is also desirable to inherit from TypedObject, which provides some
+ * virtual functions to return the TypeHandle for a particular instance.
+ *
+ * At its essence, a TypeHandle is simply a unique identifier that is assigned
+ * by the TypeRegistry.  The TypeRegistry stores a tree of TypeHandles, so
+ * that ancestry of a particular type may be queried, and the type name may be
+ * retrieved for run-time display.
+ */
+
+375 12 TypeHandle * 0 8576 12 TypeHandle * 12 TypeHandle * 0 0 374 0 0 0 0 0 0 0 0 0 0
+
+376 19 MarginPopup const * 0 8576 19 MarginPopup const * 19 MarginPopup const * 0 0 377 0 0 0 0 0 0 0 0 0 0
+
+377 17 MarginPopup const 0 8832 17 MarginPopup const 17 MarginPopup const 0 0 339 0 0 0 0 0 0 0 0 0 0
+
+378 13 MarginPopup * 0 8576 13 MarginPopup * 13 MarginPopup * 0 0 339 0 0 0 0 0 0 0 0 0 0
+
+379 15 MarginManager * 0 8576 15 MarginManager * 15 MarginManager * 0 0 341 0 0 0 0 0 0 0 0 0 0
+
+380 21 MarginManager const * 0 8576 21 MarginManager const * 21 MarginManager const * 0 0 381 0 0 0 0 0 0 0 0 0 0
+
+381 19 MarginManager const 0 8832 19 MarginManager const 19 MarginManager const 0 0 341 0 0 0 0 0 0 0 0 0 0
+
+382 4 void 0 8194 4 void 4 void 0 6 0 0 0 0 0 0 0 0 0 0 0
+
+383 9 Nametag * 0 8576 9 Nametag * 9 Nametag * 0 0 342 0 0 0 0 0 0 0 0 0 0
+
+384 15 Nametag const * 0 8576 15 Nametag const * 15 Nametag const * 0 0 385 0 0 0 0 0 0 0 0 0 0
+
+385 13 Nametag const 0 8832 13 Nametag const 13 Nametag const 0 0 342 0 0 0 0 0 0 0 0 0 0
+
+386 14 NametagGroup * 0 8576 14 NametagGroup * 14 NametagGroup * 0 0 348 0 0 0 0 0 0 0 0 0 0
+
+387 11 Nametag2d * 0 8576 11 Nametag2d * 11 Nametag2d * 0 0 344 0 0 0 0 0 0 0 0 0 0
+
+388 11 Nametag3d * 0 8576 11 Nametag3d * 11 Nametag3d * 0 0 345 0 0 0 0 0 0 0 0 0 0
+
+389 17 Nametag3d const * 0 8576 17 Nametag3d const * 17 Nametag3d const * 0 0 390 0 0 0 0 0 0 0 0 0 0
+
+390 15 Nametag3d const 0 8832 15 Nametag3d const 15 Nametag3d const 0 0 345 0 0 0 0 0 0 0 0 0 0
+
+391 16 NametagFloat2d * 0 8576 16 NametagFloat2d * 16 NametagFloat2d * 0 0 346 0 0 0 0 0 0 0 0 0 0
+
+392 16 NametagFloat3d * 0 8576 16 NametagFloat3d * 16 NametagFloat3d * 0 0 347 0 0 0 0 0 0 0 0 0 0
+
+393 20 NametagGroup const * 0 8576 20 NametagGroup const * 20 NametagGroup const * 0 0 394 0 0 0 0 0 0 0 0 0 0
+
+394 18 NametagGroup const 0 8832 18 NametagGroup const 18 NametagGroup const 0 0 348 0 0 0 0 0 0 0 0 0 0
+
+395 10 LVecBase2f 0 2048 10 LVecBase2f 10 LVecBase2f 0 0 0 0 0 0 0 0 0 0 0 0 75
+/**
+ * This is the base class for all two-component vectors and points.
+ */
+
+396 12 LVecBase2f * 0 8576 12 LVecBase2f * 12 LVecBase2f * 0 0 395 0 0 0 0 0 0 0 0 0 0
+
+397 20 WhisperPopup const * 0 8576 20 WhisperPopup const * 20 WhisperPopup const * 0 0 398 0 0 0 0 0 0 0 0 0 0
+
+398 18 WhisperPopup const 0 8832 18 WhisperPopup const 18 WhisperPopup const 0 0 350 0 0 0 0 0 0 0 0 0 0
+
+399 14 WhisperPopup * 0 8576 14 WhisperPopup * 14 WhisperPopup * 0 0 350 0 0 0 0 0 0 0 0 0 0
+
+400 16 NametagGlobals * 0 8576 16 NametagGlobals * 16 NametagGlobals * 0 0 352 0 0 0 0 0 0 0 0 0 0
+
+401 22 NametagGlobals const * 0 8576 22 NametagGlobals const * 22 NametagGlobals const * 0 0 402 0 0 0 0 0 0 0 0 0 0
+
+402 20 NametagGlobals const 0 8832 20 NametagGlobals const 20 NametagGlobals const 0 0 352 0 0 0 0 0 0 0 0 0 0
+
+403 18 LVecBase4f const * 0 8576 18 LVecBase4f const * 18 LVecBase4f const * 0 0 404 0 0 0 0 0 0 0 0 0 0
+
+404 16 LVecBase4f const 0 8832 16 LVecBase4f const 16 LVecBase4f const 0 0 364 0 0 0 0 0 0 0 0 0 0
+
+405 12 AudioSound * 0 8576 12 AudioSound * 12 AudioSound * 0 0 406 0 0 0 0 0 0 0 0 0 0
+
+406 10 AudioSound 0 2048 10 AudioSound 10 AudioSound 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+407 14 MouseWatcher * 0 8576 14 MouseWatcher * 14 MouseWatcher * 0 0 408 0 0 0 0 0 0 0 0 0 0
+
+408 12 MouseWatcher 0 2048 12 MouseWatcher 12 MouseWatcher 0 0 0 0 0 0 0 0 0 0 0 0 1142
+/**
+ * This TFormer maintains a list of rectangular regions on the screen that are
+ * considered special mouse regions; typically these will be click buttons.
+ * When the mouse passes in or out of one of these regions, or when a button
+ * is clicked while the mouse is in one of these regions, an event is thrown.
+ *
+ * Mouse events may also be suppressed from the rest of the datagraph in these
+ * special regions.
+ *
+ * This class can also implement a software mouse pointer by automatically
+ * generating a transform to apply to a piece of geometry placed under the 2-d
+ * scene graph.  It will move the geometry around according to the mouse's
+ * known position.
+ *
+ * Finally, this class can keep a record of the mouse trail.  This is useful
+ * if you want to know, not just where the mouse is, but the exact sequence of
+ * movements it took to get there.  This information is mainly useful for
+ * gesture-recognition code.  To use trail logging, you need to enable the
+ * generation of pointer events in the GraphicsWindowInputDevice and set the
+ * trail log duration in the MouseWatcher.  Otherwise, the trail log will be
+ * empty.
+ */
+
+409 5 State 0 794624 15 PGButton::State 15 PGButton::State 410 0 0 0 0 0 0 0 0 0 4 7 S_ready 17 PGButton::S_ready 0
+0 11 S_depressed 21 PGButton::S_depressed 0
+1 10 S_rollover 20 PGButton::S_rollover 0
+2 10 S_inactive 20 PGButton::S_inactive 0
+3 0 0
+
+410 8 PGButton 0 2048 8 PGButton 8 PGButton 0 0 0 0 0 0 0 0 0 0 0 0 180
+/**
+ * This is a particular kind of PGItem that is specialized to behave like a
+ * normal button object.  It keeps track of its own state, and handles mouse
+ * events sensibly.
+ */
+
+0
+0
+0

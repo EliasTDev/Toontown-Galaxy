@@ -13,7 +13,7 @@ from direct.actor import Actor
 import random
 from toontown.toon import DistributedToon
 from direct.directnotify import DirectNotifyGlobal
-from libotp import *
+from panda3d.otp import *
 NUM_CATALOG_ROWS = 3
 NUM_CATALOG_COLS = 2
 

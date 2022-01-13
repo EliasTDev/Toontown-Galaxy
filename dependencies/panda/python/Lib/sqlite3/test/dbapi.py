@@ -1,7 +1,7 @@
 #-*- coding: iso-8859-1 -*-
 # pysqlite2/test/dbapi.py: tests for DB-API compliance
 #
-# Copyright (C) 2004-2010 Gerhard Häring <gh@ghaering.de>
+# Copyright (C) 2004-2010 Gerhard HÃ¤ring <gh@ghaering.de>
 #
 # This file is part of pysqlite.
 #
@@ -21,14 +21,13 @@
 #    misrepresented as being the original software.
 # 3. This notice may not be removed or altered from any source distribution.
 
+import subprocess
+import threading
 import unittest
 import sqlite3 as sqlite
-try:
-    import threading
-except ImportError:
-    threading = None
+import sys
 
-from test.support import TESTFN, unlink
+from test.support import SHORT_TIMEOUT, TESTFN, unlink
 
 
 class ModuleTests(unittest.TestCase):
@@ -163,6 +162,17 @@ class ConnectionTests(unittest.TestCase):
         with self.assertRaises(AttributeError):
             self.cx.in_transaction = True
 
+    def CheckOpenWithPathLikeObject(self):
+        """ Checks that we can successfully connect to a database using an object that
+            is PathLike, i.e. has __fspath__(). """
+        self.addCleanup(unlink, TESTFN)
+        class Path:
+            def __fspath__(self):
+                return TESTFN
+        path = Path()
+        with sqlite.connect(path) as cx:
+            cx.execute('create table test(id integer)')
+
     def CheckOpenUri(self):
         if sqlite.sqlite_version_info < (3, 7, 7):
             with self.assertRaises(sqlite.NotSupportedError):
@@ -183,6 +193,27 @@ class ConnectionTests(unittest.TestCase):
         with self.assertRaises(sqlite.NotSupportedError) as cm:
             sqlite.connect(':memory:', check_same_thread=False)
         self.assertEqual(str(cm.exception), 'shared connections not available')
+
+
+class UninitialisedConnectionTests(unittest.TestCase):
+    def setUp(self):
+        self.cx = sqlite.Connection.__new__(sqlite.Connection)
+
+    def test_uninit_operations(self):
+        funcs = (
+            lambda: self.cx.isolation_level,
+            lambda: self.cx.total_changes,
+            lambda: self.cx.in_transaction,
+            lambda: self.cx.iterdump(),
+            lambda: self.cx.cursor(),
+            lambda: self.cx.close(),
+        )
+        for func in funcs:
+            with self.subTest(func=func):
+                self.assertRaisesRegex(sqlite.ProgrammingError,
+                                       "Base Connection.__init__ not called",
+                                       func)
+
 
 class CursorTests(unittest.TestCase):
     def setUp(self):
@@ -222,7 +253,7 @@ class CursorTests(unittest.TestCase):
             """)
 
     def CheckExecuteWrongSqlArg(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             self.cu.execute(42)
 
     def CheckExecuteArgInt(self):
@@ -268,7 +299,7 @@ class CursorTests(unittest.TestCase):
         self.assertEqual(row[0], "foo")
 
     def CheckExecuteParamSequence(self):
-        class L(object):
+        class L:
             def __len__(self):
                 return 1
             def __getitem__(self, x):
@@ -279,6 +310,18 @@ class CursorTests(unittest.TestCase):
         self.cu.execute("select name from test where name=?", L())
         row = self.cu.fetchone()
         self.assertEqual(row[0], "foo")
+
+    def CheckExecuteParamSequenceBadLen(self):
+        # Issue41662: Error in __len__() was overridden with ProgrammingError.
+        class L:
+            def __len__(self):
+                1/0
+            def __getitem__(slf, x):
+                raise AssertionError
+
+        self.cu.execute("insert into test(name) values ('foo')")
+        with self.assertRaises(ZeroDivisionError):
+            self.cu.execute("select name from test where name=?", L())
 
     def CheckExecuteDictMapping(self):
         self.cu.execute("insert into test(name) values ('foo')")
@@ -352,6 +395,9 @@ class CursorTests(unittest.TestCase):
             def __init__(self):
                 self.value = 5
 
+            def __iter__(self):
+                return self
+
             def __next__(self):
                 if self.value == 10:
                     raise StopIteration
@@ -369,7 +415,7 @@ class CursorTests(unittest.TestCase):
         self.cu.executemany("insert into test(income) values (?)", mygen())
 
     def CheckExecuteManyWrongSqlArg(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             self.cu.executemany(42, [(3,)])
 
     def CheckExecuteManySelect(self):
@@ -405,7 +451,7 @@ class CursorTests(unittest.TestCase):
         self.assertEqual(row, None)
 
     def CheckArraySize(self):
-        # must default ot 1
+        # must default to 1
         self.assertEqual(self.cu.arraysize, 1)
 
         # now set to 2
@@ -503,7 +549,6 @@ class CursorTests(unittest.TestCase):
         self.assertEqual(results, expected)
 
 
-@unittest.skipUnless(threading, 'This test requires threading.')
 class ThreadTests(unittest.TestCase):
     def setUp(self):
         self.con = sqlite.connect(":memory:")
@@ -914,6 +959,77 @@ class SqliteOnConflictTests(unittest.TestCase):
         self.assertEqual(self.cu.fetchall(), [('Very different data!', 'foo')])
 
 
+class MultiprocessTests(unittest.TestCase):
+    CONNECTION_TIMEOUT = SHORT_TIMEOUT / 1000.  # Defaults to 30 ms
+
+    def tearDown(self):
+        unlink(TESTFN)
+
+    def test_ctx_mgr_rollback_if_commit_failed(self):
+        # bpo-27334: ctx manager does not rollback if commit fails
+        SCRIPT = f"""if 1:
+            import sqlite3
+            def wait():
+                print("started")
+                assert "database is locked" in input()
+
+            cx = sqlite3.connect("{TESTFN}", timeout={self.CONNECTION_TIMEOUT})
+            cx.create_function("wait", 0, wait)
+            with cx:
+                cx.execute("create table t(t)")
+            try:
+                # execute two transactions; both will try to lock the db
+                cx.executescript('''
+                    -- start a transaction and wait for parent
+                    begin transaction;
+                    select * from t;
+                    select wait();
+                    rollback;
+
+                    -- start a new transaction; would fail if parent holds lock
+                    begin transaction;
+                    select * from t;
+                    rollback;
+                ''')
+            finally:
+                cx.close()
+        """
+
+        # spawn child process
+        proc = subprocess.Popen(
+            [sys.executable, "-c", SCRIPT],
+            encoding="utf-8",
+            bufsize=0,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+        )
+        self.addCleanup(proc.communicate)
+
+        # wait for child process to start
+        self.assertEqual("started", proc.stdout.readline().strip())
+
+        cx = sqlite.connect(TESTFN, timeout=self.CONNECTION_TIMEOUT)
+        try:  # context manager should correctly release the db lock
+            with cx:
+                cx.execute("insert into t values('test')")
+        except sqlite.OperationalError as exc:
+            proc.stdin.write(str(exc))
+        else:
+            proc.stdin.write("no error")
+        finally:
+            cx.close()
+
+        # terminate child process
+        self.assertIsNone(proc.returncode)
+        try:
+            proc.communicate(input="end", timeout=SHORT_TIMEOUT)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            proc.communicate()
+            raise
+        self.assertEqual(proc.returncode, 0)
+
+
 def suite():
     module_suite = unittest.makeSuite(ModuleTests, "Check")
     connection_suite = unittest.makeSuite(ConnectionTests, "Check")
@@ -924,10 +1040,12 @@ def suite():
     closed_con_suite = unittest.makeSuite(ClosedConTests, "Check")
     closed_cur_suite = unittest.makeSuite(ClosedCurTests, "Check")
     on_conflict_suite = unittest.makeSuite(SqliteOnConflictTests, "Check")
+    uninit_con_suite = unittest.makeSuite(UninitialisedConnectionTests)
+    multiproc_con_suite = unittest.makeSuite(MultiprocessTests)
     return unittest.TestSuite((
         module_suite, connection_suite, cursor_suite, thread_suite,
         constructor_suite, ext_suite, closed_con_suite, closed_cur_suite,
-        on_conflict_suite,
+        on_conflict_suite, uninit_con_suite, multiproc_con_suite,
     ))
 
 def test():

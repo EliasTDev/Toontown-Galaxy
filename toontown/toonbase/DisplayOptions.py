@@ -9,7 +9,7 @@ from otp.otpgui import OTPDialog
 from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPRender
 from direct.directnotify import DirectNotifyGlobal
-from libotp import *
+from panda3d.otp import *
 try:        
     import embedded
 except:
@@ -224,11 +224,11 @@ class DisplayOptions:
             base.disableShowbaseMouse()
 
             # If we've already imported (and therefore downloaded)
-            # libotp.dll, then we already have a NametagGlobals, and
+            # panda3d.otp.dll, then we already have a NametagGlobals, and
             # we should keep it up-to-date with the new MouseWatcher
             # etc.
-            if 'libotp' in sys.modules:
-                from libotp import NametagGlobals
+            if 'panda3d.otp' in sys.modules:
+                from panda3d.otp import NametagGlobals
                 NametagGlobals.setCamera(base.cam)
                 NametagGlobals.setMouseWatcher(base.mouseWatcherNode)
 

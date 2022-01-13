@@ -34,7 +34,7 @@
 import types
 import tkinter
 import Pmw
-import collections
+import collections.abc
 
 
 class _Branching:
@@ -292,7 +292,7 @@ class _LeafNode(Pmw.MegaWidget):
             self._labelWidget.configure(label_foreground = self['selectforeground'])
         #self._viewButton.configure(background = self._selectbg)
         cmd = self['selectcommand']
-        if isinstance(cmd, collections.Callable):
+        if isinstance(cmd, collections.abc.Callable):
             cmd(self)
 
     def _unhighlight(self):
@@ -302,7 +302,7 @@ class _LeafNode(Pmw.MegaWidget):
             self._labelWidget.configure(label_foreground = self['foreground'])
         #self._viewButton.configure(background = self._bg)
         cmd = self['deselectcommand']
-        if isinstance(cmd, collections.Callable):
+        if isinstance(cmd, collections.abc.Callable):
             cmd(self)
 
     def _setlast(self, last):

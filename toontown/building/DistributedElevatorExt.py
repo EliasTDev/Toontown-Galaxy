@@ -11,7 +11,7 @@ from direct.fsm import State
 from toontown.hood import ZoneUtil
 from toontown.toonbase import TTLocalizer
 from toontown.toontowngui import TeaserPanel
-from libotp import NametagGroup, Nametag
+from panda3d.otp import NametagGroup, Nametag
 
 class DistributedElevatorExt(DistributedElevator.DistributedElevator):
     def __init__(self, cr):

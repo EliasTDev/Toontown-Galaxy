@@ -19,7 +19,7 @@ from . import CannonGameGlobals
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 from toontown.toonbase import TTLocalizer
-from libotp import *
+from panda3d.otp import *
 # some constants
 LAND_TIME = 2
 

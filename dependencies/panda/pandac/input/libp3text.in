@@ -1,4 +1,4 @@
-1609527744
+1641926643
 3 3
 9 libp3text 4 z_GL 12 panda3d.core 
 409
@@ -5453,7 +5453,7 @@ static TypeHandle TextNode::get_class_type(void);
  * This is the base class for all three-component vectors and points.
  */
 
-832 6 Format 0 794624 15 Texture::Format 15 Texture::Format 821 0 0 0 0 0 0 0 0 0 46 15 F_depth_stencil 24 Texture::F_depth_stencil 0
+832 6 Format 0 794624 15 Texture::Format 15 Texture::Format 821 0 0 0 0 0 0 0 0 0 52 15 F_depth_stencil 24 Texture::F_depth_stencil 0
 1 13 F_color_index 22 Texture::F_color_index 0
 2 5 F_red 14 Texture::F_red 0
 3 7 F_green 16 Texture::F_green 0
@@ -5522,7 +5522,14 @@ static TypeHandle TextNode::get_class_type(void);
 43 10 F_rgb10_a2 19 Texture::F_rgb10_a2 0
 44 4 F_rg 13 Texture::F_rg 0
 45 6 F_r16i 15 Texture::F_r16i 0
-46 0 0
+46 7 F_rg16i 16 Texture::F_rg16i 0
+47 8 F_rgb16i 17 Texture::F_rgb16i 18
+// not recommended
+48 9 F_rgba16i 18 Texture::F_rgba16i 0
+49 7 F_rg32i 16 Texture::F_rg32i 0
+50 8 F_rgb32i 17 Texture::F_rgb32i 0
+51 9 F_rgba32i 18 Texture::F_rgba32i 0
+52 0 0
 
 833 8 FontPool 0 141313 8 FontPool 8 FontPool 0 0 0 0 498 0 9 489 490 491 492 493 494 495 496 497 0 0 0 0 0 186
 /**

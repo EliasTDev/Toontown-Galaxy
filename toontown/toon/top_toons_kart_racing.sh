@@ -82,7 +82,7 @@ rm /event_logs/top_toon_dna
 
 for file in $(cat /event_logs/toon_images);
 	do
-	wget --http-user=a1rw0lf --http-passwd=str33th4wk http://10.192.44.249:7780/_do_querry___data_toontown_dat?object_id=$file -O /event_logs/dna 
+	wget --http-user=a1rw0lf --http-password=str33th4wk http://10.192.44.249:7780/_do_querry___data_toontown_dat?object_id=$file -O /event_logs/dna 
 	cat /event_logs/dna | sed -e 's/<\/TH>/<\/TH>\n/g' | grep -a "setDNA" -A 1 | awk -F \< '{print $5}' | sed '2q' |awk -F \> '{print $1}' >> /event_logs/top_toon_dna
 	done
 cat /event_logs/top_toon_dna | sed '/^$/d' > /game_logs/topToonPictures/TopToons.txt
@@ -93,7 +93,7 @@ rm /event_logs/top_toon_names
 rm /event_logs/top_toon_score_nav
 for file in $(cat /event_logs/toon_names);
 	do
-	wget --http-user=a1rw0lf --http-passwd=str33th4wk http://10.192.44.249:7780/_do_querry___data_toontown_dat?object_id=$file -O /event_logs/names
+	wget --http-user=a1rw0lf --http-password=str33th4wk http://10.192.44.249:7780/_do_querry___data_toontown_dat?object_id=$file -O /event_logs/names
 	grep -a "name='new_name" /event_logs/names | sed -e 's/<input type=text value=//g' | awk -F \' '{print $2}' >> /event_logs/top_toon_names
 	done 
 

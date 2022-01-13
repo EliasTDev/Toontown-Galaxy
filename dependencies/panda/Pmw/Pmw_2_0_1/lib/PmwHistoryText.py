@@ -1,5 +1,5 @@
 import Pmw
-import collections
+import collections.abc
 
 _ORIGINAL = 0
 _MODIFIED = 1
@@ -65,7 +65,7 @@ class HistoryText(Pmw.ScrolledText):
             # so allow the 'Next' button to go to the entry after this one.
             self._pastIndex = self._currIndex
             nextState = 'normal'
-        if isinstance(historycommand, collections.Callable):
+        if isinstance(historycommand, collections.abc.Callable):
             historycommand('normal', nextState)
 
         # Create the new history entry.
@@ -132,7 +132,7 @@ class HistoryText(Pmw.ScrolledText):
                 if self._currIndex == 0:
                     prevstate = 'disabled'
             historycommand = self['historycommand']
-            if isinstance(historycommand, collections.Callable):
+            if isinstance(historycommand, collections.abc.Callable):
                 historycommand(prevstate, nextstate)
             currentEntry =  self._list[self._currIndex]
         else:

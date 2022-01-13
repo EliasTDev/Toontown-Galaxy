@@ -32,8 +32,8 @@ from toontown.parties.PartyEditor import PartyEditor
 from otp.otpbase import OTPGlobals
 from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
-from libotp import NametagGroup, NametagFloat2d, Nametag
-from libotp import CFSpeech
+from panda3d.otp import NametagGroup, NametagFloat2d, Nametag
+from panda3d.otp import CFSpeech
 
 class PartyPlanner(DirectFrame,FSM):
     """

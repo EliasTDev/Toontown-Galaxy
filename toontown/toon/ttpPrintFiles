@@ -105,7 +105,7 @@ if [ "$WINTOOLS" ]; then
   echo $pandabuilt/lib/libmiles_audio.dll
   echo $directbuilt/lib/libdirect.dll
   echo $directbuilt/lib/libheapq.dll
-  echo $otpbuilt/lib/libotp.dll
+  echo $otpbuilt/lib/panda3d.otp.dll
   echo $toontownbuilt/lib/libtoontown.dll
 
 else
@@ -129,8 +129,8 @@ echo $directbuilt/lib/pandac/*.py
 # Generated code for libdirect
 printlib $directbuilt/lib/pandac libdirect
 
-# Generated code for libotp
-printlib $directbuilt/lib/pandac libotp
+# Generated code for panda3d.otp
+printlib $directbuilt/lib/pandac panda3d.otp
 
 # Generated code for libtoontown
 printlib $directbuilt/lib/pandac libtoontown

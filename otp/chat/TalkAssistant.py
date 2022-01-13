@@ -11,7 +11,7 @@ from otp.chat.TalkHandle import TalkHandle
 import time
 from otp.chat.TalkGlobals import *
 from otp.chat.ChatGlobals import *
-from libotp import CFSpeech, CFTimeout, CFThought
+from panda3d.otp import CFSpeech, CFTimeout, CFThought
 
 
 """

@@ -6559,7 +6559,7 @@
  
 @@ -116,15 +161,16 @@
  
- file 2 $OTP/lib/libotp.dll .
+ file 2 $OTP/lib/panda3d.otp.dll .
  
 -# MilesWin
 +# MilesWin 1_x_14_branch and up
@@ -7029,7 +7029,7 @@
  #define PYTHON_COMMAND python2.4
 @@ -44,14 +49,19 @@
  
- #define GENPYCODE_LIBS libpandaexpress libpanda libpandaphysics libdirect libotp libtoontown
+ #define GENPYCODE_LIBS libpandaexpress libpanda libpandaphysics libdirect panda3d.otp libtoontown
  
 +#if $[eq $[shell uname -i], x86_64]
 +  #define OPTFLAGS -Os -march=opteron -mmmx -msse -mfpmath=sse -fomit-frame-pointer -finline-functions -frename-registers -pipe

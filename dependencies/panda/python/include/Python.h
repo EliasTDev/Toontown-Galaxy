@@ -18,7 +18,7 @@
 #error "Python's source code assumes C's unsigned char is an 8-bit type."
 #endif
 
-#if defined(__sgi) && defined(WITH_THREAD) && !defined(_SGI_MP_SOURCE)
+#if defined(__sgi) && !defined(_SGI_MP_SOURCE)
 #define _SGI_MP_SOURCE
 #endif
 
@@ -32,11 +32,8 @@
 #include <errno.h>
 #endif
 #include <stdlib.h>
-#ifdef HAVE_UNISTD_H
+#ifndef MS_WINDOWS
 #include <unistd.h>
-#endif
-#ifdef HAVE_CRYPT_H
-#include <crypt.h>
 #endif
 
 /* For size_t? */
@@ -53,16 +50,23 @@
 #include "pyport.h"
 #include "pymacro.h"
 
-/* A convenient way for code to know if clang's memory sanitizer is enabled. */
+/* A convenient way for code to know if sanitizers are enabled. */
 #if defined(__has_feature)
 #  if __has_feature(memory_sanitizer)
 #    if !defined(_Py_MEMORY_SANITIZER)
 #      define _Py_MEMORY_SANITIZER
 #    endif
 #  endif
+#  if __has_feature(address_sanitizer)
+#    if !defined(_Py_ADDRESS_SANITIZER)
+#      define _Py_ADDRESS_SANITIZER
+#    endif
+#  endif
+#elif defined(__GNUC__)
+#  if defined(__SANITIZE_ADDRESS__)
+#    define _Py_ADDRESS_SANITIZER
+#  endif
 #endif
-
-#include "pyatomic.h"
 
 /* Debug-mode build with pymalloc implies PYMALLOC_DEBUG.
  *  PYMALLOC_DEBUG is in error if pymalloc is not in use.
@@ -106,24 +110,32 @@
 #include "classobject.h"
 #include "fileobject.h"
 #include "pycapsule.h"
+#include "code.h"
+#include "pyframe.h"
 #include "traceback.h"
 #include "sliceobject.h"
 #include "cellobject.h"
 #include "iterobject.h"
 #include "genobject.h"
 #include "descrobject.h"
+#include "genericaliasobject.h"
 #include "warnings.h"
 #include "weakrefobject.h"
 #include "structseq.h"
 #include "namespaceobject.h"
+#include "picklebufobject.h"
 
 #include "codecs.h"
 #include "pyerrors.h"
 
+#include "cpython/initconfig.h"
+#include "pythread.h"
 #include "pystate.h"
+#include "context.h"
 
 #include "pyarena.h"
 #include "modsupport.h"
+#include "compile.h"
 #include "pythonrun.h"
 #include "pylifecycle.h"
 #include "ceval.h"
@@ -135,14 +147,13 @@
 #include "abstract.h"
 #include "bltinmodule.h"
 
-#include "compile.h"
 #include "eval.h"
 
 #include "pyctype.h"
 #include "pystrtod.h"
 #include "pystrcmp.h"
-#include "dtoa.h"
 #include "fileutils.h"
 #include "pyfpe.h"
+#include "tracemalloc.h"
 
 #endif /* !Py_PYTHON_H */

@@ -12,7 +12,7 @@ from toontown.quest import QuestParser
 from toontown.quest import QuestChoiceGui
 from direct.interval.IntervalGlobal import *
 import random
-from libotp import NametagGroup
+from panda3d.otp import NametagGroup
 
 class DistributedNPCToonBase(DistributedToon.DistributedToon):
 

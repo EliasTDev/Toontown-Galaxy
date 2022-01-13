@@ -20,7 +20,7 @@ from otp.avatar import Emote
 from direct.task import Task
 from . import QuietZoneState
 from toontown.distributed import ToontownDistrictStats
-from libotp import *
+from panda3d.otp import *
 
 class Place(StateData.StateData,
             FriendsListManager.FriendsListManager):

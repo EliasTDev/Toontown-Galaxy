@@ -5,7 +5,7 @@ import string
 import types
 import tkinter
 import Pmw
-import collections
+import collections.abc
 
 # Possible return values of validation functions.
 OK = 1
@@ -170,7 +170,7 @@ class EntryField(Pmw.MegaWidget):
     def _checkValidateFunction(self, function, option, validator):
         # Raise an error if 'function' is not a function or None.
 
-        if function is not None and not isinstance(function, collections.Callable):
+        if function is not None and not isinstance(function, collections.abc.Callable):
             extraValidators = self['extravalidators']
             extra = list(extraValidators.keys())
             extra.sort()
@@ -184,7 +184,7 @@ class EntryField(Pmw.MegaWidget):
 
     def _executeCommand(self, event = None):
         cmd = self['command']
-        if isinstance(cmd, collections.Callable):
+        if isinstance(cmd, collections.abc.Callable):
             if event is None:
                 # Return result of command for invoke() method.
                 return cmd()
@@ -215,7 +215,7 @@ class EntryField(Pmw.MegaWidget):
             return valid
 
         cmd = self['modifiedcommand']
-        if isinstance(cmd, collections.Callable) and previousText != self._entryFieldEntry.get():
+        if isinstance(cmd, collections.abc.Callable) and previousText != self._entryFieldEntry.get():
             cmd()
         return valid
 
@@ -263,7 +263,7 @@ class EntryField(Pmw.MegaWidget):
         if valid == ERROR:
             # The entry is invalid.
             cmd = self['invalidcommand']
-            if isinstance(cmd, collections.Callable):
+            if isinstance(cmd, collections.abc.Callable):
                 cmd()
             if self.hulldestroyed():
                 # The invalidcommand destroyed us.

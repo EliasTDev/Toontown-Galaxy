@@ -13,7 +13,7 @@ import time
 import os
 import sys
 import re
-from libotp import CFSpeech, CFTimeout
+from panda3d.otp import CFSpeech, CFTimeout
 
 class TimeManager(DistributedObject.DistributedObject):
     """

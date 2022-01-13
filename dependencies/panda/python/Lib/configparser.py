@@ -56,7 +56,7 @@ ConfigParser -- responsible for parsing a list of
 
         When `interpolation` is given, it should be an Interpolation subclass
         instance. It will be used as the handler for option value
-        pre-processing when using getters. RawConfigParser object s don't do
+        pre-processing when using getters. RawConfigParser objects don't do
         any sort of interpolation, whereas ConfigParser uses an instance of
         BasicInterpolation. The library also provides a ``zc.buildbot``
         inspired ExtendedInterpolation implementation.
@@ -139,7 +139,7 @@ ConfigParser -- responsible for parsing a list of
 """
 
 from collections.abc import MutableMapping
-from collections import OrderedDict as _default_dict, ChainMap as _ChainMap
+from collections import ChainMap as _ChainMap
 import functools
 import io
 import itertools
@@ -157,6 +157,7 @@ __all__ = ["NoSectionError", "DuplicateOptionError", "DuplicateSectionError",
            "LegacyInterpolation", "SectionProxy", "ConverterMapping",
            "DEFAULTSECT", "MAX_INTERPOLATION_DEPTH"]
 
+_default_dict = dict
 DEFAULTSECT = "DEFAULT"
 
 MAX_INTERPOLATION_DEPTH = 10
@@ -610,9 +611,6 @@ class RawConfigParser(MutableMapping):
         self._converters = ConverterMapping(self)
         self._proxies = self._dict()
         self._proxies[default_section] = SectionProxy(self, default_section)
-        if defaults:
-            for key, value in defaults.items():
-                self._defaults[self.optionxform(key)] = value
         self._delimiters = tuple(delimiters)
         if delimiters == ('=', ':'):
             self._optcre = self.OPTCRE_NV if allow_no_value else self.OPTCRE
@@ -637,6 +635,8 @@ class RawConfigParser(MutableMapping):
             self._interpolation = Interpolation()
         if converters is not _UNSET:
             self._converters.update(converters)
+        if defaults:
+            self._read_defaults(defaults)
 
     def defaults(self):
         return self._defaults
@@ -688,7 +688,7 @@ class RawConfigParser(MutableMapping):
 
         Return list of successfully read files.
         """
-        if isinstance(filenames, (str, os.PathLike)):
+        if isinstance(filenames, (str, bytes, os.PathLike)):
             filenames = [filenames]
         read_ok = []
         for filename in filenames:
@@ -847,6 +847,7 @@ class RawConfigParser(MutableMapping):
         except KeyError:
             if section != self.default_section:
                 raise NoSectionError(section)
+        orig_keys = list(d.keys())
         # Update with the entry specific variables
         if vars:
             for key, value in vars.items():
@@ -855,7 +856,7 @@ class RawConfigParser(MutableMapping):
             section, option, d[option], d)
         if raw:
             value_getter = lambda option: d[option]
-        return [(option, value_getter(option)) for option in d.keys()]
+        return [(option, value_getter(option)) for option in orig_keys]
 
     def popitem(self):
         """Remove a section from the parser and return it as
@@ -906,6 +907,9 @@ class RawConfigParser(MutableMapping):
 
         If `space_around_delimiters' is True (the default), delimiters
         between keys and values are surrounded by spaces.
+
+        Please note that comments in the original configuration file are not
+        preserved when writing the configuration back.
         """
         if space_around_delimiters:
             d = " {} ".format(self._delimiters[0])
@@ -962,7 +966,8 @@ class RawConfigParser(MutableMapping):
     def __setitem__(self, key, value):
         # To conform with the mapping protocol, overwrites existing values in
         # the section.
-
+        if key in self and self[key] is value:
+            return
         # XXX this is not atomic if read_dict fails at any point. Then again,
         # no update method in configparser is atomic in this implementation.
         if key == self.default_section:
@@ -1003,7 +1008,7 @@ class RawConfigParser(MutableMapping):
         Configuration files may include comments, prefixed by specific
         characters (`#' and `;' by default). Comments may appear on their own
         in an otherwise empty line or may be entered in lines holding values or
-        section names.
+        section names. Please note that comments get stripped off when reading configuration files.
         """
         elements_added = set()
         cursect = None                        # None, or a dictionary
@@ -1122,6 +1127,12 @@ class RawConfigParser(MutableMapping):
                                                                 section,
                                                                 name, val)
 
+    def _read_defaults(self, defaults):
+        """Read the defaults passed in the initializer.
+        Note: values can be non-string."""
+        for key, value in defaults.items():
+            self._defaults[self.optionxform(key)] = value
+
     def _handle_error(self, exc, fpname, lineno, line):
         if not exc:
             exc = ParsingError(fpname)
@@ -1138,7 +1149,7 @@ class RawConfigParser(MutableMapping):
             sectiondict = self._sections[section]
         except KeyError:
             if section != self.default_section:
-                raise NoSectionError(section)
+                raise NoSectionError(section) from None
         # Update with the entry specific variables
         vardict = {}
         if vars:
@@ -1198,6 +1209,19 @@ class ConfigParser(RawConfigParser):
         a string."""
         self._validate_value_types(section=section)
         super().add_section(section)
+
+    def _read_defaults(self, defaults):
+        """Reads the defaults passed in the initializer, implicitly converting
+        values to strings like the rest of the API.
+
+        Does not perform interpolation for backwards compatibility.
+        """
+        try:
+            hold_interpolation = self._interpolation
+            self._interpolation = Interpolation()
+            self.read_dict({self.default_section: defaults})
+        finally:
+            self._interpolation = hold_interpolation
 
 
 class SafeConfigParser(ConfigParser):

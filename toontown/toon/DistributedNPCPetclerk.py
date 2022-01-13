@@ -8,7 +8,7 @@ from toontown.toonbase import TTLocalizer
 from toontown.pets import PetshopGUI
 from toontown.hood import ZoneUtil
 from toontown.toontowngui import TeaserPanel
-from libotp import CFSpeech, CFTimeout
+from panda3d.otp import CFSpeech, CFTimeout
 class DistributedNPCPetclerk(DistributedNPCToonBase):
 
     def __init__(self, cr):

@@ -29,7 +29,7 @@ from toontown.coghq import CogDisguiseGlobals
 from toontown.suit import Suit
 from toontown.suit import SuitDNA
 from toontown.effects import DustCloud
-from libotp import *
+from panda3d.otp import *
 # This pointer keeps track of the one DistributedBossbotBoss that
 # should appear within the avatar's current visibility zones.  If
 # there is more than one DistributedSellbotBoss visible to a client at

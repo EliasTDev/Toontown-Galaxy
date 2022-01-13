@@ -6,8 +6,8 @@ from direct.fsm import State
 from toontown.toonbase import ToontownGlobals
 from toontown.building import Elevator
 from panda3d.core import *
-from libotp import *
-from libpandadna import *
+from panda3d.otp import *
+from panda3d.toontown import *
 from toontown.hood import ZoneUtil
 
 class FactoryExterior(BattlePlace.BattlePlace):

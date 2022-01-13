@@ -29,7 +29,7 @@ class AvatarFriendsDB(DBInterface):
             self.db = MySQLdb.connect(host=host,
                                       port=port,
                                       user=user,
-                                      passwd=passwd)
+                                      password=passwd)
         except MySQLdb.OperationalError as e:
             if __debug__:
                 self.notify.warning("Failed to connect to MySQL at %s:%d.  Avatar friends DB is disabled."%(host,port))
@@ -77,7 +77,7 @@ class AvatarFriendsDB(DBInterface):
         self.db = MySQLdb.connect(host=self.host,
                                   port=self.port,
                                   user=self.user,
-                                  passwd=self.passwd)
+                                  password=self.passwd)
         cursor = self.db.cursor()
         cursor.execute("USE `%s`"%self.dbname)
         if __debug__:

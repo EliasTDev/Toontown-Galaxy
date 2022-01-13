@@ -7,7 +7,7 @@ from .BattleSounds import *
 from . import MovieCamera
 from direct.directnotify import DirectNotifyGlobal
 import types
-from libotp import *
+from panda3d.otp import *
 notify = DirectNotifyGlobal.directNotify.newCategory('MovieToonVictory')
 
 class ToonVictorySkipper(DirectObject):

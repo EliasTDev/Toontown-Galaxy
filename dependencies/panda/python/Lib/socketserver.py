@@ -24,7 +24,7 @@ For request-based servers (including socket-based):
 
 The classes in this module favor the server type that is simplest to
 write: a synchronous TCP/IP server.  This is bad class design, but
-save some typing.  (There's also the issue that a deep class hierarchy
+saves some typing.  (There's also the issue that a deep class hierarchy
 slows down method lookups.)
 
 There are five classes in an inheritance diagram, four of which represent
@@ -126,12 +126,8 @@ __version__ = "0.4"
 import socket
 import selectors
 import os
-import errno
 import sys
-try:
-    import threading
-except ImportError:
-    import dummy_threading as threading
+import threading
 from io import BufferedIOBase
 from time import monotonic as time
 
@@ -378,7 +374,7 @@ class BaseServer:
 
         """
         print('-'*40, file=sys.stderr)
-        print('Exception happened during processing of request from',
+        print('Exception occurred during processing of request from',
             client_address, file=sys.stderr)
         import traceback
         traceback.print_exc()
@@ -551,7 +547,7 @@ if hasattr(os, "fork"):
         active_children = None
         max_children = 40
         # If true, server_close() waits until all child processes complete.
-        _block_on_close = False
+        block_on_close = True
 
         def collect_children(self, *, blocking=False):
             """Internal routine to wait for children that have exited."""
@@ -598,7 +594,7 @@ if hasattr(os, "fork"):
         def service_actions(self):
             """Collect the zombie child processes regularly in the ForkingMixIn.
 
-            service_actions is called in the BaseServer's serve_forver loop.
+            service_actions is called in the BaseServer's serve_forever loop.
             """
             self.collect_children()
 
@@ -629,7 +625,40 @@ if hasattr(os, "fork"):
 
         def server_close(self):
             super().server_close()
-            self.collect_children(blocking=self._block_on_close)
+            self.collect_children(blocking=self.block_on_close)
+
+
+class _Threads(list):
+    """
+    Joinable list of all non-daemon threads.
+    """
+    def append(self, thread):
+        self.reap()
+        if thread.daemon:
+            return
+        super().append(thread)
+
+    def pop_all(self):
+        self[:], result = [], self[:]
+        return result
+
+    def join(self):
+        for thread in self.pop_all():
+            thread.join()
+
+    def reap(self):
+        self[:] = (thread for thread in self if thread.is_alive())
+
+
+class _NoThreads:
+    """
+    Degenerate version of _Threads.
+    """
+    def append(self, thread):
+        pass
+
+    def join(self):
+        pass
 
 
 class ThreadingMixIn:
@@ -639,10 +668,10 @@ class ThreadingMixIn:
     # main process
     daemon_threads = False
     # If true, server_close() waits until all non-daemonic threads terminate.
-    _block_on_close = False
-    # For non-daemonic threads, list of threading.Threading objects
+    block_on_close = True
+    # Threads object
     # used by server_close() to wait for all threads completion.
-    _threads = None
+    _threads = _NoThreads()
 
     def process_request_thread(self, request, client_address):
         """Same as in BaseServer but as a thread.
@@ -659,23 +688,17 @@ class ThreadingMixIn:
 
     def process_request(self, request, client_address):
         """Start a new thread to process the request."""
+        if self.block_on_close:
+            vars(self).setdefault('_threads', _Threads())
         t = threading.Thread(target = self.process_request_thread,
                              args = (request, client_address))
         t.daemon = self.daemon_threads
-        if not t.daemon and self._block_on_close:
-            if self._threads is None:
-                self._threads = []
-            self._threads.append(t)
+        self._threads.append(t)
         t.start()
 
     def server_close(self):
         super().server_close()
-        if self._block_on_close:
-            threads = self._threads
-            self._threads = None
-            if threads:
-                for thread in threads:
-                    thread.join()
+        self._threads.join()
 
 
 if hasattr(os, "fork"):

@@ -5,9 +5,9 @@ from direct.fsm import ClassicFSM, State
 from direct.fsm import State
 from toontown.toonbase import ToontownGlobals
 from panda3d.core import *
-from libotp import *
+from panda3d.otp import *
 from toontown.hood import ZoneUtil
-from libpandadna import *
+from panda3d.toontown import *
 class CogHQExterior(BattlePlace.BattlePlace):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("CogHQExterior")

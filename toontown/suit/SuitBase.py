@@ -13,7 +13,7 @@ from toontown.battle import SuitBattleGlobals
 from . import SuitTimings
 from . import SuitDNA
 from toontown.toonbase import TTLocalizer
-from libpandadna import SuitLegList
+from panda3d.toontown import SuitLegList
 
 # extra time to add (in seconds) to any time calculations for path movement
 # for each leg

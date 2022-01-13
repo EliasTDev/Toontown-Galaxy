@@ -3,7 +3,7 @@ from pandac.PandaModules import *
 from . import ToonHead
 from toontown.distributed import DelayDelete
 from toontown.toonbase import ToontownGlobals
-from libotp import NametagFloat2d, Nametag 
+from panda3d.otp import NametagFloat2d, Nametag 
 class ToonHeadFrame(DirectFrame):
     def __init__(self, av, color = ToontownGlobals.GlobalDialogColor, g = DGG.getDefaultDialogGeom()):
         DirectFrame.__init__(

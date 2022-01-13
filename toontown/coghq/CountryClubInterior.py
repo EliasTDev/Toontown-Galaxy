@@ -14,7 +14,7 @@ from toontown.toonbase import ToontownBattleGlobals
 from toontown.coghq import DistributedCountryClub
 from toontown.building import Elevator
 import random
-from libotp import *
+from panda3d.otp import *
 class CountryClubInterior(BattlePlace.BattlePlace):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("CountryClubInterior")
