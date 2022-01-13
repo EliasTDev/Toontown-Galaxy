@@ -89,3 +89,4 @@ nirai/
 dist/
 *.spec
 dependencies/panda.zip
+ai-crash.txt

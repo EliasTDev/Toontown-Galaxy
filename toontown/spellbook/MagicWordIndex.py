@@ -2219,7 +2219,7 @@ class Promote(MagicWord):
         return "Set cogTypes: %s and cogLevels: %s" % (av.getCogTypes(), av.getCogLevels())
 
 class SetCogSuit(MagicWord):
-    aliases = ['cogsuit']
+    aliases = ['cogsuit', 'setcogdisguise', 'disguise', 'setsuitdisguise']
     accessLevel = 'DEVELOPER'
     desc = "Sets the toon to the indicated cog type."
     advancedDesc = """Sets the toon to the indicated cog type (e.g. 'gh' for Glad
@@ -2250,8 +2250,13 @@ class SetCogSuit(MagicWord):
             return
 
         else:
+            if cogType not  in SuitDNA.suitHeadTypes:
+                return 'Invalid cogType'
+            if dept not in SuitDNA.suitDepts:
+                return 'Invalid department'
+
             dept = SuitDNA.getSuitDept(cogType)
-            if dept == None:
+            if dept == None :
                 return "Unknown cog type: %s" % (cogType)
 
             deptIndex = SuitDNA.suitDepts.index(dept)
