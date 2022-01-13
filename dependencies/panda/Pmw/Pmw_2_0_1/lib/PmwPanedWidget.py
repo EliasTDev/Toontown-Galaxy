@@ -6,7 +6,7 @@ import sys
 import types
 import tkinter
 import Pmw
-import collections
+import collections.abc
 
 class PanedWidget(Pmw.MegaWidget):
 
@@ -441,7 +441,7 @@ class PanedWidget(Pmw.MegaWidget):
 
         # Invoke the callback command
         cmd = self['command']
-        if isinstance(cmd, collections.Callable):
+        if isinstance(cmd, collections.abc.Callable):
             cmd(list(map(lambda x, s = self: s._size[x], self._paneNames)))
 
     def _plotHandles(self):

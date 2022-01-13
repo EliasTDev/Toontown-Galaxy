@@ -11,7 +11,6 @@ from _csv import Error, __version__, writer, reader, register_dialect, \
                  __doc__
 from _csv import Dialect as _Dialect
 
-from collections import OrderedDict
 from io import StringIO
 
 __all__ = ["QUOTE_MINIMAL", "QUOTE_ALL", "QUOTE_NONNUMERIC", "QUOTE_NONE",
@@ -117,7 +116,7 @@ class DictReader:
         # values
         while row == []:
             row = next(self.reader)
-        d = OrderedDict(zip(self.fieldnames, row))
+        d = dict(zip(self.fieldnames, row))
         lf = len(self.fieldnames)
         lr = len(row)
         if lf < lr:
@@ -141,7 +140,7 @@ class DictWriter:
 
     def writeheader(self):
         header = dict(zip(self.fieldnames, self.fieldnames))
-        self.writerow(header)
+        return self.writerow(header)
 
     def _dict_to_list(self, rowdict):
         if self.extrasaction == "raise":
@@ -307,7 +306,7 @@ class Sniffer:
         charFrequency = {}
         modes = {}
         delims = {}
-        start, end = 0, min(chunkLength, len(data))
+        start, end = 0, chunkLength
         while start < len(data):
             iteration += 1
             for line in data[start:end]:
@@ -336,7 +335,7 @@ class Sniffer:
 
             # build a list of possible delimiters
             modeList = modes.items()
-            total = float(chunkLength * iteration)
+            total = float(min(chunkLength * iteration, len(data)))
             # (rows of consistent data) / (number of rows) = 100%
             consistency = 1.0
             # minimum consistency threshold

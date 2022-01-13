@@ -3,7 +3,7 @@
 import types
 import tkinter
 import Pmw
-import collections
+import collections.abc
 
 class ScrolledListBox(Pmw.MegaWidget):
     _classBindingsDefinedFor = 0
@@ -340,7 +340,7 @@ class ScrolledListBox(Pmw.MegaWidget):
 
             command = self['selectioncommand']
 
-        if isinstance(command, collections.Callable):
+        if isinstance(command, collections.abc.Callable):
             command()
 
     # Need to explicitly forward this to override the stupid

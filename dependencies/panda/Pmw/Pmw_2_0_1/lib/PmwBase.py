@@ -20,7 +20,7 @@ import sys
 import traceback
 import types
 import tkinter
-import collections
+import collections.abc
 
 # tkinter 8.5 -> 8.6 fixed a problem in which selected indexes
 # were reported as strings instead of ints
@@ -198,7 +198,7 @@ def forwardmethods(fromClass, toClass, toPart, exclude = ()):
     #if type(toPart) != bytes:
     if not isinstance(toPart, str):
         # check that it is something like a function
-        #for classes, only works in Python 2: if isinstance(toPart, collections.Callable):pyht
+        #for classes, only works in Python 2: if isinstance(toPart, collections.abc.Callable):pyht
         if hasattr(toPart, '__call__'):
             # If a method is passed, use the function within it
             if hasattr(toPart, 'im_func'):
@@ -1174,7 +1174,7 @@ class MegaToplevel(MegaArchetype):
 
         pushgrab(self._hull, globalMode, self.deactivate)
         command = self['activatecommand']
-        if isinstance(command, collections.Callable):
+        if isinstance(command, collections.abc.Callable):
             command()
         self.wait_variable(self._wait)
 
@@ -1192,7 +1192,7 @@ class MegaToplevel(MegaArchetype):
         popgrab(self._hull)
 
         command = self['deactivatecommand']
-        if isinstance(command, collections.Callable):
+        if isinstance(command, collections.abc.Callable):
             command()
 
         self.withdraw()
@@ -1382,7 +1382,7 @@ def _addRootToToplevelBusyInfo():
         _addToplevelBusyInfo(root)
 
 def busycallback(command, updateFunction = None):
-    if not isinstance(command, collections.Callable):
+    if not isinstance(command, collections.abc.Callable):
         raise ValueError('cannot register non-command busy callback %s %s' % \
                 (repr(command), type(command)))
     wrapper = _BusyWrapper(command, updateFunction)
@@ -1649,7 +1649,7 @@ class _BusyWrapper:
 
         # Call update before hiding the busy windows to clear any
         # events that may have occurred over the busy windows.
-        if isinstance(self._updateFunction, collections.Callable):
+        if isinstance(self._updateFunction, collections.abc.Callable):
             self._updateFunction()
 
         hidebusycursor()

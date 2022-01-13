@@ -49,6 +49,16 @@ try:
 except ImportError as err:
     if "No module named vrpn" not in str(err):
         raise
+try:
+    from panda3d.otp import *
+except ImportError as err:
+    if "No module named otp" not in str(err):
+        raise
+try:
+    from panda3d.toontown import *
+except ImportError as err:
+    if "No module named toontown" not in str(err):
+        raise
 
 from direct.showbase import DConfig
 

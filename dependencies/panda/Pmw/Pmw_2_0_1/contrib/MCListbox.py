@@ -29,7 +29,7 @@
 import string
 import tkinter
 import Pmw
-import collections
+import collections.abc
 
 class MultiColumnListbox(Pmw.MegaWidget):
     def __init__(self, parent = None, **kw):
@@ -641,7 +641,7 @@ class MultiColumnListbox(Pmw.MegaWidget):
         self._cursel = [row]
 
         cmd = self['command']
-        if isinstance(cmd, collections.Callable):
+        if isinstance(cmd, collections.abc.Callable):
             cmd()
 
 
@@ -649,13 +649,13 @@ class MultiColumnListbox(Pmw.MegaWidget):
     def _cellframedblclick(self, event):
         #print 'double click cell frame'
         cmd = self['dblclickcommand']
-        if isinstance(cmd, collections.Callable):
+        if isinstance(cmd, collections.abc.Callable):
             cmd()
 
     def _celldblclick(self, event):
         #print 'double click cell'
         cmd = self['dblclickcommand']
-        if isinstance(cmd, collections.Callable):
+        if isinstance(cmd, collections.abc.Callable):
             cmd()
 
 if __name__ == '__main__':

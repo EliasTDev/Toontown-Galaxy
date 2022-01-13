@@ -1,4 +1,4 @@
-1609527519
+1641926335
 3 3
 16 libp3pgraphnodes 4 Bgt0 12 panda3d.core 
 196
@@ -2374,10 +2374,12 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
  * @since 1.10.0
  */
 
-410 18 SelectiveChildNode 0 141313 18 SelectiveChildNode 18 SelectiveChildNode 0 0 0 1 282 284 0 1 283 0 0 1 0 371 0 0 0 0 112
+410 18 SelectiveChildNode 0 141313 18 SelectiveChildNode 18 SelectiveChildNode 0 0 0 1 282 284 0 1 283 0 0 1 0 371 0 0 0 0 147
 /**
  * A base class for nodes like LODNode and SequenceNode that select only one
  * visible child at a time.
+ *
+ * This class is now vestigial.
  */
 
 411 12 SequenceNode 0 141313 12 SequenceNode 12 SequenceNode 0 0 0 1 289 294 1 539 3 290 291 293 0 0 2 3 410 285 286 3 412 287 288 0 0 118

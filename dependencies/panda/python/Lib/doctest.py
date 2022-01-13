@@ -93,7 +93,6 @@ __all__ = [
 ]
 
 import __future__
-import argparse
 import difflib
 import inspect
 import linecache
@@ -212,6 +211,13 @@ def _normalize_module(module, depth=2):
     else:
         raise TypeError("Expected a module, string, or None")
 
+def _newline_convert(data):
+    # We have two cases to cover and we need to make sure we do
+    # them in the right order
+    for newline in ('\r\n', '\r'):
+        data = data.replace(newline, '\n')
+    return data
+
 def _load_testfile(filename, package, module_relative, encoding):
     if module_relative:
         package = _normalize_module(package, 3)
@@ -222,7 +228,7 @@ def _load_testfile(filename, package, module_relative, encoding):
                 file_contents = file_contents.decode(encoding)
                 # get_data() opens files as 'rb', so one must do the equivalent
                 # conversion as universal newlines would do.
-                return file_contents.replace(os.linesep, '\n'), filename
+                return _newline_convert(file_contents), filename
     with open(filename, encoding=encoding) as f:
         return f.read(), filename
 
@@ -1016,10 +1022,8 @@ class DocTestFinder:
         if inspect.isclass(obj) and self._recurse:
             for valname, val in obj.__dict__.items():
                 # Special handling for staticmethod/classmethod.
-                if isinstance(val, staticmethod):
-                    val = getattr(obj, valname)
-                if isinstance(val, classmethod):
-                    val = getattr(obj, valname).__func__
+                if isinstance(val, (staticmethod, classmethod)):
+                    val = val.__func__
 
                 # Recurse to methods, properties, and nested classes.
                 if ((inspect.isroutine(val) or inspect.isclass(val) or
@@ -1060,7 +1064,8 @@ class DocTestFinder:
         if module is None:
             filename = None
         else:
-            filename = getattr(module, '__file__', module.__name__)
+            # __file__ can be None for namespace packages.
+            filename = getattr(module, '__file__', None) or module.__name__
             if filename[-4:] == ".pyc":
                 filename = filename[:-1]
         return self._parser.get_doctest(docstring, globs, name,
@@ -1327,7 +1332,7 @@ class DocTestRunner:
             try:
                 # Don't blink!  This is where the user's code gets run.
                 exec(compile(example.source, filename, "single",
-                             compileflags, 1), test.globs)
+                             compileflags, True), test.globs)
                 self.debugger.set_continue() # ==== Example Finished ====
                 exception = None
             except KeyboardInterrupt:
@@ -1612,7 +1617,7 @@ class OutputChecker:
                           '', want)
             # If a line in got contains only spaces, then remove the
             # spaces.
-            got = re.sub(r'(?m)^\s*?$', '', got)
+            got = re.sub(r'(?m)^[^\S\n]+$', '', got)
             if got == want:
                 return True
 
@@ -1691,8 +1696,6 @@ class OutputChecker:
                 kind = 'ndiff with -expected +actual'
             else:
                 assert 0, 'Bad diff option'
-            # Remove trailing whitespace on diff output.
-            diff = [line.rstrip() + '\n' for line in diff]
             return 'Differences (%s):\n' % kind + _indent(''.join(diff))
 
         # If we're not using diff, then simply list the expected
@@ -2303,7 +2306,7 @@ class DocTestCase(unittest.TestCase):
         name = self._dt_test.name.split('.')
         return "%s (%s)" % (name[-1], '.'.join(name[:-1]))
 
-    __str__ = __repr__
+    __str__ = object.__str__
 
     def shortDescription(self):
         return "Doctest: " + self._dt_test.name
@@ -2402,7 +2405,6 @@ class DocFileCase(DocTestCase):
 
     def __repr__(self):
         return self._dt_test.filename
-    __str__ = __repr__
 
     def format_failure(self, err):
         return ('Failed doctest test for %s\n  File "%s", line 0\n\n%s'
@@ -2741,6 +2743,8 @@ __test__ = {"_TestClass": _TestClass,
 
 
 def _test():
+    import argparse
+
     parser = argparse.ArgumentParser(description="doctest runner")
     parser.add_argument('-v', '--verbose', action='store_true', default=False,
                         help='print very verbose output for all tests')

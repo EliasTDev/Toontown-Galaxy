@@ -9,7 +9,7 @@ format of the file is.  If it can't figure out the file format, or it has
 trouble reading the file, None is returned.  You can pass get_colordb() an
 optional filetype argument.
 
-Supporte file types are:
+Supported file types are:
 
     X_RGB_TXT -- X Consortium rgb.txt format files.  Three columns of numbers
                  from 0 .. 255 separated by whitespace.  Arbitrary trailing
@@ -87,7 +87,7 @@ class ColorDB:
         try:
             return self.__byrgb[rgbtuple]
         except KeyError:
-            raise BadColor(rgbtuple)
+            raise BadColor(rgbtuple) from None
 
     def find_byname(self, name):
         """Return (red, green, blue) for name"""
@@ -95,7 +95,7 @@ class ColorDB:
         try:
             return self.__byname[name]
         except KeyError:
-            raise BadColor(name)
+            raise BadColor(name) from None
 
     def nearest(self, red, green, blue):
         """Return the name of color nearest (red, green, blue)"""
@@ -128,7 +128,7 @@ class ColorDB:
         try:
             name, aliases = self.__byrgb[(red, green, blue)]
         except KeyError:
-            raise BadColor((red, green, blue))
+            raise BadColor((red, green, blue)) from None
         return [name] + aliases
 
 
