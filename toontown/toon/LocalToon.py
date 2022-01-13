@@ -270,7 +270,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
 
             # GMs have accepting-new-friends-default 0, which forces them to explicitly enable
             # friend requests if they ever want it.
-            self.acceptingNewFriends = Settings.getAcceptingNewFriends() and base.config.GetBool('accepting-new-friends-default', True)
+            self.acceptingNewFriends = base.settings.getBool('game', 'acceptingNewFriends', True) and base.config.GetBool('accepting-new-friends-default', True)
 
     def wantLegacyLifter(self):
         return True

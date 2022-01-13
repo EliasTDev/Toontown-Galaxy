@@ -73,12 +73,12 @@ class FireworkEffect(NodePath):
         self.trailSfx = []
         for audio in trailSfxNames:
             audio = loader.loadSfx(audio)
-            audio.setVolume(0.075 * Settings.getSfxVolume())
+            audio.setVolume(0.075 )
             self.trailSfx.append(audio)
         self.burstSfx = []
         for audio in burstSfxNames:
             audio = loader.loadSfx(audio)
-            audio.setVolume(0.8 * Settings.getSfxVolume())
+            audio.setVolume(0.8 )
             self.burstSfx.append(audio)
         
     def play(self):    

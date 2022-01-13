@@ -1181,12 +1181,12 @@ class DistributedGolfSpot(DistributedObject.DistributedObject, FSM.FSM):
         vol = 1.0
         if flyBallCode == ToontownGlobals.PieCodeBossCog:
             sound = loader.loadSfx('phase_4/audio/sfx/Golf_Hit_Barrier_1.ogg')
-        soundIval = SoundInterval(sound, node = splat, volume = vol * Settings.getSfxVolume())
+        soundIval = SoundInterval(sound, node = splat, volume = vol )
 
         if flyBallCode == ToontownGlobals.PieCodeBossCog and \
            localAvatar.doId == throwerId:
             vol = 1.0
-            soundIval = SoundInterval(sound, node = localAvatar, volume = vol * Settings.getSfxVolume())       
+            soundIval = SoundInterval(sound, node = localAvatar, volume = vol )       
 
         ival = Parallel(
             Func(splat.reparentTo, render),

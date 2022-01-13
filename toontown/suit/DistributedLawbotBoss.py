@@ -1597,7 +1597,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.juryBoxIval = Parallel(
             self.juryBox.posInterval( ToontownGlobals.LawbotBossJuryBoxMoveTime, endingAbsPos),
             self.reflectedJuryBox.posInterval( ToontownGlobals.LawbotBossJuryBoxMoveTime, reflectedEndingAbsPos),
-            SoundInterval(self.juryMovesSfx, node = self.chairs[2].nodePath, duration = ToontownGlobals.LawbotBossJuryBoxMoveTime,  loop = 1, volume = 1.0 * Settings.getSfxVolume()),
+            SoundInterval(self.juryMovesSfx, node = self.chairs[2].nodePath, duration = ToontownGlobals.LawbotBossJuryBoxMoveTime,  loop = 1, volume = 1.0 ),
             )
         
         self.juryBoxIval.start()
@@ -2502,7 +2502,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                 Func(node.show),
                 Parallel(node.posInterval(1, Point3(x, y, 0), fluid = 1),
                          node.hprInterval(1, VBase3(h, 0, 0), fluid = 1),
-                         Sequence(SoundInterval(self.strafeSfx[i], volume = 0.2 * Settings.getSfxVolume(), node = self), duration = 0),
+                         Sequence(SoundInterval(self.strafeSfx[i], volume = 0.2 , node = self), duration = 0),
                          ),
                 Func(node.detachNode)))
 

@@ -3466,7 +3466,6 @@ def timeElapsedString(timeDelta):
 HotkeyCategoryNames = {
        "movement": "movement",
        "interaction": "interaction",
-      "misc": "misc",
 }
 
 
@@ -3488,12 +3487,6 @@ HotkeyMap = 7
 HotkeyMapClose = 8
 HotkeyScreenshot = 9
 HotkeyChat = 10
-
-HotkeyCameraForward = 0
-HotkeyCameraBackward = 1
-HotkeyCameraFirstPerson = 2
-HotkeyPageUp = 3
-HotkeyPageDown = 4
 HotkeyNames = {
     0: {
            HotkeyUp: 'Move Forward',
@@ -3516,14 +3509,6 @@ HotkeyNames = {
            HotkeyMapClose: 'Close map',
            HotkeyScreenshot: 'screenshot',
            HotkeyChat: 'chat'
-    },
-    2:
-    {
-           HotkeyCameraForward: 'Move Camera Forward',
-           HotkeyCameraBackward: 'Move Camera Backwards',
-           HotkeyCameraFirstPerson: 'First Person Camera',
-           HotkeyPageUp: 'Look Up',
-           HotkeyPageDown: 'Look Down'
     }
    
 

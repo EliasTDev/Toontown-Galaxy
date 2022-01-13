@@ -1612,8 +1612,7 @@ Control = 'control'
 Release = 'up'
 HotkeyMovement = 'movement'
 HotkeyInteraction = 'interaction'
-HotkeyMisc = 'misc'
-Hotkeys = (HotkeyMovement, HotkeyInteraction, HotkeyMisc)
+Hotkeys = (HotkeyMovement, HotkeyInteraction)
 HotkeyUp = 0
 HotkeyDown = 1
 HotkeyLeft = 2
@@ -1655,20 +1654,8 @@ HotkeyInteractionDefaults = {
 }
 
 
-HotkeyCameraForward = 0
-HotkeyCameraBackward = 1
-HotkeyCameraFirstPerson = 2
-HotkeyPageUp = 3
-HotkeyPageDown = 4
 
-HotkeyMiscDefaults = {
-    HotkeyCameraForward: 'tab',
-    HotkeyCameraBackward: Shift + Separater + 'tab',
-    HotkeyCameraFirstPerson: Shift + Separater + Control,
-    HotkeyPageUp: 'page_up',
-    HotkeyPageDown: 'page_down',
-}
-AllHotkeys = (HotkeyMovementDefaults, HotkeyInteractionDefaults, HotkeyMiscDefaults)
+AllHotkeys = (HotkeyMovementDefaults, HotkeyInteractionDefaults)
 SpecialKeys = {
     'page_up': 'Page Up',
     'page_down': 'Page Down',

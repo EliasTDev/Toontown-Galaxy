@@ -482,12 +482,12 @@ class Movie(DirectObject.DirectObject):
             self.tomDialogue04 = base.loader.loadSfx("phase_3.5/audio/dial/CC_tom_movie_tutorial_reward02.ogg")
             self.tomDialogue05 = base.loader.loadSfx("phase_3.5/audio/dial/CC_tom_movie_tutorial_reward03.ogg")
             self.musicVolume = base.config.GetFloat(
-                "tutorial-music-volume", 0.5) * Settings.getMusicVolume()
+                "tutorial-music-volume", 0.5)
         else:
             self.tomDialogue03 = None
             self.tomDialogue04 = None
             self.tomDialogue05 = None
-            self.musicVolume = 0.9 * Settings.getMusicVolume()
+            self.musicVolume = 0.9 
 
         # Need to lower battle music during dialogue
         music = base.cr.playGame.place.loader.battleMusic

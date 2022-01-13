@@ -8,7 +8,6 @@ from panda3d.core import *
 from toontown.toonbase import TTLocalizer
 from toontown.toonbase import ToontownGlobals
 
-from settings import Settings
 class ControlSettingsDialog(DirectFrame):
     notify = DirectNotifyGlobal.directNotify.newCategory('ControlSettingsDialog')
 
@@ -87,8 +86,9 @@ class ControlSettingsDialog(DirectFrame):
             zOffset = -0.2
             num = 0
             hotkeys = ToontownGlobals.AllHotkeys[index].keys()
+            values = ToontownGlobals.AllHotkeys[index].values()
             categoryName = ToontownGlobals.Hotkeys[index]
-            controlCategory = Settings.getOption('controls', categoryName, {})
+            controlCategory = base.settings.getOption('controls', categoryName, {})
             if controlCategory is None:
                 controlCategory = {}
             self.controls[categoryName] = controlCategory
@@ -96,7 +96,12 @@ class ControlSettingsDialog(DirectFrame):
                 hotkeyName = names.get(hotkey)
                 if not hotkeyName:
                     continue
-                keyName = base.controlManager.getControlName(controlCategory.get(str(hotkey)))
+                if controlCategory.get(hotkey) is not None:
+                    #If we have the keys in settings
+                    keyName = base.controlManager.getControlName(controlCategory.get((hotkey)))
+                else:
+                    #Get the default keys defined in toontownglobals
+                     keyName = base.controlManager.getControlName(ToontownGlobals.AllHotkeys[ToontownGlobals.Hotkeys.index(categoryName)].get(hotkey))
                 DirectLabel(parent=node, relief=None, text=hotkeyName, text_align=TextNode.ALeft,
                             text_scale=TTLocalizer.CSButton, text_pos=TTLocalizer.DSDcancelPos,
                             pos=(0, 0, posZ + (zOffset * num)))
@@ -250,6 +255,6 @@ class ControlSettingsDialog(DirectFrame):
     def applyChanges(self):
         for category in self.controls.keys():
             categoryInfo = self.controls.get(category)
-            Settings.updateSetting('controls', category, categoryInfo)
+            base.settings.updateSetting('controls', category, categoryInfo)
 
         base.controlManager.reloadHotkeys()

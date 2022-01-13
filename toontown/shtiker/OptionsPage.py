@@ -287,11 +287,7 @@ class OptionsTabPage(DirectFrame):
     ChangeDisplayAPI = base.config.GetBool('change-display-api', 0)
 
     # This maps our expected API interfaces to a symbolic constant in the settings file.
-    DisplaySettingsApiMap = {
-        'OpenGL' : Settings.GL,
-        'DirectX7' : Settings.DX7,
-        'DirectX8' : Settings.DX8
-        }
+
 
     def __init__(self, parent = aspect2d):
         """
@@ -616,8 +612,6 @@ class OptionsTabPage(DirectFrame):
     def exit(self):
         assert self.notify.debugStateCall(self)
         self.hide()
-        if(self.settingsChanged != 0):
-            Settings.writeSettings()
 
         self.speedChatStyleText.exit()
 
@@ -673,10 +667,10 @@ class OptionsTabPage(DirectFrame):
         messenger.send('wakeup')
         if base.musicActive:
             base.enableMusic(0)
-            Settings.setMusic(0)
+            base.settings.updateSetting('game', 'music', False)
         else:
             base.enableMusic(1)
-            Settings.setMusic(1)
+            base.settings.updateSetting('game', 'music', True)
 
         self.settingsChanged = 1
         self.__setMusicButton()
@@ -693,10 +687,12 @@ class OptionsTabPage(DirectFrame):
         messenger.send('wakeup')
         if base.sfxActive:
             base.enableSoundEffects(0)
-            Settings.setSfx(0)
+            base.settings.updateSetting('game', 'sfx', False)
+
         else:
+            base.settings.updateSetting('game', 'sfx', True)
+
             base.enableSoundEffects(1)
-            Settings.setSfx(1)
 
         self.settingsChanged = 1
         self.__setSoundFXButton()
@@ -705,10 +701,10 @@ class OptionsTabPage(DirectFrame):
         messenger.send('wakeup')
         if base.toonChatSounds:
             base.toonChatSounds = 0
-            Settings.setToonChatSounds(0)
+            base.settings.updateSetting('game', 'toonChatSounds', False)
         else:
             base.toonChatSounds = 1
-            Settings.setToonChatSounds(1)
+            base.settings.updateSetting('game', 'toonChatSounds', True)
 
         self.settingsChanged = 1
         self.__setToonChatSoundsButton()
@@ -745,10 +741,10 @@ class OptionsTabPage(DirectFrame):
         if base.localAvatar.acceptingNewFriends:
             # now we dont accept friends
             base.localAvatar.acceptingNewFriends = 0
-            Settings.setAcceptingNewFriends(0)
+            base.settings.updateSetting('game', 'acceptingNewFriends', False)
         else:
             base.localAvatar.acceptingNewFriends = 1
-            Settings.setAcceptingNewFriends(1)
+            base.settings.updateSetting('game', 'acceptingNewFriends', True)
 
         self.settingsChanged = 1
         self.__setAcceptFriendsButton()
@@ -886,16 +882,13 @@ class OptionsTabPage(DirectFrame):
                          (self.displaySettingsSize, self.displaySettingsFullscreen,
                           self.displaySettingsApi))
 
-        Settings.setResolutionDimensions(self.displaySettingsSize[0], self.displaySettingsSize[1])
-
-        Settings.setWindowedMode(not self.displaySettingsFullscreen)
+        base.settings.updateSetting('game', 'resolution', self.displaySettingsSize)
+        base.settings.updateSetting('game', 'fullscreen', bool(self.displaySettingsFullscreen))
+        base.settings.updateSetting('game', 'embedded-mode', bool(self.displaySettingsEmbedded))
         if self.displaySettingsApiChanged:
             api = self.DisplaySettingsApiMap.get(self.displaySettingsApi)
             if api == None:
                 self.notify.warning("Cannot save unknown display API: %s" % (self.displaySettingsApi))
-            else:
-                Settings.setDisplayDriver(api)
-        Settings.writeSettings()
 
         self.displaySettingsChanged = 0
 
@@ -1467,7 +1460,7 @@ class AnotherOptionsTabPage(DirectFrame):
             volume = 1.
         if volume < 0.0:
             volume = 0.
-        Settings.setMusicVolume(volume)
+        base.settings.updateSetting('game', 'musicVolume', volume)
         base.musicManager.setVolume(volume)
         base.musicActive = volume > 0.0
         self.__setMusicLabel()
@@ -1488,7 +1481,7 @@ class AnotherOptionsTabPage(DirectFrame):
             volume = 1.
         if volume < 0.0:
             volume = 0.
-        Settings.setSfxVolume(volume)
+        base.settings.updateSetting('game', 'sfxVolume', volume)
         for x in base.sfxManagerList:
             x.setVolume(volume)
         base.sfxActive = volume > 0.0
@@ -1506,10 +1499,10 @@ class AnotherOptionsTabPage(DirectFrame):
 
         
     def __setMusicLabel(self):
-        self.musicVolumeLabel['text'] = 'Music Volume: ' + str(Settings.getMusicVolume() * 100) + "%"
+        self.musicVolumeLabel['text'] = 'Music Volume: ' + str(base.settings.getFloat('game', 'musicVolume', 1.0) * 100) + "%"
         
     def __setSfxLabel(self):
-        self.sfxVolumeLabel['text'] = 'Sfx Volume: ' + str(Settings.getSfxVolume() * 100) + "%"
+        self.sfxVolumeLabel['text'] = 'Sfx Volume: ' + str(base.settings.getFloat('game', 'sfxVolume', 1.0) * 100) + "%"
         
     def enter(self):
         localAvatar.chatMgr.fsm.request("otherDialog")
@@ -1522,8 +1515,7 @@ class AnotherOptionsTabPage(DirectFrame):
     def exit(self):
         self.ignore('confirmDone')
         self.hide()
-        if(self.settingsChanged != 0):
-            Settings.writeSettings()
+
 
     def unload(self):
         self.musicVolumeLabel.destroy()
@@ -1548,7 +1540,7 @@ class AnotherOptionsTabPage(DirectFrame):
 
     def toggleFPS(self):
         self.settingsChanged = 1
-        Settings.setFrameRateMeter(not base.frameRateMeter)
+        base.settings.updateSetting('game', 'frameRateMeter', not base.frameRateMeter)
         base.setFrameRateMeter(not base.frameRateMeter)
         self.__setFPSLabel()
 

@@ -74,7 +74,7 @@ class ToontownChatManager(ChatManager.ChatManager):
         self.openScSfx = loader.loadSfx(
             'phase_3.5/audio/sfx/GUI_quicktalker.ogg')
         # Make it a bit more subtle
-        self.openScSfx.setVolume(0.6 * (Settings.getSfxVolume()))
+        self.openScSfx.setVolume(0.6)
 
         self.scButton = DirectButton(
             image = (gui.find("**/ChtBx_ChtBtn_UP"),

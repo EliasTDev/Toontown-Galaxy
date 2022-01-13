@@ -96,7 +96,7 @@ class VineBat(NodePath, DirectObject):
         self.soundInterval = SoundInterval(self.flySfx, node=self,
                                            listenerNode = base.localAvatar,
                                            seamlessLoop = True,
-                                           volume = 0.5 * Settings.getSfxVolume(),
+                                           volume = 0.5 ,
                                            cutOff = 240)
         self.reparentTo(render)
 

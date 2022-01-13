@@ -959,7 +959,7 @@ class DistributedTravelGame(DistributedMinigame):
         soundTrack = Sequence()
         trolleyExitBellInterval = Parallel(
             SoundInterval(self.trolleyBellSfx, duration=1),
-            SoundInterval(self.turntableRotateSfx, duration=1, volume = 0.5 * Settings.getSfxVolume())
+            SoundInterval(self.turntableRotateSfx, duration=1, volume = 0.5 )
             )
         trolleyExitAwayInterval = SoundInterval(self.trolleyAwaySfx, duration=3)
         soundTrack.append(trolleyExitBellInterval)

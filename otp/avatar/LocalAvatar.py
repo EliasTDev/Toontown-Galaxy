@@ -30,6 +30,7 @@ from direct.controls.ObserverWalker import ObserverWalker
 from direct.controls.PhysicsWalker import PhysicsWalker
 from direct.controls.SwimWalker import SwimWalker
 from direct.controls.TwoDWalker import TwoDWalker
+from toontown.toonbase import ControlManager as ttControlManager
 class LocalAvatar(DistributedAvatar.DistributedAvatar,
                   DistributedSmoothNode.DistributedSmoothNode):
     """
@@ -68,6 +69,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.cTrav.setRespectPrevTransform(1)
 
         self.avatarControlsEnabled=0
+        self.ttControlManager = ttControlManager.ControlManager()
+
         self.controlManager = ControlManager.ControlManager(True, passMessagesThrough)
 
         # Set up collisions:
@@ -670,6 +673,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.avatarControlsEnabled=1
         self.setupAnimationEvents()
         self.controlManager.enable()
+        moveForward = self.ttControlManager.getKey("movement", "HotkeyUp")
+        print(f"hotkey name: {moveForward}")
 
     def disableAvatarControls(self):
         """
@@ -1626,6 +1631,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         return self.animMultiplier
 
     def enableRun(self):
+        #Get hotkey name for moving forward
         self.accept("arrow_up", self.startRunWatch)
         self.accept("arrow_up-up", self.stopRunWatch)
         self.accept("control-arrow_up", self.startRunWatch)

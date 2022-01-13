@@ -615,7 +615,7 @@ class DistributedTargetGame(DistributedMinigame):
         self.rubberSound.play()
         
         self.flutterSound = loader.loadSfx("phase_4/audio/sfx/target_wind_float_clothloop.wav")
-        self.flutterSound.setVolume(Settings.getSfxVolume())
+        self.flutterSound.setVolume(1.0)
         self.flutterSound.setPlayRate(1.0)
         self.flutterSound.setLoop(True)
 
@@ -630,7 +630,7 @@ class DistributedTargetGame(DistributedMinigame):
         
     def playSound(self, name, volume = 1.0):
         if hasattr(self, 'soundTable'):
-            self.soundTable[name].setVolume(Settings.getSfxVolume() * volume)
+            self.soundTable[name].setVolume(1.0)
             self.soundTable[name].play()
         
     def addSkys(self, instance):
@@ -1589,7 +1589,7 @@ class DistributedTargetGame(DistributedMinigame):
         self.bandVolume += stretchDiff
         self.bandVolume -= globalClock.getDt()
         
-        self.rubberSound.setVolume(self.bandVolume * Settings.getSfxVolume())
+        self.rubberSound.setVolume(self.bandVolume )
         self.rubberSound.setPlayRate(1.0 + (self.stretchY  / 120.0))
         
             
@@ -1861,7 +1861,7 @@ class DistributedTargetGame(DistributedMinigame):
         self.fogOver.setOpacity(fogVis * overlayOp)
         vol = (self.speedForward + abs(self.zVel)) / 120.0
 
-        self.flySound.setVolume(vol * Settings.getSfxVolume())
+        self.flySound.setVolume(vol )
         self.flySound.setPlayRate(1.0 + (abs(self.zVel) * 0.0050))
         
         # Remote Umbrella updating

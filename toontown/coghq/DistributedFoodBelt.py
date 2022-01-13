@@ -212,7 +212,7 @@ class DistributedFoodBelt(DistributedObject.DistributedObject, FSM.FSM, FoodBelt
         self.beltSoundInterval = SoundInterval(self.beltSound, node=self.beltModel,
                                            listenerNode = base.localAvatar,
                                            seamlessLoop = True,
-                                           volume = 0.25 * Settings.getSfxVolume(),
+                                           volume = 0.25 ,
                                            cutOff = 100)
             
 

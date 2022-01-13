@@ -16,7 +16,9 @@ from toontown.toonbase import TTLocalizer
 from toontown.toonbase import ToontownBattleGlobals
 from toontown.launcher import ToontownDownloadWatcher
 from otp.otpbase import OTPGlobals 
-from settings import *
+from settings.Settings import Settings
+from toontown.toonbase import ControlManager as TTControlManager
+
 from panda3d.otp import *
 class ToonBase(OTPBase.OTPBase):
     """ToonBase class"""
@@ -30,40 +32,10 @@ class ToonBase(OTPBase.OTPBase):
         ToonBase constructor: create a toon and launch it into the world
         """
         if not config.GetInt('ignore-user-options',0):
-            Settings.readSettings()
-            mode = not Settings.getWindowedMode()
-            music = Settings.getMusic()
-            sfx = Settings.getSfx()
-            toonChatSounds = Settings.getToonChatSounds()
-            musicVol = Settings.getMusicVolume()
-            sfxVol = Settings.getSfxVolume()
-            resList = [(640, 480),
-               (800, 600),
-               (1024, 768),
-
-               (1280, 720),
-               (1280, 1024),
-               (1440, 900),
-               (1600, 1200),
-               (1920, 1080),
-               (2560, 1440),
-               (4096, 2160)]
-               
-            res = resList[Settings.getResolution()]
-
-            if mode == None:
-                mode = 1
-            if res == None:
-                res = (800,600)
-
-            loadPrcFileData("toonBase Settings Window Res", ("win-size %s %s" % (res[0], res[1])))
-            loadPrcFileData("toonBase Settings Window FullScreen", ("fullscreen %s" % (mode)))
-            loadPrcFileData("toonBase Settings Music Active", ("audio-music-active %s" % (music)))
-            loadPrcFileData("toonBase Settings Sound Active", ("audio-sfx-active %s" % (sfx)))
-            loadPrcFileData("toonBase Settings Music Volume", ("audio-master-music-volume %s" % (musicVol)))
-            loadPrcFileData("toonBase Settings Sfx Volume", ("audio-master-sfx-volume %s" % (sfxVol)))
-            loadPrcFileData("toonBase Settings Toon Chat Sounds", ("toon-chat-sounds %s" % (toonChatSounds)))
-
+            self.settings = Settings()
+            self.loadFromSettings()
+        else:
+            self.settings = None
         OTPBase.OTPBase.__init__(self)
 
         if not self.isMainWindowOpen():
@@ -92,9 +64,9 @@ class ToonBase(OTPBase.OTPBase):
                                 ToontownGlobals.DefaultCameraFar)
 
         # Music should be a bit quieter in toontown
-        self.musicManager.setVolume(0.65 * (Settings.getMusicVolume()))
+        self.musicManager.setVolume(0.65 )
 
-        base.controlManager = ControlManager.ControlManager()
+        self.controlManager = TTControlManager.ControlManager()
         # Set the default background color.
         self.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
 
@@ -294,7 +266,7 @@ class ToonBase(OTPBase.OTPBase):
         self.isSprinting = 0
         self.accept('shift', self.startSprint)
         self.accept('shift-up', self.stopSprint)
-        if Settings.getFrameRateMeter():
+        if self.settings.getBool('game', 'frameRateMeter', False):
             base.setFrameRateMeter(True)
         else:
             base.setFrameRateMeter(False)
@@ -631,13 +603,13 @@ class ToonBase(OTPBase.OTPBase):
     def playMusic(self, music, looping = 0, interrupt = 1, volume = 1, time = 0.0):
         # play the reset midi file to kill stuck notes
         #OTPBase.OTPBase.playMusic(self, self.resetMusic)
-        OTPBase.OTPBase.playMusic(self, music, looping, interrupt, volume * Settings.getMusicVolume(), time)
+        OTPBase.OTPBase.playMusic(self, music, looping, interrupt, volume, time)
 
     def playSfx(
             self, sfx, looping = 0, interrupt = 1, volume = 1,
             time = 0.0, node = None, listener = None, cutoff = None):
         # This goes through a special player for potential localization
-        return self.sfxPlayer.playSfx(sfx, looping, interrupt, volume * Settings.getSfxVolume() , time, node, listener, cutoff)
+        return self.sfxPlayer.playSfx(sfx, looping, interrupt, volume  , time, node, listener, cutoff)
 
     def isMainWindowOpen(self):
         if self.win != None:
@@ -661,3 +633,31 @@ class ToonBase(OTPBase.OTPBase):
             base.localAvatar.controlManager.setSpeeds(OTPGlobals.ToonForwardSpeed, OTPGlobals.ToonJumpForce, OTPGlobals.ToonReverseSpeed, OTPGlobals.ToonRotateSpeed)
             self.isSprinting = 0
 
+    def loadFromSettings(self):
+        if not config.GetInt('ignore-user-options', 0):
+            wantCustomControls = self.settings.getBool('game', 'customControls', False)
+            controls = self.settings.getOption('game', 'controls', {})
+            fullscreen = self.settings.getBool('game', 'fullscreen', False)
+            music = self.settings.getBool('game', 'music', True)
+            sfx = self.settings.getBool('game', 'sfx', True)
+            toonChatSounds = self.settings.getBool('game', 'toonChatSounds', True)
+            musicVolume = self.settings.getFloat('game', 'musicVolume', 1.0)
+            sfxVolume = self.settings.getFloat('game', 'sfxVolume', 1.0)
+            res = self.settings.getList('game', 'resolution', [800, 600])
+            antialiasing = self.settings.getInt('game', 'antialiasing', 0)
+            if antialiasing:
+                loadPrcFileData('toonBase Settings Framebuffer MSAA', 'framebuffer-multisample 1')
+                loadPrcFileData('toonBase Settings MSAA Level', 'multisamples %i' % antialiasing)
+            else:
+                self.settings.updateSetting('game', 'antialiasing', antialiasing)
+                loadPrcFileData('toonBase Settings Framebuffer MSAA', 'framebuffer-multisample 0')
+            loadPrcFileData('toonBase Settings Window Res', 'win-size %s %s' % (res[0], res[1]))
+            loadPrcFileData('toonBase Settings Window FullScreen', 'fullscreen %s' % fullscreen)
+            loadPrcFileData('toonBase Settings Music Active', 'audio-music-active %s' % music)
+            loadPrcFileData('toonBase Settings Sound Active', 'audio-sfx-active %s' % sfx)
+            loadPrcFileData('toonBase Settings Music Volume', 'audio-master-music-volume %s' % musicVolume)
+            loadPrcFileData('toonBase Settings Sfx Volume', 'audio-master-sfx-volume %s' % sfxVolume)
+            loadPrcFileData('toonBase Settings Toon Chat Sounds', 'toon-chat-sounds %s' % toonChatSounds)
+            loadPrcFileData('toonBase Settings Custom Controls', 'customControls %s' % wantCustomControls)
+            loadPrcFileData('toonBase Settings Controls', 'controls %s' % controls)
+            self.settings.loadFromSettings()

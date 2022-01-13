@@ -17,16 +17,16 @@ class CogdoGameSfx:
     def getAudioSound(self):
         return self._audioSound
 
-    def play(self, loop = False, playRate = 1.0, volume = Settings.getSfxVolume(), source = None):
+    def play(self, loop = False, playRate = 1.0, volume = 1.0, source = None):
         if source is None:
             source = self._source
-        self._audioMgr.playSound(self._audioSound, loop=loop, source=source, playRate=playRate, volume=Settings.getSfxVolume())
+        self._audioMgr.playSound(self._audioSound, loop=loop, source=source, playRate=playRate, volume=1.0)
         return
 
     def loop(self, playRate = 1.0, volume = 1.0, source = None):
         if source is None:
             source = self._source
-        self.play(loop=True, source=source, playRate=playRate, volume=Settings.getSfxVolume())
+        self.play(loop=True, source=source, playRate=playRate, volume=volume)
         return
 
     def stop(self):
@@ -96,7 +96,7 @@ class CogdoGameAudioManager:
     def createSfxIval(self, sfxName, volume = 1.0, duration = 0.0, startTime = 0.0, source = None, cutoff = None):
         sound = loader.loadSfx(self._sfxFiles[sfxName])
         self._audioSounds.append(sound)
-        return self._createSoundIval(sound, volume=volume * Settings.getSfxVolume(), startTime=startTime, duration=duration, source=source, cutoff=cutoff)
+        return self._createSoundIval(sound, volume=volume , startTime=startTime, duration=duration, source=source, cutoff=cutoff)
 
     def _createSoundIval(self, audioSound, volume = 1.0, duration = 0.0, startTime = 0.0, source = None, register = False, cutoff = None):
         if cutoff == None:
@@ -108,11 +108,11 @@ class CogdoGameAudioManager:
         audioSound.setPlayRate(playRate)
         if source is not None and loop:
             self._cleanupSoundIval(audioSound)
-            ival = self._createSoundIval(audioSound, volume=volume * Settings.getSfxVolume(), source=source)
+            ival = self._createSoundIval(audioSound, volume=volume , source=source)
             self._soundIvals[audioSound] = ival
             ival.loop()
         else:
-            base.playSfx(audioSound, looping=loop, node=source, volume=volume * Settings.getSfxVolume(), listener=self._listener, cutoff=self._cutoff)
+            base.playSfx(audioSound, looping=loop, node=source, volume=volume , listener=self._listener, cutoff=self._cutoff)
         return
 
     def stopSound(self, audioSound):

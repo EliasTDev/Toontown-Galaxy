@@ -323,7 +323,7 @@ class TwoDEnemy(DirectObject):
             
             soundTrack = Sequence(
                 SoundInterval(spinningSound, duration = 1.6, startTime = 0.6, volume=0.8, node=self.deathSuit),
-                SoundInterval(deathSound, volume = 0.32 * Settings.getSfxVolume(), node=self.deathSuit)
+                SoundInterval(deathSound, volume = 0.32 , node=self.deathSuit)
             )
             
             gears1Track = Sequence(
@@ -370,7 +370,7 @@ class TwoDEnemy(DirectObject):
         
             soundTrack = Sequence(
                 SoundInterval(spinningSound, duration = 1.6, startTime = 0.6, volume=0.8, node=self.deathSuit),
-                SoundInterval(deathSound, volume = 0.32 * Settings.getSfxVolume(), node=self.deathSuit)
+                SoundInterval(deathSound, volume = 0.32 , node=self.deathSuit)
             )
         
             gears1Track = Sequence(

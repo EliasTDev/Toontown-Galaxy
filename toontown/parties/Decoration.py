@@ -204,7 +204,7 @@ class Decoration(NodePath):
             soundIval = SoundInterval(self.decSfx,
                                    node=self.hydra,
                                    listenerNode = base.localAvatar,
-                                   volume = PartyGlobals.DECORATION_VOLUME * Settings.getSfxVolume(),
+                                   volume = PartyGlobals.DECORATION_VOLUME ,
                                    cutOff = PartyGlobals.DECORATION_CUTOFF,
                                    duration = animIvalDur)
             self.animSeq = Parallel(animIval, soundIval)
@@ -226,7 +226,7 @@ class Decoration(NodePath):
             soundIval = SoundInterval(self.decSfx,
                                    node=self.tubeCog,
                                    listenerNode = base.localAvatar,
-                                   volume = PartyGlobals.DECORATION_VOLUME * Settings.getSfxVolume(),
+                                   volume = PartyGlobals.DECORATION_VOLUME ,
                                    cutOff = PartyGlobals.DECORATION_CUTOFF,
                                    duration = animIvalDur)
             self.animSeq = Parallel(animIval, soundIval)

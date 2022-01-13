@@ -326,15 +326,15 @@ class CogdoMazeGame(DirectObject):
         if volume > 3.0:
             volume = 3.0 
         if self._quakeSfx1.getAudioSound().status() != self._quakeSfx1.getAudioSound().PLAYING:
-            self._quakeSfx1.loop(volume=volume * Settings.getSfxVolume())
+            self._quakeSfx1.loop(volume=volume )
         else:
-            self._quakeSfx1.getAudioSound().setVolume(volume * Settings.getSfxVolume())
+            self._quakeSfx1.getAudioSound().setVolume(volume )
         volume = shake * shake / Globals.CameraShakeMax
         if not self.hackTemp and self._quakeSfx2.getAudioSound().status() != self._quakeSfx2.getAudioSound().PLAYING:
             taskMgr.doMethodLater(1.5, self._quakeSfx2.loop, 'loopSecondQuakeSound', extraArgs=[])
             self.hackTemp = True
         else:
-            self._quakeSfx2.getAudioSound().setVolume(volume * Settings.getSfxVolume())
+            self._quakeSfx2.getAudioSound().setVolume(volume )
 
     def handleLocalToonMeetsSuit(self, suitType, suitNum):
         if self.localPlayer.state == 'Normal' and not self.localPlayer.invulnerable:

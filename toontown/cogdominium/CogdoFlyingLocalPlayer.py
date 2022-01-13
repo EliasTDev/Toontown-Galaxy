@@ -195,8 +195,8 @@ class CogdoFlyingLocalPlayer(CogdoFlyingPlayer):
     def resetToonFunc(self):
         self.resetToon(resetFuel=self.hasPickedUpFirstPropeller)
 
-    def _loopPropellerSfx(self, playRate = 1.0, volume = Settings.getSfxVolume()):
-        self._propellerSfx.loop(playRate=playRate, volume=Settings.getSfxVolume())
+    def _loopPropellerSfx(self, playRate = 1.0, volume = 1.0):
+        self._propellerSfx.loop(playRate=playRate, volume=volume)
 
     def initCollisions(self):
         avatarRadius = 2.0

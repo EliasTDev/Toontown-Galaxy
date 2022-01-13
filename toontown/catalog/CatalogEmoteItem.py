@@ -98,7 +98,7 @@ class CatalogEmoteItem(CatalogItem.CatalogItem):
         # Discard the ival from makeFrameModel, since we don't want to
         # spin.
 
-        track, duration = Emote.globalEmote.doEmote(toon, self.emoteIndex, volume = self.volume * Settings.getSfxVolume())
+        track, duration = Emote.globalEmote.doEmote(toon, self.emoteIndex, volume = self.volume )
         
         if duration == None:
             duration = 0
@@ -129,7 +129,7 @@ class CatalogEmoteItem(CatalogItem.CatalogItem):
         # assumes getPicture has been called previously
         if not hasattr(self, 'pictureToon'):
             return Sequence()
-        track, duration = Emote.globalEmote.doEmote(self.pictureToon, self.emoteIndex, volume = self.volume * Settings.getSfxVolume())
+        track, duration = Emote.globalEmote.doEmote(self.pictureToon, self.emoteIndex, volume = self.volume )
         if duration == None:
             duration = 0
         name = "emote-item-%s" % (self.sequenceNumber)

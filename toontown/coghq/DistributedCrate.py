@@ -334,7 +334,7 @@ class DistributedCrate(DistributedCrushableEntity.DistributedCrushableEntity):
                                                            startPos=startPos,
                                                            fluid = 1)),
                                   SoundInterval(self.creakSound, node=self),
-                                  SoundInterval(self.pushSound, node=self, duration=T_PUSH, volume = .2 * Settings.getSfxVolume()),
+                                  SoundInterval(self.pushSound, node=self, duration=T_PUSH, volume = .2 ),
                                   )
         self.moveTrack.start()
 

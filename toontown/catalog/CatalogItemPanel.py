@@ -648,7 +648,7 @@ class CatalogItemPanel(DirectFrame):
             if self.ival:
                 self.ival.finish()
                 self.ival = None
-            self.ival = item.changeIval(volume = Settings.getSfxVolume())
+            self.ival = item.changeIval(volume = base.settings.getFloat('game', 'sfxVolume', 1.0))
             self.ival.loop()        
 
     def handleSoundOffButton(self):

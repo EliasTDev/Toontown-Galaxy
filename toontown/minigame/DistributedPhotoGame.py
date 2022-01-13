@@ -2281,5 +2281,5 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
         
     def playSound(self, name, volume = 1.0):
         if hasattr(self, 'soundTable'):
-            self.soundTable[name].setVolume(Settings.getSfxVolume())
+            self.soundTable[name].setVolume(volume)
             self.soundTable[name].play()
