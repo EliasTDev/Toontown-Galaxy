@@ -13,10 +13,14 @@ class ToontownLoadingScreen:
         self.__count = 0
 
         self.gui = loader.loadModel("phase_3/models/gui/progress-background")
-
+        self.gui.setScale(1,1,1)
         # Hide the Disney logo in the model itself.
         self.gui.find("**/logo").hide()
-
+        self.gui.find('**/bg').hide()
+        self.mainBackground = OnscreenImage('phase_3/maps/background.png')
+        self.mainBackground.reparentTo(aspect2d)
+        self.mainBackground.setScale(2,1,1)
+        self.mainBackground.reparentTo(hidden)
         self.banner = loader.loadModel("phase_3/models/gui/toon_council").find("**/scroll")
         self.banner.reparentTo(self.gui)
         self.banner.setScale(0.4,0.4,0.4)
@@ -29,6 +33,7 @@ class ToontownLoadingScreen:
         self.galaxyLogo.setZ(0.61)
         #self.galaxyLogo.setPos(0, 0, -galaxyLogoScale)
         self.galaxyLogo.reparentTo(hidden)
+        
 
         self.tip = DirectLabel(
             guiId = "ToontownLoadingScreenTip",
@@ -70,6 +75,7 @@ class ToontownLoadingScreen:
         self.waitBar.destroy()
         self.banner.removeNode()
         self.galaxyLogo.destroy()
+        self.mainBackground.destroy()
         self.gui.removeNode()
 
     def getTip(self, tipCategory):
@@ -86,6 +92,7 @@ class ToontownLoadingScreen:
 
         if gui:
             # Put the progress gui in front of all the fade action
+            self.mainBackground.reparentTo(self.gui)
             self.waitBar.reparentTo(self.gui)
             self.title.reparentTo(self.gui)
             self.gui.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)
@@ -96,6 +103,7 @@ class ToontownLoadingScreen:
             self.waitBar.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)
             self.title.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)
             self.gui.reparentTo(hidden)
+            self.mainBackground.reparentTo(hidden)
             self.galaxyLogo.reparentTo(hidden)
             base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
 
@@ -108,6 +116,7 @@ class ToontownLoadingScreen:
         self.title.reparentTo(self.gui)
         self.gui.reparentTo(hidden)
         self.galaxyLogo.reparentTo(hidden)
+        self.mainBackground.reparentTo(hidden)
         base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
 
         return (self.__expectedCount, self.__count)

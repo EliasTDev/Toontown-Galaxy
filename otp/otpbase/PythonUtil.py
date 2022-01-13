@@ -4,7 +4,7 @@ import math
 import random
 import time
 from html.parser import HTMLParser
-
+from direct.showbase.PythonUtil import *
 __all__ = ['enumerate', 'nonRepeatingRandomList', 'describeException', 'pdir', 'choice', 'cmp', 'lerp', 'triglerp']
 
 if not hasattr(builtins, 'enumerate'):

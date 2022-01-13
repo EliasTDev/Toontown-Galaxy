@@ -2,7 +2,7 @@ import types
 import tkinter
 import Pmw
 import sys
-import collections
+import collections.abc
 
 class OptionMenu(Pmw.MegaWidget):
 
@@ -144,5 +144,5 @@ class OptionMenu(Pmw.MegaWidget):
         self.setvalue(text)
 
         command = self['command']
-        if isinstance(command, collections.Callable):
+        if isinstance(command, collections.abc.Callable):
             return command(text)

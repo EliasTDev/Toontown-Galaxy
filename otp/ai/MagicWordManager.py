@@ -11,7 +11,7 @@ from direct.showbase.PythonUtil import Functor, DelayedCall, ScratchPad
 from otp.otpbase import OTPGlobals
 from direct.distributed.ClockDelta import *
 from direct.showutil.TexViewer import TexViewer
-from libotp import CFSpeech, CFTimeout
+from panda3d.otp import CFSpeech, CFTimeout
 
 class MagicWordManager(DistributedObject.DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory("MagicWordManager")

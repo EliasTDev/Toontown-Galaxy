@@ -7,7 +7,7 @@ from toontown.toonbase import ToontownGlobals
 from toontown.building import Elevator
 from pandac.PandaModules import *
 from toontown.coghq import CogHQExterior
-from libotp import *
+from panda3d.otp import *
 class LawbotHQExterior(CogHQExterior.CogHQExterior):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("LawbotHQExterior")

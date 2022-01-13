@@ -221,7 +221,7 @@ class DistributedRingGame(DistributedMinigame):
         camera.reparentTo(base.localAvatar)
         camera.setPosHpr(0, self.CAMERA_Y + self.TOON_Y, 0,
                          0, 0, 0)
-        base.camLens.setFov(80)
+        base.camLens.setMinFov(80/(4.0/3.0))
 
         # set the far plane
         base.camLens.setFar(self.FAR_PLANE_DIST)

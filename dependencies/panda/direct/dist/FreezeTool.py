@@ -12,6 +12,7 @@ import io
 import distutils.sysconfig as sysconf
 import zipfile
 import importlib
+import warnings
 
 from . import pefile
 
@@ -77,14 +78,36 @@ defaultHiddenImports = {
         'numpy.core._dtype_ctypes',
         'numpy.core._methods',
     ],
+    'pandas.compat': ['lzma', 'cmath'],
+    'pandas._libs.tslibs.conversion': ['pandas._libs.tslibs.base'],
 }
+
+
+# These are modules that import other modules but shouldn't pick them up as
+# dependencies (usually because they are optional).  This prevents picking up
+# unwanted dependencies.
+ignoreImports = {
+    'direct.showbase.PythonUtil': ['pstats', 'profile'],
+
+    'toml.encoder': ['numpy'],
+    'py._builtin': ['__builtin__'],
+}
+
+if sys.version_info >= (3, 8):
+    # importlib.metadata is a "provisional" module introduced in Python 3.8 that
+    # conditionally pulls in dependency-rich packages like "email" and "pep517"
+    # (the latter of which is a thirdparty package!)  But it's only imported in
+    # one obscure corner, so we don't want to pull it in by default.
+    ignoreImports['importlib._bootstrap_external'] = ['importlib.metadata']
+    ignoreImports['importlib.metadata'] = ['pep517']
+
 
 # These are overrides for specific modules.
 overrideModules = {
     # Used by the warnings module, among others, to get line numbers.  Since
     # we set __file__, this would cause it to try and extract Python code
     # lines from the main executable, which we don't want.
-    'linecache': """__all__ = ["getline", "clearcache", "checkcache"]
+    'linecache': """__all__ = ["getline", "clearcache", "checkcache", "lazycache"]
 
 cache = {}
 
@@ -163,23 +186,23 @@ class CompilationEnvironment:
         if self.platform.startswith('win'):
             self.Python = sysconf.PREFIX
 
-            if ('VCINSTALLDIR' in os.environ):
+            if 'VCINSTALLDIR' in os.environ:
                 self.MSVC = os.environ['VCINSTALLDIR']
-            elif (Filename('/c/Program Files/Microsoft Visual Studio 9.0/VC').exists()):
+            elif Filename('/c/Program Files/Microsoft Visual Studio 9.0/VC').exists():
                 self.MSVC = Filename('/c/Program Files/Microsoft Visual Studio 9.0/VC').toOsSpecific()
-            elif (Filename('/c/Program Files (x86)/Microsoft Visual Studio 9.0/VC').exists()):
+            elif Filename('/c/Program Files (x86)/Microsoft Visual Studio 9.0/VC').exists():
                 self.MSVC = Filename('/c/Program Files (x86)/Microsoft Visual Studio 9.0/VC').toOsSpecific()
-            elif (Filename('/c/Program Files/Microsoft Visual Studio .NET 2003/Vc7').exists()):
+            elif Filename('/c/Program Files/Microsoft Visual Studio .NET 2003/Vc7').exists():
                 self.MSVC = Filename('/c/Program Files/Microsoft Visual Studio .NET 2003/Vc7').toOsSpecific()
             else:
                 print('Could not locate Microsoft Visual C++ Compiler! Try running from the Visual Studio Command Prompt.')
                 sys.exit(1)
 
-            if ('WindowsSdkDir' in os.environ):
+            if 'WindowsSdkDir' in os.environ:
                 self.PSDK = os.environ['WindowsSdkDir']
-            elif (platform.architecture()[0] == '32bit' and Filename('/c/Program Files/Microsoft Platform SDK for Windows Server 2003 R2').exists()):
+            elif platform.architecture()[0] == '32bit' and Filename('/c/Program Files/Microsoft Platform SDK for Windows Server 2003 R2').exists():
                 self.PSDK = Filename('/c/Program Files/Microsoft Platform SDK for Windows Server 2003 R2').toOsSpecific()
-            elif (os.path.exists(os.path.join(self.MSVC, 'PlatformSDK'))):
+            elif os.path.exists(os.path.join(self.MSVC, 'PlatformSDK')):
                 self.PSDK = os.path.join(self.MSVC, 'PlatformSDK')
             else:
                 print('Could not locate the Microsoft Windows Platform SDK! Try running from the Visual Studio Command Prompt.')
@@ -197,7 +220,7 @@ class CompilationEnvironment:
                 self.suffix64 = '\\amd64'
 
             # If it is run by makepanda, it handles the MSVC and PlatformSDK paths itself.
-            if ('MAKEPANDA' in os.environ):
+            if 'MAKEPANDA' in os.environ:
                 self.compileObjExe = 'cl /wd4996 /Fo%(basename)s.obj /nologo /c %(MD)s /Zi /O2 /Ob2 /EHsc /Zm300 /W3 /I"%(pythonIPath)s" %(filename)s'
                 self.compileObjDll = self.compileObjExe
                 self.linkExe = 'link /nologo /MAP:NUL /FIXED:NO /OPT:REF /STACK:4194304 /INCREMENTAL:NO /LIBPATH:"%(python)s\\libs"  /out:%(basename)s.exe %(basename)s.obj'
@@ -235,7 +258,7 @@ class CompilationEnvironment:
             self.linkExe = "%(CC)s -o %(basename)s %(basename)s.o -L/usr/local/lib -lpython%(pythonVersion)s"
             self.linkDll = "%(LDSHARED)s -o %(basename)s.so %(basename)s.o -L/usr/local/lib -lpython%(pythonVersion)s"
 
-            if (os.path.isdir("/usr/PCBSD/local/lib")):
+            if os.path.isdir("/usr/PCBSD/local/lib"):
                 self.linkExe += " -L/usr/PCBSD/local/lib"
                 self.linkDll += " -L/usr/PCBSD/local/lib"
 
@@ -640,7 +663,7 @@ okMissing = [
     'email.Iterators', '_subprocess', 'gestalt', 'java.lang',
     'direct.extensions_native.extensions_darwin', '_manylinux',
     'collections.Iterable', 'collections.Mapping', 'collections.MutableMapping',
-    'collections.Sequence', 'numpy_distutils',
+    'collections.Sequence', 'numpy_distutils', '_winapi',
     ]
 
 # Since around macOS 10.15, Apple's codesigning process has become more strict.
@@ -995,7 +1018,7 @@ class Freezer:
 
         # Scan the directory, looking for .py files.
         modules = []
-        for basename in os.listdir(pathname):
+        for basename in sorted(os.listdir(pathname)):
             if basename.endswith('.py') and basename != '__init__.py':
                 modules.append(basename[:-3])
 
@@ -1007,8 +1030,8 @@ class Freezer:
         if not newName:
             newName = moduleName
 
-        assert(moduleName.endswith('.*'))
-        assert(newName.endswith('.*'))
+        assert moduleName.endswith('.*')
+        assert newName.endswith('.*')
 
         mdefs = {}
 
@@ -1018,7 +1041,7 @@ class Freezer:
         parentNames = [(parentName, newParentName)]
 
         if parentName.endswith('.*'):
-            assert(newParentName.endswith('.*'))
+            assert newParentName.endswith('.*')
             # Another special case.  The parent name "*" means to
             # return all possible directories within a particular
             # directory.
@@ -1029,7 +1052,7 @@ class Freezer:
             modulePath = self.getModulePath(topName)
             if modulePath:
                 for dirname in modulePath:
-                    for basename in os.listdir(dirname):
+                    for basename in sorted(os.listdir(dirname)):
                         if os.path.exists(os.path.join(dirname, basename, '__init__.py')):
                             parentName = '%s.%s' % (topName, basename)
                             newParentName = '%s.%s' % (newTopName, basename)
@@ -1351,7 +1374,7 @@ class Freezer:
         for moduleName, module in list(self.mf.modules.items()):
             if module.__code__:
                 co = self.mf.replace_paths_in_code(module.__code__)
-                module.__code__ = co;
+                module.__code__ = co
 
     def __addPyc(self, multifile, filename, code, compressionLevel):
         if code:
@@ -1386,7 +1409,7 @@ class Freezer:
                 else:
                     filename += '.pyo'
                 if multifile.findSubfile(filename) < 0:
-                    code = compile('', moduleName, 'exec')
+                    code = compile('', moduleName, 'exec', optimize=2)
                     self.__addPyc(multifile, filename, code, compressionLevel)
 
             moduleDirs[str] = True
@@ -1466,7 +1489,7 @@ class Freezer:
                 source = open(sourceFilename.toOsSpecific(), 'r').read()
                 if source and source[-1] != '\n':
                     source = source + '\n'
-                code = compile(source, str(sourceFilename), 'exec')
+                code = compile(source, str(sourceFilename), 'exec', optimize=2)
 
         self.__addPyc(multifile, filename, code, compressionLevel)
 
@@ -1545,7 +1568,7 @@ class Freezer:
             # trouble importing it as a builtin module.  Synthesize a frozen
             # module that loads it as builtin.
             if '.' in moduleName and self.linkExtensionModules:
-                code = compile('import sys;del sys.modules["%s"];import imp;imp.init_builtin("%s")' % (moduleName, moduleName), moduleName, 'exec')
+                code = compile('import sys;del sys.modules["%s"];import imp;imp.init_builtin("%s")' % (moduleName, moduleName), moduleName, 'exec', optimize=2)
                 code = marshal.dumps(code)
                 mangledName = self.mangleName(moduleName)
                 moduleDefs.append(self.makeModuleDef(mangledName, code))
@@ -1730,7 +1753,7 @@ class Freezer:
         return target
 
     def generateRuntimeFromStub(self, target, stub_file, use_console, fields={},
-                                log_append=False):
+                                log_append=False, log_filename_strftime=False):
         self.__replacePaths()
 
         # We must have a __main__ module to make an exe file.
@@ -1812,7 +1835,7 @@ class Freezer:
             # If it is a submodule of a frozen module, Python will have
             # trouble importing it as a builtin module.  Synthesize a frozen
             # module that loads it dynamically.
-            if '.' in moduleName:
+            if '.' in moduleName and not self.platform.startswith('android'):
                 if self.platform.startswith("macosx") and not use_console:
                     # We write the Frameworks directory to sys.path[0].
                     code = 'import sys;del sys.modules["%s"];import sys,os,imp;imp.load_dynamic("%s",os.path.join(sys.path[0], "%s%s"))' % (moduleName, moduleName, moduleName, modext)
@@ -1913,9 +1936,12 @@ class Freezer:
             # A null entry marks the end of the module table.
             blob += struct.pack(entry_layout, 0, 0, 0)
 
+            # These flags should match the enum in deploy-stub.c
             flags = 0
             if log_append:
                 flags |= 1
+            if log_filename_strftime:
+                flags |= 2
 
             # Compose the header we will be writing to the stub, to tell it
             # where to find the module data blob, as well as other variables.
@@ -1961,7 +1987,7 @@ class Freezer:
 
         if append_offset:
             # This is for legacy deploy-stub.
-            print("WARNING: Could not find blob header. Is deploy-stub outdated?")
+            warnings.warn("Could not find blob header. Is deploy-stub outdated?")
             blob += struct.pack('<Q', blob_offset)
 
         with open(target, 'wb') as f:
@@ -2224,7 +2250,7 @@ class Freezer:
 
                 strings = macho_data[stroff:stroff+strsize]
 
-                for i in range(nsyms):
+                for j in range(nsyms):
                     strx, type, sect, desc, value = struct.unpack_from(nlist_struct, macho_data, symoff)
                     symoff += nlist_size
                     name = strings[strx : strings.find(b'\0', strx)]
@@ -2380,7 +2406,13 @@ class PandaModuleFinder(modulefinder.ModuleFinder):
                     return None
 
                 try:
-                    fp = zip.open(fn.replace(os.path.sep, '/'), 'r')
+                    zip_fn = fn.replace(os.path.sep, '/')
+                    if zip_fn.startswith('deploy_libs/_tkinter.'):
+                        # If we have a tkinter wheel on the path, ignore the
+                        # _tkinter extension in deploy-libs.
+                        if any(entry.endswith(".whl") and os.path.basename(entry).startswith("tkinter-") for entry in self.path):
+                            return None
+                    fp = zip.open(zip_fn, 'r')
                 except KeyError:
                     return None
 
@@ -2446,7 +2478,7 @@ class PandaModuleFinder(modulefinder.ModuleFinder):
 
         if type is _PKG_NAMESPACE_DIRECTORY:
             m = self.add_module(fqname)
-            m.__code__ = compile('', '', 'exec')
+            m.__code__ = compile('', '', 'exec', optimize=2)
             m.__path__ = pathname
             return m
 
@@ -2458,7 +2490,7 @@ class PandaModuleFinder(modulefinder.ModuleFinder):
                 code = fp.read()
 
             code += b'\n' if isinstance(code, bytes) else '\n'
-            co = compile(code, pathname, 'exec')
+            co = compile(code, pathname, 'exec', optimize=2)
         elif type == imp.PY_COMPILED:
             if sys.version_info >= (3, 7):
                 try:
@@ -2497,6 +2529,11 @@ class PandaModuleFinder(modulefinder.ModuleFinder):
         if name in self.badmodules:
             self._add_badmodule(name, caller)
             return
+
+        if level <= 0 and caller and caller.__name__ in ignoreImports:
+            if name in ignoreImports[caller.__name__]:
+                return
+
         try:
             self.import_hook(name, caller, level=level)
         except ImportError as msg:
@@ -2537,8 +2574,10 @@ class PandaModuleFinder(modulefinder.ModuleFinder):
                     if "*" in fromlist:
                         have_star = 1
                     fromlist = [f for f in fromlist if f != "*"]
-                if what == "absolute_import": level = 0
-                else: level = -1
+                if what == "absolute_import":
+                    level = 0
+                else:
+                    level = -1
                 self._safe_import_hook(name, m, fromlist, level=level)
                 if have_star:
                     # We've encountered an "import *". If it is a Python module,
@@ -2593,9 +2632,9 @@ class PandaModuleFinder(modulefinder.ModuleFinder):
         (or self.path if None).  Returns a tuple like (fp, path, stuff), where
         stuff is a tuple like (suffix, mode, type). """
 
-        if imp.is_frozen(name):
-            # Don't pick up modules that are frozen into p3dpython.
-            raise ImportError("'%s' is a frozen module" % (name))
+        #if imp.is_frozen(name):
+        #    # Don't pick up modules that are frozen into p3dpython.
+        #    raise ImportError("'%s' is a frozen module" % (name))
 
         if parent is not None:
             fullname = parent.__name__+'.'+name
@@ -2675,7 +2714,7 @@ class PandaModuleFinder(modulefinder.ModuleFinder):
             except OSError:
                 self.msg(2, "can't list directory", dir)
                 continue
-            for name in names:
+            for name in sorted(names):
                 mod = None
                 for suff in self.suffixes:
                     n = len(suff)

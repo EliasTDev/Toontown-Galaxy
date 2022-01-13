@@ -21,7 +21,7 @@ from toontown.toonbase import TTLocalizer
 from direct.distributed import DistributedObject
 from toontown.effects import Wake
 from direct.controls.ControlManager import CollisionHandlerRayStart
-from libotp import *
+from panda3d.otp import *
 # some constants
 LAND_TIME = 2
 

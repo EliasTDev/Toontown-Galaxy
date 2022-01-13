@@ -30,7 +30,7 @@ import math
 from toontown.coghq import CogDisguiseGlobals
 from toontown.building import ElevatorConstants
 from toontown.toonbase import ToontownTimer
-from libotp import *
+from panda3d.otp import *
 import functools 
 # This pointer keeps track of the one DistributedSellbotBoss that
 # should appear within the avatar's current visibility zones.  If

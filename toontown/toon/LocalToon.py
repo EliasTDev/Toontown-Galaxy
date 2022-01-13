@@ -61,8 +61,8 @@ from . import Toon
 from . import LaffMeter
 
 from settings.Settings import Settings
-from libotp import CFThought, CFTimeout
-from libotp import WhisperPopup
+from panda3d.otp import CFThought, CFTimeout
+from panda3d.otp import WhisperPopup
 from toontown.quest import QuestMap
 from toontown.shtiker.MagicWordHelpPage import MagicWordsHelpPage
 
@@ -392,8 +392,9 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         del self.gardenPage
         del self.trackPage
         #del self.buildingPage
-        if self.magicWordHelpPage:
-            del self.magicWordHelpPage
+        if hasattr(self, "magicWordHelpPage"):
+            if self.magicWordHelpPage:
+                del self.magicWordHelpPage
         del self.book
         if self.chatLog:
             self.chatLog.stop()

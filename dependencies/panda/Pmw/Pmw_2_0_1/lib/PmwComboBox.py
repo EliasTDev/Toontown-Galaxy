@@ -5,7 +5,7 @@ import string
 import types
 import tkinter
 import Pmw
-import collections
+import collections.abc
 
 class ComboBox(Pmw.MegaWidget):
     def __init__(self, parent = None, **kw):
@@ -275,7 +275,7 @@ class ComboBox(Pmw.MegaWidget):
             self._entryfield.setentry(item)
 
         cmd = self['selectioncommand']
-        if isinstance(cmd, collections.Callable):
+        if isinstance(cmd, collections.abc.Callable):
             if event is None:
                 # Return result of selectioncommand for invoke() method.
                 return cmd(item)

@@ -38,7 +38,7 @@ class AvatarFriendsManagerUD(DistributedObjectGlobalUD):
         self.db = AvatarFriendsDB(host=self.DBhost,
                                   port=self.DBport,
                                   user=self.DBuser,
-                                  passwd=self.DBpasswd,
+                                  password=self.DBpasswd,
                                   dbname=self.DBname)
 
         self.avatarId2FriendsList = {}

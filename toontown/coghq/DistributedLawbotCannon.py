@@ -14,7 +14,7 @@ from toontown.toon import ToonHead
 from toontown.toonbase import TTLocalizer
 from toontown.minigame import Trajectory
 from toontown.effects import DustCloud
-from libotp import *
+from panda3d.otp import *
 #some constants
 
 # lowest point we should allow the toon to fall

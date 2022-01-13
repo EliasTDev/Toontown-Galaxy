@@ -10,7 +10,7 @@ from toontown.toonbase import ToontownBattleGlobals
 from toontown.battle import BattlePlace
 from toontown.suit import Suit
 import math
-from libotp import *
+from panda3d.otp import *
 class CogHQBossBattle(BattlePlace.BattlePlace):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("CogHQBossBattle")

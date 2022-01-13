@@ -137,6 +137,11 @@ typedef long Py_hash_t;
 #  endif
 #endif
 
+/* Python 3.4 */
+#if PY_VERSION_HEX < 0x03040000
+#define PyGILState_Check() (PyGILState_GetThisThreadState() == _PyThreadState_Current)
+#endif
+
 /* Python 3.6 */
 
 #if PY_VERSION_HEX < 0x03080000 && !defined(_PyObject_CallNoArg)
@@ -207,7 +212,17 @@ INLINE PyObject *_PyLong_Lshift(PyObject *a, size_t shiftby) {
 /* Python 3.9 */
 
 #if PY_VERSION_HEX < 0x03090000
-EXPCL_PYPANDA PyObject *PyObject_CallNoArgs(PyObject *func);
+INLINE PyObject *PyObject_CallNoArgs(PyObject *func) {
+#if PY_VERSION_HEX >= 0x03080000
+  return _PyObject_Vectorcall(func, nullptr, 0, nullptr);
+#elif PY_VERSION_HEX >= 0x03070000
+  return _PyObject_FastCallDict(func, nullptr, 0, nullptr);
+#elif PY_VERSION_HEX >= 0x03060000
+  return _PyObject_FastCall(func, nullptr, 0);
+#else
+  return PyObject_CallObject(func, nullptr);
+#endif
+}
 
 INLINE PyObject *PyObject_CallOneArg(PyObject *callable, PyObject *arg) {
 #if PY_VERSION_HEX >= 0x03060000

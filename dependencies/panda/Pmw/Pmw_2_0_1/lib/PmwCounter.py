@@ -3,7 +3,7 @@ import sys
 import types
 import tkinter
 import Pmw
-import collections
+import collections.abc
 
 class Counter(Pmw.MegaWidget):
 
@@ -206,7 +206,7 @@ class Counter(Pmw.MegaWidget):
 
         if datatype in _counterCommands:
             self._counterCommand = _counterCommands[datatype]
-        elif isinstance(datatype, collections.Callable):
+        elif isinstance(datatype, collections.abc.Callable):
             self._counterCommand = datatype
         else:
             validValues = list(_counterCommands.keys())

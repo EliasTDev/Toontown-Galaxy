@@ -22,7 +22,7 @@ from pandac.PandaModules import *
 import random
 import math
 import functools
-from libotp import *
+from panda3d.otp import *
 # This pointer keeps track of the one DistributedCashbotBoss that
 # should appear within the avatar's current visibility zones.  If
 # there is more than one DistributedCashbotBoss visible to a client at
@@ -150,20 +150,21 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             return
 
         npc = Toon.Toon()
-        npc.setName(TTLocalizer.ResistanceToonName)
+        #npc.setName(TTLocalizer.ResistanceToonName)
+        npc.setName("Mata Hairy")
         npc.setPickable(0)
         npc.setPlayerType(NametagGroup.CCNonPlayer)
         dna = ToonDNA.ToonDNA()
-        dna.newToonRandom(11237, 'f', 1)
+        dna.newToonRandom(146392, 'f', 1)
         dna.head = "pls"
+        dna.headColor = 3 # Red
         npc.setDNAString(dna.makeNetString())
-
         npc.animFSM.request("neutral")
 
         self.resistanceToon = npc
         self.resistanceToon.setPosHpr(*ToontownGlobals.CashbotRTBattleOneStartPosHpr)
 
-        # determine a random suit to put him in
+        # determine a random suit to put her in
         state = random.getstate()
         random.seed(self.doId)
         self.resistanceToon.suitType = SuitDNA.getRandomSuitByDept("m")
@@ -465,7 +466,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         rToon = self.resistanceToon
         rToon.setPosHpr(*ToontownGlobals.CashbotRTBattleOneStartPosHpr)
-
+        rToon.setDisplayName("Mata Hairy")
         track = Sequence(
             #Cut to resistance toon
             Func(camera.setPosHpr, 82, -219, 5, 267, 0, 0),

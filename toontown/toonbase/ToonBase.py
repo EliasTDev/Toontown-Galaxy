@@ -17,8 +17,7 @@ from toontown.toonbase import ToontownBattleGlobals
 from toontown.launcher import ToontownDownloadWatcher
 from otp.otpbase import OTPGlobals 
 from settings import *
-from libotp import *
-from . import ControlManager
+from panda3d.otp import *
 class ToonBase(OTPBase.OTPBase):
     """ToonBase class"""
 
@@ -245,6 +244,9 @@ class ToonBase(OTPBase.OTPBase):
         # cloud platforms in estates
         self.cloudPlatformsEnabled = self.config.GetBool(
             'estate-clouds', 0)
+        
+        # Tutorial at the beginning of the game 
+        self.wantTutorial = self.config.GetBool('want-tutorial', 0)
 
         # greySpacing Allowed?
         self.greySpacing = self.config.GetBool(

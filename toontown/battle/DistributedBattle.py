@@ -14,8 +14,8 @@ from otp.avatar import Emote
 from . import SuitBattleGlobals
 from toontown.distributed import DelayDelete
 import random
-from libotp import CFSpeech, CFTimeout
-from libotp import NametagGlobals
+from panda3d.otp import CFSpeech, CFTimeout
+from panda3d.otp import NametagGlobals
 
 class DistributedBattle(DistributedBattleBase.DistributedBattleBase):
 
@@ -170,18 +170,18 @@ class DistributedBattle(DistributedBattleBase.DistributedBattleBase):
 
             camTrack = Sequence()
             camTrack.append(Func(camera.wrtReparentTo, suit))
-            camTrack.append(Func(base.camLens.setMinFov, self.camFOFov/(4/3)))
+            camTrack.append(Func(base.camLens.setMinFov, self.camFOFov/(4.0/3.0)))
             camTrack.append(Func(camera.setPos, TauntCamX, TauntCamY, TauntCamHeight))
             camTrack.append(Func(camera.lookAt, suit, suitOffsetPnt))
             camTrack.append(Wait(delay))
-            camTrack.append(Func(base.camLens.setMinFov, self.camFOFov/(4/3)))
+            camTrack.append(Func(base.camLens.setMinFov, self.camFOFov/(4.0/3.0)))
             camTrack.append(Func(camera.wrtReparentTo, self))
             camTrack.append(Func(camera.setPos, self.camFOPos))
             camTrack.append(Func(camera.lookAt, suit.getPos(self)))
             camTrack.append(Wait(faceoffTime))
-            if self.interactiveProp:
-                camTrack.append(Func(camera.lookAt, self.interactiveProp.node.getPos(self)))
-                camTrack.append(Wait(FACEOFF_LOOK_AT_PROP_T))
+            #if self.interactiveProp:
+               # camTrack.append(Func(camera.lookAt, self.interactiveProp.node.getPos(self)))
+               # camTrack.append(Wait(FACEOFF_LOOK_AT_PROP_T))
 
         suitTrack.append(Wait(delay))
         toonTrack.append(Wait(delay))

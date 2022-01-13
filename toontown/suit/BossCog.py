@@ -14,7 +14,7 @@ from . import SuitDNA
 from toontown.battle import BattleProps
 from direct.showbase.PythonUtil import Functor
 import string
-from libotp import *
+from panda3d.otp import *
 GenericModel = "phase_9/models/char/bossCog"
 
 

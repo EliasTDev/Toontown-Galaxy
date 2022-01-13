@@ -90,7 +90,7 @@ class AvatarChooser(StateData.StateData):
          #   self.logoutButton.show()
 
     #reparent to aspect2d for widescreen support
-        self.pickAToonBG.reparentTo(aspect2d)
+       # self.pickAToonBG.reparentTo(aspect2d)
         self.pickAToonBG.setBin('background', 1)
         base.setBackgroundColor(Vec4(0.145, 0.368, 0.78, 1))
         choice = base.config.GetInt("auto-avatar-choice", -1)
@@ -134,10 +134,12 @@ class AvatarChooser(StateData.StateData):
         gui = loader.loadModel("phase_3/models/gui/pick_a_toon_gui")
         gui2 = loader.loadModel("phase_3/models/gui/quit_button")
         newGui = loader.loadModel("phase_3/models/gui/tt_m_gui_pat_mainGui")
-        self.pickAToonBG = newGui.find("**/tt_t_gui_pat_background")
+        #self.pickAToonBG = newGui.find("**/tt_t_gui_pat_background")
+        self.pickAToonBG = OnscreenImage('phase_3/maps/tt_t_gui_pat_background.png')
         self.pickAToonBG.reparentTo(hidden)
-        self.pickAToonBG.setPos(0.0, 2.73, 0.0)
+        #self.pickAToonBG.setPos(0.0, 2.73, 0.0)
         self.pickAToonBG.setScale(1, 1, 1)
+       # self.pickAToonBG.setScale(2,1,1)
         
         # set-up screen title
         self.title = OnscreenText(TTLocalizer.AvatarChooserPickAToon,

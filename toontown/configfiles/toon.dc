@@ -523,7 +523,7 @@ dclass DistributedToon: DistributedPlayer {
                         0 * 7        // Drop
                         }) required ownrecv db;
 
-  setMaxNPCFriends(uint16 = 8) required ownrecv db;
+  setMaxNPCFriends(uint16 = 36) required ownrecv db;
   setNPCFriendsDict(uint32uint8array = {}) required ownrecv db;
   // For testing we gave everybody NPC SOS toons
   // setNPCFriendsList(uint32array = { 2001, 3112, 2003, 1116, 2311, 3135, 4125, 2011, 5207, 3129 }) required ownrecv db;

@@ -14,7 +14,7 @@ from otp.speedchat import SCStaticTextTerminal
 from direct.showbase import PythonUtil
 from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import ToontownGlobals
-from libotp import *
+from panda3d.otp import *
 from settings import *
 from toontown.shtiker.ControlSettingsDialog import ControlSettingsDialog
 # array of the possible speedChatStyles and colors to use

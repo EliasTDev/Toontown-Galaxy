@@ -10,9 +10,11 @@ except ImportError as exc:
     _frozen_importlib = None
 try:
     import _frozen_importlib_external
-except ImportError as exc:
+except ImportError:
     _frozen_importlib_external = _bootstrap_external
 import abc
+import warnings
+from typing import Protocol, runtime_checkable
 
 
 def _register(abstract_cls, *classes):
@@ -34,6 +36,8 @@ class Finder(metaclass=abc.ABCMeta):
     reimplementations of the import system.  Otherwise, finder
     implementations should derive from the more specific MetaPathFinder
     or PathEntryFinder ABCs.
+
+    Deprecated since Python 3.3
     """
 
     @abc.abstractmethod
@@ -57,11 +61,16 @@ class MetaPathFinder(Finder):
         If no module is found, return None.  The fullname is a str and
         the path is a list of strings or None.
 
-        This method is deprecated in favor of finder.find_spec(). If find_spec()
-        exists then backwards-compatible functionality is provided for this
-        method.
+        This method is deprecated since Python 3.4 in favor of
+        finder.find_spec(). If find_spec() exists then backwards-compatible
+        functionality is provided for this method.
 
         """
+        warnings.warn("MetaPathFinder.find_module() is deprecated since Python "
+                      "3.4 in favor of MetaPathFinder.find_spec() "
+                      "(available since 3.4)",
+                      DeprecationWarning,
+                      stacklevel=2)
         if not hasattr(self, 'find_spec'):
             return None
         found = self.find_spec(fullname, path)
@@ -94,10 +103,15 @@ class PathEntryFinder(Finder):
         The portion will be discarded if another path entry finder
         locates the module as a normal module or package.
 
-        This method is deprecated in favor of finder.find_spec(). If find_spec()
-        is provided than backwards-compatible functionality is provided.
-
+        This method is deprecated since Python 3.4 in favor of
+        finder.find_spec(). If find_spec() is provided than backwards-compatible
+        functionality is provided.
         """
+        warnings.warn("PathEntryFinder.find_loader() is deprecated since Python "
+                      "3.4 in favor of PathEntryFinder.find_spec() "
+                      "(available since 3.4)",
+                      DeprecationWarning,
+                      stacklevel=2)
         if not hasattr(self, 'find_spec'):
             return None, []
         found = self.find_spec(fullname)
@@ -180,7 +194,7 @@ class ResourceLoader(Loader):
     def get_data(self, path):
         """Abstract method which when implemented should return the bytes for
         the specified path.  The path must be a str."""
-        raise IOError
+        raise OSError
 
 
 class InspectLoader(Loader):
@@ -302,7 +316,7 @@ class SourceLoader(_bootstrap_external.SourceLoader, ResourceLoader, ExecutionLo
     def path_mtime(self, path):
         """Return the (int) modification time for the path (str)."""
         if self.path_stats.__func__ is SourceLoader.path_stats:
-            raise IOError
+            raise OSError
         return int(self.path_stats(path)['mtime'])
 
     def path_stats(self, path):
@@ -313,7 +327,7 @@ class SourceLoader(_bootstrap_external.SourceLoader, ResourceLoader, ExecutionLo
         - 'size' (optional) is the size in bytes of the source code.
         """
         if self.path_mtime.__func__ is SourceLoader.path_mtime:
-            raise IOError
+            raise OSError
         return {'mtime': self.path_mtime(path)}
 
     def set_data(self, path, data):
@@ -327,3 +341,134 @@ class SourceLoader(_bootstrap_external.SourceLoader, ResourceLoader, ExecutionLo
         """
 
 _register(SourceLoader, machinery.SourceFileLoader)
+
+
+class ResourceReader(metaclass=abc.ABCMeta):
+
+    """Abstract base class to provide resource-reading support.
+
+    Loaders that support resource reading are expected to implement
+    the ``get_resource_reader(fullname)`` method and have it either return None
+    or an object compatible with this ABC.
+    """
+
+    @abc.abstractmethod
+    def open_resource(self, resource):
+        """Return an opened, file-like object for binary reading.
+
+        The 'resource' argument is expected to represent only a file name
+        and thus not contain any subdirectory components.
+
+        If the resource cannot be found, FileNotFoundError is raised.
+        """
+        raise FileNotFoundError
+
+    @abc.abstractmethod
+    def resource_path(self, resource):
+        """Return the file system path to the specified resource.
+
+        The 'resource' argument is expected to represent only a file name
+        and thus not contain any subdirectory components.
+
+        If the resource does not exist on the file system, raise
+        FileNotFoundError.
+        """
+        raise FileNotFoundError
+
+    @abc.abstractmethod
+    def is_resource(self, name):
+        """Return True if the named 'name' is consider a resource."""
+        raise FileNotFoundError
+
+    @abc.abstractmethod
+    def contents(self):
+        """Return an iterable of strings over the contents of the package."""
+        return []
+
+
+_register(ResourceReader, machinery.SourceFileLoader)
+
+
+@runtime_checkable
+class Traversable(Protocol):
+    """
+    An object with a subset of pathlib.Path methods suitable for
+    traversing directories and opening files.
+    """
+
+    @abc.abstractmethod
+    def iterdir(self):
+        """
+        Yield Traversable objects in self
+        """
+
+    @abc.abstractmethod
+    def read_bytes(self):
+        """
+        Read contents of self as bytes
+        """
+
+    @abc.abstractmethod
+    def read_text(self, encoding=None):
+        """
+        Read contents of self as bytes
+        """
+
+    @abc.abstractmethod
+    def is_dir(self):
+        """
+        Return True if self is a dir
+        """
+
+    @abc.abstractmethod
+    def is_file(self):
+        """
+        Return True if self is a file
+        """
+
+    @abc.abstractmethod
+    def joinpath(self, child):
+        """
+        Return Traversable child in self
+        """
+
+    @abc.abstractmethod
+    def __truediv__(self, child):
+        """
+        Return Traversable child in self
+        """
+
+    @abc.abstractmethod
+    def open(self, mode='r', *args, **kwargs):
+        """
+        mode may be 'r' or 'rb' to open as text or binary. Return a handle
+        suitable for reading (same as pathlib.Path.open).
+
+        When opening as text, accepts encoding parameters such as those
+        accepted by io.TextIOWrapper.
+        """
+
+    @abc.abstractproperty
+    def name(self):
+        # type: () -> str
+        """
+        The base name of this object without any parent references.
+        """
+
+
+class TraversableResources(ResourceReader):
+    @abc.abstractmethod
+    def files(self):
+        """Return a Traversable object for the loaded package."""
+
+    def open_resource(self, resource):
+        return self.files().joinpath(resource).open('rb')
+
+    def resource_path(self, resource):
+        raise FileNotFoundError(resource)
+
+    def is_resource(self, path):
+        return self.files().joinpath(path).isfile()
+
+    def contents(self):
+        return (item.name for item in self.files().iterdir())

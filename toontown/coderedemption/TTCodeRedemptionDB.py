@@ -174,7 +174,7 @@ class TTCRDBConnection(DBInterface):
                 self.__class__.db = DirectMySQLdb.connect(host=self._host,
                                                           port=self._port,
                                                           user=self._user,
-                                                          passwd=self._passwd)
+                                                          password=self._passwd)
             except MySQLdb.OperationalError as e:
                 """
                 self.notify.warning("Failed to connect to MySQL at %s:%d. Retrying in %s seconds."%(

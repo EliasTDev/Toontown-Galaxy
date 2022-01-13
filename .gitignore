@@ -88,4 +88,5 @@ panda3d/
 nirai/
 dist/
 *.spec
-*.whl
+dependencies/panda.zip
+ai-crash.txt

@@ -17,7 +17,7 @@ if os.path.exists(localPrc):
 
 from otp.ai.AIBaseGlobal import *
 from toontown.ai.ToontownAIRepository import ToontownAIRepository
-from direct.showbase import PythonUtil
+from otp.otpbase import PythonUtil
 import argparse
 
 parser = argparse.ArgumentParser()

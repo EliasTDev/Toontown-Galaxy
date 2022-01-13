@@ -23,7 +23,7 @@ from pandac.PandaModules import GeomNode
 from otp.navigation.NavUtil import PriQueue
 from otp.navigation.NavUtil import FIFOCache
 
-from libotp import PathTable
+from panda3d.otp import PathTable
 
 # Node locator collision stuff
 from pandac.PandaModules import BitMask32

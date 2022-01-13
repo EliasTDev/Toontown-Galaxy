@@ -4,7 +4,7 @@ from . import MovieCamera
 from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import TTLocalizer
 from pandac.PandaModules import *
-from libotp import CFSpeech, CFTimeout
+from panda3d.otp import CFSpeech, CFTimeout
 notify = DirectNotifyGlobal.directNotify.newCategory('MovieSOS')
 
 def doSOSs(calls):

@@ -2,7 +2,7 @@ import os
 import string
 import tkinter
 import Pmw
-import collections
+import collections.abc
 
 class Balloon(Pmw.MegaToplevel):
     def __init__(self, parent = None, **kw):
@@ -201,7 +201,7 @@ class Balloon(Pmw.MegaToplevel):
     def showstatus(self, statusHelp):
         if self['state'] in ('status', 'both'):
             cmd = self['statuscommand']
-            if isinstance(cmd, collections.Callable):
+            if isinstance(cmd, collections.abc.Callable):
                 cmd(statusHelp)
 
     def clearstatus(self):

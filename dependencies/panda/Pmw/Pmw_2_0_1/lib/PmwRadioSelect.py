@@ -1,7 +1,7 @@
 import types
 import tkinter
 import Pmw
-import collections
+import collections.abc
 
 class RadioSelect(Pmw.MegaWidget):
     # A collection of several buttons.  In single mode, only one
@@ -209,7 +209,7 @@ class RadioSelect(Pmw.MegaWidget):
         if self._singleSelect:
             self.__setSingleValue(name)
             command = self['command']
-            if isinstance(command, collections.Callable):
+            if isinstance(command, collections.abc.Callable):
                 return command(name)
         else:
             # Multiple selections
@@ -230,5 +230,5 @@ class RadioSelect(Pmw.MegaWidget):
                 state = 1
 
             command = self['command']
-            if isinstance(command, collections.Callable):
+            if isinstance(command, collections.abc.Callable):
                 return command(name, state)

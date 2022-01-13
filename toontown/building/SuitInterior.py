@@ -131,7 +131,7 @@ class SuitInterior(Place):
     def load(self):
         assert(self.notify.debug("load()"))
         # Call up the chain
-        Place.Place.load(self)
+        Place.load(self)
         self.parentFSM.getStateNamed("suitInterior").addChild(self.fsm)
         self.townBattle = TownBattle.TownBattle('town-battle-done')
         self.townBattle.load()
@@ -141,7 +141,7 @@ class SuitInterior(Place):
     def unload(self):
         assert(self.notify.debug("unload()"))
         # Call up the chain
-        Place.Place.unload(self)
+        Place.unload(self)
         
         self.parentFSM.getStateNamed("suitInterior").removeChild(self.fsm)
         del self.parentFSM
@@ -273,19 +273,19 @@ class SuitInterior(Place):
 
     # walk state inherited from Place.py
     def enterWalk(self, teleportIn=0):
-        Place.Place.enterWalk(self, teleportIn)
+        Place.enterWalk(self, teleportIn)
         self.ignore('teleportQuery')
         base.localAvatar.setTeleportAvailable(0)
 
     # sticker book state inherited from Place.py
     def enterStickerBook(self, page = None):
-        Place.Place.enterStickerBook(self, page)
+        Place.enterStickerBook(self, page)
         self.ignore('teleportQuery')
         base.localAvatar.setTeleportAvailable(0)
 
     # sit state inherited from Place.py
     def enterSit(self):
-        Place.Place.enterSit(self)
+        Place.enterSit(self)
         self.ignore('teleportQuery')
         base.localAvatar.setTeleportAvailable(0)
         
@@ -299,13 +299,13 @@ class SuitInterior(Place):
         base.localAvatar.setPosHpr(2.5, 11.5, ToontownGlobals.FloorOffset,
                                      45.0, 0.0, 0.0)
 
-        Place.Place.enterTeleportIn(self, requestStatus)
+        Place.enterTeleportIn(self, requestStatus)
 
     # teleport out state
 
     def enterTeleportOut(self, requestStatus):
         assert(self.notify.debug('enterTeleportOut()'))
-        Place.Place.enterTeleportOut(self, requestStatus, 
+        Place.enterTeleportOut(self, requestStatus, 
                         self.__teleportOutDone)
 
     def __teleportOutDone(self, requestStatus):
@@ -325,7 +325,7 @@ class SuitInterior(Place):
             messenger.send(self.doneEvent)
 
     def exitTeleportOut(self):
-        Place.Place.exitTeleportOut(self)
+        Place.exitTeleportOut(self)
 
     def goHomeFailed(self, task):
         # it took too long to hear back from the server,

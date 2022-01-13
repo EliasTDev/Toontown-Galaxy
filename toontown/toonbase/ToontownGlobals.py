@@ -1512,13 +1512,13 @@ ColorNoChat    = (0.8, 0.5, 0.1, 1)
 
 FactoryLaffMinimums = [
     # sellbot
-    (0, 31),
+    (0, 0),
     # cashbot
-    (0, 66, 71),
+    (0, 0, 0),
     # lawbot
-    (0, 81, 86, 96),
+    (0, 0, 0, 0),
     # bossbot
-    (0, 101, 106),
+    (0, 0, 0),
     ]
 
 # Picnic table sitting ime
@@ -1684,3 +1684,12 @@ SpecialKeys = {
     'print_screen': 'Print Screen',
     'caps_lock': 'Caps Lock'
 }
+#A pie splat
+maxSellbotBossDamage = 1
+#Craning with safe
+maxCashbotBossDamage = 50
+#Before bonus time is applied
+maxLawbotBossDamage = 1
+#Before 2x is applied
+#So max damage is actually 6
+maxBossbotBossDamage = 3

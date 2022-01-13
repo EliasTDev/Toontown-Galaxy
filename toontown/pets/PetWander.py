@@ -1,10 +1,10 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase.PythonUtil import reduceAngle, randFloat, normalDistrib
 from direct.showbase import DirectObject
 from toontown.pets import PetChase
 from toontown.pets import PetConstants
-from libtoontown import *
-
+#from panda3d.toontown import *
+from libtoontown import CPetChase
 class PetWander(CPetChase, DirectObject.DirectObject):
     def __init__(self, minDist=5., moveAngle=20.):
         # create a target node that we'll be moving around

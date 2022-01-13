@@ -15,7 +15,7 @@ from toontown.suit import Suit
 from . import SuitBattleGlobals
 import random
 from toontown.toonbase import ToontownGlobals
-from libotp import *
+from panda3d.otp import *
 class DistributedBattleBldg(DistributedBattleBase.DistributedBattleBase):
 
     notify = DirectNotifyGlobal.directNotify.newCategory(
@@ -169,7 +169,7 @@ class DistributedBattleBldg(DistributedBattleBase.DistributedBattleBase):
         # Put the camera somewhere
         camTrack = Sequence()
         def setCamFov(fov):
-            base.camLens.setFov(fov)
+            base.camLens.setMinFov(fov/(4.0/3.0))
         camTrack.append(Func(camera.wrtReparentTo, suitLeader))
 
         camTrack.append(Func(setCamFov, self.camFOFov))

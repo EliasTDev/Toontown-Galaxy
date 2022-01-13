@@ -5,7 +5,7 @@ import sys
 import time
 import tkinter
 import Pmw
-import collections
+import collections.abc
 
 class TimeCounter(Pmw.MegaWidget):
     """Up-down counter
@@ -367,12 +367,12 @@ class TimeCounter(Pmw.MegaWidget):
 
     def _invoke(self, event):
         cmd = self['command']
-        if isinstance(cmd, collections.Callable):
+        if isinstance(cmd, collections.abc.Callable):
             cmd()
 
     def invoke(self):
         cmd = self['command']
-        if isinstance(cmd, collections.Callable):
+        if isinstance(cmd, collections.abc.Callable):
             return cmd()
 
     def destroy(self):

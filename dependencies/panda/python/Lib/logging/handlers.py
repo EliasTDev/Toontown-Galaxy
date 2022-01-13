@@ -26,10 +26,8 @@ To use, simply 'import logging.handlers' and log away!
 import logging, socket, os, pickle, struct, time, re
 from stat import ST_DEV, ST_INO, ST_MTIME
 import queue
-try:
-    import threading
-except ImportError: #pragma: no cover
-    threading = None
+import threading
+import copy
 
 #
 # Some constants...
@@ -50,15 +48,19 @@ class BaseRotatingHandler(logging.FileHandler):
     Not meant to be instantiated directly.  Instead, use RotatingFileHandler
     or TimedRotatingFileHandler.
     """
-    def __init__(self, filename, mode, encoding=None, delay=False):
+    namer = None
+    rotator = None
+
+    def __init__(self, filename, mode, encoding=None, delay=False, errors=None):
         """
         Use the specified filename for streamed logging
         """
-        logging.FileHandler.__init__(self, filename, mode, encoding, delay)
+        logging.FileHandler.__init__(self, filename, mode=mode,
+                                     encoding=encoding, delay=delay,
+                                     errors=errors)
         self.mode = mode
         self.encoding = encoding
-        self.namer = None
-        self.rotator = None
+        self.errors = errors
 
     def emit(self, record):
         """
@@ -119,7 +121,8 @@ class RotatingFileHandler(BaseRotatingHandler):
     Handler for logging to a set of files, which switches from one file
     to the next when the current file reaches a certain size.
     """
-    def __init__(self, filename, mode='a', maxBytes=0, backupCount=0, encoding=None, delay=False):
+    def __init__(self, filename, mode='a', maxBytes=0, backupCount=0,
+                 encoding=None, delay=False, errors=None):
         """
         Open the specified file and use it as the stream for logging.
 
@@ -147,7 +150,8 @@ class RotatingFileHandler(BaseRotatingHandler):
         # on each run.
         if maxBytes > 0:
             mode = 'a'
-        BaseRotatingHandler.__init__(self, filename, mode, encoding, delay)
+        BaseRotatingHandler.__init__(self, filename, mode, encoding=encoding,
+                                     delay=delay, errors=errors)
         self.maxBytes = maxBytes
         self.backupCount = backupCount
 
@@ -181,14 +185,17 @@ class RotatingFileHandler(BaseRotatingHandler):
         Basically, see if the supplied record would cause the file to exceed
         the size limit we have.
         """
+        # See bpo-45401: Never rollover anything other than regular files
+        if os.path.exists(self.baseFilename) and not os.path.isfile(self.baseFilename):
+            return False
         if self.stream is None:                 # delay was set...
             self.stream = self._open()
         if self.maxBytes > 0:                   # are we rolling over?
             msg = "%s\n" % self.format(record)
             self.stream.seek(0, 2)  #due to non-posix-compliant Windows feature
             if self.stream.tell() + len(msg) >= self.maxBytes:
-                return 1
-        return 0
+                return True
+        return False
 
 class TimedRotatingFileHandler(BaseRotatingHandler):
     """
@@ -198,8 +205,11 @@ class TimedRotatingFileHandler(BaseRotatingHandler):
     If backupCount is > 0, when rollover is done, no more than backupCount
     files are kept - the oldest ones are deleted.
     """
-    def __init__(self, filename, when='h', interval=1, backupCount=0, encoding=None, delay=False, utc=False, atTime=None):
-        BaseRotatingHandler.__init__(self, filename, 'a', encoding, delay)
+    def __init__(self, filename, when='h', interval=1, backupCount=0,
+                 encoding=None, delay=False, utc=False, atTime=None,
+                 errors=None):
+        BaseRotatingHandler.__init__(self, filename, 'a', encoding=encoding,
+                                     delay=delay, errors=errors)
         self.when = when.upper()
         self.backupCount = backupCount
         self.utc = utc
@@ -335,10 +345,13 @@ class TimedRotatingFileHandler(BaseRotatingHandler):
         record is not used, as we are just comparing times, but it is needed so
         the method signatures are the same
         """
+        # See bpo-45401: Never rollover anything other than regular files
+        if os.path.exists(self.baseFilename) and not os.path.isfile(self.baseFilename):
+            return False
         t = int(time.time())
         if t >= self.rolloverAt:
-            return 1
-        return 0
+            return True
+        return False
 
     def getFilesToDelete(self):
         """
@@ -349,13 +362,19 @@ class TimedRotatingFileHandler(BaseRotatingHandler):
         dirName, baseName = os.path.split(self.baseFilename)
         fileNames = os.listdir(dirName)
         result = []
-        prefix = baseName + "."
+        # See bpo-44753: Don't use the extension when computing the prefix.
+        prefix = os.path.splitext(baseName)[0] + "."
         plen = len(prefix)
         for fileName in fileNames:
             if fileName[:plen] == prefix:
                 suffix = fileName[plen:]
-                if self.extMatch.match(suffix):
-                    result.append(os.path.join(dirName, fileName))
+                # See bpo-45628: The date/time suffix could be anywhere in the
+                # filename
+                parts = suffix.split('.')
+                for part in parts:
+                    if self.extMatch.match(part):
+                        result.append(os.path.join(dirName, fileName))
+                        break
         if len(result) < self.backupCount:
             result = []
         else:
@@ -433,8 +452,11 @@ class WatchedFileHandler(logging.FileHandler):
     This handler is based on a suggestion and patch by Chad J.
     Schroeder.
     """
-    def __init__(self, filename, mode='a', encoding=None, delay=False):
-        logging.FileHandler.__init__(self, filename, mode, encoding, delay)
+    def __init__(self, filename, mode='a', encoding=None, delay=False,
+                 errors=None):
+        logging.FileHandler.__init__(self, filename, mode=mode,
+                                     encoding=encoding, delay=delay,
+                                     errors=errors)
         self.dev, self.ino = -1, -1
         self._statstream()
 
@@ -732,6 +754,10 @@ class SysLogHandler(logging.Handler):
     LOG_CRON      = 9       #  clock daemon
     LOG_AUTHPRIV  = 10      #  security/authorization messages (private)
     LOG_FTP       = 11      #  FTP daemon
+    LOG_NTP       = 12      #  NTP subsystem
+    LOG_SECURITY  = 13      #  Log audit
+    LOG_CONSOLE   = 14      #  Log alert
+    LOG_SOLCRON   = 15      #  Scheduling daemon (Solaris)
 
     #  other codes through 15 reserved for system use
     LOG_LOCAL0    = 16      #  reserved for local use
@@ -759,27 +785,30 @@ class SysLogHandler(logging.Handler):
         }
 
     facility_names = {
-        "auth":     LOG_AUTH,
-        "authpriv": LOG_AUTHPRIV,
-        "cron":     LOG_CRON,
-        "daemon":   LOG_DAEMON,
-        "ftp":      LOG_FTP,
-        "kern":     LOG_KERN,
-        "lpr":      LOG_LPR,
-        "mail":     LOG_MAIL,
-        "news":     LOG_NEWS,
-        "security": LOG_AUTH,       #  DEPRECATED
-        "syslog":   LOG_SYSLOG,
-        "user":     LOG_USER,
-        "uucp":     LOG_UUCP,
-        "local0":   LOG_LOCAL0,
-        "local1":   LOG_LOCAL1,
-        "local2":   LOG_LOCAL2,
-        "local3":   LOG_LOCAL3,
-        "local4":   LOG_LOCAL4,
-        "local5":   LOG_LOCAL5,
-        "local6":   LOG_LOCAL6,
-        "local7":   LOG_LOCAL7,
+        "auth":         LOG_AUTH,
+        "authpriv":     LOG_AUTHPRIV,
+        "console":      LOG_CONSOLE,
+        "cron":         LOG_CRON,
+        "daemon":       LOG_DAEMON,
+        "ftp":          LOG_FTP,
+        "kern":         LOG_KERN,
+        "lpr":          LOG_LPR,
+        "mail":         LOG_MAIL,
+        "news":         LOG_NEWS,
+        "ntp":          LOG_NTP,
+        "security":     LOG_SECURITY,
+        "solaris-cron": LOG_SOLCRON,
+        "syslog":       LOG_SYSLOG,
+        "user":         LOG_USER,
+        "uucp":         LOG_UUCP,
+        "local0":       LOG_LOCAL0,
+        "local1":       LOG_LOCAL1,
+        "local2":       LOG_LOCAL2,
+        "local3":       LOG_LOCAL3,
+        "local4":       LOG_LOCAL4,
+        "local5":       LOG_LOCAL5,
+        "local6":       LOG_LOCAL6,
+        "local7":       LOG_LOCAL7,
         }
 
     #The map below appears to be trivially lowercasing the key. However,
@@ -1156,6 +1185,20 @@ class HTTPHandler(logging.Handler):
         """
         return record.__dict__
 
+    def getConnection(self, host, secure):
+        """
+        get a HTTP[S]Connection.
+
+        Override when a custom connection is required, for example if
+        there is a proxy.
+        """
+        import http.client
+        if secure:
+            connection = http.client.HTTPSConnection(host, context=self.context)
+        else:
+            connection = http.client.HTTPConnection(host)
+        return connection
+
     def emit(self, record):
         """
         Emit a record.
@@ -1163,12 +1206,9 @@ class HTTPHandler(logging.Handler):
         Send the record to the Web server as a percent-encoded dictionary
         """
         try:
-            import http.client, urllib.parse
+            import urllib.parse
             host = self.host
-            if self.secure:
-                h = http.client.HTTPSConnection(host, context=self.context)
-            else:
-                h = http.client.HTTPConnection(host)
+            h = self.getConnection(host, self.secure)
             url = self.url
             data = urllib.parse.urlencode(self.mapLogRecord(record))
             if self.method == "GET":
@@ -1244,7 +1284,7 @@ class BufferingHandler(logging.Handler):
         """
         self.acquire()
         try:
-            self.buffer = []
+            self.buffer.clear()
         finally:
             self.release()
 
@@ -1296,7 +1336,11 @@ class MemoryHandler(BufferingHandler):
         """
         Set the target handler for this handler.
         """
-        self.target = target
+        self.acquire()
+        try:
+            self.target = target
+        finally:
+            self.release()
 
     def flush(self):
         """
@@ -1311,7 +1355,7 @@ class MemoryHandler(BufferingHandler):
             if self.target:
                 for record in self.buffer:
                     self.target.handle(record)
-                self.buffer = []
+                self.buffer.clear()
         finally:
             self.release()
 
@@ -1374,15 +1418,19 @@ class QueueHandler(logging.Handler):
         of the record while leaving the original intact.
         """
         # The format operation gets traceback text into record.exc_text
-        # (if there's exception data), and also puts the message into
-        # record.message. We can then use this to replace the original
+        # (if there's exception data), and also returns the formatted
+        # message. We can then use this to replace the original
         # msg + args, as these might be unpickleable. We also zap the
-        # exc_info attribute, as it's no longer needed and, if not None,
-        # will typically not be pickleable.
-        self.format(record)
-        record.msg = record.message
+        # exc_info and exc_text attributes, as they are no longer
+        # needed and, if not None, will typically not be pickleable.
+        msg = self.format(record)
+        # bpo-35726: make copy of record to avoid affecting other handlers in the chain.
+        record = copy.copy(record)
+        record.message = msg
+        record.msg = msg
         record.args = None
         record.exc_info = None
+        record.exc_text = None
         return record
 
     def emit(self, record):
@@ -1396,110 +1444,112 @@ class QueueHandler(logging.Handler):
         except Exception:
             self.handleError(record)
 
-if threading:
-    class QueueListener(object):
+
+class QueueListener(object):
+    """
+    This class implements an internal threaded listener which watches for
+    LogRecords being added to a queue, removes them and passes them to a
+    list of handlers for processing.
+    """
+    _sentinel = None
+
+    def __init__(self, queue, *handlers, respect_handler_level=False):
         """
-        This class implements an internal threaded listener which watches for
-        LogRecords being added to a queue, removes them and passes them to a
-        list of handlers for processing.
+        Initialise an instance with the specified queue and
+        handlers.
         """
-        _sentinel = None
+        self.queue = queue
+        self.handlers = handlers
+        self._thread = None
+        self.respect_handler_level = respect_handler_level
 
-        def __init__(self, queue, *handlers, respect_handler_level=False):
-            """
-            Initialise an instance with the specified queue and
-            handlers.
-            """
-            self.queue = queue
-            self.handlers = handlers
-            self._thread = None
-            self.respect_handler_level = respect_handler_level
+    def dequeue(self, block):
+        """
+        Dequeue a record and return it, optionally blocking.
 
-        def dequeue(self, block):
-            """
-            Dequeue a record and return it, optionally blocking.
+        The base implementation uses get. You may want to override this method
+        if you want to use timeouts or work with custom queue implementations.
+        """
+        return self.queue.get(block)
 
-            The base implementation uses get. You may want to override this method
-            if you want to use timeouts or work with custom queue implementations.
-            """
-            return self.queue.get(block)
+    def start(self):
+        """
+        Start the listener.
 
-        def start(self):
-            """
-            Start the listener.
+        This starts up a background thread to monitor the queue for
+        LogRecords to process.
+        """
+        self._thread = t = threading.Thread(target=self._monitor)
+        t.daemon = True
+        t.start()
 
-            This starts up a background thread to monitor the queue for
-            LogRecords to process.
-            """
-            self._thread = t = threading.Thread(target=self._monitor)
-            t.daemon = True
-            t.start()
+    def prepare(self, record):
+        """
+        Prepare a record for handling.
 
-        def prepare(self , record):
-            """
-            Prepare a record for handling.
+        This method just returns the passed-in record. You may want to
+        override this method if you need to do any custom marshalling or
+        manipulation of the record before passing it to the handlers.
+        """
+        return record
 
-            This method just returns the passed-in record. You may want to
-            override this method if you need to do any custom marshalling or
-            manipulation of the record before passing it to the handlers.
-            """
-            return record
+    def handle(self, record):
+        """
+        Handle a record.
 
-        def handle(self, record):
-            """
-            Handle a record.
+        This just loops through the handlers offering them the record
+        to handle.
+        """
+        record = self.prepare(record)
+        for handler in self.handlers:
+            if not self.respect_handler_level:
+                process = True
+            else:
+                process = record.levelno >= handler.level
+            if process:
+                handler.handle(record)
 
-            This just loops through the handlers offering them the record
-            to handle.
-            """
-            record = self.prepare(record)
-            for handler in self.handlers:
-                if not self.respect_handler_level:
-                    process = True
-                else:
-                    process = record.levelno >= handler.level
-                if process:
-                    handler.handle(record)
+    def _monitor(self):
+        """
+        Monitor the queue for records, and ask the handler
+        to deal with them.
 
-        def _monitor(self):
-            """
-            Monitor the queue for records, and ask the handler
-            to deal with them.
-
-            This method runs on a separate, internal thread.
-            The thread will terminate if it sees a sentinel object in the queue.
-            """
-            q = self.queue
-            has_task_done = hasattr(q, 'task_done')
-            while True:
-                try:
-                    record = self.dequeue(True)
-                    if record is self._sentinel:
-                        break
-                    self.handle(record)
+        This method runs on a separate, internal thread.
+        The thread will terminate if it sees a sentinel object in the queue.
+        """
+        q = self.queue
+        has_task_done = hasattr(q, 'task_done')
+        while True:
+            try:
+                record = self.dequeue(True)
+                if record is self._sentinel:
                     if has_task_done:
                         q.task_done()
-                except queue.Empty:
                     break
+                self.handle(record)
+                if has_task_done:
+                    q.task_done()
+            except queue.Empty:
+                break
 
-        def enqueue_sentinel(self):
-            """
-            This is used to enqueue the sentinel record.
+    def enqueue_sentinel(self):
+        """
+        This is used to enqueue the sentinel record.
 
-            The base implementation uses put_nowait. You may want to override this
-            method if you want to use timeouts or work with custom queue
-            implementations.
-            """
-            self.queue.put_nowait(self._sentinel)
+        The base implementation uses put_nowait. You may want to override this
+        method if you want to use timeouts or work with custom queue
+        implementations.
+        """
+        self.queue.put_nowait(self._sentinel)
 
-        def stop(self):
-            """
-            Stop the listener.
+    def stop(self):
+        """
+        Stop the listener.
 
-            This asks the thread to terminate, and then waits for it to do so.
-            Note that if you don't call this before your application exits, there
-            may be some records still left on the queue, which won't be processed.
-            """
-            self.enqueue_sentinel()
-            self._thread.join()
-            self._thread = None
+        This asks the thread to terminate, and then waits for it to do so.
+        Note that if you don't call this before your application exits, there
+        may be some records still left on the queue, which won't be processed.
+        """
+        self.enqueue_sentinel()
+        self._thread.join()
+        self._thread = None

@@ -387,7 +387,7 @@ class ToonControlManager(ControlManager):
         base.camera.wrtReparentTo(self.avatar)
         base.camera.setHpr(0, 0, 0)
         base.camera.setPos(0, -11.8125, 3.9375)
-        base.camLens.setFov(VBase2(60, 46.8265))        
+        base.camLens.setMinFov(VBase2(60, 46.8265) / (4.0/3.0))        
 
         # Turn on collisions
         #if self.panel.fColl.get():
@@ -413,7 +413,7 @@ class ToonControlManager(ControlManager):
         # Reset cam
         base.camera.setPos(base.direct.cam, 0, 0, 0)
         base.direct.cam.setPosHpr(0, 0, 0, 0, 0, 0)
-        base.camLens.setFov(self.oldFov)
+        base.camLens.setMinFov(self.oldFov/(4.0/3.0))
         # Renable mouse
         #self.editor.enableMouse()
         #base.direct.enable()

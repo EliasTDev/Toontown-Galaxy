@@ -6,8 +6,8 @@ from direct.fsm import State
 from toontown.toonbase import ToontownGlobals
 from toontown.building import Elevator
 from panda3d.core import *
-from libotp import *
-from libtoontown import *
+from panda3d.otp import *
+from panda3d.toontown import *
 from toontown.hood import ZoneUtil
 
 class FactoryExterior(BattlePlace.BattlePlace):
@@ -150,7 +150,7 @@ class FactoryExterior(BattlePlace.BattlePlace):
 
         for visGroup in range(numVisGroups):
             groupName = dnaStorage.getDNAVisGroupName(visGroup)
-            visGroupClient= dnaStorage.getDNAVisGroup(visGroup)
+            visGroupClient= dnaStorage.getDNAVisGroupAI(visGroup)
             visGroupZoneId = int(base.cr.hoodMgr.extractGroupName(groupName))
             visGroupZoneId = ZoneUtil.getTrueZoneId(visGroupZoneId, self.zoneId)
             visibles = []

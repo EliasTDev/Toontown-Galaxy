@@ -14,7 +14,7 @@ import collections, types
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
 
-from libotp import NametagGroup, WhisperPopup
+from panda3d.otp import NametagGroup, WhisperPopup
 
 from otp.otpbase import OTPLocalizer
 from otp.otpbase import OTPGlobals
@@ -38,7 +38,7 @@ from toontown.suit import SuitDNA
 from direct.showbase.InputStateGlobal import inputState
 from toontown.toonbase import ToontownBattleGlobals
 from toontown.hood import ZoneUtil
-from toontown.toon import ToonDNA
+from toontown.toon import ToonDNA, NPCToons
 from toontown.parties import PartyGlobals
 #from toontown.suit import DistributedBossCog
 
@@ -969,6 +969,7 @@ class SetQuestTier(MagicWord):
     desc = 'Sets the quest tier of the target'
     accessLevel = 'DEVELOPER'
     arguments = [('tier', int, True)]
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
     
     def handleWord(self, invoker, avId, av, *args):
         tier = int(args[0])
@@ -1822,7 +1823,7 @@ class ToggleWireframe(MagicWord):
     affectRange = [MagicWordConfig.AFFECT_SELF]
   
     def handleWord(self, invoker, avId, toon, *args):
-        base.toggleWireframe
+        base.toggleWireframe()
         return 'Wireframe has been toggled.'
 
 
@@ -2083,15 +2084,22 @@ class SetNPCFriend(MagicWord):
     def handleWord(self, invoker, avId, av, *args):
             npcName = str(args[0])
             numCalls = int(args[1])
-            npcId = NPCToons.getNPCId(npcName)
-            if npcId is None:
-                return 'invalid SOS name'
             if numCalls > 100 or numCalls <= 0:
                 return 'Invalid amount for sos card'
-            if self.doNpcFriend(av, npcId, numCalls):
-                return "Added sos card {0}".format(npcName)
+            for npcId, sosName in TTLocalizer.NPCToonNames.items():
+                if sosName.lower() == npcName.lower():
+                    if npcId not in NPCToons.npcFriends:
+                        continue
+                    break
             else:
-                return "invalid NPC name"
+                return 'Invalid sos name'
+
+            if (numCalls == 0) and (npcId in av.NPCFriendsDict):
+                del av.NPCFriendsDict[npcId]
+            else:
+                av.NPCFriendsDict[npcId] = numCalls
+            av.d_setNPCFriendsDict(av.NPCFriendsDict)
+            return "Added sos card {0}".format(npcName)
                 
 class GiveBessies(MagicWord):
     aliases = ['uberdrop', 'pianos', 'bessies', 'barnaclebessies']
@@ -2211,7 +2219,7 @@ class Promote(MagicWord):
         return "Set cogTypes: %s and cogLevels: %s" % (av.getCogTypes(), av.getCogLevels())
 
 class SetCogSuit(MagicWord):
-    aliases = ['cogsuit']
+    aliases = ['cogsuit', 'setcogdisguise', 'disguise', 'setsuitdisguise']
     accessLevel = 'DEVELOPER'
     desc = "Sets the toon to the indicated cog type."
     advancedDesc = """Sets the toon to the indicated cog type (e.g. 'gh' for Glad
@@ -2242,8 +2250,13 @@ class SetCogSuit(MagicWord):
             return
 
         else:
+            if cogType not  in SuitDNA.suitHeadTypes:
+                return 'Invalid cogType'
+            if dept not in SuitDNA.suitDepts:
+                return 'Invalid department'
+
             dept = SuitDNA.getSuitDept(cogType)
-            if dept == None:
+            if dept == None :
                 return "Unknown cog type: %s" % (cogType)
 
             deptIndex = SuitDNA.suitDepts.index(dept)

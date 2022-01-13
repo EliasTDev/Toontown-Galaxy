@@ -9,6 +9,7 @@ from .ElevatorConstants import *
 from .ElevatorUtils import *
 from .SuitBuildingGlobals import *
 from direct.gui.DirectGui import *
+
 from pandac.PandaModules import *
 
 from toontown.toonbase import ToontownGlobals
@@ -22,6 +23,7 @@ from toontown.distributed import DelayDelete
 from toontown.toon import TTEmote
 from otp.avatar import Emote
 from toontown.hood import ZoneUtil
+
 FO_DICT = {'s': 'tt_m_ara_cbe_fieldOfficeMoverShaker',
  'l': 'tt_m_ara_cbe_fieldOfficeLegalEagle',
  'm': 'tt_m_ara_cbe_fieldOfficeMoverShaker',
@@ -256,10 +258,12 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         #("exitOff()"))
 
     ##### waitForVictors state #####
+
     def enterWaitForVictors(self, ts):
         if self.mode != 'suit':
             self.setToSuit()
         victorCount = self.victorList.count(base.localAvatar.doId)
+
         if victorCount == 1:
             self.acceptOnce("insideVictorElevator", self.handleInsideVictorElevator)
 
@@ -271,10 +275,11 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             camera.reparentTo(render)
             camera.setPosHpr(self.elevatorNodePath,
                              0, -32.5, 9.4, 0, 348, 0)
-            base.camLens.setFov(52.0)
+            base.camLens.setMinFov(52.0/(4.0/3.0))
 
             # Are we waiting for any other players to come out?
             anyOthers = 0
+            
             for v in self.victorList:
                 if v != 0 and v != base.localAvatar.doId:
                     anyOthers = 1
@@ -287,13 +292,12 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                     relief = None,
                     pos = (0, 0, 0.35),
                     scale = 0.1)
-
         elif victorCount == 0:
-            pass
+            pass 
         else:
             self.error("localToon is on the victorList %d times" % victorCount)
+  # Make sure the elevator doors are still closed in this state.
 
-        # Make sure the elevator doors are still closed in this state.
         closeDoors(self.leftDoor, self.rightDoor)
 
         # And turn off the elevator light.
@@ -301,7 +305,10 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             if light != None:
                 light.setColor(LIGHT_OFF_COLOR)
             
-        return
+        return 
+  
+
+      
 
     def handleInsideVictorElevator(self):
         self.sendUpdate("setVictorReady", [])
@@ -330,7 +337,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             camera.reparentTo(render)
             camera.setPosHpr(self.elevatorNodePath,
                              0, -32.5, 9.4, 0, 348, 0)
-            base.camLens.setFov(52.0)
+            base.camLens.setMinFov(52.0/(4.0/3.0))
 
             # Are we waiting for any other players to come out?
             anyOthers = 0
@@ -378,6 +385,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
     def enterBecomingToon(self, ts):
         #("enterBecomingToon() %s" %(str(self.getDoId()))))
         # Start animation:
+
         self.animToToon(ts)
     
     def exitBecomingToon(self):
@@ -1346,16 +1354,16 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             Func(camera.setPosHpr,
                  self.elevatorNodePath,
                  0, -32.5, 9.4, 0, 348, 0),
-            Func(base.camLens.setFov, 52.0),
+            Func(base.camLens.setMinFov, ToontownGlobals.DefaultCameraFov/(4./3.)),
             Wait(VICTORY_RUN_TIME),
             # Watch the building transform
             Func(camera.setPosHpr,
                  self.elevatorNodePath,
                  0, -32.5, 17, 0, 347, 0),
-            Func(base.camLens.setFov, 75.0),
+            Func(base.camLens.setMinFov,75.0/(4.0/3.0)),
             Wait(TO_TOON_BLDG_TIME),
             # Put the camera fov back to normal
-            Func(base.camLens.setFov, 52.0),
+            Func(base.camLens.setMinFov, ToontownGlobals.DefaultCameraFov /(4.0/3.0)),
             )
         return track
 

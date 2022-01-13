@@ -56,7 +56,7 @@ def getRingPoints(segCount, centerX, centerY, radius, thickness = 2.0 ,wideX= 1.
 def addRing(attachNode, color, vertexCount, radius, layer = 0, thickness = 1.0 ):
     targetGN=GeomNode("target Circle")
     zFloat = 0.025
-    targetCircleShape = getRingPoints(5 + (vertexCount), 0.0, 0.0, radius, thickness)
+    targetCircleShape = getRingPoints(5 + int(vertexCount), 0.0, 0.0, radius, thickness)
     gFormat = GeomVertexFormat.getV3cp()
     targetCircleVertexData = GeomVertexData("holds my vertices", gFormat, Geom.UHDynamic)
     targetCircleVertexWriter = GeomVertexWriter(targetCircleVertexData, "vertex")
@@ -83,7 +83,7 @@ def addRing(attachNode, color, vertexCount, radius, layer = 0, thickness = 1.0 )
 def addCircle(attachNode, color, vertexCount, radius, layer = 0):
     targetGN=GeomNode("target Circle")
     zFloat = 0.025
-    targetCircleShape = getCirclePoints(5 + (vertexCount), 0.0, 0.0, radius)
+    targetCircleShape = getCirclePoints(5 + int(vertexCount), 0.0, 0.0, radius)
     gFormat = GeomVertexFormat.getV3cp()
     targetCircleVertexData = GeomVertexData("holds my vertices", gFormat, Geom.UHDynamic)
     targetCircleVertexWriter = GeomVertexWriter(targetCircleVertexData, "vertex")
@@ -569,7 +569,6 @@ class DistributedTargetGame(DistributedMinigame):
 
         
         self.umbrella = loader.loadModel("phase_4/models/minigames/slingshot_game_umbrellas.bam")
-        
         pick = random.randint(0, 3)
         self.umbrellaColorSelect[pick] = 0
         tex = loader.loadTexture(DistributedTargetGame.UMBRELLA_TEXTURE_LIST[pick])
@@ -698,7 +697,7 @@ class DistributedTargetGame(DistributedMinigame):
                     targetNodePathGeom = self.targets.attachNewNode(targetGN)
 
                     targetNodePathGeom.setPos(placeX,placeY,0)
-                    points = (self.targetSize[combinedIndex] / 2) + 20
+                    points = (self.targetSize[combinedIndex] // 2) + 20
                     order = len(self.targetList) -combinedIndex + 10
                     if first: 
                         first = 0
@@ -780,10 +779,14 @@ class DistributedTargetGame(DistributedMinigame):
         self.environModel.removeNode()
         del self.environModel
         self.fogOver.delete()
+        open = self.umbrella.find('**/open_umbrella')
+        closed = self.umbrella.find('**/closed_umbrella')
+        closed.hide()
+        open.hide()
         self.umbrella.removeNode()
         del self.umbrella
         for umbrella in self.remoteUmbrellas:
-            self.remoteUmbrellas[umbrella].removeNode()
+            self.remoteUmbrellas[umbrella].cleanup()
         self.remoteUmbrellas.clear()
         del self.remoteUmbrellas
             
@@ -839,10 +842,10 @@ class DistributedTargetGame(DistributedMinigame):
 
 
         
-        camera.reparentTo(render)
+        base.camera.reparentTo(render)
         toonPos = self.getAvatar(self.localAvId).getPos()
-        camera.setPosHpr(toonPos[0],toonPos[1] - 18,toonPos[2] + 10,0,-15,0)
-        base.camLens.setFov(80)
+        base.camera.setPosHpr(toonPos[0],toonPos[1] - 18,toonPos[2] + 10,0,-15,0)
+        base.camLens.setMinFov(80.0/(4.0/3.0))
         
 
         # set the far plane
@@ -971,10 +974,10 @@ class DistributedTargetGame(DistributedMinigame):
         toon.dropShadow.hide()
         self.__spawnUpdateLocalToonTask()
         toonPos = base.localAvatar.getPos()
-        camera.setPosHpr(toonPos[0],toonPos[1] - 26,toonPos[2] + 10,0,-15,0)
+        base.camera.setPosHpr(toonPos[0],toonPos[1] - 26,toonPos[2] + 10,0,-15,0)
         #camera.setPosHpr(0, self.CAMERA_Y + self.TOON_Y + 12, 5,
         #                 0, -15, 0)
-        base.camLens.setFov(80)
+        base.camLens.setMinFov(80/(4.0/3.0))
         self.resetNums()
         
     def resetNums(self):
@@ -1012,8 +1015,8 @@ class DistributedTargetGame(DistributedMinigame):
 
         render.clearFog()
         base.camLens.setFar(ToontownGlobals.DefaultCameraFar)
-        base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov/(4/3))
-        camera.setHpr(0,90,0)
+        base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov/(4.0/3.0))
+        base.camera.setHpr(0,90,0)
 
         # Restore the background color
         base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
@@ -1168,11 +1171,11 @@ class DistributedTargetGame(DistributedMinigame):
                 open.setScale(1.5)
                 closed = umbrella.find('**/closed_umbrella')
                 closed.show()
-                hand = toon.find("**/joint_Rhold")
+                hand = toon.getRightHands()[0]
                 ce = CompassEffect.make(NodePath(), CompassEffect.PRot)
                 closed.node().setEffect(ce)
                 closed.setHpr(0.0,90.0,35.0)
-                
+                closed.hide()
                 umbrella.reparentTo(hand)
                 # Start the smoothing task.
                 toon.startSmooth()
@@ -1210,15 +1213,15 @@ class DistributedTargetGame(DistributedMinigame):
         self.gameFSM.request("launch")
         self.powerBar.show()
         self.powerBar['value'] = self.startPower
-        camera.reparentTo(render)
+        base.camera.reparentTo(render)
         self.__placeToon(self.localAvId)
         toonPos = self.getAvatar(self.localAvId).getPos()
         newPos = Point3(toonPos[0],toonPos[1] - 25,toonPos[2] + 7)
         newHpr = Point3(0,-15,0)
-        self.cameraWork =  camera.posHprInterval(2.5, newPos, newHpr,
+        self.cameraWork =  base.camera.posHprInterval(2.5, newPos, newHpr,
                           blendType = "easeInOut")#,
         self.cameraWork.start()
-        base.camLens.setFov(80)
+        base.camLens.setMinFov(80/(4.0/3.0))
         self.stretchY = self.startPower
         self.power = self.startPower
         self.scoreboard.hide() 
@@ -1262,10 +1265,10 @@ class DistributedTargetGame(DistributedMinigame):
         toon.b_setAnimState('swim', 1.0)
         toon.stopBobSwimTask()
         toon.dropShadow.hide()
-        camera.reparentTo(base.localAvatar)
-        camera.setPosHpr(0, self.CAMERA_Y + self.TOON_Y + 12, 5,
+        base.camera.reparentTo(base.localAvatar)
+        base.camera.setPosHpr(0, self.CAMERA_Y + self.TOON_Y + 12, 5,
                          0, -15, 0)
-        base.camLens.setFov(80)
+        base.camLens.setMinFov(80/(4.0/3.0))
         self.help.show()
         self.help['text'] = TTLocalizer.TargetGameFlyHelp
         self.rubberSound.setVolume(0.0)
@@ -1290,7 +1293,7 @@ class DistributedTargetGame(DistributedMinigame):
         self.gravity = 4
         newHpr = Point3(0, -68, 0)
         newPos = Point3(0, self.CAMERA_Y + self.TOON_Y + 15, 15)
-        camera.posHprInterval(2.5, newPos, newHpr,
+        base.camera.posHprInterval(2.5, newPos, newHpr,
                           blendType = "easeInOut").start()
                           
         open = self.umbrella.find('**/open_umbrella')
@@ -1395,7 +1398,7 @@ class DistributedTargetGame(DistributedMinigame):
         
         newHpr = Point3(180, 10, 0)
         newPos = Point3(0, -(self.CAMERA_Y + self.TOON_Y + 12), 1)
-        camera.posHprInterval(5.0, newPos, newHpr,
+        base.camera.posHprInterval(5.0, newPos, newHpr,
                           blendType = "easeInOut",
                           )
                           
@@ -1791,7 +1794,7 @@ class DistributedTargetGame(DistributedMinigame):
             self.__posBroadcast(dt)
         
         
-        visZ = camera.getZ(render)
+        visZ = base.camera.getZ(render)
         
         
         

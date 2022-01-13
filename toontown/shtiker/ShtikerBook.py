@@ -10,7 +10,7 @@ from toontown.toonbase import TTLocalizer
 from toontown.effects import DistributedFireworkShow
 from toontown.parties import DistributedPartyFireworksActivity
 from direct.directnotify import DirectNotifyGlobal
-from libotp import NametagGlobals
+from panda3d.otp import NametagGlobals
 
 class ShtikerBook(DirectFrame, StateData.StateData):
     """ShtikerBook class"""

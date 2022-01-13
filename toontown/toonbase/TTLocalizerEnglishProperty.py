@@ -12,7 +12,7 @@ RPmeritLabelXPosition = 0.55
 RPmeritBarsXPosition = 0.825
 
 #battle/BattleBase.py
-BBbattleInputTimeout = 20.0
+BBbattleInputTimeout = 30.0
 
 #battle/FireCogPanel.py
 FCPtextFrameScale = 0.08

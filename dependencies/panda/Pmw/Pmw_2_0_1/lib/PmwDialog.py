@@ -10,7 +10,7 @@ import sys
 import types
 import tkinter
 import Pmw
-import collections
+import collections.abc
 
 # A Toplevel with a ButtonBox and child site.
 
@@ -128,7 +128,7 @@ class Dialog(Pmw.MegaToplevel):
             return
 
         command = self['command']
-        if isinstance(command, collections.Callable):
+        if isinstance(command, collections.abc.Callable):
             return command(name)
         else:
             if self.active():

@@ -4,7 +4,8 @@ The official repo for Toontown Galaxy, a new Toontown game based on Disney's Too
 # staff:
  
  1. Galaxy-  Fouder,  Team Leader, and Game Developer
- 2. Rocket -  Game Developer
+ 2. Xeltania - Game Developer
+
  3.  DarthAnonymous1 - Game Developer 
 # Repo Rules and Regulations:
 

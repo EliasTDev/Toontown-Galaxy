@@ -761,8 +761,8 @@ class RewardPanel(DirectFrame):
         #import pdb; pdb.set_trace()
         if hasUber < 0:
             print((toon.doId, 'Reward Panel received an invalid hasUber from an uberList'))
-        
-        tickDelay = 0.16
+        #Changed to as fast as in 2013
+        tickDelay = 1.0/60
         intervalList = []
         if (origSkill + earnedSkill) >= ToontownBattleGlobals.UnpaidMaxSkill and toon.getGameAccess() != OTPGlobals.AccessFull:
             lostExp = (origSkill + earnedSkill) - ToontownBattleGlobals.UnpaidMaxSkill
@@ -778,14 +778,16 @@ class RewardPanel(DirectFrame):
         # for a one-point boost, and maybe four or five seconds for
         # 100 points.  Conveniently, this is the ratio that natural
         # log gives us.
-        barTime = math.log(earnedSkill + 1)
+
+        # Changed to faster time in 2013
+        barTime = 0.5
         numTicks = int(math.ceil(barTime / tickDelay))
 
         for i in range(numTicks):
             t = (i + 1) / float(numTicks)
             newValue = int(origSkill + t * earnedSkill + 0.5)
             intervalList.append(Func(self.incrementExp, track, newValue, toon))
-            intervalList.append(Wait(tickDelay))
+            intervalList.append(Wait(tickDelay * 0.5))
 
         intervalList.append(Func(self.resetBarColor, track))
         intervalList.append(Wait(0.4))
@@ -862,7 +864,7 @@ class RewardPanel(DirectFrame):
             intervalList.append(Func(self.showMeritIncLabel, dept, min(neededMerits, earnedMerits)))
 
         # How much time should it take to increment the bar?
-        barTime = math.log(earnedMerits + 1)
+        barTime = 0.5
         numTicks = int(math.ceil(barTime / tickDelay))
 
         for i in range(numTicks):
@@ -1054,7 +1056,7 @@ class RewardPanel(DirectFrame):
 
                 if earned > 0 or (base.localAvatar.tutorialAck==0 and num==1):
                     # See getTrackIntervalList() for timing comments.
-                    barTime = math.log(earned + 1)
+                    barTime = 0.5
                     numTicks = int(math.ceil(barTime / tickDelay))
 
                     for i in range(numTicks):

@@ -1,4 +1,4 @@
-1609527379
+1641926042
 3 3
 14 libp3dtoolutil 4 3LYc 12 panda3d.core 
 280
@@ -1666,7 +1666,7 @@ inline bool Filename::operator <(std::string const &other) const;
 61
 inline int Filename::compare_to(Filename const &other) const;
 
-487 11 __nonzero__ 0 4 603 21 Filename::__nonzero__ 0 1 202 349
+487 8 __bool__ 0 4 603 18 Filename::__bool__ 0 1 202 349
 /**
  * Returns true if the Filename is valid (not empty), or false if it is an
  * empty string.
@@ -1676,8 +1676,8 @@ inline int Filename::compare_to(Filename const &other) const;
  * many ambiguities for the C++ compiler, so we use this Python-only approach
  * instead.
  */
-46
-inline bool Filename::__nonzero__(void) const;
+43
+inline bool Filename::__bool__(void) const;
 
 488 8 get_hash 0 4 603 18 Filename::get_hash 0 1 203 92
 /**
@@ -1793,10 +1793,12 @@ static std::string PandaSystem::get_distributor(void);
 51
 static std::string PandaSystem::get_compiler(void);
 
-502 14 get_build_date 0 4 605 27 PandaSystem::get_build_date 0 1 217 140
+502 14 get_build_date 0 4 605 27 PandaSystem::get_build_date 0 1 217 158
 /**
  * Returns a string representing the date and time at which this version of
  * Panda (or at least dtool) was compiled, if available.
+ *
+ * @deprecated
  */
 53
 static std::string PandaSystem::get_build_date(void);
@@ -3305,9 +3307,11 @@ LineStream::~LineStream(void);
  * Returns a string representing the compiler that was used to generate this
  * version of Panda, if it is available, or "unknown" if it is not.
  */ 0 
-217 0 0 6 231 633 0 0 140 /**
+217 0 0 6 231 633 0 0 158 /**
  * Returns a string representing the date and time at which this version of
  * Panda (or at least dtool) was compiled, if available.
+ *
+ * @deprecated
  */ 0 
 218 0 0 6 232 633 0 0 162 /**
  * Returns a string representing the git commit hash that this source tree is

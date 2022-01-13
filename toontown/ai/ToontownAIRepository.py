@@ -2,8 +2,8 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.task.Task import Task
 from panda3d.core import *
 from otp.ai import BanManagerAI
-from libotp import CImpulse
-from libtoontown import *
+from panda3d.otp import CImpulse
+from panda3d.toontown import *
 from otp.ai.AIZoneData import AIZoneDataStore
 from otp.ai.TimeManagerAI import TimeManagerAI
 from otp.distributed.OtpDoGlobals import *

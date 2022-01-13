@@ -45,7 +45,7 @@ class Party(Place.Place):
                          ['final', 'sit', 'stickerBook', 
                           'options', 'quest', 'fishing',
                           'stopped', 'DFA', 'trialerFA',
-                          'push', 'activity',
+                          'push', 'activity', 'teleportOut'
                           ]),
             State.State('stopped',
                         self.enterStopped,
@@ -63,7 +63,7 @@ class Party(Place.Place):
              State.State('partyPlanning',
                          self.enterPartyPlanning,
                          self.exitPartyPlanning,
-                         ['DFA','teleportOut',
+                         ['DFA','teleportOut', 'walk'
                           ]),
              State.State('stickerBook',
                          self.enterStickerBook,
@@ -151,6 +151,7 @@ class Party(Place.Place):
         if hasattr(base.localAvatar, "aboutToPlanParty") and base.localAvatar.aboutToPlanParty:
             if not hasattr(self, "partyPlanner") or self.partyPlanner is None:
                 self.partyPlanner = PartyPlanner.PartyPlanner(self.partyPlannerDoneEvent)
+                
 
         self.parentFSMState.addChild(self.fsm)
 
@@ -238,7 +239,9 @@ class Party(Place.Place):
 
     def doRequestLeave(self, requestStatus):
         # when it's time to leave, check their trialer status first
-        self.fsm.request('trialerFA', [requestStatus])
+        # Dont need this as people have unlimited access now
+        #self.fsm.request('trialerFA', [requestStatus]) 
+        return
 
     def enterInit(self):
         pass
@@ -247,11 +250,12 @@ class Party(Place.Place):
         pass
 
     def enterPartyPlanning(self, requestStatus):
-        assert(self.notify.debug("enterPartyPlanning()"))
+        self.notify.info("EnterPartyPlanningenterPartyPlanning()")
         base.localAvatar.aboutToPlanParty = False
         self.accept(self.partyPlannerDoneEvent, self.handlePartyPlanningDone)
 
     def handlePartyPlanningDone(self):
+        print("handling party planning done")
         self.ignore( self.partyPlannerDoneEvent )
         self.partyPlanner.close()
         del self.partyPlanner
@@ -299,6 +303,7 @@ class Party(Place.Place):
         # If we're about to plan a party, set the next state to partyPlanning
         if hasattr(base.localAvatar, "aboutToPlanParty") and base.localAvatar.aboutToPlanParty:
             self.nextState = 'partyPlanning'
+            self.fsm.request(self.nextState, ["DFA"])
 
     def enterTeleportOut(self, requestStatus):
         assert(self.notify.debug("enterTeleportOut()"))

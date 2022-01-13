@@ -18,7 +18,7 @@ __version__ = '$Id: PmwFileDialog.py,v 1.2.2.1 2012/08/04 00:56:51 adyh Exp $'
 ################################################################################
 import os,fnmatch,time
 import tkinter,Pmw
-import collections
+import collections.abc
 #Pmw.setversion("0.8.5")
 
 def _errorpop(master,text):
@@ -224,7 +224,7 @@ class PmwFileDialog(Pmw.Dialog):
         self.configure(directory=dir,filename=value)
 
         c=self['command']
-        if isinstance(c, collections.Callable):
+        if isinstance(c, collections.abc.Callable):
             c()
 
     def newfilename(self):

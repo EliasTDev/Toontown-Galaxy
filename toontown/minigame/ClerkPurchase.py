@@ -51,6 +51,7 @@ class ClerkPurchase(PurchaseBase):
         purchaseModels.removeNode()
 
     def unload(self):
+        self.timer.destroy()
         PurchaseBase.unload(self)
         del self.backToPlayground
         del self.timer

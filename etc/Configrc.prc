@@ -18,7 +18,7 @@ notify-level-loader warning
 notify-timestamp #t
 notify-integrate #f
 default-model-extension .bam
-audio-library-name p3fmod_audio
+audio-library-name p3openal_audio
 cursor-filename phase_3/models/gui/toonmono.cur
 
 want-dev 1

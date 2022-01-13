@@ -1621,8 +1621,13 @@ class NameShop(StateData.StateData):
         self.notify.debug("ParentPos = %.2f %.2f %.2f" % (parentPos[0], parentPos[1], parentPos[2]))
 
     def storeSkipTutorialRequest(self):
-        """Store our skip tutorial request in cr, as NameShop gets deleted."""
-        base.cr.skipTutorialRequest = self.requestingSkipTutorial
+        """Store our skip tutorial request in cr, as NameShop gets deleted.
+            Also check the config variable if we want the tutorial or not."""
+        if base.wantTutorial:
+            base.cr.skipTutorialRequest = self.requestingSkipTutorial
+        # if we don't want the tutorial
+        else:
+            base.cr.skipTutorialRequest = True
 
     def __isFirstTime(self):
         """

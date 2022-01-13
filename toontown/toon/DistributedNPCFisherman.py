@@ -6,7 +6,7 @@ from . import NPCToons
 from toontown.toonbase import TTLocalizer
 from toontown.fishing import FishSellGUI
 from direct.task.Task import Task
-from libotp import CFSpeech, CFTimeout
+from panda3d.otp import CFSpeech, CFTimeout
 
 class DistributedNPCFisherman(DistributedNPCToonBase):
 
