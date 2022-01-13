@@ -16,4 +16,4 @@ echo "Username: $ttgUsername"
 echo "Gameserver: $TTG_GAMESERVER"
 echo "==============================="
 
-/usr/bin/python3 -m toontown.toonbase.ToontownStart
+python3.10 -m toontown.toonbase.ToontownStart
