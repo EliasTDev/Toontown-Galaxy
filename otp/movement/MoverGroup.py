@@ -1,5 +1,5 @@
 from pandac.PandaModules import *
-from libotp import CMoverGroup
+from panda3d.otp import CMoverGroup
 from otp.movement.Mover import Mover
 
 class MoverGroup(CMoverGroup):

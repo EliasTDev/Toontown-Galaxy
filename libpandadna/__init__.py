@@ -1,7 +1,7 @@
 import sys
 
 if sys.platform == "darwin":
-        # Create folder in /Library/Developer/Panda3D and call it pandaMac and drop libpandadna.so in there
-    from pandaMac.libpandadna import *
+        # Create folder in /Library/Developer/Panda3D and call it pandaMac and drop panda3d.toontown.so in there
+    from pandaMac.panda3d.toontown import *
 else:
-    from .libpandadna import *
+    from .panda3d.toontown import *

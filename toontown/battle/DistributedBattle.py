@@ -14,8 +14,8 @@ from otp.avatar import Emote
 from . import SuitBattleGlobals
 from toontown.distributed import DelayDelete
 import random
-from libotp import CFSpeech, CFTimeout
-from libotp import NametagGlobals
+from panda3d.otp import CFSpeech, CFTimeout
+from panda3d.otp import NametagGlobals
 
 class DistributedBattle(DistributedBattleBase.DistributedBattleBase):
 

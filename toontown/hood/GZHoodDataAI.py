@@ -8,7 +8,7 @@ from toontown.classicchars import DistributedGoofySpeedwayAI
 from toontown.safezone import DistributedGolfKartAI
 import string
 
-from libpandadna import DNAData, DNAGroup, DNAVisGroup
+from panda3d.toontown import DNAData, DNAGroup, DNAVisGroup
 
 if( __debug__ ):
     import pdb

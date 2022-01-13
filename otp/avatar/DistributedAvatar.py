@@ -8,7 +8,7 @@ from direct.actor.DistributedActor import DistributedActor
 from direct.task import Task
 from direct.showbase import PythonUtil
 
-from libotp import Nametag
+from panda3d.otp import Nametag
 from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPLocalizer
 from otp.speedchat import SCDecoders

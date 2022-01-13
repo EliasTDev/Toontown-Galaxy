@@ -25,7 +25,7 @@ from toontown.battle import BattleProps
 import math
 import copy
 
-from libotp import CFSpeech, CFTimeout
+from panda3d.otp import CFSpeech, CFTimeout
 
 
 

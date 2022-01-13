@@ -19,7 +19,7 @@ from . import ToonInteriorColors
 from toontown.hood import ZoneUtil
 from toontown.toon import ToonDNA
 from toontown.toon import ToonHead
-from libpandadna import DNADoor
+from panda3d.toontown import DNADoor
 
 class DistributedToonHallInterior(DistributedToonInterior):
     if __debug__:

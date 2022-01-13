@@ -17,7 +17,7 @@ from toontown.toonbase import ToontownBattleGlobals
 from toontown.launcher import ToontownDownloadWatcher
 from otp.otpbase import OTPGlobals 
 from settings import *
-from libotp import *
+from panda3d.otp import *
 class ToonBase(OTPBase.OTPBase):
     """ToonBase class"""
 

@@ -421,6 +421,6 @@ class NametagGroup:
 
     def frameCallback(self):
         # This should be in Nametag2d
-        # I have no idea where libotp called it
+        # I have no idea where panda3d.otp called it
         # so I'm doing it in MarginManager.update
         self.updateRegions()

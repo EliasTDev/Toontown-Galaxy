@@ -22,7 +22,7 @@ from pandac.PandaModules import *
 import random
 import math
 import functools
-from libotp import *
+from panda3d.otp import *
 # This pointer keeps track of the one DistributedCashbotBoss that
 # should appear within the avatar's current visibility zones.  If
 # there is more than one DistributedCashbotBoss visible to a client at

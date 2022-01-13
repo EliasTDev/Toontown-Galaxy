@@ -6,7 +6,7 @@ from toontown.safezone import ButterflyGlobals
 #from toontown.safezone import DistributedButterflyAI
 from panda3d.core import *
 from toontown.toon import NPCToons
-from libpandadna import DNAData
+from panda3d.toontown import DNAData
 
 class HoodDataAI:
     """

@@ -17,7 +17,7 @@ from . import ToonInteriorColors
 from toontown.hood import ZoneUtil
 from toontown.toon import ToonDNA
 from toontown.toon import ToonHead
-from libpandadna import DNADoor
+from panda3d.toontown import DNADoor
 
 # These four coordinates define the region we have available to fit
 # the sign from the front of the building.  Signs will be scaled down

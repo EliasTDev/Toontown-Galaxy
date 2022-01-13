@@ -17,7 +17,7 @@ from toontown.toonbase import ToontownGlobals
 from toontown.toon import Toon
 from . import FriendHandle
 from otp.otpbase import OTPGlobals
-from libotp import NametagGlobals
+from panda3d.otp import NametagGlobals
 
 class FriendsListManager:
     """

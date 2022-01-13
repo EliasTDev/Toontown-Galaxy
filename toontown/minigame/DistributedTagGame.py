@@ -16,7 +16,7 @@ from toontown.toonbase import TTLocalizer
 from otp.otpbase import OTPGlobals
 from . import TagGameGlobals
 from . import Trajectory
-from libotp import *
+from panda3d.otp import *
 class DistributedTagGame(DistributedMinigame):
 
     DURATION = TagGameGlobals.DURATION

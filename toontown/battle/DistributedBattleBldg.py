@@ -15,7 +15,7 @@ from toontown.suit import Suit
 from . import SuitBattleGlobals
 import random
 from toontown.toonbase import ToontownGlobals
-from libotp import *
+from panda3d.otp import *
 class DistributedBattleBldg(DistributedBattleBase.DistributedBattleBase):
 
     notify = DirectNotifyGlobal.directNotify.newCategory(

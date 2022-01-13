@@ -70,7 +70,7 @@ from direct.task.Task import Task
 from toontown.battle import BattleProps
 from toontown.toonbase import TTLocalizer
 import string
-from libotp import NametagGroup
+from panda3d.otp import NametagGroup
 
 aSize = 6.06
 bSize = 5.29
