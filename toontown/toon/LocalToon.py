@@ -43,7 +43,7 @@ from toontown.shtiker import TIPPage
 from toontown.quest import Quests
 from toontown.quest import QuestParser
 from toontown.toonbase.ToontownGlobals import *
-from toontown.toonbase import ToontownGlobals
+from toontown.toonbase import ToontownGlobals, ControlGlobals
 from toontown.toonbase import TTLocalizer
 from toontown.catalog import CatalogNotifyDialog
 from toontown.chat import ToontownChatManager
@@ -1720,13 +1720,13 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         self.hideClarabelleGui()
         clarabelleHidden = 1
 
-        self.ignore(ToontownGlobals.FriendsListHotkey)
+        self.ignore(ControlGlobals.FRIENDS)
 #        import pdb; pdb.set_trace()
 
         if self.friendsListButtonActive and \
            self.friendsListButtonObscured <= 0:
             self.bFriendsList.show()
-            self.accept(ToontownGlobals.FriendsListHotkey, self.sendFriendsListEvent)
+            self.accept(ControlGlobals.FRIENDS, self.sendFriendsListEvent)
 
             if self.clarabelleButtonObscured <= 0 and self.isTeleportAllowed():
                 if self.catalogNotify == ToontownGlobals.NewItems or \

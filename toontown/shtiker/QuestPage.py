@@ -1,11 +1,11 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from . import ShtikerPage
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 from toontown.quest import Quests
 from toontown.toon import NPCToons
 from toontown.hood import ZoneUtil
-from toontown.toonbase import ToontownGlobals
+from toontown.toonbase import ToontownGlobals, ControlGlobals
 from toontown.toonbase import TTLocalizer
 from toontown.quest import QuestPoster
 
@@ -63,12 +63,12 @@ class QuestPage(ShtikerPage.ShtikerPage):
         self.updatePage()
 
     def acceptOnscreenHooks(self):        
-        self.accept(ToontownGlobals.QuestsHotkeyOn, self.showQuestsOnscreen)
-        self.accept(ToontownGlobals.QuestsHotkeyOff, self.hideQuestsOnscreen)
+        self.accept(ControlGlobals.TASKS, self.showQuestsOnscreen)
+        self.accept(f"{ControlGlobals.TASKS}-up", self.hideQuestsOnscreen)
 
     def ignoreOnscreenHooks(self):        
-        self.ignore(ToontownGlobals.QuestsHotkeyOn)
-        self.ignore(ToontownGlobals.QuestsHotkeyOff)
+        self.ignore(ControlGlobals.TASKS)
+        self.ignore(f"{ControlGlobals.TASKS}-up")
 
     def unload(self):
         del self.title

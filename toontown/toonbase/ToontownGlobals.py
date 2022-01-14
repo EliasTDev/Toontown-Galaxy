@@ -686,9 +686,10 @@ MinigameReleaseDates = {
 ThinkPosHotkey = "f1-up"
 PlaceMarkerHotkey = "f2-up"
 FriendsListHotkey = "f7-up"
+#TODO add secondary shticker book hotkey to keybinds
 StickerBookHotkey = "f8-up"
 OptionsPageHotkey = "escape-up"
-ScreenshotHotkey = "f9-up"
+#ScreenshotHotkey = "f9-up"
 SynchronizeHotkey = "f6-up"
 QuestsHotkeyOn = "end"
 QuestsHotkeyOff = "end-up"
@@ -1606,6 +1607,7 @@ AnimPropTypes = Enum(("Unknown",
 MaxCarryLimit = 80
 ALLOWED_FIELD_OFFICES = ['s', 'l']
 
+# New Hotkeys globals
 Separater = '-'
 Shift = 'shift'
 Control = 'control'
@@ -1619,38 +1621,32 @@ HotkeyLeft = 2
 HotkeyRight = 3
 HotkeyJump = 4
 HotkeyThrow = 5
+HotkeySprint = 6
 HotkeyMovementDefaults = {
     HotkeyUp: 'arrow_up',
     HotkeyDown: 'arrow_down',
     HotkeyLeft: 'arrow_left',
     HotkeyRight: 'arrow_right',
     HotkeyJump: 'control',
-    HotkeyThrow: 'delete'
+    HotkeyThrow: 'delete',
+    HotkeySprint: 'shift'
 }
 HotkeyBook = 0
-HotkeyBookSecondary = 1
-HotkeyTasks = 2
-HotkeyTasksClose = 3
-HotkeyInventory = 4
-HotkeyInventoryClose = 5
-HotkeyFriends = 6
-HotkeyMap = 7
-HotkeyMapClose = 8
-HotkeyScreenshot = 9
-HotkeyChat = 10
+HotkeyTasks = 1
+HotkeyInventory = 2
+HotkeyFriends = 3
+HotkeyMap = 4
+HotkeyScreenshot = 5
+HotkeyChat = 6
 
 HotkeyInteractionDefaults = {
     HotkeyBook: 'escape',
-    HotkeyBookSecondary: 'f8',
     HotkeyTasks: 'end',
-    HotkeyTasksClose: 'end' + Separater + Release,
     HotkeyInventory: 'home',
-    HotkeyInventoryClose: 'home' + Separater + Release,
     HotkeyFriends: 'f7',
     HotkeyMap: 'alt',
-    HotkeyMapClose: 'alt' + Separater + Release,
     HotkeyScreenshot: 'f9',
-    HotkeyChat: 'f5',
+    HotkeyChat: 't',
 }
 
 

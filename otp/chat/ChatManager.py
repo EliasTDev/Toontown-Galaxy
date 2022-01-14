@@ -14,7 +14,8 @@ from otp.otpbase import OTPLocalizer
 from direct.directnotify import DirectNotifyGlobal
 from otp.login import LeaveToPayDialog
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from toontown.toonbase import ControlGlobals
+from panda3d.core import *
 #from ChatInputSpeedChat import ChatInputSpeedChat
 
 # other systems can listen for these events if they
@@ -79,8 +80,8 @@ class ChatManager(DirectObject.DirectObject):
         # Store the client repository and the local avatar
         self.cr = cr
         self.localAvatar = localAvatar
-
-        self.wantBackgroundFocus = 1
+        #If list is empty then this will return 0 else return 1
+        self.wantBackgroundFocus = not base.controlManager.getChangedHotkeys()  or not base.controlManager.getChatDisabled
 
         self.__scObscured = 0
         self.__normalObscured = 0
@@ -398,6 +399,9 @@ class ChatManager(DirectObject.DirectObject):
             # typeEvent.
             self.acceptOnce('enterNormalChat', self.fsm.request, ['normalChat'])
             
+            if not self.wantBackgroundFocus:
+                self.accept(ControlGlobals.CHAT, messenger.send, ['enterNormalChat'])
+
     def checkObscurred(self):
         if not self.__scObscured:
             self.scButton.show()
@@ -662,12 +666,15 @@ class ChatManager(DirectObject.DirectObject):
         self.clButton.hide()
         
     def enterNormalChat(self):
+        if base.controlManager.getChangedHotkeys:
+            base.localAvatar.disableAvatarControls()
         assert self.notify.debugStateCall(self)
         result = self.chatInputNormal.activateByData()
         return result
         
     def exitNormalChat(self):
-        assert self.notify.debugStateCall(self)
+        if base.controlManager.getChangedHotkeys:
+            base.localAvatar.enableAvatarControls()
         self.chatInputNormal.deactivate()
 
     def enterOpenChatWarning(self):

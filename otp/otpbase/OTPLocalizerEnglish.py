@@ -3475,18 +3475,17 @@ HotkeyLeft = 2
 HotkeyRight = 3
 HotkeyJump = 4
 HotkeyThrow = 5
-
+HotkeySprint = 6
 HotkeyBook = 0
-HotkeyBookSecondary = 1
-HotkeyTasks = 2
-HotkeyTasksClose = 3
-HotkeyInventory = 4
-HotkeyInventoryClose = 5
-HotkeyFriends = 6
-HotkeyMap = 7
-HotkeyMapClose = 8
-HotkeyScreenshot = 9
-HotkeyChat = 10
+HotkeyTasks = 1
+HotkeyTasksClose = 2
+HotkeyInventory = 3
+HotkeyInventoryClose = 4
+HotkeyFriends = 5
+HotkeyMap = 6
+HotkeyMapClose = 7
+HotkeyScreenshot = 8
+HotkeyChat = 9
 HotkeyNames = {
     0: {
            HotkeyUp: 'Move Forward',
@@ -3494,19 +3493,16 @@ HotkeyNames = {
            HotkeyLeft: 'Move Left',
            HotkeyRight: 'Move Right',
            HotkeyJump: 'Jump',
-           HotkeyThrow: 'Throw'
+           HotkeyThrow: 'Throw',
+           HotkeySprint: 'Sprint'
 
     },
     1: {
            HotkeyBook: 'Open Book',
-           HotkeyBookSecondary: 'Open Book Secondary',
            HotkeyTasks: 'Open Tasks',
-           HotkeyTasksClose: 'Close Tasks',
            HotkeyInventory: 'Open Inventory',
-           HotkeyInventoryClose: 'Close inventory',
            HotkeyFriends: 'Open Friends',
            HotkeyMap: 'Open map',
-           HotkeyMapClose: 'Close map',
            HotkeyScreenshot: 'screenshot',
            HotkeyChat: 'chat'
     }

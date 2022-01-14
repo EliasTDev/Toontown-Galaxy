@@ -31,6 +31,8 @@ from direct.controls.PhysicsWalker import PhysicsWalker
 from direct.controls.SwimWalker import SwimWalker
 from direct.controls.TwoDWalker import TwoDWalker
 from toontown.toonbase import ControlManager as ttControlManager
+from toontown.toonbase import ToontownGlobals
+from toontown.toonbase import ControlGlobals
 class LocalAvatar(DistributedAvatar.DistributedAvatar,
                   DistributedSmoothNode.DistributedSmoothNode):
     """
@@ -69,8 +71,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.cTrav.setRespectPrevTransform(1)
 
         self.avatarControlsEnabled=0
-        self.ttControlManager = ttControlManager.ControlManager()
-
         self.controlManager = ControlManager.ControlManager(True, passMessagesThrough)
 
         # Set up collisions:
@@ -673,9 +673,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.avatarControlsEnabled=1
         self.setupAnimationEvents()
         self.controlManager.enable()
-        moveForward = self.ttControlManager.getKey("movement", "HotkeyUp")
-        print(f"hotkey name: {moveForward}")
-
     def disableAvatarControls(self):
         """
         Ignore the tab, page up, arrow keys, etc.
@@ -1632,24 +1629,29 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
     def enableRun(self):
         #Get hotkey name for moving forward
-        self.accept("arrow_up", self.startRunWatch)
-        self.accept("arrow_up-up", self.stopRunWatch)
-        self.accept("control-arrow_up", self.startRunWatch)
-        self.accept("control-arrow_up-up", self.stopRunWatch)
-        self.accept("alt-arrow_up", self.startRunWatch)
-        self.accept("alt-arrow_up-up", self.stopRunWatch)
-        self.accept("shift-arrow_up", self.startRunWatch)
-        self.accept("shift-arrow_up-up", self.stopRunWatch)
+        moveForward = ControlGlobals.MOVE_FORWARD
+        #Get hotkey name for moving backwards
+        moveBackwards = ControlGlobals.MOVE_BACKWARDS
+        self.accept(moveForward, self.startRunWatch)
+        self.accept(moveBackwards, self.stopRunWatch)
+        self.accept(f"control-{moveForward}", self.startRunWatch)
+        self.accept(f"control-{moveForward}-up", self.stopRunWatch)
+        self.accept(f"alt-{moveForward}", self.startRunWatch)
+        self.accept(f"alt-{moveForward}-up", self.stopRunWatch)
+        self.accept(f"shift-{moveForward}", self.startRunWatch)
+        self.accept(f"shift-{moveForward}-up", self.stopRunWatch)
 
     def disableRun(self):
-        self.ignore("arrow_up")
-        self.ignore("arrow_up-up")
-        self.ignore("control-arrow_up")
-        self.ignore("control-arrow_up-up")
-        self.ignore("alt-arrow_up")
-        self.ignore("alt-arrow_up-up")
-        self.ignore("shift-arrow_up")
-        self.ignore("shift-arrow_up-up")
+        #Get hotkey name for moving forward
+        moveForward = ControlGlobals.MOVE_FORWARD
+        self.ignore(f"{moveForward}")
+        self.ignore(f"{moveForward}-up")
+        self.ignore(f"control-{moveForward}-up")
+        self.ignore(f"control-{moveForward}-up")
+        self.ignore(f"alt-{moveForward}")
+        self.ignore(f"alt-{moveForward}-up")
+        self.ignore(f"shift-{moveForward}")
+        self.ignore(f"shift-{moveForward}-up")
 
     def startRunWatch(self):
         def setRun(ignored):

@@ -125,7 +125,9 @@ class ToonBase(OTPBase.OTPBase):
         # self.win.getGsg().enableFrameClear(0, 1)
 
         # Accept the screenshot key
-        self.accept(ToontownGlobals.ScreenshotHotkey, self.takeScreenShot)
+        #Bad practice I know but only way I can do it without messing up controlglobals which needs to access toonbase
+        from toontown.toonbase import ControlGlobals
+        self.accept(ControlGlobals.SCREENSHOT, self.takeScreenShot)
 
         # If panda throws a panic event, we know we're not rendering
         # properly; send the user to the appropriate web page.
@@ -264,8 +266,9 @@ class ToonBase(OTPBase.OTPBase):
         self.glitchCount = 0
         self.walking = 0
         self.isSprinting = 0
-        self.accept('shift', self.startSprint)
-        self.accept('shift-up', self.stopSprint)
+
+        self.accept(ControlGlobals.SPRINT, self.startSprint)
+        self.accept(f'{ControlGlobals.SPRINT}-up', self.stopSprint)
         if self.settings.getBool('game', 'frameRateMeter', False):
             base.setFrameRateMeter(True)
         else:

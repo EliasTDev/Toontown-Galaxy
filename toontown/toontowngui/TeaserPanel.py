@@ -10,7 +10,7 @@ from direct.showbase.DirectObject import DirectObject
 from otp.login import LeaveToPayDialog
 #from otp.otpbase import OTPLauncherGlobals
 from direct.gui.DirectGuiGlobals import NO_FADE_SORT_INDEX
-
+from toontown.toonbase import ControlGlobals
 """
 d.destroy()
 from direct.gui import DirectDialog
@@ -201,8 +201,8 @@ class TeaserPanel(DirectObject):
         base.transitions.fadeScreen(.5)
         
         if base.config.GetBool('want-teaser-scroll-keys',0):
-            self.accept('arrow_right', self.showNextPage)
-            self.accept('arrow_left',  self.showPrevPage)
+            self.accept(ControlGlobals.MOVE_RIGHT, self.showNextPage)
+            self.accept(ControlGlobals.MOVE_LEFT,  self.showPrevPage)
         self.accept('stoppedAsleep', self.__handleDone)
 
     def showNextPage(self):

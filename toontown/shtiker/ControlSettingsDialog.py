@@ -86,7 +86,6 @@ class ControlSettingsDialog(DirectFrame):
             zOffset = -0.2
             num = 0
             hotkeys = ToontownGlobals.AllHotkeys[index].keys()
-            values = ToontownGlobals.AllHotkeys[index].values()
             categoryName = ToontownGlobals.Hotkeys[index]
             controlCategory = base.settings.getOption('controls', categoryName, {})
             if controlCategory is None:
@@ -96,9 +95,9 @@ class ControlSettingsDialog(DirectFrame):
                 hotkeyName = names.get(hotkey)
                 if not hotkeyName:
                     continue
-                if controlCategory.get(hotkey) is not None:
+                if controlCategory.get(str(hotkey)) is not None:
                     #If we have the keys in settings
-                    keyName = base.controlManager.getControlName(controlCategory.get((hotkey)))
+                    keyName = base.controlManager.getControlName(controlCategory.get(str(hotkey)))
                 else:
                     #Get the default keys defined in toontownglobals
                      keyName = base.controlManager.getControlName(ToontownGlobals.AllHotkeys[ToontownGlobals.Hotkeys.index(categoryName)].get(hotkey))

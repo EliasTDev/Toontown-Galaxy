@@ -4,6 +4,7 @@ from direct.showbase.DirectObject import DirectObject
 from toontown.toonbase import ToontownGlobals
 
 import string
+from otp.otpbase import OTPLocalizer
 
 
 class ControlManager(DirectObject):
@@ -84,14 +85,44 @@ class ControlManager(DirectObject):
     def getChanging(self):
         return self.changing
 
-    def getKey(self, category, idSpecified):
-        hotkey = None
-        controlCategory = base.settings.getOption('controls', category, {})
-        hotKey = controlCategory.get(idSpecified)
-        if hotkey is None:
-            return ToontownGlobals.AllHotkeys[ToontownGlobals.Hotkeys.index(category)].get(idSpecified)
-        else:
-            return hotkey
+    def getKeyName(self, category, id):
+        """
+        Gets the key name based on the category  specified and the id specified 
+        you can find these in ToontownGlobals  under the  "New Hotkeys globals " comment
+        categories: 'movement' and interaction
+        ids: 0-10 
+        """
+        #Might be a better way of doing this but for now this is what I came up with
+        for category in OTPLocalizer.HotkeyCategoryNames.keys():
+            if category == category:
+                index = ToontownGlobals.Hotkeys.index(category)
+                break
+        keyName = None
+        names = OTPLocalizer.HotkeyNames[index]
+
+        hotkeys = ToontownGlobals.AllHotkeys[index].keys()
+        categoryName = ToontownGlobals.Hotkeys[index]
+        controlCategory = base.settings.getOption('controls', categoryName, {})
+        if controlCategory is None:
+            controlCategory = {}
+        for hotkey in hotkeys:
+            if hotkey == id:
+                hotkeyName = names.get(hotkey)
+                
+                if controlCategory.get(str(hotkey)) is not None:
+                #If we have the keys in settings
+                    keyName = base.controlManager.getControlName(controlCategory.get(str(hotkey)))
+                    break
+                else:
+                #Get the default keys defined in toontownglobals
+                    keyName = base.controlManager.getControlName(ToontownGlobals.AllHotkeys[ToontownGlobals.Hotkeys.index(categoryName)].get(hotkey))
+                    break
+
+        if keyName is None:
+            self.notify.warning(f"Key name is None. Category : {category} hotkey: {hotkeyName}")
+        print(f'Keyname: {keyName}')
+        return keyName
+
     def hotkeyPressed(self, hotkeyName, hotkey, key, event=None):
         if not self.getChanging() and int(key) not in self.disabledHotkeys:
             if self.disableAlphaNumericHotkeys:
@@ -107,7 +138,10 @@ class ControlManager(DirectObject):
             messenger.send(hotkeyName)
 
     def getControlName(self, name, label=False):
-
+        """
+        Adds a seperator to the name of the control specified and adds any special keys.
+        Also gives it a title format 
+        """
         if ToontownGlobals.Separater in name:
             name = name.replace(ToontownGlobals.Separater, ' + ')
 
@@ -178,5 +212,4 @@ class ControlManager(DirectObject):
         return False
 
     def getChangedHotkeys(self):
-        print(self.changedHotkeys)
         return self.changedHotkeys

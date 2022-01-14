@@ -2,6 +2,7 @@
 
 from panda3d.core import *
 from toontown.toonbase.ToonBaseGlobal import *
+from toontown.toonbase import ControlGlobals
 from direct.showbase.PythonUtil import PriorityCallbacks
 from toontown.toon.Toon import teleportDebug
 
@@ -288,7 +289,7 @@ class Place(StateData.StateData,
         # Play the sit animations
         base.localAvatar.b_setAnimState('SitStart', 1)
         # Just push up to get up again
-        self.accept("arrow_up", self.fsm.request, extraArgs=['walk'])
+        self.accept(ControlGlobals.MOVE_FORWARD, self.fsm.request, extraArgs=['walk'])
 
     def exitSit(self):
         # The friends list is no longer available.
@@ -297,7 +298,7 @@ class Place(StateData.StateData,
         # Clean up teleport handling.
         base.localAvatar.setTeleportAvailable(0)
         self.ignore("teleportQuery")
-        self.ignore("arrow_up")
+        self.ignore(ControlGlobals.MOVE_FORWARD)
 
     # drive state
     

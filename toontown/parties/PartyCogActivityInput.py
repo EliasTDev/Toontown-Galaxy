@@ -7,13 +7,13 @@
 from direct.showbase.DirectObject import DirectObject
 
 from panda3d.core import ModifierButtons
-
-ROTATE_LEFT_KEY = "arrow_left"
-ROTATE_RIGHT_KEY = "arrow_right"
-FORWARD_KEY = "arrow_up"
-BACKWARDS_KEY = "arrow_down"
-
-THROW_PIE_KEYS = ["control", "delete", "insert"]
+from toontown.toonbase import ControlGlobals
+ROTATE_LEFT_KEY = ControlGlobals.MOVE_LEFT
+ROTATE_RIGHT_KEY = ControlGlobals.MOVE_RIGHT
+FORWARD_KEY = ControlGlobals.MOVE_FORWARD
+BACKWARDS_KEY =  ControlGlobals.MOVE_BACKWARDS
+#TODO add insert to keybinds 
+THROW_PIE_KEYS = [ControlGlobals.JUMP, ControlGlobals.THROW, "insert"]
 
 class PartyCogActivityInput(DirectObject):
     """Manager for all keyboard input for the party cog activity"""

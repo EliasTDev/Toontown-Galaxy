@@ -2,14 +2,14 @@
 
 from pandac.PandaModules import ModifierButtons
 from direct.showbase.DirectObject import DirectObject
-
+from toontown.toonbase import ControlGlobals
 class ArrowKeys(DirectObject):
     # keyboard controls
-    UP_KEY    = "arrow_up"
-    DOWN_KEY  = "arrow_down"
-    LEFT_KEY  = "arrow_left"
-    RIGHT_KEY = "arrow_right"
-    JUMP_KEY  = "control"
+    UP_KEY    = ControlGlobals.MOVE_FORWARD
+    DOWN_KEY  = ControlGlobals.MOVE_BACKWARDS
+    LEFT_KEY  = ControlGlobals.MOVE_LEFT
+    RIGHT_KEY = ControlGlobals.MOVE_RIGHT
+    JUMP_KEY  = ControlGlobals.JUMP
 
     UP_INDEX = 0
     DOWN_INDEX = 1
