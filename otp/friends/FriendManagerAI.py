@@ -429,8 +429,10 @@ class FriendManagerAI(DistributedObjectAI.DistributedObjectAI):
                     dg.addUint16(self.air.dclassesByName['DistributedToonAI'].getNumber())
                     self.air.send(dg)
 
-                    friend.extendFriendsList(avId, 1)
-                    av.extendFriendsList(friendId, 1)
+                   # friend.extendFriendsList(avId, 1)
+                   # av.extendFriendsList(friendId, 1)
+                    friend.extendFriendsList(avId)
+                    av.extendFriendsList(friendId)
 
                     friend.d_setFriendsList(friend.getFriendsList())
                     av.d_setFriendsList(av.getFriendsList())
