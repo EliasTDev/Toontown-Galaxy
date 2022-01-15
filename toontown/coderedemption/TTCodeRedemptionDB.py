@@ -422,14 +422,14 @@ class TTCodeRedemptionDBTester(Job):
         return code
 
     def run(self):
-        self.notify.info('testing started')
-
         retryStartT = None
         retryDelay = 5
         if not config.GetBool('want-db-test', 1):
             yield Job.Done
             return
-            
+
+        self.notify.info('testing started')
+        
         while 1:
             try:
                 db = self._db
