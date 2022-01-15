@@ -187,6 +187,8 @@ class ToontownControlManager(ControlManager.ControlManager):
         """
         Reload the controlmanager in-game
         """
+        base.wantWASD = base.MOVE_FORWARD == 'w' and base.MOVE_BACKWARDS == 's' and base.MOVE_LEFT == 'a' and base.MOVE_RIGHT == 'd'
+
         self.wantWASD = base.wantWASD#Reload wantWASD if it was recently changed.
         if self.wantWASD:       
             for token in self.istNormal:

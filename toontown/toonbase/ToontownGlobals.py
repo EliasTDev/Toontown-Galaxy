@@ -1612,9 +1612,8 @@ Separater = '-'
 Shift = 'shift'
 Control = 'control'
 Release = 'up'
-HotkeyMovement = 'movement'
-HotkeyInteraction = 'interaction'
-Hotkeys = (HotkeyMovement, HotkeyInteraction)
+HotkeyGroup = 'HotKeys'
+Hotkeys = (HotkeyGroup)
 HotkeyUp = 0
 HotkeyDown = 1
 HotkeyLeft = 2
@@ -1622,24 +1621,21 @@ HotkeyRight = 3
 HotkeyJump = 4
 HotkeyThrow = 5
 HotkeySprint = 6
-HotkeyMovementDefaults = {
+HotkeyBook = 7
+HotkeyTasks = 8
+HotkeyInventory = 9
+HotkeyFriends = 10
+HotkeyMap = 11
+HotkeyScreenshot = 12
+HotkeyChat = 13
+HotkeyGroupDefaults = {
     HotkeyUp: 'arrow_up',
     HotkeyDown: 'arrow_down',
     HotkeyLeft: 'arrow_left',
     HotkeyRight: 'arrow_right',
     HotkeyJump: 'control',
     HotkeyThrow: 'delete',
-    HotkeySprint: 'shift'
-}
-HotkeyBook = 0
-HotkeyTasks = 1
-HotkeyInventory = 2
-HotkeyFriends = 3
-HotkeyMap = 4
-HotkeyScreenshot = 5
-HotkeyChat = 6
-
-HotkeyInteractionDefaults = {
+    HotkeySprint: 'shift',
     HotkeyBook: 'escape',
     HotkeyTasks: 'end',
     HotkeyInventory: 'home',
@@ -1651,7 +1647,10 @@ HotkeyInteractionDefaults = {
 
 
 
-AllHotkeys = (HotkeyMovementDefaults, HotkeyInteractionDefaults)
+
+
+
+AllHotkeys = (HotkeyGroupDefaults)
 SpecialKeys = {
     'page_up': 'Page Up',
     'page_down': 'Page Down',

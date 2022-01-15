@@ -63,10 +63,13 @@ class QuestPage(ShtikerPage.ShtikerPage):
         self.updatePage()
 
     def acceptOnscreenHooks(self):        
+        print(base.TASKS)
         self.accept(base.TASKS, self.showQuestsOnscreen)
         self.accept(f"{base.TASKS}-up", self.hideQuestsOnscreen)
 
-    def ignoreOnscreenHooks(self):        
+    def ignoreOnscreenHooks(self):     
+        print(base.TASKS)
+   
         self.ignore(base.TASKS)
         self.ignore(f"{base.TASKS}-up")
 

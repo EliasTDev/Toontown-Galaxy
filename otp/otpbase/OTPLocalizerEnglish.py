@@ -3464,8 +3464,8 @@ def timeElapsedString(timeDelta):
 
 
 HotkeyCategoryNames = {
-       "movement": "movement",
-       "interaction": "interaction",
+       "HotKeys": "HotKeys",
+
 }
 
 
@@ -3476,16 +3476,13 @@ HotkeyRight = 3
 HotkeyJump = 4
 HotkeyThrow = 5
 HotkeySprint = 6
-HotkeyBook = 0
-HotkeyTasks = 1
-HotkeyTasksClose = 2
-HotkeyInventory = 3
-HotkeyInventoryClose = 4
-HotkeyFriends = 5
-HotkeyMap = 6
-HotkeyMapClose = 7
-HotkeyScreenshot = 8
-HotkeyChat = 9
+HotkeyBook = 7
+HotkeyTasks = 8
+HotkeyInventory = 9
+HotkeyFriends = 10
+HotkeyMap = 11
+HotkeyScreenshot = 12
+HotkeyChat = 13
 HotkeyNames = {
     0: {
            HotkeyUp: 'Move Forward',
@@ -3494,10 +3491,7 @@ HotkeyNames = {
            HotkeyRight: 'Move Right',
            HotkeyJump: 'Jump',
            HotkeyThrow: 'Throw',
-           HotkeySprint: 'Sprint'
-
-    },
-    1: {
+           HotkeySprint: 'Sprint',
            HotkeyBook: 'Open Book',
            HotkeyTasks: 'Open Tasks',
            HotkeyInventory: 'Open Inventory',
@@ -3506,7 +3500,6 @@ HotkeyNames = {
            HotkeyScreenshot: 'screenshot',
            HotkeyChat: 'chat'
     }
-   
 
 
 

@@ -16,9 +16,7 @@ class ControlManager(DirectObject):
         self.disableChat = 1
         self.disabledHotkeys = []
         self.activeHotkeys = []
-        self.changedHotkeys = {ToontownGlobals.HotkeyMovement: [],
-                               ToontownGlobals.HotkeyInteraction: []
-                               }
+        self.changedHotkeys = {ToontownGlobals.HotkeyGroup: []}
         self.disableAlphaNumericHotkeys = False
         self.reloadHotkeys(True)
         
@@ -27,41 +25,35 @@ class ControlManager(DirectObject):
         self.ignoreAll()
         disableChat = 1
         activeHotkeys = []
-        for category in ToontownGlobals.Hotkeys:
-            controlCategory = base.settings.getOption('controls', category, {})
-            if controlCategory is None:
-                controlCategory = {}
-            if controlCategory == {}:
-                continue
+        controlCategory = base.settings.getOption('game', 'controls', {})
+        if controlCategory is None:
+            controlCategory = {}
             
-            for key in controlCategory.keys():
-                hotkey = controlCategory.get(key)
-                alphaNumeric = self.isAlphaNumericHotkey(hotkey)
-                if disableChat and alphaNumeric:
-                    disableChat = 0
-                if ToontownGlobals.AllHotkeys[ToontownGlobals.Hotkeys.index(category)].get(key) != hotkey:
-                    changedHotkeys = self.changedHotkeys.get(category)
-                    changedHotkeys.append(key)
-                    self.changedHotkeys[ToontownGlobals.Hotkeys.index(category)] = changedHotkeys
-                activeHotkeys.append(hotkey)
-                self.accept(hotkey, self.hotkeyPressed, extraArgs=[self.getHotkeyName(category, key), hotkey, key])
-                self.accept(hotkey + '-up', self.hotkeyPressed, extraArgs=[self.getHotkeyName(category, key, True), hotkey, key])
+        for key in controlCategory.keys():
+            hotkey = controlCategory.get(key)
+            alphaNumeric = self.isAlphaNumericHotkey(hotkey)
+            if disableChat and alphaNumeric:
+                disableChat = 0
+            if ToontownGlobals.HotkeyGroupDefaults.get(key) != hotkey:
+                changedHotkeys = self.changedHotkeys.get('HotKeys')
+                changedHotkeys.append(key)
+                self.changedHotkeys[0] = changedHotkeys
+            activeHotkeys.append(hotkey)
+            self.accept(hotkey, self.hotkeyPressed, extraArgs=[self.getHotkeyName('HotKeys', key), hotkey, key])
+            self.accept(hotkey + '-up', self.hotkeyPressed, extraArgs=[self.getHotkeyName('HotKeys', key, True), hotkey, key])
 
         self.activeHotkeys = activeHotkeys
 
-        for category in ToontownGlobals.Hotkeys:
-            controlCategory = base.settings.getOption('controls', category, {})
-            if controlCategory is None:
-                controlCategory = {}
-            if controlCategory == {}:
-                continue
-            for key in controlCategory.keys():
-                hotkey = controlCategory.get(key)
-                for bonus in ('shift', 'control', 'alt'):
-                    failSafeKey = bonus + ToontownGlobals.Separater + hotkey
-                    if not hotkey.startswith(str(key)) and failSafeKey not in activeHotkeys:
-                        self.accept(failSafeKey, self.hotkeyPressed, extraArgs=[self.getHotkeyName(category, key), hotkey, key])
-                        self.accept(failSafeKey + '-up', self.hotkeyPressed, extraArgs=[self.getHotkeyName(category, key, True), hotkey, key])
+        controlCategory = base.settings.getOption('game', 'controls', {})
+        if controlCategory is None:
+            controlCategory = {}
+        for key in controlCategory.keys():
+            hotkey = controlCategory.get(key)
+            for bonus in ('shift', 'control', 'alt'):
+                failSafeKey = bonus + ToontownGlobals.Separater + hotkey
+                if not hotkey.startswith(str(key)) and failSafeKey not in activeHotkeys:
+                    self.accept(failSafeKey, self.hotkeyPressed, extraArgs=[self.getHotkeyName(ToontownGlobals.HotkeyGroup, key), hotkey, key])
+                    self.accept(failSafeKey + '-up', self.hotkeyPressed, extraArgs=[self.getHotkeyName(ToontownGlobals.HotkeyGroup, key, True), hotkey, key])
 
         self.disableChat = disableChat
 
@@ -72,7 +64,7 @@ class ControlManager(DirectObject):
             #    base.localAvatar.chatMgr.chatLog.enableHotkey()
            # else:
              #   base.localAvatar.chatMgr.chatLog.disableHotkey()
-
+        
     def getHotkeyName(self, category, id, released=False):
         hotkey = 'hotkey-' + category + '-' + str(id)
         if released:
@@ -93,16 +85,11 @@ class ControlManager(DirectObject):
         ids: 0-10 
         """
         #Might be a better way of doing this but for now this is what I came up with
-        for category in OTPLocalizer.HotkeyCategoryNames.keys():
-            if category == category:
-                index = ToontownGlobals.Hotkeys.index(category)
-                break
-        keyName = None
-        names = OTPLocalizer.HotkeyNames[index]
+        names = OTPLocalizer.HotkeyNames[0]
 
-        hotkeys = ToontownGlobals.AllHotkeys[index].keys()
-        categoryName = ToontownGlobals.Hotkeys[index]
-        controlCategory = base.settings.getOption('controls', categoryName, {})
+        hotkeys = ToontownGlobals.HotkeyGroupDefaults.keys()
+        categoryName = ToontownGlobals.HotkeyGroup
+        controlCategory = base.settings.getOption('game', 'controls', {})
         if controlCategory is None:
             controlCategory = {}
         for hotkey in hotkeys:
@@ -115,7 +102,7 @@ class ControlManager(DirectObject):
                     break
                 else:
                 #Get the default keys defined in toontownglobals
-                    keyName = base.controlManager.getControlName(ToontownGlobals.AllHotkeys[ToontownGlobals.Hotkeys.index(categoryName)].get(hotkey))
+                    keyName = base.controlManager.getControlName(ToontownGlobals.HotkeyGroupDefaults.get(hotkey))
                     break
 
         if keyName is None:
@@ -149,14 +136,14 @@ class ControlManager(DirectObject):
                 value = ToontownGlobals.SpecialKeys.get(key)
                 name = name.replace(key, value)
                 break
-
         name = name.title()
 
         if label:
             name += ' Key'
             if '+' in name:
                 name += 's'
-
+        if name == 'Esc':
+            name = 'escape'
         return name
 
     def convertHotkeyString(self, dialog, activator):
@@ -166,8 +153,8 @@ class ControlManager(DirectObject):
             info = split[1]
             category = int(info[:2])
             index = int(info[2:4])
-            categoryName = ToontownGlobals.Hotkeys[category]
-            controlCategory = base.settings.getOption('controls', categoryName, {})
+            categoryName = ToontownGlobals.HotkeyGroup
+            controlCategory = base.settings.getOption('game', 'controls', {})
             hotkey = self.getControlName(controlCategory.get(str(index)), True)
             dialog = first + hotkey + info[4:]
 

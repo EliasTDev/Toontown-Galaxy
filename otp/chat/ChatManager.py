@@ -399,6 +399,7 @@ class ChatManager(DirectObject.DirectObject):
             self.acceptOnce('enterNormalChat', self.fsm.request, ['normalChat'])
             
             if not self.wantBackgroundFocus:
+                print(base.CHAT)
                 self.accept(base.CHAT, messenger.send, ['enterNormalChat'])
 
     def checkObscurred(self):

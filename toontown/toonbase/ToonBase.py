@@ -126,7 +126,7 @@ class ToonBase(OTPBase.OTPBase):
         # self.win.getGsg().enableFrameClear(0, 1)
 
         # Accept the screenshot key
-        self.SCREENSHOT = self.controlManager.getKeyName("interaction", ToontownGlobals.HotkeyScreenshot)
+        self.SCREENSHOT = self.controlManager.getKeyName("HotKeys", ToontownGlobals.HotkeyScreenshot).lower()
 
         self.accept(self.SCREENSHOT, self.takeScreenShot)
 
@@ -260,13 +260,13 @@ class ToonBase(OTPBase.OTPBase):
         cogGray.setShadow(0.01)
         tpMgr.setProperties('cogGray', cogGray)
         del tpMgr
-        self.MOVE_FORWARD = self.controlManager.getKeyName('movement', ToontownGlobals.HotkeyUp).lower()
-        self.MOVE_BACKWARDS = self.controlManager.getKeyName('movement', ToontownGlobals.HotkeyDown).lower()
-        self.MOVE_LEFT = self.controlManager.getKeyName('movement', ToontownGlobals.HotkeyLeft).lower()
-        self.MOVE_RIGHT = self.controlManager.getKeyName('movement', ToontownGlobals.HotkeyRight).lower()
-        self.JUMP = self.controlManager.getKeyName('movement', ToontownGlobals.HotkeyJump).lower()
-        self.THROW = self.controlManager.getKeyName('movement', ToontownGlobals.HotkeyThrow).lower()
-        self.SPRINT = self.controlManager.getKeyName('movement', ToontownGlobals.HotkeySprint).lower()
+        self.MOVE_FORWARD = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyUp).lower()
+        self.MOVE_BACKWARDS = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyDown).lower()
+        self.MOVE_LEFT = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyLeft).lower()
+        self.MOVE_RIGHT = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyRight).lower()
+        self.JUMP = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyJump).lower()
+        self.THROW = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyThrow).lower()
+        self.SPRINT = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeySprint).lower()
         """
         From toontownglobals
         HotkeyBook = 0
@@ -277,12 +277,12 @@ class ToonBase(OTPBase.OTPBase):
         HotkeyScreenshot = 5
         HotkeyChat = 6
         """
-        self.BOOK = self.controlManager.getKeyName('interaction', ToontownGlobals.HotkeyBook).lower()
-        self.TASKS = self.controlManager.getKeyName('interaction', ToontownGlobals.HotkeyTasks).lower()
-        self.INVENTORY = self.controlManager.getKeyName('interaction', ToontownGlobals.HotkeyInventory).lower()
-        self.FRIENDS = self.controlManager.getKeyName('interaction', ToontownGlobals.HotkeyFriends).lower()
-        self.STREET_MAP = self.controlManager.getKeyName('interaction', ToontownGlobals.HotkeyMap).lower()
-        self.CHAT = self.controlManager.getKeyName("interaction", ToontownGlobals.HotkeyChat).lower()
+        self.BOOK = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyBook).lower()
+        self.TASKS = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyTasks).lower()
+        self.INVENTORY = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyInventory).lower()
+        self.FRIENDS = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyFriends).lower()
+        self.STREET_MAP = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyMap).lower()
+        self.CHAT = self.controlManager.getKeyName("HotKeys", ToontownGlobals.HotkeyChat).lower()
         self.lastScreenShotTime = globalClock.getRealTime()
         self.accept('InputState-forward', self.__walking)
         self.canScreenShot = 1
