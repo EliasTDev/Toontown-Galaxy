@@ -258,7 +258,7 @@ class DistributedDivingGame(DistributedMinigame):
         # hack to make sure this never executes if the program is closing
         # using it to avoid some edge conditions before I more extensively
         # try to nail them down
-        if self.dead is 1:
+        if self.dead == 1:
             return
         
         # calculated to make sure all Lerps will start at the same time
@@ -638,7 +638,7 @@ class DistributedDivingGame(DistributedMinigame):
         
             self.accept('hitby-'+'crabby'+str(i), self.fishCollision)
             
-            if i % 2 is 0:
+            if i % 2 == 0:
                 crab.setPos(20, 0, -40)
                 crab.direction = -1
             else:
@@ -1099,7 +1099,7 @@ class DistributedDivingGame(DistributedMinigame):
                 
             
             # bears and nurses don't care about you and will go about their merry way
-            if fish.name is 'bear' or fish.name is 'nurse':
+            if fish.name == 'bear' or fish.name == 'nurse':
                 return
                 
             colList = fish.findAllMatches("**/fc*")
