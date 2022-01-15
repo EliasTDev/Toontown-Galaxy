@@ -11,18 +11,17 @@
 from direct.showbase.DirectObject import DirectObject
 from direct.gui.DirectGui import DirectFrame, DirectButton
 import direct.gui.DirectGuiGlobals as DGG
-
 from toontown.parties import PartyUtils
 
 class CannonGui(DirectObject):
     notify = directNotify.newCategory("CannonGui")
     
     # keyboard controls
-    FIRE_KEY  = "control"
-    UP_KEY    = "arrow_up"
-    DOWN_KEY  = "arrow_down"
-    LEFT_KEY  = "arrow_left"
-    RIGHT_KEY = "arrow_right"
+    FIRE_KEY  = base.JUMP
+    UP_KEY    = base.MOVE_FORWARD
+    DOWN_KEY  = base.MOVE_BACKWARDS
+    LEFT_KEY  = base.MOVE_LEFT
+    RIGHT_KEY = base.MOVE_RIGHT
     
     FIRE_PRESSED = "cannongui_fire_pressed"
     

@@ -168,7 +168,7 @@ class Train(DirectObject):
                 Parallel(
                     Sequence(
                         Wait(totalTime-sfxStopTime),
-                        SoundInterval(self.trainStopStartSfx, volume = 0.5),
+                        SoundInterval(self.trainStopStartSfx, volume = 0.5 ),
                         ),
                     Sequence(
                         LerpPosInterval(self.locomotive, totalTime, halfway, self.trackStartPos, blendType = "easeInOut"),
@@ -190,7 +190,7 @@ class Train(DirectObject):
                 Parallel(
                     Sequence(
                         Wait(sfxStartTime),
-                        SoundInterval(self.trainPassingSfx, volume = 0.5),
+                        SoundInterval(self.trainPassingSfx, volume = 0.5 ),
                         ),
                     LerpPosInterval(self.locomotive, totalTime, self.trackEndPos, self.trackStartPos),
                     )

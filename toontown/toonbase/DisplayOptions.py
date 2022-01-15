@@ -26,47 +26,44 @@ class DisplayOptions:
 
     def loadFromSettings(self):
         """Read the saved settings."""
-        Settings.readSettings()
-        mode = not Settings.getWindowedMode()
-        music = Settings.getMusic()
-        sfx = Settings.getSfx()
-        toonChatSounds = Settings.getToonChatSounds()
-        musicVol = Settings.getMusicVolume()
-        sfxVol = Settings.getSfxVolume()
-        resList = [(640, 480),
-               (800, 600),
-               (1024, 768),
+        mode = base.settings.getBool('game', 'fullscreen', False)
+        music = base.settings.getBool('game', 'music', True)
+        sfx = base.settings.getBool('game', 'sfx', True)
+        toonChatSounds = base.settings.getBool('game', 'toonChatSounds', True)
+        musicVolume = base.settings.getFloat('game', 'musicVolume', 1.0)
+        sfxVolume = base.settings.getFloat('game', 'sfxVolume', 1.0)
 
-               (1280, 720),
-               (1280, 1024),
-               (1440, 900),
-               (1600, 1200),
-               (1920, 1080),
-               (2560, 1440),
-               (4096, 2160)]
         #copied from Resolution in settingsFile.h
-        res = resList[Settings.getResolution()]
-        embed = Settings.getEmbeddedMode()
+        res = base.settings.getList('game', 'resolution', [800, 600])
+        embed = base.settings.getBool('game', 'embeddedMode', False)
+        antialiasing = base.settings.getInt('game', 'antialiasing', 0)
+        if antialiasing == True:
+            loadPrcFileData('toonBase Settings Framebuffer MSAA', 'framebuffer-multisample 1')
+            loadPrcFileData('toonBase Settings MSAA Level', 'multisamples %i' % antialiasing)
+        else:
+            base.settings.updateSetting('game', 'antialiasing', antialiasing)
+            loadPrcFileData('toonBase Settings Framebuffer MSAA', 'framebuffer-multisample 0')
         self.notify.debug("before prc settings embedded mode=%s" % str(embed))
         self.notify.debug("before prc settings full screen mode=%s" % str(mode)) 
         if mode == None:
             mode = 1
         if res == None:
             res = (800,600)
-
         loadPrcFileData("toonBase Settings Window Res", ("win-size %s %s" % (res[0], res[1])))
         self.notify.debug("settings resolution = %s" % str(res))
         loadPrcFileData("toonBase Settings Window FullScreen", ("fullscreen %s" % (mode)))
         self.notify.debug("settings full screen mode=%s" % str(mode))        
         loadPrcFileData("toonBase Settings Music Active", ("audio-music-active %s" % (music)))
         loadPrcFileData("toonBase Settings Sound Active", ("audio-sfx-active %s" % (sfx)))
-        loadPrcFileData("toonBase Settings Music Volume", ("audio-master-music-volume %s" % (musicVol)))
-        loadPrcFileData("toonBase Settings Sfx Volume", ("audio-master-sfx-volume %s" % (sfxVol)))
+        loadPrcFileData("toonBase Settings Music Volume", ("audio-master-music-volume %s" % (musicVolume)))
+        loadPrcFileData("toonBase Settings Sfx Volume", ("audio-master-sfx-volume %s" % (sfxVolume)))
         loadPrcFileData("toonBase Settings Toon Chat Sounds", ("toon-chat-sounds %s" % (toonChatSounds)))
         self.settingsFullScreen = mode
         self.settingsWidth = res[0]
         self.settingsHeight = res[1]
         self.settingsEmbedded = embed
+        self.settingsAntialiasing = antialiasing
+
         self.notify.debug("settings embedded mode=%s" % str(self.settingsEmbedded))   
 
         self.notify.info("settingsFullScreen = %s, embedded = %s width=%d height=%d" %

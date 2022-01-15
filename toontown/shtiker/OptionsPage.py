@@ -1,6 +1,6 @@
 """OptionsPage module: contains the OptionsPage class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from . import ShtikerPage
 from toontown.toontowngui import TTDialog
 from direct.gui.DirectGui import *
@@ -16,6 +16,7 @@ from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import ToontownGlobals
 from panda3d.otp import *
 from settings import *
+from toontown.shtiker.ControlSettingsDialog import ControlSettingsDialog
 # array of the possible speedChatStyles and colors to use
 # R,G,B for arrow, rollover, and frame color if we want to specify it
 # the first parameter refers to the key in the SpeedChatStaticText variable
@@ -286,11 +287,7 @@ class OptionsTabPage(DirectFrame):
     ChangeDisplayAPI = base.config.GetBool('change-display-api', 0)
 
     # This maps our expected API interfaces to a symbolic constant in the settings file.
-    DisplaySettingsApiMap = {
-        'OpenGL' : Settings.GL,
-        'DirectX7' : Settings.DX7,
-        'DirectX8' : Settings.DX8
-        }
+
 
     def __init__(self, parent = aspect2d):
         """
@@ -615,8 +612,6 @@ class OptionsTabPage(DirectFrame):
     def exit(self):
         assert self.notify.debugStateCall(self)
         self.hide()
-        if(self.settingsChanged != 0):
-            Settings.writeSettings()
 
         self.speedChatStyleText.exit()
 
@@ -672,10 +667,10 @@ class OptionsTabPage(DirectFrame):
         messenger.send('wakeup')
         if base.musicActive:
             base.enableMusic(0)
-            Settings.setMusic(0)
+            base.settings.updateSetting('game', 'music', False)
         else:
             base.enableMusic(1)
-            Settings.setMusic(1)
+            base.settings.updateSetting('game', 'music', True)
 
         self.settingsChanged = 1
         self.__setMusicButton()
@@ -692,10 +687,12 @@ class OptionsTabPage(DirectFrame):
         messenger.send('wakeup')
         if base.sfxActive:
             base.enableSoundEffects(0)
-            Settings.setSfx(0)
+            base.settings.updateSetting('game', 'sfx', False)
+
         else:
+            base.settings.updateSetting('game', 'sfx', True)
+
             base.enableSoundEffects(1)
-            Settings.setSfx(1)
 
         self.settingsChanged = 1
         self.__setSoundFXButton()
@@ -704,10 +701,10 @@ class OptionsTabPage(DirectFrame):
         messenger.send('wakeup')
         if base.toonChatSounds:
             base.toonChatSounds = 0
-            Settings.setToonChatSounds(0)
+            base.settings.updateSetting('game', 'toonChatSounds', False)
         else:
             base.toonChatSounds = 1
-            Settings.setToonChatSounds(1)
+            base.settings.updateSetting('game', 'toonChatSounds', True)
 
         self.settingsChanged = 1
         self.__setToonChatSoundsButton()
@@ -744,10 +741,10 @@ class OptionsTabPage(DirectFrame):
         if base.localAvatar.acceptingNewFriends:
             # now we dont accept friends
             base.localAvatar.acceptingNewFriends = 0
-            Settings.setAcceptingNewFriends(0)
+            base.settings.updateSetting('game', 'acceptingNewFriends', False)
         else:
             base.localAvatar.acceptingNewFriends = 1
-            Settings.setAcceptingNewFriends(1)
+            base.settings.updateSetting('game', 'acceptingNewFriends', True)
 
         self.settingsChanged = 1
         self.__setAcceptFriendsButton()
@@ -885,16 +882,13 @@ class OptionsTabPage(DirectFrame):
                          (self.displaySettingsSize, self.displaySettingsFullscreen,
                           self.displaySettingsApi))
 
-        Settings.setResolutionDimensions(self.displaySettingsSize[0], self.displaySettingsSize[1])
-
-        Settings.setWindowedMode(not self.displaySettingsFullscreen)
+        base.settings.updateSetting('game', 'resolution', self.displaySettingsSize)
+        base.settings.updateSetting('game', 'fullscreen', bool(self.displaySettingsFullscreen))
+        base.settings.updateSetting('game', 'embedded-mode', bool(self.displaySettingsEmbedded))
         if self.displaySettingsApiChanged:
             api = self.DisplaySettingsApiMap.get(self.displaySettingsApi)
             if api == None:
                 self.notify.warning("Cannot save unknown display API: %s" % (self.displaySettingsApi))
-            else:
-                Settings.setDisplayDriver(api)
-        Settings.writeSettings()
 
         self.displaySettingsChanged = 0
 
@@ -1411,7 +1405,7 @@ class AnotherOptionsTabPage(DirectFrame):
                                             command=self.setSfxVolume)
         self.sfxVolumeEntry.setScale(0.08)
 
-        self.FPSLabel = DirectLabel(parent=self, relief=None, text='', 
+        self.FPSLabel = DirectLabel(parent=self, relief=None, text='FPS:', 
                                             text_align = TextNode.ALeft, text_scale = options_text_scale,
                                             text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.2))
                                         
@@ -1423,13 +1417,33 @@ class AnotherOptionsTabPage(DirectFrame):
                      guiButton.find("**/QuitBtn_RLVR"),
                      ),
             image_scale = button_image_scale,
-            text = "",
+            text = "Toggle FPS",
             text_scale = options_text_scale,
             text_pos = button_textpos,
             pos = (buttonbase_xcoord, 0, buttonbase_ycoord - 0.2),
             command = self.toggleFPS,
             )
 
+        self.customsControlsLabel = DirectLabel(parent=self, relief=None, text='Custom Controls:', 
+                                            text_align = TextNode.ALeft, text_scale = options_text_scale,
+                                            text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.3))
+        self.customControlsButton = DirectButton(
+            parent = self,
+            relief = None,
+            image = (guiButton.find("**/QuitBtn_UP"),
+                     guiButton.find("**/QuitBtn_DN"),
+                     guiButton.find("**/QuitBtn_RLVR"),
+                     ),
+            image_scale = button_image_scale,
+            text = "Custom Controls",
+            text_scale = options_text_scale,
+            text_pos = button_textpos,
+            pos = (buttonbase_xcoord, 0, buttonbase_ycoord - 0.3),
+            command = self.openCustomControlsGUI,
+            )
+
+    def openCustomControlsGUI(self):
+        ControlSettingsDialog()
     def setMusicVolume(self, input=None):
         if input is None:
             input = self.musicVolumeEntry.get()
@@ -1446,7 +1460,7 @@ class AnotherOptionsTabPage(DirectFrame):
             volume = 1.
         if volume < 0.0:
             volume = 0.
-        Settings.setMusicVolume(volume)
+        base.settings.updateSetting('game', 'musicVolume', volume)
         base.musicManager.setVolume(volume)
         base.musicActive = volume > 0.0
         self.__setMusicLabel()
@@ -1467,7 +1481,7 @@ class AnotherOptionsTabPage(DirectFrame):
             volume = 1.
         if volume < 0.0:
             volume = 0.
-        Settings.setSfxVolume(volume)
+        base.settings.updateSetting('game', 'sfxVolume', volume)
         for x in base.sfxManagerList:
             x.setVolume(volume)
         base.sfxActive = volume > 0.0
@@ -1483,13 +1497,12 @@ class AnotherOptionsTabPage(DirectFrame):
             self.FPSButton['text'] = ['Toggle fps on']
 
 
-
         
     def __setMusicLabel(self):
-        self.musicVolumeLabel['text'] = 'Music Volume: ' + str(Settings.getMusicVolume() * 100) + "%"
+        self.musicVolumeLabel['text'] = 'Music Volume: ' + str(base.settings.getFloat('game', 'musicVolume', 1.0) * 100) + "%"
         
     def __setSfxLabel(self):
-        self.sfxVolumeLabel['text'] = 'Sfx Volume: ' + str(Settings.getSfxVolume() * 100) + "%"
+        self.sfxVolumeLabel['text'] = 'Sfx Volume: ' + str(base.settings.getFloat('game', 'sfxVolume', 1.0) * 100) + "%"
         
     def enter(self):
         localAvatar.chatMgr.fsm.request("otherDialog")
@@ -1502,8 +1515,7 @@ class AnotherOptionsTabPage(DirectFrame):
     def exit(self):
         self.ignore('confirmDone')
         self.hide()
-        if(self.settingsChanged != 0):
-            Settings.writeSettings()
+
 
     def unload(self):
         self.musicVolumeLabel.destroy()
@@ -1519,12 +1531,16 @@ class AnotherOptionsTabPage(DirectFrame):
         del self.FPSLabel
         self.FPSButton.destroy()
         del self.FPSButton
+        self.customsControlsLabel.destroy()
+        del self.customsControlsLabel
+        self.customCfontrolsButton.destroy()
+        del self.customControlsButton
     
 
 
     def toggleFPS(self):
         self.settingsChanged = 1
-        Settings.setFrameRateMeter(not base.frameRateMeter)
+        base.settings.updateSetting('game', 'frameRateMeter', not base.frameRateMeter)
         base.setFrameRateMeter(not base.frameRateMeter)
         self.__setFPSLabel()
 

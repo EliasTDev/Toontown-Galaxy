@@ -1221,7 +1221,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
                             SoundInterval(dialogueArray[sfxIndex], node = None,
                                            listenerNode = base.localAvatar,
                                            loop = 0,
-                                           volume = 1.0),
+                                           volume = 1.0 ),
                                            )
             self.soundSequenceList.append(soundSequence)
             soundSequence.start()

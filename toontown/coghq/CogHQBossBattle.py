@@ -11,6 +11,7 @@ from toontown.battle import BattlePlace
 from toontown.suit import Suit
 import math
 from panda3d.otp import *
+
 class CogHQBossBattle(BattlePlace.BattlePlace):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("CogHQBossBattle")
@@ -214,9 +215,8 @@ class CogHQBossBattle(BattlePlace.BattlePlace):
         
         # Put away the book
         base.localAvatar.book.hideButton()
-        self.ignore(ToontownGlobals.StickerBookHotkey)
         self.ignore("enterStickerBook")
-        self.ignore(ToontownGlobals.OptionsPageHotkey)
+        self.ignore(base.BOOK)
         
     def exitFinalBattle(self):
         assert(self.notify.debug("exitFinalBattle()"))
@@ -262,9 +262,8 @@ class CogHQBossBattle(BattlePlace.BattlePlace):
         base.localAvatar.setTeleportAllowed(0)
         # Put away the book
         base.localAvatar.book.hideButton()
-        self.ignore(ToontownGlobals.StickerBookHotkey)
         self.ignore("enterStickerBook")
-        self.ignore(ToontownGlobals.OptionsPageHotkey)
+        self.ignore(base.BOOK)
 
     def exitWalk(self):
         """Make sure to enable teleport for the toon."""

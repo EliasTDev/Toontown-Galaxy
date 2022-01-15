@@ -15,6 +15,7 @@ from otp.chat import ChatManager
 from .TTChatInputSpeedChat import TTChatInputSpeedChat
 from .TTChatInputNormal import TTChatInputNormal
 from .TTChatInputWhiteList import TTChatInputWhiteList
+from settings import *
 #from toontown.launcher import QuickLauncher
 
 # hack class to simulate radio buttons (prevent radio button from clearing

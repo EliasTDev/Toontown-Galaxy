@@ -296,13 +296,14 @@ QuestsDefaultReject = ("Hello.",
                        "Some rewards let you carry more gags.",
                        "If you win a battle, you get ToonTask credit for every " + Cog + " defeated.",
                        "If you recapture a " + Cog + " building, go back inside to see a special thank-you from its owner!",
-                       "If you press the Page Up key, you can look up!",
-                       "If you press the Tab key, you can see different views of your surroundings!",
+                       "If you press the page up key, you can look up!",
+                       "If you press the tab key, you can see different views of your surroundings!",
                        "To show True Friends what you're thinking, enter a '.' before your thought.",
                        "If a " + Cog + " is stunned, it is more difficult for them to avoid falling objects.",
                        "Each kind of " + Cog + " building has a distinct look.",
                        "Defeating " + Cogs + " on the higher floors of a building will give you greater skill rewards.",
                        )
+
 QuestsDefaultTierNotDone = ("Hello, _avName_! You must finish your current ToonTasks before getting a new one.",
                             "Hi there! You need to finish the ToonTasks you are working on in order to get a new one.",
                             "Hi, _avName_! Before I can give you a new ToonTask, you need to finish the ones you have.",
@@ -4335,10 +4336,10 @@ SharedChatterComments = [
         "A-hem, are you lost?  Don't forget your map is in your shticker Book.",
         "Try not to get tied up in the " + Cogs + "' Red Tape.",
         "I hear " + Daisy + " has planted some new flowers in her garden.",
-        "If you press the Page Up key, you can look up!",
+        "If you press the page up key, you can look up!",
         "If you help take over Cog buildings, you can earn a bronze star!",
-        "If you press the Tab key, you can see different views of your surroundings!",
-        "If you press the Ctrl key, you can jump!",
+        "If you press the tab key, you can see different views of your surroundings!",
+        "If you press the jump key, you can jump!",
         ]
 
 SharedChatterGoodbyes = [
@@ -6400,9 +6401,9 @@ PartyCatchRewardMessage = "Pieces of fruit caught: %s\n\nJellybeans earned: %s"
 
 # DistributedPartyDanceActivity.py
 PartyDanceActivityTitle = "Party Dance Floor"
-PartyDanceActivityInstructions = "Combine 3 or more ARROW KEY patterns to do dance moves! There are 10 dance moves available. Can you find them all?"
+PartyDanceActivityInstructions = "Combine 3 or more MOVEMENT KEY patterns to do dance moves! There are 10 dance moves available. Can you find them all?"
 PartyDanceActivity20Title = "Party Dance Floor"
-PartyDanceActivity20Instructions = "Combine 3 or more ARROW KEY patterns to do dance moves! There are 20 dance moves available. Can you find them all?"
+PartyDanceActivity20Instructions = "Combine 3 or more MOVEMENT KEY patterns to do dance moves! There are 20 dance moves available. Can you find them all?"
 
 DanceAnimRight = "Right"
 DanceAnimReelNeutral = "The Fishertoon"
@@ -6429,11 +6430,11 @@ DanceAnimLeft = "Left"
 
 # DistributedPartyCannonActivity.py
 PartyCannonActivityTitle = "Party Cannons"
-PartyCannonActivityInstructions = "Hit the clouds to change their color and bounce in the air! While IN THE AIR, you can USE THE ARROW KEYS to GLIDE."
+PartyCannonActivityInstructions = "Hit the clouds to change their color and bounce in the air! While IN THE AIR, you can USE THE MOVEMENT KEYS to GLIDE."
 PartyCannonResults = "You collected %d jelly beans!\n\nNumber of Clouds Hit: %d"
 
 # DistributedPartyFireworksActivity.py
-FireworksActivityInstructions = "Hit the \"Page Up\" key to see better."
+FireworksActivityInstructions = 'Hit the "page up" key to see better.'
 FireworksActivityBeginning = "Party fireworks are about to start! Enjoy the show!"
 FireworksActivityEnding = "Hope you enjoyed the show!"
 PartyFireworksAlreadyActive = "The fireworks show has already started."
@@ -6486,7 +6487,7 @@ PartyCogTitle = "Cog-O-War"
 PartyCogInstructions = \
 "Throw pies at cogs to push them away from your team. " +\
 "When time's up, the team with most cogs on the other side wins!" +\
-"\n\nThrow with the CONTROL KEY. Move with the ARROW KEYS."
+"\n\nThrow with the CONTROL KEY. Move with the MOVEMENT KEYS."
 
 # PartyCogActivity.py
 PartyCogDistance = "%d ft"
@@ -6990,7 +6991,7 @@ FishPokerPair = "Pair"
 # DistributedTutorial.py
 TutorialGreeting1 = "Hi %s!"
 TutorialGreeting2 = "Hi %s!\nCome over here!"
-TutorialGreeting3 = "Hi %s!\nCome over here!\nUse the arrow keys!"
+TutorialGreeting3 = "Hi %s!\nCome over here!\nUse the movement keys!"
 TutorialMickeyWelcome = "Welcome to Toontown!"
 TutorialFlippyIntro = "Let me introduce you to my friend %s..." % Flippy
 TutorialFlippyHi = "Hi, %s!"
@@ -7109,17 +7110,17 @@ MinigameTemplateInstructions = "This is a template minigame. Use it to create ne
 
 # DistributedCannonGame.py
 CannonGameTitle = "Cannon Game"
-CannonGameInstructions = "Shoot your toon into the water tower as quickly as you can. Use the mouse or the arrow keys to aim the cannon. Be quick and win a big reward for everyone!"
+CannonGameInstructions = "Shoot your toon into the water tower as quickly as you can. Use the mouse or the movement keys to aim the cannon. Be quick and win a big reward for everyone!"
 CannonGameReward = "REWARD"
 
 # DistributedTwoDGame.py
 TwoDGameTitle = "Toon Escape"
-TwoDGameInstructions = "Escape from the " + Cog + " den as soon as you can. Use arrow keys to run/jump and Ctrl to squirt a " + Cog + ". Collect " + Cog + " treasures to gain even more points."
+TwoDGameInstructions = "Escape from the " + Cog + " den as soon as you can. Use movement keys to run/jump and the jump key to squirt a " + Cog + ". Collect " + Cog + " treasures to gain even more points."
 TwoDGameElevatorExit = "EXIT"
 
 # DistributedTugOfWarGame.py
 TugOfWarGameTitle = "Tug-of-War"
-TugOfWarInstructions = "Alternately tap the left and right arrow keys just fast enough to line up the green bar with the red line. Don't tap them too slow or too fast, or you'll end up in the water!"
+TugOfWarInstructions = "Alternately tap the left and right movement keys just fast enough to line up the green bar with the red line. Don't tap them too slow or too fast, or you'll end up in the water!"
 TugOfWarGameGo = "GO!"
 TugOfWarGameReady = "Ready..."
 TugOfWarGameEnd = "Good game!"
@@ -7129,7 +7130,7 @@ TugOfWarPowerMeter = "Power meter"
 # DistributedPatternGame.py
 PatternGameTitle = "Match %s" % Minnie
 PatternGameInstructions = Minnie + " will show you a dance sequence. " + \
-                          "Try to repeat "+Minnie+"'s dance just the way you see it using the arrow keys!"
+                          "Try to repeat "+Minnie+"'s dance just the way you see it using the movement keys!"
 PatternGameWatch   = "Watch these dance steps..."
 PatternGameGo      = "GO!"
 PatternGameRight   = "Good, %s!"
@@ -7172,9 +7173,9 @@ RaceGameJellybeans10 = "10 jellybeans!"
 # DistributedRingGame.py
 RingGameTitle = "Ring Game"
 # color
-RingGameInstructionsSinglePlayer = "Try to swim through as many of the %s rings as you can.  Use the arrow keys to swim."
+RingGameInstructionsSinglePlayer = "Try to swim through as many of the %s rings as you can.  Use the movement keys to swim."
 # color
-RingGameInstructionsMultiPlayer = "Try to swim through the %s rings.  Other players will try for the other colored rings.  Use the arrow keys to swim."
+RingGameInstructionsMultiPlayer = "Try to swim through the %s rings.  Other players will try for the other colored rings.  Use the movement keys to swim."
 RingGameMissed = "MISSED"
 RingGameGroupPerfect = "GROUP\nPERFECT!!"
 RingGamePerfect = "PERFECT!"
@@ -7192,9 +7193,9 @@ ColorYellow = "yellow"
 # DistributedDivingGame.py
 DivingGameTitle = "Treasure Dive"
 # color
-DivingInstructionsSinglePlayer = "Treasures will appear at the bottom of the lake.  Use the arrow keys to swim.  Avoid the fish and get the treasures up to the boat!"
+DivingInstructionsSinglePlayer = "Treasures will appear at the bottom of the lake.  Use the movement keys to swim.  Avoid the fish and get the treasures up to the boat!"
 # color
-DivingInstructionsMultiPlayer = "Treasures will appear at the bottom of the lake.  Use the arrow keys to swim.  Work together to get the treasures up to the boat!"
+DivingInstructionsMultiPlayer = "Treasures will appear at the bottom of the lake.  Use the movement keys to swim.  Work together to get the treasures up to the boat!"
 DivingGameTreasuresRetrieved = "Treasures Retrieved"
 
 #Distributed Target Game
@@ -7203,9 +7204,9 @@ TargetGameInstructionsSinglePlayer = "Land on targets to score points"
 TargetGameInstructionsMultiPlayer = "Land on targets to score points"
 TargetGameBoard = "Round %s - Keeping Best Score"
 TargetGameCountdown = "Forced launch in %s seconds"
-TargetGameCountHelp = "Pound left and right arrows for power, stop to launch"
+TargetGameCountHelp = "Pound left and right movement keys for power, stop to launch"
 TargetGameFlyHelp = "Press down to open umbrella"
-TargetGameFallHelp = "Use the arrow keys to land on target"
+TargetGameFallHelp = "Use the movement keys to land on target"
 TargetGameBounceHelp = " Bouncing can knock you off target"
 
 #Distributed Photo Game
@@ -7243,14 +7244,14 @@ PieTossGameTitle = "Pie Toss Game"
 PieTossGameInstructions = "Toss pies at the targets."
 
 # DistributedPhotoGame.py
-PhotoGameInstructions = "Capture photos matching the toons shown at the bottom. Aim the camera with the mouse, and left click to take a picture. Press Ctrl to zoom in/out, and look around with the arrow keys.  Pictures with higher ratings get more points!"
+PhotoGameInstructions = "Capture photos matching the toons shown at the bottom. Aim the camera with the mouse, and left click to take a picture. Press jump key to zoom in/out, and look around with the movement keys.  Pictures with higher ratings get more points!"
 PhotoGameTitle = "Photo Fun"
 PhotoGameFilm = "FILM"
 PhotoGameScore = "Team Score: %s\n\nBest Photos: %s\n\nTotal Score: %s"
 
 # DistributedCogThiefGame.py
 CogThiefGameTitle = Cog + " Thief"
-CogThiefGameInstructions = "Keep the " + Cogs + " from stealing our gag barrels! Press the Ctrl key to throw a pie. Use the arrow keys to move. Tip: you can move diagonally."
+CogThiefGameInstructions = "Keep the " + Cogs + " from stealing our gag barrels! Press the jump key to throw a pie. Use the movement keys to move. Tip: you can move diagonally."
 CogThiefBarrelsSaved = "%(num)d Barrels\nSaved!"
 CogThiefBarrelSaved = "%(num)d Barrel\nSaved!"
 CogThiefNoBarrelsSaved = "No Barrels\nSaved"
@@ -7481,7 +7482,7 @@ LeaderboardTitle = "Toon Platoon"
 QuestScriptTutorialMickey_1 = "Toontown has a new citizen! Do you have some extra gags?"
 QuestScriptTutorialMickey_2 = "Sure, %s!"
 QuestScriptTutorialMickey_3 = "Tutorial Tom will tell you all about the Cogs.\aGotta go!"
-QuestScriptTutorialMickey_4 = "Come here! Use the arrow keys to move."
+QuestScriptTutorialMickey_4 = "Come here! Use the movement keys to move."
 
 # These are needed to correspond to the Japanese gender specific phrases
 QuestScriptTutorialMinnie_1 = "Toontown has a new citizen! Do you have some extra gags?"
@@ -7605,7 +7606,7 @@ CagedToonBattleThree = {
     12: "Hey there, %(toon)s!  You've got some pies now!",
 
     20: "Hey, %(toon)s!  Jump up to my cage and get some pies to throw!",
-    21: "Hi, %(toon)s!  Use the Ctrl key to jump up and touch my cage!",
+    21: "Hi, %(toon)s!  Use the jump key to jump up and touch my cage!",
 
     100: "Press the Delete key to throw a pie.",
     101: "The blue power meter shows how high your pie will go.",
@@ -7643,12 +7644,12 @@ ResistanceToonKeepHimBusy = "Keep him busy!  I'm going to set a trap!"
 ResistanceToonWatchThis = "Watch this!"
 CashbotBossGetAwayFromThat = "Hey!  Get away from that!"
 ResistanceToonCraneInstructions1 = "Control a magnet by stepping up to a podium."
-ResistanceToonCraneInstructions2 = "Use the arrow keys to move the crane, and press the Ctrl key to grab an object."
+ResistanceToonCraneInstructions2 = "Use the movement keys to move the crane, and press the jump key to grab an object."
 ResistanceToonCraneInstructions3 = "Grab a safe with a magnet and knock the C.F.O.'s safe-ty helmet off."
 ResistanceToonCraneInstructions4 = "Once his helmet is gone, grab a disabled goon and hit him in the head!"
 ResistanceToonGetaway = "Eek!  Gotta run!"
 CashbotCraneLeave = "Leave Crane"
-CashbotCraneAdvice = "Use the arrow keys to move the overhead crane."
+CashbotCraneAdvice = "Use the movement keys to move the overhead crane."
 CashbotMagnetAdvice = "Hold down the control key to pick things up."
 CashbotCraneLeaving = "Leaving crane"
 
@@ -10369,7 +10370,7 @@ PetTrait2descriptions = {
 # end translate
 
 # DistributedFireworkShow.py
-FireworksInstructions = lToonHQ+": Hit the \"Page Up\" key to see better."
+FireworksInstructions = lToonHQ+': Hit the "page up" key to see better.'
 startFireworksResponse = "Usage: startFireworksShow [\'num\']\n \
                                         \'num\' = %s - New Years\n \
                                         %s - Party Summer \n \
@@ -10438,11 +10439,12 @@ TipDict = {
     TIP_GENERAL : (
     "Quickly check your ToonTask progress by holding down the \"End\" key.",
     "Quickly check your Gag page by holding down the \"Home\" key.",
-    "Open your Friends List by pressing the \"F7\" key.",
-    "Open or close your Shticker Book by pressing the \"F8\" key.",
-    "You can look up by pressing the \"Page Up\" key and look down by pressing the \"Page Down\" key.",
-    "Press the \"Control\" key to jump.",
-    "Press the \"F9\" key to take a screenshot, which will be saved in your Toontown folder on your computer.",
+    'Open your Friends List by pressing the "friends" key.',
+    'Open or close your Shticker Book by pressing the "book" key.',
+    'You can look up by pressing the \"page up" key and look down by pressing the \"page down" key.',
+    
+    'Press the "jump " key to jump.',
+    'Press the "Screenshot" key to take a screenshot, which will be saved in your Toontown folder on your computer.',
     # This one makes me nervous without mentioning Parent Passwords - but that would be too long
     # "You can exchange Secret Friend Codes with somebody you know outside Toontown to enable open chat with them in Toontown.",
     "You can change your screen resolution, adjust audio, and control other options on the Options Page in the Shticker Book.",
@@ -10455,7 +10457,7 @@ TipDict = {
     "Some ToonTask rewards let you teleport to playgrounds in Toontown by using the Map Page in the Shticker Book.",
     "Increase your Laff points in the Playgrounds by collecting treasures like stars and ice cream cones.",
     "To heal quickly after a battle, go to your estate and play with your Doodle.",
-    "Change to different views of your Toon by pressing the Tab Key.",
+    'Change to different views of your Toon by pressing the "camera forward" Key.',
     "Sometimes you can find several different ToonTasks offered for the same reward. Shop around!",
     "Finding friends with similar ToonTasks is a fun way to progress through the game.",
     "You never need to save your Toontown progress. The Toontown servers continually save all the necessary information.",
@@ -10538,8 +10540,8 @@ TipDict = {
 
   TIP_MINIGAME : (
     "After you fill up your jellybean jar, any jellybeans you get from Trolley Games automatically spill over into your bank.",
-    "You can use the arrow keys instead of the mouse in the \"Match Minnie\" Trolley Game.",
-    "In the Cannon Game you can use the arrow keys to move your cannon and press the \"Control\" key to fire.",
+    "You can use the movement keys instead of the mouse in the \"Match Minnie\" Trolley Game.",
+    "In the Cannon Game you can use the movement keys to move your cannon and press the \"Control\" key to fire.",
     "In the Ring Game, bonus points are awarded when the entire group successfully swims through its rings.",
     "A perfect game of Match Minnie will double your points.",
     "In the Tug-of-War you are awarded more jellybeans if you play against a tougher Cog.",
@@ -10639,8 +10641,8 @@ TipDict = {
     ),
     TIP_GOLF: (
     # Golfing specific
-    "Press the Tab key to see a top view of the golf course.",
-    "Press the Up Arrow key to point yourself towards the golf hole.",
+    'Press the "camera forward" key to see a top view of the golf course.',
+    "Press the move forward key to point yourself towards the golf hole.",
     "Swinging the club is just like throwing a pie.",
     ),
     }
@@ -11114,7 +11116,7 @@ KartRace_RRInfo = "Welcome to Rustic Raceway!\nPlease be kind to the fauna and s
 KartRace_AAInfo = "Welcome to Airborne Acres!\nHold onto your hats! It looks bumpy up ahead...\n"
 KartRace_CCInfo = "Welcome to City Circuit!\nWatch out for pedestrians as you speed through downtown!\n"
 KartRace_BBInfo = "Welcome to Blizzard Boulevard!\nWatch your speed. There might be ice out there.\n"
-KartRace_GeneralInfo = "Use Control to throw gags you pick up on the track, and the arrow keys to control your kart."
+KartRace_GeneralInfo = "Use Control to throw gags you pick up on the track, and the movement keys to control your kart."
 
 KartRace_TrackInfo = {
   RaceGlobals.RT_Speedway_1     : KartRace_SSInfo + KartRace_GeneralInfo,
@@ -11867,10 +11869,10 @@ BossbotRTPhase4Speech1 = "Good Job! Now squirt the C.E.O. with the water on the 
 BossbotRTPhase4Speech2 = "or use golf balls to slow him down."
 BossbotPitcherLeave = "Leave Bottle"
 BossbotPitcherLeaving = "Leaving Bottle"
-BossbotPitcherAdvice = "Use the left and right keys to rotate.\nHold down Ctrl increase power.\nRelease Ctrl to fire."
+BossbotPitcherAdvice = "Use the left and right movement keys to rotate.\nHold down  the jump key increase power.\nRelease the jump key to fire."
 BossbotGolfSpotLeave = "Leave Golf Ball"
 BossbotGolfSpotLeaving = "Leaving Golf Ball"
-BossbotGolfSpotAdvice = "Use the left and right keys to rotate.\nCtrl to fire."
+BossbotGolfSpotAdvice = "Use the left and right movement keys to rotate.\n jump key to fire."
 BossbotRewardSpeech1 = "No! The Chairman won't like this."
 BossbotRewardSpeech2 = "Arrrggghhh!!!!"
 BossbotRTCongratulations = "You did it!  You've demoted the C.E.O.!\aHere, take these pink slips the C.E.O. left behind.\aWith it you'll be able to fire Cogs in a battle."""
@@ -11906,12 +11908,13 @@ DaysToGo = "Wait\n%s Days"
 
 # DistributedIceGame.py
 IceGameTitle = "Ice Slide"
-IceGameInstructions = "Get as close to the center by the end of the second round. Use arrow keys to change direction and force. Press Ctrl to launch your toon.  Hit barrels for extra points and avoid the TNT!"
-IceGameInstructionsNoTnt = "Get as close to the center by the end of the second round. Use arrow keys to change direction and force. Press Ctrl to launch your toon.  Hit barrels for extra points."
+IceGameInstructions = "Get as close to the center by the end of the second round. Use movement keys to change direction and force. Press the jump key to launch your toon.  Hit barrels for extra points and avoid the TNT!"
+IceGameInstructionsNoTnt = "Get as close to the center by the end of the second round. Use movement keys to change direction and force. Press the jump key to launch your toon.  Hit barrels for extra points."
+
 IceGameWaitingForPlayersToFinishMove = "Waiting for other players..."
 IceGameWaitingForAISync = "Waiting for other players..."
 IceGameInfo= "Match %(curMatch)d/%(numMatch)d, Round %(curRound)d/%(numRound)d"
-IceGameControlKeyWarning="Remember to press the Ctrl key!"
+IceGameControlKeyWarning="Remember to press the the jump key!"
 
 
 #DistributedPicnicTable.py
@@ -12113,7 +12116,7 @@ CogdoMazeGameTimeOut = 'Oh no, time ran out! You lost your jokes.'
 CogdoMazeGameTimeAlert = 'Hurry up! 60 seconds to go!'
 CogdoMazeGameBossGuiTitle = 'BIG COGS:'
 CogdoMazeFindHint = 'Find a Water Cooler'
-CogdoMazeThrowHint = "Press 'Ctrl' to throw your water balloon"
+CogdoMazeThrowHint = "Press 'move forward' key to throw your water balloon"
 CogdoMazeSquashHint = 'Falling objects pop your balloon'
 CogdoMazeBossHint = 'Big Cogs take TWO hits to defeat'
 CogdoMazeMinionHint = 'Smaller Cogs drop jokes'
@@ -12126,7 +12129,7 @@ CogdoFlyingGameFuelLabel = 'Fuel'
 CogdoFlyingGameLegalEagleTargeting = 'A Legal Eagle has noticed you!'
 CogdoFlyingGameLegalEagleAttacking = 'Incoming Eagle!'
 CogdoFlyingGamePickUpAPropeller = 'You need a propeller to fly!'
-CogdoFlyingGamePressCtrlToFly = "Press 'Ctrl' to fly up!"
+CogdoFlyingGamePressCtrlToFly = "Press  the 'jump' key  to fly up!"
 CogdoFlyingGameYouAreInvincible = 'Red Tape protects you!'
 CogdoFlyingGameTimeIsRunningOut = 'Time is running out!'
 CogdoFlyingGameMinimapIntro = 'This meter shows your progress!\nX marks the finish line.'
@@ -12170,3 +12173,36 @@ InteractivePropTrackBonusTerms = {
 }
 
 PlayingCardUnknown = "Card Name is unknown"
+
+ControlSettingsTitle = 'Control Settings'
+ControlSettingsInfoLabelDefault = 'Change your input settings here.'
+ControlSettingsInfoLabelChangeKey = 'Press a key combination\ncreate your new hotkey.'
+ControlSettingsAlreadyInUse = 'That key combination is already\nin use. Please choose another.'
+ControlSettingsSuccessful = 'Hotkey set successfully.'
+ControlSettingsChangesApplied = 'All changes applied successfully.'
+ControlSettingsResetToDefault = 'Reset to default settings'
+ControlSettingsExit = 'Exit'
+"""
+# Below is an example of how to convert a string to include the proper name of a hotkey.
+# For example, here is the original Ice Slide game instructions:
+
+IceGameInstructions = 'Get as close to the center by the end of the second round. Use arrow keys to change direction and force. Press Ctrl to launch your toon.  Hit barrels for extra points and avoid the TNT!'
+
+# This is the updated version:
+
+IceGameInstructions = 'Get as close to the center by the end of the second round. Use movement keys to change direction and force. Press  %0004 to launch your toon.  Hit barrels for extra points and avoid the TNT!'
+
+# You should replace all instances of "arrow keys", "left and right keys", etc. with "movement keys" to keep everything consistent.
+# Replace specific hotkey names such as "Ctrl" with a special ID. This ID will be formatted using a function in the ControlManager.
+# In this instance, the ID is " $0004".
+# The $ is the indentifer. This is to let the game know to start formatting the rest of your ID right here.
+# The 4 numbers after that stand for category and hotkey ids. Ctrl is in the "Movement" category, which has the ID of 00.
+# Ctrl, or "Jump", has the ID 04. You can reference these IDs in ControlGlobals.py
+# Therefore, to format the jump key, you just replace, "Ctrl" with " $0004"
+# Typically, you can format the string like so:
+
+base.controlManager.convertHotkeyString(TTLocalizer.IceGameInstructionsNoTnt, '%')
+
+# The last argument is the identififer you're using. Most of the time you'll want to use a $ instead of a % like in the example above.
+# Make sure to put TWO spaces in between the identifier and the previous word.
+"""

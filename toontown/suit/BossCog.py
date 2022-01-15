@@ -395,7 +395,7 @@ class BossCog(Avatar.Avatar):
 
             self.callback(0)
             ival = Parallel(
-                SoundInterval(self.openSfx, node = self.animate, volume = 0.2),
+                SoundInterval(self.openSfx, node = self.animate, volume = 0.2 ),
                 self.animate.hprInterval(1, self.openedHpr,
                                     blendType = 'easeInOut'),
                 Sequence(Wait(0.2), Func(self.callback, 1)),
@@ -426,7 +426,7 @@ class BossCog(Avatar.Avatar):
 
             self.callback(1)
             ival = Parallel(
-                SoundInterval(self.closeSfx, node = self.animate, volume = 0.2),
+                SoundInterval(self.closeSfx, node = self.animate, volume = 0.2 ),
                 self.animate.hprInterval(1, self.closedHpr,
                                     blendType = 'easeInOut'),
                 Sequence(Wait(0.8), Func(self.callback, 0)),

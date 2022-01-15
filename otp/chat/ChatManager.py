@@ -14,7 +14,7 @@ from otp.otpbase import OTPLocalizer
 from direct.directnotify import DirectNotifyGlobal
 from otp.login import LeaveToPayDialog
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 #from ChatInputSpeedChat import ChatInputSpeedChat
 
 # other systems can listen for these events if they
@@ -79,8 +79,8 @@ class ChatManager(DirectObject.DirectObject):
         # Store the client repository and the local avatar
         self.cr = cr
         self.localAvatar = localAvatar
-
-        self.wantBackgroundFocus = 1
+        
+        self.wantBackgroundFocus = not self.checkTheKeys()
 
         self.__scObscured = 0
         self.__normalObscured = 0
@@ -185,6 +185,16 @@ class ChatManager(DirectObject.DirectObject):
                 "off",
                 )
         self.fsm.enterInitialState()
+    def checkTheKeys(self):
+        """
+        Checks if any of the changed hotkeys match an alpha numeric character, if so return true
+        if not return false
+        """
+        hotkeys = base.controlManager.getChangedHotkeys()
+        for key in hotkeys:
+            if base.controlManager.isAlphaNumericHotkey(key):
+                return True
+        return False
 
     def delete(self):
         assert self.notify.debugStateCall(self)
@@ -398,6 +408,9 @@ class ChatManager(DirectObject.DirectObject):
             # typeEvent.
             self.acceptOnce('enterNormalChat', self.fsm.request, ['normalChat'])
             
+            if not self.wantBackgroundFocus:
+                self.accept(base.CHAT, messenger.send, ['enterNormalChat'])
+
     def checkObscurred(self):
         if not self.__scObscured:
             self.scButton.show()
@@ -661,13 +674,17 @@ class ChatManager(DirectObject.DirectObject):
         self.chatInputSpeedChat.hide()
         self.clButton.hide()
         
-    def enterNormalChat(self):
+    def enterNormalChat(self):            
+        if base.localAvatar.controlManager.wantWASD:
+            base.localAvatar.controlManager.disableWASD()
+
         assert self.notify.debugStateCall(self)
         result = self.chatInputNormal.activateByData()
         return result
         
     def exitNormalChat(self):
-        assert self.notify.debugStateCall(self)
+        if base.localAvatar.controlManager.wantWASD:
+            base.localAvatar.controlManager.enableWASD()
         self.chatInputNormal.deactivate()
 
     def enterOpenChatWarning(self):
@@ -818,3 +835,6 @@ class ChatManager(DirectObject.DirectObject):
     def __privacyPolicyDone(self):
         assert self.notify.debugStateCall(self)
         self.fsm.request("activateChat")
+        
+    def setBackgroundFocus(self, backgroundFocus, todo):
+        self.wantBackgroundFocus = backgroundFocus

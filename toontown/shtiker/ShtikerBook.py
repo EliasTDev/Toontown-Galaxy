@@ -116,7 +116,7 @@ class ShtikerBook(DirectFrame, StateData.StateData):
         if not self.safeMode:
             # register events
             self.accept("shtiker-page-done", self.__pageDone)
-            self.accept(ToontownGlobals.StickerBookHotkey, self.__close)
+           # self.accept(ToontownGlobals.StickerBookHotkey, self.__close)
             # Add hooks so the keyboard arrow keys work too
 ##            self.accept("arrow_right", self.__pageChange, [1])
 ##            self.accept("arrow_left", self.__pageChange, [-1])
@@ -182,7 +182,7 @@ class ShtikerBook(DirectFrame, StateData.StateData):
         self.pageTabFrame.hide()
 
         self.ignore("shtiker-page-done")
-        self.ignore(ToontownGlobals.StickerBookHotkey)
+       # self.ignore(ToontownGlobals.StickerBookHotkey)
         self.ignore("arrow_right")
         self.ignore("arrow_left")
 

@@ -66,6 +66,7 @@ from . import HoodMgr
 from . import PlayGame
 from toontown.toontowngui import ToontownLoadingBlocker
 from otp.distributed.DisneyMessageTypes import *
+from settings import *
 
 class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
     """ToontownClientRepository class: handle distribution for client"""

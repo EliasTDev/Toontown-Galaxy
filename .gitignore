@@ -90,3 +90,10 @@ dist/
 *.spec
 dependencies/panda.zip
 ai-crash.txt
+dependencies/panda/Website.url
+dependencies/panda/LICENSE
+dependencies/panda/Manual.url
+dependencies/panda/pandaIcon.ico
+dependencies/panda/ReleaseNotes
+dependencies/panda/Samples.url
+dependencies/panda/uninst.exe
