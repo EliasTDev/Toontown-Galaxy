@@ -5,7 +5,7 @@ from direct.directnotify import DirectNotifyGlobal
 from toontown.hood import Place
 from direct.fsm import ClassicFSM, State
 from direct.fsm import State
-from toontown.toonbase import ToontownGlobals, ControlGlobals
+from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import ToontownBattleGlobals
 from toontown.battle import BattlePlace
 from toontown.suit import Suit
@@ -216,7 +216,7 @@ class CogHQBossBattle(BattlePlace.BattlePlace):
         # Put away the book
         base.localAvatar.book.hideButton()
         self.ignore("enterStickerBook")
-        self.ignore(ControlGlobals.BOOK)
+        self.ignore(base.BOOK)
         
     def exitFinalBattle(self):
         assert(self.notify.debug("exitFinalBattle()"))
@@ -263,7 +263,7 @@ class CogHQBossBattle(BattlePlace.BattlePlace):
         # Put away the book
         base.localAvatar.book.hideButton()
         self.ignore("enterStickerBook")
-        self.ignore(ControlGlobals.BOOK)
+        self.ignore(base.BOOK)
 
     def exitWalk(self):
         """Make sure to enable teleport for the toon."""

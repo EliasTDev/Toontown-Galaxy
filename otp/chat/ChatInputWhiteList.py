@@ -7,7 +7,6 @@ from panda3d.core import *
 from otp.otpbase import OTPLocalizer
 from direct.task import Task
 from otp.chat.ChatInputTyped import ChatInputTyped
-from toontown.toonbase import ControlGlobals
 class ChatInputWhiteList(FSM.FSM, DirectEntry):
     notify = DirectNotifyGlobal.directNotify.newCategory("ChatInputWhiteList")
     
@@ -164,8 +163,8 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
         self.guiItem.setAcceptEnabled(True)
         self.accept('uber-escape',self.handleEscape)
         if self.wantHistory:
-            self.accept(f'{ControlGlobals.MOVE_FORWARD}-up', self.getPrevHistory)
-            self.accept(f'{ControlGlobals.MOVE_BACKWARDS}-up', self.getNextHistory)
+            self.accept(f'{base.MOVE_FORWARD}-up', self.getPrevHistory)
+            self.accept(f'{base.MOVE_BACKWARDS}-up', self.getNextHistory)
         
     def deactivate(self):
         self.ignore('uber-escape')

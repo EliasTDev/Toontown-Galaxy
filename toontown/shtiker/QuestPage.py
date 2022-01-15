@@ -5,7 +5,7 @@ from pandac.PandaModules import *
 from toontown.quest import Quests
 from toontown.toon import NPCToons
 from toontown.hood import ZoneUtil
-from toontown.toonbase import ToontownGlobals, ControlGlobals
+from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 from toontown.quest import QuestPoster
 
@@ -63,12 +63,12 @@ class QuestPage(ShtikerPage.ShtikerPage):
         self.updatePage()
 
     def acceptOnscreenHooks(self):        
-        self.accept(ControlGlobals.TASKS, self.showQuestsOnscreen)
-        self.accept(f"{ControlGlobals.TASKS}-up", self.hideQuestsOnscreen)
+        self.accept(base.TASKS, self.showQuestsOnscreen)
+        self.accept(f"{base.TASKS}-up", self.hideQuestsOnscreen)
 
     def ignoreOnscreenHooks(self):        
-        self.ignore(ControlGlobals.TASKS)
-        self.ignore(f"{ControlGlobals.TASKS}-up")
+        self.ignore(base.TASKS)
+        self.ignore(f"{base.TASKS}-up")
 
     def unload(self):
         del self.title

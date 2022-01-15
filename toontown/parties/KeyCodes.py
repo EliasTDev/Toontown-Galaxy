@@ -16,7 +16,6 @@
 from panda3d.core import *
 
 from direct.showbase.DirectObject import DirectObject
-from toontown.toonbase import ControlGlobals
 
 #Not sure if this can be converted 
 

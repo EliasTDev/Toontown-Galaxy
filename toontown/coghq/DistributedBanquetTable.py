@@ -14,7 +14,7 @@ from direct.gui.DirectGui import DGG, DirectButton, DirectLabel, DirectWaitBar
 from direct.task import Task
 from toontown.suit import Suit
 from toontown.suit import SuitDNA
-from toontown.toonbase import ToontownGlobals, ControlGlobals
+from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 from toontown.coghq import BanquetTableBase
 from toontown.coghq import DinerStatusIndicator
@@ -955,14 +955,14 @@ class DistributedBanquetTable(DistributedObject.DistributedObject, FSM.FSM, Banq
         
         self.accept('escape', self.__exitPitcher)
 
-        self.accept(ControlGlobals.JUMP, self.__controlPressed)
-        self.accept(f'{ControlGlobals.JUMP}-up', self.__controlReleased)
+        self.accept(base.JUMP, self.__controlPressed)
+        self.accept(f'{base.JUMP}-up', self.__controlReleased)
         self.accept('InputState-forward', self.__upArrow)
         self.accept('InputState-reverse', self.__downArrow)
         self.accept('InputState-turnLeft', self.__leftArrow)
         self.accept('InputState-turnRight', self.__rightArrow)
-        self.accept(ControlGlobals.MOVE_FORWARD, self.__upArrowKeyPressed)
-        self.accept(ControlGlobals.MOVE_BACKWARDS, self.__downArrowKeyPressed)
+        self.accept(base.MOVE_FORWARD, self.__upArrowKeyPressed)
+        self.accept(base.MOVE_BACKWARDS, self.__downArrowKeyPressed)
 
         taskMgr.add(self.__watchControls, self.watchControlsName)
 
@@ -998,8 +998,8 @@ class DistributedBanquetTable(DistributedObject.DistributedObject, FSM.FSM, Banq
         self.ignore('InputState-reverse')
         self.ignore('InputState-turnLeft')
         self.ignore('InputState-turnRight')
-        self.ignore(ControlGlobals.MOVE_FORWARD)
-        self.ignore(ControlGlobals.MOVE_BACKWARDS)
+        self.ignore(base.MOVE_FORWARD)
+        self.ignore(base.MOVE_BACKWARDS)
 
         self.arrowVert = 0
         self.arrowHorz = 0

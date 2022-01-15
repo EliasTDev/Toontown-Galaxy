@@ -15,7 +15,6 @@ from toontown.toonbase import TTLocalizer
 from toontown.minigame import Trajectory
 from toontown.effects import DustCloud
 from panda3d.otp import *
-from toontown.toonbase import ControlGlobals
 #some constants
 
 # lowest point we should allow the toon to fall
@@ -50,11 +49,11 @@ class DistributedLawbotCannon (DistributedObject.DistributedObject):
     LOCAL_CANNON_MOVE_TASK = "localCannonMoveTask"
     
     # keyboard controls
-    FIRE_KEY  = ControlGlobals.JUMP
-    UP_KEY    = ControlGlobals.MOVE_FORWARD
-    DOWN_KEY  = ControlGlobals.MOVE_BACKWARDS
-    LEFT_KEY  = ControlGlobals.MOVE_LEFT
-    RIGHT_KEY = ControlGlobals.MOVE_RIGHT
+    FIRE_KEY  = base.JUMP
+    UP_KEY    = base.MOVE_FORWARD
+    DOWN_KEY  = base.MOVE_BACKWARDS
+    LEFT_KEY  = base.MOVE_LEFT
+    RIGHT_KEY = base.MOVE_RIGHT
 
     # flags for objects that the toons can hit
     HIT_GROUND = 0

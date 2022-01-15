@@ -1,7 +1,7 @@
 """ShtikerBook module: contains the ShtikerBook class"""
 
 from panda3d.core import *
-from toontown.toonbase import ToontownGlobals, ControlGlobals
+from toontown.toonbase import ToontownGlobals
 from direct.showbase import DirectObject
 from direct.fsm import StateData
 from direct.gui.DirectGui import *

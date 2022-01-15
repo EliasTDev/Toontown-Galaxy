@@ -1,6 +1,6 @@
 """LocalAvatar module: contains the LocalAvatar class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from panda3d.otp import Nametag, WhisperPopup
 from direct.gui.DirectGui import *
 from direct.showbase.PythonUtil import *
@@ -9,7 +9,7 @@ from direct.showbase.InputStateGlobal import inputState
 from pandac.PandaModules import *
 
 from . import Avatar
-from direct.controls import ControlManager
+from toontown.toonbase import ToontownControlManager
 from . import DistributedAvatar
 from direct.task import Task
 from . import PositionExaminer
@@ -30,9 +30,7 @@ from direct.controls.ObserverWalker import ObserverWalker
 from direct.controls.PhysicsWalker import PhysicsWalker
 from direct.controls.SwimWalker import SwimWalker
 from direct.controls.TwoDWalker import TwoDWalker
-from toontown.toonbase import ControlManager as ttControlManager
 from toontown.toonbase import ToontownGlobals
-from toontown.toonbase import ControlGlobals
 class LocalAvatar(DistributedAvatar.DistributedAvatar,
                   DistributedSmoothNode.DistributedSmoothNode):
     """
@@ -71,8 +69,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.cTrav.setRespectPrevTransform(1)
 
         self.avatarControlsEnabled=0
-        self.controlManager = ControlManager.ControlManager(True, passMessagesThrough)
-
+        self.controlManager = ToontownControlManager.ToontownControlManager(True, passMessagesThrough)
         # Set up collisions:
         self.initializeCollisions()
         # Set up camera:
@@ -1629,9 +1626,9 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
     def enableRun(self):
         #Get hotkey name for moving forward
-        moveForward = ControlGlobals.MOVE_FORWARD
+        moveForward = base.MOVE_FORWARD
         #Get hotkey name for moving backwards
-        moveBackwards = ControlGlobals.MOVE_BACKWARDS
+        moveBackwards = base.MOVE_BACKWARDS
         self.accept(moveForward, self.startRunWatch)
         self.accept(moveBackwards, self.stopRunWatch)
         self.accept(f"control-{moveForward}", self.startRunWatch)
@@ -1643,7 +1640,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
     def disableRun(self):
         #Get hotkey name for moving forward
-        moveForward = ControlGlobals.MOVE_FORWARD
+        moveForward = base.MOVE_FORWARD
         self.ignore(f"{moveForward}")
         self.ignore(f"{moveForward}-up")
         self.ignore(f"control-{moveForward}-up")

@@ -59,7 +59,8 @@ class ToonBase(OTPBase.OTPBase):
         self.exitErrorCode = 0
 
         camera.setPosHpr(0, 0, 0, 0, 0, 0)
-        self.camLens.setFov(ToontownGlobals.DefaultCameraFov)
+        #TODO when adding settings for this use the settings to grab the FOV, use the globals as default
+        self.camLens.setMinFov(ToontownGlobals.DefaultCameraFov / (4.0/3.0))
         self.camLens.setNearFar(ToontownGlobals.DefaultCameraNear,
                                 ToontownGlobals.DefaultCameraFar)
 
@@ -125,9 +126,9 @@ class ToonBase(OTPBase.OTPBase):
         # self.win.getGsg().enableFrameClear(0, 1)
 
         # Accept the screenshot key
-        #Bad practice I know but only way I can do it without messing up controlglobals which needs to access toonbase
-        from toontown.toonbase import ControlGlobals
-        self.accept(ControlGlobals.SCREENSHOT, self.takeScreenShot)
+        self.SCREENSHOT = self.controlManager.getKeyName("interaction", ToontownGlobals.HotkeyScreenshot)
+
+        self.accept(self.SCREENSHOT, self.takeScreenShot)
 
         # If panda throws a panic event, we know we're not rendering
         # properly; send the user to the appropriate web page.
@@ -259,21 +260,43 @@ class ToonBase(OTPBase.OTPBase):
         cogGray.setShadow(0.01)
         tpMgr.setProperties('cogGray', cogGray)
         del tpMgr
-
+        self.MOVE_FORWARD = self.controlManager.getKeyName('movement', ToontownGlobals.HotkeyUp).lower()
+        self.MOVE_BACKWARDS = self.controlManager.getKeyName('movement', ToontownGlobals.HotkeyDown).lower()
+        self.MOVE_LEFT = self.controlManager.getKeyName('movement', ToontownGlobals.HotkeyLeft).lower()
+        self.MOVE_RIGHT = self.controlManager.getKeyName('movement', ToontownGlobals.HotkeyRight).lower()
+        self.JUMP = self.controlManager.getKeyName('movement', ToontownGlobals.HotkeyJump).lower()
+        self.THROW = self.controlManager.getKeyName('movement', ToontownGlobals.HotkeyThrow).lower()
+        self.SPRINT = self.controlManager.getKeyName('movement', ToontownGlobals.HotkeySprint).lower()
+        """
+        From toontownglobals
+        HotkeyBook = 0
+        HotkeyTasks = 1
+        HotkeyInventory = 2
+        HotkeyFriends = 3
+        HotkeyMap = 4
+        HotkeyScreenshot = 5
+        HotkeyChat = 6
+        """
+        self.BOOK = self.controlManager.getKeyName('interaction', ToontownGlobals.HotkeyBook).lower()
+        self.TASKS = self.controlManager.getKeyName('interaction', ToontownGlobals.HotkeyTasks).lower()
+        self.INVENTORY = self.controlManager.getKeyName('interaction', ToontownGlobals.HotkeyInventory).lower()
+        self.FRIENDS = self.controlManager.getKeyName('interaction', ToontownGlobals.HotkeyFriends).lower()
+        self.STREET_MAP = self.controlManager.getKeyName('interaction', ToontownGlobals.HotkeyMap).lower()
+        self.CHAT = self.controlManager.getKeyName("interaction", ToontownGlobals.HotkeyChat).lower()
         self.lastScreenShotTime = globalClock.getRealTime()
         self.accept('InputState-forward', self.__walking)
         self.canScreenShot = 1
         self.glitchCount = 0
         self.walking = 0
         self.isSprinting = 0
-
-        self.accept(ControlGlobals.SPRINT, self.startSprint)
-        self.accept(f'{ControlGlobals.SPRINT}-up', self.stopSprint)
+        self.accept(self.SPRINT, self.startSprint)
+        self.accept(f'{self.SPRINT}-up', self.stopSprint)
         if self.settings.getBool('game', 'frameRateMeter', False):
             base.setFrameRateMeter(True)
         else:
             base.setFrameRateMeter(False)
         #self.resetMusic = self.loader.loadMusic("phase_3/audio/bgm/MIDI_Events_16channels.ogg")
+        self.wantWASD = base.MOVE_FORWARD == 'w' and base.MOVE_BACKWARDS == 's' and base.MOVE_LEFT == 'a' and base.MOVE_RIGHT == 'd'
 
     def disableShowbaseMouse(self):
         # Hack:

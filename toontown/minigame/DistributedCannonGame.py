@@ -20,7 +20,6 @@ from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 from toontown.toonbase import TTLocalizer
 from panda3d.otp import *
-from toontown.toonbase import ControlGlobals
 # some constants
 LAND_TIME = 2
 
@@ -87,11 +86,11 @@ class DistributedCannonGame(DistributedMinigame):
     HIT_WATER  = 2
 
     # keyboard controls
-    FIRE_KEY  = ControlGlobals.JUMP
-    UP_KEY    = ControlGlobals.MOVE_FORWARD
-    DOWN_KEY  = ControlGlobals.MOVE_BACKWARDS
-    LEFT_KEY  = ControlGlobals.MOVE_LEFT
-    RIGHT_KEY = ControlGlobals.MOVE_RIGHT
+    FIRE_KEY  = base.JUMP
+    UP_KEY    = base.MOVE_FORWARD
+    DOWN_KEY  = base.MOVE_BACKWARDS
+    LEFT_KEY  = base.MOVE_LEFT
+    RIGHT_KEY = base.MOVE_RIGHT
 
     INTRO_TASK_NAME = "CannonGameIntro"
     INTRO_TASK_NAME_CAMERA_LERP = "CannonGameIntroCamera"

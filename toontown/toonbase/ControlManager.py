@@ -65,9 +65,9 @@ class ControlManager(DirectObject):
 
         self.disableChat = disableChat
 
-        #TODO disable chat box
-        #if hasattr(base, 'localAvatar') and hasattr(base.localAvatar, 'chatMgr') and base.localAvatar.chatMgr:
-            #base.localAvatar.chatMgr.setBackgroundFocus(disableChat, realtime)
+        if hasattr(base, 'localAvatar') and hasattr(base.localAvatar, 'chatMgr') and base.localAvatar.chatMgr:
+            base.localAvatar.chatMgr.setBackgroundFocus(disableChat, realtime)
+           #TODO add to chatlog
            # if not disableChat:
             #    base.localAvatar.chatMgr.chatLog.enableHotkey()
            # else:
@@ -120,7 +120,6 @@ class ControlManager(DirectObject):
 
         if keyName is None:
             self.notify.warning(f"Key name is None. Category : {category} hotkey: {hotkeyName}")
-        print(f'Keyname: {keyName}')
         return keyName
 
     def hotkeyPressed(self, hotkeyName, hotkey, key, event=None):

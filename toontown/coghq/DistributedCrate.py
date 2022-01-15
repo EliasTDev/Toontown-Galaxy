@@ -10,15 +10,14 @@ from direct.directnotify import DirectNotifyGlobal
 from . import MovingPlatform
 from direct.task.Task import Task
 from . import DistributedCrushableEntity
-from toontown.toonbase import ControlGlobals
 from settings import Settings
 class DistributedCrate(DistributedCrushableEntity.DistributedCrushableEntity):
     notify = DirectNotifyGlobal.directNotify.newCategory("DistributedCrate")
     # keyboard controls
-    UP_KEY    = ControlGlobals.MOVE_FORWARD
-    DOWN_KEY  = ControlGlobals.MOVE_BACKWARDS
-    LEFT_KEY  = ControlGlobals.MOVE_LEFT
-    RIGHT_KEY = ControlGlobals.MOVE_RIGHT
+    UP_KEY    = base.MOVE_FORWARD
+    DOWN_KEY  = base.MOVE_BACKWARDS
+    LEFT_KEY  = base.MOVE_LEFT
+    RIGHT_KEY = base.MOVE_RIGHT
 
     ModelPaths = (
         "phase_9/models/cogHQ/woodCrateB",
@@ -80,8 +79,8 @@ class DistributedCrate(DistributedCrushableEntity.DistributedCrushableEntity):
         taskMgr.remove(self.taskName("crushTask"))
         if self.pushable:
             self.__listenForCollisions(0)
-            self.ignore(ControlGlobals.MOVE_FORWARD)
-            self.ignore(f"{ControlGlobals.MOVE_FORWARD}-up")
+            self.ignore(base.MOVE_FORWARD)
+            self.ignore(f"{base.MOVE_FORWARD}-up")
             
         DistributedCrushableEntity.DistributedCrushableEntity.disable(self)
 
@@ -130,7 +129,7 @@ class DistributedCrate(DistributedCrushableEntity.DistributedCrushableEntity):
         
         if self.pushable:
             self.__listenForCollisions(1)
-            self.accept(ControlGlobals.MOVE_FORWARD, self.__upKeyPressed)
+            self.accept(base.MOVE_FORWARD, self.__upKeyPressed)
 
     def modCrateCollisions(self):
         # make it easier to jump on crates
@@ -147,13 +146,13 @@ class DistributedCrate(DistributedCrushableEntity.DistributedCrushableEntity):
         floor2.setZ(-.80)
 
     def __upKeyPressed(self):
-        self.ignore(ControlGlobals.MOVE_FORWARD)
-        self.accept(f"{ControlGlobals.MOVE_FORWARD}-up", self.__upKeyReleased)
+        self.ignore(base.MOVE_FORWARD)
+        self.accept(f"{base.MOVE_FORWARD}-up", self.__upKeyReleased)
         self.upPressed = 1
 
     def __upKeyReleased(self):
-        self.ignore(f"{ControlGlobals.MOVE_FORWARD}-up")
-        self.accept(ControlGlobals.MOVE_FORWARD, self.__upKeyPressed)
+        self.ignore(f"{base.MOVE_FORWARD}-up")
+        self.accept(base.MOVE_FORWARD, self.__upKeyPressed)
         self.upPressed = 0
         if self.stuckToCrate:
             self.__resetStick()
@@ -309,13 +308,13 @@ class DistributedCrate(DistributedCrushableEntity.DistributedCrushableEntity):
     def __listenForCancelEvents(self, on):
         self.notify.debug("%s, __listenForCancelEvents(%s)" % (self.doId, on))
         if on:
-            self.accept(ControlGlobals.MOVE_BACKWARDS, self.__resetStick)
-            self.accept(ControlGlobals.MOVE_LEFT, self.__resetStick)
-            self.accept(ControlGlobals.MOVE_RIGHT, self.__resetStick)
+            self.accept(base.MOVE_BACKWARDS, self.__resetStick)
+            self.accept(base.MOVE_LEFT, self.__resetStick)
+            self.accept(base.MOVE_RIGHT, self.__resetStick)
         else:
-            self.ignore(ControlGlobals.MOVE_BACKWARDS)
-            self.ignore(ControlGlobals.MOVE_LEFT)
-            self.ignore(ControlGlobals.MOVE_RIGHT)
+            self.ignore(base.MOVE_BACKWARDS)
+            self.ignore(base.MOVE_LEFT)
+            self.ignore(base.MOVE_RIGHT)
 
     def setMoveTo(self,avId,x0,y0,z0,x1,y1,z1):
         self.notify.debug("setMoveTo")

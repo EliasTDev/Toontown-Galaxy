@@ -14,7 +14,6 @@ from otp.otpbase import OTPLocalizer
 from direct.directnotify import DirectNotifyGlobal
 from otp.login import LeaveToPayDialog
 from direct.gui.DirectGui import *
-from toontown.toonbase import ControlGlobals
 from panda3d.core import *
 #from ChatInputSpeedChat import ChatInputSpeedChat
 
@@ -400,7 +399,7 @@ class ChatManager(DirectObject.DirectObject):
             self.acceptOnce('enterNormalChat', self.fsm.request, ['normalChat'])
             
             if not self.wantBackgroundFocus:
-                self.accept(ControlGlobals.CHAT, messenger.send, ['enterNormalChat'])
+                self.accept(base.CHAT, messenger.send, ['enterNormalChat'])
 
     def checkObscurred(self):
         if not self.__scObscured:
@@ -666,15 +665,16 @@ class ChatManager(DirectObject.DirectObject):
         self.clButton.hide()
         
     def enterNormalChat(self):
-        if base.controlManager.getChangedHotkeys:
-            base.localAvatar.disableAvatarControls()
+        if base.localAvatar.controlManager.wantWASD:
+            base.localAvatar.controlManager.disableWASD()
+
         assert self.notify.debugStateCall(self)
         result = self.chatInputNormal.activateByData()
         return result
         
     def exitNormalChat(self):
-        if base.controlManager.getChangedHotkeys:
-            base.localAvatar.enableAvatarControls()
+        if base.localAvatar.controlManager.wantWASD:
+            base.localAvatar.controlManager.enableWASD()
         self.chatInputNormal.deactivate()
 
     def enterOpenChatWarning(self):
@@ -825,3 +825,6 @@ class ChatManager(DirectObject.DirectObject):
     def __privacyPolicyDone(self):
         assert self.notify.debugStateCall(self)
         self.fsm.request("activateChat")
+        
+    def setBackgroundFocus(self, backgroundFocus, todo):
+        self.wantBackgroundFocus = backgroundFocus

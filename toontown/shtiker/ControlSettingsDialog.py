@@ -127,8 +127,8 @@ class ControlSettingsDialog(DirectFrame):
     def enter(self):
         base.controlManager.setChanging(True)
         base.transitions.fadeScreen(0.5)
-        #if hasattr(base, 'localAvatar') and hasattr(base.localAvatar, 'chatMgr') and base.localAvatar.chatMgr:
-            #base.localAvatar.chatMgr.setBackgroundFocus(False, True)
+        if hasattr(base, 'localAvatar') and hasattr(base.localAvatar, 'chatMgr') and base.localAvatar.chatMgr:
+            base.localAvatar.chatMgr.setBackgroundFocus(False, True)
         self.show()
         return
 
@@ -257,3 +257,5 @@ class ControlSettingsDialog(DirectFrame):
             base.settings.updateSetting('controls', category, categoryInfo)
 
         base.controlManager.reloadHotkeys()
+        base.localAvatar.controlManager.reload()
+

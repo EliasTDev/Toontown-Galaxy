@@ -6,7 +6,6 @@ import sys
 from direct.gui.DirectGui import *
 from panda3d.core import *
 from otp.otpbase import OTPLocalizer
-from toontown.toonbase import ControlGlobals
 class ChatInputTyped(DirectObject.DirectObject):
     """ChatInputTyped class: controls the chat input bubble, and handles
     chat message construction"""
@@ -76,8 +75,8 @@ class ChatInputTyped(DirectObject.DirectObject):
         self.typedChatBar.hide()
 
         if self.wantHistory:
-            self.accept(f'{ControlGlobals.MOVE_FORWARD}-up', self.getPrevHistory)
-            self.accept(f'{ControlGlobals.MOVE_BACKWARDS}-up', self.getNextHistory)
+            self.accept(f'{base.MOVE_FORWARD}-up', self.getPrevHistory)
+            self.accept(f'{base.MOVE_BACKWARDS}-up', self.getNextHistory)
 
     def hide(self):
         #import pdb; pdb.set_trace()

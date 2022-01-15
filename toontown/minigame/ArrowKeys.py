@@ -1,16 +1,27 @@
 """ArrowKeys.py: contains the ArrowKeys class"""
 
-from pandac.PandaModules import ModifierButtons
+from panda3d.core import ModifierButtons
 from direct.showbase.DirectObject import DirectObject
-from toontown.toonbase import ControlGlobals
 class ArrowKeys(DirectObject):
     # keyboard controls
-    UP_KEY    = ControlGlobals.MOVE_FORWARD
-    DOWN_KEY  = ControlGlobals.MOVE_BACKWARDS
-    LEFT_KEY  = ControlGlobals.MOVE_LEFT
-    RIGHT_KEY = ControlGlobals.MOVE_RIGHT
-    JUMP_KEY  = ControlGlobals.JUMP
-
+    try:
+        UP_KEY    = base.MOVE_FORWARD
+        DOWN_KEY  = base.MOVE_BACKWARDS
+        LEFT_KEY  = base.MOVE_LEFT
+        RIGHT_KEY = base.MOVE_RIGHT
+        JUMP_KEY  = base.JUMP
+    except NameError:
+        #Uberdog fucks up so we need to define it for it
+        MOVE_FORWARD = 'arrow_up'
+        MOVE_BACKWARDS = 'arrow_down'
+        MOVE_LEFT = 'arrow_left'
+        MOVE_RIGHT = 'arrow_right'
+        JUMP = 'control'
+        UP_KEY    = MOVE_FORWARD
+        DOWN_KEY  = MOVE_BACKWARDS
+        LEFT_KEY  = MOVE_LEFT
+        RIGHT_KEY = MOVE_RIGHT
+        JUMP_KEY  = JUMP
     UP_INDEX = 0
     DOWN_INDEX = 1
     LEFT_INDEX = 2

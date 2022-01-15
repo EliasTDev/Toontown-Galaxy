@@ -4,7 +4,7 @@ from . import ShtikerPage
 from toontown.toonbase import ToontownBattleGlobals
 from direct.gui.DirectGui import *
 from panda3d.core import *
-from toontown.toonbase import ToontownGlobals, ControlGlobals
+from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 
 class InventoryPage(ShtikerPage.ShtikerPage):
@@ -199,8 +199,8 @@ class InventoryPage(ShtikerPage.ShtikerPage):
 
     # for the hotkey that allows quick display of the inventory page
     def acceptOnscreenHooks(self):        
-        self.accept(ControlGlobals.INVENTORY, self.showInventoryOnscreen)
-        self.accept(f"{ControlGlobals.INVENTORY}-up", self.hideInventoryOnscreen)
+        self.accept(base.INVENTORY, self.showInventoryOnscreen)
+        self.accept(f"{base.INVENTORY}-up", self.hideInventoryOnscreen)
 
     def ignoreOnscreenHooks(self):        
         self.ignore(ToontownGlobals.InventoryHotkeyOn)
