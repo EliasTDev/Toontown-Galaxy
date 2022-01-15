@@ -40,7 +40,6 @@ class PublicWalk(Walk.Walk):
         base.localAvatar.book.showButton()
         #self.accept(StickerBookHotkey, self.__handleStickerBookEntry)
         self.accept("enterStickerBook", self.__handleStickerBookEntry)
-        print(base.BOOK)
         self.accept(base.BOOK, self.__handleOptionsEntry)
 
         # The laffMeter

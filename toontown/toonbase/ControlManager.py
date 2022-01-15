@@ -98,11 +98,11 @@ class ControlManager(DirectObject):
                 
                 if controlCategory.get(str(hotkey)) is not None:
                 #If we have the keys in settings
-                    keyName = base.controlManager.getControlName(controlCategory.get(str(hotkey)))
+                    keyName = controlCategory.get(str(hotkey).lower())
                     break
                 else:
                 #Get the default keys defined in toontownglobals
-                    keyName = base.controlManager.getControlName(ToontownGlobals.HotkeyGroupDefaults.get(hotkey))
+                    keyName = ToontownGlobals.HotkeyGroupDefaults.get(hotkey).lower()
                     break
 
         if keyName is None:
@@ -142,8 +142,6 @@ class ControlManager(DirectObject):
             name += ' Key'
             if '+' in name:
                 name += 's'
-        if name == 'Esc':
-            name = 'escape'
         return name
 
     def convertHotkeyString(self, dialog, activator):
@@ -161,6 +159,7 @@ class ControlManager(DirectObject):
         return dialog
 
     def isAlphaNumericHotkey(self, hotkey):
+        hotkey = str(hotkey)
         for prefix in ('shift', 'control', 'alt'):
             if prefix in hotkey:
                 hotkey = hotkey.replace(prefix, '')

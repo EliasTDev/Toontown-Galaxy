@@ -18,8 +18,6 @@ class ControlSettingsDialog(DirectFrame):
                              text_scale=0.12, text_pos=(0, 0.4), borderWidth=(0.01, 0.01))
         self.setBin('gui-popup', 0)
         self.initialiseoptions(ControlSettingsDialog)
-        self.category = 0
-        self.categoryButtons = []
         self.keyButtons = []
         self.controls = {}
         self.queuedKey = None
@@ -45,15 +43,22 @@ class ControlSettingsDialog(DirectFrame):
                                                                    guiButton.find('**/QuitBtn_DN'),
                                                                    guiButton.find('**/QuitBtn_RLVR')),
                                   image_scale=(0.6, 1, 1), text=TTLocalizer.DisplaySettingsApply, text_scale=0.06,
-                                  text_pos=(0, -0.02), pos=(0.52, 0, -0.53), command=self.__apply)
-        self.cancel = DirectButton(parent=self, relief=None, text=TTLocalizer.DisplaySettingsCancel,
+                                  text_pos=(0, -0.02), pos=(-0.55, 0, -0.53), command=self.__apply)
+        self.cancel = DirectButton(parent=self, relief=None, text=TTLocalizer.ControlSettingsExit,
                                    image=(guiButton.find('**/QuitBtn_UP'), guiButton.find('**/QuitBtn_DN'),
                                           guiButton.find('**/QuitBtn_RLVR')),
                                    image_scale=(0.6, 1, 1), text_scale=TTLocalizer.DSDcancel,
-                                   text_pos=TTLocalizer.DSDcancelPos, pos=(0.2, 0, -0.53), command=self.__cancel)
+                                 text_pos=TTLocalizer.DSDcancelPos, pos=(-0.1, 0, -0.53), command=self.__cancel)
+        
+        self.resetToDefaults = DirectButton(parent=self, relief=None, text=TTLocalizer.ControlSettingsResetToDefault,
+                                   image=(guiButton.find('**/QuitBtn_UP'), guiButton.find('**/QuitBtn_DN'),
+                                          guiButton.find('**/QuitBtn_RLVR')),
+                                   image_scale=(1.5, 1, 1), text_scale=TTLocalizer.DSDcancel ,
+                                   text_pos=TTLocalizer.DSDcancelPos , pos=(0.42, 0, -0.53), command=self.__resetToDefault)
+
         self.infoLabel = DirectLabel(parent=self, relief=None, text=TTLocalizer.ControlSettingsInfoLabelDefault,
-                                     text_scale=TTLocalizer.CSButton, text_pos=TTLocalizer.DSDcancelPos,
-                                     pos=(-0.35, 0, -0.5))
+                                     text_scale=TTLocalizer.CSButton , text_pos=TTLocalizer.DSDcancelPos,
+                                     pos=(0, 0, 0.29))
         self.hotkeysList = DirectScrolledFrame(parent=self, frameSize=(-0.65, 0.65, -0.4, 0.2), relief=DGG.SUNKEN,
                                                geom=scrollBkgd, geom_scale=(0.3, 1, 0.025), geom_pos=(0.6, 0, -0.1),
                                                geom_hpr=(0, 0, 90), borderWidth=(0.01, 0.01),
@@ -80,8 +85,8 @@ class ControlSettingsDialog(DirectFrame):
         node = canvas.attachNewNode('category-%s' % 0)
         node.setPos(-0.95, 0, 0.75)
         names = OTPLocalizer.HotkeyNames[0]
-        posZ = 0.2
-        zOffset = -0.2
+        posZ = 0.15
+        zOffset = -0.15
         num = 0
         hotkeys = ToontownGlobals.HotkeyGroupDefaults.keys()
        # categoryName = ToontownGlobals.Hotkeys[0]
@@ -148,6 +153,13 @@ class ControlSettingsDialog(DirectFrame):
     def __cancel(self):
         self.exit()
 
+    def __resetToDefault(self):
+        base.settings.updateSetting('game', 'controls', {})
+        self.controls = {}
+        base.controlManager.reloadHotkeys()
+        base.reloadControls()
+        base.localAvatar.controlManager.reload()
+        base.localAvatar.controlManager.disable()
 
 
     def __changeKey(self, id, event):
@@ -222,11 +234,10 @@ class ControlSettingsDialog(DirectFrame):
         return hotkeys
 
     def applyChanges(self):
-       # for category in self.controls.keys():
-           # categoryInfo = self.controls.get(category)
         base.settings.updateSetting('game', 'controls', self.controls)
 
         base.controlManager.reloadHotkeys()
         base.localAvatar.controlManager.reload()
-        self.exit()
+        base.reloadControls()
+        base.localAvatar.controlManager.disable()
 

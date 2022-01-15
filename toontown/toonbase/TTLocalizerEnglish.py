@@ -12180,6 +12180,8 @@ ControlSettingsInfoLabelChangeKey = 'Press a key combination\ncreate your new ho
 ControlSettingsAlreadyInUse = 'That key combination is already\nin use. Please choose another.'
 ControlSettingsSuccessful = 'Hotkey set successfully.'
 ControlSettingsChangesApplied = 'All changes applied successfully.'
+ControlSettingsResetToDefault = 'Reset to default settings'
+ControlSettingsExit = 'Exit'
 """
 # Below is an example of how to convert a string to include the proper name of a hotkey.
 # For example, here is the original Ice Slide game instructions:

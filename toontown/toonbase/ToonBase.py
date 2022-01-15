@@ -296,8 +296,26 @@ class ToonBase(OTPBase.OTPBase):
         else:
             base.setFrameRateMeter(False)
         #self.resetMusic = self.loader.loadMusic("phase_3/audio/bgm/MIDI_Events_16channels.ogg")
-        self.wantWASD = base.MOVE_FORWARD == 'w' and base.MOVE_BACKWARDS == 's' and base.MOVE_LEFT == 'a' and base.MOVE_RIGHT == 'd'
-
+        self.wantWASD =  base.MOVE_FORWARD != 'arrow_up' and base.MOVE_BACKWARDS != 'arrow_down' and base.MOVE_LEFT != 'arrow_left' and base.MOVE_RIGHT != 'arrow_right'
+        
+    def reloadControls(self):
+        self.ignore(self.SCREENSHOT)
+        self.MOVE_FORWARD = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyUp).lower()
+        self.MOVE_BACKWARDS = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyDown).lower()
+        self.MOVE_LEFT = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyLeft).lower()
+        self.MOVE_RIGHT = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyRight).lower()
+        self.JUMP = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyJump).lower()
+        self.THROW = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyThrow).lower()
+        self.SPRINT = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeySprint).lower()
+        self.BOOK = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyBook).lower()
+        self.TASKS = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyTasks).lower()
+        self.INVENTORY = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyInventory).lower()
+        self.FRIENDS = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyFriends).lower()
+        self.STREET_MAP = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyMap).lower()
+        self.CHAT = self.controlManager.getKeyName("HotKeys", ToontownGlobals.HotkeyChat).lower()
+        self.SCREENSHOT = self.controlManager.getKeyName("HotKeys", ToontownGlobals.HotkeyScreenshot).lower()
+        self.accept(self.SCREENSHOT, self.takeScreenShot)
+        self.wantWASD =  base.MOVE_FORWARD != 'arrow_up' and base.MOVE_BACKWARDS != 'arrow_down' and base.MOVE_LEFT != 'arrow_left' and base.MOVE_RIGHT != 'arrow_right'
     def disableShowbaseMouse(self):
         # Hack:
         # Enable drive mode but turn it off, and reset the camera
@@ -687,3 +705,4 @@ class ToonBase(OTPBase.OTPBase):
             loadPrcFileData('toonBase Settings Custom Controls', 'customControls %s' % wantCustomControls)
             loadPrcFileData('toonBase Settings Controls', 'controls %s' % controls)
             self.settings.loadFromSettings()
+

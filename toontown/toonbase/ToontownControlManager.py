@@ -2,7 +2,7 @@ from direct.controls import ControlManager
 from direct.showbase.InputStateGlobal import inputState
 class ToontownControlManager(ControlManager.ControlManager):
     #If all these keys match wasd then enable wasd
-    wantWASD = base.wantWASD
+    
 
     def __init__(self, enable=True, passMessagesThrough = False):
 
@@ -53,7 +53,7 @@ class ToontownControlManager(ControlManager.ControlManager):
         ist.append(inputState.watchWithModifiers("reverse", "arrow_down", inputSource=inputState.ArrowKeys))
         ist.append(inputState.watchWithModifiers("reverse", "mouse4", inputSource=inputState.Mouse))
 
-        if self.wantWASD:
+        if base.wantWASD:
             ist.append(inputState.watch("turnLeft", "mouse-look_left", "mouse-look_left-done"))
             ist.append(inputState.watch("turnLeft", "force-turnLeft", "force-turnLeft-stop"))
 
@@ -141,7 +141,7 @@ class ToontownControlManager(ControlManager.ControlManager):
             self.currentControls.disableAvatarControls()
             
         if self.passMessagesThrough: # for not breaking toontown          
-            if self.wantWASD:
+            if base.wantWASD:
                 self.notify.info('WASD support was enabled.')
                 self.istWASD.append(inputState.watchWithModifiers("forward", "w", inputSource=inputState.WASD))
                 self.istWASD.append(inputState.watchWithModifiers("reverse", "s", inputSource=inputState.WASD))
@@ -187,7 +187,7 @@ class ToontownControlManager(ControlManager.ControlManager):
         """
         Reload the controlmanager in-game
         """
-        base.wantWASD = base.MOVE_FORWARD == 'w' and base.MOVE_BACKWARDS == 's' and base.MOVE_LEFT == 'a' and base.MOVE_RIGHT == 'd'
+        #base.wantWASD = base.wan
 
         self.wantWASD = base.wantWASD#Reload wantWASD if it was recently changed.
         if self.wantWASD:       

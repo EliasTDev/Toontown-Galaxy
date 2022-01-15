@@ -79,8 +79,8 @@ class ChatManager(DirectObject.DirectObject):
         # Store the client repository and the local avatar
         self.cr = cr
         self.localAvatar = localAvatar
-        #If list is empty then this will return 0 else return 1
-        self.wantBackgroundFocus = not base.controlManager.getChangedHotkeys()  or not base.controlManager.getChatDisabled
+        
+        self.wantBackgroundFocus = not self.checkTheKeys()
 
         self.__scObscured = 0
         self.__normalObscured = 0
@@ -185,6 +185,16 @@ class ChatManager(DirectObject.DirectObject):
                 "off",
                 )
         self.fsm.enterInitialState()
+    def checkTheKeys(self):
+        """
+        Checks if any of the changed hotkeys match an alpha numeric character, if so return true
+        if not return false
+        """
+        hotkeys = base.controlManager.getChangedHotkeys()
+        for key in hotkeys:
+            if base.controlManager.isAlphaNumericHotkey(key):
+                return True
+        return False
 
     def delete(self):
         assert self.notify.debugStateCall(self)
@@ -399,7 +409,6 @@ class ChatManager(DirectObject.DirectObject):
             self.acceptOnce('enterNormalChat', self.fsm.request, ['normalChat'])
             
             if not self.wantBackgroundFocus:
-                print(base.CHAT)
                 self.accept(base.CHAT, messenger.send, ['enterNormalChat'])
 
     def checkObscurred(self):
@@ -665,7 +674,7 @@ class ChatManager(DirectObject.DirectObject):
         self.chatInputSpeedChat.hide()
         self.clButton.hide()
         
-    def enterNormalChat(self):
+    def enterNormalChat(self):            
         if base.localAvatar.controlManager.wantWASD:
             base.localAvatar.controlManager.disableWASD()
 
