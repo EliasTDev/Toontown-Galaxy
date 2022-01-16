@@ -686,9 +686,10 @@ MinigameReleaseDates = {
 ThinkPosHotkey = "f1-up"
 PlaceMarkerHotkey = "f2-up"
 FriendsListHotkey = "f7-up"
+#TODO add secondary shticker book hotkey to keybinds
 StickerBookHotkey = "f8-up"
 OptionsPageHotkey = "escape-up"
-ScreenshotHotkey = "f9-up"
+#ScreenshotHotkey = "f9-up"
 SynchronizeHotkey = "f6-up"
 QuestsHotkeyOn = "end"
 QuestsHotkeyOff = "end-up"
@@ -1605,6 +1606,66 @@ AnimPropTypes = Enum(("Unknown",
 
 MaxCarryLimit = 80
 ALLOWED_FIELD_OFFICES = ['s', 'l']
+
+# New Hotkeys globals
+Separater = '-'
+Shift = 'shift'
+Control = 'control'
+Release = 'up'
+HotkeyGroup = 'HotKeys'
+Hotkeys = (HotkeyGroup)
+HotkeyUp = 0
+HotkeyDown = 1
+HotkeyLeft = 2
+HotkeyRight = 3
+HotkeyJump = 4
+HotkeyThrow = 5
+HotkeySprint = 6
+HotkeyBook = 7
+HotkeyTasks = 8
+HotkeyInventory = 9
+HotkeyFriends = 10
+HotkeyMap = 11
+HotkeyScreenshot = 12
+HotkeyChat = 13
+HotkeyGroupDefaults = {
+    HotkeyUp: 'arrow_up',
+    HotkeyDown: 'arrow_down',
+    HotkeyLeft: 'arrow_left',
+    HotkeyRight: 'arrow_right',
+    HotkeyJump: 'control',
+    HotkeyThrow: 'delete',
+    HotkeySprint: 'shift',
+    HotkeyBook: 'escape',
+    HotkeyTasks: 'end',
+    HotkeyInventory: 'home',
+    HotkeyFriends: 'f7',
+    HotkeyMap: 'alt',
+    HotkeyScreenshot: 'f9',
+    HotkeyChat: 't',
+}
+
+
+
+
+
+
+AllHotkeys = (HotkeyGroupDefaults)
+SpecialKeys = {
+    'page_up': 'Page Up',
+    'page_down': 'Page Down',
+    'escape': 'Esc',
+    'delete': 'Del',
+    'control': 'Ctrl',
+    'insert': 'Ins',
+    'arrow_up': 'Up Arrow',
+    'arrow_down': 'Down Arrow',
+    'arrow_left': 'Left Arrow',
+    'arrow_right': 'Right Arrow',
+    'num_lock': 'Number Lock',
+    'print_screen': 'Print Screen',
+    'caps_lock': 'Caps Lock'
+}
 #A pie splat
 maxSellbotBossDamage = 1
 #Craning with safe

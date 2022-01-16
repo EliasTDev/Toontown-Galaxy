@@ -2,7 +2,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.PythonUtil import reduceAngle
 from panda3d.core import *
 
-from libotp import *
+from panda3d.otp import *
 
 
 class CPetFlee(CImpulse):

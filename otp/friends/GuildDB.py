@@ -74,7 +74,7 @@ class GuildDB(DBInterface):
         self.db = MySQLdb.connect(host=host,
                                   port=port,
                                   user=user,
-                                  passwd=passwd)
+                                  password=passwd)
 
         if __debug__:
             self.notify.info("Connected to %s MySQL db at %s:%d." % (self.dbname, host, port))
@@ -134,7 +134,7 @@ class GuildDB(DBInterface):
         self.db = MySQLdb.connect(host=self.host,
                                   port=self.port,
                                   user=self.user,
-                                  passwd=self.passwd)
+                                  password=self.passwd)
         cursor = self.db.cursor()
         cursor.execute("USE `%s`"%self.dbname)
         if __debug__:

@@ -11,7 +11,7 @@ from . import HealJokes
 from toontown.toonbase import TTLocalizer
 from toontown.toonbase import ToontownBattleGlobals
 from toontown.toon import NPCToons
-from libotp import CFSpeech, CFTimeout
+from panda3d.otp import CFSpeech, CFTimeout
 notify = DirectNotifyGlobal.directNotify.newCategory('MovieNPCSOS')
 
 soundFiles = ('AA_heal_tickle.ogg',

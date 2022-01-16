@@ -14,7 +14,7 @@ BattleCamFaceOffPos = Point3(0, -10, 4)
 BattleCamDefaultPos = Point3(0, -8.6, 16.5)
 BattleCamDefaultHpr = Vec3(0, -61, 0)
 BattleCamDefaultFov = 100.0
-BattleCamMenuFov = 95.0
+BattleCamMenuFov = 65.0
 BattleCamJoinPos = Point3(0, -12, 13)
 BattleCamJoinHpr = Vec3(0, -45, 0)
 
@@ -83,6 +83,15 @@ PropTypeToTrackBonus = {
 # avatar skill levels (totalled)
 #Levels = [0, 10, 50, 140, 300, 550]
 #Levels = [0, 10, 50, 250, 750, 2000]
+#TODO merge this into one (will probably be done with MIM_constants)
+#Levels = [[20, 60, 200, 600, 1300, 2100, 3000, 4200, 5500, 6000],  # heal
+ #         [20, 60, 200, 600, 1300, 2100, 3000, 4200, 5500, 6000],  # trap
+  #        [20, 60, 200, 600, 1300, 2100, 3000, 4200, 5500, 6000],  # lure
+   #       [20, 60, 200, 600, 1300, 2100, 3000, 4200, 5500, 6000],  # sound
+    #      [20, 60, 200, 600, 1300, 2100, 3000, 4200, 5500, 6000],  # throw
+     #     [20, 60, 200, 600, 1300, 2100, 3000, 4200, 5500, 6000],  # squirt
+      #    [20, 60, 200, 600, 1300, 2100, 3000, 4200, 5500, 6000],  # drop
+       #   ]
 Levels = [[0, 20, 200, 800, 2000, 6000, 10000], # heal
           [0, 20, 100, 800, 2000, 6000, 10000], # trap
           [0, 20, 100, 800, 2000, 6000, 10000], # lure

@@ -1,7 +1,8 @@
 import math
 import random
-from pandac.PandaModules import NodePath, Point3, VBase4, TextNode, Vec3, deg2Rad, \
-     CollisionSegment, CollisionHandlerQueue, CollisionNode, BitMask32, SmoothMover
+from panda3d.core import NodePath, Point3, VBase4, TextNode, Vec3, deg2Rad, \
+     CollisionSegment, CollisionHandlerQueue, CollisionNode, BitMask32
+from panda3d.direct import SmoothMover
 from direct.fsm import FSM
 from direct.distributed import DistributedObject
 from direct.distributed.ClockDelta import globalClockDelta
@@ -19,7 +20,7 @@ from toontown.coghq import BanquetTableBase
 from toontown.coghq import DinerStatusIndicator
 from toontown.battle import MovieUtil
 
-
+from settings import *
 class DistributedBanquetTable(DistributedObject.DistributedObject, FSM.FSM, BanquetTableBase.BanquetTableBase):
     """ This class represents a banquet table and the associated chairs,
     The DistributedBossbotBoss creates several of these of these for the CEO
@@ -496,7 +497,7 @@ class DistributedBanquetTable(DistributedObject.DistributedObject, FSM.FSM, Banq
             Wait(0.8),
             SoundInterval(spinningSound, duration=1.2, startTime = 1.5, volume=0.2, node=deathSuit),
             SoundInterval(spinningSound, duration=3.0, startTime = 0.6, volume=0.8, node=deathSuit),
-            SoundInterval(deathSound, volume = 0.32, node=deathSuit),
+            SoundInterval(deathSound, volume = 0.32 , node=deathSuit),
             )        
         intervalName = "dinerDie-%d-%d" % (self.index, chairIndex)
         deathIval = Parallel(ival, deathSoundTrack)
@@ -952,14 +953,14 @@ class DistributedBanquetTable(DistributedObject.DistributedObject, FSM.FSM, Banq
         
         self.accept('escape', self.__exitPitcher)
 
-        self.accept('control', self.__controlPressed)
-        self.accept('control-up', self.__controlReleased)
+        self.accept(base.JUMP, self.__controlPressed)
+        self.accept(f'{base.JUMP}-up', self.__controlReleased)
         self.accept('InputState-forward', self.__upArrow)
         self.accept('InputState-reverse', self.__downArrow)
         self.accept('InputState-turnLeft', self.__leftArrow)
         self.accept('InputState-turnRight', self.__rightArrow)
-        self.accept('arrow_up', self.__upArrowKeyPressed)
-        self.accept('arrow_down', self.__downArrowKeyPressed)
+        self.accept(base.MOVE_FORWARD, self.__upArrowKeyPressed)
+        self.accept(base.MOVE_BACKWARDS, self.__downArrowKeyPressed)
 
         taskMgr.add(self.__watchControls, self.watchControlsName)
 
@@ -995,8 +996,8 @@ class DistributedBanquetTable(DistributedObject.DistributedObject, FSM.FSM, Banq
         self.ignore('InputState-reverse')
         self.ignore('InputState-turnLeft')
         self.ignore('InputState-turnRight')
-        self.ignore('arrow_up')
-        self.ignore('arrow_down')
+        self.ignore(base.MOVE_FORWARD)
+        self.ignore(base.MOVE_BACKWARDS)
 
         self.arrowVert = 0
         self.arrowHorz = 0
@@ -1647,4 +1648,4 @@ class DistributedBanquetTable(DistributedObject.DistributedObject, FSM.FSM, Banq
                 self.moveSound.stop()
             self.moveSound = sfx
             if self.moveSound:
-                base.playSfx(self.moveSound, looping=1, volume = 0.5)
+                base.playSfx(self.moveSound, looping=1, volume = 0.5 )

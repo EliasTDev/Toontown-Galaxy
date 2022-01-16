@@ -23,8 +23,8 @@ import copy
 from . import DistributedSuitBase
 from otp.otpbase import OTPLocalizer
 import random
-from libpandadna import SuitLeg
-from libotp import CFSpeech
+from panda3d.toontown import SuitLeg
+from panda3d.otp import CFSpeech
 
 # how far outside of a door to stop in WalkFromStreet mode before
 # transitioning to ToSuitBuilding or ToToonBuilding.  This distance is
@@ -1221,7 +1221,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
                             SoundInterval(dialogueArray[sfxIndex], node = None,
                                            listenerNode = base.localAvatar,
                                            loop = 0,
-                                           volume = 1.0),
+                                           volume = 1.0 ),
                                            )
             self.soundSequenceList.append(soundSequence)
             soundSequence.start()

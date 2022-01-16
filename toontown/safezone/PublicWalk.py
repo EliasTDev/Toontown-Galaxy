@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase.ToontownGlobals import *
 from direct.directnotify import DirectNotifyGlobal
 from . import Walk
@@ -38,9 +38,9 @@ class PublicWalk(Walk.Walk):
         
         # The shticker book and associated events
         base.localAvatar.book.showButton()
-        self.accept(StickerBookHotkey, self.__handleStickerBookEntry)
+        #self.accept(StickerBookHotkey, self.__handleStickerBookEntry)
         self.accept("enterStickerBook", self.__handleStickerBookEntry)
-        self.accept(OptionsPageHotkey, self.__handleOptionsEntry)
+        self.accept(base.BOOK, self.__handleOptionsEntry)
 
         # The laffMeter
         base.localAvatar.laffMeter.start()
@@ -52,9 +52,9 @@ class PublicWalk(Walk.Walk):
         
         # Put away the book
         base.localAvatar.book.hideButton()
-        self.ignore(StickerBookHotkey)
+        #self.ignore(StickerBookHotkey)
         self.ignore("enterStickerBook")
-        self.ignore(OptionsPageHotkey)
+        self.ignore(base.BOOK)
 
         # Put away the laff meter
         base.localAvatar.laffMeter.stop()

@@ -7,7 +7,7 @@ from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import TTLocalizer
 from toontown.toontowngui import TTDialog
 from toontown.toonbase import ToontownGlobals
-from libotp import *
+from panda3d.otp import *
 class DisplaySettingsDialog(DirectFrame, StateData.StateData):
     """DisplaySettingsDialog:
 

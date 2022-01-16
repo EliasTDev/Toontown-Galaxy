@@ -7,13 +7,13 @@ from direct.task import Task
 from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
 from otp.otpbase import OTPGlobals
-from direct.showbase import PythonUtil
+from otp.otpbase import PythonUtil
 from direct.showbase import GarbageReport
 import time
 import os
 import sys
 import re
-from libotp import CFSpeech, CFTimeout
+from panda3d.otp import CFSpeech, CFTimeout
 
 class TimeManager(DistributedObject.DistributedObject):
     """

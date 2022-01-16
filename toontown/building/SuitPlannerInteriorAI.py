@@ -27,7 +27,7 @@ class SuitPlannerInteriorAI:
     notify = DirectNotifyGlobal.directNotify.newCategory(
         'SuitPlannerInteriorAI')
 
-    def __init__( self, numFloors, bldgLevel, bldgTrack, zone, respectInvasions=1):
+    def __init__( self, numFloors, bldgLevel, bldgTrack, zone, respectInvasions=0):
         # when the suit planner interior is created, create information
         # about all suits that will exist in this building
         #
@@ -41,7 +41,7 @@ class SuitPlannerInteriorAI:
         # By default, if an invasion is in progress we only generate
         # suits of that kind.  Set this false to turn off this
         # behavior.
-        self.respectInvasions = respectInvasions
+        self.respectInvasions = False
 
         # This dbg var forces the creations of all 1 suit type (overrides level/type restrictions)
         dbg_defaultSuitName = simbase.config.GetString('suit-type', 'random')

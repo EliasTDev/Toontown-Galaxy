@@ -27,7 +27,7 @@ class sbMaildb:
             self.db = MySQLdb.connect(host=host,
                                       port=port,
                                       user=user,
-                                      passwd=passwd,
+                                      password=passwd,
                                       db=db)
         except MySQLdb.OperationalError as e:
             self.log.warning("Failed to connect to MySQL at %s:%d.  sbMaildb is disabled."%(host,port))
@@ -52,7 +52,7 @@ class sbMaildb:
         self.db = MySQLdb.connect(host=self.host,
                                   port=self.port,
                                   user=self.user,
-                                  passwd=self.passwd)
+                                  password=self.passwd)
         cursor = self.db.cursor()
         cursor.execute("USE `%s`"%self.dbname)
         self.log.debug("Reconnected to MySQL server at %s:%d."%(self.host,self.port))

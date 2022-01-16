@@ -6,7 +6,7 @@ from direct.task import Task
 import random
 from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
-from libotp import NametagGroup
+from panda3d.otp import NametagGroup
 
 AnimDict = {
     "mk": (("walk", "walk", 3),

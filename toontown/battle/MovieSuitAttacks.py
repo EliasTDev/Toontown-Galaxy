@@ -13,7 +13,7 @@ from direct.particles import ParticleEffect
 from . import BattleParticles
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
-from libotp import CFSpeech, CFTimeout
+from panda3d.otp import CFSpeech, CFTimeout
 
 notify = DirectNotifyGlobal.directNotify.newCategory('MovieSuitAttacks')
 

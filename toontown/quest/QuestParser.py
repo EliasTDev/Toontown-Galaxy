@@ -21,7 +21,7 @@ from otp.speedchat import SpeedChatGlobals
 from toontown.ai import DistributedBlackCatMgr
 from direct.showbase import PythonUtil
 from direct.interval.IntervalGlobal import *
-from libotp import CFReversed, CFSpeech, CFTimeout
+from panda3d.otp import CFReversed, CFSpeech, CFTimeout
 
 notify = DirectNotifyGlobal.directNotify.newCategory("QuestParser")
 

@@ -26,7 +26,7 @@ from toontown.effects import DustCloud
 from direct.showbase.PythonUtil import Functor
 from toontown.distributed import DelayDelete
 import types, functools
-from libotp import CFThought
+from panda3d.otp import CFThought
 
 """
 import Toon
@@ -3844,7 +3844,7 @@ class Toon(Avatar.Avatar, ToonHead):
         ival = Parallel(
             Func(splat.reparentTo, render),
             Func(splat.setPos, x, y, z),
-            SoundInterval(sound, node = splat, volume = vol),
+            SoundInterval(sound, node = splat, volume = vol ),
             Sequence(ActorInterval(splat, splatName),
                      Func(splat.detachNode)),
             )

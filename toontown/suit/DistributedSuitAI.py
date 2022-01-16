@@ -19,7 +19,7 @@ from toontown.building import FADoorCodes
 from . import DistributedSuitBaseAI
 from toontown.hood import ZoneUtil
 import random
-from libpandadna import SuitLeg
+from panda3d.toontown import SuitLeg
 
 class DistributedSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
     """

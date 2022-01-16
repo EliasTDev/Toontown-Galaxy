@@ -27,7 +27,7 @@ from toontown.makeatoon import NameGenerator
 from otp.otpbase import OTPGlobals
 from toontown.battle import BattleParticles
 from toontown.minigame import PhotoGameBase
-from libpandadna import *
+from panda3d.toontown import *
 # some constants
 
 WORLD_SCALE = 2.
@@ -70,11 +70,11 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
 
 
     # keyboard controls
-    FIRE_KEY  = "control"
-    UP_KEY    = "arrow_up"
-    DOWN_KEY  = "arrow_down"
-    LEFT_KEY  = "arrow_left"
-    RIGHT_KEY = "arrow_right"
+    FIRE_KEY  = base.JUMP
+    UP_KEY    = base.MOVE_FORWARD
+    DOWN_KEY  = base.MOVE_BACKWARDS
+    LEFT_KEY  = base.MOVE_LEFT
+    RIGHT_KEY = base.MOVE_RIGHT
 
     INTRO_TASK_NAME = "PhotoGameIntro"
     INTRO_TASK_NAME_CAMERA_LERP = "PhotoGameIntroCamera"

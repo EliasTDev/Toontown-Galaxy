@@ -6,14 +6,13 @@
 #===============================================================================
 from direct.showbase.DirectObject import DirectObject
 
-from pandac.PandaModules import ModifierButtons
-
-ROTATE_LEFT_KEY = "arrow_left"
-ROTATE_RIGHT_KEY = "arrow_right"
-FORWARD_KEY = "arrow_up"
-BACKWARDS_KEY = "arrow_down"
-
-THROW_PIE_KEYS = ["control", "delete", "insert"]
+from panda3d.core import ModifierButtons
+ROTATE_LEFT_KEY = base.MOVE_LEFT
+ROTATE_RIGHT_KEY = base.MOVE_RIGHT
+FORWARD_KEY = base.MOVE_FORWARD
+BACKWARDS_KEY =  base.MOVE_BACKWARDS
+#TODO add insert to keybinds 
+THROW_PIE_KEYS = [base.JUMP, base.THROW, "insert"]
 
 class PartyCogActivityInput(DirectObject):
     """Manager for all keyboard input for the party cog activity"""

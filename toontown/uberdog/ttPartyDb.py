@@ -31,7 +31,7 @@ class ttPartyDb:
             self.db = MySQLdb.connect(host=host,
                                       port=port,
                                       user=user,
-                                      passwd=passwd,
+                                      password=passwd,
                                       )
         except MySQLdb.OperationalError as e:
             self.notify.warning("Failed to connect to MySQL db=%s at %s:%d.  ttMaildb DB is disabled."%(db,host,port))
@@ -146,7 +146,7 @@ class ttPartyDb:
         self.db = MySQLdb.connect(host=self.host,
                                   port=self.port,
                                   user=self.user,
-                                  passwd=self.passwd)
+                                  password=self.passwd)
         cursor = self.db.cursor()
         cursor.execute("USE `%s`"%self.dbname)
         self.notify.debug("Reconnected to MySQL server at %s:%d."%(self.host,self.port))

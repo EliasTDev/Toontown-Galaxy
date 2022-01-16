@@ -29,7 +29,7 @@ from toontown.hood import EstateHood
 from toontown.hood import PartyHood
 from toontown.toonbase import TTLocalizer
 from toontown.parties.PartyGlobals import GoToPartyStatus
-from libpandadna import DNAStorage
+from panda3d.toontown import DNAStorage
 
 class PlayGame(StateData.StateData):
     """PlayGame class"""

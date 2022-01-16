@@ -27,7 +27,7 @@ from direct.task import Task
 import random
 import math
 from toontown.coghq import CogDisguiseGlobals
-from libotp import *
+from panda3d.otp import *
 # This pointer keeps track of the one DistributedSellbotBoss that
 # should appear within the avatar's current visibility zones.  If
 # there is more than one DistributedSellbotBoss visible to a client at
@@ -1879,7 +1879,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                 Func(node.show),
                 Parallel(node.posInterval(1, Point3(x, y, 0), fluid = 1),
                          node.hprInterval(1, VBase3(h, 0, 0), fluid = 1),
-                         Sequence(SoundInterval(self.strafeSfx[i], volume = 0.2, node = self), duration = 0),
+                         Sequence(SoundInterval(self.strafeSfx[i], volume = 0.2 , node = self), duration = 0),
                          ),
                 Func(node.detachNode)))
 

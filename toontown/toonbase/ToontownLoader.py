@@ -4,8 +4,8 @@ from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import *
 from direct.showbase import Loader
 from toontown.toontowngui import ToontownLoadingScreen
-from libotp import CImpulse
-from libpandadna import loadDNAFile, loadDNAFileAI
+from panda3d.otp import CImpulse
+from panda3d.toontown import loadDNAFile, loadDNAFileAI
 
 class ToontownLoader(Loader.Loader):
     """ToontownLoader class"""

@@ -61,3 +61,4 @@ Temporary Items
 *.db
 *.json
 src/src/dependencies/MongoDB/GardeningDatabase/mongod.lock
+panda/**/

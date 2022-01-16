@@ -5,7 +5,7 @@ from direct.fsm import StateData
 from otp.otpbase import OTPLocalizer
 from otp.otpbase import OTPGlobals
 from otp.uberdog import RejectCode
-from libotp import NametagGlobals
+from panda3d.otp import NametagGlobals
 
 globalFriendSecret = None
 

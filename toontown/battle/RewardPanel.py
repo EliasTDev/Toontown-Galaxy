@@ -1202,7 +1202,7 @@ class RewardPanel(DirectFrame):
             
             # for each track we've reached the end up, create an end track interval
             for i in range(len(endTracks)):
-                if endTracks[i] is 1:
+                if endTracks[i] == 1:
                         track += self.getEndTrackIntervalList(toon,toonList,i)
                         
             # at the end, cleanup and cause all the endtrack frames to vanish

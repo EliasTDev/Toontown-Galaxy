@@ -8,7 +8,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.actor import Actor
 from . import ToonInteriorColors
 from toontown.hood import ZoneUtil
-from libpandadna import DNADoor
+from panda3d.toontown import DNADoor
 
 class DistributedPetshopInterior(DistributedObject.DistributedObject):
     if __debug__:

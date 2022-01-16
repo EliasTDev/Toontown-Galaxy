@@ -16,7 +16,7 @@ from . import DistributedAnimatedProp
 from toontown.distributed import DelayDelete
 from toontown.toonbase import TTLocalizer
 from toontown.hood import ZoneUtil
-from libotp import (CFSpeech, CFTimeout, NametagGroup)
+from panda3d.otp import (CFSpeech, CFTimeout, NametagGroup)
 
 class DistributedKnockKnockDoor(DistributedAnimatedProp.DistributedAnimatedProp):
     """
