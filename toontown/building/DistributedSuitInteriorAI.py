@@ -438,13 +438,16 @@ class DistributedSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.battle.generateWithRequired(self.zoneId)
 
         # We get a bonus factor applied toward each attack's experience credit.
-        mult = getCreditMultiplier(self.currentFloor)
+
+        #Have constant double exp multiplier in building
+        #Also have the highest multiplier be consistent throughought the building
+        mult = getCreditMultiplier(self.topFloor) * getInvasionMultiplier()
         
         # If there is an invasion, multiply the exp for the duration of this battle
         # Now, if the invasion ends midway through this battle, the players will
         # continue getting credit. This is ok I guess.
-        if self.air.suitInvasionManager.getInvading():
-            mult *= getInvasionMultiplier()
+    #    if self.air.suitInvasionManager.getInvading():
+            #mult *= getInvasionMultiplier()
         
         self.battle.battleCalc.setSkillCreditMultiplier(mult)
 
