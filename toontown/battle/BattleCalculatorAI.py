@@ -1444,9 +1444,10 @@ class BattleCalculatorAI:
                 expList = [0, 0, 0, 0, 0, 0, 0]
                 self.toonSkillPtsGained[id] = expList
                 
+            #expList[trk] = min(ExperienceCap,
+                            #   expList[trk] + (lvl + 1) * self.__skillCreditMultiplier)
             expList[trk] = min(ExperienceCap,
-                               expList[trk] + (lvl + 1) * self.__skillCreditMultiplier)
-
+                                 expList[trk] + 1 * self.__skillCreditMultiplier)
     def __clearTgtDied(self, tgt, lastAtk, currAtk):
         """
         tgt, the target (in this case a suit)

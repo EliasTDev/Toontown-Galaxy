@@ -541,7 +541,7 @@ class InventoryNew(InventoryBase.InventoryBase, DirectFrame):
             mult = self.__battleCreditMultiplier
             if self.__respectInvasions:
                 mult *= self.__invasionCreditMultiplier
-            self.setDetailCredit(track, (level + 1) * mult)
+            self.setDetailCredit(track, ( 1) * mult)
         else:
             self.setDetailCredit(track, None)
         self.detailCreditLabel.show()
