@@ -78,7 +78,7 @@ class ToontownControlManager(ControlManager.ControlManager):
             ist.append(inputState.watch("turnRight", "mouse-look_right", "mouse-look_right-done"))
             ist.append(inputState.watch("turnRight", "force-turnRight", "force-turnRight-stop"))
         # Jump controls
-        if self.wantWASD:
+        if base.wantWASD:
             ist.append(inputState.watchWithModifiers("jump", base.JUMP))
         else:
             ist.append(inputState.watch("jump", "control", "control-up"))
@@ -155,7 +155,7 @@ class ToontownControlManager(ControlManager.ControlManager):
                 self.istNormal.append(inputState.watchWithModifiers("turnRight", "arrow_right", inputSource=inputState.ArrowKeys))
             
     def disableWASD(self):#Disables WASD for when chat is open.
-        if self.wantWASD:
+        if base.wantWASD:
             self.forceTokens=[#Forces all keys to return 0. This won't affect chat input.
                 inputState.force(
                   "jump", 0, 'ControlManager.disableWASD'),
@@ -176,7 +176,7 @@ class ToontownControlManager(ControlManager.ControlManager):
                 
                 
     def enableWASD(self):#Enables WASD after chat is closed.
-        if self.wantWASD:
+        if base.wantWASD:
             if self.forceTokens:
                 for token in self.forceTokens:#Release all the forced keys we added earlier.
                     token.release()
@@ -189,8 +189,8 @@ class ToontownControlManager(ControlManager.ControlManager):
         """
         #base.wantWASD = base.wan
 
-        self.wantWASD = base.wantWASD#Reload wantWASD if it was recently changed.
-        if self.wantWASD:       
+        
+        if base.wantWASD:       
             for token in self.istNormal:
                 token.release()#Release arrow key input
             self.istNormal = []
