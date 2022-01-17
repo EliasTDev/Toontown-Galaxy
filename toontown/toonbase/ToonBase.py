@@ -297,7 +297,8 @@ class ToonBase(OTPBase.OTPBase):
             base.setFrameRateMeter(False)
         #self.resetMusic = self.loader.loadMusic("phase_3/audio/bgm/MIDI_Events_16channels.ogg")
         self.wantWASD =  base.MOVE_FORWARD != 'arrow_up' and base.MOVE_BACKWARDS != 'arrow_down' and base.MOVE_LEFT != 'arrow_left' and base.MOVE_RIGHT != 'arrow_right'
-        
+        self.accept("winow-event", self.windowEvent)
+
     def reloadControls(self):
         self.ignore(self.SCREENSHOT)
         self.MOVE_FORWARD = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyUp).lower()
@@ -458,22 +459,51 @@ class ToonBase(OTPBase.OTPBase):
         # And define a bunch of cells along the margins.
         mm = self.marginManager
         self.leftCells = [
-            mm.addGridCell(0, 1, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(0, 2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(0, 3, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
-            ]
+            mm.addGridCell(0, 1.333, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 2.667, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 4, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+        ]
         self.bottomCells = [
-            mm.addGridCell(0.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(1.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(2.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(3.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(4.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
-            ]
+            mm.addGridCell(0.5, 0.2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(1.5, 0.2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(2.5, 0.2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(3.5, 0.2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(4.5, 0.2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+        ]
         self.rightCells = [
-            mm.addGridCell(5, 2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(5, 1, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
-            ]
+            # mm.addGridCell(5, 2.667, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(5, 1.333, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+        ]
 
+    def windowEvent(self, win):
+        super().windowEvent(win)
+        self.reloadNametags(win)
+
+    def reloadNametags(self, win):
+        mm = self.marginManager
+        for cell in self.leftCells:
+            mm.setCellAvailable(cell, False)
+        for cell in self.bottomCells:
+            mm.setCellAvailable(cell, False)
+        for cell in self.rightCells:
+            mm.setCellAvailable(cell, False)
+        self.leftCells = [
+            mm.addGridCell(0, 1.333, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 2.667, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 4, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+        ]
+        self.bottomCells = [
+            mm.addGridCell(0.5, 0.25, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(1.5, 0.25, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(2.5, 0.25, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(3.5, 0.25, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(4.5, 0.25, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+        ]
+        self.rightCells = [
+            # mm.addGridCell(5, 2.667, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(5, 1.333, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+        ]
+        
     def setCellsAvailable(self, cell_list, available):
         """setCellsAvailable(self, cell_list, bool available)
 
