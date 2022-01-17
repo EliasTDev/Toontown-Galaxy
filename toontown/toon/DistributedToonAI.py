@@ -2430,10 +2430,15 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
 
     def addResistanceMessage(self, textId):
         msgs = self.getResistanceMessages()
+        doId = self.getAvatarIdFromSender()
         #look through the array and find the textId
         for i in range(len(msgs)):
             if msgs[i][0] == textId:
-                msgs[i][1] += 1
+                if msgs[i[1]] < 32767:
+                    msgs[i][1] += 1
+                else:
+                    self.notify.warning(f"Toon {doId} tried to add a unite when they are already at limit")
+                    return
                 self.b_setResistanceMessages(msgs)
                 return
 

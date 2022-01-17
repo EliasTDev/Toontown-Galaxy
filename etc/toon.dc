@@ -590,7 +590,7 @@ dclass DistributedToon: DistributedPlayer {
   setSleepAutoReply(uint32 fromId) broadcast clsend ownrecv;
 
   // Special resistance SpeedChat messages we have earned.
-  setResistanceMessages(pair32 resistanceMessages[] = {}) required ownrecv db;
+  setResistanceMessages(pair16[] = []) required ownrecv db;
 
   // Pet trick-training phrases
   setPetTrickPhrases(uint8array petTricks = {0,}) required ownrecv db;
