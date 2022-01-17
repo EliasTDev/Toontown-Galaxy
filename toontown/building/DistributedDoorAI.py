@@ -204,8 +204,6 @@ class DistributedDoorAI(DistributedObjectAI.DistributedObjectAI):
         lockedVal = self.isLockedDoor()
         
         # Check that player has full access
-        if not ToontownAccessAI.canAccess(avatarID, self.zoneId):
-            lockedVal = True
             
         if lockedVal:
             self.sendReject(avatarID, lockedVal)
@@ -234,10 +232,7 @@ class DistributedDoorAI(DistributedObjectAI.DistributedObjectAI):
             doorFsm.request('opening')
     
     def requestExit(self):
-        assert(self.debugPrint("requestExit()"))
         avatarID = self.air.getAvatarIdFromSender()
-        assert(self.notify.debug("  avatarID:%s" % (str(avatarID),)))
-
         # Make sure you send the avatar exit before telling the door to
         # open Otherwise the client will get the open door and will not be
         # on the list of avatars to walk through the door yet.
@@ -246,17 +241,13 @@ class DistributedDoorAI(DistributedObjectAI.DistributedObjectAI):
         self.enqueueAvatarIdExit(avatarID)
         
     def enqueueAvatarIdExit(self, avatarID):
-        assert(self.debugPrint("enqueueAvatarIdExit(avatarID=%s)"%(avatarID,)))
-        assert(self.debugPrint("enqueueAvatarIdExit(avatarsWhoAreExiting=%s)"%(self.avatarsWhoAreExiting,)))
         if avatarID in self.avatarsWhoAreEntering:
             del self.avatarsWhoAreEntering[avatarID]
-        elif avatarID not in self.avatarsWhoAreExiting:
-            self.avatarsWhoAreExiting[avatarID]=1
-            self.openDoor(self.exitDoorFSM)
         else:
-            assert(self.notify.debug(str(avatarID)
-                    +" requested an exit, and they're already exiting"))
-    
+            if avatarID not in self.avatarsWhoAreExiting:
+                self.avatarsWhoAreExiting[avatarID] = 1
+                self.openDoor(self.exitDoorFSM)
+
     def requestSuitEnter(self, avatarID):
         """
         unlike requestEnter(), which is for toons, this is not a

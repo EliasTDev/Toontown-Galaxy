@@ -180,6 +180,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
                           'Battle',
                           'neutral',
                           'WalkFromStreet',
+                          'FromCogHQ'
                           'ToSky',
                           'ToCogHQ',
                           'Walk']),
