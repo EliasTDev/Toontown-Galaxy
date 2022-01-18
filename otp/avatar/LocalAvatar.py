@@ -681,6 +681,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             return
         self.avatarControlsEnabled=0
         self.ignoreAnimationEvents()
+        self.controlManager.setWASDTurn(1)
         self.controlManager.disable()
         self.clearPageUpDown()
 
@@ -1771,7 +1772,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         #print("trackAnimToSpeed %s" % (random.random()))
         speed, rotSpeed, slideSpeed = self.controlManager.getSpeeds()
 
-        if (speed != 0.0 or rotSpeed != 0.0 or inputState.isSet("jump")):
+        if (speed != 0.0 or rotSpeed != 0.0 or slideSpeed != 0.0 or inputState.isSet("jump")):
             # did we just start moving?
             if not self.movingFlag:
                 self.movingFlag = 1
@@ -1846,7 +1847,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
                 self.emoteTrack = None
             if action == OTPGlobals.WALK_INDEX or action == OTPGlobals.REVERSE_INDEX:
                 self.walkSound()
-            elif action == OTPGlobals.RUN_INDEX:
+            elif (action == OTPGlobals.RUN_INDEX or action == OTPGlobals.STRAFE_LEFT_INDEX  
+                  or action == OTPGlobals.STRAFE_RIGHT_INDEX):
                 self.runSound()
             else:
                 self.stopSound()

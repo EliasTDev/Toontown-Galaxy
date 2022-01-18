@@ -1951,7 +1951,6 @@ class Toon(Avatar.Avatar, ToonHead):
             if (forwardSpeed >= ToontownGlobals.RunCutOff):
                 # Running
                 action = OTPGlobals.RUN_INDEX
-            #TODO implement strafing when wasd support is added
             elif (forwardSpeed > ToontownGlobals.WalkCutOff):
                 # Walking
                 action = OTPGlobals.WALK_INDEX
@@ -1961,6 +1960,11 @@ class Toon(Avatar.Avatar, ToonHead):
             elif (rotateSpeed != 0.0):
                 # Spin in place
                 action = OTPGlobals.WALK_INDEX
+
+            elif slideSpeed > ToontownGlobals.RunCutOff:
+                action = OTPGlobals.STRAFE_RIGHT_INDEX
+            elif slideSpeed < -ToontownGlobals.RunCutOff:
+                action = OTPGlobals.STRAFE_LEFT_INDEX
             else:
                 # Stand still
                 action = OTPGlobals.STAND_INDEX
@@ -1969,7 +1973,20 @@ class Toon(Avatar.Avatar, ToonHead):
             # change the motion state before we proceed
             self.motion.enter()
             self.motion.setState(anim, rate)
-            self.orbitalCamera.setGeomNodeH(0)
+            if action == OTPGlobals.STRAFE_LEFT_INDEX:
+                base.localAvatar.orbitalCamera.setGeomNodeH(90)
+            elif action == OTPGlobals.STRAFE_RIGHT_INDEX:
+                base.localAvatar.orbitalCamera.setGeomNodeH(-90)
+            elif action == OTPGlobals.RUN_INDEX:
+                if slideSpeed > ToontownGlobals.RunCutOff:
+                    base.localAvatar.orbitalCamera.setGeomNodeH(-45)
+                if slideSpeed < -ToontownGlobals.RunCutOff:
+                    base.localAvatar.orbitalCamera.setGeomNodeH(45)
+                else:
+                    base.localAvatar.orbitalCamera.setGeomNodeH(0)
+            else:
+                base.localAvatar.orbitalCamera.setGeomNodeH(0)
+
             if (anim != self.playingAnim):
                 self.playingAnim = anim
                 self.playingRate = rate
@@ -2059,7 +2076,9 @@ class Toon(Avatar.Avatar, ToonHead):
             ("neutral", 1.0),
             ("walk", 1.0),
             ("run", 1.0),
-            ("walk", -1.0)
+            ("walk", -1.0),
+            ("run", 1.0), #strafe left
+            ("run", 1.0), #strafe right 
             )
         self.setSpeed(self.forwardSpeed, self.rotateSpeed, self.slideSpeed)
         self.setActiveShadow(1)
@@ -2078,9 +2097,11 @@ class Toon(Avatar.Avatar, ToonHead):
             ("sad-neutral", 1.0),
             ("sad-walk", 1.2),
             ("sad-walk", 1.2),
-            ("sad-walk", -1.0)
+            ("sad-walk", -1.0),
+            ("sad-walk", 1.0), #strafe left
+            ("sad-walk", 1.0),# strafe right
             )
-        self.setSpeed(0, 0)
+        self.setSpeed(0, 0, 0)
 
         # disable body emotes
         Emote.globalEmote.disableBody(self, "toon, enterSad")
@@ -2102,7 +2123,9 @@ class Toon(Avatar.Avatar, ToonHead):
             ("catch-neutral", 1.0),
             ("catch-run", 1.0),
             ("catch-run", 1.0),
-            ("catch-run", -1.0)
+            ("catch-run", -1.0),
+            ("catch-run", 1.0), #strafe left
+            ("catch-run", 1.0), #strafe right
             )
         self.setSpeed(self.forwardSpeed, self.rotateSpeed, self.slideSpeed)
         self.setActiveShadow(1)
@@ -2122,7 +2145,8 @@ class Toon(Avatar.Avatar, ToonHead):
             ("catch-eatneutral", 1.0),
             ("catch-eatnrun", 1.0),
             ("catch-eatnrun", 1.0),
-            ("catch-eatnrun", -1.0)
+            ("catch-eatnrun", -1.0),
+            ("catch-eatnrun", 1.0), #strafe left 
             )
         self.setSpeed(self.forwardSpeed, self.rotateSpeed, self.slideSpeed)
         self.setActiveShadow(0)
