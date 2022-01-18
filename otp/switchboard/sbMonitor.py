@@ -35,14 +35,14 @@ class sbMonitor(object):
                                      host=sbConfig.lastSeenDBhost,
                                      port=sbConfig.lastSeenDBport,
                                      user=sbConfig.lastSeenDBuser,
-                                     passwd=sbConfig.lastSeenDBpasswd,
+                                     password=sbConfig.lastSeenDBpasswd,
                                      dbname=sbConfig.lastSeenDBdb)
 
         self.mailDB = sbMaildb(log=self.printlog,
                                host=sbConfig.mailDBhost,
                                port=sbConfig.mailDBport,
                                user=sbConfig.mailDBuser,
-                               passwd=sbConfig.mailDBpasswd,
+                               password=sbConfig.mailDBpasswd,
                                db=sbConfig.mailDBdb)
 
         

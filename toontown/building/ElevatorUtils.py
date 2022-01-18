@@ -197,5 +197,5 @@ def getRideElevatorInterval(type = ELEVATOR_NORMAL):
                             Point3(0, 14, 4),
                             startPos=Point3(0, 14, 4.2)),
             )
-    base.camLens.setFov(cameraValue)
+    #base.camLens.setFov(cameraValue)
     return ival

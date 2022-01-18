@@ -69,7 +69,7 @@ class DistributedPhysicsWorld(DistributedObject.DistributedObject, PhysicsWorldB
                     windMillSoundInterval = SoundInterval(windmillSfx, node=pandaNodePathGeom,
                                                        listenerNode = base.camera,
                                                        seamlessLoop = True,
-                                                       volume = 0.5)
+                                                       volume = 0.5 )
                     windMillSoundInterval.loop()
                     self.physicsSfxDict[index] = (windmillSfx, windMillSoundInterval)
                     break            
@@ -86,7 +86,7 @@ class DistributedPhysicsWorld(DistributedObject.DistributedObject, PhysicsWorldB
                     moverSoundInterval = SoundInterval(moverSfx, node=pandaNodePathGeom,
                                                        listenerNode = base.camera,
                                                        seamlessLoop = True,
-                                                       volume = 0.5)
+                                                       volume = 0.5  )
                     moverSoundInterval.start()
                     self.physicsSfxDict[index] = (moverSfx, moverSoundInterval,index)
                     break

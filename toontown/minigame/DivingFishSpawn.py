@@ -43,23 +43,23 @@ class DivingFishSpawn(DirectObject):
             # clown fish
             fish = Actor.Actor('phase_4/models/char/clownFish-zero.bam',{'anim': loadBase + 'clownFish-swim.bam'})
             fish.name = 'clown'
-        elif fishcode is 1:
+        elif fishcode == 1:
             # pbj fish
             fish = Actor.Actor("phase_4/models/char/PBJfish-zero.bam",{'anim': "phase_4/models/char/PBJfish-swim.bam"})
             fish.name = 'pbj'
-        elif fishcode is 2:
+        elif fishcode == 2:
             # bearAcuda
             fish = Actor.Actor("phase_4/models/char/BearAcuda-zero.bam",{'anim': "phase_4/models/char/BearAcuda-swim.bam"})
             fish.name = 'bear'
-        elif fishcode is 3:
+        elif fishcode == 3:
             fish = Actor.Actor(loadBase + 'balloonFish-zero.bam',{'anim': loadBase + 'balloonFish-swim.bam'})    
             fish.name = 'balloon'
             # balloonFish
-        elif fishcode is 4:
+        elif fishcode == 4:
             fish = Actor.Actor(loadBase + 'nurseShark-zero.bam',{'anim': loadBase + 'nurseShark-swim.bam'})    
             fish.name = 'nurse'
             # nurse shark
-        elif fishcode is 5:
+        elif fishcode == 5:
             fish = Actor.Actor(loadBase + 'pianoTuna-zero.bam',{'anim': loadBase + 'pianoTuna-swim.bam'})    
             fish.name = 'piano'
             # piano tuna
@@ -118,7 +118,7 @@ class DivingFishSpawn(DirectObject):
             fish.setScale(1.4)
             cSphere = CollisionSphere(0,0,0,1)
             fishSoundName = "Piano_Tuna.ogg"
-            if self.direction is -1:
+            if self.direction == -1:
                 fish.setH(0)
             else:
                 fish.setH(180)

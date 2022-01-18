@@ -13,7 +13,7 @@ from toontown.toonbase import TTLocalizer
 from direct.task.Task import Task
 from direct.distributed import ClockDelta
 from panda3d.core import Point3, Quat
-from libotp import *
+from panda3d.otp import *
 from toontown.toontowngui import TTDialog
 from otp.otpbase import OTPLocalizer
 from toontown.parties import PartyGlobals

@@ -96,8 +96,8 @@ class DistributedBattleAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
         timeForFaceoff = self.calcFaceoffTime(self.pos, 
                          self.initialSuitPos) + FACEOFF_TAUNT_T + \
                                  SERVER_BUFFER_TIME
-        if self.interactivePropTrackBonus >= 0:
-            timeForFaceoff += FACEOFF_LOOK_AT_PROP_T
+        #if self.interactivePropTrackBonus >= 0:
+            #timeForFaceoff += FACEOFF_LOOK_AT_PROP_T
         self.timer.startCallback(timeForFaceoff,
                          self.__serverFaceOffDone)
         return None

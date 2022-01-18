@@ -141,7 +141,7 @@ class GenericAnimatedProp(AnimatedProp.AnimatedProp):
             result = SoundInterval(theSound,
                                    node=self.node,
                                    listenerNode = base.localAvatar,
-                                   volume = sfxVolume,
+                                   volume = sfxVolume ,
                                    cutOff = cutoff,
                                    startTime = 0,
                                    duration = soundDur)

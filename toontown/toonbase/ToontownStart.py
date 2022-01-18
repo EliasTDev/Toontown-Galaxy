@@ -31,39 +31,6 @@ class game:
     process = "client"
 builtins.game = game()
 
-from settings import Settings 
-mode = not Settings.getWindowedMode()
-music = Settings.getMusic()
-sfx = Settings.getSfx()
-toonChatSounds = Settings.getToonChatSounds()
-musicVol = Settings.getMusicVolume()
-sfxVol = Settings.getSfxVolume()
-resList = [(640, 480),
-               (800, 600),
-               (1024, 768),
-
-               (1280, 720),
-               (1280, 1024),
-               (1440, 900),
-               (1600, 1200),
-               (1920, 1080),
-               (2560, 1440),
-               (4096, 2160)]
-#copied from Resolution in settingsFile.h
-res = resList[Settings.getResolution()]
-embed = Settings.getEmbeddedMode()
-if mode == None:
-    mode = 1
-if res == None:
-    res = (800,600)
-loadPrcFileData('Settings: res', 'win-size %d %d' % (res[0], res[1]))
-loadPrcFileData('Settings: fullscreen', 'fullscreen %s' % mode)
-loadPrcFileData('Settings: music', 'audio-music-active %s' % music)
-loadPrcFileData('Settings: sfx', 'audio-sfx-active %s' % sfx)
-loadPrcFileData('Settings: musicVol', 'audio-master-music-volume %s' % musicVol)
-loadPrcFileData('Settings: sfxVol', 'audio-master-sfx-volume %s' % sfxVol)
-loadPrcFileData('Settings: toonChatSounds', 'toon-chat-sounds %s' % toonChatSounds)
-
 
 import time
 import os

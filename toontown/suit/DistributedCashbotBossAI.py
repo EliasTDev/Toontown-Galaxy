@@ -478,6 +478,7 @@ class DistributedCashbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
 
     def recordHit(self, damage):
         avId = self.air.getAvatarIdFromSender()
+        toon = self.air.doId2do.get(avId)
         assert self.notify.debug('%s.recordHit(%s, %s)' % (self.doId, avId, damage))
         if not self.validate(avId, avId in self.involvedToons,
                              'recordHit from unknown avatar'):
@@ -485,6 +486,18 @@ class DistributedCashbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
 
         if self.state != 'BattleThree':
             return
+        if  toon.getStaffAccess() < 200:
+            # They are a not staff member so dont allow insane damage
+            if damage > ToontownGlobals.maxCashbotBossDamage:
+            #Impossible to do this unless your staff 
+            #  For now dont allow it to prevent hackers
+            #Max damage when throwing safe
+                self.validate(avId, avId in self.involvedToons, damage <= ToontownGlobals.maxCashbotBossDamage , f"Invalid boss damage in CFO {damage}")
+                return
+            #They are a staff member 
+             
+
+        #TODO check if toon is at a crane to do damage to prevent hacking
 
         # Record a successful hit in battle three.
         self.b_setBossDamage(self.bossDamage + damage)

@@ -3,11 +3,10 @@ from otp.otpbase import OTPGlobals
 import sys
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.otpbase import OTPLocalizer
 from direct.task import Task
 from otp.chat.ChatInputTyped import ChatInputTyped
-
 class ChatInputWhiteList(FSM.FSM, DirectEntry):
     notify = DirectNotifyGlobal.directNotify.newCategory("ChatInputWhiteList")
     
@@ -164,8 +163,8 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
         self.guiItem.setAcceptEnabled(True)
         self.accept('uber-escape',self.handleEscape)
         if self.wantHistory:
-            self.accept('arrow_up-up', self.getPrevHistory)
-            self.accept('arrow_down-up', self.getNextHistory)
+            self.accept(f'{base.MOVE_FORWARD}-up', self.getPrevHistory)
+            self.accept(f'{base.MOVE_BACKWARDS}-up', self.getNextHistory)
         
     def deactivate(self):
         self.ignore('uber-escape')

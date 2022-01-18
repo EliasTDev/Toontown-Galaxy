@@ -20,7 +20,7 @@ from otp.avatar import Emote
 from direct.task import Task
 from . import QuietZoneState
 from toontown.distributed import ToontownDistrictStats
-from libotp import *
+from panda3d.otp import *
 
 class Place(StateData.StateData,
             FriendsListManager.FriendsListManager):
@@ -288,7 +288,7 @@ class Place(StateData.StateData,
         # Play the sit animations
         base.localAvatar.b_setAnimState('SitStart', 1)
         # Just push up to get up again
-        self.accept("arrow_up", self.fsm.request, extraArgs=['walk'])
+        self.accept(base.MOVE_FORWARD, self.fsm.request, extraArgs=['walk'])
 
     def exitSit(self):
         # The friends list is no longer available.
@@ -297,7 +297,7 @@ class Place(StateData.StateData,
         # Clean up teleport handling.
         base.localAvatar.setTeleportAvailable(0)
         self.ignore("teleportQuery")
-        self.ignore("arrow_up")
+        self.ignore(base.MOVE_FORWARD)
 
     # drive state
     
@@ -333,7 +333,6 @@ class Place(StateData.StateData,
 
         # Start the smart camera, to put it in the right place, but be
         # prepared to stop it again in exitPush
-        base.localAvatar.attachCamera()
         base.localAvatar.startUpdateSmartCamera()
 
         # Specifically start posHpr broadcast since we aren't
@@ -725,14 +724,11 @@ class Place(StateData.StateData,
     # door in state
 
     def enterDoorIn(self, requestStatus):
-        assert(self.notify.debug("enterDoorIn(requestStatus="
-                +str(requestStatus)+")"))
         # Turn off the little red arrows while we pass through the
         # door.
         NametagGlobals.setMasterArrowsOn(0)
 
         door=base.cr.doId2do.get(requestStatus['doorDoId'])
-        assert(door)
         door.readyToExit()
         #door_origin=door.getDoorNodePath()
         #assert(not door_origin.isEmpty())

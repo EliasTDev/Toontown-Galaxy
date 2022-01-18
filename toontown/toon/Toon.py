@@ -26,7 +26,7 @@ from toontown.effects import DustCloud
 from direct.showbase.PythonUtil import Functor
 from toontown.distributed import DelayDelete
 import types, functools
-from libotp import CFThought
+from panda3d.otp import CFThought
 
 """
 import Toon
@@ -808,6 +808,7 @@ class Toon(Avatar.Avatar, ToonHead):
 
         self.forwardSpeed = 0.0
         self.rotateSpeed = 0.0
+        self.slideSpeed = 0.0
         self.newTask = None 
 
         # Set Avatar Type (Toon, Teen, or Pirate)
@@ -1927,12 +1928,13 @@ class Toon(Avatar.Avatar, ToonHead):
             self.jar = None
 
 
-    def setSpeed(self, forwardSpeed, rotateSpeed):
+    def setSpeed(self, forwardSpeed, rotateSpeed, slideSpeed):
         """setSpeed(self, float forwardSpeed, float rotateSpeed)
 
-        Sets the indicated forward velocity and rotational velocities
+        Sets the indicated forward velocity, strafe velocity,  and rotational velocities
         of the toon.  This is used when in the Happy and Sad states to
         determine which animation to play.
+        
 
         The return value is one of RUN_INDEX, WALK_INDEX, etc., or
         None if the animation does not specialize for the various
@@ -1940,7 +1942,7 @@ class Toon(Avatar.Avatar, ToonHead):
         """
         self.forwardSpeed = forwardSpeed
         self.rotateSpeed = rotateSpeed
-
+        self.slideSpeed = slideSpeed
         action = None
 
         if self.standWalkRunReverse != None:
@@ -1958,6 +1960,11 @@ class Toon(Avatar.Avatar, ToonHead):
             elif (rotateSpeed != 0.0):
                 # Spin in place
                 action = OTPGlobals.WALK_INDEX
+
+            elif slideSpeed > ToontownGlobals.RunCutOff:
+                action = OTPGlobals.STRAFE_RIGHT_INDEX
+            elif slideSpeed < -ToontownGlobals.RunCutOff:
+                action = OTPGlobals.STRAFE_LEFT_INDEX
             else:
                 # Stand still
                 action = OTPGlobals.STAND_INDEX
@@ -1966,6 +1973,24 @@ class Toon(Avatar.Avatar, ToonHead):
             # change the motion state before we proceed
             self.motion.enter()
             self.motion.setState(anim, rate)
+            if action == OTPGlobals.STRAFE_LEFT_INDEX:
+                #If toon starts strafing left rotate that character in that direction
+                base.localAvatar.orbitalCamera.setGeomNodeH(90)
+                #If toon starts strafing right rotate that character in that direction
+
+            elif action == OTPGlobals.STRAFE_RIGHT_INDEX:
+                base.localAvatar.orbitalCamera.setGeomNodeH(-90)
+            elif action == OTPGlobals.RUN_INDEX:
+                #If toon is already running but tries to strafe only rotate them a little 
+                #Else just them to default h value
+                if slideSpeed > ToontownGlobals.RunCutOff:
+                    base.localAvatar.orbitalCamera.setGeomNodeH(-45)
+                if slideSpeed < -ToontownGlobals.RunCutOff:
+                    base.localAvatar.orbitalCamera.setGeomNodeH(45)
+                else:
+                    base.localAvatar.orbitalCamera.setGeomNodeH(0)
+            else:
+                base.localAvatar.orbitalCamera.setGeomNodeH(0)
 
             if (anim != self.playingAnim):
                 self.playingAnim = anim
@@ -2056,9 +2081,11 @@ class Toon(Avatar.Avatar, ToonHead):
             ("neutral", 1.0),
             ("walk", 1.0),
             ("run", 1.0),
-            ("walk", -1.0)
+            ("walk", -1.0),
+            ("run", 1.0), #strafe left
+            ("run", 1.0), #strafe right 
             )
-        self.setSpeed(self.forwardSpeed, self.rotateSpeed)
+        self.setSpeed(self.forwardSpeed, self.rotateSpeed, self.slideSpeed)
         self.setActiveShadow(1)
 
     def exitHappy(self):
@@ -2075,9 +2102,11 @@ class Toon(Avatar.Avatar, ToonHead):
             ("sad-neutral", 1.0),
             ("sad-walk", 1.2),
             ("sad-walk", 1.2),
-            ("sad-walk", -1.0)
+            ("sad-walk", -1.0),
+            ("sad-walk", 1.0), #strafe left
+            ("sad-walk", 1.0),# strafe right
             )
-        self.setSpeed(0, 0)
+        self.setSpeed(0, 0, 0)
 
         # disable body emotes
         Emote.globalEmote.disableBody(self, "toon, enterSad")
@@ -2099,9 +2128,11 @@ class Toon(Avatar.Avatar, ToonHead):
             ("catch-neutral", 1.0),
             ("catch-run", 1.0),
             ("catch-run", 1.0),
-            ("catch-run", -1.0)
+            ("catch-run", -1.0),
+            ("catch-run", 1.0), #strafe left
+            ("catch-run", 1.0), #strafe right
             )
-        self.setSpeed(self.forwardSpeed, self.rotateSpeed)
+        self.setSpeed(self.forwardSpeed, self.rotateSpeed, self.slideSpeed)
         self.setActiveShadow(1)
 
     def exitCatching(self):
@@ -2119,9 +2150,10 @@ class Toon(Avatar.Avatar, ToonHead):
             ("catch-eatneutral", 1.0),
             ("catch-eatnrun", 1.0),
             ("catch-eatnrun", 1.0),
-            ("catch-eatnrun", -1.0)
+            ("catch-eatnrun", -1.0),
+            ("catch-eatnrun", 1.0), #strafe left 
             )
-        self.setSpeed(self.forwardSpeed, self.rotateSpeed)
+        self.setSpeed(self.forwardSpeed, self.rotateSpeed, self.slideSpeed)
         self.setActiveShadow(0)
 
     def exitCatchEating(self):
@@ -2874,7 +2906,7 @@ class Toon(Avatar.Avatar, ToonHead):
             ("run", 1.0),
             ("walk", -1.0)
             )
-        self.setSpeed(self.forwardSpeed, self.rotateSpeed)
+        self.setSpeed(self.forwardSpeed, self.rotateSpeed, self.slideSpeed)
 
         # Wake the toon up
         if (self.isLocal() and emoteIndex != Emote.globalEmote.EmoteSleepIndex):
@@ -3841,7 +3873,7 @@ class Toon(Avatar.Avatar, ToonHead):
         ival = Parallel(
             Func(splat.reparentTo, render),
             Func(splat.setPos, x, y, z),
-            SoundInterval(sound, node = splat, volume = vol),
+            SoundInterval(sound, node = splat, volume = vol ),
             Sequence(ActorInterval(splat, splatName),
                      Func(splat.detachNode)),
             )
@@ -3938,7 +3970,7 @@ class Toon(Avatar.Avatar, ToonHead):
             ("run", 1.0),
             ("run", -1.0)
             )
-        self.setSpeed(self.forwardSpeed, self.rotateSpeed)
+        self.setSpeed(self.forwardSpeed, self.rotateSpeed, self.slideSpeed)
         self.setActiveShadow(1)
 
     def exitCogThiefRunning(self):

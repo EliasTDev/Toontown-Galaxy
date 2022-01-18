@@ -3,7 +3,7 @@
 from . import ShtikerPage
 from toontown.toonbase import ToontownBattleGlobals
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 
@@ -18,7 +18,7 @@ class InventoryPage(ShtikerPage.ShtikerPage):
         ShtikerPage.ShtikerPage.__init__(self)
         self.currentTrackInfo = None
         self.onscreen = 0
-        self.lastInventoryTime = globalClock.getRealTime()
+        self.lastInventoryTime = base.clock.getRealTime()
 
     def load(self):
         ShtikerPage.ShtikerPage.load(self)
@@ -199,8 +199,8 @@ class InventoryPage(ShtikerPage.ShtikerPage):
 
     # for the hotkey that allows quick display of the inventory page
     def acceptOnscreenHooks(self):        
-        self.accept(ToontownGlobals.InventoryHotkeyOn, self.showInventoryOnscreen)
-        self.accept(ToontownGlobals.InventoryHotkeyOff, self.hideInventoryOnscreen)
+        self.accept(base.INVENTORY, self.showInventoryOnscreen)
+        self.accept(f"{base.INVENTORY}-up", self.hideInventoryOnscreen)
 
     def ignoreOnscreenHooks(self):        
         self.ignore(ToontownGlobals.InventoryHotkeyOn)
@@ -208,10 +208,10 @@ class InventoryPage(ShtikerPage.ShtikerPage):
 
     def showInventoryOnscreen(self):
         messenger.send('wakeup')
-        timedif = globalClock.getRealTime() - self.lastInventoryTime  
+        timedif = base.clock.getRealTime() - self.lastInventoryTime  
         if timedif < 0.7:
             return
-        self.lastInventoryTime = globalClock.getRealTime()
+        self.lastInventoryTime = base.clock.getRealTime()
         if self.onscreen or base.localAvatar.questPage.onscreen:
             return
         self.onscreen = 1

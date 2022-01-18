@@ -193,7 +193,7 @@ MAX_JOIN_T = TTLocalizer.BBbattleInputTimeout
 FACEOFF_TAUNT_T = 3.5
 
 # length of time we look at the interactive prop helping toons
-FACEOFF_LOOK_AT_PROP_T = 6
+FACEOFF_LOOK_AT_PROP_T = 3
 
 # The amount of time it takes to open up the elevator doors and walk
 # out.

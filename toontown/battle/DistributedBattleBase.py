@@ -1068,8 +1068,10 @@ class DistributedBattleBase(DistributedNode.DistributedNode, BattleBase):
                 base.camLens.setMinFov(fov/(4/3))
             camTrack.append(Func(setCamFov, self.camFov))
             camTrack.append(Func(camera.wrtReparentTo, self))
-            camTrack.append(Func(camera.setPos, self.camJoinPos))
-            camTrack.append(Func(camera.setHpr, self.camJoinHpr))
+          #  camTrack.append(Func(camera.setPos, self.camJoinPos))
+         #   camTrack.append(Func(camera.setHpr, self.camJoinHpr))
+            camInterval = camera.posHprInterval(0.6, self.camJoinPos, self.camJoinHpr)
+            camTrack.append(camInterval)
             return Parallel(joinTrack, camTrack, name=name)
         else:
             return Sequence(joinTrack, name=name)
@@ -1392,8 +1394,8 @@ class DistributedBattleBase(DistributedNode.DistributedNode, BattleBase):
         self.notify.debug('enterLocalToonWaitForInput()')
         # Move the camera into position
         # (assumes the camera is a child of the battle)
-        camera.setPosHpr(self.camPos, self.camHpr)
-        base.camLens.setMinFov(self.camMenuFov/(4/3))
+        camera.posHprInterval(0.4, self.camPos, self.camHpr, blendType = 'easeInOut').start()
+        base.camLens.setMinFov(self.camMenuFov/(4.0/3.0))
         # No arrows - they just get in the way
         NametagGlobals.setMasterArrowsOn(0)
         # Put local toon into 'Attack' state
@@ -1689,14 +1691,13 @@ class DistributedBattleBase(DistributedNode.DistributedNode, BattleBase):
             # myself go sad.
             self.movie.reset()
             camera.reparentTo(render)
-            camera.setPosHpr(localAvatar,
-                             5.2, 5.45, localAvatar.getHeight() * 0.66,
-                             131.5, 3.6, 0)
+            camera.posHprInterval(0.5, Point3(localAvatar,
+                             5.2, 5.45), Point3(localAvatar.getHeight() * 0.66,
+                             131.5, 3.6), blendType = 'easeInOut').start()
 
         else:
             # Otherwise, reparent the camera back to the toon where it
             # belongs (most of the time).
-            camera.wrtReparentTo(base.localAvatar)
             messenger.send('localToonLeftBattle')
 
         base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov/(4/3))

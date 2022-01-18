@@ -1155,7 +1155,7 @@ class DistributedPartyManagerAI(DistributedObjectAI):
             self.air.writeServerEvent('suspicious', senderId, 'someone else trying to free a zone for this avatar: hostId = %d' % hostId)
             return
         if hostId in self.hostIdToPlanningPartyZoneId:
-            DistributedPartyManagerAI.notify.debug("freeZoneIdFromPlannedParty : freeing zone : hostId = %d, zoneId = %d" % (hostId, zoneId))
+            self.notify.debug("freeZoneIdFromPlannedParty : freeing zone : hostId = %d, zoneId = %d" % (hostId, zoneId))
             self.air.deallocateZone(self.hostIdToPlanningPartyZoneId[hostId])
             del self.hostIdToPlanningPartyZoneId[hostId]
             return

@@ -107,7 +107,7 @@ class MySQLAccountAvatarsDB(DBInterface):
         self.db = MySQLdb.connect(host=self.host,
                                   port=self.port,
                                   user=self.user,
-                                  passwd=self.passwd)
+                                  password=self.passwd)
         # Enable autocommit mode (all explicit calls to commit have been
         # deleted - see NOTES, ISSUE, and RESOLUTION above)
         self.db.autocommit(True)

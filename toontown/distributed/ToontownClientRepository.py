@@ -66,6 +66,7 @@ from . import HoodMgr
 from . import PlayGame
 from toontown.toontowngui import ToontownLoadingBlocker
 from otp.distributed.DisneyMessageTypes import *
+from settings import *
 
 class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
     """ToontownClientRepository class: handle distribution for client"""
@@ -1433,7 +1434,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
             for i in range(0, count):
                 doId = di.getUint32()
                 name = di.getString()
-                dnaString = di.getString()
+                dnaString = di.getBlob()
                 dna = ToonDNA.ToonDNA()
                 dna.makeFromNetString(dnaString)
                 petId = di.getUint32()"""

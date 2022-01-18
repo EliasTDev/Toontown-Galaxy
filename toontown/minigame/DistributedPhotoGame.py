@@ -27,7 +27,7 @@ from toontown.makeatoon import NameGenerator
 from otp.otpbase import OTPGlobals
 from toontown.battle import BattleParticles
 from toontown.minigame import PhotoGameBase
-from libpandadna import *
+from panda3d.toontown import *
 # some constants
 
 WORLD_SCALE = 2.
@@ -70,11 +70,11 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
 
 
     # keyboard controls
-    FIRE_KEY  = "control"
-    UP_KEY    = "arrow_up"
-    DOWN_KEY  = "arrow_down"
-    LEFT_KEY  = "arrow_left"
-    RIGHT_KEY = "arrow_right"
+    FIRE_KEY  = base.JUMP
+    UP_KEY    = base.MOVE_FORWARD
+    DOWN_KEY  = base.MOVE_BACKWARDS
+    LEFT_KEY  = base.MOVE_LEFT
+    RIGHT_KEY = base.MOVE_RIGHT
 
     INTRO_TASK_NAME = "PhotoGameIntro"
     INTRO_TASK_NAME_CAMERA_LERP = "PhotoGameIntroCamera"
@@ -345,6 +345,7 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
         #del self.textureBuffer
             
     def unload(self):
+        self.music.stop()
         self.notify.debug("unload")
         DistributedMinigame.unload(self)
         
@@ -925,7 +926,7 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
             hMove = hMDegree * (1.0 - ZOOMRATIO)
             vMove = vMDegree * (1.0 - ZOOMRATIO)
             self.currentFov = self.zoomFov
-            base.camLens.setFov(self.zoomFov)
+            base.camLens.setMinFov(self.zoomFov/(4.0/3.0))
             self.blackoutNode.show()
             self.swivel.setHpr(self.swivel, (hMove * -self.zoomFlip), (vMove * self.zoomFlip), 0)
             #self.swivel.setH(hCam + (hMove * -self.zoomFlip))
@@ -937,7 +938,7 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
             hMove = hMDegree * ((1.0 - ZOOMRATIO) / ZOOMRATIO)
             vMove = vMDegree * ((1.0 - ZOOMRATIO) / ZOOMRATIO)
             self.currentFov = self.outFov
-            base.camLens.setFov(self.outFov)
+            base.camLens.setMinFov(self.outFov/(4.0/3.0))
             self.blackoutNode.hide()
             self.swivel.setHpr(self.swivel, (hMove * self.zoomFlip), (vMove * -self.zoomFlip), 0)
             #self.swivel.setH(hCam + (hMove * self.zoomFlip))
@@ -980,7 +981,7 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
             hMove = hMDegree * (1.0 - ZOOMRATIO)
             vMove = vMDegree * (1.0 - ZOOMRATIO)
             self.currentFov = self.zoomFov
-            base.camLens.setFov(self.zoomFov)
+            base.camLens.setMinFov(self.zoomFov/(4.0/3.0))
             self.blackoutNode.show()
             #self.swivel.setHpr(self.swivel, (hMove * -self.zoomFlip), (vMove * self.zoomFlip), 0)
             #self.swivel.setH(hCam + (hMove * -self.zoomFlip))
@@ -1008,7 +1009,7 @@ class DistributedPhotoGame(DistributedMinigame, PhotoGameBase.PhotoGameBase):
             hMove = hMDegree * ((1.0 - ZOOMRATIO) / ZOOMRATIO)#* ZOOMRATIO
             vMove = vMDegree * ((1.0 - ZOOMRATIO) / ZOOMRATIO)#* ZOOMRATIO
             self.currentFov = self.outFov
-            base.camLens.setFov(self.outFov)
+            base.camLens.setMinFov(self.outFov/(4.0/3.0))
             #self.blackoutNode.hide()
             #self.swivel.setHpr(self.swivel, (hMove * self.zoomFlip), (vMove * -self.zoomFlip), 0)
             #self.swivel.setH(hCam + (hMove * self.zoomFlip))

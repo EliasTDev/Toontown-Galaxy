@@ -12,9 +12,11 @@
 import collections, types
 
 from direct.distributed.ClockDelta import *
+from direct.distributed import MsgTypes
+
 from direct.interval.IntervalGlobal import *
 
-from libotp import NametagGroup, WhisperPopup
+from panda3d.otp import NametagGroup, WhisperPopup
 
 from otp.otpbase import OTPLocalizer
 from otp.otpbase import OTPGlobals
@@ -40,6 +42,7 @@ from toontown.toonbase import ToontownBattleGlobals
 from toontown.hood import ZoneUtil
 from toontown.toon import ToonDNA, NPCToons
 from toontown.parties import PartyGlobals
+from toontown.suit import DistributedSuitPlanner
 #from toontown.suit import DistributedBossCog
 
 #from otp.ai.AIBaseGlobal import *
@@ -1560,7 +1563,7 @@ class DNA(MagicWord):
     execLocation = MagicWordConfig.EXEC_LOC_SERVER
     arguments = [('part', str, True ), ('value', str, True)]
     accessLevel = 'CREATIVE'
-    affectRange = [MagicWordConfig.AFFECT_SELF]   
+    
     def handleWord(self, invoker, avId, toon, *args):
         dna = ToonDNA.ToonDNA()
         dna.makeFromNetString(invoker.getDNAString())
@@ -2219,7 +2222,7 @@ class Promote(MagicWord):
         return "Set cogTypes: %s and cogLevels: %s" % (av.getCogTypes(), av.getCogLevels())
 
 class SetCogSuit(MagicWord):
-    aliases = ['cogsuit']
+    aliases = ['cogsuit', 'setcogdisguise', 'disguise', 'setsuitdisguise']
     accessLevel = 'DEVELOPER'
     desc = "Sets the toon to the indicated cog type."
     advancedDesc = """Sets the toon to the indicated cog type (e.g. 'gh' for Glad
@@ -2250,8 +2253,13 @@ class SetCogSuit(MagicWord):
             return
 
         else:
+            if cogType not  in SuitDNA.suitHeadTypes:
+                return 'Invalid cogType'
+            if dept not in SuitDNA.suitDepts:
+                return 'Invalid department'
+
             dept = SuitDNA.getSuitDept(cogType)
-            if dept == None:
+            if dept == None :
                 return "Unknown cog type: %s" % (cogType)
 
             deptIndex = SuitDNA.suitDepts.index(dept)
@@ -2373,6 +2381,28 @@ class DamageCFO(MagicWord):
         boss.magicWordHit(dmg, invoker.doId)
         return 'Damaged cfo for {0} damage'.format(dmg)
 
+class kick(MagicWord):
+    desc = 'Kicks the targeted player with a given reason.'
+    arguments = [('reason', str, True)]
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    accessLevel = 'MODERATOR'
+
+    def handleWord(self, invoker, avId, toon, *args):
+        reason = args[0]
+        if invoker == toon:
+            return 'Imagine trying to kick yourself smh use ~~'
+        if reason == '' or reason is None:
+            return 'Need a reason to kick this person'
+        dg = PyDatagram()
+        # CLIENTAGENT_EJECT is a global set in direct.distributed.MsgTypes,
+        # why does p3d like messing with globals so much :grief:
+        dg.addServerHeader(self.GetPuppetConnectionChannel(avId), simbase.air.ourChannel,
+                           MsgTypes.MsgName2Id['CLIENTAGENT_EJECT'])
+        dg.addUint16(168)
+        dg.addString(reason)
+        simbase.air.send(dg)
+        return f'Successfully kicked {toon.getName()}'
+    
 class StunAllGoons(MagicWord):
     aliases = ['disablegoons', 'stungoons']
     desc = 'stun all of the goons in the CFO battle.'

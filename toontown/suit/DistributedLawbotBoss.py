@@ -30,7 +30,7 @@ import math
 from toontown.coghq import CogDisguiseGlobals
 from toontown.building import ElevatorConstants
 from toontown.toonbase import ToontownTimer
-from libotp import *
+from panda3d.otp import *
 import functools 
 # This pointer keeps track of the one DistributedSellbotBoss that
 # should appear within the avatar's current visibility zones.  If
@@ -1599,7 +1599,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.juryBoxIval = Parallel(
             self.juryBox.posInterval( ToontownGlobals.LawbotBossJuryBoxMoveTime, endingAbsPos),
             self.reflectedJuryBox.posInterval( ToontownGlobals.LawbotBossJuryBoxMoveTime, reflectedEndingAbsPos),
-            SoundInterval(self.juryMovesSfx, node = self.chairs[2].nodePath, duration = ToontownGlobals.LawbotBossJuryBoxMoveTime,  loop = 1, volume = 1.0),
+            SoundInterval(self.juryMovesSfx, node = self.chairs[2].nodePath, duration = ToontownGlobals.LawbotBossJuryBoxMoveTime,  loop = 1, volume = 1.0 ),
             )
         
         self.juryBoxIval.start()
@@ -1756,9 +1756,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.scaleNodePath.unstash()
         
         localAvatar.setPos(-3,0,0)        
-        camera.reparentTo( localAvatar)
-        camera.setPos( localAvatar.cameraPositions[0][0])
-        camera.setHpr( 0, 0, 0)
+        base.localAvatar.orbitalCamera.start()
 
         self.clearChat()
         self.witnessToon.clearChat()
@@ -2504,7 +2502,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                 Func(node.show),
                 Parallel(node.posInterval(1, Point3(x, y, 0), fluid = 1),
                          node.hprInterval(1, VBase3(h, 0, 0), fluid = 1),
-                         Sequence(SoundInterval(self.strafeSfx[i], volume = 0.2, node = self), duration = 0),
+                         Sequence(SoundInterval(self.strafeSfx[i], volume = 0.2 , node = self), duration = 0),
                          ),
                 Func(node.detachNode)))
 

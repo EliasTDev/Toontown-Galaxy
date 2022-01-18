@@ -61,8 +61,8 @@ from . import Toon
 from . import LaffMeter
 
 from settings.Settings import Settings
-from libotp import CFThought, CFTimeout
-from libotp import WhisperPopup
+from panda3d.otp import CFThought, CFTimeout
+from panda3d.otp import WhisperPopup
 from toontown.quest import QuestMap
 from toontown.shtiker.MagicWordHelpPage import MagicWordsHelpPage
 
@@ -270,7 +270,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
 
             # GMs have accepting-new-friends-default 0, which forces them to explicitly enable
             # friend requests if they ever want it.
-            self.acceptingNewFriends = Settings.getAcceptingNewFriends() and base.config.GetBool('accepting-new-friends-default', True)
+            self.acceptingNewFriends = base.settings.getBool('game', 'acceptingNewFriends', True) and base.config.GetBool('accepting-new-friends-default', True)
 
     def wantLegacyLifter(self):
         return True
@@ -1720,13 +1720,13 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         self.hideClarabelleGui()
         clarabelleHidden = 1
 
-        self.ignore(ToontownGlobals.FriendsListHotkey)
+        self.ignore(base.FRIENDS)
 #        import pdb; pdb.set_trace()
 
         if self.friendsListButtonActive and \
            self.friendsListButtonObscured <= 0:
             self.bFriendsList.show()
-            self.accept(ToontownGlobals.FriendsListHotkey, self.sendFriendsListEvent)
+            self.accept(base.FRIENDS, self.sendFriendsListEvent)
 
             if self.clarabelleButtonObscured <= 0 and self.isTeleportAllowed():
                 if self.catalogNotify == ToontownGlobals.NewItems or \
@@ -1792,7 +1792,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
                 
                 self.lerpFurnitureButton = self.__furnitureGui.posHprScaleInterval(
                     1.0,
-                    pos = Point3(0.12, 0.00, -0.66),
+                    pos = Point3(-1.19, 0.00, 0.33),
                     hpr = Vec3(0.00, 0.00, 0.00),
                     scale = Vec3(0.04, 0.04, 0.04),
                     blendType = 'easeInOut',
@@ -1835,7 +1835,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
 
         currentWeek = self.catalogScheduleCurrentWeek - 1
         if currentWeek < 57:
-            seriesNumber = currentWeek / ToontownGlobals.CatalogNumWeeksPerSeries + 1
+            seriesNumber = currentWeek // ToontownGlobals.CatalogNumWeeksPerSeries + 1
             weekNumber = currentWeek % ToontownGlobals.CatalogNumWeeksPerSeries + 1
         # Catalog Series 5 & 6 are short. Need some special math here.
         elif currentWeek < 65:
@@ -1844,7 +1844,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
         # All catalogs after 5 & 6 now need to get bumped up by
         # one since the last 13 weeks used two series numbers.
         else:
-            seriesNumber = currentWeek / ToontownGlobals.CatalogNumWeeksPerSeries + 2
+            seriesNumber = currentWeek // ToontownGlobals.CatalogNumWeeksPerSeries + 2
             weekNumber = currentWeek % ToontownGlobals.CatalogNumWeeksPerSeries + 1
 
         message = None

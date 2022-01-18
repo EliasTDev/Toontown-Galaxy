@@ -20,7 +20,7 @@ from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 from direct.gui import DirectLabel
 from toontown.quest import Quests
-from libotp import *
+from panda3d.otp import *
 class Playground(Place.Place):
     """Playground class"""
 

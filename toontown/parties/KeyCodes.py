@@ -13,9 +13,11 @@
 #          to enter the next key, otherwise the creation of the pattern times out.
 #-------------------------------------------------------------------------------
 
-from pandac.PandaModules import *
+from panda3d.core import *
 
 from direct.showbase.DirectObject import DirectObject
+
+#Not sure if this can be converted 
 
 ARROW_KEYCODE_MAP = {"arrow_up" : "u",
                      "arrow_down" : "d",

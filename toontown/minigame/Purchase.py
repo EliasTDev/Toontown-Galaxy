@@ -7,7 +7,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.PythonUtil import Functor
 from toontown.minigame import TravelGameGlobals
 from toontown.distributed import DelayDelete
-from libotp import NametagFloat2d, Nametag, NametagGlobals
+from panda3d.otp import NametagFloat2d, Nametag, NametagGlobals
 
 COUNT_UP_RATE = 0.15
 DELAY_BEFORE_COUNT_UP = 1.25
@@ -362,7 +362,7 @@ class Purchase(PurchaseBase):
         camera.setPos(0, 16.0, 2.0)
         camera.lookAt(0, 0, 0.75)
         base.transitions.irisIn(0.4)
-        base.camLens.setFov(60)
+        base.camLens.setMinFov(60/(4.0/3.0))
         #base.camLens.setFar(150)
         # show background elements
         self.title.reparentTo(aspect2d)

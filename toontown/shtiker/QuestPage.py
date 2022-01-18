@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from . import ShtikerPage
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
@@ -63,12 +63,13 @@ class QuestPage(ShtikerPage.ShtikerPage):
         self.updatePage()
 
     def acceptOnscreenHooks(self):        
-        self.accept(ToontownGlobals.QuestsHotkeyOn, self.showQuestsOnscreen)
-        self.accept(ToontownGlobals.QuestsHotkeyOff, self.hideQuestsOnscreen)
+        self.accept(base.TASKS, self.showQuestsOnscreen)
+        self.accept(f"{base.TASKS}-up", self.hideQuestsOnscreen)
 
-    def ignoreOnscreenHooks(self):        
-        self.ignore(ToontownGlobals.QuestsHotkeyOn)
-        self.ignore(ToontownGlobals.QuestsHotkeyOff)
+    def ignoreOnscreenHooks(self):     
+   
+        self.ignore(base.TASKS)
+        self.ignore(f"{base.TASKS}-up")
 
     def unload(self):
         del self.title

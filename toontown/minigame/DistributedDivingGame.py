@@ -29,7 +29,7 @@ from . import TreasureScorePanel
 
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
-
+from settings import *
 class DistributedDivingGame(DistributedMinigame):
 
     COLLISION_WATCH_TASK = "DivingGameCollisionWatchTask"
@@ -187,7 +187,7 @@ class DistributedDivingGame(DistributedMinigame):
         self.soundTable[name] = loader.loadSfx(soundSource)
         
     def playSound(self, name, volume = 1.0):
-        self.soundTable[name].setVolume(1.0)
+        self.soundTable[name].setVolume(volume )
         self.soundTable[name].play()
         
     def unload(self):
@@ -258,7 +258,7 @@ class DistributedDivingGame(DistributedMinigame):
         # hack to make sure this never executes if the program is closing
         # using it to avoid some edge conditions before I more extensively
         # try to nail them down
-        if self.dead is 1:
+        if self.dead == 1:
             return
         
         # calculated to make sure all Lerps will start at the same time
@@ -368,7 +368,7 @@ class DistributedDivingGame(DistributedMinigame):
         camera.setH(0)
         camera.setX(0)
         #camera.setP(-7)
-        base.camLens.setFov(45)
+        base.camLens.setMinFov(45/(4.0/3.0))
         camera.setY(-54)
         base.camLens.setFar(1500)
         
@@ -473,7 +473,7 @@ class DistributedDivingGame(DistributedMinigame):
             #base.playSfx(self.sndAmbience, looping = 1, volume = 0.8)
             self.sndAmbience.setLoop(True)
             self.sndAmbience.play()
-            self.sndAmbience.setVolume(0.01)
+            self.sndAmbience.setVolume(0.01 )
         
     def offstage(self):
         self.notify.debug("offstage")
@@ -638,7 +638,7 @@ class DistributedDivingGame(DistributedMinigame):
         
             self.accept('hitby-'+'crabby'+str(i), self.fishCollision)
             
-            if i % 2 is 0:
+            if i % 2 == 0:
                 crab.setPos(20, 0, -40)
                 crab.direction = -1
             else:
@@ -1043,7 +1043,7 @@ class DistributedDivingGame(DistributedMinigame):
             self.localLerp = Sequence(Func(toonSD.fsm.request,'freeze'), Wait(3.0), Func(toonSD.fsm.request,'normal'))
             self.localLerp.start(ts)
             self.hitSound.play()
-            self.hitSound.setVolume(volume)
+            self.hitSound.setVolume(volume  )
     
     # called from the AI to make the toon freeze and have the fish respond
     # in a certain way (depending on the fish type)
@@ -1093,13 +1093,13 @@ class DistributedDivingGame(DistributedMinigame):
                 
             if fish.sound:
                 fish.sound.play()
-                fish.sound.setVolume(volume)
+                fish.sound.setVolume(volume )
                 self.hitSound.play()
-                self.hitSound.setVolume(volume)
+                self.hitSound.setVolume(volume )
                 
             
             # bears and nurses don't care about you and will go about their merry way
-            if fish.name is 'bear' or fish.name is 'nurse':
+            if fish.name == 'bear' or fish.name == 'nurse':
                 return
                 
             colList = fish.findAllMatches("**/fc*")
@@ -1302,7 +1302,7 @@ class DistributedDivingGame(DistributedMinigame):
                     loop = 0,
                     duration = 1.6,
                     startTime = 0.0,
-                    volume = crabVolume,)
+                    volume = crabVolume )
                 crabSoundInterval.start()
         
         
@@ -1371,7 +1371,7 @@ class DistributedDivingGame(DistributedMinigame):
                 self.zVel = -10
                 
         swimVolume = (abs(self.zVel) + abs(self.xVel)) / 15.0       
-        self.swimSound.setVolume(swimVolume)
+        self.swimSound.setVolume(swimVolume )
         
         pos[0] += (self.xVel * dt)
         pos[1] = -2
@@ -1438,7 +1438,7 @@ class DistributedDivingGame(DistributedMinigame):
         
         
         
-        self.sndAmbience.setVolume(ambVolume)
+        self.sndAmbience.setVolume(ambVolume )
             
         return Task.cont
 

@@ -15,7 +15,7 @@ from toontown.toon import NPCToons
 from . import MovieNPCSOS
 from toontown.effects import Splash
 from direct.task import Task
-from libotp import CFSpeech, CFTimeout
+from panda3d.otp import CFSpeech, CFTimeout
 notify = DirectNotifyGlobal.directNotify.newCategory('MovieHeal')
 
 soundFiles = ('AA_heal_tickle.ogg',

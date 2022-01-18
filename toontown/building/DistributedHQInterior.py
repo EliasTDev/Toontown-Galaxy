@@ -9,7 +9,7 @@ from direct.directnotify import DirectNotifyGlobal
 from . import ToonInteriorColors
 import pickle
 from toontown.toonbase import TTLocalizer
-from libpandadna import DNADoor
+from panda3d.toontown import DNADoor
 
 class DistributedHQInterior(DistributedObject.DistributedObject):
     if __debug__:

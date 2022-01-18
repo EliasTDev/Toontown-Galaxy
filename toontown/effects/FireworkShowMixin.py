@@ -22,7 +22,7 @@ from . import Fireworks
 from . import FireworkShows
 from .FireworkGlobals import skyTransitionDuration,preShowPauseDuration,postShowPauseDuration,preNormalMusicPauseDuration
 from toontown.effects.FireworkShow import FireworkShow
-
+from settings import *
 class FireworkShowMixin:
 
     notify = DirectNotifyGlobal.directNotify.newCategory("FireworkShowMixin")

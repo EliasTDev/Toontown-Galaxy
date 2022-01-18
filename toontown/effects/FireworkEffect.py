@@ -22,7 +22,7 @@ from toontown.effects.SkullBurst import SkullBurst
 from toontown.effects.SkullFlash import SkullFlash
 from toontown.effects.TrailExplosion import TrailExplosion
 from toontown.effects.IceCream import IceCream
-
+from settings import *
 trailSfxNames = ['phase_4/audio/sfx/firework_whistle_01.ogg',
                  'phase_4/audio/sfx/firework_whistle_02.ogg']
 burstSfxNames = ['phase_4/audio/sfx/firework_explosion_01.ogg',
@@ -73,12 +73,12 @@ class FireworkEffect(NodePath):
         self.trailSfx = []
         for audio in trailSfxNames:
             audio = loader.loadSfx(audio)
-            audio.setVolume(0.075)
+            audio.setVolume(0.075 )
             self.trailSfx.append(audio)
         self.burstSfx = []
         for audio in burstSfxNames:
             audio = loader.loadSfx(audio)
-            audio.setVolume(0.8)
+            audio.setVolume(0.8 )
             self.burstSfx.append(audio)
         
     def play(self):    

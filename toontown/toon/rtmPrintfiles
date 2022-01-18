@@ -83,7 +83,7 @@ echo $PANDA/built/lib/libpandaode.dll
 echo $PANDA/built/lib/libmiles_audio.dll
 echo $DIRECT/built/lib/libdirect.dll
 echo $DIRECT/built/lib/libheapq.dll
-echo $OTP/built/lib/libotp.dll
+echo $OTP/built/lib/panda3d.otp.dll
 echo $TOONTOWN/built/lib/libtoontown.dll
 
 # Generated code for libpanda
@@ -95,8 +95,8 @@ echo $DIRECT/built/lib/pandac/*.py
 # Generated code for libdirect
 printlib $DIRECT/built/lib/pandac libdirect
 
-# Generated code for libotp
-printlib $DIRECT/built/lib/pandac libotp
+# Generated code for panda3d.otp
+printlib $DIRECT/built/lib/pandac panda3d.otp
 
 # Generated code for libtoontown
 printlib $DIRECT/built/lib/pandac libtoontown

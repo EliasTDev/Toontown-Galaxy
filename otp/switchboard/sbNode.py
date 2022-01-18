@@ -68,7 +68,7 @@ class sbNode(Pyro5.core.SynchronizedObjBase):#,ChannelListener):
                                      host=sbConfig.lastSeenDBhost,
                                      port=sbConfig.lastSeenDBport,
                                      user=sbConfig.lastSeenDBuser,
-                                     passwd=sbConfig.lastSeenDBpasswd,
+                                     password=sbConfig.lastSeenDBpasswd,
                                      dbname=sbConfig.lastSeenDBdb)
 
         from .sbMaildb import sbMaildb
@@ -76,7 +76,7 @@ class sbNode(Pyro5.core.SynchronizedObjBase):#,ChannelListener):
                                host=sbConfig.mailDBhost,
                                port=sbConfig.mailDBport,
                                user=sbConfig.mailDBuser,
-                               passwd=sbConfig.mailDBpasswd,
+                               password=sbConfig.mailDBpasswd,
                                db=sbConfig.mailDBdb)
                                
         # pyro init

@@ -16,7 +16,7 @@ from toontown.toontowngui import TTDialog
 from direct.interval.IntervalGlobal import *
 from . import VoteResultsPanel
 from . import VoteResultsTrolleyPanel
-from libotp import *
+from panda3d.otp import *
 # For each minigame, what's the corresponding icon
 IconDict = {
     ToontownGlobals.RaceGameId : 'mg_trolley_sign_race',
@@ -959,7 +959,7 @@ class DistributedTravelGame(DistributedMinigame):
         soundTrack = Sequence()
         trolleyExitBellInterval = Parallel(
             SoundInterval(self.trolleyBellSfx, duration=1),
-            SoundInterval(self.turntableRotateSfx, duration=1, volume = 0.5)
+            SoundInterval(self.turntableRotateSfx, duration=1, volume = 0.5 )
             )
         trolleyExitAwayInterval = SoundInterval(self.trolleyAwaySfx, duration=3)
         soundTrack.append(trolleyExitBellInterval)

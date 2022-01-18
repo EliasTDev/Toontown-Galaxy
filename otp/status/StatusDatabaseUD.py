@@ -33,7 +33,7 @@ class StatusDatabaseUD(DistributedObjectGlobalUD,DBInterface):
         self.db = MySQLdb.connect(host=self.DBhost,
                                   port=self.DBport,
                                   user=self.DBuser,
-                                  passwd=self.DBpasswd)
+                                  password=self.DBpasswd)
 
         self.notify.info("Connected to MySQL server at %s:%d."%(self.DBhost,self.DBport))
 

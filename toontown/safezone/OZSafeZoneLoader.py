@@ -137,14 +137,14 @@ class OZSafeZoneLoader( SafeZoneLoader ):
         self.geyserSoundInterval = SoundInterval(self.geyserSound, node=geyserPlacer,
                                            listenerNode = base.camera,
                                            seamlessLoop = False,
-                                           volume = 1.0,
+                                           volume = 1.0 ,
                                            cutOff = 120)
                                 
         self.geyserSoundNoToon = loader.loadSfx("phase_6/audio/sfx/OZ_Geyser_No_Toon.ogg")
         self.geyserSoundNoToonInterval = SoundInterval(self.geyserSoundNoToon, node=geyserPlacer,
                                            listenerNode = base.camera,
                                            seamlessLoop = False,
-                                           volume = 1.0,
+                                           volume = 1.0 ,
                                            cutOff = 120)
         #self.geyserSoundInterval.start()
 

@@ -61,8 +61,8 @@ import copy
 if base.wantKarts:
     from toontown.racing.KartDNA import *
 
-from libotp import CFSpeech, CFTimeout, CFThought
-from libotp import WhisperPopup
+from panda3d.otp import CFSpeech, CFTimeout, CFThought
+from panda3d.otp import WhisperPopup
 from direct.showbase.InputStateGlobal import inputState
 if( __debug__ ):
     import pdb
@@ -1764,6 +1764,7 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
 
         self.smoother.computeAndApplySmoothPosHpr(self, self)
         self.setSpeed(self.smoother.getSmoothForwardVelocity(),
+                      self.smoother.getSmoothLateralVelocity(),
                       self.smoother.getSmoothRotationalVelocity())
         return Task.cont
 
@@ -3209,7 +3210,7 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
                             SoundInterval(dialogueArray[sfxIndex], node = None,
                                            listenerNode = base.localAvatar,
                                            loop = 0,
-                                           volume = 1.0),
+                                           volume = 1.0 ),
                                            )
             self.soundSequenceList.append(soundSequence)
             soundSequence.start()

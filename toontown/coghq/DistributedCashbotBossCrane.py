@@ -11,7 +11,7 @@ from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 from otp.otpbase import OTPGlobals
 import random
-from libotp import *
+from panda3d.otp import *
 class DistributedCashbotBossCrane(DistributedObject.DistributedObject, FSM.FSM):
     """ This class represents a crane holding a magnet on a cable.
     The DistributedCashbotBoss creates four of these for the CFO
@@ -1193,11 +1193,12 @@ class DistributedCashbotBossCrane(DistributedObject.DistributedObject, FSM.FSM):
 
         if avId == localAvatar.doId:
             # The local toon is beginning to control the crane.
-
+            localAvatar.orbitalCamera.stop()
             self.boss.toCraneMode()
 
             camera.reparentTo(self.hinge)
             camera.setPosHpr(0, -20, -5, 0, -20, 0)
+            localAvatar.orbitalCamera.start()
             self.tube.stash()
 
             localAvatar.setPosHpr(self.controls, 0, 0, 0, 0, 0, 0)
@@ -1238,7 +1239,7 @@ class DistributedCashbotBossCrane(DistributedObject.DistributedObject, FSM.FSM):
         
         if self.avId == localAvatar.doId:
             # The local toon is no longer in control of the crane.
-
+            localAvatar.orbitalCamera.start()
             self.__disableControlInterface()
             self.__deactivatePhysics()
             self.tube.unstash()
