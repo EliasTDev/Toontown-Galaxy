@@ -192,7 +192,7 @@ class ChatManager(DirectObject.DirectObject):
         """
         hotkeys = base.controlManager.getChangedHotkeys()
         for key in hotkeys:
-            if base.controlManager.isAlphaNumericHotkey(key) and base.CHAT != key :
+            if base.controlManager.isAlphaNumericHotkey(key) and str(base.CHAT) != str(key) :
                 return True
                 break
         return False
