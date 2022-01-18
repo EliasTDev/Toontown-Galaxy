@@ -1974,10 +1974,15 @@ class Toon(Avatar.Avatar, ToonHead):
             self.motion.enter()
             self.motion.setState(anim, rate)
             if action == OTPGlobals.STRAFE_LEFT_INDEX:
+                #If toon starts strafing left rotate that character in that direction
                 base.localAvatar.orbitalCamera.setGeomNodeH(90)
+                #If toon starts strafing right rotate that character in that direction
+
             elif action == OTPGlobals.STRAFE_RIGHT_INDEX:
                 base.localAvatar.orbitalCamera.setGeomNodeH(-90)
             elif action == OTPGlobals.RUN_INDEX:
+                #If toon is already running but tries to strafe only rotate them a little 
+                #Else just them to default h value
                 if slideSpeed > ToontownGlobals.RunCutOff:
                     base.localAvatar.orbitalCamera.setGeomNodeH(-45)
                 if slideSpeed < -ToontownGlobals.RunCutOff:
