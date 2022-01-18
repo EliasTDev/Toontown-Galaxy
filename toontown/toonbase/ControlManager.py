@@ -109,6 +109,13 @@ class ControlManager(DirectObject):
             self.notify.warning(f"Key name is None. Category : {category} hotkey: {hotkeyName}")
         return keyName
 
+    def getHotKeyName(self, key):
+        """ Get the hotkey name based on the hotkey provided. 
+        For example w is provided and "Move Forward" is returned
+        """
+        #TODO
+        return
+        
     def hotkeyPressed(self, hotkeyName, hotkey, key, event=None):
         if not self.getChanging() and int(key) not in self.disabledHotkeys:
             if self.disableAlphaNumericHotkeys:

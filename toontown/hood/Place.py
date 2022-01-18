@@ -724,14 +724,11 @@ class Place(StateData.StateData,
     # door in state
 
     def enterDoorIn(self, requestStatus):
-        assert(self.notify.debug("enterDoorIn(requestStatus="
-                +str(requestStatus)+")"))
         # Turn off the little red arrows while we pass through the
         # door.
         NametagGlobals.setMasterArrowsOn(0)
 
         door=base.cr.doId2do.get(requestStatus['doorDoId'])
-        assert(door)
         door.readyToExit()
         #door_origin=door.getDoorNodePath()
         #assert(not door_origin.isEmpty())

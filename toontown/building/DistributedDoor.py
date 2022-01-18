@@ -412,6 +412,7 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         return self.building
 
     def readyToExit(self):
+        print('Sending request to exit')
         #("readyToExit()"))
         base.transitions.fadeScreen(1.0)
         # Ask permission to exit:
@@ -526,8 +527,10 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         #("enterDoor()"))
         if self.allowedToEnter():
             messenger.send("DistributedDoor_doorTrigger")
+            print('request')
             self.sendUpdate("requestEnter") # calls back with a avatarEnter.
         else:
+            print('not allowed to enter')
             place = base.cr.playGame.getPlace()
             if place:
                 place.fsm.request('stopped')

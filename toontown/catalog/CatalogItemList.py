@@ -32,7 +32,7 @@ class CatalogItemList:
         self.__blob = None
         self.__list = None
 
-        if isinstance(source, (str, bytes)):
+        if isinstance(source, (bytes)):
             self.__blob = source
         elif isinstance(source, list):
             self.__list = source[:]
@@ -225,40 +225,31 @@ class CatalogItemList:
         return len(self.__list)
 
     def __getitem__(self, index):
-        if self.__list == None:
+        if self.__list is None:
             self.__decodeList()
+        if isinstance(index, slice):
+            return CatalogItemList(self.__list[index.start:index.stop], store=self.store)
         return self.__list[index]
 
     def __setitem__(self, index, item):
-        if self.__list == None:
+        if self.__list is None:
             self.__decodeList()
-        self.__list[index] = item
+        if isinstance(index, slice):
+            if isinstance(item, CatalogItemList):
+                self.__list[index.start:index.stop] = item.__list
+            else:
+                self.__list[index.start:index.stop] = item
+        else:
+            self.__list[index] = item
         self.__blob = None
 
     def __delitem__(self, index):
-        if self.__list == None:
+        if self.__list is None:
             self.__decodeList()
-        del self.__list[index]
-        self.__blob = None
-
-    def __getslice__(self, i, j):
-        if self.__list == None:
-            self.__decodeList()
-        return CatalogItemList(self.__list[i : j], store = self.store)
-
-    def __setslice__(self, i, j, s):
-        if self.__list == None:
-            self.__decodeList()
-        if isinstance(s, CatalogItemList):
-            self.__list[i : j] = s.__list
+        if isinstance(index, slice):
+            del self.__list[index.start:index.stop]
         else:
-            self.__list[i : j] = s
-        self.__blob = None
-
-    def __delslice__(self, i, j):
-        if self.__list == None:
-            self.__decodeList()
-        del self.__list[i : j]
+            del self.__list[index]
         self.__blob = None
 
     def __iadd__(self, other):

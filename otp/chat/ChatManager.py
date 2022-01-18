@@ -192,8 +192,9 @@ class ChatManager(DirectObject.DirectObject):
         """
         hotkeys = base.controlManager.getChangedHotkeys()
         for key in hotkeys:
-            if base.controlManager.isAlphaNumericHotkey(key):
+            if base.controlManager.isAlphaNumericHotkey(key) and str(base.CHAT) != str(key) :
                 return True
+                break
         return False
 
     def delete(self):
