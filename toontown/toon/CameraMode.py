@@ -39,34 +39,11 @@ class CameraMode(FSM):
         pass
 
     def enterActive(self):
-        self.cTravOnFloor = CollisionTraverser('CamMode.cTravOnFloor')
-        self.camFloorRayNode = self.attachNewNode('camFloorRayNode')
-        self.ccRay2 = CollisionRay(0.0, 0.0, 0.0, 0.0, 0.0, -1.0)
-        self.ccRay2Node = CollisionNode('ccRay2Node')
-        self.ccRay2Node.addSolid(self.ccRay2)
-        self.ccRay2NodePath = self.camFloorRayNode.attachNewNode(self.ccRay2Node)
-        self.ccRay2BitMask = OTPGlobals.FloorBitmask
-        self.ccRay2Node.setFromCollideMask(self.ccRay2BitMask)
-        self.ccRay2Node.setIntoCollideMask(BitMask32.allOff())
-        self.ccRay2MoveNodePath = hidden.attachNewNode('ccRay2MoveNode')
-        self.camFloorCollisionBroadcaster = CollisionHandlerFloor()
-        self.camFloorCollisionBroadcaster.setInPattern('on-floor')
-        self.camFloorCollisionBroadcaster.setOutPattern('off-floor')
-        self.camFloorCollisionBroadcaster.addCollider(self.ccRay2NodePath, self.ccRay2MoveNodePath)
-        self.cTravOnFloor.addCollider(self.ccRay2NodePath, self.camFloorCollisionBroadcaster)
         self.enableInput()
 
     def exitActive(self):
         self.disableInput()
-        del self.cTravOnFloor
-        del self.ccRay2
-        del self.ccRay2Node
-        self.ccRay2NodePath.remove_node()
-        del self.ccRay2NodePath
-        self.ccRay2MoveNodePath.remove_node()
-        del self.ccRay2MoveNodePath
-        self.camFloorRayNode.remove_node()
-        del self.camFloorRayNode
+
 
     def enableInput(self):
         self.__inputEnabled = True

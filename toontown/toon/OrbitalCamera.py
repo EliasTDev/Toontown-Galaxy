@@ -22,7 +22,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
     UpdateTaskName = 'OrbitCamUpdateTask'
     CollisionCheckTaskName = 'OrbitCamCollisionTask'
     GeomFadeLerpDur = 1.0
-    PullFwdDist = 1.0
+    PullFwdDist = 2.0
     ReadMouseTaskName = 'OrbitCamReadMouseTask'
     CollisionCheckTaskName = 'OrbitCamCollisionTask'
     MinP = -50
@@ -52,10 +52,33 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self.forceMaxDistance = True
         self.avFacingScreen = False
         self.collisionTaskCountNum = 0
-
+        self.cTravOnFloor = CollisionTraverser('CamMode.cTravOnFloor')
+        self.camFloorRayNode = self.attachNewNode('camFloorRayNode')
+        self.ccRay2 = CollisionRay(0.0, 0.0, 0.0, 0.0, 0.0, -1.0)
+        self.ccRay2Node = CollisionNode('ccRay2Node')
+        self.ccRay2Node.addSolid(self.ccRay2)
+        self.ccRay2NodePath = self.camFloorRayNode.attachNewNode(self.ccRay2Node)
+        self.ccRay2BitMask = OTPGlobals.FloorBitmask
+        self.ccRay2Node.setFromCollideMask(self.ccRay2BitMask)
+        self.ccRay2Node.setIntoCollideMask(BitMask32.allOff())
+        self.ccRay2MoveNodePath = hidden.attachNewNode('ccRay2MoveNode')
+        self.camFloorCollisionBroadcaster = CollisionHandlerFloor()
+        self.camFloorCollisionBroadcaster.addInPattern('zone_on-floor')
+        self.camFloorCollisionBroadcaster.addOutPattern('zone_off-floor')
+        self.camFloorCollisionBroadcaster.addCollider(self.ccRay2NodePath, self.ccRay2MoveNodePath)
+        self.cTravOnFloor.addCollider(self.ccRay2NodePath, self.camFloorCollisionBroadcaster)
         return
 
     def destroy(self):
+        del self.cTravOnFloor
+        del self.ccRay2
+        del self.ccRay2Node
+        self.ccRay2NodePath.remove_node()
+        del self.ccRay2NodePath
+        self.ccRay2MoveNodePath.remove_node()
+        del self.ccRay2MoveNodePath
+        self.camFloorRayNode.remove_node()
+        del self.camFloorRayNode
         self._paramStack = None
         self.escapemntNode = None
         self.camParent = None
@@ -243,25 +266,26 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
 
     def enterActive(self):
         CameraMode.CameraMode.enterActive(self)
+
         self.reparentTo(render)
-        self.clearTransform()
-        self.setH(self.subject, self._rotation)
-        self.setP(0)
-        self.setR(0)
-        self.camParent.clearTransform()
-        camera.reparentTo(self.camParent)
-        camera.clearTransform()
+       # self.clearTransform()
+        #self.setH(self.subject, self._rotation)
+        #self.setP(0)
+       # self.setR(0)
+       # self.camParent.clearTransform()
+        camera.reparentTo(self)
+        #camera.clearTransform()
         base.camNode.setLodCenter(self.subject)
         
         if base.wantEnviroDR:
             base.enviroCamNode.setLodCenter(self.subject)
-        self.lookAtNode.reparentTo(self.subject)
-        self.lookAtNode.clearTransform()
-        self.lookAtNode.setPos(self.lookAtOffset)
-        self.setFluidPos(render, self.lookAtNode.getPos(render))
-        self.escapementNode.setP(-self.escapement)
+        #self.lookAtNode.reparentTo(self.subject)
+       # self.lookAtNode.clearTransform()
+       # self.lookAtNode.setPos(self.lookAtOffset)
+      #  self.setFluidPos(render, self.lookAtNode.getPos(render))
+       # self.escapementNode.setP(-self.escapement)
         #self._setCurDistance(self.idealDistance)
-        camera.lookAt(self.lookAtNode)
+       # camera.lookAt(self.lookAtNode)
         self._disableRotateToRear()
         self._isAtRear = True
         self._rotateToRearIval = None
@@ -273,12 +297,12 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self.reparentTo(self.subject)
         self.setPos(0, 0, self.subject.getHeight())
         base.camera.reparentTo(self)
-        camera.setPosHpr(self.camOffset[0], self.camOffset[1], 0, 0, 0, 0)
+        camera.setPosHpr(self.camOffset[0], self.camOffset[1], 10, 0, 0, 0)
         self._initMaxDistance()
-        self._startUpdateTask()
+        #self._startUpdateTask()
 
         self._startCollisionCheck()
-        self.setCameraPos(-10, 0, 0)
+        #self.setCameraPos(-10, 0, 0)
 
         return
 
@@ -333,14 +357,17 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
 
     def exitActive(self):
         taskMgr.remove(OrbitCamera.UpdateTaskName)
-        self.ignoreAll()
-        self._stopRotateToRearIval()
         self._stopCollisionCheck()
-        self.lookAtNode.detachNode()
-        self.detachNode()
+        #self.ignoreAll()
+        #self._stopRotateToRearIval()
+       # self._stopCollisionCheck()
+        #self.lookAtNode.detachNode()
+        #self.detachNode()
         base.camNode.setLodCenter(NodePath())
+        self.ignoreWheel()
         if base.wantEnviroDR:
             base.enviroCamNode.setLodCenter(NodePath())
+        
         CameraMode.CameraMode.exitActive(self)
         
     def _startUpdateTask(self):
@@ -372,7 +399,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
                     self._rotateToRearIval = LerpHprInterval(self, duration, Point3(targetH, 0, 0), startHpr=Point3(startH, 0, 0), other=render, blendType='easeOut')
                     self._rotateToRearIval.start()
         self.lastSubjectH = curSubjectH
-        self.setP(0)
+        ##self.setP(0)
         self.setR(0)
         camera.clearMat()
         return Task.cont
@@ -454,12 +481,12 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
 
 
     def _stopCollisionCheck(self):
-        while len(self._hiddenGeoms):
-            self._unfadeGeom(self._hiddenGeoms.keys()[0])
-
-        del self._hiddenGeoms
-        del self._fadeOutIvals
-        del self._fadeInIvals
+        #while len(self._hiddenGeoms):
+            #self._unfadeGeom(self._hiddenGeoms.keys()[0])
+#
+       # del self._hiddenGeoms
+      #  del self._fadeOutIvals
+     #   del self._fadeInIvals
         taskMgr.remove(OrbitCamera.CollisionCheckTaskName)
         self._cTrav.removeCollider(self._collSolidNp)
         del self._cHandlerQueue
@@ -573,7 +600,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         if hasattr(base, 'oobeMode') and base.oobeMode:
             return Task.cont
 
-        self._cTrav.traverse(self.subject.getGeom())
+        self._cTrav.traverse(render)
         try:
             self._cHandlerQueue.sortEntries()
         except AssertionError:
@@ -588,9 +615,8 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
                 break
 
         if not collEntry:
-            if self.forceMaxDistance:
-                camera.setPos(self.camOffset)
-                camera.setZ(0)
+            camera.setPos(self.camOffset)
+            camera.setZ(0)
 
             self.subject.getGeomNode().show()
             return task.cont
