@@ -312,7 +312,7 @@ class TownBattleSOSPanel(DirectFrame, StateData.StateData):
         # in factories, we should show friends that are with us in the factory
         if (not self.bldg) or (self.factoryToonIdList is not None):
             for friendPair in base.localAvatar.friendsList:
-                if base.cr.isFriendOnline(friendPair[0]):
+                if base.cr.isFriendOnline(friendPair):
                     if ((self.factoryToonIdList is None) or
                         (friendPair[0] in self.factoryToonIdList)):
                         newFriends.append(friendPair)
