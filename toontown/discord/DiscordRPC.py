@@ -3,8 +3,16 @@ from ctypes import *
 from direct.task import Task 
 from pypresence import Presence
 clientId  = "796502813353050122"
-RPC = Presence(clientId)
-RPC.connect()
+try:
+    RPC = Presence(clientId)
+except:
+    print("DiscordRPC: Warning : Discord not found for this client.")
+    RPC = None    
+try:
+    RPC.connect()
+except:
+    print("DiscordRPC: Warning : Failed to connect to discord client.")
+    RPC = None
 class DiscordRPC(object):
 
     zone2imgdesc = { # A dict of ZoneID -> An image and a description
@@ -117,7 +125,8 @@ class DiscordRPC(object):
         state = self.state
         party = self.partySize
         maxSize = self.maxParty
-        RPC.update(state=state,details=details , large_image=image, large_text=imageTxt,  small_image=smallLogo, small_text=smallTxt, party_size=[party, maxSize])
+        if RPC is not None:
+            RPC.update(state=state,details=details , large_image=image, large_text=imageTxt,  small_image=smallLogo, small_text=smallTxt, party_size=[party, maxSize])
 
     def setLaff(self, hp, maxHp):
         self.state = '{0}: {1}/{2}'.format(base.localAvatar.name, hp, maxHp)
