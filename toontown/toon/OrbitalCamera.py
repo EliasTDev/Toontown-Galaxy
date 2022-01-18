@@ -275,6 +275,8 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         base.camera.reparentTo(self)
         camera.setPosHpr(self.camOffset[0], self.camOffset[1], 0, 0, 0, 0)
         self._initMaxDistance()
+        self._startUpdateTask()
+
         self._startCollisionCheck()
         self.setCameraPos(-10, 0, 0)
 
@@ -570,44 +572,39 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
        #From FPSCamera Potco
         if hasattr(base, 'oobeMode') and base.oobeMode:
             return Task.cont
-        self.collisionTaskCountNum = (self.collisionTaskCountNum + 1) % 5 
+
         self._cTrav.traverse(self.subject.getGeom())
-        self.subject.getGeomNode().show()
-        if self._cHandlerQueue.getNumEntries() == 0:
-            for i in range(self._cHandlerQueue.getNumEntries()):
-                if not self._cHandlerQueue.getEntry(i).hasSurfacePoint():
-                    return Task.cont
-        self._cHandlerQueue.sortEntries()
+        try:
+            self._cHandlerQueue.sortEntries()
+        except AssertionError:
+            return Task.cont
 
         cNormal = (0, -1, 0)
         collEntry = None
-        numEntries = self._cHandlerQueue.getNumEntries()
-
-        if numEntries > 0:
-            collEntry = self._cHandlerQueue.getEntry(0)
+        for i in range(self._cHandlerQueue.getNumEntries()):
+            collEntry = self._cHandlerQueue.getEntry(i)
             cNormal = collEntry.getSurfaceNormal(self)
+            if cNormal[1] < 0:
+                break
 
-        if collEntry is not None:
-            if not collEntry and collEntry.hasSurfacePoint():
+        if not collEntry:
+            if self.forceMaxDistance:
                 camera.setPos(self.camOffset)
                 camera.setZ(0)
 
             self.subject.getGeomNode().show()
             return task.cont
 
-        
-            
-        if collEntry is not None:
-            cPoint = collEntry.getSurfacePoint(self)
-            offset = 0.9
-            camera.setPos(cPoint + cNormal * offset)
+        cPoint = collEntry.getSurfacePoint(self)
+        offset = 0.9
+        camera.setPos(cPoint + cNormal * offset)
         distance = camera.getDistance(self)
         if distance < 1.8:
             self.subject.getGeomNode().hide()
         else:
             self.subject.getGeomNode().show()
 
-        self.subject.ccPusherTrav.traverse(render)
+        self._cTrav.traverse(render)
         return Task.cont
 
 
