@@ -552,10 +552,10 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
             return task.cont
         subjectMoving = self.isSubjectMoving()
         subjectTurning = (inputState.isSet('turnRight') or inputState.isSet('turnLeft')) and self.subject.controlManager.isEnabled
-        if subjectMoving:
-            hNode = self.subject
-        else:
-            hNode = self
+        #if subjectMoving:
+         #   hNode = self.subject
+        #else:
+        hNode = self
 
         if self.mouseDelta[0] or self.mouseDelta[1]:
             dx, dy = self.mouseDelta
@@ -578,10 +578,10 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self.baseH = baseH
         self.minH = minH
         self.maxH = maxH
-        if self.isSubjectMoving():
-            hNode = self.subject
-        else:
-            hNode = self
+        #if self.isSubjectMoving():
+            #hNode = self.subject
+       # else:
+        hNode = self
 
         hNode.setH(maxH)
 
