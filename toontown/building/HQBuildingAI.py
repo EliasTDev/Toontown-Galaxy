@@ -49,11 +49,15 @@ class HQBuildingAI:
         self.interior.generateWithRequired(self.interiorZone)
         # Outside door 0. 
         door0=DistributedDoorAI.DistributedDoorAI(
-            self.air, blockNumber, DoorTypes.EXT_HQ,
+            self.air,
+            blockNumber,
+            DoorTypes.EXT_HQ,
             doorIndex=0)
         # Outside door 1. 
         door1=DistributedDoorAI.DistributedDoorAI(
-            self.air, blockNumber, DoorTypes.EXT_HQ,
+            self.air,
+            blockNumber,
+            DoorTypes.EXT_HQ,
             doorIndex=1)
         # Inside door 0. 
         insideDoor0=DistributedDoorAI.DistributedDoorAI(

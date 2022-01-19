@@ -193,7 +193,7 @@ class DistributedToonInterior(DistributedObject.DistributedObject):
         door_origin.setScale(0.8, 0.8, 0.8)
         # Move the origin away from the wall so it does not shimmer
         # We do this instead of decals
-        door_origin.setPos(door_origin, 0, -0.025, 0)
+        door_origin.setPos(door_origin, 0, -0.25, 0)
         color=self.randomGenerator.choice(self.colors["TI_door"])
         DNADoor.setupDoor(doorNP,
                           self.interior, door_origin,

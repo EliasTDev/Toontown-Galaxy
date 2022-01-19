@@ -206,7 +206,7 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
             assert(not doorNP.isEmpty())
             assert(not doorOrigin.isEmpty())
             doorOrigin.setScale(0.8, 0.8, 0.8)
-            doorOrigin.setPos(doorOrigin, 0, -0.025, 0)
+            doorOrigin.setPos(doorOrigin, 0, -0.25, 0)
             doorColor = self.randomGenerator.choice(self.colors["TI_door"])
             triggerId = str(self.block) + "_" + doorOriginIndexStr
             DNADoor.setupDoor(doorNP,
