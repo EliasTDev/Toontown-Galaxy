@@ -692,9 +692,14 @@ class ToonBase(OTPBase.OTPBase):
 
     def startSprint(self):
         if hasattr(base, 'localAvatar'):
-            base.localAvatar.currentSpeed = OTPGlobals.ToonForwardSprintSpeed
-            base.localAvatar.currentReverseSpeed = OTPGlobals.ToonReverseSprintSpeed
-            base.localAvatar.controlManager.setSpeeds(OTPGlobals.ToonForwardSprintSpeed, OTPGlobals.ToonJumpForce, OTPGlobals.ToonReverseSprintSpeed, OTPGlobals.ToonRotateSpeed)
+            if base.localAvatar.getState() == 'Sad':
+                base.localAvatar.currentSpeed = OTPGlobals.ToonForwardSadSprintSpeed
+                base.localAvatar.currentReverseSpeed = OTPGlobals.ToonReverseSprintSpeed
+                base.localAvatar.controlManager.setSpeeds(OTPGlobals.ToonForwardSadSprintSpeed, OTPGlobals.ToonJumpForce, OTPGlobals.ToonReverseSprintSpeed, OTPGlobals.ToonRotateSpeed)
+            else:
+                base.localAvatar.currentSpeed = OTPGlobals.ToonForwardSprintSpeed
+                base.localAvatar.currentReverseSpeed = OTPGlobals.ToonReverseSprintSpeed
+                base.localAvatar.controlManager.setSpeeds(OTPGlobals.ToonForwardSprintSpeed, OTPGlobals.ToonJumpForce, OTPGlobals.ToonReverseSprintSpeed, OTPGlobals.ToonRotateSpeed)
             self.isSprinting = 1
         else:
             if self.isSprinting == 1:
