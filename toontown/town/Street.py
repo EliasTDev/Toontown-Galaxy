@@ -1,6 +1,6 @@
 """Street module: contains the Street class"""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.battle.BattleProps import *
 from toontown.battle.BattleSounds import *
 from toontown.distributed.ToontownMsgTypes import *
@@ -21,7 +21,7 @@ from toontown.toonbase import TTLocalizer
 from direct.interval.IntervalGlobal import *
 from panda3d.otp import NametagGlobals
 
-visualizeZones = base.config.GetBool("visualize-zones", 0)
+visualizeZones = ConfigVariableBool("visualize-zones", 0).value
 
 class Street(BattlePlace.BattlePlace):
     """
