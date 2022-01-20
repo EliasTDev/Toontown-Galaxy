@@ -474,12 +474,17 @@ class ToonBase(OTPBase.OTPBase):
             # mm.addGridCell(5, 2.667, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
             mm.addGridCell(5, 1.333, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
         ]
+        self.oldAspectRatio = self.get_aspect_ratio()
 
     def windowEvent(self, win):
         super().windowEvent(win)
         self.reloadNametagCells(win)
 
     def reloadNametagCells(self, win):
+
+        if  self.oldAspectRatio == self.get_aspect_ratio():
+            return
+
         mm = self.marginManager
         for cell in self.leftCells:
             mm.setCellAvailable(cell, False)
@@ -503,6 +508,7 @@ class ToonBase(OTPBase.OTPBase):
             # mm.addGridCell(5, 2.667, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
             mm.addGridCell(5, 1.333, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
         ]
+        self.oldAspectRatio = self.get_aspect_ratio()
 
     def setCellsAvailable(self, cell_list, available):
         """setCellsAvailable(self, cell_list, bool available)
