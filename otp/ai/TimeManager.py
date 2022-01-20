@@ -37,16 +37,16 @@ class TimeManager(DistributedObject.DistributedObject):
         # The number of seconds to wait between automatic
         # synchronizations.  Set to 0 to disable auto sync after
         # startup.
-        self.updateFreq = ConfigVariableFloat('time-manager-freq', 1800).value
+        self.updateFreq = ConfigVariableDouble('time-manager-freq', 1800).value
 
         # The minimum number of seconds to wait between two unrelated
         # synchronization attempts.  Increasing this number cuts down
         # on frivolous synchronizations.
-        self.minWait = ConfigVariableFloat('time-manager-min-wait', 10).value
+        self.minWait = ConfigVariableDouble('time-manager-min-wait', 10).value
 
         # The maximum number of seconds of uncertainty to tolerate in
         # the clock delta without trying again.
-        self.maxUncertainty = ConfigVariableFloat('time-manager-max-uncertainty', 1).value
+        self.maxUncertainty = ConfigVariableDouble('time-manager-max-uncertainty', 1).value
 
         # The maximum number of attempts to try to get a low-latency
         # time measurement before giving up and accepting whatever we
