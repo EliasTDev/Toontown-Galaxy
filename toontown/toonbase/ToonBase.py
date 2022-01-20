@@ -54,7 +54,7 @@ class ToonBase(OTPBase.OTPBase):
         self.toonChatSounds = self.config.GetBool('toon-chat-sounds', 1)
 
         # Toontown doesn't care about dynamic shadows for now.
-        self.wantDynamicShadows = 0
+        self.wantDynamicShadows = 1
         # this is temporary until we pull in the new launcher code in production
         self.exitErrorCode = 0
 
@@ -298,7 +298,13 @@ class ToonBase(OTPBase.OTPBase):
         #self.resetMusic = self.loader.loadMusic("phase_3/audio/bgm/MIDI_Events_16channels.ogg")
         self.wantWASD =  base.MOVE_FORWARD != 'arrow_up' and base.MOVE_BACKWARDS != 'arrow_down' and base.MOVE_LEFT != 'arrow_left' and base.MOVE_RIGHT != 'arrow_right'
         self.accept("winow-event", self.windowEvent)
-
+        if not self.win.getGsg().getSupportsBasicShaders():
+            self.notify.error("Video driver doesn't support shaders")
+        if gsg.getSupportsBasicShaders() and gsg.getSupportsGlsl():
+            render.setShaderAuto()
+            render2d.setShaderAuto()
+            render2dp.setShaderAuto()
+        
     def reloadControls(self):
         self.ignore(self.SCREENSHOT)
         self.MOVE_FORWARD = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyUp).lower()
@@ -334,8 +340,8 @@ class ToonBase(OTPBase.OTPBase):
         # These are to fix graphical issues on Modern panda.
         cullBinMgr = CullBinManager.getGlobalPtr()
         cullBinMgr.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
-        cullBinMgr.addBin('shadow', CullBinManager.BTFixed, 15)
-        cullBinMgr.addBin('ground', CullBinManager.BTFixed, 14)
+        cullBinMgr.addBin('shadow', CullBinManager.BTFixed, -100)
+        cullBinMgr.addBin('ground', CullBinManager.BTUnsorted, 18)
 
     def __walking(self, pressed):
         self.walking = pressed
