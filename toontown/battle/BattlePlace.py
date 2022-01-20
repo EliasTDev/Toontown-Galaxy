@@ -151,7 +151,7 @@ class BattlePlace(Place.Place):
         """
         if newZoneId != self.zoneId:
             # Tell the server that we changed zones
-            if newZoneId != None:
+            if newZoneId is not None:
                 base.cr.sendSetZoneMsg(newZoneId)
                 if hasattr(self, 'zoneVisDict'):
                     visList = self.zoneVisDict[newZoneId]
