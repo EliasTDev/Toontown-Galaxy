@@ -153,11 +153,12 @@ class BattlePlace(Place.Place):
             # Tell the server that we changed zones
             if newZoneId != None:
                 base.cr.sendSetZoneMsg(newZoneId)
-                   # if hasattr(self, 'zoneVisDict'):
-                #visList = self.zoneVisDict[newZoneId]
-                    #else:
-                        #visList = base.cr.playGame.getPlace().loader.zoneVisDict[newZoneId]
-
+                if hasattr(self, 'zoneVisDict'):
+                    visList = self.zoneVisDict[newZoneId]
+                else:
+                    visList = base.cr.playGame.getPlace().loader.zoneVisDict[newZoneId]
+            if newZoneId not in visList:
+                visList.append(newZoneId)
             self.notify.debug("Entering Zone %d" % (newZoneId))
                 
             # The new zone is now old

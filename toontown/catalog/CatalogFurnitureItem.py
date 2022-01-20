@@ -1196,11 +1196,11 @@ def get50ItemTrunk(avatar, duplicateItems):
 
 
 def getMaxTrunks():
-    list = []
+    _list = []
     for trunkId in MaxTrunkIds:
-        list.append(CatalogFurnitureItem(trunkId))
+        _list.append(CatalogFurnitureItem(trunkId))
 
-    return list
+    return _list
 
 def getAllClosets():
     _list = []

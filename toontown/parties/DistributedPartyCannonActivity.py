@@ -396,16 +396,13 @@ class DistributedPartyCannonActivity(DistributedPartyActivity):
             self.inWater = 0
             
             # calculate the trajectory
-            flightResults = self.__calcFlightResults(cannon, toonId, launchTime)
-            # pull all the results (startPos, startHpr, startVel, trajectory) into the local namespace
-            for key in flightResults:
-                exec("%s = flightResults['%s']" % (key, key))
-            
+            startPos, startHpr, startVel, trajectory = self.__calcFlightResults(cannon, toonId, launchTime)
+
             #self.notify.debug("start position: " + str(startPos))
             #self.notify.debug("start velocity: " + str(startVel))
             #self.notify.debug("time of launch: " + str(launchTime))
             #these arent defined in this function ^
-        
+  
         cannon.removeToonReadyToFire()
         
         # Create the shoot task

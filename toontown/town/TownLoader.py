@@ -358,7 +358,7 @@ class TownLoader(StateData.StateData):
 
         # A list of all visible nodes
         self.nodeList = []
-
+        self.node2zone = {}
         self.fadeInDict = {}
         self.fadeOutDict = {}
 
@@ -392,7 +392,7 @@ class TownLoader(StateData.StateData):
             self.nodeDict[zoneId] = []
             self.nodeList.append(groupNode)
             self.zoneDict[zoneId] = groupNode
-            self.nodeToZone[groupNode] = zoneId
+            self.node2zone[groupNode] = zoneId
 
             fadeDuration = 0.5
 
