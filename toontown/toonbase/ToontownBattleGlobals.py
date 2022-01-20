@@ -544,3 +544,21 @@ def getUberFlagSafe(flagMask, index):
         return -1
     else:
         return getUberFlag(flagMask, index)
+
+ZONE_TO_MUSIC = {
+    
+    #ZoneId, music file in phase files
+    #For now we just use the default track since we dont have different songs for each street
+    #2000
+    ToontownCentral: 'phase_3.5/audio/bgm/encntr_general_bg.ogg',
+    #1000
+    DonaldsDock : 'phase_3.5/audio/bgm/encntr_general_bg.ogg',
+    #5000
+    DaisyGardens: 'phase_3.5/audio/bgm/encntr_general_bg.ogg',
+    #4000
+    MinniesMelodyland: 'phase_3.5/audio/bgm/encntr_general_bg.ogg',
+    #3000
+    TheBrrrgh: 'phase_3.5/audio/bgm/encntr_general_bg.ogg',
+    #9000
+    DonaldsDreamland: 'phase_3.5/audio/bgm/encntr_general_bg.ogg'
+}
