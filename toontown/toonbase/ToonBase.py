@@ -18,7 +18,7 @@ from toontown.launcher import ToontownDownloadWatcher
 from otp.otpbase import OTPGlobals 
 from settings.Settings import Settings
 from toontown.toonbase import ControlManager as TTControlManager
-
+from toontown.toonbase.ToontownPostProcess import  ToontownPostProcess
 from panda3d.otp import *
 class ToonBase(OTPBase.OTPBase):
     """ToonBase class"""
@@ -300,11 +300,25 @@ class ToonBase(OTPBase.OTPBase):
         self.accept("winow-event", self.windowEvent)
         if not self.win.getGsg().getSupportsBasicShaders():
             self.notify.error("Video driver doesn't support shaders")
-        if gsg.getSupportsBasicShaders() and gsg.getSupportsGlsl():
+        if self.win.gsg.getSupportsBasicShaders() and self.win.gsg.getSupportsGlsl():
             render.setShaderAuto()
             render2d.setShaderAuto()
             render2dp.setShaderAuto()
-        
+        self.wantShaders = self.settings.getBool('game', 'want-shaders', True)
+        if self.wantShaders:
+            self.render.setAntialias(AntialiasAttrib.MMultisample)
+            self.render2d.setAntialias(AntialiasAttrib.MMultisample)
+            self.render2dp.setAntialias(AntialiasAttrib.MMultisample)
+            self.pixel2d.setAntialias(AntialiasAttrib.MMultisample)
+
+            self.render.setAttrib(LightRampAttrib.makeHdr0())
+
+            # Set up the post-processing system
+            self.postProcess = ToontownPostProcess()
+            self.postProcess.startup(self.win)
+            self.postProcess.setup()
+            self.taskMgr.add(self.__updatePostProcess, 'updatePostProcess')    
+
     def reloadControls(self):
         self.ignore(self.SCREENSHOT)
         self.MOVE_FORWARD = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyUp).lower()
@@ -486,6 +500,11 @@ class ToonBase(OTPBase.OTPBase):
         super().windowEvent(win)
         self.reloadNametagCells(win)
 
+    def __updatePostProcess(self, task):
+        if hasattr(self, 'postProcess'):
+            self.postProcess.update()
+        return task.cont
+        
     def reloadNametagCells(self, win):
 
         if  self.oldAspectRatio == self.get_aspect_ratio():
@@ -753,3 +772,6 @@ class ToonBase(OTPBase.OTPBase):
             loadPrcFileData('toonBase Settings Controls', 'controls %s' % controls)
             self.settings.loadFromSettings()
 
+
+    def setLightColor(self, temperature, light, intensity):
+        light.setColor(Vec4(light.getColor().getXyz() * intensity, 1.0))
