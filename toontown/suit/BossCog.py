@@ -91,12 +91,12 @@ class BossCog(Avatar.Avatar):
                                     text_pos = (-0.005,-0.01), image = (upButton, downButton, rolloverButton, upButton),
                                     image_color = (0.66274509803, 0.66274509803, 0.66274509803, 1),
                                     image_scale = (5,1,2),
-                                    command = self._handleSkip()
+                                    command = self._handleSkip
         )
         self.skipCButton.hide()
         self.accept('disableSkipCutscene', self.skipCButton.hide)
         self.accept('enableSkipCutscene',self.skipCButton.show )
-        self.accept('cutSceneSkipAmountChange', self.updateSkipCButton)
+        self.accept('cutsceneSkipAmountChange', self.updateSkipCButton, )
         self.accept('messageSetToonsFirstTime', self.handleSetToonsFirstTime)
 
     def handleSetToonsFirstTime(self):
@@ -406,7 +406,7 @@ class BossCog(Avatar.Avatar):
         Updates the skip cutscene button to match the amount of people voting"
         """
         self.notify.info("Updating skip cutscene button")
-        self.skipCButton['text'] = f'Skip Cutscene: {minimum}/{maximum}'
+        self.skipCButton['text'] = f'Skip Cutscene:{minimum}/{maximum}'
         self.skipCButton['state'] = DGG.NORMAL
 
     def _handleSkip(self):

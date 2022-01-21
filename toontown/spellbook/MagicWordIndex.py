@@ -345,6 +345,23 @@ class SetMaxHP(MagicWord):
         toon.toonUp(maxhp)
         return "{}'s max laff has been set to {}.".format(toon.getName(), maxhp)
 
+class ToggleSellbotCutscene(MagicWord):
+    aliases = ['ToggleSC']
+    desc = 'Will set whether you have seen the VP cutscene for the first time or not.'
+    advancedDesc = 'Sets the sellbot cutscene first time variable. If already set to true will set to false, etc'
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    affectRange = [MagicWordConfig.AFFECT_SELF]
+
+    accessLevel = 'DEVELOPER'
+    def handleWord(self, invoker, avId, toon, *args):
+        if invoker.getSellbotCutSceneFirstTime():
+            invoker.b_setSellbotCutSceneFirstTime(False)
+            return 'Set sellbot cutscene first time to false'
+        else:
+            invoker.b_setSellbotCutSceneFirstTime(True)
+            return 'Set sellbot cutscene first time to true'
+
+
 class ToonUp(MagicWord):
     aliases = ["tu", "toon-up", "heal"]
     desc = "Heals the toon to full laff."
@@ -548,7 +565,8 @@ class ToggleGhost(MagicWord):
             toon.b_setGhostMode(0)
             response = 'Ghost mode disabled'
         else:
-            toon.b_setGhostMode(2)
+            #we want staff to be invisible to the players if they want to spy
+            toon.b_setGhostMode(1)
             response = 'Ghost mode enabled'
         return response
 

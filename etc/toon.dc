@@ -1142,6 +1142,7 @@ dclass DistributedBossCog: DistributedNode {
   setSkipAmount(uint8) broadcast;
   requestSkip() airecv clsend;
   setToonsFirstTime(bool) broadcast clsend;
+  skipCutscene() broadcast;
 };
 
 dclass DistributedSellbotBoss: DistributedBossCog {

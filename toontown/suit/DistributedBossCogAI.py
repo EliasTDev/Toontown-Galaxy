@@ -335,7 +335,7 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
         
     def exitElevator(self):
         self.ignoreBarrier(self.barrier)
-        self.checkSkip()
+        self.checkSkipWithoutSkipping()
 
     ##### Introduction state #####
 
@@ -936,6 +936,16 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
         # boss's attacks in battle three.
         self.b_setAttackCode(ToontownGlobals.BossCogNoAttack)
 
+    def checkSkipWithoutSkipping(self):
+        if self.toonsFirstTime:
+            self.notify.info("Checkskip: First time")
+            self.sendToonsFirstTime(True)
+        #tell the client the amount of toons skipped
+        self.notify.info('Sending client skip amount')
+        self.sendUpdate('setSkipAmount', [len(self.toonsSkipped)])
+            #Just in case
+            #self.canSkip = False
+        return
     def checkSkip(self):
         self.notify.info("Checking skip")
         #check if we can skip
@@ -947,16 +957,25 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
             return
         if len(self.toonsSkipped) >= len(self.involvedToons) - 1:
             #exit cutscene
+            self.notify.info('Skipping to next stage')
+            self.tellClientToSkip()
             if self.state == 'Introduction':
                 self.exitIntroduction()
+                self.doneIntroduction()
             elif self.state == 'RollToBattleTwo':
                 self.exitRollToBattleTwo()
-            elif self.state == 'PrepareBattleTwo':
-                self.exitPrepareBattleTwo()
+                self.enterPrepareBattleTwo()
+
+            #elif self.state == 'PrepareBattleTwo':
+               # self.exitPrepareBattleTwo()
+              #  self.__onToBattleTwo()
+
             elif self.state == 'PrepareBattleThree':
                 self.exitPrepareBattleThree()
+                self.__onToBattleThree()
             elif self.state == 'PrepareBattleFour':
                 self.exitPrepareBattleFour()
+                self.__onToBattleFour()
         else:
             #tell the client the amount of toons skipped
             self.notify.info('Sending client skip amount')
@@ -972,6 +991,8 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
         self.checkSkip()
         
 
+    def tellClientToSkip(self):
+        self.sendUpdate('skipCutscene')
 
     def sendToonsFirstTime(self, toonsFirstTime):
         """
