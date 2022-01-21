@@ -301,7 +301,7 @@ class ToonBase(OTPBase.OTPBase):
         self.accept("winow-event", self.windowEvent)
         if not self.win.getGsg().getSupportsBasicShaders():
             self.notify.error("Video driver doesn't support shaders")
-        if win.gsg.getSupportsBasicShaders() and win.gsg.getSupportsGlsl():
+        if self.win.gsg.getSupportsBasicShaders() and self.win.gsg.getSupportsGlsl():
             render.setShaderAuto()
             render2d.setShaderAuto()
             render2dp.setShaderAuto()
