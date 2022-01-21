@@ -88,9 +88,9 @@ class Hood(StateData.StateData):
             return
         else:
             _ambientLight = AmbientLight("hood-ambient-light")
-            #base.setLightColor(self.ambientTem, _ambientLight, self.ambientIntensity)
-            _ambientLight.setColor((0.5, 0.5, 0.5, 1))
+            base.setLightColor(self.ambientTemp, _ambientLight, self.ambientIntensity)
             self.ambientLight = base.render.attachNewNode(_ambientLight)
+
             if self.wantSun:
                 return
                 #TODO
@@ -242,7 +242,7 @@ class Hood(StateData.StateData):
         self.sky.setLightOff()
         OTPRender.renderShadow(False, self.sky)
 
-        self.createOutdoorLighting()
+        #self.createOutdoorLighting()
 
     def unload(self):
         """
