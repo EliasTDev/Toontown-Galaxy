@@ -23,6 +23,7 @@ from toontown.hood import ZoneUtil
 from direct.interval.IntervalGlobal import *
 from toontown.hood import GenericAnimatedBuilding
 from toontown.hood import MailboxInteractiveProp
+from toontown.toonbase.ToontownBattleGlobals import ZONE_TO_MUSIC
 class TownLoader(StateData.StateData):
     """
     TownLoader class
@@ -100,7 +101,7 @@ class TownLoader(StateData.StateData):
         self.music = base.loader.loadMusic(self.musicFile)
         self.activityMusic = base.loader.loadMusic(self.activityMusicFile)
         self.battleMusic = base.loader.loadMusic(
-                'phase_3.5/audio/bgm/encntr_general_bg.ogg')
+                ZONE_TO_MUSIC.get(ZoneUtil.getHoodId(zoneId), 'phase_3.5/audio/bgm/encntr_general_bg.ogg'))
         # Load the battle UI:
         self.townBattle = TownBattle.TownBattle(self.townBattleDoneEvent)
         self.townBattle.load()
@@ -357,7 +358,6 @@ class TownLoader(StateData.StateData):
 
         # A list of all visible nodes
         self.nodeList = []
-
         self.fadeInDict = {}
         self.fadeOutDict = {}
 
@@ -392,7 +392,6 @@ class TownLoader(StateData.StateData):
             self.nodeList.append(groupNode)
             self.zoneDict[zoneId] = groupNode
             self.nodeToZone[groupNode] = zoneId
-
             fadeDuration = 0.5
 
             self.fadeOutDict[groupNode] = Sequence(

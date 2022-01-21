@@ -15,7 +15,6 @@ from direct.interval.IntervalGlobal import *
 from toontown.toonbase.ToontownGlobals import *
 from toontown.toonbase import TTLocalizer
 from toontown.parties import PartyGlobals
-from toontown.hood import *
 
 # effects imports
 from . import Fireworks
@@ -141,16 +140,16 @@ class FireworkShowMixin:
                 if not self.__checkStreetValidity():
                     return
                 else:
-                    place.halloweenLights = base.cr.playGame.getPlace().loader.geom.findAllMatches("**/*light*")
-                    place.halloweenLights.extend(base.cr.playGame.getPlace().loader.geom.findAllMatches("**/*lamp*"))
+                    place.halloweenLights = list(base.cr.playGame.getPlace().loader.geom.findAllMatches("**/*light*"))
+                    place.halloweenLights.extend(list(base.cr.playGame.getPlace().loader.geom.findAllMatches("**/*lamp*")))
                     for light in place.halloweenLights:
                         light.setColorScaleOff(0)
             else:
                 if not self.__checkHoodValidity():
                     return
                 else:
-                    place.loader.hood.halloweenLights = base.cr.playGame.hood.loader.geom.findAllMatches("**/*light*")
-                    place.loader.hood.halloweenLights.extend(base.cr.playGame.hood.loader.geom.findAllMatches("**/*lamp*"))
+                    place.loader.hood.halloweenLights = list(base.cr.playGame.hood.loader.geom.findAllMatches("**/*light*"))
+                    place.loader.hood.halloweenLights.extend(list(base.cr.playGame.hood.loader.geom.findAllMatches("**/*lamp*")))
                     for light in base.cr.playGame.hood.halloweenLights:
                         light.setColorScaleOff(0)
             
@@ -196,7 +195,7 @@ class FireworkShowMixin:
             
     def restoreCameraLens(self):
         """ Restore the far clipping distance after fireworks """
-        
+        from toontown.hood import OZHood, GSHood
         hood = self.getHood()
             
         

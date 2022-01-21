@@ -493,7 +493,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         del self._cTrav
         self._collSolidNp.detachNode()
         del self._collSolidNp
-        self.subject.getGeomNode().show()
+        self.showOrHide(self.subject)
 
     def _fadeGeom(self, np):
         if np in self._fadeInIvals:
@@ -552,10 +552,10 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
             return task.cont
         subjectMoving = self.isSubjectMoving()
         subjectTurning = (inputState.isSet('turnRight') or inputState.isSet('turnLeft')) and self.subject.controlManager.isEnabled
-        if subjectMoving:
-            hNode = self.subject
-        else:
-            hNode = self
+        #if subjectMoving:
+         #   hNode = self.subject
+        #else:
+        hNode = self
 
         if self.mouseDelta[0] or self.mouseDelta[1]:
             dx, dy = self.mouseDelta
@@ -578,10 +578,10 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self.baseH = baseH
         self.minH = minH
         self.maxH = maxH
-        if self.isSubjectMoving():
-            hNode = self.subject
-        else:
-            hNode = self
+        #if self.isSubjectMoving():
+            #hNode = self.subject
+       # else:
+        hNode = self
 
         hNode.setH(maxH)
 
@@ -617,15 +617,13 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         if not collEntry:
             camera.setPos(self.camOffset)
             camera.setZ(0)
-
-            self.subject.getGeomNode().show()
             return task.cont
-
+        self.showOrHide(self.subject)
         cPoint = collEntry.getSurfacePoint(self)
         offset = 0.9
         camera.setPos(cPoint + cNormal * offset)
         distance = camera.getDistance(self)
-        if distance < 1.8:
+        if distance < 1.8 or self.subject.isDisguised:
             self.subject.getGeomNode().hide()
         else:
             self.subject.getGeomNode().show()
@@ -655,3 +653,12 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self.camOffset.setY(y)
         self.setPos(self.getX(), self.getY(), z)
         self.setHpr(h, p, 0)
+
+    def showOrHide(self, subject):
+        """Given a toon object check if they are in a disguise if so hide the toon , 
+        else show the toon
+        """
+        if subject.isDisguised:
+            self.subject.getGeomNode().hide()
+        else:
+            self.subject.getGeomNode().show()

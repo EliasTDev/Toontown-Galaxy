@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from toontown.toonbase.ToontownGlobals import *
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
@@ -303,7 +303,7 @@ class TownBattleSOSPanel(DirectFrame, StateData.StateData):
         # newFriends is a list of 2-item tuples (friendId, flags)
         newFriends = []
 
-        battlePets = base.config.GetBool('want-pets-in-battle', 1)
+        battlePets = ConfigVariableBool('want-pets-in-battle', 1).value
 
         if base.wantPets and battlePets == 1 and base.localAvatar.hasPet():
             newFriends.append((base.localAvatar.getPetId(), 0))

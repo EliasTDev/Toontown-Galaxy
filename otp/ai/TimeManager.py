@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase.DirectObject import *
 from direct.distributed.ClockDelta import *
 from direct.task import Task
@@ -37,29 +37,29 @@ class TimeManager(DistributedObject.DistributedObject):
         # The number of seconds to wait between automatic
         # synchronizations.  Set to 0 to disable auto sync after
         # startup.
-        self.updateFreq = base.config.GetFloat('time-manager-freq', 1800)
+        self.updateFreq = ConfigVariableDouble('time-manager-freq', 1800).value
 
         # The minimum number of seconds to wait between two unrelated
         # synchronization attempts.  Increasing this number cuts down
         # on frivolous synchronizations.
-        self.minWait = base.config.GetFloat('time-manager-min-wait', 10)
+        self.minWait = ConfigVariableDouble('time-manager-min-wait', 10).value
 
         # The maximum number of seconds of uncertainty to tolerate in
         # the clock delta without trying again.
-        self.maxUncertainty = base.config.GetFloat('time-manager-max-uncertainty', 1)
+        self.maxUncertainty = ConfigVariableDouble('time-manager-max-uncertainty', 1).value
 
         # The maximum number of attempts to try to get a low-latency
         # time measurement before giving up and accepting whatever we
         # get.
-        self.maxAttempts = base.config.GetInt('time-manager-max-attempts', 5)
+        self.maxAttempts = ConfigVariableInt('time-manager-max-attempts', 5).value
 
         # A simulated clock skew for debugging, in seconds.
-        self.extraSkew = base.config.GetInt('time-manager-extra-skew', 0)
+        self.extraSkew = ConfigVariableInt('time-manager-extra-skew', 0).value
 
         if self.extraSkew != 0:
             self.notify.info("Simulating clock skew of %0.3f s" % self.extraSkew)
 
-        self.reportFrameRateInterval = base.config.GetDouble('report-frame-rate-interval', 300.0)
+        self.reportFrameRateInterval = ConfigVariableDouble('report-frame-rate-interval', 300.0).value
 
         self.talkResult = 0
         self.thisContext = -1
@@ -88,7 +88,7 @@ class TimeManager(DistributedObject.DistributedObject):
         self.accept(OTPGlobals.SynchronizeHotkey, self.handleHotkey)
         self.accept('clock_error', self.handleClockError)
 
-        if __dev__ and base.config.GetBool('enable-garbage-hotkey', 0):
+        if __dev__ and ConfigVariableBool('enable-garbage-hotkey', 0).value:
             self.accept(OTPGlobals.DetectGarbageHotkey, self.handleDetectGarbageHotkey)
 
         if self.updateFreq > 0:
@@ -338,7 +338,7 @@ class TimeManager(DistributedObject.DistributedObject):
             # However, we'll put a cap on the frame rate interval, so
             # it doesn't go unreasonably wide if we set the reporting
             # interval to be fairly slow.
-            maxFrameRateInterval = base.config.GetDouble('max-frame-rate-interval', 30.0)
+            maxFrameRateInterval = ConfigVariableDouble('max-frame-rate-interval', 30.0).value
             globalClock.setAverageFrameRateInterval(min(frameRateInterval, maxFrameRateInterval))
 
         taskMgr.remove('frameRateMonitor')

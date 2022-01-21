@@ -140,7 +140,7 @@ base.graphicsEngine.renderFrame()
 
 # do the quest sanity check
 if __debug__:
-    if base.config.GetBool('quest-sanity-check',0):
+    if ConfigVariableBool('quest-sanity-check',0).value:
         from toontown.quest import Quests
         Quests.assertAllQuestsValid()
 
@@ -154,7 +154,7 @@ from . import TTLocalizer
 from otp.otpbase import OTPGlobals
 OTPGlobals.setDefaultProductPrefix(TTLocalizer.ProductPrefix)
 #TODO check if winter holiday is running, this is quite difficult as newsmanager can't be initalized yet 
-winter = base.config.GetBool('is-winter-running', 0)
+winter = ConfigVariableBool('is-winter-running', 0).value
 # Play music at startup
 # This is a bit strange because the music is created here, then
 # handed off to the cr to control. This is done so keep the music

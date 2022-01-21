@@ -18,7 +18,7 @@ from toontown.launcher import ToontownDownloadWatcher
 from otp.otpbase import OTPGlobals 
 from settings.Settings import Settings
 from toontown.toonbase import ControlManager as TTControlManager
-
+from toontown.toonbase.ToontownPostProcess import  ToontownPostProcess
 from panda3d.otp import *
 class ToonBase(OTPBase.OTPBase):
     """ToonBase class"""
@@ -54,7 +54,7 @@ class ToonBase(OTPBase.OTPBase):
         self.toonChatSounds = self.config.GetBool('toon-chat-sounds', 1)
 
         # Toontown doesn't care about dynamic shadows for now.
-        self.wantDynamicShadows = 0
+        self.wantDynamicShadows = 1
         # this is temporary until we pull in the new launcher code in production
         self.exitErrorCode = 0
 
@@ -297,7 +297,28 @@ class ToonBase(OTPBase.OTPBase):
             base.setFrameRateMeter(False)
         #self.resetMusic = self.loader.loadMusic("phase_3/audio/bgm/MIDI_Events_16channels.ogg")
         self.wantWASD =  base.MOVE_FORWARD != 'arrow_up' and base.MOVE_BACKWARDS != 'arrow_down' and base.MOVE_LEFT != 'arrow_left' and base.MOVE_RIGHT != 'arrow_right'
-        
+        self.accept("winow-event", self.windowEvent)
+        if not self.win.getGsg().getSupportsBasicShaders():
+            self.notify.error("Video driver doesn't support shaders")
+        if self.win.gsg.getSupportsBasicShaders() and self.win.gsg.getSupportsGlsl():
+            render.setShaderAuto()
+            render2d.setShaderAuto()
+            render2dp.setShaderAuto()
+        self.wantShaders = self.settings.getBool('game', 'want-shaders', True)
+        if self.wantShaders:
+            self.render.setAntialias(AntialiasAttrib.MMultisample)
+            self.render2d.setAntialias(AntialiasAttrib.MMultisample)
+            self.render2dp.setAntialias(AntialiasAttrib.MMultisample)
+            self.pixel2d.setAntialias(AntialiasAttrib.MMultisample)
+
+            self.render.setAttrib(LightRampAttrib.makeHdr0())
+
+            # Set up the post-processing system
+            self.postProcess = ToontownPostProcess()
+            self.postProcess.startup(self.win)
+            self.postProcess.setup()
+            self.taskMgr.add(self.__updatePostProcess, 'updatePostProcess')    
+
     def reloadControls(self):
         self.ignore(self.SCREENSHOT)
         self.MOVE_FORWARD = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyUp).lower()
@@ -333,8 +354,8 @@ class ToonBase(OTPBase.OTPBase):
         # These are to fix graphical issues on Modern panda.
         cullBinMgr = CullBinManager.getGlobalPtr()
         cullBinMgr.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
-        cullBinMgr.addBin('shadow', CullBinManager.BTFixed, 15)
-        cullBinMgr.addBin('ground', CullBinManager.BTFixed, 14)
+        cullBinMgr.addBin('shadow', CullBinManager.BTFixed, -100)
+        cullBinMgr.addBin('ground', CullBinManager.BTUnsorted, 18)
 
     def __walking(self, pressed):
         self.walking = pressed
@@ -458,21 +479,61 @@ class ToonBase(OTPBase.OTPBase):
         # And define a bunch of cells along the margins.
         mm = self.marginManager
         self.leftCells = [
-            mm.addGridCell(0, 1, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(0, 2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(0, 3, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
-            ]
+            mm.addGridCell(0, 1.333, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 2.667, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 4, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+        ]
         self.bottomCells = [
-            mm.addGridCell(0.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(1.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(2.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(3.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(4.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
-            ]
+            mm.addGridCell(0.5, 0.2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(1.5, 0.2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(2.5, 0.2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(3.5, 0.2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(4.5, 0.2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+        ]
         self.rightCells = [
-            mm.addGridCell(5, 2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(5, 1, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
-            ]
+            # mm.addGridCell(5, 2.667, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(5, 1.333, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+        ]
+        self.oldAspectRatio = self.get_aspect_ratio()
+
+    def windowEvent(self, win):
+        super().windowEvent(win)
+        self.reloadNametagCells(win)
+
+    def __updatePostProcess(self, task):
+        if hasattr(self, 'postProcess'):
+            self.postProcess.update()
+        return task.cont
+        
+    def reloadNametagCells(self, win):
+
+        if  self.oldAspectRatio == self.get_aspect_ratio():
+            return
+
+        mm = self.marginManager
+        for cell in self.leftCells:
+            mm.setCellAvailable(cell, False)
+        for cell in self.bottomCells:
+            mm.setCellAvailable(cell, False)
+        for cell in self.rightCells:
+            mm.setCellAvailable(cell, False)
+        self.leftCells = [
+            mm.addGridCell(0, 1.333, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 2.667, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 4, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+        ]
+        self.bottomCells = [
+            mm.addGridCell(0.5, 0.25, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(1.5, 0.25, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(2.5, 0.25, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(3.5, 0.25, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(4.5, 0.25, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+        ]
+        self.rightCells = [
+            # mm.addGridCell(5, 2.667, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(5, 1.333, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+        ]
+        self.oldAspectRatio = self.get_aspect_ratio()
 
     def setCellsAvailable(self, cell_list, available):
         """setCellsAvailable(self, cell_list, bool available)
@@ -662,9 +723,14 @@ class ToonBase(OTPBase.OTPBase):
 
     def startSprint(self):
         if hasattr(base, 'localAvatar'):
-            base.localAvatar.currentSpeed = OTPGlobals.ToonForwardSprintSpeed
-            base.localAvatar.currentReverseSpeed = OTPGlobals.ToonReverseSprintSpeed
-            base.localAvatar.controlManager.setSpeeds(OTPGlobals.ToonForwardSprintSpeed, OTPGlobals.ToonJumpForce, OTPGlobals.ToonReverseSprintSpeed, OTPGlobals.ToonRotateSpeed)
+            if base.localAvatar.getState() == 'Sad':
+                base.localAvatar.currentSpeed = OTPGlobals.ToonForwardSadSprintSpeed
+                base.localAvatar.currentReverseSpeed = OTPGlobals.ToonReverseSprintSpeed
+                base.localAvatar.controlManager.setSpeeds(OTPGlobals.ToonForwardSadSprintSpeed, OTPGlobals.ToonJumpForce, OTPGlobals.ToonReverseSprintSpeed, OTPGlobals.ToonRotateSpeed)
+            else:
+                base.localAvatar.currentSpeed = OTPGlobals.ToonForwardSprintSpeed
+                base.localAvatar.currentReverseSpeed = OTPGlobals.ToonReverseSprintSpeed
+                base.localAvatar.controlManager.setSpeeds(OTPGlobals.ToonForwardSprintSpeed, OTPGlobals.ToonJumpForce, OTPGlobals.ToonReverseSprintSpeed, OTPGlobals.ToonRotateSpeed)
             self.isSprinting = 1
         else:
             if self.isSprinting == 1:
@@ -706,3 +772,6 @@ class ToonBase(OTPBase.OTPBase):
             loadPrcFileData('toonBase Settings Controls', 'controls %s' % controls)
             self.settings.loadFromSettings()
 
+
+    def setLightColor(self, temperature, light, intensity):
+        light.setColor(Vec4(light.getColor().getXyz() * intensity, 1.0))

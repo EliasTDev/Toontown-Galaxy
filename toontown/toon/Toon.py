@@ -1960,7 +1960,6 @@ class Toon(Avatar.Avatar, ToonHead):
             elif (rotateSpeed != 0.0):
                 # Spin in place
                 action = OTPGlobals.WALK_INDEX
-
             elif slideSpeed > ToontownGlobals.RunCutOff:
                 action = OTPGlobals.STRAFE_RIGHT_INDEX
             elif slideSpeed < -ToontownGlobals.RunCutOff:
@@ -1977,7 +1976,6 @@ class Toon(Avatar.Avatar, ToonHead):
                 #If toon starts strafing left rotate that character in that direction
                 base.localAvatar.orbitalCamera.setGeomNodeH(90)
                 #If toon starts strafing right rotate that character in that direction
-
             elif action == OTPGlobals.STRAFE_RIGHT_INDEX:
                 base.localAvatar.orbitalCamera.setGeomNodeH(-90)
             elif action == OTPGlobals.RUN_INDEX:
@@ -1985,7 +1983,7 @@ class Toon(Avatar.Avatar, ToonHead):
                 #Else just them to default h value
                 if slideSpeed > ToontownGlobals.RunCutOff:
                     base.localAvatar.orbitalCamera.setGeomNodeH(-45)
-                if slideSpeed < -ToontownGlobals.RunCutOff:
+                elif slideSpeed < -ToontownGlobals.RunCutOff:
                     base.localAvatar.orbitalCamera.setGeomNodeH(45)
                 else:
                     base.localAvatar.orbitalCamera.setGeomNodeH(0)

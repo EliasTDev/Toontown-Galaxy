@@ -199,7 +199,7 @@ class TeaserPanel(DirectObject):
         self.browser.reparentTo(self.dialog)
         base.transitions.fadeScreen(.5)
         
-        if base.config.GetBool('want-teaser-scroll-keys',0):
+        if ConfigVariableBool('want-teaser-scroll-keys',0).value:
             self.accept(base.MOVE_RIGHT, self.showNextPage)
             self.accept(base.MOVE_LEFT,  self.showPrevPage)
         self.accept('stoppedAsleep', self.__handleDone)
