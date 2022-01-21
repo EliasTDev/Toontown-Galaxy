@@ -18,6 +18,7 @@ from toontown.launcher import ToontownDownloadWatcher
 from otp.otpbase import OTPGlobals 
 from settings.Settings import Settings
 from toontown.toonbase import ControlManager as TTControlManager
+from ctypes import cdll
 
 from panda3d.otp import *
 class ToonBase(OTPBase.OTPBase):
@@ -734,7 +735,7 @@ class ToonBase(OTPBase.OTPBase):
             toonChatSounds = self.settings.getBool('game', 'toonChatSounds', True)
             musicVolume = self.settings.getFloat('game', 'musicVolume', 1.0)
             sfxVolume = self.settings.getFloat('game', 'sfxVolume', 1.0)
-            res = self.settings.getList('game', 'resolution', [800, 600])
+            res = self.settings.getList('game', 'resolution', [cdll.user32.GetSystemMetrics(0)*5/6, cdll.user32.GetSystemMetrics(1)*5/6])
             antialiasing = self.settings.getInt('game', 'antialiasing', 0)
             if antialiasing:
                 loadPrcFileData('toonBase Settings Framebuffer MSAA', 'framebuffer-multisample 1')
