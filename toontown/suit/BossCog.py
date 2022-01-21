@@ -86,20 +86,20 @@ class BossCog(Avatar.Avatar):
         downButton = gui.find('**/InventoryButtonDown')
         rolloverButton = gui.find('**/InventoryButtonRollover')
         self.skipCButton = DirectButton(parent=base.a2dBottomRight, relief=None, 
-                                     pos=(-0.36, 0, 0.17), scale=(1,1,1), 
+                                     pos=(-0.46, 0, 0.27), scale=(1,1,1), 
                                      text='Skip cutscene', text_scale = (0.05, 0.05),
                                     text_pos = (-0.005,-0.01), image = (upButton, downButton, rolloverButton, upButton),
                                     image_color = (0.66274509803, 0.66274509803, 0.66274509803, 1),
-                                    image_scale = (4,4,4),
+                                    image_scale = (5,1,2),
                                     command = self._handleSkip()
         )
         self.skipCButton.hide()
         self.accept('disableSkipCutscene', self.skipCButton.hide)
         self.accept('enableSkipCutscene',self.skipCButton.show )
         self.accept('cutSceneSkipAmountChange', self.updateSkipCButton)
-        self.accept('setToonsFirstTime', self.setToonsFirstTime)
+        self.accept('messageSetToonsFirstTime', self.handleSetToonsFirstTime)
 
-    def setToonsFirstTime(self):
+    def handleSetToonsFirstTime(self):
         """
         Tell the gui it's one of the toon's first time
         """
@@ -400,6 +400,19 @@ class BossCog(Avatar.Avatar):
         self.treadsRightPos += duration * rate
         return self.__rollTreadsInterval(
             self.treadsRight, start = start, duration = duration, rate = rate)
+
+    def updateSkipCButton(self, minimum, maximum):
+        """
+        Updates the skip cutscene button to match the amount of people voting"
+        """
+        self.notify.info("Updating skip cutscene button")
+        self.skipCButton['text'] = f'Skip Cutscene: {minimum}/{maximum}'
+        self.skipCButton['state'] = DGG.NORMAL
+
+    def _handleSkip(self):
+        self.notify.info('Handling skip')
+        messenger.send('cutsceneSkip') 
+        return
 
     # Manage the doors on the bottom that open and close for Cogs to
     # walk out.
@@ -713,16 +726,6 @@ class BossCog(Avatar.Avatar):
 
         return ival
 
-    def updateSkipCButton(self, minimum, maximum):
-        """
-        Updates the skip cutscene button to match the amount of people voting"
-        """
-        self.skipCButton['text'] = f'Skip Cutscene: {minimum}/{maximum}'
-        self.skipCButton['state'] = DGG.NORMAL
-
-    def _handleSkip(self):
-        messenger.send('cutsceneSkip') 
-        return
 
     def getAnim(self, anim):
         # A low-level function to return an interval to play the

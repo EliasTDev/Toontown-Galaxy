@@ -937,11 +937,14 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
         self.b_setAttackCode(ToontownGlobals.BossCogNoAttack)
 
     def checkSkip(self):
+        self.notify.info("Checking skip")
         #check if we can skip
         if self.toonsFirstTime:
+            self.notify.info("Checkskip: First time")
             self.sendToonsFirstTime(True)
             #Just in case
             #self.canSkip = False
+            return
         if len(self.toonsSkipped) >= len(self.involvedToons) - 1:
             #exit cutscene
             if self.state == 'Introduction':
@@ -956,6 +959,7 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
                 self.exitPrepareBattleFour()
         else:
             #tell the client the amount of toons skipped
+            self.notify.info('Sending client skip amount')
             self.sendUpdate('setSkipAmount', [len(self.toonsSkipped)])
 
     def requestSkip(self):
@@ -964,6 +968,7 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
             print('Unable to request skip')
             return
         self.toonsSkipped.append(toon)
+        self.notify.info('toons Skipped appended')
         self.checkSkip()
         
 
@@ -972,5 +977,6 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
         """
         Tell the client it's one of the toon's first time
         """
+        self.notify.info("Telling client its the user's first time")
         self.toonsFirstTime = toonsFirstTime
         self.sendUpdate('setToonsFirstTime', [self.toonsFirstTime])

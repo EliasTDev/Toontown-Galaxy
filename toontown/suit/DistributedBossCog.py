@@ -167,7 +167,7 @@ class DistributedBossCog(DistributedAvatar.DistributedAvatar,
 
     def enableSkipCutscene(self):
         messenger.send('enableSkipCutscene')
-        
+
     def disable(self):
         """
         This method is called when the DistributedObject
@@ -1655,6 +1655,7 @@ class DistributedBossCog(DistributedAvatar.DistributedAvatar,
         return seq
 
     def setToonsFirstTime(self, toonsFirstTime):
+        self.notify.info("Setting toon's first time")
         self.toonsFirstTime = toonsFirstTime
         if self.toonsFirstTime:
-            messenger.send('setToonsFirstTime')
+            messenger.send('messageSetToonsFirstTime')

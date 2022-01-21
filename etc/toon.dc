@@ -508,10 +508,10 @@ dclass DistributedToon: DistributedPlayer {
   setMoney(int16 = 0) required broadcast ownrecv db;
   setMaxHp(int16 = 16) required broadcast ownrecv db;
   setHp(int16 = 16) required broadcast ownrecv db;
-  setSellbotCutSceneFirstTime(bool) required  ownrecv db;
-  setCashbotCutSceneFirstTime(bool) required  ownrecv db;
-  setLawbotCutSceneFirstTime(bool) required  ownrecv db;
-  setBossbotCutSceneFirstTime(bool) required  ownrecv db;
+  setSellbotCutSceneFirstTime(bool = 1) required  ownrecv db;
+  setCashbotCutSceneFirstTime(bool = 1) required  ownrecv db;
+  setLawbotCutSceneFirstTime(bool = 1) required  ownrecv db;
+  setBossbotCutSceneFirstTime(bool = 1) required  ownrecv db;
   toonUp(uint16 hpGained) broadcast ownrecv;
   takeDamage(uint16 hpLost) broadcast ownrecv;
 
@@ -1141,7 +1141,7 @@ dclass DistributedBossCog: DistributedNode {
   setAttackCode(uint8 attackCode, uint32 avId) broadcast;
   setSkipAmount(uint8) broadcast;
   requestSkip() airecv clsend;
-  setToonsFirstTime(bool) broadcast;
+  setToonsFirstTime(bool) broadcast clsend;
 };
 
 dclass DistributedSellbotBoss: DistributedBossCog {

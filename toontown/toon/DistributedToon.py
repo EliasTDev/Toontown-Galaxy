@@ -2111,7 +2111,6 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         by default this is true
         """
         self.sellbotCutsceneFirstTime = cutscene
-        self.sendUpdate('setSellbotCutSceneFirstTime', [self.sellbotCutsceneFirstTime])
 
     def setCashbotCutSceneFirstTime(self, cutscene):
         """
@@ -2119,7 +2118,6 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         by default this is true
         """
         self.cashbotCutsceneFirstTime = cutscene
-        self.sendUpdate('setCashbotCutSceneFirstTime', [self.cashbotCutsceneFirstTime])
 
     def setLawbotCutSceneFirstTime(self, cutscene):
         """
@@ -2127,7 +2125,6 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         by default this is true
         """
         self.lawbotCutsceneFirstTime = cutscene
-        self.sendUpdate('setLawbotCutSceneFirstTime', [self.lawbotCutsceneFirstTime])
 
     def setBossbotCutSceneFirstTime(self, cutscene):
         """
@@ -2135,7 +2132,6 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         by default this is true
         """
         self.bossbotCutsceneFirstTime = cutscene
-        self.sendUpdate('setBossbotCutSceneFirstTime', [self.bossbotCutsceneFirstTime])
 
 
     #TODO for the get functions return these values from the server side or do a check
