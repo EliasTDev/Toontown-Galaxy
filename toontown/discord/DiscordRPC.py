@@ -155,22 +155,22 @@ class DiscordRPC(object):
 
     def vp(self):
         self.image = 'vp'
-        self.details = 'Fighting the vp.'
+        self.details = 'Fighting the V.P.'
         self.setData()
 
     def cfo(self):
         self.image = 'cfo'
-        self.details = 'Fighting the cfo.'
+        self.details = 'Fighting the C.F.O.'
         self.setData()
 
     def cj(self):
         self.image = 'cj'
-        self.details = 'Fighting the cj.'
+        self.details = 'Fighting the C.J.'
         self.setData()
 
     def ceo(self):
         self.image = 'ceo'
-        self.details = 'Fighting the ceo.'
+        self.details = 'Fighting the C.E.O.'
 
 
     
