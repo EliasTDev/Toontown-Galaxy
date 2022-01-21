@@ -501,7 +501,9 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
             if toon.getLawbotCutSceneFirstTime():
                 self.canSkip = False 
                 self.toonsFirstTime = True
+                self.sendToonsFirstTime(self.toonsFirstTime)
                 break
+        DistributedBossCogAI.DistributedBossCogAI.exitElevator(self)
 
     ##### Introduction state #####
 

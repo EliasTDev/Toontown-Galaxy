@@ -1064,6 +1064,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     ##### RollToBattleTwo state #####
 
     def enterRollToBattleTwo(self):
+        self.enableSkipCutscene()
         self.accept('cutsceneSkip', self.requestSkip)
         assert self.notify.debug('enterRollToBattleTwo()')
         # Disable collision on the toon, there is a collision issue where the boss was 

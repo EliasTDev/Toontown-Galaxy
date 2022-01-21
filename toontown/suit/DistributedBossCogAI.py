@@ -335,6 +335,7 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
         
     def exitElevator(self):
         self.ignoreBarrier(self.barrier)
+        self.checkSkip()
 
     ##### Introduction state #####
 
@@ -938,10 +939,9 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
     def checkSkip(self):
         #check if we can skip
         if self.toonsFirstTime:
-            self.sendToonsFirstTime()
+            self.sendToonsFirstTime(True)
             #Just in case
-            self.canSkip = False
-            return
+            #self.canSkip = False
         if len(self.toonsSkipped) >= len(self.involvedToons) - 1:
             #exit cutscene
             if self.state == 'Introduction':
@@ -961,12 +961,16 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
     def requestSkip(self):
         toon = self.air.getAvatarIdFromSender()
         if (toon not in self.involvedToons) or (not self.canSkip) or (toon in self.toonsSkipped):
+            print('Unable to request skip')
             return
         self.toonsSkipped.append(toon)
         self.checkSkip()
+        
 
-    def sendToonsFirstTime(self):
+
+    def sendToonsFirstTime(self, toonsFirstTime):
         """
         Tell the client it's one of the toon's first time
         """
+        self.toonsFirstTime = toonsFirstTime
         self.sendUpdate('setToonsFirstTime', [self.toonsFirstTime])

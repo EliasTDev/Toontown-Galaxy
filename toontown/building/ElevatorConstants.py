@@ -34,6 +34,7 @@ if __dev__:
     if elevatorCountdown != -1:
         bboard.post('elevatorCountdown', elevatorCountdown)
 
+#Reduced boss elevator times for testing revert back to 30 for open beta/production 
 # Constants used for elevator coordination
 ElevatorData = {
     ELEVATOR_NORMAL : { "openTime"  : 2.0,
@@ -46,7 +47,7 @@ ElevatorData = {
     ELEVATOR_VP     : { "openTime"  : 4.0,
                         "closeTime" : 4.0,
                         "width"     : 11.5,
-                        "countdown" : bboard.get('elevatorCountdown',30.0),
+                        "countdown" : bboard.get('elevatorCountdown',10.0),
                         "sfxVolume" : 0.7,
                         "collRadius": 7.5,
                         },
@@ -67,14 +68,14 @@ ElevatorData = {
     ELEVATOR_CFO    : { "openTime"  : 3.0,
                         "closeTime" : 3.0,
                         "width"     : 8.166,
-                        "countdown" : bboard.get('elevatorCountdown',30.0),
+                        "countdown" : bboard.get('elevatorCountdown',10.0),
                         "sfxVolume" : 0.7,
                         "collRadius": 7.5,
                         },
     ELEVATOR_CJ     : { "openTime"  : 4.0,
                         "closeTime" : 4.0,
                         "width"     : 15.8, 
-                        "countdown" : bboard.get('elevatorCountdown',30.0),
+                        "countdown" : bboard.get('elevatorCountdown',10.0),
                         "sfxVolume" : 0.7,
                         "collRadius": 7.5,
                         },
@@ -88,7 +89,7 @@ ElevatorData = {
     ELEVATOR_BB     : { "openTime"  : 4.0,
                         "closeTime" : 4.0,
                         "width"     : 6.3, 
-                        "countdown" : bboard.get('elevatorCountdown',30.0),
+                        "countdown" : bboard.get('elevatorCountdown',10.0),
                         "sfxVolume" : 0.7,
                         "collRadius": 7.5,
                         },

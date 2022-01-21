@@ -2104,32 +2104,39 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         self.pieType = pieType
         if self.isLocal():
             self.updatePieButton()
+
     def setSellbotCutSceneFirstTime(self, cutscene):
         """
         sets the boolean value for seeing the VP cutscene for the first time
-        by default this is false
+        by default this is true
         """
         self.sellbotCutsceneFirstTime = cutscene
+        self.sendUpdate('setSellbotCutSceneFirstTime', [self.sellbotCutsceneFirstTime])
 
     def setCashbotCutSceneFirstTime(self, cutscene):
         """
         sets the boolean value for seeing the CFO cutscene for the first time
-        by default this is false
+        by default this is true
         """
         self.cashbotCutsceneFirstTime = cutscene
+        self.sendUpdate('setCashbotCutSceneFirstTime', [self.cashbotCutsceneFirstTime])
 
     def setLawbotCutSceneFirstTime(self, cutscene):
         """
         sets the boolean value for seeing the CJ cutscene for the first time
-        by default this is false
+        by default this is true
         """
         self.lawbotCutsceneFirstTime = cutscene
+        self.sendUpdate('setLawbotCutSceneFirstTime', [self.lawbotCutsceneFirstTime])
+
     def setBossbotCutSceneFirstTime(self, cutscene):
         """
         sets the boolean value for seeing the CEO cutscene for the first time
-        by default this is false
+        by default this is true
         """
         self.bossbotCutsceneFirstTime = cutscene
+        self.sendUpdate('setBossbotCutSceneFirstTime', [self.bossbotCutsceneFirstTime])
+
 
     #TODO for the get functions return these values from the server side or do a check
     # Not very important atm because hacking these values doesn't really impact gameplay
@@ -2151,7 +2158,7 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         """
         return self.cashbotCutsceneFirstTime
 
-   def getLawbotCutSceneFirstTime(self):
+    def getLawbotCutSceneFirstTime(self):
         """
         Purpose: The getLawbotCutSceneFirstTime Method tells us whether
          the toon has seen the CJ  cutscene or not

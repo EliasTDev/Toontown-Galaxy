@@ -32,7 +32,7 @@ class DistributedBossCog(DistributedAvatar.DistributedAvatar,
     def __init__(self, cr):
         DistributedAvatar.DistributedAvatar.__init__(self, cr)
         BossCog.BossCog.__init__(self)
-
+        self.toonsFirstTime = False
         self.gotAllToons = 0
         self.toonsA = []
         self.toonsB = []
@@ -165,7 +165,9 @@ class DistributedBossCog(DistributedAvatar.DistributedAvatar,
         messenger.send('disableSkipCutscene')
         self.ignore('cutsceneSkip')
 
-
+    def enableSkipCutscene(self):
+        messenger.send('enableSkipCutscene')
+        
     def disable(self):
         """
         This method is called when the DistributedObject
@@ -1404,6 +1406,7 @@ class DistributedBossCog(DistributedAvatar.DistributedAvatar,
     ##### Introduction state #####
 
     def enterIntroduction(self):
+        self.enableSkipCutscene()
         assert self.notify.debug('enterIntroduction()')
         self.accept('cutsceneSkip', self.requestSkip)
         self.controlToons()
@@ -1650,3 +1653,8 @@ class DistributedBossCog(DistributedAvatar.DistributedAvatar,
 
         seq.append(suitsOff)        
         return seq
+
+    def setToonsFirstTime(self, toonsFirstTime):
+        self.toonsFirstTime = toonsFirstTime
+        if self.toonsFirstTime:
+            messenger.send('setToonsFirstTime')

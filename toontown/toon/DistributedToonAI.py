@@ -221,10 +221,10 @@ class DistributedToonAI(DistributedPlayerAI.DistributedPlayerAI,
         self.trueFriends = []
 
         # boss stuff
-        self.sellbotCutsceneFirstTime = False
-        self.cashbotCutsceneFirstTime = False
-        self.lawbotCutsceneFirstTime = False
-        self.bossbotCutsceneFirstTime = False
+        self.sellbotCutsceneFirstTime = True
+        self.cashbotCutsceneFirstTime = True
+        self.lawbotCutsceneFirstTime = True
+        self.bossbotCutsceneFirstTime = True
 
 
     #def __del__(self):

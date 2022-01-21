@@ -1081,6 +1081,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     ##### PrepareBattleThree state #####
 
     def enterPrepareBattleThree(self):
+        self.enableSkipCutscene()
         self.accept('cutsceneSkip', self.requestSkip)
         assert self.notify.debug('enterPrepareBattleThree()')
 

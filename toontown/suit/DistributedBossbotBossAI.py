@@ -96,9 +96,12 @@ class DistributedBossbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
             toon = self.air.doId2do.get(toonId)
             #If it's one of the toon's first time
             if toon.getBossbotCutSceneFirstTime():
+                print('First time')
                 self.canSkip = False 
                 self.toonsFirstTime = True
+                self.sendToonsFirstTime(self.toonsFirstTime)
                 break
+        DistributedBossCogAI.DistributedBossCogAI.exitElevator(self)
 
     def enterIntroduction(self):
         """Handle enterint the introduction state.

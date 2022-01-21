@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.actor import Actor
 from otp.avatar import Avatar
@@ -15,6 +15,8 @@ from toontown.battle import BattleProps
 from direct.showbase.PythonUtil import Functor
 import string
 from panda3d.otp import *
+from direct.gui.DirectGui import *
+
 GenericModel = "phase_9/models/char/bossCog"
 
 
@@ -73,19 +75,36 @@ class BossCog(Avatar.Avatar):
 
         self.healthBar = None
         self.healthCondition = 0
+        self.toonsFirstTime = False
 
         # We don't need to uniquify these since there is only one
         # BossCog on a client at any given time.
         self.animDoneEvent = 'BossCogAnimDone'
         self.animIvalName = 'BossCogAnimIval'
-        
+        gui = loader.loadModel('phase_3.5/models/gui/inventory_gui.bam')
+        upButton = gui.find('**/InventoryButtonUp')
+        downButton = gui.find('**/InventoryButtonDown')
+        rolloverButton = gui.find('**/InventoryButtonRollover')
+        self.skipCButton = DirectButton(parent=base.a2dBottomRight, relief=None, 
+                                     pos=(-0.36, 0, 0.17), scale=(1,1,1), 
+                                     text='Skip cutscene', text_scale = (0.05, 0.05),
+                                    text_pos = (-0.005,-0.01), image = (upButton, downButton, rolloverButton, upButton),
+                                    image_color = (0.66274509803, 0.66274509803, 0.66274509803, 1),
+                                    image_scale = (4,4,4),
+                                    command = self._handleSkip()
+        )
+        self.skipCButton.hide()
+        self.accept('disableSkipCutscene', self.skipCButton.hide)
+        self.accept('enableSkipCutscene',self.skipCButton.show )
+        self.accept('cutSceneSkipAmountChange', self.updateSkipCButton)
+        self.accept('setToonsFirstTime', self.setToonsFirstTime)
 
     def setToonsFirstTime(self):
         """
         Tell the gui it's one of the toon's first time
         """
-        pass
-        #
+        self.skipCButton['text'] = "Can't skip. First time user present."
+        self.skipCButton['state'] = DGG.DISABLED
 
     def delete(self):
         Avatar.Avatar.delete(self)
@@ -97,6 +116,13 @@ class BossCog(Avatar.Avatar):
             self.doorB.request('Off')
             self.doorA = None
             self.doorB = None
+        # Ignore all messenger requsts then destroy the 
+        # gui element for skipping cutscenes
+        self.ignoreAll()
+        if hasattr(self, 'skipButton'):
+            self.skipCButton.destroy()
+            del self.skipCButton
+        
 
     def setDNAString(self, dnaString):
         self.dna = SuitDNA.SuitDNA()
@@ -686,6 +712,17 @@ class BossCog(Avatar.Avatar):
             ival = ActorInterval(self, animName, **kw)
 
         return ival
+
+    def updateSkipCButton(self, minimum, maximum):
+        """
+        Updates the skip cutscene button to match the amount of people voting"
+        """
+        self.skipCButton['text'] = f'Skip Cutscene: {minimum}/{maximum}'
+        self.skipCButton['state'] = DGG.NORMAL
+
+    def _handleSkip(self):
+        messenger.send('cutsceneSkip') 
+        return
 
     def getAnim(self, anim):
         # A low-level function to return an interval to play the

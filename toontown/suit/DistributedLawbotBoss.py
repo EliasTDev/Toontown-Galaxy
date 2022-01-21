@@ -1372,6 +1372,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         """
         Rolling to the podium.
         """
+        self.enableSkipCutscene()
         self.accept('cutsceneSkip', self.requestSkip)
         self.notify.debug("----- enterRollToBattleTwo")
         assert self.notify.debug('enterRollToBattleTwo()')

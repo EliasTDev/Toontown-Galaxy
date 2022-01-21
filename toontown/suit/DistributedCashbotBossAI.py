@@ -578,7 +578,9 @@ class DistributedCashbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
             if toon.getCashbotCutSceneFirstTime():
                 self.canSkip = False 
                 self.toonsFirstTime = True
+                self.sendToonsFirstTime(self.toonsFirstTime)
                 break
+        DistributedBossCogAI.DistributedBossCogAI.exitElevator(self)
 
     ##### PrepareBattleThree state #####
 

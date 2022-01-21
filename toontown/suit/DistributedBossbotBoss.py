@@ -461,6 +461,7 @@ class DistributedBossbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         Walk toons through door
         Close door        
         """
+        self.enableSkipCutscene()
         self.accept('cutsceneSkip', self.requestSkip)
         self.controlToons()
         self.setToonsToNeutral(self.involvedToons)
@@ -896,6 +897,7 @@ class DistributedBossbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     ##### PrepareBattleFour state #####
     def enterPrepareBattleFour(self):
         """Handle entering the Prepare Battle Four State."""
+        self.enableSkipCutscene()
         self.accept('cutsceneSkip', self.requestSkip)
         self.controlToons()
         intervalName = "PrepareBattleFourMovie"                
