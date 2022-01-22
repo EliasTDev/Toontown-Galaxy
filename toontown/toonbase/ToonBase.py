@@ -352,7 +352,7 @@ class ToonBase(OTPBase.OTPBase):
             os.mkdir('user')
             os.mkdir('user/logs')   
         namePrefix = 'screenshot'
-        namePrefix = 'user/screenshots' + namePrefix
+        namePrefix = 'user/screenshots/' + namePrefix
 
         #requires that you have at least 1 second between shots
         timedif = globalClock.getRealTime() - self.lastScreenShotTime
