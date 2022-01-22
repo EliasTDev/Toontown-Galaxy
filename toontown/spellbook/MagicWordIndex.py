@@ -468,6 +468,55 @@ class SkipFlyingGame(MagicWord):
         else:
             response = 'Not in a lawbot field office'
         return response 
+
+class SkipVP(MagicWord):
+    desc = "Skips to the indicated round of the VP."
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    arguments = [("round", str, False, "next")]
+    accessLevel = "DEVELOPER"
+
+    def handleWord(self, invoker, avId, toon, *args):
+        round = args[0]
+        from toontown.suit.DistributedSellbotBossAI import DistributedSellbotBossAI
+        boss = None
+        for do in simbase.air.doId2do.values():
+            if isinstance(do, DistributedSellbotBossAI):
+                if invoker.doId in do.involvedToons:
+                    boss = do
+                    break
+        if not boss:
+            return "You aren't in a VP!"
+
+        round = round.lower()
+
+        if round == 'three':
+            if boss.state in ('PrepareBattleThree', 'BattleThree'):
+                return "You can not return to previous rounds!"
+            else:
+                boss.exitIntroduction()
+                boss.b_setState('PrepareBattleThree')
+                return "Skipping to final round."
+        elif round == 'two':
+            if boss.state in ('PrepareBattleThree', 'BattleThree'):
+                return "You can not return to previous rounds!"
+            else:
+                boss.exitIntroduction()
+                boss.b_setState('RollToBattleTwo')
+                return 'Skipping to 2nd round.'
+        if round == 'next':
+            if boss.state in ('PrepareBattleOne', 'BattleOne'):
+                boss.exitIntroduction()
+                boss.b_setState('RollToBattleTwo')
+                return "Skipping current round..."
+            elif boss.state in ('PrepareBattleTwo', 'BattleTwo'):
+                boss.b_setState('PrepareBattleThree')
+                return 'Skipping to final round.'
+
+            elif boss.state in ('PrepareBattleThree', 'BattleThree'):
+                boss.exitIntroduction()
+                boss.b_setState('Victory')
+                return "Killing the vp. :O "
+
 class ainotify(MagicWord):
     desc = 'Sets the ai notification level'
     execLocation = MagicWordConfig.EXEC_LOC_SERVER
