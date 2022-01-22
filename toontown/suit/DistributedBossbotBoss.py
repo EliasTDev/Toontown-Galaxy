@@ -779,6 +779,8 @@ class DistributedBossbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     ##### Prepare BattleThree state #####        
     def enterPrepareBattleThree(self):
         """Handle entering the Prepare Battle three state """
+        self.enableSkipCutscene()
+        self.accept('cutsceneSkip', self.requestSkip)
         self.calcNotDeadList()
         self.battleANode.setPosHpr(*ToontownGlobals.DinerBattleAPosHpr)
         self.battleBNode.setPosHpr(*ToontownGlobals.DinerBattleBPosHpr)        
@@ -810,6 +812,8 @@ class DistributedBossbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
     def exitPrepareBattleThree(self):
         """Handle exiting the Prepare Battle three state """
+        self.disableSkipCutscene()
+
         self.clearInterval( "PrepareBattleThreeMovie")
         self.betweenPhaseMusic.stop()
         pass

@@ -1066,6 +1066,8 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     def enterRollToBattleTwo(self):
         self.enableSkipCutscene()
         self.accept('cutsceneSkip', self.requestSkip)
+        self.canSkip = True
+
         assert self.notify.debug('enterRollToBattleTwo()')
         # Disable collision on the toon, there is a collision issue where the boss was 
         # hitting the toons right after the first battle, so we turn off their collision briefly
@@ -1108,6 +1110,17 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.unstickBoss()
         self.setPosHpr(*ToontownGlobals.SellbotBossBattleTwoPosHpr)
         self.doneBarrier('RollToBattleTwo')
+
+    def skipCutscene(self):
+        #super().skipCutscene()
+        if self.state == 'Introduction':
+            self.exitIntroduction()
+            self.enterBattleOne()
+        elif self.state == 'RollToBattleTwo':
+            self.__onToPrepareBattleTwo()
+            self.exitRollToBattleTwo()
+            self.enterPrepareBattleTwo()
+        super().skipCutscene()
 
     def exitRollToBattleTwo(self):
         self.disableSkipCutscene()

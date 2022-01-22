@@ -433,6 +433,7 @@ class DistributedBossbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
     ##### PrepareBattleThree state #####            
     def enterPrepareBattleThree(self):
         """Handle entering the Battle Three State."""
+        self.canSkip = True
         self.barrier = self.beginBarrier(
             "PrepareBattleThree",
             self.involvedToons,
@@ -554,6 +555,7 @@ class DistributedBossbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
     ##### PrepareBattleFour state #####
     def enterPrepareBattleFour(self):
         """Handle entering the Prepare Battle Four State."""
+        self.canSkip = True
         self.resetBattles()
         assert self.notify.debug('%s.enterPrepareBattleFour()' % (self.doId))
         self.setupBattleFourObjects()
@@ -570,6 +572,26 @@ class DistributedBossbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
         """Handle exiting the Prepare Battle Four State."""
         self.ignoreBarrier(self.barrier)
 
+
+    def checkSkip(self):
+        if len(self.toonsSkipped) >= len(self.involvedToons) - 1:
+            if self.state == 'Introduction':
+                self.exitIntroduction()
+                self.doneIntroduction(self.involvedToons)
+            #elif self.state == 'RollToBattleTwo':
+              #  self.exitRollToBattleTwo()
+             #   self.enterPrepareBattleTwo()
+
+            elif self.state == 'PrepareBattleTwo':
+                self.exitPrepareBattleTwo()
+                self.__onToBattleTwo()
+            elif self.state == 'PrepareBattleThree':
+                self.exitPrepareBattleThree()
+                self.__onToBattleThree()
+            elif self.state == 'PrepareBattleFour':
+                self.exitPrepareBattleFour()
+                self.__onToBattleFour()
+        super().checkSkip()
 
     ##### BattleFour state #####  
     def enterBattleFour(self):

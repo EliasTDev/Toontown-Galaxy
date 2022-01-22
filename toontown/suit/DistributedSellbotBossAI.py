@@ -347,12 +347,13 @@ class DistributedSellbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
     ##### BattleOne state #####
 
     ##### RollToBattleTwo state #####
-
     def enterRollToBattleTwo(self):
         assert self.notify.debug('%s.enterRollToBattleTwo()' % (self.doId))
 
         # Reshuffle the remaining toons for the second pair of battles.
         self.divideToons()
+        self.canSkip = True
+
 
         # The clients will play a movie showing the boss cog moving up
         # to the top of the area for the phase 2 battle.
@@ -643,3 +644,23 @@ class DistributedSellbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
         self.b_setAttackCode(ToontownGlobals.BossCogRecoverDizzyAttack)
             
         
+    def checkSkip(self):
+        if len(self.toonsSkipped) >= len(self.involvedToons) - 1:
+            if self.state == 'Introduction':
+                self.exitIntroduction()
+                self.enterBattleOne()
+                #self.doneIntroduction(self.involvedToons)
+            elif self.state == 'RollToBattleTwo':
+                self.exitRollToBattleTwo()
+                self.enterPrepareBattleTwo()
+
+            #elif self.state == 'PrepareBattleTwo':
+             #   self.exitPrepareBattleTwo()
+             #   self.__onToBattleTwo()
+            #elif self.state == 'PrepareBattleThree':
+            #    self.exitPrepareBattleThree()
+            #    self.__onToBattleThree()
+            #elif self.state == 'PrepareBattleFour':
+             #   self.exitPrepareBattleFour()
+             #   self.__onToBattleFour()
+        super().checkSkip()

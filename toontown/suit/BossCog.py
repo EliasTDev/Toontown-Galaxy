@@ -86,7 +86,7 @@ class BossCog(Avatar.Avatar):
         downButton = gui.find('**/InventoryButtonDown')
         rolloverButton = gui.find('**/InventoryButtonRollover')
         self.skipCButton = DirectButton(parent=base.a2dBottomRight, relief=None, 
-                                     pos=(-0.46, 0, 0.27), scale=(1,1,1), 
+                                     pos=(-0.46, 0, 0.1), scale=(1,1,1), 
                                      text='Skip cutscene', text_scale = (0.05, 0.05),
                                     text_pos = (-0.005,-0.01), image = (upButton, downButton, rolloverButton, upButton),
                                     image_color = (0.66274509803, 0.66274509803, 0.66274509803, 1),
@@ -406,7 +406,7 @@ class BossCog(Avatar.Avatar):
         Updates the skip cutscene button to match the amount of people voting"
         """
         self.notify.info("Updating skip cutscene button")
-        self.skipCButton['text'] = f'Skip Cutscene:{minimum}/{maximum}'
+        self.skipCButton['text'] = f'Skip Cutscene:{minimum} / {maximum}'
         self.skipCButton['state'] = DGG.NORMAL
 
     def _handleSkip(self):

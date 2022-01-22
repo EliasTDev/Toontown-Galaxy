@@ -946,40 +946,30 @@ class DistributedBossCogAI(DistributedAvatarAI.DistributedAvatarAI):
             #Just in case
             #self.canSkip = False
         return
+
     def checkSkip(self):
+        #Overwritten by other bosses
         self.notify.info("Checking skip")
         #check if we can skip
         if self.toonsFirstTime:
             self.notify.info("Checkskip: First time")
             self.sendToonsFirstTime(True)
             #Just in case
-            #self.canSkip = False
+            self.canSkip = False
             return
         if len(self.toonsSkipped) >= len(self.involvedToons) - 1:
             #exit cutscene
             self.notify.info('Skipping to next stage')
             self.tellClientToSkip()
-            if self.state == 'Introduction':
-                self.exitIntroduction()
-                self.doneIntroduction()
-            elif self.state == 'RollToBattleTwo':
-                self.exitRollToBattleTwo()
-                self.enterPrepareBattleTwo()
 
-            #elif self.state == 'PrepareBattleTwo':
-               # self.exitPrepareBattleTwo()
-              #  self.__onToBattleTwo()
-
-            elif self.state == 'PrepareBattleThree':
-                self.exitPrepareBattleThree()
-                self.__onToBattleThree()
-            elif self.state == 'PrepareBattleFour':
-                self.exitPrepareBattleFour()
-                self.__onToBattleFour()
+            self.toonsSkipped = []
+            #to prevent someone trying to skip during a battle?!
+            self.canSkip = False
         else:
             #tell the client the amount of toons skipped
             self.notify.info('Sending client skip amount')
             self.sendUpdate('setSkipAmount', [len(self.toonsSkipped)])
+        return
 
     def requestSkip(self):
         toon = self.air.getAvatarIdFromSender()

@@ -534,6 +534,8 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
 
         # Reshuffle the remaining toons for the second pair of battles.
         self.divideToons()
+        self.canSkip = True
+
 
 
         # The clients will play a movie showing the boss cog moving up
@@ -1456,3 +1458,21 @@ class DistributedLawbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FSM
 
         self.b_setBattleDifficulty(battleDifficulty)
         
+    def checkSkip(self):
+        if len(self.toonsSkipped) >= len(self.involvedToons) - 1:
+            if self.state == 'Introduction':
+                self.exitIntroduction()
+                self.doneIntroduction(self.involvedToons)
+            elif self.state == 'RollToBattleTwo':
+                self.exitRollToBattleTwo()
+                self.enterPrepareBattleTwo()
+        super().checkSkip()
+            #elif self.state == 'PrepareBattleTwo':
+             #   self.exitPrepareBattleTwo()
+             #   self.__onToBattleTwo()
+            #elif self.state == 'PrepareBattleThree':
+            #    self.exitPrepareBattleThree()
+            #    self.__onToBattleThree()
+            #elif self.state == 'PrepareBattleFour':
+             #   self.exitPrepareBattleFour()
+             #   self.__onToBattleFour()

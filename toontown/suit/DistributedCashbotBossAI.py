@@ -732,3 +732,23 @@ class DistributedCashbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
 
         # Tell the clients now what the reward Id will be.
         self.d_setRewardId(self.rewardId)
+
+    def checkSkip(self):
+        if len(self.toonsSkipped) >= len(self.involvedToons) - 1:
+            if self.state == 'Introduction':
+                self.exitIntroduction()
+                self.doneIntroduction(self.involvedToons)
+            #elif self.state == 'RollToBattleTwo':
+              #  self.exitRollToBattleTwo()
+             #   self.enterPrepareBattleTwo()
+
+          #  elif self.state == 'PrepareBattleTwo':
+         #       self.exitPrepareBattleTwo()
+             #   self.__onToBattleTwo()
+            elif self.state == 'PrepareBattleThree':
+                self.exitPrepareBattleThree()
+                self.__donePrepareBattleThree()
+           # elif self.state == 'PrepareBattleFour':
+           #     self.exitPrepareBattleFour()
+          #      self.__onToBattleFour()
+        super().checkSkip()

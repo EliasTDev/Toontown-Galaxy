@@ -176,23 +176,24 @@ class DistributedBossCog(DistributedAvatar.DistributedAvatar,
 
     def skipCutscene(self):
         self.notify.info('Skipping cutscene ...')
-        if self.state == 'Introduction':
-            self.exitIntroduction()
-            self.__beginBattleOne()
-        elif self.state == 'RollToBattleTwo':
-            self.exitRollToBattleTwo()
-            self.enterPrepareBattleTwo()
+        #if self.state == 'Introduction':
+         #   self.exitIntroduction()
+         #   self.__beginBattleOne()
+         #   self.enterBattleOne()
+        #elif self.state == 'RollToBattleTwo':
+        #    self.exitRollToBattleTwo()
+        #    self.enterPrepareBattleTwo()
 
         #elif self.state == 'PrepareBattleTwo':
             # self.exitPrepareBattleTwo()
             #  self.__onToBattleTwo()
 
-        elif self.state == 'PrepareBattleThree':
-            self.exitPrepareBattleThree()
-            self.__onToBattleThree()
-        elif self.state == 'PrepareBattleFour':
-            self.exitPrepareBattleFour()
-            self.__onToBattleFour()
+       # elif self.state == 'PrepareBattleThree':
+        #    self.exitPrepareBattleThree()
+       #     self.__onToBattleThree()
+      #  elif self.state == 'PrepareBattleFour':
+         #   self.exitPrepareBattleFour()
+        #    self.__onToBattleFour()
 
     def disable(self):
         """

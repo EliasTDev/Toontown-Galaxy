@@ -1374,6 +1374,7 @@ class DistributedLawbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         """
         self.enableSkipCutscene()
         self.accept('cutsceneSkip', self.requestSkip)
+        self.canSkip = True
         self.notify.debug("----- enterRollToBattleTwo")
         assert self.notify.debug('enterRollToBattleTwo()')
 
