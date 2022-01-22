@@ -8,7 +8,7 @@ import os
 import inspect
 
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from pandac.PandaModules import *
 from direct.gui.DirectGui import *
 from otp.distributed.OtpDoGlobals import *
@@ -300,8 +300,8 @@ class OTPClientRepository(ClientRepositoryBase):
 
         if config.GetBool('run-garbage-reports', 0) or config.GetBool('client-run-garbage-reports', 0):
             noneValue = -1.
-            reportWait = config.GetFloat('garbage-report-wait', noneValue)
-            reportWaitScale = config.GetFloat('garbage-report-wait-scale', noneValue)
+            reportWait = ConfigVariableDouble('garbage-report-wait', noneValue).value
+            reportWaitScale = ConfigVariableDouble('garbage-report-wait-scale', noneValue).value
             if reportWait == noneValue:
                 reportWait = 60. * 2.
             if reportWaitScale == noneValue:
@@ -585,7 +585,7 @@ class OTPClientRepository(ClientRepositoryBase):
     def startLeakDetector(self):
         if hasattr(self, 'leakDetector'):
             return False
-        firstCheckDelay = config.GetFloat('leak-detector-first-check-delay', 2 * 60.)
+        firstCheckDelay = ConfigVariableDouble('leak-detector-first-check-delay', 2 * 60.).value
         self.leakDetector = ContainerLeakDetector(
             'client container leak detector', firstCheckDelay = firstCheckDelay)
         self.objectTypesLeakDetector = LeakDetectors.ObjectTypesLeakDetector()

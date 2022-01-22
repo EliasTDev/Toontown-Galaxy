@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.otpbase import OTPGlobals
 from .AIMsgTypes import *
 from direct.showbase.PythonUtil import Functor
@@ -40,8 +40,8 @@ class AIDistrict(AIRepository):
         self.setClientDatagram(0)
         assert minChannel > districtId
         if hasattr(self, 'setVerbose'):
-            if self.config.GetBool('verbose-airepository'):
-                self.setVerbose(1)
+            if ConfigVariableBool('verbose-airepository'):
+                self.setVerbose(1).value
 
         # Save the state server id
         self.serverId = serverId
@@ -154,7 +154,7 @@ class AIDistrict(AIRepository):
     def enterPlayGame(self):
         self._zoneDataStore = AIZoneDataStore()
         AIRepository.enterPlayGame(self)
-        if simbase.config.GetBool('game-server-tests', 0):
+        if ConfigVariableBool('game-server-tests', 0).value:
             from otp.distributed import DistributedTestObjectAI
             self.testObject = DistributedTestObjectAI.DistributedTestObjectAI(self)
             self.testObject.generateOtpObject(self.getGameDoId(), 3)
@@ -201,7 +201,7 @@ class AIDistrict(AIRepository):
         return parentMgr
 
     def exitPlayGame(self):
-        if simbase.config.GetBool('game-server-tests', 0):
+        if ConfigVariableBool('game-server-tests', 0).value:
             self.testObject.requestDelete()
             del self.testObject
         self._zoneDataStore.destroy()

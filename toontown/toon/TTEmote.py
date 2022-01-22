@@ -461,7 +461,7 @@ def singNote1(toon, volume = 1):
             return getSingingNote(toon, 'g3')
 
 def singNote2(toon, volume = 1):
-    if ConfigVariableBooll('want-octaves', True).value:
+    if ConfigVariableBool('want-octaves', True).value:
         if toon.style.getTorsoSize() == 'short':
             return getSingingNote(toon, 'a1')
         elif toon.style.getTorsoSize()  == 'medium':

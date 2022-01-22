@@ -92,7 +92,7 @@ BUILDING_REWARD_TIMEOUT = 300
 
 try:
 #    debugBattles = base.config.GetBool('debug-battles', 0)
-    CLIENT_INPUT_TIMEOUT = base.config.GetFloat('battle-input-timeout', TTLocalizer.BBbattleInputTimeout)
+    CLIENT_INPUT_TIMEOUT = ConfigVariableDouble('battle-input-timeout', TTLocalizer.BBbattleInputTimeout).value
 except:
 #    debugBattles = simbase.config.GetBool('debug-battles', 0)
     CLIENT_INPUT_TIMEOUT = simbase.config.GetFloat('battle-input-timeout', TTLocalizer.BBbattleInputTimeout)

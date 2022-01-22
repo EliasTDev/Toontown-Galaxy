@@ -5,7 +5,7 @@
 #################################################################
 import urllib.request, urllib.parse, urllib.error
 import os
-from pandac.PandaModules import HTTPClient, Ramfile
+from panda3d.core import HTTPClient, Ramfile
 from direct.directnotify import DirectNotifyGlobal
 
 class BanManagerAI:
@@ -52,7 +52,7 @@ class BanManagerAI:
         self.notify.info ("ban request %s dislid=%s comment=%s fullUrl=%s" % (self.curBanRequestNum, dislid, comment, fullUrl))
         simbase.air.writeServerEvent('ban_request', avatarId, "%s|%s|%s" % (dislid, comment, fullUrl))
 
-        if simbase.config.GetBool('do-actual-ban',False):            
+        if ConfigVariableBool('do-actual-ban',False).value:            
             newTaskName = "ban-task-%d" % self.curBanRequestNum
             newTask = taskMgr.add(self.doBanUrlTask, newTaskName)
             newTask.banRequestNum = self.curBanRequestNum

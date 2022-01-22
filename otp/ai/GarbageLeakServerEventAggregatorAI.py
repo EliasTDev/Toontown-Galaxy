@@ -5,7 +5,7 @@ class GarbageLeakServerEventAggregatorAI(DirectObject):
     ClientLeakEvent = 'LeakAggregator-ClientGarbageLeakReceived'
     def __init__(self, air):
         self.air = air
-        self._eventFreq = config.GetFloat('garbage-leak-server-event-frequency', 60 * 60.)
+        self._eventFreq = ConfigVariableDouble('garbage-leak-server-event-frequency', 60 * 60.).value
         self._doLaterName = None
         self._sentLeakDesc2num = {}
         self._curLeakDesc2num = {}

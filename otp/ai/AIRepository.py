@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.otpbase import OTPGlobals
 from .AIMsgTypes import *
 from direct.showbase.PythonUtil import Functor
@@ -52,7 +52,7 @@ class AIRepository(ConnectionRepository):
             minChannel, maxChannel, dcSuffix = 'AI'):
         assert self.notify.debugStateCall(self)
         self._channels={}
-        self.AIRunningNetYield = simbase.config.GetBool('ai-running-net-yield', 0)        
+        self.AIRunningNetYield = ConfigVariableBool('ai-running-net-yield', 0).value      
         
         self._msgBundleNames = []
 
@@ -117,19 +117,19 @@ class AIRepository(ConnectionRepository):
         assert self.maxZone >= self.minZone
         self.zoneAllocator = UniqueIdAllocator(self.minZone, self.maxZone)
 
-        if config.GetBool('detect-leaks', 0) or config.GetBool('ai-detect-leaks', 0):
+        if ConfigVariableBool('detect-leaks', 0).value or ConfigVariableBool('ai-detect-leaks', 0).value:
             self.startLeakDetector()
 
-        if config.GetBool('detect-messenger-leaks', 0) or config.GetBool('ai-detect-messenger-leaks', 0):
+        if ConfigVariableBool('detect-messenger-leaks', 0) or ConfigVariableBool('ai-detect-messenger-leaks', 0).value:
             self.messengerLeakDetector = MessengerLeakDetector.MessengerLeakDetector(
                 'AI messenger leak detector')
-            if config.GetBool('leak-messages', 0):
+            if ConfigVariableBool('leak-messages', 0).value:
                 MessengerLeakDetector._leakMessengerObject()
 
-        if config.GetBool('run-garbage-reports', 0) or config.GetBool('ai-run-garbage-reports', 0):
+        if ConfigVariableBool('run-garbage-reports', 0) or ConfigVariableBool('ai-run-garbage-reports', 0).value:
             noneValue = -1.
-            reportWait = config.GetFloat('garbage-report-wait', noneValue)
-            reportWaitScale = config.GetFloat('garbage-report-wait-scale', noneValue)
+            reportWait = ConfigVariableInt('garbage-report-wait', noneValue).value
+            reportWaitScale = ConfigVariableFloat('garbage-report-wait-scale', noneValue).value
             if reportWait == noneValue:
                 reportWait = None
             if reportWaitScale == noneValue:
@@ -137,9 +137,9 @@ class AIRepository(ConnectionRepository):
             self.garbageReportScheduler = GarbageReportScheduler(waitBetween=reportWait,
                                                                  waitScale=reportWaitScale)
 
-        self._proactiveLeakChecks = (config.GetBool('proactive-leak-checks', 1) and
-                                     config.GetBool('ai-proactive-leak-checks', 1))
-        self._crashOnProactiveLeakDetect = config.GetBool('crash-on-proactive-leak-detect', 1)
+        self._proactiveLeakChecks = (ConfigVariableBool('proactive-leak-checks', 1).value and
+                                     ConfigVariableBool('ai-proactive-leak-checks', 1).value)
+        self._crashOnProactiveLeakDetect = ConfigVariableBool('crash-on-proactive-leak-detect', 1).value
 
         # Give ourselves the first channel in the range
         self.ourChannel = self.allocateChannel()
@@ -158,7 +158,7 @@ class AIRepository(ConnectionRepository):
         #for generating unqiue names for non-dos, manly used for tasks
         self.keyCounter = 0
         
-        self.MaxEpockSpeed = self.config.GetFloat('ai-net-yield-epoch', 1.0/30.0)        
+        self.MaxEpockSpeed = ConfigVariableDouble('ai-net-yield-epoch', 1.0/30.0).value        
         
         if self.AIRunningNetYield :
             taskMgr.doYield =self.taskManagerDoYieldNetwork
@@ -225,7 +225,7 @@ class AIRepository(ConnectionRepository):
     def startLeakDetector(self):
         if hasattr(self, 'leakDetector'):
             return False
-        firstCheckDelay = config.GetFloat('leak-detector-first-check-delay', -1)
+        firstCheckDelay = ConfigVariableDouble('leak-detector-first-check-delay', -1).value
         if firstCheckDelay == -1:
             firstCheckDelay = None
         self.leakDetector = ContainerLeakDetector(
