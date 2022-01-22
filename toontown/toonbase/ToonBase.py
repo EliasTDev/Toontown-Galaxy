@@ -348,8 +348,11 @@ class ToonBase(OTPBase.OTPBase):
         self.walking = pressed
 
     def takeScreenShot(self):
+        if not os.path.exists('user/screenshots/'):
+            os.mkdir('user')
+            os.mkdir('user/logs')   
         namePrefix = 'screenshot'
-        namePrefix = launcher.logPrefix + namePrefix
+        namePrefix = 'user/screenshots/' + namePrefix
 
         #requires that you have at least 1 second between shots
         timedif = globalClock.getRealTime() - self.lastScreenShotTime
