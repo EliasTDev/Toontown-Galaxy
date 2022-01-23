@@ -77,7 +77,11 @@ saveDNA = False
 
 def getRandomDNA(seed, gender):
     randomDNA = ToonDNA.ToonDNA()
-    randomDNA.newToonRandom(seed, gender, 1)
+    if gender == 'm':
+        eyelashes = 0
+    else:
+        eyelashes = 1
+    randomDNA.newToonRandom(seed, eyelashes, 1)
     return randomDNA.asTuple()
 
 def createNPC(air, npcId, desc, zoneId, posIndex=0, questCallback=None):
@@ -92,7 +96,7 @@ def createNPC(air, npcId, desc, zoneId, posIndex=0, questCallback=None):
     from . import DistributedNPCSpecialQuestGiverAI
     from . import DistributedNPCFlippyInToonHallAI
     from . import DistributedNPCScientistAI
-    canonicalZoneId, name, dnaType, gender, protected, type = desc
+    canonicalZoneId, name, dnaType, eyelashes, protected, type = desc
     if (type == NPC_REGULAR):
         npc = DistributedNPCToonAI.DistributedNPCToonAI(
                 air, npcId,

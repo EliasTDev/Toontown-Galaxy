@@ -20,7 +20,6 @@ from .MakeAToonGlobals import *
 from direct.interval.IntervalGlobal import *
 from direct.directnotify import DirectNotifyGlobal
 from toontown.toontowngui import TTDialog
-from . import GenderShop
 from . import BodyShop
 from . import ColorShop
 from . import MakeClothesGUI
@@ -106,16 +105,14 @@ class MakeAToon(StateData.StateData):
         self.parentFSM.getStateNamed('createAvatar').addChild(self.fsm)
 
         # create the shops
-        self.gs = GenderShop.GenderShop(self, "GenderShop-done")
         self.bs = BodyShop.BodyShop("BodyShop-done")
         self.cos = ColorShop.ColorShop("ColorShop-done")
         self.cls = MakeClothesGUI.MakeClothesGUI("ClothesShop-done")
         self.ns = NameShop.NameShop(self, "NameShop-done", avList, index, self.isPaid)
-        self.shop = GENDERSHOP
         self.shopsVisited = []
 
         if self.warp:
-            self.shopsVisited = [GENDERSHOP, BODYSHOP, COLORSHOP, CLOTHESSHOP]
+            self.shopsVisited = [BODYSHOP, COLORSHOP, CLOTHESSHOP]
 
         # sound
         self.music = None
@@ -165,7 +162,7 @@ class MakeAToon(StateData.StateData):
             self.guiLastButton.hide()
             self.fsm.request("NameShop")
         else:
-            self.fsm.request("GenderShop")
+            self.fsm.request("BodyShop")
 
     def exit(self):
         base.camLens.setMinFov(ToontownGlobals.DefaultCameraFov/(4/3))
@@ -548,8 +545,8 @@ class MakeAToon(StateData.StateData):
     def goToNextShop(self):
         self.progressing = 1
         # go to the next shop
-        if self.shop == GENDERSHOP:
-            self.fsm.request("BodyShop")
+       # if self.shop == GENDERSHOP:
+         #   self.fsm.request("BodyShop")
         elif self.shop == BODYSHOP:
             self.fsm.request("ColorShop")
         elif self.shop == COLORSHOP:
@@ -560,9 +557,7 @@ class MakeAToon(StateData.StateData):
     def goToLastShop(self):
         self.progressing = 0
         # go to the last shop
-        if self.shop == BODYSHOP:
-            self.fsm.request("GenderShop")
-        elif self.shop == COLORSHOP:
+        if self.shop == COLORSHOP:
             self.fsm.request("BodyShop")
         elif self.shop == CLOTHESSHOP:
             self.fsm.request("ColorShop")
@@ -585,7 +580,7 @@ class MakeAToon(StateData.StateData):
         self.dna = ToonDNA.ToonDNA()
         # stage = 1 is MAKE_A_TOON
         #Since female is our most gender neutral option we will go for that for now
-        self.dna.newToonRandom(gender = 'f', stage = 1)
+        self.dna.newToonRandom(eyelashes=random.randint(0, 1), stage = 1)
         
         self.toon = Toon.Toon()
         self.toon.setDNA(self.dna)
@@ -607,45 +602,9 @@ class MakeAToon(StateData.StateData):
     def exitInit(self):
         pass
 
-    # GenderShop state
-    def enterGenderShop(self):
-        base.cr.centralLogger.writeClientEvent('MAT - enteringGenderShop')
-        self.shop = GENDERSHOP
-        if (GENDERSHOP not in self.shopsVisited):
-            self.shopsVisited.append(GENDERSHOP)
-            self.genderWalls.reparentTo(self.squishJoint)
-            self.genderProps.reparentTo(self.propJoint)
-            self.roomSquishActor.pose('squish', 0)
-            # Start the next button with disabled. It'll be enabled when a gender selection is made.
-            self.guiNextButton['state'] = DGG.DISABLED
-        else:
-            self.dropRoom(self.genderWalls, self.genderProps)
 
-        self.guiTopBar['text'] = TTLocalizer.CreateYourToonTitle
-        self.guiTopBar['text_fg'] = (1,0.92,0.2,1)
-##        self.guiTopBar['text_fg'] = (1, 1, 0, 1)
-        self.guiTopBar['text_scale'] = TTLocalizer.MATenterGenderShop
-        base.transitions.fadeIn()
-        self.accept("GenderShop-done", self.__handleGenderShopDone)
-        self.gs.enter()
 
-##        self.toon.setHpr(self.toonHpr)
 
-        self.guiNextButton.show()
-        self.gs.showButtons()
-        self.rotateLeftButton.hide()
-        self.rotateRightButton.hide()
-
-    def exitGenderShop(self):
-        self.squishRoom(self.genderWalls)
-        self.squishProp(self.genderProps)
-        self.gs.exit()
-        self.ignore("GenderShop-done")
-
-    def __handleGenderShopDone(self):
-        self.guiNextButton.hide()
-        self.gs.hideButtons()
-        self.goToNextShop()
 
     # BodyShop state
     def bodyShopOpening(self):

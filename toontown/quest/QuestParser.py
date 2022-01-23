@@ -744,59 +744,8 @@ class NPCMoviePlayer(DirectObject.DirectObject):
         self.setVar(varName, dialogue)
         return
 
-    def parseLoadCCDialogue(self, line):
-        """ Like loadSfx except dialogue is conditional on language """
-        token, varName, filenameTemplate = line
-        if self.toon.getStyle().gender == 'm':
-            classicChar = 'mickey'
-        else:
-            classicChar = 'minnie'
-        filename = filenameTemplate % classicChar
-        if base.config.GetString("language", "english") == "japanese":
-            dialogue = base.loader.loadSfx(filename)
-        else:
-            dialogue = None
-        self.setVar(varName, dialogue)
-        return
 
-    def parseLoadChar(self, line):
-        token, name, charType = line
-        char = Char.Char()
-        dna = CharDNA.CharDNA()
-        dna.newChar(charType)
-        char.setDNA(dna)
-        # Mickey needs an ear task running
-        if (charType == 'mk' or charType == 'mn'):
-            char.startEarTask()
-        char.nametag.manage(base.marginManager)
-        char.addActive()
-        char.hideName()
-        self.setVar(name, char)
 
-    def parseLoadClassicChar(self, line):
-        token, name  = line
-        char = Char.Char()
-        dna = CharDNA.CharDNA()
-        if self.toon.getStyle().gender == 'm':
-            charType = "mk"
-        else:
-            charType = "mn"
-        dna.newChar(charType)
-        char.setDNA(dna)
-        # Mickey and Minnie need an ear task running
-        char.startEarTask()
-        char.nametag.manage(base.marginManager)
-        char.addActive()
-        char.hideName()
-        self.setVar(name, char)
-        self.chars.append(char)
-
-    def parseUnloadChar(self, line):
-        token, name = line
-        char = self.getVar(name)
-        track = Sequence()
-        track.append(Func(self.__unloadChar, char))
-        track.append(Func(self.delVar, name))
         return track
 
     def parseLoadSuit(self, line):
@@ -997,35 +946,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
         quitButton, extraChatFlags, dialogueList = self.parseExtraChatArgs(line[4:])
         return Func(avatar.setLocalPageChat, chatString, quitButton, extraChatFlags, dialogueList)
 
-    def parseCCChatConfirm(self, line):
-        lineLength = len(line)
-        assert(lineLength in [3,4,5,6])
-        avatarName = line[1]
-        avatar = self.getVar(avatarName)
-        if self.toon.getStyle().gender == 'm':
-            chatString = eval("TTLocalizer." + (line[2] % 'Mickey'))
-        else:
-            chatString = eval("TTLocalizer." + (line[2] % 'Minnie'))
-        quitButton, extraChatFlags, dialogueList = self.parseExtraChatArgs(line[3:])
-        return Func(avatar.setLocalPageChat, chatString, quitButton, extraChatFlags, dialogueList)
 
-    def parseCCChatToConfirm(self, line):
-        lineLength = len(line)
-        assert(lineLength in [4,5,6,7])
-        avatarKey = line[1]
-        avatar = self.getVar(avatarKey)
-        toAvatarKey = line[2]
-        toAvatar = self.getVar(toAvatarKey)
-        # This is ugly...
-        localizerAvatarName = toAvatar.getName().capitalize()
-        toAvatarName = eval("TTLocalizer." + localizerAvatarName)
-        if self.toon.getStyle().gender == 'm':
-            chatString = eval("TTLocalizer." + (line[3] % 'Mickey'))
-        else:
-            chatString = eval("TTLocalizer." + (line[3] % 'Minnie'))
-        chatString = chatString.replace('%s', toAvatarName)
-        quitButton, extraChatFlags, dialogueList = self.parseExtraChatArgs(line[4:])
-        return Func(avatar.setLocalPageChat, chatString, quitButton, extraChatFlags, dialogueList)
 
     def parsePlaySfx(self, line):
         if len(line) == 2:

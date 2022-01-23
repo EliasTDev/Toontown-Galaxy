@@ -3400,7 +3400,6 @@ dclass DistributedPet: DistributedSmoothNode {
   setColor(int8(0-25) color = 0) required broadcast db;
   setColorScale(int8(0-8) color = 0) required broadcast db;
   setEyeColor(int8(0-5) eyeColor = 0) required broadcast db;
-  setGender (int8(0-1) gender = 0) required broadcast db;
   //setStyle: setHead, setEars, setNose, setTail, setBodyTexture, setColor, setColorScale, setEyeColor, setGender;
 
   // mood

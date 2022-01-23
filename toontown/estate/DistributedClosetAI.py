@@ -390,7 +390,6 @@ class DistributedClosetAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI)
         self.bottomList = fields['setClothesBottomsList'][0]
         style = ToonDNA.ToonDNA()
         style.makeFromNetString(fields['setDNAString'][0])
-        self.gender = style.gender
 
         self.d_setState(ClosetGlobals.OPEN, self.customerId, self.ownerId, self.gender, self.topList, self.bottomList)
 

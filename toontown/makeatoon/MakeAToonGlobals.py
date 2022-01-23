@@ -1,11 +1,10 @@
 """MakeAToonGlobals module: contains global vars for the MakeAToon classes"""
 
 # shop names
-GENDERSHOP = 1
-BODYSHOP = 2
-COLORSHOP = 3
-CLOTHESSHOP = 4
-NAMESHOP = 5
+BODYSHOP = 1
+COLORSHOP = 2
+CLOTHESSHOP = 3
+NAMESHOP = 4
 
 halfButtonScale = (0.6, 0.6, 0.6)
 halfButtonHoverScale = (0.7, 0.7, 0.7)

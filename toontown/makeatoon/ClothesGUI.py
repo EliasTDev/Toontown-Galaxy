@@ -28,8 +28,7 @@ class ClothesGUI(StateData.StateData):
         self.type = type
         self.toon = None
         self.swapEvent = swapEvent
-        self.gender = '?'
-        self.girlInShorts = 0
+        self.toonInShorts = 0
         self.swappedTorso = 0
         return
         
@@ -224,25 +223,25 @@ class ClothesGUI(StateData.StateData):
         self.ignore(self.shuffleFetchMsg)
 
     def setupButtons(self):
-        self.girlInShorts = 0 
-        if (self.gender == 'f'):
+        self.toonInShorts = 0 
+       # if (self.gender == 'f'):
             # See what kind of torso we need (shorts vs. skirt)
-            if (self.bottomChoice == -1):
-                botTex = self.bottoms[0][0]
-            else:
-                botTex = self.bottoms[self.bottomChoice][0]
-            if (ToonDNA.GirlBottoms[botTex][1] == ToonDNA.SHORTS):
-                self.girlInShorts = 1
+        if (self.bottomChoice == -1):
+            botTex = self.bottoms[0][0]
+        else:
+            botTex = self.bottoms[self.bottomChoice][0]
+        if (ToonDNA.Bottoms[botTex][1] == ToonDNA.SHORTS):
+            self.toonInShorts = 1
 
         # set the button text based on gender
-        if (self.toon.style.getGender() == "m"):
+        #if (self.toon.style.getGender() == "m"):
 ##            self.bottomLButton['text'] = TTLocalizer.ClothesShopShorts
 ##            self.bottomRButton['text'] = TTLocalizer.ClothesShopShorts
-            self.bottomFrame['text'] = TTLocalizer.ClothesShopShorts
-        else:
+            #self.bottomFrame['text'] = TTLocalizer.ClothesShopShorts
+        #else:
 ##            self.bottomLButton['text'] = TTLocalizer.ClothesShopBottoms
 ##            self.bottomRButton['text'] = TTLocalizer.ClothesShopBottoms
-            self.bottomFrame['text'] = TTLocalizer.ClothesShopBottoms
+        self.bottomFrame['text'] = TTLocalizer.ClothesShopBottoms
         
         # set exit event
         self.acceptOnce("last", self.__handleBackward)

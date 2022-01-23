@@ -102,7 +102,6 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
             self.glassesList = self.ownerAv.getGlassesList()
             self.backpackList = self.ownerAv.getBackpackList()
             self.shoesList = self.ownerAv.getShoesList()
-            self.gender = self.ownerAv.dna.gender
         else:
             self.notify.warning('ownerAv is none while trying to open trunk.')
             return
@@ -126,7 +125,6 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
         self.shoesList = fields['setShoesList'][0]
         style = ToonDNA.ToonDNA()
         style.makeFromNetString(fields['setDNAString'][0])
-        self.gender = style.gender
 
         self.sendUpdate('setMovie', [ClosetGlobals.CLOSET_MOVIE_CLEAR, self.customerId, ClockDelta.globalClockDelta.getRealNetworkTime()])
         self.sendUpdate('setState', [ClosetGlobals.OPEN, self.customerId, self.ownerId, self.gender, self.hatList, self.glassesList,
@@ -187,7 +185,6 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
                 av.b_setShoes(*self.customerDNA[3])
                 self.customerId = 0
                 self.customerDNA = None
-                self.gender = ''
                 self.deletedGlasses = []
                 self.deletedHats = []
                 self.deletedBackpacks = []
@@ -235,7 +232,6 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
                 av.b_setShoesList(av.getShoesList())
                 self.customerId = 0
                 self.customerDNA = None
-                self.gender = ''
                 self.__finalizeDelete()
                 self.sendUpdate('setMovie', [ClosetGlobals.CLOSET_MOVIE_COMPLETE, avId, ClockDelta.globalClockDelta.getRealNetworkTime()])
                 self.sendUpdate('setMovie', [ClosetGlobals.CLOSET_MOVIE_CLEAR, 0, ClockDelta.globalClockDelta.getRealNetworkTime()])

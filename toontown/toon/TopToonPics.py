@@ -279,7 +279,7 @@ def lookAtToon():
     
 tt = Toon()
 dna = ToonDNA.ToonDNA()
-dna.newToonRandom(gender = 'f')
+dna.newToonRandom()
 tt.setDNA(dna)
 tt.reparentTo(render)
 

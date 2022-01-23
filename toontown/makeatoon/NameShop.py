@@ -62,8 +62,7 @@ class NameShop(StateData.StateData):
         # makeatoon process
         self.names = ["","","",""]
         self.toon = None
-        self.boy = 0
-        self.girl = 0
+
 
         self.allTitles = []
         self.allFirsts = []
@@ -211,32 +210,32 @@ class NameShop(StateData.StateData):
             return None
         else:
             self.toon = toon
-            if (self.toon.style.gender == 'm'):
-                self.boy = 1
-                self.girl = 0
-            else:
-                self.boy = 0
-                self.girl = 1
+            #if (self.toon.style.gender == 'm'):
+            #    self.boy = 1
+            #    self.girl = 0
+            #else:
+                #self.boy = 0
+                #self.girl = 1
 
         self.usedNames = usedNames
 
         # We were able to add last names in the load function but to add
         #   titles and first names I needed to know gender
         #   Also, run again if gender has changed
-        if (not self.addedGenderSpecific) or self.oldBoy != self.boy:
-            self.oldBoy = self.boy
+        if (not self.addedGenderSpecific):
+           # self.oldBoy = self.boy
             self.listsLoaded = 0
 
             # Fill titleScrollList
-            self.allTitles = [" "] + [" "] + self.nameGen.boyTitles*self.boy + \
-                             self.nameGen.girlTitles*self.girl + \
+            self.allTitles = [" "] + [" "] + self.nameGen.boyTitles + \
+                             self.nameGen.girlTitles + \
                              self.nameGen.neutralTitles
             self.allTitles.sort()
             self.allTitles += [" "] + [" "]
 
             # Fill firstnameScrollList
-            self.allFirsts = [" "] + [" "] + self.nameGen.boyFirsts*self.boy + \
-                             self.nameGen.girlFirsts*self.girl + \
+            self.allFirsts = [" "] + [" "] + self.nameGen.boyFirsts + \
+                             self.nameGen.girlFirsts + \
                              self.nameGen.neutralFirsts
             self.allFirsts.sort()
             self.allFirsts += [" "] + [" "]
@@ -1080,7 +1079,7 @@ class NameShop(StateData.StateData):
         self.notify.debug("Finding random name")
         # Create a random name using the new function which returns
         # more information
-        uberReturn = self.nameGen.randomNameMoreinfo(self.boy, self.girl)
+        uberReturn = self.nameGen.randomNameMoreinfo()
         flags = uberReturn[:3]
         names = uberReturn[3:7]
         fullName = uberReturn[-1]

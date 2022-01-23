@@ -39,7 +39,6 @@ class BodyShop(StateData.StateData):
         # load up the given toon
         self.toon = toon
         self.dna = self.toon.getStyle()
-        gender = self.toon.style.getGender()
         
         self.speciesStart = self.getSpeciesStart()
         self.speciesChoice = self.speciesStart
@@ -365,7 +364,6 @@ class BodyShop(StateData.StateData):
     def __swapTorso(self, offset):
         # if this is the first time through only choose from naked torsos
         # (they are at 6-8)
-        gender = self.toon.style.getGender()
         if not (self.clothesPicked):
             length = len(ToonDNA.toonTorsoTypes[6:])
             torsoOffset =  6
@@ -373,15 +371,15 @@ class BodyShop(StateData.StateData):
         else:
             # Note: we need to correct colors that are not cross-gender
             # male (0-2)
-            if (gender == 'm'):
-                length = len(ToonDNA.toonTorsoTypes[:3])
-                torsoOffset = 0
-                if self.dna.armColor not in ToonDNA.defaultBoyColorList:
-                    self.dna.armColor = ToonDNA.defaultBoyColorList[0]
-                if self.dna.legColor not in ToonDNA.defaultBoyColorList:
-                    self.dna.legColor = ToonDNA.defaultBoyColorList[0]
-                if self.dna.headColor not in ToonDNA.defaultBoyColorList:
-                    self.dna.headColor = ToonDNA.defaultBoyColorList[0]
+            #if (gender == 'm'):
+              #  length = len(ToonDNA.toonTorsoTypes[:3])
+         #       torsoOffset = 0
+          #      if self.dna.armColor not in ToonDNA.defaultBoyColorList:
+         #           self.dna.armColor = ToonDNA.defaultBoyColorList[0]
+         #       if self.dna.legColor not in ToonDNA.defaultBoyColorList:
+          #          self.dna.legColor = ToonDNA.defaultBoyColorList[0]
+         #       if self.dna.headColor not in ToonDNA.defaultBoyColorList:
+        #            self.dna.headColor = ToonDNA.defaultBoyColorList[0]
                 # Make sure the topTex, sleeveTex, and botTex are all within
                 # valid index range for boys in case we're switching gender
                 if (self.toon.style.topTex not in ToonDNA.MakeAToonBoyShirts):
