@@ -2185,13 +2185,26 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         string = string + "head color = %d\n" % \
                  (self.headColor)
         string = string + f'eyeslashes = {self.eyelashes}\n'
-
         string = string + "top texture = %d\n" % self.topTex
         string = string + "top texture color = %d\n" % self.topTexColor
         string = string + "sleeve texture = %d\n" % self.sleeveTex
         string = string + "sleeve texture color = %d\n" % self.sleeveTexColor
         string = string + "bottom texture = %d\n" % self.botTex
         string = string + "bottom texture color = %d\n" % self.botTexColor
+        string = string + f'hat model{self.hatModel}\n'
+        string = string + f"hat texture{self.hatTex}\n"
+        string = string + f"hat texture color{self.hatColor}\n"
+        string = string + f'glasses model{self.glassesModel}\n'
+        string = string + f"glasses texture{self.glassesTex}\n"
+        string = string + f"glasses texture color{self.glassesColor}\n"
+        string = string + f'backpack model{self.backpackModel}\n'
+
+        string = string + f"backpack texture{self.backpackTex}\n"
+        string = string + f"backpack texture color{self.backpackColor}\n"
+        string = string + f'shoes model{self.shoesModel}\n'
+
+        string = string + f"shoes texture{self.shoesTex}\n"
+        string = string + f"shoes texture color{self.shoesColor}\n"
         return string
 
 
@@ -2217,11 +2230,26 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             dg.addUint8(self.sleeveTexColor)
             dg.addUint8(self.botTex)
             dg.addUint8(self.botTexColor)
+            #Accessories 
+            dg.addUint8(self.hatModel)
+            dg.addUint8(self.hatTex)
+            dg.addUint8(self.hatColor)
+            dg.addUint8(self.glassesModel)
+            dg.addUint8(self.glassesTex)
+            dg.addUint8(self.glassesColor)
+            dg.addUint8(self.backpackModel)
+            dg.addUint8(self.backpackTex)
+            dg.addUint8(self.backpackColor)
+            dg.addUint8(self.shoesModel)
+            dg.addUint8(self.shoesTex)
+            dg.addUint8(self.shoesColor) 
             # Colors
             dg.addUint8(self.armColor) # We assume < 256 colors.
             dg.addUint8(self.gloveColor)
             dg.addUint8(self.legColor)
             dg.addUint8(self.headColor)
+
+
         elif (self.type == 'u'):
             notify.error("undefined avatar")
         else:
@@ -2258,6 +2286,18 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         sleeveTexColor = dgi.getUint8()
         botTex = dgi.getUint8()
         botTexColor = dgi.getUint8()
+        hatModel = dgi.getUint8()
+        hatTex = dgi.getUint8()
+        hatColor = dgi.getUint8()
+        glassesModel = dgi.getUint8()
+        glassesTex = dgi.getUint8()
+        glassesColor = dgi.getUint8()
+        backpackModel = dgi.getUint8()
+        backpackTex = dgi.getUint8()
+        backpackColor = dgi.getUint8()
+        shoesModel = dgi.getUint8()
+        shoesTex = dgi.getUint8()
+        shoesColor = dgi.getUint8()
         armColor = dgi.getUint8()
         gloveColor = dgi.getUint8()
         legColor = dgi.getUint8()
@@ -2274,6 +2314,30 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         if botTex >= len(Bottoms):
             return False
         if botTexColor >= len(ClothesColors):
+            return False
+        if hatModel >= len(HatModels):
+            return False
+        if hatTex >= len(HatTextures):
+            return False
+        if hatColor >= len(ClothesColors):
+            return False
+        if glassesModel >= len(GlassesModels):
+            return False
+        if glassesTex >= len(GlassesTextures):
+            return False
+        if glassesColor >= len(ClothesColors):
+            return False
+        if backpackModel >= len(BackpackModels):
+            return False
+        if backpackTex >= len(BackpackTextures):
+            return False
+        if backpackColor >= len(ClothesColors):
+            return False
+        if shoesModel >= len(ShoesModels):
+            return False
+        if shoesTex >= len(ShoesTextures):
+            return False
+        if shoesColor >= len(ClothesColors):
             return False
         if armColor >= len(allColorsList):
             return False
@@ -2311,6 +2375,18 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             self.sleeveTexColor = dgi.getUint8()
             self.botTex = dgi.getUint8()
             self.botTexColor = dgi.getUint8()
+            self.hatModel = dgi.getUint8()
+            self.hatTex = dgi.getUint8()
+            self.hatColor = dgi.getUint8()
+            self.glassesModel = dgi.getUint8()
+            self.glassesTex = dgi.getUint8()
+            self.glassesColor = dgi.getUint8()      
+            self.backpackModel = dgi.getUint8()
+            self.backpackTex = dgi.getUint8()
+            self.backpackColor = dgi.getUint8()
+            self.shoesModel = dgi.getUint8()
+            self.shoesTex = dgi.getUint8()
+            self.shoesColor = dgi.getUint8()
             self.armColor = dgi.getUint8()
             self.gloveColor = dgi.getUint8()
             self.legColor = dgi.getUint8()
@@ -2354,6 +2430,19 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             self.sleeveTexColor = 0
             self.botTex = 0
             self.botTexColor = 0
+            self.hatModel = 0 
+            self.hatTex = 0
+            self.hatColor = 0
+            self.glassesModel = 0
+            self.glassesTex = 0
+            self.glassesColor = 0
+            self.backpackModel = 0
+            self.backpackTex = 0
+            self.backpackColor = 0
+            self.shoesModel = 0
+            self.shoesTex = 0
+            self.shoesColor = 0
+
 
             if (color == None):
                 color = self.defaultColor()
@@ -2371,7 +2460,11 @@ class ToonDNA(AvatarDNA.AvatarDNA):
                               armColor, gloveColor, legColor, headColor, eyelashes,
                               topTexture, topTextureColor, sleeveTexture,
                               sleeveTextureColor, bottomTexture,
-                              bottomTextureColor):
+                              bottomTextureColor,
+                              hat, hatTex, hatColor,
+                              glasses, glassesTex, glassesColor,
+                              backpack, backpackTex, backpackColor,
+                              shoes, shoesTex, shoesColor):
         """
         Fill in Toon dna using known parameters for all values. Example:
         dna.newToonFromProperties('dll', 'md', 'l', 'm', 1, 0, 23, 3, 22, 22, 30)
@@ -2392,6 +2485,18 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         self.sleeveTexColor = sleeveTextureColor
         self.botTex = bottomTexture
         self.botTexColor = bottomTextureColor 
+        self.hatModel = hat
+        self.hatTex = hatTex
+        self.hatColor = hatColor
+        self.glassesModel = glasses
+        self.glassesTex = glassesTex
+        self.glassesColor = glassesColor
+        self.backpack = backpack
+        self.backpackTex = backpackTex
+        self.backpackColor = backpackColor
+        self.shoesModel = shoes
+        self.shoesTex = shoesTex
+        self.shoesColor = shoesColor
         return
 
     def updateToonProperties(self, head = None, torso = None, legs = None,
@@ -2402,7 +2507,13 @@ class ToonDNA(AvatarDNA.AvatarDNA):
                              sleeveTexture = None,
                              sleeveTextureColor = None, bottomTexture = None,
                              bottomTextureColor = None,
-                             shirt = None, bottom = None):
+                             hatModel = None, hatTex = None, hatColor = None,
+                             glassesModel = None, glassesTex = None, glassesColor = None,
+                             backpackModel = None, backpackTex = None, backpackColor = None,
+                             shoesModel = None, shoesTex = None, shoesColor = None,
+                             shirt = None, bottom = None,
+                             hat = None, glasses = None,
+                             backpack = None, shoes = None):
 
         # Changes only the named properties.  'shirt' and 'bottom' are
         # special properties that specify an article of clothing with
@@ -2440,6 +2551,30 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             self.botTex = bottomTexture
         if bottomTextureColor:
             self.botTexColor = bottomTextureColor
+        if hatModel:
+            self.hatModel = hatModel
+        if hatTex:
+            self.hatTex = hatTex
+        if hatColor:
+            self.hatTex = hatTex
+        if glassesModel:
+            self.glassesModel = glassesModel
+        if glassesTex:
+            self.glassesTex = glassesTex
+        if glassesColor:
+            self.glassesColor = glassesColor
+        if backpackModel:
+            self.backpackModel = backpackModel
+        if backpackTex:
+            self.backpackTex = backpackTex
+        if backpackColor:
+            self.backpackColor = backpackColor
+        if shoesModel:
+            self.shoesModel = shoesModel
+        if shoesTex:
+            self.shoesTex = shoesTex
+        if shoesColor:
+            self.shoesColor = shoesColor
         if shirt:
             str, colorIndex = shirt
             defn = ShirtStyles[str]
@@ -2452,6 +2587,30 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             defn = BottomStyles[str]
             self.botTex = defn[0]
             self.botTexColor = defn[1][colorIndex]
+        if hat:
+            str, texIndex, colorIndex = hat
+            defn = HatStyles[str]
+            self.hatModel = defn[0]
+            self.hatTex = defn[1][texIndex]
+            self.hatColor = defn[2][colorIndex]
+        if glasses:
+            str, texIndex, colorIndex = glasses
+            defn = GlassesStyles[str]
+            self.glassesModel = defn[0]
+            self.glassesTex = defn[1][texIndex]
+            self.glassesColor = defn[2][colorIndex]
+        if backpack:
+            str, texIndex, colorIndex = backpack
+            defn = BackpackStyles[str]
+            self.backpackModel = defn[0]
+            self.backpackTex = defn[1][texIndex]
+            self.backpackColor = defn[2][colorIndex]
+        if shoes:
+            str, texIndex, colorIndex = shoes
+            defn = BackpackStyles[str]
+            self.shoesModel = defn[0]
+            self.shoesTex = defn[1][texIndex]
+            self.shoesColor = defn[2][colorIndex]
             
         return
 
