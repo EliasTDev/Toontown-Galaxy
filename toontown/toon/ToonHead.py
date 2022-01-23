@@ -1081,6 +1081,12 @@ class ToonHead(Actor.Actor):
 
         return reachedTarget
 
+    def setEyelashes(self, eyelashes):
+        self.eyelashes = eyelashes
+
+    def getEyelashes(self, eyelashes):
+        return self.eyelashes 
+
     def setupEyelashes(self, style):
         #Disney: if the toon is male no need to set lashes
         #Us: if toon didn't want eyelashes in toon setup we dont need to set lashes
@@ -1095,7 +1101,7 @@ class ToonHead(Actor.Actor):
                 self.__eyelashClosed = None
         else:
             # Disney: it's a female load the appropriate eyelash models
-            # Us: Toon didn't want eyelashes in pick a toon
+            # Us: Toon didn't want eyelashes in make a toon
             if self.__eyelashOpen:
                 self.__eyelashOpen.removeNode()
             if self.__eyelashClosed:
@@ -1925,8 +1931,3 @@ class ToonHead(Actor.Actor):
                 return True
         return False
 
-    def setEyelashes(self, eyelashes):
-        self.eyelashes = eyelashes
-
-    def getEyelashes(self, eyelashes):
-        return self.eyelashes 
