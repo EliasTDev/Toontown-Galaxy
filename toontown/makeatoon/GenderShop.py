@@ -24,7 +24,7 @@ class GenderShop(StateData.StateData):
         StateData.StateData.__init__(self, doneEvent)
         self.shopsVisited = []
         self.toon = None
-        self.gender = "m"
+        self.gender = "none"
         self.makeAToon = makeAToon
         return
 
@@ -164,7 +164,7 @@ class GenderShop(StateData.StateData):
             
         self.dna = ToonDNA.ToonDNA()
         # stage = 1 is MAKE_A_TOON
-        self.dna.newToonRandom(gender = gender, stage = 1)
+        self.dna.newToonRandom(gender = 'none', stage = 1)
         
         self.toon = Toon.Toon()
         self.toon.setDNA(self.dna)

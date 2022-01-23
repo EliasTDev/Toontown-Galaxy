@@ -71,15 +71,15 @@ class MakeAToon(StateData.StateData):
                         [State.State('Init',
                                      self.enterInit,
                                      self.exitInit,
-                                     ['GenderShop', 'NameShop']),
-                         State.State('GenderShop',
-                                     self.enterGenderShop,
-                                     self.exitGenderShop,
-                                     ['BodyShop']),
+                                     ['BodyShop', 'NameShop']),
+                        # State.State('GenderShop',
+                          #           self.enterGenderShop,
+                         #            self.exitGenderShop,
+                          #           ['BodyShop']),
                          State.State('BodyShop',
                                      self.enterBodyShop,
                                      self.exitBodyShop,
-                                     ['GenderShop', 'ColorShop']),
+                                     ['ColorShop']),
                          State.State('ColorShop',
                                      self.enterColorShop,
                                      self.exitColorShop,
@@ -576,7 +576,33 @@ class MakeAToon(StateData.StateData):
     # Specific State functions
 
     def enterInit(self):
-        pass
+        # Cleanup any old toon.
+        if self.toon:
+            self.toon.stopBlink()
+            self.toon.stopLookAroundNow()
+            self.toon.delete()
+            
+        self.dna = ToonDNA.ToonDNA()
+        # stage = 1 is MAKE_A_TOON
+        #Since female is our most gender neutral option we will go for that for now
+        self.dna.newToonRandom(gender = 'f', stage = 1)
+        
+        self.toon = Toon.Toon()
+        self.toon.setDNA(self.dna)
+        # make sure the avatar uses its highest LOD
+        self.toon.useLOD(1000)
+        # make sure his name doesn't show up
+        self.toon.setNameVisible(0)
+        self.toon.startBlink()
+        self.toon.startLookAround()
+        self.toon.reparentTo(render)
+        self.toon.setPos(self.toonPosition)
+        self.toon.setHpr(self.toonHpr)
+        self.toon.setScale(self.toonScale)
+        self.toon.loop("neutral")
+        self.setToon(self.toon)
+        messenger.send("MAT-newToonCreated")
+        return
 
     def exitInit(self):
         pass

@@ -377,14 +377,15 @@ def loadModels():
             loadTex(shirt)
         for sleeve in ToonDNA.Sleeves:
             loadTex(sleeve)
-        for short in ToonDNA.BoyShorts:
-            loadTex(short)
+       # for short in ToonDNA.BoyShorts:
+           # loadTex(short)
 
         # Girls
         # Girl bottoms are a tuple (texName, type)
-        for bottom in ToonDNA.GirlBottoms:
+       # for bottom in ToonDNA.GirlBottoms:
+          #  loadTex(bottom[0])
+        for bottom in ToonDNA.Bottoms:
             loadTex(bottom[0])
-
         # preload the leg models
         for key in list(LegDict.keys()):
             fileRoot = LegDict[key]
@@ -1456,14 +1457,14 @@ class Toon(Avatar.Avatar, ToonHead):
         # the appropriate texture
         swappedTorso = 0
         if (self.hasLOD()):
-            if (self.style.getGender() == 'f' and fromNet == 0):
+            if fromNet == 0):
                 # See if we need to switch torso to change from skirts to
                 # shorts or vice versa
                 # Only do this once
                 try:
-                    bottomPair = ToonDNA.GirlBottoms[self.style.botTex]
+                    bottomPair = ToonDNA.Bottoms[self.style.botTex]
                 except:
-                    bottomPair = ToonDNA.GirlBottoms[0]
+                    bottomPair = ToonDNA.Bottoms[0]
                 if (self.style.torso[1] == 's' and
                     bottomPair[1] == ToonDNA.SKIRT):
                     assert self.notify.debug("genToonClothes() - swapping torso from 's' to 'd', tex: %s" % bottomPair[0])
@@ -1503,17 +1504,15 @@ class Toon(Avatar.Avatar, ToonHead):
             except:
                 sleeveColor = ToonDNA.ClothesColors[0]
             # set the bottom texture and color
-            if (self.style.getGender() == 'm'):
-                try:
-                    texName = ToonDNA.BoyShorts[self.style.botTex]
-                except:
-                    texName = ToonDNA.BoyShorts[0]
-            else:
-                try:
-                    texName = ToonDNA.GirlBottoms[self.style.botTex][0]
-                except:
-                    texName = ToonDNA.GirlBottoms[0][0]
+            try:
+                texName = ToonDNA.Bottoms[self.style.botTex][0]
+            except:
+                texName = ToonDNA.Bottoms[0][0]
             bottomTex = loader.loadTexture(texName)
+            if bottomTex is None:
+                self.sendLogSuspiciousEvent('failed to load texture %s' % texName)
+                bottomTex = loader.loadTexutre(ToonDNA.Bottoms[0[0]])
+                    
             bottomTex.setMinfilter(Texture.FTLinearMipmapLinear)
             bottomTex.setMagfilter(Texture.FTLinear)
             try:

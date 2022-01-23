@@ -678,10 +678,10 @@ class CatalogClothingItem(CatalogItem.CatalogItem):
             defn = ToonDNA.BottomStyles[str]
             botTex = defn[0]
             article = ClothingTypes[self.clothingType][CTArticle]
-            if article == ABoysShorts:
-                return ToonDNA.BoyShorts[botTex]
-            else:
-                return ToonDNA.GirlBottoms[botTex][0]
+            #if article == ABoysShorts:
+               # return ToonDNA.BoyShorts[botTex]
+            #else:
+            return ToonDNA.Bottoms[botTex][0]
 
     def getColor(self):
         str = ClothingTypes[self.clothingType][CTString]

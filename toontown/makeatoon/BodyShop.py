@@ -30,6 +30,7 @@ class BodyShop(StateData.StateData):
         self.legChoice = 0
         self.headChoice = 0
         self.speciesChoice = 0
+        self.eyelashesChoice = 0
 
     def enter(self, toon, shopsVisited=[]):
         # turn off any user control
@@ -48,6 +49,8 @@ class BodyShop(StateData.StateData):
         self.torsoChoice = ToonDNA.toonTorsoTypes.index(self.dna.torso) % 3        
         self.legStart = 0
         self.legChoice = ToonDNA.toonLegTypes.index(self.dna.legs)
+        self.eyelashesStart = 0
+        self.eyelashesChoice = 
 
         if CLOTHESSHOP in shopsVisited:
             self.clothesPicked = 1
@@ -55,13 +58,13 @@ class BodyShop(StateData.StateData):
             self.clothesPicked = 0
         self.clothesPicked = 1
             
-        if (gender == 'm' or 
-            ToonDNA.GirlBottoms[self.dna.botTex][1] == ToonDNA.SHORTS):
-            torsoStyle = 's'
-            torsoPool = ToonDNA.toonTorsoTypes[:3]
-        else:
-            torsoStyle = 'd'
-            torsoPool = ToonDNA.toonTorsoTypes[3:6]
+        #if (gender == 'm' or 
+         #   ToonDNA.GirlBottoms[self.dna.botTex][1] == ToonDNA.SHORTS):
+         #   torsoStyle = 's'
+         #   torsoPool = ToonDNA.toonTorsoTypes[:3]
+        #else:
+        torsoStyle = 'd'
+        torsoPool = ToonDNA.toonTorsoTypes[3:6]
         
         # update the clothes and eye lashes, just in case
         self.__swapSpecies(0)
@@ -480,8 +483,22 @@ class BodyShop(StateData.StateData):
         if (self.headChoice > maxHeadChoice):
             self.headChoice = maxHeadChoice
         
-        self.__updateHead()        
-    
+        self.__updateHead()     
+
+    def __swapEyelashes(self, offset):
+        length = len([0,1])
+        self.eyelashesChoice = (self.eyelashesChoice + offset ) % length
+        self.__updateScrollButtons(self.eyelashesChoice, length, self.eyelashesStart,
+                                   self.eyelashesLButton, self.eyelashesRButton)
+        self.eyelashes = [0, 1][self.eyelashesChoice]
+        self.__updateEyelashes()
+
+    def __updateEyelashes(self):
+        return 
+        #WIP
+        #TODO figure out what toggles eyelashes and use the model head based on if they want eyelashes or not
+        self.__updateScrollButtons(self.eyelashesChoice, len([0, 1]), self.eyelashesStart,
+                                   self.eyelashesLButton, self.eyelashesRButton)   
     def __updateHead(self):
         self.__updateScrollButtons(self.headChoice, len(self.headList), self.headStart,
                                    self.headLButton, self.headRButton)
