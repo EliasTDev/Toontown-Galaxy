@@ -305,6 +305,8 @@ class ToonBase(OTPBase.OTPBase):
             render.setShaderAuto()
             render2d.setShaderAuto()
             render2dp.setShaderAuto()
+        #TODO add gui setting in shticker book
+        base.wantSmoothAnimations = self.settings.getBool('game', 'smooth-animations', False)
         
     def reloadControls(self):
         self.ignore(self.SCREENSHOT)
