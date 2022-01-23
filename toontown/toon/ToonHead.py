@@ -188,7 +188,7 @@ class ToonHead(Actor.Actor):
             self.__eyesOpen = ToonHead.EyesOpen
             self.__eyesClosed = ToonHead.EyesClosed
             self.__height = 0.0
-
+            self.eyelashes = 0
             # Create our own random number generator.  We do this
             # mainly so we don't jumble up the random number chain of
             # the rest of the world (making playback from a session
@@ -1082,8 +1082,10 @@ class ToonHead(Actor.Actor):
         return reachedTarget
 
     def setupEyelashes(self, style):
-        # if the toon is male no need to set lashes
-        if style.getGender() == 'm':
+        #Disney: if the toon is male no need to set lashes
+        #Us: if toon didn't want eyelashes in toon setup we dont need to set lashes
+        #if style.getGender() == 'm':
+        if not self.getEyelashes():
             # if eyelashes are present, remove them
             if self.__eyelashOpen:
                 self.__eyelashOpen.removeNode()
@@ -1092,7 +1094,8 @@ class ToonHead(Actor.Actor):
                 self.__eyelashClosed.removeNode()
                 self.__eyelashClosed = None
         else:
-            # it's a female load the appropriate eyelash models
+            # Disney: it's a female load the appropriate eyelash models
+            # Us: Toon didn't want eyelashes in pick a toon
             if self.__eyelashOpen:
                 self.__eyelashOpen.removeNode()
             if self.__eyelashClosed:
@@ -1921,3 +1924,9 @@ class ToonHead(Actor.Actor):
             or (self.savedCheesyEffect == 14):
                 return True
         return False
+
+    def setEyelashes(self, eyelashes):
+        self.eyelashes = eyelashes
+
+    def getEyelashes(self, eyelashes):
+        return self.eyelashes 

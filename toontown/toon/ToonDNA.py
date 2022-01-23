@@ -57,7 +57,8 @@ def getHeadStartIndex(species):
     for head in toonHeadTypes:
         if (head[0] == species):
             return toonHeadTypes.index(head)
-        
+
+
 def getSpecies(head):
     """
     Returns the species when the head is given.

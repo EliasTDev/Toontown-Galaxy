@@ -50,7 +50,7 @@ class BodyShop(StateData.StateData):
         self.legStart = 0
         self.legChoice = ToonDNA.toonLegTypes.index(self.dna.legs)
         self.eyelashesStart = 0
-        self.eyelashesChoice = 
+        self.eyelashesChoice = 0
 
         if CLOTHESSHOP in shopsVisited:
             self.clothesPicked = 1
@@ -499,6 +499,11 @@ class BodyShop(StateData.StateData):
         #TODO figure out what toggles eyelashes and use the model head based on if they want eyelashes or not
         self.__updateScrollButtons(self.eyelashesChoice, len([0, 1]), self.eyelashesStart,
                                    self.eyelashesLButton, self.eyelashesRButton)   
+        eyelashesIndex =  self.eyelashesChoice
+        self.dna.eyelashes = eyelashesIndex
+        self.toon.setEyelashes(eyelashesIndex) 
+        self.toon.loop("neutral", 0)
+        self.toon.swapToonColor(self.dna)
     def __updateHead(self):
         self.__updateScrollButtons(self.headChoice, len(self.headList), self.headStart,
                                    self.headLButton, self.headRButton)
