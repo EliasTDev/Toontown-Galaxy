@@ -140,11 +140,6 @@ class SellbotCogHQLoader(CogHQLoader.CogHQLoader):
                 door.find("**/doorFrameHoleRight").wrtReparentTo(doorFrame)
                 doorFrame.node().setEffect(DecalEffect.make())
                 index += 1
-               # doorOrigin.setHpr(90, 0, 0)
-                #doorOrigin.setScale(0.8, 0.8, 0.8)
-                #doorOrigin.setPos(doorOrigin, 0, -0.25, 0)                
-                #TODO see if we can fix with doorOrigin right now doors have a black opening
-                door.setPos(door, 0, -0.188, 0)
         elif zoneId == ToontownGlobals.SellbotFactoryExt:
             self.geom = loader.loadModel(self.factoryExteriorModelPath)
             factoryLinkTunnel = self.geom.find("**/tunnel_group2")
