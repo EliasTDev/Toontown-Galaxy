@@ -1469,6 +1469,33 @@ for index in MakeAToonGirlBottoms:
     else:
         notify.error("Invalid flag")
 
+def getRandomHat(generator=None):
+    if generator is None:
+        generator = random
+    styleList = HatStyles
+    style = generator.choice(styleList)
+    return style[0], style[1], style[2]
+
+def getRandomGlasses(generator=None):
+    if generator is None:
+        generator = random
+    styleList = GlassesStyles
+    style = generator.choice(styleList)
+    return style[0], style[1], style[2]
+
+def getRandomBackpack(generator=None):
+    if generator is None:
+        generator = random
+    styleList = BackpackStyles
+    style = generator.choice(styleList)
+    return style[0], style[1], style[2]
+
+def getRandomShoes(generator=None):
+    if generator is None:
+        generator = random
+    styleList = ShoesStyles
+    style = generator.choice(styleList)
+    return style[0], style[1], style[2]
 
 # Convenience funtions for clothing
 def getRandomTop(gender, tailorId = MAKE_A_TOON, generator = None):
@@ -2647,6 +2674,10 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             self.head = generator.choice(toonHeadTypes[:22])
         top, topColor, sleeve, sleeveColor = getRandomTop(gender, generator = generator)
         bottom, bottomColor = getRandomBottom(gender, generator = generator)
+        hatModel, hatTex, hatColor = getRandomHat(generator = generator)
+        glassesModel, glassesTex, glassesColor = getRandomGlasses(generator = generator)
+        backpackModel, backpackTex, backpackColor = getRandomBackpack(generator = generator)
+        shoesModel, shoesTex, shoesColor = getRandomShoes(generator = generator)
         #if gender == "m":
             #Hopefully this is gender neutral option
         self.torso = generator.choice(toonTorsoTypes[:6])
@@ -2657,6 +2688,18 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         self.sleeveTexColor = sleeveColor
         self.botTex = bottom 
         self.botTexColor = bottomColor
+        self.hatModel = hatModel
+        self.hatTex = hatTex
+        self.hatColor = hatColor
+        self.glassesModel = glassesModel
+        self.glassesTex = glassesTex
+        self.glassesColor = glassesColor
+        self.backpackModel = backpackModel
+        self.backpackTex = backpackTex
+        self.backpackColor = backpackColor
+        self.shoesModel = shoesModel
+        self.shoesTex = shoesTex
+        self.shoesColor = shoesColor
         color = generator.choice(defaultColorList)
         self.armColor = color
         self.legColor = color
@@ -2692,7 +2735,11 @@ class ToonDNA(AvatarDNA.AvatarDNA):
                 self.armColor, self.gloveColor, self.legColor, self.headColor,
                 self.eyelashes,
                 self.topTex, self.topTexColor, self.sleeveTex, 
-                self.sleeveTexColor, self.botTex, self.botTexColor)
+                self.sleeveTexColor, self.botTex, self.botTexColor,
+                self.hatModel, self.hatTex, self.hatColor,
+                self.glassesModel, self.glassesTex, self.glassesColor,
+                self.backpackModel, self.backpackTex, self.backpackColor,
+                self.shoesModel, self.shoesTex, self.shoesColor)
 
     def getType(self):
         """getType(self)
