@@ -3,7 +3,6 @@ from . import HoodDataAI
 from toontown.toonbase import ToontownGlobals
 from toontown.safezone import DistributedTrolleyAI
 from toontown.safezone import MMTreasurePlannerAI
-from toontown.classicchars import DistributedMinnieAI
 from toontown.safezone import DistributedMMPianoAI
 
 class MMHoodDataAI(HoodDataAI.HoodDataAI):
@@ -25,11 +24,6 @@ class MMHoodDataAI(HoodDataAI.HoodDataAI):
 
         self.treasurePlanner = MMTreasurePlannerAI.MMTreasurePlannerAI(self.zoneId)
         self.treasurePlanner.start()
-
-        self.classicChar = DistributedMinnieAI.DistributedMinnieAI(self.air)
-        self.classicChar.generateWithRequired(self.zoneId)
-        self.classicChar.start()
-        self.addDistObj(self.classicChar)
 
         # Piano is not compatible with the fishing pond that is there now
         # Perhaps we can work that out later

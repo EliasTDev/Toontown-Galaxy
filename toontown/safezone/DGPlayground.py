@@ -38,11 +38,3 @@ class DGPlayground(Playground.Playground):
             base.playSfx(self.loader.bird4Sound)
         self.nextBirdTime = task.time + randNum * 20.0 
         return Task.cont
-
-
-    def showPaths(self):
-        # Overridden from Playground to fill in the correct parameters
-        # for showPathPoints().
-        from toontown.classicchars import CCharPaths
-        from toontown.toonbase import TTLocalizer
-        self.showPathPoints(CCharPaths.getPaths(TTLocalizer.Goofy))
