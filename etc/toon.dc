@@ -3024,7 +3024,6 @@ dclass DistributedCloset: DistributedFurnitureItem {
   setDNA(blob dna, int8 finished, uint8 which) airecv clsend;       //security breach: invalid finished not checked, dna needs sanity check
   setState(uint8 mode,
            uint32 avId, uint32 ownerId,
-           string gender,
            uint8array topList, uint8array botList)
            broadcast ram;
   setMovie(uint8 mode, uint32 avId, int16 timestamp) broadcast ram;
@@ -3035,7 +3034,7 @@ dclass DistributedCloset: DistributedFurnitureItem {
 };
 
 dclass DistributedTrunk : DistributedCloset {
-  setState(uint8, uint32, uint32, string, uint8[], uint8[], uint8[], uint8[]) broadcast ram;
+  setState(uint8, uint32, uint32, uint8[], uint8[], uint8[], uint8[]) broadcast ram;
   removeItem(uint8, uint8, uint8, uint8) airecv clsend;
   setDNA(uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, int8, uint8) airecv clsend;
   setCustomerDNA(uint32, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8) broadcast ram;

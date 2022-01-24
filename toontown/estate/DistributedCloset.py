@@ -542,11 +542,10 @@ class DistributedCloset(DistributedFurnitureItem.DistributedFurnitureItem):
         elif (mode == ClosetGlobals.CLOSET_MOVIE_COMPLETE):
             assert(self.notify.debug('CLOSET_MOVIE_COMPLETE'))
             if self.isLocalToon:
-                self.__revertGender()
                 
                 # print out our clothes and closet information before we start
                 print ("-----------ending closet interaction-----------")
-                print("avid: %s, gender: %s" % (self.av.doId, self.av.style.gender))
+                print("avid: %s" % (self.av.doId))
                 print("current top = %s,%s,%s,%s and  bot = %s,%s," % (self.av.style.topTex, self.av.style.topTexColor,
                                                                        self.av.style.sleeveTex, self.av.style.sleeveTexColor,
                                                                        self.av.style.botTex, self.av.style.botTexColor))

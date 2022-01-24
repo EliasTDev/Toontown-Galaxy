@@ -61,7 +61,8 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
         self.model.setScale(self.worldScale*1.5, self.worldScale*1.5, self.worldScale)
         self.getToonPropertiesFromOptional()
         dna = ToonDNA.ToonDNA()
-        dna.newToonFromProperties(self.headType, self.torsoType, self.legType, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        #I hope I counted the amount of arguments right LOL
+        dna.newToonFromProperties(self.headType, self.torsoType, self.legType, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         self.setupStoneToon(dna)
         self.poseToonFromTypeIndex(self.typeIndex)
         self.toon.reparentTo(self.model)

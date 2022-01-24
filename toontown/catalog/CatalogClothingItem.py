@@ -350,31 +350,26 @@ class CatalogClothingItem(CatalogItem.CatalogItem):
     def notOfferedTo(self, avatar):
         # Boys can only buy boy clothing, and girls can only buy girl
         # clothing.  Sorry.
+        #nah i dont think so disney you're wrong!
         article = ClothingTypes[self.clothingType][CTArticle]
 
         if article == AShirt or article == AShorts:
             # This article is androgynous.
             return 0
             
-        forBoys = (article == ABoysShirt or article == ABoysShorts)
-        if avatar.getStyle().getGender() == 'm':
-            return not forBoys
-        else:
-            return forBoys
+        #forBoys = (article == ABoysShirt or article == ABoysShorts)
+        #if avatar.getStyle().getGender() == 'm':
+         #   return not forBoys
+        #else:
+         #   return forBoys
+        return 0 
             
     def forBoysOnly(self):
-        article = ClothingTypes[self.clothingType][CTArticle]
-        if (article == ABoysShirt or article == ABoysShorts):
-            return 1
-        else:
-            return 0
+
+        return 0
             
     def forGirlsOnly(self):
-        article = ClothingTypes[self.clothingType][CTArticle]
-        if (article == AGirlsShirt or article == AGirlsSkirt or article == AGirlsShorts):
-            return 1
-        else:
-            return 0
+        return 0
         
 
     def getPurchaseLimit(self):

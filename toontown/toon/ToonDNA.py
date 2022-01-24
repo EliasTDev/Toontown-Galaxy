@@ -1440,7 +1440,7 @@ MakeAToonBottoms = []
 MakeAToonShirts = []
 MakeAToonSkirts = []
 MakeAToonShorts = []
-for style in TailorCollections[MAKE_A_TOON][Bottoms]:
+for style in TailorCollections[MAKE_A_TOON][BOTTOMS]:
     index = BottomStyles[style][0]
     MakeAToonBottoms.append(index)
 

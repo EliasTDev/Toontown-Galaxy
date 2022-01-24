@@ -796,6 +796,7 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         self.hatList = clothesList
 
     def getHatList(self):
+        
         return self.hatList
 
     def setGlassesList(self, clothesList):
@@ -819,6 +820,7 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
     def isTrunkFull(self, extraAccessories = 0):
         numAccessories = (len(self.hatList) + len(self.glassesList) + len(self.backpackList) + len(self.shoesList)) / 3
         return numAccessories + extraAccessories >= self.maxAccessories
+
     def setMaxClothes(self, max):
         self.maxClothes = max
 

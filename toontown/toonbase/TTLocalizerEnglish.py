@@ -7293,6 +7293,7 @@ GenderShopGirlButtonText = "Girl"
 BodyShopHead = "Head"
 BodyShopBody = "Body"
 BodyShopLegs = "Legs"
+BodyShopEyelashes = 'Eyelashes'
 
 # ColorShop.py
 ColorShopToon = "Toon Color"

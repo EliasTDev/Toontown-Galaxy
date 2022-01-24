@@ -80,7 +80,6 @@ class NameShop(StateData.StateData):
 
         self.quickFind = 0
         self.listsLoaded = 0
-        self.addedGenderSpecific = 0
         self.chastise = 0    # If this is 1 or 2, mickey has chastised you!
         self.nameIndices = [-1,-1,-1,-1]
         self.nameFlags = [1,1,1,0]
@@ -222,129 +221,126 @@ class NameShop(StateData.StateData):
         # We were able to add last names in the load function but to add
         #   titles and first names I needed to know gender
         #   Also, run again if gender has changed
-        if (not self.addedGenderSpecific):
-           # self.oldBoy = self.boy
-            self.listsLoaded = 0
+        # self.oldBoy = self.boy
+        self.listsLoaded = 0
 
-            # Fill titleScrollList
-            self.allTitles = [" "] + [" "] + self.nameGen.boyTitles + \
-                             self.nameGen.girlTitles + \
-                             self.nameGen.neutralTitles
-            self.allTitles.sort()
-            self.allTitles += [" "] + [" "]
+        # Fill titleScrollList
+        self.allTitles = [" "] + [" "] + self.nameGen.boyTitles + \
+                            self.nameGen.girlTitles + \
+                            self.nameGen.neutralTitles
+        self.allTitles.sort()
+        self.allTitles += [" "] + [" "]
 
-            # Fill firstnameScrollList
-            self.allFirsts = [" "] + [" "] + self.nameGen.boyFirsts + \
-                             self.nameGen.girlFirsts + \
-                             self.nameGen.neutralFirsts
-            self.allFirsts.sort()
-            self.allFirsts += [" "] + [" "]
-            try:
-                k = self.allFirsts.index("Von")
-                self.allFirsts[k] = "von"
-            except:
-                print("NameShop: Couldn't find von")
-
+        # Fill firstnameScrollList
+        self.allFirsts = [" "] + [" "] + self.nameGen.boyFirsts + \
+                            self.nameGen.girlFirsts + \
+                            self.nameGen.neutralFirsts
+        self.allFirsts.sort()
+        self.allFirsts += [" "] + [" "]
+        try:
+            k = self.allFirsts.index("Von")
+            self.allFirsts[k] = "von"
+        except:
+            print("NameShop: Couldn't find von")
 
 
-            if (not self.addedGenderSpecific):
-                nameShopGui = loader.loadModel("phase_3/models/gui/tt_m_gui_mat_nameShop")
-                self.namePanel = DirectFrame(
-                    parent = aspect2d,
-                    image = None,
-                    relief = 'flat',
-                    state = 'disabled',
-                    pos = (-0.42, 0, -0.15),
-                    image_pos = (0, 0, 0.025),
-                    frameColor = (1,1,1,0.3),
-                    )
 
-                panel = nameShopGui.find("**/tt_t_gui_mat_namePanel")
-                self.panelFrame = DirectFrame(
-                    image = panel,
-                    scale = (.75, .7, .7),
-                    relief = 'flat',
-                    frameColor = (1,1,1,0),
-                    pos = (-0.0163, 0, 0.1199)
+            nameShopGui = loader.loadModel("phase_3/models/gui/tt_m_gui_mat_nameShop")
+            self.namePanel = DirectFrame(
+                parent = aspect2d,
+                image = None,
+                relief = 'flat',
+                state = 'disabled',
+                pos = (-0.42, 0, -0.15),
+                image_pos = (0, 0, 0.025),
+                frameColor = (1,1,1,0.3),
                 )
-                self.panelFrame.reparentTo(self.namePanel, sort = 1)
 
-                self.pickANameGUIElements.append(self.namePanel)
-                self.pickANameGUIElements.append(self.panelFrame)
-                self.nameResult.reparentTo(self.namePanel, sort = 2)
+            panel = nameShopGui.find("**/tt_t_gui_mat_namePanel")
+            self.panelFrame = DirectFrame(
+                image = panel,
+                scale = (.75, .7, .7),
+                relief = 'flat',
+                frameColor = (1,1,1,0),
+                pos = (-0.0163, 0, 0.1199)
+            )
+            self.panelFrame.reparentTo(self.namePanel, sort = 1)
 
-                    # Add check boxes!
-                self.circle = nameShopGui.find("**/tt_t_gui_mat_namePanelCircle")
-                self.titleCheck = self.makeCheckBox(
-                    (-0.615, 0, 0.371), TTLocalizer.TitleCheckBox,
-                    (0,0.25,0.5,1), self.titleToggle)
-                self.firstCheck = self.makeCheckBox(
-                    (-0.2193, 0, 0.371), TTLocalizer.FirstCheckBox,
-                    (0,0.25,0.5,1), self.firstToggle)
-                self.lastCheck = self.makeCheckBox(
-                    (0.3886, 0, 0.371), TTLocalizer.LastCheckBox,
-                    (0,0.25,0.5,1), self.lastToggle)
+            self.pickANameGUIElements.append(self.namePanel)
+            self.pickANameGUIElements.append(self.panelFrame)
+            self.nameResult.reparentTo(self.namePanel, sort = 2)
 
-                # Don't attempt to remove the circle, since it's just a
-                # reference to a node within the nameShopGui hierarchy.
-                #self.circle.removeNode()
-                del self.circle
+                # Add check boxes!
+            self.circle = nameShopGui.find("**/tt_t_gui_mat_namePanelCircle")
+            self.titleCheck = self.makeCheckBox(
+                (-0.615, 0, 0.371), TTLocalizer.TitleCheckBox,
+                (0,0.25,0.5,1), self.titleToggle)
+            self.firstCheck = self.makeCheckBox(
+                (-0.2193, 0, 0.371), TTLocalizer.FirstCheckBox,
+                (0,0.25,0.5,1), self.firstToggle)
+            self.lastCheck = self.makeCheckBox(
+                (0.3886, 0, 0.371), TTLocalizer.LastCheckBox,
+                (0,0.25,0.5,1), self.lastToggle)
 
-                # Make the check buttons pretty
-                self.pickANameGUIElements.append(self.titleCheck)
-                self.pickANameGUIElements.append(self.firstCheck)
-                self.pickANameGUIElements.append(self.lastCheck)
-                self.titleCheck.reparentTo(self.namePanel, sort = 2)
-                self.firstCheck.reparentTo(self.namePanel, sort = 2)
-                self.lastCheck.reparentTo(self.namePanel, sort = 2)
+            # Don't attempt to remove the circle, since it's just a
+            # reference to a node within the nameShopGui hierarchy.
+            #self.circle.removeNode()
+            del self.circle
 
-                nameShopGui.removeNode()
+            # Make the check buttons pretty
+            self.pickANameGUIElements.append(self.titleCheck)
+            self.pickANameGUIElements.append(self.firstCheck)
+            self.pickANameGUIElements.append(self.lastCheck)
+            self.titleCheck.reparentTo(self.namePanel, sort = 2)
+            self.firstCheck.reparentTo(self.namePanel, sort = 2)
+            self.lastCheck.reparentTo(self.namePanel, sort = 2)
 
-                self.lastprefixScrollList.reparentTo(self.namePanel)
-                self.lastprefixScrollList.decButton.wrtReparentTo(self.namePanel, sort = 2)
-                self.lastprefixScrollList.incButton.wrtReparentTo(self.namePanel, sort = 2)
-                self.lastsuffixScrollList.reparentTo(self.namePanel)
-                self.lastsuffixScrollList.decButton.wrtReparentTo(self.namePanel, sort = 2)
-                self.lastsuffixScrollList.incButton.wrtReparentTo(self.namePanel, sort = 2)
+            nameShopGui.removeNode()
 
-                self.titleHigh.reparentTo(self.namePanel)
-                self.prefixHigh.reparentTo(self.namePanel)
-                self.firstHigh.reparentTo(self.namePanel)
-                self.suffixHigh.reparentTo(self.namePanel)
+            self.lastprefixScrollList.reparentTo(self.namePanel)
+            self.lastprefixScrollList.decButton.wrtReparentTo(self.namePanel, sort = 2)
+            self.lastprefixScrollList.incButton.wrtReparentTo(self.namePanel, sort = 2)
+            self.lastsuffixScrollList.reparentTo(self.namePanel)
+            self.lastsuffixScrollList.decButton.wrtReparentTo(self.namePanel, sort = 2)
+            self.lastsuffixScrollList.incButton.wrtReparentTo(self.namePanel, sort = 2)
 
-                self.randomButton.reparentTo(self.namePanel, sort = 2)
-                self.typeANameButton.reparentTo(self.namePanel, sort = 2)
+            self.titleHigh.reparentTo(self.namePanel)
+            self.prefixHigh.reparentTo(self.namePanel)
+            self.firstHigh.reparentTo(self.namePanel)
+            self.suffixHigh.reparentTo(self.namePanel)
 
-            self.pickANameGUIElements.remove(self.titleScrollList)
-            self.pickANameGUIElements.remove(self.firstnameScrollList)
-            self.titleScrollList.destroy()
-            self.firstnameScrollList.destroy()
+            self.randomButton.reparentTo(self.namePanel, sort = 2)
+            self.typeANameButton.reparentTo(self.namePanel, sort = 2)
 
-            self.titleScrollList = self.makeScrollList(
-                None, (-0.6, 0, 0.202), \
-                (1,0.80,.80,1), self.allTitles, \
-                self.makeLabel, \
-                [TextNode.ACenter, 'title'])
-            self.firstnameScrollList = self.makeScrollList(
-                None, (-0.2, 0, 0.202), \
-                (0.80,1,.80,1), self.allFirsts, \
-                self.makeLabel, \
-                [TextNode.ACenter, 'first'])
-            self.pickANameGUIElements.append(self.titleScrollList)
-            self.pickANameGUIElements.append(self.firstnameScrollList)
+        self.pickANameGUIElements.remove(self.titleScrollList)
+        self.pickANameGUIElements.remove(self.firstnameScrollList)
+        self.titleScrollList.destroy()
+        self.firstnameScrollList.destroy()
 
-            self.titleScrollList.reparentTo(self.namePanel, sort = -1)
-            self.titleScrollList.decButton.wrtReparentTo(self.namePanel, sort = 2)
-            self.titleScrollList.incButton.wrtReparentTo(self.namePanel, sort = 2)
-            self.firstnameScrollList.reparentTo(self.namePanel, sort = -1)
-            self.firstnameScrollList.decButton.wrtReparentTo(self.namePanel, sort = 2)
-            self.firstnameScrollList.incButton.wrtReparentTo(self.namePanel, sort = 2)
+        self.titleScrollList = self.makeScrollList(
+            None, (-0.6, 0, 0.202), \
+            (1,0.80,.80,1), self.allTitles, \
+            self.makeLabel, \
+            [TextNode.ACenter, 'title'])
+        self.firstnameScrollList = self.makeScrollList(
+            None, (-0.2, 0, 0.202), \
+            (0.80,1,.80,1), self.allFirsts, \
+            self.makeLabel, \
+            [TextNode.ACenter, 'first'])
+        self.pickANameGUIElements.append(self.titleScrollList)
+        self.pickANameGUIElements.append(self.firstnameScrollList)
 
-            # If you're doing this you'd better make the highlights
-            # again so they're on top
-            self.listsLoaded = 1
-            self.addedGenderSpecific = 1
-            self.__randomName()
+        self.titleScrollList.reparentTo(self.namePanel, sort = -1)
+        self.titleScrollList.decButton.wrtReparentTo(self.namePanel, sort = 2)
+        self.titleScrollList.incButton.wrtReparentTo(self.namePanel, sort = 2)
+        self.firstnameScrollList.reparentTo(self.namePanel, sort = -1)
+        self.firstnameScrollList.decButton.wrtReparentTo(self.namePanel, sort = 2)
+        self.firstnameScrollList.incButton.wrtReparentTo(self.namePanel, sort = 2)
+
+        # If you're doing this you'd better make the highlights
+        # again so they're on top
+        self.listsLoaded = 1
+        self.__randomName()
 
         # if we have re-entered make sure the Type/Pick button is labelled correctly
         self.typeANameButton['text'] = TTLocalizer.TypeANameButton
@@ -1416,7 +1412,7 @@ class NameShop(StateData.StateData):
         return None
 
     def _submitTypeANameAsPickAName(self):
-        pnp = TTPickANamePattern(self.nameEntry.get(), self.toon.style.gender)
+        pnp = TTPickANamePattern(self.nameEntry.get())
         if pnp.hasNamePattern():
             # submit the name as a pick-a-name
             # manipulate the GUI elements to pick up NameShop GUI-related code
@@ -1426,11 +1422,10 @@ class NameShop(StateData.StateData):
             names = []
             for i in range(len(pattern)):
                 if pattern[i] != -1:
-                    names.append(pnp.getNamePartString(
-                        self.toon.style.gender, i, pattern[i]))
+                    names.append(pnp.getNamePartString( i, pattern[i]))
                 else:
                     names.append('')
-            fullName = pnp.getNameString(pattern, self.toon.style.gender)
+            fullName = pnp.getNameString(pattern)
             self._updateGuiWithPickAName(flags, names, fullName)
             # now that the gui has been set to the new name, submit it
             self.__handleDone()

@@ -208,8 +208,6 @@ class PurchaseGiftRequest(AsyncRequest):
     def checkGender(self, retcode):
         sAv = self.neededObjects[self.senderId]
         rAv = self.neededObjects[self.receiverId]
-        if ((self.item.forBoysOnly() and rAv.dna.getGender() == 'f') or (self.item.forGirlsOnly() and rAv.dna.getGender() == 'm')):
-            return ToontownGlobals.P_WillNotFit
         return retcode
         
     def checkPurchaseLimit(self, retcode):

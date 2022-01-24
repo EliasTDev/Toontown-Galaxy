@@ -95,25 +95,27 @@ class NameGenerator:
                 nameParts[cat2part[cat]][str] = id
         return nameParts
 
-    def getMaleNameParts(self):
+    def getNameParts(self):
         return self._getNameParts({0: 0,
+                                   1: 0,
                                    2: 0,
                                    3: 1,
-                                   5: 1,
-                                   6: 2,
-                                   7: 2,
-                                   8: 3,
-                                   })
-
-    def getFemaleNameParts(self):
-        return self._getNameParts({1: 0,
-                                   2: 0,
                                    4: 1,
                                    5: 1,
                                    6: 2,
                                    7: 2,
                                    8: 3,
                                    })
+
+    #def getFemaleNameParts(self):
+     #   return self._getNameParts({1: 0,
+      #                             2: 0,
+      #                             4: 1,
+      #                             5: 1,
+       #                            6: 2,
+        #                           7: 2,
+         #                          8: 3,
+                        #           })
 
     def getLastNamePrefixesCapped(self):
         return self.capPrefixes

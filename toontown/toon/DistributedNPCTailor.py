@@ -195,7 +195,7 @@ class DistributedNPCTailor(DistributedNPCToonBase):
                                        self.uniqueName('popupPurchaseGUI'))
                 # print out our clothes and closet information before we start
                 print ("-----------Starting tailor interaction-----------")
-                print("avid: %s, gender: %s" % (self.av.doId, self.av.style.gender))
+                print("avid: %s" % (self.av.doId))
                 print("current top = %s,%s,%s,%s and  bot = %s,%s," % (self.av.style.topTex, self.av.style.topTexColor,
                                                                        self.av.style.sleeveTex, self.av.style.sleeveTexColor,
                                                                        self.av.style.botTex, self.av.style.botTexColor))
@@ -212,7 +212,7 @@ class DistributedNPCTailor(DistributedNPCToonBase):
             if self.av and self.isLocalToon:
                 # print out our clothes and closet information before we start
                 print ("-----------ending tailor interaction-----------")
-                print("avid: %s, gender: %s" % (self.av.doId, self.av.style.gender))
+                print("avid: %s" % (self.av.doId)
                 print("current top = %s,%s,%s,%s and  bot = %s,%s," % (self.av.style.topTex, self.av.style.topTexColor,
                                                                        self.av.style.sleeveTex, self.av.style.sleeveTexColor,
                                                                        self.av.style.botTex, self.av.style.botTexColor))

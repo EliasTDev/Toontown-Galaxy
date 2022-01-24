@@ -86,7 +86,7 @@ MaxMailboxContents = 30
 # the attic, but not those windows and wallpaper which are installed.
 MaxHouseItems = 45
 #the max number of accessories you can have in a trunk
-MaxAccessories = 50
+MaxAccessories = 1000
 
 
 # How many extra items, over the above limit, can we keep on the
