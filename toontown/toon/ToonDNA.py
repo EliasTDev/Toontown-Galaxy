@@ -1469,28 +1469,28 @@ for index in MakeAToonBottoms:
 def getRandomHat(generator=None):
     if generator is None:
         generator = random
-    styleList = HatStyles
+    styleList = list(HatStyles.values())
     style = generator.choice(styleList)
     return style[0], style[1], style[2]
 
 def getRandomGlasses(generator=None):
     if generator is None:
         generator = random
-    styleList = GlassesStyles
+    styleList = list(GlassesStyles.values())
     style = generator.choice(styleList)
     return style[0], style[1], style[2]
 
 def getRandomBackpack(generator=None):
     if generator is None:
         generator = random
-    styleList = BackpackStyles
+    styleList = list(BackpackStyles.values())
     style = generator.choice(styleList)
     return style[0], style[1], style[2]
 
 def getRandomShoes(generator=None):
     if generator is None:
         generator = random
-    styleList = ShoesStyles
+    styleList = list(ShoesStyles.values())
     style = generator.choice(styleList)
     return style[0], style[1], style[2]
 
@@ -2476,10 +2476,10 @@ class ToonDNA(AvatarDNA.AvatarDNA):
                               topTexture, topTextureColor, sleeveTexture,
                               sleeveTextureColor, bottomTexture,
                               bottomTextureColor,
-                              hat, hatTex, hatColor,
-                              glasses, glassesTex, glassesColor,
-                              backpack, backpackTex, backpackColor,
-                              shoes, shoesTex, shoesColor):
+                              hat=0, hatTex=0, hatColor=0,
+                              glasses=0, glassesTex=0, glassesColor=0,
+                              backpack=0, backpackTex=0, backpackColor=0,
+                              shoes=0, shoesTex=0, shoesColor=0):
         """
         Fill in Toon dna using known parameters for all values. Example:
         dna.newToonFromProperties('dll', 'md', 'l', 'm', 1, 0, 23, 3, 22, 22, 30)
@@ -2499,13 +2499,21 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         self.sleeveTexColor = sleeveTextureColor
         self.botTex = bottomTexture
         self.botTexColor = bottomTextureColor 
+        if not hat:
+            hat, hatTex, hatColor = getRandomHat()
+        if not glasses:
+            glasses, glassesTex, glassesColor = getRandomGlasses()
+        #if not backpack:
+         #   backpack, backpackTex, backpackColor = 0
+       # if not shoes:
+        #    shoes, shoesTex, shoesColor = 0
         self.hatModel = hat
         self.hatTex = hatTex
         self.hatColor = hatColor
         self.glassesModel = glasses
         self.glassesTex = glassesTex
         self.glassesColor = glassesColor
-        self.backpack = backpack
+        self.backpackModel = backpack
         self.backpackTex = backpackTex
         self.backpackColor = backpackColor
         self.shoesModel = shoes

@@ -3036,7 +3036,7 @@ dclass DistributedCloset: DistributedFurnitureItem {
 dclass DistributedTrunk : DistributedCloset {
   setState(uint8, uint32, uint32, uint8[], uint8[], uint8[], uint8[]) broadcast ram;
   removeItem(uint8, uint8, uint8, uint8) airecv clsend;
-  setDNA(uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, int8, uint8) airecv clsend;
+  setDNA(uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, blob, int8, uint8) airecv clsend;
   setCustomerDNA(uint32, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8) broadcast ram;
 };
 dclass DistributedPhone: DistributedFurnitureItem {
