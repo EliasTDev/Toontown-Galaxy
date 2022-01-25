@@ -2238,7 +2238,6 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             #Remove gender so we'll go with 0 for female
             #dg.addUint8(0)
             # Clothes
-            print(self.eyelashes)
             dg.addUint8(self.eyelashes)
             dg.addUint8(self.topTex) # We assume < 256 textures.
             dg.addUint8(self.topTexColor)
@@ -2704,11 +2703,11 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         else:
             self.eyelashes = random.randint(0, 1)
         #else:
-           # self.torso = generator.choice(toonTorsoTypes[:6])
-            #self.topTex = top
-           # self.topTexColor = topColor
-           # self.sleeveTex = sleeve
-           # self.sleeveTexColor = sleeveColor
+        self.torso = generator.choice(toonTorsoTypes[:6])
+        self.topTex = top
+        self.topTexColor = topColor
+        self.sleeveTex = sleeve
+        self.sleeveTexColor = sleeveColor
             
 ##            # Make sure the bottom type matches the torso type
 ##            if (self.torso[1] == 'd'):
@@ -2722,9 +2721,9 @@ class ToonDNA(AvatarDNA.AvatarDNA):
                 
             # Make sure the bottom type matches the torso type
         if (self.torso[1] == 'd'):
-            bottom, bottomColor = getRandomBottom( generator = generator, girlBottomType = SKIRT)
+            bottom, bottomColor = getRandomBottom( generator = generator, bottomType = SKIRT)
         else:
-            bottom, bottomColor = getRandomBottom( generator = generator, girlBottomType = SHORTS)
+            bottom, bottomColor = getRandomBottom( generator = generator, bottomType = SHORTS)
 
         # gloves always white
         self.gloveColor = 0

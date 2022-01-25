@@ -128,7 +128,7 @@ def createNPC(air, npcId, desc, zoneId, posIndex=0, questCallback=None):
     
     if dnaType == "r":
         # ...random dna.
-        dnaList = getRandomDNA(npcId)
+        dnaList = getRandomDNA(npcId, eyelashes )
     else:
         dnaList = dnaType
     
@@ -381,7 +381,7 @@ NPCToonDict = {
     1009 : (1510, lnames[1009],("dsl" ,"ss" ,"m" , 0 ,17 ,0 ,17 ,17 ,0 ,0 ,0 ,0 ,0 ,14 ,), 0, 0, NPC_PETCLERK),
     1010 : (1510, lnames[1010],("dss" ,"ld" ,"m" ,1 ,10 ,0 ,10 ,10 ,0 ,0 ,0 ,0 ,26 ,27 ,), 1, 0, NPC_PETCLERK),
     1011 : (1510, lnames[1011],("fll" ,"sd" ,"m" ,1 ,1 ,0 ,1 ,1 ,0 ,1 ,0 ,1 ,4 ,25 ,), 1, 0, NPC_PETCLERK),
-    1012 : (1000, lnames[1012], ("fls", "ms", "l", 14, 0, 3, 3, 0, 1, 0, 1, 0, 13), "m", 1, NPC_PARTYPERSON),
+    1012 : (1000, lnames[1012], ("fls", "ms", "l", 0, 14, 0, 3, 3, 0, 1, 0, 1, 0, 13), 0, 1, NPC_PARTYPERSON),
     1013 : (1000, lnames[1013], ("fss", "ms", "m", 1, 2, 0, 3, 3, 1, 6, 1, 6, 5, 6), 1, 1, NPC_PARTYPERSON),
 
     1101 : (1627, lnames[1101],("fll" ,"ls" ,"m" , 0 ,14 ,0 ,14 ,14 ,1 ,3 ,1 ,3 ,1 ,9 ,), 0, 0, NPC_REGULAR),
@@ -484,7 +484,7 @@ NPCToonDict = {
     3010 : (3511, lnames[3010],("rls" ,"ss" ,"l" , 0 ,10 ,0 ,10 ,10 ,0 ,12 ,0 ,12 ,0 ,11 ,), 0, 0, NPC_PETCLERK),
     3011 : (3511, lnames[3011],("mls" ,"md" ,"l" ,1 ,3 ,0 ,3 ,3 ,1 ,26 ,1 ,26 ,26 ,27 ,), 1, 0, NPC_PETCLERK),
     3012 : (3511, lnames[3012],("hsl" ,"ms" ,"l" , 0 ,18 ,0 ,18 ,18 ,1 ,12 ,1 ,12 ,0 ,1 ,), 0, 0, NPC_PETCLERK),
-    3013 : (3000, lnames[3013], ("cls", "ss", "m", "m", 18, 0, 17, 17, 1, 7, 1, 7, 1, 9), "m", 1, NPC_PARTYPERSON),
+    3013 : (3000, lnames[3013], ("cls", "ss", "m", 0, 18, 0, 17, 17, 1, 7, 1, 7, 1, 9), 0, 1, NPC_PARTYPERSON),
     3014 : (3000, lnames[3014], ("css", "sd", "m", 1, 17, 0, 16, 16, 0, 24, 0, 24, 0, 9), 1, 1, NPC_PARTYPERSON),
 
     # Walrus Way
@@ -493,12 +493,12 @@ NPCToonDict = {
     3103 : (3641, lnames[3103], "r",  0, 0, NPC_REGULAR),
     3104 : (3602, lnames[3104],("cll" ,"ss" ,"l" ,1 ,16 ,0 ,16 ,16 ,0 ,4 ,0 ,4 ,3 ,2 ,), 1, 0, NPC_REGULAR),
     3105 : (3651, lnames[3105], "r",  0, 0, NPC_REGULAR),
-    3106 : (3636, lnames[3106], ('fll', 'ls', 'l', 0, 8,2,8,8,10,27,0,27,7,11), "m", 0, NPC_REGULAR),
+    3106 : (3636, lnames[3106], ('fll', 'ls', 'l', 0, 8,2,8,8,10,27,0,27,7,11), 0, 0, NPC_REGULAR),
     3107 : (3630, lnames[3107],("dll" ,"ms" ,"l" ,1 ,15 ,0 ,15 ,15 ,0 ,5 ,0 ,5 ,4 ,4 ,), 1, 0, NPC_REGULAR),
     3108 : (3638, lnames[3108], "r",  0, 0, NPC_REGULAR),
     3109 : (3637, lnames[3109],("fll" ,"sd" ,"m" ,1 ,23 ,0 ,23 ,23 ,1 ,6 ,1 ,6 ,12 ,27 ,), 1, 0, NPC_REGULAR),
-    3110 : (3629, lnames[3110], ('fss', 'ms', 'l', 0, 10,10,10,10,16,4,0,4,5,4), "m", 0, NPC_REGULAR),
-    3111 : (3627, lnames[3111], ('dsl', 'ls', 's', 0, 6,0,6,6,14,27,10,27,1,14), "m", 1, NPC_REGULAR),
+    3110 : (3629, lnames[3110], ('fss', 'ms', 'l', 0, 10,10,10,10,16,4,0,4,5,4), 0, 0, NPC_REGULAR),
+    3111 : (3627, lnames[3111], ('dsl', 'ls', 's', 0, 6,0,6,6,14,27,10,27,1,14), 0, 1, NPC_REGULAR),
     3112 : (3607, lnames[3112],("rll" ,"ls" ,"m" , 0 ,21 ,0 ,21 ,21 ,1 ,5 ,1 ,5 ,1 ,9 ,), 0, 0, NPC_REGULAR),
     3113 : (3618, lnames[3113],("rss" ,"ms" ,"m" , 0 ,14 ,0 ,14 ,14 ,1 ,5 ,1 ,5 ,0 ,2 ,), 0, 0, NPC_REGULAR),
     3114 : (3620, lnames[3114],("rls" ,"ss" ,"m" , 0 ,7 ,0 ,7 ,7 ,0 ,6 ,0 ,6 ,0 ,20 ,), 0, 0, NPC_REGULAR),
@@ -541,7 +541,7 @@ NPCToonDict = {
     3209 : (3737, lnames[3209],("css" ,"ss" ,"l" , 0 ,19 ,0 ,19 ,19 ,0 ,1 ,0 ,1 ,1 ,9 ,), 0, 0, NPC_REGULAR),
     # Simian Sam is now a monkey!
     #3210 : (3728, lnames[3210],("pls" ,"ls" ,"s" , 0 ,13 ,0 ,13 ,13 ,2 ,1 ,2 ,1 ,5 ,2 ,), 0, 0, NPC_REGULAR),
-    3210 : (3728, lnames[3210], ('pls', 'ls', 's', 0, 13,0,13,13,2,1,2,1,5,2), "m", 0, NPC_REGULAR),
+    3210 : (3728, lnames[3210], ('pls', 'ls', 's', 0, 13,0,13,13,2,1,2,1,5,2), 0, 0, NPC_REGULAR),
     3211 : (3710, lnames[3211], "r", 1, 0, NPC_REGULAR),
     3212 : (3707, lnames[3212],("dss" ,"ss" ,"s" , 0 ,19 ,0 ,19 ,19 ,0 ,2 ,0 ,2 ,1 ,17 ,), 0, 0, NPC_REGULAR),
     3213 : (3739, lnames[3213],("fll" ,"ls" ,"s" , 0 ,12 ,0 ,12 ,12 ,1 ,2 ,1 ,2 ,1 ,14 ,), 0, 0, NPC_HQ),
@@ -580,10 +580,10 @@ NPCToonDict = {
     3308 : (3815, lnames[3308],("mss" ,"ss" ,"m" , 0 ,3 ,0 ,3 ,3 ,1 ,11 ,1 ,11 ,1 ,0 ,), 0, 0, NPC_REGULAR),
     3309 : (3826, lnames[3309],("hll" ,"ls" ,"m" , 0 ,17 ,0 ,17 ,17 ,1 ,11 ,1 ,11 ,1 ,18 ,), 0, 0, NPC_REGULAR),
     # Professor Flake
-    3310 : (3823, lnames[3310], ('pll', 'ms', 'm', 0, 10,0,10,10,60,27,49,27,0,13), "m", 0, NPC_REGULAR),
+    3310 : (3823, lnames[3310], ('pll', 'ms', 'm', 0, 10,0,10,10,60,27,49,27,0,13), 0, 0, NPC_REGULAR),
     3311 : (3829, lnames[3311], "r", 1, 0, NPC_REGULAR),
     # March Harry
-    3312 : (3813, lnames[3312], ('rss', 'ms', 'l', 0, 4,0,4,4,5,2,5,2,1,10), "m", 0, NPC_REGULAR),
+    3312 : (3813, lnames[3312], ('rss', 'ms', 'l', 0, 4,0,4,4,5,2,5,2,1,10), 0, 0, NPC_REGULAR),
     # Toon HQ
     3313 : (3801, lnames[3313],("css" ,"ms" ,"l" , 0 ,9 ,0 ,9 ,9 ,0 ,0 ,0 ,0 ,1 ,2 ,), 0, 0, NPC_HQ),
     3314 : (3801, lnames[3314],("cls" ,"ms" ,"l" ,1 ,1 ,0 ,1 ,1 ,0 ,0 ,0 ,0 ,3 ,25 ,), 1, 0, NPC_HQ),
@@ -591,7 +591,7 @@ NPCToonDict = {
     3316 : (3801, lnames[3316],("dss" ,"md" ,"l" ,1 ,10 ,0 ,10 ,10 ,0 ,1 ,0 ,1 ,10 ,27 ,), 1, 0, NPC_HQ),
     3317 : (3816, lnames[3317],("fll" ,"ls" ,"l" ,1 ,1 ,0 ,1 ,1 ,0 ,2 ,0 ,2 ,3 ,24 ,), 1, 0, NPC_REGULAR),
     # Johnny Cashmere
-    3318 : (3808, lnames[3318], ('dss', 'ms', 'm', 0, 18,0,18,18,57,1,46,1,12,1), "m", 0, NPC_REGULAR),
+    3318 : (3808, lnames[3318], ('dss', 'ms', 'm', 0, 18,0,18,18,57,1,46,1,12,1), 0, 0, NPC_REGULAR),
     3319 : (3825, lnames[3319],("fls" ,"ls" ,"l" , 0 ,9 ,0 ,9 ,9 ,1 ,2 ,1 ,2 ,1 ,1 ,), 0, 0, NPC_REGULAR),
     3320 : (3814, lnames[3320],("rsl" ,"ls" ,"l" ,1 ,1 ,0 ,1 ,1 ,1 ,3 ,1 ,3 ,12 ,27 ,), 1, 0, NPC_REGULAR),
     3321 : (3818, lnames[3321],("rss" ,"ss" ,"l" , 0 ,16 ,0 ,16 ,16 ,1 ,2 ,1 ,2 ,1 ,16 ,), 0, 0, NPC_REGULAR),
@@ -617,7 +617,7 @@ NPCToonDict = {
     4010 : (4508, lnames[4010],("hss" ,"ms" ,"m" , 0 ,12 ,0 ,12 ,12 ,0 ,5 ,0 ,5 ,1 ,10 ,), 0, 0, NPC_PETCLERK),
     4011 : (4508, lnames[4011],("cll" ,"ss" ,"m" , 0 ,4 ,0 ,4 ,4 ,0 ,5 ,0 ,5 ,1 ,4 ,), 0, 0, NPC_PETCLERK),
     4012 : (4508, lnames[4012],("csl" ,"ss" ,"m" ,1 ,19 ,0 ,19 ,19 ,0 ,8 ,0 ,8 ,10 ,27 ,), 1, 0, NPC_PETCLERK),
-    4013 : (4000, lnames[4013], ("bll", "ls", "s", "m", 3, 0, 19, 19, 0, 8, 0, 8, 1, 12), "m", 1, NPC_PARTYPERSON),
+    4013 : (4000, lnames[4013], ("bll", "ls", "s", 0, 3, 0, 19, 19, 0, 8, 0, 8, 1, 12), 0, 1, NPC_PARTYPERSON),
     4014 : (4000, lnames[4014], ("bss", "md", "m", 1, 24, 0, 19, 19, 0, 24, 0, 24, 0, 12), 1, 1, NPC_PARTYPERSON),
 
     4101 : (4603, lnames[4101],("cll" ,"ms" ,"m" , 0 ,16 ,0 ,16 ,16 ,1 ,7 ,1 ,7 ,0 ,6 ,), 0, 0, NPC_REGULAR),
@@ -745,7 +745,7 @@ NPCToonDict = {
     5009 : (5505, lnames[5009],("csl" ,"ls" ,"m" ,1 ,21 ,0 ,21 ,21 ,1 ,23 ,1 ,23 ,8 ,23 ,), 1, 0, NPC_PETCLERK),
     5010 : (5505, lnames[5010],("cls" ,"ss" ,"m" , 0 ,13 ,0 ,13 ,13 ,1 ,10 ,1 ,10 ,0 ,10 ,), 0, 0, NPC_PETCLERK),
     5011 : (5505, lnames[5011],("dll" ,"ls" ,"m" , 0 ,5 ,0 ,5 ,5 ,1 ,10 ,1 ,10 ,0 ,4 ,), 0, 0, NPC_PETCLERK),
-    5012 : (5000, lnames[5012], ("dls", "ms", "m", "m", 13, 0, 12, 12, 0, 1, 0, 1, 0, 6), "m", 1, NPC_PARTYPERSON),
+    5012 : (5000, lnames[5012], ("dls", "ms", "m", 0, 13, 0, 12, 12, 0, 1, 0, 1, 0, 6), 0, 1, NPC_PARTYPERSON),
     5013 : (5000, lnames[5013], ("dss", "md", "m", 1, 1, 0, 3, 3, 1, 5, 1, 5, 0, 5), 1, 1, NPC_PARTYPERSON),
 
     # Elm Street
@@ -843,10 +843,10 @@ NPCToonDict = {
     #          'Lavender', 'Pink', 'Plum', 'Black']
     
     # Goofy's Speedway
-    8001 : (8501, lnames[8001], ("psl", "ms", "m", 0, 13, 0, 13,  13,  0, 11, 0, 11, 2, 10), "m", 0, NPC_KARTCLERK),
+    8001 : (8501, lnames[8001], ("psl", "ms", "m", 0, 13, 0, 13,  13,  0, 11, 0, 11, 2, 10), 0, 0, NPC_KARTCLERK),
     8002 : (8501, lnames[8002], ("psl", "ld", "s", 1, 23, 0, 23,  23,  0, 11, 0, 11, 2, 10), 1, 0, NPC_KARTCLERK),
     8003 : (8501, lnames[8003], ("pll", "ss", "l", 1, 1, 0, 1,  1,  0, 11, 0, 11, 2, 10), 1, 0, NPC_KARTCLERK),
-    8004 : (8501, lnames[8004], ("pls", "ms", "l", 0, 16, 0, 16,  16,  0, 11, 0, 11, 2, 10), "m", 0, NPC_KARTCLERK),
+    8004 : (8501, lnames[8004], ("pls", "ms", "l", 0, 16, 0, 16,  16,  0, 11, 0, 11, 2, 10), 0, 0, NPC_KARTCLERK),
 
     # Dreamland
     9001 : (9503, lnames[9001],("fll" ,"ss" ,"l" ,1 ,16 ,0 ,16 ,16 ,0 ,6 ,0 ,6 ,26 ,27 ,), 1, 0, NPC_REGULAR),
@@ -863,7 +863,7 @@ NPCToonDict = {
     9012 : (9508, lnames[9012],("cls" ,"ld" ,"l" ,1 ,23 ,0 ,23 ,23 ,0 ,21 ,0 ,21 ,10 ,27 ,), 1, 0, NPC_PETCLERK),
     9013 : (9508, lnames[9013],("dll" ,"sd" ,"l" ,1 ,15 ,0 ,15 ,15 ,0 ,21 ,0 ,21 ,10 ,27 ,), 1, 0, NPC_PETCLERK),
     9014 : (9508, lnames[9014],("dss" ,"ss" ,"l" , 0 ,7 ,0 ,7 ,7 ,0 ,9 ,0 ,9 ,1 ,15 ,), 0, 0, NPC_PETCLERK),
-    9015 : (9000, lnames[9015], ("rss", "ls", "l", "m", 21, 0, 20, 20, 0, 12, 0, 12, 0, 11), "m", 1, NPC_PARTYPERSON),
+    9015 : (9000, lnames[9015], ("rss", "ls", "l", 0, 21, 0, 20, 20, 0, 12, 0, 12, 0, 11), 0, 1, NPC_PARTYPERSON),
     9016 : (9000, lnames[9016], ("rls", "md", "l", 1, 6, 0, 21, 21, 1, 11, 1, 11, 0, 11), 1, 1, NPC_PARTYPERSON),
 
     9101 : (9604, lnames[9101],("css" ,"ls" ,"l" , 0 ,14 ,0 ,14 ,14 ,1 ,1 ,1 ,1 ,0 ,11 ,), 0, 0, NPC_REGULAR),
@@ -942,7 +942,6 @@ NPCToonDict = {
     9235 : (9756, lnames[9235],("dll" ,"ls" ,"l" , 0 ,6 ,0 ,6 ,6 ,1 ,6 ,1 ,6 ,0 ,16 ,), 0, 0, NPC_HQ),
     9236 : (9756, lnames[9236],("dss" ,"ms" ,"l" , 0 ,20 ,0 ,20 ,20 ,0 ,6 ,0 ,6 ,0 ,13 ,), 0, 0, NPC_HQ),
     9237 : (9255, lnames[9237],("dls" ,"ss" ,"l" , 0 ,14 ,0 ,14 ,14 ,0 ,7 ,0 ,7 ,0 ,10 ,), 0, 0, NPC_FISHERMAN),   
-
 
 
 
