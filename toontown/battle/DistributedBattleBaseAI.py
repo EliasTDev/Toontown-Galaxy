@@ -1007,8 +1007,9 @@ class DistributedBattleBaseAI(DistributedObjectAI.DistributedObjectAI,
                 empty = InventoryBase.InventoryBase(toon)
                 toon.b_setInventory(empty.makeNetString())
                 toon.b_setHp(0)
+                toon.b_setLocation(self.zoneId, 5000)
 
-                
+
                 messageToonReleased = ("Battle releasing toon %s" % (toon.doId))
                 messenger.send(messageToonReleased, [toon.doId])
 
