@@ -2238,6 +2238,7 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             #Remove gender so we'll go with 0 for female
             #dg.addUint8(0)
             # Clothes
+            print(self.eyelashes)
             dg.addUint8(self.eyelashes)
             dg.addUint8(self.topTex) # We assume < 256 textures.
             dg.addUint8(self.topTexColor)
@@ -2282,9 +2283,9 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             return False
 
         headIndex = dgi.getUint8()
-        eyelashes = dgi.getUint8()
         torsoIndex = dgi.getUint8()
         legsIndex = dgi.getUint8()
+        eyelashes = dgi.getUint8()
 
         if headIndex >= len(toonHeadTypes):
             return False
@@ -2294,6 +2295,7 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             return False
         if legsIndex >= len(toonLegTypes):
             return False
+        eyelashes = dgi.getUint8()
 
         topTex = dgi.getUint8()
         topTexColor = dgi.getUint8()
@@ -2471,8 +2473,8 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         else:
             notify.error("tuple must be in format ('%s', '%s', '%s', '%s')")
 
-    def newToonFromProperties(self, head, torso, legs, 
-                              armColor, gloveColor, legColor, headColor, eyelashes,
+    def newToonFromProperties(self, head, torso, legs, eyelashes,
+                              armColor, gloveColor, legColor, headColor,
                               topTexture, topTextureColor, sleeveTexture,
                               sleeveTextureColor, bottomTexture,
                               bottomTextureColor,
@@ -2488,6 +2490,7 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         self.head = head
         self.torso = torso
         self.legs = legs
+        self.eyelashes = eyelashes
         self.armColor = armColor
         self.gloveColor = gloveColor
         self.legColor = legColor
@@ -2522,9 +2525,9 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         return
 
     def updateToonProperties(self, head = None, torso = None, legs = None,
+                            eyelashes = None,
                              armColor = None, gloveColor = None,
                              legColor = None, headColor = None,
-                             eyelashes = None,
                              topTexture = None, topTextureColor = None,
                              sleeveTexture = None,
                              sleeveTextureColor = None, bottomTexture = None,
@@ -2548,7 +2551,8 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             self.torso = torso
         if legs:
             self.legs = legs
-
+        if eyelashes:
+            self.eyelashes = eyelashes
         if armColor:
             self.armColor = armColor
         if gloveColor:
@@ -2557,8 +2561,6 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             self.legColor = legColor
         if headColor:
             self.headColor = headColor
-        if eyelashes:
-            self.eyelashes = eyelashes
         if topTexture:
             self.topTex = topTexture
         if topTextureColor:
@@ -2729,8 +2731,8 @@ class ToonDNA(AvatarDNA.AvatarDNA):
 
     def asTuple(self):
         return (self.head, self.torso, self.legs,
-                self.armColor, self.gloveColor, self.legColor, self.headColor,
                 self.eyelashes,
+                self.armColor, self.gloveColor, self.legColor, self.headColor,
                 self.topTex, self.topTexColor, self.sleeveTex, 
                 self.sleeveTexColor, self.botTex, self.botTexColor,
                 self.hatModel, self.hatTex, self.hatColor,
