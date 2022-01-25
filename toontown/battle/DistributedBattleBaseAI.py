@@ -1008,6 +1008,10 @@ class DistributedBattleBaseAI(DistributedObjectAI.DistributedObjectAI,
                 toon.b_setInventory(empty.makeNetString())
                 toon.b_setHp(0)
 
+                
+                messageToonReleased = ("Battle releasing toon %s" % (toon.doId))
+                messenger.send(messageToonReleased, [toon.doId])
+
                 # And write these two fields directly to the database.
                 db = DatabaseObject.DatabaseObject(self.air, toonId)
                 db.storeObject(toon, ["setInventory", "setHp"])
