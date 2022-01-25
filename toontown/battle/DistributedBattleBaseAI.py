@@ -1015,7 +1015,7 @@ class DistributedBattleBaseAI(DistributedObjectAI.DistributedObjectAI,
 
                 # And write these two fields directly to the database.
                 db = DatabaseObject.DatabaseObject(self.air, toonId)
-                db.storeObject(toon, ["setInventory", "setHp"])
+                db.storeObject(toon, ["setInventory", "setHp", "setLocation"])
 
                 self.notify.info('killing mem leak from temporary DistributedToonAI %d' % toonId)
                 toon.deleteDummy()
