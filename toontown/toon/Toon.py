@@ -1457,7 +1457,7 @@ class Toon(Avatar.Avatar, ToonHead):
         # the appropriate texture
         swappedTorso = 0
         if (self.hasLOD()):
-            if fromNet == 0):
+            if (fromNet == 0):
                 # See if we need to switch torso to change from skirts to
                 # shorts or vice versa
                 # Only do this once

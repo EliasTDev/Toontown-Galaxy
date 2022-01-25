@@ -1084,7 +1084,7 @@ class ToonHead(Actor.Actor):
     def setEyelashes(self, eyelashes):
         self.eyelashes = eyelashes
 
-    def getEyelashes(self, eyelashes):
+    def getEyelashes(self):
         return self.eyelashes 
 
     def setupEyelashes(self, style):

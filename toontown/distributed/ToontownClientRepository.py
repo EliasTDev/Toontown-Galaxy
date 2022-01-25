@@ -259,13 +259,13 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
                             #for gender in ('m', 'f'):
                             print('species: %s, head: %s, torso: %s, legs: %s' % (
                                     species, head, torso, legs))
-                                dna = ToonDNA.ToonDNA()
-                                dna.newToon((head, torso, legs))
-                                toon = Toon.Toon()
-                                try:
-                                    toon.setDNA(dna)
-                                except Exception as e:
-                                    print(e)
+                            dna = ToonDNA.ToonDNA()
+                            dna.newToon((head, torso, legs))
+                            toon = Toon.Toon()
+                            try:
+                                toon.setDNA(dna)
+                            except Exception as e:
+                                print(e)
 
     # Each state will have an enter function, an exit function,
     # and a datagram handler, which will be set during each enter function.

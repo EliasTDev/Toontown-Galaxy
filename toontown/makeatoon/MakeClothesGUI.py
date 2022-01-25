@@ -16,14 +16,12 @@ class MakeClothesGUI(ClothesGUI.ClothesGUI):
         # this thinks we are changing gender because gender is initialized
         # to be = '?'
       #  if (gender != self.gender):
-            #self.tops = ToonDNA.getRandomizedTops(gender, 
-      # this#                                              tailorId = ToonDNA.MAKE_A_TOON)
-            #self.bottoms = ToonDNA.getRandomizedBottoms(gender, 
-                                                  #        tailorId = ToonDNA.MAKE_A_TOON)
+        self.tops = ToonDNA.getRandomizedTops(tailorId = ToonDNA.MAKE_A_TOON)
+        self.bottoms = ToonDNA.getRandomizedBottoms(tailorId = ToonDNA.MAKE_A_TOON)
            # self.gender = gender
             # Don't try and preserve choices made as a different gender
-          ##  self.topChoice = 0
-            #self.bottomChoice = 0
+        self.topChoice = 0
+        self.bottomChoice = 0
 
         # setup the buttons
 

@@ -391,7 +391,6 @@ class MakeAToon(StateData.StateData):
             self.toon.startBlink()
             self.toon.startLookAround()
 
-        self.gs.load()
         self.bs.load()
         self.cos.load()
         self.cls.load()
@@ -415,13 +414,11 @@ class MakeAToon(StateData.StateData):
             self.toon.stopBlink()
             self.toon.stopLookAroundNow()
 
-        self.gs.unload()
         self.bs.unload()
         self.cos.unload()
         self.cls.unload()
         self.ns.unload()
 
-        del self.gs
         del self.bs
         del self.cos
         del self.cls
@@ -547,7 +544,7 @@ class MakeAToon(StateData.StateData):
         # go to the next shop
        # if self.shop == GENDERSHOP:
          #   self.fsm.request("BodyShop")
-        elif self.shop == BODYSHOP:
+        if self.shop == BODYSHOP:
             self.fsm.request("ColorShop")
         elif self.shop == COLORSHOP:
             self.fsm.request("ClothesShop")
@@ -572,31 +569,7 @@ class MakeAToon(StateData.StateData):
 
     def enterInit(self):
         # Cleanup any old toon.
-        if self.toon:
-            self.toon.stopBlink()
-            self.toon.stopLookAroundNow()
-            self.toon.delete()
-            
-        self.dna = ToonDNA.ToonDNA()
-        # stage = 1 is MAKE_A_TOON
-        #Since female is our most gender neutral option we will go for that for now
-        self.dna.newToonRandom(eyelashes=random.randint(0, 1), stage = 1)
-        
-        self.toon = Toon.Toon()
-        self.toon.setDNA(self.dna)
-        # make sure the avatar uses its highest LOD
-        self.toon.useLOD(1000)
-        # make sure his name doesn't show up
-        self.toon.setNameVisible(0)
-        self.toon.startBlink()
-        self.toon.startLookAround()
-        self.toon.reparentTo(render)
-        self.toon.setPos(self.toonPosition)
-        self.toon.setHpr(self.toonHpr)
-        self.toon.setScale(self.toonScale)
-        self.toon.loop("neutral")
-        self.setToon(self.toon)
-        messenger.send("MAT-newToonCreated")
+
         return
 
     def exitInit(self):
@@ -615,6 +588,32 @@ class MakeAToon(StateData.StateData):
         self.rotateRightButton.show()
 
     def enterBodyShop(self):
+        if hasattr(self, 'toon'):
+            if self.toon:
+                self.toon.stopBlink()
+                self.toon.stopLookAroundNow()
+                self.toon.delete()
+            
+        self.dna = ToonDNA.ToonDNA()
+        # stage = 1 is MAKE_A_TOON
+        self.dna.newToonRandom(eyelashes=random.randint(0, 1), stage = 1)
+        
+        self.toon = Toon.Toon()
+        self.toon.setDNA(self.dna)
+        # make sure the avatar uses its highest LOD
+        self.toon.useLOD(1000)
+        # make sure his name doesn't show up
+        self.toon.setNameVisible(0)
+        self.toon.startBlink()
+        self.toon.startLookAround()
+        self.toon.reparentTo(render)
+        self.toon.setPos(self.toonPosition)
+        self.toon.setHpr(self.toonHpr)
+        self.toon.setScale(self.toonScale)
+        self.toon.loop("neutral")
+        self.setNextButtonState(DGG.NORMAL)
+        self.setToon(self.toon)
+        messenger.send("MAT-newToonCreated")
         base.cr.centralLogger.writeClientEvent('MAT - enteringBodyShop')
         self.toon.show()
         # self.roomWalls.setColorScale(0.49, 0.612, 0.380, 1)
