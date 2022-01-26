@@ -1,7 +1,7 @@
 
 server-version staff-build-1.0
 model-path
-window-title Toontown Galaxy
+window-title Toontown: Event Horizon
 icon-filename phase_3/models/gui/toontown.ico
 load-display pandadx9
 aux-display pandagl

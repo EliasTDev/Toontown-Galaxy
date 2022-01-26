@@ -19,7 +19,7 @@ export tte_PLAYCOOKIE=$tteUsername
 export tte_GAMESERVER=$tte_GAMESERVER
 
 echo "==============================="
-echo "Starting Toontown Galaxy..."
+echo "Starting Toontown: Event Horizon..."
 echo "Username: $tteUsername"
 echo "Gameserver: $TTE_GAMESERVER"
 echo "==============================="

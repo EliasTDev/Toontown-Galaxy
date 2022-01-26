@@ -2,7 +2,7 @@ END USER LICENCE AGREEMENT
 IMPORTANT NOTICE
 PLEASE READ CAREFULLY BEFORE PROCEEDING
 
-This End User Licence Agreement ("Agreement") relates to Toontown Galaxy (sm) service and all related or successor services (the "Service"),the installer program and related documentation (the "Software"). The Software shall also include any upgrades,modified versions or updates of the Software.
+This End User Licence Agreement ("Agreement") relates to Toontown: Event Horizon (sm) service and all related or successor services (the "Service"),the installer program and related documentation (the "Software"). The Software shall also include any upgrades,modified versions or updates of the Software.
 
 BEFORE YOU USE OR DOWNLOAD OR INSTALL THE SOFTWARE,CAREFULLY READ THIS AGREEMENT.  AT THE END OF THIS AGREEMENT,YOU WILL BE ASKED TO ACCEPT THE AGREEMENT AND CONTINUE THE INSTALLATION PROCESS.  IF YOU DO NOT WISH TO ACCEPT THE TERMS OF THIS AGREEMENT,YOU WILL NOT BE ABLE TO USE THE SOFTWARE. 
 

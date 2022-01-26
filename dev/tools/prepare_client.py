@@ -11,15 +11,15 @@ parser.add_argument('--distribution', default='test',
 parser.add_argument('--build-dir', default='build',
                     help='The directory in which to store the build files.')
 parser.add_argument('--src-dir', default='../..',
-                    help='The directory of the Toontown Galaxy source code.')
+                    help='The directory of the Toontown  source code.')
 parser.add_argument('--server-ver', default='staff-build-1.0',
                     help='The server version of this build.')
 parser.add_argument('--build-mfs', action='store_true',
                     help='When present, the resource multifiles will be built.')
 parser.add_argument('--resources-dir', default='../../resources',
-                    help='The directory of the Toontown Galaxy resources.')
+                    help='The directory of the Toontown  resources.')
 parser.add_argument('--config-dir', default='../../etc/',
-                    help='The directory of the Toontown Galaxy configuration files.')
+                    help='The directory of the Toontown  configuration files.')
 parser.add_argument('--include', '-i', action='append',
                     help='Explicitly include this file in the build.')
 parser.add_argument('--exclude', '-x', action='append',
@@ -38,7 +38,7 @@ if os.path.exists(args.build_dir):
 os.mkdir(args.build_dir)
 print('Build directory = ' + args.build_dir)
 
-# Copy the provided Toontown Galaxy modules:
+# Copy the provided Toontown  modules:
 # All client and server files are included by default.
 includes = ('NonRepeatableRandomSourceUD.py', 'NonRepeatableRandomSourceAI.py')
 

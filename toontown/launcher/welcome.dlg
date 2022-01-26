@@ -2,7 +2,7 @@ Document Type: DLG
 item: Custom Dialog
   Name=Welcome
   item: Dialog
-    Title=Toontown Galaxy
+    Title=Toontown: Event Horizon
     Width=370
     Height=370
     Font Name=Helv

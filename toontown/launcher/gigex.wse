@@ -1,7 +1,7 @@
 Document Type: WSE
 item: Global
   Version=9.0
-  Title=Toontown Galaxy Installation
+  Title=Toontown: Event Horizon Installation
   Flags=00010100
   Languages=65 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
   Copy Default=1
@@ -28,7 +28,7 @@ item: Global
   Per-User Version ID=1
   Dialogs Version=7
   Version File=1.0.6.9
-  Version Description=Toontown Galaxy
+  Version Description=Toontown: Event Horizon
   Version Copyright=Disney
   Version Company=Walt Disney Internet Group
   Crystal Format=10111100101100000010001001001001
@@ -80,7 +80,7 @@ end
 item: Check Configuration
   Message=The computer you are using does not meet the minimum requirements to run. 
   Message=
-  Message=Toontown Galaxy requires Microsoft Windows 98, ME, 2000, or XP.
+  Message=Toontown: Event Horizon requires Microsoft Windows 98, ME, 2000, or XP.
   Title=Missed System Requirements
   Flags=11010001
 end
@@ -92,7 +92,7 @@ end
 item: Check Configuration
   Message=The computer you are using does not meet the minimum requirements to run. 
   Message=
-  Message=Toontown Galaxy requires Microsoft Windows 98, ME, 2000, or XP.
+  Message=Toontown: Event Horizon requires Microsoft Windows 98, ME, 2000, or XP.
   Title=Missed System Requirements
   Flags=11000001
 end
@@ -139,7 +139,7 @@ item: Remark
 end
 item: Set Variable
   Variable=APPTITLE
-  Value=Toontown Galaxy
+  Value=Toontown: Event Horizon
   Flags=10000000
 end
 item: Set Variable
@@ -192,7 +192,7 @@ item: Custom Dialog Set
   Name=Welcome
   Display Variable=DISPLAY
   item: Dialog
-    Title=Toontown Galaxy
+    Title=Toontown: Event Horizon
     Width=334
     Height=333
     Font Name=Helv
@@ -734,7 +734,7 @@ item: If/While Statement
 end
 item: Display Message
   Title=Missing System Requirement
-  Text=Toontown Galaxy requires Microsoft Internet Explorer version 4 or newer. Please install a newer version and run this installer again.
+  Text=Toontown: Event Horizon requires Microsoft Internet Explorer version 4 or newer. Please install a newer version and run this installer again.
   Flags=00101000
 end
 item: Exit Installation
@@ -817,7 +817,7 @@ item: Get Registry Key Value
 end
 item: Set Variable
   Variable=PROG_GROUP_NAME
-  Value=%PROGRAMS%\Toontown Galaxy%TEST_SERVER_STR%
+  Value=%PROGRAMS%\Toontown: Event Horizon%TEST_SERVER_STR%
 end
 item: Create Shortcut
   Source=%IEPATH%\IEXPLORE.EXE
@@ -840,7 +840,7 @@ item: Remark
 end
 item: Create Shortcut
   Source=%IEPATH%\IEXPLORE.EXE
-  Destination=%DESKTOPDIR%\Toontown Galaxy.lnk
+  Destination=%DESKTOPDIR%\Toontown: Event Horizon.lnk
   Command Options=http://play.toontown.com/?source=toontownDesktopIcon
   Icon Number=0
   Icon Pathname=%MAINDIR%\toontown.ico

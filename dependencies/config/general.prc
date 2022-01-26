@@ -1,9 +1,9 @@
 # Window settings:
-window-title Toontown Galaxy
+window-title Toontown: Event Horizon
 win-origin -1 -1
 icon-filename phase_3/etc/icon.ico
 cursor-filename phase_3/etc/toonmono.cur
-server-version Toontown Galaxy
+server-version Toontown: Event Horizon
 build-version BUILD_VERSION
 
 # Audio:

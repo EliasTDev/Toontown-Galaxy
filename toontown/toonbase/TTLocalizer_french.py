@@ -3405,7 +3405,7 @@ SuitAttackTaunts = {
                 "Tu n'es pas au-dessus des lois!",
                 "Il devrait y avoir une loi contre toi.",
                 "Il n'y a rien de postérieur aux faits!",
-                "Toontown Galaxy de Disney n'est pas légalement responsable des opinions exprimées dans cette attaque.",
+                "Toontown: Event Horizon de Disney n'est pas légalement responsable des opinions exprimées dans cette attaque.",
                 "Nous ne serons pas tenus responsables des dommages subis suite à cette attaque.",
                 "Les résultats de cette attaque peuvent différer.",
                 "Cette attaque est nulle là où elle n'est pas autorisée.",

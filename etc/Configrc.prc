@@ -3,7 +3,7 @@ server-version staff-build-1.0
 model-path resources
 dc-file etc/toon.dc
 dc-file etc/otp.dc
-window-title Toontown Galaxy
+window-title Toontown: Event Horizon
 
 icon-filename phase_3/models/gui/toontown.ico
 load-display pandadx9

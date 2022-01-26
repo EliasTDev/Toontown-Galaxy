@@ -14,7 +14,7 @@ export TTE_PLAYCOOKIE=$tteUsername
 export TTE_GAMESERVER="127.0.0.1"
 
 echo "==============================="
-echo "Starting Toontown Galaxy..."
+echo "Starting Toontown: Event Horizon..."
 echo "Username: $tteUsername"
 echo "Gameserver: $TTE_GAMESERVER"
 echo "==============================="

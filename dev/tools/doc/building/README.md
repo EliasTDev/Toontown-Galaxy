@@ -1,6 +1,6 @@
 Building
 ========
-These documents outline everything you need to know for building a Toontown Galaxy client.
+These documents outline everything you need to know for building a Toontown  client.
 
 - - -
 

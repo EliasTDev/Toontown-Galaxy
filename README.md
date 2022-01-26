@@ -1,5 +1,5 @@
-# Toontown Galaxy
-The official repo for Toontown Galaxy, a new Toontown game based on Disney's Toontown Online.
+# Toontown: Event Horizon
+The official repo for Toontown: Event Horizon, a new Toontown game based on Disney's Toontown Online.
 
 # staff:
  
