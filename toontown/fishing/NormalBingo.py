@@ -43,8 +43,8 @@ class NormalBingo(BingoCardBase.BingoCardBase):
     # Output: None
     ################################################################# 
     def checkForWin(self, id):
-        rowId = int(id / BingoGlobals.CARD_ROWS)
-        colId = id % BingoGlobals.CARD_COLS
+        rowId = int(id // BingoGlobals.CARD_ROWS)
+        colId = int(id % BingoGlobals.CARD_COLS)
 
         rowResult = self.rowCheck(rowId)
         colResult = self.colCheck(colId)
