@@ -14,7 +14,7 @@ read -p "Base channel (DEFAULT: 401000000): " BASE_CHANNEL
 BASE_CHANNEL=${BASE_CHANNEL:-401000000}
 
 echo "==============================="
-echo "Starting Toontown Galaxy AI server..."
+echo "Starting Toontown: Event Horizon AI server..."
 echo "District name: $DISTRICT_NAME"
 echo "Base channel: $BASE_CHANNEL"
 echo "Max channels: $MAX_CHANNELS"

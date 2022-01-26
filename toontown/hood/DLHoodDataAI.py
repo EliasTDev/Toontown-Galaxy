@@ -3,7 +3,6 @@ from . import HoodDataAI
 from toontown.toonbase import ToontownGlobals
 from toontown.safezone import DistributedTrolleyAI
 from toontown.safezone import DLTreasurePlannerAI
-from toontown.classicchars import DistributedDonaldAI
 from toontown.safezone import ButterflyGlobals
 
 class DLHoodDataAI(HoodDataAI.HoodDataAI):
@@ -25,8 +24,3 @@ class DLHoodDataAI(HoodDataAI.HoodDataAI):
 
         self.treasurePlanner = DLTreasurePlannerAI.DLTreasurePlannerAI(self.zoneId)
         self.treasurePlanner.start()
-
-        self.classicChar = DistributedDonaldAI.DistributedDonaldAI(self.air)
-        self.classicChar.generateWithRequired(self.zoneId)
-        self.classicChar.start()
-        self.addDistObj(self.classicChar)

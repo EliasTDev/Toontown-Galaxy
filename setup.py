@@ -1,12 +1,12 @@
 from setuptools import setup
 
 setup(
-    name='Toontown Galaxy',
+    name='Toontown: Event Horizon',
     options = {
         'build_apps': {
             'console_apps': {
         #'launcher': 'start_ui_launcher.py',
-        'galaxy': 'galaxy.py',
+        'EventHorizon': 'EventHorizon.py',
     },
     'gui_apps': {
 
@@ -17,7 +17,7 @@ setup(
 
     },
     'icons': {
-        'Toontown Galaxy': ['galaxy_logo.jpg'],
+        'Toontown: Event Horizon': ['galaxy_logo.jpg'],
     },
     'plugins': [
         'pandagl',

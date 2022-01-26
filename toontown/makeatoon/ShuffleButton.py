@@ -48,7 +48,7 @@ class ShuffleButton:
         self.parentFrame = DirectFrame(
             parent = self._parent.parentFrame,
             relief = DGG.RAISED,
-            pos = (0, 0, -1),
+            pos = (0, 0, -1.1),
             frameColor = (1, 0, 0, 0),
             )
 

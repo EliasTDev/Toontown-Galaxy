@@ -16,7 +16,7 @@ export TTG_PLAYCOOKIE=$ttgUsername
 export TTG_GAMESERVER=$TTE_GAMESERVER
 
 echo "==============================="
-echo "Starting Toontown Galaxy..."
+echo "Starting Toontown: Event Horizon..."
 echo "Username: $ttgUsername"
 echo "Gameserver: $TTG_GAMESERVER"
 echo "==============================="

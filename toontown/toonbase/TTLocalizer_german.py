@@ -2368,7 +2368,7 @@ SuitAttackTaunts = {
                 "Du stehst nicht über dem Gesetz!",
                 "Du solltest gesetzlich verboten werden.",
                 "Bei mir gibt's kein rückwirkendes Strafgesetz!",
-                "Die Meinungen in diesem Schlagabtausch sind nicht die von Disneys Toontown Galaxy.",
+                "Die Meinungen in diesem Schlagabtausch sind nicht die von Disneys Toontown: Event Horizon.",
                 "Wir haften nicht für Schäden, die durch diesen Schlagabtausch entstehen.",
                 "Die Ergebnisse dieses Schlagabtauschs können unterschiedlich sein.",
                 "Dieser Schlagabtausch verliert seine Gültigkeit soweit ein Verbot vorhanden ist.",
@@ -3346,7 +3346,7 @@ LauncherPhaseNames = {
 
 # Lets make these messages a little more friendly
 LauncherProgress = "%(name)s (%(current)s von %(total)s)"
-LauncherStartingMessage = "Disneys Toontown Galaxy wird gestartet ... "
+LauncherStartingMessage = "Disneys Toontown: Event Horizon wird gestartet ... "
 LauncherDownloadFile = "Update für "+ LauncherProgress + " wird heruntergeladen ..."
 LauncherDownloadFileBytes = "Update für "+ LauncherProgress + " wird heruntergeladen: %(bytes)s"
 LauncherDownloadFilePercent = "Update für "+ LauncherProgress + " wird heruntergeladen: %(percent)s%%"

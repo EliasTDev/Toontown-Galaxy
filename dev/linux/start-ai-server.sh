@@ -6,14 +6,14 @@ MAX_CHANNELS=999999
 STATESERVER=4002
 ASTRON_IP="127.0.0.1:7100"
 EVENTLOGGER_IP="127.0.0.1:7198"
-DISTRICT_NAME="Nutty Galaxy"
+DISTRICT_NAME="Nutty "
 
 # Get the user input:
 read -p "Base channel (DEFAULT: 401000000): " BASE_CHANNEL
 BASE_CHANNEL=${BASE_CHANNEL:-401000000}
 
 echo "==============================="
-echo "Starting Toontown Galaxy AI server..."
+echo "Starting Toontown: Event Horizon AI server..."
 echo "District name: $DISTRICT_NAME"
 echo "Base channel: $BASE_CHANNEL"
 echo "Max channels: $MAX_CHANNELS"

@@ -471,20 +471,20 @@ class ToonBase(OTPBase.OTPBase):
         # And define a bunch of cells along the margins.
         mm = self.marginManager
         self.leftCells = [
-            mm.addGridCell(0, 1.333, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(0, 2.667, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(0, 4, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+            mm.addGridCell(0, 1, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 3, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
         ]
         self.bottomCells = [
-            mm.addGridCell(0.5, 0.2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(1.5, 0.2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(2.5, 0.2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(3.5, 0.2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(4.5, 0.2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+            mm.addGridCell(0.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(1.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(2.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(3.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(4.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
         ]
         self.rightCells = [
-            # mm.addGridCell(5, 2.667, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(5, 1.333, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+            mm.addGridCell(5, 2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(5, 1, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
         ]
         self.oldAspectRatio = self.get_aspect_ratio()
 
@@ -505,20 +505,20 @@ class ToonBase(OTPBase.OTPBase):
         for cell in self.rightCells:
             mm.setCellAvailable(cell, False)
         self.leftCells = [
-            mm.addGridCell(0, 1.333, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(0, 2.667, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(0, 4, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+            mm.addGridCell(0, 1, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 3, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
         ]
         self.bottomCells = [
-            mm.addGridCell(0.5, 0.25, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(1.5, 0.25, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(2.5, 0.25, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(3.5, 0.25, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(4.5, 0.25, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+            mm.addGridCell(0.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(1.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(2.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(3.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(4.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
         ]
         self.rightCells = [
-            # mm.addGridCell(5, 2.667, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(5, 1.333, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
+            mm.addGridCell(5, 2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(5, 1, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
         ]
         self.oldAspectRatio = self.get_aspect_ratio()
 

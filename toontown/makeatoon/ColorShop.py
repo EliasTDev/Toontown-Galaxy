@@ -28,10 +28,8 @@ class ColorShop(StateData.StateData):
         return
 
     def getGenderColorList(self, dna):
-        if self.dna.getGender() == "m":
-            return ToonDNA.defaultBoyColorList
-        else:
-            return ToonDNA.defaultGirlColorList
+
+        return ToonDNA.defaultColorList
 
     def enter(self, toon, shopsVisited=[]):
         """enter(self, toon)

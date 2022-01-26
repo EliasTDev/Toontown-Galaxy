@@ -138,7 +138,6 @@ NScolorPrecede = True
 TravelGameBonusBeansSize = 0.35
 
 #makeatoon/MakeAToon.py
-MATenterGenderShop = 0.18
 MATenterBodyShop = 0.18
 MATenterColorShop = 0.18
 MATenterClothesShop = 0.16

@@ -11,7 +11,7 @@ from . import FactoryExterior
 from . import FactoryInterior
 from . import SellbotHQExterior
 from . import SellbotHQBossBattle
-from pandac.PandaModules import DecalEffect
+from panda3d.core import DecalEffect
 
 # Used to compensate for scaling of Cog tunnel sign's
 # original aspect ratio of 1125x813 to a uniform ratio,
@@ -140,11 +140,9 @@ class SellbotCogHQLoader(CogHQLoader.CogHQLoader):
                 door.find("**/doorFrameHoleRight").wrtReparentTo(doorFrame)
                 doorFrame.node().setEffect(DecalEffect.make())
                 index += 1
-               # doorOrigin.setHpr(90, 0, 0)
-                #doorOrigin.setScale(0.8, 0.8, 0.8)
-                #doorOrigin.setPos(doorOrigin, 0, -0.25, 0)                
-                #TODO see if we can fix with doorOrigin right now doors have a black opening
-                door.setPos(door, 0, -0.188, 0)
+                # Find the trigger and move it away from the wall a bit so the toon can actually collide with it
+                trigger = door.find("**/door_trigger*")
+                trigger.setPos(trigger, 0, -0.2, 0)
         elif zoneId == ToontownGlobals.SellbotFactoryExt:
             self.geom = loader.loadModel(self.factoryExteriorModelPath)
             factoryLinkTunnel = self.geom.find("**/tunnel_group2")

@@ -375,35 +375,6 @@ class Playground(Place.Place):
         # Undoes a previous call to showPaths().
         self.hideDebugPointText()
 
-    def showPathPoints(self, paths, waypoints = None):
-        # Reveals all of the char path points (where the neighborhood
-        # char walks around the safezone) in the given paths and
-        # waypoints lists (defined in CCharPaths.py).
-        
-        self.hideDebugPointText()
-        lines = LineSegs()
-        lines.setColor(1, 0, 0, 1)
-
-        from toontown.classicchars import CCharPaths
-
-        for name, pointDef in list(paths.items()):
-            self.showDebugPointText(name, pointDef[0])
-
-            # Also draw the connecting lines.
-            for connectTo in pointDef[1]:
-                toDef = paths[connectTo]
-                fromP = pointDef[0]
-                toP = toDef[0]
-                lines.moveTo(fromP[0], fromP[1], fromP[2] + 2.0)
-
-                wpList = CCharPaths.getWayPoints(name, connectTo, paths, waypoints)
-                for wp in wpList:
-                    lines.drawTo(wp[0], wp[1], wp[2] + 2.0)
-                    self.showDebugPointText('*', wp)
-
-                lines.drawTo(toP[0], toP[1], toP[2] + 2.0)
-
-        self.debugText.attachNewNode(lines.create())
 
     def hideDebugPointText(self):
         # Hides all text previously created by showDebugPointText().

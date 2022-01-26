@@ -95,25 +95,27 @@ class NameGenerator:
                 nameParts[cat2part[cat]][str] = id
         return nameParts
 
-    def getMaleNameParts(self):
+    def getNameParts(self):
         return self._getNameParts({0: 0,
+                                   1: 0,
                                    2: 0,
                                    3: 1,
-                                   5: 1,
-                                   6: 2,
-                                   7: 2,
-                                   8: 3,
-                                   })
-
-    def getFemaleNameParts(self):
-        return self._getNameParts({1: 0,
-                                   2: 0,
                                    4: 1,
                                    5: 1,
                                    6: 2,
                                    7: 2,
                                    8: 3,
                                    })
+
+    #def getFemaleNameParts(self):
+     #   return self._getNameParts({1: 0,
+      #                             2: 0,
+      #                             4: 1,
+      #                             5: 1,
+       #                            6: 2,
+        #                           7: 2,
+         #                          8: 3,
+                        #           })
 
     def getLastNamePrefixesCapped(self):
         return self.capPrefixes
@@ -334,19 +336,13 @@ class NameGenerator:
 
         return retString
 
-    def randomNameMoreinfo(self, boy=0, girl=0):
+    def randomNameMoreinfo(self):
         """This is just like randomName only it returns a list where the first three
            values are titleFlag, firstFlag, and lastFlag and the next four values are
            the title, firstname, and lastname (if applicable, '' if not)
            """
 
-        if boy and girl:
-            self.error("A name can't be both boy and girl!")
 
-        if (not boy) and (not girl):
-            # Randomly pick the name sex
-            boy = random.choice([0, 1])
-            girl = not boy
 
         # Five types of name combos
         uberFlag = random.choice(["title-first", "title-last",
@@ -387,23 +383,16 @@ class NameGenerator:
 
         # Shallow copy, since we will be altering the list
         titleList = self.neutralTitles[:]
-        if boy:
-            titleList += self.boyTitles
-        elif girl:
-            titleList += self.girlTitles
-        else:
-            self.error("Must be boy or girl.")
+        titleList += self.boyTitles
+
+        titleList += self.girlTitles
 
         uberReturn[3] = random.choice(titleList)
 
         # Shallow copy, since we will be altering the list
         firstList = self.neutralFirsts[:]
-        if boy:
-            firstList += self.boyFirsts
-        elif girl:
-            firstList += self.girlFirsts
-        else:
-            self.error("Must be boy or girl.")
+        firstList += self.boyFirsts
+        firstList += self.girlFirsts
 
         uberReturn[4] = random.choice(firstList)
 

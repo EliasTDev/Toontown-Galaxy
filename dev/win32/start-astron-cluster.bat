@@ -1,7 +1,7 @@
 @echo off
 cd "../../dependencies/astron/"
 
-title TTG Astron
+title TTEH Astron
 :main
 astrond --loglevel info --pretty config/cluster.yml
 pause

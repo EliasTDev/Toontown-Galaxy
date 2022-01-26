@@ -303,8 +303,6 @@ class AwardManagerUD(DistributedObjectGlobalUD):
 
     def checkGender(self, toon, catalogItem):
         """Return None if everything is ok and we don't have mismatched sex."""
-        if ((catalogItem.forBoysOnly() and toon.dna.getGender() == 'f') or (catalogItem.forGirlsOnly() and toon.dna.getGender() == 'm')):
-            return ToontownGlobals.P_WillNotFit
         return None
 
     def checkGiftable(self, toon, catalogItem ):

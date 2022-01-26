@@ -1,8 +1,8 @@
 class PickANamePattern:
     """Given a name string, converts it to a pick-a-name if possible"""
-    def __init__(self, nameStr, gender):
+    def __init__(self, nameStr):
         self._nameStr = nameStr
-        self._namePattern = self._compute(self._nameStr, gender)
+        self._namePattern = self._compute(self._nameStr)
 
     def hasNamePattern(self):
         return self._namePattern is not None
@@ -10,8 +10,8 @@ class PickANamePattern:
     def getNamePattern(self):
         return self._namePattern
 
-    def getNameString(self, pattern, gender):
-        nameParts = self._getNameParts(gender)
+    def getNameString(self, pattern):
+        nameParts = self._getNameParts()
         # convert from string->index to index->string
         invNameParts = []
         for i in range(len(nameParts)):
@@ -24,8 +24,8 @@ class PickANamePattern:
                 name += invNameParts[i][pattern[i]]
         return name
 
-    def getNamePartString(self, gender, patternIndex, partIndex):
-        nameParts = self._getNameParts(gender)
+    def getNamePartString(self, patternIndex, partIndex):
+        nameParts = self._getNameParts()
         # convert from string->index to index->string
         invNamePart = invertDict(nameParts[patternIndex])
         return invNamePart[partIndex]
@@ -55,11 +55,11 @@ class PickANamePattern:
         for splitName in self._genWordListSplitPermutations(name.split()):
             yield splitName
 
-    def _compute(self, nameStr, gender):
+    def _compute(self, nameStr):
         """this does the work of calculating a pick-a-name pattern from
         a name string, if possible"""
-        # get the appropriate name parts for the specified gender
-        return self._computeWithNameParts(nameStr, self._getNameParts(gender))
+        # get the appropriate name parts
+        return self._computeWithNameParts(nameStr, self._getNameParts())
 
     def _computeWithNameParts(self, nameStr, nameParts):
         # run through each permutation of consecutive words joined with a space
@@ -70,7 +70,7 @@ class PickANamePattern:
                 return pattern
         return None
 
-    def _getNameParts(self, gender):
+    def _getNameParts(self):
         # override and return list of name word dicts
         # each name word dict should be word->index
         # for instance [{'Captain': 0}, {'Bigbeard': 0, 'Longbeard': 1}]
@@ -101,8 +101,8 @@ class PickANamePattern:
         return self._recursiveCompute(words, nameParts, wi,   nwli+1, pattern)
         
 class PickANamePatternTwoPartLastName(PickANamePattern):
-    def getNameString(self, pattern, gender):
-        name = PickANamePattern.getNameString(self, pattern, gender)
+    def getNameString(self, pattern ):
+        name = PickANamePattern.getNameString(self, pattern)
         if pattern[-2] != -1:
             # remove the space between the two parts of the last name
             words = name.split()
@@ -125,8 +125,8 @@ class PickANamePatternTwoPartLastName(PickANamePattern):
         # returns list of last name prefixes that capitalize their suffix
         return []
     
-    def _compute(self, nameStr, gender):
-        nameParts = self._getNameParts(gender)
+    def _compute(self, nameStr):
+        nameParts = self._getNameParts()
         combinedNameParts = nameParts[:-2]
         
         # temporarily combine the two name parts of the last names into one unified name part

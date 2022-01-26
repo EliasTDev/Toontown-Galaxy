@@ -124,7 +124,7 @@ class DistributedGagshopInterior(DistributedObject.DistributedObject):
         assert(not doorNP.isEmpty())
         assert(not doorOrigin.isEmpty())
         doorOrigin.setScale(0.8, 0.8, 0.8)
-        doorOrigin.setPos(doorOrigin, 0, -0.25, 0)
+        doorOrigin.setPos(doorOrigin, 0, -0.025, 0)
         doorColor = self.randomGenerator.choice(self.colors["TI_door"])
         DNADoor.setupDoor(doorNP,
                           self.interior, doorOrigin,

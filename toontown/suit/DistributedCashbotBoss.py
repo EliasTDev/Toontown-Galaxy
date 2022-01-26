@@ -155,7 +155,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         npc.setPickable(0)
         npc.setPlayerType(NametagGroup.CCNonPlayer)
         dna = ToonDNA.ToonDNA()
-        dna.newToonRandom(146392, 'f', 1)
+        dna.newToonRandom(146392, 1, 1)
         dna.head = "pls"
         dna.headColor = 3 # Red
         npc.setDNAString(dna.makeNetString())

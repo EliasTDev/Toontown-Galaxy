@@ -256,9 +256,6 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
 
         trunkItem = 4000
         wardrobeItem = 500
-        if avatar and avatar.getStyle().getGender() == 'f':
-            wardrobeItem = 510
-            trunkItem = 4010
         
 
         InitialFurnitureA = CatalogItemList.CatalogItemList([

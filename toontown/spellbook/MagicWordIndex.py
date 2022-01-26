@@ -1620,12 +1620,6 @@ class DNA(MagicWord):
         value = args[1]
         if part.endswith('size') or part.endswith('color') or part.endswith('tex'):
             value = int(value)
-        if part == 'gender':
-            if value not in ('male', 'female', 'm', 'f'): #darn no nonbinary? feelsbadman
-                return 'Invalid gender: {0}'.format(value)
-            dna.gender = value[0]
-            invoker.b_setDNAString(dna.makeNetString())
-            return 'Gender is now : {0}'.format(dna.gender)
         if part in ('species', 'head', 'animal'):
             animalsList = ('dog', 'cat', 'horse', 'mouse', 'rabbit', 'duck', 'monkey', 'bear',
             'pig')
@@ -1645,13 +1639,16 @@ class DNA(MagicWord):
             invoker.b_setDNAString(dna.makeNetString())
             return 'Head size index is now: {0}'.format(dna.head[1:])
         if part == 'torso':
-            if dna.gender not in ('m', 'f'):
-                return 'Invalid gender.'
+            #if dna.gender not in ('m', 'f'):
+            #    return 'Invalid gender.'
+            #return 'torso modification is in WIP due to gender'
             value = int(value)
-            if (not 0 <= value <= 2) and (dna.gender == 'm'):
-                return 'Male torso index out of range (0-2).'
-            if (not 3 <= value <= 8) and (dna.gender == 'f') :
-                return 'Female torso index out of range (3-8).'
+           # if (not 0 <= value <= 2) and (dna.gender == 'm'):
+               # return 'Male torso index out of range (0-2).'
+            #if (not 3 <= value <= 8) and (dna.gender == 'f') :
+             #   return 'Female torso index out of range (3-8).'
+            if (not 0 <= value <= 8):
+                 return 'Torso index out of range '
             dna.torso = ToonDNA.toonTorsoTypes[value]
             invoker.b_setDNAString(dna.makeNetString())
             return 'Torso is now: {0}'.format(dna.torso)
@@ -1665,50 +1662,62 @@ class DNA(MagicWord):
             return 'Legs are now: {0}'.format(dna.legs)
 
         if part == 'headcolor':
-            if dna.gender not in ('m', 'f'):
-                return 'Invalid gender.'
-            if (value not in ToonDNA.defaultBoyColorList) and (dna.gender == 'm'):
-                return 'Invalid male head color index:{0}'.format(str(value))
-            if (value not in ToonDNA.defaultGirlColorList) and (dna.gender == 'f'):
-                return 'Invalid female head color index: {0}'.format(str(value))
+            #if dna.gender not in ('m', 'f'):
+            #    return 'Invalid gender.'
+            if (value not in ToonDNA.defaultColorList):
+                return f'Invalid head color index: {dna.headColor}'
             dna.headColor = value
             invoker.b_setDNAString(dna.makeNetString())
-            return 'Head color index is now: {0} '.format(str(dna.headColor))
+            return f'Head color index is now: {dna.headColor} '
 
         if part == 'armcolor':
-            if dna.gender not in ('m', 'f'):
-                return 'Invalid gender.'
-            if (value not in ToonDNA.defaultBoyColorList) and (dna.gender == 'm'):
-                return 'Invalid male arm color index: {0}'.format(str(value))
-            if (value not in ToonDNA.defaultGirlColorList) and (dna.gender == 'f'):
-                return 'Invalid female arm color index: {0}'.format(str(value))
+           # if dna.gender not in ('m', 'f'):
+           #     return 'Invalid gender.'
+            #if (value not in ToonDNA.defaultBoyColorList) and (dna.gender == 'm'):
+             #   return 'Invalid male arm color index: {0}'.format(str(value))
+            #if (value not in ToonDNA.defaultGirlColorList) and (dna.gender == 'f'):
+            #    return 'Invalid female arm color index: {0}'.format(str(value))
+            if value not in ToonDNA.defaultColorList:
+                return f'Invalid arm color index : {value}'
             dna.armColor = value
             invoker.b_setDNAString(dna.makeNetString())
-            return 'Arm color index is now: {0}'.format(str(dna.armColor))
+            return f'Arm color index is now: {dna.armColor}'
 
         if part == 'legcolor':
-            if dna.gender not in ('m', 'f'):
-                return 'Invalid gender.'
-            if (value not in ToonDNA.defaultBoyColorList) and (dna.gender == 'm'):
-                return 'Invalid male leg color index: {0}'.format(str(value))
-            if (value not in ToonDNA.defaultGirlColorList) and (dna.gender == 'f'):
-                return 'Invalid female leg color index: {0}'.format(str(value))
+            #if dna.gender not in ('m', 'f'):
+               # return 'Invalid gender.'
+           # if (value not in ToonDNA.defaultBoyColorList) and (dna.gender == 'm'):
+         #       return 'Invalid male leg color index: {0}'.format(str(value))
+         #   if (value not in ToonDNA.defaultGirlColorList) and (dna.gender == 'f'):
+           #     return 'Invalid female leg color index: {0}'.format(str(value))
+            if value not in ToonDNA.defaultColorList:
+                return f'Invalid leg color index : {value}'
             dna.legColor = value
             invoker.b_setDNAString(dna.makeNetString())
             return 'Leg color index is now: {0}'.format(str(dna.legColor))
         if part == 'color':
-            if dna.gender not in ('m', 'f'):
-                return 'Invalid gender.'
-            if (value not in ToonDNA.defaultBoyColorList) and (dna.gender == 'm'):
-                return 'Invalid male color index: {0}'.format(str(value))
-            if (value not in ToonDNA.defaultGirlColorList) and (dna.gender == 'f'):
-                return 'Invalid female leg color index: {0}'.format(str(value))
+           # if dna.gender not in ('m', 'f'):
+           #     return 'Invalid gender.'
+        #    if (value not in ToonDNA.defaultBoyColorList) and (dna.gender == 'm'):
+        #        return 'Invalid male color index: {0}'.format(str(value))
+        #    if (value not in ToonDNA.defaultGirlColorList) and (dna.gender == 'f'):
+        #        return 'Invalid female  color index: {0}'.format(str(value))
+            if value not in ToonDNA.defaultColorList:
+                return f'Invalid  color index : {value}'
             dna.headColor = value
             dna.armColor = value
             dna.legColor = value
             invoker.b_setDNAString(dna.makeNetString())
             return 'Color index is now: {0}'.format(str(dna.headColor))  
-
+        if part == 'eyelashes':
+            if value not in [0, 1] or value not in [True, False]:
+                return 'Invalid eyelash values'
+            if value == True:
+                dna.eyelashes = 1
+            elif value == False:
+                dna.eyelashes = 0
+            else:
+                dna.eyelashes = value
         if part == 'gloves':
                 value = int(value)
                 if value not in ToonDNA.defaultGloveColorList:
@@ -1746,18 +1755,45 @@ class DNA(MagicWord):
                 return 'Sleeve texture color index set to: {0}'.format((dna.sleeveTexColor))
 
         if part == 'bottex':
-                if dna.gender not in ('m', 'f'):
-                    return 'Invalid gender.'
-                if dna.gender == 'm':
-                    bottoms = ToonDNA.BoyShorts
-                else:
-                    bottoms = ToonDNA.GirlBottoms
+                #if dna.gender == 'm':
+                  #  bottoms = ToonDNA.BoyShorts
+              #  else:
+                bottoms = ToonDNA.Bottoms
                 if not -1 <= value <= len(bottoms):
                     return 'Bottom texture index out of range (0-{0}).'.format(len(bottoms))
                 dna.botTex = value
                 invoker.b_setDNAString(dna.makeNetString())
                 return 'Bottom texture index set to:{0}'.format(str(dna.botTex))
+        if part == 'hatModel':
+            hatModels = ToonDNA.HatModels
+            if not -1 <= value <= len(hatModels):
+                return f"Hat model index out of range(0-{len(hatModels)}"
+            dna.hatModel = value
+            invoker.b_setDNAString(dna.makeNetString())
+            return f'Hat model index set to : {str(dna.hatModel)}'
+        if part == 'glassesModel':
+            glassesModel = ToonDNA.glassesModel
+            if not -1 <= value <= len(glassesModel):
+                return f"Glasses model index out of range(0-{len(glassesModel)}"
+            dna.glassesModel = value
+            invoker.b_setDNAString(dna.makeNetString())
+            return f'Glasses model index set to : {str(dna.glassesModel)}'  
+        if part == 'backpackModel':
+            backpackModels = ToonDNA.BackpackModels
+            if not -1 <= value <= len(backpackModels):
+                return f"Backpack model index out of range(0-{len(backpackModels)}"
+            dna.backpackModel = value
+            invoker.b_setDNAString(dna.makeNetString())
+            return f'Backpack model index set to : {str(dna.backpackModel)}'
+        if part == 'shoesModel':
+            shoesModels = ToonDNA.ShoesModels
+            if not -1 <= value <= len(shoesModels):
+                return f"Shoes model index out of range(0-{len(shoesModels)}"
+            dna.shoesModel = value
+            invoker.b_setDNAString(dna.makeNetString())
+            return f'Shoes model index set to : {str(dna.shoesModel)}'       
 
+        #TODO textures and colors for accessories 
         if part == 'bottexcolor':
                 if not -1 < value <= len(ToonDNA.ClothesColors):
                     return 'Bottom texture color index out of range(0-{0}).'.format(len(ToonDNA.ClothesColors))

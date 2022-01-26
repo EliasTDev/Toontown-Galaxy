@@ -4,7 +4,6 @@ from toontown.toonbase import ToontownGlobals
 from toontown.racing import DistributedStartingBlockAI
 from pandac.PandaModules import *
 from toontown.racing.RaceGlobals import *
-from toontown.classicchars import DistributedGoofySpeedwayAI
 from toontown.safezone import DistributedGolfKartAI
 import string
 

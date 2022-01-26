@@ -38,7 +38,7 @@ messagedirector:
 roles:
     - type: clientagent
       bind: 0.0.0.0:7899
-      version: "Toontown Galaxy"
+      version: "Toontown: Event Horizon"
       client:
         relocate: true
         add_interest: enabled

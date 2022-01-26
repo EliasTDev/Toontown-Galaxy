@@ -3,7 +3,7 @@
 !include FileFunc.nsh
 
 ; Localization Constants
-!define PRODUCT_NAME "Disney Toontown Galaxy ${PRODUCT_RELEASE}"
+!define PRODUCT_NAME "Disney Toontown: Event Horizon ${PRODUCT_RELEASE}"
 !define PROG_GROUPNAME "${PRODUCT_NAME}"
 !define UNINSTALLER_NAME "uninst"
 !define UNINSTALL_LINK_NAME "Uninstall Toontown IE Helper"

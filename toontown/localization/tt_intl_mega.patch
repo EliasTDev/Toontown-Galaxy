@@ -3460,11 +3460,11 @@
 @@ -2,8 +2,13 @@
  item: Global
    Version=9.0
-   Title=Toontown Galaxy Installation
-+  Title French=Disneys Toontown Galaxy Installation
-+  Title German=Disneys Toontown Galaxy Installation
-+  Title Portuguese=Disney Toontown Galaxy Installation
-+  Title Spanish=Toontown Galaxy Installation
+   Title=Toontown: Event Horizon Installation
++  Title French=Disneys Toontown: Event Horizon Installation
++  Title German=Disneys Toontown: Event Horizon Installation
++  Title Portuguese=Disney Toontown: Event Horizon Installation
++  Title Spanish=Toontown: Event Horizon Installation
 +  Title Japanese=gD[^EEIC CXg[
    Flags=00010100
 -  Languages=65 0 0 0 0 0 66 0 0 0 0 0 0 0 0 0
@@ -3476,10 +3476,10 @@
    FTP Cluster Size=20
    Per-User Version ID=1
    Dialogs Version=7
--  Version Description=Toontown Galaxy
+-  Version Description=Toontown: Event Horizon
 -  Version Copyright=2002
 -  Version Company=Disney
-+  Version Description=Toontown Galaxy
++  Version Description=Toontown: Event Horizon
 +  Version Copyright=2002-2008
 +  Version Company=Walt Disney Co.
    Crystal Format=10111100101100000010001001001001
@@ -3563,7 +3563,7 @@
 +end
 +item: Set Variable
 +  Variable=APPTITLE
-+  Value=Toontown Galaxy ES
++  Value=Toontown: Event Horizon ES
 +  Flags=10000000
 +end
 +item: Get Registry Key Value
@@ -3600,7 +3600,7 @@
 +end
 +item: Set Variable
 +  Variable=APPTITLE
-+  Value=Disneys Toontown Galaxy DE
++  Value=Disneys Toontown: Event Horizon DE
 +  Flags=10000000
 +end
 +item: Get Registry Key Value
@@ -3617,7 +3617,7 @@
 +end
 +item: Set Variable
 +  Variable=APPTITLE
-+  Value=Disney Toontown Galaxy BR
++  Value=Disney Toontown: Event Horizon BR
 +  Flags=10000000
 +end
 +item: Get Registry Key Value
@@ -3634,7 +3634,7 @@
 +end
 +item: Set Variable
 +  Variable=APPTITLE
-+  Value=Toontown Galaxy FR
++  Value=Toontown: Event Horizon FR
 +  Flags=10000000
 +end
 +item: Get Registry Key Value
@@ -3921,7 +3921,7 @@
  end
  item: Set Variable
 -  Variable=PROG_GROUP_NAME
--  Value=%PROGRAMS%\Toontown Galaxy%TEST_SERVER_STR%
+-  Value=%PROGRAMS%\Toontown: Event Horizon%TEST_SERVER_STR%
 +  Variable=TTINST_LOGNAME
 +  Value=ToontownInstaller*.log
  end
@@ -4185,7 +4185,7 @@
 +end
 +item: Set Variable
 +  Variable=PROG_GROUP_NAME
-+  Value=%PROGRAMS%\Toontown Galaxy%TEST_SERVER_STR%
++  Value=%PROGRAMS%\Toontown: Event Horizon%TEST_SERVER_STR%
 +end
 +item: Create Shortcut
 +  Source=%IEPATH%\IEXPLORE.EXE
@@ -4208,7 +4208,7 @@
 +end
 +item: Create Shortcut
 +  Source=%IEPATH%\IEXPLORE.EXE
-+  Destination=%DESKTOPDIR%\Toontown Galaxy%TEST_SERVER_STR%.lnk
++  Destination=%DESKTOPDIR%\Toontown: Event Horizon%TEST_SERVER_STR%.lnk
 +  Command Options=%DESKTOP_URL%
 +  Icon Number=0
 +  Icon Pathname=%MAINDIR%\toontown.ico
@@ -4344,7 +4344,7 @@
 +end
 +item: Set Variable
 +  Variable=PROG_GROUP_NAME
-+  Value=%PROGRAMS%\Disneys Toontown Galaxy%TEST_SERVER_STR%
++  Value=%PROGRAMS%\Disneys Toontown: Event Horizon%TEST_SERVER_STR%
 +end
 +item: Create Shortcut
 +  Source=%IEPATH%\IEXPLORE.EXE
@@ -4367,7 +4367,7 @@
 +end
 +item: Create Shortcut
 +  Source=%IEPATH%\IEXPLORE.EXE
-+  Destination=%DESKTOPDIR%\Disneys Toontown Galaxy%TEST_SERVER_STR%.lnk
++  Destination=%DESKTOPDIR%\Disneys Toontown: Event Horizon%TEST_SERVER_STR%.lnk
 +  Command Options=%DESKTOP_URL%
 +  Icon Number=0
 +  Icon Pathname=%MAINDIR%\toontown.ico
@@ -4429,20 +4429,20 @@
 +  Text=remove older and incorrect English named links
 +end
 +item: Check if File/Dir Exists
-+  Pathname=%DESKTOPDIR%\Toontown Galaxy.lnk
++  Pathname=%DESKTOPDIR%\Toontown: Event Horizon.lnk
 +  Flags=01000100
 +end
 +item: Delete File
-+  Pathname=%DESKTOPDIR%\Toontown Galaxy.lnk
++  Pathname=%DESKTOPDIR%\Toontown: Event Horizon.lnk
 +end
 +item: End Block
 +end
 +item: Check if File/Dir Exists
-+  Pathname=%PROGRAMS%\Toontown Galaxy
++  Pathname=%PROGRAMS%\Toontown: Event Horizon
 +  Flags=01000101
 +end
 +item: Delete File
-+  Pathname=%PROGRAMS%\Toontown Galaxy
++  Pathname=%PROGRAMS%\Toontown: Event Horizon
 +  Flags=00001100
 +end
 +item: End Block
@@ -4468,7 +4468,7 @@
 +end
 +item: Set Variable
 +  Variable=PROG_GROUP_NAME
-+  Value=%PROGRAMS%\Toontown Galaxy%TEST_SERVER_STR%
++  Value=%PROGRAMS%\Toontown: Event Horizon%TEST_SERVER_STR%
 +end
 +item: Create Shortcut
 +  Source=%IEPATH%\IEXPLORE.EXE
@@ -4491,7 +4491,7 @@
 +end
 +item: Create Shortcut
 +  Source=%IEPATH%\IEXPLORE.EXE
-   Destination=%DESKTOPDIR%\Toontown Galaxy%TEST_SERVER_STR%.lnk
+   Destination=%DESKTOPDIR%\Toontown: Event Horizon%TEST_SERVER_STR%.lnk
    Command Options=%DESKTOP_URL%
    Icon Number=0
 @@ -734,6 +1482,9 @@

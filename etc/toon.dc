@@ -3,21 +3,6 @@
 from toontown.ai import WelcomeValleyManager/AI
 from toontown.building import DistributedAnimatedProp/AI
 from toontown.toon import DistributedToon/AI/UD
-from toontown.classicchars import DistributedCCharBase/AI
-from toontown.classicchars import DistributedMickey/AI
-from toontown.classicchars import DistributedVampireMickey/AI
-from toontown.classicchars import DistributedMinnie/AI
-from toontown.classicchars import DistributedWitchMinnie/AI
-from toontown.classicchars import DistributedGoofy/AI
-from toontown.classicchars import DistributedSuperGoofy/AI
-from toontown.classicchars import DistributedDaisy/AI
-from toontown.classicchars import DistributedChip/AI
-from toontown.classicchars import DistributedDale/AI
-from toontown.classicchars import DistributedGoofySpeedway/AI
-from toontown.classicchars import DistributedDonald/AI
-from toontown.classicchars import DistributedDonaldDock/AI
-from toontown.classicchars import DistributedPluto/AI
-from toontown.classicchars import DistributedWesternPluto/AI
 from toontown.safezone import DistributedTrolley/AI
 from toontown.safezone import DistributedPartyGate/AI
 from toontown.suit import DistributedSuitPlanner/AI
@@ -3024,7 +3009,6 @@ dclass DistributedCloset: DistributedFurnitureItem {
   setDNA(blob dna, int8 finished, uint8 which) airecv clsend;       //security breach: invalid finished not checked, dna needs sanity check
   setState(uint8 mode,
            uint32 avId, uint32 ownerId,
-           string gender,
            uint8array topList, uint8array botList)
            broadcast ram;
   setMovie(uint8 mode, uint32 avId, int16 timestamp) broadcast ram;
@@ -3035,10 +3019,10 @@ dclass DistributedCloset: DistributedFurnitureItem {
 };
 
 dclass DistributedTrunk : DistributedCloset {
-  setState(uint8, uint32, uint32, string, uint8[], uint8[], uint8[], uint8[]) broadcast ram;
+  setState(uint8, uint32, uint32, uint8[], uint8[], uint8[], uint8[]) broadcast ram;
   removeItem(uint8, uint8, uint8, uint8) airecv clsend;
-  setDNA(uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, int8, uint8) airecv clsend;
-  setCustomerDNA(uint32, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8, uint8) broadcast ram;
+  setDNA(blob, int8, uint8) airecv clsend;
+  setCustomerDNA(uint32 avId, blob dna) broadcast ram;
 };
 dclass DistributedPhone: DistributedFurnitureItem {
   // Phones adjust their scale to accomodate a toon, then keep that
@@ -3400,7 +3384,6 @@ dclass DistributedPet: DistributedSmoothNode {
   setColor(int8(0-25) color = 0) required broadcast db;
   setColorScale(int8(0-8) color = 0) required broadcast db;
   setEyeColor(int8(0-5) eyeColor = 0) required broadcast db;
-  setGender (int8(0-1) gender = 0) required broadcast db;
   //setStyle: setHead, setEars, setNose, setTail, setBodyTexture, setColor, setColorScale, setEyeColor, setGender;
 
   // mood

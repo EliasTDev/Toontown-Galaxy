@@ -10,7 +10,7 @@ export DISTRICT_NAME="Nutty River"
 export BASE_CHANNEL=401000000
 
 echo ===============================
-echo Starting Toontown Galaxy AI server...
+echo Starting Toontown: Event Horizon AI server...
 echo ppython: "ppython"
 echo District name: $DISTRICT_NAME
 echo Base channel: $BASE_CHANNEL

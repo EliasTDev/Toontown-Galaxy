@@ -5,7 +5,7 @@ distribution qa
 model-path /
 
 # Server:
-server-version Toontown Galaxy
+server-version Toontown: Event Horizon
 build-version BUILD_VERSION
 min-access-level 100
 accountdb-type remote

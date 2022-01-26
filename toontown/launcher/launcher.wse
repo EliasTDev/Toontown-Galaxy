@@ -1,7 +1,7 @@
 Document Type: WSE
 item: Global
   Version=9.0
-  Title=Toontown Galaxy Installation
+  Title=Toontown: Event Horizon Installation
   Flags=00010100
   Languages=65 0 0 0 0 0 66 0 0 0 0 0 0 0 0 0
   Copy Default=1
@@ -27,7 +27,7 @@ item: Global
   FTP Cluster Size=20
   Per-User Version ID=1
   Dialogs Version=7
-  Version Description=Toontown Galaxy
+  Version Description=Toontown: Event Horizon
   Version Copyright=2002-2006
   Version Company=Walt Disney Company
   Crystal Format=10111100101100000010001001001001
@@ -133,7 +133,7 @@ item: Remark
 end
 item: Set Variable
   Variable=APPTITLE
-  Value=Toontown Galaxy Test Server
+  Value=Toontown: Event Horizon Test Server
   Flags=10000000
 end
 item: Remark
@@ -164,7 +164,7 @@ item: End Block
 end
 item: Set Variable
   Variable=APPTITLE
-  Value=Toontown Galaxy
+  Value=Toontown: Event Horizon
   Flags=10000000
 end
 item: Get Registry Key Value
@@ -714,7 +714,7 @@ item: Get Registry Key Value
 end
 item: Set Variable
   Variable=PROG_GROUP_NAME
-  Value=%PROGRAMS%\Toontown Galaxy%TEST_SERVER_STR%
+  Value=%PROGRAMS%\Toontown: Event Horizon%TEST_SERVER_STR%
 end
 item: Create Shortcut
   Source=%IEPATH%\IEXPLORE.EXE
@@ -737,7 +737,7 @@ item: Remark
 end
 item: Create Shortcut
   Source=%IEPATH%\IEXPLORE.EXE
-  Destination=%DESKTOPDIR%\Toontown Galaxy%TEST_SERVER_STR%.lnk
+  Destination=%DESKTOPDIR%\Toontown: Event Horizon%TEST_SERVER_STR%.lnk
   Command Options=%DESKTOP_URL%
   Icon Number=0
   Icon Pathname=%MAINDIR%\toontown.ico
