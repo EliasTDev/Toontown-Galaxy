@@ -2,3 +2,5 @@
 *.dir
 *.dat
 *.bak
+astrondb-2/*
+astrondb-inventory/
