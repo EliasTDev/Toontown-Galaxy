@@ -981,39 +981,9 @@ class DistributedBattleBaseAI(DistributedObjectAI.DistributedObjectAI,
         else:
             # In this case, the toon exited the battle abnormally--he
             # explicitly disconnected.  The toon is no longer in
-            # the game, so we can no longer query his current HP or
-            # inventory, and we can't update the cog page manager or
-            # anything like that.
-
-            if len(self.suits) > 0 and not self.streetBattle:
-                # If the toon was in a building battle, and there are
-                # still some suits left to the battle, assume the
-                # player cheated by pulling the plug or something and
-                # impose a penalty.  (We don't impose this penalty for
-                # a street battle because the user can always run from
-                # a street battle.)
-
-                self.notify.info("toon %d aborted non-street battle; clearing inventory and hp." % (toonId))
-
-                # This is a little tricky because the toon is already
-                # gone.  First, we have to create an empty
-                # DistributedToonAI object to represent the toon.
-                # There is no useful data in this object, so we can't
-                # query his hp or anything.
-                toon = DistributedToonAI.DistributedToonAI(self.air)
-                toon.doId = toonId
-
-                # Now set the inventory and HP to nothing.
-                empty = InventoryBase.InventoryBase(toon)
-                toon.b_setInventory(empty.makeNetString())
-                toon.b_setHp(0)
-
-                # And write these two fields directly to the database.
-                db = DatabaseObject.DatabaseObject(self.air, toonId)
-                db.storeObject(toon, ["setInventory", "setHp"])
-
-                self.notify.info('killing mem leak from temporary DistributedToonAI %d' % toonId)
-                toon.deleteDummy()
+            # the game, and we will simply leave them be.
+            # Leaving this here in case we want to do anything with it in the future.
+            pass
                 
 
     def getToon(self, toonId):
