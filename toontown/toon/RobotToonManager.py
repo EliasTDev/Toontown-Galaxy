@@ -3410,8 +3410,6 @@ class RobotToonControlPanel(AppShell):
         strList.append(comments)         
         strList.append("\nSPECIES: ")  
         strList.append(self.species.get())   
-        strList.append("\nGENDER: ")       
-        strList.append(self.gender.get()) 
         strList.append("\nHEAD: ")       
         strList.append(self.head.get()) 
         strList.append("\nTORSO: ")          

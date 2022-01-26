@@ -25,7 +25,6 @@ class ClosetGUI(ClothesGUI.ClothesGUI):
         self.isOwner = isOwner
         self.deleteEvent = deleteEvent
         self.cancelEvent = cancelEvent
-        self.genderChange = 0
         self.verify = None
 
     def load(self):
@@ -158,7 +157,7 @@ class ClosetGUI(ClothesGUI.ClothesGUI):
         self.notify.debug("setupScrollInterface")
     
         self.dna = self.toon.getStyle()
-        self.gender = self.dna.getGender()
+        #self.gender = self.dna.getGender()
         self.swappedTorso = 0
 
         # if we already have a topsList, it means we are looking at another
@@ -214,11 +213,7 @@ class ClosetGUI(ClothesGUI.ClothesGUI):
                 self.bottomTrashButton['text'] = TTLocalizer.ClosetDeleteShorts
             
         
-    def setGender(self, gender):
-        # this is only called when the user's gender is not the
-        # same as the closet owner's gender
-        self.ownerGender = gender
-        self.genderChange = 1
+
     
     def swapBottom(self, offset):
         # override swap bottom to allow cross dressing
@@ -241,11 +236,11 @@ class ClosetGUI(ClothesGUI.ClothesGUI):
         assert(self.notify.debug("bottomChoice: %s" % (self.bottomChoice)))
         assert(self.notify.debug("shorts: %d tex, %d texcolor" % (self.toon.style.botTex, self.toon.style.botTexColor)))
 
-        if (self.genderChange == 1):
-            if self.bottomChoice > 0:
-                self.__handleGenderBender(1)
-            else:
-                self.__handleGenderBender(0)
+        #if (self.genderChange == 1):
+          #  if self.bottomChoice > 0:
+         #       self.__handleGenderBender(1)
+         #   else:
+         #       self.__handleGenderBender(0)
 
         if (self.toon.generateToonClothes() == 1):
             self.toon.loop("neutral", 0)
@@ -257,39 +252,6 @@ class ClosetGUI(ClothesGUI.ClothesGUI):
         if (self.swapEvent != None):
             messenger.send(self.swapEvent)
 
-    # This is only used for closets, where a male toon can be trying
-    # on a female toons clothes and vice-versa
-    def __handleGenderBender(self, type):
-        if type == 1:
-            # handle the case that a girl wearing a skirt is
-            # using the boys closet.  We need to do this
-            # because we have tricked our dna into thinking we
-            # are a boy, and generateToonClothes() does not bother
-            # swapping the torsos for a boy (since he only has shorts and no skirts)
-            
-            if ((self.toon.style.gender != self.ownerGender) and
-                self.toon.style.gender == 'f'):
-                self.toon.swapToonTorso(self.toon.style.torso[0] + 's',
-                                        genClothes = 0)
-                self.toon.loop("neutral", 0)
-                self.swappedTorso = 1
-
-            # assume the closet owners gender
-            self.toon.style.gender = self.ownerGender
-        else:
-            # assume our original gender
-            self.toon.style.gender = self.gender
-            
-            # handle the case that a boy is trying on a girls skirt
-            # and then scolls back to his shorts.  we need to manually swap
-            # the torso back in this case, because generateToonClothes wont
-            # do it (see above)
-            if ((self.toon.style.gender != self.ownerGender) and
-                self.toon.style.gender == 'm'):
-                self.toon.swapToonTorso(self.toon.style.torso[0] + 's',
-                                        genClothes = 0)
-                self.toon.loop("neutral", 0)
-                self.swappedTorso = 1
 
             
     def removeTop(self, index):

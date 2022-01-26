@@ -46,7 +46,7 @@ BankToMoney = {
     1310 : 2500,
     1320 : 5000,
     1330 : 7500,
-    1340 : 10000,
+    1340 : 15000,
     }
 MoneyToBank = {}
 for bankId, maxMoney in list(BankToMoney.items()):
@@ -59,12 +59,13 @@ ClosetToClothes = {500: 10,
  502: 15,
  504: 20,
  506: 25,
- 508: 50,
+ 508: 1000,
  510: 10,
  512: 15,
  514: 20,
  516: 25,
- 518: 50}
+ 518: 1000
+}
 ClothesToCloset = {}
 for closetId, maxClothes in list(ClosetToClothes.items()):
     # There is not a 1-to-1 mapping like the banks since there are boys
@@ -73,8 +74,8 @@ for closetId, maxClothes in list(ClosetToClothes.items()):
         ClothesToCloset[maxClothes] = (closetId,)
     else:
         ClothesToCloset[maxClothes] += (closetId,)
-MaxClosetIds = (508, 518)
-MaxTrunkIds = (4000, 4010)
+MaxClosetIds = (520)
+MaxTrunkIds = (4000, 4012)
 
 
 # These index numbers are written to the database.  Don't mess with them.
@@ -295,29 +296,31 @@ FurnitureTypes = {
        500,
        FLCloset,
        1.3),
+
     # Girl's Wardrobe, 10 items - Initial Furniture
-    510 : ("phase_5.5/models/estate/closetGirl",
+    512 : ("phase_5.5/models/estate/closetGirl",
            None, None, 500, FLCloset, 0.85),
 
     # Girl's Wardrobe, 15 items - Series 1
-    512 : ("phase_5.5/models/estate/closetGirl",
+    514 : ("phase_5.5/models/estate/closetGirl",
            None, None, 500, FLCloset, 1.0),
 
     # Girl's Wardrobe, 20 items
-    514 : ("phase_5.5/models/estate/closetGirl",
+    516 : ("phase_5.5/models/estate/closetGirl",
            None, None, 500, FLCloset, 1.15),
 
     # Girl's Wardrobe, 25 items
-    516 : ("phase_5.5/models/estate/closetGirl",
+    518 : ("phase_5.5/models/estate/closetGirl",
            None, None, 500, FLCloset, 1.3),
 
     #Girl's Wardrobe, 50 items
-    518: ('phase_5.5/models/estate/closetGirl',
+    520: ('phase_5.5/models/estate/closetGirl',
        None,
        None,
        500,
        FLCloset,
        1.3),
+
     ## LAMPS ##
     # Short lamp - Series 1
     600 : ("phase_3.5/models/modules/lamp_short",
@@ -889,15 +892,9 @@ class CatalogFurnitureItem(CatalogAtticItem.CatalogAtticItem):
             return None
 
     def notOfferedTo(self, avatar):
-        if (self.getFlags() & FLCloset or self.getFlags() & FLTrunk):
             # Boys can only buy boy wardrobes, and girls can only buy
             # girl wardrobes.  Sorry.
-            decade = self.furnitureType - (self.furnitureType % 10)
-            forBoys = (decade == 500 or decade == 4000)
-            if avatar.getStyle().getGender() == 'm':
-                return not forBoys
-            else:
-                return forBoys
+#nah i think not disney
 
         # All other items are completely androgynous.
         return 0
@@ -930,6 +927,8 @@ class CatalogFurnitureItem(CatalogAtticItem.CatalogAtticItem):
             return 25
         elif index == 8:
             return 50
+        elif index == 10:
+            return 1000
         else:
             return None
 
@@ -1142,10 +1141,11 @@ def getAllBanks():
 
 def nextAvailableCloset(avatar, duplicateItems):
     # detemine which closet index in the tuple to use
-    if avatar.getStyle().getGender() == 'm':
-        index = 0
-    else:
-        index = 1
+    #if avatar.getStyle().getGender() == 'm':
+
+    index = 0
+    #else:
+        #index = 1
     # handle a race a condition - dist toon ai cleaned up?
     if not hasattr(avatar, "maxClothes"):
         return None
@@ -1173,10 +1173,7 @@ def nextAvailableCloset(avatar, duplicateItems):
     return item
 
 def get50ItemCloset(avatar, duplicateItems):
-    if avatar.getStyle().getGender() == 'm':
-        index = 0
-    else:
-        index = 1
+    index = 0
     closetId = MaxClosetIds[index]
     item = CatalogFurnitureItem(closetId)
     if item in avatar.onOrder or item in avatar.mailboxContents:
@@ -1184,11 +1181,8 @@ def get50ItemCloset(avatar, duplicateItems):
     return item
 
 def get50ItemTrunk(avatar, duplicateItems):
-    if avatar.getStyle().getGender() == 'm':
-        index = 0
-    else:
-        index = 1
-    trunkId = MaxTrunkIds[index]
+
+    trunkId = MaxTrunkIds[0]
     item = CatalogFurnitureItem(trunkId)
     if item in avatar.onOrder or item in avatar.mailboxContents:
         return None
@@ -1204,7 +1198,7 @@ def getMaxTrunks():
 
 def getAllClosets():
     _list = []
-    for closetId in list(ClosetsToClothes.keys()):
+    for closetId in list(ClothesToCloset.keys()):
         _list.append(CatalogFurnitureItem(closetId))
     return _list
 

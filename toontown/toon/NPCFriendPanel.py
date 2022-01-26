@@ -328,9 +328,14 @@ class NPCFriendCard(DirectFrame):
         # Given an NPC id create a toon head suitable for framing
         NPCInfo = NPCToons.NPCToonDict[NPCID]
         dnaList = NPCInfo[2]
-        gender = NPCInfo[3]
+        #To not break the entire npc list
+        eyelashes = NPCInfo[3]
+        if eyelashes == 'm':
+            eyelashes = 0
+        else:
+            eyelashes = 1
         if dnaList == 'r':
-            dnaList = NPCToons.getRandomDNA(NPCID, gender)
+            dnaList = NPCToons.getRandomDNA(NPCID, eyelashes)
         dna = ToonDNA.ToonDNA()
         dna.newToonFromProperties(*dnaList)
         head = ToonHead.ToonHead()

@@ -28,7 +28,6 @@ class LoadHouseOperation(FSM):
         self.done = False
         self.houseId = None
         self.house = None
-        self.gender = None
 
     def start(self):
         # We have a few different cases here:
@@ -42,7 +41,6 @@ class LoadHouseOperation(FSM):
         style = ToonDNA.ToonDNA()
         style.makeFromNetString(self.avatar.get('setDNAString')[0])
         self.houseId = self.avatar.get('setHouseId', [0])[0]
-        self.gender = style.gender
         if self.houseId == 0:
             # Case #2: There is an avatar, but no setHouseId. Make a new house:
             self.demand('CreateHouse')
@@ -98,7 +96,6 @@ class LoadHouseOperation(FSM):
         house.estate = self.estate
 
         # Initialize our interior:
-        house.interior.gender = self.gender
         #house.interior.start()
 
         self.house = house

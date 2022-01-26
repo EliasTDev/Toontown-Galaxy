@@ -21,10 +21,10 @@ def dnaCodeFromToonDNA(dna):
             i += 1
         return i
 
-    if dna.gender == 'f':
-        genderTypeNum = 0
-    else:
-        genderTypeNum = 1
+   # if dna.gender == 'f':
+    genderTypeNum = 0
+    #else:
+    #    genderTypeNum = 1
 
     # Left shift the bits to get the correct position
     legTypeNum = findItemNumInList(dna.legs, ToonDNA.toonLegTypes) << 1
@@ -61,7 +61,8 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
         self.model.setScale(self.worldScale*1.5, self.worldScale*1.5, self.worldScale)
         self.getToonPropertiesFromOptional()
         dna = ToonDNA.ToonDNA()
-        dna.newToonFromProperties(self.headType, self.torsoType, self.legType, self.gender, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        #I hope I counted the amount of arguments right LOL
+        dna.newToonFromProperties(self.headType, self.torsoType, self.legType, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         self.setupStoneToon(dna)
         self.poseToonFromTypeIndex(self.typeIndex)
         self.toon.reparentTo(self.model)
@@ -78,7 +79,6 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
         self.toon.stopBlink()
         self.toon.stopLookAround()
 
-        self.gender = self.toon.style.gender
         self.speciesType = self.toon.style.getAnimal()
         self.headType = self.toon.style.head
 
@@ -103,7 +103,6 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
         self.toon.pose('victory', 30)
         self.toon.setH(180)
         self.speciesType = self.toon.style.getAnimal()
-        self.gender = self.toon.style.gender
 
     def setupCollision(self):
         DistributedStatuary.DistributedStatuary.setupCollision(self)
@@ -232,7 +231,9 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
         tsLashes.setMode(tsLashes.MDecal)
 
         # Lashes only exist in females
-        if self.gender == 'f':
+        #NO STOP BEING SEXIST DISNEY
+        if self.eyelashes:
+        #if self.gender == 'f':
             if self.toon.hasLOD():
                 # Lashes are there only in the 1st LOD
                 head = self.toon.getPart('head', '1000')
@@ -274,15 +275,15 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
         '''
 
         #Bit-mask by the appropriate number and right shift to get the range from 0 to the appropriate number
-        genderTypeNum = self.optional & 1
+        #genderTypeNum = self.optional & 1
         legTypeNum = (self.optional & 6) >> 1
         torsoTypeNum = (self.optional & 120) >> 3
         headTypeNum = (self.optional & 65408) >> 7
 
-        if genderTypeNum == 0:
-            self.gender = 'f'
-        else:
-            self.gender = 'm'
+       # if genderTypeNum == 0:
+           # self.gender = 'f'
+       # else:
+           # self.gender = 'm'
 
         # @TODO: change these hardcoded numbers to length of the respective lists
 

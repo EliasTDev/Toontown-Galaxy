@@ -57,7 +57,8 @@ def getHeadStartIndex(species):
     for head in toonHeadTypes:
         if (head[0] == species):
             return toonHeadTypes.index(head)
-        
+
+
 def getSpecies(head):
     """
     Returns the species when the head is given.
@@ -616,6 +617,97 @@ SKIRT = 1
 
 # len = 14 
 GirlBottoms = [
+    ("phase_3/maps/desat_skirt_1.jpg", SKIRT), # 0 solid
+    ("phase_3/maps/desat_skirt_2.jpg", SKIRT), # 1 special, polka dots
+    ("phase_3/maps/desat_skirt_3.jpg", SKIRT), # 2 vertical stripes
+    ("phase_3/maps/desat_skirt_4.jpg", SKIRT), # 3 horizontal stripe
+    ("phase_3/maps/desat_skirt_5.jpg", SKIRT), # 4 flower print
+    ("phase_3/maps/desat_shorts_1.jpg", SHORTS), # 5 plain w/ pockets
+    ("phase_3/maps/desat_shorts_5.jpg", SHORTS), # 6 flower
+    ("phase_3/maps/desat_skirt_6.jpg", SKIRT), # 7 special, 2 pockets
+    ("phase_3/maps/desat_skirt_7.jpg", SKIRT), # 8 denim (2 darker colors)
+    ("phase_3/maps/desat_shorts_10.jpg", SHORTS), # 9 denim (2 darker colors)
+
+    # Catalog Series 1 exclusive
+    ("phase_4/maps/female_skirt1.jpg", SKIRT), # 10 blue with tan border and button
+    ("phase_4/maps/female_skirt2.jpg", SKIRT), # 11 purple with pink border and ribbon
+    ("phase_4/maps/female_skirt3.jpg", SKIRT), # 12 teal with yellow border and star
+
+    # Valentines
+    ("phase_4/maps/VdaySkirt1.jpg", SKIRT),    # 13 valentines skirts
+
+    # Catalog Series 3 exclusive
+    ("phase_4/maps/skirtNew5.jpg", SKIRT),     # 14 rainbow skirt
+
+    ("phase_4/maps/shorts5.jpg", SHORTS),      # 15 leprechaun shorts
+    # St. Pats
+
+    # Catalog Series 4 exclusive
+    ("phase_4/maps/CowboySkirt1.jpg", SKIRT),     # 16 cowboy skirt 1
+    ("phase_4/maps/CowboySkirt2.jpg", SKIRT),     # 17 cowboy skirt 2
+
+    # July 4th Skirt
+    ("phase_4/maps/4thJulySkirt1.jpg", SKIRT),    # 18 july 4th skirt 1
+
+    # Catalog series 7
+    ("phase_4/maps/skirtCat7_01.jpg", SKIRT),    # 19 blue with flower
+    
+    # Pajama Shorts
+    ("phase_4/maps/Blue_shorts_1.jpg", SHORTS),  # 20 Blue Pajama shorts
+    ("phase_4/maps/Red_shorts_1.jpg", SHORTS),   # 21 Red Pajama shorts
+    ("phase_4/maps/Purple_shorts_1.jpg", SHORTS),# 22 Purple Pajama shorts
+    
+    # Winter Holiday Skirts
+    ("phase_4/maps/tt_t_chr_avt_skirt_winter1.jpg", SKIRT),  # 23 Winter Holiday Skirt Style 1
+    ("phase_4/maps/tt_t_chr_avt_skirt_winter2.jpg", SKIRT),  # 24 Winter Holiday Skirt Style 2
+    ("phase_4/maps/tt_t_chr_avt_skirt_winter3.jpg", SKIRT),  # 25 Winter Holiday Skirt Style 3
+    ("phase_4/maps/tt_t_chr_avt_skirt_winter4.jpg", SKIRT),  # 26 Winter Holiday Skirt Style 4
+    
+    # 2009 Valentines Day Skirts
+    ("phase_4/maps/tt_t_chr_avt_skirt_valentine1.jpg", SKIRT),  # 27 Valentines Skirt 1
+    ("phase_4/maps/tt_t_chr_avt_skirt_valentine2.jpg", SKIRT),  # 28 Valentines Skirt 2
+    
+    # Special award clothing
+    ("phase_4/maps/tt_t_chr_avt_skirt_fishing1.jpg", SKIRT),   # 29
+    ("phase_4/maps/tt_t_chr_avt_skirt_gardening1.jpg", SKIRT),   # 30
+    ("phase_4/maps/tt_t_chr_avt_skirt_party1.jpg", SKIRT),   # 31
+    ("phase_4/maps/tt_t_chr_avt_skirt_racing1.jpg", SKIRT),   # 32
+    ("phase_4/maps/tt_t_chr_avt_skirt_summer1.jpg", SKIRT),   # 33
+    
+    ("phase_4/maps/tt_t_chr_avt_skirt_golf1.jpg", SKIRT),   # 34
+    ("phase_4/maps/tt_t_chr_avt_skirt_halloween1.jpg", SKIRT),   # 35
+    ("phase_4/maps/tt_t_chr_avt_skirt_halloween2.jpg", SKIRT),   # 36
+    ("phase_4/maps/tt_t_chr_avt_skirt_saveBuilding1.jpg", SKIRT),   # 37
+    ("phase_4/maps/tt_t_chr_avt_skirt_trolley1.jpg", SKIRT),   # 38
+    ("phase_4/maps/tt_t_chr_avt_skirt_halloween3.jpg", SKIRT),   # 39
+    ("phase_4/maps/tt_t_chr_avt_skirt_halloween4.jpg", SKIRT),   # 40
+    
+    ("phase_4/maps/tt_t_chr_shorts_scientistA.jpg", SHORTS),   # 41
+    ("phase_4/maps/tt_t_chr_shorts_scientistB.jpg", SHORTS),   # 42
+    ("phase_4/maps/tt_t_chr_shorts_scientistC.jpg", SHORTS),   # 43
+    
+    ("phase_4/maps/tt_t_chr_avt_shorts_cogbuster.jpg", SHORTS),   # 44 Silly Cogbuster Shorts 
+    ('phase_4/maps/tt_t_chr_avt_shorts_sellbotCrusher.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_shorts_halloween5.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_shorts_halloweenTurtle.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_skirt_greentoon1.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_skirt_racingGrandPrix.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_shorts_lawbotCrusher.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_shorts_bee.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_shorts_pirate.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_skirt_pirate.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_shorts_supertoon.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_shorts_vampire.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_shorts_dinosaur.jpg', SHORTS),
+    ('phase_4/maps/tt_t_chr_avt_skirt_golf02.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_skirt_racing03.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_skirt_golf03.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_skirt_golf04.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_skirt_racing04.jpg', SKIRT),
+    ('phase_4/maps/tt_t_chr_avt_skirt_racing05.jpg', SKIRT)]
+
+#TODO check for missing bottoms from boy section, for now this is just the girl section
+Bottoms = [
     ("phase_3/maps/desat_skirt_1.jpg", SKIRT), # 0 solid
     ("phase_3/maps/desat_skirt_2.jpg", SKIRT), # 1 special, polka dots
     ("phase_3/maps/desat_skirt_3.jpg", SKIRT), # 2 vertical stripes
@@ -1315,28 +1407,28 @@ TAILOR_HARMONY = 4008 # MM
 BONNIE_BLOSSOM = 5007 # DG
 WARREN_BUNDLES = 3008 # TB
 WORNOUT_WAYLON = 9010 # DDR
-
+#TODO figure out how this list works and group the boy styles with the girl styles as one
 TailorCollections = {
-    # TailorId : [ [ boyShirts ], [ girlShirts ], [boyShorts], [girlBottoms] ]
-    MAKE_A_TOON : [ ['bss1', 'bss2'],
-                    ['gss1', 'gss2'],
-                    ['bbs1', 'bbs2'],
-                    ['gsk1', 'gsh1'] ],
-    TAMMY_TAILOR : [ ['bss1', 'bss2'],
-                     ['gss1', 'gss2'],
-                     ['bbs1', 'bbs2'],
-                     ['gsk1', 'gsh1'] ],
-    LONGJOHN_LEROY : [ ['bss3', 'bss4', 'bss14'], ['gss3', 'gss4', 'gss14'], ['bbs3', 'bbs4'], ['gsk2', 'gsh2'] ],
-    TAILOR_HARMONY : [ ['bss5', 'bss6', 'bss10'], ['gss5', 'gss6', 'gss9'], ['bbs5'], ['gsk3', 'gsh3'] ],
-    BONNIE_BLOSSOM : [ ['bss7', 'bss8', 'bss12'], ['gss8', 'gss10', 'gss12'], ['bbs6'], ['gsk4', 'gsk5'] ],
-    WARREN_BUNDLES : [ ['bss9','bss13'], ['gss7', 'gss11'], ['bbs7'], ['gsk6'] ],
-    WORNOUT_WAYLON : [ ['bss11', 'bss15'], ['gss13', 'gss15'], ['bbs8'], ['gsk7'] ],
+    #OG:  TailorId : [ [ boyShirts ], [ girlShirts ], [boyShorts], [girlBottoms] ]
+    #New: TailorId : [[ shirts,] [bottoms]]
+    MAKE_A_TOON : [ ['bss1', 'bss2', 'gss1', 'gss2'],
+                    ['bbs1', 'bbs2' ,'gsk1', 'gsh1'] ],
+    TAMMY_TAILOR : [ ['bss1', 'bss2', 'gss1', 'gss2'],
+                     ['bbs1', 'bbs2', 'gsk1', 'gsh1']],
+    LONGJOHN_LEROY : [ ['bss3', 'bss4', 'bss14', 'gss3', 'gss4', 'gss14'],
+                       ['bbs3', 'bbs4', 'gsk2', 'gsh2'] ],
+    TAILOR_HARMONY : [ ['bss5', 'bss6', 'bss10', 'gss5', 'gss6', 'gss9'],
+                          ['bbs5', 'gsk3', 'gsh3']],
+    BONNIE_BLOSSOM : [ ['bss7', 'bss8', 'bss12', 'gss8', 'gss10', 'gss12'], 
+                        ['bbs6', 'gsk4', 'gsk5']],
+    WARREN_BUNDLES : [ ['bss9','bss13', 'gss7', 'gss11'],
+                     ['bbs7', 'gsk6']],
+    WORNOUT_WAYLON : [ ['bss11', 'bss15', 'gss13', 'gss15'],  
+                        ['bbs8', 'gsk7']],
     }
 
-BOY_SHIRTS = 0
-GIRL_SHIRTS = 1
-BOY_SHORTS = 2
-GIRL_BOTTOMS = 3
+SHIRTS = 0
+BOTTOMS = 1
 HAT = 1
 GLASSES = 2
 BACKPACK = 4
@@ -1344,72 +1436,94 @@ SHOES = 8
 
 # Make a list of the girl bottoms in MakeAToon
 # This is used in the body shop when switching genders
-MakeAToonBoyBottoms = []
-MakeAToonBoyShirts = []
-MakeAToonGirlBottoms = []
-MakeAToonGirlShirts = []
-MakeAToonGirlSkirts = []
-MakeAToonGirlShorts = []
-
-for style in TailorCollections[MAKE_A_TOON][BOY_SHORTS]:
+MakeAToonBottoms = []
+MakeAToonShirts = []
+MakeAToonSkirts = []
+MakeAToonShorts = []
+for style in TailorCollections[MAKE_A_TOON][BOTTOMS]:
     index = BottomStyles[style][0]
-    MakeAToonBoyBottoms.append(index)
+    MakeAToonBottoms.append(index)
 
-for style in TailorCollections[MAKE_A_TOON][BOY_SHIRTS]:
+for style in TailorCollections[MAKE_A_TOON][SHIRTS]:
     index = ShirtStyles[style][0]
-    MakeAToonBoyShirts.append(index)
+    MakeAToonShirts.append(index)
 
-for style in TailorCollections[MAKE_A_TOON][GIRL_BOTTOMS]:
-    index = BottomStyles[style][0]
-    MakeAToonGirlBottoms.append(index)
+#for style in TailorCollections[MAKE_A_TOON][GIRL_BOTTOMS]:
+ #   index = BottomStyles[style][0]
+  #  MakeAToonGirlBottoms.append(index)
 
-for style in TailorCollections[MAKE_A_TOON][GIRL_SHIRTS]:
-    index = ShirtStyles[style][0]
-    MakeAToonGirlShirts.append(index)
+#for style in TailorCollections[MAKE_A_TOON][GIRL_SHIRTS]:
+ #   index = ShirtStyles[style][0]
+ #   MakeAToonGirlShirts.append(index)
 
 # Separate out the skirts and shorts
-for index in MakeAToonGirlBottoms:
-    flag = GirlBottoms[index][1]
+for index in MakeAToonBottoms:
+    flag = Bottoms[index][1]
     if flag == SKIRT:
-        MakeAToonGirlSkirts.append(index)
+        MakeAToonSkirts.append(index)
     elif flag == SHORTS:
-        MakeAToonGirlShorts.append(index)
+        MakeAToonShorts.append(index)
     else:
         notify.error("Invalid flag")
 
+def getRandomHat(generator=None):
+    if generator is None:
+        generator = random
+    styleList = list(HatStyles.values())
+    style = generator.choice(styleList)
+    return style[0], style[1], style[2]
+
+def getRandomGlasses(generator=None):
+    if generator is None:
+        generator = random
+    styleList = list(GlassesStyles.values())
+    style = generator.choice(styleList)
+    return style[0], style[1], style[2]
+
+def getRandomBackpack(generator=None):
+    if generator is None:
+        generator = random
+    styleList = list(BackpackStyles.values())
+    style = generator.choice(styleList)
+    return style[0], style[1], style[2]
+
+def getRandomShoes(generator=None):
+    if generator is None:
+        generator = random
+    styleList = list(ShoesStyles.values())
+    style = generator.choice(styleList)
+    return style[0], style[1], style[2]
 
 # Convenience funtions for clothing
-def getRandomTop(gender, tailorId = MAKE_A_TOON, generator = None):
+def getRandomTop(tailorId = MAKE_A_TOON, generator = None):
     # Returns (shirtTex, color, sleeveTex, color)
     if (generator == None):
         generator = random 
     collection = TailorCollections[tailorId]
-    if (gender == 'm'):
-        style = generator.choice(collection[BOY_SHIRTS])
-    else:
-        style = generator.choice(collection[GIRL_SHIRTS])
+    style = generator.choice(collection[SHIRTS])
     styleList = ShirtStyles[style]
     colors = generator.choice(styleList[2])
     return styleList[0], colors[0], styleList[1], colors[1]
 
-def getRandomBottom(gender, tailorId = MAKE_A_TOON, generator = None, girlBottomType = None):
+def getRandomBottom(tailorId = MAKE_A_TOON, generator = None, bottomType = None):
     # Returns (bottomTex, color)
     if (generator == None):
         generator = random
     collection = TailorCollections[tailorId]
-    if (gender == 'm'):
-        style = generator.choice(collection[BOY_SHORTS])
+    #if (gender == 'm'):
+    #    style = generator.choice(collection[BOY_SHORTS])
+   # else:
+    if (bottomType is None):
+        style = generator.choice(collection[BOTTOMS])
+    elif (bottomType == SKIRT):
+        skirtCollection = [style for style in collection[BOTTOMS] if Bottoms[BottomStyles[style][0]][1] == SKIRT]
+        style = generator.choice(skirtCollection)
+    elif (bottomType == SHORTS):
+        shortsCollection = [style for style in collection[BOTTOMS] if Bottoms[BottomStyles[style][0]][1] == SHORTS]
+        style = generator.choice(shortsCollection)
     else:
-        if (girlBottomType is None):
-            style = generator.choice(collection[GIRL_BOTTOMS])
-        elif (girlBottomType == SKIRT):
-            skirtCollection = [style for style in collection[GIRL_BOTTOMS] if GirlBottoms[BottomStyles[style][0]][1] == SKIRT]
-            style = generator.choice(skirtCollection)
-        elif (girlBottomType == SHORTS):
-            shortsCollection = [style for style in collection[GIRL_BOTTOMS] if GirlBottoms[BottomStyles[style][0]][1] == SHORTS]
-            style = generator.choice(shortsCollection)
-        else:
-            notify.error("Bad girlBottomType: %s" % girlBottomType)
+        notify.error(f"Bad bottomType: {bottomType}" )
+
             
     styleList = BottomStyles[style]
     color = generator.choice(styleList[1])
@@ -1418,7 +1532,7 @@ def getRandomBottom(gender, tailorId = MAKE_A_TOON, generator = None, girlBottom
 def getRandomGirlBottom(type):
     bottoms = []
     index = 0
-    for bottom in GirlBottoms:
+    for bottom in Bottoms:
         if (bottom[1] == type):
             bottoms.append(index)
         index += 1
@@ -1436,15 +1550,12 @@ def getRandomGirlBottomAndColor(type):
     style = BottomStyles[random.choice(bottoms)]
     return style[0], random.choice(style[1])
 
-def getRandomizedTops(gender, tailorId = MAKE_A_TOON, generator = None):
+def getRandomizedTops(tailorId = MAKE_A_TOON, generator = None):
     # Returns a list of [ (shirt, color, sleeve, color), ... ]
     if (generator == None):
         generator = random
     collection = TailorCollections[tailorId]
-    if (gender == 'm'):
-        collection = collection[BOY_SHIRTS][:]
-    else:
-        collection = collection[GIRL_SHIRTS][:]
+    collection = collection[SHIRTS][:]
     tops = []
     random.shuffle(collection)
     for style in collection:
@@ -1455,15 +1566,15 @@ def getRandomizedTops(gender, tailorId = MAKE_A_TOON, generator = None):
                          ShirtStyles[style][1], color[1]))
     return tops
 
-def getRandomizedBottoms(gender, tailorId = MAKE_A_TOON, generator = None):
+def getRandomizedBottoms(tailorId = MAKE_A_TOON, generator = None):
     # Returns a list of [ (bottom, color), ... ]
     if (generator == None):
         generator = random
     collection = TailorCollections[tailorId]
-    if (gender == 'm'):
-        collection = collection[BOY_SHORTS][:]
-    else:
-        collection = collection[GIRL_BOTTOMS][:]
+    #if (gender == 'm'):
+      #  collection = collection[BOY_SHORTS][:]
+    #else:
+    collection = collection[BOTTOMS][:]
     bottoms = []
     random.shuffle(collection)
     for style in collection:
@@ -1473,12 +1584,10 @@ def getRandomizedBottoms(gender, tailorId = MAKE_A_TOON, generator = None):
             bottoms.append((BottomStyles[style][0], color))
     return bottoms    
 
-def getTops(gender, tailorId = MAKE_A_TOON):
+def getTops( tailorId = MAKE_A_TOON):
     # Returns a list of [ (shirt, color, sleeve, color), ... ]
-    if (gender == 'm'):
-        collection = TailorCollections[tailorId][BOY_SHIRTS]
-    else:
-        collection = TailorCollections[tailorId][GIRL_SHIRTS]
+    collection = TailorCollections[tailorId][SHIRTS]
+
     tops = []
     for style in collection:
         for color in ShirtStyles[style][2]:
@@ -1486,65 +1595,65 @@ def getTops(gender, tailorId = MAKE_A_TOON):
                          ShirtStyles[style][1], color[1]))
     return tops
 
-def getAllTops(gender):
+def getAllTops():
     tops = []
     for style in list(ShirtStyles.keys()):
-        if gender == 'm':
-            if (style[0] == 'g') or (style[:3] == 'c_g'):
+        if (style[0] == 'g') or (style[:3] == 'c_g'):
                 continue
-        else:
-            if (style[0] == 'b') or (style[:3] == 'c_b'):
+        if (style[0] == 'b') or (style[:3] == 'c_b'):
                 continue
         for color in ShirtStyles[style][2]:
             tops.append((ShirtStyles[style][0], color[0],
                          ShirtStyles[style][1], color[1]))
     return tops
 
-def getBottoms(gender, tailorId = MAKE_A_TOON):
+def getBottoms( tailorId = MAKE_A_TOON):
     # Returns a list of [ (bottom, color), ... ]
-    if (gender == 'm'):
-        collection = TailorCollections[tailorId][BOY_SHORTS]
-    else:
-        collection = TailorCollections[tailorId][GIRL_BOTTOMS]
+    #if (gender == 'm'):
+       # collection = TailorCollections[tailorId][BOY_SHORTS]
+   # else:
+    collection = TailorCollections[tailorId][BOTTOMS]
     bottoms = []
     for style in collection:
         for color in BottomStyles[style][1]:
             bottoms.append((BottomStyles[style][0], color))
     return bottoms
 
-def getAllBottoms(gender, output = 'both'):
+def getAllBottoms( output = 'both'):
     bottoms = []
     for style in list(BottomStyles.keys()):
-        if gender == 'm':
-            if ((style[0] == 'g') or (style[:3] == 'c_g') or
-                (style[:4] == 'vd_g') or (style[:4] == 'sd_g') or
-                (style[:4] == 'j4_g') or (style[:4] == 'pj_g') or
-                (style[:4] == 'wh_g') or (style[:4] == 'sa_g') or
-                (style[:4] == 'sc_g') or (style[:5] == 'sil_g')) :
+       # if gender == 'm':
+        if ((style[0] == 'g') or (style[:3] == 'c_g') or
+            (style[:4] == 'vd_g') or (style[:4] == 'sd_g') or
+            (style[:4] == 'j4_g') or (style[:4] == 'pj_g') or
+            (style[:4] == 'wh_g') or (style[:4] == 'sa_g') or
+            (style[:4] == 'sc_g') or (style[:5] == 'sil_g')) :
 
                 continue
-        else:
-            if ((style[0] == 'b') or (style[:3] == 'c_b') or
-                (style[:4] == 'vd_b') or (style[:4] == 'sd_b') or
-                (style[:4] == 'j4_b') or (style[:4] == 'pj_b') or
-                (style[:4] == 'wh_b') or (style[:4] == 'sa_b') or
-                (style[:4] == 'sc_b') or (style[:5] == 'sil_b')):
-                continue
+       # else:
+        if ((style[0] == 'b') or (style[:3] == 'c_b') or
+            (style[:4] == 'vd_b') or (style[:4] == 'sd_b') or
+            (style[:4] == 'j4_b') or (style[:4] == 'pj_b') or
+            (style[:4] == 'wh_b') or (style[:4] == 'sa_b') or
+            (style[:4] == 'sc_b') or (style[:5] == 'sil_b')):
+            continue
         
         bottomIdx = BottomStyles[style][0]
         # What type of texture is at this index?
-        if gender == 'f':
+        #if gender == 'f':
             # Female textures can be shorts or skirts
-            textureType = GirlBottoms[bottomIdx][1]
-        else:
+        textureType = Bottoms[bottomIdx][1]
+        #else:
+            #SILLY DISNEY YOU AND YOUR BOOMER WAYS XD
             # All male textures are shorts
-            textureType = SHORTS
+            #textureType = SHORTS
         if ((output == 'both') or
             ((output == 'skirts') and (textureType == SKIRT)) or
             ((output == 'shorts') and (textureType == SHORTS))):
             for color in BottomStyles[style][1]:
                 bottoms.append((bottomIdx, color))
     return bottoms
+
 
 # color defines
 
@@ -1590,12 +1699,8 @@ allColorsList = [
 
 # *This* is the list of color choices presented by make-a-toon.  It
 # indexes into the above array.
-defaultBoyColorList = [0, 1,
-    2, 3, 4, 5, 6, 7, 8, 9, 10, 12,
-    13, 14, 15, 16, 17, 18, 19, 20,
-    21, 22,23, 24, 25, 26
-    ]
-defaultGirlColorList = [0,
+
+defaultColorList = [0,
     1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12,
     13, 14, 15, 16, 17, 18, 19, 21, 22,
     23, 24, 25, 26
@@ -2083,7 +2188,7 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         Avatar DNA print method
         """
         string = "type = toon\n"
-        string = string + "gender = %s\n" % (self.gender)
+        #string = string + "gender = %s\n" % (self.gender)
         string = string + "head = %s, torso = %s, legs = %s\n" % \
                   (self.head, self.torso, self.legs)
         string = string + "arm color = %d\n" % \
@@ -2094,12 +2199,27 @@ class ToonDNA(AvatarDNA.AvatarDNA):
                  (self.legColor)
         string = string + "head color = %d\n" % \
                  (self.headColor)
+        string = string + f'eyeslashes = {self.eyelashes}\n'
         string = string + "top texture = %d\n" % self.topTex
         string = string + "top texture color = %d\n" % self.topTexColor
         string = string + "sleeve texture = %d\n" % self.sleeveTex
         string = string + "sleeve texture color = %d\n" % self.sleeveTexColor
         string = string + "bottom texture = %d\n" % self.botTex
         string = string + "bottom texture color = %d\n" % self.botTexColor
+        string = string + f'hat model{self.hatModel}\n'
+        string = string + f"hat texture{self.hatTex}\n"
+        string = string + f"hat texture color{self.hatColor}\n"
+        string = string + f'glasses model{self.glassesModel}\n'
+        string = string + f"glasses texture{self.glassesTex}\n"
+        string = string + f"glasses texture color{self.glassesColor}\n"
+        string = string + f'backpack model{self.backpackModel}\n'
+
+        string = string + f"backpack texture{self.backpackTex}\n"
+        string = string + f"backpack texture color{self.backpackColor}\n"
+        string = string + f'shoes model{self.shoesModel}\n'
+
+        string = string + f"shoes texture{self.shoesTex}\n"
+        string = string + f"shoes texture color{self.shoesColor}\n"
         return string
 
 
@@ -2112,27 +2232,39 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             headIndex = toonHeadTypes.index(self.head)
             torsoIndex = toonTorsoTypes.index(self.torso)
             legsIndex = toonLegTypes.index(self.legs)
-            dg.addUint8(headIndex)
+            dg.addUint8(headIndex)           
             dg.addUint8(torsoIndex)
             dg.addUint8(legsIndex)
-            if self.gender == 'm':
-                # male is 1
-                dg.addUint8(1)
-            else:
-                # female is 0
-                dg.addUint8(0)
+            #Remove gender so we'll go with 0 for female
+            #dg.addUint8(0)
             # Clothes
+            dg.addUint8(self.eyelashes)
             dg.addUint8(self.topTex) # We assume < 256 textures.
             dg.addUint8(self.topTexColor)
             dg.addUint8(self.sleeveTex)
             dg.addUint8(self.sleeveTexColor)
             dg.addUint8(self.botTex)
             dg.addUint8(self.botTexColor)
+            #Accessories 
+            dg.addUint8(self.hatModel)
+            dg.addUint8(self.hatTex)
+            dg.addUint8(self.hatColor)
+            dg.addUint8(self.glassesModel)
+            dg.addUint8(self.glassesTex)
+            dg.addUint8(self.glassesColor)
+            dg.addUint8(self.backpackModel)
+            dg.addUint8(self.backpackTex)
+            dg.addUint8(self.backpackColor)
+            dg.addUint8(self.shoesModel)
+            dg.addUint8(self.shoesTex)
+            dg.addUint8(self.shoesColor) 
             # Colors
             dg.addUint8(self.armColor) # We assume < 256 colors.
             dg.addUint8(self.gloveColor)
             dg.addUint8(self.legColor)
             dg.addUint8(self.headColor)
+
+
         elif (self.type == 'u'):
             notify.error("undefined avatar")
         else:
@@ -2143,7 +2275,7 @@ class ToonDNA(AvatarDNA.AvatarDNA):
     def isValidNetString(self, string):
         dg=PyDatagram(string)
         dgi=PyDatagramIterator(dg)
-        if dgi.getRemainingSize() != 15:
+        if dgi.getRemainingSize() != 27:
             return False
         type = dgi.getFixedString(1)
         if type not in ('t', ):
@@ -2152,19 +2284,16 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         headIndex = dgi.getUint8()
         torsoIndex = dgi.getUint8()
         legsIndex = dgi.getUint8()
+        eyelashes = dgi.getUint8()
 
         if headIndex >= len(toonHeadTypes):
+            return False
+        if eyelashes >= 1:
             return False
         if torsoIndex >= len(toonTorsoTypes):
             return False
         if legsIndex >= len(toonLegTypes):
             return False
-
-        gender = dgi.getUint8()
-        if gender == 1:
-            gender = 'm'
-        else:
-            gender = 'f'
 
         topTex = dgi.getUint8()
         topTexColor = dgi.getUint8()
@@ -2172,6 +2301,18 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         sleeveTexColor = dgi.getUint8()
         botTex = dgi.getUint8()
         botTexColor = dgi.getUint8()
+        hatModel = dgi.getUint8()
+        hatTex = dgi.getUint8()
+        hatColor = dgi.getUint8()
+        glassesModel = dgi.getUint8()
+        glassesTex = dgi.getUint8()
+        glassesColor = dgi.getUint8()
+        backpackModel = dgi.getUint8()
+        backpackTex = dgi.getUint8()
+        backpackColor = dgi.getUint8()
+        shoesModel = dgi.getUint8()
+        shoesTex = dgi.getUint8()
+        shoesColor = dgi.getUint8()
         armColor = dgi.getUint8()
         gloveColor = dgi.getUint8()
         legColor = dgi.getUint8()
@@ -2185,9 +2326,33 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             return False
         if sleeveTexColor >= len(ClothesColors):
             return False
-        if botTex >= choice(gender == 'm', len(BoyShorts), len(GirlBottoms)):
+        if botTex >= len(Bottoms):
             return False
         if botTexColor >= len(ClothesColors):
+            return False
+        if hatModel >= len(HatModels):
+            return False
+        if hatTex >= len(HatTextures):
+            return False
+        if hatColor >= len(ClothesColors):
+            return False
+        if glassesModel >= len(GlassesModels):
+            return False
+        if glassesTex >= len(GlassesTextures):
+            return False
+        if glassesColor >= len(ClothesColors):
+            return False
+        if backpackModel >= len(BackpackModels):
+            return False
+        if backpackTex >= len(BackpackTextures):
+            return False
+        if backpackColor >= len(ClothesColors):
+            return False
+        if shoesModel >= len(ShoesModels):
+            return False
+        if shoesTex >= len(ShoesTextures):
+            return False
+        if shoesColor >= len(ClothesColors):
             return False
         if armColor >= len(allColorsList):
             return False
@@ -2206,22 +2371,37 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         self.type = dgi.getFixedString(1)
         if (self.type == 't'):  # Toon
             headIndex = dgi.getUint8()
+            
+
             torsoIndex = dgi.getUint8()
             legsIndex = dgi.getUint8()
             self.head = toonHeadTypes[headIndex]
             self.torso = toonTorsoTypes[torsoIndex]
             self.legs = toonLegTypes[legsIndex]
-            gender = dgi.getUint8()
-            if gender == 1:
-                self.gender = 'm'
-            else:
-                self.gender = 'f'
-            self.topTex = dgi.getUint8()
+            #gender = dgi.getUint8()
+           # if gender == 1:
+           #     self.gender = 'm'
+          #  else:
+          #      self.gender = 'f'
+            self.eyelashes = dgi.getUint8()
+            self.topTex = dgi.getUint8() 
             self.topTexColor = dgi.getUint8()
             self.sleeveTex = dgi.getUint8()
             self.sleeveTexColor = dgi.getUint8()
             self.botTex = dgi.getUint8()
             self.botTexColor = dgi.getUint8()
+            self.hatModel = dgi.getUint8()
+            self.hatTex = dgi.getUint8()
+            self.hatColor = dgi.getUint8()
+            self.glassesModel = dgi.getUint8()
+            self.glassesTex = dgi.getUint8()
+            self.glassesColor = dgi.getUint8()      
+            self.backpackModel = dgi.getUint8()
+            self.backpackTex = dgi.getUint8()
+            self.backpackColor = dgi.getUint8()
+            self.shoesModel = dgi.getUint8()
+            self.shoesTex = dgi.getUint8()
+            self.shoesColor = dgi.getUint8()
             self.armColor = dgi.getUint8()
             self.gloveColor = dgi.getUint8()
             self.legColor = dgi.getUint8()
@@ -2257,13 +2437,27 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             self.head = dna[0]
             self.torso = dna[1]
             self.legs = dna[2]
-            self.gender = dna[3]
+            #self.gender = dna[3]
+            self.eyelashes = 0
             self.topTex = 0
             self.topTexColor = 0
             self.sleeveTex = 0
             self.sleeveTexColor = 0
             self.botTex = 0
             self.botTexColor = 0
+            self.hatModel = 0 
+            self.hatTex = 0
+            self.hatColor = 0
+            self.glassesModel = 0
+            self.glassesTex = 0
+            self.glassesColor = 0
+            self.backpackModel = 0
+            self.backpackTex = 0
+            self.backpackColor = 0
+            self.shoesModel = 0
+            self.shoesTex = 0
+            self.shoesColor = 0
+
 
             if (color == None):
                 color = self.defaultColor()
@@ -2277,11 +2471,15 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         else:
             notify.error("tuple must be in format ('%s', '%s', '%s', '%s')")
 
-    def newToonFromProperties(self, head, torso, legs, gender,
+    def newToonFromProperties(self, head, torso, legs, eyelashes,
                               armColor, gloveColor, legColor, headColor,
                               topTexture, topTextureColor, sleeveTexture,
                               sleeveTextureColor, bottomTexture,
-                              bottomTextureColor):
+                              bottomTextureColor,
+                              hat=0, hatTex=0, hatColor=0,
+                              glasses=0, glassesTex=0, glassesColor=0,
+                              backpack=0, backpackTex=0, backpackColor=0,
+                              shoes=0, shoesTex=0, shoesColor=0):
         """
         Fill in Toon dna using known parameters for all values. Example:
         dna.newToonFromProperties('dll', 'md', 'l', 'm', 1, 0, 23, 3, 22, 22, 30)
@@ -2290,27 +2488,55 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         self.head = head
         self.torso = torso
         self.legs = legs
-        self.gender = gender
+        self.eyelashes = eyelashes
         self.armColor = armColor
         self.gloveColor = gloveColor
         self.legColor = legColor
         self.headColor = headColor
+        self.eyelashes = eyelashes
         self.topTex = topTexture
         self.topTexColor = topTextureColor
         self.sleeveTex = sleeveTexture
         self.sleeveTexColor = sleeveTextureColor
         self.botTex = bottomTexture
         self.botTexColor = bottomTextureColor 
+        if not hat:
+            hat, hatTex, hatColor = getRandomHat()
+        if not glasses:
+            glasses, glassesTex, glassesColor = getRandomGlasses()
+        #if not backpack:
+         #   backpack, backpackTex, backpackColor = 0
+       # if not shoes:
+        #    shoes, shoesTex, shoesColor = 0
+        self.hatModel = hat
+        self.hatTex = hatTex
+        self.hatColor = hatColor
+        self.glassesModel = glasses
+        self.glassesTex = glassesTex
+        self.glassesColor = glassesColor
+        self.backpackModel = backpack
+        self.backpackTex = backpackTex
+        self.backpackColor = backpackColor
+        self.shoesModel = shoes
+        self.shoesTex = shoesTex
+        self.shoesColor = shoesColor
         return
 
     def updateToonProperties(self, head = None, torso = None, legs = None,
-                             gender = None, armColor = None, gloveColor = None,
+                            eyelashes = None,
+                             armColor = None, gloveColor = None,
                              legColor = None, headColor = None,
                              topTexture = None, topTextureColor = None,
                              sleeveTexture = None,
                              sleeveTextureColor = None, bottomTexture = None,
                              bottomTextureColor = None,
-                             shirt = None, bottom = None):
+                             hatModel = None, hatTex = None, hatColor = None,
+                             glassesModel = None, glassesTex = None, glassesColor = None,
+                             backpackModel = None, backpackTex = None, backpackColor = None,
+                             shoesModel = None, shoesTex = None, shoesColor = None,
+                             shirt = None, bottom = None,
+                             hat = None, glasses = None,
+                             backpack = None, shoes = None):
 
         # Changes only the named properties.  'shirt' and 'bottom' are
         # special properties that specify an article of clothing with
@@ -2323,8 +2549,8 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             self.torso = torso
         if legs:
             self.legs = legs
-        if gender:
-            self.gender = gender
+        if eyelashes:
+            self.eyelashes = eyelashes
         if armColor:
             self.armColor = armColor
         if gloveColor:
@@ -2346,6 +2572,30 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             self.botTex = bottomTexture
         if bottomTextureColor:
             self.botTexColor = bottomTextureColor
+        if hatModel:
+            self.hatModel = hatModel
+        if hatTex:
+            self.hatTex = hatTex
+        if hatColor:
+            self.hatTex = hatTex
+        if glassesModel:
+            self.glassesModel = glassesModel
+        if glassesTex:
+            self.glassesTex = glassesTex
+        if glassesColor:
+            self.glassesColor = glassesColor
+        if backpackModel:
+            self.backpackModel = backpackModel
+        if backpackTex:
+            self.backpackTex = backpackTex
+        if backpackColor:
+            self.backpackColor = backpackColor
+        if shoesModel:
+            self.shoesModel = shoesModel
+        if shoesTex:
+            self.shoesTex = shoesTex
+        if shoesColor:
+            self.shoesColor = shoesColor
         if shirt:
             str, colorIndex = shirt
             defn = ShirtStyles[str]
@@ -2358,10 +2608,34 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             defn = BottomStyles[str]
             self.botTex = defn[0]
             self.botTexColor = defn[1][colorIndex]
+        if hat:
+            str, texIndex, colorIndex = hat
+            defn = HatStyles[str]
+            self.hatModel = defn[0]
+            self.hatTex = defn[1][texIndex]
+            self.hatColor = defn[2][colorIndex]
+        if glasses:
+            str, texIndex, colorIndex = glasses
+            defn = GlassesStyles[str]
+            self.glassesModel = defn[0]
+            self.glassesTex = defn[1][texIndex]
+            self.glassesColor = defn[2][colorIndex]
+        if backpack:
+            str, texIndex, colorIndex = backpack
+            defn = BackpackStyles[str]
+            self.backpackModel = defn[0]
+            self.backpackTex = defn[1][texIndex]
+            self.backpackColor = defn[2][colorIndex]
+        if shoes:
+            str, texIndex, colorIndex = shoes
+            defn = BackpackStyles[str]
+            self.shoesModel = defn[0]
+            self.shoesTex = defn[1][texIndex]
+            self.shoesColor = defn[2][colorIndex]
             
         return
 
-    def newToonRandom(self, seed = None, gender = "m", npc = 0, stage = None):
+    def newToonRandom(self, seed = None, eyelashes=None, npc = 0, stage = None):
         """newToonRandom(self, float=None, float=None, float=None)
         Return the dna tuple for a random toon.  Use random
         colors and random clothes textures.
@@ -2372,47 +2646,86 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         else:
             # Just use the normal one
             generator = random
-        
         self.type = "t" # Toon.
         # Skew the leg length toward medium and long:
         self.legs = generator.choice(toonLegTypes + ["m", "l", "l", "l"])
-        self.gender = gender
 
         # We have added the monkey species. It would be weird for existing NPCs
         # to change into monkeys so don't use those heads for NPCs.
         if not npc:
             if (stage == MAKE_A_TOON):
-                if not base.cr.isPaid():
-                    animalIndicesToUse = allToonHeadAnimalIndicesTrial
-                else:
-                    animalIndicesToUse = allToonHeadAnimalIndices
+                animalIndicesToUse = allToonHeadAnimalIndices
                 animal = generator.choice(animalIndicesToUse)
                 self.head = toonHeadTypes[animal]
+                hatModel = 0 
+                hatTex = 0
+                hatColor = 0
+                glassesModel = 0 
+                glassesTex = 0
+                glassesColor = 0
+                backpackModel = 0
+                backpackTex = 0
+                backpackColor = 0 
+                shoesModel = 0
+                shoesTex = 0
+                shoesColor = 0
+                top, topColor, sleeve, sleeveColor = getRandomTop( generator = generator)
+                bottom, bottomColor = getRandomBottom( generator = generator)
+
             else:
                 self.head = generator.choice(toonHeadTypes)
+                top, topColor, sleeve, sleeveColor = getRandomTop( generator = generator)
+                bottom, bottomColor = getRandomBottom( generator = generator)
+                hatModel, hatTex, hatColor = getRandomHat(generator = generator)
+                glassesModel, glassesTex, glassesColor = getRandomGlasses(generator = generator)
+                backpackModel, backpackTex, backpackColor = getRandomBackpack(generator = generator)
+                shoesModel, shoesTex, shoesColor = getRandomShoes(generator = generator)
+                
         else:
             self.head = generator.choice(toonHeadTypes[:22])
-        top, topColor, sleeve, sleeveColor = getRandomTop(gender, generator = generator)
-        bottom, bottomColor = getRandomBottom(gender, generator = generator)
-        if gender == "m":
-            self.torso = generator.choice(toonTorsoTypes[:3])
+            top, topColor, sleeve, sleeveColor = getRandomTop( generator = generator)
+            bottom, bottomColor = getRandomBottom( generator = generator)
+            hatModel, hatTex, hatColor = getRandomHat(generator = generator)
+            glassesModel, glassesTex, glassesColor = getRandomGlasses(generator = generator)
+            backpackModel, backpackTex, backpackColor = getRandomBackpack(generator = generator)
+            shoesModel, shoesTex, shoesColor = getRandomShoes(generator = generator)
+        #if gender == "m":
+            #Hopefully this is gender neutral option
+        self.torso = generator.choice(toonTorsoTypes[:6])
+        #self.torso = generator.choice(toonTorsoTypes[:3])
             # Choose a random boy shirt style from MakeAToon
-            self.topTex = top
-            self.topTexColor = topColor 
-            self.sleeveTex = sleeve
-            self.sleeveTexColor = sleeveColor
-            self.botTex = bottom 
-            self.botTexColor = bottomColor
-            color = generator.choice(defaultBoyColorList)
-            self.armColor = color
-            self.legColor = color
-            self.headColor = color
+      
+        self.sleeveTex = sleeve
+        self.sleeveTexColor = sleeveColor
+        self.botTex = bottom 
+        self.botTexColor = bottomColor
+        self.hatModel = hatModel
+        self.hatTex = hatTex
+        self.hatColor = hatColor
+        self.glassesModel = glassesModel
+        self.glassesTex = glassesTex
+        self.glassesColor = glassesColor
+        self.backpackModel = backpackModel
+        self.backpackTex = backpackTex
+        self.backpackColor = backpackColor
+        self.shoesModel = shoesModel
+        self.shoesTex = shoesTex
+        self.shoesColor = shoesColor
+        color = generator.choice(defaultColorList)
+        self.armColor = color
+        self.legColor = color
+        self.headColor = color
+        #TODO check if npc otherwise set eyelashes to random
+        if eyelashes:
+            self.eyelashes = eyelashes
         else:
-            self.torso = generator.choice(toonTorsoTypes[:6])
-            self.topTex = top
-            self.topTexColor = topColor
-            self.sleeveTex = sleeve
-            self.sleeveTexColor = sleeveColor
+            self.eyelashes = random.randint(0, 1)
+        #else:
+        self.torso = generator.choice(toonTorsoTypes[:6])
+        self.topTex = top
+        self.topTexColor = topColor
+        self.sleeveTex = sleeve
+        self.sleeveTexColor = sleeveColor
             
 ##            # Make sure the bottom type matches the torso type
 ##            if (self.torso[1] == 'd'):
@@ -2425,25 +2738,24 @@ class ToonDNA(AvatarDNA.AvatarDNA):
 ##                self.botTexColor = color
                 
             # Make sure the bottom type matches the torso type
-            if (self.torso[1] == 'd'):
-                bottom, bottomColor = getRandomBottom(gender, generator = generator, girlBottomType = SKIRT)
-            else:
-                bottom, bottomColor = getRandomBottom(gender, generator = generator, girlBottomType = SHORTS)
-            self.botTex = bottom 
-            self.botTexColor = bottomColor
-            color = generator.choice(defaultGirlColorList)
-            self.armColor = color
-            self.legColor = color
-            self.headColor = color
+        if (self.torso[1] == 'd'):
+            bottom, bottomColor = getRandomBottom( generator = generator, bottomType = SKIRT)
+        else:
+            bottom, bottomColor = getRandomBottom( generator = generator, bottomType = SHORTS)
 
         # gloves always white
         self.gloveColor = 0
 
     def asTuple(self):
-        return (self.head, self.torso, self.legs, self.gender,
+        return (self.head, self.torso, self.legs,
+                self.eyelashes,
                 self.armColor, self.gloveColor, self.legColor, self.headColor,
                 self.topTex, self.topTexColor, self.sleeveTex, 
-                self.sleeveTexColor, self.botTex, self.botTexColor)
+                self.sleeveTexColor, self.botTex, self.botTexColor,
+                self.hatModel, self.hatTex, self.hatColor,
+                self.glassesModel, self.glassesTex, self.glassesColor,
+                self.backpackModel, self.backpackTex, self.backpackColor,
+                self.shoesModel, self.shoesTex, self.shoesColor)
 
     def getType(self):
         """getType(self)
@@ -2531,8 +2843,7 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         else:
             notify.error("unknown leg size: ", self.legs)
 
-    def getGender(self):
-        return self.gender
+
 
     def getClothes(self):
         """getClothes(self)
