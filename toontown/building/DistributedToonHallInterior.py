@@ -307,7 +307,7 @@ class DistributedToonHallInterior(DistributedToonInterior):
                                                    "phaseFive" : "phase_4/models/props/tt_a_ara_ttc_sillyMeter_phaseFive",
                                                 })
         self.sillyMeter.reparentTo(self.interior)
-
+        self.sillyMetter.setBlend(base.wantSmoothAnimations)
         self.flatSillyMeter = loader.loadModel("phase_3.5/models/modules/tt_m_ara_int_sillyMeterFlat")
         self.flatSillyMeter.reparentTo(self.interior)
         self.flatSillyMeter.hide()

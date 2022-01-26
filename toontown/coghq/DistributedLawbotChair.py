@@ -248,7 +248,7 @@ class DistributedLawbotChair(DistributedObject.DistributedObject, FSM.FSM):
         self.nodePath = Actor.Actor() #NodePath(self.uniqueName("chairNodePath"))        
 
         self.chair = self.nodePath.attachNewNode('myChair')
-
+        
     def disable(self):
         DistributedObject.DistributedObject.disable(self)
         assert(self.boss.chairs.get(self.index) == self)

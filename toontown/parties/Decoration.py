@@ -78,7 +78,7 @@ class Decoration(NodePath):
         elif self._name == "GagGlobe":
             self.partyGlobe = Actor.Actor("phase_13/models/parties/tt_m_ara_pty_gagGlobe_model", \
                                     {'idle' : 'phase_13/models/parties/tt_m_ara_pty_gagGlobe',})
-                                    
+            self.partyGlobe.setBlend(base.wantSmoothAnimations)    
             self.partyGlobe.setBillboardAxis()
             confettiLocator = self.partyGlobe.find("**/uvj_confetti")
             confettiMesh = self.partyGlobe.find("**/innerGlobeMesh")
@@ -122,6 +122,7 @@ class Decoration(NodePath):
             flyingHeartModel = loader.loadModel("phase_13/models/parties/tt_m_ara_pty_heartWing_model")
             self.flyingHeart = Actor.Actor(flyingHeartModel, \
                                     {'idle' : 'phase_13/models/parties/tt_m_ara_pty_heartWing',})
+            self.flyingHeart.setBlend(base.wantSmoothAnimations)
             wingsSeqNodeParent = self.flyingHeart.find("**/heartWingJoint")
             
             # Setup the collision in code, because the collision flag set on
@@ -180,6 +181,7 @@ class Decoration(NodePath):
             self.heartBanner = Actor.Actor("phase_13/models/parties/tt_m_ara_pty_bannerValentine_model", \
                                     {'idle' : 'phase_13/models/parties/tt_m_ara_pty_bannerValentine',})
             
+            self.heartBanner.setBlend(base.wantSmoothAnimations)
             balloonLeft = self.heartBanner.find("**/balloonsL")
             balloonRight = self.heartBanner.find("**/balloonsR")
             balloonLeft.setBillboardAxis()
@@ -197,6 +199,7 @@ class Decoration(NodePath):
                 
             self.hydra = Actor.Actor("phase_13/models/parties/tt_a_ara_pty_hydra_default", \
                                             {'dance' : 'phase_13/models/parties/tt_a_ara_pty_hydra_dance' })
+            self.hydra.setBlend(base.wantSmoothAnimations)
             st = random.randint(0,10)
             animIval = ActorInterval(self.hydra, "dance")
             animIvalDur = animIval.getDuration()
@@ -218,7 +221,8 @@ class Decoration(NodePath):
 
         elif self._name == "TubeCogVictory":
             self.tubeCog = Actor.Actor("phase_13/models/parties/tt_a_ara_pty_tubeCogVictory_default", \
-                                            {'wave' : 'phase_13/models/parties/tt_a_ara_pty_tubeCogVictory_wave' })
+                                              {'wave' : 'phase_13/models/parties/tt_a_ara_pty_tubeCogVictory_wave' })
+            self.tubeCog.setBlend(base.wantSmoothAnimations)
             st = random.randint(0,10)
             animIval = ActorInterval(self.tubeCog, "wave")
             animIvalDur = animIval.getDuration()
@@ -240,6 +244,7 @@ class Decoration(NodePath):
             self.bannerVictory = Actor.Actor("phase_13/models/parties/tt_m_ara_pty_bannerVictory_model", \
                                     {'idle' : 'phase_13/models/parties/tt_m_ara_pty_bannerVictory',})
 
+            self.bannerVictory.setBlend(base.wantSmoothAnimations)
             balloonLeft = self.bannerVictory.find("**/balloonsLMesh")
             balloonRight = self.bannerVictory.find("**/balloonsRMesh")
             balloonLeft.setBillboardAxis()
@@ -257,6 +262,7 @@ class Decoration(NodePath):
             self.cannonVictory = Actor.Actor("phase_13/models/parties/tt_m_ara_pty_cannonVictory_model", \
                                     {'idle' : 'phase_13/models/parties/tt_m_ara_pty_cannonVictory',})
             
+            self.cannonVictory.setBlend(base.wantSmoothAnimations)
             # NOTE: -expose uvj_confetties creates two nodes with this name: one dummy and one joint. Ignore the dummy.
             confettiLocator = self.cannonVictory.findAllMatches("**/uvj_confetties")[1]
             assert confettiLocator and not confettiLocator.isEmpty()

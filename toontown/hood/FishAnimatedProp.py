@@ -22,6 +22,7 @@ class FishAnimatedProp(AnimatedProp.AnimatedProp):
 
         self.fish.loadAnims({'jump' : "phase_4/models/props/SZ_fish-jump",
                              'swim' : "phase_4/models/props/SZ_fish-swim"})
+        self.fish.setBlend(base.wantSmoothAnimations)
 
         self.splashSfxList = (loader.loadSfx("phase_4/audio/sfx/TT_splash1.ogg"),
                               loader.loadSfx("phase_4/audio/sfx/TT_splash2.ogg"),

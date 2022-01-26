@@ -127,7 +127,8 @@ class MailboxInteractiveProp(InteractiveAnimatedProp.InteractiveAnimatedProp):
         """Add the pie package."""
         self.pieActor = Actor.Actor('phase_5/models/char/tt_r_prp_ext_piePackage', {
             'fightBoost': 'phase_5/models/char/tt_a_prp_ext_piePackage_fightBoost',
-            })        
+            })       
+        self.pieActor.setBlend(base.wantSmoothAnimations)
         self.pieActor.reparentTo(self.node)
         self.pieActor.hide()        
         InteractiveAnimatedProp.InteractiveAnimatedProp.setupActor(self, node)

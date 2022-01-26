@@ -1244,7 +1244,8 @@ class Suit(Avatar.Avatar):
 
                 # set the appropriate tie texture
                 self.generateCorporateTie(self.loseActor)
-
+                
+        self.loseActor.setBlend(base.wantSmoothAnimations)
         # set the scale on the lose actor
         self.loseActor.setScale(self.scale)
 

@@ -150,7 +150,7 @@ class DistributedLawbotBossGavel(DistributedObject.DistributedObject, FSM.FSM):
 
     def makeNodePath(self):
         self.nodePath = Actor.Actor() #NodePath(self.uniqueName("gavelNodePath"))        
-
+        self.nodePath.setBlend(base.wantSmoothAnimations)
  
 
         

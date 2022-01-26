@@ -70,6 +70,7 @@ class FishBase:
             "intro": prefix + fileInfo[2],
             "swim":  prefix + fileInfo[3],
             })
+        actor.setBlend(base.wantSmoothAnimations)
         return actor
 
     def getSound(self):

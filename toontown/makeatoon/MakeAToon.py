@@ -309,18 +309,21 @@ class MakeAToon(StateData.StateData):
 
         # These are the drop and scale joints that the rooms are going to be parented to during transitions.
         self.roomDropActor = Actor()
+        self.roomDropActor.setBlend(base.wantSmoothAnimations)
         self.roomDropActor.loadModel('phase_3/models/makeatoon/roomAnim_model')
         self.roomDropActor.loadAnims({'drop':'phase_3/models/makeatoon/roomAnim_roomDrop'})
         self.roomDropActor.reparentTo(render)
         self.dropJoint = self.roomDropActor.find('**/droppingJoint')
 
         self.roomSquishActor = Actor()
+        self.roomSquishActor.setBlend(base.wantSmoothAnimations)
         self.roomSquishActor.loadModel('phase_3/models/makeatoon/roomAnim_model')
         self.roomSquishActor.loadAnims({'squish':'phase_3/models/makeatoon/roomAnim_roomSquish'})
         self.roomSquishActor.reparentTo(render)
         self.squishJoint = self.roomSquishActor.find('**/scalingJoint')
 
         self.propSquishActor = Actor()
+        self.propSquishActor.setBlend(base.wantSmoothAnimations)
         self.propSquishActor.loadModel('phase_3/models/makeatoon/roomAnim_model')
         self.propSquishActor.loadAnims({'propSquish':'phase_3/models/makeatoon/roomAnim_propSquish'})
         self.propSquishActor.reparentTo(render)
@@ -328,6 +331,7 @@ class MakeAToon(StateData.StateData):
         self.propJoint = self.propSquishActor.find('**/propJoint')
 
         self.spotlightActor = Actor()
+        self.spotlightActor.setBlend(base.wantSmoothAnimations)
         self.spotlightActor.loadModel('phase_3/models/makeatoon/roomAnim_model')
         self.spotlightActor.loadAnims({'spotlightShake':'phase_3/models/makeatoon/roomAnim_spotlightShake'})
         self.spotlightActor.reparentTo(render)

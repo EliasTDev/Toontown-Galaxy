@@ -105,7 +105,7 @@ class DistributedPhone(DistributedFurnitureItem.DistributedFurnitureItem):
               'LL_phoneNeutral' : 'phase_5.5/models/estate/prop_phone-LL_phoneNeutral',
               'LL_phoneBack' : 'phase_5.5/models/estate/prop_phone-LL_phoneBack',
               })
-
+        self.model.setBlend(base.wantSmoothAnimations)
         self.model.pose('SS_phoneOut', 0)
 
         self.receiverJoint = self.model.find('**/joint_receiver')

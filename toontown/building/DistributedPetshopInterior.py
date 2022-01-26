@@ -115,6 +115,7 @@ class DistributedPetshopInterior(DistributedObject.DistributedObject):
             'phase_4/models/props/interiorfish-zero',
             { 'swim' : 'phase_4/models/props/interiorfish-swim',})
         self.fish.reparentTo(self.interior)
+        self.fish.setBlend(base.wantSmoothAnimations)
 
         # Give them a little bluish green color to make it seem like they
         # are behind the glass. The 0.8 alpha makes their fins a little
