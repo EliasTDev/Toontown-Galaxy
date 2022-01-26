@@ -151,7 +151,7 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
 
 
 
-    def setDNA(self, hatIdx, hatTexture, hatColor, glassesIdx, glassesTexture, glassesColor, backpackIdx, backpackTexture, backpackColor, shoesIdx, shoesTexture, shoesColor, blob, finished, which):
+    def setDNA(self, blob, finished, which):
         avId = self.air.getAvatarIdFromSender()
         if avId != self.customerId:
             if self.customerId:
@@ -160,31 +160,19 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
             return
         if (avId in self.air.doId2do):
             av = self.air.doId2do[avId]
-            hat = (hatIdx, hatTexture, hatColor)
-            glasses = (glassesIdx, glassesTexture, glassesColor)
-            backpack = (backpackIdx, backpackTexture, backpackColor)
-            shoes = (shoesIdx, shoesTexture, shoesColor)
-            accessories = (hat, glasses, backpack, shoes)
-
-            types = (ToonDNA.HAT, ToonDNA.GLASSES, ToonDNA.BACKPACK, ToonDNA.SHOES)
-            for i, accessory in enumerate(accessories):
-                if not av.checkAccessorySanity(types[i], *accessory):
-                    return
             testDNA = ToonDNA.ToonDNA()
             if not testDNA.isValidNetString(blob):
                 self.air.writeServerEvent('suspicious', avId, 'DistributedTrunkAI.setDNA: invalid dna: %s' % blob)
                 return
             if finished == 0:
-                self.sendUpdate('setCustomerDNA',
-                            [avId, hatIdx, hatTexture, hatColor, glassesIdx, glassesTexture, glassesColor, backpackIdx,
-                             backpackTexture, backpackColor, shoesIdx, shoesTexture, shoesColor, which])
+                #TODO security check here
+                #make sure they are only changing accessories here with client
+                self.sendUpdate("setCustomerDNA", [avId, blob])
+
                 return
 
             elif finished == 1:
-                av.b_setHat(*self.customerDNA[0])
-                av.b_setGlasses(*self.customerDNA[1])
-                av.b_setBackpack(*self.customerDNA[2])
-                av.b_setShoes(*self.customerDNA[3])
+                av.b_setDNAString(self.customerDNA.makeNetString())
                 self.customerId = 0
                 self.customerDNA = None
                 self.deletedGlasses = []
@@ -195,20 +183,27 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
                 self.glassesList = []
                 self.backpackList = []
                 self.shoesList = []
-                self.sendUpdate('setMovie', [ClosetGlobals.CLOSET_MOVIE_COMPLETE, avId, ClockDelta.globalClockDelta.getRealNetworkTime()])
-                self.sendUpdate('setMovie', [ClosetGlobals.CLOSET_MOVIE_CLEAR, 0, ClockDelta.globalClockDelta.getRealNetworkTime()])
-                self.sendUpdate('setCustomerDNA', [0 for i in range(14)])
-                self.sendUpdate('setState', [ClosetGlobals.CLOSED, 0, self.ownerId, self.hatList, self.glassesList,
-                            self.backpackList, self.shoesList])
 
             elif finished == 2:
 
                 if self.ownerId != avId:
                     self.air.writeServerEvent('suspicious', avId, 'Toon tried to take accessories that are not theirs.')
                     return
+                newDNA = self.updateToonAccessories(av, blob)
+                hat = (newDNA.hatModel, newDNA.hatTex, newDNA.hatColor)
+                glasses = (newDNA.glassesModel, newDNA.glassesTex, newDNA.glassesColor)
+                backpack = (newDNA.backpackModel, newDNA.backpackTex, newDNA.backpackColor)
+                shoes = (newDNA.shoesModel, newDNA.shoesTex, newDNA.shoesColor)
+                accessories = (hat, glasses, backpack, shoes)
+
+                types = (ToonDNA.HAT, ToonDNA.GLASSES, ToonDNA.BACKPACK, ToonDNA.SHOES)
+                for i, accessory in enumerate(accessories):
+                    if not av.checkAccessorySanity(types[i], *accessory):
+                        #TODO do something better here then just returning 
+                        return
                 oldToNew = tuple([accessories[i] + self.customerDNA[i] for i in range(len(self.customerDNA))])
                 if which & ToonDNA.HAT:
-                    if av.replaceItemInAccessoriesList(ToonDNA.HAT, *oldToNew[0]):
+                    if av.replaceItemInAccessoriesList(ToonDNA.HAT, oldToNew[0]):
                         av.b_setHat(*hat)
 
 
@@ -237,11 +232,11 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
                 self.customerId = 0
                 self.customerDNA = None
                 self.__finalizeDelete()
-                self.sendUpdate('setMovie', [ClosetGlobals.CLOSET_MOVIE_COMPLETE, avId, ClockDelta.globalClockDelta.getRealNetworkTime()])
-                self.sendUpdate('setMovie', [ClosetGlobals.CLOSET_MOVIE_CLEAR, 0, ClockDelta.globalClockDelta.getRealNetworkTime()])
-                self.sendUpdate('setCustomerDNA', [0 for x in range(14)])
-                self.sendUpdate('setState', [ClosetGlobals.CLOSED, 0, self.ownerId, self.hatList, self.glassesList,
-                            self.backpackList, self.shoesList])
+                #self.sendUpdate('setMovie', [ClosetGlobals.CLOSET_MOVIE_COMPLETE, avId, ClockDelta.globalClockDelta.getRealNetworkTime()])
+                #self.sendUpdate('setMovie', [ClosetGlobals.CLOSET_MOVIE_CLEAR, 0, ClockDelta.globalClockDelta.getRealNetworkTime()])
+                #self.sendUpdate('setCustomerDNA', [0 for x in range(14)])
+                #self.sendUpdate('setState', [ClosetGlobals.CLOSED, 0, self.ownerId, self.hatList, self.glassesList,
+                #            self.backpackList, self.shoesList])
             else:
                 self.notify.warning('no av for avId: %d' % avId)
         if (self.timedOut == 1 or finished == 0 or finished == 4):
@@ -374,8 +369,7 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
                                      ClockDelta.globalClockDelta.getRealNetworkTime()])
         self.sendUpdate('setState', [ClosetGlobals.CLOSED, avId, self.ownerId, self.hatList, self.glassesList,
                         self.backpackList, self.shoesList])
-        self.sendUpdate("setCustomerDNA", [0 for i in range(14)])
-
+        self.sendUpdate("setCustomerDNA", [0, ''])
         #RAU kill mem leak when opening closet that's not yours
         if self.dummyToonAI:
             self.dummyToonAI.deleteDummy()

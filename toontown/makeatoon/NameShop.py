@@ -152,6 +152,7 @@ class NameShop(StateData.StateData):
 
         self.fsm.enterInitialState()
         self.requestingSkipTutorial = False
+        self.namePanel = None
         return None
 
     def makeLabel(self, te, index, others):
@@ -245,72 +246,72 @@ class NameShop(StateData.StateData):
 
 
 
-            nameShopGui = loader.loadModel("phase_3/models/gui/tt_m_gui_mat_nameShop")
-            self.namePanel = DirectFrame(
-                parent = aspect2d,
-                image = None,
-                relief = 'flat',
-                state = 'disabled',
-                pos = (-0.42, 0, -0.15),
-                image_pos = (0, 0, 0.025),
-                frameColor = (1,1,1,0.3),
-                )
-
-            panel = nameShopGui.find("**/tt_t_gui_mat_namePanel")
-            self.panelFrame = DirectFrame(
-                image = panel,
-                scale = (.75, .7, .7),
-                relief = 'flat',
-                frameColor = (1,1,1,0),
-                pos = (-0.0163, 0, 0.1199)
+        nameShopGui = loader.loadModel("phase_3/models/gui/tt_m_gui_mat_nameShop")
+        self.namePanel = DirectFrame(
+            parent = aspect2d,
+            image = None,
+            relief = 'flat',
+            state = 'disabled',
+            pos = (-0.42, 0, -0.15),
+            image_pos = (0, 0, 0.025),
+            frameColor = (1,1,1,0.3),
             )
-            self.panelFrame.reparentTo(self.namePanel, sort = 1)
 
-            self.pickANameGUIElements.append(self.namePanel)
-            self.pickANameGUIElements.append(self.panelFrame)
-            self.nameResult.reparentTo(self.namePanel, sort = 2)
+        panel = nameShopGui.find("**/tt_t_gui_mat_namePanel")
+        self.panelFrame = DirectFrame(
+            image = panel,
+            scale = (.75, .7, .7),
+            relief = 'flat',
+            frameColor = (1,1,1,0),
+            pos = (-0.0163, 0, 0.1199)
+        )
+        self.panelFrame.reparentTo(self.namePanel, sort = 1)
 
-                # Add check boxes!
-            self.circle = nameShopGui.find("**/tt_t_gui_mat_namePanelCircle")
-            self.titleCheck = self.makeCheckBox(
-                (-0.615, 0, 0.371), TTLocalizer.TitleCheckBox,
-                (0,0.25,0.5,1), self.titleToggle)
-            self.firstCheck = self.makeCheckBox(
-                (-0.2193, 0, 0.371), TTLocalizer.FirstCheckBox,
-                (0,0.25,0.5,1), self.firstToggle)
-            self.lastCheck = self.makeCheckBox(
-                (0.3886, 0, 0.371), TTLocalizer.LastCheckBox,
-                (0,0.25,0.5,1), self.lastToggle)
+        self.pickANameGUIElements.append(self.namePanel)
+        self.pickANameGUIElements.append(self.panelFrame)
+        self.nameResult.reparentTo(self.namePanel, sort = 2)
 
-            # Don't attempt to remove the circle, since it's just a
-            # reference to a node within the nameShopGui hierarchy.
-            #self.circle.removeNode()
-            del self.circle
+            # Add check boxes!
+        self.circle = nameShopGui.find("**/tt_t_gui_mat_namePanelCircle")
+        self.titleCheck = self.makeCheckBox(
+            (-0.615, 0, 0.371), TTLocalizer.TitleCheckBox,
+            (0,0.25,0.5,1), self.titleToggle)
+        self.firstCheck = self.makeCheckBox(
+            (-0.2193, 0, 0.371), TTLocalizer.FirstCheckBox,
+            (0,0.25,0.5,1), self.firstToggle)
+        self.lastCheck = self.makeCheckBox(
+            (0.3886, 0, 0.371), TTLocalizer.LastCheckBox,
+            (0,0.25,0.5,1), self.lastToggle)
 
-            # Make the check buttons pretty
-            self.pickANameGUIElements.append(self.titleCheck)
-            self.pickANameGUIElements.append(self.firstCheck)
-            self.pickANameGUIElements.append(self.lastCheck)
-            self.titleCheck.reparentTo(self.namePanel, sort = 2)
-            self.firstCheck.reparentTo(self.namePanel, sort = 2)
-            self.lastCheck.reparentTo(self.namePanel, sort = 2)
+        # Don't attempt to remove the circle, since it's just a
+        # reference to a node within the nameShopGui hierarchy.
+        #self.circle.removeNode()
+        del self.circle
 
-            nameShopGui.removeNode()
+        # Make the check buttons pretty
+        self.pickANameGUIElements.append(self.titleCheck)
+        self.pickANameGUIElements.append(self.firstCheck)
+        self.pickANameGUIElements.append(self.lastCheck)
+        self.titleCheck.reparentTo(self.namePanel, sort = 2)
+        self.firstCheck.reparentTo(self.namePanel, sort = 2)
+        self.lastCheck.reparentTo(self.namePanel, sort = 2)
 
-            self.lastprefixScrollList.reparentTo(self.namePanel)
-            self.lastprefixScrollList.decButton.wrtReparentTo(self.namePanel, sort = 2)
-            self.lastprefixScrollList.incButton.wrtReparentTo(self.namePanel, sort = 2)
-            self.lastsuffixScrollList.reparentTo(self.namePanel)
-            self.lastsuffixScrollList.decButton.wrtReparentTo(self.namePanel, sort = 2)
-            self.lastsuffixScrollList.incButton.wrtReparentTo(self.namePanel, sort = 2)
+        nameShopGui.removeNode()
 
-            self.titleHigh.reparentTo(self.namePanel)
-            self.prefixHigh.reparentTo(self.namePanel)
-            self.firstHigh.reparentTo(self.namePanel)
-            self.suffixHigh.reparentTo(self.namePanel)
+        self.lastprefixScrollList.reparentTo(self.namePanel)
+        self.lastprefixScrollList.decButton.wrtReparentTo(self.namePanel, sort = 2)
+        self.lastprefixScrollList.incButton.wrtReparentTo(self.namePanel, sort = 2)
+        self.lastsuffixScrollList.reparentTo(self.namePanel)
+        self.lastsuffixScrollList.decButton.wrtReparentTo(self.namePanel, sort = 2)
+        self.lastsuffixScrollList.incButton.wrtReparentTo(self.namePanel, sort = 2)
 
-            self.randomButton.reparentTo(self.namePanel, sort = 2)
-            self.typeANameButton.reparentTo(self.namePanel, sort = 2)
+        self.titleHigh.reparentTo(self.namePanel)
+        self.prefixHigh.reparentTo(self.namePanel)
+        self.firstHigh.reparentTo(self.namePanel)
+        self.suffixHigh.reparentTo(self.namePanel)
+
+        self.randomButton.reparentTo(self.namePanel, sort = 2)
+        self.typeANameButton.reparentTo(self.namePanel, sort = 2)
 
         self.pickANameGUIElements.remove(self.titleScrollList)
         self.pickANameGUIElements.remove(self.firstnameScrollList)

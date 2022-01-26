@@ -157,7 +157,7 @@ class DistributedTrunk(DistributedCloset.DistributedCloset):
             oldGlasses = self.oldStyle[ToonDNA.GLASSES]
             oldBackpack = self.oldStyle[ToonDNA.BACKPACK]
             oldShoes = self.oldStyle[ToonDNA.SHOES]
-            self.d_setDNA(oldHat[0], oldHat[1], oldHat[2], oldGlasses[0], oldGlasses[1], oldGlasses[2], oldBackpack[0], oldBackpack[1], oldBackpack[2], oldShoes[0], oldShoes[1], oldShoes[2], 1)
+            self.d_setDNA(self.av.getStyle().makeNetString(), 1)
             self.updateToonProperties(hatModel=oldHat[0], hatTex=oldHat[1], hatColor=oldHat[2], glassesModel=oldGlasses[0], glassesTex=oldGlasses[1], glassesColor = oldGlasses[2], backpackModel = oldBackpack[0], backpackTex = oldBackpack[1], backpackColor = oldBackpack[2], shoesModel = oldShoes[0], shoesTex = oldShoes[1], shoesColor = oldShoes[2])
         else:
             self.notify.info('avoided crash in handleCancel')
@@ -171,25 +171,25 @@ class DistributedTrunk(DistributedCloset.DistributedCloset):
 
     def __handleSwapHat(self):
         item = self.av.getHat()
-        self.d_setDNA(item[0], item[1], item[2], N_A, N_A, N_A, N_A, N_A, N_A, N_A, N_A, N_A, 0, ToonDNA.HAT)
+        self.d_setDNA(self.av.getStyle().makeNetString(), 0, ToonDNA.HAT)
         if self.closetGUI:
             self.closetGUI.updateTrashButtons()
 
     def __handleSwapGlasses(self):
         item = self.av.getGlasses()
-        self.d_setDNA(N_A, N_A, N_A, item[0], item[1], item[2], N_A, N_A, N_A, N_A, N_A, N_A, 0, ToonDNA.GLASSES)
+        self.d_setDNA(self.av.getStyle().makeNetString(), 0, ToonDNA.GLASSES)
         if self.closetGUI:
             self.closetGUI.updateTrashButtons()
 
     def __handleSwapBackpack(self):
         item = self.av.getBackpack()
-        self.d_setDNA(N_A, N_A, N_A, N_A, N_A, N_A, item[0], item[1], item[2], N_A, N_A, N_A, 0, ToonDNA.BACKPACK)
+        self.d_setDNA(self.av.getStyle().makeNetString(), 0, ToonDNA.BACKPACK)
         if self.closetGUI:
             self.closetGUI.updateTrashButtons()
 
     def __handleSwapShoes(self):
         item = self.av.getShoes()
-        self.d_setDNA(N_A, N_A, N_A, N_A, N_A, N_A, N_A, N_A, N_A, item[0], item[1], item[2], 0, ToonDNA.SHOES)
+        self.d_setDNA(self.av.getStyle().makeNetString(), 0, ToonDNA.SHOES)
         if self.closetGUI:
             self.closetGUI.updateTrashButtons()
 
@@ -266,7 +266,7 @@ class DistributedTrunk(DistributedCloset.DistributedCloset):
             oldGlasses = self.oldStyle[ToonDNA.GLASSES]
             oldBackpack = self.oldStyle[ToonDNA.BACKPACK]
             oldShoes = self.oldStyle[ToonDNA.SHOES]
-            self.d_setDNA(oldHat[0], oldHat[1], oldHat[2], oldGlasses[0], oldGlasses[1], oldGlasses[2], oldBackpack[0], oldBackpack[1], oldBackpack[2], oldShoes[0], oldShoes[1], oldShoes[2], self.av.getStyle().makeNetString(), 1)
+            self.d_setDNA(self.av.getStyle().makeNetString(), 1, 0)
         else:
             which = 0
             if hasattr(self.closetGUI, 'hatChoice') and hasattr(self.closetGUI, 'glassesChoice') and hasattr(self.closetGUI, 'backpackChoice') and hasattr(self.closetGUI, 'shoesChoice'):
@@ -278,42 +278,29 @@ class DistributedTrunk(DistributedCloset.DistributedCloset):
                     which = which | ToonDNA.BACKPACK
                 if self.closetGUI.shoesChoice != 0 or self.shoesDeleted:
                     which = which | ToonDNA.SHOES
-            hat = self.av.getHat()
-            glasses = self.av.getGlasses()
-            backpack = self.av.getBackpack()
-            shoes = self.av.getShoes()
-            self.d_setDNA(hat[0], hat[1], hat[2], glasses[0], glasses[1], glasses[2], backpack[0], backpack[1], backpack[2], shoes[0], shoes[1], shoes[2], self.av.getStyle().makeNetString(), 2, which)
+           # hat = self.av.getHat()
+           # glasses = self.av.getGlasses()
+           # backpack = self.av.getBackpack()
+          #  shoes = self.av.getShoes()
+            self.d_setDNA(self.av.getStyle().makeNetString(), 2, which)
 
-    def d_setDNA(self, hatIdx, hatTexture, hatColor, glassesIdx, glassesTexture, glassesColor, backpackIdx, backpackTexture, backpackColor, shoesIdx, shoesTexture, shoesColor, blob, finished, which = ToonDNA.HAT | ToonDNA.GLASSES | ToonDNA.BACKPACK | ToonDNA.SHOES):
-        self.sendUpdate('setDNA', [hatIdx,
-         hatTexture,
-         hatColor,
-         glassesIdx,
-         glassesTexture,
-         glassesColor,
-         backpackIdx,
-         backpackTexture,
-         backpackColor,
-         shoesIdx,
-         shoesTexture,
-         shoesColor,
-         blob,
-         finished,
-         which])
+    def d_setDNA(self, blob, finished, which = ToonDNA.HAT | ToonDNA.GLASSES | ToonDNA.BACKPACK | ToonDNA.SHOES):
+        self.sendUpdate('setDNA',  [ blob,finished, which])
 
-    def setCustomerDNA(self, avId, hatIdx, hatTexture, hatColor, glassesIdx, glassesTexture, glassesColor, backpackIdx, backpackTexture, backpackColor, shoesIdx, shoesTexture, shoesColor, which):
+    def setCustomerDNA(self, avId, dnaString):
         if avId and avId != base.localAvatar.doId:
             av = base.cr.doId2do.get(avId, None)
             if av:
                 if self.av == base.cr.doId2do[avId]:
-                    if which & ToonDNA.HAT:
-                        self.av.setHat(hatIdx, hatTexture, hatColor)
-                    if which & ToonDNA.GLASSES:
-                        self.av.setGlasses(glassesIdx, glassesTexture, glassesColor)
-                    if which & ToonDNA.BACKPACK:
-                        self.av.setBackpack(backpackIdx, backpackTexture, backpackColor)
-                    if which & ToonDNA.SHOES:
-                        self.av.setShoes(shoesIdx, shoesTexture, shoesColor)
+                    self.av.style.makeFromNetString(dnaString)
+                   # if which & ToonDNA.HAT:
+                    #    self.av.setHat(hatIdx, hatTexture, hatColor)
+                  #  if which & ToonDNA.GLASSES:
+                    #    self.av.setGlasses(glassesIdx, glassesTexture, glassesColor)
+                  #  if which & ToonDNA.BACKPACK:
+                      #  self.av.setBackpack(backpackIdx, backpackTexture, backpackColor)
+                 #   if which & ToonDNA.SHOES:
+                       # self.av.setShoes(shoesIdx, shoesTexture, shoesColor)
                     self.av.generateToonAccessories()
         return
 

@@ -27,7 +27,7 @@ from direct.showbase.PythonUtil import Functor
 from toontown.distributed import DelayDelete
 import types, functools
 from panda3d.otp import CFThought
-
+from toontown.toon import AccessoryGlobals
 """
 import Toon
 t = Toon.Toon()
@@ -997,6 +997,7 @@ class Toon(Avatar.Avatar, ToonHead):
         # easier just to do these color!'s than to check
         self.swapToonColor(newDNA)
         self.__swapToonClothes(newDNA)
+        self.__swapToonAccessories(newDNA)
 
     def setDNAString(self, dnaString):
         assert self.notify.debugStateCall(self, "animFsm")
@@ -1449,6 +1450,10 @@ class Toon(Avatar.Avatar, ToonHead):
         self.setStyle(dna)
         self.generateToonClothes(fromNet = 1)
 
+    def __swapToonAccessories(self, dna):
+        self.setStyle(dna)
+        self.generateTooonAccessories(fromNet = 1)
+
     def generateToonClothes(self, fromNet = 0):
         """
         Set the textures and colors described in the dna for the clothes
@@ -1545,7 +1550,12 @@ class Toon(Avatar.Avatar, ToonHead):
 
 
     def generateHat(self, fromRTM = False):
-        hat = self.getHat()
+        try:
+            hat =  [self.style.hatModel, self.style.hatTex, self.style.hatColor]
+        except:
+            self.notify.warning('Setting hat failed setting to 0')
+
+            hat = [0, 0, 0]
         if hat[0] >= len(ToonDNA.HatModels):
             self.sendLogSuspiciousEvent('tried to put a wrong hat idx %d' % hat[0])
             return
@@ -1590,7 +1600,11 @@ class Toon(Avatar.Avatar, ToonHead):
         return
 
     def generateGlasses(self, fromRTM = False):
-        glasses = self.getGlasses()
+        try:
+            glasses = [self.style.glassesModel, self.style.glassesTex, self.style.glassesColor]
+        except:
+            self.notify.warning('Setting glasses failed setting to 0')
+            glasses = [0, 0, 0]
         if glasses[0] >= len(ToonDNA.GlassesModels):
             self.sendLogSuspiciousEvent('tried to put a wrong glasses idx %d' % glasses[0])
             return
@@ -1635,7 +1649,11 @@ class Toon(Avatar.Avatar, ToonHead):
         return
 
     def generateBackpack(self, fromRTM = False):
-        backpack = self.getBackpack()
+        try:
+            backpack = [self.style.backpackModel, self.style.backpackTex, self.style.backpackColor]
+        except:
+            self.notify.warning('Setting backpack failed setting to 0')
+            backpack = [0, 0, 0]
         if backpack[0] >= len(ToonDNA.BackpackModels):
             self.sendLogSuspiciousEvent('tried to put a wrong backpack idx %d' % backpack[0])
             return
@@ -1677,7 +1695,11 @@ class Toon(Avatar.Avatar, ToonHead):
         return
 
     def generateShoes(self):
-        shoes = self.getShoes()
+        try:
+            shoes = [self.style.shoesModel, self.style.shoesTex, self.style.shoesColor]
+        except:
+            self.notify.warning('Generating shoes failed , setting to 0')
+            shoes = [0, 0, 0]
         if shoes[0] >= len(ToonDNA.ShoesModels):
             self.sendLogSuspiciousEvent('tried to put a wrong shoes idx %d' % shoes[0])
             return

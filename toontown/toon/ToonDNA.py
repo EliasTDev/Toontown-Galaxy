@@ -2275,7 +2275,7 @@ class ToonDNA(AvatarDNA.AvatarDNA):
     def isValidNetString(self, string):
         dg=PyDatagram(string)
         dgi=PyDatagramIterator(dg)
-        if dgi.getRemainingSize() != 15:
+        if dgi.getRemainingSize() != 27:
             return False
         type = dgi.getFixedString(1)
         if type not in ('t', ):
@@ -2294,7 +2294,6 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             return False
         if legsIndex >= len(toonLegTypes):
             return False
-        eyelashes = dgi.getUint8()
 
         topTex = dgi.getUint8()
         topTexColor = dgi.getUint8()
@@ -2655,22 +2654,41 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         # to change into monkeys so don't use those heads for NPCs.
         if not npc:
             if (stage == MAKE_A_TOON):
-                if not base.cr.isPaid():
-                    animalIndicesToUse = allToonHeadAnimalIndicesTrial
-                else:
-                    animalIndicesToUse = allToonHeadAnimalIndices
+                animalIndicesToUse = allToonHeadAnimalIndices
                 animal = generator.choice(animalIndicesToUse)
                 self.head = toonHeadTypes[animal]
+                hatModel = 0 
+                hatTex = 0
+                hatColor = 0
+                glassesModel = 0 
+                glassesTex = 0
+                glassesColor = 0
+                backpackModel = 0
+                backpackTex = 0
+                backpackColor = 0 
+                shoesModel = 0
+                shoesTex = 0
+                shoesColor = 0
+                top, topColor, sleeve, sleeveColor = getRandomTop( generator = generator)
+                bottom, bottomColor = getRandomBottom( generator = generator)
+
             else:
                 self.head = generator.choice(toonHeadTypes)
+                top, topColor, sleeve, sleeveColor = getRandomTop( generator = generator)
+                bottom, bottomColor = getRandomBottom( generator = generator)
+                hatModel, hatTex, hatColor = getRandomHat(generator = generator)
+                glassesModel, glassesTex, glassesColor = getRandomGlasses(generator = generator)
+                backpackModel, backpackTex, backpackColor = getRandomBackpack(generator = generator)
+                shoesModel, shoesTex, shoesColor = getRandomShoes(generator = generator)
+                
         else:
             self.head = generator.choice(toonHeadTypes[:22])
-        top, topColor, sleeve, sleeveColor = getRandomTop( generator = generator)
-        bottom, bottomColor = getRandomBottom( generator = generator)
-        hatModel, hatTex, hatColor = getRandomHat(generator = generator)
-        glassesModel, glassesTex, glassesColor = getRandomGlasses(generator = generator)
-        backpackModel, backpackTex, backpackColor = getRandomBackpack(generator = generator)
-        shoesModel, shoesTex, shoesColor = getRandomShoes(generator = generator)
+            top, topColor, sleeve, sleeveColor = getRandomTop( generator = generator)
+            bottom, bottomColor = getRandomBottom( generator = generator)
+            hatModel, hatTex, hatColor = getRandomHat(generator = generator)
+            glassesModel, glassesTex, glassesColor = getRandomGlasses(generator = generator)
+            backpackModel, backpackTex, backpackColor = getRandomBackpack(generator = generator)
+            shoesModel, shoesTex, shoesColor = getRandomShoes(generator = generator)
         #if gender == "m":
             #Hopefully this is gender neutral option
         self.torso = generator.choice(toonTorsoTypes[:6])
