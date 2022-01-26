@@ -984,7 +984,7 @@ class Toon(Avatar.Avatar, ToonHead):
         """
         assert self.notify.debugStateCall(self, "animFsm")
         # Make sure gender is updated (for RobotToons)
-        self.style.gender = newDNA.getGender()
+        self.style.eyelashes = newDNA.eyelashes
         # test and only update the new parts
         oldDNA = self.style
         if fForce or (newDNA.head != oldDNA.head):
