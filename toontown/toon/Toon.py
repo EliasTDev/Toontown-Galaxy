@@ -1457,7 +1457,7 @@ class Toon(Avatar.Avatar, ToonHead):
 
     def __swapToonAccessories(self, dna):
         self.setStyle(dna)
-        self.generateTooonAccessories(fromNet = 1)
+        self.generateToonAccessories(fromNet = 1)
 
     def generateToonClothes(self, fromNet = 0):
         """

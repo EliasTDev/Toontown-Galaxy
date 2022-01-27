@@ -1766,28 +1766,44 @@ class DNA(MagicWord):
                 return 'Bottom texture index set to:{0}'.format(str(dna.botTex))
         if part == 'hatModel':
             hatModels = ToonDNA.HatModels
-            if not -1 <= value <= len(hatModels):
+            try:
+                value = int(value)
+            except:
+                return 'value must be an int '
+            if not -1 <= int(value) <= len(hatModels):
                 return f"Hat model index out of range(0-{len(hatModels)}"
             dna.hatModel = value
             invoker.b_setDNAString(dna.makeNetString())
             return f'Hat model index set to : {str(dna.hatModel)}'
         if part == 'glassesModel':
             glassesModel = ToonDNA.glassesModel
-            if not -1 <= value <= len(glassesModel):
+            try:
+                value = int(value)
+            except:
+                return 'value must be an int '
+            if not -1 <= int(value) <= len(glassesModel):
                 return f"Glasses model index out of range(0-{len(glassesModel)}"
             dna.glassesModel = value
             invoker.b_setDNAString(dna.makeNetString())
             return f'Glasses model index set to : {str(dna.glassesModel)}'  
         if part == 'backpackModel':
             backpackModels = ToonDNA.BackpackModels
-            if not -1 <= value <= len(backpackModels):
+            try:
+                value = int(value)
+            except:
+                return 'value must be an int '
+            if not -1 <= int(value) <= len(backpackModels):
                 return f"Backpack model index out of range(0-{len(backpackModels)}"
             dna.backpackModel = value
             invoker.b_setDNAString(dna.makeNetString())
             return f'Backpack model index set to : {str(dna.backpackModel)}'
         if part == 'shoesModel':
             shoesModels = ToonDNA.ShoesModels
-            if not -1 <= value <= len(shoesModels):
+            try:
+                value = int(value)
+            except:
+                return 'value must be an int '
+            if not -1 <= int(value) <= len(shoesModels):
                 return f"Shoes model index out of range(0-{len(shoesModels)}"
             dna.shoesModel = value
             invoker.b_setDNAString(dna.makeNetString())
