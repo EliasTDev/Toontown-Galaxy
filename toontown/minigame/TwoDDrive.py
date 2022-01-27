@@ -140,7 +140,7 @@ class TwoDDrive:
                 messenger.send('avatarStoppedX')
 
         speed = vel.length()
-        action = self.lt.setSpeed(speed, 0)
+        action = self.lt.setSpeed(speed, 0, 0)
         
         if (action != self.lastAction):
             self.lastAction = action

@@ -284,7 +284,7 @@ class DistributedCogThiefGame(DistributedMinigame):
         lt = base.localAvatar
         lt.reparentTo(render)
         self.__placeToon(self.localAvId)
-        lt.setSpeed(0,0)
+        lt.setSpeed(0,0, 0)
 
         self.moveCameraToTop()
         

@@ -291,7 +291,7 @@ class DistributedPairingGame(DistributedMinigame):
         lt.hideName()
         self.__placeToon(self.localAvId)
         lt.setAnimState('Happy', 1.0)
-        lt.setSpeed(0,0)
+        lt.setSpeed(0,0, 0)
 
         self.moveCameraToTop()
 

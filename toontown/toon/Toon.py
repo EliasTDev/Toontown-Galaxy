@@ -28,6 +28,8 @@ from toontown.distributed import DelayDelete
 import types, functools
 from panda3d.otp import CFThought
 from toontown.toon import AccessoryGlobals
+from toontown.toon.OrbitalCamera import OrbitCamera
+
 """
 import Toon
 t = Toon.Toon()
@@ -925,7 +927,7 @@ class Toon(Avatar.Avatar, ToonHead):
         self.animFSM.enterInitialState()
         # Note: When you add an animation to this animFSM list also add it to
         # setAnimStateAllowedList if you want to use setAnimState to change to that animation.
-
+        self.orbitalCamera = OrbitCamera(self) 
     def stopAnimations(self):
         assert self.notify.debugStateCall(self, "animFsm")
         if not self.animFSM.isInternalStateInFlux():

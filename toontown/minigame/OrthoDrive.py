@@ -103,7 +103,7 @@ class OrthoDrive:
 
         ## animate the toon
         speed = vel.length()
-        action = self.lt.setSpeed(speed, 0)
+        action = self.lt.setSpeed(speed, 0, 0)
         if action != self.lastAction:
             self.lastAction = action
             if self.wantSound:
@@ -113,7 +113,7 @@ class OrthoDrive:
                     self.lt.runSound()
                 else:
                     self.lt.stopSound()
-        self.lt.setSpeed(speed, 0)
+        self.lt.setSpeed(speed, 0, 0)
 
         if self.setHeading:
             self.__handleHeading(xVel, yVel)
