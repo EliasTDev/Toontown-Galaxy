@@ -43,6 +43,7 @@ from toontown.hood import ZoneUtil
 from toontown.toon import ToonDNA, NPCToons
 from toontown.parties import PartyGlobals
 from toontown.suit import DistributedSuitPlanner
+from toontown.ai import HolidayManagerAI
 #from toontown.suit import DistributedBossCog
 
 #from otp.ai.AIBaseGlobal import *
@@ -1605,6 +1606,30 @@ class AIMessenger(MagicWord):
         return 'logging AI messenger'
 
 
+class StartHoliday(MagicWord):
+    desc = 'Starts a holiday based on the id specified'
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    accessLevel = 'ADMIN'
+    arguments = [('holidayId', int, 0)]
+    def handleWord(self, invoker, avId, toon, *args):
+        holidayId = args[0]
+        if holidayId in self.air.holidayManager.holidaysCommon:
+            self.air.holidayManager.startHoliday(holidayId)
+            return f'Holiday successfully started {holidayId}'
+        else:
+            return f'Invalid holiday {holidayId}'
+class StopHoliday(MagicWord):
+    desc = 'Starts a holiday based on the id specified'
+    execLocation = MagicWordConfig.EXEC_LOC_SERVER
+    accessLevel = 'ADMIN'
+    arguments = [('holidayId', int, 0)]
+    def handleWord(self, invoker, avId, toon, *args):
+        holidayId = args[0]
+        if holidayId in self.air.holidayManager.holidaysCommon:
+            self.air.holidayManager.endHoliday(holidayId)
+            return f'Holiday successfully ended {holidayId}'
+        else:
+            return f'Invalid holiday {holidayId}'
 
 class DNA(MagicWord):
     aliases = ['dodna']
