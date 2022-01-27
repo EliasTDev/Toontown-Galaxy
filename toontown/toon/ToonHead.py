@@ -7,7 +7,8 @@ furthermore, Toon inherits from this class to define its own head
 piece.
 
 """
-
+from . import ToonDNA
+from . import AccessoryGlobals
 from direct.actor import Actor
 from direct.task import Task
 from toontown.toonbase import ToontownGlobals
@@ -189,6 +190,10 @@ class ToonHead(Actor.Actor):
             self.__eyesClosed = ToonHead.EyesClosed
             self.__height = 0.0
             self.eyelashes = 0
+            self.hatNodes = []
+            self.glassesNodes = []
+            self.hat = (0, 0, 0)
+            self.glasses = (0, 0, 0)
             # Create our own random number generator.  We do this
             # mainly so we don't jumble up the random number chain of
             # the rest of the world (making playback from a session
@@ -596,9 +601,129 @@ class ToonHead(Actor.Actor):
         self.eyelids.request("closed")
         self.eyelids.request("open")
         self.setupMuzzles(style)
-
+        self.generateHat(style, fromRTM=False)
+        self.generateGlasses(style, fromRTM=False)
         return headHeight
 
+    def generateHat(self, style, fromRTM=False):
+        if style:
+            try:
+                hat =  [style.hatModel, style.hatTex, style.hatColor]
+            except:
+                self.notify.warning('Setting hat failed setting to 0')
+                hat = [0, 0, 0]
+        else:
+            try:
+                hat =  [self.style.hatModel, self.style.hatTex, self.style.hatColor]
+            except:
+                self.notify.warning('Setting hat failed setting to 0')
+
+                hat = [0, 0, 0]
+        if hat[0] >= len(ToonDNA.HatModels):
+            self.sendLogSuspiciousEvent('tried to put a wrong hat idx %d' % hat[0])
+            return
+        if len(self.hatNodes) > 0:
+            for hatNode in self.hatNodes:
+                hatNode.removeNode()
+
+            self.hatNodes = []
+        self.showEars()
+        if hat[0] != 0:
+            hatGeom = loader.loadModel(ToonDNA.HatModels[hat[0]], okMissing=True)
+            if hatGeom:
+                if hat[0] == 54:
+                    self.hideEars()
+                if hat[1] != 0:
+                    texName = ToonDNA.HatTextures[hat[1]]
+                    tex = loader.loadTexture(texName, okMissing=True)
+                    if tex is None:
+                        self.sendLogSuspiciousEvent('failed to load texture %s' % texName)
+                    else:
+                        tex.setMinfilter(Texture.FTLinearMipmapLinear)
+                        tex.setMagfilter(Texture.FTLinear)
+                        hatGeom.setTexture(tex, 1)
+                if fromRTM:
+                    importlib.reload(AccessoryGlobals)
+                transOffset = None
+                if AccessoryGlobals.ExtendedHatTransTable.get(hat[0]) and not style:
+                    transOffset = AccessoryGlobals.ExtendedHatTransTable[hat[0]].get(self.style.head[:2])
+                elif AccessoryGlobals.ExtendedHatTransTable.get(hat[0]) and style:
+                    transOffset = AccessoryGlobals.ExtendedHatTransTable[hat[0]].get(style.head[:2])
+                if transOffset is None and not style:
+                    transOffset = AccessoryGlobals.HatTransTable.get(self.style.head[:2])
+                elif transOffset is None and style:
+                    transOffset = AccessoryGlobals.HatTransTable.get(style.head[:2])
+                if transOffset is None:
+                    return
+                hatGeom.setPos(transOffset[0][0], transOffset[0][1], transOffset[0][2])
+                hatGeom.setHpr(transOffset[1][0], transOffset[1][1], transOffset[1][2])
+                hatGeom.setScale(transOffset[2][0], transOffset[2][1], transOffset[2][2])
+                headNodes = self.findAllMatches('**/__Actor_head')
+                for headNode in headNodes:
+                    hatNode = headNode.attachNewNode('hatNode')
+                    self.hatNodes.append(hatNode)
+                    hatGeom.instanceTo(hatNode)
+        return
+
+    def generateGlasses(self, style, fromRTM=False):
+        if not style:
+            try:
+                glasses = [self.style.glassesModel, self.style.glassesTex, self.style.glassesColor]
+            except:
+                self.notify.warning('Setting glasses failed setting to 0')
+                glasses = [0, 0, 0]
+        else:
+            try:
+                glasses = [style.glassesModel, style.glassesTex, style.glassesColor]
+            except:
+                self.notify.warning('Setting glasses failed setting to 0')
+                glasses = [0, 0, 0]            
+        if glasses[0] >= len(ToonDNA.GlassesModels):
+            self.sendLogSuspiciousEvent('tried to put a wrong glasses idx %d' % glasses[0])
+            return
+        if len(self.glassesNodes) > 0:
+            for glassesNode in self.glassesNodes:
+                glassesNode.removeNode()
+
+            self.glassesNodes = []
+        self.showEyelashes()
+        if glasses[0] != 0:
+            glassesGeom = loader.loadModel(ToonDNA.GlassesModels[glasses[0]], okMissing=True)
+            if glassesGeom:
+                if glasses[0] in [15, 16]:
+                    self.hideEyelashes()
+                if glasses[1] != 0:
+                    texName = ToonDNA.GlassesTextures[glasses[1]]
+                    tex = loader.loadTexture(texName, okMissing=True)
+                    if tex is None:
+                        self.sendLogSuspiciousEvent('failed to load texture %s' % texName)
+                    else:
+                        tex.setMinfilter(Texture.FTLinearMipmapLinear)
+                        tex.setMagfilter(Texture.FTLinear)
+                        glassesGeom.setTexture(tex, 1)
+                if fromRTM:
+                    importlib.reload(AccessoryGlobals)
+                transOffset = None
+                if AccessoryGlobals.ExtendedGlassesTransTable.get(glasses[0]) and not style:
+                    transOffset = AccessoryGlobals.ExtendedGlassesTransTable[glasses[0]].get(self.style.head[:2])
+                elif AccessoryGlobals.ExtendedGlassesTransTable.get(glasses[0]) and  style:
+                    transOffset = AccessoryGlobals.ExtendedGlassesTransTable[glasses[0]].get(style.head[:2])
+                if transOffset is None and not style:
+                    transOffset = AccessoryGlobals.GlassesTransTable.get(self.style.head[:2])
+                elif transOffset is None and style:
+                    transOffset = AccessoryGlobals.GlassesTransTable.get(style.head[:2])
+                if transOffset is None:
+                    return
+                glassesGeom.setPos(transOffset[0][0], transOffset[0][1], transOffset[0][2])
+                glassesGeom.setHpr(transOffset[1][0], transOffset[1][1], transOffset[1][2])
+                glassesGeom.setScale(transOffset[2][0], transOffset[2][1], transOffset[2][2])
+                headNodes = self.findAllMatches('**/__Actor_head')
+                for headNode in headNodes:
+                    glassesNode = headNode.attachNewNode('glassesNode')
+                    self.glassesNodes.append(glassesNode)
+                    glassesGeom.instanceTo(glassesNode)
+
+        return
     def loadPumpkin(self,headStyle, lod, copy):
         if (hasattr(base, 'launcher') and
             ((not base.launcher) or
@@ -1930,4 +2055,5 @@ class ToonHead(Actor.Actor):
             or (self.savedCheesyEffect == 14):
                 return True
         return False
+
 

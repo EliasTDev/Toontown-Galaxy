@@ -204,7 +204,7 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
                 oldToNew = tuple([accessories[i] + self.customerDNA[i] for i in range(len(self.customerDNA))])
                 if which & ToonDNA.HAT:
                     if av.replaceItemInAccessoriesList(ToonDNA.HAT, oldToNew[0]):
-                        av.b_setHat(*hat)
+                        av.b_setHat(None, *hat)
 
 
                 if which & ToonDNA.GLASSES:

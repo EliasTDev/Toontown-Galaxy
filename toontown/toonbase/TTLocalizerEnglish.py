@@ -5775,6 +5775,7 @@ FriendsListPanelIgnoredFriends = "IGNORED\nTOONS"
 FriendsListPanelPets = "NEARBY\nPETS"
 FriendsListPanelPlayers = "ALL PLAYER\nFRIENDS"
 FriendsListPanelOnlinePlayers = "ONLINE PLAYER\nFRIENDS"
+FriendsListPanelNearbyToons = "NEARBY\nTOONS"
 
 FriendInviterClickToon = "Click on the toon you would like to make friends with.\n\n(You have %s friends)"
 

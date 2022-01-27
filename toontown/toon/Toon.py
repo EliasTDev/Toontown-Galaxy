@@ -1109,6 +1109,7 @@ class Toon(Avatar.Avatar, ToonHead):
         self.generateToonColor()
         self.parentToonParts()
         # make small toons with big heads
+        self.generateToonAccessories()
         self.rescaleToon()
         self.resetHeight()
         self.setupToonNodes()
@@ -1437,7 +1438,10 @@ class Toon(Avatar.Avatar, ToonHead):
             legs = self.getPart('legs', lodName)
             for pieceName in ('legs', 'feet'):
                 piece = legs.find('**/' + pieceName)
-                piece.setColor(legColor)
+                if not piece.isEmpty():
+                    piece.setColor(legColor)
+                else:
+                    self.notify.warning(f'Piece is empty! {pieceName}')
 
         # no shoes yet, forget this bit
         # color the front of the feet - may have multiple pieces
@@ -1457,7 +1461,7 @@ class Toon(Avatar.Avatar, ToonHead):
 
     def __swapToonAccessories(self, dna):
         self.setStyle(dna)
-        self.generateToonAccessories(fromNet = 1)
+        self.generateToonAccessories()
 
     def generateToonClothes(self, fromNet = 0):
         """
@@ -1553,14 +1557,22 @@ class Toon(Avatar.Avatar, ToonHead):
                 caps.setColor(darkBottomColor)
         return swappedTorso
 
+#Copied from toonhead functions 
+#This is a hacky fix should probably try to find a better way to generate for both head and toon
+    def generateHat(self, style, fromRTM=False):
+        if style:
+            try:
+                hat =  [style.hatModel, style.hatTex, style.hatColor]
+            except:
+                self.notify.warning('Setting hat failed setting to 0')
+                hat = [0, 0, 0]
+        else:
+            try:
+                hat =  [self.style.hatModel, self.style.hatTex, self.style.hatColor]
+            except:
+                self.notify.warning('Setting hat failed setting to 0')
 
-    def generateHat(self, fromRTM = False):
-        try:
-            hat =  [self.style.hatModel, self.style.hatTex, self.style.hatColor]
-        except:
-            self.notify.warning('Setting hat failed setting to 0')
-
-            hat = [0, 0, 0]
+                hat = [0, 0, 0]
         if hat[0] >= len(ToonDNA.HatModels):
             self.sendLogSuspiciousEvent('tried to put a wrong hat idx %d' % hat[0])
             return
@@ -1587,12 +1599,16 @@ class Toon(Avatar.Avatar, ToonHead):
                 if fromRTM:
                     importlib.reload(AccessoryGlobals)
                 transOffset = None
-                if AccessoryGlobals.ExtendedHatTransTable.get(hat[0]):
+                if AccessoryGlobals.ExtendedHatTransTable.get(hat[0]) and not style:
                     transOffset = AccessoryGlobals.ExtendedHatTransTable[hat[0]].get(self.style.head[:2])
-                if transOffset is None:
+                elif AccessoryGlobals.ExtendedHatTransTable.get(hat[0]) and style:
+                    transOffset = AccessoryGlobals.ExtendedHatTransTable[hat[0]].get(style.head[:2])
+                if transOffset is None and not style:
                     transOffset = AccessoryGlobals.HatTransTable.get(self.style.head[:2])
-                    if transOffset is None:
-                        return
+                elif transOffset is None and style:
+                    transOffset = AccessoryGlobals.HatTransTable.get(style.head[:2])
+                if transOffset is None:
+                    return
                 hatGeom.setPos(transOffset[0][0], transOffset[0][1], transOffset[0][2])
                 hatGeom.setHpr(transOffset[1][0], transOffset[1][1], transOffset[1][2])
                 hatGeom.setScale(transOffset[2][0], transOffset[2][1], transOffset[2][2])
@@ -1601,15 +1617,21 @@ class Toon(Avatar.Avatar, ToonHead):
                     hatNode = headNode.attachNewNode('hatNode')
                     self.hatNodes.append(hatNode)
                     hatGeom.instanceTo(hatNode)
-
         return
 
-    def generateGlasses(self, fromRTM = False):
-        try:
-            glasses = [self.style.glassesModel, self.style.glassesTex, self.style.glassesColor]
-        except:
-            self.notify.warning('Setting glasses failed setting to 0')
-            glasses = [0, 0, 0]
+    def generateGlasses(self, style, fromRTM=False):
+        if not style:
+            try:
+                glasses = [self.style.glassesModel, self.style.glassesTex, self.style.glassesColor]
+            except:
+                self.notify.warning('Setting glasses failed setting to 0')
+                glasses = [0, 0, 0]
+        else:
+            try:
+                glasses = [style.glassesModel, style.glassesTex, style.glassesColor]
+            except:
+                self.notify.warning('Setting glasses failed setting to 0')
+                glasses = [0, 0, 0]            
         if glasses[0] >= len(ToonDNA.GlassesModels):
             self.sendLogSuspiciousEvent('tried to put a wrong glasses idx %d' % glasses[0])
             return
@@ -1636,12 +1658,16 @@ class Toon(Avatar.Avatar, ToonHead):
                 if fromRTM:
                     importlib.reload(AccessoryGlobals)
                 transOffset = None
-                if AccessoryGlobals.ExtendedGlassesTransTable.get(glasses[0]):
+                if AccessoryGlobals.ExtendedGlassesTransTable.get(glasses[0]) and not style:
                     transOffset = AccessoryGlobals.ExtendedGlassesTransTable[glasses[0]].get(self.style.head[:2])
-                if transOffset is None:
+                elif AccessoryGlobals.ExtendedGlassesTransTable.get(glasses[0]) and  style:
+                    transOffset = AccessoryGlobals.ExtendedGlassesTransTable[glasses[0]].get(style.head[:2])
+                if transOffset is None and not style:
                     transOffset = AccessoryGlobals.GlassesTransTable.get(self.style.head[:2])
-                    if transOffset is None:
-                        return
+                elif transOffset is None and style:
+                    transOffset = AccessoryGlobals.GlassesTransTable.get(style.head[:2])
+                if transOffset is None:
+                    return
                 glassesGeom.setPos(transOffset[0][0], transOffset[0][1], transOffset[0][2])
                 glassesGeom.setHpr(transOffset[1][0], transOffset[1][1], transOffset[1][2])
                 glassesGeom.setScale(transOffset[2][0], transOffset[2][1], transOffset[2][2])
@@ -1652,7 +1678,7 @@ class Toon(Avatar.Avatar, ToonHead):
                     glassesGeom.instanceTo(glassesNode)
 
         return
-
+        
     def generateBackpack(self, fromRTM = False):
         try:
             backpack = [self.style.backpackModel, self.style.backpackTex, self.style.backpackColor]
@@ -1732,24 +1758,36 @@ class Toon(Avatar.Avatar, ToonHead):
         return
 
     def generateToonAccessories(self):
-        self.generateHat()
-        self.generateGlasses()
+        self.generateHat(None)
+        self.generateGlasses(None)
         self.generateBackpack()
         self.generateShoes()
 
     def setHat(self, hatIdx, textureIdx, colorIdx, fromRTM = False):
         self.hat = (hatIdx, textureIdx, colorIdx)
-        self.generateHat(fromRTM=fromRTM)
+        self.generateHat(None, fromRTM=fromRTM)
 
     def getHat(self):
-        return self.hat
+        if hasattr(self, 'style'):
+            if self.style:
+                return [self.style.hatModel, self.style.hatTex, self.style.hatColor]
+            else:
+                return self.hat
+        else:
+            return self.hat
 
     def setGlasses(self, glassesIdx, textureIdx, colorIdx, fromRTM = False):
         self.glasses = (glassesIdx, textureIdx, colorIdx)
-        self.generateGlasses(fromRTM=fromRTM)
+        self.generateGlasses(None, fromRTM=fromRTM)
 
     def getGlasses(self):
-        return self.glasses
+        if hasattr(self, 'style'):
+            if self.style:
+                return [self.style.glassesModel, self.style.glassesTex, self.style.glassesColor]
+            else:
+                return self.glasses
+        else:
+            return self.glasses
 
     def setBackpack(self, backpackIdx, textureIdx, colorIdx, fromRTM = False):
         self.backpack = (backpackIdx, textureIdx, colorIdx)

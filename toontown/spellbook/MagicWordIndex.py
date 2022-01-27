@@ -43,7 +43,6 @@ from toontown.hood import ZoneUtil
 from toontown.toon import ToonDNA, NPCToons
 from toontown.parties import PartyGlobals
 from toontown.suit import DistributedSuitPlanner
-from toontown.ai import HolidayManagerAI
 #from toontown.suit import DistributedBossCog
 
 #from otp.ai.AIBaseGlobal import *
@@ -1610,7 +1609,7 @@ class StartHoliday(MagicWord):
     desc = 'Starts a holiday based on the id specified'
     execLocation = MagicWordConfig.EXEC_LOC_SERVER
     accessLevel = 'ADMIN'
-    arguments = [('holidayId', int, 0)]
+    arguments = [('holidayId', int, False, 0)]
     def handleWord(self, invoker, avId, toon, *args):
         holidayId = args[0]
         if holidayId in self.air.holidayManager.holidaysCommon:
@@ -1618,11 +1617,12 @@ class StartHoliday(MagicWord):
             return f'Holiday successfully started {holidayId}'
         else:
             return f'Invalid holiday {holidayId}'
+
 class StopHoliday(MagicWord):
     desc = 'Starts a holiday based on the id specified'
     execLocation = MagicWordConfig.EXEC_LOC_SERVER
     accessLevel = 'ADMIN'
-    arguments = [('holidayId', int, 0)]
+    arguments = [('holidayId', int, False, 0)]
     def handleWord(self, invoker, avId, toon, *args):
         holidayId = args[0]
         if holidayId in self.air.holidayManager.holidaysCommon:
@@ -1800,17 +1800,39 @@ class DNA(MagicWord):
             dna.hatModel = value
             invoker.b_setDNAString(dna.makeNetString())
             return f'Hat model index set to : {str(dna.hatModel)}'
-        if part == 'glassesModel':
-            glassesModel = ToonDNA.glassesModel
+        if part == 'hatTex':
+            hatTextures = ToonDNA.HatTextures
             try:
                 value = int(value)
             except:
                 return 'value must be an int '
-            if not -1 <= int(value) <= len(glassesModel):
-                return f"Glasses model index out of range(0-{len(glassesModel)}"
+            if not -1 <= int(value) <= len(hatTextures):
+                return f"Hat texture index out of range(0-{len(hatTextures)}"
+            dna.hatTex = value
+            invoker.b_setDNAString(dna.makeNetString())
+            return f'Hat texture index set to : {str(dna.hatTex)}'
+        if part == 'glassesModel':
+            glassesModels = ToonDNA.GlassesModels
+            try:
+                value = int(value)
+            except:
+                return 'value must be an int '
+            if not -1 <= int(value) <= len(glassesModels):
+                return f"Glasses model index out of range(0-{len(glassesModels)}"
             dna.glassesModel = value
             invoker.b_setDNAString(dna.makeNetString())
             return f'Glasses model index set to : {str(dna.glassesModel)}'  
+        if part == 'glassesTex':
+            glassesTextures = ToonDNA.GlassesTextures
+            try:
+                value = int(value)
+            except:
+                return 'value must be an int '
+            if not -1 <= int(value) <= len(glassesTextures):
+                return f"Glasses texture index out of range(0-{len(glassesTextures)}"
+            dna.glassesTex = value
+            invoker.b_setDNAString(dna.makeNetString())
+            return f'Glasses model index set to : {str(dna.glassesTex)}'  
         if part == 'backpackModel':
             backpackModels = ToonDNA.BackpackModels
             try:

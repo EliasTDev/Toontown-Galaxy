@@ -17,6 +17,7 @@ FLPAll = 3
 FLPOnlinePlayers = 4
 FLPPlayers = 5
 FLPEnemies = 6
+FLPNearby = 7
 
 
 globalFriendsList = None
@@ -131,15 +132,16 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
         FriendsListPanel constructor: create the friend selector page
         """
         self.leftmostPanel = FLPPets
-        self.rightmostPanel = FLPPlayers
+        self.rightmostPanel = FLPNearby
         if base.cr.productName in ['DisneyOnline-UK', 'DisneyOnline-AP', 'JP', 'FR', 'BR']:
-            self.rightmostPanel = FLPAll
+            self.rightmostPanel = FLPNearby
         DirectFrame.__init__(self, relief = None)
         self.listScrollIndex = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] # how far the panel has scrolled
         self.initialiseoptions(FriendsListPanel)
         StateData.StateData.__init__(self, "friends-list-done")
         # Friends maps (friendId, flags) pairs to the button in the scrollList
         self.friends = {}
+        self.nonFriends = {}
         self.textRolloverColor = Vec4(1,1,0,1)
         self.textDownColor = Vec4(0.5,0.9,1,1)
         self.textDisabledColor = Vec4(0.4,0.8,0.4,1)
@@ -296,6 +298,7 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
         del self.left
         del self.right
         del self.friends
+        del self.nonFriends
         DirectFrame.destroy(self)
 
     def makeFriendButton(self, friendId, colorChoice = None, bold = 0):
@@ -476,6 +479,7 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
         petFriends = []
         trueFriends = []
         newFriends = []
+        nearbyPlayers = []
         # Double means both avatar AND player are online, OneRef means Player OR Avatar online
 
         #freeChatOneRef = []
@@ -508,12 +512,21 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
                 from toontown.pets import DistributedPet
                 if isinstance(av, DistributedPet.DistributedPet):
                     petFriends.append(avId)
+        elif self.panelType == FLPNearby:
+            nearbyPlayers = base.localAvatar.getNearbyPlayers()
+
+
 
         for friend in list(self.friends.keys()):
             friendButton = self.friends[friend]
             self.scrollList.removeItem(friendButton, refresh=0)
             friendButton.destroy()
             del self.friends[friend]
+        for nonFriend in list(self.nonFriends.keys()):
+            friendButton = self.nonFriends[nonFriend]
+            self.scrollList.removeItem(friendButton, refresh=0)
+            friendButton.destroy()
+            del self.nonFriends[nonFriend]
 
         #newFriends.sort(key=lambda a, b: a[0] - b[0])
         #petFriends.sort(key=lambda a, b: a[0] - b[0])
@@ -537,7 +550,12 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
         for friendPair in trueFriends:
             if friendPair not in self.friends:
                 friendButton = self.makeFriendButton(friendPair, ToontownGlobals.ColorFreeChat, 1)
-
+        for friendPair in nearbyPlayers:
+            if friendPair not in self.nonFriends:
+                friendButton = self.makeFriendButton(friendPair)
+                self.nonFriends[friendPair] = friendButton
+                self.scrollList.addItem(friendButton, refresh=0)
+            
         self.scrollList.index = self.listScrollIndex[self.panelType]
         self.scrollList.refresh()
 
@@ -570,27 +588,6 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
                        # else:
                                 #speedChatOneRef.insert(0, (0, 0,playerFriendId, 1))
 
-        # ONLINE PLAYER FRIENDS
-
-        if self.panelType == FLPOnlinePlayers:# or self.panelType == FLPOnline:
-            playerFriendList = base.cr.playerFriendsManager.playerFriendsList
-
-            #print playerFriendList
-
-            for playerFriendId in playerFriendList:
-                if playerFriendId in base.cr.playerFriendsManager.playerId2Info:
-                    playerFriendInfo = base.cr.playerFriendsManager.playerId2Info.get(playerFriendId)
-                    if playerFriendInfo.onlineYesNo:
-                        if playerFriendInfo.understandableYesNo:
-                            if playerFriendInfo.avatarId:
-                                freeChatDouble.insert(0, ( playerFriendInfo.avatarId, 0,playerFriendId, 1))
-                            else:
-                                freeChatOneRef.insert(0, ( 0, 0,playerFriendId, 1))
-                        else:
-                            if playerFriendInfo.avatarId:
-                                speedChatDouble.insert(0, ( playerFriendInfo.avatarId, 0,playerFriendId, 1))
-                            else:
-                                speedChatOneRef.insert(0, ( 0, 0,playerFriendId, 1))
 
 
         # ALL TOON FRIENDS
@@ -799,6 +796,8 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
             self.title['text'] = TTLocalizer.FriendsListPanelPlayers
         elif self.panelType == FLPOnlinePlayers:
             self.title['text'] = TTLocalizer.FriendsListPanelOnlinePlayers
+        elif self.panelType == FLPNearby:
+            self.title['text'] = TTLocalizer.FriendsListPanelNearbyToons
         else:
             self.title['text'] = TTLocalizer.FriendsListPanelIgnoredFriends
 
@@ -866,3 +865,4 @@ class FriendsListPanel(DirectFrame, StateData.StateData):
         if self.panelType == FLPEnemies:
             self.__updateScrollList()
 
+#TODO if a toon enters zone updateScrollList for nearby toons

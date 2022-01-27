@@ -473,14 +473,17 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         nearbyPlayers = self.getNearbyPlayers(ResistanceChat.EFFECT_RADIUS)
         self.sendUpdate("reqSCResistance", [msgIndex, nearbyPlayers])
 
-    def getNearbyPlayers(self, radius, includeSelf=True):
+    def getNearbyPlayers(self, radius=None, includeSelf=True):
         nearbyToons = []
         toonIds = self.cr.getObjectsOfExactClass(DistributedToon)
         for toonId, toon in list(toonIds.items()):
             if toon is not self:
                 dist = toon.getDistance(self)
-                if dist < radius:
-                    nearbyToons.append(toonId)
+                if radius:
+                    if dist < radius:
+                        nearbyToons.append(toonId)
+                else:
+                    nearbyToons.append()
         if includeSelf:
             nearbyToons.append(self.doId)
 
