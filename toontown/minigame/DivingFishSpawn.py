@@ -65,6 +65,8 @@ class DivingFishSpawn(DirectObject):
             # piano tuna
         else:
             return
+        fish.setBlend(base.wantSmoothAnimations)
+
         fish.active = 1
         fish.direction = self.direction
 

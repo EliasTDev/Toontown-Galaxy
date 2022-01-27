@@ -386,6 +386,7 @@ class PropPool:
             # make sure the props is loaded
             if name not in self.props:
                 prop = Actor.Actor()
+                prop.setBlend(base.wantSmoothAnimations)
                 prop.loadModel(self.propStrings[name][0])
                 animDict = {}
                 animDict[name] = self.propStrings[name][1]

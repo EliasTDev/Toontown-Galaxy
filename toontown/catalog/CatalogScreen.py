@@ -935,8 +935,9 @@ class CatalogScreen(DirectFrame):
         # Add Clarabelle model
         self.clarabelle = Actor.Actor("phase_5.5/models/char/Clarabelle-zero",
                                       { "listen" : "phase_5.5/models/char/Clarabelle-listens" } )
+        self.clarabelle.setBlend(base.wantSmoothAnimations)
         self.clarabelle.loop("listen")
-
+    
         # Force her eyes to render back-to-front, by the simple
         # expedient of parenting them to the fixed bin in order.
         self.clarabelle.find('**/eyes').setBin('fixed', 0)

@@ -305,6 +305,8 @@ class ToonBase(OTPBase.OTPBase):
             render.setShaderAuto()
             render2d.setShaderAuto()
             render2dp.setShaderAuto()
+        #TODO add gui setting in shticker book
+        base.wantSmoothAnimations = self.settings.getBool('game', 'smooth-animations', False)
         
     def reloadControls(self):
         self.ignore(self.SCREENSHOT)
@@ -739,6 +741,7 @@ class ToonBase(OTPBase.OTPBase):
             musicVolume = self.settings.getFloat('game', 'musicVolume', 1.0)
             sfxVolume = self.settings.getFloat('game', 'sfxVolume', 1.0)
             res = self.settings.getList('game', 'resolution', [cdll.user32.GetSystemMetrics(0)*5/6, cdll.user32.GetSystemMetrics(1)*5/6])
+            smoothAnimations = self.settings.getBool('game', 'smooth-animations', False)
             antialiasing = self.settings.getInt('game', 'antialiasing', 0)
             if antialiasing:
                 loadPrcFileData('toonBase Settings Framebuffer MSAA', 'framebuffer-multisample 1')
@@ -753,7 +756,8 @@ class ToonBase(OTPBase.OTPBase):
             loadPrcFileData('toonBase Settings Music Volume', 'audio-master-music-volume %s' % musicVolume)
             loadPrcFileData('toonBase Settings Sfx Volume', 'audio-master-sfx-volume %s' % sfxVolume)
             loadPrcFileData('toonBase Settings Toon Chat Sounds', 'toon-chat-sounds %s' % toonChatSounds)
-            loadPrcFileData('toonBase Settings Custom Controls', 'customControls %s' % wantCustomControls)
-            loadPrcFileData('toonBase Settings Controls', 'controls %s' % controls)
+            loadPrcFileData(f'toonBase Settings Custom Controls', 'customControls {wantCustomControls}')
+            loadPrcFileData(f'toonBase Settings Controls', 'controls {controls}' )
+            loadPrcFileData(f'toonBase Settings smooth animations', 'smooth animations: {smoothAnimations}' )
             self.settings.loadFromSettings()
 

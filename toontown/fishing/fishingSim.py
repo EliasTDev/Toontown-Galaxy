@@ -164,6 +164,8 @@ class Fisherman(Toon.Toon):
         self.pole.loadModel('phase_4/models/props/fishing-pole-mod')
         self.pole.loadAnims(
             {'cast' : 'phase_4/models/props/fishing-pole-chan'})
+        self.pole.setBlend(base.wantSmoothAnimations)
+
         # Get the top of the pole.
         self.ptop = self.pole.find('**/joint_attachBill')
         self.pole.pose('cast', 0)

@@ -195,6 +195,8 @@ class DistributedFoodBelt(DistributedObject.DistributedObject, FSM.FSM, FoodBelt
                 self.beltActor.loadAnims({'idle': "phase_12/models/bossbotHQ/food_belt1"})
             else:
                 self.beltActor.loadAnims({'idle': "phase_12/models/bossbotHQ/food_belt2"})
+            self.beltActor.setBlend(base.wantSmoothAnimations)
+
             self.beltActor.reparentTo(render)
             # adjust this number as necessary to match up with the food intervals
             self.beltActor.setPlayRate(self.BeltActorPlayRate, 'idle')

@@ -620,8 +620,8 @@ class DistributedDivingGame(DistributedMinigame):
         loadBase = "phase_4/models/char/"
         
         for i in range(self.NUMCRABS):
-            self.crabs.append(Actor.Actor(loadBase + 'kingCrab-zero.bam',{'anim': loadBase + 'kingCrab-swimLOOP.bam'}))
-        
+            self.crabs.append(Actor.Actor(loadBase + 'kingCrab-zero.bam',{'anim': loadBase + 'kingCrab-swimLOOP.bam'}).setBlend(base.wantSmoothAnimations))
+            
         for i in range(len(self.crabs)):
             crab = self.crabs[i]
             crab.reparentTo(render)

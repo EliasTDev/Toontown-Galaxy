@@ -406,6 +406,7 @@ class DistributedFishingSpot(DistributedObject.DistributedObject):
             rodPath = RodFileDict[0]
 
         self.pole = Actor.Actor()
+        self.pole.setBlend(base.wantSmoothAnimations)
         self.pole.loadModel(rodPath)
         # All rods use the same animation
         self.pole.loadAnims({'cast' : 'phase_4/models/props/fishing-pole-chan'})

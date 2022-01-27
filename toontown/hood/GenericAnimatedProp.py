@@ -82,6 +82,8 @@ class GenericAnimatedProp(AnimatedProp.AnimatedProp):
         self.trashcan = Actor.Actor(node, copy = 0)
         self.trashcan.reparentTo(node)
         self.trashcan.loadAnims({'anim' : "%s/%s"%(self.path,anim)})
+        self.trashcan.setBlend(base.wantSmoothAnimations)
+
         self.trashcan.pose('anim', 0)
         self.node = self.trashcan
 

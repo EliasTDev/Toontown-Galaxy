@@ -1173,6 +1173,9 @@ class Toon(Avatar.Avatar, ToonHead):
                                 {'book': 'phase_3.5/models/props/book-chan'})
         bookActor2 = Actor.Actor(other=bookActor)
         bookActor3 = Actor.Actor(other=bookActor)
+        bookActor.setBlend(base.wantSmoothAnimations)
+        bookActor2.setBlend(base.wantSmoothAnimations)
+        bookActor3.setBlend(base.wantSmoothAnimations)
         self.__bookActors = [bookActor, bookActor2, bookActor3]
         hands = self.getRightHands()
         for bookActor, hand in zip(self.__bookActors, hands):

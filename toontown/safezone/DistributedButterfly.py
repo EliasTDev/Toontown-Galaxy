@@ -95,6 +95,7 @@ class DistributedButterfly(DistributedObject.DistributedObject):
             return
         
         self.butterfly = Actor.Actor()
+        self.butterfly.setBlend(base.wantSmoothAnimations)
         self.butterfly.loadModel(
             'phase_4/models/props/SZ_butterfly-mod.bam')
         self.butterfly.loadAnims({
@@ -128,7 +129,7 @@ class DistributedButterfly(DistributedObject.DistributedObject):
         # blending to combine two or more animations at once on
         # playback for a nice fluttering and landing effect.
         self.butterfly2 = Actor.Actor(other = self.butterfly)
-
+        self.butterfly2.setBlend(base.wantSmoothAnimations)
         # Allow the nearby butterfly to blend between its three
         # animations.  All animations will be playing all the time;
         # we'll control which one is visible by varying the control

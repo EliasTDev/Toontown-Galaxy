@@ -81,9 +81,9 @@ class CatalogPoleItem(CatalogItem.CatalogItem):
             1.47, 0, -1.67,
             90, 55, -90)
         pole.setScale(0.8)
-        
         pole.setDepthTest(1)
         pole.setDepthWrite(1)
+        pole.setBlend(base.wantSmoothAnimations)
 
         frame = self.makeFrame()
         frame.attachNewNode(pole.node())
