@@ -59,7 +59,7 @@ MAX_RARITY = 10
 # Higher numbers mean the rare fish are even more rare. 
 # Note - the rodId is factored into the dice roll too. Now better rods
 # will have an easier time catching more rare fish
-GlobalRarityDialBase = 4.3
+GlobalRarityDialBase = 4.3 / 2
 
 FishingAngleMax = 50.0
 
