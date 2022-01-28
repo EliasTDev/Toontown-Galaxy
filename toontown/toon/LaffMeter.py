@@ -97,8 +97,7 @@ class LaffMeter(DirectFrame):
             self.tooth5 = DirectFrame(parent = self.openSmile, relief = None,
                                  image = gui.find("**/tooth_5"))
             self.tooth6 = DirectFrame(parent = self.openSmile, relief = None,
-                                 image = gui.find("**/tooth_6"))
-
+                                 image = gui.find("**/tooth_6"))  
                         
             self.maxLabel = DirectLabel(parent = self.eyes,
                                    relief = None,
@@ -118,7 +117,13 @@ class LaffMeter(DirectFrame):
             self.teeth = [self.tooth6, self.tooth5, self.tooth4,
                           self.tooth3, self.tooth2, self.tooth1]
             self.fractions = [0., 0.166666, 0.333333, 0.5, 0.666666, 0.833333]
-
+            self.eyes.setY(-0.2)
+            self.frown.setY(-0.2)
+            self.smile.setY(-0.2)
+            self.hpLabel.setY(-0.2)
+            self.maxLabel.setY(-0.2)
+            for tooth in self.teeth:
+                tooth.setY(-0.2)
         gui.removeNode()
 
     def destroy(self):

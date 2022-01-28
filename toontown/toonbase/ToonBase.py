@@ -306,8 +306,9 @@ class ToonBase(OTPBase.OTPBase):
             render2d.setShaderAuto()
             render2dp.setShaderAuto()
         #TODO add gui setting in shticker book
-        base.wantSmoothAnimations = self.settings.getBool('game', 'smooth-animations', False)
-        
+        self.wantSmoothAnimations = self.settings.getBool('game', 'smooth-animations', False)
+
+        self.wantLaffMeterOverHead = self.settings.getBool('game', 'want-laff-meter-over-head', True)
     def reloadControls(self):
         self.ignore(self.SCREENSHOT)
         self.MOVE_FORWARD = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyUp).lower()
@@ -742,7 +743,8 @@ class ToonBase(OTPBase.OTPBase):
             sfxVolume = self.settings.getFloat('game', 'sfxVolume', 1.0)
             res = self.settings.getList('game', 'resolution', [cdll.user32.GetSystemMetrics(0)*5/6, cdll.user32.GetSystemMetrics(1)*5/6])
             smoothAnimations = self.settings.getBool('game', 'smooth-animations', False)
-            antialiasing = self.settings.getInt('game', 'antialiasing', 0)
+            antialiasing = self.settings.getBool('game', 'antialiasing', 0)
+            wantLaffMeterOverHead = self.settings.getBool('game', 'want-laff-meter-over-head', True)
             if antialiasing:
                 loadPrcFileData('toonBase Settings Framebuffer MSAA', 'framebuffer-multisample 1')
                 loadPrcFileData('toonBase Settings MSAA Level', 'multisamples %i' % antialiasing)
@@ -759,5 +761,7 @@ class ToonBase(OTPBase.OTPBase):
             loadPrcFileData(f'toonBase Settings Custom Controls', 'customControls {wantCustomControls}')
             loadPrcFileData(f'toonBase Settings Controls', 'controls {controls}' )
             loadPrcFileData(f'toonBase Settings smooth animations', 'smooth animations: {smoothAnimations}' )
+            loadPrcFileData(f'toonBase Settings Laff Meter Over Head', 'laff-meter-overhead: {wantLaffMeterOverHead}' )
+
             self.settings.loadFromSettings()
 
