@@ -19,6 +19,7 @@ echo ===============================
 
 cd ../../
 
+"dependencies/panda/python/ppython.exe" -m pip install -r requirements.txt
 
 :main
 "dependencies/panda/python/ppython.exe" ^
