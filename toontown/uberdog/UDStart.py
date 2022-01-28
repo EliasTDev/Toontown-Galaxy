@@ -39,20 +39,20 @@ simbase.air.connect(host, port)
 sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
 
 try:
-    
     run()
-except SystemExit:
+except (SystemExit, KeyboardInterrupt):
     raise
 except Exception as e:
     from otp.otpbase import PythonUtil
 
     info = PythonUtil.describeException()
-    import getpass
-    sentry_sdk.set_context("UD" , {
+    from os.path import expanduser
+    sentry_sdk.set_context("Uberdog" , {
         'district_name': os.getenv('DISTRICT_NAME', "NULL"),
         'SENDER_AVID': simbase.air.getAvatarIdFromSender(), 
         'SENDER_ACCOUNT_ID': simbase.air.getAccountIdFromSender(), 
-        'HOST_NAME': getpass.getuser()
+        'homedir': expanduser('~'),
+        'CRITICAL': 'True'
     })
     sentry_sdk.capture_exception(e)
     print(info)

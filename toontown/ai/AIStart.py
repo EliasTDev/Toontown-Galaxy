@@ -49,7 +49,7 @@ sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry
 
 try:
     run()
-except SystemExit:
+except (SystemExit, KeyboardInterrupt):
     raise
 except Exception as e:
     from otp.otpbase import PythonUtil
@@ -58,12 +58,13 @@ except Exception as e:
     simbase.air.writeServerEvent('ai-exception', avId=simbase.air.getAvatarIdFromSender(), accId=simbase.air.getAccountIdFromSender(), exception=info)
     with open(config.GetString('ai-crash-log-name', 'ai-crash.txt'), 'w+') as file:
         file.write(info + "\n")
-    import getpass
+    from os.path import expanduser
     sentry_sdk.set_context( "AI", { 
         'district_name': os.getenv('DISTRICT_NAME', "NULL"),
         'SENDER_AVID': simbase.air.getAvatarIdFromSender(), 
         'SENDER_ACCOUNT_ID': simbase.air.getAccountIdFromSender(), 
-        'HOST_NAME': getpass.getuser()
+        'homedir': expanduser('~'),
+        'CRITICAL': 'True'
     })
     sentry_sdk.capture_exception(e)
     raise

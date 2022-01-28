@@ -6,6 +6,8 @@ from direct.distributed import MsgTypes
 from toontown.distributed.ToontownNetMessengerAI import ToontownNetMessengerAI
 import traceback
 import sys 
+import sentry_sdk
+import os
 class OTPInternalRepository(AstronInternalRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory('OTPInternalRepository')
     dbId = 4003
@@ -21,10 +23,11 @@ class OTPInternalRepository(AstronInternalRepository):
         try:
             return AstronInternalRepository.readerPollOnce(self)
             
-        except SystemExit:
+        except (SystemExit, KeyboardInterrupt):
             raise
             
         except Exception as e:
+            sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
             if self.getAvatarIdFromSender() > 100000000:
                 dg = PyDatagram()
                 dg.addServerHeader(self.getMsgSender(), self.ourChannel, CLIENTAGENT_EJECT)
@@ -35,6 +38,19 @@ class OTPInternalRepository(AstronInternalRepository):
             self.writeServerEvent('INTERNAL-EXCEPTION', self.getAvatarIdFromSender(), self.getAccountIdFromSender(), repr(e), traceback.format_exc())
             self.notify.warning('INTERNAL-EXCEPTION: {0} ({1})'.format(repr(e), self.getAvatarIdFromSender()))
             print(traceback.format_exc())
+            from os.path import expanduser
+            sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
+            sentry_sdk.set_context( 'uberdog',
+                {
+                    
+                'district_name': os.getenv('DISTRICT_NAME', "NULL"),
+                'SENDER_AVID': simbase.air.getAvatarIdFromSender(), 
+                'SENDER_ACCOUNT_ID': simbase.air.getAccountIdFromSender(), 
+                'homedir': expanduser('~'),
+                'CRITICAL': 'False'
+                }
+            )
+            sentry_sdk.capture_exception(e)
             
         return 1
     def getAccountIdFromSender(self):

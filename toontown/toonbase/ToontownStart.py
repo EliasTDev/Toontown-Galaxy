@@ -268,6 +268,7 @@ if autoRun and launcher.isDummy():
 
     except Exception as e:
         from otp.otpbase import PythonUtil
-        sentry_sdk.capture_exception(e)
+        if not __debug__:
+            sentry_sdk.capture_exception(e)
         print(PythonUtil.describeException())
         raise
