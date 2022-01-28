@@ -42,5 +42,17 @@ except SystemExit:
     raise
 except Exception:
     from otp.otpbase import PythonUtil
-    print(PythonUtil.describeException())
+    from raven import Client 
+
+    info = PythonUtil.describeException()
+    import getpass
+    sentryReporter = Client('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
+    sentryReporter.user_context({
+        'district_name': os.getenv('DISTRICT_NAME', "NULL"),
+        'SENDER_AVID': simbase.air.getAvatarIdFromSender(), 
+        'SENDER_ACCOUNT_ID': simbase.air.getAccountIdFromSender(), 
+        'HOST_NAME': getpass.getuser()
+    })
+    sentryReporter.captureMessage(info)
+    print(info)
     raise

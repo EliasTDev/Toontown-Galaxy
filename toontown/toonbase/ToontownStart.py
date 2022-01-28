@@ -265,5 +265,7 @@ if autoRun and launcher.isDummy():
 
     except:
         from otp.otpbase import PythonUtil
+        from raven import Client
+        Client('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162').captureMessage(message=PythonUtil.describeException())
         print(PythonUtil.describeException())
         raise
