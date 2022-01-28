@@ -6,7 +6,7 @@ from . import CogDisguiseGlobals
 from toontown.toonbase.ToontownBattleGlobals import getInvasionMultiplier
 from functools import reduce
 
-MeritMultiplier = 0.5
+MeritMultiplier = 2.0
 
 class PromotionManagerAI:
 
