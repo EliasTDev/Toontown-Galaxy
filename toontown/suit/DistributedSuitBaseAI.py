@@ -165,9 +165,13 @@ class DistributedSuitBaseAI(DistributedAvatarAI.DistributedAvatarAI,
     def getMaxSkeleRevives(self):
         return self.maxSkeleRevives
 
-    def useSkeleRevive(self):
+    def useSkeleRevive(self, leftoverDamage=0):
+        #TODO add carryover damage
+        #maybe add if previouskelerevives == 2 and skelerevives == 1 then make it a virtual cog?
         self.skeleRevives -= 1
-        self.currHP = self.maxHP
+        #BRUH MOMENT FOR DISNEY LOL xD
+       # self.currHP = self.maxHP
+        self.b_setHP(self.maxHP - leftoverDamage)
         self.reviveFlag = 1
 
     def reviveCheckAndClear(self):
