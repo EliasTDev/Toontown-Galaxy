@@ -55,7 +55,7 @@ class ToonBase(OTPBase.OTPBase):
         self.toonChatSounds = self.config.GetBool('toon-chat-sounds', 1)
 
         # Toontown doesn't care about dynamic shadows for now.
-        self.wantDynamicShadows = 1
+        self.wantDynamicShadows = 0
         # this is temporary until we pull in the new launcher code in production
         self.exitErrorCode = 0
 
@@ -343,8 +343,8 @@ class ToonBase(OTPBase.OTPBase):
         # These are to fix graphical issues on Modern panda.
         cullBinMgr = CullBinManager.getGlobalPtr()
         cullBinMgr.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
-        cullBinMgr.addBin('shadow', CullBinManager.BTFixed, -100)
-        cullBinMgr.addBin('ground', CullBinManager.BTUnsorted, 18)
+        cullBinMgr.addBin('shadow', CullBinManager.BTFixed, 15)
+        cullBinMgr.addBin('ground', CullBinManager.BTFixed, 14)
 
     def __walking(self, pressed):
         self.walking = pressed
