@@ -30,19 +30,20 @@ from panda3d.otp import CFSpeech
 # transitioning to ToSuitBuilding or ToToonBuilding.  This distance is
 # chosen to roughly match what the DistributedDoor code expects to
 # see.
-STAND_OUTSIDE_DOOR         = 2.5
+STAND_OUTSIDE_DOOR = 2.5
 
 # how long after a suit exits a movement interruption that
 # the suit ignore's local battle collisions
 #
-BATTLE_IGNORE_TIME       = 6
-BATTLE_WAIT_TIME         = 3
+BATTLE_IGNORE_TIME = 6
+BATTLE_WAIT_TIME = 3
 CATCHUP_SPEED_MULTIPLIER = 3
 
 # wether or not to enable battle detection when a suit
 # enters bellicose mode
 #
-ALLOW_BATTLE_DETECT      = 1
+ALLOW_BATTLE_DETECT = 1
+
 
 class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
     """
@@ -83,7 +84,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         try:
             self.DistributedSuit_initialized
             return
-        except:
+        except BaseException:
             self.DistributedSuit_initialized = 1
 
         DistributedSuitBase.DistributedSuitBase.__init__(self, cr)
@@ -111,8 +112,8 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         # remember the suit's initial and end state so we dont have to
         # calculate them more than once
         #
-        self.initState       = None
-        self.finalState      = None
+        self.initState = None
+        self.finalState = None
 
         # Indicates that the suit is in a building or not
         self.buildingSuit = 0
@@ -236,11 +237,11 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
                          self.exitDanceThenFlyAway,
                          []),
              ],
-                    # Initial state
-                    'Off',
-                    # Final state
-                    'Off',
-                   )
+            # Initial state
+            'Off',
+            # Final state
+            'Off',
+        )
 
         self.fsm.enterInitialState()
 
@@ -275,7 +276,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         """
         try:
             self.DistributedSuit_deleted
-        except:
+        except BaseException:
             self.DistributedSuit_deleted = 1
             self.notify.debug("DistributedSuit %d: deleting" % self.getDoId())
 
@@ -299,7 +300,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
            self.pathEndpointEnd == end and \
            self.minPathLen == minPathLen and \
            self.maxPathLen == maxPathLen and \
-           self.path != None:
+           self.path is not None:
             # The path endpoints haven't changed since last time.
             # Presumably this will happen only when we re-generate a
             # suit that was previously disabled (e.g. we encounter the
@@ -350,12 +351,16 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         The return value is true if a suit planner is available, false
         if not.
         """
-        if self.sp == None and self.spDoId != 0:
-            self.notify.warning("Suit %d does not have a suit planner!  Expected SP doId %s." % (self.doId, self.spDoId))
+        if self.sp is None and self.spDoId != 0:
+            self.notify.warning(
+                "Suit %d does not have a suit planner!  Expected SP doId %s." %
+                (self.doId, self.spDoId))
             self.sp = self.cr.doId2do.get(self.spDoId, None)
 
-        if self.sp == None:
-            assert self.notify.debug("Cannot create path for suit %d" % (self.doId))
+        if self.sp is None:
+            assert self.notify.debug(
+                "Cannot create path for suit %d" %
+                (self.doId))
             return 0
         return 1
 
@@ -381,14 +386,16 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
 
         # If we didn't generate a path yet--possibly because of a
         # failed setPathEndpoints()--try again now.
-        if self.path == None:
+        if self.path is None:
             self.setPathEndpoints(self.pathEndpointStart, self.pathEndpointEnd,
                                   self.minPathLen, self.maxPathLen)
 
         self.pathPositionIndex = index
-        self.pathPositionTimestamp = globalClockDelta.networkToLocalTime(timestamp)
-        if self.legList != None:
-            self.pathStartTime = self.pathPositionTimestamp - self.legList.getStartTime(self.pathPositionIndex)
+        self.pathPositionTimestamp = globalClockDelta.networkToLocalTime(
+            timestamp)
+        if self.legList is not None:
+            self.pathStartTime = self.pathPositionTimestamp - \
+                self.legList.getStartTime(self.pathPositionIndex)
 
     def setPathState(self, state):
         """
@@ -440,7 +447,9 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         # future, we're probably just out of sync in general.  Nothing
         # will be reported accurately until we get back in sync.
         if messageAge < -(chug + 0.5) or messageAge > (chug + 1.0):
-            print("Apparently out of sync with AI by %0.2f seconds.  Suggest resync!" % (messageAge))
+            print(
+                "Apparently out of sync with AI by %0.2f seconds.  Suggest resync!" %
+                (messageAge))
             return
 
         localElapsed = now - self.pathStartTime
@@ -453,13 +462,17 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         if abs(timeDiff) > 0.2:
             # We disagree about where the suit is along the path.
             # This could be because we paused the AI or the client.
-            print("%s (%d) appears to be %0.2f seconds out of sync along its path.  Suggest '~cogs sync'." % (self.getName(), self.getDoId(), timeDiff))
+            print(
+                "%s (%d) appears to be %0.2f seconds out of sync along its path.  Suggest '~cogs sync'." %
+                (self.getName(), self.getDoId(), timeDiff))
             return
 
         # Verify the suit's calculated (x, y) position.  This ensures
         # our path agrees with that from the AI.
-        if self.legList == None:
-            print("%s (%d) doesn't have a legList yet." % (self.getName(), self.getDoId()))
+        if self.legList is None:
+            print(
+                "%s (%d) doesn't have a legList yet." %
+                (self.getName(), self.getDoId()))
             return
 
         netPos = Point3(x, y, 0.0)
@@ -469,7 +482,9 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         calcDelta = Vec3(netPos - calcPos)
         diff = calcDelta.length()
         if diff > 4.0:
-            print("%s (%d) is %0.2f feet from the AI computed path!" % (self.getName(), self.getDoId(), diff))
+            print(
+                "%s (%d) is %0.2f feet from the AI computed path!" %
+                (self.getName(), self.getDoId(), diff))
             print("Probably your DNA files are out of sync.")
             return
 
@@ -479,11 +494,15 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         localDelta = Vec3(netPos - localPos)
         diff = localDelta.length()
         if diff > 10.0:
-            print("%s (%d) in state %s is %0.2f feet from its correct position!" % (self.getName(), self.getDoId(), self.fsm.getCurrentState().getName(), diff))
-            print("Should be at (%0.2f, %0.2f), but is at (%0.2f, %0.2f)." % (x, y, localPos[0], localPos[1]))
+            print("%s (%d) in state %s is %0.2f feet from its correct position!" % (
+                self.getName(), self.getDoId(), self.fsm.getCurrentState().getName(), diff))
+            print(
+                "Should be at (%0.2f, %0.2f), but is at (%0.2f, %0.2f)." %
+                (x, y, localPos[0], localPos[1]))
             return
 
-        print("%s (%d) is in the correct position." % (self.getName(), self.getDoId()))
+        print("%s (%d) is in the correct position." %
+              (self.getName(), self.getDoId()))
 
     def denyBattle(self):
         DistributedSuitBase.DistributedSuitBase.denyBattle(self)
@@ -515,7 +534,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
             elif state == 2:
                 # Fly away right now from wherever we are.
                 self.stopPathNow()
-                if self.sp != None:
+                if self.sp is not None:
                     # Go to off state to make sure we can transition to flyaway
                     self.setState('Off')
                     self.setState('FlyAway')
@@ -526,7 +545,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
             elif state == 4:
                 # Fly away right now from wherever we are.
                 self.stopPathNow()
-                if self.sp != None:
+                if self.sp is not None:
                     # Go to off state to make sure we can transition to flyaway
                     self.setState('Off')
                     self.setState('DanceThenFlyAway')
@@ -541,8 +560,10 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         next leg, and all the bookkeeping that goes along with
         that.
         """
-        if self.legList == None:
-            self.notify.warning("Suit %d does not have a path!" % (self.getDoId()))
+        if self.legList is None:
+            self.notify.warning(
+                "Suit %d does not have a path!" %
+                (self.getDoId()))
             return Task.done
 
         # First, which leg have we reached, anyway?
@@ -554,7 +575,10 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
 
         if self.currentLeg != nextLeg:
             self.currentLeg = nextLeg
-            self.doPathLeg(self.legList[nextLeg], elapsed - self.legList.getStartTime(nextLeg))
+            self.doPathLeg(
+                self.legList[nextLeg],
+                elapsed -
+                self.legList.getStartTime(nextLeg))
 
             assert(self.notify.debug("Suit %d reached leg %d of %d." %
                                      (self.getDoId(), nextLeg, numLegs - 1)))
@@ -622,7 +646,6 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
             angle = math.atan2(ydelta, xdelta)
             return rad2Deg(angle) - 90
 
-
     def beginBuildingMove(self, moveIn, doneEvent, suit=0):
         """
         Parameters:  moveIn, 1 if move should be into building, 0 for out
@@ -654,8 +677,8 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         dx = doorPt[0] - streetPt[0]
         dy = doorPt[1] - streetPt[1]
         buildingPt = Point3(doorPt[0] + dx,
-                                    doorPt[1] + dy,
-                                    doorPt[2])
+                            doorPt[1] + dy,
+                            doorPt[2])
 
         if moveIn:
             # if we are moving into the building, all we have to do
@@ -669,14 +692,14 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
             else:
                 moveTime = SuitTimings.toToonBuilding
             return self.beginMove(doneEvent, buildingPt,
-                                   time = moveTime)
+                                  time=moveTime)
         else:
             # if we are moving out of the building, we have to teleport
             # the suit to the new location within the building and tell the
             # suit to move to its original position outside of the building
             #
             return self.beginMove(doneEvent, doorPt, buildingPt,
-                                   time=SuitTimings.fromSuitBuilding)
+                                  time=SuitTimings.fromSuitBuilding)
         return None
 
     def setSPDoId(self, doId):
@@ -687,9 +710,10 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         """
         self.spDoId = doId
         self.sp = self.cr.doId2do.get(doId, None)
-        if self.sp == None and self.spDoId != 0:
-            self.notify.warning("Suit %s created before its suit planner, %d" % (self.doId, self.spDoId))
-
+        if self.sp is None and self.spDoId != 0:
+            self.notify.warning(
+                "Suit %s created before its suit planner, %d" %
+                (self.doId, self.spDoId))
 
     def d_requestBattle(self, pos, hpr):
         # Make sure the local toon can't continue to run around (and
@@ -717,7 +741,6 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         # is waiting for word back from the server about our battle request
         #
         self.setState('WaitForBattle')
-
 
     # Each state will have an enter function, an exit function,
     # and a datagram handler, which will be set during each enter function.
@@ -800,8 +823,8 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
                          1.0, 1.0, 1.0)
 
         self.mtrack = Sequence(
-            LerpPosInterval(self, leg.getLegTime(), b, startPos = a1),
-            name = self.taskName('walkToStreet'))
+            LerpPosInterval(self, leg.getLegTime(), b, startPos=a1),
+            name=self.taskName('walkToStreet'))
         self.mtrack.start(time)
 
     def exitWalkToStreet(self):
@@ -839,8 +862,8 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
                          1.0, 1.0, 1.0)
 
         self.mtrack = Sequence(
-            LerpPosInterval(self, leg.getLegTime(), b1, startPos = a),
-            name = self.taskName('walkFromStreet'))
+            LerpPosInterval(self, leg.getLegTime(), b1, startPos=a),
+            name=self.taskName('walkFromStreet'))
         self.mtrack.start(time)
 
     def exitWalkFromStreet(self):
@@ -873,8 +896,8 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
                             1.0, 1.0, 1.0)
 
         self.mtrack = Sequence(
-            LerpPosInterval(self, leg.getLegTime(), b, startPos = a),
-            name = self.taskName('bellicose'))
+            LerpPosInterval(self, leg.getLegTime(), b, startPos=a),
+            name=self.taskName('bellicose'))
         self.mtrack.start(time)
 
     def exitWalk(self):
@@ -937,7 +960,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         delta = Vec3(b - a)
         length = delta.length()
         delta2 = delta * (self.sp.suitWalkSpeed * leg.getLegTime()) / length
-        delta *= (length - STAND_OUTSIDE_DOOR) /length
+        delta *= (length - STAND_OUTSIDE_DOOR) / length
         b1 = Point3(b - delta)
         a1 = Point3(b1 - delta2)
 
@@ -951,8 +974,8 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
                          1.0, 1.0, 1.0)
 
         self.mtrack = Sequence(
-            LerpPosInterval(self, leg.getLegTime(), b1, startPos = a1),
-            name = self.taskName('fromSuitBuilding'))
+            LerpPosInterval(self, leg.getLegTime(), b1, startPos=a1),
+            name=self.taskName('fromSuitBuilding'))
         self.mtrack.start(time)
 
     def exitFromSuitBuilding(self):
@@ -993,7 +1016,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         delta = Vec3(b - a)
         length = delta.length()
         delta2 = delta * (self.sp.suitWalkSpeed * leg.getLegTime()) / length
-        delta *= (length - STAND_OUTSIDE_DOOR) /length
+        delta *= (length - STAND_OUTSIDE_DOOR) / length
         a1 = Point3(a + delta)
         b1 = Point3(a1 + delta2)
 
@@ -1004,8 +1027,8 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
                          1.0, 1.0, 1.0)
 
         self.mtrack = Sequence(
-            LerpPosInterval(self, leg.getLegTime(), b1, startPos = a1),
-            name = self.taskName('toSuitBuilding'))
+            LerpPosInterval(self, leg.getLegTime(), b1, startPos=a1),
+            name=self.taskName('toSuitBuilding'))
         self.mtrack.start(time)
 
     def exitToSuitBuilding(self):
@@ -1109,7 +1132,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         flyMtrack = self.beginSupaFlyMove(b, 0, 'flyAway')
         self.mtrack = Sequence(
             danceTrack, flyMtrack,
-            name = self.taskName('danceThenFlyAway'))
+            name=self.taskName('danceThenFlyAway'))
         self.mtrack.start()
 
     def exitDanceThenFlyAway(self):
@@ -1121,7 +1144,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         # to (we might have interrupted the track before it was done).
         self.detachPropeller()
 
-    def playCurrentDialogue(self, dialogue, chatFlags, interrupt = 1):
+    def playCurrentDialogue(self, dialogue, chatFlags, interrupt=1):
         if interrupt and (self.__currentDialogue is not None):
             self.__currentDialogue.stop()
         self.__currentDialogue = dialogue
@@ -1140,14 +1163,17 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
                 # message.  This way we aren't fooled by long pages
                 # that end in question marks.
                 self.playDialogueForString(self.nametag.getChat())
-                if (self.soundChatBubble != None):
+                if (self.soundChatBubble is not None):
                     base.playSfx(self.soundChatBubble, node=self)
-            elif (self.nametag.getChatStomp() > 0 ):
-                self.playDialogueForString(self.nametag.getStompText(), self.nametag.getStompDelay())
+            elif (self.nametag.getChatStomp() > 0):
+                self.playDialogueForString(
+                    self.nametag.getStompText(),
+                    self.nametag.getStompDelay())
                 if hasattr(base.cr, 'chatLog'):
-                    base.cr.chatLog.addToLog('\1cogGray\1{0}\2: {1}'.format(self.name, self.nametag.getStompText()))
-   
-    def playDialogueForString(self, chatString, delay = 0.0):
+                    base.cr.chatLog.addToLog(
+                        f'cogGray{self.name}: {self.nametag.getStompText()}')
+
+    def playDialogueForString(self, chatString, delay=0.0):
         """
         Play dialogue samples to match the given chat string
         """
@@ -1160,7 +1186,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
             # special sound
             type = "special"
         elif (searchString.find(OTPLocalizer.DialogExclamation) >= 0):
-            #exclamation
+            # exclamation
             type = "exclamation"
         elif (searchString.find(OTPLocalizer.DialogQuestion) >= 0):
             # question
@@ -1185,7 +1211,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
 
         self.playDialogue(type, length, delay)
 
-    def playDialogue(self, type, length, delay = 0.0):
+    def playDialogue(self, type, length, delay=0.0):
         """playDialogue(self, string, int)
         Play the specified type of dialogue for the specified time
         """
@@ -1195,7 +1221,7 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
 
         # Choose the appropriate sound effect.
         dialogueArray = self.getDialogueArray()
-        if dialogueArray == None:
+        if dialogueArray is None:
             return
 
         sfxIndex = None
@@ -1215,14 +1241,17 @@ class DistributedSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
         else:
             notify.error("unrecognized dialogue type: ", type)
 
-        if sfxIndex != None and sfxIndex < len(dialogueArray) and \
-           dialogueArray[sfxIndex] != None:
-            soundSequence = Sequence(Wait(delay),
-                            SoundInterval(dialogueArray[sfxIndex], node = None,
-                                           listenerNode = base.localAvatar,
-                                           loop = 0,
-                                           volume = 1.0 ),
-                                           )
+        if sfxIndex is not None and sfxIndex < len(dialogueArray) and \
+           dialogueArray[sfxIndex] is not None:
+            soundSequence = Sequence(
+                Wait(delay),
+                SoundInterval(
+                    dialogueArray[sfxIndex],
+                    node=None,
+                    listenerNode=base.localAvatar,
+                    loop=0,
+                    volume=1.0),
+            )
             self.soundSequenceList.append(soundSequence)
             soundSequence.start()
 

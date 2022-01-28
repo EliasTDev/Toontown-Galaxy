@@ -51,25 +51,26 @@ from toontown.uberdog import DataStoreGlobals
 if (simbase.wantKarts):
     from toontown.racing.KartDNA import *
 
+
 class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory("ToontownMagicWordManagerAI")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "ToontownMagicWordManagerAI")
 
     GameAvatarClass = DistributedToonAI.DistributedToonAI
 
     # is it a safezone?
     Str2szId = {
         'ttc': ToontownGlobals.ToontownCentral,
-        'tt':  ToontownGlobals.ToontownCentral,
-        'tc':  ToontownGlobals.ToontownCentral,
-        'dd':  ToontownGlobals.DonaldsDock,
-        'dg':  ToontownGlobals.DaisyGardens,
+        'tt': ToontownGlobals.ToontownCentral,
+        'tc': ToontownGlobals.ToontownCentral,
+        'dd': ToontownGlobals.DonaldsDock,
+        'dg': ToontownGlobals.DaisyGardens,
         'mml': ToontownGlobals.MinniesMelodyland,
-        'mm':  ToontownGlobals.MinniesMelodyland,
-        'br':  ToontownGlobals.TheBrrrgh,
+        'mm': ToontownGlobals.MinniesMelodyland,
+        'br': ToontownGlobals.TheBrrrgh,
         'ddl': ToontownGlobals.DonaldsDreamland,
-        'dl':  ToontownGlobals.DonaldsDreamland,
-        }
-
+        'dl': ToontownGlobals.DonaldsDreamland,
+    }
 
     def __init__(self, air):
         MagicWordManagerAI.MagicWordManagerAI.__init__(self, air)
@@ -78,24 +79,16 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
 
     def doMagicWord(self, word, av, zoneId, senderId):
         def wordIs(w, word=word):
-            return word[:(len(w)+1)] == ('%s ' % w) or word == w
+            return word[:(len(w) + 1)] == f'{w} ' or word == w
 
-        if (MagicWordManagerAI.MagicWordManagerAI.doMagicWord(self, word, av,
-                                                zoneId, senderId) == 1):
+        if (MagicWordManagerAI.MagicWordManagerAI.doMagicWord(
+                self, word, av, zoneId, senderId) == 1):
             pass
 
-
-
-
-        
         if word == "~poor":
             av.b_setMoney(0)
             av.b_setBankMoney(0)
             self.notify.debug(av._name + " is now poor")
-
-
-
- 
 
         elif word == "~amateur+":
             av.experience.setAllExp(9)
@@ -123,8 +116,8 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             av.b_setQuestCarryLimit(ToontownGlobals.MaxQuestCarryLimit)
             av.experience.makeExpHigh()
             av.d_setExperience(av.experience.makeNetString())
-            av.b_setMaxHp(ToontownGlobals.MaxHpLimit-15)
-            av.b_setHp(ToontownGlobals.MaxHpLimit-15)
+            av.b_setMaxHp(ToontownGlobals.MaxHpLimit - 15)
+            av.b_setHp(ToontownGlobals.MaxHpLimit - 15)
             self.notify.debug("High exp for " + av._name)
 
         elif word == "~maxexp--":
@@ -140,16 +133,14 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             av.experience.maxOutExp()
             av.d_setExperience(av.experience.makeNetString())
             av.b_setQuestHistory([])
-            av.b_setRewardHistory(Quests.DL_TIER+2, [])
+            av.b_setRewardHistory(Quests.DL_TIER + 2, [])
             av.fixAvatar()
             # 7LP for fishing, + 5LP for SellbotHQ, /2
-            av.b_setMaxHp(av.getMaxHp()+6)
+            av.b_setMaxHp(av.getMaxHp() + 6)
             av.b_setHp(av.getMaxHp())
             trackAccess = [1, 1, 1, 1, 1, 1, 1]
             trackAccess[random.choice((0, 1, 2, 3, 6))] = 0
             av.b_setTrackAccess(trackAccess)
-
-
 
         elif word == "~trophies":
             # Report the top 10 trophy holders.
@@ -162,28 +153,12 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     avName = av._name
                 else:
                     avName = avId
-                response += '%s %s\n' % (score, avName)
+                response += f'{score} {avName}\n'
 
             self.down_setMagicWordResponse(senderId, response)
 
-
-
-
-
-
         elif word[:8] == "~welcome":
             self.doWelcome(word, av, zoneId, senderId)
-
-
-
-
-
-
-
-
-
-  
-
 
         elif word == "~visitHQ":
             # Sets quests to return to HQ Officer instead of whomever.
@@ -192,13 +167,8 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 quest[2] = Quests.ToonHQ
             av.b_setQuests(av.quests)
 
-
-
-
         elif word[:16] == "~buildingPercent":
             self.doBuildingPercent(word, av, zoneId, senderId)
-
-
 
         elif wordIs('~battle'):
             self.doBattle(word, av, zoneId, senderId)
@@ -208,10 +178,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
 
         # Suit Invasions
 
-
         # Fireworks
-
-
 
         elif word == "~save":
             # Save the AI state.  Presently, this is just the set of
@@ -238,22 +205,22 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     fId = FactoryManagerAI.FactoryManagerAI.factoryId
                     FactoryManagerAI.FactoryManagerAI.factoryId = None
                     self.down_setMagicWordResponse(
-                        senderId, "cancelled request for factory %s" % fId)
+                        senderId, f"cancelled request for factory {fId}")
             else:
                 factoryId = int(args[1])
-                if not factoryId in ToontownGlobals.factoryId2factoryType:
+                if factoryId not in ToontownGlobals.factoryId2factoryType:
                     self.down_setMagicWordResponse(
                         senderId,
-                        "unknown factory '%s'" % factoryId)
+                        f"unknown factory '{factoryId}'")
                 else:
                     FactoryManagerAI.FactoryManagerAI.factoryId = factoryId
                     self.down_setMagicWordResponse(
                         senderId,
-                        "selected factory %s" % factoryId)
+                        f"selected factory {factoryId}")
 
         elif wordIs('~mintId'):
             args = word.split()
-            postName = 'mintId-%s' % av.doId
+            postName = f'mintId-{av.doId}'
             if len(args) < 2:
                 if bboard.has(postName):
                     bboard.remove(postName)
@@ -265,16 +232,16 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     id = int(args[1])
                     # make sure it's a valid id
                     foo = ToontownGlobals.MintNumRooms[id]
-                except:
-                    response = 'bad mint id: %s' % args[1]
+                except BaseException:
+                    response = f'bad mint id: {args[1]}'
                 else:
                     bboard.post(postName, id)
-                    response = 'selected mint %s' % id
+                    response = f'selected mint {id}'
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~mintFloor'):
             args = word.split()
-            postName = 'mintFloor-%s' % av.doId
+            postName = f'mintFloor-{av.doId}'
             if len(args) < 2:
                 if bboard.has(postName):
                     bboard.remove(postName)
@@ -284,16 +251,16 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             else:
                 try:
                     floor = int(args[1])
-                except:
-                    response = 'bad floor index: %s' % args[1]
+                except BaseException:
+                    response = f'bad floor index: {args[1]}'
                 else:
                     bboard.post(postName, floor)
-                    response = 'selected floor %s' % floor
+                    response = f'selected floor {floor}'
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~mintRoom'):
             args = word.split()
-            postName = 'mintRoom-%s' % av.doId
+            postName = f'mintRoom-{av.doId}'
             if len(args) < 2:
                 if bboard.has(postName):
                     bboard.remove(postName)
@@ -307,19 +274,19 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 try:
                     id = int(args[1])
                     name = MintRoomSpecs.CashbotMintRoomId2RoomName[id]
-                except:
+                except BaseException:
                     if args[1] in MintRoomSpecs.CashbotMintRoomName2RoomId:
                         name = args[1]
                         id = MintRoomSpecs.CashbotMintRoomName2RoomId[name]
                     else:
-                        response = 'invalid room: %s' % args[1]
+                        response = f'invalid room: {args[1]}'
                 bboard.post(postName, id)
-                response = 'selected mint room %s: %s' % (id, name)
+                response = f'selected mint room {id}: {name}'
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~stageRoom'):
             args = word.split()
-            postName = 'stageRoom-%s' % av.doId
+            postName = f'stageRoom-{av.doId}'
             if len(args) < 2:
                 if bboard.has(postName):
                     bboard.remove(postName)
@@ -333,28 +300,27 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 try:
                     id = int(args[1])
                     name = StageRoomSpecs.CashbotStageRoomId2RoomName[id]
-                except:
+                except BaseException:
                     if args[1] in StageRoomSpecs.CashbotStageRoomName2RoomId:
                         name = args[1]
                         id = StageRoomSpecs.CashbotStageRoomName2RoomId[name]
                     else:
-                        response = 'invalid room: %s' % args[1]
+                        response = f'invalid room: {args[1]}'
                 bboard.post(postName, id)
-                response = 'selected stage room %s: %s' % (id, name)
+                response = f'selected stage room {id}: {name}'
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs("~autoRestock"):
             args = word.split()
-            postName = 'autoRestock-%s' % av.doId
+            postName = f'autoRestock-{av.doId}'
             enable = not bboard.get(postName, 0)
             # are they explicitly setting the state?
             if len(args) > 1:
                 try:
                     enable = int(args[1])
-                except:
+                except BaseException:
                     self.down_setMagicWordResponse(senderId,
-                                                   'invalid state flag: %s' %
-                                                   args[1])
+                                                   f'invalid state flag: {args[1]}')
                     return
             if enable:
                 state = 'ON'
@@ -362,7 +328,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             else:
                 state = 'OFF'
                 bboard.remove(postName)
-            self.down_setMagicWordResponse(senderId, 'autoRestock %s' % state)
+            self.down_setMagicWordResponse(senderId, f'autoRestock {state}')
 
         elif wordIs("~resistanceRestock"):
             from toontown.chat import ResistanceChat
@@ -408,16 +374,13 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 suitName = SuitDNA.suitHeadTypes[suitIndex]
                 suitFullName = SuitBattleGlobals.SuitAttributes[suitName]['name']
                 self.down_setMagicWordResponse(
-                    senderId, "%s summons added for %s" % (type, suitFullName))
+                    senderId, f"{type} summons added for {suitFullName}")
 
         elif wordIs("~treasures"):
             self.doTreasures(word, av, zoneId, senderId)
 
         elif wordIs("~emote"):
             self.doEmotes(word, av, zoneId, senderId)
-
-
-
 
         # Fishing
         elif word == "~clearFishTank":
@@ -433,12 +396,15 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             # Clear the fish tank
             av.b_setFishTank([], [], [])
             # Feedback to sender
-            self.down_setMagicWordResponse(senderId, ("Sold fish in tank for %s jellbeans." % totalValue))
+            self.down_setMagicWordResponse(
+                senderId,
+                f"Sold fish in tank for {totalValue} jellbeans.")
 
         elif word == "~clearFishCollection":
             av.b_setFishCollection([], [], [])
             av.b_setFishingTrophies([])
-            self.down_setMagicWordResponse(senderId, "Cleared fish collection.")
+            self.down_setMagicWordResponse(
+                senderId, "Cleared fish collection.")
 
         elif word == "~completeFishCollection":
             from toontown.fishing import FishGlobals
@@ -454,7 +420,8 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     weightList.append(weight)
 
             av.b_setFishCollection(genusList, speciesList, weightList)
-            self.down_setMagicWordResponse(senderId, "Complete fish collection.")
+            self.down_setMagicWordResponse(
+                senderId, "Complete fish collection.")
 
         elif word == "~randomFishTank":
             av.makeRandomFishTank()
@@ -465,7 +432,6 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             allTrophyList = list(FishGlobals.TrophyDict.keys())
             av.b_setFishingTrophies(allTrophyList)
             self.down_setMagicWordResponse(senderId, "All fishing trophies")
-
 
         elif wordIs('~inGameEdit'):
             # edit a level in the game engine
@@ -491,7 +457,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             level = self.air.doId2do.get(levelDoId)
             if not level:
                 self.down_setMagicWordResponse(
-                    senderId, ("Level %s not found" % levelDoId))
+                    senderId, (f"Level {levelDoId} not found"))
                 return
 
             from toontown.coghq import DistributedInGameEditorAI
@@ -499,24 +465,14 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 self.air, level, senderId, editUsername)
 
             self.down_setMagicWordResponse(
-                senderId, ("Editing level %s as %s" % (
-                levelDoId, editUsername)))
-
-
-
-
+                senderId, (f"Editing level {levelDoId} as {editUsername}"))
 
         elif wordIs("~resetNPCFriendsDict"):
             av.resetNPCFriendsDict()
             self.down_setMagicWordResponse(senderId, "Reset NPC Friends Dict")
 
-
-
         elif wordIs("~bossBattle"):
             self.doBossBattle(word, av, zoneId, senderId)
-
-
-
 
         elif wordIs("~noParts"):
             args = word.split()
@@ -525,14 +481,8 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 parts[dept] = 0
 
             av.b_setCogParts(parts)
-            self.down_setMagicWordResponse(senderId, "Set cog parts: %s" % (parts))
-
-
-
-
-  
-
-
+            self.down_setMagicWordResponse(
+                senderId, f"Set cog parts: {parts}")
 
         elif wordIs("~setPaid"):
             args = word.split()
@@ -546,20 +496,18 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     paid = 0
                     av.b_setAccess(OTPGlobals.AccessVelvetRope)
             else:
-                self.down_setMagicWordResponse(senderId, "0 for unpaid 1 for paid")
+                self.down_setMagicWordResponse(
+                    senderId, "0 for unpaid 1 for paid")
                 return
 
-            self.down_setMagicWordResponse(senderId, "setPaid: %s" % (paid))
-
-
-
-     
+            self.down_setMagicWordResponse(senderId, f"setPaid: {paid}")
 
         elif wordIs('~pet') and simbase.wantPets:
             def summonPet(petId, callback=None, zoneId=zoneId):
                 def handleGetPet(success, pet, petId=petId, zoneId=zoneId):
                     if success:
-                        pet.generateWithRequiredAndId(petId, self.air.districtId, zoneId)
+                        pet.generateWithRequiredAndId(
+                            petId, self.air.districtId, zoneId)
                     if callback is not None:
                         callback(success, pet)
                 self.air.petMgr.getPetObject(petId, handleGetPet)
@@ -587,10 +535,10 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 response = 'creating new pet...'
             else:
                 if petId in self.air.doId2do:
-                    response = 'pet %s already active' % petId
+                    response = f'pet {petId} already active'
                 else:
                     summonPet(petId)
-                    response = 'summoning pet %s...' % petId
+                    response = f'summoning pet {petId}...'
 
             self.down_setMagicWordResponse(senderId, response)
 
@@ -598,7 +546,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             pet, response = self.getPet(av)
             if pet:
                 pet.requestDelete()
-                response = "pet %s dismissed" % pet.doId
+                response = f"pet {pet.doId} dismissed"
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~deletePet') and simbase.wantPets:
@@ -611,7 +559,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 if pet is not None:
                     pet.requestDelete()
                 self.air.petMgr.deleteToonsPet(av.doId)
-                response = "deleted pet %s" % petId
+                response = f"deleted pet {petId}"
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~petName') and simbase.wantPets:
@@ -624,7 +572,6 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     pet.b_setPetName(args[1])
                     response = 'name changed'
             self.down_setMagicWordResponse(senderId, response)
-
 
         elif wordIs('~feed') and simbase.wantPets:
             pet, response = self.getPet(av)
@@ -651,14 +598,14 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             pet, response = self.getPet(av)
             if pet:
                 pet.handleStay(av)
-                response = "Stay, %s." % pet.getPetName()
+                response = f"Stay, {pet.getPetName()}."
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~shoo') and simbase.wantPets:
             pet, response = self.getPet(av)
             if pet:
                 pet.handleShoo(av)
-                response = "Shoo, %s." % pet.getPetName()
+                response = f"Shoo, {pet.getPetName()}."
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~maxMood') and simbase.wantPets:
@@ -686,7 +633,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     comp = args[1]
                     value = float(args[2])
                     if comp not in PetMood.PetMood.Components:
-                        response = "unknown mood '%s'" % comp
+                        response = f"unknown mood '{comp}'"
                     else:
                         pet.mood.setComponent(comp, value)
                         response = "mood set"
@@ -702,7 +649,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     simbase.petMoodTimescale = float(args[1])
                     # make the new timescale take effect immediately
                     pet.mood._driftMoodTask()
-                    response = 'pet mood timescale = %s' % args[1]
+                    response = f'pet mood timescale = {args[1]}'
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~typicalTraits') and simbase.wantPets:
@@ -710,7 +657,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             args = word.split()
             if len(args) > 1:
                 szId = self.Str2szId.get(args[1])
-            if szId == None:
+            if szId is None:
                 szId = ToontownGlobals.ToontownCentral
 
             pet, response = self.getPet(av)
@@ -719,7 +666,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 # delete him to make sure we don't have a pet whose
                 # internal state is out-of-sync
                 pet.requestDelete()
-                response = 'set typical traits for %s' % szId
+                response = f'set typical traits for {szId}'
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~medianTraits') and simbase.wantPets:
@@ -727,7 +674,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             args = word.split()
             if len(args) > 1:
                 szId = self.Str2szId.get(args[1])
-            if szId == None:
+            if szId is None:
                 szId = ToontownGlobals.ToontownCentral
 
             pet, response = self.getPet(av)
@@ -736,7 +683,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 # delete him to make sure we don't have a pet whose
                 # internal state is out-of-sync
                 pet.requestDelete()
-                response = 'set median traits for %s' % szId
+                response = f'set median traits for {szId}'
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~lowTraits') and simbase.wantPets:
@@ -744,7 +691,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             args = word.split()
             if len(args) > 1:
                 szId = self.Str2szId.get(args[1])
-            if szId == None:
+            if szId is None:
                 szId = ToontownGlobals.ToontownCentral
 
             pet, response = self.getPet(av)
@@ -753,7 +700,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 # delete him to make sure we don't have a pet whose
                 # internal state is out-of-sync
                 pet.requestDelete()
-                response = 'set low traits for %s' % szId
+                response = f'set low traits for {szId}'
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~highTraits') and simbase.wantPets:
@@ -761,7 +708,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             args = word.split()
             if len(args) > 1:
                 szId = self.Str2szId.get(args[1])
-            if szId == None:
+            if szId is None:
                 szId = ToontownGlobals.ToontownCentral
 
             pet, response = self.getPet(av)
@@ -770,7 +717,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 # delete him to make sure we don't have a pet whose
                 # internal state is out-of-sync
                 pet.requestDelete()
-                response = 'set high traits for %s' % szId
+                response = f'set high traits for {szId}'
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~leash') and simbase.wantPets:
@@ -816,13 +763,13 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
         elif wordIs('~petStress') and simbase.wantPets:
             from toontown.pets import DistributedPetAI
             args = word.split()
-            numPets = 56 # 50 friends, six Toons/acct #100 * 3 # 500 toons, 100 at estate, 3 pets per
+            numPets = 56  # 50 friends, six Toons/acct #100 * 3 # 500 toons, 100 at estate, 3 pets per
             if len(args) > 1:
                 numPets = int(args[1])
             for i in range(numPets):
                 pet = DistributedPetAI.DistributedPetAI(self.air)
                 # make up a fake owner doId
-                pet._initFakePet(100+i, 'StressPet%s' % i)
+                pet._initFakePet(100 + i, f'StressPet{i}')
                 pet.generateWithRequired(zoneId)
                 pet.setPos(randFloat(-30, 30),
                            randFloat(-30, 30), 0)
@@ -837,12 +784,12 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 id = int(num)
                 if id not in PetTricks.Tricks:
                     invalid = 1
-                    response = 'invalid trick ID: %s' % id
+                    response = f'invalid trick ID: {id}'
                     break
                 trickIds.append(id)
             if not invalid:
                 av.b_setPetTrickPhrases(trickIds)
-                response = 'set pet trick phrases: %s' % trickIds
+                response = f'set pet trick phrases: {trickIds}'
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~trickAptitude') and simbase.wantPets:
@@ -854,8 +801,8 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 else:
                     from toontown.pets import PetTricks
                     pet.b_setTrickAptitudes([float(args[1])] *
-                                            (len(PetTricks.Tricks)-1))
-                    response = 'trick aptitude = %s' % args[1]
+                                            (len(PetTricks.Tricks) - 1))
+                    response = f'trick aptitude = {args[1]}'
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~spamTrick'):
@@ -887,7 +834,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             if len(args) > 1:
                 showZone = int(args[1])
             from otp.ai import ShowBaseAI
-            base = ShowBaseAI.ShowBaseAI('zone %s' % showZone)
+            base = ShowBaseAI.ShowBaseAI(f'zone {showZone}')
             base.zoneData = AIZoneData(self.air.districtId, showZone)
             render = base.zoneData.getRender()
             base.camNode.setScene(render)
@@ -897,7 +844,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             axis.reparentTo(render)
             axis.setPosHpr(render, 0, 0, 0, 0, 0, 0)
             self.down_setMagicWordResponse(
-                senderId, 'rendering AI zone %s' % showZone)
+                senderId, f'rendering AI zone {showZone}')
 
         elif __dev__ and wordIs("~aics"):
             showZone = zoneId
@@ -920,7 +867,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
 
             render.csVisible = not csVisible
             self.down_setMagicWordResponse(
-                senderId, 'collisions %s for %s' % (action, showZone))
+                senderId, f'collisions {action} for {showZone}')
 
         ### Karting ###
         elif(word[:8] == '~BuyKart'):
@@ -929,19 +876,19 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 #accList[-1] = getDefaultColor()
                 accList[-2] = getDefaultRim()
 
-                response = "Av %s now owns accessories: %s" % (av.getDoId(), accList)
+                response = f"Av {av.getDoId()} now owns accessories: {accList}"
                 av.b_setKartAccessoriesOwned(accList)
                 self.down_setMagicWordResponse(senderId, response)
 
         elif(word[:13] == '~BuyAccessory'):
             if (simbase.wantKarts):
-                response = "Av %s attempting to buy accessory %s" % (av.getDoId(), word[14:])
+                response = f"Av {av.getDoId()} attempting to buy accessory {word[14:]}"
                 av.addOwnedAccessory(int(word[14:]))
                 self.down_setMagicWordResponse(senderId, response)
 
         elif(word[:8] == '~Tickets'):
             if (simbase.wantKarts):
-                response = "Av %s now has %s tickets" % (av.getDoId(), word[9:])
+                response = f"Av {av.getDoId()} now has {word[9:]} tickets"
                 av.b_setTickets(int(word[9:]))
                 self.down_setMagicWordResponse(senderId, response)
 
@@ -949,18 +896,18 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             if (simbase.wantKarts):
                 av.setAllowSoloRace(not av.allowSoloRace)
                 if av.allowSoloRace:
-                    response = "Av %s can now race solo" % (av.getDoId())
+                    response = f"Av {av.getDoId()} can now race solo"
                 else:
-                    response = "Av %s can no longer Race solo" % (av.getDoId())
+                    response = f"Av {av.getDoId()} can no longer Race solo"
                 self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~allowRaceTimeout'):
             if (simbase.wantKarts):
                 av.setAllowRaceTimeout(not av.allowRaceTimeout)
                 if av.allowRaceTimeout:
-                    response = "Av %s can timeout of races" % (av.getDoId())
+                    response = f"Av {av.getDoId()} can timeout of races"
                 else:
-                    response = "Av %s can not timeout of races" % (av.getDoId())
+                    response = f"Av {av.getDoId()} can not timeout of races"
                 self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~drive'):
@@ -981,7 +928,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
         elif wordIs("~party"):
             self.doParty(word, av, zoneId, senderId)
 
-        #Gardening
+        # Gardening
         elif wordIs("~garden"):
             self.doGarden(word, av, zoneId, senderId)
 
@@ -1045,7 +992,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
 
         elif wordIs('~trialerCount'):
             total = 0
-            trialer =0
+            trialer = 0
             paid = 0
             unknown = 0
             allToons = simbase.air.doFindAll('DistributedToonAI')
@@ -1057,13 +1004,15 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     trialer += 1
                 else:
                     unknown += 1
-            response = "%d trialers, %d paid, %d total" % (trialer, paid, total)
+            response = "%d trialers, %d paid, %d total" % (
+                trialer, paid, total)
             if unknown:
                 response += "%d unknown" % unknown
             self.down_setMagicWordResponse(senderId, response)
 
         elif wordIs('~deleteBackupStores'):
-            storeClient = DataStoreAIClient(self.air, DataStoreGlobals.GEN, None)
+            storeClient = DataStoreAIClient(
+                self.air, DataStoreGlobals.GEN, None)
             storeClient.deleteBackupStores()
             storeClient.closeStore()
 
@@ -1073,20 +1022,21 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             if __dev__ or av.hasGMName():
                 # Basically this is a signal that a GM has logged in.
                 if av.hasGMName():
-                    self.air.writeServerEvent('GM', av.doId, 'GM %s used auto-rich' % av.getName())
-                    assert self.notify.debug('GM %s %s used auto-rich' % (av.doId, av.getName()))
+                    self.air.writeServerEvent(
+                        'GM', av.doId, f'GM {av.getName()} used auto-rich')
+                    assert self.notify.debug(
+                        f'GM {av.doId} {av.getName()} used auto-rich')
 
                 args = word.split()
-                postName = 'autoRich-%s' % av.doId
+                postName = f'autoRich-{av.doId}'
                 enable = not bboard.get(postName, 0)
                 # are they explicitly setting the state?
                 if len(args) > 1:
                     try:
                         enable = int(args[1])
-                    except:
-                        self.down_setMagicWordResponse(senderId,
-                                                       'invalid state flag: %s' %
-                                                       args[1])
+                    except BaseException:
+                        self.down_setMagicWordResponse(
+                            senderId, f'invalid state flag: {args[1]}')
                         return
                 if enable:
                     state = 'ON'
@@ -1096,9 +1046,12 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 else:
                     state = 'OFF'
                     bboard.remove(postName)
-                self.down_setMagicWordResponse(senderId, 'autoRich %s' % state)
+                self.down_setMagicWordResponse(senderId, f'autoRich {state}')
             else:
-                self.air.writeServerEvent('suspicious', av.doId, 'non-GM toon with name %s using ~autoRich' % av.getName())
+                self.air.writeServerEvent(
+                    'suspicious',
+                    av.doId,
+                    f'non-GM toon with name {av.getName()} using ~autoRich')
 
         else:
             # The word is not an AI-side magic word.  If the sender is
@@ -1106,17 +1059,14 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             # word down to the target client-side MagicWordManager to
             # execute a client-side magic word.
             if (senderId != av.doId):
-                self.sendUpdateToAvatarId(av.doId, 'setMagicWord', [word, av.doId, zoneId])
-
-
-
-
-
+                self.sendUpdateToAvatarId(
+                    av.doId, 'setMagicWord', [
+                        word, av.doId, zoneId])
 
     def doExp(self, word, av, zoneId, senderId):
         """Handle the ~exp magic word."""
         track = None
-        args=word.split()
+        args = word.split()
         trackIndex = -1
         increment = 0
         gotIncrement = 0
@@ -1136,21 +1086,26 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     if not gotIncrement:
                         # No increment specified; the default is whatever
                         # it takes to get to the next track.
-                        increment = av.experience.getNextExpValue(trackIndex) - av.experience.getExp(trackIndex)
+                        increment = av.experience.getNextExpValue(
+                            trackIndex) - av.experience.getExp(trackIndex)
 
-                    self.notify.debug("Adding %d to %s track for %s." % (increment, ToontownBattleGlobals.Tracks[trackIndex], av._name))
+                    self.notify.debug(
+                        "Adding %d to %s track for %s." %
+                        (increment, ToontownBattleGlobals.Tracks[trackIndex], av._name))
                     av.experience.addExp(trackIndex, increment)
         else:
             if not gotIncrement:
                 # No increment specified; the default is whatever
                 # it takes to get to the next track.
-                increment = av.experience.getNextExpValue(trackIndex) - av.experience.getExp(trackIndex)
+                increment = av.experience.getNextExpValue(
+                    trackIndex) - av.experience.getExp(trackIndex)
 
-            self.notify.debug("Adding %d to %s track for %s." % (increment, ToontownBattleGlobals.Tracks[trackIndex], av._name))
+            self.notify.debug(
+                "Adding %d to %s track for %s." %
+                (increment, ToontownBattleGlobals.Tracks[trackIndex], av._name))
             av.experience.addExp(trackIndex, increment)
 
         av.d_setExperience(av.experience.makeNetString())
-
 
     def doTrophy(self, word, av, zoneId, senderId):
         """Handle the ~trophy magic word: artificially set (or
@@ -1160,34 +1115,26 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
         if len(args) > 1:
             score = int(args[1])
 
-            response = "Set trophy score to %s." % (score)
+            response = f"Set trophy score to {score}."
             self.down_setMagicWordResponse(senderId, response)
         else:
             # No score specified; restore the actual trophy score.
             score = self.air.trophyMgr.getTrophyScore(av.doId)
 
-            response = "Trophy score is %s." % (score)
+            response = f"Trophy score is {score}."
             self.down_setMagicWordResponse(senderId, response)
 
         av.d_setTrophyScore(score)
-
-
-
-
-
-
-
-
 
     def formatWelcomeValley(self, hood):
         mgr = self.air.welcomeValleyManager
 
         if hood == mgr.newHood:
-            return "%s N" % (hood[0].zoneId)
+            return f"{hood[0].zoneId} N"
         elif hood in mgr.removingHoods:
-            return "%s R" % (hood[0].zoneId)
+            return f"{hood[0].zoneId} R"
         else:
-            return "%s" % (hood[0].zoneId)
+            return f"{hood[0].zoneId}"
 
     def doWelcome(self, word, av, zoneId, senderId):
         """Handle the ~welcome magic word, for managing Welcome Valley."""
@@ -1204,7 +1151,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
 
         if len(args) == 1:
             # No parameter: report the current zone and population.
-            if hood == None:
+            if hood is None:
                 response = "Not in Welcome Valley."
             else:
                 response = "%s, pg = %s, hood = %s" % (
@@ -1217,8 +1164,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             # Welcome Valleys.
 
             response = ""
-            hoodIds = list(mgr.welcomeValleys.keys())
-            hoodIds.sort()
+            hoodIds = sorted(mgr.welcomeValleys.keys())
             for hoodId in hoodIds:
                 hood = mgr.welcomeValleys[hoodId]
                 response += "\n%s %s" % (
@@ -1235,8 +1181,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             # Welcome Valleys.
 
             response = ""
-            hoodIds = list(mgr.welcomeValleys.keys())
-            hoodIds.sort()
+            hoodIds = sorted(mgr.welcomeValleys.keys())
             for hoodId in hoodIds:
                 hood = mgr.welcomeValleys[hoodId]
                 response += "\n%s %s" % (
@@ -1254,8 +1199,9 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             # match any real avatars.
             avId = int(args[2])
 
-            zoneId = mgr.avatarRequestZone(avId, ToontownGlobals.WelcomeValleyToken)
-            response = "%s assigned to %s." % (avId, zoneId)
+            zoneId = mgr.avatarRequestZone(
+                avId, ToontownGlobals.WelcomeValleyToken)
+            response = f"{avId} assigned to {zoneId}."
 
         elif args[1] == "logout":
             # ~welcome logout avId: simulate a player logging out.
@@ -1266,9 +1212,9 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             avZoneId = mgr.avatarZones.get(avId)
             if avZoneId:
                 mgr.avatarLogout(avId)
-                response = "%s logged out from %s." % (avId, avZoneId)
+                response = f"{avId} logged out from {avZoneId}."
             else:
-                response = "%s is unknown." % (avId)
+                response = f"{avId} is unknown."
 
         elif args[1] == "zone":
             # ~welcome zone avId [zoneId]: simulate a player switching
@@ -1281,7 +1227,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 newZoneId = zoneId
 
             zoneId = mgr.avatarRequestZone(avId, newZoneId)
-            response = "%s redirected to %s." % (avId, zoneId)
+            response = f"{avId} redirected to {zoneId}."
 
         elif args[1] == "new":
             # ~welcome new [hoodId]: immediately move the indicated
@@ -1315,7 +1261,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             # are actually real avatars; logs out any others.
             removed = mgr.checkAvatars()
             if removed:
-                response = "Logged out %s phony avatars." % (len(removed))
+                response = f"Logged out {len(removed)} phony avatars."
             else:
                 response = "All avatars real."
 
@@ -1336,26 +1282,24 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 WelcomeValleyManagerAI.PGmaximum)
 
         else:
-            response = "Invalid welcome command: %s" % (args[1])
+            response = f"Invalid welcome command: {args[1]}"
 
         self.down_setMagicWordResponse(senderId, response)
 
     def __sortBuildingDist(self, a, b):
         return a[0] - b[0]
 
-
- 
-
     def doBuildingPercent(self, word, av, zoneId, senderId):
         """Handle the ~buildingPercent magic word."""
         percent = None
 
-        args=word.split()
+        args = word.split()
         if len(args) > 1:
             percent = int(args[1])
 
-        if percent == None:
-            response = "Suit building target percentage is %d" % (DistributedSuitPlannerAI.DistributedSuitPlannerAI.TOTAL_SUIT_BUILDING_PCT)
+        if percent is None:
+            response = "Suit building target percentage is %d" % (
+                DistributedSuitPlannerAI.DistributedSuitPlannerAI.TOTAL_SUIT_BUILDING_PCT)
         else:
             DistributedSuitPlannerAI.DistributedSuitPlannerAI.TOTAL_SUIT_BUILDING_PCT = percent
             sp = list(self.air.suitPlanners.values())[0]
@@ -1364,10 +1308,6 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
 
         self.down_setMagicWordResponse(senderId, response)
 
-
-
-
-
     def doBattle(self, word, av, zoneId, senderId):
         """Handle the ~battle magic word."""
 
@@ -1375,22 +1315,23 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
         # near or involved in.  We'll have to walk through all the
         # battles currently in the doId2do map.
         battle = self.__findInvolvedBattle(av.doId)
-        if battle == None:
+        if battle is None:
             battle = self.__findBattleInZone(zoneId)
 
-        if battle == None:
-            response = "No battle in zone %s." % (zoneId)
+        if battle is None:
+            response = f"No battle in zone {zoneId}."
         else:
             args = word.split()
             if len(args) < 2:
-                response = "Battle %s in state %s" % (battle.doId, battle.fsm.getCurrentState().getName())
+                response = "Battle %s in state %s" % (
+                    battle.doId, battle.fsm.getCurrentState().getName())
 
             elif args[1] == 'abort':
                 battle.abortBattle()
-                response = "Battle %s aborted." % (battle.doId)
+                response = f"Battle {battle.doId} aborted."
 
             else:
-                response = "Uknown battle command %s" % (args[1])
+                response = f"Uknown battle command {args[1]}"
 
         self.down_setMagicWordResponse(senderId, response)
 
@@ -1413,49 +1354,43 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 if dobj.zoneId == zoneId:
                     return dobj
 
-
-
-
-
-
-
     def startFireworks(self, word, av, zoneId, senderId):
         fMgr = self.air.fireworkManager
         if fMgr.isShowRunning(zoneId):
-            response = ("Show already running in zone: %s" % (zoneId))
+            response = f"Show already running in zone: {zoneId}"
         else:
-            args=word.split()
+            args = word.split()
             if len(args) == 2:
                 showType = int(args[1])
                 if fMgr.startShow(zoneId, showType, 1):
-                    response = ("Show started, showType: %s" % showType)
+                    response = f"Show started, showType: {showType}"
                 else:
-                    response = ("Show failed, showType: %s" % showType)
+                    response = f"Show failed, showType: {showType}"
             else:
                 # Default to showType 0
-                response = (TTLocalizer.startFireworksResponse \
-                    %( ToontownGlobals.NEWYEARS_FIREWORKS, \
-                    PartyGlobals.FireworkShows.Summer, \
-                    ToontownGlobals.JULY4_FIREWORKS))
+                response = (TTLocalizer.startFireworksResponse
+                            % (ToontownGlobals.NEWYEARS_FIREWORKS,
+                               PartyGlobals.FireworkShows.Summer,
+                               ToontownGlobals.JULY4_FIREWORKS))
         self.down_setMagicWordResponse(senderId, response)
 
     def stopFireworks(self, word, av, zoneId, senderId):
         if self.air.fireworkManager.stopShow(zoneId):
-            response = ("Show stopped, zoneId: %s" % zoneId)
+            response = f"Show stopped, zoneId: {zoneId}"
         else:
-            response = ("Show stop failed, zoneId: %s" % zoneId)
+            response = f"Show stop failed, zoneId: {zoneId}"
         self.down_setMagicWordResponse(senderId, response)
 
     def stopAllFireworks(self, word, av, zoneId, senderId):
         numStopped = self.air.fireworkManager.stopAllShows()
-        response = ("Stopped %s firework show(s)" % (numStopped))
+        response = f"Stopped {numStopped} firework show(s)"
         self.down_setMagicWordResponse(senderId, response)
 
     def doCogs(self, word, av, zoneId, senderId):
         """Handle the ~cogs magic word."""
         streetId = ZoneUtil.getBranchZone(zoneId)
 
-        args=word.split()
+        args = word.split()
         firstKeyword = 1
 
         sync = 0
@@ -1470,7 +1405,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 try:
                     streetId = int(args[1])
                     firstKeyword = 2
-                except:
+                except BaseException:
                     pass
 
         # Check for extra keywords.
@@ -1485,7 +1420,8 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             elif word[:6] == "count=":
                 count = int(word[6:])
             else:
-                self.down_setMagicWordResponse(senderId, "invalid keyword %s" % (word))
+                self.down_setMagicWordResponse(
+                    senderId, f"invalid keyword {word}")
                 return
 
         if streetId == "all":
@@ -1504,7 +1440,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 if count != -1:
                     sp.currDesired = count
 
-            if sp == None:
+            if sp is None:
                 response = "No cogs active."
             else:
                 response = "Overall, %d cogs (%s); target is %d." % (
@@ -1533,14 +1469,13 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
 
         self.down_setMagicWordResponse(senderId, response)
 
-
     def doMinigame(self, word, av, zoneId, senderId):
         """Handle the ~minigame magic word: request a particular minigame."""
         args = word.split()
         if len(args) == 1:
             # No minigame parameter specified: clear the request.
             mgRequest = MinigameCreatorAI.RequestMinigame.get(av.doId)
-            if mgRequest != None:
+            if mgRequest is not None:
                 mgId = mgRequest[0]
                 del MinigameCreatorAI.RequestMinigame[av.doId]
                 response = "Request for minigame %d cleared." % (mgId)
@@ -1559,17 +1494,17 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 mgId = int(name)
                 numMgs = len(ToontownGlobals.MinigameIDs)
                 if mgId < 1 or mgId > numMgs or mgId not in ToontownGlobals.MinigameIDs:
-                    response = "minigame ID '%s' is out of range" % mgId
+                    response = f"minigame ID '{mgId}' is out of range"
                     mgId = None
-            except:
+            except BaseException:
                 name = name.lower()
                 if name[-4:] == "game":
                     name = name[:-4]
                 if name[:11] == "distributed":
                     name = name[11:]
                 mgId = ToontownGlobals.MinigameNames.get(name)
-                if mgId == None:
-                    response = "Unknown minigame '%s'." % (name)
+                if mgId is None:
+                    response = f"Unknown minigame '{name}'."
 
             argIndex = 2
             while argIndex < len(args):
@@ -1589,7 +1524,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 try:
                     mgDiff = float(arg)
                     continue
-                except:
+                except BaseException:
                     pass
 
                 mgSzId = self.Str2szId.get(arg)
@@ -1597,20 +1532,19 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     continue
 
                 # it's a string, but it's not a safezone.
-                response = ("unknown safezone '%s'; use "
-                            "tt, dd, dg, mm, br, dl" % arg)
+                response = f"unknown safezone '{arg}'; use tt, dd, dg, mm, br, dl"
                 mgId = None
                 break
 
-            if mgId != None:
+            if mgId is not None:
                 # mdId must be the first element
                 MinigameCreatorAI.RequestMinigame[av.doId] = (
                     mgId, mgKeep, mgDiff, mgSzId)
                 response = "Selected minigame %d" % mgId
                 if mgDiff is not None:
-                    response += ", difficulty %s" % mgDiff
+                    response += f", difficulty {mgDiff}"
                 if mgSzId is not None:
-                    response += ", safezone %s" % mgSzId
+                    response += f", safezone {mgSzId}"
                 if mgKeep:
                     response += ", keep=true"
 
@@ -1627,7 +1561,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 hood = h
                 break
 
-        if hood == None or hood.treasurePlanner == None:
+        if hood is None or hood.treasurePlanner is None:
             self.down_setMagicWordResponse(senderId, "Not in a safezone.")
             return
 
@@ -1635,18 +1569,17 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
 
         if len(args) == 1:
             # No parameter: report the current treasure count.
-            response = "%s treasures." % (tp.numTreasures())
+            response = f"{tp.numTreasures()} treasures."
 
         elif args[1] == "all":
             # ~treasures all: fill up all available treasures.
             tp.placeAllTreasures()
-            response = "now %s treasures." % (tp.numTreasures())
+            response = f"now {tp.numTreasures()} treasures."
 
         else:
-            response = "Invalid treasures command: %s" % (args[1])
+            response = f"Invalid treasures command: {args[1]}"
 
         self.down_setMagicWordResponse(senderId, response)
-
 
     def doEmotes(self, word, av, zoneId, senderId):
         """Handle the ~emote magic word:  turns on/off the specified emotion"""
@@ -1671,7 +1604,6 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 else:
                     response = "Emote %d disabled" % emoteId
         self.down_setMagicWordResponse(senderId, response)
-
 
     def doCatalog(self, word, av, zoneId, senderId):
         """Handle the ~catalog magic word: manage catalogs"""
@@ -1699,7 +1631,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             # ~catalog next: advance to the next catalog.
             week = av.catalogScheduleCurrentWeek + 1
             self.air.catalogManager.forceCatalog(av, week, afterMinutes)
-            response = "Issued catalog for week %s." % (week)
+            response = f"Issued catalog for week {week}."
 
         elif args[1] == "week":
             # ~catalog week n: force to the catalog of the nth week.
@@ -1708,9 +1640,9 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             week = int(args[2])
             if week > 0:
                 self.air.catalogManager.forceCatalog(av, week, afterMinutes)
-                response = "Forced to catalog week %s." % (week)
+                response = f"Forced to catalog week {week}."
             else:
-                response = "Invalid catalog week %s." % (week)
+                response = f"Invalid catalog week {week}."
 
         elif args[1] == "season":
             # ~catalog season mm/dd: regenerate the monthly catalog
@@ -1724,7 +1656,8 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 dd = int(args[3])
 
             self.air.catalogManager.forceMonthlyCatalog(av, mm, dd)
-            response = "%s items for %d/%0d." % (len(av.monthlyCatalog), mm, dd)
+            response = "%s items for %d/%0d." % (
+                len(av.monthlyCatalog), mm, dd)
 
         elif (args[1] == "clear") or (args[1] == "reset"):
             # ~catalog clear: reset the catalog (and the back catalog)
@@ -1749,11 +1682,10 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             av.onOrder.markDirty()
             av.b_setDeliverySchedule(av.onOrder)
 
-            response = "Delivered %s item(s)." % (len(av.onOrder))
-
+            response = f"Delivered {len(av.onOrder)} item(s)."
 
         else:
-            response = "Invalid catalog command: %s" % (args[1])
+            response = f"Invalid catalog command: {args[1]}"
 
         self.down_setMagicWordResponse(senderId, response)
 
@@ -1768,10 +1700,10 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
         dna = ToonDNA.ToonDNA(av.dna.makeNetString())
 
         # Modify it according to the user's parameter selection.
-        eval("dna.updateToonProperties(%s)" % (parms))
+        eval(f"dna.updateToonProperties({parms})")
 
         av.b_setDNAString(dna.makeNetString())
-        response = "%s" % (dna.asTuple(),)
+        response = f"{dna.asTuple()}"
 
         self.down_setMagicWordResponse(senderId, response)
 
@@ -1803,7 +1735,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     bossCog = distObj
                     break
 
-        if bossCog == None:
+        if bossCog is None:
             # The caller isn't in a zone with a Boss Cog; use the
             # default Boss zone.
 
@@ -1817,7 +1749,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             del args[1]
             deptIndex = SuitDNA.suitDepts.index(dept)
 
-            if self.__bossBattleZoneId[deptIndex] == None:
+            if self.__bossBattleZoneId[deptIndex] is None:
                 # Make up a new zone for the battle.
                 zoneId = self.air.allocateZone()
                 self.__bossBattleZoneId[deptIndex] = zoneId
@@ -1843,7 +1775,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             response = ""
             for bc in DistributedBossCogAI.AllBossCogs:
                 if bc.dept == bossCog.dept and bc != bossCog:
-                    response += ", %s %s %s" % (bc.zoneId, bc.state, len(bc.involvedToons))
+                    response += f", {bc.zoneId} {bc.state} {len(bc.involvedToons)}"
             if response:
                 response = response[2:]
             else:
@@ -1864,8 +1796,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                                            bc.zoneId, 0])
                 av.b_setGhostMode(2)
             else:
-                response = "No boss battle in zone %s" % (zoneId)
-
+                response = f"No boss battle in zone {zoneId}"
 
         elif args[1] == "start":
             # ~bossBattle start: restart the boss battle.
@@ -1960,7 +1891,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             if len(args) <= 2:
                 response = "No state specified."
             else:
-                response = "Requested state %s." % (args[2])
+                response = f"Requested state {args[2]}."
                 bossCog.b_setState(args[2])
 
         elif args[1] == "stop":
@@ -1983,9 +1914,9 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 damage = int(args[2])
 
             ##
-            ## this is very suspect .. it is reasigning a internal var(msgSender)..
-            ## it is trying to make the message look like it came from a difrent avatarID
-            ##  to other areas of the code .. ???
+            # this is very suspect .. it is reasigning a internal var(msgSender)..
+            # it is trying to make the message look like it came from a difrent avatarID
+            # to other areas of the code .. ???
             self.air.msgSender = av.doId
             bossCog.magicWordHit(damage, av.doId)
 
@@ -1996,7 +1927,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
 
         elif args[1] == "avatarEnter":
             # ~bossBattle avatarEnter: Force a call to d_avatarEnter
-            #This magic word is handled by the client.
+            # This magic word is handled by the client.
             pass
 
         elif args[1] == "stun":
@@ -2025,11 +1956,11 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             # make the ceo toggle doing move attacks
             if hasattr(bossCog, 'toggleMove'):
                 doingMoveAttack = bossCog.toggleMove()
-                response = "doing move attack = %s"  % doingMoveAttack
+                response = f"doing move attack = {doingMoveAttack}"
             else:
                 response = "toggleMove is only for CEO"
         else:
-            response = "Invalid bossBattle command: %s" % (args[1])
+            response = f"Invalid bossBattle command: {args[1]}"
 
         if response:
             self.down_setMagicWordResponse(senderId, response)
@@ -2038,12 +1969,14 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
         bossCog = None
 
         if dept == 's':
-            bossCog = DistributedSellbotBossAI.DistributedSellbotBossAI(self.air)
+            bossCog = DistributedSellbotBossAI.DistributedSellbotBossAI(
+                self.air)
             bossCog.generateWithRequired(zoneId)
             bossCog.b_setState('Frolic')
 
         elif dept == 'm':
-            bossCog = DistributedCashbotBossAI.DistributedCashbotBossAI(self.air)
+            bossCog = DistributedCashbotBossAI.DistributedCashbotBossAI(
+                self.air)
             bossCog.generateWithRequired(zoneId)
 
         elif dept == 'l':
@@ -2051,15 +1984,15 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             bossCog.generateWithRequired(zoneId)
             bossCog.b_setState('Frolic')
         elif dept == 'c':
-            bossCog = DistributedBossbotBossAI.DistributedBossbotBossAI(self.air)
+            bossCog = DistributedBossbotBossAI.DistributedBossbotBossAI(
+                self.air)
             bossCog.generateWithRequired(zoneId)
             bossCog.b_setState('Frolic')
 
         else:
-            raise Exception('Not implemented: boss cog %s' % (dept))
+            raise Exception(f'Not implemented: boss cog {dept}')
 
         return bossCog
-
 
     def doGarden(self, word, av, zoneId, senderId):
         """Handle the ~garden magic worde."""
@@ -2080,13 +2013,13 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             response = 'start\nclear\nwilt <plot>\nunwilt <plot>\nplant <plantKey> <plot> <water> <growth> <variety>\nclearCarriedSpecials\nclearCollection\ncompleteCollection\nwater <waterLevel>\nshovel <0-3> <shovelSkill>\nrandomBasket\nnuke\nepoch <opt num>\nwateringCan <0-3> <skill>'
         elif action == 'start':
             messenger.send("gardenTest", [senderId])
-            response =  "Test Garden Planted"
+            response = "Test Garden Planted"
         elif action == 'clear':
             messenger.send("gardenClear", [senderId])
             response = "Garden Cleared"
         elif action == 'nuke':
-            #clear the garden and remove the planters
-            #clear the garden started flag
+            # clear the garden and remove the planters
+            # clear the garden started flag
             messenger.send("gardenNuke", [senderId])
             av.b_setGardenStarted(False)
             response = "Garden Nuked"
@@ -2098,13 +2031,13 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             response = "Garden Specials Added"
         elif action == 'wilt':
             if len(args) >= 3:
-                messenger.send("wiltGarden", [senderId, int(args[2])] )
+                messenger.send("wiltGarden", [senderId, int(args[2])])
             else:
                 messenger.send("wiltGarden", [senderId])
             response = "Garden wilted"
         elif action == 'unwilt':
             if len(args) >= 3:
-                messenger.send("unwiltGarden", [senderId, int(args[2])] )
+                messenger.send("unwiltGarden", [senderId, int(args[2])])
             else:
                 messenger.send("unwiltGarden", [senderId])
             response = "Garden unwilted"
@@ -2116,7 +2049,9 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             if len(args) > 3:
                 specificHardPoint = int(args[3])
 
-            messenger.send("waterGarden", [senderId, waterLevel, specificHardPoint] )
+            messenger.send(
+                "waterGarden", [
+                    senderId, waterLevel, specificHardPoint])
 
             response = "water level changed to %d" % waterLevel
         elif action == 'growth':
@@ -2127,7 +2062,9 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             if len(args) > 3:
                 specificHardPoint = int(args[3])
 
-            messenger.send("growthGarden", [senderId, waterLevel, specificHardPoint] )
+            messenger.send(
+                "growthGarden", [
+                    senderId, waterLevel, specificHardPoint])
 
             response = "growth level changed to %d" % waterLevel
         elif action == 'plant':
@@ -2147,13 +2084,16 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             if len(args) > 6:
                 variety = int(args[6])
 
-            response = "Planting type=%d plot=%d water=%d growth=%d" % (type,plot,water,growth)
-            messenger.send("gardenPlant", [senderId, type, plot, water, growth, variety])
+            response = "Planting type=%d plot=%d water=%d growth=%d" % (
+                type, plot, water, growth)
+            messenger.send(
+                "gardenPlant", [
+                    senderId, type, plot, water, growth, variety])
         elif action == 'clearCarriedSpecials':
-            av.b_setGardenSpecials( [])
+            av.b_setGardenSpecials([])
             response = "Cleared garden specials carried by toon"
         elif action == 'clearCollection':
-            av.b_setFlowerCollection( [], [])
+            av.b_setFlowerCollection([], [])
             response = "Cleared flower collection."
         elif action == 'completeCollection':
             #from toontown.estate import GardenGlobals
@@ -2166,7 +2106,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     speciesList.append(species)
                     varietyList.append(variety)
 
-            av.b_setFlowerCollection( speciesList, varietyList)
+            av.b_setFlowerCollection(speciesList, varietyList)
             av.b_setGardenTrophies([])
             response = "Complete flower collection."
         elif action == 'epoch':
@@ -2184,15 +2124,17 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 if passedShovel >= 0 and \
                    passedShovel < GardenGlobals.MAX_SHOVELS:
                     shovel = passedShovel
-                skill =0
+                skill = 0
                 if len(args) >= 4:
                     passedSkill = int(args[3])
-                    skill = min (passedSkill, GardenGlobals.ShovelAttributes[shovel]['skillPts'] - 1)
-                    skill = max (skill, 0)
+                    skill = min(
+                        passedSkill,
+                        GardenGlobals.ShovelAttributes[shovel]['skillPts'] - 1)
+                    skill = max(skill, 0)
 
                 av.b_setShovel(shovel)
                 av.b_setShovelSkill(skill)
-                response = "Set shovel=%d shovelSkill=%d" % (shovel,skill)
+                response = "Set shovel=%d shovelSkill=%d" % (shovel, skill)
         elif action == 'wateringCan':
             if len(args) < 3:
                 response = "specify a watering can (0-3)"
@@ -2202,18 +2144,22 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 if passedWateringCan >= 0 and \
                    passedWateringCan < GardenGlobals.MAX_WATERING_CANS:
                     wateringCan = passedWateringCan
-                skill =0
+                skill = 0
                 if len(args) >= 4:
                     passedSkill = int(args[3])
-                    skill = min (passedSkill, GardenGlobals.WateringCanAttributes[wateringCan]['skillPts'] - 1)
-                    skill = max (skill, 0)
+                    skill = min(
+                        passedSkill,
+                        GardenGlobals.WateringCanAttributes[wateringCan]['skillPts'] - 1)
+                    skill = max(skill, 0)
 
                 av.b_setWateringCan(wateringCan)
                 av.b_setWateringCanSkill(skill)
-                response = "Set wateringCan=%d wateringCanSkill=%d" % (wateringCan,skill)
+                response = "Set wateringCan=%d wateringCanSkill=%d" % (
+                    wateringCan, skill)
         elif action == 'randomBasket':
             av.makeRandomFlowerBasket()
-            self.down_setMagicWordResponse(senderId, "Created random flower basket")
+            self.down_setMagicWordResponse(
+                senderId, "Created random flower basket")
         elif action == "allTrophies":
             allTrophyList = list(GardenGlobals.TrophyDict.keys())
             av.b_setGardenTrophies(allTrophyList)
@@ -2254,24 +2200,24 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 holeId, holeDoId = course.abortCurrentHole()
                 response = "Aborting holeId %d, doId=%d" % (holeId, holeDoId)
             else:
-                response =  "Couldn't find golf course"
+                response = "Couldn't find golf course"
         elif action == 'endcourse' or action == 'endCourse':
             course = GolfManagerAI.GolfManagerAI().findGolfCourse(senderId)
             if course:
                 course.setCourseAbort()
                 response = "Aborting course %d" % course.doId
             else:
-                response =  "Couldn't find golf course"
+                response = "Couldn't find golf course"
         elif action == 'test':
             #messenger.send("gardenTest", [senderId])
-            response =  "golf test"
-            avList = [senderId];
+            response = "golf test"
+            avList = [senderId]
             args = word.split()
             import string
             for i in range(2, len(args)):
                 avList.append(str.atoi(args[i]))
             manager = GolfManagerAI.GolfManagerAI()
-            #simbase.golfGoer.generateWithRequired(OTPGlobals.UberZone)
+            # simbase.golfGoer.generateWithRequired(OTPGlobals.UberZone)
             courseId = 0
             zoneId = manager.readyGolfCourse(avList, courseId)
             for avId in avList:
@@ -2313,7 +2259,8 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 av.b_setGolfHistory(maxHistory)
                 response = 'golf history maxeded'
         elif action == 'midHistory':
-            # set it up so that we just need one more course complete to get a cup
+            # set it up so that we just need one more course complete to get a
+            # cup
             response = 'midHistory failed'
             midHistory = [0] * 18
             midHistory[GolfGlobals.CoursesCompleted] = GolfGlobals.TrophyRequirements[GolfGlobals.CoursesCompleted][1] - 1
@@ -2334,17 +2281,17 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
         elif action == 'unlimitedSwing' or action == "us":
             av.b_setUnlimitedSwing(not av.getUnlimitedSwing())
             if av.getUnlimitedSwing():
-                response = "Av %s has an unlimited swing" % (av.getDoId())
+                response = f"Av {av.getDoId()} has an unlimited swing"
             else:
-                response = "Av %s does NOT have unlimited swings" % (av.getDoId())
+                response = f"Av {av.getDoId()} does NOT have unlimited swings"
         elif action == 'hole':
             import string
             manager = GolfManagerAI.GolfManagerAI()
             if len(args) <= 2:
                 # No minigame parameter specified: clear the request.
                 holeRequest = GolfManagerAI.RequestHole.get(av.doId)
-                if holeRequest != None:
-                    holeId =  holeRequest[0]
+                if holeRequest is not None:
+                    holeId = holeRequest[0]
                     del GolfManagerAI.RequestHole[av.doId]
                     response = "Request for hole %d cleared." % (holeId)
                 else:
@@ -2356,17 +2303,17 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 try:
                     holeId = int(name)
                     if holeId not in GolfGlobals.HoleInfo:
-                        response = "hole ID '%s' is out of range" % holeId
+                        response = f"hole ID '{holeId}' is out of range"
                         holeId = None
-                except:
+                except BaseException:
                     #name = string.lower(name)
-                    #for testHoleId in GolfGlobals.HoleInfo:
+                    # for testHoleId in GolfGlobals.HoleInfo:
                     #    holeName = string.lower(GolfGlobals.getHoleName(testHoleId))
                     #    if name == holeName:
                     #        holeId = testHoleId
                     #        break;
-                    if holeId == None:
-                        response = "Unknown hole '%s'." % (name)
+                    if holeId is None:
+                        response = f"Unknown hole '{name}'."
 
                 argIndex = 2
                 while argIndex < len(args):
@@ -2382,7 +2329,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                         holeKeep = 1
                         continue
 
-                if holeId != None:
+                if holeId is not None:
                     # hoId must be the first element
                     GolfManagerAI.RequestHole[av.doId] = (
                         holeId, holeKeep)
@@ -2390,12 +2337,10 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     if holeKeep:
                         response += ", keep=true"
 
-
         if response:
             self.down_setMagicWordResponse(senderId, response)
 
-
-    def doMail(self,word, av, zoneId, senderId):
+    def doMail(self, word, av, zoneId, senderId):
         """Handle mail magic words."""
         args = word.split()
         response = None
@@ -2424,7 +2369,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
         if response:
             self.down_setMagicWordResponse(senderId, response)
 
-    def doParty(self,word, av, zoneId, senderId):
+    def doParty(self, word, av, zoneId, senderId):
         """Handle mail magic words."""
         args = word.split()
         response = None
@@ -2433,8 +2378,7 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
         if len(args) == 1:
             # No parameter: change it to usage
             self.down_setMagicWordResponse(
-                senderId,
-                "Available commands: plan, new, update, checkStart, end, debugGrid")
+                senderId, "Available commands: plan, new, update, checkStart, end, debugGrid")
             return
 
         action = args[1]
@@ -2445,10 +2389,12 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             else:
                 invitees = []
                 for i in range(2, len(args)):
-                    invitees.append( int(args[i]))
+                    invitees.append(int(args[i]))
                 # start the party 1 minute from now
-                startTime = datetime.datetime.now(self.air.toontownTimeManager.serverTimeZone) + datetime.timedelta(minutes=-1)
-                endTime = startTime + datetime.timedelta(hours=PartyGlobals.DefaultPartyDuration)
+                startTime = datetime.datetime.now(
+                    self.air.toontownTimeManager.serverTimeZone) + datetime.timedelta(minutes=-1)
+                endTime = startTime + \
+                    datetime.timedelta(hours=PartyGlobals.DefaultPartyDuration)
 
                 from toontown.parties.PartyEditorGrid import PartyEditorGrid
 
@@ -2463,7 +2409,8 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                 gridEditor.grid.reverse()
 
                 # Given a center coord (x or y) and a size (w or h), returns a list of indices in
-                # in the grid on that axis. (WARNING: Can return invalid indices.)
+                # in the grid on that axis. (WARNING: Can return invalid
+                # indices.)
                 def gridComputeRange(centerGrid, size):
                     result = []
                     if size == 1:
@@ -2475,16 +2422,19 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                         #   The range with rounding:    range(int(1.5), int(-2), -1)
                         # Not a problem with center>=2 in this example:
                         #   The range without rounding: range(int(3.5), int(0.5), -1)
-                        #   The range with rounding:    range(int(3.5), int(0), -1)
-                        result =  list(range(int(centerGrid + size/2),
-                                        int(centerGrid - (size/2)), -1))
+                        # The range with rounding:    range(int(3.5), int(0),
+                        # -1)
+                        result = list(range(int(centerGrid + size / 2),
+                                            int(centerGrid - (size / 2)), -1))
 
                     # The result list should be the same size as given.
-                    assert len(result) == size, "Bad result range: c=%s s=%s result=%s" % (centerGrid, size, result)
+                    assert len(result) == size, "Bad result range: c=%s s=%s result=%s" % (
+                        centerGrid, size, result)
 
                     return result
 
-                # Returns true if the given space is available centered at x,y with dims w,h.
+                # Returns true if the given space is available centered at x,y
+                # with dims w,h.
                 def gridIsAvailable(x, y, w, h):
                     for j in gridComputeRange(y, h):
                         if 0 > j or j >= len(gridEditor.grid):
@@ -2492,10 +2442,11 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                         for i in gridComputeRange(x, w):
                             if 0 > i or i >= len(gridEditor.grid[0]):
                                 return False
-                            if gridEditor.grid[j][i] == None:
+                            if gridEditor.grid[j][i] is None:
                                 return False
 
-                    #print "grid available: xy(%s %s) wh(%s %s)" % (x, y, w, h)
+                    # print "grid available: xy(%s %s) wh(%s %s)" % (x, y, w,
+                    # h)
                     return True
 
                 # Returns the first x,y (centered) that has space for w,h.
@@ -2506,10 +2457,11 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                                 return x, y
                     return None, None
 
-                # Returns True and an x,y (centered) coord for the given space. Marks that space used.
+                # Returns True and an x,y (centered) coord for the given space.
+                # Marks that space used.
                 def gridTryPlace(w, h):
                     x, y = gridGetAvailable(w, h)
-                    if not x == None:
+                    if x is not None:
                         for j in gridComputeRange(y, h):
                             for i in gridComputeRange(x, w):
                                 gridEditor.grid[j][i] = None
@@ -2518,11 +2470,13 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                         return False, None, None
 
                 actualActIdsToAdd = [
-                    #PartyGlobals.ActivityIds.PartyJukebox,             # mut.ex: PartyJukebox40
+                    # PartyGlobals.ActivityIds.PartyJukebox,             #
+                    # mut.ex: PartyJukebox40
                     PartyGlobals.ActivityIds.PartyCannon,
-                    #PartyGlobals.ActivityIds.PartyTrampoline,
+                    # PartyGlobals.ActivityIds.PartyTrampoline,
                     PartyGlobals.ActivityIds.PartyCatch,
-                    #PartyGlobals.ActivityIds.PartyDance,               # mut.ex: PartyDance20
+                    # PartyGlobals.ActivityIds.PartyDance,               #
+                    # mut.ex: PartyDance20
                     PartyGlobals.ActivityIds.PartyTugOfWar,
                     PartyGlobals.ActivityIds.PartyFireworks,
                     PartyGlobals.ActivityIds.PartyClock,
@@ -2544,11 +2498,11 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     PartyGlobals.DecorationIds.NoiseMakers,
                     PartyGlobals.DecorationIds.Pinwheel,
                     PartyGlobals.DecorationIds.GagGlobe,
-                    #PartyGlobals.DecorationIds.BannerJellyBean,
+                    # PartyGlobals.DecorationIds.BannerJellyBean,
                     PartyGlobals.DecorationIds.CakeTower,
-                    #PartyGlobals.DecorationIds.HeartTarget,        # valentoons
-                    #PartyGlobals.DecorationIds.HeartBanner,        # valentoons
-                    #PartyGlobals.DecorationIds.FlyingHeart,        # valentoons
+                    # PartyGlobals.DecorationIds.HeartTarget,        # valentoons
+                    # PartyGlobals.DecorationIds.HeartBanner,        # valentoons
+                    # PartyGlobals.DecorationIds.FlyingHeart,        # valentoons
                     PartyGlobals.DecorationIds.Hydra,                # 16: victory party
                     PartyGlobals.DecorationIds.BannerVictory,        # 17: victory party
                     PartyGlobals.DecorationIds.CannonVictory,        # 18: victory party
@@ -2563,12 +2517,14 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     item = PartyGlobals.ActivityInformationDict[itemId]
                     success, x, y = gridTryPlace(*item['gridsize'])
                     if success:
-                        print("~party new ADDED: Activity %s %s at %s, %s" % (itemId, str(item['gridsize']), x, y))
+                        print("~party new ADDED: Activity %s %s at %s, %s" %
+                              (itemId, str(item['gridsize']), x, y))
                         # item index, grid x, grid y, heading
                         partyItem = (itemId, x, y, 0)
                         activities.append(partyItem)
                     else:
-                        print("~party new SKIPPED: No room for activity %s" % itemId)
+                        print(
+                            f"~party new SKIPPED: No room for activity {itemId}")
 
                 decorations = []
 
@@ -2576,12 +2532,16 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
                     item = PartyGlobals.DecorationInformationDict[itemId]
                     success, x, y = gridTryPlace(*item['gridsize'])
                     if success:
-                        print("~party new ADDED: Decoration %s %s at %s, %s" % (itemId, str(item['gridsize']), x, y))
+                        print(
+                            "~party new ADDED: Decoration %s %s at %s, %s" %
+                            (itemId, str(
+                                item['gridsize']), x, y))
                         # item index, grid x, grid y, heading
                         partyItem = (itemId, x, y, 0)
                         decorations.append(partyItem)
                     else:
-                        print("~party new SKIPPED: No room for decoration %s" % itemId)
+                        print(
+                            f"~party new SKIPPED: No room for decoration {itemId}")
 
                 isPrivate = False
                 inviteTheme = PartyGlobals.InviteTheme.Birthday
@@ -2609,11 +2569,11 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
 
         elif action == 'unreleasedServer':
             newVal = self.air.partyManager.toggleAllowUnreleasedServer()
-            response = "Allow Unreleased Server= %s" % newVal
+            response = f"Allow Unreleased Server= {newVal}"
 
         elif action == 'canBuy':
             newVal = self.air.partyManager.toggleCanBuyParties()
-            response = "can buy parties= %s" % newVal
+            response = f"can buy parties= {newVal}"
 
         elif action == 'end':
             response = self.air.partyManager.magicWordEnd(senderId)
@@ -2625,8 +2585,8 @@ class ToontownMagicWordManagerAI(MagicWordManagerAI.MagicWordManagerAI):
             hoodId = ToontownGlobals.PartyHood
 
             self.sendUpdateToAvatarId(av.doId, 'requestTeleport',
-                          ["safeZoneLoader", "party",
-                           hoodId, 0, 0])
+                                      ["safeZoneLoader", "party",
+                                       hoodId, 0, 0])
 
         if response:
             self.down_setMagicWordResponse(senderId, response)

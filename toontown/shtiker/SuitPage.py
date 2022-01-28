@@ -19,14 +19,14 @@ SCALE_FACTOR = 1.5
 RADAR_DELAY = 0.2
 
 # positions for the building radar labels
-BUILDING_RADAR_POS = (0.375, 0.065 ,-0.225, -0.5)
+BUILDING_RADAR_POS = (0.375, 0.065, -0.225, -0.5)
 
 PANEL_COLORS = (
     Vec4(0.8, 0.78, 0.77, 1),
     Vec4(0.75, 0.78, 0.8, 1),
     Vec4(0.75, 0.82, 0.79, 1),
     Vec4(0.825, 0.76, 0.77, 1)
-    )
+)
 
 # TODO: get art to replace these simple color swaps...
 PANEL_COLORS_COMPLETE1 = (
@@ -34,14 +34,14 @@ PANEL_COLORS_COMPLETE1 = (
     Vec4(0.625, 0.725, 0.65, 1),
     Vec4(0.6, 0.75, 0.525, 1),
     Vec4(0.675, 0.675, 0.55, 1)
-    )
+)
 
 PANEL_COLORS_COMPLETE2 = (
     Vec4(0.9, 0.725, 0.32, 1),
     Vec4(0.825, 0.725, 0.45, 1),
     Vec4(0.8, 0.75, 0.325, 1),
     Vec4(0.875, 0.675, 0.35, 1)
-    )
+)
 
 # the shadows must be carefully positioned behind the heads
 SHADOW_SCALE_POS = (
@@ -72,7 +72,7 @@ SHADOW_SCALE_POS = (
     (0.95, 0.0175, 10, -0.015),
     (1.0, 0, 10, -0.06),
     (0.95, 0.02, 10, -0.0175),
-    (0.9 , 0, 10, -0.03),
+    (0.9, 0, 10, -0.03),
     # sales
     (1.15, 0, 10, -0.01),
     (1.0, 0, 10, 0),
@@ -82,7 +82,8 @@ SHADOW_SCALE_POS = (
     (0.95, 0.005, 10, -0.01),
     (1.0, 0, 10, -0.02),
     (0.9, 0.0025, 10, -0.03),
-    )
+)
+
 
 class SuitPage(ShtikerPage.ShtikerPage):
 
@@ -125,71 +126,71 @@ class SuitPage(ShtikerPage.ShtikerPage):
 
         # make the title
         self.title = DirectLabel(
-            parent = self.iconNode,
-            relief = None,
-            text = TTLocalizer.SuitPageTitle,
-            text_scale = 0.1,
-            text_pos = (0.04, 0),
-            textMayChange = 0,
-            )
+            parent=self.iconNode,
+            relief=None,
+            text=TTLocalizer.SuitPageTitle,
+            text_scale=0.1,
+            text_pos=(0.04, 0),
+            textMayChange=0,
+        )
 
         # make the radar buttons
         self.radarButtons = []
         icon = icons.find('**/corp_icon')
         self.corpRadarButton = DirectButton(
-            parent = self.iconNode,
-            relief = None,
-            state = DGG.DISABLED,
-            image = icon,
-            image_scale = (0.03375, 1, 0.045),
+            parent=self.iconNode,
+            relief=None,
+            state=DGG.DISABLED,
+            image=icon,
+            image_scale=(0.03375, 1, 0.045),
             # stand in for rollover art
-            image2_color = Vec4(1.0,1.0,1.0,0.75),
-            pos = (-0.2, 10, -0.575),
-            command = self.toggleRadar,
-            extraArgs = [0],
-            )
+            image2_color=Vec4(1.0, 1.0, 1.0, 0.75),
+            pos=(-0.2, 10, -0.575),
+            command=self.toggleRadar,
+            extraArgs=[0],
+        )
         self.radarButtons.append(self.corpRadarButton)
         icon = icons.find('**/legal_icon')
         self.legalRadarButton = DirectButton(
-            parent = self.iconNode,
-            relief = None,
-            state = DGG.DISABLED,
-            image = icon,
-            image_scale = (0.03375, 1, 0.045),
+            parent=self.iconNode,
+            relief=None,
+            state=DGG.DISABLED,
+            image=icon,
+            image_scale=(0.03375, 1, 0.045),
             # stand in for rollover art
-            image2_color = Vec4(1.0,1.0,1.0,0.75),
-            pos = (-0.2, 10, -0.575),
-            command = self.toggleRadar,
-            extraArgs = [1],
-            )
+            image2_color=Vec4(1.0, 1.0, 1.0, 0.75),
+            pos=(-0.2, 10, -0.575),
+            command=self.toggleRadar,
+            extraArgs=[1],
+        )
         self.radarButtons.append(self.legalRadarButton)
         icon = icons.find('**/money_icon')
         self.moneyRadarButton = DirectButton(
-            parent = self.iconNode,
-            relief = None,
-            state = DGG.DISABLED,
-            image = (icon, icon, icon),
-            image_scale = (0.03375, 1, 0.045),
+            parent=self.iconNode,
+            relief=None,
+            state=DGG.DISABLED,
+            image=(icon, icon, icon),
+            image_scale=(0.03375, 1, 0.045),
             # stand in for rollover art
-            image2_color = Vec4(1.0,1.0,1.0,0.75),
-            pos = (-0.2, 10, -0.575),
-            command = self.toggleRadar,
-            extraArgs = [2],
-            )
+            image2_color=Vec4(1.0, 1.0, 1.0, 0.75),
+            pos=(-0.2, 10, -0.575),
+            command=self.toggleRadar,
+            extraArgs=[2],
+        )
         self.radarButtons.append(self.moneyRadarButton)
         icon = icons.find('**/sales_icon')
         self.salesRadarButton = DirectButton(
-            parent = self.iconNode,
-            relief = None,
-            state = DGG.DISABLED,
-            image = (icon, icon, icon),
-            image_scale = (0.03375, 1, 0.045),
+            parent=self.iconNode,
+            relief=None,
+            state=DGG.DISABLED,
+            image=(icon, icon, icon),
+            image_scale=(0.03375, 1, 0.045),
             # stand in for rollover art
-            image2_color = Vec4(1.0,1.0,1.0,0.75),
-            pos = (-0.2, 10, -0.575),
-            command = self.toggleRadar,
-            extraArgs = [3],
-            )
+            image2_color=Vec4(1.0, 1.0, 1.0, 0.75),
+            pos=(-0.2, 10, -0.575),
+            command=self.toggleRadar,
+            extraArgs=[3],
+        )
         self.radarButtons.append(self.salesRadarButton)
 
         # this field will let us know when the builing radar is activated
@@ -258,13 +259,12 @@ class SuitPage(ShtikerPage.ShtikerPage):
                 self.radarButtons[index]['state'] = DGG.NORMAL
         ShtikerPage.ShtikerPage.exit(self)
 
-
     #
     # callbacks
     #
 
     def grow(self, panel, pos):
-        #don't grow if there's already a big panel
+        # don't grow if there's already a big panel
         if self.bigPanel:
             print("setting next panel - " + str(panel))
             self.nextPanel = panel
@@ -301,8 +301,6 @@ class SuitPage(ShtikerPage.ShtikerPage):
         if self.nextPanel:
             self.grow(self.nextPanel, self.nextPanelPos)
 
-
-
     def toggleRadar(self, deptNum):
         messenger.send('wakeup')
 
@@ -314,33 +312,43 @@ class SuitPage(ShtikerPage.ShtikerPage):
 
         # figure out which panels are effected
         deptSize = SuitDNA.suitsPerDept
-        panels = self.panels[deptSize*deptNum:SuitDNA.suitsPerDept*(deptNum+1)]
+        panels = self.panels[deptSize *
+                             deptNum:SuitDNA.suitsPerDept * (deptNum + 1)]
 
         if self.radarOn[deptNum]:
             # if we have a handle to the suit planner
             if hasattr(base.cr, 'currSuitPlanner'):
                 # make sure we are on a street w/ a suit planner
-                if base.cr.currSuitPlanner != None:
+                if base.cr.currSuitPlanner is not None:
                     # ask the suit planner for a list of suits
                     base.cr.currSuitPlanner.d_suitListQuery()
                     # wait for the repsonse to come back from the suit planner
                     self.acceptOnce('suitListResponse', self.updateCogRadar,
                                     extraArgs=[deptNum, panels])
-                    # start a timeout in case we never hear back from the suit planner
+                    # start a timeout in case we never hear back from the suit
+                    # planner
                     taskMgr.doMethodLater(1.0, self.suitListResponseTimeout,
                                           'suitListResponseTimeout-later',
-                                          extraArgs = (deptNum, panels))
+                                          extraArgs=(deptNum, panels))
                     # if building radar is also enabled
                     if self.radarButtons[deptNum].building:
                         # ask the suit planner for a list of buildings
                         base.cr.currSuitPlanner.d_buildingListQuery()
-                        # wait for the repsonse to come back from the suit planner
-                        self.acceptOnce('buildingListResponse', self.updateBuildingRadar,
-                                        extraArgs=[deptNum])
-                        # start a timeout in case we never hear back from the suit planner
-                        taskMgr.doMethodLater(1.0, self.buildingListResponseTimeout,
-                                              'buildingListResponseTimeout-later',
-                                              extraArgs = (deptNum,))
+                        # wait for the repsonse to come back from the suit
+                        # planner
+                        self.acceptOnce(
+                            'buildingListResponse',
+                            self.updateBuildingRadar,
+                            extraArgs=[deptNum])
+                        # start a timeout in case we never hear back from the
+                        # suit planner
+                        taskMgr.doMethodLater(
+                            1.0,
+                            self.buildingListResponseTimeout,
+                            'buildingListResponseTimeout-later',
+                            extraArgs=(
+                                deptNum,
+                            ))
                 else:
                     # we must be in a building, put in zeros
                     self.updateCogRadar(deptNum, panels)
@@ -356,7 +364,6 @@ class SuitPage(ShtikerPage.ShtikerPage):
             # turn off the radar
             self.updateCogRadar(deptNum, panels)
             self.updateBuildingRadar(deptNum)
-
 
     def suitListResponseTimeout(self, deptNum, panels):
         # ai is not responding, put zeroes in for the number of suits
@@ -385,22 +392,22 @@ class SuitPage(ShtikerPage.ShtikerPage):
             for type in range(0, SuitDNA.suitsPerDept):
                 # make a panel
                 panel = DirectLabel(
-                    parent = self.panelNode,
-                    pos = (xStart + (type * xOffset),
-                           0.0,
-                           yStart - (dept * yOffset)),
-                    relief = None,
-                    state = DGG.NORMAL,
-                    image = self.panelModel,
-                    image_scale = (1, 1, 1),
-                    image_color = color,
-                    text = TTLocalizer.SuitPageMystery,
-                    text_scale = 0.045,
-                    text_fg = (0, 0, 0, 1),
-                    text_pos = (0, 0.185, 0),
-                    text_font = ToontownGlobals.getSuitFont(),
-                    text_wordwrap = 7
-                    )
+                    parent=self.panelNode,
+                    pos=(xStart + (type * xOffset),
+                         0.0,
+                         yStart - (dept * yOffset)),
+                    relief=None,
+                    state=DGG.NORMAL,
+                    image=self.panelModel,
+                    image_scale=(1, 1, 1),
+                    image_color=color,
+                    text=TTLocalizer.SuitPageMystery,
+                    text_scale=0.045,
+                    text_fg=(0, 0, 0, 1),
+                    text_pos=(0, 0.185, 0),
+                    text_font=ToontownGlobals.getSuitFont(),
+                    text_wordwrap=7
+                )
                 # add our special scaling functions
                 #panel.bind(DGG.WITHIN, self.grow, extraArgs=[panel])
                 #panel.bind(DGG.WITHOUT, self.shrink, extraArgs=[panel])
@@ -434,15 +441,15 @@ class SuitPage(ShtikerPage.ShtikerPage):
 
         # add the current quota
         quotaLabel = DirectLabel(
-            parent = panel,
-            pos = (0.0, 0.0, -0.215),
-            relief = None,
-            state = DGG.DISABLED,
-            text = TTLocalizer.SuitPageQuota % (count, quota),
-            text_scale = 0.045,
-            text_fg = (0, 0, 0, 1),
-             text_font = ToontownGlobals.getSuitFont(),
-            )
+            parent=panel,
+            pos=(0.0, 0.0, -0.215),
+            relief=None,
+            state=DGG.DISABLED,
+            text=TTLocalizer.SuitPageQuota % (count, quota),
+            text_scale=0.045,
+            text_fg=(0, 0, 0, 1),
+            text_font=ToontownGlobals.getSuitFont(),
+        )
         panel.quotaLabel = quotaLabel
 
     def addSuitHead(self, panel, suitName):
@@ -451,7 +458,7 @@ class SuitPage(ShtikerPage.ShtikerPage):
         # add the shadow model
         shadow = panel.attachNewNode('shadow')
         shadowModel = self.shadowModels[panelIndex]
-        #shadowModel.setTransparency(0.5)
+        # shadowModel.setTransparency(0.5)
         shadowModel.copyTo(shadow)
         coords = SHADOW_SCALE_POS[panelIndex]
         shadow.setScale(coords[0])
@@ -464,15 +471,15 @@ class SuitPage(ShtikerPage.ShtikerPage):
     def addCogRadarLabel(self, panel):
         # make a label to show cog radar results
         cogRadarLabel = DirectLabel(
-            parent = panel,
-            pos = (0.0, 0.0, -0.215),
-            relief = None,
-            state = DGG.DISABLED,
-            text = '',
-            text_scale = 0.05,
-            text_fg = (0, 0, 0, 1),
-            text_font = ToontownGlobals.getSuitFont(),
-            )
+            parent=panel,
+            pos=(0.0, 0.0, -0.215),
+            relief=None,
+            state=DGG.DISABLED,
+            text='',
+            text_scale=0.05,
+            text_fg=(0, 0, 0, 1),
+            text_font=ToontownGlobals.getSuitFont(),
+        )
         panel.cogRadarLabel = cogRadarLabel
 
     def addSummonButton(self, panel):
@@ -480,36 +487,39 @@ class SuitPage(ShtikerPage.ShtikerPage):
         buttons = loader.loadModel('phase_3/models/gui/dialog_box_buttons_gui')
         #okButton = buttons.find('**/ChtBx_OKBtn_UP')
         okButtonList = (buttons.find('**/ChtBx_OKBtn_UP'),
-                       buttons.find('**/ChtBx_OKBtn_DN'),
-                       buttons.find('**/ChtBx_OKBtn_Rllvr'))
+                        buttons.find('**/ChtBx_OKBtn_DN'),
+                        buttons.find('**/ChtBx_OKBtn_Rllvr'))
         gui = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
         iconGeom = gui.find('**/summons')
         summonButton = DirectButton(
-            parent = panel,
+            parent=panel,
             #pos = (0.1, 0.0, 0.1),
-            pos = (0.1, 0.0, -0.13),
-            scale = 0.1,
-            relief = None,
-            state = DGG.NORMAL,
-            image = okButtonList,
-            image_scale = 13.0,
-            geom = iconGeom,
-            geom_scale = 0.7,
-            text = ("", TTLocalizer.IssueSummons,
-                    TTLocalizer.IssueSummons, ""),
-            text_scale = 0.4,
+            pos=(0.1, 0.0, -0.13),
+            scale=0.1,
+            relief=None,
+            state=DGG.NORMAL,
+            image=okButtonList,
+            image_scale=13.0,
+            geom=iconGeom,
+            geom_scale=0.7,
+            text=("", TTLocalizer.IssueSummons,
+                  TTLocalizer.IssueSummons, ""),
+            text_scale=0.4,
             #text_pos = (-0.7, -0.7),
-            text_pos = (-1.1, -0.4),
-            command = self.summonButtonPressed,
-            extraArgs = [panel]
-            )
+            text_pos=(-1.1, -0.4),
+            command=self.summonButtonPressed,
+            extraArgs=[panel]
+        )
         panel.summonButton = summonButton
 
     def summonButtonPressed(self, panel):
         panelIndex = self.panels.index(panel)
         self.summonDialog = SummonCogDialog.SummonCogDialog(panelIndex)
         self.summonDialog.load()
-        self.accept(self.summonDialog.doneEvent, self.summonDone, extraArgs=[panel])
+        self.accept(
+            self.summonDialog.doneEvent,
+            self.summonDone,
+            extraArgs=[panel])
         self.summonDialog.enter()
 
     def summonDone(self, panel):
@@ -527,19 +537,19 @@ class SuitPage(ShtikerPage.ShtikerPage):
         # determine where to place it
         zPos = BUILDING_RADAR_POS[self.radarButtons.index(button)]
         buildingRadarLabel = DirectLabel(
-            parent = button,
-            relief = None,
-            pos = (0.225, 0.0, zPos),
-            state = DGG.DISABLED,
-            image = gui.find('**/avatar_panel'),
-            image_hpr = (0, 0, 90),
-            image_scale = (0.05, 1, 0.1),
-            image_pos = (0, 0, 0.015),
-            text = TTLocalizer.SuitPageBuildingRadarP % '0',
-            text_scale = 0.05,
-            text_fg = (1, 0, 0, 1),
-            text_font = ToontownGlobals.getSuitFont(),
-            )
+            parent=button,
+            relief=None,
+            pos=(0.225, 0.0, zPos),
+            state=DGG.DISABLED,
+            image=gui.find('**/avatar_panel'),
+            image_hpr=(0, 0, 90),
+            image_scale=(0.05, 1, 0.1),
+            image_pos=(0, 0, 0.015),
+            text=TTLocalizer.SuitPageBuildingRadarP % '0',
+            text_scale=0.05,
+            text_fg=(1, 0, 0, 1),
+            text_font=ToontownGlobals.getSuitFont(),
+        )
         gui.removeNode()
         button.buildingRadarLabel = buildingRadarLabel
 
@@ -557,8 +567,8 @@ class SuitPage(ShtikerPage.ShtikerPage):
             panel.shadow.hide()
         if panel.summonButton:
             panel.summonButton.hide()
-            #panel.head.setScale(1.25)
-            #panel.shadow.setScale(1.25)
+            # panel.head.setScale(1.25)
+            # panel.shadow.setScale(1.25)
         # set the color of the panel per dept
         color = PANEL_COLORS[dept]
         panel['image_color'] = color
@@ -588,15 +598,15 @@ class SuitPage(ShtikerPage.ShtikerPage):
                 panel.shadow.show()
             else:
                 self.addSuitHead(panel, suitName)
-            #make or show the 'issue summons' button
+            # make or show the 'issue summons' button
             if base.localAvatar.hasCogSummons(index):
                 if panel.summonButton:
                     panel.summonButton.show()
                 else:
                     self.addSummonButton(panel)
                 # shrink the head slightly
-                #panel.head.setScale(panel.head.getScale()*0.75)
-                #panel.shadow.setScale(panel.shadow.getScale()*0.75)
+                # panel.head.setScale(panel.head.getScale()*0.75)
+                # panel.shadow.setScale(panel.shadow.getScale()*0.75)
         elif status == COG_DEFEATED:
             # update count
             count = str(base.localAvatar.cogCounts[index])
@@ -605,13 +615,16 @@ class SuitPage(ShtikerPage.ShtikerPage):
                 quota = str(COG_QUOTAS[0][index % SuitDNA.suitsPerDept])
             else:
                 quota = str(COG_QUOTAS[1][index % SuitDNA.suitsPerDept])
-            panel.quotaLabel['text'] = TTLocalizer.SuitPageQuota % (count, quota)
+            panel.quotaLabel['text'] = TTLocalizer.SuitPageQuota % (
+                count, quota)
         elif status == COG_COMPLETE1:
             # if first quota met show green frame
-            panel['image_color'] = PANEL_COLORS_COMPLETE1[(index // SuitDNA.suitsPerDept)]
+            panel['image_color'] = PANEL_COLORS_COMPLETE1[(
+                index // SuitDNA.suitsPerDept)]
         elif status == COG_COMPLETE2:
             # if second quota met show gold frame
-            panel['image_color'] = PANEL_COLORS_COMPLETE2[index // SuitDNA.suitsPerDept]
+            panel['image_color'] = PANEL_COLORS_COMPLETE2[index //
+                                                          SuitDNA.suitsPerDept]
 
     #
     # update calls
@@ -637,7 +650,7 @@ class SuitPage(ShtikerPage.ShtikerPage):
     def updateCogStatus(self, dept, type, status):
         # make sure they passed in something reasonable
         if ((dept < 0) or (dept > len(SuitDNA.suitDepts))):
-             print('ucs: bad cog dept: ', dept)
+            print('ucs: bad cog dept: ', dept)
         elif ((type < 0) or (type > SuitDNA.suitsPerDept)):
             print('ucs: bad cog type: ', type)
         elif ((status < COG_UNSEEN) or (status > COG_COMPLETE2)):
@@ -666,7 +679,6 @@ class SuitPage(ShtikerPage.ShtikerPage):
                 self.setPanelStatus(panel, COG_DEFEATED)
                 self.setPanelStatus(panel, COG_COMPLETE2)
 
-
     def updateCogRadarButtons(self, radars):
         # turn on the appropriate radar button based on 'radars' list
         for index in range(0, len(radars)):
@@ -678,7 +690,7 @@ class SuitPage(ShtikerPage.ShtikerPage):
         taskMgr.remove('suitListResponseTimeout-later')
         # if we haven't timed out get the current suit list
         if (not timeout and hasattr(base.cr, 'currSuitPlanner')
-            and base.cr.currSuitPlanner != None):
+                and base.cr.currSuitPlanner is not None):
             cogList = base.cr.currSuitPlanner.suitList
         else:
             cogList = []
@@ -690,7 +702,7 @@ class SuitPage(ShtikerPage.ShtikerPage):
         # get the latest counts from the suit planner info
         for cog in cogList:
             # the cogs names and panels are 1 to 1 mapping
-            self.panels[cog].count  += 1
+            self.panels[cog].count += 1
 
         # update the cog radar label text for the dept in question
         for panel in panels:
@@ -699,13 +711,15 @@ class SuitPage(ShtikerPage.ShtikerPage):
             # case 1: show the radar, hide the quota
             if self.radarOn[deptNum]:
                 panel.quotaLabel.hide()
+
                 def showLabel(label):
                     label.show()
                 taskMgr.doMethodLater(RADAR_DELAY * panels.index(panel),
                                       showLabel,
                                       'showCogRadarLater',
-                                      extraArgs = (panel.cogRadarLabel,))
-                def activateButton(s = self, index = deptNum):
+                                      extraArgs=(panel.cogRadarLabel,))
+
+                def activateButton(s=self, index=deptNum):
                     self.radarButtons[index]['state'] = DGG.NORMAL
                     return Task.done
 
@@ -715,13 +729,14 @@ class SuitPage(ShtikerPage.ShtikerPage):
                     # displaying. (If we *do* have building radar, the
                     # updateBuildingRadar function will take care of
                     # this.)
-                    taskMgr.doMethodLater(RADAR_DELAY * len(panels),
-                                          activateButton, 'activateButtonLater')
+                    taskMgr.doMethodLater(
+                        RADAR_DELAY * len(panels),
+                        activateButton,
+                        'activateButtonLater')
             # case 2: hide the radar, show the quota
             else:
                 panel.cogRadarLabel.hide()
                 panel.quotaLabel.show()
-
 
     def updateBuildingRadarButtons(self, radars):
         # turn on the appropriate radar ability based on 'radars' list
@@ -733,12 +748,13 @@ class SuitPage(ShtikerPage.ShtikerPage):
         # remove timeout task
         taskMgr.remove('buildingListResponseTimeout-later')
         if (not timeout and hasattr(base.cr, 'currSuitPlanner')
-            and base.cr.currSuitPlanner != None):
+                and base.cr.currSuitPlanner is not None):
             buildingList = base.cr.currSuitPlanner.buildingList
         else:
             buildingList = [0, 0, 0, 0]
 
-        # figure out the current number of buildings of this type on this street
+        # figure out the current number of buildings of this type on this
+        # street
         button = self.radarButtons[deptNum]
         if button.building:
             # make sure we have a buildingRadarLabel first
@@ -751,6 +767,7 @@ class SuitPage(ShtikerPage.ShtikerPage):
                     button.buildingRadarLabel['text'] = TTLocalizer.SuitPageBuildingRadarS % num
                 else:
                     button.buildingRadarLabel['text'] = TTLocalizer.SuitPageBuildingRadarP % num
+
                 def showLabel(button):
                     button.buildingRadarLabel.show()
                     # last but not least, turn the radar button back on
@@ -758,12 +775,7 @@ class SuitPage(ShtikerPage.ShtikerPage):
                 taskMgr.doMethodLater(RADAR_DELAY * SuitDNA.suitsPerDept,
                                       showLabel,
                                       'showBuildingRadarLater',
-                                      extraArgs = (button,))
+                                      extraArgs=(button,))
             # case 2: hide the radar
             else:
                 button.buildingRadarLabel.hide()
-
-
-
-
-

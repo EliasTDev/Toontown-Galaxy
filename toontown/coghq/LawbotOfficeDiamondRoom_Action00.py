@@ -11,7 +11,7 @@ GlobalEntities = {
         'farPlaneDistance': 1500,
         'modelFilename': 'phase_11/models/lawbotHQ/LB_Zone13a',
         'wantDoors': 1,
-        }, # end entity 1000
+    },  # end entity 1000
     # EDITMGR
     1001: {
         'type': 'editMgr',
@@ -21,7 +21,7 @@ GlobalEntities = {
         'removeEntity': None,
         'requestNewEntity': None,
         'requestSave': None,
-        }, # end entity 1001
+    },  # end entity 1001
     # ZONE
     0: {
         'type': 'zone',
@@ -31,7 +31,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 0
+    },  # end entity 0
     # ATTRIBMODIFIER
     10005: {
         'type': 'attribModifier',
@@ -42,7 +42,7 @@ GlobalEntities = {
         'recursive': 1,
         'typeName': 'stomper',
         'value': '10',
-        }, # end entity 10005
+    },  # end entity 10005
     10009: {
         'type': 'attribModifier',
         'name': 'spotlightDamage',
@@ -52,7 +52,7 @@ GlobalEntities = {
         'recursive': 1,
         'typeName': 'securityCamera',
         'value': '10',
-        }, # end entity 10009
+    },  # end entity 10009
     10032: {
         'type': 'attribModifier',
         'name': 'radius',
@@ -62,7 +62,7 @@ GlobalEntities = {
         'recursive': 1,
         'typeName': 'securityCamera',
         'value': '7',
-        }, # end entity 10032
+    },  # end entity 10032
     10036: {
         'type': 'attribModifier',
         'name': 'accel',
@@ -72,7 +72,7 @@ GlobalEntities = {
         'recursive': 1,
         'typeName': 'securityCamera',
         'value': '2',
-        }, # end entity 10036
+    },  # end entity 10036
     10066: {
         'type': 'attribModifier',
         'name': 'maxVel',
@@ -82,7 +82,7 @@ GlobalEntities = {
         'recursive': 1,
         'typeName': 'securityCamera',
         'value': '10',
-        }, # end entity 10066
+    },  # end entity 10066
     # NODEPATH
     10000: {
         'type': 'nodepath',
@@ -92,7 +92,7 @@ GlobalEntities = {
         'pos': Point3(-80, -1.5, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10000
+    },  # end entity 10000
     10001: {
         'type': 'nodepath',
         'name': 'left',
@@ -101,7 +101,7 @@ GlobalEntities = {
         'pos': Point3(0, 40, 0.05),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10001
+    },  # end entity 10001
     10002: {
         'type': 'nodepath',
         'name': 'right',
@@ -110,7 +110,7 @@ GlobalEntities = {
         'pos': Point3(0, -40, 0.05),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10002
+    },  # end entity 10002
     10003: {
         'type': 'nodepath',
         'name': 'back',
@@ -119,7 +119,7 @@ GlobalEntities = {
         'pos': Point3(80, 0, 0.05),
         'hpr': Vec3(0, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10003
+    },  # end entity 10003
     10007: {
         'type': 'nodepath',
         'name': '<unnamed>',
@@ -128,7 +128,7 @@ GlobalEntities = {
         'pos': Point3(0, -10, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10007
+    },  # end entity 10007
     10008: {
         'type': 'nodepath',
         'name': '<unnamed>',
@@ -137,7 +137,7 @@ GlobalEntities = {
         'pos': Point3(0, 10, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10008
+    },  # end entity 10008
     10011: {
         'type': 'nodepath',
         'name': '<unnamed>',
@@ -146,7 +146,7 @@ GlobalEntities = {
         'pos': Point3(0, 10, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10011
+    },  # end entity 10011
     10012: {
         'type': 'nodepath',
         'name': '<unnamed>',
@@ -155,7 +155,7 @@ GlobalEntities = {
         'pos': Point3(0, -10, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10012
+    },  # end entity 10012
     10017: {
         'type': 'nodepath',
         'name': 'stompers',
@@ -164,7 +164,7 @@ GlobalEntities = {
         'pos': Point3(0, -6, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10017
+    },  # end entity 10017
     10019: {
         'type': 'nodepath',
         'name': '<unnamed>',
@@ -173,7 +173,7 @@ GlobalEntities = {
         'pos': Point3(0, 10, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10019
+    },  # end entity 10019
     10020: {
         'type': 'nodepath',
         'name': '<unnamed>',
@@ -182,7 +182,7 @@ GlobalEntities = {
         'pos': Point3(0, -10, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10020
+    },  # end entity 10020
     10021: {
         'type': 'nodepath',
         'name': 'leftFront',
@@ -191,7 +191,7 @@ GlobalEntities = {
         'pos': Point3(-29.5779, 0, 0),
         'hpr': Point3(27, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10021
+    },  # end entity 10021
     10026: {
         'type': 'nodepath',
         'name': 'projectors',
@@ -200,7 +200,7 @@ GlobalEntities = {
         'pos': Point3(-15, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10026
+    },  # end entity 10026
     10027: {
         'type': 'nodepath',
         'name': 'left',
@@ -209,7 +209,7 @@ GlobalEntities = {
         'pos': Point3(0, 8, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10027
+    },  # end entity 10027
     10028: {
         'type': 'nodepath',
         'name': 'middle',
@@ -218,7 +218,7 @@ GlobalEntities = {
         'pos': Point3(0, -15, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10028
+    },  # end entity 10028
     10029: {
         'type': 'nodepath',
         'name': 'right',
@@ -227,7 +227,7 @@ GlobalEntities = {
         'pos': Point3(0, -28, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10029
+    },  # end entity 10029
     10031: {
         'type': 'nodepath',
         'name': 'nodepaths',
@@ -236,7 +236,7 @@ GlobalEntities = {
         'pos': Point3(0, -2, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10031
+    },  # end entity 10031
     10033: {
         'type': 'nodepath',
         'name': 'backLeft',
@@ -245,7 +245,7 @@ GlobalEntities = {
         'pos': Point3(0, 20, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10033
+    },  # end entity 10033
     10034: {
         'type': 'nodepath',
         'name': 'backCenter',
@@ -254,7 +254,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10034
+    },  # end entity 10034
     10035: {
         'type': 'nodepath',
         'name': 'backRight',
@@ -263,7 +263,7 @@ GlobalEntities = {
         'pos': Point3(0, -20, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10035
+    },  # end entity 10035
     10037: {
         'type': 'nodepath',
         'name': 'rightFront',
@@ -272,7 +272,7 @@ GlobalEntities = {
         'pos': Point3(-20.7505, 15.0698, 0),
         'hpr': Point3(333, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10037
+    },  # end entity 10037
     10038: {
         'type': 'nodepath',
         'name': 'projectors',
@@ -281,7 +281,7 @@ GlobalEntities = {
         'pos': Point3(-15, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10038
+    },  # end entity 10038
     10043: {
         'type': 'nodepath',
         'name': 'left',
@@ -290,7 +290,7 @@ GlobalEntities = {
         'pos': Point3(0, 8, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10043
+    },  # end entity 10043
     10044: {
         'type': 'nodepath',
         'name': 'middle',
@@ -299,7 +299,7 @@ GlobalEntities = {
         'pos': Point3(0, -15, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10044
+    },  # end entity 10044
     10045: {
         'type': 'nodepath',
         'name': 'frontLeft',
@@ -308,7 +308,7 @@ GlobalEntities = {
         'pos': Point3(-15, 20, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10045
+    },  # end entity 10045
     10046: {
         'type': 'nodepath',
         'name': 'frontCenter',
@@ -317,7 +317,7 @@ GlobalEntities = {
         'pos': Point3(-15, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10046
+    },  # end entity 10046
     10047: {
         'type': 'nodepath',
         'name': 'frontRight',
@@ -326,7 +326,7 @@ GlobalEntities = {
         'pos': Point3(-15, -20, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10047
+    },  # end entity 10047
     10048: {
         'type': 'nodepath',
         'name': 'right',
@@ -335,7 +335,7 @@ GlobalEntities = {
         'pos': Point3(0, -28, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10048
+    },  # end entity 10048
     10049: {
         'type': 'nodepath',
         'name': 'rightBack',
@@ -344,7 +344,7 @@ GlobalEntities = {
         'pos': Point3(20, 4, 0),
         'hpr': Point3(21, 0, 0),
         'scale': 1,
-        }, # end entity 10049
+    },  # end entity 10049
     10050: {
         'type': 'nodepath',
         'name': 'leftBack',
@@ -353,7 +353,7 @@ GlobalEntities = {
         'pos': Point3(20, -7, 0),
         'hpr': Point3(334, 0, 0),
         'scale': 1,
-        }, # end entity 10050
+    },  # end entity 10050
     10057: {
         'type': 'nodepath',
         'name': 'discoFloor',
@@ -362,7 +362,7 @@ GlobalEntities = {
         'pos': Point3(36.354, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10057
+    },  # end entity 10057
     10059: {
         'type': 'nodepath',
         'name': 'cameras',
@@ -371,7 +371,7 @@ GlobalEntities = {
         'pos': Point3(-7, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10059
+    },  # end entity 10059
     # SECURITYCAMERA
     10006: {
         'type': 'securityCamera',
@@ -392,7 +392,7 @@ GlobalEntities = {
         'trackTarget1': 10007,
         'trackTarget2': 10008,
         'trackTarget3': 0,
-        }, # end entity 10006
+    },  # end entity 10006
     10010: {
         'type': 'securityCamera',
         'name': '<unnamed>',
@@ -412,7 +412,7 @@ GlobalEntities = {
         'trackTarget1': 10011,
         'trackTarget2': 10012,
         'trackTarget3': 0,
-        }, # end entity 10010
+    },  # end entity 10010
     10018: {
         'type': 'securityCamera',
         'name': '<unnamed>',
@@ -432,7 +432,7 @@ GlobalEntities = {
         'trackTarget1': 10019,
         'trackTarget2': 10020,
         'trackTarget3': 0,
-        }, # end entity 10018
+    },  # end entity 10018
     10024: {
         'type': 'securityCamera',
         'name': '<unnamed>',
@@ -452,7 +452,7 @@ GlobalEntities = {
         'trackTarget1': 10027,
         'trackTarget2': 10028,
         'trackTarget3': 0,
-        }, # end entity 10024
+    },  # end entity 10024
     10025: {
         'type': 'securityCamera',
         'name': 'copy of <unnamed>',
@@ -472,7 +472,7 @@ GlobalEntities = {
         'trackTarget1': 10028,
         'trackTarget2': 10029,
         'trackTarget3': 0,
-        }, # end entity 10025
+    },  # end entity 10025
     10041: {
         'type': 'securityCamera',
         'name': '<unnamed>',
@@ -492,7 +492,7 @@ GlobalEntities = {
         'trackTarget1': 10043,
         'trackTarget2': 10044,
         'trackTarget3': 0,
-        }, # end entity 10041
+    },  # end entity 10041
     10042: {
         'type': 'securityCamera',
         'name': 'copy of <unnamed>',
@@ -512,7 +512,7 @@ GlobalEntities = {
         'trackTarget1': 10044,
         'trackTarget2': 10048,
         'trackTarget3': 0,
-        }, # end entity 10042
+    },  # end entity 10042
     10060: {
         'type': 'securityCamera',
         'name': 'backRow',
@@ -532,7 +532,7 @@ GlobalEntities = {
         'trackTarget1': 10033,
         'trackTarget2': 10034,
         'trackTarget3': 0,
-        }, # end entity 10060
+    },  # end entity 10060
     10062: {
         'type': 'securityCamera',
         'name': 'frontRow',
@@ -552,7 +552,7 @@ GlobalEntities = {
         'trackTarget1': 10045,
         'trackTarget2': 10046,
         'trackTarget3': 0,
-        }, # end entity 10062
+    },  # end entity 10062
     10063: {
         'type': 'securityCamera',
         'name': 'backRow2',
@@ -572,7 +572,7 @@ GlobalEntities = {
         'trackTarget1': 0,
         'trackTarget2': 10034,
         'trackTarget3': 10035,
-        }, # end entity 10063
+    },  # end entity 10063
     10065: {
         'type': 'securityCamera',
         'name': 'frontRow2',
@@ -592,7 +592,7 @@ GlobalEntities = {
         'trackTarget1': 0,
         'trackTarget2': 10046,
         'trackTarget3': 10047,
-        }, # end entity 10065
+    },  # end entity 10065
     # STOMPER
     10004: {
         'type': 'stomper',
@@ -623,7 +623,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10004
+    },  # end entity 10004
     10013: {
         'type': 'stomper',
         'name': '2',
@@ -653,7 +653,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10013
+    },  # end entity 10013
     10014: {
         'type': 'stomper',
         'name': '1',
@@ -683,7 +683,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10014
+    },  # end entity 10014
     10015: {
         'type': 'stomper',
         'name': 'copy of 4 (2)',
@@ -713,7 +713,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10015
+    },  # end entity 10015
     10016: {
         'type': 'stomper',
         'name': '4',
@@ -743,7 +743,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10016
+    },  # end entity 10016
     10022: {
         'type': 'stomper',
         'name': 'copy of 3',
@@ -773,7 +773,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10022
+    },  # end entity 10022
     10023: {
         'type': 'stomper',
         'name': 'copy of 3 (2)',
@@ -803,7 +803,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10023
+    },  # end entity 10023
     10030: {
         'type': 'stomper',
         'name': 'copy of 4 (3)',
@@ -833,7 +833,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10030
+    },  # end entity 10030
     10039: {
         'type': 'stomper',
         'name': 'copy of 3',
@@ -863,7 +863,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10039
+    },  # end entity 10039
     10040: {
         'type': 'stomper',
         'name': 'copy of 3 (2)',
@@ -893,7 +893,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10040
+    },  # end entity 10040
     10051: {
         'type': 'stomper',
         'name': 'copy of 4 (4)',
@@ -923,7 +923,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10051
+    },  # end entity 10051
     10052: {
         'type': 'stomper',
         'name': 'copy of 4 (5)',
@@ -953,7 +953,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10052
+    },  # end entity 10052
     10053: {
         'type': 'stomper',
         'name': 'copy of 4',
@@ -983,7 +983,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10053
+    },  # end entity 10053
     10054: {
         'type': 'stomper',
         'name': 'copy of 4 (2)',
@@ -1013,7 +1013,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10054
+    },  # end entity 10054
     10055: {
         'type': 'stomper',
         'name': 'copy of 4 (3)',
@@ -1043,7 +1043,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10055
+    },  # end entity 10055
     10056: {
         'type': 'stomper',
         'name': 'copy of 4 (4)',
@@ -1073,15 +1073,15 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10056
-    }
+    },  # end entity 10056
+}
 
 Scenario0 = {
-    }
+}
 
 levelSpec = {
     'globalEntities': GlobalEntities,
     'scenarios': [
         Scenario0,
-        ],
-    }
+    ],
+}

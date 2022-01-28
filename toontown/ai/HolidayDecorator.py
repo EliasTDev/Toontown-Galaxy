@@ -3,6 +3,7 @@ from direct.interval.IntervalGlobal import Parallel, Sequence, Func, Wait
 from panda3d.core import Vec4, CSDefault, TransformState, NodePath, TransparencyAttrib
 from panda3d.toontown import loadDNAFile
 
+
 class HolidayDecorator:
 
     def __init__(self):
@@ -23,7 +24,7 @@ class HolidayDecorator:
     def undecorate(self):
         # if there are any other decoration holidays running
         holidayIds = base.cr.newsManager.getDecorationHolidayId()
-        if len(holidayIds)>0:
+        if len(holidayIds) > 0:
             self.decorate()
             return
         # Reload the regular storage file
@@ -33,7 +34,7 @@ class HolidayDecorator:
         self.swapIval = self.getSwapVisibleIval()
         if self.swapIval:
             self.swapIval.start()
-            
+
     def updateHoodDNAStore(self):
         # Load the specified storage files for this hood to overwrite
         # DNA storage with seasonal specific files
@@ -43,7 +44,7 @@ class HolidayDecorator:
             for storageFile in hood.holidayStorageDNADict.get(holiday, []):
                 loadDNAFile(self.dnaStore, storageFile, CSDefault)
 
-    def getSwapVisibleIval(self, wait = 5.0, tFadeOut = 3.0, tFadeIn = 3.0):
+    def getSwapVisibleIval(self, wait=5.0, tFadeOut=3.0, tFadeIn=3.0):
         loader = base.cr.playGame.hood.loader
         # Update all visible holiday props
         npl = render.findAllMatches('**/=DNARoot=holiday_prop;+s')
@@ -66,24 +67,23 @@ class HolidayDecorator:
             # Set transform to match old node paths transform
             if np.hasTag('transformIndex'):
                 index = int(np.getTag('transformIndex'))
-                transform = loader.holidayPropTransforms.get(index, TransformState.makeIdentity())
-                # Position relative to empty node path *just in case* render not top of scene graph
+                transform = loader.holidayPropTransforms.get(
+                    index, TransformState.makeIdentity())
+                # Position relative to empty node path *just in case* render
+                # not top of scene graph
                 newNP.setTransform(NodePath(), transform)
                 newNP.setTag('transformIndex', repr(index))
-            s = Sequence(Wait(wait),
-                         np.colorScaleInterval(tFadeOut, Vec4(1, 1, 1, 0),
-                                               startColorScale = Vec4(1, 1, 1, 1),
-                                               blendType = 'easeInOut'),
-                         Func(np.detachNode),
-                         Func(np.clearTransparency),
-                         newNP.colorScaleInterval(tFadeOut, Vec4(1, 1, 1, 1),
-                                                  startColorScale = Vec4(1, 1, 1, 0),
-                                                  blendType = 'easeInOut'),
-                         Func(newNP.clearTransparency),
-                         Func(newNP.clearColorScale),
-                         )
+            s = Sequence(
+                Wait(wait), np.colorScaleInterval(
+                    tFadeOut, Vec4(
+                        1, 1, 1, 0), startColorScale=Vec4(
+                        1, 1, 1, 1), blendType='easeInOut'), Func(
+                    np.detachNode), Func(
+                        np.clearTransparency), newNP.colorScaleInterval(
+                            tFadeOut, Vec4(
+                                1, 1, 1, 1), startColorScale=Vec4(
+                                    1, 1, 1, 0), blendType='easeInOut'), Func(
+                                        newNP.clearTransparency), Func(
+                                            newNP.clearColorScale), )
             p.append(s)
         return p
-    
-                       
-        

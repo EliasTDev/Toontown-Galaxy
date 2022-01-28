@@ -3,35 +3,37 @@
 from .DistributedMinigameAI import *
 from direct.fsm import ClassicFSM, State
 from direct.fsm import State
+
+
 class DistributedMinigameTemplateAI(DistributedMinigameAI):
 
     def __init__(self, air, minigameId):
         try:
             self.DistributedMinigameTemplateAI_initialized
-        except:
+        except BaseException:
             self.DistributedMinigameTemplateAI_initialized = 1
             DistributedMinigameAI.__init__(self, air, minigameId)
 
             self.gameFSM = ClassicFSM.ClassicFSM('DistributedMinigameTemplateAI',
-                                   [
-                                    State.State('inactive',
-                                                self.enterInactive,
-                                                self.exitInactive,
-                                                ['play']),
-                                    State.State('play',
-                                                self.enterPlay,
-                                                self.exitPlay,
-                                                ['cleanup']),
-                                    State.State('cleanup',
-                                                self.enterCleanup,
-                                                self.exitCleanup,
-                                                ['inactive']),
-                                    ],
-                                   # Initial State
-                                   'inactive',
-                                   # Final State
-                                   'inactive',
-                                   )
+                                                 [
+                                                     State.State('inactive',
+                                                                 self.enterInactive,
+                                                                 self.exitInactive,
+                                                                 ['play']),
+                                                     State.State('play',
+                                                                 self.enterPlay,
+                                                                 self.exitPlay,
+                                                                 ['cleanup']),
+                                                     State.State('cleanup',
+                                                                 self.enterCleanup,
+                                                                 self.exitCleanup,
+                                                                 ['inactive']),
+                                                 ],
+                                                 # Initial State
+                                                 'inactive',
+                                                 # Final State
+                                                 'inactive',
+                                                 )
 
             # Add our game ClassicFSM to the framework ClassicFSM
             self.addChildGameFSM(self.gameFSM)

@@ -11,12 +11,14 @@ from toontown.toonbase import ToontownGlobals
 from otp.otpbase import OTPGlobals
 from direct.actor import Actor
 
+
 class DistributedLawbotBossGavel(DistributedObject.DistributedObject, FSM.FSM):
     """ This class represents a crane holding a magnet on a cable.
     The DistributedCashbotBoss creates four of these for the CFO
     battle scene. """
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLawbotBossGavel')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedLawbotBossGavel')
 
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
@@ -25,7 +27,7 @@ class DistributedLawbotBossGavel(DistributedObject.DistributedObject, FSM.FSM):
         self.boss = None
         self.index = None
         self.avId = 0
-        
+
         #self.modelPath = "phase_11/models/lawbotHQ/lawbot_gavel"
         self.modelPath = "phase_11/models/lawbotHQ/LB_gavel"
         self.modelFindString = None
@@ -33,38 +35,34 @@ class DistributedLawbotBossGavel(DistributedObject.DistributedObject, FSM.FSM):
         self.nodePath = None
 
         self.ival = None
-        self.origHpr = Point3(0,0,0)
-        self.downTime = 0.5 #how long to stomp down
-        self.upTime = 5 #how long to go up
+        self.origHpr = Point3(0, 0, 0)
+        self.downTime = 0.5  # how long to stomp down
+        self.upTime = 5  # how long to go up
 
         self.gavelSfx = None
 
     def announceGenerate(self):
-        self.notify.debug("announceGenerate: %s" % self.doId)
+        self.notify.debug(f"announceGenerate: {self.doId}")
         DistributedObject.DistributedObject.announceGenerate(self)
-        self.name = 'gavel-%s' % (self.doId)
-        #self.setName(self.name)
-
-  
+        self.name = f'gavel-{self.doId}'
+        # self.setName(self.name)
 
         # Load the model, (using loadModelOnce), and child it to the nodepath
         self.loadModel(self.modelPath, self.modelFindString)
         # animate if necessary
-        #self.startAnimation()
+        # self.startAnimation()
         # Put this thing in the world
         self.nodePath.wrtReparentTo(render)
 
         self.gavelSfx = loader.loadSfx('phase_11/audio/sfx/LB_gavel.ogg')
-        
+
         tempTuple = ToontownGlobals.LawbotBossGavelPosHprs[self.index]
         self.nodePath.setPosHpr(*tempTuple)
-        self.origHpr = Point3( tempTuple[3], tempTuple[4], tempTuple[5])
+        self.origHpr = Point3(tempTuple[3], tempTuple[4], tempTuple[5])
         self.downTime = ToontownGlobals.LawbotBossGavelTimes[self.index][0]
         self.upTime = ToontownGlobals.LawbotBossGavelTimes[self.index][1]
         self.stayDownTime = ToontownGlobals.LawbotBossGavelTimes[self.index][2]
 
-
-        
         assert(self.index not in self.boss.gavels)
         self.boss.gavels[self.index] = self
 
@@ -76,38 +74,36 @@ class DistributedLawbotBossGavel(DistributedObject.DistributedObject, FSM.FSM):
         # leaving the safezone.  Calling unloadModel will force the
         # next treasure of this type to reload from disk.
         loader.unloadModel(self.modelPath)
-        
+
         self.nodePath.removeNode()
 
-
-    def loadModel(self, modelPath, modelFindString = None):
-        if self.nodePath == None:
+    def loadModel(self, modelPath, modelFindString=None):
+        if self.nodePath is None:
             self.makeNodePath()
         else:
             self.gavel.getChildren().detach()
 
         # Load the gavel model and put it under our root node.
         model = loader.loadModel(modelPath)
-        if modelFindString != None:
+        if modelFindString is not None:
             modTel = model.find("**/" + modelFindString)
-            assert model != None
+            assert model is not None
 
         parts = model.findAllMatches("**/gavel*")
-        #color it dark brown
-        #parts.setColor(139,37,12)
-        #parts.setColor(0.402,0.06640625,0.02734375)
+        # color it dark brown
+        # parts.setColor(139,37,12)
+        # parts.setColor(0.402,0.06640625,0.02734375)
 
         gavelTop = model.find("**/top*")
         gavelHandle = model.find("**/handle*")
         #import pdb; pdb.set_trace()
-            
+
         model.instanceTo(self.gavel)
 
         self.attachColTube()
 
-        self.scale = 3.0        
+        self.scale = 3.0
         self.nodePath.setScale(self.scale)
-
 
     def attachColTube(self):
 
@@ -116,44 +112,48 @@ class DistributedLawbotBossGavel(DistributedObject.DistributedObject, FSM.FSM):
         gavelHandle = self.nodePath.find("**/handle*")
 
         collNode = CollisionNode(self.uniqueName("headSphere"))
-        #collNode.setIntoCollideMask(WallBitmask)
-        #collNode.addSolid(collSphere)
+        # collNode.setIntoCollideMask(WallBitmask)
+        # collNode.addSolid(collSphere)
 
         topBounds = gavelTop.getBounds()
         center = topBounds.getCenter()
         radius = topBounds.getRadius()
 
         tube1 = CollisionTube(0, -1, center.getZ(), 0, 1, center.getZ(), 1)
-        tube1.setTangible(0)        
+        tube1.setTangible(0)
         collNode.addSolid(tube1)
-        collNode.setTag('attackCode', str(ToontownGlobals.BossCogGavelStomp))        
+        collNode.setTag('attackCode', str(ToontownGlobals.BossCogGavelStomp))
         collNode.setName('GavelZap')
 
-        
         self.collNodePath = self.nodePath.attachNewNode(collNode)
-        #self.collNodePath.stash()
+        # self.collNodePath.stash()
 
         handleBounds = gavelHandle.getBounds()
         handleCenter = handleBounds.getCenter()
         handleRadius = handleBounds.getRadius()
 
-
-        tube2 = CollisionTube(0, 0, handleCenter.getZ() + handleRadius, 0, 0, handleCenter.getZ() - handleRadius, 0.25)
+        tube2 = CollisionTube(
+            0,
+            0,
+            handleCenter.getZ() +
+            handleRadius,
+            0,
+            0,
+            handleCenter.getZ() -
+            handleRadius,
+            0.25)
         tube2.setTangible(0)
         handleCollNode = CollisionNode(self.uniqueName("gavelHandle"))
         handleCollNode.addSolid(tube2)
-        handleCollNode.setTag('attackCode', str(ToontownGlobals.BossCogGavelHandle))
+        handleCollNode.setTag(
+            'attackCode', str(
+                ToontownGlobals.BossCogGavelHandle))
         handleCollNode.setName('GavelHandleZap')
         self.handleCollNodePath = self.nodePath.attachNewNode(handleCollNode)
-        
-        
 
     def makeNodePath(self):
-        self.nodePath = Actor.Actor() #NodePath(self.uniqueName("gavelNodePath"))        
+        self.nodePath = Actor.Actor()  # NodePath(self.uniqueName("gavelNodePath"))
         self.nodePath.setBlend(base.wantSmoothAnimations)
- 
-
-        
 
         self.gavel = self.nodePath.attachNewNode('myGavel')
 
@@ -161,21 +161,17 @@ class DistributedLawbotBossGavel(DistributedObject.DistributedObject, FSM.FSM):
         # to the nodepath.
         #collSphere = CollisionSphere(0, 0, 0, 1)
         # Make the sphere intangible
-        #collSphere.setTangible(0)
-        #collSphere.setTangible(1)
-
-
-
+        # collSphere.setTangible(0)
+        # collSphere.setTangible(1)
 
         #self.scale = 5.0
 
-        
     def disable(self):
         DistributedObject.DistributedObject.disable(self)
         assert(self.boss.gavels.get(self.index) == self)
         self.nodePath.detachNode()
-        if (self.ival):        
-            self.ival.finish();
+        if (self.ival):
+            self.ival.finish()
             self.ival = None
 
         self.ignoreAll()
@@ -183,11 +179,9 @@ class DistributedLawbotBossGavel(DistributedObject.DistributedObject, FSM.FSM):
         self.cleanup()
 
     def cleanup(self):
-        #if self.state != 'Off':
+        # if self.state != 'Off':
         #    self.demand('Off')
         self.boss = None
-
-
 
     ##### Messages To/From The Server #####
 
@@ -213,44 +207,56 @@ class DistributedLawbotBossGavel(DistributedObject.DistributedObject, FSM.FSM):
         elif state == 'N':
             self.demand('On')
         else:
-            self.notify.error("Invalid state from AI: %s" % (state))
-
+            self.notify.error(f"Invalid state from AI: {state}")
 
     ### FSM States ###
 
     def enterOn(self):
-        #do whatever we need to start the big gavels stomping
+        # do whatever we need to start the big gavels stomping
         self.notify.debug("enterOn for gavel %d" % self.index)
 
         myHeadings = ToontownGlobals.LawbotBossGavelHeadings[self.index]
 
-        seqName = "LawbotBossGavel-%s" % self.doId
-        self.ival = Sequence(name = seqName)
+        seqName = f"LawbotBossGavel-{self.doId}"
+        self.ival = Sequence(name=seqName)
         downAngle = -80
 
         for index in range(len(myHeadings)):
-            nextIndex = index +1;
+            nextIndex = index + 1
             if (nextIndex == len(myHeadings)):
                 nextIndex = 0
-                
-            goingDown = self.nodePath.hprInterval(self.downTime,
-                                                  Point3(myHeadings[index] + self.origHpr[0],
-                                                  downAngle,
-                                                  self.origHpr[2]),
-                                                  startHpr = Point3(myHeadings[index] + self.origHpr[0] ,0,self.origHpr[2]))
-            self.ival.append(goingDown)
-            self.ival.append(SoundInterval(self.gavelSfx, node = self.gavelTop))
-            self.ival.append(Wait(self.stayDownTime))
-            
-            goingUp = self.nodePath.hprInterval(self.upTime,
-                                                Point3(myHeadings[nextIndex] + self.origHpr[0],
-                                                0,
-                                                self.origHpr[2]),
-                                                startHpr = Point3(myHeadings[index] + self.origHpr[0], downAngle, self.origHpr[2]))
-            self.ival.append(goingUp)
-            
 
-        self.ival.loop() #globalClock.getFrameTime());
+            goingDown = self.nodePath.hprInterval(
+                self.downTime,
+                Point3(
+                    myHeadings[index] +
+                    self.origHpr[0],
+                    downAngle,
+                    self.origHpr[2]),
+                startHpr=Point3(
+                    myHeadings[index] +
+                    self.origHpr[0],
+                    0,
+                    self.origHpr[2]))
+            self.ival.append(goingDown)
+            self.ival.append(SoundInterval(self.gavelSfx, node=self.gavelTop))
+            self.ival.append(Wait(self.stayDownTime))
+
+            goingUp = self.nodePath.hprInterval(
+                self.upTime,
+                Point3(
+                    myHeadings[nextIndex] +
+                    self.origHpr[0],
+                    0,
+                    self.origHpr[2]),
+                startHpr=Point3(
+                    myHeadings[index] +
+                    self.origHpr[0],
+                    downAngle,
+                    self.origHpr[2]))
+            self.ival.append(goingUp)
+
+        self.ival.loop()  # globalClock.getFrameTime());
         self.accept('enterGavelZap', self.__touchedGavel)
         self.accept('enterGavelHandleZap', self.__touchedGavelHandle)
 
@@ -261,9 +267,9 @@ class DistributedLawbotBossGavel(DistributedObject.DistributedObject, FSM.FSM):
         tempTuple = ToontownGlobals.LawbotBossGavelPosHprs[self.index]
         self.nodePath.setPosHpr(*tempTuple)
 
-    def __touchedGavel(self,entry):
+    def __touchedGavel(self, entry):
         self.notify.debug("__touchedGavel")
-        self.notify.debug("self=%s entry=%s" % (self,entry))
+        self.notify.debug(f"self={self} entry={entry}")
 
         self.boss.touchedGavel(self, entry)
 
@@ -271,4 +277,3 @@ class DistributedLawbotBossGavel(DistributedObject.DistributedObject, FSM.FSM):
         self.notify.debug("__touchedGavelHandle")
 
         self.boss.touchedGavelHandle(self, entry)
-

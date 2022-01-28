@@ -17,9 +17,11 @@ from direct.distributed import DistributedObjectAI
 from toontown.ai.ToonBarrier import *
 
 
-
-class DistributedLawOfficeFloorAI(DistributedLevelAI.DistributedLevelAI, LawOfficeBase.LawOfficeBase):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLawOfficeAI')
+class DistributedLawOfficeFloorAI(
+        DistributedLevelAI.DistributedLevelAI,
+        LawOfficeBase.LawOfficeBase):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedLawOfficeAI')
 
     def __init__(self, air, lawOfficeId, zoneId, entranceId, avIds, spec):
         # entranceId is the entrance the toons will come in (based on
@@ -37,19 +39,20 @@ class DistributedLawOfficeFloorAI(DistributedLevelAI.DistributedLevelAI, LawOffi
         return FactoryEntityCreatorAI.FactoryEntityCreatorAI(level=self)
 
     def getBattleCreditMultiplier(self):
-        return ToontownBattleGlobals.getFactoryCreditMultiplier(self.lawOfficeId)
-    
+        return ToontownBattleGlobals.getFactoryCreditMultiplier(
+            self.lawOfficeId)
+
     def generate(self):
         self.notify.info('generate')
 
         self.notify.info('start factory %s %s creation, frame=%s' %
                          (self.lawOfficeId, self.doId,
                           globalClock.getFrameCount()))
-                          
+
         self.layout = LawOfficeLayout.LawOfficeLayout(self.lawOfficeId)
-        
+
         self.startFloor()
-        
+
     def startFloor(self):
 
         if __debug__:
@@ -64,10 +67,9 @@ class DistributedLawOfficeFloorAI(DistributedLevelAI.DistributedLevelAI, LawOffi
             self.notify.info('creating entity type registry')
             typeReg = self.getEntityTypeReg()
             self.factorySpec.setEntityTypeReg(typeReg)
-        
+
         self.notify.info('creating entities')
         DistributedLevelAI.DistributedLevelAI.generate(self, self.factorySpec)
-        
 
         self.notify.info('creating cogs')
         cogSpecModule = FactorySpecs.getCogSpecModule(self.lawOfficeId)
@@ -80,24 +82,23 @@ class DistributedLawOfficeFloorAI(DistributedLevelAI.DistributedLevelAI, LawOffi
             cogSpecModule.BattleCells)
         suitHandles = self.planner.genSuits()
         # alert battle blockers that planner has been created
-        messenger.send("plannerCreated-"+str(self.doId))
-        
+        messenger.send("plannerCreated-" + str(self.doId))
+
         self.suits = suitHandles['activeSuits']
         self.reserveSuits = suitHandles['reserveSuits']
         self.d_setSuits()
 
         # log that toons entered the factory
-        scenario = 0 # placeholder until we have real scenarios
+        scenario = 0  # placeholder until we have real scenarios
         description = '%s|%s|%s|%s' % (
             self.lawOfficeId, self.entranceId, scenario, self.avIdList)
         for avId in self.avIdList:
             self.air.writeServerEvent('DAOffice Entered', avId, description)
 
-        self.notify.info('finish factory %s %s creation' %
-                         (self.lawOfficeId, self.doId))
+        self.notify.info(f'finish factory {self.lawOfficeId} {self.doId} creation')
 
     def delete(self):
-        self.notify.info('delete: %s' % self.doId)
+        self.notify.info(f'delete: {self.doId}')
         suits = self.suits
         for reserve in self.reserveSuits:
             suits.append(reserve[0])
@@ -108,21 +109,20 @@ class DistributedLawOfficeFloorAI(DistributedLevelAI.DistributedLevelAI, LawOffi
                 suit.factoryIsGoingDown()
                 suit.requestDelete()
         DistributedLevelAI.DistributedLevelAI.delete(self, False)
-        
-        #self.notify.debug('delete')
-        #if __dev__:
+
+        # self.notify.debug('delete')
+        # if __dev__:
         #    self.removeAutosaveTask()
-        #self.destroyLevel()
-        #self.ignoreAll()
-        #if 0:
+        # self.destroyLevel()
+        # self.ignoreAll()
+        # if 0:
         #    self.air.deallocateZone(self.zoneId)
-        #DistributedObjectAI.DistributedObjectAI.delete(self)
-    
-        
+        # DistributedObjectAI.DistributedObjectAI.delete(self)
+
     def readyForNextFloor(self):
         toonId = self.air.getAvatarIdFromSender()
         self.__barrier.clear(toonId)
-        
+
     def dumpEveryone(self):
         pass
 
@@ -155,12 +155,12 @@ class DistributedLawOfficeFloorAI(DistributedLevelAI.DistributedLevelAI, LawOffi
                 activeVictorIds.append(victorId)
 
         # log that toons beat the factory
-        scenario = 0 # placeholder until we have real scenarios
+        scenario = 0  # placeholder until we have real scenarios
         description = '%s|%s|%s|%s' % (
             self.lawOfficeId, self.entranceId, scenario, activeVictorIds)
         for avId in activeVictorIds:
             self.air.writeServerEvent('DAOffice Defeated', avId, description)
-            
+
         for toon in activeVictors:
             # update toon's quests
             # WE ASSUME THAT self.lawOfficeId IS THE 'FAUX-ZONE' OF THE FACTORY
@@ -169,7 +169,7 @@ class DistributedLawOfficeFloorAI(DistributedLevelAI.DistributedLevelAI, LawOffi
 
         # this causes the toons to leave in the middle of the reward movie
         # see DistributedBattleFactoryAI.enterResume
-        #self.b_setDefeated()
+        # self.b_setDefeated()
 
     # call this when the factory boss has been defeated and we're ready
     # for the toons to leave
@@ -177,8 +177,10 @@ class DistributedLawOfficeFloorAI(DistributedLevelAI.DistributedLevelAI, LawOffi
     def b_setDefeated(self):
         self.d_setDefeated()
         self.setDefeated()
+
     def d_setDefeated(self):
         self.sendUpdate('setDefeated')
+
     def setDefeated(self):
         # we add parts in the battle ai now...
         pass

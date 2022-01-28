@@ -4,6 +4,7 @@ Street object
 
 from .ToonTownObj import *
 
+
 class StreetObj(ToonTownObj):
     def __init__(self, editor, streetType, dna=None, nodePath=None):
         self.hoodId = streetType[:2]
@@ -20,7 +21,6 @@ class StreetObj(ToonTownObj):
         dnaNode.setCode(self.streetType)
         dnaNode.setPos(VBase3(0))
         dnaNode.setHpr(VBase3(0))
-        
 
         # Set street texture to neighborhood dependant texture
         dnaNode.setStreetTexture(

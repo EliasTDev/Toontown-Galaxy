@@ -6,6 +6,7 @@ You need to uncomment it from toon.dc to use it.
 
 from direct.distributed import DistributedObject
 
+
 class DistributedTester(DistributedObject.DistributedObject):
 
     """
@@ -45,5 +46,3 @@ class DistributedTester(DistributedObject.DistributedObject):
 
     def setState(self, *args):
         print("DistributedTester setState: doId: ", self.doId)
-
-

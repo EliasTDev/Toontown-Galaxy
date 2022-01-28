@@ -2,6 +2,7 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObject import DistributedObject
 
+
 class DistributedDistrict(DistributedObject):
     """
     See Also: "otp/src/distributed/DistributedDistrictAI.py"
@@ -26,7 +27,7 @@ class DistributedDistrict(DistributedObject):
             base.cr.distributedDistrict = None
         if self.doId in self.cr.activeDistrictMap:
             del self.cr.activeDistrictMap[self.doId]
-        DistributedObject.delete(self)        
+        DistributedObject.delete(self)
         messenger.send('shardInfoUpdated')
 
     def setAvailable(self, available):
@@ -34,5 +35,5 @@ class DistributedDistrict(DistributedObject):
         messenger.send('shardInfoUpdated')
 
     def setName(self, name):
-        self.name=name
+        self.name = name
         messenger.send('shardInfoUpdated')

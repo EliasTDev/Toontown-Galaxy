@@ -7,6 +7,7 @@ from direct.gui.DirectGuiGlobals import FADE_SORT_INDEX
 from pandac.PandaModules import *
 from . import LaffMeter
 
+
 class DeathForceAcknowledge:
     def __init__(self, doneEvent):
         """___init___(self, Event)"""
@@ -21,13 +22,13 @@ class DeathForceAcknowledge:
         fadeModel = loader.loadModel("phase_3/models/misc/fade")
         if fadeModel:
             self.fade = DirectFrame(
-                parent = aspect2dp,
-                relief = None,
-                image = fadeModel,
-                image_color = (0, 0, 0, 0.4),
-                image_scale = 3.0,
-                state = DGG.NORMAL,
-                )
+                parent=aspect2dp,
+                relief=None,
+                image=fadeModel,
+                image_color=(0, 0, 0, 0.4),
+                image_scale=3.0,
+                state=DGG.NORMAL,
+            )
             self.fade.reparentTo(aspect2d, FADE_SORT_INDEX)
             fadeModel.removeNode()
         else:
@@ -35,16 +36,15 @@ class DeathForceAcknowledge:
             self.fade = None
 
         self.dialog = TTDialog.TTGlobalDialog(
-            message = TTLocalizer.PlaygroundDeathAckMessage,
-            doneEvent = doneEvent,
-            style = TTDialog.Acknowledge,
-            suppressKeys = True,
-            )
-        self.dialog['text_pos'] = (-.26,.1)
+            message=TTLocalizer.PlaygroundDeathAckMessage,
+            doneEvent=doneEvent,
+            style=TTDialog.Acknowledge,
+            suppressKeys=True,
+        )
+        self.dialog['text_pos'] = (-.26, .1)
         scale = self.dialog.component('image0').getScale()
         scale.setX(scale[0] * 1.3)
         self.dialog.component('image0').setScale(scale)
-
 
         av = base.localAvatar
         self.laffMeter = LaffMeter.LaffMeter(av.style, av.hp, av.maxHp)

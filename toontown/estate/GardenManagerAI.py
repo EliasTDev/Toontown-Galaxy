@@ -1,4 +1,4 @@
-#credit to toontown school house
+# credit to toontown school house
 import json
 import os
 
@@ -23,7 +23,10 @@ NULL_STATUARY = 0
 
 # NULL_DATA is just a dictionary containing all the null values that are
 # defined above; this makes up a default garden with nothing in it.
-NULL_DATA = {'flowers': NULL_FLOWERS, 'trees': NULL_TREES, 'statuary': NULL_STATUARY}
+NULL_DATA = {
+    'flowers': NULL_FLOWERS,
+    'trees': NULL_TREES,
+    'statuary': NULL_STATUARY}
 
 # X position offsets for flowers & flower plots:
 FLOWER_X_OFFSETS = (None, (0,), (-1.5, 1.5), (-3.4, 0, 3.5))
@@ -44,14 +47,14 @@ class GardenAI:
         self.trees = set()
         self.flowers = set()
         self.objects = set()
-        self.fileName = 'garden_%s.json' % avId
+        self.fileName = f'garden_{avId}.json'
         self.filePath = 'backups/gardens/'
         try:
             with open(self.filePath + self.fileName, 'r') as f:
                 self.data = json.load(f)
 
             self.dbExists = True
-        except:
+        except BaseException:
             self.data = NULL_DATA.copy()
             self.dbExists = False
 
@@ -62,7 +65,8 @@ class GardenAI:
         self.data.pop('_id', None)
 
     def destroy(self):
-        messenger.send('garden-%d-%d-going-down' % (id(self.gardenMgr), self.avId))
+        messenger.send('garden-%d-%d-going-down' %
+                       (id(self.gardenMgr), self.avId))
         for tree in self.trees:
             tree.requestDelete()
 
@@ -78,7 +82,9 @@ class GardenAI:
     def load(self, estate):
         self.estate = estate
         if self.avId not in estate.activeToons:
-            self.notify.warning('Garden associated with unknown avatar %d, deleting...' % self.avId)
+            self.notify.warning(
+                'Garden associated with unknown avatar %d, deleting...' %
+                self.avId)
             return False
 
         houseIndex = estate.activeToons.index(self.avId)
@@ -107,8 +113,14 @@ class GardenAI:
                 data = self.data['trees'][treeIndex]
                 planted, waterLevel, lastCheck, growthLevel, lastHarvested = data
                 if planted != -1:
-                    obj = self.plantTree(treeIndex, planted, waterLevel=waterLevel, lastCheck=lastCheck,
-                                         growthLevel=growthLevel, lastHarvested=lastHarvested, generate=False)
+                    obj = self.plantTree(
+                        treeIndex,
+                        planted,
+                        waterLevel=waterLevel,
+                        lastCheck=lastCheck,
+                        growthLevel=growthLevel,
+                        lastHarvested=lastHarvested,
+                        generate=False)
                     self.trees.add(obj)
                 else:
                     obj = self.placePlot(treeIndex)
@@ -123,8 +135,14 @@ class GardenAI:
                 data = self.data['flowers'][flowerIndex]
                 planted, waterLevel, lastCheck, growthLevel, variety = data
                 if planted != -1:
-                    obj = self.plantFlower(flowerIndex, planted, variety, waterLevel=waterLevel, lastCheck=lastCheck,
-                                           growthLevel=growthLevel, generate=False)
+                    obj = self.plantFlower(
+                        flowerIndex,
+                        planted,
+                        variety,
+                        waterLevel=waterLevel,
+                        lastCheck=lastCheck,
+                        growthLevel=growthLevel,
+                        generate=False)
                     zOffset = 1.5
                 else:
                     obj = self.placePlot(flowerIndex)
@@ -187,7 +205,8 @@ class GardenAI:
                     break
 
                 tree = self.getTree(track, level)
-                if tree.getGrowthLevel() < tree.growthThresholds[1] or tree.getWilted():
+                if tree.getGrowthLevel(
+                ) < tree.growthThresholds[1] or tree.getWilted():
                     break
 
             bonus[track] = level - 1
@@ -207,8 +226,19 @@ class GardenAI:
             if tree.getTypeIndex() == GardenGlobals.getTreeTypeIndex(track, index):
                 return tree
 
-    def plantTree(self, treeIndex, value, plot=None, waterLevel=-1, lastCheck=0, growthLevel=0, lastHarvested=0,
-                  ownerIndex=-1, plotId=-1, pos=None, generate=True):
+    def plantTree(
+            self,
+            treeIndex,
+            value,
+            plot=None,
+            waterLevel=-1,
+            lastCheck=0,
+            growthLevel=0,
+            lastHarvested=0,
+            ownerIndex=-1,
+            plotId=-1,
+            pos=None,
+            generate=True):
         if not self.air:
             return
 
@@ -242,7 +272,14 @@ class GardenAI:
 
         return tree
 
-    def placeStatuary(self, data, plot=None, plotId=-1, ownerIndex=-1, pos=None, generate=True):
+    def placeStatuary(
+            self,
+            data,
+            plot=None,
+            plotId=-1,
+            ownerIndex=-1,
+            pos=None,
+            generate=True):
         if not self.air:
             return
 
@@ -284,8 +321,18 @@ class GardenAI:
 
         return obj
 
-    def plantFlower(self, flowerIndex, species, variety, plot=None, waterLevel=-1, lastCheck=0, growthLevel=0,
-                    ownerIndex=-1, plotId=-1, generate=True):
+    def plantFlower(
+            self,
+            flowerIndex,
+            species,
+            variety,
+            plot=None,
+            waterLevel=-1,
+            lastCheck=0,
+            growthLevel=0,
+            ownerIndex=-1,
+            plotId=-1,
+            generate=True):
         if not self.air:
             return
 

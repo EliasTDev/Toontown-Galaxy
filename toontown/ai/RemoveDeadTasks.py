@@ -1,9 +1,12 @@
+from . import UtilityStart
 from . import RepairAvatars
 from . import DatabaseObject
 import time
 
 # this removes all traces of a list of tasks from all avatars; if they are
 # working on the task, it will disappear
+
+
 class DeadTaskRemover(RepairAvatars.AvatarIterator):
     # When we come to this many non-avatars in a row, assume we have
     # reached the end of the database.
@@ -28,7 +31,7 @@ class DeadTaskRemover(RepairAvatars.AvatarIterator):
         questList = []
         questLen = 5
         for i in range(0, len(flatQuests), questLen):
-            questList.append(flatQuests[i:i+questLen])
+            questList.append(flatQuests[i:i + questLen])
 
         # make list of quests to remove
         toRemove = []
@@ -51,7 +54,7 @@ class DeadTaskRemover(RepairAvatars.AvatarIterator):
 
         # and store the changes in the DB
         if questsChanged:
-            print("Fixing %s: %s" % (av.doId, av._name))
+            print(f"Fixing {av.doId}: {av._name}")
             fields = ['setQuests']
             if questHistoryChanged:
                 fields.append('setQuestHistory')
@@ -59,19 +62,18 @@ class DeadTaskRemover(RepairAvatars.AvatarIterator):
                 fields.append('setRewardHistory')
             db2 = DatabaseObject.DatabaseObject(self.air, av.doId)
             db2.storeObject(av, fields)
-    
+
     def printSometimes(self, av):
         now = time.time()
         if now - self.lastPrintTime > self.printInterval:
             print("Avatar %d: %s" % (av.doId, av._name))
             self.lastPrintTime = now
 
-from . import UtilityStart
-f = DeadTaskRemover(simbase.air, (list(range(6979, 6999+1)) +
-                                  list(range(7979, 7999+1)) +
-                                  list(range(8979, 8999+1)) +
-                                  list(range(9979, 9999+1)) +
-                                  list(range(10979, 10999+1))))
+
+f = DeadTaskRemover(simbase.air, (list(range(6979, 6999 + 1)) +
+                                  list(range(7979, 7999 + 1)) +
+                                  list(range(8979, 8999 + 1)) +
+                                  list(range(9979, 9999 + 1)) +
+                                  list(range(10979, 10999 + 1))))
 f.start()
 run()
-

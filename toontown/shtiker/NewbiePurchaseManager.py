@@ -12,6 +12,7 @@ QuestParser.readFile(QuestParser.scriptFile)
 npm.playMovie()
 """
 
+
 class NewbiePurchaseManager(PurchaseManager.PurchaseManager):
     def setOwnedNewbieId(self, ownedNewbieId):
         self.ownedNewbieId = ownedNewbieId

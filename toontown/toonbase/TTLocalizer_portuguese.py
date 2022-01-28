@@ -144,14 +144,14 @@ BossbotP = "Robôs-chefe"
 LawbotP = "Robôs da Lei"
 CashbotP = "Robôs Mercenários"
 SellbotP = "Robôs Vendedores"
-BossbotSkelS = "um Esqueletocog %s" % (Bossbot)
-LawbotSkelS = "um Esqueletocog %s" % (Lawbot)
-CashbotSkelS = "um Esqueletocog %s" % (Cashbot)
-SellbotSkelS = "um Esqueletocog %s" % (Sellbot)
-BossbotSkelP = "Esqueletocogs %s" % (BossbotP)
-LawbotSkelP = "Esqueletocogs %s" % (LawbotP)
-CashbotSkelP = "Esqueletocogs %s" % (CashbotP)
-SellbotSkelP = "Esqueletocogs %s" % (SellbotP)
+BossbotSkelS = f"um Esqueletocog {Bossbot}"
+LawbotSkelS = f"um Esqueletocog {Lawbot}"
+CashbotSkelS = f"um Esqueletocog {Cashbot}"
+SellbotSkelS = f"um Esqueletocog {Sellbot}"
+BossbotSkelP = f"Esqueletocogs {BossbotP}"
+LawbotSkelP = f"Esqueletocogs {LawbotP}"
+CashbotSkelP = f"Esqueletocogs {CashbotP}"
+SellbotSkelP = f"Esqueletocogs {SellbotP}"
 SkeleRevivePostFix = " v2.0"
 
 lBossbotHQ = 'Quartel do Robô-chefe'
@@ -2064,8 +2064,8 @@ QuestDialogDict = {
               },
     11001 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Sim, sim. Eu tenho peças de disfarce de Robôs da Lei.\aMas não tenho interesse nelas.\aO foco da minha pesquisa são as flutuações na temperatura ambiente de Toontown.\aEu troco com você as minhas peças de disfarce por termômetros de cogs.\aVocê pode começar em %s." % GlobalStreetNames[2100][-1],
-              INCOMPLETE_PROGRESS : "Tentou procurar em %s?" % GlobalStreetNames[2100][-1],
+              QUEST : f"Sim, sim. Eu tenho peças de disfarce de Robôs da Lei.Mas não tenho interesse nelas.O foco da minha pesquisa são as flutuações na temperatura ambiente de Toontown.Eu troco com você as minhas peças de disfarce por termômetros de cogs.Você pode começar em {GlobalStreetNames[2100][-1]}.",
+              INCOMPLETE_PROGRESS : f"Tentou procurar em {GlobalStreetNames[2100][-1]}?",
               COMPLETE : "Ah, ótimo!\aComo eu temia...\aAh, é! Aqui está a sua peça de disfarce.",
              },
 
@@ -2075,8 +2075,8 @@ QuestDialogDict = {
               },
     11003 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Mais peças de disfarce de Robô da Lei?\aBem, se você insiste...\amas eu vou precisar de outro termômetro de Cog.\aDesta vez, procure em %s." % GlobalStreetNames[2200][-1],
-              INCOMPLETE_PROGRESS : "Você está procurando em %s, certo?" % GlobalStreetNames[2200][-1],
+              QUEST : f"Mais peças de disfarce de Robô da Lei?Bem, se você insiste...mas eu vou precisar de outro termômetro de Cog.Desta vez, procure em {GlobalStreetNames[2200][-1]}.",
+              INCOMPLETE_PROGRESS : f"Você está procurando em {GlobalStreetNames[2200][-1]}, certo?",
               COMPLETE : "Obrigado!\aE aqui está a sua peça de disfarce.",
              },
     11004 : { GREETING : "",
@@ -2085,8 +2085,8 @@ QuestDialogDict = {
               },
     11005 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Você está me saindo bastante útil!\aVocê pode dar uma ollhada em %s?" % GlobalStreetNames[2300][-1],
-              INCOMPLETE_PROGRESS : "Tem certeza de que está procurando em %s?" % GlobalStreetNames[2300][-1],
+              QUEST : f"Você está me saindo bastante útil!Você pode dar uma ollhada em {GlobalStreetNames[2300][-1]}?",
+              INCOMPLETE_PROGRESS : f"Tem certeza de que está procurando em {GlobalStreetNames[2300][-1]}?",
               COMPLETE : "Humm, não gostei muito da aparência disto...\amas aqui está a sua peça de disfarce...",
              },
     11006 : { GREETING : "",
@@ -2095,8 +2095,8 @@ QuestDialogDict = {
               },
     11007 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Já de volta?\aQue dedicação...\aA próxima parada é %s." % GlobalStreetNames[1100][-1],
-              INCOMPLETE_PROGRESS : "Você já tentou observar %s?" % GlobalStreetNames[1100][-1],
+              QUEST : f"Já de volta?Que dedicação...A próxima parada é {GlobalStreetNames[1100][-1]}.",
+              INCOMPLETE_PROGRESS : f"Você já tentou observar {GlobalStreetNames[1100][-1]}?",
               COMPLETE : "Isso! Parece que você está pegando o jeito da coisa!\aA sua peça de disfarce...",
              },
     11008 : { GREETING : "",
@@ -2105,8 +2105,8 @@ QuestDialogDict = {
               },
     11009 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Engraçado encontrar você aqui!\aAgora, eu preciso de medições em %s." % GlobalStreetNames[1200][-1],
-              INCOMPLETE_PROGRESS : "Você está procurando em %s, certo?" % GlobalStreetNames[1200][-1],
+              QUEST : f"Engraçado encontrar você aqui!Agora, eu preciso de medições em {GlobalStreetNames[1200][-1]}.",
+              INCOMPLETE_PROGRESS : f"Você está procurando em {GlobalStreetNames[1200][-1]}, certo?",
               COMPLETE : "Muito obrigado.\aO seu disfarce deve estar quase pronto...",
              },
     11010 : { GREETING : "",
@@ -2115,8 +2115,8 @@ QuestDialogDict = {
               },
     11011 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Que bom ver você de novo, _avName_!\aVocê pode fazer uma medição em %s, por favor?" % GlobalStreetNames[1300][-1],
-              INCOMPLETE_PROGRESS : "Tentou procurar em %s?" % GlobalStreetNames[1300][-1],
+              QUEST : f"Que bom ver você de novo, _avName_!Você pode fazer uma medição em {GlobalStreetNames[1300][-1]}, por favor?",
+              INCOMPLETE_PROGRESS : f"Tentou procurar em {GlobalStreetNames[1300][-1]}?",
               COMPLETE : "Ótimo trabalho!\aAqui está a sua merecida recompensa!",
              },
     11012 : { GREETING : "",
@@ -2125,8 +2125,8 @@ QuestDialogDict = {
               },
     11013 : { GREETING : "",
               LEAVING : "",
-              QUEST : "_avName_, meu caro!\aVocê pode ir até %s e encontrar mais um termômetro para mim?" % GlobalStreetNames[5100][-1],
-              INCOMPLETE_PROGRESS : "Tem certeza de que está procurando em %s?" % GlobalStreetNames[5100][-1],
+              QUEST : f"_avName_, meu caro!Você pode ir até {GlobalStreetNames[5100][-1]} e encontrar mais um termômetro para mim?",
+              INCOMPLETE_PROGRESS : f"Tem certeza de que está procurando em {GlobalStreetNames[5100][-1]}?",
               COMPLETE : "Excelente!\aCom a sua ajuda, a minha pesquisa está caminhando!\aAqui está a sua recompensa.",
              },
     11014 : { GREETING : "",
@@ -2135,8 +2135,8 @@ QuestDialogDict = {
               },
     11015 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Bem-vindo de volta!\aEstive esperando.\aA próxima medição tem que ser em %s." % GlobalStreetNames[5200][-1],
-              INCOMPLETE_PROGRESS : "Você está procurando em %s, certo?" % GlobalStreetNames[5200][-1],
+              QUEST : f"Bem-vindo de volta!Estive esperando.A próxima medição tem que ser em {GlobalStreetNames[5200][-1]}.",
+              INCOMPLETE_PROGRESS : f"Você está procurando em {GlobalStreetNames[5200][-1]}, certo?",
               COMPLETE : "Obrigado!\aAqui está sua recompensa.",
              },
     11016 : { GREETING : "",
@@ -2145,8 +2145,8 @@ QuestDialogDict = {
               },
     11017 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Olá, Cientista de Pesquisas Iniciante!\aAinda precisamos de medições de %s." % GlobalStreetNames[5300][-1],
-              INCOMPLETE_PROGRESS : "Tentou procurar em %s?" % GlobalStreetNames[5300][-1],
+              QUEST : f"Olá, Cientista de Pesquisas Iniciante!Ainda precisamos de medições de {GlobalStreetNames[5300][-1]}.",
+              INCOMPLETE_PROGRESS : f"Tentou procurar em {GlobalStreetNames[5300][-1]}?",
               COMPLETE : "Ótimo trabalho!\aAqui está o seu negócio de Robô da Lei...",
              },
     11018 : { GREETING : "",
@@ -2155,8 +2155,8 @@ QuestDialogDict = {
               },
     11019 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Então.\aPronto para outra recuperação?\aDesta vez, tente %s." % GlobalStreetNames[4100][-1],
-              INCOMPLETE_PROGRESS : "Tem certeza de que está procurando em %s?" % GlobalStreetNames[4100][-1],
+              QUEST : f"Então.Pronto para outra recuperação?Desta vez, tente {GlobalStreetNames[4100][-1]}.",
+              INCOMPLETE_PROGRESS : f"Tem certeza de que está procurando em {GlobalStreetNames[4100][-1]}?",
               COMPLETE : "Mais um!\aNossa, você é a eficiência em pessoa!",
              },
     11020 : { GREETING : "",
@@ -2165,8 +2165,8 @@ QuestDialogDict = {
               },
     11021 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Você já deve ter adivinhado...\amas eu preciso de medições de %s." % GlobalStreetNames[4200][-1],
-              INCOMPLETE_PROGRESS : "Você está procurando em %s, certo?" % GlobalStreetNames[4200][-1],
+              QUEST : f"Você já deve ter adivinhado...mas eu preciso de medições de {GlobalStreetNames[4200][-1]}.",
+              INCOMPLETE_PROGRESS : f"Você está procurando em {GlobalStreetNames[4200][-1]}, certo?",
               COMPLETE : "Quase lá!\aAqui está...",
              },
     11022 : { GREETING : "",
@@ -2175,8 +2175,8 @@ QuestDialogDict = {
               },
     11023 : { GREETING : "",
               LEAVING : "",
-              QUEST : "O que acha de %s? Poderia conseguir um termômetro de lá também?" % GlobalStreetNames[4300][-1],
-              INCOMPLETE_PROGRESS : "Tentou procurar em %s?" % GlobalStreetNames[4300][-1],
+              QUEST : f"O que acha de {GlobalStreetNames[4300][-1]}? Poderia conseguir um termômetro de lá também?",
+              INCOMPLETE_PROGRESS : f"Tentou procurar em {GlobalStreetNames[4300][-1]}?",
               COMPLETE : "Outro ótimo trabalho, _avName_",
              },
     11024 : { GREETING : "",
@@ -2185,8 +2185,8 @@ QuestDialogDict = {
               },
     11025 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Acho que ainda precisamos de uma medição de %s." % GlobalStreetNames[9100][-1],
-              INCOMPLETE_PROGRESS : "Tem certeza de que está procurando em %s?" % GlobalStreetNames[9100][-1],
+              QUEST : f"Acho que ainda precisamos de uma medição de {GlobalStreetNames[9100][-1]}.",
+              INCOMPLETE_PROGRESS : f"Tem certeza de que está procurando em {GlobalStreetNames[9100][-1]}?",
               COMPLETE : "Bom trabalho!\aAcho que estamos chegando perto...",
              },
     11026 : { GREETING : "",
@@ -2195,8 +2195,8 @@ QuestDialogDict = {
               },
     11027 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Já de volta?\aA medição final é em %s." % GlobalStreetNames[9200][-1],
-              INCOMPLETE_PROGRESS : "Você está procurando em %s, certo?" % GlobalStreetNames[9200][-1],
+              QUEST : f"Já de volta?A medição final é em {GlobalStreetNames[9200][-1]}.",
+              INCOMPLETE_PROGRESS : f"Você está procurando em {GlobalStreetNames[9200][-1]}, certo?",
               COMPLETE : "Está pronto!\aAgora, você já pode se infiltrar no Escritório do Promotor Público e coletar Avisos de Júri.\aBoa sorte e obrigado pela sua ajuda!",
              },
     12000 : { GREETING : "",
@@ -2236,7 +2236,7 @@ QuestDialogDict = {
     12007 : { GREETING : "",
               LEAVING : "",
               QUEST : "Se você derrotar um Micro\4empresário, darei a você mais uma peça.",
-              INCOMPLETE_PROGRESS : "Tente procurar em %s" % GlobalStreetNames[1100][-1],
+              INCOMPLETE_PROGRESS : f"Tente procurar em {GlobalStreetNames[1100][-1]}",
               COMPLETE : "Você se saiu muito bem!\aAqui está sua quarta peça de disfarce.",
              },
     12008 : { GREETING : "",
@@ -2246,7 +2246,7 @@ QuestDialogDict = {
     12009 : { GREETING : "",
               LEAVING : "",
               QUEST : "Agora estou atrás de um Facão...",
-              INCOMPLETE_PROGRESS : "Algum problema? Tente procurar em %s" % GlobalStreetNames[3100][-1],
+              INCOMPLETE_PROGRESS : f"Algum problema? Tente procurar em {GlobalStreetNames[3100][-1]}",
               COMPLETE : "Não foi tão difícil!\aAqui está sua quinta peça de disfarce. ",
              },
     12010 : { GREETING : "",
@@ -2276,7 +2276,7 @@ QuestDialogDict = {
     12015 : { GREETING : "",
               LEAVING : "",
               QUEST : "Agora, o mais precioso de todos: O um Rei da Cocada Preta!",
-              INCOMPLETE_PROGRESS : "Tente procurar em %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Tente procurar em {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Sabia que podia contar com você para cortar...\aAh, não importa.\aAqui está sua próxima peça de disfarce. ",
              },
     12016 : { GREETING : "",
@@ -2286,7 +2286,7 @@ QuestDialogDict = {
     12017 : { GREETING : "",
               LEAVING : "",
               QUEST : "Agora, preciso que você derrote um dos novos e mais traiçoeiros Cogs de Robô-Chefe.",
-              INCOMPLETE_PROGRESS : "Tente procurar em %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Tente procurar em {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Eles são mais fortes do que parecem, hein?\aAcho que lhe devo uma peça de disfarce. ",
              },
     12018 : { GREETING : "",
@@ -2296,7 +2296,7 @@ QuestDialogDict = {
     12019 : { GREETING : "",
               LEAVING : "",
               QUEST : "Esses Cogs versão 2.0 são muito interessantes.\aPor favor, derrote mais um.  ",
-              INCOMPLETE_PROGRESS : "Tente procurar em %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Tente procurar em {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Valeu!\aMais uma peça de disfarce chegando. ",
              },
     12020 : { GREETING : "",
@@ -2306,7 +2306,7 @@ QuestDialogDict = {
     12021 : { GREETING : "",
               LEAVING : "",
               QUEST : "Imagino se puderem se regenerar...",
-              INCOMPLETE_PROGRESS : "Tente procurar em %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Tente procurar em {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Acho que não.\aAqui está sua peça... ",
              },
     12022 : { GREETING : "",
@@ -2316,7 +2316,7 @@ QuestDialogDict = {
     12023 : { GREETING : "",
               LEAVING : "",
               QUEST : "Talvez não sejam Robôs-Chefe afinal...",
-              INCOMPLETE_PROGRESS : "Tente procurar em %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Tente procurar em {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Hummm, acho que realmente são Robôs-Chefe.\aConsiga mais uma peça. ",
              },
     12024 : { GREETING : "",
@@ -2326,7 +2326,7 @@ QuestDialogDict = {
     12025 : { GREETING : "",
               LEAVING : "",
               QUEST : "Talvez, de alguma maneira, estejam relacionados aos Esqueletocogs... ",
-              INCOMPLETE_PROGRESS : "Tente procurar em %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Tente procurar em {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Isso foi inconsequente...\aAqui está sua peça de disfarce. ",
              },
     12026 : { GREETING : "",
@@ -2336,7 +2336,7 @@ QuestDialogDict = {
     12027 : { GREETING : "",
               LEAVING : "",
               QUEST : "Ainda tenho dúvidas de que não sejam algum tipo de Esqueletocogs...",
-              INCOMPLETE_PROGRESS : "Tente procurar em %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Tente procurar em {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Bem, talvez não.\aAqui está sua próxima peça. ",
              },
     12028 : { GREETING : "",
@@ -2346,7 +2346,7 @@ QuestDialogDict = {
     12029 : { GREETING : "",
               LEAVING : "",
               QUEST : "Esses novos Cogs ainda me deixam dúvidas.\aPoderia derrotar mais um, por favor?",
-              INCOMPLETE_PROGRESS : "Tente procurar em %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Tente procurar em {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Fascinante. Simplesmente fascinante.\aUma peça de disfarce pelos inconvenientes. ",
              },
     12030 : { GREETING : "",
@@ -2356,7 +2356,7 @@ QuestDialogDict = {
     12031 : { GREETING : "",
               LEAVING : "",
               QUEST : "Já havia quase descoberto o que são esses novos Cogs.\aSó mais um... ",
-              INCOMPLETE_PROGRESS : "Tente procurar em %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Tente procurar em {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Sim, acho que encontrei algo importante.\aAh, sim.\aIsso é para você... ",
              },
     12032 : { GREETING : "",
@@ -4444,8 +4444,8 @@ DaisyChatter = (
         "Se você vir areia embaixo de uma planta, está na hora de regar ou ela morrerá.",
         ],
         [ # Goodbyes
-        "Estou indo para Melodilândia para ver %s!" % Minnie,
-        "Preciso correr para o meu picnic com %s!" % Donald,
+        f"Estou indo para Melodilândia para ver {Minnie}!",
+        f"Preciso correr para o meu picnic com {Donald}!",
         "Acho que vou nadar no "+lDonaldsDock+".",
         "Oh, estou com sono. Acho que vou para a Sonholândia.",
         ]
@@ -4453,7 +4453,7 @@ DaisyChatter = (
 
 ChipChatter = (
         [ # Greetings
-        "Boas-vindas a %s!" % lOutdoorZone,
+        f"Boas-vindas a {lOutdoorZone}!",
         "Olá, sou " + Chip + ". Qual é o seu nome?",
         "Não, eu sou " + Chip + ".",
         "É tão bom ver você, %!",
@@ -4465,8 +4465,8 @@ ChipChatter = (
         "Os buracos de golfe com vulcões são os mais desafiadores para mim.",
         ],
         [ # Goodbyes
-        "Vamos até " + lTheBrrrgh +" brincar com %s." % Pluto,
-        "Vamos visitar %s e dar um jeito nele." % Donald,
+        "Vamos até " + lTheBrrrgh +f" brincar com {Pluto}.",
+        f"Vamos visitar {Donald} e dar um jeito nele.",
         "Acho que vou nadar no " + lDonaldsDock + ".",
         "Oh, estou com sono. Acho que vou até a Sonholândia.",
         ]
@@ -4478,7 +4478,7 @@ DaleChatter = (
         "É tão bom ver você, %!",
         "Olá, sou " + Dale + ". Qual é o seu nome?",
         "Olá, sou " + Chip + ".",
-        "Boas-vindas a %s!" % lOutdoorZone,
+        f"Boas-vindas a {lOutdoorZone}!",
         "Somos Tico e Teco!",
         ],
         [ # Comments
@@ -4488,7 +4488,7 @@ DaleChatter = (
         ],
         [ # Goodbyes
         "Hihihi, é divertido brincar com " + Pluto + ".",
-        "Sim, vamos dar um jeito em %s." % Donald,
+        f"Sim, vamos dar um jeito em {Donald}.",
         "Ah, seria refrescante dar uma nadada.",
         "Estou ficando cansado, uma boa soneca cairia bem.",
         ]
@@ -4542,8 +4542,8 @@ GoofySpeedwayChatter = (
         "Nas Lojas de piadas do Pateta, todas as tortas na cara têm garantia de fazer rir, ou você tem as suas balinhas de volta!"
         ],
         [ # Goodbyes
-        "Vou para Melodilândia para ver %s!" % Mickey,
-        "Caramba, estou atrasado para o meu jogo com %s!" % Donald,
+        f"Vou para Melodilândia para ver {Mickey}!",
+        f"Caramba, estou atrasado para o meu jogo com {Donald}!",
         "Acho que vou nadar no "+lDonaldsDock+".",
         "É hora de tirar um cochilo. Vou para a Sonholândia.",
         ]
@@ -4608,7 +4608,7 @@ AFMinnieChatter = (
         ],
         [ # Goodbyes
         "Oi, preciso dar de comer ao Pluto. Você o viu?",
-        "Nossa, estou atrasada para meu encontro com o %s!" % Mickey,
+        f"Nossa, estou atrasada para meu encontro com o {Mickey}!",
         ]
     )
 
@@ -4644,7 +4644,7 @@ AFGoofySpeedwayChatter = (
         "Espero que tudo esteja bem no Autódromo.",
         ],
         [ # Goodbyes
-        "Ohoh, estou atrasado para meu jogo com o %s!" % Donald,
+        f"Ohoh, estou atrasado para meu jogo com o {Donald}!",
         ]
     )
 
@@ -4652,7 +4652,7 @@ AFDonaldChatter = (
         [ # Greetings
         "Feliz Semana da Preguiça, hã, dos April Toons (Toons de Abril)!",
         "Feliz Semana dos April Toons (Toons de Abril), %!",
-        "Oi, meu nome é%s. Qual é o seu?" % Donald,
+        f"Oi, meu nome é{Donald}. Qual é o seu?",
         ],
         [ # Comments
         "Você viu o Pateta por aí?",
@@ -4662,7 +4662,7 @@ AFDonaldChatter = (
         ],
         [ # Goodbyes
         "De onde surgiram repentinamente todos esses carros barulhentos?",
-        "Vou para Melodilândia ver a %s!" % Minnie,
+        f"Vou para Melodilândia ver a {Minnie}!",
         ]
     )    
 
@@ -9451,7 +9451,7 @@ def getTunnelSignName(trackId, padId):
         return "tunnel_countrysign1"
     else:
         genreId = RaceGlobals.getTrackGenre(trackId)
-        return "tunnel%s_%ssign" % (padId + 1, RaceGlobals.getTrackGenreString(genreId))
+        return f"tunnel{padId + 1}_{RaceGlobals.getTrackGenreString(genreId)}sign"
 
 # Kart Trophy Descriptions
 KartTrophyDescriptions = [
@@ -9833,20 +9833,19 @@ def getRecipeBeanText(beanTuple):
 
     if allTheSame:
         if len(beanTuple) > 1:
-            retval = "%d %s balinhas" % (len(beanTuple),
-                                           BeanColorWords[beanTuple[0]])
+            retval = f"{len(beanTuple)} {BeanColorWords[beanTuple[0]]} balinhas"
         else:
-            retval = "uma balinha %s" % BeanColorWords[beanTuple[0]]
+            retval = f"uma balinha {BeanColorWords[beanTuple[0]]}"
     else:
         retval += 'a'
         maxBeans = len(beanTuple)
         for index in range(maxBeans):
             if index == maxBeans - 1:
-                retval += " e balinha %s" % BeanColorWords[beanTuple[index]]
+                retval += f" e balinha {BeanColorWords[beanTuple[index]]}"
             elif index == 0:
-                retval += " %s" % BeanColorWords[beanTuple[index]]
+                retval += f" {BeanColorWords[beanTuple[index]]}"
             else:
-                retval += ", %s" % BeanColorWords[beanTuple[index]]
+                retval += f", {BeanColorWords[beanTuple[index]]}"
 
     return retval
     

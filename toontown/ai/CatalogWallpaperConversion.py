@@ -8,11 +8,12 @@ from . import RepairAvatars
 from . import DatabaseObject
 import time
 
-# Conversion 
+# Conversion
 mouldingBase = 1000
 wainscotingBase = 1000
 flooringBase = 1000
 wallpaperBase = 1000
+
 
 def convertItem(item, fCatalog):
     patternIndex = item.patternIndex
@@ -32,13 +33,13 @@ def convertItem(item, fCatalog):
             newPatternIndex = 1000
         elif patternIndex == 153:
             newPatternIndex = 1010
-        if newColorIndex == None:
+        if newColorIndex is None:
             newColorIndex = 0
         newItem = CatalogMouldingItem.CatalogMouldingItem(
             newPatternIndex, newColorIndex)
     elif (patternIndex == 201) or (patternIndex == 202):
         # Wainscoting
-        if newColorIndex == None:
+        if newColorIndex is None:
             newColorIndex = 0
         newPatternIndex = wainscotingBase + (patternIndex - 201) * 10
         newItem = CatalogWainscotingItem.CatalogWainscotingItem(
@@ -121,13 +122,15 @@ def convertItem(item, fCatalog):
     newItem.posHpr = item.posHpr
     return newItem
 
-def convertWallpaperItems(itemList, fCatalog = 0):
+
+def convertWallpaperItems(itemList, fCatalog=0):
     for i in range(len(itemList)):
         item = itemList[i]
         if isinstance(item, CatalogWallpaperItem.CatalogWallpaperItem):
             newItem = convertItem(item, fCatalog)
             # Replace Item
             itemList[i] = newItem
+
 
 class AvatarWallpaperFixer(RepairAvatars.AvatarIterator):
     # When we come to this many non-avatars in a row, assume we have
@@ -140,10 +143,10 @@ class AvatarWallpaperFixer(RepairAvatars.AvatarIterator):
 
     def processAvatar(self, av, db):
         self.printSometimes(av)
-        #print "Processing Avatar: %d, %s" % (av.doId, av._name)
-        convertWallpaperItems(av.monthlyCatalog, fCatalog = 1)
-        convertWallpaperItems(av.weeklyCatalog, fCatalog = 1)
-        convertWallpaperItems(av.backCatalog, fCatalog = 1)
+        # print "Processing Avatar: %d, %s" % (av.doId, av._name)
+        convertWallpaperItems(av.monthlyCatalog, fCatalog=1)
+        convertWallpaperItems(av.weeklyCatalog, fCatalog=1)
+        convertWallpaperItems(av.backCatalog, fCatalog=1)
         convertWallpaperItems(av.onOrder)
         convertWallpaperItems(av.mailboxContents)
         # Remove Duplicates for backCatalog list
@@ -157,19 +160,19 @@ class AvatarWallpaperFixer(RepairAvatars.AvatarIterator):
         av.weeklyCatalog = CatalogItemList.CatalogItemList()
         for item in oldWeeklyCatalog:
             if ((item not in av.backCatalog) and
-                (item not in av.weeklyCatalog)):
+                    (item not in av.weeklyCatalog)):
                 av.weeklyCatalog.append(item)
         db2 = DatabaseObject.DatabaseObject(self.air, av.doId)
         db2.storeObject(av, ['setCatalog', 'setMailboxContents',
                              'setDeliverySchedule'])
         return
+
     def printSometimes(self, av):
         now = time.time()
         if now - self.lastPrintTime > self.printInterval:
             print("Avatar %d: %s" % (av.doId, av._name))
             self.lastPrintTime = now
 
-    
 
 class HouseWallpaperFixer(RepairAvatars.HouseIterator):
     # When we come to this many non-houses in a row, assume we have
@@ -182,7 +185,7 @@ class HouseWallpaperFixer(RepairAvatars.HouseIterator):
 
     def processHouse(self, house, db):
         self.printSometimes(house)
-        #print "Processing house: %d, %s" % (house.doId, house.name)
+        # print "Processing house: %d, %s" % (house.doId, house.name)
         convertWallpaperItems(house.atticWallpaper)
         convertWallpaperItems(house.interiorWallpaper)
         convertWallpaperItems(house.deletedItems)
@@ -190,29 +193,33 @@ class HouseWallpaperFixer(RepairAvatars.HouseIterator):
         db2.storeObject(house, ['setAtticWallpaper', 'setInteriorWallpaper',
                                 'setDeletedItems'])
 
+
 def convertWallpaper():
     f = AvatarWallpaperFixer(simbase.air)
     f.start()
     f2 = HouseWallpaperFixer(simbase.air)
     f2.start()
 
+
 def convertWallpaperAvatarVals():
     avatarVals = open('avatar.vals')
     avatars = avatarVals.readlines()
 
-    print("Fixing %s avatars" % (len(avatars)))
+    print(f"Fixing {len(avatars)} avatars")
     f = AvatarWallpaperFixer(simbase.air)
     f.objIdList = avatars
     f.start()
 
+
 def convertWallpaperHouseVals():
     houseVals = open('house.vals')
     houses = houseVals.readlines()
-    
-    print("Fixing %s houses" % (len(houses)))
+
+    print(f"Fixing {len(houses)} houses")
     f2 = HouseWallpaperFixer(simbase.air)
     f2.objIdList = houses
     f2.start()
+
 
 """
 import UtilityStart

@@ -11,11 +11,12 @@ base.localAvatar.chatMgr.chatInputSpeedChat.speedChat[2].getMenu()
 from otp.speedchat.SCMenu import SCMenu
 from otp.speedchat.SCStaticTextTerminal import SCStaticTextTerminal
 
+
 class TTSCCogMenu(SCMenu):
     """
     TTSCCogMenu represents a menu of SCCogTerminals.
     """
-    
+
     def __init__(self, indices):
         SCMenu.__init__(self)
 
@@ -25,4 +26,3 @@ class TTSCCogMenu(SCMenu):
 
     def destroy(self):
         SCMenu.destroy(self)
-

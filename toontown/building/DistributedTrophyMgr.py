@@ -3,9 +3,11 @@ from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import TTLocalizer
 
+
 class DistributedTrophyMgr(DistributedObject.DistributedObject):
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTrophyMgr')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedTrophyMgr')
 
     neverDisable = 1
 
@@ -13,7 +15,7 @@ class DistributedTrophyMgr(DistributedObject.DistributedObject):
         DistributedObject.DistributedObject.__init__(self, cr)
 
     def generate(self):
-        if base.cr.trophyManager != None:
+        if base.cr.trophyManager is not None:
             base.cr.trophyManager.delete()
         base.cr.trophyManager = self
         DistributedObject.DistributedObject.generate(self)

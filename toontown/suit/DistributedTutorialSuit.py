@@ -6,16 +6,19 @@ from direct.directnotify import DirectNotifyGlobal
 from toontown.distributed.DelayDeletable import DelayDeletable
 from . import DistributedSuitBase
 
-class DistributedTutorialSuit(DistributedSuitBase.DistributedSuitBase, DelayDeletable):
+
+class DistributedTutorialSuit(
+        DistributedSuitBase.DistributedSuitBase,
+        DelayDeletable):
 
     notify = DirectNotifyGlobal.directNotify.newCategory(
-                                        'DistributedTutorialSuit')
+        'DistributedTutorialSuit')
 
     def __init__(self, cr):
         """__init__(cr)"""
         try:
             self.DistributedSuit_initialized
-        except:
+        except BaseException:
             self.DistributedSuit_initialized = 1
             DistributedSuitBase.DistributedSuitBase.__init__(self, cr)
 
@@ -42,11 +45,11 @@ class DistributedTutorialSuit(DistributedSuitBase.DistributedSuitBase, DelayDele
                              self.exitWaitForBattle,
                              ['Battle']),
                  ],
-                        # Initial state
-                        'Off',
-                        # Final state
-                        'Off',
-                       )
+                # Initial state
+                'Off',
+                # Final state
+                'Off',
+            )
 
             self.fsm.enterInitialState()
 
@@ -85,7 +88,7 @@ class DistributedTutorialSuit(DistributedSuitBase.DistributedSuitBase, DelayDele
         """
         try:
             self.DistributedSuit_deleted
-        except:
+        except BaseException:
             self.DistributedSuit_deleted = 1
             self.notify.debug("DistributedSuit %d: deleting" % self.getDoId())
 
@@ -116,7 +119,7 @@ class DistributedTutorialSuit(DistributedSuitBase.DistributedSuitBase, DelayDele
 
         toonId = base.localAvatar.getDoId()
         self.notify.debug('Distributed suit: requesting a Battle with ' +
-                           'toon: %d' % toonId)
+                          'toon: %d' % toonId)
         self.d_requestBattle(self.getPos(), self.getHpr())
 
         # the suit on this machine only will go into wait for battle while it
@@ -125,7 +128,6 @@ class DistributedTutorialSuit(DistributedSuitBase.DistributedSuitBase, DelayDele
         self.setState('WaitForBattle')
 
         return None
-
 
     # Each state will have an enter function, an exit function,
     # and a datagram handler, which will be set during each enter function.

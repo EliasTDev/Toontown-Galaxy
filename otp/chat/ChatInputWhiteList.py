@@ -7,21 +7,23 @@ from panda3d.core import *
 from otp.otpbase import OTPLocalizer
 from direct.task import Task
 from otp.chat.ChatInputTyped import ChatInputTyped
+
+
 class ChatInputWhiteList(FSM.FSM, DirectEntry):
     notify = DirectNotifyGlobal.directNotify.newCategory("ChatInputWhiteList")
-    
+
     # This will hold the local namespace we evaluate '>chat' messages
     # within.
     ExecNamespace = None
 
     # special methods
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
         FSM.FSM.__init__(self, 'ChatInputWhiteList')
         optiondefs = (
             ('parent', parent, None),
             ('relief', DGG.SUNKEN, None),
             ('text_scale', 0.03, None),
-            ('frameSize',(-0.2, 25.3, -0.5, 1.2), None),
+            ('frameSize', (-0.2, 25.3, -0.5, 1.2), None),
             ('borderWidth', (0.003, 0.003), None),
             ('frameColor', (0.9, 0.9, 0.85, 0.8), None),
             ('entryFont', OTPGlobals.getInterfaceFont(), None),
@@ -35,9 +37,9 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
             ('failedCommand', self.sendFailed, None),
             ('focus', 0, None),
             ('text', '', None),
-            )
+        )
         self.defineoptions(kw, optiondefs)
-        DirectEntry.__init__(self, parent = parent, **kw)
+        DirectEntry.__init__(self, parent=parent, **kw)
         self.initialiseoptions(ChatInputWhiteList)
 
         self.whisperId = None
@@ -46,26 +48,27 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
         wantHistory = 0
         if __dev__:
             wantHistory = 1
-        self.wantHistory = base.config.GetBool('want-chat-history', wantHistory)
+        self.wantHistory = base.config.GetBool(
+            'want-chat-history', wantHistory)
         self.history = ['']
         self.historySize = base.config.GetInt('chat-history-size', 10)
         self.historyIndex = 0
 
         self.whiteList = None
-        
+
         self.active = 0
         self.autoOff = 0
-        
+
         self.alwaysSubmit = False
 
         from direct.gui import DirectGuiGlobals
-        self.bind(DirectGuiGlobals.TYPE,self.applyFilter)
-        self.bind(DirectGuiGlobals.ERASE,self.applyFilter)
+        self.bind(DirectGuiGlobals.TYPE, self.applyFilter)
+        self.bind(DirectGuiGlobals.ERASE, self.applyFilter)
 
         tpMgr = TextPropertiesManager.getGlobalPtr()
         Red = tpMgr.getProperties('red')
-        Red.setTextColor(1.0,0.0,0.0,1)
-        tpMgr.setProperties('WLRed',Red)
+        Red.setTextColor(1.0, 0.0, 0.0, 1)
+        tpMgr.setProperties('WLRed', Red)
         del tpMgr
 
         self.origFrameColor = self['frameColor']
@@ -76,39 +79,37 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
         self.ignore('arrow_up-up')
         self.ignore('arrow_down-up')
 
-
     def requestMode(self, mode, *args):
         """
         This is done so we can provide some symettry with
         the PChatInputSpeedChat.
         """
         self.request(mode, *args)
-        
+
     def defaultFilter(self, request, *args):
         if request == 'AllChat':
-            #if not base.chatAssistant.checkOpenSpeedChat():
+            # if not base.chatAssistant.checkOpenSpeedChat():
             #    messenger.send("Chat-Failed open typed chat test")
             #    return None
             pass
         elif request == 'PlayerWhisper':
-            if not base.talkAssistant.checkWhisperSpeedChatPlayer(self.whisperId):
+            if not base.talkAssistant.checkWhisperSpeedChatPlayer(
+                    self.whisperId):
                 messenger.send("Chat-Failed player typed chat test")
                 return None
         elif request == 'AvatarWhisper':
-            if not base.talkAssistant.checkWhisperSpeedChatAvatar(self.whisperId):
+            if not base.talkAssistant.checkWhisperSpeedChatAvatar(
+                    self.whisperId):
                 messenger.send("Chat-Failed avatar typed chat test")
                 return None
         return FSM.FSM.defaultFilter(self, request, *args)
-        
-
-        
 
     def enterOff(self):
         self.deactivate()
 
     def exitOff(self):
         self.activate()
-    
+
     def enterAllChat(self):
         self['focus'] = 1
         self.show()
@@ -126,7 +127,7 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
     def enterCrewChat(self):
         self['focus'] = 1
         self.show()
-    
+
     def exitCrewChat(self):
         pass
 
@@ -161,11 +162,11 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
         self.show()
         self.active = 1
         self.guiItem.setAcceptEnabled(True)
-        self.accept('uber-escape',self.handleEscape)
+        self.accept('uber-escape', self.handleEscape)
         if self.wantHistory:
             self.accept(f'{base.MOVE_FORWARD}-up', self.getPrevHistory)
             self.accept(f'{base.MOVE_BACKWARDS}-up', self.getNextHistory)
-        
+
     def deactivate(self):
         self.ignore('uber-escape')
         self.set("")
@@ -174,10 +175,10 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
         self.active = 0
         self.ignore('arrow_up-up')
         self.ignore('arrow_down-up')
-        
+
     def handleEscape(self):
         localAvatar.chatMgr.deactivateChat()
-        
+
     def isActive(self):
         return self.active
 
@@ -190,14 +191,14 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
             return False
         else:
             return True
-    
-    def sendChat(self, text, overflow = False):
+
+    def sendChat(self, text, overflow=False):
         """
         Send the text from the entry
         """
-    
+
         text = self.get(plain=True)
-        #print text
+        # print text
         # Filter out empty string
         if text:
             self.set("")
@@ -219,7 +220,7 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
                     return
                 else:
                     localAvatar.chatMgr.deactivateChat()
-     
+
             # If slash command, execute it instead of sending chat
             elif base.config.GetBool("want-slash-commands", 1) and (text[0] == '/'):
                 base.talkAssistant.executeSlashCommand(text)
@@ -232,13 +233,12 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
                 self.addToHistory(text)
         else:
             localAvatar.chatMgr.deactivateChat()
-        
+
         if not overflow:
             self.hide()
             if self.autoOff:
                 self.requestMode('Off')
             localAvatar.chatMgr.messageSent()
-            
 
     def sendChatByMode(self, text):
         state = self.getCurrentOrNextState()
@@ -258,28 +258,29 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
         field red!
         """
         self['frameColor'] = (0.9, 0.0, 0.0, 0.8)
+
         def resetFrameColor(task=None):
             self['frameColor'] = self.origFrameColor
             return Task.done
-        taskMgr.doMethodLater(0.1,resetFrameColor,"resetFrameColor")
-        # Also let them submit if they try again--we'll stomp on any violating words
-        self.applyFilter(keyArgs=None,strict=False)
+        taskMgr.doMethodLater(0.1, resetFrameColor, "resetFrameColor")
+        # Also let them submit if they try again--we'll stomp on any violating
+        # words
+        self.applyFilter(keyArgs=None, strict=False)
         self.guiItem.setAcceptEnabled(True)
-        
-    
+
     def chatOverflow(self, overflowText):
         """
         When the user types too many lines of text, an event gets thrown
         which calls this function. Right now it just sends the text just
         as if you hit return to complete the sentence.
         """
-        self.sendChat(self.get(plain=True), overflow = True)
-   
+        self.sendChat(self.get(plain=True), overflow=True)
 
     ####################################
     # History functions
+
     def addToHistory(self, text):
-        self.history = [text] + self.history[:self.historySize-1]
+        self.history = [text] + self.history[:self.historySize - 1]
         self.historyIndex = 0
 
     def getPrevHistory(self):
@@ -287,28 +288,31 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
         self.historyIndex += 1
         self.historyIndex %= len(self.history)
         self.setCursorPosition(len(self.get()))
-        
+
     def getNextHistory(self):
         self.set(self.history[self.historyIndex])
         self.historyIndex -= 1
         self.historyIndex %= len(self.history)
         self.setCursorPosition(len(self.get()))
 
-
     ####################################
     # Exec-chat functions
+
     def importExecNamespace(self):
         # Derived classes should take advantage of this hook to import
         # useful variables into the chat namespace for developer
         # access.
         pass
-    
+
     def __execMessage(self, message):
-        print(("_execMessage %s" % (message)))
+        print(f"_execMessage {message}")
         if not ChatInputTyped.ExecNamespace:
             # Import some useful variables into the ExecNamespace initially.
-            ChatInputTyped.ExecNamespace = { }
-            exec('from pandac.PandaModules import *', globals(), self.ExecNamespace)
+            ChatInputTyped.ExecNamespace = {}
+            exec(
+                'from pandac.PandaModules import *',
+                globals(),
+                self.ExecNamespace)
             self.importExecNamespace()
 
         # Now try to evaluate the expression using ChatInputTyped.ExecNamespace as
@@ -323,14 +327,14 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
             try:
                 exec(message, globals(), ChatInputTyped.ExecNamespace)
                 return 'ok'
-            except:
+            except BaseException:
                 exception = sys.exc_info()[0]
                 extraInfo = sys.exc_info()[1]
                 if extraInfo:
                     return str(extraInfo)
                 else:
                     return str(exception)
-        except:
+        except BaseException:
             exception = sys.exc_info()[0]
             extraInfo = sys.exc_info()[1]
             if extraInfo:
@@ -338,7 +342,7 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
             else:
                 return str(exception)
 
-    def applyFilter(self,keyArgs,strict=False):
+    def applyFilter(self, keyArgs, strict=False):
         text = self.get(plain=True)
 
         if len(text) > 0:
@@ -354,7 +358,7 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
 
         words = text.split(" ")
         newwords = []
-        self.notify.debug("%s" % words)
+        self.notify.debug(f"{words}")
 
         okayToSubmit = True
 
@@ -365,7 +369,7 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
                 okayToSubmit = False
                 newwords.append("\1WLEnter\1" + word + "\2")
 
-        #if not strict:
+        # if not strict:
         #    newwords[-1] = words[-1]
 
         if not strict:

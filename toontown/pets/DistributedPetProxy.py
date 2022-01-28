@@ -5,11 +5,12 @@ from toontown.pets import PetMood, PetTricks
 from toontown.toonbase import ToontownGlobals
 import string
 
+
 class DistributedPetProxy(DistributedObject.DistributedObject):
 
     notify = DirectNotifyGlobal.directNotify.newCategory("DistributedPetProxy")
 
-    def __init__(self, cr): 
+    def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
         # create our distributed trait and mood funcs
         self.__funcsToDelete = []
@@ -33,7 +34,7 @@ class DistributedPetProxy(DistributedObject.DistributedObject):
         self.requiredMoodComponents = {}
 
     def getSetterName(self, valueName, prefix='set'):
-        return '%s%s%s' % (prefix,  valueName[0].upper(), valueName[1:])
+        return f'{prefix}{valueName[0].upper()}{valueName[1:]}'
 
     def setOwnerId(self, ownerId):
         self.ownerId = ownerId
@@ -56,6 +57,7 @@ class DistributedPetProxy(DistributedObject.DistributedObject):
         for i in range(PetTraits.PetTraits.NumTraits):
             traitName = PetTraits.getTraitNames()[i]
             setterName = self.getSetterName(traitName)
+
             def traitSetter(value, self=self, i=i):
                 self.traitList[i] = value
             # put the func onto self
@@ -63,39 +65,39 @@ class DistributedPetProxy(DistributedObject.DistributedObject):
             self.__funcsToDelete.append(setterName)
 
     def setHead(self, head):
-        DistributedPetProxy.notify.debug('setHead: %s' % head)
+        DistributedPetProxy.notify.debug(f'setHead: {head}')
         self.head = head
 
     def setEars(self, ears):
-        DistributedPetProxy.notify.debug('setEars: %s' % ears)
+        DistributedPetProxy.notify.debug(f'setEars: {ears}')
         self.ears = ears
 
     def setNose(self, nose):
-        DistributedPetProxy.notify.debug('setNose: %s' % nose)
+        DistributedPetProxy.notify.debug(f'setNose: {nose}')
         self.nose = nose
 
     def setTail(self, tail):
-        DistributedPetProxy.notify.debug('setTail: %s' % tail)
+        DistributedPetProxy.notify.debug(f'setTail: {tail}')
         self.tail = tail
 
     def setBodyTexture(self, bodyTexture):
-        DistributedPetProxy.notify.debug('setBodyTexture: %s' % bodyTexture)
+        DistributedPetProxy.notify.debug(f'setBodyTexture: {bodyTexture}')
         self.bodyTexture = bodyTexture
 
     def setColor(self, color):
-        DistributedPetProxy.notify.debug('setColor: %s' % color)
+        DistributedPetProxy.notify.debug(f'setColor: {color}')
         self.color = color
 
     def setColorScale(self, colorScale):
-        DistributedPetProxy.notify.debug('setColorScale: %s' % colorScale)
+        DistributedPetProxy.notify.debug(f'setColorScale: {colorScale}')
         self.colorScale = colorScale
 
     def setEyeColor(self, eyeColor):
-        DistributedPetProxy.notify.debug('setEyeColor: %s' % eyeColor)
+        DistributedPetProxy.notify.debug(f'setEyeColor: {eyeColor}')
         self.eyeColor = eyeColor
 
     def setGender(self, gender):
-        DistributedPetProxy.notify.debug('setGender: %s' % gender)
+        DistributedPetProxy.notify.debug(f'setGender: {gender}')
         self.gender = gender
 
     def getDNA(self):
@@ -109,7 +111,8 @@ class DistributedPetProxy(DistributedObject.DistributedObject):
         return ToontownGlobals.getToonFont()
 
     def setLastSeenTimestamp(self, timestamp):
-        DistributedPetProxy.notify.debug('setLastSeenTimestamp: %s' % timestamp)
+        DistributedPetProxy.notify.debug(
+            f'setLastSeenTimestamp: {timestamp}')
         self.lastSeenTimestamp = timestamp
 
     def getTimeSinceLastSeen(self):
@@ -129,7 +132,7 @@ class DistributedPetProxy(DistributedObject.DistributedObject):
     def __handleMoodSet(self, component, value):
         # THIS IS ONLY TO BE USED BY THE MOOD SET HANDLERS
         # see requiredMoodComponents comment in __init__
-        #print "Doid: %s Comp: %s Value: %s" % (self.doId, component, value)
+        # print "Doid: %s Comp: %s Value: %s" % (self.doId, component, value)
         if self.isGenerated():
             self.mood.setComponent(component, value)
         else:
@@ -139,6 +142,7 @@ class DistributedPetProxy(DistributedObject.DistributedObject):
         # generate a get, b_set, d_set, and set func for each mood component
         for compName in PetMood.PetMood.Components:
             setterName = self.getSetterName(compName)
+
             def moodSetter(value, self=self, compName=compName):
                 self.__handleMoodSet(compName, value)
             # put the func onto self
@@ -171,7 +175,7 @@ class DistributedPetProxy(DistributedObject.DistributedObject):
         self.requiredMoodComponents = {}
 
         DistributedPetProxy.notify.debug(
-            'time since last seen: %s' % self.getTimeSinceLastSeen())
+            f'time since last seen: {self.getTimeSinceLastSeen()}')
 
         self.style = [self.head,
                       self.ears,
@@ -189,7 +193,7 @@ class DistributedPetProxy(DistributedObject.DistributedObject):
 
         # Throw the event that pet info is available
         #proxyGenerateMessage = "petProxy-%d-generated" % self.doId
-        #messenger.send(proxyGenerateMessage)
+        # messenger.send(proxyGenerateMessage)
         self.sendGenerateMessage = 1
 
     def disable(self):
@@ -219,9 +223,9 @@ class DistributedPetProxy(DistributedObject.DistributedObject):
         # there are situations where this is being called by PetAvatarPanel
         # before we're fully generated. Not a big deal if the panel erroneously
         # shows the pet as neutral
-        #if not hasattr(self, 'mood'):
+        # if not hasattr(self, 'mood'):
         #    return PetMood.PetMood.Neutral
-        #return self.mood.getDominantMood()
+        # return self.mood.getDominantMood()
         return self.dominantMood
 
     def setTrickAptitudes(self, aptitudes):
@@ -232,4 +236,3 @@ class DistributedPetProxy(DistributedObject.DistributedObject):
 
     def isProxy(self):
         return True
-

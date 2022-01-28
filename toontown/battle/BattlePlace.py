@@ -3,6 +3,8 @@ from toontown.toon import Toon
 from toontown.hood import Place
 from toontown.hood import ZoneUtil
 from toontown.toonbase import ToontownGlobals
+
+
 class BattlePlace(Place.Place):
     def __init__(self, loader, doneEvent):
         assert(self.notify.debug("__init__()"))
@@ -14,23 +16,25 @@ class BattlePlace(Place.Place):
         Toon.loadBattleAnims()
 
     def setState(self, state, battleEvent=None):
-        assert(self.notify.debug("setState(state="+str(state)
-                +", battleEvent="+str(battleEvent)+")"))
+        assert(self.notify.debug("setState(state=" + str(state)
+                                 + ", battleEvent=" + str(battleEvent) + ")"))
         if (battleEvent):
             if not self.fsm.request(state, [battleEvent]):
-                self.notify.warning("fsm.request('%s') returned 0 (zone id %s, avatar pos %s)." 
-                    % (state, self.zoneId, base.localAvatar.getPos(render)))
+                self.notify.warning(
+                    "fsm.request('%s') returned 0 (zone id %s, avatar pos %s)." %
+                    (state, self.zoneId, base.localAvatar.getPos(render)))
         else:
             if not self.fsm.request(state):
-                self.notify.warning("fsm.request('%s') returned 0 (zone id %s, avatar pos %s)." 
-                    % (state, self.zoneId, base.localAvatar.getPos(render)))
+                self.notify.warning(
+                    "fsm.request('%s') returned 0 (zone id %s, avatar pos %s)." %
+                    (state, self.zoneId, base.localAvatar.getPos(render)))
 
     def enterWalk(self, flag=0):
         assert(self.notify.debug("enterWalk()"))
         Place.Place.enterWalk(self, flag)
         # handlers
         self.accept("enterBattle", self.handleBattleEntry)
-        
+
     def exitWalk(self):
         assert(self.notify.debug("exitWalk()"))
         Place.Place.exitWalk(self)
@@ -63,7 +67,7 @@ class BattlePlace(Place.Place):
 
     def enterTownBattle(self, event):
         self.loader.townBattle.enter(event, self.fsm.getStateNamed("battle"))
-        
+
     def exitBattle(self):
         assert(self.notify.debug("exitBattle()"))
         self.loader.townBattle.exit()
@@ -76,12 +80,12 @@ class BattlePlace(Place.Place):
     def handleBattleEntry(self):
         assert(self.notify.debug("handleBattleEntry()"))
         self.fsm.request("battle")
-    
+
     def enterFallDown(self, extraArgs=[]):
         assert(self.notify.debug("enterFallDown()"))
         # exitWalk hides the laffmeter, so start it here
         base.localAvatar.laffMeter.start()
-         # Play the 'slip backwards' animation
+        # Play the 'slip backwards' animation
         base.localAvatar.b_setAnimState('FallDown',
                                         callback=self.handleFallDownDone,
                                         extraArgs=extraArgs)
@@ -89,11 +93,11 @@ class BattlePlace(Place.Place):
     def handleFallDownDone(self):
         # put place back in walk state after squish is done
         base.cr.playGame.getPlace().setState("walk")
-        
+
     def exitFallDown(self):
         assert(self.notify.debug("exitFallDown"))
         base.localAvatar.laffMeter.stop()
-    
+
     def enterSquished(self):
         assert(self.notify.debug("enterSquished()"))
         # exitWalk hides the laffmeter, so start it here
@@ -104,30 +108,32 @@ class BattlePlace(Place.Place):
         taskMgr.doMethodLater(2.0,
                               self.handleSquishDone,
                               base.localAvatar.uniqueName("finishSquishTask"))
-        
+
     def handleSquishDone(self, extraArgs=[]):
         # put place back in walk state after squish is done
         base.cr.playGame.getPlace().setState("walk")
-        #self.fsm.request("walk")
-        
+        # self.fsm.request("walk")
+
     def exitSquished(self):
         assert(self.notify.debug("exitSquished()"))
         taskMgr.remove(base.localAvatar.uniqueName("finishSquishTask"))
         base.localAvatar.laffMeter.stop()
-    
+
     def enterZone(self, newZone):
         """
         Puts the toon in the indicated zone.  newZone may either be a
         CollisionEntry object as determined by a floor polygon, or an
         integer zone id.  It may also be None, to indicate no zone.
         """
-        assert(self.notify.debug("enterZone(newZone=%s)"%(newZone,)))
+        assert(self.notify.debug(f"enterZone(newZone={newZone})"))
         if isinstance(newZone, CollisionEntry):
             # Get the name of the collide node
             try:
                 newZoneId = int(newZone.getIntoNode().getName())
-            except:
-                self.notify.warning("Invalid floor collision node in street: %s" % (newZone.getIntoNode().getName()))
+            except BaseException:
+                self.notify.warning(
+                    "Invalid floor collision node in street: %s" %
+                    (newZone.getIntoNode().getName()))
                 return
         else:
             newZoneId = newZone
@@ -135,14 +141,15 @@ class BattlePlace(Place.Place):
         self.doEnterZone(newZoneId)
 
     def genDNAFileName(self, zoneId):
-            zoneId = ZoneUtil.getCanonicalZoneId(zoneId)
-            hoodId = ZoneUtil.getCanonicalHoodId(zoneId)
-            hood = ToontownGlobals.dnaMap[hoodId]
-            phase = ToontownGlobals.streetPhaseMap[hoodId]
-            if hoodId == zoneId:
-                zoneId = 'sz'
+        zoneId = ZoneUtil.getCanonicalZoneId(zoneId)
+        hoodId = ZoneUtil.getCanonicalHoodId(zoneId)
+        hood = ToontownGlobals.dnaMap[hoodId]
+        phase = ToontownGlobals.streetPhaseMap[hoodId]
+        if hoodId == zoneId:
+            zoneId = 'sz'
 
-            return 'phase_%s/dna/%s_%s.dna' % (phase, hood, zoneId)
+        return f'phase_{phase}/dna/{hood}_{zoneId}.dna'
+
     def doEnterZone(self, newZoneId):
         """
         Puts the Toon in the indicated zone, which is an integer
@@ -156,13 +163,12 @@ class BattlePlace(Place.Place):
                 if hasattr(self, 'zoneVisDict'):
                     visList = self.zoneVisDict[newZoneId]
                 else:
-                    visList = base.cr.playGame.getPlace().loader.zoneVisDict[newZoneId]
+                    visList = base.cr.playGame.getPlace(
+                    ).loader.zoneVisDict[newZoneId]
             if newZoneId not in visList:
                 visList.append(newZoneId)
             self.notify.debug("Entering Zone %d" % (newZoneId))
-                
+
             # The new zone is now old
             self.zoneId = newZoneId
-        assert(self.notify.debug("  newZoneId="+str(newZoneId)))
-
-
+        assert(self.notify.debug("  newZoneId=" + str(newZoneId)))

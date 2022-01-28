@@ -5,6 +5,7 @@ from direct.actor import Actor
 from toontown.toonbase import TTLocalizer
 from direct.interval.IntervalGlobal import *
 
+
 class CatalogPoleItem(CatalogItem.CatalogItem):
     """CatalogPoleItem
 
@@ -16,10 +17,10 @@ class CatalogPoleItem(CatalogItem.CatalogItem):
     """
 
     sequenceNumber = 0
-    
+
     def makeNewItem(self, rodId):
         self.rodId = rodId
-        
+
         CatalogItem.CatalogItem.makeNewItem(self)
 
     def getPurchaseLimit(self):
@@ -32,9 +33,8 @@ class CatalogPoleItem(CatalogItem.CatalogItem):
         # Returns true if the item cannot be bought because the avatar
         # has already bought his limit on this item.
         return avatar.getFishingRod() >= self.rodId or \
-               self in avatar.onOrder or \
-               self in avatar.mailboxContents
-    
+            self in avatar.onOrder or \
+            self in avatar.mailboxContents
 
     def saveHistory(self):
         # Returns true if items of this type should be saved in the
@@ -45,20 +45,23 @@ class CatalogPoleItem(CatalogItem.CatalogItem):
         return TTLocalizer.PoleTypeName
 
     def getName(self):
-        return TTLocalizer.FishingRod % (TTLocalizer.FishingRodNameDict[self.rodId])
+        return TTLocalizer.FishingRod % (
+            TTLocalizer.FishingRodNameDict[self.rodId])
 
     def recordPurchase(self, avatar, optional):
         if self.rodId < 0 or self.rodId > FishGlobals.MaxRodId:
-            self.notify.warning("Invalid fishing pole: %s for avatar %s" % (self.rodId, avatar.doId))
+            self.notify.warning(
+                f"Invalid fishing pole: {self.rodId} for avatar {avatar.doId}")
             return ToontownGlobals.P_InvalidIndex
 
         if self.rodId < avatar.getFishingRod():
-            self.notify.warning("Avatar already has pole: %s for avatar %s" % (self.rodId, avatar.doId))
+            self.notify.warning(
+                f"Avatar already has pole: {self.rodId} for avatar {avatar.doId}")
             return ToontownGlobals.P_ItemUnneeded
-                         
+
         avatar.b_setFishingRod(self.rodId)
         return ToontownGlobals.P_ItemAvailable
-        
+
     def isGift(self):
         return 0
 
@@ -75,8 +78,10 @@ class CatalogPoleItem(CatalogItem.CatalogItem):
 
         rodPath = FishGlobals.RodFileDict.get(self.rodId)
 
-        pole = Actor.Actor(rodPath, {'cast' : 'phase_4/models/props/fishing-pole-chan'})
-        
+        pole = Actor.Actor(
+            rodPath, {
+                'cast': 'phase_4/models/props/fishing-pole-chan'})
+
         pole.setPosHpr(
             1.47, 0, -1.67,
             90, 55, -90)
@@ -88,7 +93,7 @@ class CatalogPoleItem(CatalogItem.CatalogItem):
         frame = self.makeFrame()
         frame.attachNewNode(pole.node())
 
-        name = "pole-item-%s" % (self.sequenceNumber)
+        name = f"pole-item-{self.sequenceNumber}"
         CatalogPoleItem.sequenceNumber += 1
 
         # Not sure if this looks good or not.  This interval makes the
@@ -97,16 +102,16 @@ class CatalogPoleItem(CatalogItem.CatalogItem):
         # have to use an interval instead of just posing the actor and
         # forgetting it, because otherwise the Actor python object
         # will destruct and forget about the pose.)
-        
-##         track = Sequence(ActorInterval(pole, 'cast', startFrame=84, endFrame=130),
+
+# track = Sequence(ActorInterval(pole, 'cast', startFrame=84, endFrame=130),
 ##                          ActorInterval(pole, 'cast', startFrame=130, endFrame=84),
-##                          Wait(2),
-##                          name = name)
+# Wait(2),
+# name = name)
         track = Sequence(Func(pole.pose, 'cast', 130),
                          Wait(100),
-                         name = name)
+                         name=name)
         assert (not self.hasPicture)
-        self.hasPicture=True
+        self.hasPicture = True
 
         return (frame, track)
 
@@ -119,13 +124,11 @@ class CatalogPoleItem(CatalogItem.CatalogItem):
             return TTLocalizer.CatalogAcceptPole
         elif retcode == ToontownGlobals.P_ItemUnneeded:
             return TTLocalizer.CatalogAcceptPoleUnneeded
-            
+
         return CatalogItem.CatalogItem.getAcceptItemErrorText(self, retcode)
 
-    def output(self, store = ~0):
-        return "CatalogPoleItem(%s%s)" % (
-            self.rodId,
-            self.formatOptionalData(store))
+    def output(self, store=~0):
+        return f"CatalogPoleItem({self.rodId}{self.formatOptionalData(store)})"
 
     def getFilename(self):
         return FishGlobals.RodFileDict.get(self.rodId)
@@ -150,7 +153,7 @@ class CatalogPoleItem(CatalogItem.CatalogItem):
     def encodeDatagram(self, dg, store):
         CatalogItem.CatalogItem.encodeDatagram(self, dg, store)
         dg.addUint8(self.rodId)
-        
+
 
 def nextAvailablePole(avatar, duplicateItems):
     rodId = avatar.getFishingRod() + 1
@@ -163,13 +166,14 @@ def nextAvailablePole(avatar, duplicateItems):
     # But if this rod is already on order, don't offer the same rod
     # again.  Skip to the next one instead.
     while item in avatar.onOrder or \
-          item in avatar.mailboxContents:
+            item in avatar.mailboxContents:
         rodId += 1
         if rodId > FishGlobals.MaxRodId:
             return None
         item = CatalogPoleItem(rodId)
 
     return item
+
 
 def getAllPoles():
     _list = []

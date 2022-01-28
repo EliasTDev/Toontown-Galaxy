@@ -39,16 +39,21 @@ from toontown.toonbase import TTLocalizer
 #################################################################
 import time
 
-class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
-    notify = DirectNotifyGlobal.directNotify.newCategory("DistributedPondBingoManager")
-    #notify.setDebug(True)
 
-    cardTypeDict = { BingoGlobals.NORMAL_CARD: NormalBingo.NormalBingo,
-                     BingoGlobals.FOURCORNER_CARD: FourCornerBingo.FourCornerBingo,
-                     BingoGlobals.DIAGONAL_CARD: DiagonalBingo.DiagonalBingo,
-                     BingoGlobals.THREEWAY_CARD: ThreewayBingo.ThreewayBingo,
-                     BingoGlobals.BLOCKOUT_CARD: BlockoutBingo.BlockoutBingo }
-    
+class DistributedPondBingoManager(
+        DistributedObject.DistributedObject,
+        FSM.FSM):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedPondBingoManager")
+    # notify.setDebug(True)
+
+    cardTypeDict = {
+        BingoGlobals.NORMAL_CARD: NormalBingo.NormalBingo,
+        BingoGlobals.FOURCORNER_CARD: FourCornerBingo.FourCornerBingo,
+        BingoGlobals.DIAGONAL_CARD: DiagonalBingo.DiagonalBingo,
+        BingoGlobals.THREEWAY_CARD: ThreewayBingo.ThreewayBingo,
+        BingoGlobals.BLOCKOUT_CARD: BlockoutBingo.BlockoutBingo}
+
 #################################################################
 # Construction and Destruction Method Definitions
 #################################################################
@@ -62,7 +67,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
         FSM.FSM.__init__(self, 'DistributedPondBingoManager')
-      
+
         self.cardId = 0
         self.jackpot = 0
         self.pond = None
@@ -80,14 +85,14 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     #          initialization.
     # Input: None
     # Output: None
-    #############################################################                         
+    #############################################################
     def generate(self):
         DistributedObject.DistributedObject.generate(self)
         self.card = BingoCardGui.BingoCardGui()
         self.card.reparentTo(aspect2d, 1)
         self.card.hideNextGameTimer()
         self.notify.debug('generate: DistributedPondBingoManager')
-        
+
     #############################################################
     # Method: delete
     # Purpose: This method overrides the DistributedObject
@@ -95,11 +100,11 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     #          that we can avoid memory leaks.
     # Input: None
     # Output: None
-    ############################################################# 
+    #############################################################
     def delete(self):
         del self.pond.pondBingoMgr
         self.pond.pondBingoMgr = None
-        
+
         del self.pond
         self.pond = None
 
@@ -110,9 +115,10 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
         self.card.destroy()
         del self.card
 
-        self.notify.debug('delete: Deleting Local PondManager %s'%(self.doId))
+        self.notify.debug(
+            f'delete: Deleting Local PondManager {self.doId}')
         DistributedObject.DistributedObject.delete(self)
-    
+
 #################################################################
 # Distributed Method Definitions
 #################################################################
@@ -193,7 +199,8 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
                 self.pond.getLocalToonSpot().cleanupFishPanel()
                 self.pond.getLocalToonSpot().hideBootPanel()
         else:
-            self.notify.warning("CheckForWin: Attempt to Play Cell without a valid catch.")
+            self.notify.warning(
+                "CheckForWin: Attempt to Play Cell without a valid catch.")
 
     #############################################################
     # Method: updateGameState
@@ -226,7 +233,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     # Output: None
     ############################################################
     def __generateCard(self):
-        self.notify.debug("__generateCard: %s" % self.typeId)
+        self.notify.debug(f"__generateCard: {self.typeId}")
         # A card has already been generated, but we are
         # moving on to a new card at this point. We must
         # delete the reference to the old card before generating
@@ -240,10 +247,22 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
         self.card.addGame(game)
         self.card.generateCard(self.tileSeed, self.pond.getArea())
         color = BingoGlobals.getColor(self.typeId)
-        self.card.setProp('image_color', VBase4(color[0],color[1], color[2],color[3]))
+        self.card.setProp(
+            'image_color',
+            VBase4(
+                color[0],
+                color[1],
+                color[2],
+                color[3]))
         color = BingoGlobals.getButtonColor(self.typeId)
-        self.card.bingo.setProp('image_color', VBase4(color[0],color[1], color[2],color[3]))
-        
+        self.card.bingo.setProp(
+            'image_color',
+            VBase4(
+                color[0],
+                color[1],
+                color[2],
+                color[3]))
+
         if self.hasEntered:
             self.card.loadCard()
             self.card.show()
@@ -261,7 +280,8 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     # Output: None
     ############################################################
     def showCard(self):
-        if (self.state != 'Off' or self.state != 'CloseEvent') and self.card.getGame():
+        if (self.state != 'Off' or self.state !=
+                'CloseEvent') and self.card.getGame():
             self.card.loadCard()
             self.card.show()
         elif self.state == 'GameOver':
@@ -274,7 +294,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
         elif self.state == 'Intermission':
             self.card.showNextGameTimer(TTLocalizer.FishBingoIntermission)
             self.card.show()
-        self.hasEntered = 1    
+        self.hasEntered = 1
 
     #############################################################
     # Method: __cardChoice
@@ -345,7 +365,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     # Output: None
     ############################################################
     def setState(self, state, timeStamp):
-        self.notify.debug("State change: %s -> %s" % (self.state, state))
+        self.notify.debug(f"State change: {self.state} -> {state}")
 
         self.request(state, timeStamp)
 
@@ -407,7 +427,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
 #     - GameOver      Transitions To WaitCountdown or Off
 #################################################################
 
-    ################################################################# 
+    #################################################################
     # Method: enterOff
     # Purpose: This method is called when the AI determines that
     #          the Bingo Night has ended or when a client leaves a
@@ -418,21 +438,21 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     def enterOff(self):
         self.notify.debug('enterOff: Enter Off State')
 
-        # Unbind the spot reference        
+        # Unbind the spot reference
         del self.spot
         self.spot = None
-        
+
         if self.card.getGame:
             self.card.removeGame()
         self.card.hide()
 
         self.card.stopNextGameTimer()
-           
+
         self.hasEntered = 0
         self.lastCatch = None
         #del self.initGameState
 
-    ################################################################# 
+    #################################################################
     # Method: filterOff
     # Purpose: This method is called when a client joins a
     #          FishingSpot. Allows only a transition to the
@@ -448,7 +468,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
             return (request, args)
         elif request == 'Playing':
             self.__generateCard()
-            self.card.setJackpotText(str(self.jackpot))        
+            self.card.setJackpotText(str(self.jackpot))
             return (request, args)
         elif request == 'Intermission':
             return (request, args)
@@ -462,9 +482,10 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
             # Invalid State Transitions:
             #   - Off to Reward
             #   - Off to GameOver
-            self.notify.debug("filterOff: Invalid State Transition from, Off to %s" %(request))
+            self.notify.debug(
+                f"filterOff: Invalid State Transition from, Off to {request}")
 
-    ################################################################# 
+    #################################################################
     # Method:  exitOff
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. (Likely will be removed.)
@@ -474,7 +495,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     def exitOff(self):
         self.notify.debug('exitOff: Exit Off State')
 
-    ################################################################# 
+    #################################################################
     # Method:  enterIntro
     # Purpose: This method is called when the AI tells the client
     #          to enter the Intro phase for the Beginning of Fish
@@ -490,9 +511,9 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
         # Show the card
         self.pond.setSpotGui()
         self.hasEntered = 1
-        #self.card.show()
+        # self.card.show()
 
-    ################################################################# 
+    #################################################################
     # Method: filterIntro
     # Purpose: This method is called when the AI tells the client
     #          to transition into the next game state.
@@ -504,9 +525,10 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
         if request == 'WaitCountdown':
             return (request, args)
         else:
-            self.notify.debug('filterIntro: Invalid State Transition from Intro to %s' %(request))
+            self.notify.debug(
+                f'filterIntro: Invalid State Transition from Intro to {request}')
 
-    ################################################################# 
+    #################################################################
     # Method:  exitIntro
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. (Likely will be removed.)
@@ -514,9 +536,9 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     # Output: None
     #################################################################
     def exitIntro(self):
-      self.notify.debug('exitIntro: Exit Intro State')
+        self.notify.debug('exitIntro: Exit Intro State')
 
-    ################################################################# 
+    #################################################################
     # Method:  enterWaitCountdown
     # Purpose: This method is called when the AI tells the client
     #          to enter the Countdown phase for the next game. This
@@ -529,16 +551,17 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     def enterWaitCountdown(self, timeStamp):
         self.notify.debug('enterWaitCountdown: Enter WaitCountdown State')
         # Generate the new card for the next game.
-        #self.__generateCard()
-        
+        # self.__generateCard()
+
         # Start the Countdown for the next game.
-        time = BingoGlobals.TIMEOUT_SESSION - globalClockDelta.localElapsedTime(timeStamp[0])
+        time = BingoGlobals.TIMEOUT_SESSION - \
+            globalClockDelta.localElapsedTime(timeStamp[0])
         self.card.startNextGameCountdown(time)
 
         if self.hasEntered:
             self.card.showNextGameTimer(TTLocalizer.FishBingoNextGame)
 
-    ################################################################# 
+    #################################################################
     # Method: filterWaitCountdown
     # Purpose: This method is called when the AI determines that
     #          the Countdown phase has ended. It allows only a
@@ -556,9 +579,10 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
             #   - WaitCountdown to Reward
             #   - WaitCountdown to GameOver
             #   - WaitCountdown to Off
-            self.notify.debug("filterOff: Invalid State Transition from WaitCountdown to %s" %(request))
+            self.notify.debug(
+                f"filterOff: Invalid State Transition from WaitCountdown to {request}")
 
-    ################################################################# 
+    #################################################################
     # Method:  exitWaitCountdown
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. Before leaving, it resets
@@ -572,11 +596,11 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
         if self.pond:
             self.__generateCard()
             self.card.setJackpotText(str(self.jackpot))
-            
+
             self.card.resetGameTimer()
             self.card.hideNextGameTimer()
 
-    ################################################################# 
+    #################################################################
     # Method:  enterPlaying
     # Purpose: This method is called when the AI tells the client
     #          to enter the Playing phase. It sets the timer
@@ -590,14 +614,14 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
         self.notify.debug('enterPlaying: Enter Playing State')
         self.lastCatch = None
 
-        session = BingoGlobals.getGameTime(self.typeId)        
+        session = BingoGlobals.getGameTime(self.typeId)
         time = session - globalClockDelta.localElapsedTime(timeStamp[0])
         self.card.startGameCountdown(time)
 
         # Check to determine if there is a card to enable.
         self.card.enableCard(self.checkForUpdate)
 
-    ################################################################# 
+    #################################################################
     # Method: filterPlaying
     # Purpose: This method is called when the AI determines that
     #          the Playing phase has ended. It allows only a
@@ -606,7 +630,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     # Input: request - The transitional state.
     #        args - additional arguments needed for the transition.
     # Output: None
-    #################################################################   
+    #################################################################
     def filterPlaying(self, request, args):
         if request == 'Reward':
             return (request, args)
@@ -617,9 +641,10 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
             # Invalid State Transitions:
             #   - Playing to WaitCountdown
             #   - Playing to Off
-            self.notify.debug("filterOff: Invalid State Transition from Playing to %s" %(request))
+            self.notify.debug(
+                f"filterOff: Invalid State Transition from Playing to {request}")
 
-    ################################################################# 
+    #################################################################
     # Method:  exitPlaying
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. Before leaving, it resets
@@ -631,7 +656,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
         self.notify.debug('exitPlaying: Exit Playing State')
         self.card.resetGameTimer()
 
-    ################################################################# 
+    #################################################################
     # Method:  enterReward
     # Purpose: This method is called when the AI tells the client
     #          to enter the Reward Phase due to a victory. It
@@ -653,7 +678,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
             localToonSpot.setJarAmount(self.jackpot)
         self.jackpot = 0
 
-    ################################################################# 
+    #################################################################
     # Method: filterReward
     # Purpose: This method is called when the AI determines that
     #          the Reward phase has ended. It allows only a
@@ -661,7 +686,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     # Input: request - The transitional state.
     #        args - additional arguments needed for the transition.
     # Output: None
-    #################################################################   
+    #################################################################
     def filterReward(self, request, args):
         if request == 'WaitCountdown':
             return (request, args)
@@ -676,9 +701,10 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
             # Invalid State Transitions:
             #   - Reward to Playing
             #   - Reward to GameOver
-            self.notify.debug("filterOff: Invalid State Transition from Reward to %s" %(request))
+            self.notify.debug(
+                f"filterOff: Invalid State Transition from Reward to {request}")
 
-    ################################################################# 
+    #################################################################
     # Method:  exitReward
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. (Likely will be removed.)
@@ -689,7 +715,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
         self.notify.debug('exitReward: Exit Reward State')
         self.card.setGameOver('')
 
-    ################################################################# 
+    #################################################################
     # Method:  enterGameOver
     # Purpose: This method is called when the AI tells the client
     #          to enter the GameOver Phase due to a loss. It
@@ -706,7 +732,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
         self.card.removeGame()
         self.card.setGameOver(TTLocalizer.FishBingoGameOver)
 
-    ################################################################# 
+    #################################################################
     # Method: filterGameOver
     # Purpose: This method is called when the AI determines that
     #          the GameOver phase has ended. It allows only a
@@ -714,7 +740,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     # Input: request - The transitional state.
     #        args - additional arguments needed for the transition.
     # Output: None
-    ################################################################# 
+    #################################################################
     def filterGameOver(self, request, args):
         if request == 'WaitCountdown':
             return (request, args)
@@ -729,9 +755,10 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
             # Invalid State Transitions:
             #   - GameOver to Playing
             #   - Playing to Reward
-            self.notify.debug("filterOff: Invalid State Transition from GameOver to %s" %(request))
+            self.notify.debug(
+                f"filterOff: Invalid State Transition from GameOver to {request}")
 
-    ################################################################# 
+    #################################################################
     # Method:  exitGameOver
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. (Likely will be removed.)
@@ -743,7 +770,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
         self.card.setGameOver('')
         self.card.resetGameTypeText()
 
-    ################################################################# 
+    #################################################################
     # Method:  enterIntermission
     # Purpose: This method is called when the AI tells the client
     #          to enter the GameOver Phase due to a loss. It
@@ -758,14 +785,14 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
         self.notify.debug('enterIntermission: Enter Intermission State')
         if self.hasEntered:
             self.card.showNextGameTimer(TTLocalizer.FishBingoIntermission)
-        self.notify.debug('enterIntermission: timestamp %s'%(timeStamp[0]))
+        self.notify.debug(f'enterIntermission: timestamp {timeStamp[0]}')
         elapsedTime = globalClockDelta.localElapsedTime(timeStamp[0])
-        self.notify.debug('enterIntermission: elapsedTime %s'%(elapsedTime))
+        self.notify.debug(f'enterIntermission: elapsedTime {elapsedTime}')
         waitTime = BingoGlobals.HOUR_BREAK_SESSION - elapsedTime
-        self.notify.debug('enterIntermission: waitTime %s'%(waitTime))
+        self.notify.debug(f'enterIntermission: waitTime {waitTime}')
         self.card.startNextGameCountdown(waitTime)
-             
-    ################################################################# 
+
+    #################################################################
     # Method: filterGameOver
     # Purpose: This method is called when the AI determines that
     #          the GameOver phase has ended. It allows only a
@@ -773,7 +800,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     # Input: request - The transitional state.
     #        args - additional arguments needed for the transition.
     # Output: None
-    ################################################################# 
+    #################################################################
     def filterIntermission(self, request, args):
         if request == 'WaitCountdown':
             return (request, args)
@@ -784,9 +811,10 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
             # Invalid State Transitions:
             #   - GameOver to Playing
             #   - Playing to Reward
-            self.notify.warning("filterOff: Invalid State Transition from GameOver to %s" %(request))
+            self.notify.warning(
+                f"filterOff: Invalid State Transition from GameOver to {request}")
 
-    ################################################################# 
+    #################################################################
     # Method:  exitGameOver
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. (Likely will be removed.)
@@ -796,7 +824,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     def exitIntermission(self):
         self.notify.debug('enterIntermission: Exit Intermission State')
 
-    ################################################################# 
+    #################################################################
     # Method:  enterCloseEvent
     # Purpose: This method is called when the AI tells the client
     #          to enter the GameOver Phase due to a loss. It
@@ -814,8 +842,8 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
         # a fishing spot.
         self.card.hide()
         self.pond.resetSpotGui()
-             
-    ################################################################# 
+
+    #################################################################
     # Method: filterCloseEvent
     # Purpose: This method is called when the AI determines that
     #          the GameOver phase has ended. It allows only a
@@ -823,7 +851,7 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     # Input: request - The transitional state.
     #        args - additional arguments needed for the transition.
     # Output: None
-    ################################################################# 
+    #################################################################
     def filterCloseEvent(self, request, args):
         if request == 'Off':
             return 'Off'
@@ -832,9 +860,10 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
             # Invalid State Transitions:
             #   - GameOver to Playing
             #   - Playing to Reward
-            self.notify.warning("filterOff: Invalid State Transition from GameOver to %s" %(request))
+            self.notify.warning(
+                f"filterOff: Invalid State Transition from GameOver to {request}")
 
-    ################################################################# 
+    #################################################################
     # Method:  exitCloseEvent
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. (Likely will be removed.)
@@ -843,4 +872,3 @@ class DistributedPondBingoManager(DistributedObject.DistributedObject, FSM.FSM):
     #################################################################
     def exitCloseEvent(self):
         self.notify.debug('exitCloseEvent: Exit CloseEvent State')
-        

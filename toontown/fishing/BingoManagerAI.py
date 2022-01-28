@@ -46,20 +46,22 @@ import time
 TTG = ToontownGlobals
 BG = BingoGlobals
 
-class BingoManagerAI(object):
-#    __metaclass__ = PythonUtil.Singleton
-    notify = DirectNotifyGlobal.directNotify.newCategory("BingoManagerAI")
-    #notify.setDebug(True)
-    #notify.setInfo(True)
-    serverDataFolder = simbase.config.GetString('server-data-folder', "dependencies/backups/bingo")
 
-    DefaultReward = { TTG.DonaldsDock: [BG.MIN_SUPER_JACKPOT, 1],
-                      TTG.ToontownCentral: [BG.MIN_SUPER_JACKPOT, 1],
-                      TTG.TheBrrrgh: [BG.MIN_SUPER_JACKPOT, 1],
-                      TTG.MinniesMelodyland: [BG.MIN_SUPER_JACKPOT, 1],
-                      TTG.DaisyGardens: [BG.MIN_SUPER_JACKPOT, 1],
-                      TTG.DonaldsDreamland: [BG.MIN_SUPER_JACKPOT, 1],
-                      TTG.MyEstate: [BG.MIN_SUPER_JACKPOT, 1] }
+class BingoManagerAI(object):
+    #    __metaclass__ = PythonUtil.Singleton
+    notify = DirectNotifyGlobal.directNotify.newCategory("BingoManagerAI")
+    # notify.setDebug(True)
+    # notify.setInfo(True)
+    serverDataFolder = simbase.config.GetString(
+        'server-data-folder', "dependencies/backups/bingo")
+
+    DefaultReward = {TTG.DonaldsDock: [BG.MIN_SUPER_JACKPOT, 1],
+                     TTG.ToontownCentral: [BG.MIN_SUPER_JACKPOT, 1],
+                     TTG.TheBrrrgh: [BG.MIN_SUPER_JACKPOT, 1],
+                     TTG.MinniesMelodyland: [BG.MIN_SUPER_JACKPOT, 1],
+                     TTG.DaisyGardens: [BG.MIN_SUPER_JACKPOT, 1],
+                     TTG.DonaldsDreamland: [BG.MIN_SUPER_JACKPOT, 1],
+                     TTG.MyEstate: [BG.MIN_SUPER_JACKPOT, 1]}
 
     ############################################################
     # Method:  __init__
@@ -74,13 +76,13 @@ class BingoManagerAI(object):
         # Dictionaries for quick reference to the DPMAI
         self.doId2do = {}
         self.zoneId2do = {}
-        self.hood2doIdList = { TTG.DonaldsDock: [],
-                               TTG.ToontownCentral: [],
-                               TTG.TheBrrrgh: [],
-                               TTG.MinniesMelodyland: [],
-                               TTG.DaisyGardens: [],
-                               TTG.DonaldsDreamland: [],
-                               TTG.MyEstate: [] }
+        self.hood2doIdList = {TTG.DonaldsDock: [],
+                              TTG.ToontownCentral: [],
+                              TTG.TheBrrrgh: [],
+                              TTG.MinniesMelodyland: [],
+                              TTG.DaisyGardens: [],
+                              TTG.DonaldsDreamland: [],
+                              TTG.MyEstate: []}
 
         self.__hoodJackpots = {}
         self.finalGame = BG.NORMAL_GAME
@@ -100,13 +102,14 @@ class BingoManagerAI(object):
     def start(self):
         # Iterate through keys and change into "active" state
         # for the pondBingoManagerAI
-        self.notify.info("Starting Bingo Night Event: %s" % (time.ctime()))
+        self.notify.info(f"Starting Bingo Night Event: {time.ctime()}")
         self.air.bingoMgr = self
         # Determine current time so that we can gracefully handle
         # an AI crash or reboot during Bingo Night.
         currentMin = time.localtime()[4]
         self.timeStamp = globalClockDelta.getRealNetworkTime()
-        initState = ((currentMin < BG.HOUR_BREAK_MIN) and ['Intro'] or ['Intermission'])[0]
+        initState = ((currentMin < BG.HOUR_BREAK_MIN)
+                     and ['Intro'] or ['Intermission'])[0]
 
         # CHEATS
         #initState = 'Intermission'
@@ -147,7 +150,9 @@ class BingoManagerAI(object):
         if self.doId2do:
             #self.notify.warning('__shutdown: Not all PondBingoManagers have shutdown! Manual Shutdown for Memory sake.')
             for bingoMgr in list(self.doId2do.values()):
-                self.notify.info("__shutdown: shutting down PondBinfoManagerAI in zone %s" % bingoMgr.zoneId)
+                self.notify.info(
+                    "__shutdown: shutting down PondBinfoManagerAI in zone %s" %
+                    bingoMgr.zoneId)
                 bingoMgr.shutdown()
             self.doId2do.clear()
         del self.doId2do
@@ -171,8 +176,12 @@ class BingoManagerAI(object):
                 if self.finalGame:
                     bingoMgr.setFinalGame(self.finalGame)
                 bingoMgr.resumeBingoNight()
-        timeToWait = BG.getGameTime(BG.BLOCKOUT_CARD) + BG.TIMEOUT_SESSION + 5.0
-        taskMgr.doMethodLater(timeToWait, self.__handleSuperBingoClose, 'SuperBingoClose')
+        timeToWait = BG.getGameTime(
+            BG.BLOCKOUT_CARD) + BG.TIMEOUT_SESSION + 5.0
+        taskMgr.doMethodLater(
+            timeToWait,
+            self.__handleSuperBingoClose,
+            'SuperBingoClose')
 
         # If we have another game after this, then do not want to generate a
         # new task to wait for the next intermission.
@@ -191,7 +200,8 @@ class BingoManagerAI(object):
     def __handleSuperBingoClose(self, task):
         # Save Jackpot Data to File
         self.notify.info("handleSuperBingoClose: Saving Hood Jackpots to DB")
-        self.notify.info("handleSuperBingoClose: hoodJackpots %s" %(self.__hoodJackpots))
+        self.notify.info(
+            f"handleSuperBingoClose: hoodJackpots {self.__hoodJackpots}")
         for hood in list(self.__hoodJackpots.keys()):
             if self.__hoodJackpots[hood][1]:
                 self.__hoodJackpots[hood][0] += BG.ROLLOVER_AMOUNT
@@ -247,10 +257,11 @@ class BingoManagerAI(object):
             currentSec = currentTime[5]
 
             # Calculate time until the next hour
-            waitTime = (60-currentMin)*60 - currentSec
-            sec = (currentMin - BG.HOUR_BREAK_MIN)*60 + currentSec
+            waitTime = (60 - currentMin) * 60 - currentSec
+            sec = (currentMin - BG.HOUR_BREAK_MIN) * 60 + currentSec
             self.timeStamp = globalClockDelta.getRealNetworkTime() - sec
-            self.notify.info('__startIntermission: Timestamp %s'%(self.timeStamp))
+            self.notify.info(
+                f'__startIntermission: Timestamp {self.timeStamp}')
         else:
             # In case someone should decide that bingo night does not end on the hour, ie 30 past,
             # then this will allow a five minute intermission to sync up the PBMgrAIs for the
@@ -259,8 +270,13 @@ class BingoManagerAI(object):
             self.timeStamp = globalClockDelta.getRealNetworkTime()
 
         self.waitTaskName = 'waitForEndOfIntermission'
-        self.notify.info('__startIntermission: Waiting %s seconds until Bingo Night resumes.' %(waitTime))
-        taskMgr.doMethodLater(waitTime, self.__resumeBingoNight, self.waitTaskName)
+        self.notify.info(
+            '__startIntermission: Waiting %s seconds until Bingo Night resumes.' %
+            (waitTime))
+        taskMgr.doMethodLater(
+            waitTime,
+            self.__resumeBingoNight,
+            self.waitTaskName)
         return Task.done
 
     ############################################################
@@ -280,13 +296,19 @@ class BingoManagerAI(object):
         # Waitcountdown all the way to the gameover. (in secs)
         if currentMin >= BG.HOUR_BREAK_MIN:
             # If the AI starts during bingo night and after the intermission start(a crash or scheduled downtime),
-            # then immediately start the intermission to sync all the clients up for the next hour.
+            # then immediately start the intermission to sync all the clients
+            # up for the next hour.
             self.__startIntermission()
         else:
-            waitTime = ((BG.HOUR_BREAK_MIN - currentMin)*60) - currentSec
+            waitTime = ((BG.HOUR_BREAK_MIN - currentMin) * 60) - currentSec
             self.waitTaskName = 'waitForIntermission'
-            self.notify.info("Waiting %s seconds until Final Game of the Hour should be announced." % (waitTime))
-            taskMgr.doMethodLater(waitTime, self.__handleIntermission, self.waitTaskName)
+            self.notify.info(
+                "Waiting %s seconds until Final Game of the Hour should be announced." %
+                (waitTime))
+            taskMgr.doMethodLater(
+                waitTime,
+                self.__handleIntermission,
+                self.waitTaskName)
 
     ############################################################
     # Method:  generateBingoManagers
@@ -315,7 +337,8 @@ class BingoManagerAI(object):
     # Output: None
     ############################################################
     def addDistObj(self, distObj):
-        self.notify.debug("addDistObj: Adding %s : %s" % (distObj.getDoId(), distObj.zoneId))
+        self.notify.debug(
+            f"addDistObj: Adding {distObj.getDoId()} : {distObj.zoneId}")
         self.doId2do[distObj.getDoId()] = distObj
         self.zoneId2do[distObj.zoneId] = distObj
 
@@ -337,18 +360,22 @@ class BingoManagerAI(object):
     # Output: None
     ############################################################
     def createPondBingoMgrAI(self, hood, dynamic=0):
-        if hood.fishingPonds == None:
-            self.notify.warning("createPondBingoMgrAI: hood doesn't have any ponds... were they deleted? %s" % hood)
+        if hood.fishingPonds is None:
+            self.notify.warning(
+                "createPondBingoMgrAI: hood doesn't have any ponds... were they deleted? %s" %
+                hood)
             return
 
         for pond in hood.fishingPonds:
-            # First, optain hood id based on zone id that the pond is located in.
+            # First, optain hood id based on zone id that the pond is located
+            # in.
             hoodId = self.__hoodToUse(pond.zoneId)
             if hoodId not in self.hood2doIdList:
                 # for now don't start it for minigolf zone and outdoor zone
                 continue
 
-            bingoMgr = DistributedPondBingoManagerAI.DistributedPondBingoManagerAI(self.air, pond)
+            bingoMgr = DistributedPondBingoManagerAI.DistributedPondBingoManagerAI(
+                self.air, pond)
             bingoMgr.generateWithRequired(pond.zoneId)
 
             self.addDistObj(bingoMgr)
@@ -380,7 +407,8 @@ class BingoManagerAI(object):
         # in the WaitCountdown state. Otherwise, it should start in the intermission
         # state so that it can sync up with all of the other Estate PBMgrAIs for the
         # super bingo game.
-        initState = (((currentMin < BG.HOUR_BREAK_MIN) and (not self.finalGame)) and ['WaitCountdown'] or ['Intermission'])[0]
+        initState = (((currentMin < BG.HOUR_BREAK_MIN) and (not self.finalGame)) and [
+                     'WaitCountdown'] or ['Intermission'])[0]
         bingoMgr.startup(initState)
 
     ############################################################
@@ -395,13 +423,16 @@ class BingoManagerAI(object):
     def removePondBingoMgrAI(self, doId):
         if doId in self.doId2do:
             zoneId = self.doId2do[doId].zoneId
-            self.notify.info('removePondBingoMgrAI: Removing PondBingoMgrAI %s' %(zoneId))
+            self.notify.info(
+                f'removePondBingoMgrAI: Removing PondBingoMgrAI {zoneId}')
             hood = self.__hoodToUse(zoneId)
             self.hood2doIdList[hood].remove(doId)
             del self.zoneId2do[zoneId]
             del self.doId2do[doId]
         else:
-            self.notify.debug('removeBingoManager: Attempt to remove invalid PondBingoManager %s' % (doId))
+            self.notify.debug(
+                'removeBingoManager: Attempt to remove invalid PondBingoManager %s' %
+                (doId))
 
     ############################################################
     # Method:  SetFishForPlayer
@@ -412,11 +443,12 @@ class BingoManagerAI(object):
     # Output: None
     ############################################################
     def setAvCatchForPondMgr(self, avId, zoneId, catch):
-        self.notify.info('setAvCatchForPondMgr: zoneId %s' %(zoneId))
+        self.notify.info(f'setAvCatchForPondMgr: zoneId {zoneId}')
         if zoneId in self.zoneId2do:
             self.zoneId2do[zoneId].setAvCatch(avId, catch)
         else:
-            self.notify.info('setAvCatchForPondMgr Failed: zoneId %s' %(zoneId))
+            self.notify.info(
+                f'setAvCatchForPondMgr Failed: zoneId {zoneId}')
 
     ############################################################
     # Method:  getFileName
@@ -427,7 +459,7 @@ class BingoManagerAI(object):
     ############################################################
     def getFileName(self):
         """Figure out the path to the saved state"""
-        f = "%s%s.jackpot" % (self.serverDataFolder, self.shard)
+        f = f"{self.serverDataFolder}{self.shard}.jackpot"
         return f
 
     ############################################################
@@ -451,10 +483,10 @@ class BingoManagerAI(object):
         """Save data to default location"""
         try:
             fileName = self.getFileName()
-            backup = fileName+ '.jbu'
+            backup = fileName + '.jbu'
             if os.path.exists(fileName):
                 os.rename(fileName, backup)
-            
+
             file = open(fileName, 'wb')
             file.seek(0)
             self.saveTo(file)
@@ -476,8 +508,9 @@ class BingoManagerAI(object):
         jackpots = self.DefaultReward
         try:
             jackpots = pickle.load(file)
-        except :
-            self.notify.warning('Jackpot file failed to load, returning default reward.')
+        except BaseException:
+            self.notify.warning(
+                'Jackpot file failed to load, returning default reward.')
             pass
         return jackpots
 
@@ -492,7 +525,7 @@ class BingoManagerAI(object):
         """Load Jackpot data from default location"""
         fileName = self.getFileName()
         try:
-            file = open(fileName+'.jbu', 'rb')
+            file = open(fileName + '.jbu', 'rb')
             if os.path.exists(fileName):
                 os.remove(fileName)
         except IOError:
@@ -518,7 +551,8 @@ class BingoManagerAI(object):
     ############################################################
     def getSuperJackpot(self, zoneId):
         hood = self.__hoodToUse(zoneId)
-        self.notify.info('getSuperJackpot: hoodJackpots %s \t hood %s' % (self.__hoodJackpots, hood))
+        self.notify.info(
+            f'getSuperJackpot: hoodJackpots {self.__hoodJackpots} \t hood {hood}')
         return self.__hoodJackpots.get(hood, [BG.MIN_SUPER_JACKPOT])[0]
 
     ############################################################
@@ -553,13 +587,12 @@ class BingoManagerAI(object):
         self.__hoodJackpots[hood][1] = 0
 
         # tell everyone who won
-        #simbase.air.newsManager.bingoWin(zoneId)
+        # simbase.air.newsManager.bingoWin(zoneId)
 
         # Tell the other ponds that they did not win and should handle the loss
         for doId in self.hood2doIdList[hood]:
             distObj = self.doId2do[doId]
             if distObj.zoneId != zoneId:
-                self.notify.info("handleSuperBingoWin: Did not win in zone %s" %(distObj.zoneId))
+                self.notify.info(
+                    f"handleSuperBingoWin: Did not win in zone {distObj.zoneId}")
                 distObj.handleSuperBingoLoss()
-
-

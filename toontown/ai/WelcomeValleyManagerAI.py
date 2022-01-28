@@ -14,16 +14,16 @@ import random
 
 # The minimum number of people that should be in the playground before
 # we start to phase out the hood.
-PGminimum   = 1
+PGminimum = 1
 
 # The "stable" watermark; the first time we reach this number of
 # people in the playground, we consider the hood to be in a stable
 # state.
-PGstable    = 15
+PGstable = 15
 
 # The maximum number of people in the playground before we stop adding
 # people to the hood.
-PGmaximum   = 20
+PGmaximum = 20
 
 # How often, in seconds, to report the current WelcomeValley state to
 # the log.
@@ -81,7 +81,8 @@ LogInterval = 300
 
 
 class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory("WelcomeValleyManagerAI")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "WelcomeValleyManagerAI")
 
     def __init__(self, air):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
@@ -109,32 +110,32 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
         DistributedObjectAI.DistributedObjectAI.delete(self)
 
 # now done locally on the AI
-##     def clientSetZone(self, zoneId):
-##         """
-##         This is used by the client to inform the AI which zone he is
-##         going to.  It is mainly used to balance the WelcomeValley zones,
-##         so the AI can know how many avatars are in each WelcomeValley.
-##         """
+# def clientSetZone(self, zoneId):
+# """
+# This is used by the client to inform the AI which zone he is
+# going to.  It is mainly used to balance the WelcomeValley zones,
+# so the AI can know how many avatars are in each WelcomeValley.
+# """
 ##         avId = self.air.getAvatarIdFromSender()
 ##         lastZoneId = self.avatarSetZone(avId, zoneId)
 
-##         # Temporary kludge to ensure ghost mode doesn't remain on
-##         # longer than it should--that's probably the result of an
-##         # unintended bug.  If ghost mode is on, we turn it off
-##         # whenever the client switches zones.  Note that this is not a
-##         # real solution, since a hacked client can simply not send the
-##         # clientSetZone messages.
+# Temporary kludge to ensure ghost mode doesn't remain on
+# longer than it should--that's probably the result of an
+# unintended bug.  If ghost mode is on, we turn it off
+# whenever the client switches zones.  Note that this is not a
+# real solution, since a hacked client can simply not send the
+# clientSetZone messages.
 ##         avatar = self.air.doId2do.get(avId)
-##         if avatar and avatar.ghostMode:
+# if avatar and avatar.ghostMode:
 ##             self.air.writeServerEvent('suspicious', avId, 'has ghost mode %s transitioning from zone %s to %s' % (avatar.ghostMode, lastZoneId, zoneId))
-##             if avatar.ghostMode == 1:
-##                 avatar.b_setGhostMode(0)
+# if avatar.ghostMode == 1:
+# avatar.b_setGhostMode(0)
 
-##         if avatar and avatar.cogIndex >= 0:
-##             if (lastZoneId != 11100 and lastZoneId != 12100 and lastZoneId != 13100 ) or \
-##                (zoneId < 61000 and zoneId != 11000 and zoneId != 12000 and zoneId != 13000):
+# if avatar and avatar.cogIndex >= 0:
+# if (lastZoneId != 11100 and lastZoneId != 12100 and lastZoneId != 13100 ) or \
+# (zoneId < 61000 and zoneId != 11000 and zoneId != 12000 and zoneId != 13000):
 ##                 self.air.writeServerEvent('suspicious', avId, 'has cogIndex %s transitioning from zone %s to %s' % (avatar.cogIndex, lastZoneId, zoneId))
-##                 avatar.b_setCogIndex(-1)
+# avatar.b_setCogIndex(-1)
 
     def toonSetZone(self, avId, zoneId):
         lastZoneId = self.avatarSetZone(avId, zoneId)
@@ -151,8 +152,8 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
                 avatar.b_setGhostMode(0)
 
         if avatar and avatar.cogIndex >= 0:
-            if (lastZoneId != 11100 and lastZoneId != 12100 and lastZoneId != 13100 ) or \
-               (zoneId < 61000 and zoneId != 11000 and zoneId != 12000 and zoneId != 13000):
+            if (lastZoneId != 11100 and lastZoneId != 12100 and lastZoneId != 13100) or (
+                    zoneId < 61000 and zoneId != 11000 and zoneId != 12000 and zoneId != 13000):
                 avatar.b_setCogIndex(-1)
 
     def avatarSetZone(self, avId, zoneId):
@@ -160,12 +161,12 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
         if lastZoneId == zoneId:
             return lastZoneId
 
-        if zoneId == None:
-            self.notify.debug("Avatar %s has left the shard." % (avId))
+        if zoneId is None:
+            self.notify.debug(f"Avatar {avId} has left the shard.")
             del self.avatarZones[avId]
             self.ignore(self.air.getAvatarExitEvent(avId))
         else:
-            self.notify.debug("Avatar %s is now in zone %s." % (avId, zoneId))
+            self.notify.debug(f"Avatar {avId} is now in zone {zoneId}.")
 
             # First, add the avatar into his/her new zone.  We must do
             # this first so we don't risk momentarily bringing the
@@ -180,13 +181,14 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
 
             if hood:
                 hood[0].incrementPopulation(zoneId, 1)
-                if (hood == self.newHood) and hood[0].getPgPopulation() >= PGstable:
+                if (hood == self.newHood) and hood[0].getPgPopulation(
+                ) >= PGstable:
                     # This is now a stable hood.
                     self.__newToStable(hood)
 
             self.avatarZones[avId] = zoneId
 
-        if lastZoneId == None:
+        if lastZoneId is None:
             # This is the first time we have heard from this avatar.
             self.acceptOnce(self.air.getAvatarExitEvent(avId),
                             self.avatarLogout, extraArgs=[avId])
@@ -206,7 +208,7 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
                     self.__hoodIsEmpty(hood)
 
                 elif (hood != self.newHood) and not hood[0].hasRedirect() and \
-                     hood[0].getPgPopulation() < PGminimum:
+                        hood[0].getPgPopulation() < PGminimum:
                     self.__stableToRemoving(hood)
 
         return lastZoneId
@@ -218,11 +220,11 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
         # Makes the indicated hoodId new, if possible.  Used for magic
         # word purposes only.  Returns a string describing the action.
         hood = self.welcomeValleys.get(hoodId)
-        if hood == None:
-            return "Hood %s is unknown." % (hoodId)
+        if hood is None:
+            return f"Hood {hoodId} is unknown."
         if hood == self.newHood:
-            return "Hood %s is already new." % (hoodId)
-        if self.newHood != None:
+            return f"Hood {hoodId} is already new."
+        if self.newHood is not None:
             self.__newToStable(self.newHood)
 
         if hood in self.removingHoods:
@@ -232,17 +234,17 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
             self.stableHoods.remove(hood)
 
         self.newHood = hood
-        return "Hood %s is now New." % (hoodId)
+        return f"Hood {hoodId} is now New."
 
     def makeStable(self, hoodId):
         # Moves the indicated hoodId to the Stable pool, if possible.
         # Used for magic word purposes only.  Returns a string
         # describing the action.
         hood = self.welcomeValleys.get(hoodId)
-        if hood == None:
-            return "Hood %s is unknown." % (hoodId)
+        if hood is None:
+            return f"Hood {hoodId} is unknown."
         if hood in self.stableHoods:
-            return "Hood %s is already Stable." % (hoodId)
+            return f"Hood {hoodId} is already Stable."
 
         if hood == self.newHood:
             self.__newToStable(hood)
@@ -251,24 +253,24 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
             hood[0].setRedirect(None)
             self.stableHoods.append(hood)
 
-        return "Hood %s is now Stable." % (hoodId)
+        return f"Hood {hoodId} is now Stable."
 
     def makeRemoving(self, hoodId):
         # Moves the indicated hoodId to the Removing pool, if possible.
         # Used for magic word purposes only.  Returns a string
         # describing the action.
         hood = self.welcomeValleys.get(hoodId)
-        if hood == None:
-            return "Hood %s is unknown." % (hoodId)
+        if hood is None:
+            return f"Hood {hoodId} is unknown."
         if hood in self.removingHoods:
-            return "Hood %s is already Removing." % (hoodId)
+            return f"Hood {hoodId} is already Removing."
 
         if hood == self.newHood:
             self.__newToStable(hood)
 
         self.__stableToRemoving(hood)
 
-        return "Hood %s is now Removing." % (hoodId)
+        return f"Hood {hoodId} is now Removing."
 
     def checkAvatars(self):
         # Checks that all of the avatars recorded as being logged in
@@ -287,7 +289,7 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
     def __newToStable(self, hood):
         # This New hood's population has reached the stable limit;
         # mark it as a Stable hood.
-        self.notify.info("Hood %s moved to Stable." % (hood[0].zoneId))
+        self.notify.info(f"Hood {hood[0].zoneId} moved to Stable.")
 
         assert(hood == self.newHood)
         self.newHood = None
@@ -296,12 +298,12 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
     def __stableToRemoving(self, hood):
         # This hood's population has dropped too low;
         # schedule it for removal.
-        self.notify.info("Hood %s moved to Removing." % (hood[0].zoneId))
+        self.notify.info(f"Hood {hood[0].zoneId} moved to Removing.")
 
         assert(hood in self.stableHoods)
         self.stableHoods.remove(hood)
-        replacementHood = self.chooseWelcomeValley(allowCreateNew = 0)
-        if replacementHood == None:
+        replacementHood = self.chooseWelcomeValley(allowCreateNew=0)
+        if replacementHood is None:
             # Hmm, we couldn't find a suitable
             # replacement, so just keep this one.
             self.stableHoods.append(hood)
@@ -310,7 +312,7 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
             self.removingHoods.append(hood)
 
     def __hoodIsEmpty(self, hood):
-        self.notify.info("Hood %s is now empty." % (hood[0].zoneId))
+        self.notify.info(f"Hood {hood[0].zoneId} is now empty.")
 
         replacementHood = hood[0].replacementHood
         self.destroyWelcomeValley(hood)
@@ -319,8 +321,6 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
         # have just emptied it too.
         if replacementHood and replacementHood[0].getHoodPopulation() == 0:
             self.__hoodIsEmpty(replacementHood)
-
-
 
     def avatarRequestZone(self, avId, origZoneId):
         # This services a redirect-zone request for a particular
@@ -340,7 +340,8 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
             hood = self.chooseWelcomeValley()
 
         if not hood:
-            self.notify.warning("Could not create new WelcomeValley hood for avatar %s." % (avId))
+            self.notify.warning(
+                f"Could not create new WelcomeValley hood for avatar {avId}.")
             zoneId = ZoneUtil.getCanonicalZoneId(origZoneId)
         else:
             # use TTC hoodId
@@ -369,7 +370,7 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
         self.sendUpdateToAvatarId(avId, "requestZoneIdResponse",
                                   [zoneId, context])
 
-    def chooseWelcomeValley(self, allowCreateNew = 1):
+    def chooseWelcomeValley(self, allowCreateNew=1):
         # Picks a hood to assign a new avatar to.  If allowCreateNew
         # is 1, a new hood may be created if necessary.
 
@@ -383,16 +384,17 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
         bestPopulation = None
         for hood in self.stableHoods:
             population = hood[0].getPgPopulation()
-            if bestHood == None or population < bestPopulation:
+            if bestHood is None or population < bestPopulation:
                 bestHood = hood
                 bestPopulation = population
 
         # Unless there are no hoods with a small-enough population, in
         # which case we create another New hood.
-        if allowCreateNew and (bestHood == None or bestPopulation >= PGmaximum):
+        if allowCreateNew and (
+                bestHood is None or bestPopulation >= PGmaximum):
             self.newHood = self.createWelcomeValley()
             if self.newHood:
-                self.notify.info("Hood %s is New." % self.newHood[0].zoneId)
+                self.notify.info(f"Hood {self.newHood[0].zoneId} is New.")
                 return self.newHood
 
         return bestHood
@@ -420,7 +422,8 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
 
         # create a pond bingo manager ai for the new WV
         if simbase.wantBingo:
-            self.notify.info('creating bingo mgr for Welcome Valley %s' %  ttHoodId)
+            self.notify.info(
+                f'creating bingo mgr for Welcome Valley {ttHoodId}')
             self.air.createPondBingoMgrAI(ttHood)
 
         return (ttHood, gsHood)
@@ -469,8 +472,7 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
         # of the Welcome Valley hoods.
 
         self.notify.info("Current Welcome Valleys:")
-        hoodIds = list(self.welcomeValleys.keys())
-        hoodIds.sort()
+        hoodIds = sorted(self.welcomeValleys.keys())
         for hoodId in hoodIds:
             hood = self.welcomeValleys[hoodId]
             if hood == self.newHood:
@@ -483,4 +485,3 @@ class WelcomeValleyManagerAI(DistributedObjectAI.DistributedObjectAI):
             self.notify.info("%s %s %s/%s" % (
                 hood[0].zoneId, flag,
                 hood[0].getPgPopulation(), hood[0].getHoodPopulation()))
-

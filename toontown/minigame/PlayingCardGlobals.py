@@ -6,7 +6,8 @@ from pandac.PandaModules import Vec4
 Up = 1
 Down = 0
 
-# This is toontown, so we may have a different rank, and number of suits for our games
+# This is toontown, so we may have a different rank, and number of suits
+# for our games
 MaxRank = 13
 MaxSuit = 4
 
@@ -28,12 +29,13 @@ Suits = [Hearts, Diamonds, Clubs, Spades]
 
 Unknown = 255
 
-UpColor = Vec4(1,1,1,1)
-RolloverColor = Vec4(1,1,0.5,1)
-DownColor = Vec4(1,0.9,0.9,1)
-DisabledColor = Vec4(1,1,1,0.5)
+UpColor = Vec4(1, 1, 1, 1)
+RolloverColor = Vec4(1, 1, 0.5, 1)
+DownColor = Vec4(1, 0.9, 0.9, 1)
+DisabledColor = Vec4(1, 1, 1, 0.5)
 
 CardColors = (UpColor, DownColor, RolloverColor, DisabledColor)
+
 
 def getCardName(value):
     if value == Unknown:
@@ -43,32 +45,36 @@ def getCardName(value):
         suit = value / MaxRank
         return TTLocalizer.getPlayingCardName(suit, rank)
 
+
 Styles = ['standard']
 # Style -> Suit -> Rank -> image nodePath dict
 CardImages = {}
 _cardImagesInitialized = 0
 _modelPathBase = "phase_3.5/models/gui/inventory_icons"
 
+
 def convertValueToGagTrackAndLevel(value):
     # for a stand deck, converts 0 to 51 to a gag
-    assert rank < (ToontownBattleGlobals.MAX_TRACK_INDEX +1) *\
-           (ToontownBattleGlobals.MAX_LEVEL_INDEX +1) * MaxSuit
-    imageNum = int( rank / MaxSuit)
-    track = imageNum  % (ToontownBattleGlobals.MAX_TRACK_INDEX +1)
-    level = imageNum / (ToontownBattleGlobals.MAX_TRACK_INDEX+1)
-    return track,level
+    assert rank < (ToontownBattleGlobals.MAX_TRACK_INDEX + 1) *\
+        (ToontownBattleGlobals.MAX_LEVEL_INDEX + 1) * MaxSuit
+    imageNum = int(rank / MaxSuit)
+    track = imageNum % (ToontownBattleGlobals.MAX_TRACK_INDEX + 1)
+    level = imageNum / (ToontownBattleGlobals.MAX_TRACK_INDEX + 1)
+    return track, level
+
 
 def convertRankToGagTrackAndLevel(rank):
-    # for a stand deck, converts 0 to 12 to a gag    
-    assert rank < (ToontownBattleGlobals.MAX_TRACK_INDEX +1) *\
-           (ToontownBattleGlobals.MAX_LEVEL_INDEX +1)
-    track = rank  %( ToontownBattleGlobals.MAX_TRACK_INDEX +1)
+    # for a stand deck, converts 0 to 12 to a gag
+    assert rank < (ToontownBattleGlobals.MAX_TRACK_INDEX + 1) *\
+        (ToontownBattleGlobals.MAX_LEVEL_INDEX + 1)
+    track = rank % (ToontownBattleGlobals.MAX_TRACK_INDEX + 1)
     level = rank // (ToontownBattleGlobals.MAX_TRACK_INDEX + 1)
-    return track,level
+    return track, level
+
 
 def initCardImages():
     suitCodes = ('h', 'd', 'c', 's')
-    rankCodes = ('02', '03', '04', '05', '06','07', '08', '09', '10',
+    rankCodes = ('02', '03', '04', '05', '06', '07', '08', '09', '10',
                  '11', '12', '13', '01')
 
     for style in Styles:
@@ -79,26 +85,28 @@ def initCardImages():
         for suitIndex in range(MaxSuit):
             CardImages[style][suitIndex] = {}
             for rankIndex in range(MaxRank):
-                track,level = convertRankToGagTrackAndLevel(rankIndex)
+                track, level = convertRankToGagTrackAndLevel(rankIndex)
                 propName = ToontownBattleGlobals.AvPropsNew[track][level]
-                cardNode = cardModel.find('**/%s' % propName)
+                cardNode = cardModel.find(f'**/{propName}')
                 assert not cardNode.isEmpty()
                 CardImages[style][suitIndex][rankIndex] = cardNode
-                
+
         # Card back for this style
-        propName = ToontownBattleGlobals.AvPropsNew[ToontownBattleGlobals.MAX_TRACK_INDEX][ToontownBattleGlobals.MAX_LEVEL_INDEX]
+        propName = ToontownBattleGlobals.AvPropsNew[
+            ToontownBattleGlobals.MAX_TRACK_INDEX][ToontownBattleGlobals.MAX_LEVEL_INDEX]
         CardImages[style]['back'] = cardModel.find(propName)
-        
+
     global _cardImagesInitialized
     _cardImagesInitialized = 1
 
-def getImage(style, suit, rank):    
+
+def getImage(style, suit, rank):
     if _cardImagesInitialized == 0:
         initCardImages()
     return CardImages[style][suit][rank]
+
 
 def getBack(style):
     if _cardImagesInitialized == 0:
         initCardImages()
     return CardImages[style]['back']
-

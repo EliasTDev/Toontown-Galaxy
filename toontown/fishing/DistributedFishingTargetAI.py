@@ -9,9 +9,11 @@ from toontown.toonbase import ToontownGlobals
 import math
 from direct.distributed.ClockDelta import *
 
+
 class DistributedFishingTargetAI(DistributedNodeAI.DistributedNodeAI):
 
-    notify = DirectNotifyGlobal.directNotify.newCategory("DistributedFishingTargetAI")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedFishingTargetAI")
 
     def __init__(self, air, pond, hunger):
         DistributedNodeAI.DistributedNodeAI.__init__(self, air)
@@ -47,19 +49,21 @@ class DistributedFishingTargetAI(DistributedNodeAI.DistributedNodeAI):
         return (random.random() <= self.hunger)
 
     def getCurrentPos(self):
-        x = (self.currentRadius * math.cos(self.currentAngle)) + self.centerPoint[0]
-        y = (self.currentRadius * math.sin(self.currentAngle)) + self.centerPoint[1]
+        x = (self.currentRadius * math.cos(self.currentAngle)) + \
+            self.centerPoint[0]
+        y = (self.currentRadius * math.sin(self.currentAngle)) + \
+            self.centerPoint[1]
         z = self.centerPoint[2]
         return (x, y, z)
 
     def getState(self):
-        return [self.stateIndex, self.currentAngle, self.currentRadius, 
+        return [self.stateIndex, self.currentAngle, self.currentRadius,
                 self.time, globalClockDelta.getRealNetworkTime()]
 
     def d_setState(self, stateIndex, angle, radius, time):
         self.sendUpdate('setState', [stateIndex, angle, radius, time,
                                      globalClockDelta.getRealNetworkTime()])
-        
+
     def moveToNextPos(self, task=None):
         # Send out our current position before moving
         self.d_setPos(*self.getCurrentPos())
@@ -68,7 +72,11 @@ class DistributedFishingTargetAI(DistributedNodeAI.DistributedNodeAI):
         self.currentRadius = random.random() * self.maxRadius
         # Pick a travel duration
         self.time = 6.0 + (6.0 * random.random())
-        self.d_setState(self.stateIndex, self.currentAngle, self.currentRadius, self.time)
+        self.d_setState(
+            self.stateIndex,
+            self.currentAngle,
+            self.currentRadius,
+            self.time)
         waitTime = 1.0 + random.random() * 4.0
         taskMgr.doMethodLater(self.time + waitTime,
                               self.moveToNextPos,

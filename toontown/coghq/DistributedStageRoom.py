@@ -15,16 +15,20 @@ if __dev__:
 
 # gives you the name of the bboard posting that will be made when a room is
 # ready for business
+
+
 def getStageRoomReadyPostName(doId):
-    return 'stageRoomReady-%s' % doId
+    return f'stageRoomReady-{doId}'
+
 
 class DistributedStageRoom(DistributedLevel.DistributedLevel,
-                          StageRoomBase.StageRoomBase, StageRoom.StageRoom):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedStageRoom')
+                           StageRoomBase.StageRoomBase, StageRoom.StageRoom):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedStageRoom')
 
     # Any non-entrance stage room will not have an entrancePoint entity.
     EmulateEntrancePoint = False
-    
+
     def __init__(self, cr):
         DistributedLevel.DistributedLevel.__init__(self, cr)
         StageRoomBase.StageRoomBase.__init__(self)
@@ -50,18 +54,18 @@ class DistributedStageRoom(DistributedLevel.DistributedLevel,
         DistributedLevel.DistributedLevel.delete(self)
         StageRoom.StageRoom.delete(self)
         self.ignoreAll()
-        
+
     # required fields
     def setStageId(self, stageId):
-        self.notify.debug('stageId: %s' % stageId)
+        self.notify.debug(f'stageId: {stageId}')
         StageRoomBase.StageRoomBase.setStageId(self, stageId)
 
     def setRoomId(self, roomId):
-        self.notify.debug('roomId: %s' % roomId)
+        self.notify.debug(f'roomId: {roomId}')
         StageRoomBase.StageRoomBase.setRoomId(self, roomId)
 
     def setRoomNum(self, num):
-        self.notify.debug('roomNum: %s' % num)
+        self.notify.debug(f'roomNum: {num}')
         StageRoom.StageRoom.setRoomNum(self, num)
 
     def levelAnnounceGenerate(self):
@@ -76,7 +80,7 @@ class DistributedStageRoom(DistributedLevel.DistributedLevel,
             # give the spec a factory EntityTypeRegistry.
             typeReg = self.getStageEntityTypeReg()
             roomSpec.setEntityTypeReg(typeReg)
-        
+
         DistributedLevel.DistributedLevel.initializeLevel(self, roomSpec)
 
         # if the AI is sending us a spec, we won't have it yet and the
@@ -136,22 +140,31 @@ class DistributedStageRoom(DistributedLevel.DistributedLevel,
     # for now, let's ignore visibility, since we may not even need it
     def initVisibility(self, *args, **kw):
         pass
+
     def shutdownVisibility(self, *args, **kw):
         pass
+
     def lockVisibility(self, *args, **kw):
         pass
+
     def unlockVisibility(self, *args, **kw):
         pass
+
     def enterZone(self, *args, **kw):
         pass
+
     def updateVisibility(self, *args, **kw):
         pass
+
     def setVisibility(self, *args, **kw):
         pass
+
     def resetVisibility(self, *args, **kw):
         pass
+
     def handleVisChange(self, *args, **kw):
         pass
+
     def forceSetZoneThisFrame(self, *args, **kw):
         pass
 
@@ -192,20 +205,19 @@ class DistributedStageRoom(DistributedLevel.DistributedLevel,
             pos = base.localAvatar.getPos(thisZone)
             h = base.localAvatar.getH(thisZone)
             roomName = StageRoomSpecs.CashbotStageRoomId2RoomName[self.roomId]
-            print('stage pos: %s, h: %s, room: %s' % (
-                repr(pos), h, roomName))
+            print(f'stage pos: {repr(pos)}, h: {h}, room: {roomName}')
             if self.stage is not None:
                 floorNum = self.stage.floorNum
             else:
                 floorNum = '???'
-            posStr = "X: %.3f" % pos[0] + "\nY: %.3f" % pos[1] + \
-                     "\nZ: %.3f" % pos[2] + "\nH: %.3f" % h + \
-                     "\nstageId: %s" % self.stageId + \
-                     "\nfloor: %s" % floorNum + \
-                     "\nroomId: %s" % self.roomId + \
-                     "\nroomName: %s" % roomName
-            base.localAvatar.setChatAbsolute(posStr,CFThought|CFTimeout)
-        self.accept('f2',printPos)
+            posStr = f"X: {pos[0]:.3f}" + f"\nY: {pos[1]:.3f}" + \
+                     f"\nZ: {pos[2]:.3f}" + f"\nH: {h:.3f}" + \
+                     f"\nstageId: {self.stageId}" + \
+                     f"\nfloor: {floorNum}" + \
+                     f"\nroomId: {self.roomId}" + \
+                     f"\nroomName: {roomName}"
+            base.localAvatar.setChatAbsolute(posStr, CFThought | CFTimeout)
+        self.accept('f2', printPos)
 
     def handleSOSPanel(self, panel):
         # make a list of toons that are still in the factory
@@ -236,7 +248,7 @@ class DistributedStageRoom(DistributedLevel.DistributedLevel,
 
     def setSuits(self, suitIds, reserveSuitIds):
         assert(self.notify.debug(
-            "setSuits suits: %s, reserves: %s" % (suitIds, reserveSuitIds)))
+            f"setSuits suits: {suitIds}, reserves: {reserveSuitIds}"))
         oldSuitIds = list(self.suitIds)
         self.suitIds = suitIds
         self.reserveSuitIds = reserveSuitIds
@@ -252,7 +264,7 @@ class DistributedStageRoom(DistributedLevel.DistributedLevel,
                     suit.comeOutOfReserve()
             assert not hasattr(self, 'relatedObjectMgrRequest')
             self.relatedObjectMgrRequest = self.cr.relatedObjectMgr.requestObjects(
-                    newSuitIds, bringOutOfReserve)
+                newSuitIds, bringOutOfReserve)
 
     def reservesJoining(self):
         assert(self.notify.debug("reservesJoining"))
@@ -279,6 +291,7 @@ class DistributedStageRoom(DistributedLevel.DistributedLevel,
 
     def getBossTaunt(self):
         return TTLocalizer.StageBossTaunt
+
     def getBossBattleTaunt(self):
         return TTLocalizer.StageBossBattleTaunt
 
@@ -290,8 +303,9 @@ class DistributedStageRoom(DistributedLevel.DistributedLevel,
                 StageRoomSpecs.CashbotStageRoomId2RoomName[self.roomId],)
         else:
             return 'DistributedStageRoom'
+
     def __repr__(self):
         return str(self)
-        
+
     def complexVis(self):
         return 0

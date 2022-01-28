@@ -15,8 +15,10 @@ from .LevelStyleManager import *
 from .ToonControlManager import *
 #from LevelEditorGlobals import *
 
+
 class ToonLevelEditor(LevelEditorBase):
-    """ Class for ToonTown LevelEditor """ 
+    """ Class for ToonTown LevelEditor """
+
     def __init__(self):
         self.controlMgr = ToonControlManager(self)
         LevelEditorBase.__init__(self)
@@ -35,7 +37,9 @@ class ToonLevelEditor(LevelEditorBase):
         self.ui = LevelEditorUI(self)
 
         self.DNAData = None
-        self.dnaDirectory = Filename.expandFrom(base.config.GetString("dna-directory", "$TTMODELS/src/dna"))
+        self.dnaDirectory = Filename.expandFrom(
+            base.config.GetString(
+                "dna-directory", "$TTMODELS/src/dna"))
 
         self.NPToplevel = None
         self.suitPointToplevel = None
@@ -44,14 +48,15 @@ class ToonLevelEditor(LevelEditorBase):
         # When you define your own LevelEditor class inheriting LevelEditorBase
         # you should call self.initialize() at the end of __init__() function
         self.initialize()
-        self.styleManager = LevelStyleManager(NEIGHBORHOODS, NEIGHBORHOOD_CODES)
+        self.styleManager = LevelStyleManager(
+            NEIGHBORHOODS, NEIGHBORHOOD_CODES)
         self.accept('DIRECT-mouse1', self.handleMouse1)
 
     def setTitleWithFilename(self, filename=""):
         title = self.ui.appname
         if filename != "":
-           filenameshort = filename.split("\\")
-           title = title + " (%s)"%(filenameshort[-1])
+            filenameshort = filename.split("\\")
+            title = title + f" ({filenameshort[-1]})"
         self.ui.SetLabel(title)
 
     def deleteToplevel(self):
@@ -66,12 +71,12 @@ class ToonLevelEditor(LevelEditorBase):
             self.suitPointToplevel.removeNode()
         self.NPParent = render
 
-    def reset(self, fCreateToplevel = 1):
+    def reset(self, fCreateToplevel=1):
         self.controlMgr.disable()
         LevelEditorBase.reset(self)
         if self.ui.useDriveModeMenuItem.IsChecked():
             self.ui.useDriveModeMenuItem.Toggle()
-        
+
         # Reset path markers
         self.ui.resetPathMarkers()
         # Reset battle cell markers
@@ -92,36 +97,39 @@ class ToonLevelEditor(LevelEditorBase):
         if fCreateToplevel:
             self.createToplevel(DNANode('level'))
         # Start block ID at 0 (it will be incremented before use (to 1)):
-        self.landmarkBlock=0
+        self.landmarkBlock = 0
         # Set count of groups added to level
         self.setGroupNum(0)
         self.currHoodId = None
         #self.DNATarget = None
         self.setTitleWithFilename()
 
-    def createToplevel(self, dnaNode, nodePath = None):
+    def createToplevel(self, dnaNode, nodePath=None):
         # Add toplevel node path for suit points
-        self.suitPointToplevel = self.objectMgr.addNewObject('__sys__', parent=render, fSelectObject=False)
+        self.suitPointToplevel = self.objectMgr.addNewObject(
+            '__sys__', parent=render, fSelectObject=False)
 
         # When you create a new level, data is added to this node
         # When you load a DNA file, you replace this node with the new data
         self.DNAToplevel = dnaNode
-        self.NPToplevel = self.objectMgr.addNewObject('__group__', parent=render, fSelectObject=False, nodePath=GroupObj(self, '', dnaNode, nodePath))
+        self.NPToplevel = self.objectMgr.addNewObject(
+            '__group__', parent=render, fSelectObject=False, nodePath=GroupObj(
+                self, '', dnaNode, nodePath))
         self.DNAData.add(self.DNAToplevel)
-        
+
         # Update parent pointers
         self.DNAParent = self.DNAToplevel
         self.NPParent = self.NPToplevel
         self.VGParent = None
-        
+
     def setEditMode(self, hoodId):
-        self.styleManager.setEditMode(HOOD_IDS[hoodId])        
-        
+        self.styleManager.setEditMode(HOOD_IDS[hoodId])
+
     def exportDna(self):
         binaryFilename = Filename(self.currentFile)
         binaryFilename.setBinary()
         if self.DNAData.writeDna(binaryFilename, Notify.out(), DNASTORE):
-           self.setTitleWithFilename(binaryFilename)
+            self.setTitleWithFilename(binaryFilename)
 
     # LEVEL OBJECT MANAGEMENT FUNCTIONS
     def findDNANode(self, nodePath):
@@ -132,7 +140,7 @@ class ToonLevelEditor(LevelEditorBase):
             return None
 
     def load(self, fileName):
-        self.reset(fCreateToplevel = 0)
+        self.reset(fCreateToplevel=0)
         self.fileMgr.loadFromFile(fileName)
 
         topNodes = render.findAllMatches('=OBJRoot')
@@ -143,7 +151,7 @@ class ToonLevelEditor(LevelEditorBase):
                     self.NPToplevel = obj[OG.OBJ_NP]
                 else:
                     self.suitPointToplevel = obj[OG.OBJ_NP]
-                    
+
             self.DNAToplevel = self.findDNANode(self.NPToplevel)
             self.DNAData.add(self.DNAToplevel)
 
@@ -157,18 +165,22 @@ class ToonLevelEditor(LevelEditorBase):
                 topNode.reparentTo(self.NPToplevel)
 
         # reset the landmark block number:
-        (self.landmarkBlock, needTraverse)=self.findHighestLandmarkBlock(
-            self.DNAToplevel, self.NPToplevel)            
+        (self.landmarkBlock, needTraverse) = self.findHighestLandmarkBlock(
+            self.DNAToplevel, self.NPToplevel)
 
         # now update look of objects from loaded DNA
         self.objectMgr.replace(self.NPToplevel)
         self.ui.populateBattleCells()
         self.ui.populateSuitPaths()
         self.currentFile = fileName
-        
+
     def importDna(self, filename):
-        self.reset(fCreateToplevel = 0)
-        node = loadDNAFile(DNASTORE, Filename.fromOsSpecific(filename).cStr(), CSDefault, 1)        
+        self.reset(fCreateToplevel=0)
+        node = loadDNAFile(
+            DNASTORE,
+            Filename.fromOsSpecific(filename).cStr(),
+            CSDefault,
+            1)
 
         for hood in NEIGHBORHOODS:
             if filename.startswith(hood):
@@ -189,7 +201,7 @@ class ToonLevelEditor(LevelEditorBase):
         newDNAToplevel = self.findDNANode(newNPToplevel)
 
         # reset the landmark block number:
-        (self.landmarkBlock, needTraverse)=self.findHighestLandmarkBlock(
+        (self.landmarkBlock, needTraverse) = self.findHighestLandmarkBlock(
             newDNAToplevel, newNPToplevel)
 
         # Update toplevel variables
@@ -204,34 +216,34 @@ class ToonLevelEditor(LevelEditorBase):
         # [gjeon] to be implemented later
         # Create visible representations of all the paths and battle cells
         self.ui.populateSuitPaths()
-##         self.hideSuitPaths()
+# self.hideSuitPaths()
         self.ui.populateBattleCells()
-##         self.hideBattleCells()
+# self.hideBattleCells()
 
-##         #[gjeon] Handle Animated Props
-##         self.loadAnimatedProps(newNPToplevel)
+# [gjeon] Handle Animated Props
+# self.loadAnimatedProps(newNPToplevel)
         self.currentFile = filename
         self.setTitleWithFilename(filename)
 
     def findHighestLandmarkBlock(self, dnaRoot, npRoot):
-        npc=npRoot.findAllMatches("**/*:toon_landmark_*")
-        highest=0
+        npc = npRoot.findAllMatches("**/*:toon_landmark_*")
+        highest = 0
         for i in range(npc.getNumPaths()):
-            path=npc.getPath(i)
-            block=path.getName()
-            block=int(block[2:block.find(':')])
+            path = npc.getPath(i)
+            block = path.getName()
+            block = int(block[2:block.find(':')])
             if (block > highest):
-                highest=block
+                highest = block
         # Make a list of flat building names, outside of the
         # recursive function:
-        self.flatNames=['random'] + BUILDING_TYPES
-        self.flatNames=[n+'_DNARoot' for n in self.flatNames]
+        self.flatNames = ['random'] + BUILDING_TYPES
+        self.flatNames = [n + '_DNARoot' for n in self.flatNames]
         # Search/recurse the dna:
-        newHighest=self.convertToLandmarkBlocks(highest, dnaRoot)
+        newHighest = self.convertToLandmarkBlocks(highest, dnaRoot)
         # Get rid of the list of flat building names:
         del self.flatNames
 
-        needToTraverse = (highest!=newHighest)
+        needToTraverse = (highest != newHighest)
         return (newHighest, needToTraverse)
 
     def convertToLandmarkBlocks(self, block, dnaRoot):
@@ -243,19 +255,19 @@ class ToonLevelEditor(LevelEditorBase):
             child = dnaRoot.at(i)
             if DNAClassEqual(child, DNA_LANDMARK_BUILDING):
                 # Landmark buildings:
-                name=child.getName()
-                if name.find('toon_landmark_')==0:
-                    block=block+1
-                    child.setName('tb'+str(block)+':'+name)
+                name = child.getName()
+                if name.find('toon_landmark_') == 0:
+                    block = block + 1
+                    child.setName('tb' + str(block) + ':' + name)
             elif DNAClassEqual(child, DNA_FLAT_BUILDING):
                 # Flat buildings:
-                name=child.getName()
+                name = child.getName()
                 if (name in self.flatNames):
-                    child.setName('tb0:'+name)
+                    child.setName('tb0:' + name)
             else:
                 block = self.convertToLandmarkBlocks(block, child)
         return block
-        
+
     def handleMouse1(self, modifiers):
         if base.direct.fAlt or modifiers == 4:
             return
@@ -271,7 +283,7 @@ class ToonLevelEditor(LevelEditorBase):
             # If it exists, set the name of the DNA Node
             dnaNode.setName(newName)
 
-    def createNewGroup(self, type = 'dna'):
+    def createNewGroup(self, type='dna'):
         print("createNewGroup")
         """ Create a new DNA Node group under the active parent """
         # Create a new DNA Node group
@@ -325,14 +337,15 @@ class ToonLevelEditor(LevelEditorBase):
     def storeMousePos(self):
         v = self.getGridSnapIntersectionPoint()
         mat = base.direct.grid.getMat(self.NPParent)
-        self.lastMousePos = Point3(mat.xformPoint(v))         
+        self.lastMousePos = Point3(mat.xformPoint(v))
 
     def getGridSnapIntersectionPoint(self):
         """
         Return point of intersection between ground plane and line from cam
         through mouse. Return false, if nothing selected. Snap to grid.
         """
-        return base.direct.grid.computeSnapPoint(base.direct.manipulationControl.objectHandles.getMouseIntersectPt())
+        return base.direct.grid.computeSnapPoint(
+            base.direct.manipulationControl.objectHandles.getMouseIntersectPt())
 
     def updateSelectedPose(self, nodePathList):
         """
@@ -347,9 +360,9 @@ class ToonLevelEditor(LevelEditorBase):
                     # First snap selected node path to grid
                     pos = selectedNode.getPos(base.direct.grid)
                     snapPos = base.direct.grid.computeSnapPoint(pos)
-                    #if self.panel.fPlaneSnap.get():
+                    # if self.panel.fPlaneSnap.get():
                     #    zheight = 0
-                    #else:
+                    # else:
                     zheight = snapPos[2]
                     selectedNode.setPos(base.direct.grid,
                                         snapPos[0], snapPos[1], zheight)
@@ -367,9 +380,9 @@ class ToonLevelEditor(LevelEditorBase):
                     # First snap selected node path to grid
                     pos = selectedNode.getPos(base.direct.grid)
                     snapPos = base.direct.grid.computeSnapPoint(pos)
-                    #if self.panel.fPlaneSnap.get():
+                    # if self.panel.fPlaneSnap.get():
                     #    zheight = 0
-                    #else:
+                    # else:
                     zheight = snapPos[2]
                     selectedNode.setPos(
                         base.direct.grid,
@@ -404,7 +417,7 @@ class ToonLevelEditor(LevelEditorBase):
         dnaObject.setHpr(nodePath.getHpr())
         dnaObject.setScale(nodePath.getScale())
 
-    def adjustPropChildren(self, nodePath, maxPropOffset = -4):
+    def adjustPropChildren(self, nodePath, maxPropOffset=-4):
         for np in nodePath.getChildren():
             dnaNode = self.findDNANode(np)
             if dnaNode:

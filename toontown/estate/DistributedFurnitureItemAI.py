@@ -10,20 +10,22 @@ from . import HouseGlobals
 from . import DistributedHouseItemAI
 from direct.distributed import DistributedSmoothNodeAI
 
-class DistributedFurnitureItemAI(DistributedSmoothNodeAI.\
+
+class DistributedFurnitureItemAI(DistributedSmoothNodeAI.
                                  DistributedSmoothNodeAI):
 
     """
     This is the AI class for furniture items that you can move around your rooms
     """
 
-    notify = DirectNotifyGlobal.directNotify.newCategory("DistributedFurnitureItemAI")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedFurnitureItemAI")
 
     def __init__(self, air, furnitureMgr, item):
         DistributedSmoothNodeAI.DistributedSmoothNodeAI.__init__(self, air)
         self.furnitureMgr = furnitureMgr
         self.item = item
-        self.posHpr = item.posHpr        
+        self.posHpr = item.posHpr
         self.mode = HouseGlobals.FURNITURE_MODE_OFF
         self.directorAvId = 0
 
@@ -34,7 +36,10 @@ class DistributedFurnitureItemAI(DistributedSmoothNodeAI.\
         DistributedHouseItemAI.DistributedHouseItemAI.delete(self)
 
     def getItem(self):
-        return (self.furnitureMgr.doId, self.item.getBlob(store = CatalogItem.Customization))
+        return (
+            self.furnitureMgr.doId,
+            self.item.getBlob(
+                store=CatalogItem.Customization))
 
     def d_setSmPosHpr(self, x, y, z, h, p, r, t):
         self.sendUpdate("setSmPosHpr", [x, y, z, h, p, r, t])
@@ -45,7 +50,7 @@ class DistributedFurnitureItemAI(DistributedSmoothNodeAI.\
 
     def d_setMode(self, mode, directorAvId):
         self.sendUpdate("setMode", (mode, directorAvId))
-        
+
     def setMode(self, mode, directorAvId):
         self.mode = mode
         self.directorAvId = directorAvId
@@ -60,10 +65,10 @@ class DistributedFurnitureItemAI(DistributedSmoothNodeAI.\
         if self.furnitureMgr.requestControl(self, directorAvId):
             if not self.directorAvId:
                 self.b_setMode(HouseGlobals.FURNITURE_MODE_START, directorAvId)
-            self.posHpr = (x,y,z,h,p,r)
+            self.posHpr = (x, y, z, h, p, r)
             # TODO: should we trust the av timestamp, or generate our own?
             # Broadcast down the new poshpr
-            self.d_setSmPosHpr(x,y,z,h,p,r,timestamp)
+            self.d_setSmPosHpr(x, y, z, h, p, r, timestamp)
             if final:
                 # Write these properties to the database.
                 self.__savePosition()
@@ -72,9 +77,13 @@ class DistributedFurnitureItemAI(DistributedSmoothNodeAI.\
                 # And turn it off too, clearing the director
                 self.b_setMode(HouseGlobals.FURNITURE_MODE_OFF, 0)
         else:
-            self.air.writeServerEvent('suspicious', directorAvId, 'DistributedFurnitureItem no permission to move')
-            self.notify.warning("setPosHpr: avId: %s tried to move item: %s without permission" %
-                                (directorAvId, self.item))
+            self.air.writeServerEvent(
+                'suspicious',
+                directorAvId,
+                'DistributedFurnitureItem no permission to move')
+            self.notify.warning(
+                "setPosHpr: avId: %s tried to move item: %s without permission" %
+                (directorAvId, self.item))
 
     def removeDirector(self):
         # Forcibly removes the current director.  This is called from
@@ -85,8 +94,6 @@ class DistributedFurnitureItemAI(DistributedSmoothNodeAI.\
             self.__savePosition()
             self.b_setMode(HouseGlobals.FURNITURE_MODE_STOP, oldDirector)
             self.b_setMode(HouseGlobals.FURNITURE_MODE_OFF, 0)
-            
 
     def __savePosition(self):
         self.furnitureMgr.saveItemPosition(self)
-        

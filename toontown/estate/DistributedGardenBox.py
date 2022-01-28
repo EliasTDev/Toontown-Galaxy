@@ -9,29 +9,26 @@ from direct.distributed import DistributedNode
 from pandac.PandaModules import NodePath
 from pandac.PandaModules import Vec3
 
+
 class DistributedGardenBox(DistributedLawnDecor.DistributedLawnDecor):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGardenPlot')
-    
-    
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedGardenPlot')
+
     def __init__(self, cr):
         DistributedLawnDecor.DistributedLawnDecor.__init__(self, cr)
         #self.defaultModel = "phase_8/models/props/flower_treasure.bam"
-        
-        
+
         self.plantPath = NodePath('plantPath')
         self.plantPath.reparentTo(self)
         self.plotScale = 1.0
 
         self.plantingGuiDoneEvent = "plantingGuiDone"
         self.defaultModel = "phase_5.5/models/estate/planterC"
-        
 
-            
     def announceGenerate(self):
         #print("box announceGenerate!!!!")
         self.notify.debug('announceGenerate')
         DistributedLawnDecor.DistributedLawnDecor.announceGenerate(self)
-        
 
     def doModelSetup(self):
         if self.typeIndex == GardenGlobals.BOX_THREE:
@@ -43,12 +40,11 @@ class DistributedGardenBox(DistributedLawnDecor.DistributedLawnDecor):
             self.collSphereOffset = 0.0
             self.collSphereRadius = self.collSphereRadius * 1.41
             self.plotScale = Vec3(1.0, 1.0, 1.0)
-        
-        
+
     def setupShadow(self):
-        #we don't want the shadow 
+        # we don't want the shadow
         pass
-        
+
     def loadModel(self):
         self.rotateNode = self.plantPath.attachNewNode('rotate')
         self.model = None
@@ -58,28 +54,17 @@ class DistributedGardenBox(DistributedLawnDecor.DistributedLawnDecor):
         self.model.reparentTo(self.rotateNode)
         self.stick2Ground()
 
-        #uncomment line below if we want the toons to walk on top of the planter
-        #self.model.find("**/collision").stash()
+        # uncomment line below if we want the toons to walk on top of the planter
+        # self.model.find("**/collision").stash()
 
-        
-    def handleEnterPlot(self, entry = None):
+    def handleEnterPlot(self, entry=None):
         #print("Box entered")
         pass
 
-            
-    def handleExitPlot(self, entry = None):
+    def handleExitPlot(self, entry=None):
         DistributedLawnDecor.DistributedLawnDecor.handleExitPlot(self, entry)
         pass
-        
+
     def setTypeIndex(self, typeIndex):
         #print("box setting type index!!!!")
         self.typeIndex = typeIndex
-
-
-
-
-
-
-        
-        
-        

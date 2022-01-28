@@ -9,15 +9,17 @@ from pandac.PandaModules import CollisionSphere
 from pandac.PandaModules import CollisionNode
 from . import FireworksGui
 
-class DistributedFireworksCannon(DistributedFireworkShow.DistributedFireworkShow):
+
+class DistributedFireworksCannon(
+        DistributedFireworkShow.DistributedFireworkShow):
 
     notify = directNotify.newCategory("DistributedFireworksCannon")
 
     def __init__(self, cr):
-        DistributedFireworkShow.DistributedFireworkShow.__init__(self,cr)
+        DistributedFireworkShow.DistributedFireworkShow.__init__(self, cr)
         self.fireworksGui = None
         self.load()
-        
+
     def generateInit(self):
         DistributedFireworkShow.DistributedFireworkShow.generateInit(self)
         """generateInit(self)
@@ -43,11 +45,11 @@ class DistributedFireworksCannon(DistributedFireworkShow.DistributedFireworkShow
         to the world, either for the first time or from the cache.
         """
         DistributedFireworkShow.DistributedFireworkShow.generate(self)
-        
+
     def announceGenerate(self):
         self.notify.debug("announceGenerate")
-        self.accept(self.fireworksSphereEnterEvent,  self.__handleEnterSphere)
-        
+        self.accept(self.fireworksSphereEnterEvent, self.__handleEnterSphere)
+
     def disable(self):
         self.notify.debug("disable")
         self.ignore(self.fireworksSphereEnterEvent)
@@ -67,13 +69,13 @@ class DistributedFireworksCannon(DistributedFireworkShow.DistributedFireworkShow
         self.geom = loader.loadModel("phase_5/models/props/trashcan_TT.bam")
         self.geom.reparentTo(base.cr.playGame.hood.loader.geom)
         self.geom.setScale(.5)
-        
+
     def __handleEnterSphere(self, collEntry):
         self.notify.debug("handleEnterSphere()")
         # don't let other toons access the fireworks now
         self.ignore(self.fireworksSphereEnterEvent)
         self.sendUpdate("avatarEnter", [])
-        
+
     def __handleFireworksDone(self):
         self.ignore(self.fireworksGuiDoneEvent)
         self.ignore(self.shootEvent)
@@ -87,16 +89,15 @@ class DistributedFireworksCannon(DistributedFireworkShow.DistributedFireworkShow
         """
         # If we are the local toon and we have simply taken too long,
         # just free us
-        base.localAvatar.posCamera(0,0)
+        base.localAvatar.posCamera(0, 0)
         base.cr.playGame.getPlace().setState("walk")
         # Start accepting the fireworks collision sphere event again
         self.accept(self.fireworksSphereEnterEvent, self.__handleEnterSphere)
-        
-        
+
     def setMovie(self, mode, avId, timestamp):
         """
         This is a message from the AI describing a movie between this fireworks
-        cannon and a Toon that has approached us. 
+        cannon and a Toon that has approached us.
         """
         timeStamp = globalClockDelta.localElapsedTime(timestamp)
         # See if this is the local toon
@@ -108,29 +109,31 @@ class DistributedFireworksCannon(DistributedFireworkShow.DistributedFireworkShow
         elif (mode == FIREWORKS_MOVIE_GUI):
             self.notify.debug("setMovie: gui")
             if isLocalToon:
-                self.fireworksGui = FireworksGui.FireworksGui(self.fireworksGuiDoneEvent, self.shootEvent)
-                self.accept(self.fireworksGuiDoneEvent, self.__handleFireworksDone)
+                self.fireworksGui = FireworksGui.FireworksGui(
+                    self.fireworksGuiDoneEvent, self.shootEvent)
+                self.accept(
+                    self.fireworksGuiDoneEvent,
+                    self.__handleFireworksDone)
                 self.accept(self.shootEvent, self.localShootFirework)
             return
         else:
-            self.notify.warning("unknown mode in setMovie: %s" % (mode))
-        
+            self.notify.warning(f"unknown mode in setMovie: {mode}")
+
     def setPosition(self, x, y, z):
-        self.pos = [x,y,z]
-        self.geom.setPos(x,y,z)
-        
+        self.pos = [x, y, z]
+        self.geom.setPos(x, y, z)
+
     def localShootFirework(self, index):
         style = index
-        col1,col2 = self.fireworksGui.getCurColor()
+        col1, col2 = self.fireworksGui.getCurColor()
         amp = 30
 
         # attach a dummy node to the toon that always in front of him.
         # This is where the fireworks will shoot from.
         dummy = base.localAvatar.attachNewNode("dummy")
-        dummy.setPos(0,100,60)
+        dummy.setPos(0, 100, 60)
         pos = dummy.getPos(render)
         dummy.removeNode()
-        
-        print(("lauFirework: %s, col=%s" % (index,col1)))
-        self.d_requestFirework(pos[0],pos[1],pos[2],style,col1,col2)
-        
+
+        print(f"lauFirework: {index}, col={col1}")
+        self.d_requestFirework(pos[0], pos[1], pos[2], style, col1, col2)

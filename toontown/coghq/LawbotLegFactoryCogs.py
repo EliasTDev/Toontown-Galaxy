@@ -9,12 +9,12 @@ LobbyCell = 0
 
 
 BattleCells = {
-    }
-    
+}
+
 
 ReserveCogData = [
-    ]
+]
 
 CogData = [
     # lobby
-    ]
+]

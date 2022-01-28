@@ -6,23 +6,26 @@ from . import SellbotLegFactoryCogs
 from . import LawbotLegFactorySpec
 from . import LawbotLegFactoryCogs
 
+
 def getFactorySpecModule(factoryId):
     return FactorySpecModules[factoryId]
+
 
 def getCogSpecModule(factoryId):
     return CogSpecModules[factoryId]
 
+
 # source data for factory specifications
 FactorySpecModules = {
     ToontownGlobals.SellbotFactoryInt: SellbotLegFactorySpec,
-    ToontownGlobals.LawbotOfficeInt: LawbotLegFactorySpec, #remove me JML
-    }
+    ToontownGlobals.LawbotOfficeInt: LawbotLegFactorySpec,  # remove me JML
+}
 
-## until cogs are entities...
+# until cogs are entities...
 CogSpecModules = {
     ToontownGlobals.SellbotFactoryInt: SellbotLegFactoryCogs,
-    ToontownGlobals.LawbotOfficeInt: LawbotLegFactoryCogs, #remove me JML
-    }
+    ToontownGlobals.LawbotOfficeInt: LawbotLegFactoryCogs,  # remove me JML
+}
 
 if __dev__:
     from . import FactoryMockupSpec

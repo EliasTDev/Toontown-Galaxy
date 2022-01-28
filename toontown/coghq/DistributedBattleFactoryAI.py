@@ -6,9 +6,12 @@ from toontown.battle.BattleBase import *
 from . import CogDisguiseGlobals
 from direct.showbase.PythonUtil import addListsByValue
 
-class DistributedBattleFactoryAI(DistributedLevelBattleAI.DistributedLevelBattleAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleFactoryAI')
-    
+
+class DistributedBattleFactoryAI(
+        DistributedLevelBattleAI.DistributedLevelBattleAI):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedBattleFactoryAI')
+
     def __init__(self, air, battleMgr, pos, suit, toonId, zoneId,
                  level, battleCellId,
                  roundCallback=None,
@@ -28,9 +31,9 @@ class DistributedBattleFactoryAI(DistributedLevelBattleAI.DistributedLevelBattle
 
         # Add a new reward state to the battle ClassicFSM
         self.fsm.addState(State.State('FactoryReward',
-                                        self.enterFactoryReward,
-                                        self.exitFactoryReward,
-                                        ['Resume']))
+                                      self.enterFactoryReward,
+                                      self.exitFactoryReward,
+                                      ['Resume']))
         playMovieState = self.fsm.getStateNamed('PlayMovie')
         playMovieState.addTransition('FactoryReward')
 
@@ -41,26 +44,34 @@ class DistributedBattleFactoryAI(DistributedLevelBattleAI.DistributedLevelBattle
     def handleToonsWon(self, toons):
         # toons just beat the boss
         for toon in toons:
-            # Append recovered and unrecovered items onto their respective lists
+            # Append recovered and unrecovered items onto their respective
+            # lists
             recovered, notRecovered = self.air.questManager.recoverItems(
                 toon, self.suitsKilled, self.getTaskZoneId())
             self.toonItems[toon.doId][0].extend(recovered)
             self.toonItems[toon.doId][1].extend(notRecovered)
-            
+
             # the merit list must be added by value to the cumulative list
             meritArray = self.air.promotionMgr.recoverMerits(
-                toon, self.suitsKilled, self.getTaskZoneId(), getFactoryMeritMultiplier(self.getTaskZoneId()))
+                toon,
+                self.suitsKilled,
+                self.getTaskZoneId(),
+                getFactoryMeritMultiplier(
+                    self.getTaskZoneId()))
             if toon.doId in self.helpfulToons:
-                self.toonMerits[toon.doId] = addListsByValue(self.toonMerits[toon.doId], meritArray)
+                self.toonMerits[toon.doId] = addListsByValue(
+                    self.toonMerits[toon.doId], meritArray)
             else:
-                self.notify.debug("toon %d not helpful, skipping merits" % toon.doId)
+                self.notify.debug(
+                    "toon %d not helpful, skipping merits" %
+                    toon.doId)
 
             # only give part at the very end
             if self.bossBattle:
                 self.toonParts[toon.doId] = self.air.cogSuitMgr.recoverPart(
                     toon, self.level.factoryType, self.suitTrack,
                     self.getTaskZoneId(), toons)
-                self.notify.debug("toonParts = %s" % self.toonParts)
+                self.notify.debug(f"toonParts = {self.toonParts}")
 
     ##### FactoryReward state #####
 
@@ -79,7 +90,9 @@ class DistributedBattleFactoryAI(DistributedLevelBattleAI.DistributedLevelBattle
 
         # Set an upper timeout for the reward movie.  If no toons
         # report back by this time, call it done anyway.
-        self.timer.startCallback(BUILDING_REWARD_TIMEOUT, self.serverRewardDone)
+        self.timer.startCallback(
+            BUILDING_REWARD_TIMEOUT,
+            self.serverRewardDone)
         return None
 
     def exitFactoryReward(self):

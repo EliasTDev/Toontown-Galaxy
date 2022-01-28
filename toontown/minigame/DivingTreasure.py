@@ -9,6 +9,7 @@ from . import DivingGameGlobals
 # a treasure that has some information on who grabbed it
 # and a moveLerp
 
+
 class DivingTreasure(DirectObject):
 
     def __init__(self, i):
@@ -16,25 +17,25 @@ class DivingTreasure(DirectObject):
         loadBase = "phase_4/models/minigames/"
         self.chest = loader.loadModel(loadBase + "treasure.bam")
         self.chest.reparentTo(self.treasureNode)
-        self.chest.setPos(0,0,-25)
-        self.chest.setScale(1,.7,1)
-        
+        self.chest.setPos(0, 0, -25)
+        self.chest.setScale(1, .7, 1)
+
         self.chestId = i
         self.grabbedId = 0
         self.moveLerp = Sequence()
         self.treasureNode.setScale(.04)
-        self.treasureNode.setPos(-15+10.0*i, .25, -36.0)
-        
-        cSphere = CollisionSphere(0.0, 0.0, 0.0,45)
+        self.treasureNode.setPos(-15 + 10.0 * i, .25, -36.0)
+
+        cSphere = CollisionSphere(0.0, 0.0, 0.0, 45)
         cSphere.setTangible(0)
         name = str(i)
         cSphereNode = CollisionNode(name)
-            
+
         cSphereNode.setIntoCollideMask(DivingGameGlobals.CollideMask)
         cSphereNode.addSolid(cSphere)
         self.chestNode = cSphereNode
         self.chestCNP = self.treasureNode.attachNewNode(cSphereNode)
-        
+
     def destroy(self):
         self.ignoreAll()
         del self.chest

@@ -16,9 +16,11 @@ from toontown.coghq import FactoryCameraViews
 if __dev__:
     from otp.level import EditorGlobals
 
+
 class DistributedLawOfficeFloor(DistributedLevel.DistributedLevel,
-                         LawOfficeBase.LawOfficeBase):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLawOffice')
+                                LawOfficeBase.LawOfficeBase):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedLawOffice')
 
     def __init__(self, cr):
         DistributedLevel.DistributedLevel.__init__(self, cr)
@@ -30,7 +32,7 @@ class DistributedLawOfficeFloor(DistributedLevel.DistributedLevel,
         self.joiningReserves = []
         self.suitsInitialized = 0
         self.goonClipPlanes = {}
-        
+
     def createEntityCreator(self):
         return FactoryEntityCreator.FactoryEntityCreator(level=self)
 
@@ -53,19 +55,16 @@ class DistributedLawOfficeFloor(DistributedLevel.DistributedLevel,
 
         self.accept('SOSPanelEnter', self.handleSOSPanel)
         #self.accept('lawOfficeFloorDone', self.handleFloorDone)
-        
+
         #print("local Avatar Position %s" % (base.localAvatar.getPos()))
-        #base.localAvatar.setPos(0,0,0)
+        # base.localAvatar.setPos(0,0,0)
         #import pdb; pdb.set_trace()
-        
-        
-        
 
     def delete(self):
         #print("LAW OFFICE FLOOR DELETE")
-        
+
         DistributedLevel.DistributedLevel.delete(self)
-        
+
         # remove factory menu from SpeedChat
         base.localAvatar.chatMgr.chatInputSpeedChat.removeFactoryMenu()
         # remove special camera views
@@ -76,9 +75,9 @@ class DistributedLawOfficeFloor(DistributedLevel.DistributedLevel,
             base.factory = None
         if __dev__:
             bboard.removeIfEqual(EditorGlobals.EditTargetPostName, self)
-       
-        
+
     # required fields
+
     def setLawOfficeId(self, id):
         LawOfficeBase.LawOfficeBase.setLawOfficeId(self, id)
 
@@ -100,7 +99,7 @@ class DistributedLawOfficeFloor(DistributedLevel.DistributedLevel,
     def levelAnnounceGenerate(self):
         #print("LEVEL ANNOUNCE GENERATE")
         self.notify.debug('levelAnnounceGenerate')
-        #import pdb; pdb.set_trace() # toon detached by here
+        # import pdb; pdb.set_trace() # toon detached by here
         DistributedLevel.DistributedLevel.levelAnnounceGenerate(self)
 
         # create our spec
@@ -111,7 +110,7 @@ class DistributedLawOfficeFloor(DistributedLevel.DistributedLevel,
             # give the spec a factory EntityTypeRegistry.
             typeReg = self.getEntityTypeReg()
             factorySpec.setEntityTypeReg(typeReg)
-        
+
         DistributedLevel.DistributedLevel.initializeLevel(self, factorySpec)
 
         # if the AI is sending us a spec, we won't have it yet and the
@@ -119,10 +118,8 @@ class DistributedLawOfficeFloor(DistributedLevel.DistributedLevel,
         # can start doing stuff here. Much of what used to be here
         # has been moved to FactoryLevelMgr, where it really belongs, but...
         # this could be cleaner.
-        #import pdb; pdb.set_trace() 
-        #print("LEVEL ANNOUNCE GENERATE DONE") #toon detached by here
-        
-        
+        #import pdb; pdb.set_trace()
+        # print("LEVEL ANNOUNCE GENERATE DONE") #toon detached by here
 
     def privGotSpec(self, levelSpec):
         # OK, we've got the spec that we're going to use, either the one
@@ -140,6 +137,7 @@ class DistributedLawOfficeFloor(DistributedLevel.DistributedLevel,
         firstSetZoneDoneEvent = self.cr.getNextSetZoneDoneEvent()
         # wait until the first viz setZone completes before announcing
         # that we're ready to go
+
         def handleFirstSetZoneDone():
             # NOW we're ready.
             base.factoryReady = 1
@@ -162,13 +160,12 @@ class DistributedLawOfficeFloor(DistributedLevel.DistributedLevel,
             # print position of localToon relative to the zone that he's in
             pos = base.localAvatar.getPos(self.getZoneNode(self.lastToonZone))
             h = base.localAvatar.getH(self.getZoneNode(self.lastToonZone))
-            print('factory pos: %s, h: %s, zone %s' % (
-                repr(pos), h, self.lastToonZone))
-            posStr = "X: %.3f" % pos[0] + "\nY: %.3f" % pos[1] + \
-                  "\nZ: %.3f" % pos[2] + "\nH: %.3f" % h + \
-                  "\nZone: %s" % str(self.lastToonZone)
-            base.localAvatar.setChat(posStr,CFThought,0)
-        self.accept('f2',printPos)
+            print(f'factory pos: {repr(pos)}, h: {h}, zone {self.lastToonZone}')
+            posStr = f"X: {pos[0]:.3f}" + f"\nY: {pos[1]:.3f}" + \
+                f"\nZ: {pos[2]:.3f}" + f"\nH: {h:.3f}" + \
+                f"\nZone: {str(self.lastToonZone)}"
+            base.localAvatar.setChat(posStr, CFThought, 0)
+        self.accept('f2', printPos)
 
         base.localAvatar.setCameraCollisionsCanMove(1)
 
@@ -186,7 +183,7 @@ class DistributedLawOfficeFloor(DistributedLevel.DistributedLevel,
             if base.cr.doId2do.get(avId):
                 avIds.append(avId)
         panel.setFactoryToonIdList(avIds)
-        
+
     def handleFloorDone(self):
         self.sendUpdate("readyForNextFloor")
 
@@ -206,7 +203,9 @@ class DistributedLawOfficeFloor(DistributedLevel.DistributedLevel,
         DistributedLevel.DistributedLevel.disable(self)
 
     def setSuits(self, suitIds, reserveSuitIds):
-        assert(self.notify.debug("setSuits suits: %s, reserves: %s" % (suitIds, reserveSuitIds)))
+        assert(
+            self.notify.debug(
+                f"setSuits suits: {suitIds}, reserves: {reserveSuitIds}"))
         oldSuitIds = list(self.suitIds)
         self.suitIds = suitIds
         self.reserveSuitIds = reserveSuitIds
@@ -222,7 +221,7 @@ class DistributedLawOfficeFloor(DistributedLevel.DistributedLevel,
                     suit.comeOutOfReserve()
             assert not hasattr(self, 'relatedObjectMgrRequest')
             self.relatedObjectMgrRequest = self.cr.relatedObjectMgr.requestObjects(
-                    newSuitIds, bringOutOfReserve)
+                newSuitIds, bringOutOfReserve)
 
     def reservesJoining(self):
         assert(self.notify.debug("reservesJoining"))
@@ -252,22 +251,23 @@ class DistributedLawOfficeFloor(DistributedLevel.DistributedLevel,
 
     def getBossTaunt(self):
         return TTLocalizer.FactoryBossTaunt
+
     def getBossBattleTaunt(self):
         return TTLocalizer.FactoryBossBattleTaunt
-        
+
     def placeLocalToon(self):
         initialZoneEnt = None
         # the entrancePoint entities register themselves with us
         if self.entranceId in self.entranceId2entity:
             epEnt = self.entranceId2entity[self.entranceId]
-            #epEnt.placeToon(base.localAvatar,
+            # epEnt.placeToon(base.localAvatar,
             #                self.avIdList.index(base.localAvatar.doId),
             #                len(self.avIdList))
             initialZoneEnt = self.getEntity(epEnt.getZoneEntId())
         elif self.EmulateEntrancePoint:
-            self.notify.debug('unknown entranceId %s' % self.entranceId)
-            #base.localAvatar.reparentTo(render)
-            #base.localAvatar.setPosHpr(0,0,0,0,0,0)
+            self.notify.debug(f'unknown entranceId {self.entranceId}')
+            # base.localAvatar.reparentTo(render)
+            # base.localAvatar.setPosHpr(0,0,0,0,0,0)
             self.notify.debug('showing all zones')
             self.setColorZones(1)
             # put the toon in a random zone to start
@@ -276,16 +276,14 @@ class DistributedLawOfficeFloor(DistributedLevel.DistributedLevel,
             if len(zoneEntIds):
                 zoneEntId = random.choice(zoneEntIds)
                 initialZoneEnt = self.getEntity(zoneEntId)
-                #base.localAvatar.setPos(
+                # base.localAvatar.setPos(
                 #    render,
                 #    initialZoneEnt.getZoneNode().getPos(render))
             else:
                 initialZoneEnt = self.getEntity(
                     LevelConstants.UberZoneEntId)
-                #base.localAvatar.setPos(render,0,0,0)
+                # base.localAvatar.setPos(render,0,0,0)
 
         if initialZoneEnt is not None:
             # kickstart the visibility
             self.enterZone(initialZoneEnt.entId)
-
-    

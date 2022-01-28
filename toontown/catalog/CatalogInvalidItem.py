@@ -3,6 +3,7 @@ from toontown.toonbase import TTLocalizer
 from direct.showbase import PythonUtil
 from toontown.toonbase import ToontownGlobals
 
+
 class CatalogInvalidItem(CatalogItem.CatalogItem):
     """CatalogInvalidItem
 
@@ -21,5 +22,5 @@ class CatalogInvalidItem(CatalogItem.CatalogItem):
     def acceptItem(self, mailbox, index, callback):
         self.notify.error("Attempt to accept invalid item.")
 
-    def output(self, store = ~0):
+    def output(self, store=~0):
         return "CatalogInvalidItem()"

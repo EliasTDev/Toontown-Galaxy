@@ -5,6 +5,7 @@ from toontown.coghq import StageLayout
 from direct.showbase import DirectObject
 import random
 
+
 class StageManagerAI(DirectObject.DirectObject):
 
     notify = DirectNotifyGlobal.directNotify.newCategory('StageManagerAI')
@@ -23,8 +24,8 @@ class StageManagerAI(DirectObject.DirectObject):
     def createStage(self, stageId, players):
         # check for ~stageId
         for avId in players:
-            if bboard.has('stageId-%s' % avId):
-                stageId = bboard.get('stageId-%s' % avId)
+            if bboard.has(f'stageId-{avId}'):
+                stageId = bboard.get(f'stageId-{avId}')
                 break
 
         numFloors = StageLayout.getNumFloors(stageId)
@@ -32,17 +33,17 @@ class StageManagerAI(DirectObject.DirectObject):
         floor = random.randrange(numFloors)
         # check for ~stageFloor
         for avId in players:
-            if bboard.has('stageFloor-%s' % avId):
-                floor = bboard.get('stageFloor-%s' % avId)
+            if bboard.has(f'stageFloor-{avId}'):
+                floor = bboard.get(f'stageFloor-{avId}')
                 # bounds check
                 floor = max(0, floor)
-                floor = min(floor, numFloors-1)
+                floor = min(floor, numFloors - 1)
                 break
 
         # check for ~stageRoom
         for avId in players:
-            if bboard.has('stageRoom-%s' % avId):
-                roomId = bboard.get('stageRoom-%s' % avId)
+            if bboard.has(f'stageRoom-{avId}'):
+                roomId = bboard.get(f'stageRoom-{avId}')
                 for i in range(numFloors):
                     layout = StageLayout.StageLayout(stageId, i)
                     if roomId in layout.getRoomIds():

@@ -11,7 +11,7 @@ GlobalEntities = {
         'farPlaneDistance': 1500,
         'modelFilename': 'phase_12/models/bossbotHQ/BossbotGreenRoom_A',
         'wantDoors': 1,
-        }, # end entity 1000
+    },  # end entity 1000
     # EDITMGR
     1001: {
         'type': 'editMgr',
@@ -21,7 +21,7 @@ GlobalEntities = {
         'removeEntity': None,
         'requestNewEntity': None,
         'requestSave': None,
-        }, # end entity 1001
+    },  # end entity 1001
     # ZONE
     0: {
         'type': 'zone',
@@ -31,7 +31,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 0
+    },  # end entity 0
     # DOOR
     110301: {
         'type': 'door',
@@ -54,7 +54,7 @@ GlobalEntities = {
         'unlock1Event': 110302,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 110301
+    },  # end entity 110301
     # GOLFGREENGAME
     110302: {
         'type': 'golfGreenGame',
@@ -69,7 +69,7 @@ GlobalEntities = {
         'timeToPlay': 140,
         'cellId': 0,
         'switchId': 0,
-        }, # end entity 100000
+    },  # end entity 100000
     # NODEPATH
     10002: {
         'type': 'nodepath',
@@ -79,7 +79,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10002
+    },  # end entity 10002
     110303: {
         'type': 'nodepath',
         'name': '<unnamed>',
@@ -88,15 +88,15 @@ GlobalEntities = {
         'pos': Point3(40.9635, 2, 0),
         'hpr': Vec3(270, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 110303
-    }
+    },  # end entity 110303
+}
 
 Scenario0 = {
-    }
+}
 
 levelSpec = {
     'globalEntities': GlobalEntities,
     'scenarios': [
         Scenario0,
-        ],
-    }
+    ],
+}

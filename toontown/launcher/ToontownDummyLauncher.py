@@ -5,8 +5,12 @@ import os
 
 # it's important to derive from DummyLauncherBase first so that Python
 # will find its methods before looking at the real launcher
+
+
 class ToontownDummyLauncher(DummyLauncherBase, ToontownLauncher):
-    notify = DirectNotifyGlobal.directNotify.newCategory("ToontownDummyLauncher")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "ToontownDummyLauncher")
+
     def __init__(self):
         DummyLauncherBase.__init__(self)
         # If we are running the show, the first 3 phases must be complete
@@ -45,7 +49,7 @@ class ToontownDummyLauncher(DummyLauncherBase, ToontownLauncher):
         return self.frequency
 
     def getInstallDir(self):
-        return 'C:\Program Files\Disney\Disney Online\Toontown'
+        return 'C:\\Program Files\\Disney\\Disney Online\\Toontown'
 
     def getUserName(self):
         return 'dummy'
@@ -54,15 +58,15 @@ class ToontownDummyLauncher(DummyLauncherBase, ToontownLauncher):
         return None
 
     def setRegistry(self, name, value):
-        print("setRegistry[%s] = %s" % (name, value))
+        print(f"setRegistry[{name}] = {value}")
         self.reg[name] = value
 
-    def getRegistry(self, name, defaultValue = None):
+    def getRegistry(self, name, defaultValue=None):
         if name in self.reg:
             value = self.reg[name]
         else:
             value = defaultValue
-        print("getRegistry[%s] = %s" % (name, value))
+        print(f"getRegistry[{name}] = {value}")
         return value
 
     def getGame2Done(self):

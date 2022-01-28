@@ -3,6 +3,7 @@ from toontown.uberdog import DataStoreGlobals
 from direct.showbase.DirectObject import DirectObject
 import pickle
 
+
 class DataStoreAIClient(DirectObject):
     """
     This class should be instantiated by any class that needs to
@@ -26,11 +27,11 @@ class DataStoreAIClient(DirectObject):
     control on the Uberdog.  That way, we have only one point of control
     rather than several various AIs who may not be entirely in sync.
     """
-    
+
     notify = directNotify.newCategory('DataStoreAIClient')
     wantDsm = simbase.config.GetBool('want-ddsm', 1)
-        
-    def __init__(self,air,storeId,resultsCallback):
+
+    def __init__(self, air, storeId, resultsCallback):
         """
         storeId is a unique identifier to the type of store
         the client wishes to connect to.  There will only be
@@ -48,7 +49,7 @@ class DataStoreAIClient(DirectObject):
         self.__storeClass = DataStoreGlobals.getStoreClass(storeId)
         self.__queryTypesDict = self.__storeClass.QueryTypes
         self.__queryStringDict = dict(list(zip(list(self.__queryTypesDict.values()),
-                                          list(self.__queryTypesDict.keys()))))
+                                               list(self.__queryTypesDict.keys()))))
         self.__enabled = False
 
     def openStore(self):
@@ -76,31 +77,33 @@ class DataStoreAIClient(DirectObject):
 
     def isOpen(self):
         return self.__enabled
-    
+
     def getQueryTypes(self):
         return list(self.__queryTypesDict.keys())
 
-    def getQueryTypeString(self,qId):
-        return self.__queryStringDict.get(qId,None)
-    
-    def sendQuery(self,queryTypeString,queryData):
+    def getQueryTypeString(self, qId):
+        return self.__queryStringDict.get(qId, None)
+
+    def sendQuery(self, queryTypeString, queryData):
         """
         Sends a query to the data store.  The format of the query is
         defined in the store's class definition.
         """
         if self.__enabled:
-            qId = self.__queryTypesDict.get(queryTypeString,None)
+            qId = self.__queryTypesDict.get(queryTypeString, None)
             if qId is not None:
-                query = (qId,queryData)
+                query = (qId, queryData)
                 # pack the data to be sent to the Uberdog store.
                 pQuery = pickle.dumps(query)
-                self.__storeMgr.queryStore(self.__storeId,pQuery)
+                self.__storeMgr.queryStore(self.__storeId, pQuery)
             else:
-                self.notify.debug('Tried to send invalid query type: \'%s\'' % (queryTypeString,))
+                self.notify.debug(
+                    f'Tried to send invalid query type: \'{queryTypeString}\'')
         else:
-            self.notify.warning('Client currently stopped.  \'%s\' query will fail.' % (queryTypeString,))
-        
-    def receiveResults(self,data):
+            self.notify.warning(
+                f'Client currently stopped.  \'{queryTypeString}\' query will fail.')
+
+    def receiveResults(self, data):
         """
         Upon receiving a query, the store will respond with a result.
         This function will call the resultsCallback function with the
@@ -111,7 +114,8 @@ class DataStoreAIClient(DirectObject):
         # unpack the results from the Uberdog store.
 
         if data == 'Store not found':
-            self.notify.debug('%s not present on uberdog. Query dropped.' %(self.__storeClass.__name__,))
+            self.notify.debug(
+                f'{self.__storeClass.__name__} not present on uberdog. Query dropped.')
         else:
             results = pickle.loads(data)
             self.__resultsCallback(results)
@@ -121,9 +125,9 @@ class DataStoreAIClient(DirectObject):
         Allow the client to send queries and receive results from its
         associated data store.
         """
-        self.accept('TDS-results-%d'%self.__storeId,self.receiveResults)
+        self.accept('TDS-results-%d' % self.__storeId, self.receiveResults)
         self.__enabled = True
-        
+
     def __stopClient(self):
         """
         Disallow the client from sending queries and receiving results

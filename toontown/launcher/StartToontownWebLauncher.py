@@ -21,6 +21,6 @@ if int(appRunner.tokenDict.get('download', '0')):
 
 else:
     launcher = ToontownWebLauncher(appRunner)
-    
+
     print("Reached end of StartToontownLauncher.py.")
     base.run()

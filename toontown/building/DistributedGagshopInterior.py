@@ -9,6 +9,7 @@ from . import ToonInteriorColors
 from toontown.hood import ZoneUtil
 from panda3d.toontown import DNADoor
 
+
 class DistributedGagshopInterior(DistributedObject.DistributedObject):
     if __debug__:
         notify = DirectNotifyGlobal.directNotify.newCategory(
@@ -16,7 +17,7 @@ class DistributedGagshopInterior(DistributedObject.DistributedObject):
 
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
-        self.dnaStore=cr.playGame.dnaStore
+        self.dnaStore = cr.playGame.dnaStore
 
     def generate(self):
         DistributedObject.DistributedObject.generate(self)
@@ -27,7 +28,7 @@ class DistributedGagshopInterior(DistributedObject.DistributedObject):
 
     def randomDNAItem(self, category, findFunc):
         codeCount = self.dnaStore.getNumCatalogCodes(category)
-        index = self.randomGenerator.randint(0, codeCount-1)
+        index = self.randomGenerator.randint(0, codeCount - 1)
         code = self.dnaStore.getCatalogCode(category, index)
         # findFunc will probably be findNode or findTexture
         return findFunc(code)
@@ -37,7 +38,7 @@ class DistributedGagshopInterior(DistributedObject.DistributedObject):
         Here are the name     Here is
         prefixes that are     what they
         affected:             do:
-        
+
         random_mox_            change the Model Only.
         random_mcx_            change the Model and the Color.
         random_mrx_            change the Model and Recurse.
@@ -46,19 +47,19 @@ class DistributedGagshopInterior(DistributedObject.DistributedObject):
 
         x is simply a uniquifying integer because Multigen will not
         let you have multiple nodes with the same name
-        
+
         """
-        baseTag="random_"
-        npc=model.findAllMatches("**/"+baseTag+"???_*")
+        baseTag = "random_"
+        npc = model.findAllMatches("**/" + baseTag + "???_*")
         for i in range(npc.getNumPaths()):
-            np=npc.getPath(i)
-            name=np.getName()
-            
-            b=len(baseTag)
-            category=name[b+4:]
-            key1=name[b]
-            key2=name[b+1]
-            
+            np = npc.getPath(i)
+            name = np.getName()
+
+            b = len(baseTag)
+            category = name[b + 4:]
+            key1 = name[b]
+            key2 = name[b + 1]
+
             assert(key1 in ["m", "t"])
             assert(key2 in ["c", "o", "r"])
             if key1 == "m":
@@ -70,12 +71,14 @@ class DistributedGagshopInterior(DistributedObject.DistributedObject):
                     self.replaceRandomInModel(newNP)
             elif key1 == "t":
                 # ...texture.
-                texture=self.randomDNAItem(category, self.dnaStore.findTexture)
+                texture = self.randomDNAItem(
+                    category, self.dnaStore.findTexture)
                 assert(texture)
-                np.setTexture(texture,100)
-                newNP=np
+                np.setTexture(texture, 100)
+                newNP = np
             if key2 == "c":
-                if (category == "TI_wallpaper") or (category == "TI_wallpaper_border"):
+                if (category == "TI_wallpaper") or (
+                        category == "TI_wallpaper_border"):
                     self.randomGenerator.seed(self.zoneId)
                     newNP.setColorScale(
                         self.randomGenerator.choice(self.colors[category]))
@@ -91,24 +94,24 @@ class DistributedGagshopInterior(DistributedObject.DistributedObject):
         # I copy/pasted this door string choosing code from
         # DistributedToonInterior.
         # Door:
-        doorModelName="door_double_round_ul" # hack  zzzzzzz
+        doorModelName = "door_double_round_ul"  # hack  zzzzzzz
         # Switch leaning of the door:
         if doorModelName[-1:] == "r":
-            doorModelName=doorModelName[:-1]+"l"
+            doorModelName = doorModelName[:-1] + "l"
         else:
-            doorModelName=doorModelName[:-1]+"r"
-        door=self.dnaStore.findNode(doorModelName)
+            doorModelName = doorModelName[:-1] + "r"
+        door = self.dnaStore.findNode(doorModelName)
         return door
 
     def setup(self):
-        self.dnaStore=base.cr.playGame.dnaStore
+        self.dnaStore = base.cr.playGame.dnaStore
         # Set up random generator
         self.randomGenerator = random.Random()
         self.randomGenerator.seed(self.zoneId)
 
-        self.interior = loader.loadModel('phase_4/models/modules/gagShop_interior')
+        self.interior = loader.loadModel(
+            'phase_4/models/modules/gagShop_interior')
         self.interior.reparentTo(render)
-
 
         # Load a color dictionary for this hood:
         hoodId = ZoneUtil.getCanonicalHoodId(self.zoneId)
@@ -128,7 +131,7 @@ class DistributedGagshopInterior(DistributedObject.DistributedObject):
         doorColor = self.randomGenerator.choice(self.colors["TI_door"])
         DNADoor.setupDoor(doorNP,
                           self.interior, doorOrigin,
-                          self.dnaStore, str(self.block), 
+                          self.dnaStore, str(self.block),
                           doorColor)
         doorFrame = doorNP.find("door_*_flat")
         doorFrame.wrtReparentTo(self.interior)
@@ -138,9 +141,8 @@ class DistributedGagshopInterior(DistributedObject.DistributedObject):
         del self.dnaStore
         del self.randomGenerator
         self.interior.flattenMedium()
-                                      
+
     def disable(self):
         self.interior.removeNode()
         del self.interior
         DistributedObject.DistributedObject.disable(self)
-        

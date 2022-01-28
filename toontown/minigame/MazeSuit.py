@@ -11,6 +11,7 @@ from direct.showbase.RandomNumGen import RandomNumGen
 from toontown.suit import Suit
 from toontown.suit import SuitDNA
 
+
 class MazeSuit(DirectObject):
     """this represents a single suit in the maze"""
 
@@ -24,14 +25,26 @@ class MazeSuit(DirectObject):
     DIR_LEFT = 2
     DIR_RIGHT = 3
     oppositeDirections = [DIR_DOWN, DIR_UP, DIR_RIGHT, DIR_LEFT]
-    directionHs = [0,180,90,270]
+    directionHs = [0, 180, 90, 270]
 
     DEFAULT_SPEED = 4.
 
     SUIT_Z = 0.1
 
-    def __init__(self, serialNum, maze, randomNumGen,
-                 cellWalkPeriod, difficulty, suitDnaName = 'f', startTile = None, ticFreq = MazeGameGlobals.SUIT_TIC_FREQ, walkSameDirectionProb = MazeGameGlobals.WALK_SAME_DIRECTION_PROB, walkTurnAroundProb = MazeGameGlobals.WALK_TURN_AROUND_PROB, uniqueRandomNumGen = True, walkAnimName = None):
+    def __init__(
+            self,
+            serialNum,
+            maze,
+            randomNumGen,
+            cellWalkPeriod,
+            difficulty,
+            suitDnaName='f',
+            startTile=None,
+            ticFreq=MazeGameGlobals.SUIT_TIC_FREQ,
+            walkSameDirectionProb=MazeGameGlobals.WALK_SAME_DIRECTION_PROB,
+            walkTurnAroundProb=MazeGameGlobals.WALK_TURN_AROUND_PROB,
+            uniqueRandomNumGen=True,
+            walkAnimName=None):
         self.serialNum = serialNum
         self.maze = maze
         if uniqueRandomNumGen:
@@ -44,29 +57,33 @@ class MazeSuit(DirectObject):
         self._walkAnimName = walkAnimName or 'walk'
         self.suit = Suit.Suit()
         d = SuitDNA.SuitDNA()
-        d.newSuit(suitDnaName) 
+        d.newSuit(suitDnaName)
         self.suit.setDNA(d)
         if startTile is None:
             defaultStartPos = MazeGameGlobals.SUIT_START_POSITIONS[self.serialNum]
-            self.startTile = (defaultStartPos[0] * self.maze.width, defaultStartPos[1] * self.maze.height)
+            self.startTile = (
+                defaultStartPos[0] *
+                self.maze.width,
+                defaultStartPos[1] *
+                self.maze.height)
         else:
             self.startTile = startTile
         self.ticFreq = ticFreq
 
         self.ticPeriod = int(cellWalkPeriod)
         self.cellWalkDuration = float(self.ticPeriod) / \
-                                float(self.ticFreq)
+            float(self.ticFreq)
         self.turnDuration = 0.6 * self.cellWalkDuration
 
     def destroy(self):
         self.suit.delete()
-        
+
     def uniqueName(self, str):
         return str + repr(self.serialNum)
 
     def gameStart(self, gameStartTime):
         self.gameStartTime = gameStartTime
-        
+
         self.initCollisions()
         self.startWalkAnim()
 
@@ -74,25 +91,25 @@ class MazeSuit(DirectObject):
         self.occupiedTiles = [
             ##(self.TX, self.TY),
             (self.nextTX, self.nextTY),
-            ]
+        ]
 
         # to avoid thinking all the suits on the first frame,
         # stagger the suits' first thinks by an nth of a second
         n = 20
-        self.nextThinkTic = (self.serialNum *  self.ticFreq) // n
+        self.nextThinkTic = (self.serialNum * self.ticFreq) // n
 
         # create the Point3 objects up-front
-        self.fromPos = Point3(0,0,0)
-        self.toPos = Point3(0,0,0)
-        self.fromHpr = Point3(0,0,0)
-        self.toHpr = Point3(0,0,0)
+        self.fromPos = Point3(0, 0, 0)
+        self.toPos = Point3(0, 0, 0)
+        self.fromHpr = Point3(0, 0, 0)
+        self.toHpr = Point3(0, 0, 0)
         # set the moveIval to a dummy interval
         self.moveIval = WaitInterval(1.)
-        
+
     def gameEnd(self):
         self.moveIval.pause()
         del self.moveIval
-        
+
         self.shutdownCollisions()
 
         # keep the suits from walking in place
@@ -116,7 +133,7 @@ class MazeSuit(DirectObject):
 
     def shutdownCollisions(self):
         self.ignore(self.uniqueName('enter' + self.COLL_SPHERE_NAME))
-        
+
         del self.collSphere
         self.collNodePath.removeNode()
         del self.collNodePath
@@ -167,7 +184,7 @@ class MazeSuit(DirectObject):
 
         self.suit.reparentTo(render)
         self.suit.setPos(self.__getWorldPos(self.TX, self.TY))
-        self.suit.setHpr(self.directionHs[self.direction],0,0)
+        self.suit.setHpr(self.directionHs[self.direction], 0, 0)
         self.suit.reparentTo(render)
         # cache the walk animation
         self.suit.pose(self._walkAnimName, 0)
@@ -230,7 +247,7 @@ class MazeSuit(DirectObject):
         if curTic < self.nextThinkTic:
             return []
         else:
-            r = list(range(self.nextThinkTic, curTic+1, self.ticPeriod))
+            r = list(range(self.nextThinkTic, curTic + 1, self.ticPeriod))
             # store the last tic for which update() will be called this frame
             # this way, we only create a maximum of one move track per
             # frame per suit
@@ -244,7 +261,7 @@ class MazeSuit(DirectObject):
         self.occupiedTiles = [
             ##(self.TX, self.TY),
             (self.nextTX, self.nextTY),
-            ]
+        ]
 
     def think(self, curTic, curT, unwalkables):
         self.TX = self.nextTX
@@ -260,7 +277,7 @@ class MazeSuit(DirectObject):
         self.occupiedTiles = [
             (self.TX, self.TY),
             (self.nextTX, self.nextTY),
-            ]
+        ]
 
         # only create movement track if this is the last update
         # before the end of the frame
@@ -311,15 +328,13 @@ class MazeSuit(DirectObject):
                 self.suit.setH(self.directionHs[self.direction])
 
             moveStartT = float(self.nextThinkTic) / \
-                         float(self.ticFreq)
+                float(self.ticFreq)
             self.moveIval.start(curT - (moveStartT + self.gameStartTime))
 
         self.nextThinkTic += self.ticPeriod
 
-
-
     @staticmethod
-    def thinkSuits(suitList, startTime, ticFreq = MazeGameGlobals.SUIT_TIC_FREQ):
+    def thinkSuits(suitList, startTime, ticFreq=MazeGameGlobals.SUIT_TIC_FREQ):
         curT = globalClock.getFrameTime() - startTime
         curTic = int(curT * float(ticFreq))
         suitUpdates = []

@@ -3,6 +3,7 @@ from direct.showbase import Pool
 from direct.showbase.DirectObject import DirectObject
 import re
 
+
 class PooledEffect(DirectObject, NodePath):
 
     pool = None
@@ -10,17 +11,17 @@ class PooledEffect(DirectObject, NodePath):
 
     @classmethod
     def getEffect(cls, context=''):
-##        if __dev__:
-##            if base.cr.hasToggledEffects():
-##                # if there are any specific effects toggled on/off
-##                # extract module name and see if we should show this effect type
-##                match = re.split('\.',cls.__module__)
-##                moduleName = match[len(match)-1]
-##                if (not base.cr.queryShowEffect(moduleName+context)):
-##                    return None
-##            elif not base.cr.wantSpecialEffects:
-##                # global effects config is off
-##                return None
+        # if __dev__:
+        # if base.cr.hasToggledEffects():
+        # if there are any specific effects toggled on/off
+        # extract module name and see if we should show this effect type
+        ##                match = re.split('\.',cls.__module__)
+        ##                moduleName = match[len(match)-1]
+        # if (not base.cr.queryShowEffect(moduleName+context)):
+        # return None
+        # elif not base.cr.wantSpecialEffects:
+        # global effects config is off
+        # return None
 
         # If we already have a free one, return it
         if cls.pool is None:
@@ -51,12 +52,12 @@ class PooledEffect(DirectObject, NodePath):
     def __init__(self):
         # Initialize the superclass
         NodePath.__init__(self, self.__class__.__name__)
-        
+
         # When the game shuts down, any effects that may be active
         # should accept this event so their pool gets cleaned up
         self.accept("clientLogout", self.__class__.cleanup)
 
-    def destroy(self,item = None):
+    def destroy(self, item=None):
         if item:
             self.pool.remove(item)
         self.ignore("clientLogout")

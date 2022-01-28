@@ -5,6 +5,7 @@ from toontown.toonbase import ToontownGlobals, TTLocalizer
 from toontown.hood import ZoneUtil
 from toontown.coghq import CashbotCogHQLoader
 
+
 class CashbotHQ(CogHood.CogHood):
     notify = DirectNotifyGlobal.directNotify.newCategory('CashbotHQ')
 
@@ -14,7 +15,7 @@ class CashbotHQ(CogHood.CogHood):
         self.cogHQLoaderClass = CashbotCogHQLoader.CashbotCogHQLoader
         # Create the safe zone state data
         self.storageDNAFile = None
-        
+
         # this is a dummy skyfile... we're going to hide it after loading
         self.skyFile = "phase_3.5/models/props/TT_sky"
 
@@ -28,7 +29,7 @@ class CashbotHQ(CogHood.CogHood):
         self.parentFSM.getStateNamed("CashbotHQ").removeChild(self.fsm)
         del self.cogHQLoaderClass
         CogHood.CogHood.unload(self)
-        
+
     def enter(self, *args):
         CogHood.CogHood.enter(self, *args)
         localAvatar.setCameraFov(ToontownGlobals.CogHQCameraFov)
@@ -46,7 +47,7 @@ class CashbotHQ(CogHood.CogHood):
             # the mints display their name and a floor number
             text = '%s\n%s' % (
                 ToontownGlobals.StreetNames[zoneId][-1],
-                TTLocalizer.MintFloorTitle % (floorNum+1))
+                TTLocalizer.MintFloorTitle % (floorNum + 1))
             self.doSpawnTitleText(text)
         else:
             CogHood.CogHood.spawnTitleText(self, zoneId)

@@ -6,12 +6,13 @@ from toontown.safezone import TTTreasurePlannerAI
 from toontown.safezone import ButterflyGlobals
 from direct.task import Task
 
+
 class TTHoodDataAI(HoodDataAI.HoodDataAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("TTHoodDataAI")
 
-    def __init__(self, air, zoneId = None):
+    def __init__(self, air, zoneId=None):
         hoodId = ToontownGlobals.ToontownCentral
-        if zoneId == None:
+        if zoneId is None:
             zoneId = hoodId
         HoodDataAI.HoodDataAI.__init__(self, air, zoneId, hoodId)
 
@@ -24,27 +25,27 @@ class TTHoodDataAI(HoodDataAI.HoodDataAI):
         self.addDistObj(trolley)
         self.trolley = trolley
 
-        self.treasurePlanner = TTTreasurePlannerAI.TTTreasurePlannerAI(self.zoneId)
+        self.treasurePlanner = TTTreasurePlannerAI.TTTreasurePlannerAI(
+            self.zoneId)
         self.treasurePlanner.start()
-
 
         self.createButterflies(ButterflyGlobals.TTC)
 
         if simbase.blinkTrolley:
             taskMgr.doMethodLater(.5, self._deleteTrolley, 'deleteTrolley')
-            
+
         messenger.send("TTHoodSpawned", [self])
 
     def shutdown(self):
         """Do base class shutdown then tell costume manager."""
         HoodDataAI.HoodDataAI.shutdown(self)
-        messenger.send("TTHoodDestroyed", [self])        
+        messenger.send("TTHoodDestroyed", [self])
 
     def _deleteTrolley(self, task):
         self.trolley.requestDelete()
         taskMgr.doMethodLater(.5, self._createTrolley, 'createTrolley')
         return Task.done
-    
+
     def _createTrolley(self, task):
         trolley = DistributedTrolleyAI.DistributedTrolleyAI(self.air)
         trolley.generateWithRequired(self.zoneId)

@@ -8,6 +8,7 @@ from toontown.toontowngui import ToonHeadDialog
 from direct.gui.DirectGui import DGG
 from otp.otpbase import OTPGlobals
 
+
 class FriendInvitee(ToonHeadDialog.ToonHeadDialog):
     """FriendInvitee:
     This is a panel that pops up in the middle of your screen whenever
@@ -29,7 +30,7 @@ class FriendInvitee(ToonHeadDialog.ToonHeadDialog):
             base.cr.friendManager.up_inviteeFriendResponse(
                 3, self.context)
             self.context = None
-            text =  OTPLocalizer.FriendInviteeTooManyFriends % (self.avName)
+            text = OTPLocalizer.FriendInviteeTooManyFriends % (self.avName)
             style = TTDialog.Acknowledge
             buttonTextList = [OTPLocalizer.FriendInviteeOK]
             command = self.__handleOhWell
@@ -42,24 +43,24 @@ class FriendInvitee(ToonHeadDialog.ToonHeadDialog):
             command = self.__handleButton
 
         optiondefs = (
-            ('dialogName',    'FriendInvitee',        None),
-            ('text',          text,                   None),
-            ('style',         style,                  None),
-            ('buttonTextList',buttonTextList,         None),
-            ('command',       command,                None),
-            ('image_color',   (1.0, 0.89, 0.77, 1.0), None),
+            ('dialogName', 'FriendInvitee', None),
+            ('text', text, None),
+            ('style', style, None),
+            ('buttonTextList', buttonTextList, None),
+            ('command', command, None),
+            ('image_color', (1.0, 0.89, 0.77, 1.0), None),
             # Make the head smaller so the panel can be smaller
-            ('geom_scale',    0.2,                    None),
+            ('geom_scale', 0.2, None),
             # Don't have to move it over as much
-            ('geom_pos',      (-0.1,0,-0.025),        None),
+            ('geom_pos', (-0.1, 0, -0.025), None),
             # Reduce padding
-            ('pad',           (0.075,0.075),          None),
-            ('topPad',        0,                      None),
-            ('midPad',        0,                      None),
+            ('pad', (0.075, 0.075), None),
+            ('topPad', 0, None),
+            ('midPad', 0, None),
             # Position panel right next to friends panel
-            ('pos',           (0.45, 0, 0.75),        None),
-            ('scale',         0.75,                   None),
-            )
+            ('pos', (0.45, 0, 0.75), None),
+            ('scale', 0.75, None),
+        )
         # Merge keyword options with default options
         self.defineoptions(kw, optiondefs)
 
@@ -81,17 +82,17 @@ class FriendInvitee(ToonHeadDialog.ToonHeadDialog):
         """
         ToonHeadDialog.ToonHeadDialog.cleanup(self)
         self.ignore('cancelFriendInvitation')
-        if self.context != None:
+        if self.context is not None:
             # Send back a non-committal reply.
             base.cr.friendManager.up_inviteeFriendResponse(
                 2, self.context)
             self.context = None
-        
+
         if base.friendMode == 1:
             base.cr.friendManager.executeGameSpecificFunction()
-        
 
-    ### Button handing methods
+    # Button handing methods
+
     def __handleButton(self, value):
         print("handleButton")
         if value == DGG.DIALOG_OK:
@@ -99,25 +100,22 @@ class FriendInvitee(ToonHeadDialog.ToonHeadDialog):
                 base.cr.friendManager.up_inviteeFriendResponse(1, self.context)
             elif base.friendMode == 1:
                 print("sending Request Invite")
-                base.cr.avatarFriendsManager.sendRequestInvite(self.avId)              
+                base.cr.avatarFriendsManager.sendRequestInvite(self.avId)
         else:
             if base.friendMode == 0:
                 base.cr.friendManager.up_inviteeFriendResponse(0, self.context)
-            elif base.friendMode == 1:    
+            elif base.friendMode == 1:
                 base.cr.avatarFriendsManager.sendRequestRemove(self.avId)
-            
-            
+
         self.context = None
         self.cleanup()
 
     def __handleOhWell(self, value):
         self.cleanup()
 
-    def __handleCancelFromAbove(self, context = None):
-        if context == None or context == self.context:
+    def __handleCancelFromAbove(self, context=None):
+        if context is None or context == self.context:
             # We've just been told by the FriendManager to forget it;
             # the inviter has rescinded his/her offer.
             self.context = None
             self.cleanup()
-
-

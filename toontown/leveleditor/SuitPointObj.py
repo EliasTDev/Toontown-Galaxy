@@ -1,5 +1,6 @@
 from pandac.PandaModules import *
 
+
 class SuitPointObj(NodePath):
     def __init__(self, editor, dna=None):
         NodePath.__init__(self)
@@ -32,5 +33,5 @@ class SuitPointObj(NodePath):
             marker.setColor(0, 0.6, 0.2)
             marker.setScale(0.5)
         else:
-            marker.setColor(1,1,1)
+            marker.setColor(1, 1, 1)
             marker.setScale(1)

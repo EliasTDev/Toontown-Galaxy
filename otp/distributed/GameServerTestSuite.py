@@ -1,7 +1,10 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.showbase import DirectObject, TaskThreaded
 
-class GameServerTestSuite(DirectObject.DirectObject, TaskThreaded.TaskThreaded):
+
+class GameServerTestSuite(
+        DirectObject.DirectObject,
+        TaskThreaded.TaskThreaded):
     # Suite of client-side game server tests.
     # Fire-and-forget, create one and get rid of the reference; if there's a problem
     # it will assert sometime later.
@@ -13,45 +16,61 @@ class GameServerTestSuite(DirectObject.DirectObject, TaskThreaded.TaskThreaded):
 
         class TimeoutTest(DirectObject.DirectObject):
             Timeout = 10
+
             def _getTaskName(self, name):
-                return '%s-timeout-%s' % (self.__class__.__name__, name)
+                return f'{self.__class__.__name__}-timeout-{name}'
+
             def startTimeout(self, name):
                 self.stopTimeout(name)
                 _taskName = self._getTaskName(name)
-                taskMgr.doMethodLater(self.Timeout, Functor(self._timeout, _taskName), _taskName)
+                taskMgr.doMethodLater(
+                    self.Timeout, Functor(
+                        self._timeout, _taskName), _taskName)
+
             def stopTimeout(self, name):
                 _taskName = self._getTaskName(name)
                 taskMgr.remove(_taskName)
+
             def _timeout(self, taskName, task=None):
-                self.parent.notify.warning('TEST TIMED OUT: %s' % taskName)
-                import pdb;pdb.set_trace()
+                self.parent.notify.warning(f'TEST TIMED OUT: {taskName}')
+                import pdb
+                pdb.set_trace()
 
         class MsgHandlerTest:
             # shims in a custom message handler that gets first crack at incoming messages
-            # override self.handleMsg and call down if it's not the message you're waiting for
+            # override self.handleMsg and call down if it's not the message
+            # you're waiting for
             def installMsgHandler(self):
                 self.oldHandler = self.parent.handler
                 self.parent.handler = self.handleMsg
+
             def removeMsgHandler(self):
                 self.parent.handler = self.oldHandler
                 del self.oldHandler
+
             def handleMsg(self, msgType, di):
                 self.parent.cr.handler(msgType, di)
 
-        class TestGetAvatars(TaskThreaded.TaskThread, TimeoutTest, MsgHandlerTest):
+        class TestGetAvatars(
+                TaskThreaded.TaskThread,
+                TimeoutTest,
+                MsgHandlerTest):
             def setUp(self):
                 self.state = 'request'
                 self.installMsgHandler()
+
             def handleMsg(self, msgType, di):
                 if msgType == CLIENT_GET_AVATARS_RESP:
                     self.finished()
                 else:
                     MsgHandlerTest.handleMsg(self, msgType, di)
+
             def run(self):
                 if self.state == 'request':
                     self.parent.cr.sendGetAvatarsMsg()
                     self.startTimeout('getAvatarList')
                     self.state = 'waitForList'
+
             def tearDown(self):
                 self.stopTimeout('getAvatarList')
                 self.removeMsgHandler()
@@ -59,6 +78,7 @@ class GameServerTestSuite(DirectObject.DirectObject, TaskThreaded.TaskThreaded):
         class TestInterestOpenAndClose(TaskThreaded.TaskThread, TimeoutTest):
             def setUp(self):
                 self.state = 'open'
+
             def run(self):
                 if self.state == 'open':
                     def openInterestDone():
@@ -69,7 +89,8 @@ class GameServerTestSuite(DirectObject.DirectObject, TaskThreaded.TaskThreaded):
                     openInterestDone = None
                     self.timeoutName = 'openInterest'
                     self.startTimeout(self.timeoutName)
-                    self.handle = self.parent.cr.addInterest(self.parent.cr.GameGlobalsId, 91504, 'testInterest', doneEvent)
+                    self.handle = self.parent.cr.addInterest(
+                        self.parent.cr.GameGlobalsId, 91504, 'testInterest', doneEvent)
                     self.state = 'waitOpenComplete'
                 elif self.state == 'modify':
                     def modifyInterestDone():
@@ -80,7 +101,12 @@ class GameServerTestSuite(DirectObject.DirectObject, TaskThreaded.TaskThreaded):
                     modifyInterestDone = None
                     self.timeoutName = 'modifyInterest'
                     self.startTimeout(self.timeoutName)
-                    self.parent.cr.alterInterest(self.handle, self.parent.cr.GameGlobalsId, 91506, 'testInterest', doneEvent)
+                    self.parent.cr.alterInterest(
+                        self.handle,
+                        self.parent.cr.GameGlobalsId,
+                        91506,
+                        'testInterest',
+                        doneEvent)
                     self.state = 'waitModifyComplete'
                 elif self.state == 'close':
                     def closeInterestDone():
@@ -91,24 +117,29 @@ class GameServerTestSuite(DirectObject.DirectObject, TaskThreaded.TaskThreaded):
                     closeInterestDone = None
                     self.timeoutName = 'closeInterest'
                     self.startTimeout(self.timeoutName)
-                    self.handle = self.parent.cr.removeInterest(self.handle, doneEvent)
+                    self.handle = self.parent.cr.removeInterest(
+                        self.handle, doneEvent)
                     self.state = 'waitCloseComplete'
                 elif self.state == 'done':
                     self.finished()
 
-        class TestNonRequiredNonSetFields(TaskThreaded.TaskThread, TimeoutTest):
+        class TestNonRequiredNonSetFields(
+                TaskThreaded.TaskThread, TimeoutTest):
             # if we start AI and client at the same time it can take a while
             # for the object to show up
             Timeout = 60
+
             def setUp(self):
                 # the test object should be created by the AI on startup
                 self.timeoutName = 'lookForObj'
                 self.startTimeout(self.timeoutName)
+
             def run(self):
                 testObj = self.parent.cr.doFind('DistributedTestObject')
                 if testObj is not None:
                     assert not testObj.gotNonReqThatWasntSet()
                     self.finished()
+
             def tearDown(self):
                 self.stopTimeout(self.timeoutName)
                 del self.timeoutName

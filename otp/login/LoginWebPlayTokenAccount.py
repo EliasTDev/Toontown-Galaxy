@@ -8,7 +8,8 @@ from . import LoginTTAccount
 class LoginWebPlayTokenAccount(LoginTTAccount.LoginTTAccount):
 
     # Create a notify category
-    notify = DirectNotifyGlobal.directNotify.newCategory("LoginWebPlayTokenAccount")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "LoginWebPlayTokenAccount")
 
     def supportsRelogin(self):
         """
@@ -21,11 +22,11 @@ class LoginWebPlayTokenAccount(LoginTTAccount.LoginTTAccount):
         pass
 
     def authorize(self, loginName, password):
-        self.playToken=password
-        self.playTokenIsEncrypted=1
-        self.freeTimeExpires=-1
-        self.cr.freeTimeExpiresAt=self.freeTimeExpires
-    
+        self.playToken = password
+        self.playTokenIsEncrypted = 1
+        self.freeTimeExpires = -1
+        self.cr.freeTimeExpiresAt = self.freeTimeExpires
+
     def createBilling(self, loginName, password, data):
         pass
 
@@ -35,16 +36,18 @@ class LoginWebPlayTokenAccount(LoginTTAccount.LoginTTAccount):
     def supportsParentPassword(self):
         return 1
 
-    # from TTAccount: def authenticateParentPassword(self, loginName, password, parentPassword):
-    
-    # from TTAccount: def enableSecretFriends(self, loginName, password, parentPassword, enable=1):
-    
+    # from TTAccount: def authenticateParentPassword(self, loginName,
+    # password, parentPassword):
+
+    # from TTAccount: def enableSecretFriends(self, loginName, password,
+    # parentPassword, enable=1):
+
     def changePassword(self, loginName, password, newPassword):
         pass
 
     def requestPwdReminder(self, email=None, acctName=None):
         pass
-    
+
     def cancelAccount(self, loginName, password):
         pass
 

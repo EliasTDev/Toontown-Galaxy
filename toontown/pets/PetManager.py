@@ -2,13 +2,16 @@ from pandac.PandaModules import *
 from toontown.toonbase import ToontownGlobals
 from direct.task import Task
 
+
 def acquirePetManager():
     if not hasattr(base, 'petManager'):
         PetManager()
     base.petManager.incRefCount()
 
+
 def releasePetManager():
     base.petManager.decRefCount()
+
 
 class PetManager:
     # A global non-distributed object that exists as long as at least one pet
@@ -40,6 +43,7 @@ class PetManager:
 
     def incRefCount(self):
         self.refCount += 1
+
     def decRefCount(self):
         self.refCount -= 1
         if self.refCount == 0:

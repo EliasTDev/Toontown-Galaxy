@@ -1,6 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObjectAI
 
+
 class DistributedResistanceEmoteMgrAI(DistributedObjectAI.DistributedObjectAI):
     """Resistance emote ai implementation. This object sits in zone 9720 ('Talking in Your Sleep
     Voiceover Training' interior) and will activate the resistance emote for anyone who says
@@ -8,7 +9,7 @@ class DistributedResistanceEmoteMgrAI(DistributedObjectAI.DistributedObjectAI):
 
     notify = DirectNotifyGlobal.directNotify.newCategory(
         'DistributedResistanceEmoteMgrAI')
-    
+
     def __init__(self, air):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
 
@@ -18,9 +19,8 @@ class DistributedResistanceEmoteMgrAI(DistributedObjectAI.DistributedObjectAI):
         av = self.air.doId2do.get(avId)
         if not av:
             DistributedResistanceEmoteMgrAI.notify.warning(
-                'Tried to add resistance emote to av %s, but they left' % avId)
+                f'Tried to add resistance emote to av {avId}, but they left')
         else:
             DistributedResistanceEmoteMgrAI.notify.warning(
-                'Activating resistance emote for av %s' % avId)
+                f'Activating resistance emote for av {avId}')
             av.setEmoteAccessId(15, 1)
-            

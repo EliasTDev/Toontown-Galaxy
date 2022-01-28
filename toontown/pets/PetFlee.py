@@ -2,6 +2,7 @@ from pandac.PandaModules import *
 from direct.showbase.PythonUtil import reduceAngle
 from otp.movement import Impulse
 
+
 class PetFlee(Impulse.Impulse):
     def __init__(self, chaser=None,
                  maxDist=50., moveAngle=20.):
@@ -12,7 +13,7 @@ class PetFlee(Impulse.Impulse):
         # how much do we need to be facing away from our chaser
         # before we start moving?
         self.moveAngle = moveAngle
-        
+
         # create a node that we'll use to calculate hprs
         self.lookAtNode = NodePath('lookatNode')
         self.lookAtNode.hide()
@@ -63,7 +64,7 @@ class PetFlee(Impulse.Impulse):
             vH = 0
 
         # don't oversteer
-        if abs(vH*dt) > abs(relH):
+        if abs(vH * dt) > abs(relH):
             vH = relH / dt
 
         if (distance < self.maxDist) and (abs(relH) < self.moveAngle):
@@ -73,7 +74,7 @@ class PetFlee(Impulse.Impulse):
 
         # don't get too far away
         distanceLeft = self.maxDist - distance
-        if (distanceLeft > 0.) and ((vForward*dt) > distanceLeft):
+        if (distanceLeft > 0.) and ((vForward * dt) > distanceLeft):
             vForward = distanceLeft / dt
 
         self.vel.setY(vForward)

@@ -4,6 +4,7 @@ from direct.showbase import DirectObject
 from . import Avatar
 from direct.distributed import DistributedObject
 
+
 class AvatarPanel(DirectObject.DirectObject):
     """
     This is a panel that pops up in response to clicking on a Toon or
@@ -14,7 +15,7 @@ class AvatarPanel(DirectObject.DirectObject):
     # Limit to only have one avatar panel at a time
     currentAvatarPanel = None
 
-    def __init__(self, avatar, FriendsListPanel = None):
+    def __init__(self, avatar, FriendsListPanel=None):
         # You can only have one open at a time
         if AvatarPanel.currentAvatarPanel:
             AvatarPanel.currentAvatarPanel.cleanup()
@@ -26,7 +27,7 @@ class AvatarPanel(DirectObject.DirectObject):
         if FriendsListPanel:
             self.friendsListShown = FriendsListPanel.isFriendsListShown()
             FriendsListPanel.hideFriendsList()
-        
+
         if avatar:
             self.avatar = avatar
             self.avName = avatar.getName()
@@ -52,7 +53,7 @@ class AvatarPanel(DirectObject.DirectObject):
 
         if self.avDisableName:
             self.accept(self.avDisableName, self.__handleDisableAvatar)
-            
+
     def cleanup(self):
         if AvatarPanel.currentAvatarPanel != self:
             # Must already be cleaned up
@@ -66,21 +67,21 @@ class AvatarPanel(DirectObject.DirectObject):
             self.ignore(self.avHpChangeName)
 
         AvatarPanel.currentAvatarPanel = None
-        
+
     def __handleClose(self):
         self.cleanup()
         AvatarPanel.currentAvatarPanel = None
         if self.friendsListShown:
             # Restore the friends list if it was up before.
             self.FriendsListPanel.showFriendsList()
-            
+
     def __handleDisableAvatar(self):
         #  the old __handleDisableAvatar was sneaking past the inherited class
         if AvatarPanel.currentAvatarPanel:
             AvatarPanel.currentAvatarPanel.handleDisableAvatar()
         else:
             self.handleDisableAvatar()
-    
+
     def handleDisableAvatar(self):
         """
         Called whenever an avatar is disabled, this should cleanup the
@@ -89,10 +90,10 @@ class AvatarPanel(DirectObject.DirectObject):
         # If the avatar wandered away (or disconnected) shut down the panel.
         self.cleanup()
         AvatarPanel.currentAvatarPanel = None
-        
+
     def isHidden(self):
         # this function should be sub-classed
         return 1
-        
+
     def getType(self):
         return None

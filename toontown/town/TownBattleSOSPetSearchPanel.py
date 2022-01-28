@@ -4,6 +4,7 @@ from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 from toontown.toonbase import TTLocalizer
 
+
 class TownBattleSOSPetSearchPanel(StateData.StateData):
     """TownBattleSOSPetSearchPanel
     This displays a 'Searching for pet...' message and has a Back button
@@ -15,30 +16,30 @@ class TownBattleSOSPetSearchPanel(StateData.StateData):
     def load(self):
         gui = loader.loadModel("phase_3.5/models/gui/battle_gui")
         self.frame = DirectFrame(
-            relief = None,
-            image = gui.find("**/Waiting4Others"),
-            text_align = TextNode.ALeft,
-            pos = (0,0,0),
-            scale = 0.65,
-            )
+            relief=None,
+            image=gui.find("**/Waiting4Others"),
+            text_align=TextNode.ALeft,
+            pos=(0, 0, 0),
+            scale=0.65,
+        )
         self.frame.hide()
         self.backButton = DirectButton(
-            parent = self.frame,
-            relief = None,
-            image = (gui.find("**/PckMn_BackBtn"),
-                     gui.find("**/PckMn_BackBtn_Dn"),
-                     gui.find("**/PckMn_BackBtn_Rlvr"),
-                     ),
-            pos = (-0.647, 0, -0.011),
-            scale = 1.05,
-            text = TTLocalizer.TownBattleWaitBack,
-            text_scale = 0.05,
-            text_pos = (0.01,-0.012),
-            text_fg = Vec4(0,0,0.8,1),
-            command = self.__handleBack,
-            )
+            parent=self.frame,
+            relief=None,
+            image=(gui.find("**/PckMn_BackBtn"),
+                   gui.find("**/PckMn_BackBtn_Dn"),
+                   gui.find("**/PckMn_BackBtn_Rlvr"),
+                   ),
+            pos=(-0.647, 0, -0.011),
+            scale=1.05,
+            text=TTLocalizer.TownBattleWaitBack,
+            text_scale=0.05,
+            text_pos=(0.01, -0.012),
+            text_fg=Vec4(0, 0, 0.8, 1),
+            command=self.__handleBack,
+        )
         gui.removeNode()
-    
+
     def unload(self):
         self.frame.destroy()
         del self.frame
@@ -48,7 +49,7 @@ class TownBattleSOSPetSearchPanel(StateData.StateData):
         self.petId = petId
         self.petName = petName
         self.frame['text'] = TTLocalizer.TownBattleSOSPetSearchTitle % petName
-        self.frame['text_pos'] = (0,0.01,0)
+        self.frame['text_pos'] = (0, 0.01, 0)
         self.frame['text_scale'] = TTLocalizer.TBPSpanel
         # Show the panel
         self.frame.show()
@@ -58,5 +59,5 @@ class TownBattleSOSPetSearchPanel(StateData.StateData):
         self.frame.hide()
 
     def __handleBack(self):
-        doneStatus = {'mode':'Back'}
+        doneStatus = {'mode': 'Back'}
         messenger.send(self.doneEvent, [doneStatus])

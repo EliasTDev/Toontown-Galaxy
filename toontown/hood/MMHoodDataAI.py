@@ -5,12 +5,13 @@ from toontown.safezone import DistributedTrolleyAI
 from toontown.safezone import MMTreasurePlannerAI
 from toontown.safezone import DistributedMMPianoAI
 
+
 class MMHoodDataAI(HoodDataAI.HoodDataAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("MMHoodDataAI")
 
-    def __init__(self, air, zoneId = None):
+    def __init__(self, air, zoneId=None):
         hoodId = ToontownGlobals.MinniesMelodyland
-        if zoneId == None:
+        if zoneId is None:
             zoneId = hoodId
         HoodDataAI.HoodDataAI.__init__(self, air, zoneId, hoodId)
 
@@ -22,7 +23,8 @@ class MMHoodDataAI(HoodDataAI.HoodDataAI):
         trolley.start()
         self.addDistObj(trolley)
 
-        self.treasurePlanner = MMTreasurePlannerAI.MMTreasurePlannerAI(self.zoneId)
+        self.treasurePlanner = MMTreasurePlannerAI.MMTreasurePlannerAI(
+            self.zoneId)
         self.treasurePlanner.start()
 
         # Piano is not compatible with the fishing pond that is there now

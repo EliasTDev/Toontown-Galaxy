@@ -1,32 +1,31 @@
 from otp.avatar.AvatarHandle import AvatarHandle
-#struct FriendInfo
-#{
+# struct FriendInfo
+# {
 # string avatarName;
-# string playerName; 
+# string playerName;
 # uint8 onlineYesNo;
 # uint8 understandableYesNo;
 # uint16 chatLevel;
 # uint32 location;
 # uint32 sublocation;
-# uint32 timestamp; 
-#};
-
+# uint32 timestamp;
+# };
 
 
 class FriendInfo(AvatarHandle):
     def __init__(self,
-                 avatarName = "",
-                 playerName = "",
-                 onlineYesNo = 0,
-                 openChatEnabledYesNo = 0,
-                 openChatFriendshipYesNo = 0,
-                 wlChatEnabledYesNo = 0,
-                 location = "",
-                 sublocation = "",
-                 timestamp = 0,
-                 avatarId = 0,
-                 friendPrivs = 0,
-                 tokenPrivs = 0):
+                 avatarName="",
+                 playerName="",
+                 onlineYesNo=0,
+                 openChatEnabledYesNo=0,
+                 openChatFriendshipYesNo=0,
+                 wlChatEnabledYesNo=0,
+                 location="",
+                 sublocation="",
+                 timestamp=0,
+                 avatarId=0,
+                 friendPrivs=0,
+                 tokenPrivs=0):
         self.avatarName = avatarName
         self.playerName = playerName
         self.onlineYesNo = onlineYesNo
@@ -42,7 +41,7 @@ class FriendInfo(AvatarHandle):
 
         # just in case we dont get a NoAttribute error
         # all values we're getting at this point is zero
-        self.understandableYesNo = self.isUnderstandable() 
+        self.understandableYesNo = self.isUnderstandable()
 
     def calcUnderstandableYesNo(self):
         # ideally other classes should call isUnderstandable()
@@ -75,11 +74,11 @@ class FriendInfo(AvatarHandle):
                 result = True
             elif self.wlChatEnabledYesNo and base.cr.whiteListChatEnabled:
                 result = True
-                
-        except:
+
+        except BaseException:
             # what to do with no base.cr? do we need this in uberdog or AI?
             pass
-        
+
         return result
 
     def isOnline(self):

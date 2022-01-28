@@ -2,16 +2,18 @@ from toontown.toonbase import TTLocalizer
 from direct.directnotify import DirectNotifyGlobal
 from . import NPCDialogue
 
+
 class NPCDialogueManagerAI:
     """
-    Create and distroy dialogues here.    
+    Create and distroy dialogues here.
     """
 
-    notify = DirectNotifyGlobal.directNotify.newCategory("NPCDialogueManagerAI")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "NPCDialogueManagerAI")
 
     def __init__(self):
         self.dialogues = []
-        
+
     def createNewDialogue(self, participant, dialogueTopic):
         """
         Create a new dialogue
@@ -21,7 +23,7 @@ class NPCDialogueManagerAI:
         if result:
             self.dialogues.append(dialogue)
         return result
-        
+
     def requestDialogue(self, participant, dialogueTopic):
         """
         Request to be added to the dialogue: dialogueTopic
@@ -31,11 +33,11 @@ class NPCDialogueManagerAI:
                 result = dialogue.addParticipant(participant)
                 if result and not dialogue.isRunning():
                     result = dialogue.start()
-                return result        
-        
-        result = self.createNewDialogue(participant, dialogueTopic)        
+                return result
+
+        result = self.createNewDialogue(participant, dialogueTopic)
         return result
-        
+
     def leaveDialogue(self, participant, dialogueTopic):
         """
         Stop participating in this dialogue
@@ -44,12 +46,13 @@ class NPCDialogueManagerAI:
         for dialogue in self.dialogues:
             if dialogue.getTopic() == dialogueTopic:
                 result = dialogue.removeParticipant(participant)
-                
+
                 if dialogue.getNumParticipants() == 0:
                     dialogue.stop()
                     try:
                         self.dialogues.remove(dialogue)
-                    except:
-                        self.notify.warning("Couldn't find the dialogue: %s" %dialogue)
-                        
+                    except BaseException:
+                        self.notify.warning(
+                            f"Couldn't find the dialogue: {dialogue}")
+
         return result

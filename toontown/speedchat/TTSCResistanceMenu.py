@@ -3,9 +3,9 @@ TTSCResistanceMenu.py: contains the TTSCResistanceMenu class
 """
 
 # For standalone testing these are useful:
-#base.localAvatar.chatMgr.chatInputSpeedChat.addResistanceMenu()
-#base.localAvatar.chatMgr.chatInputSpeedChat.removeResistanceMenu()
-#base.localAvatar.chatMgr.chatInputSpeedChat.speedChat[2].getMenu()
+# base.localAvatar.chatMgr.chatInputSpeedChat.addResistanceMenu()
+# base.localAvatar.chatMgr.chatInputSpeedChat.removeResistanceMenu()
+# base.localAvatar.chatMgr.chatInputSpeedChat.speedChat[2].getMenu()
 
 from direct.showbase import PythonUtil
 from otp.speedchat.SCMenu import SCMenu
@@ -14,16 +14,19 @@ from toontown.chat import ResistanceChat
 #from toontown.toonbase.TTLocalizer import ResistanceSCStrings
 from .TTSCResistanceTerminal import TTSCResistanceTerminal
 
+
 class TTSCResistanceMenu(SCMenu):
     """
     TTSCResistanceMenu represents a menu of TTSCResistanceTerminals.
     """
-    
+
     def __init__(self):
         SCMenu.__init__(self)
 
         # listen for changes to localtoon's resistance speedchat messages
-        self.accept("resistanceMessagesChanged", self.__resistanceMessagesChanged)
+        self.accept(
+            "resistanceMessagesChanged",
+            self.__resistanceMessagesChanged)
         self.__resistanceMessagesChanged()
         submenus = []
 
@@ -40,12 +43,12 @@ class TTSCResistanceMenu(SCMenu):
         # if local toon has not been created, don't panic
         try:
             lt = base.localAvatar
-        except:
+        except BaseException:
             return
 
-        #create the necessary items in the appropriate submenus
+        # create the necessary items in the appropriate submenus
         phrases = lt.resistanceMessages
-        #create the menus
+        # create the menus
         for menuIndex in ResistanceChat.resistanceMenu:
             # build a submenu of a particular type (toonup, etc)
             menu = SCMenu()
@@ -54,9 +57,8 @@ class TTSCResistanceMenu(SCMenu):
                 charges = lt.getResistanceMessageCharges(textId)
                 if charges > 0:
                     menu.append(TTSCResistanceTerminal(textId, charges))
-                    
+
             # add the menu to self (SpeedChat won't display empty menus)
             textId = ResistanceChat.encodeId(menuIndex, 0)
             menuName = ResistanceChat.getMenuName(textId)
-            self.append( SCMenuHolder(menuName, menu) )
-            
+            self.append(SCMenuHolder(menuName, menu))

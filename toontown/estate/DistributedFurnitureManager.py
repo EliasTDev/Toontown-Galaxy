@@ -3,6 +3,7 @@ from toontown.catalog import CatalogItem
 from toontown.catalog import CatalogItemList
 from direct.directnotify.DirectNotifyGlobal import *
 
+
 class DistributedFurnitureManager(DistributedObject.DistributedObject):
 
     notify = directNotify.newCategory("DistributedFurnitureManager")
@@ -15,7 +16,7 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
     def generate(self):
         DistributedObject.DistributedObject.generate(self)
         self.accept("releaseDirector", self.releaseDirector)
-        
+
     def disable(self):
         self.ignoreAll()
         if self.cr.furnitureManager == self:
@@ -28,7 +29,6 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
     def delete(self):
         self.notify.debug("delete")
         DistributedObject.DistributedObject.delete(self)
-        
 
     def setOwnerId(self, ownerId):
         # Specifies the avatar who owns this furniture.  If this is
@@ -37,7 +37,7 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
         self.ownerId = ownerId
         if self.ownerId == base.localAvatar.doId:
             self.cr.furnitureManager = self
-            if self.cr.objectManager == None:
+            if self.cr.objectManager is None:
                 from . import houseDesign
                 self.cr.objectManager = houseDesign.ObjectManager()
 
@@ -56,16 +56,20 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
         return self.cr.doId2do.get(self.interiorId)
 
     def setAtticItems(self, items):
-        self.atticItems = CatalogItemList.CatalogItemList(items, store = CatalogItem.Customization)
+        self.atticItems = CatalogItemList.CatalogItemList(
+            items, store=CatalogItem.Customization)
 
     def setAtticWallpaper(self, items):
-        self.atticWallpaper = CatalogItemList.CatalogItemList(items, store = CatalogItem.Customization)
+        self.atticWallpaper = CatalogItemList.CatalogItemList(
+            items, store=CatalogItem.Customization)
 
     def setAtticWindows(self, items):
-        self.atticWindows = CatalogItemList.CatalogItemList(items, store = CatalogItem.Customization)
+        self.atticWindows = CatalogItemList.CatalogItemList(
+            items, store=CatalogItem.Customization)
 
     def setDeletedItems(self, items):
-        self.deletedItems = CatalogItemList.CatalogItemList(items, store = CatalogItem.Customization)
+        self.deletedItems = CatalogItemList.CatalogItemList(
+            items, store=CatalogItem.Customization)
 
     def releaseDirector(self):
         # Tells the AI that we are done being the director.
@@ -86,7 +90,7 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
     def setDirector(self, avId):
         # A message from the AI that the controls are being handed to
         # avId, possibly interrupting someone else.
-        self.notify.info("Furniture director is now %s" % (avId))
+        self.notify.info(f"Furniture director is now {avId}")
         base.localAvatar.setFurnitureDirector(avId, self)
         self.director = avId
 
@@ -105,7 +109,7 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
         # a ToontownGlobals.FM_* code, followed by the dfitem.item.
         # If successful, the original dfitem will already have been
         # deleted.
-        
+
         context = self.getCallbackContext(callback, [dfitem.item])
         self.sendUpdate("moveItemToAtticMessage", [dfitem.doId, context])
 
@@ -116,7 +120,7 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
         # a ToontownGlobals.FM_* code, followed by the newly generated
         # DistributedFurnitureItem, followed by the supplied item
         # index.
-        
+
         context = self.getCallbackContext(callback, [index])
         self.sendUpdate("moveItemFromAtticMessage",
                         [index, posHpr[0], posHpr[1], posHpr[2],
@@ -131,9 +135,9 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
         # The item and its index number are both passed in as a
         # doublecheck safeguard, to ensure against the AI possibly
         # being out of sync with the client in its list of atticItems.
-        
+
         context = self.getCallbackContext(callback, [item, index])
-        blob = item.getBlob(store = CatalogItem.Customization)
+        blob = item.getBlob(store=CatalogItem.Customization)
         self.sendUpdate("deleteItemFromAtticMessage", [blob, index, context])
 
     def deleteItemFromRoom(self, dfitem, callback):
@@ -142,10 +146,12 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
         # two parameters: ToontownGlobals.FM_* code, followed by the
         # dfitem.item.  If successful, the original dfitem will
         # already have been deleted.
-        
+
         context = self.getCallbackContext(callback, [dfitem.item])
-        blob = dfitem.item.getBlob(store = CatalogItem.Customization)
-        self.sendUpdate("deleteItemFromRoomMessage", [blob, dfitem.doId, context])
+        blob = dfitem.item.getBlob(store=CatalogItem.Customization)
+        self.sendUpdate(
+            "deleteItemFromRoomMessage", [
+                blob, dfitem.doId, context])
 
     def moveWallpaperFromAttic(self, index, room, callback):
         # Requests the AI to move the nth wallpaper item from the
@@ -155,7 +161,7 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
         # callback will be called when the operation is complete with
         # three parameters: a ToontownGlobals.FM_* code, followed by the
         # item index and the room index.
-        
+
         context = self.getCallbackContext(callback, [index, room])
         self.sendUpdate("moveWallpaperFromAtticMessage",
                         [index, room, context])
@@ -171,10 +177,12 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
         # doublecheck safeguard, to ensure against the AI possibly
         # being out of sync with the client in its list of
         # atticWallpapers.
-        
+
         context = self.getCallbackContext(callback, [item, index])
-        blob = item.getBlob(store = CatalogItem.Customization)
-        self.sendUpdate("deleteWallpaperFromAtticMessage", [blob, index, context])
+        blob = item.getBlob(store=CatalogItem.Customization)
+        self.sendUpdate(
+            "deleteWallpaperFromAtticMessage", [
+                blob, index, context])
 
     def moveWindowToAttic(self, slot, callback):
         # Requests the AI to move the window in the indicated
@@ -184,7 +192,7 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
         # The callback will be called when the operation is complete
         # with two parameters: a ToontownGlobals.FM_* code, followed
         # by the placement slot.
-        
+
         context = self.getCallbackContext(callback, [slot])
         self.sendUpdate("moveWindowToAtticMessage", [slot, context])
 
@@ -199,7 +207,7 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
         # The callback will be called when the operation is complete
         # with three parameters: a ToontownGlobals.FM_* code, followed
         # by the item index, and the placement slot index.
-        
+
         context = self.getCallbackContext(callback, [index, slot])
         self.sendUpdate("moveWindowFromAtticMessage",
                         [index, slot, context])
@@ -215,7 +223,7 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
         # The callback will be called when the operation is complete
         # with three parameters: a ToontownGlobals.FM_* code, followed
         # by the from and to slot numbers.
-        
+
         context = self.getCallbackContext(callback, [fromSlot, toSlot])
         self.sendUpdate("moveWindowMessage",
                         [fromSlot, toSlot, context])
@@ -231,9 +239,9 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
         # doublecheck safeguard, to ensure against the AI possibly
         # being out of sync with the client in its list of
         # atticWindows.
-        
+
         context = self.getCallbackContext(callback, [item, index])
-        blob = item.getBlob(store = CatalogItem.Customization)
+        blob = item.getBlob(store=CatalogItem.Customization)
         self.sendUpdate("deleteWindowFromAtticMessage", [blob, index, context])
 
     def recoverDeletedItem(self, item, index, callback):
@@ -247,11 +255,10 @@ class DistributedFurnitureManager(DistributedObject.DistributedObject):
         # doublecheck safeguard, to ensure against the AI possibly
         # being out of sync with the client in its list of
         # deletedItems.
-        
-        context = self.getCallbackContext(callback, [item, index])
-        blob = item.getBlob(store = CatalogItem.Customization)
-        self.sendUpdate("recoverDeletedItemMessage", [blob, index, context])
 
+        context = self.getCallbackContext(callback, [item, index])
+        blob = item.getBlob(store=CatalogItem.Customization)
+        self.sendUpdate("recoverDeletedItemMessage", [blob, index, context])
 
     def moveItemToAtticResponse(self, retcode, context):
         self.doCallbackContext(context, [retcode])

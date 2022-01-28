@@ -3,6 +3,7 @@ from toontown.cogdominium.DistCogdoGame import DistCogdoGame
 from toontown.toonbase import ToontownTimer
 from toontown.toonbase import TTLocalizer as TTL
 
+
 class DistBoardroomGame(DistCogdoGame):
     notify = directNotify.newCategory("DistBoardroomGame")
 
@@ -24,10 +25,10 @@ class DistBoardroomGame(DistCogdoGame):
         self.timer.destroy()
         self.timer = None
         DistCogdoGame.disable(self)
-        
+
     def enterGame(self):
         DistCogdoGame.enterGame(self)
-        #self.timer.posInTopRightCorner()
+        # self.timer.posInTopRightCorner()
         timeLeft = 15. - (globalClock.getRealTime() - self.getStartTime())
         self.timer.setTime(timeLeft)
         self.timer.countdown(timeLeft, self.timerExpired)

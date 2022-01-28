@@ -16,9 +16,10 @@ from .AnimPropObj import *
 from .InteractivePropObj import *
 from .StreetObj import *
 
+
 class ObjectHandler:
     """ ObjectHandler will create and update objects """
-    
+
     def __init__(self, editor):
         self.editor = editor
 
@@ -85,7 +86,7 @@ class ObjectHandler:
 
     def updateTitle(self, val, obj):
         objNP = obj[OG.OBJ_NP]
-        objNP.dna.setTitle(val)        
+        objNP.dna.setTitle(val)
 
     def updateFlatBuildingWidth(self, val, obj, no_loading):
         objNP = obj[OG.OBJ_NP]
@@ -96,8 +97,9 @@ class ObjectHandler:
         objNP = obj[OG.OBJ_NP]
         objNP.dna.setAnim(val)
         objNP.animPropObj.exit()
-        objNP.animPropObj.node.loadAnims({'anim':"%s/%s"%(objNP.animPropObj.path,val)})
-        objNP.animPropObj.enter()        
+        objNP.animPropObj.node.loadAnims(
+            {'anim': f"{objNP.animPropObj.path}/{val}"})
+        objNP.animPropObj.enter()
 
     def updateSuitPointIndex(self, val, obj):
         objNP = obj[OG.OBJ_NP]
@@ -114,4 +116,4 @@ class ObjectHandler:
 
     def updateSuitPointType(self, val, obj):
         objNP = obj[OG.OBJ_NP]
-        objNP.setPointType(eval('DNASuitPoint.%s'%val))
+        objNP.setPointType(eval(f'DNASuitPoint.{val}'))

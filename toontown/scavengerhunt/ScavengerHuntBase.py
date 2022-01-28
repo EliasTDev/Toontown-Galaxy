@@ -5,13 +5,13 @@ class ScavengerHuntBase:
     such that you shouldn't need to subclass it, though.
     """
 
-    def __init__(self,scavengerHuntId, scavengerHuntType):
+    def __init__(self, scavengerHuntId, scavengerHuntType):
         self.id = scavengerHuntId
         self.type = scavengerHuntType
         self.goals = set()
         self.milestones = {}
-        
-    def defineGoals(self,goalIds):
+
+    def defineGoals(self, goalIds):
         """
         Accepts a list of Goal identifiers.  This could be something as
         simple as a range of integers corresponding to the goals in the
@@ -19,15 +19,15 @@ class ScavengerHuntBase:
         """
         self.goals = set(goalIds)
 
-    def defineMilestones(self,milestones = []):
+    def defineMilestones(self, milestones=[]):
         """
         Accepts a list with items of the format:
         [milestoneId,[goal1,goal2,goal3,...]]
         """
-        for id,stone in milestones:
+        for id, stone in milestones:
             self.milestones[frozenset(stone)] = id
 
-    def getRecentMilestonesHit(self,goals,mostRecentGoal):
+    def getRecentMilestonesHit(self, goals, mostRecentGoal):
         """
         Given a list of goals, and the most recent goal added to that
         list, return a list of milestone ids which that latest goal would
@@ -40,8 +40,7 @@ class ScavengerHuntBase:
                 milestones.append(self.milestones[milestone])
         return milestones
 
-
-    def getAllMilestonesHit(self,goals):
+    def getAllMilestonesHit(self, goals):
         """
         Return a list of milestone ids which are satisfied by the Goals listed
         in goals.
@@ -51,15 +50,5 @@ class ScavengerHuntBase:
         for milestone in list(self.milestones.keys()):
             if(milestone.issubset(goals)):
                 milestones.append(self.milestones[milestone])
-                                
+
         return milestones
-        
-
-    
-
-
-
-
-
-    
-        

@@ -5,13 +5,14 @@ from otp.otpbase import OTPLocalizer
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
 
+
 class CatalogNametagItem(CatalogItem.CatalogItem):
     """
-    This represents nametags sent 
+    This represents nametags sent
     """
 
     sequenceNumber = 0
-    
+
     def makeNewItem(self, nametagStyle):
         self.nametagStyle = nametagStyle
         CatalogItem.CatalogItem.makeNewItem(self)
@@ -27,11 +28,11 @@ class CatalogNametagItem(CatalogItem.CatalogItem):
         # has already bought his limit on this item.
         if self in avatar.onOrder or self in avatar.mailboxContents or self in avatar.onGiftOrder \
            or self in avatar.awardMailboxContents or self in avatar.onAwardOrder:
-            return 1        
+            return 1
         if avatar.nametagStyle == self.nametagStyle:
             return 1
         return 0
-        
+
     def getAcceptItemErrorText(self, retcode):
         # Returns a string describing the error that occurred on
         # attempting to accept the item from the mailbox.  The input
@@ -62,15 +63,14 @@ class CatalogNametagItem(CatalogItem.CatalogItem):
             name = TTLocalizer.NametagAction
         elif self.nametagStyle == 2:
             name = TTLocalizer.NametagFrilly
-        
 
     def recordPurchase(self, avatar, optional):
         if avatar:
             avatar.b_setNametagStyle(self.nametagStyle)
 
         #avatar.emoteAccess[self.emoteIndex] = 1
-        #avatar.d_setEmoteAccess(avatar.emoteAccess)
-        #TODO: increase the toon's money here
+        # avatar.d_setEmoteAccess(avatar.emoteAccess)
+        # TODO: increase the toon's money here
         return ToontownGlobals.P_ItemAvailable
 
     def getPicture(self, avatar):
@@ -80,33 +80,33 @@ class CatalogNametagItem(CatalogItem.CatalogItem):
             inFont = ToontownGlobals.getToonFont()
         else:
             inFont = ToontownGlobals.getNametagFont(self.nametagStyle)
-            
+
         #nametagJar = loader.loadModel("phase_3.5/models/gui/jar_gui")
         nameTagDemo = DirectLabel(
-            parent = frame,
-            relief = None,
-            pos = (0,0,0.24),
-            scale = 0.5,
-            text = localAvatar.getName(),
-            text_fg = (1.0, 1.0, 1.0, 1),
-            text_shadow = (0, 0, 0, 1),
-            text_font = inFont,
-            text_wordwrap = 9,
-            )
-        #chatBalloon.find("**/top").setPos(1,0,5)
-        #chatBalloon.find("**/middle").setScale(1,1,3)
-        
-        #nametagJar.reparentTo(frame)
+            parent=frame,
+            relief=None,
+            pos=(0, 0, 0.24),
+            scale=0.5,
+            text=localAvatar.getName(),
+            text_fg=(1.0, 1.0, 1.0, 1),
+            text_shadow=(0, 0, 0, 1),
+            text_font=inFont,
+            text_wordwrap=9,
+        )
+        # chatBalloon.find("**/top").setPos(1,0,5)
+        # chatBalloon.find("**/middle").setScale(1,1,3)
 
-        #nametagJar.setPos(0,0,0)
-        #nametagJar.setScale(2.5)
+        # nametagJar.reparentTo(frame)
+
+        # nametagJar.setPos(0,0,0)
+        # nametagJar.setScale(2.5)
 
         assert (not self.hasPicture)
-        self.hasPicture=True
+        self.hasPicture = True
 
         return (frame, None)
 
-    def output(self, store = ~0):
+    def output(self, store=~0):
         return "CatalogNametagItem(%s%s)" % (
             self.nametagStyle,
             self.formatOptionalData(store))
@@ -133,17 +133,16 @@ class CatalogNametagItem(CatalogItem.CatalogItem):
     def decodeDatagram(self, di, versionNumber, store):
         CatalogItem.CatalogItem.decodeDatagram(self, di, versionNumber, store)
         self.nametagStyle = di.getUint16()
-        
+
     def encodeDatagram(self, dg, store):
         CatalogItem.CatalogItem.encodeDatagram(self, dg, store)
         dg.addUint16(self.nametagStyle)
-        
+
     def isGift(self):
         return 0
-        
+
     def getBackSticky(self):
-        #some items should hang around in the back catalog
-        itemType = 1 #the types that should stick around
-        numSticky = 4 #how many should stick around
+        # some items should hang around in the back catalog
+        itemType = 1  # the types that should stick around
+        numSticky = 4  # how many should stick around
         return itemType, numSticky
-        

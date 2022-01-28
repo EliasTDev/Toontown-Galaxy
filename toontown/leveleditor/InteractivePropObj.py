@@ -4,6 +4,7 @@ InteractiveProp object
 
 from .AnimPropObj import *
 
+
 class InteractivePropObj(AnimPropObj):
     def __init__(self, editor, interactivePropType, dna=None, nodePath=None):
         self.interactivePropType = interactivePropType

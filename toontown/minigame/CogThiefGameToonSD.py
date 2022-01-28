@@ -10,16 +10,17 @@ from direct.fsm import ClassicFSM, State
 from direct.fsm import State
 from direct.task.Task import Task
 
+
 class CogThiefGameToonSD(StateData.StateData):
     """ CogThiefGameToonSD catching game char anim statedata """
     notify = DirectNotifyGlobal.directNotify.newCategory("CogThiefGameToonSD")
 
-    FallBackAnim      = 'slip-backward'
-    FallFwdAnim       = 'slip-forward'
-    NeutralAnim       = 'neutral'
-    RunAnim           = 'run'
-    ThrowNeutralAnim  = 'throw'
-    ThrowRunAnim      = 'throw'
+    FallBackAnim = 'slip-backward'
+    FallFwdAnim = 'slip-forward'
+    NeutralAnim = 'neutral'
+    RunAnim = 'run'
+    ThrowNeutralAnim = 'throw'
+    ThrowRunAnim = 'throw'
 
     animList = [FallBackAnim, FallFwdAnim,
                 NeutralAnim, RunAnim,
@@ -34,38 +35,38 @@ class CogThiefGameToonSD(StateData.StateData):
         self.unexpectedExit = False
 
         self.fsm = ClassicFSM.ClassicFSM(
-            'CogThiefGameAnimFSM-%s' % self.avId,
+            f'CogThiefGameAnimFSM-{self.avId}',
             [
-            State.State('init',
-                        self.enterInit,
-                        self.exitInit,
-                        ['normal']),
-            State.State('normal',
-                        self.enterNormal,
-                        self.exitNormal,
-                        ['throwPie', 'fallBack', 'fallForward']),
-            # TODO: ClassicFSM does not allow transition from a state to the
-            # same state. Separate throwPie into 2 states or fix ClassicFSM.
-            State.State('throwPie',
-                        self.enterThrowPie,
-                        self.exitThrowPie,
-                        ['normal', 'fallBack', 'fallForward', 'throwPie']),
-            State.State('fallBack',
-                        self.enterFallBack,
-                        self.exitFallBack,
-                        ['normal']),
-            State.State('fallForward',
-                        self.enterFallForward,
-                        self.exitFallForward,
-                        ['normal']),
-            State.State('cleanup',
-                        self.enterCleanup,
-                        self.exitCleanup,
-                        []),
+                State.State('init',
+                            self.enterInit,
+                            self.exitInit,
+                            ['normal']),
+                State.State('normal',
+                            self.enterNormal,
+                            self.exitNormal,
+                            ['throwPie', 'fallBack', 'fallForward']),
+                # TODO: ClassicFSM does not allow transition from a state to the
+                # same state. Separate throwPie into 2 states or fix ClassicFSM.
+                State.State('throwPie',
+                            self.enterThrowPie,
+                            self.exitThrowPie,
+                            ['normal', 'fallBack', 'fallForward', 'throwPie']),
+                State.State('fallBack',
+                            self.enterFallBack,
+                            self.exitFallBack,
+                            ['normal']),
+                State.State('fallForward',
+                            self.enterFallForward,
+                            self.exitFallForward,
+                            ['normal']),
+                State.State('cleanup',
+                            self.enterCleanup,
+                            self.exitCleanup,
+                            []),
             ],
             'init',
             'cleanup',
-            )
+        )
         self.exitAlreadyCalled = False
 
     def load(self):
@@ -73,7 +74,7 @@ class CogThiefGameToonSD(StateData.StateData):
         # cache the animations
         for anim in self.animList:
             self.toon.pose(anim, 0)
-        
+
     def unload(self):
         del self.fsm
 
@@ -81,12 +82,12 @@ class CogThiefGameToonSD(StateData.StateData):
         assert self.notify.debugStateCall(self)
         self.fsm.enterInitialState()
 
-    def exit(self, unexpectedExit = False):
+    def exit(self, unexpectedExit=False):
         assert self.notify.debugStateCall(self)
         if self.exitAlreadyCalled:
             return
-        self.exitAlreadyCalled = True        
-        self.notify.debug('in exit self.toon.doId=%s' % self.toon.doId)
+        self.exitAlreadyCalled = True
+        self.notify.debug(f'in exit self.toon.doId={self.toon.doId}')
         self.unexpectedExit = unexpectedExit
         self.fsm.requestFinalState()
 
@@ -103,7 +104,7 @@ class CogThiefGameToonSD(StateData.StateData):
         self.origDropShadowColor = self.dropShadow.getColor()
         c = self.origDropShadowColor
         alpha = .35
-        self.dropShadow.setColor(c[0],c[1],c[2], alpha)
+        self.dropShadow.setColor(c[0], c[1], c[2], alpha)
 
     def exitInit(self):
         pass
@@ -160,15 +161,15 @@ class CogThiefGameToonSD(StateData.StateData):
         self.eatIval = Sequence(
             Parallel(WaitInterval(duration),
                      # toon throw the pie halfway through animation
-                     Sequence(LerpScaleInterval(pieModel, duration/2.,
-                                                pieModel.getScale()*.5,
+                     Sequence(LerpScaleInterval(pieModel, duration / 2.,
+                                                pieModel.getScale() * .5,
                                                 blendType='easeInOut'),
                               Func(pieModel.hide),
                               ),
                      ),
             Func(finishedEating),
             name=self.toon.uniqueName('eatingIval')
-            )
+        )
         self.eatIval.start()
 
     def exitThrowPie(self):
@@ -196,7 +197,7 @@ class CogThiefGameToonSD(StateData.StateData):
         animName = self.FallBackAnim
         startFrame = 12
         totalFrames = self.toon.getNumFrames(animName)
-        frames = (totalFrames-1) - startFrame
+        frames = (totalFrames - 1) - startFrame
         frameRate = self.toon.getFrameRate(animName)
         newRate = frames / duration
         playRate = newRate / frameRate
@@ -205,10 +206,10 @@ class CogThiefGameToonSD(StateData.StateData):
             self.fsm.request('normal')
 
         self.fallBackIval = Sequence(
-            ActorInterval(self.toon, animName, startTime=startFrame/newRate,
-                          endTime=totalFrames/newRate, playRate=playRate),
+            ActorInterval(self.toon, animName, startTime=startFrame / newRate,
+                          endTime=totalFrames / newRate, playRate=playRate),
             FunctionInterval(resume),
-            )
+        )
 
         self.fallBackIval.start()
 
@@ -230,7 +231,7 @@ class CogThiefGameToonSD(StateData.StateData):
         animName = self.FallFwdAnim
         startFrame = 12
         totalFrames = self.toon.getNumFrames(animName)
-        frames = (totalFrames-1) - startFrame
+        frames = (totalFrames - 1) - startFrame
         frameRate = self.toon.getFrameRate(animName)
         newRate = frames / duration
         playRate = newRate / frameRate
@@ -239,13 +240,13 @@ class CogThiefGameToonSD(StateData.StateData):
             self.fsm.request('normal')
 
         self.fallFwdIval = Sequence(
-            ActorInterval(self.toon, animName, startTime=startFrame/newRate,
-                          endTime=totalFrames/newRate, playRate=playRate),
+            ActorInterval(self.toon, animName, startTime=startFrame / newRate,
+                          endTime=totalFrames / newRate, playRate=playRate),
             FunctionInterval(resume),
-            )
+        )
 
         self.fallFwdIval.start()
-        
+
     def exitFallForward(self):
         # don't 'stop/finish' the stunnedIval; it will attempt to
         # transition to 'normal', when we're already in the process
@@ -254,7 +255,7 @@ class CogThiefGameToonSD(StateData.StateData):
         del self.fallFwdIval
 
     def enterCleanup(self):
-        self.notify.debug('enterCleanup %s'  % self.toon.doId)
+        self.notify.debug(f'enterCleanup {self.toon.doId}')
         if self.toon and not self.toon.isEmpty():
             self.toon.stopBlink()
             self.toon.startLookAround()

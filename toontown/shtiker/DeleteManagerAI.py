@@ -3,6 +3,7 @@ from pandac.PandaModules import *
 from direct.distributed import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DeleteManagerAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("DeleteManagerAI")
 
@@ -22,9 +23,8 @@ class DeleteManagerAI(DistributedObjectAI.DistributedObjectAI):
             # Tell the state server
             av.d_setInventory(av.inventory.makeNetString())
         else:
-            self.air.writeServerEvent('suspicious', avId, 'DeleteManagerAI.setInventory unknown avatar')
+            self.air.writeServerEvent(
+                'suspicious', avId, 'DeleteManagerAI.setInventory unknown avatar')
             self.notify.warning(
                 "Avatar: " + str(avId) +
                 " tried to setInventory, but is not in the district.")
-            
-        

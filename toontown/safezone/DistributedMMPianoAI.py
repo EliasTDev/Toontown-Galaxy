@@ -14,7 +14,7 @@ from direct.task import Task
 PianoSpeeds = [
     1.0, 2.0, 3.0, 4.0, 5.0, 6.0,
     8.0, 10.0, 12.0, 14.0, 16.0, 18.0
-    ]
+]
 
 PianoMaxSpeed = PianoSpeeds[len(PianoSpeeds) - 1]
 
@@ -24,6 +24,7 @@ PianoMaxSpeed = PianoSpeeds[len(PianoSpeeds) - 1]
 PianoSlowDownFactor = 0.7
 PianoSlowDownInterval = 10.0
 PianoSlowDownMinimum = 0.1
+
 
 class DistributedMMPianoAI(DistributedObjectAI.DistributedObjectAI):
     """
@@ -35,13 +36,14 @@ class DistributedMMPianoAI(DistributedObjectAI.DistributedObjectAI):
     //
     ////////////////////////////////////////////////////////////////////
     """
+
     def __init__(self, air):
         """__init__(air)
         """
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
         self.spinStartTime = 0.0
         self.rpm = 0.0
-        self.degreesPerSecond = (self.rpm/60.0) * 360.0
+        self.degreesPerSecond = (self.rpm / 60.0) * 360.0
         self.offset = 0.0
         self.direction = 1
         return None
@@ -61,7 +63,7 @@ class DistributedMMPianoAI(DistributedObjectAI.DistributedObjectAI):
             for speed in PianoSpeeds:
                 if speed > self.rpm:
                     break
-                
+
             self.updateSpeed(speed, self.direction)
 
         self.d_playSpeedUp(self.air.getAvatarIdFromSender())
@@ -87,7 +89,9 @@ class DistributedMMPianoAI(DistributedObjectAI.DistributedObjectAI):
         """d_setSpeed(self, float rpm, float offset, float startTime)
         Tells the clients about the new rotate speed of the piano.
         """
-        self.sendUpdate('setSpeed', [rpm, offset, globalClockDelta.localToNetworkTime(startTime)])
+        self.sendUpdate(
+            'setSpeed', [
+                rpm, offset, globalClockDelta.localToNetworkTime(startTime)])
 
     def d_playSpeedUp(self, avId):
         """d_playSpeedUp(self, uint32 avId)
@@ -103,8 +107,8 @@ class DistributedMMPianoAI(DistributedObjectAI.DistributedObjectAI):
         """
         self.sendUpdate('playChangeDirection', [avId])
 
-
     ### Support functions ###
+
     def updateSpeed(self, rpm, direction):
         """updateSpeed(self, rpm, direction)
 
@@ -116,13 +120,13 @@ class DistributedMMPianoAI(DistributedObjectAI.DistributedObjectAI):
 
         # First, determine its current orientation at this time.
         heading = \
-                (self.degreesPerSecond * (now - self.spinStartTime)) + \
-                self.offset
+            (self.degreesPerSecond * (now - self.spinStartTime)) + \
+            self.offset
 
         # That becomes the new offset as of the new start time, now.
         self.rpm = rpm
         self.direction = direction
-        self.degreesPerSecond = (rpm/60.0) * 360.0 * direction
+        self.degreesPerSecond = (rpm / 60.0) * 360.0 * direction
         self.offset = heading % 360.0
         self.spinStartTime = now
 
@@ -130,8 +134,8 @@ class DistributedMMPianoAI(DistributedObjectAI.DistributedObjectAI):
         self.d_setSpeed(self.rpm * self.direction, self.offset,
                         self.spinStartTime)
 
-
     ### How you start up the piano ###
+
     def start(self):
         # Nothing to do here at the moment.  The piano starts up
         # stationary, and starts to move when clients bump into stuff.
@@ -158,12 +162,9 @@ class DistributedMMPianoAI(DistributedObjectAI.DistributedObjectAI):
         else:
             self.updateSpeed(rpm, self.direction)
             self.__slowDownLater()
-            
+
         return Task.done
 
-        
-            
-        
 
 # History
 #

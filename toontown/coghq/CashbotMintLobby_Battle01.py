@@ -11,7 +11,7 @@ GlobalEntities = {
         'farPlaneDistance': 1500,
         'modelFilename': 'phase_10/models/cashbotHQ/ZONE04a',
         'wantDoors': 1,
-        }, # end entity 1000
+    },  # end entity 1000
     # EDITMGR
     1001: {
         'type': 'editMgr',
@@ -21,7 +21,7 @@ GlobalEntities = {
         'removeEntity': None,
         'requestNewEntity': None,
         'requestSave': None,
-        }, # end entity 1001
+    },  # end entity 1001
     # ZONE
     0: {
         'type': 'zone',
@@ -31,7 +31,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 0
+    },  # end entity 0
     # LOCATOR
     10001: {
         'type': 'locator',
@@ -39,251 +39,251 @@ GlobalEntities = {
         'comment': '',
         'parentEntId': 0,
         'searchPath': '**/DGG.EXIT',
-        }, # end entity 10001
+    },  # end entity 10001
     # MINTPRODUCT
     10014: {
         'type': 'mintProduct',
         'name': '<unnamed>',
         'comment': '',
         'parentEntId': 10013,
-        'pos': Point3(-7.80045461655,0.0,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
+        'pos': Point3(-7.80045461655, 0.0, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
         'mintId': 12500,
-        }, # end entity 10014
+    },  # end entity 10014
     10015: {
         'type': 'mintProduct',
         'name': 'copy of <unnamed>',
         'comment': '',
         'parentEntId': 10013,
-        'pos': Point3(15.7111005783,-2.0225315094,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
+        'pos': Point3(15.7111005783, -2.0225315094, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
         'mintId': 12500,
-        }, # end entity 10015
+    },  # end entity 10015
     10016: {
         'type': 'mintProduct',
         'name': 'copy of <unnamed> (2)',
         'comment': '',
         'parentEntId': 10013,
-        'pos': Point3(6.66144704819,-1.54405653477,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
+        'pos': Point3(6.66144704819, -1.54405653477, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
         'mintId': 12500,
-        }, # end entity 10016
+    },  # end entity 10016
     # MINTPRODUCTPALLET
     10017: {
         'type': 'mintProductPallet',
         'name': '<unnamed>',
         'comment': '',
         'parentEntId': 10020,
-        'pos': Point3(34.8923339844,32.3863983154,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
+        'pos': Point3(34.8923339844, 32.3863983154, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
         'mintId': 12500,
-        }, # end entity 10017
+    },  # end entity 10017
     10021: {
         'type': 'mintProductPallet',
         'name': 'copy of <unnamed>',
         'comment': '',
         'parentEntId': 10020,
-        'pos': Point3(-34.8899993896,32.3863983154,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
+        'pos': Point3(-34.8899993896, 32.3863983154, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
         'mintId': 12600,
-        }, # end entity 10021
+    },  # end entity 10021
     10022: {
         'type': 'mintProductPallet',
         'name': 'copy of <unnamed>',
         'comment': '',
         'parentEntId': 10020,
-        'pos': Point3(34.8923339844,-23.3355064392,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
+        'pos': Point3(34.8923339844, -23.3355064392, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
         'mintId': 12600,
-        }, # end entity 10022
+    },  # end entity 10022
     10023: {
         'type': 'mintProductPallet',
         'name': 'copy of <unnamed> (2)',
         'comment': '',
         'parentEntId': 10020,
-        'pos': Point3(-34.8899993896,-23.3355064392,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
+        'pos': Point3(-34.8899993896, -23.3355064392, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
         'mintId': 12600,
-        }, # end entity 10023
+    },  # end entity 10023
     # MODEL
     10002: {
         'type': 'model',
         'name': '<unnamed>',
         'comment': '',
         'parentEntId': 10001,
-        'pos': Point3(0.0,0.0,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
+        'pos': Point3(0.0, 0.0, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
         'scale': 1,
         'collisionsOnly': 0,
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/VaultDoorCover.bam',
-        }, # end entity 10002
+    },  # end entity 10002
     10005: {
         'type': 'model',
         'name': '<unnamed>',
         'comment': '',
         'parentEntId': 10004,
-        'pos': Point3(26.7393283844,70.7373962402,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
+        'pos': Point3(26.7393283844, 70.7373962402, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
         'collisionsOnly': 0,
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/pipes_A1.bam',
-        }, # end entity 10005
+    },  # end entity 10005
     10006: {
         'type': 'model',
         'name': 'copy of <unnamed>',
         'comment': '',
         'parentEntId': 10004,
-        'pos': Point3(63.8051605225,33.5718955994,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
+        'pos': Point3(63.8051605225, 33.5718955994, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
         'collisionsOnly': 0,
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/pipes_A1.bam',
-        }, # end entity 10006
+    },  # end entity 10006
     10007: {
         'type': 'model',
         'name': 'copy of <unnamed> (2)',
         'comment': '',
         'parentEntId': 10004,
-        'pos': Point3(63.7982444763,-19.1328792572,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
+        'pos': Point3(63.7982444763, -19.1328792572, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
         'collisionsOnly': 0,
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/pipes_A1.bam',
-        }, # end entity 10007
+    },  # end entity 10007
     10008: {
         'type': 'model',
         'name': 'copy of <unnamed> (3)',
         'comment': '',
         'parentEntId': 10004,
-        'pos': Point3(26.769536972,-56.2981185913,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
+        'pos': Point3(26.769536972, -56.2981185913, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
         'collisionsOnly': 0,
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/pipes_A1.bam',
-        }, # end entity 10008
+    },  # end entity 10008
     10009: {
         'type': 'model',
         'name': 'copy of <unnamed> (4)',
         'comment': '',
         'parentEntId': 10004,
-        'pos': Point3(-26.0181350708,-56.2504425049,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
+        'pos': Point3(-26.0181350708, -56.2504425049, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
         'collisionsOnly': 0,
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/pipes_A1.bam',
-        }, # end entity 10009
+    },  # end entity 10009
     10010: {
         'type': 'model',
         'name': 'copy of <unnamed> (5)',
         'comment': '',
         'parentEntId': 10004,
-        'pos': Point3(-63.1796150208,-19.1894207001,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
+        'pos': Point3(-63.1796150208, -19.1894207001, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
         'collisionsOnly': 0,
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/pipes_A1.bam',
-        }, # end entity 10010
+    },  # end entity 10010
     10011: {
         'type': 'model',
         'name': 'copy of <unnamed> (6)',
         'comment': '',
         'parentEntId': 10004,
-        'pos': Point3(-63.194984436,33.6143226624,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
+        'pos': Point3(-63.194984436, 33.6143226624, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
         'collisionsOnly': 0,
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/pipes_A1.bam',
-        }, # end entity 10011
+    },  # end entity 10011
     10012: {
         'type': 'model',
         'name': 'copy of <unnamed>',
         'comment': '',
         'parentEntId': 10004,
-        'pos': Point3(-26.161315918,70.7677078247,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
+        'pos': Point3(-26.161315918, 70.7677078247, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
         'collisionsOnly': 0,
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/pipes_A1.bam',
-        }, # end entity 10012
+    },  # end entity 10012
     # NODEPATH
     10000: {
         'type': 'nodepath',
         'name': 'cogs',
         'comment': '',
         'parentEntId': 0,
-        'pos': Point3(0.0,0.0,0.0),
-        'hpr': Point3(0.0,0.0,0.0),
+        'pos': Point3(0.0, 0.0, 0.0),
+        'hpr': Point3(0.0, 0.0, 0.0),
         'scale': 1,
-        }, # end entity 10000
+    },  # end entity 10000
     10003: {
         'type': 'nodepath',
         'name': 'props',
         'comment': '',
         'parentEntId': 0,
-        'pos': Point3(0.0,0.0,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
+        'pos': Point3(0.0, 0.0, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
         'scale': 1,
-        }, # end entity 10003
+    },  # end entity 10003
     10004: {
         'type': 'nodepath',
         'name': 'posts',
         'comment': '',
         'parentEntId': 10003,
-        'pos': Point3(0.0,0.0,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
+        'pos': Point3(0.0, 0.0, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
         'scale': 1,
-        }, # end entity 10004
+    },  # end entity 10004
     10013: {
         'type': 'nodepath',
         'name': 'productByVault',
         'comment': '',
         'parentEntId': 10020,
-        'pos': Point3(0.0,67.5628051758,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Vec3(1.0,1.0,1.0),
-        }, # end entity 10013
+        'pos': Point3(0.0, 67.5628051758, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Vec3(1.0, 1.0, 1.0),
+    },  # end entity 10013
     10020: {
         'type': 'nodepath',
         'name': 'product',
         'comment': '',
         'parentEntId': 10003,
-        'pos': Point3(0.0,0.0,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
+        'pos': Point3(0.0, 0.0, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
         'scale': 1,
-        }, # end entity 10020
-    }
+    },  # end entity 10020
+}
 
 Scenario0 = {
-    }
+}
 
 levelSpec = {
     'globalEntities': GlobalEntities,
     'scenarios': [
         Scenario0,
-        ],
-    }
+    ],
+}

@@ -1,5 +1,6 @@
 from direct.showbase.TkGlobal import *
 
+
 class LauncherTool:
     def __init__(self, launcher):
         self.launcher = launcher
@@ -17,5 +18,3 @@ class LauncherTool:
 
     def setStatus(self, action):
         self.statusLabel['text'] = 'Status: ' + action
-
-        

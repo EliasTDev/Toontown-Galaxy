@@ -18,7 +18,8 @@ class LoginTTAccount(LoginBase.LoginBase, TTAccount.TTAccount):
         LoginBase.LoginBase.__init__(self, cr)
         TTAccount.TTAccount.__init__(self, cr)
         self.useTTSpecificLogin = base.config.GetBool('tt-specific-login', 0)
-        self.notify.info('self.useTTSpecificLogin =%s' % self.useTTSpecificLogin)
+        self.notify.info(
+            f'self.useTTSpecificLogin ={self.useTTSpecificLogin}')
 
     def supportsRelogin(self):
         """
@@ -31,9 +32,9 @@ class LoginTTAccount(LoginBase.LoginBase, TTAccount.TTAccount):
         """
         Send a message to the game server with our playToken.
         """
-        assert "playToken" in self.__dict__ # Hey, there's no playToken.
-        #...no error code in the response, so we have a play token.
-        cr=self.cr
+        assert "playToken" in self.__dict__  # Hey, there's no playToken.
+        # ...no error code in the response, so we have a play token.
+        cr = self.cr
         # Time to send a login message
         datagram = PyDatagram()
         # Add message type
@@ -72,10 +73,10 @@ class LoginTTAccount(LoginBase.LoginBase, TTAccount.TTAccount):
         properties in-game, for instance when we enable chat.
         """
         assert self.response is not None
-        assert not self.response.hasKey('errorMsg') # Hey, there was an error
-        assert "playToken" in self.__dict__ # Hey, there's no playToken.
-        #...no error code in the response, so we have a play token.
-        cr=self.cr
+        assert not self.response.hasKey('errorMsg')  # Hey, there was an error
+        assert "playToken" in self.__dict__  # Hey, there's no playToken.
+        # ...no error code in the response, so we have a play token.
+        cr = self.cr
 
         datagram = PyDatagram()
         # Add message type
@@ -100,24 +101,25 @@ class LoginTTAccount(LoginBase.LoginBase, TTAccount.TTAccount):
         # resendPlayToken().
         if self.useTTSpecificLogin:
             # also known as TOKEN_TYPE_KIM_S in otp_server
-            datagram.addInt32(CLIENT_LOGIN_3_DISL_TOKEN) 
+            datagram.addInt32(CLIENT_LOGIN_3_DISL_TOKEN)
         else:
             if self.playTokenIsEncrypted:
                 datagram.addInt32(CLIENT_LOGIN_2_PLAY_TOKEN)
             else:
                 # The game server doesn't yet understand this token type:
-                #datagram.addInt32(CLIENT_LOGIN_2_PLAY_TOKEN_PLAIN)
+                # datagram.addInt32(CLIENT_LOGIN_2_PLAY_TOKEN_PLAIN)
                 # Yes, this makes this if statement useless.
                 datagram.addInt32(CLIENT_LOGIN_2_PLAY_TOKEN)
-        
 
     # result-getters
     # these override default implementations in LoginBase
     # prefer using these over looking directly into 'response' in client code
     # these cannot be in TTAccount due to multiple-inheritance issues;
     # they would not override the LoginBase methods
+
     def getErrorCode(self):
         return self.response.getInt('errorCode', 0)
+
     def needToSetParentPassword(self):
         return self.response.getBool('secretsPasswordNotSet', 0)
 
@@ -127,8 +129,9 @@ class LoginTTAccount(LoginBase.LoginBase, TTAccount.TTAccount):
         Authenticate the parent password, doing it correctly if he uses
         the new tt specific login or not
         """
-        if base.cr.withParentAccount :
-            self.notify.error("authenticateParentPassword called, but with parentAccount")
+        if base.cr.withParentAccount:
+            self.notify.error(
+                "authenticateParentPassword called, but with parentAccount")
             try:
                 errorMsg = self.talk(
                     'authenticateParentUsernameAndPassword',
@@ -166,19 +169,18 @@ class LoginTTAccount(LoginBase.LoginBase, TTAccount.TTAccount):
                 except TTAccountException as e:
                     # connection error, bad response, etc.
                     # pass it back
-                    return (0, str(e))                
+                    return (0, str(e))
             else:
                 # old login_2 style just call to base clase
-                return TTAccount.TTAccount.authenticateParentPassword(self, loginName,
-                                       password, parentPassword)
-
+                return TTAccount.TTAccount.authenticateParentPassword(
+                    self, loginName, password, parentPassword)
 
     def authenticateDelete(self, loginName, password):
         """
         Authenticate the deleting with regular password, doing it correctly if he uses
         the new tt specific login or not
         """
-        if self.useTTSpecificLogin :
+        if self.useTTSpecificLogin:
             try:
                 errorMsg = self.talk(
                     'authenticateDeleteNewStyle',
@@ -199,5 +201,6 @@ class LoginTTAccount(LoginBase.LoginBase, TTAccount.TTAccount):
                 return (0, str(e))
         else:
             self.notify.info("using old style authenticate delete")
-            result = TTAccount.TTAccount.authenticateDelete(self,loginName, password)
+            result = TTAccount.TTAccount.authenticateDelete(
+                self, loginName, password)
             return result

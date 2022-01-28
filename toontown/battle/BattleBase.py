@@ -1,7 +1,8 @@
 from panda3d.core import *
 from toontown.toonbase.ToontownBattleGlobals import *
 from direct.task.Timer import *
-import math, functools
+import math
+import functools
 
 from direct.directnotify import DirectNotifyGlobal
 from toontown.toon import NPCToons
@@ -10,34 +11,34 @@ from toontown.toonbase import TTLocalizer
 # locations of the various types of data within the toonAttacks list
 # used when calculating attack damage, accuracy bonus, and damage bonus
 #
-TOON_ID_COL             = 0
-TOON_TRACK_COL          = 1
-TOON_LVL_COL            = 2
-TOON_TGT_COL            = 3
-TOON_HP_COL             = 4
-TOON_ACCBONUS_COL       = 5
-TOON_HPBONUS_COL        = 6
-TOON_KBBONUS_COL        = 7
-SUIT_DIED_COL           = 8
-SUIT_REVIVE_COL         = 9
+TOON_ID_COL = 0
+TOON_TRACK_COL = 1
+TOON_LVL_COL = 2
+TOON_TGT_COL = 3
+TOON_HP_COL = 4
+TOON_ACCBONUS_COL = 5
+TOON_HPBONUS_COL = 6
+TOON_KBBONUS_COL = 7
+SUIT_DIED_COL = 8
+SUIT_REVIVE_COL = 9
 
 # locations of the various types of data within the suitAttacks list
 # used when calculating toon attack type, target, and attack damage
 #
-SUIT_ID_COL             = 0
-SUIT_ATK_COL            = 1
-SUIT_TGT_COL            = 2
-SUIT_HP_COL             = 3
-TOON_DIED_COL           = 4
-SUIT_BEFORE_TOONS_COL   = 5
-SUIT_TAUNT_COL          = 6
+SUIT_ID_COL = 0
+SUIT_ATK_COL = 1
+SUIT_TGT_COL = 2
+SUIT_HP_COL = 3
+TOON_DIED_COL = 4
+SUIT_BEFORE_TOONS_COL = 5
+SUIT_TAUNT_COL = 6
 
 # Toon actions and attacks
 #
 NO_ID = -1
 NO_ATTACK = -1
 UN_ATTACK = -2
-PASS_ATTACK = -3 # used so we can display pass indicator
+PASS_ATTACK = -3  # used so we can display pass indicator
 NO_TRAP = -1
 LURE_SUCCEEDED = -1
 PASS = 98
@@ -91,26 +92,30 @@ FLOOR_REWARD_TIMEOUT = 4
 BUILDING_REWARD_TIMEOUT = 300
 
 try:
-#    debugBattles = base.config.GetBool('debug-battles', 0)
-    CLIENT_INPUT_TIMEOUT = ConfigVariableDouble('battle-input-timeout', TTLocalizer.BBbattleInputTimeout).value
-except:
-#    debugBattles = simbase.config.GetBool('debug-battles', 0)
-    CLIENT_INPUT_TIMEOUT = simbase.config.GetFloat('battle-input-timeout', TTLocalizer.BBbattleInputTimeout)
+    #    debugBattles = base.config.GetBool('debug-battles', 0)
+    CLIENT_INPUT_TIMEOUT = ConfigVariableDouble(
+        'battle-input-timeout', TTLocalizer.BBbattleInputTimeout).value
+except BaseException:
+    #    debugBattles = simbase.config.GetBool('debug-battles', 0)
+    CLIENT_INPUT_TIMEOUT = simbase.config.GetFloat(
+        'battle-input-timeout', TTLocalizer.BBbattleInputTimeout)
+
 
 def levelAffectsGroup(track, level):
-    #return (level % 2)
-    return attackAffectsGroup(track, level) #UBER
+    # return (level % 2)
+    return attackAffectsGroup(track, level)  # UBER
+
 
 def attackAffectsGroup(track, level, type=None):
-    #if (track == HEAL and (level % 2)):
+    # if (track == HEAL and (level % 2)):
     #    return 1
-    #elif (track == LURE and (level % 2)):
+    # elif (track == LURE and (level % 2)):
     #    return 1
-    #elif (track == SOUND):
+    # elif (track == SOUND):
     #    return 1
-    #elif (track == NPCSOS or type == NPCSOS or track == PETSOS or type == PETSOS):
+    # elif (track == NPCSOS or type == NPCSOS or track == PETSOS or type == PETSOS):
     #    return 1
-    #else:
+    # else:
     #    return 0
     if (track == NPCSOS or type == NPCSOS or track == PETSOS or type == PETSOS):
         return 1
@@ -125,6 +130,7 @@ def getToonAttack(id, track=NO_ATTACK, level=-1, target=-1):
     """
     return [id, track, level, target, [], 0, 0, [], 0, 0]
 
+
 def getDefaultSuitAttacks():
     """ getDefaultSuitAttacks()
     """
@@ -134,10 +140,12 @@ def getDefaultSuitAttacks():
                    [NO_ID, NO_ATTACK, -1, [], 0, 0, 0]]
     return suitAttacks
 
+
 def getDefaultSuitAttack():
     """ getDefaultSuitAttack()
     """
     return [NO_ID, NO_ATTACK, -1, [], 0, 0, 0]
+
 
 def findToonAttack(toons, attacks, track):
     """ findToonAttack(toons, attacks, track)
@@ -166,6 +174,7 @@ def findToonAttack(toons, attacks, track):
                 else:
                     assert(t == attack[TOON_ID_COL])
                     foundAttacks.append(attack)
+
     def compFunc(a, b):
         if (a[TOON_LVL_COL] > b[TOON_LVL_COL]):
             return 1
@@ -174,6 +183,7 @@ def findToonAttack(toons, attacks, track):
         return 0
     foundAttacks.sort(key=functools.cmp_to_key(compFunc))
     return foundAttacks
+
 
 # A little pad time added to server time calculations, to allow for
 # slow or out-of-sync clients.  In general, the AI server will give
@@ -205,6 +215,7 @@ BATTLE_SMALL_VALUE = 0.0000001
 # get the battle.  If we are further away than this, we suspect we are
 # victims of clock skew.
 MAX_EXPECTED_DISTANCE_FROM_BATTLE = 50.0
+
 
 class BattleBase:
 
@@ -239,7 +250,7 @@ class BattleBase:
         (Point3(0, 9, 0), 179),
         (Point3(4, 8.2, 0), 170),
         (Point3(8, 3.2, 0), 160),
-        )
+    )
 
     # This is similar to the above, but for toons instead of suits.
     toonPoints = (
@@ -263,7 +274,7 @@ class BattleBase:
         (Point3(0, -9, 0), 0),
         (Point3(3, -8, 0), 5),
         (Point3(5.5, -5.5, 0), 20),
-        )
+    )
 
     # These define the points on the perimeter of the battle circle
     # for suits and toons who are "joining"; this allows the avatar to
@@ -311,9 +322,9 @@ class BattleBase:
         self.runningToons = []
         self.toonGone = 0
 
-        # keep track of toons who helped, so we know which toons just passed all the time
+        # keep track of toons who helped, so we know which toons just passed
+        # all the time
         self.helpfulToons = []
-
 
     def calcFaceoffTime(self, centerpos, suitpos):
         """ calcFaceoffTime(centerpos, suitpos)
@@ -357,9 +368,8 @@ class BattleBase:
             if (dist < minDist):
                 nearestP = p
                 minDist = dist
-        assert(nearestP != None)
-        self.notify.debug('buildJoinPointList() - avp: %s nearp: %s' % \
-                (avPos, nearestP))
+        assert(nearestP is not None)
+        self.notify.debug(f'buildJoinPointList() - avp: {avPos} nearp: {nearestP}')
 
         # See if destPos is the closest point
         dist = Vec3(avPos - destPos).length()
@@ -374,12 +384,12 @@ class BattleBase:
             elif (BattleBase.toonCwise.count(nearestP) == 1):
                 self.notify.debug('buildJoinPointList() - clockwise')
                 index = BattleBase.toonCwise.index(nearestP)
-                plist = BattleBase.toonCwise[index+1:]
+                plist = BattleBase.toonCwise[index + 1:]
             else:
                 self.notify.debug('buildJoinPointList() - counter-clockwise')
                 assert(BattleBase.toonCCwise.count(nearestP) == 1)
                 index = BattleBase.toonCCwise.index(nearestP)
-                plist = BattleBase.toonCCwise[index+1:]
+                plist = BattleBase.toonCCwise[index + 1:]
         else:
             if (nearestP == BattleBase.posA):
                 self.notify.debug('buildJoinPointList() - posA')
@@ -387,18 +397,17 @@ class BattleBase:
             elif (BattleBase.suitCwise.count(nearestP) == 1):
                 self.notify.debug('buildJoinPointList() - clockwise')
                 index = BattleBase.suitCwise.index(nearestP)
-                plist = BattleBase.suitCwise[index+1:]
+                plist = BattleBase.suitCwise[index + 1:]
             else:
                 self.notify.debug('buildJoinPointList() - counter-clockwise')
                 assert(BattleBase.suitCCwise.count(nearestP) == 1)
                 index = BattleBase.suitCCwise.index(nearestP)
-                plist = BattleBase.suitCCwise[index+1:]
+                plist = BattleBase.suitCCwise[index + 1:]
 
-        self.notify.debug('buildJoinPointList() - plist: %s' % plist)
+        self.notify.debug(f'buildJoinPointList() - plist: {plist}')
         return plist
 
     def addHelpfulToon(self, toonId):
         """Add toonId to our helpful toons, make sure it's in the list at most once."""
         if toonId not in self.helpfulToons:
             self.helpfulToons.append(toonId)
-

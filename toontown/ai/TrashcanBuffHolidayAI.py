@@ -4,6 +4,7 @@ from toontown.ai import PropBuffHolidayAI
 from toontown.ai import DistributedPhaseEventMgrAI
 from toontown.toonbase import ToontownGlobals
 
+
 class TrashcanBuffHolidayAI(PropBuffHolidayAI.PropBuffHolidayAI):
 
     notify = DirectNotifyGlobal.directNotify.newCategory(
@@ -12,5 +13,5 @@ class TrashcanBuffHolidayAI(PropBuffHolidayAI.PropBuffHolidayAI):
     PostName = 'TrashcanBuffHoliday'
 
     def __init__(self, air, holidayId, startAndEndTimes, phaseDates):
-        PropBuffHolidayAI.PropBuffHolidayAI.__init__(self, air, holidayId, startAndEndTimes, phaseDates)
-        
+        PropBuffHolidayAI.PropBuffHolidayAI.__init__(
+            self, air, holidayId, startAndEndTimes, phaseDates)

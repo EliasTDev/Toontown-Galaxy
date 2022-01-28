@@ -9,6 +9,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 import random
 
+
 class ShuffleButton:
     """
     ShuffleButton Class: Contains methods for the shuffle button, which shuffles
@@ -17,6 +18,7 @@ class ShuffleButton:
     different random combinations.
     """
     notify = DirectNotifyGlobal.directNotify.newCategory('ShuffleButton')
+
     def __init__(self, parent, fetchEvent):
         """__init__(self)
         Set-up the shuffle button.
@@ -25,7 +27,7 @@ class ShuffleButton:
         self.fetchEvent = fetchEvent
         self.history = [0]
         self.historyPtr = 0     # This is the pointer which points to which toon
-                                # we're currently looking at in history.
+        # we're currently looking at in history.
         self.maxHistory = 10
         self.load()
 
@@ -44,84 +46,106 @@ class ShuffleButton:
         gui.removeNode()
         del gui
 
-        # Create an emtpy frame which houses all the option buttons including the shuffle button.
+        # Create an emtpy frame which houses all the option buttons including
+        # the shuffle button.
         self.parentFrame = DirectFrame(
-            parent = self._parent.parentFrame,
-            relief = DGG.RAISED,
-            pos = (0, 0, -1.1),
-            frameColor = (1, 0, 0, 0),
-            )
+            parent=self._parent.parentFrame,
+            relief=DGG.RAISED,
+            pos=(0, 0, -1.1),
+            frameColor=(1, 0, 0, 0),
+        )
 
         # Create the Shuffle Frame.
         self.shuffleFrame = DirectFrame(
-##            parent = self._parent.parentFrame,
-            parent = self.parentFrame,
-            image = shuffleFrame,
-            image_scale = halfButtonInvertScale,
-            relief = None,
-##            pos = (0, 0, -0.875),
-##            pos = (0, 0, -1),
-            frameColor = (1, 1, 1, 1),
-            )
+            ##            parent = self._parent.parentFrame,
+            parent=self.parentFrame,
+            image=shuffleFrame,
+            image_scale=halfButtonInvertScale,
+            relief=None,
+            ##            pos = (0, 0, -0.875),
+            ##            pos = (0, 0, -1),
+            frameColor=(1, 1, 1, 1),
+        )
         self.shuffleFrame.hide()
 
         # Create Shuffle Button.
         self.shuffleBtn = DirectButton(
-##            parent = self.shuffleFrame,
-            parent = self.parentFrame,
-            relief = None,
-            image = (shuffleUp, shuffleDown, shuffleUp),
+            ##            parent = self.shuffleFrame,
+            parent=self.parentFrame,
+            relief=None,
+            image=(shuffleUp, shuffleDown, shuffleUp),
             # buttonScale is defined in MakeAToonGlobals
-            image_scale = halfButtonInvertScale,
-            image1_scale = (-0.63, 0.6, 0.6),
-            image2_scale = (-0.63, 0.6, 0.6),
-            text = (TTLocalizer.ShuffleButton, TTLocalizer.ShuffleButton, TTLocalizer.ShuffleButton, ""),
-            text_font = ToontownGlobals.getInterfaceFont(),
-            text_scale = TTLocalizer.SBshuffleBtn,
-            text_pos = (0, -0.02),
-            text_fg = (1, 1, 1, 1),
-            text_shadow = (0, 0, 0, 1),
-            command = self.chooseRandom,
-            )
-##        self.shuffleBtn.hide()
+            image_scale=halfButtonInvertScale,
+            image1_scale=(-0.63, 0.6, 0.6),
+            image2_scale=(-0.63, 0.6, 0.6),
+            text=(
+                TTLocalizer.ShuffleButton,
+                TTLocalizer.ShuffleButton,
+                TTLocalizer.ShuffleButton,
+                ""),
+            text_font=ToontownGlobals.getInterfaceFont(),
+            text_scale=TTLocalizer.SBshuffleBtn,
+            text_pos=(0, -0.02),
+            text_fg=(1, 1, 1, 1),
+            text_shadow=(0, 0, 0, 1),
+            command=self.chooseRandom,
+        )
+# self.shuffleBtn.hide()
 
         # Create the Increment Button - Right Arrow.
         self.incBtn = DirectButton(
-##            parent = self.shuffleFrame,
-            parent = self.parentFrame,
-            relief = None,
-            image = (shuffleArrowUp, shuffleArrowDown, shuffleArrowUp, shuffleArrowDisabled),
+            ##            parent = self.shuffleFrame,
+            parent=self.parentFrame,
+            relief=None,
+            image=(
+                shuffleArrowUp,
+                shuffleArrowDown,
+                shuffleArrowUp,
+                shuffleArrowDisabled),
             # buttonScale is defined in MakeAToonGlobals
-            image_scale = halfButtonInvertScale,
-            image1_scale = halfButtonInvertHoverScale,
-            image2_scale = halfButtonInvertHoverScale,
-##            pos = (0.195, 0, 0),
-            pos = (0.202, 0, 0),
-            command = self.__goFrontHistory,
-            )
+            image_scale=halfButtonInvertScale,
+            image1_scale=halfButtonInvertHoverScale,
+            image2_scale=halfButtonInvertHoverScale,
+            ##            pos = (0.195, 0, 0),
+            pos=(0.202, 0, 0),
+            command=self.__goFrontHistory,
+        )
         self.incBtn.hide()
 
         # Create the Decrement Button - Left Arrow.
         self.decBtn = DirectButton(
-##            parent = self.shuffleFrame,
-            parent = self.parentFrame,
-            relief = None,
-            image = (shuffleArrowUp, shuffleArrowDown, shuffleArrowUp, shuffleArrowDisabled),
+            ##            parent = self.shuffleFrame,
+            parent=self.parentFrame,
+            relief=None,
+            image=(
+                shuffleArrowUp,
+                shuffleArrowDown,
+                shuffleArrowUp,
+                shuffleArrowDisabled),
             # buttonScale is defined in MakeAToonGlobals
-            image_scale = halfButtonScale,
-            image1_scale = halfButtonHoverScale,
-            image2_scale = halfButtonHoverScale,
-##            pos = (-0.195, 0, 0),
-            pos = (-0.202, 0, 0),
-            command = self.__goBackHistory,
-            )
+            image_scale=halfButtonScale,
+            image1_scale=halfButtonHoverScale,
+            image2_scale=halfButtonHoverScale,
+            ##            pos = (-0.195, 0, 0),
+            pos=(-0.202, 0, 0),
+            command=self.__goBackHistory,
+        )
         self.decBtn.hide()
 
         self.lerpDuration = 0.5
         self.showLerp = None
-        self.frameShowLerp =  LerpColorInterval(self.shuffleFrame, self.lerpDuration, Vec4(1, 1, 1, 1), Vec4(1, 1, 1, 0))
-        self.incBtnShowLerp =  LerpColorInterval(self.incBtn, self.lerpDuration, Vec4(1, 1, 1, 1), Vec4(1, 1, 1, 0))
-        self.decBtnShowLerp =  LerpColorInterval(self.decBtn, self.lerpDuration, Vec4(1, 1, 1, 1), Vec4(1, 1, 1, 0))
+        self.frameShowLerp = LerpColorInterval(
+            self.shuffleFrame, self.lerpDuration, Vec4(
+                1, 1, 1, 1), Vec4(
+                1, 1, 1, 0))
+        self.incBtnShowLerp = LerpColorInterval(
+            self.incBtn, self.lerpDuration, Vec4(
+                1, 1, 1, 1), Vec4(
+                1, 1, 1, 0))
+        self.decBtnShowLerp = LerpColorInterval(
+            self.decBtn, self.lerpDuration, Vec4(
+                1, 1, 1, 1), Vec4(
+                1, 1, 1, 0))
 
         self.__updateArrows()
 
@@ -184,7 +208,7 @@ class ShuffleButton:
         self.currChoice = []
         for prop in self.pool:
             self.currChoice.append(random.choice(prop))
-        self.notify.debug('current choice : %s' %self.currChoice)
+        self.notify.debug(f'current choice : {self.currChoice}')
 
         if (len(self.history) == self.maxHistory):
             self.history.remove(self.history[0])
@@ -261,9 +285,8 @@ class ShuffleButton:
                 self.frameShowLerp,
                 self.incBtnShowLerp,
                 self.decBtnShowLerp)
-            )
+        )
         self.showLerp.start()
-
 
     def cleanHistory(self):
         """

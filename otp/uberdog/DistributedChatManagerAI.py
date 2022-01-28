@@ -29,6 +29,6 @@ class DistributedChatManagerAI(DistributedObjectAI):
         assert self.notify.debugCall()
         self.notify.warning("ChatManagerAI going offline")
         DistributedObjectAI.delete(self)
-    
+
     def online(self):
         assert self.notify.debugCall()

@@ -1,7 +1,7 @@
 #################################################################
 # File: BingoGlobals.py
 # Purpose: Provides Global Variables for use within all Bingo
-#          related files. 
+#          related files.
 #################################################################
 
 from toontown.toonbase import TTLocalizer
@@ -17,47 +17,87 @@ BLOCKOUT_CARD = 4
 # representing different aspects of the card.
 # { Key : ( (Color), Base_Reward, Game_Time ) }
 
-         #base color,           button color,         button rollover
-Style1 = ((249, 193, 41, 255),  (106, 241, 233, 255), (64, 215, 206, 255) ) #Gold
-Style2 = ((138, 241, 106, 255), (246, 129, 220, 255), (221, 113, 197, 255)) #Light Green
-Style3 = ((128, 108, 250, 255), (248, 129, 56, 255),  (250, 95, 26, 255)  ) #Purple
-Style4 = ((10, 118, 251, 255),  (252, 225, 97, 255),  (245, 207, 29, 255) ) #Blue
-Style5 = ((243, 84, 253, 255),  (97, 163, 253, 255),  (48, 129, 240, 255) ) #Light Purple
+# base color,           button color,         button rollover
+Style1 = ((249, 193, 41, 255), (106, 241, 233, 255),
+          (64, 215, 206, 255))  # Gold
+Style2 = ((138, 241, 106, 255), (246, 129, 220, 255),
+          (221, 113, 197, 255))  # Light Green
+Style3 = ((128, 108, 250, 255), (248, 129, 56, 255),
+          (250, 95, 26, 255))  # Purple
+Style4 = ((10, 118, 251, 255), (252, 225, 97, 255),
+          (245, 207, 29, 255))  # Blue
+Style5 = ((243, 84, 253, 255), (97, 163, 253, 255),
+          (48, 129, 240, 255))  # Light Purple
 
-                                    #color,  reward, time, name,                              help string
-CardTypeDict = { NORMAL_CARD :     ( Style1, 10,     140,  TTLocalizer.FishBingoTypeNormal,   TTLocalizer.FishBingoHelpNormal ),
-                 FOURCORNER_CARD : ( Style2, 20,     120,  TTLocalizer.FishBingoTypeCorners,  TTLocalizer.FishBingoHelpCorners ),
-                 DIAGONAL_CARD :   ( Style3, 40,     180,  TTLocalizer.FishBingoTypeDiagonal, TTLocalizer.FishBingoHelpDiagonals ),
-                 THREEWAY_CARD :   ( Style4, 80,     180,  TTLocalizer.FishBingoTypeThreeway, TTLocalizer.FishBingoHelpThreeway ),
-                 BLOCKOUT_CARD :   ( Style5, 1000,   90,   TTLocalizer.FishBingoTypeBlockout, TTLocalizer.FishBingoHelpBlockout  ) }
+# color,  reward, time, name,                              help string
+CardTypeDict = {
+    NORMAL_CARD: (
+        Style1,
+        10,
+        140,
+        TTLocalizer.FishBingoTypeNormal,
+        TTLocalizer.FishBingoHelpNormal),
+    FOURCORNER_CARD: (
+        Style2,
+        20,
+        120,
+        TTLocalizer.FishBingoTypeCorners,
+        TTLocalizer.FishBingoHelpCorners),
+    DIAGONAL_CARD: (
+        Style3,
+        40,
+        180,
+        TTLocalizer.FishBingoTypeDiagonal,
+        TTLocalizer.FishBingoHelpDiagonals),
+    THREEWAY_CARD: (
+        Style4,
+        80,
+        180,
+        TTLocalizer.FishBingoTypeThreeway,
+        TTLocalizer.FishBingoHelpThreeway),
+    BLOCKOUT_CARD: (
+        Style5,
+        1000,
+        90,
+        TTLocalizer.FishBingoTypeBlockout,
+        TTLocalizer.FishBingoHelpBlockout)}
+
 
 def getGameTime(typeId):
     return CardTypeDict[typeId][2]
 
+
 def getGameName(typeId):
     return CardTypeDict[typeId][3]
+
 
 def getJackpot(typeId):
     return CardTypeDict[typeId][1]
 
+
 def getColor(typeId):
-    float_color = [x/255.0 for x in CardTypeDict[typeId][0][0]]
+    float_color = [x / 255.0 for x in CardTypeDict[typeId][0][0]]
     return float_color
+
 
 def getButtonColor(typeId):
-    float_color = [x/255.0 for x in CardTypeDict[typeId][0][1]]
+    float_color = [x / 255.0 for x in CardTypeDict[typeId][0][1]]
     return float_color
 
+
 def getButtonRolloverColor(typeId):
-    float_color = [x/255.0 for x in CardTypeDict[typeId][0][2]]
+    float_color = [x / 255.0 for x in CardTypeDict[typeId][0][2]]
     return float_color
+
 
 def getHelpString(typeId):
     return CardTypeDict[typeId][4]
 
-#cell colors
-CellColorActive =   (1.0, 1.0, 1.0, 1.0)  # a square needed to 'win' a game
-CellColorInactive = (0.8, 0.8, 0.8, 1.0)  # a square that is not needed for this game
+
+# cell colors
+CellColorActive = (1.0, 1.0, 1.0, 1.0)  # a square needed to 'win' a game
+# a square that is not needed for this game
+CellColorInactive = (0.8, 0.8, 0.8, 1.0)
 
 # Min/Max Number of JBs the super jackpot can
 # reach.
@@ -101,7 +141,7 @@ CardPosition = (0.75, 1.0, -.65)
 #CardPosition = (-0.75, 1.0, -.95+CardImageScale[2]*0.5)
 
 TutorialPosition = (0.2, 1.0, -0.76)
-TutorialScale = 0.6 #(0.5, 0.5, 0.15)
+TutorialScale = 0.6  # (0.5, 0.5, 0.15)
 TutorialTextScale = (0.07, 0.233)
 # Cell Defaults Image Values. These ensure that no matter
 # what value the CardImageScale takes, the card GUI will
@@ -112,11 +152,11 @@ GridXOffset = -0.052
 FishButtonDict = {
     # (buttonName)
     -1: ("mickeyButton", ),
-     0: ("BaloonFishButton", ),
-     2: ("CatfishButton", ),
-     4: ("ClownfishButton", ),
-     6: ("FrozenfishButton", ),
-     8: ("starfishButton", ),
+    0: ("BaloonFishButton", ),
+    2: ("CatfishButton", ),
+    4: ("ClownfishButton", ),
+    6: ("FrozenfishButton", ),
+    8: ("starfishButton", ),
     10: ("holyMackrelButton", ),
     12: ("DogfishButton", ),
     14: ("amoreEelButton", ),
@@ -130,13 +170,10 @@ FishButtonDict = {
     30: ("pianotunaButton", ),
     32: ("PBJfishButton", ),
     34: ("DevilrayButton", ),
-    }
+}
 
-#tutorial type enum
+# tutorial type enum
 TutorialIntro = 1
 TutorialMark = 2
 TutorialCard = 3
 TutorialBingo = 4
-
-
-

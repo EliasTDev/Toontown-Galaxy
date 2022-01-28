@@ -6,16 +6,17 @@ from toontown.coghq import CountryClubRoomSpecs
 from direct.directnotify import DirectNotifyGlobal
 import random
 
+
 class CountryClubRoom(DirectObject.DirectObject):
     """Represents the geometry of a single room of a mint. This includes
     hallways. Handles logic for matching up doorways to doorways of
     adjacent rooms."""
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('CountryClubRoom')    
-    
+    notify = DirectNotifyGlobal.directNotify.newCategory('CountryClubRoom')
+
     FloorCollPrefix = 'mintFloorColl'
     CashbotMintDoorFrame = 'phase_10/models/cashbotHQ/DoorFrame'
-    
+
     def __init__(self, path=None):
         if path is not None:
             if path in CountryClubRoomSpecs.BossbotCountryClubConnectorRooms:
@@ -23,26 +24,26 @@ class CountryClubRoom(DirectObject.DirectObject):
             else:
                 loadFunc = loader.loadModel
             self.setGeom(loadFunc(path))
-        
+
         self.localToonFSM = ClassicFSM.ClassicFSM('CountryClubRoomLocalToonPresent',
-                                          [State.State('off',
-                                                       self.enterLtOff,
-                                                       self.exitLtOff,
-                                                       ['notPresent']),
-                                           State.State('notPresent',
-                                                       self.enterLtNotPresent,
-                                                       self.exitLtNotPresent,
-                                                       ['present']),
-                                           State.State('present',
-                                                       self.enterLtPresent,
-                                                       self.exitLtPresent,
-                                                       ['notPresent']),
-                                           ],
-                                           # Initial State
-                                           'notPresent',
-                                           # Final State
-                                           'notPresent',
-                                           )
+                                                  [State.State('off',
+                                                               self.enterLtOff,
+                                                               self.exitLtOff,
+                                                               ['notPresent']),
+                                                   State.State('notPresent',
+                                                               self.enterLtNotPresent,
+                                                               self.exitLtNotPresent,
+                                                               ['present']),
+                                                   State.State('present',
+                                                               self.enterLtPresent,
+                                                               self.exitLtPresent,
+                                                               ['notPresent']),
+                                                   ],
+                                                  # Initial State
+                                                  'notPresent',
+                                                  # Final State
+                                                  'notPresent',
+                                                  )
         self.localToonFSM.enterInitialState()
 
     def delete(self):
@@ -50,77 +51,83 @@ class CountryClubRoom(DirectObject.DirectObject):
 
     def enter(self):
         self.localToonFSM.request('notPresent')
+
     def exit(self):
         self.localToonFSM.requestFinalState()
-        
+
     def setRoomNum(self, num):
         # First room in the mint is room zero, first hallway is one, second
         # room is two, etc.
         self.roomNum = num
+
     def getRoomNum(self):
         return self.roomNum
 
     def setGeom(self, geom):
         assert self.notify.debugStateCall()
-        if geom == None:
-            import pdb; pdb.set_trace()
+        if geom is None:
+            import pdb
+            pdb.set_trace()
         self.__geom = geom
+
     def getGeom(self):
         return self.__geom
 
     def _getEntrances(self):
         return self.__geom.findAllMatches('**/ENTRANCE*')
+
     def _getExits(self):
         return self.__geom.findAllMatches('**/EXIT*')
 
     def attachTo(self, other, rng):
-        # attach an entrance doorway of this room to another room's exit doorway
+        # attach an entrance doorway of this room to another room's exit
+        # doorway
         otherExits = other._getExits()
         entrances = self._getEntrances()
 
-        otherDoor = otherExits[0] #rng.choice(otherExits)
+        otherDoor = otherExits[0]  # rng.choice(otherExits)
         thisDoor = rng.choice(entrances)
         geom = self.getGeom()
         otherGeom = other.getGeom()
 
-        self.notify.debug('thisDoor = %s' % thisDoor)
-        self.notify.debug('otherDoor = %s' % otherDoor)
-        self.notify.debug('thisGeom = %s' % geom)
-        self.notify.debug('otherGeom = %s' % otherGeom)
+        self.notify.debug(f'thisDoor = {thisDoor}')
+        self.notify.debug(f'otherDoor = {otherDoor}')
+        self.notify.debug(f'thisGeom = {geom}')
+        self.notify.debug(f'otherGeom = {otherGeom}')
 
-        debugAxis1 = None # loader.loadModel('models/misc/xyzAxis')
+        debugAxis1 = None  # loader.loadModel('models/misc/xyzAxis')
         if debugAxis1:
             debugAxis1.reparentTo(thisDoor)
-        
-        debugAxis2 = None # loader.loadModel('models/misc/smiley')
+
+        debugAxis2 = None  # loader.loadModel('models/misc/smiley')
         if debugAxis2:
             debugAxis2.reparentTo(otherDoor)
-            debugAxis2.setColorScale(0.5,0.5,0.5,1)
+            debugAxis2.setColorScale(0.5, 0.5, 0.5, 1)
 
         tempNode = otherDoor.attachNewNode('tempRotNode')
         geom.reparentTo(tempNode)
         geom.clearMat()
         # position our door at our origin so that it's on top of the other door
-        newGeomPos = Vec3(0)-thisDoor.getPos(geom)
-        self.notify.debug('newGeomPos = %s' % newGeomPos)
+        newGeomPos = Vec3(0) - thisDoor.getPos(geom)
+        self.notify.debug(f'newGeomPos = {newGeomPos}')
         geom.setPos(newGeomPos)
         # rotate so that our door is facing the right way
         newTempNodeH = -thisDoor.getH(otherDoor)
-        self.notify.debug('newTempNodeH =%s' % newTempNodeH)
+        self.notify.debug(f'newTempNodeH ={newTempNodeH}')
         tempNode.setH(newTempNodeH)
         geom.wrtReparentTo(otherGeom.getParent())
         tempNode.removeNode()
 
         #doorFrame = loader.loadModel(CountryClubRoom.CashbotMintDoorFrame)
-        #doorFrame.reparentTo(thisDoor)
+        # doorFrame.reparentTo(thisDoor)
 
     def getFloorCollName(self):
-        return '%s%s' % (CountryClubRoom.FloorCollPrefix, self.roomNum)
+        return f'{CountryClubRoom.FloorCollPrefix}{self.roomNum}'
 
     def initFloorCollisions(self):
         # call this after calling setGeom and before adding anything under
         # the room geometry
-        
+
         # we handle floor collisions differently from a standard level. Our
         # entire level is going to be treated as one 'zone' (this level
         # represents one room of the mint)
@@ -136,27 +143,30 @@ class CountryClubRoom(DirectObject.DirectObject):
             # nodes have that name
             floorCollName = self.getFloorCollName()
             others = self.getGeom().findAllMatches(
-                '**/%s' % floorCollName)
+                f'**/{floorCollName}')
             for other in others:
-                other.setName('%s_renamed' % floorCollName)
+                other.setName(f'{floorCollName}_renamed')
             for floorColl in floorColls:
                 floorColl.setName(floorCollName)
 
     # states for 'localToon present' FSM
     def enterLtOff(self):
         pass
+
     def exitLtOff(self):
         pass
 
     def enterLtNotPresent(self):
         # called when localToon is no longer in this room
         pass
+
     def exitLtNotPresent(self):
         pass
 
     def enterLtPresent(self):
         # called when localToon is in this room
         pass
+
     def exitLtPresent(self):
         pass
 
@@ -166,7 +176,7 @@ class CountryClubRoom(DirectObject.DirectObject):
             axis = loader.loadModel("models/misc/xyzAxis.bam")
             axis.setColorOff()
             # last 1 overrides default colorScale
-            axis.setColorScale(1,1,1,1,1)
+            axis.setColorScale(1, 1, 1, 1, 1)
             for doorway in self._getEntrances() + self._getExits():
                 self.axes.append(axis.copyTo(doorway))
             self.axes.append(axis.copyTo(self.model))
@@ -183,4 +193,3 @@ class CountryClubRoom(DirectObject.DirectObject):
             for axis in self.axes:
                 axis.removeNode()
             del self.axes
-

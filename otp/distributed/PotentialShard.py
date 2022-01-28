@@ -1,5 +1,6 @@
 """PotentialShard module: contains the PotenialShardClass"""
 
+
 class PotentialShard:
 
     def __init__(self, id):
@@ -9,4 +10,3 @@ class PotentialShard:
         self.welcomeValleyPopulation = 0
         self.active = 1
         self.available = 1
-

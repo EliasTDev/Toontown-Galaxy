@@ -9,52 +9,53 @@
 ######################################################################
 
 from .ScavengerHuntBase import ScavengerHuntBase
-import unittest,copy
+import unittest
+import copy
 
-hunt = ScavengerHuntBase(scavengerHuntId = 12,scavengerHuntType = 3)
-hunt.defineGoals(list(range(1,6)))
-hunt.defineMilestones([[0,list(range(1,4))],[1,list(range(1,6))]])
+hunt = ScavengerHuntBase(scavengerHuntId=12, scavengerHuntType=3)
+hunt.defineGoals(list(range(1, 6)))
+hunt.defineMilestones([[0, list(range(1, 4))], [1, list(range(1, 6))]])
+
 
 class MilestoneTestCase(unittest.TestCase):
     def testDefineGoals(self):
-        gc = set(range(1,6))
-        self.assertEqual(hunt.goals,gc)
+        gc = set(range(1, 6))
+        self.assertEqual(hunt.goals, gc)
 
     def testDefineMilestones(self):
         m = {}
 
-        gc = list(range(1,4))
+        gc = list(range(1, 4))
         m[frozenset(gc)] = 0
 
-        gc = list(range(1,6))
+        gc = list(range(1, 6))
         m[frozenset(gc)] = 1
 
-        self.assertEqual(hunt.milestones,m)
+        self.assertEqual(hunt.milestones, m)
 
     def testRecentMilestonesHit(self):
-        gc = list(range(1,4))
-        m = hunt.getRecentMilestonesHit(gc,2)
-        self.assertEqual([0],m)
+        gc = list(range(1, 4))
+        m = hunt.getRecentMilestonesHit(gc, 2)
+        self.assertEqual([0], m)
 
-        gc = list(range(1,6))
-        m = hunt.getRecentMilestonesHit(gc,2)
-        m.sort()
-        self.assertEqual([0,1],m)
+        gc = list(range(1, 6))
+        m = sorted(hunt.getRecentMilestonesHit(gc, 2))
+        self.assertEqual([0, 1], m)
 
     def testRecentMilestonesMissed(self):
-        gc = list(range(1,5))
-            
-        m = hunt.getRecentMilestonesHit(gc,4)
-        self.assertEqual([],m)
-    
+        gc = list(range(1, 5))
+
+        m = hunt.getRecentMilestonesHit(gc, 4)
+        self.assertEqual([], m)
+
     def testAllMilestonesHit(self):
-        gc = list(range(1,6))
+        gc = list(range(1, 6))
 
         m = hunt.getAllMilestonesHit(gc)
         m.sort()
-        M = list(hunt.milestones.values())
-        M.sort()
-        self.assertEqual(M,m)
+        M = sorted(hunt.milestones.values())
+        self.assertEqual(M, m)
 
-if __name__ == "__main__":    
+
+if __name__ == "__main__":
     unittest.main()

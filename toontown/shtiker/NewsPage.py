@@ -15,8 +15,9 @@ if UseDirectNewsFrame:
 else:
     try:
         from toontown.shtiker import InGameNewsFrame
-    except :
+    except BaseException:
         HaveNewsFrame = False
+
 
 class NewsPage(ShtikerPage.ShtikerPage):
     """
@@ -24,41 +25,39 @@ class NewsPage(ShtikerPage.ShtikerPage):
     """
 
     notify = DirectNotifyGlobal.directNotify.newCategory("NewsPage")
-    
+
     def __init__(self):
         ShtikerPage.ShtikerPage.__init__(self)
 
-
     def load(self):
         self.noNewsLabel = DirectLabel(
-            parent = self,
-            relief = None,
-            text = TTLocalizer.NewsPageImportError ,
-            text_scale = 0.12,
+            parent=self,
+            relief=None,
+            text=TTLocalizer.NewsPageImportError,
+            text_scale=0.12,
         )
-        
+
         if HaveNewsFrame:
             if UseDirectNewsFrame:
                 import datetime
                 start = datetime.datetime.now()
-                self.newsFrame = DirectNewsFrame.DirectNewsFrame(parent = self)
+                self.newsFrame = DirectNewsFrame.DirectNewsFrame(parent=self)
                 ending = datetime.datetime.now()
-                self.notify.info("time to load news = %s" % str(ending-start))
+                self.notify.info(f"time to load news = {str(ending - start)}")
             else:
-                self.newsFrame = InGameNewsFrame.InGameNewsFrame(parent = self)
+                self.newsFrame = InGameNewsFrame.InGameNewsFrame(parent=self)
                 # this forces a preload of the news web site
                 self.newsFrame.activate()
 
-        
     def unload(self):
         if HaveNewsFrame:
             self.newsFrame.unload()
             del self.newsFrame
 
-    def clearPage(self):        
+    def clearPage(self):
         return
 
-    def updatePage(self):        
+    def updatePage(self):
         return
 
     def enter(self):
@@ -71,13 +70,14 @@ class NewsPage(ShtikerPage.ShtikerPage):
             if self.book:
                 # hide the previous arrow
                 self.book.prevArrow.hide()
-                self.book.disableAllPageTabs()        
+                self.book.disableAllPageTabs()
             self.newsFrame.activate()
             # turn off the cells that obstruct
             base.setCellsAvailable(base.leftCells, 0)
             base.setCellsAvailable([base.rightCells[1]], 0)
             localAvatar.book.bookCloseButton.hide()
-            localAvatar.setLastTimeReadNews(base.cr.toontownTimeManager.getCurServerDateTime())
+            localAvatar.setLastTimeReadNews(
+                base.cr.toontownTimeManager.getCurServerDateTime())
         return
 
     def exit(self):
@@ -91,13 +91,13 @@ class NewsPage(ShtikerPage.ShtikerPage):
         if HaveNewsFrame:
             self.newsFrame.deactivate()
             base.setCellsAvailable(base.leftCells, 1)
-            base.setCellsAvailable([base.rightCells[1]], 1)            
+            base.setCellsAvailable([base.rightCells[1]], 1)
             if localAvatar.book.shouldBookButtonBeHidden():
                 localAvatar.book.bookCloseButton.hide()
             else:
                 localAvatar.book.bookCloseButton.show()
         return
-              
+
     def doSnapshot(self):
         """Save our current browser page as png file."""
         if HaveNewsFrame:

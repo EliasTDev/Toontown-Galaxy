@@ -82,15 +82,19 @@ Launcher sends the event "phaseComplete-n" when phase n is finished downloading
 #                                                #
 ##################################################
 
-import os
-import sys
-import time
-import types
 
 #
 # Original bootstrap logger that gets LOGGING IMMEDIATELY UP before any
 # Panda/Toontown dependencies are imported
 #
+from toontown.toonbase import TTLocalizer
+from panda3d.core import *
+from otp.otpbase import OTPLauncherGlobals
+from otp.launcher.LauncherBase import LauncherBase
+import os
+import sys
+import time
+import types
 if 1:   # flip this as necessary
     # Setup the log files
     # We want C++ and Python to both go to the same log so they
@@ -100,7 +104,8 @@ if 1:   # flip this as necessary
     # want this fmt so log files can be sorted oldest first based on name,
     # and so old open handles to logs dont prevent game from starting
     ltime = time.localtime()
-    logSuffix = "%02d%02d%02d_%02d%02d%02d" % (ltime[0]-2000,ltime[1],ltime[2],ltime[3],ltime[4],ltime[5])
+    logSuffix = "%02d%02d%02d_%02d%02d%02d" % (
+        ltime[0] - 2000, ltime[1], ltime[2], ltime[3], ltime[4], ltime[5])
     logfile = 'toontownD-' + logSuffix + '.log'
 
     # Redirect Python output and err to the same file
@@ -108,19 +113,21 @@ if 1:   # flip this as necessary
         def __init__(self, orig, log):
             self.orig = orig
             self.log = log
+
         def write(self, str):
             self.log.write(str)
             self.log.flush()
             self.orig.write(str)
             self.orig.flush()
+
         def flush(self):
             self.log.flush()
             self.orig.flush()
 
     # old game log deletion now managed by activeX control
-    ## Delete old log files so they do not clog up the disk
-    ##if os.path.exists(logfile):
-    ##    os.remove(logfile)
+    # Delete old log files so they do not clog up the disk
+    # if os.path.exists(logfile):
+    # os.remove(logfile)
 
     # Open the new one for appending
     # Make sure you use 'a' mode (appending) because both Python and
@@ -130,7 +137,7 @@ if 1:   # flip this as necessary
     # output and Python output not interlaced properly.
     if not os.path.exists('user/logs/'):
         os.mkdir('user')
-        os.mkdir('user/logs')    
+        os.mkdir('user/logs')
     log = open(os.path.join('user/logs', logfile), 'a')
     logOut = LogAndOutput(sys.__stdout__, log)
     logErr = LogAndOutput(sys.__stderr__, log)
@@ -144,16 +151,26 @@ if 1:   # flip this as necessary
     print("sys.path = ", sys.path)
     print("sys.argv = ", sys.argv)
 
-from otp.launcher.LauncherBase import LauncherBase
-from otp.otpbase import OTPLauncherGlobals
 # LauncherBase sets up import path stuff, import Panda after
-from panda3d.core import *
-from toontown.toonbase import TTLocalizer
+
 
 class ToontownLauncher(LauncherBase):
     GameName = 'Toontown'
-    LauncherPhases = [3,3.5,4,5,5.5,6,7,8,9,10,11,12,13]
-    TmpOverallMap = [0.25,0.15,0.12,0.17,0.08,0.07,0.05,0.05,0.017,0.011,0.010,0.012,0.010]
+    LauncherPhases = [3, 3.5, 4, 5, 5.5, 6, 7, 8, 9, 10, 11, 12, 13]
+    TmpOverallMap = [
+        0.25,
+        0.15,
+        0.12,
+        0.17,
+        0.08,
+        0.07,
+        0.05,
+        0.05,
+        0.017,
+        0.011,
+        0.010,
+        0.012,
+        0.010]
     RegistryKey = 'Software\\Disney\\Disney Online\\Toontown'
     ForegroundSleepTime = 0.01
     Localizer = TTLocalizer
@@ -169,7 +186,8 @@ class ToontownLauncher(LauncherBase):
         # argv[3] : account server (single url)
         # argv[4] : test server flag (0 or 1)
         # argv[5] : args to Configrc.exe
-        # It is an error not to pass in the right number of command line parameters
+        # It is an error not to pass in the right number of command line
+        # parameters
 
         # For backwards compatibility with the launcher, we allow this
         # old script name to be on the command line, and we ignore it
@@ -211,9 +229,10 @@ class ToontownLauncher(LauncherBase):
         self.toontownRegistryKey = 'Software\\Disney\\Disney Online\\Toontown'
         # This is where all the registry keys are located
         if self.testServerFlag:
-            self.toontownRegistryKey = "%s%s" % (self.toontownRegistryKey, 'Test')
-        # append any necessary productName to differentiate from US installation
-        self.toontownRegistryKey = "%s%s" % (self.toontownRegistryKey, self.getProductName())
+            self.toontownRegistryKey = f"{self.toontownRegistryKey}{'Test'}"
+        # append any necessary productName to differentiate from US
+        # installation
+        self.toontownRegistryKey = f"{self.toontownRegistryKey}{self.getProductName()}"
 
         LauncherBase.__init__(self)
 
@@ -226,7 +245,7 @@ class ToontownLauncher(LauncherBase):
     def getValue(self, key, default=None):
         try:
             return self.getRegistry(key, default)
-        except:
+        except BaseException:
             return self.getRegistry(key)
 
     def setValue(self, key, value):
@@ -282,8 +301,11 @@ class ToontownLauncher(LauncherBase):
         if 'secretsNeedsParentPassword' in dict:
             self.secretNeedsParentPasswordKey = 1 and dict['secretsNeedsParentPassword']
         else:
-            self.notify.warning('no secretNeedsParentPassword token in webAcctParams')
-        self.notify.info('secretNeedsParentPassword = %d' % self.secretNeedsParentPasswordKey)
+            self.notify.warning(
+                'no secretNeedsParentPassword token in webAcctParams')
+        self.notify.info(
+            'secretNeedsParentPassword = %d' %
+            self.secretNeedsParentPasswordKey)
 
         self.chatEligibleKey = 0
         if 'chatEligible' in dict:
@@ -292,9 +314,9 @@ class ToontownLauncher(LauncherBase):
             self.notify.warning('no chatEligible token in webAcctParams')
         self.notify.info('chatEligibleKey = %d' % self.chatEligibleKey)
 
-    #============================================================
+    # ============================================================
     # Interface of launcher to the rest of the game
-    #============================================================
+    # ============================================================
 
     def getBlue(self):
         """
@@ -326,9 +348,9 @@ class ToontownLauncher(LauncherBase):
             playToken = None
         return playToken
 
-    #============================================================
+    # ============================================================
     #   Registry functions
-    #============================================================
+    # ============================================================
 
     def setRegistry(self, name, value):
         # Set this name to this value under the master game registry key
@@ -346,48 +368,55 @@ class ToontownLauncher(LauncherBase):
             WindowsRegistry.setStringValue(self.toontownRegistryKey, name,
                                            value)
         else:
-            self.notify.warning("setRegistry: Invalid type for registry value: "
-                                + repr(value))
+            self.notify.warning(
+                "setRegistry: Invalid type for registry value: " +
+                repr(value))
 
-    def getRegistry(self, name, missingValue = None):
+    def getRegistry(self, name, missingValue=None):
         # Return the value of this key.
 
-        self.notify.info("getRegistry%s" % ((name, missingValue),))
+        self.notify.info(f"getRegistry{name, missingValue}")
         if not self.WIN32:
             # Outside of windows, we query the environment.
-            if (missingValue == None):
+            if (missingValue is None):
                 missingValue = ""
             value = os.environ.get(name, missingValue)
             try:
                 value = int(value)
-            except:
+            except BaseException:
                 pass
             return value
 
         t = WindowsRegistry.getKeyType(self.toontownRegistryKey, name)
         if (t == WindowsRegistry.TInt):
-            if (missingValue == None):
+            if (missingValue is None):
                 missingValue = 0
             return WindowsRegistry.getIntValue(self.toontownRegistryKey, name,
                                                missingValue)
         elif (t == WindowsRegistry.TString):
-            if (missingValue == None):
+            if (missingValue is None):
                 missingValue = ""
-            return WindowsRegistry.getStringValue(self.toontownRegistryKey, name,
-                                                  missingValue)
+            return WindowsRegistry.getStringValue(
+                self.toontownRegistryKey, name, missingValue)
         else:
             return missingValue
 
-    #============================================================
+    # ============================================================
     # Download functions
-    #============================================================
+    # ============================================================
 
     def getCDDownloadPath(self, origPath, serverFilePath):
-        return '%s/%s%s/CD_%d/%s' % (
-            origPath, self.ServerVersion, self.ServerVersionSuffix, self.fromCD, serverFilePath)
+        return '%s/%s%s/CD_%d/%s' % (origPath,
+                                     self.ServerVersion,
+                                     self.ServerVersionSuffix,
+                                     self.fromCD,
+                                     serverFilePath)
+
     def getDownloadPath(self, origPath, serverFilePath):
-        return '%s/%s%s/%s' % (
-            origPath, self.ServerVersion, self.ServerVersionSuffix, serverFilePath)
+        return '%s/%s%s/%s' % (origPath,
+                               self.ServerVersion,
+                               self.ServerVersionSuffix,
+                               serverFilePath)
 
     def getPercentPatchComplete(self, bytesWritten):
         if self.totalPatchDownload:
@@ -421,12 +450,12 @@ class ToontownLauncher(LauncherBase):
         """
         self.pandaErrorCode = code
         if self.WIN32:
-            self.notify.info("setting panda error code to %s" % (code))
+            self.notify.info(f"setting panda error code to {code}")
             exitCode2exitPage = {
                 OTPLauncherGlobals.ExitEnableChat: "chat",
                 OTPLauncherGlobals.ExitSetParentPassword: "setparentpassword",
                 OTPLauncherGlobals.ExitPurchase: "purchase",
-                }
+            }
             if code in exitCode2exitPage:
                 self.setRegistry("EXIT_PAGE", exitCode2exitPage[code])
                 self.setRegistry(self.PandaErrorCodeKey, 0)
@@ -439,18 +468,17 @@ class ToontownLauncher(LauncherBase):
             LauncherBase.setPandaErrorCode(self, code)
 
     def getNeedPwForSecretKey(self):
-##         """
-##         Get the PlayToken out of the registry and return it.  The
-##         PlayToken is not saved; if this method is called a second
-##         time it will return None.
-##         """
-##         nameValue = self.getRegistry(self.webAcctParams)
-##         needPwForSecretKey = self.getRegistry(self.needPwForSecretKey)
-##         # Immediately clear out the PlayToken so it will be more
-##         # difficult for a hacker to pull it out of the registry.
-##         self.setRegistry(self.needPwForSecretKey, "")
-##         return 1 and needPwForSecretKey
-
+        # """
+        # Get the PlayToken out of the registry and return it.  The
+        # PlayToken is not saved; if this method is called a second
+        # time it will return None.
+        # """
+        ##         nameValue = self.getRegistry(self.webAcctParams)
+        ##         needPwForSecretKey = self.getRegistry(self.needPwForSecretKey)
+        # Immediately clear out the PlayToken so it will be more
+        # difficult for a hacker to pull it out of the registry.
+        ##         self.setRegistry(self.needPwForSecretKey, "")
+        # return 1 and needPwForSecretKey
         """
         Everything is already parsed if parseWebAcctParams was called
         """
@@ -460,25 +488,25 @@ class ToontownLauncher(LauncherBase):
         """
         Get the parent password set key
         """
-##         return self.getRegistry(self.chatEligibleKey, 0)
+# return self.getRegistry(self.chatEligibleKey, 0)
         # Everything is already parsed if parseWebAcctParams was called
         return self.chatEligibleKey
 
-    def MakeNTFSFilesGlobalWriteable(self, pathToSet = None ):
+    def MakeNTFSFilesGlobalWriteable(self, pathToSet=None):
         if not self.WIN32:
             return
         LauncherBase.MakeNTFSFilesGlobalWriteable(self, pathToSet)
 
-    #============================================================
+    # ============================================================
     #  Launcher startup
-    #============================================================
+    # ============================================================
 
     def startGame(self):
         # We'll need to import Phase3.pyo.  Make sure there's not a
         # competing Phase3.py file in the way first.
         try:
             os.remove('Phase3.py')
-        except:
+        except BaseException:
             pass
 
         # Read in the Phase3.pyz file

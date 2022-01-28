@@ -17,6 +17,8 @@ from toontown.toontowngui import TTDialog
 from toontown.shtiker.ShardPage import POP_COLORS
 import functools
 import random
+
+
 class DistrictSelector(ShtikerPage.ShtikerPage):
     """DistrictSelector class"""
 
@@ -27,11 +29,11 @@ class DistrictSelector(ShtikerPage.ShtikerPage):
         self.shardButtonMap = {}
         self.shardButtons = []
         self.scrollList = None
-        self.gui = None 
+        self.gui = None
 
-        self.textRolloverColor = Vec4(1,1,0,1)
-        self.textDownColor = Vec4(0.5,0.9,1,1)
-        self.textDisabledColor = Vec4(0.4,0.8,0.4,1)
+        self.textRolloverColor = Vec4(1, 1, 0, 1)
+        self.textDownColor = Vec4(0.5, 0.9, 1, 1)
+        self.textDisabledColor = Vec4(0.4, 0.8, 0.4, 1)
         self.ShardInfoUpdateInterval = 5.0  # seconds
 
         self.lowPop, self.oggPop, self.highPop = base.getShardPopLimits()
@@ -41,25 +43,25 @@ class DistrictSelector(ShtikerPage.ShtikerPage):
 
     def showSelector(self):
         self.enter()
-    
+
     def hideSelector(self):
         self.exit()
-    
+
     def load(self):
         main_text_scale = 0.06
         helpText_ycoord = 0.403
         shardPop_ycoord = helpText_ycoord - 0.523
         totalPop_ycoord = shardPop_ycoord - 0.26
         self.totalPopulationText = DirectLabel(
-            parent = self,
-            relief = None,
-            text = TTLocalizer.ShardPagePopulationTotal % (1),
-            text_scale = main_text_scale,
-            text_wordwrap = 8,
-            textMayChange = 1,
-            text_align = TextNode.ACenter,
-            pos = (0.6, 0, totalPop_ycoord),
-            )
+            parent=self,
+            relief=None,
+            text=TTLocalizer.ShardPagePopulationTotal % (1),
+            text_scale=main_text_scale,
+            text_wordwrap=8,
+            textMayChange=1,
+            text_align=TextNode.ACenter,
+            pos=(0.6, 0, totalPop_ycoord),
+        )
         if self.showPop:
             self.totalPopulationText.show()
             self.totalPopulationText.setBin('gui-popup', 0)
@@ -102,58 +104,72 @@ class DistrictSelector(ShtikerPage.ShtikerPage):
             self.scrollList = None
 
         self.scrollList = DirectScrolledList(
-            parent = self,
-            relief = None,
-            pos = (0,0,0),
+            parent=self,
+            relief=None,
+            pos=(0, 0, 0),
             # inc and dec are DirectButtons
             # incButton is on the bottom of page, decButton is on the top!
-            incButton_image = (self.gui.find("**/FndsLst_ScrollUp"),
-                               self.gui.find("**/FndsLst_ScrollDN"),
-                               self.gui.find("**/FndsLst_ScrollUp_Rllvr"),
-                               self.gui.find("**/FndsLst_ScrollUp"),
-                               ),
-            incButton_relief = None,
-            incButton_scale = (self.arrowButtonScale,self.arrowButtonScale,-self.arrowButtonScale),
-            incButton_pos = (self.buttonXstart,0,self.itemFrameZorigin-0.999),
+            incButton_image=(self.gui.find("**/FndsLst_ScrollUp"),
+                             self.gui.find("**/FndsLst_ScrollDN"),
+                             self.gui.find("**/FndsLst_ScrollUp_Rllvr"),
+                             self.gui.find("**/FndsLst_ScrollUp"),
+                             ),
+            incButton_relief=None,
+            incButton_scale=(
+                self.arrowButtonScale, self.arrowButtonScale, -self.arrowButtonScale),
+            incButton_pos=(
+                self.buttonXstart,
+                0,
+                self.itemFrameZorigin -
+                0.999),
             # Make the disabled button fade out
-            incButton_image3_color = Vec4(1,1,1,0.2),
-            decButton_image = (self.gui.find("**/FndsLst_ScrollUp"),
-                               self.gui.find("**/FndsLst_ScrollDN"),
-                               self.gui.find("**/FndsLst_ScrollUp_Rllvr"),
-                               self.gui.find("**/FndsLst_ScrollUp"),
-                               ),
-            decButton_relief = None,
-            decButton_scale = (self.arrowButtonScale,self.arrowButtonScale,self.arrowButtonScale),
+            incButton_image3_color=Vec4(1, 1, 1, 0.2),
+            decButton_image=(self.gui.find("**/FndsLst_ScrollUp"),
+                             self.gui.find("**/FndsLst_ScrollDN"),
+                             self.gui.find("**/FndsLst_ScrollUp_Rllvr"),
+                             self.gui.find("**/FndsLst_ScrollUp"),
+                             ),
+            decButton_relief=None,
+            decButton_scale=(
+                self.arrowButtonScale,
+                self.arrowButtonScale,
+                self.arrowButtonScale),
             #decButton_pos = (self.buttonXstart,0,self.itemFrameZorigin+0.127),
-            decButton_pos = (self.buttonXstart,0,self.itemFrameZorigin+0.125),
+            decButton_pos=(
+                self.buttonXstart,
+                0,
+                self.itemFrameZorigin +
+                0.125),
             # Make the disabled button fade out
-            decButton_image3_color = Vec4(1,1,1,0.2),
+            decButton_image3_color=Vec4(1, 1, 1, 0.2),
 
             # itemFrame is a DirectFrame
-            itemFrame_pos = (self.itemFrameXorigin,0,self.itemFrameZorigin),
-            itemFrame_scale = 1.0,
-            itemFrame_relief = DGG.SUNKEN,
+            itemFrame_pos=(self.itemFrameXorigin, 0, self.itemFrameZorigin),
+            itemFrame_scale=1.0,
+            itemFrame_relief=DGG.SUNKEN,
             # frameSize is (minX,maxX,minZ,maxZ);  where x goes left->right neg->pos,
             # and z goes bottom->top neg->pos
-            itemFrame_frameSize = (self.listXorigin,self.listXorigin+self.listFrameSizeX,
-                                   self.listZorigin,self.listZorigin+self.listFrameSizeZ),
-            itemFrame_frameColor = (0.85,0.95,1,1),
-            itemFrame_borderWidth = (0.01,0.01),
+            itemFrame_frameSize=(self.listXorigin, self.listXorigin + self.listFrameSizeX,
+                                 self.listZorigin, self.listZorigin + self.listFrameSizeZ),
+            itemFrame_frameColor=(0.85, 0.95, 1, 1),
+            itemFrame_borderWidth=(0.01, 0.01),
             # each item is a button with text on it
-            numItemsVisible = 15,
+            numItemsVisible=15,
             # need to set height of each entry to avoid list text running off end of listbox
-            forceHeight = 0.065,
-            items = self.shardButtons,
-            )
+            forceHeight=0.065,
+            items=self.shardButtons,
+        )
         self.scrollList.setBin('gui-popup', 0)
         self.scrollList.scrollTo(selectedIndex)
-
 
     def askForShardInfoUpdate(self, task=None):
 
         ToontownDistrictStats.refresh('shardInfoUpdated')
         # repeat request several seconds in the future
-        taskMgr.doMethodLater(self.ShardInfoUpdateInterval, self.askForShardInfoUpdate, 'ShardPageUpdateTask-doLater')
+        taskMgr.doMethodLater(
+            self.ShardInfoUpdateInterval,
+            self.askForShardInfoUpdate,
+            'ShardPageUpdateTask-doLater')
         return Task.done
 
     def makeShardButton(self, shardId, shardName, shardPop):
@@ -161,62 +177,63 @@ class DistrictSelector(ShtikerPage.ShtikerPage):
         shardButtonParent = DirectFrame()
 
         shardButtonL = DirectButton(
-            parent = shardButtonParent,
-            relief = None,
-            text = shardName,
-            text_scale = 0.06,
-            text_align = TextNode.ALeft,
-            text1_bg = self.textDownColor,
-            text2_bg = self.textRolloverColor,
-            text3_fg = self.textDisabledColor,
-            textMayChange = 0,
-            command = self.getPopChoiceHandler(shardPop),
-            extraArgs = [shardId],
-            )
+            parent=shardButtonParent,
+            relief=None,
+            text=shardName,
+            text_scale=0.06,
+            text_align=TextNode.ALeft,
+            text1_bg=self.textDownColor,
+            text2_bg=self.textRolloverColor,
+            text3_fg=self.textDisabledColor,
+            textMayChange=0,
+            command=self.getPopChoiceHandler(shardPop),
+            extraArgs=[shardId],
+        )
 
-        # live ops has requested a dconfig to show shard pop - so we will support both
+        # live ops has requested a dconfig to show shard pop - so we will
+        # support both
         if self.showPop:
             popText = str(shardPop)
-            if shardPop == None:
+            if shardPop is None:
                 popText = ""
             shardButtonR = DirectButton(
-                parent = shardButtonParent,
-                relief = None,
-                text = popText,
-                text_scale = 0.06,
-                text_align = TextNode.ALeft,
-                text1_bg = self.textDownColor,
-                text2_bg = self.textRolloverColor,
-                text3_fg = self.textDisabledColor,
-                textMayChange = 1,
-                pos = (0.5, 0, 0),
-                command = self.choseShard,
-                extraArgs = [shardId],
-                )
+                parent=shardButtonParent,
+                relief=None,
+                text=popText,
+                text_scale=0.06,
+                text_align=TextNode.ALeft,
+                text1_bg=self.textDownColor,
+                text2_bg=self.textRolloverColor,
+                text3_fg=self.textDisabledColor,
+                textMayChange=1,
+                pos=(0.5, 0, 0),
+                command=self.choseShard,
+                extraArgs=[shardId],
+            )
         else:
             model = loader.loadModel('phase_3.5/models/gui/matching_game_gui')
             button = model.find('**/minnieCircle')
 
             shardButtonR = DirectButton(
-                parent = shardButtonParent,
-                relief = None,
-                image = button,
-                image_scale = (0.3, 1, 0.3),
-                image2_scale = (0.35, 1, 0.35),
-                image_color = self.getPopColor(shardPop),
-                pos = (0.6, 0, 0.0125),
-                text = self.getPopText(shardPop),
-                text_scale = 0.06,
-                text_align = TextNode.ACenter,
-                text_pos = (-0.0125, -0.0125),
+                parent=shardButtonParent,
+                relief=None,
+                image=button,
+                image_scale=(0.3, 1, 0.3),
+                image2_scale=(0.35, 1, 0.35),
+                image_color=self.getPopColor(shardPop),
+                pos=(0.6, 0, 0.0125),
+                text=self.getPopText(shardPop),
+                text_scale=0.06,
+                text_align=TextNode.ACenter,
+                text_pos=(-0.0125, -0.0125),
                 # only rollover text visible on "stop lights"
-                text_fg = Vec4(0,0,0,0),
-                text1_fg = Vec4(0,0,0,0),
-                text2_fg = Vec4(0,0,0,1),
-                text3_fg = Vec4(0,0,0,0),
-                command = self.getPopChoiceHandler(shardPop),
-                extraArgs = [shardId],
-                )
+                text_fg=Vec4(0, 0, 0, 0),
+                text1_fg=Vec4(0, 0, 0, 0),
+                text2_fg=Vec4(0, 0, 0, 1),
+                text3_fg=Vec4(0, 0, 0, 0),
+                command=self.getPopChoiceHandler(shardPop),
+                extraArgs=[shardId],
+            )
 
             del model
             del button
@@ -280,32 +297,33 @@ class DistrictSelector(ShtikerPage.ShtikerPage):
             else:
                 handler = self.choseShard
         else:
-                # deny
-                handler = self.shardChoiceReject
+            # deny
+            handler = self.shardChoiceReject
         return handler
 
     def getCurrentZoneId(self):
         try:
             zoneId = base.cr.playGame.getPlace().getZoneId()
-        except:
+        except BaseException:
             zoneId = None
-        return zoneId   
+        return zoneId
 
     def getCurrentShardId(self):
         # Returns the user's current shard if we are not in
         # WelcomeValley, or WelcomeValleyToken if we are in
         # WelcomeValley.
         zoneId = self.getCurrentZoneId()
-        if zoneId != None and ZoneUtil.isWelcomeValley(zoneId):
+        if zoneId is not None and ZoneUtil.isWelcomeValley(zoneId):
             return ToontownGlobals.WelcomeValleyToken
         else:
             if not base.cr.defaultShard:
-                base.cr.defaultShard = random.choice(base.cr.listActiveShards())
+                base.cr.defaultShard = random.choice(
+                    base.cr.listActiveShards())
             return base.cr.defaultShard
 
-
     def updateScrollList(self):
-        # curShardTuples is a list of 3-item tuples (shardId, shardName, shardPopulation)
+        # curShardTuples is a list of 3-item tuples (shardId, shardName,
+        # shardPopulation)
         curShardTuples = base.cr.listActiveShards()
 
         """
@@ -350,8 +368,8 @@ class DistrictSelector(ShtikerPage.ShtikerPage):
             curShardTuples.append((ToontownGlobals.WelcomeValleyToken,
                                    TTLocalizer.WelcomeValley[-1], 0, 0))
 
-        #print "curShardTuples=",curShardTuples
-        #print "self.shardButtns.keys=",self.shardButtons.keys()
+        # print "curShardTuples=",curShardTuples
+        # print "self.shardButtns.keys=",self.shardButtons.keys()
 
         currentShardId = self.getCurrentShardId()
         anyChanges = 0
@@ -370,7 +388,7 @@ class DistrictSelector(ShtikerPage.ShtikerPage):
 
             currentMap[shardId] = 1
             buttonTuple = self.shardButtonMap.get(shardId)
-            if buttonTuple == None:
+            if buttonTuple is None:
                 # This is a new shard; add it to the list.
                 buttonTuple = self.makeShardButton(shardId, name, pop)
                 self.shardButtonMap[shardId] = buttonTuple
@@ -384,8 +402,10 @@ class DistrictSelector(ShtikerPage.ShtikerPage):
                     # all but the Japanese product get the new scheme
                     if not base.cr.productName == "JP":
                         buttonTuple[1]['text'] = self.getPopText(pop)
-                        buttonTuple[1]['command'] = self.getPopChoiceHandler(pop)
-                        buttonTuple[2]['command'] = self.getPopChoiceHandler(pop)
+                        buttonTuple[1]['command'] = self.getPopChoiceHandler(
+                            pop)
+                        buttonTuple[2]['command'] = self.getPopChoiceHandler(
+                            pop)
 
             self.shardButtons.append(buttonTuple[0])
 
@@ -407,7 +427,8 @@ class DistrictSelector(ShtikerPage.ShtikerPage):
 
         # Set the population for WelcomeValley properly, as the sum of
         # all of the WelcomeValley hoods across all shards.
-        buttonTuple = self.shardButtonMap.get(ToontownGlobals.WelcomeValleyToken)
+        buttonTuple = self.shardButtonMap.get(
+            ToontownGlobals.WelcomeValleyToken)
         if buttonTuple:
             if self.showPop:
                 buttonTuple[1]['text'] = str(totalWVPop)
@@ -416,16 +437,16 @@ class DistrictSelector(ShtikerPage.ShtikerPage):
                 # all but the Japanese product get the new scheme
                 if not base.cr.productName == "JP":
                     buttonTuple[1]['text'] = self.getPopText(totalWVPop)
-                    buttonTuple[1]['command'] = self.getPopChoiceHandler(totalWVPop)
-                    buttonTuple[2]['command'] = self.getPopChoiceHandler(totalWVPop)
+                    buttonTuple[1]['command'] = self.getPopChoiceHandler(
+                        totalWVPop)
+                    buttonTuple[2]['command'] = self.getPopChoiceHandler(
+                        totalWVPop)
 
         if anyChanges:
             self.regenerateScrollList()
 
-        self.totalPopulationText["text"] = TTLocalizer.ShardPagePopulationTotal % (totalPop)
-
-
-
+        self.totalPopulationText["text"] = TTLocalizer.ShardPagePopulationTotal % (
+            totalPop)
 
     def enter(self):
         self.askForShardInfoUpdate()
@@ -436,7 +457,7 @@ class DistrictSelector(ShtikerPage.ShtikerPage):
         buttonTuple = self.shardButtonMap.get(currentShardId)
         if buttonTuple:
             i = self.shardButtons.index(buttonTuple[0])
-            self.scrollList.scrollTo(i, centered = 1)
+            self.scrollList.scrollTo(i, centered=1)
 
         ShtikerPage.ShtikerPage.enter(self)
         self.accept('shardInfoUpdated', self.updateScrollList)
@@ -449,9 +470,9 @@ class DistrictSelector(ShtikerPage.ShtikerPage):
     def shardChoiceReject(self, shardId):
         # we have denied the user's request to move to a crowded shard
         self.confirm = TTDialog.TTGlobalDialog(
-            doneEvent = "confirmDone",
-            message = TTLocalizer.ShardPageChoiceReject,
-            style = TTDialog.Acknowledge)
+            doneEvent="confirmDone",
+            message=TTLocalizer.ShardPageChoiceReject,
+            style=TTDialog.Acknowledge)
         self.confirm.show()
         self.accept("confirmDone", self.__handleConfirm)
 
@@ -465,4 +486,3 @@ class DistrictSelector(ShtikerPage.ShtikerPage):
     def choseShard(self, shardId):
         base.cr.defaultShard = shardId
         self.updateScrollList()
-

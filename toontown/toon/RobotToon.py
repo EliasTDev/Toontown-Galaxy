@@ -19,13 +19,14 @@ try:
 except AttributeError:
     builtins.launcher = None
 
+
 class RobotAvatarBase:
     # Base class for robot toons and robot suits
     # Not meant to be instantiated by itself
-    def __init__(self, parent = render,
-                 startPos = Point3(0), startHpr = Point3(0),
-                 endPos = Point3(0,1,0), endHpr = Point3(0),
-                 state = 'neutral'):
+    def __init__(self, parent=render,
+                 startPos=Point3(0), startHpr=Point3(0),
+                 endPos=Point3(0, 1, 0), endHpr=Point3(0),
+                 state='neutral'):
         self.setTag('robotAvatar', '1')
         # Place robot within world
         self.reparentTo(parent)
@@ -35,14 +36,17 @@ class RobotAvatarBase:
         self.setEndHpr(endHpr)
         self.setPosHpr(self.startPos, self.startHpr)
         self.ival = self.victoryIval = None
-        if not base.config.GetBool('want-new-anims',1):        
+        if not base.config.GetBool('want-new-anims', 1):
             self.updateWalkIval()
-            self.accept('playVictoryIval', lambda: self.setAnimState('victory'))
+            self.accept(
+                'playVictoryIval',
+                lambda: self.setAnimState('victory'))
             self.accept('playRTMWalkIval', lambda: self.setAnimState('walk'))
             self.accept('playRTMRunIval', lambda: self.setAnimState('run'))
-        self.setAnimState(state)        
+        self.setAnimState(state)
         self.state = state
-    def convertServerDNAString(self, serverString, type = 't'):
+
+    def convertServerDNAString(self, serverString, type='t'):
         # Strip out blank space and take last 30 characters
         serverString = serverstr.replace(' ', '')
         if type == 't':
@@ -52,35 +56,41 @@ class RobotAvatarBase:
         serverString = serverString[-stringLen:]
         # Create a datagram from server string
         dg = PyDatagram()
-        for i in range(0,len(serverString),2):
-            eval('dg.addUint8(0x%s)' % serverString[i:i+2])
+        for i in range(0, len(serverString), 2):
+            eval(f'dg.addUint8(0x{serverString[i:i + 2]})')
         return dg.getMessage()
-    def setAnimState(self,state):
+
+    def setAnimState(self, state):
         self.stopIvals()
         self.state = state
-        if not base.config.GetBool('want-new-anims',1):     
+        if not base.config.GetBool('want-new-anims', 1):
             if state == 'victory':
-                if self.victoryIval != None:
+                if self.victoryIval is not None:
                     self.victoryIval.start()
                     return
             elif state in ['run', 'walk', 'sad-walk']:
                 if state == 'run':
                     self.ival.loop()
                 elif state == 'walk':
-                    self.ival.loop(playRate = 0.25)
+                    self.ival.loop(playRate=0.25)
                 elif state == 'sad-walk':
-                    self.ival.loop(playRate = 0.0625)
+                    self.ival.loop(playRate=0.0625)
             else:
                 self.setPosHpr(self.startPos, self.startHpr)
         self.loop(state)
+
     def setStartPos(self, pos):
         self.startPos = Point3(pos)
+
     def setEndPos(self, pos):
         self.endPos = Point3(pos)
+
     def setStartHpr(self, hpr):
         self.startHpr = Point3(hpr)
+
     def setEndHpr(self, hpr):
         self.endHpr = Point3(hpr)
+
     def updateStartPos(self, pos):
         self.setStartPos(pos)
         self.updateWalkIval()
@@ -88,6 +98,7 @@ class RobotAvatarBase:
             self.setAnimState('walk')
         else:
             self.setAnimState(self.state)
+
     def updateEndPos(self, pos):
         self.setEndPos(pos)
         self.updateWalkIval()
@@ -95,15 +106,16 @@ class RobotAvatarBase:
             self.setAnimState('walk')
         else:
             self.setAnimState(self.state)
+
     def updateWalkIval(self):
         self.stopIvals()
         start2Stop = Vec3(self.endPos - self.startPos)
         dist = start2Stop.length()
-        walkDuration = dist/ToontownGlobals.ToonForwardSpeed
+        walkDuration = dist / ToontownGlobals.ToonForwardSpeed
         angleVec = Vec3(start2Stop)
         angleVec.setZ(0)
         angleVec.normalize()
-        dotProd = angleVec.dot(Vec3(0,1,0))
+        dotProd = angleVec.dot(Vec3(0, 1, 0))
         angle = rad2Deg(math.acos(dotProd))
         if angleVec[0] >= 0:
             angle *= -1
@@ -114,64 +126,71 @@ class RobotAvatarBase:
         backAngle = (angle + 180.0)
         self.ival = Sequence(
             Func(self.setHpr, angle, 0, 0),
-            self.posInterval(duration = walkDuration, pos = self.endPos,
-                             startPos = self.startPos),
-            self.hprInterval(duration = 1, hpr = Vec3(backAngle,0,0),
-                             startHpr = Vec3(angle,0,0)),
-            self.posInterval(duration = walkDuration, pos = self.startPos,
-                             startPos = self.endPos),
-            self.hprInterval(duration = 1, hpr = Vec3(angle,0,0),
-                             startHpr = Vec3(backAngle,0,0)),
-            )
+            self.posInterval(duration=walkDuration, pos=self.endPos,
+                             startPos=self.startPos),
+            self.hprInterval(duration=1, hpr=Vec3(backAngle, 0, 0),
+                             startHpr=Vec3(angle, 0, 0)),
+            self.posInterval(duration=walkDuration, pos=self.startPos,
+                             startPos=self.endPos),
+            self.hprInterval(duration=1, hpr=Vec3(angle, 0, 0),
+                             startHpr=Vec3(backAngle, 0, 0)),
+        )
         vDuration = self.getDuration('victory')
         if vDuration:
             vRemainder = (walkDuration % vDuration)
             vWait = vDuration - vRemainder
             self.victoryIval = Sequence(
                 # Jitter by up to 2 frames
-                Wait(randint(0,2) * (1/24.0)),
-                Func(self.setPosHpr, self.startPos, Vec3(angle,0,0)),
-                Func(self.loop,'neutral'),
-                Func(self.loop,'run'),
-                self.posInterval(duration = walkDuration, pos = self.endPos,
-                                 startPos = self.startPos),
+                Wait(randint(0, 2) * (1 / 24.0)),
+                Func(self.setPosHpr, self.startPos, Vec3(angle, 0, 0)),
+                Func(self.loop, 'neutral'),
+                Func(self.loop, 'run'),
+                self.posInterval(duration=walkDuration, pos=self.endPos,
+                                 startPos=self.startPos),
                 Parallel(
-                Sequence(ActorInterval(self, 'victory', startTime = vRemainder)),
-                Sequence(
-                Wait(vWait),
-                Func(self.loop,'victory')
+                    Sequence(
+                        ActorInterval(
+                            self,
+                            'victory',
+                            startTime=vRemainder)),
+                    Sequence(
+                        Wait(vWait),
+                        Func(self.loop, 'victory')
+                    )
                 )
-                )
-                )
+            )
         else:
             # doodle don't have a victory anim
             self.victoryIval = None
+
     def stopIvals(self):
-        if self.ival != None:
+        if self.ival is not None:
             self.ival.finish()
-        if self.victoryIval != None:
+        if self.victoryIval is not None:
             self.victoryIval.finish()
+
     def destroy(self):
         self.stopIvals()
         self.stop()
         self.ignore('playVictoryIval')
         self.removeNode()
 
+
 class RobotToon(Toon.Toon, RobotAvatarBase):
     # Default is flippy
-    def __init__(self, description = None, parent = render,
-                 startPos = Point3(0), startHpr = Point3(0),
-                 endPos = Point3(0,1,0), endHpr = Point3(0),
-                 state = 'neutral'):
+    def __init__(self, description=None, parent=render,
+                 startPos=Point3(0), startHpr=Point3(0),
+                 endPos=Point3(0, 1, 0), endHpr=Point3(0),
+                 state='neutral'):
         # Initialize superclasses
         Toon.Toon.__init__(self)
         self.customMessages = []
-        self.setCogLevels([1,1,1,1])
+        self.setCogLevels([1, 1, 1, 1])
         self.updateDNA(description)
         RobotAvatarBase.__init__(self, parent, startPos, startHpr,
                                  endPos, endHpr, state)
         self.showHiRes()
-        
+
     def updateDNA(self, description):
         # Create dna
         if isinstance(description, ToonDNA.ToonDNA):
@@ -179,7 +198,7 @@ class RobotToon(Toon.Toon, RobotAvatarBase):
         else:
             dna = ToonDNA.ToonDNA()
             if (isinstance(description, list) or
-                isinstance(description, tuple)):
+                    isinstance(description, tuple)):
                 # Assume it is a property list
                 dna.newToonFromProperties(*description)
             elif isinstance(description, Datagram):
@@ -202,13 +221,13 @@ class RobotToon(Toon.Toon, RobotAvatarBase):
                     gender = 'm'
                 else:
                     gender = 'f'
-                dna.newToonRandom(gender = gender)
+                dna.newToonRandom(gender=gender)
         if not self.style:
             # New toon, need to initialize style
             self.setDNA(dna)
         else:
             # Just jump straight to the update function
-            self.updateToonDNA(dna,fForce = 1)
+            self.updateToonDNA(dna, fForce=1)
 
     def setCogLevels(self, levels):
         self.cogLevels = levels
@@ -216,26 +235,28 @@ class RobotToon(Toon.Toon, RobotAvatarBase):
     def setCustomMessages(self, customMessages):
         self.customMessages = customMessages
 
-    def showHiRes(self, switchIn = 10000):
+    def showHiRes(self, switchIn=10000):
         lodNames = self.getLODNames()
         if lodNames:
             maxLOD = int(lodNames[0])
-            self.setLOD(maxLOD, switchIn,0)
+            self.setLOD(maxLOD, switchIn, 0)
             for lod in lodNames[1:]:
                 self.setLOD(int(lod), switchIn + 10, switchIn)
                 switchIn += 10
 
+
 class RobotSuit(Suit.Suit, RobotAvatarBase):
     # Default is flippy
-    def __init__(self, description = None, parent = render,
-                 startPos = Point3(0), startHpr = Point3(0),
-                 endPos = Point3(0,1,0), endHpr = Point3(0),
-                 state = 'neutral'):
+    def __init__(self, description=None, parent=render,
+                 startPos=Point3(0), startHpr=Point3(0),
+                 endPos=Point3(0, 1, 0), endHpr=Point3(0),
+                 state='neutral'):
         # Initialize superclasses
         Suit.Suit.__init__(self)
         self.updateDNA(description)
         RobotAvatarBase.__init__(self, parent, startPos, startHpr,
                                  endPos, endHpr, state)
+
     def updateDNA(self, description):
         # Create dna
         if isinstance(description, ToonDNA.ToonDNA):
@@ -249,11 +270,11 @@ class RobotSuit(Suit.Suit, RobotAvatarBase):
                 # Assume it specifies suit level
                 dna.newSuitRandom(description)
             elif (isinstance(description, list) or
-                isinstance(description, tuple)):
+                  isinstance(description, tuple)):
                 # Assume it is a (level,track) list
                 dna.newSuitRandom(description[0], description[1])
             else:
-                level = randint(0,7)
+                level = randint(0, 7)
                 trackVal = random()
                 if trackVal < 0.25:
                     track = 'c'
@@ -266,18 +287,20 @@ class RobotSuit(Suit.Suit, RobotAvatarBase):
                 dna.newSuitRandom(level, track)
         self.setDNA(dna)
 
+
 class RobotDoodle(Pet.Pet, RobotAvatarBase):
-    def __init__(self, description = None, parent = render,
-                 startPos = Point3(0), startHpr = Point3(0),
-                 endPos = Point3(0,1,0), endHpr = Point3(0),
-                 state = 'neutral'):
+    def __init__(self, description=None, parent=render,
+                 startPos=Point3(0), startHpr=Point3(0),
+                 endPos=Point3(0, 1, 0), endHpr=Point3(0),
+                 state='neutral'):
         # Initialize superclasses
         Pet.Pet.__init__(self)
         self.updateDNA(description)
         RobotAvatarBase.__init__(self, parent, startPos, startHpr,
                                  endPos, endHpr, state)
+
     def updateDNA(self, description):
-        # doodle dna is an array of the form: [head, ears, nose, tail, body, color, partColor, eyes, gender]
+        # doodle dna is an array of the form: [head, ears, nose, tail, body,
+        # color, partColor, eyes, gender]
         if (isinstance(description, list) or isinstance(description, tuple)):
             self.setDNA(description)
-

@@ -3,6 +3,7 @@ from direct.distributed import DistributedObject
 from direct.interval.IntervalGlobal import *
 from toontown.effects import DustCloud
 
+
 def getDustCloudIval(toon):
     dustCloud = DustCloud.DustCloud(fBillboard=0)
     dustCloud.setBillboardAxis(2.)
@@ -16,7 +17,8 @@ def getDustCloudIval(toon):
         dustCloud.track,
         Func(dustCloud.detachNode),
         Func(toon.laffMeter.adjustFace, toon.hp, toon.maxHp)
-        )
+    )
+
 
 class DistributedBlackCatMgr(DistributedObject.DistributedObject):
     """Black cat client implementation; turn a cat into a black cat if
@@ -25,7 +27,7 @@ class DistributedBlackCatMgr(DistributedObject.DistributedObject):
         'DistributedBlackCatMgr')
 
     ActivateEvent = 'DistributedBlackCatMgr-activate'
-    
+
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
 
@@ -45,17 +47,17 @@ class DistributedBlackCatMgr(DistributedObject.DistributedObject):
         del self.dustCloudIval
         self.ignore(DistributedBlackCatMgr.ActivateEvent)
         DistributedObject.DistributedObject.delete(self)
-        
+
     def doBlackCatTransformation(self):
         DistributedBlackCatMgr.notify.debug('doBlackCatTransformation')
         toon = base.cr.doId2do[self.avId]
         if not toon:
             DistributedBlackCatMgr.notify.warning(
-                "couldn't find Toon %s" % self.avId)
+                f"couldn't find Toon {self.avId}")
             return
         # are they a cat?
         if toon.style.getAnimal() != 'cat':
-            DistributedBlackCatMgr.notify.warning("not a cat: %s" % self.avId)
+            DistributedBlackCatMgr.notify.warning(f"not a cat: {self.avId}")
             return
         self.sendUpdate('doBlackCatTransformation', [])
 
@@ -64,7 +66,3 @@ class DistributedBlackCatMgr(DistributedObject.DistributedObject):
         # the cat turns black.
         self.dustCloudIval = getDustCloudIval(toon)
         self.dustCloudIval.start()
-
-
-
-

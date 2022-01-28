@@ -24,15 +24,15 @@ class UberDog(AIRepository):
             serverId, minChannel, maxChannel):
         AIRepository.__init__(
             self, mdip, mdport, esip, esport, dcFileNames,
-            serverId, minChannel, maxChannel, dcSuffix = 'UD')
+            serverId, minChannel, maxChannel, dcSuffix='UD')
 
         # We're responsible for keeping track of who's online with which avatar
         self.onlineAccountDetails = {}
         self.onlineAvatars = {}
         self.onlinePlayers = {}
 
-        self.pending={}
-        self.doId2doCache={}
+        self.pending = {}
+        self.doId2doCache = {}
 
         if hasattr(self, 'setVerbose'):
             if self.config.GetBool('verbose-uberrepository'):
@@ -41,27 +41,27 @@ class UberDog(AIRepository):
         # The AI State machine
         self.fsm = ClassicFSM(
             'UberDog', [
-            State('off',
-                self.enterOff,
-                self.exitOff,
-                ['connect']),
-            State('connect',
-                self.enterConnect,
-                self.exitConnect,
-                ['noConnection', 'playGame',]),
-            State('playGame',
-                self.enterPlayGame,
-                self.exitPlayGame,
-                ['noConnection']),
-            State('noConnection',
-                self.enterNoConnection,
-                self.exitNoConnection,
-                ['connect'])],
+                State('off',
+                      self.enterOff,
+                      self.exitOff,
+                      ['connect']),
+                State('connect',
+                      self.enterConnect,
+                      self.exitConnect,
+                      ['noConnection', 'playGame', ]),
+                State('playGame',
+                      self.enterPlayGame,
+                      self.exitPlayGame,
+                      ['noConnection']),
+                State('noConnection',
+                      self.enterNoConnection,
+                      self.exitNoConnection,
+                      ['connect'])],
             # initial state
             'off',
             # final state
             'off',
-            )
+        )
         self.fsm.enterInitialState()
         self.fsm.request("connect")
 
@@ -75,7 +75,13 @@ class UberDog(AIRepository):
         self.registerForChannel(CHANNEL_PUPPET_ACTION)
         self.fsm.request("playGame")
 
-    def dispatchUpdateToDoId(self, dclassName, fieldName, doId, args, channelId=None):
+    def dispatchUpdateToDoId(
+            self,
+            dclassName,
+            fieldName,
+            doId,
+            args,
+            channelId=None):
         # dispatch immediately to local object if it's local, otherwise send
         # it over the wire
         obj = self.doId2do.get(doId)
@@ -97,13 +103,14 @@ class UberDog(AIRepository):
         else:
             self.sendUpdateToGlobalDoId(dclassName, fieldName, doId, args)
 
-    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    @report(types=['args'], dConfigParam='avatarmgr')
     def handleAccountUsage(self, di):
-        priorAccount = di.getUint32() # Historic - used only in __dev__ atm
+        priorAccount = di.getUint32()  # Historic - used only in __dev__ atm
         newAccount = di.getUint32()
 
         if priorAccount == 0 and newAccount == 0:
-            assert self.notify.debug("priorAccount==0 and newAccount==0, ignoring accountUsage message")
+            assert self.notify.debug(
+                "priorAccount==0 and newAccount==0, ignoring accountUsage message")
             return
 
         accountDetailRecord = AccountDetailRecord()
@@ -127,7 +134,7 @@ class UberDog(AIRepository):
         accountDetailRecord.familyMembers = []
         for i in range(accountDetailRecord.numFamilyMembers):
             accountDetailRecord.familyMembers.append(di.getInt32())
-            
+
         logoutReason = di.getInt32()
 
         # Now retrieve the subscription information
@@ -156,27 +163,29 @@ class UberDog(AIRepository):
 
         # How many avatar slots total do you get in this game?
         accountDetailRecord.maxAvatarSlots = di.getInt8()
-            
-        assert self.notify.debug("accountDetailRecord: %s" % accountDetailRecord)
+
+        assert self.notify.debug(
+            f"accountDetailRecord: {accountDetailRecord}")
 
         if priorAccount:
             # Send any previous account offline
             self.accountOffline(priorAccount)
             pass
-        
+
         if newAccount:
             # Set up the new guy
             self.accountOnline(newAccount, accountDetailRecord)
             pass
         pass
 
-    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    @report(types=['args'], dConfigParam='avatarmgr')
     def handleAvatarUsage(self, di):
         priorAvatar = di.getUint32()
         newAvatar = di.getUint32()
 
         if priorAvatar == 0 and newAvatar == 0:
-            assert self.notify.debug("priorAvatar==0 and newAvatar==0, ignoring avatarUsage message")
+            assert self.notify.debug(
+                "priorAvatar==0 and newAvatar==0, ignoring avatarUsage message")
             return
 
         newAvatarType = di.getUint16()
@@ -201,12 +210,12 @@ class UberDog(AIRepository):
             openChatEnabled = 1
         else:
             openChatEnabled = 0
-            
+
         if priorAvatar:
             # Send any previous avatar offline
             self.avatarOffline(accountId, priorAvatar)
             pass
-        
+
         if newAvatar:
             # Set up the new guy
             self.avatarOnline(newAvatar, newAvatarType,
@@ -218,17 +227,15 @@ class UberDog(AIRepository):
                               chatCodeCreation)
             pass
         pass
-    
-        
 
-    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    @report(types=['args'], dConfigParam='avatarmgr')
     def accountOnline(self, accountId, accountDetailRecord):
         self.writeServerEvent('accountOnline', accountId, '')
         self.onlineAccountDetails[accountId] = accountDetailRecord
         messenger.send('accountOnline', [accountId])
         pass
-    
-    @report(types = ['args'], dConfigParam = 'avatarmgr')
+
+    @report(types=['args'], dConfigParam='avatarmgr')
     def accountOffline(self, accountId):
         self.writeServerEvent('accountOffline', accountId, '')
         self.onlineAccountDetails.pop(accountId, None)
@@ -236,44 +243,59 @@ class UberDog(AIRepository):
         messenger.send('accountOffline', [accountId])
         pass
 
-    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    @report(types=['args'], dConfigParam='avatarmgr')
     def getAccountDetails(self, accountId):
         return self.onlineAccountDetails.get(accountId)
 
-    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    @report(types=['args'], dConfigParam='avatarmgr')
     def isAccountOnline(self, accountId):
         return accountId in self.onlineAccountDetails
 
-    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    @report(types=['args'], dConfigParam='avatarmgr')
     def isAvatarOnline(self, avatarId):
         return avatarId in self.onlineAvatars
 
-    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    @report(types=['args'], dConfigParam='avatarmgr')
     def getAvatarAccountOnline(self, avatarId):
         return self.onlineAvatars.get(avatarId, 0)
 
-    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    @report(types=['args'], dConfigParam='avatarmgr')
     def getAccountOnlineAvatar(self, accountId):
         return self.onlinePlayers.get(accountId, 0)
 
-    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    @report(types=['args'], dConfigParam='avatarmgr')
     def checkAccountId(self, accountId):
         if not accountId:
             # SUSPICIOUS
-            self.notify.warning("Bogus accountId: %s" % accountId)
-            self.writeServerEvent('suspicious', accountId, 'bogus accountId in OtpAvatarManagerUD')
+            self.notify.warning(f"Bogus accountId: {accountId}")
+            self.writeServerEvent(
+                'suspicious',
+                accountId,
+                'bogus accountId in OtpAvatarManagerUD')
         elif not self.isAccountOnline(accountId):
             # SUSPICIOUS
-            self.notify.warning("Got request from account not online: %s" % accountId)
-            self.writeServerEvent('suspicious', accountId, 'request from offline account in OtpAvatarManagerUD')
+            self.notify.warning(
+                f"Got request from account not online: {accountId}")
+            self.writeServerEvent(
+                'suspicious',
+                accountId,
+                'request from offline account in OtpAvatarManagerUD')
         else:
             # Everything checks out
             return True
         return False
 
-    @report(types = ['args'], dConfigParam = 'avatarmgr')
-    def avatarOnline(self, avatarId, avatarType, accountId, playerName, playerNameApproved,
-                     openChatEnabled, createFriendsWithChat, chatCodeCreation):
+    @report(types=['args'], dConfigParam='avatarmgr')
+    def avatarOnline(
+            self,
+            avatarId,
+            avatarType,
+            accountId,
+            playerName,
+            playerNameApproved,
+            openChatEnabled,
+            createFriendsWithChat,
+            chatCodeCreation):
         self.writeServerEvent('avatarOnline', avatarId, '%s|%s|%s|%s|%s|%s' % (
             accountId, playerName, playerNameApproved, openChatEnabled,
             createFriendsWithChat, chatCodeCreation))
@@ -289,13 +311,13 @@ class UberDog(AIRepository):
                     openChatEnabled,
                     createFriendsWithChat,
                     chatCodeCreation]
-        
+
         # necessary for local UD manager objects
         messenger.send("avatarOnline", simpleInfo)
         messenger.send("avatarOnlinePlusAccountInfo", fullInfo)
         pass
 
-    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    @report(types=['args'], dConfigParam='avatarmgr')
     def avatarOffline(self, accountId, avatarId):
         self.writeServerEvent('avatarOffline', avatarId, '')
 
@@ -305,13 +327,13 @@ class UberDog(AIRepository):
         # necessary for local UD manager objects
         messenger.send("avatarOffline", [avatarId])
         pass
-        
+
     ###################################
     # Assumed Obsolete as of 6/29/09
     #
     # If you're reading this and there
     # haven't been any strange UD crashes
-    # here lately, you can probably delete 
+    # here lately, you can probably delete
     # the next few functions.
     ###################################
     def _addObject(self, context, distributedObject):
@@ -320,10 +342,10 @@ class UberDog(AIRepository):
         it to the cache calling self.handleGotDo().
         """
         assert False, 'JCW: Testing for obsolete functions. If this crashes, let Josh know'
-        doId=distributedObject.getDoId()
+        doId = distributedObject.getDoId()
         assert doId not in self.doId2doCache
         if doId not in self.doId2doCache:
-            self.doId2doCache[doId]=distributedObject
+            self.doId2doCache[doId] = distributedObject
             self.handleGotDo(distributedObject)
 
     def handleGotDo(self, distributedObject):
@@ -336,7 +358,7 @@ class UberDog(AIRepository):
         """
         assert False, 'JCW: Testing for obsolete functions. If this crashes, let Josh know'
         assert doId in self.doId2doCache
-        pending=self.pending.get(doId)
+        pending = self.pending.get(doId)
         if pending is not None:
             del self.pending[doId]
             for i in pending:
@@ -350,12 +372,12 @@ class UberDog(AIRepository):
         assert False, 'JCW: Testing for obsolete functions. If this crashes, let Josh know'
         if self.doId2doCache.had_key(doId):
             self.unregisterForChannel(doId)
-            #self.deleteObject(doId)
+            # self.deleteObject(doId)
             del self.doId2doCache[doId]
-        #HACK:
+        # HACK:
         self.unregisterForChannel(doId)
         AIRepository.deleteObject(self.doId)
-        
+
     def uniqueName(self, desc):
         return desc
 
@@ -363,18 +385,18 @@ class UberDog(AIRepository):
         """
         Early warning system for unsupported use of the Uberdog Repository
         """
+
         def deleteObjects(self):
             assert 0
-    
+
         def createDistrict(self, districtId, districtName):
             assert 0
-    
+
         def deleteDistrict(self, districtId):
             assert 0
-    
+
         def enterDistrictReset(self):
             assert 0
-    
+
         def exitDistrictReset(self):
             assert 0
-    

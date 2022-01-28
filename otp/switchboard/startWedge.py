@@ -3,20 +3,20 @@ import sys
 import getopt
 
 try:
-    opts,args = getopt.getopt(sys.argv[1:], "",
-                              ['name=',
+    opts, args = getopt.getopt(sys.argv[1:], "",
+                               ['name=',
                                'wedgeport=',
-                               'nshost=',
-                               'nsport=',
-                               'clhost=',
-                               'clport=',
-                               'bwdictpath='
-                               ])
+                                'nshost=',
+                                'nsport=',
+                                'clhost=',
+                                'clport=',
+                                'bwdictpath='
+                                ])
 except getopt.GetoptError:
     print("Please pass a wedge name with --name=.")
     sys.exit(1)
 
-#defaults
+# defaults
 wedgename = ""
 wedgeport = None
 nshost = None
@@ -25,7 +25,7 @@ clhost = None
 clport = None
 bwdictpath = ""
 
-for o,a in opts:
+for o, a in opts:
     if o == "--name":
         wedgename = a
     elif o == "--wedgeport":
@@ -42,12 +42,12 @@ for o,a in opts:
         bwdictpath = a
     else:
         print("Error: Illegal option: " + o)
-        sys.exit(1)        
+        sys.exit(1)
 
 if wedgename == "":
     print("Please pass a wedge name with --name=.")
     sys.exit(2)
-    
+
 
 myWedge = sbWedge(wedgeName=wedgename,
                   nsHost=nshost,

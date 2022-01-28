@@ -6,10 +6,11 @@ from toontown.toonbase.ToontownGlobals import *
 from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedTreasure(DistributedObject.DistributedObject):
 
     notify = DirectNotifyGlobal.directNotify.newCategory("DistributedTreasure")
-    
+
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
         self.av = None
@@ -48,8 +49,8 @@ class DistributedTreasure(DistributedObject.DistributedObject):
         # Really, we don't want to unloadModel on this, until we're
         # leaving the safezone.  Calling unloadModel will force the
         # next treasure of this type to reload from disk.
-        #loader.unloadModel(self.modelPath)
-        
+        # loader.unloadModel(self.modelPath)
+
         self.nodePath.removeNode()
 
     def announceGenerate(self):
@@ -58,13 +59,13 @@ class DistributedTreasure(DistributedObject.DistributedObject):
         to the world, either for the first time or from the cache.
         """
         DistributedObject.DistributedObject.announceGenerate(self)
-        
+
         # Load the model, (using loadModelOnce), and child it to the nodepath
         self.loadModel(self.modelPath, self.modelFindString)
         # animate if necessary
         self.startAnimation()
         # Put this thing in the world
-        self.nodePath.wrtReparentTo(render)        
+        self.nodePath.wrtReparentTo(render)
         # Add a hook looking for collisions with localToon, and call
         # requestGrab.
         self.accept(self.uniqueName('entertreasureSphere'),
@@ -72,7 +73,7 @@ class DistributedTreasure(DistributedObject.DistributedObject):
 
     def handleEnterSphere(self, collEntry=None):
         # Only toons with hp > 0 can pick up treasures.
-        #if base.localAvatar.hp > 0:
+        # if base.localAvatar.hp > 0:
         localAvId = base.localAvatar.getDoId()
 
         # if treasure is not going to fly, make it disappear
@@ -91,28 +92,28 @@ class DistributedTreasure(DistributedObject.DistributedObject):
         """
         return 2.0
 
-    def loadModel(self, modelPath, modelFindString = None):
+    def loadModel(self, modelPath, modelFindString=None):
         # Load the sound effect
         self.grabSound = base.loader.loadSfx(self.grabSoundPath)
         self.rejectSound = base.loader.loadSfx(self.rejectSoundPath)
 
-        if self.nodePath == None:
+        if self.nodePath is None:
             self.makeNodePath()
         else:
             self.treasure.getChildren().detach()
 
         # Load the treasure model and put it under our root node.
         model = loader.loadModel(modelPath)
-        if modelFindString != None:
+        if modelFindString is not None:
             model = model.find("**/" + modelFindString)
-            assert model != None
+            assert model is not None
         model.instanceTo(self.treasure)
 
     def makeNodePath(self):
         self.nodePath = NodePath(self.uniqueName("treasure"))
         if self.billboard:
             self.nodePath.setBillboardPointEye()
-        self.nodePath.setScale(0.9*self.scale)
+        self.nodePath.setScale(0.9 * self.scale)
 
         self.treasure = self.nodePath.attachNewNode('treasure')
 
@@ -123,8 +124,8 @@ class DistributedTreasure(DistributedObject.DistributedObject):
                     "phase_3/models/props/drop_shadow")
                 # Set the shadow color
                 self.dropShadow.setColor(0, 0, 0, 0.5)
-                self.dropShadow.setPos(0,0,0.025)
-                self.dropShadow.setScale(0.4*self.scale)
+                self.dropShadow.setPos(0, 0, 0.025)
+                self.dropShadow.setScale(0.4 * self.scale)
 
                 # Might as well apply the transforms to the shadow vertices.
                 self.dropShadow.flattenLight()
@@ -154,14 +155,14 @@ class DistributedTreasure(DistributedObject.DistributedObject):
             self.makeNodePath()
 
         self.nodePath.reparentTo(self.getParentNodePath())
-        self.nodePath.setPos(x, y, z+self.zOffset)
+        self.nodePath.setPos(x, y, z + self.zOffset)
         self.collNodePath.unstash()
 
     def setGrab(self, avId):
         if avId == 0:
             # avId of 0 indicates it hasn't been grabbed by anyone.
             return
-        
+
         # ignore this message if we have already called handleGrab
         if self.fly or avId != base.localAvatar.getDoId():
             self.handleGrab(avId)
@@ -174,19 +175,19 @@ class DistributedTreasure(DistributedObject.DistributedObject):
             self.treasureFlyTrack.finish()
             self.treasureFlyTrack = None
 
-        base.playSfx(self.rejectSound, node = self.nodePath)
+        base.playSfx(self.rejectSound, node=self.nodePath)
         self.treasureFlyTrack = Sequence(
             LerpColorScaleInterval(self.nodePath, 0.8,
-                                   colorScale = VBase4(0, 0, 0, 0),
-                                   startColorScale = VBase4(1, 1, 1, 1),
-                                   blendType = 'easeIn'),
+                                   colorScale=VBase4(0, 0, 0, 0),
+                                   startColorScale=VBase4(1, 1, 1, 1),
+                                   blendType='easeIn'),
             LerpColorScaleInterval(self.nodePath, 0.2,
-                                   colorScale = VBase4(1, 1, 1, 1),
-                                   startColorScale = VBase4(0, 0, 0, 0),
-                                   blendType = 'easeOut'),
-            name = self.uniqueName("treasureFlyTrack"))
+                                   colorScale=VBase4(1, 1, 1, 1),
+                                   startColorScale=VBase4(0, 0, 0, 0),
+                                   blendType='easeOut'),
+            name=self.uniqueName("treasureFlyTrack"))
         self.treasureFlyTrack.start()
-        
+
     def handleGrab(self, avId):
         # this function handles client-side 'grabbed' behavior
         # NOTE: if the treasure does not fly towards the toon,
@@ -194,7 +195,7 @@ class DistributedTreasure(DistributedObject.DistributedObject):
         # AI comes back and announces that the treasure was grabbed.
         # Someone else may actually end up getting credit for the
         # grab from the AI, after this has been called.
-        
+
         # First, do not try to grab this treasure anymore.
         self.collNodePath.stash()
         # Save the avId for later, we may need it if there is an unexpected
@@ -213,7 +214,7 @@ class DistributedTreasure(DistributedObject.DistributedObject):
         # Play a sound effect, if appropriate
         if self.playSoundForRemoteToons or \
            (self.avId == base.localAvatar.getDoId()):
-            base.playSfx(self.grabSound, node = self.nodePath)
+            base.playSfx(self.grabSound, node=self.nodePath)
 
         if not self.fly:
             # don't make it fly, just make it disappear
@@ -237,9 +238,9 @@ class DistributedTreasure(DistributedObject.DistributedObject):
         track = Sequence(
             LerpPosInterval(self.nodePath,
                             flytime,
-                            pos = Point3(0, 0, 3),
-                            startPos = self.nodePath.getPos(),
-                            blendType = "easeInOut"),
+                            pos=Point3(0, 0, 3),
+                            startPos=self.nodePath.getPos(),
+                            blendType="easeInOut"),
             Func(self.nodePath.detachNode),
             Func(self.ignore, avatarGoneName))
 
@@ -248,14 +249,14 @@ class DistributedTreasure(DistributedObject.DistributedObject):
                 HideInterval(self.dropShadow),
                 track,
                 ShowInterval(self.dropShadow),
-                name = self.uniqueName("treasureFlyTrack"))
+                name=self.uniqueName("treasureFlyTrack"))
         else:
             self.treasureFlyTrack = Sequence(
                 track,
-                name = self.uniqueName("treasureFlyTrack"))
+                name=self.uniqueName("treasureFlyTrack"))
 
         self.treasureFlyTrack.start()
-    
+
     def handleUnexpectedExit(self):
         # The avatar we were flying the treasure to just disconnected.
         self.notify.warning("While getting treasure, " + str(self.avId) +

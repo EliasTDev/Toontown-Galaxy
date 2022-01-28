@@ -2,19 +2,20 @@ from direct.distributed import DistributedObjectAI
 from direct.distributed.ClockDelta import *
 from pandac.PandaModules import *
 
+
 class DistributedGagAI(DistributedObjectAI.DistributedObjectAI):
     def __init__(self, air, ownerId, race, activateTime, x, y, z, type):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
-        self.activateTime=activateTime
-        self.initTime=globalClockDelta.getFrameNetworkTime(16, 100)
-        self.pos=(x, y, z)
-        self.race=race
-        self.ownerId=ownerId
+        self.activateTime = activateTime
+        self.initTime = globalClockDelta.getFrameNetworkTime(16, 100)
+        self.pos = (x, y, z)
+        self.race = race
+        self.ownerId = ownerId
         self.type = type
+
     def generate(self):
         DistributedObjectAI.DistributedObjectAI.generate(self)
-        #This is a good time to grab the starting time
-
+        # This is a good time to grab the starting time
 
     def announceGenerate(self):
         DistributedObjectAI.DistributedObjectAI.announceGenerate(self)
@@ -30,7 +31,7 @@ class DistributedGagAI(DistributedObjectAI.DistributedObjectAI):
         return self.pos
 
     def setPos(self, x, y, z):
-        self.pos=(x, y, z)
+        self.pos = (x, y, z)
 
     def getType(self):
         return self.type
@@ -49,7 +50,16 @@ class DistributedGagAI(DistributedObjectAI.DistributedObjectAI):
 
     def hitSomebody(self, avId, timeStamp):
         if self.type == 0:
-            taskMgr.doMethodLater(4, self.requestDelete, "deleting: "+self.uniqueName("banana"), extraArgs=[])
+            taskMgr.doMethodLater(
+                4,
+                self.requestDelete,
+                "deleting: " +
+                self.uniqueName("banana"),
+                extraArgs=[])
         elif self.type == 1:
-            taskMgr.doMethodLater(4, self.requestDelete, "deleting: "+self.uniqueName("pie"), extraArgs=[])
-
+            taskMgr.doMethodLater(
+                4,
+                self.requestDelete,
+                "deleting: " +
+                self.uniqueName("pie"),
+                extraArgs=[])

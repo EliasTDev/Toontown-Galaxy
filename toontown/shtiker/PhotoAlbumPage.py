@@ -7,82 +7,84 @@ import os
 from toontown.toonbase import ToontownGlobals
 from direct.gui.DirectGuiGlobals import NO_FADE_SORT_INDEX
 
+
 class PhotoAlbumPage(ShtikerPage.ShtikerPage):
 
     # special methods
     def __init__(self):
         ShtikerPage.ShtikerPage.__init__(self)
-        self.textRolloverColor = Vec4(1,1,0,1)
-        self.textDownColor = Vec4(0.5,0.9,1,1)
-        self.textDisabledColor = Vec4(0.4,0.8,0.4,1)
+        self.textRolloverColor = Vec4(1, 1, 0, 1)
+        self.textDownColor = Vec4(0.5, 0.9, 1, 1)
+        self.textDisabledColor = Vec4(0.4, 0.8, 0.4, 1)
         self.photos = {}
         self.selectedFileName = None
         self.photoIndex = 0
-        
+
     def load(self):
         self.title = DirectLabel(
-            parent = self,
-            relief = None,
-            text = "Photo Album",
-            text_scale = 0.10,
-            pos = (0,0,0.6),
-            )
+            parent=self,
+            relief=None,
+            text="Photo Album",
+            text_scale=0.10,
+            pos=(0, 0, 0.6),
+        )
 
-        self.pictureImage = loader.loadModel('phase_3.5/models/gui/photo_frame')
+        self.pictureImage = loader.loadModel(
+            'phase_3.5/models/gui/photo_frame')
         self.pictureImage.setScale(0.2)
-        self.pictureImage.setPos(0.44,0,0.25)
+        self.pictureImage.setPos(0.44, 0, 0.25)
         self.pictureImage.reparentTo(self)
         self.pictureFg = self.pictureImage.find('**/fg')
-        self.pictureFg.setColor(1,1,1,0.1)
+        self.pictureFg.setColor(1, 1, 1, 0.1)
 
         guiButton = loader.loadModel("phase_3/models/gui/quit_button")
 
         self.pictureCaption = DirectLabel(
-            parent = self,
-            relief = None,
-            text = "Caption",
-            text_scale = 0.05,
-            text_wordwrap = 10,
-            text_align = TextNode.ACenter,
-            pos = (0.45, 0, -0.22),
-            )
+            parent=self,
+            relief=None,
+            text="Caption",
+            text_scale=0.05,
+            text_wordwrap=10,
+            text_align=TextNode.ACenter,
+            pos=(0.45, 0, -0.22),
+        )
 
         self.renameButton = DirectButton(
-            parent = self,
-            relief = None,
-            image = (guiButton.find("**/QuitBtn_UP"),
-                     guiButton.find("**/QuitBtn_DN"),
-                     guiButton.find("**/QuitBtn_RLVR"),
-                     ),
-            image_scale = (1,1,1),
-            pos = (0.45,0,-0.35),
-            text = "Caption",
-            text_scale = 0.06,
-            text_pos = (0,-0.02),
-            command = self.renameImage,
-            state = DGG.DISABLED,
-            )
+            parent=self,
+            relief=None,
+            image=(guiButton.find("**/QuitBtn_UP"),
+                   guiButton.find("**/QuitBtn_DN"),
+                   guiButton.find("**/QuitBtn_RLVR"),
+                   ),
+            image_scale=(1, 1, 1),
+            pos=(0.45, 0, -0.35),
+            text="Caption",
+            text_scale=0.06,
+            text_pos=(0, -0.02),
+            command=self.renameImage,
+            state=DGG.DISABLED,
+        )
 
         trashcanGui = loader.loadModel("phase_3/models/gui/trashcan_gui")
 
         self.deleteButton = DirectButton(
-            parent = self,
-            image = (trashcanGui.find("**/TrashCan_CLSD"),
-                     trashcanGui.find("**/TrashCan_OPEN"),
-                     trashcanGui.find("**/TrashCan_RLVR")),
-            text = ("", "Delete", "Delete"),
-            text_fg = (1,1,1,1),
-            text_shadow = (0,0,0,1),
-            text_scale = 0.1,
-            text_pos = (0, -0.1),
-            text_font = ToontownGlobals.getInterfaceFont(),
-            textMayChange = 0,            
-            relief = None,
-            pos = (0.73, 0, -0.33),
-            scale = 0.4,
-            state = DGG.DISABLED,
-            command = self.deleteImage,
-            )
+            parent=self,
+            image=(trashcanGui.find("**/TrashCan_CLSD"),
+                   trashcanGui.find("**/TrashCan_OPEN"),
+                   trashcanGui.find("**/TrashCan_RLVR")),
+            text=("", "Delete", "Delete"),
+            text_fg=(1, 1, 1, 1),
+            text_shadow=(0, 0, 0, 1),
+            text_scale=0.1,
+            text_pos=(0, -0.1),
+            text_font=ToontownGlobals.getInterfaceFont(),
+            textMayChange=0,
+            relief=None,
+            pos=(0.73, 0, -0.33),
+            scale=0.4,
+            state=DGG.DISABLED,
+            command=self.deleteImage,
+        )
 
         """
         # We have no print support right now
@@ -105,152 +107,152 @@ class PhotoAlbumPage(ShtikerPage.ShtikerPage):
 
         guiButton.removeNode()
         trashcanGui.removeNode()
-        
+
         gui = loader.loadModel("phase_3.5/models/gui/friendslist_gui")
 
         self.scrollList = DirectScrolledList(
-            parent = self,
-            relief = None,
-            forceHeight = 0.07,
-            pos = (-0.5,0,0),
+            parent=self,
+            relief=None,
+            forceHeight=0.07,
+            pos=(-0.5, 0, 0),
             # inc and dec are DirectButtons
-            incButton_image = (gui.find("**/FndsLst_ScrollUp"),
-                               gui.find("**/FndsLst_ScrollDN"),
-                               gui.find("**/FndsLst_ScrollUp_Rllvr"),
-                               gui.find("**/FndsLst_ScrollUp"),
-                               ),
-            incButton_relief = None,
-            incButton_scale = (1.3,1.3,-1.3),
-            incButton_pos = (0,0,-0.51),
+            incButton_image=(gui.find("**/FndsLst_ScrollUp"),
+                             gui.find("**/FndsLst_ScrollDN"),
+                             gui.find("**/FndsLst_ScrollUp_Rllvr"),
+                             gui.find("**/FndsLst_ScrollUp"),
+                             ),
+            incButton_relief=None,
+            incButton_scale=(1.3, 1.3, -1.3),
+            incButton_pos=(0, 0, -0.51),
             # Make the disabled button fade out
-            incButton_image3_color = Vec4(1,1,1,0.2),
-            decButton_image = (gui.find("**/FndsLst_ScrollUp"),
-                               gui.find("**/FndsLst_ScrollDN"),
-                               gui.find("**/FndsLst_ScrollUp_Rllvr"),
-                               gui.find("**/FndsLst_ScrollUp"),
-                               ),
-            decButton_relief = None,
-            decButton_scale = (1.3,1.3,1.3),
-            decButton_pos = (0,0,0.51),
+            incButton_image3_color=Vec4(1, 1, 1, 0.2),
+            decButton_image=(gui.find("**/FndsLst_ScrollUp"),
+                             gui.find("**/FndsLst_ScrollDN"),
+                             gui.find("**/FndsLst_ScrollUp_Rllvr"),
+                             gui.find("**/FndsLst_ScrollUp"),
+                             ),
+            decButton_relief=None,
+            decButton_scale=(1.3, 1.3, 1.3),
+            decButton_pos=(0, 0, 0.51),
             # Make the disabled button fade out
-            decButton_image3_color = Vec4(1,1,1,0.2),
+            decButton_image3_color=Vec4(1, 1, 1, 0.2),
             # itemFrame is a DirectFrame
-            itemFrame_pos = (-0.237,0,0.41),
-            itemFrame_scale = 1.0,
-            itemFrame_relief = DGG.SUNKEN,
-            itemFrame_frameSize = (-0.05,0.66,-0.88,0.06),
-            itemFrame_frameColor = (0.85,0.95,1,1),
-            itemFrame_borderWidth = (0.01, 0.01),
+            itemFrame_pos=(-0.237, 0, 0.41),
+            itemFrame_scale=1.0,
+            itemFrame_relief=DGG.SUNKEN,
+            itemFrame_frameSize=(-0.05, 0.66, -0.88, 0.06),
+            itemFrame_frameColor=(0.85, 0.95, 1, 1),
+            itemFrame_borderWidth=(0.01, 0.01),
             # each item is a button with text on it
-            numItemsVisible = 13,
-            items = [],
-            )
+            numItemsVisible=13,
+            items=[],
+        )
 
         self.renamePanel = DirectFrame(
-            parent = self,
-            relief = None,
-            pos = (0.45,0,-0.45),
-            image = DGG.getDefaultDialogGeom(),
-            image_color = ToontownGlobals.GlobalDialogColor,
-            image_scale = (1.0, 1.0, 0.6),
-            text = 'Caption Photo',
-            text_scale = 0.06,
-            text_pos = (0.0, 0.13),
-            sortOrder = NO_FADE_SORT_INDEX,
-            )
+            parent=self,
+            relief=None,
+            pos=(0.45, 0, -0.45),
+            image=DGG.getDefaultDialogGeom(),
+            image_color=ToontownGlobals.GlobalDialogColor,
+            image_scale=(1.0, 1.0, 0.6),
+            text='Caption Photo',
+            text_scale=0.06,
+            text_pos=(0.0, 0.13),
+            sortOrder=NO_FADE_SORT_INDEX,
+        )
 
         self.renameEntry = DirectEntry(
-            parent = self.renamePanel,
-            relief = DGG.SUNKEN,
-            scale = 0.06,
-            pos = (-0.3,0,0),
-            borderWidth = (0.1, 0.1),
-            numLines = 1,
-            cursorKeys = 0,
+            parent=self.renamePanel,
+            relief=DGG.SUNKEN,
+            scale=0.06,
+            pos=(-0.3, 0, 0),
+            borderWidth=(0.1, 0.1),
+            numLines=1,
+            cursorKeys=0,
             # width = 10,
-            frameColor = (0.8,0.8,0.5,1),
-            frameSize = (-0.2, 10, -0.4, 1.1),
-            command = self.renameDialog,
-            )
+            frameColor=(0.8, 0.8, 0.5, 1),
+            frameSize=(-0.2, 10, -0.4, 1.1),
+            command=self.renameDialog,
+        )
 
         buttons = loader.loadModel('phase_3/models/gui/dialog_box_buttons_gui')
 
-        self.bCancel = DirectButton(parent = self.renamePanel,
-                                    image = (buttons.find('**/CloseBtn_UP'),
-                                             buttons.find('**/CloseBtn_DN'),
-                                             buttons.find('**/CloseBtn_Rllvr')),
-                                    relief = None,
-                                    text = "Cancel",
-                                    text_scale = 0.05,
-                                    text_pos = (0.0, -0.1),
-                                    pos = (0.0, 0.0, -0.1),
-                                    command = self.renameCancel)
+        self.bCancel = DirectButton(parent=self.renamePanel,
+                                    image=(buttons.find('**/CloseBtn_UP'),
+                                           buttons.find('**/CloseBtn_DN'),
+                                           buttons.find('**/CloseBtn_Rllvr')),
+                                    relief=None,
+                                    text="Cancel",
+                                    text_scale=0.05,
+                                    text_pos=(0.0, -0.1),
+                                    pos=(0.0, 0.0, -0.1),
+                                    command=self.renameCancel)
         self.renamePanel.hide()
 
         self.deletePanel = DirectFrame(
-            parent = self,
-            relief = None,
-            pos = (0,0,0),
-            image = DGG.getDefaultDialogGeom(),
-            image_color = ToontownGlobals.GlobalDialogColor,
-            image_scale = (1.0, 1.0, 0.6),
-            text = 'Delete Photo?',
-            text_scale = 0.06,
-            text_pos = (0.0, 0.13),
-            sortOrder = NO_FADE_SORT_INDEX,
-            )
+            parent=self,
+            relief=None,
+            pos=(0, 0, 0),
+            image=DGG.getDefaultDialogGeom(),
+            image_color=ToontownGlobals.GlobalDialogColor,
+            image_scale=(1.0, 1.0, 0.6),
+            text='Delete Photo?',
+            text_scale=0.06,
+            text_pos=(0.0, 0.13),
+            sortOrder=NO_FADE_SORT_INDEX,
+        )
 
-        self.dOk = DirectButton(parent = self.deletePanel,
-                                image = (buttons.find('**/ChtBx_OKBtn_UP'),
-                                         buttons.find('**/ChtBx_OKBtn_DN'),
-                                         buttons.find('**/ChtBx_OKBtn_Rllvr')),
-                                relief = None,
-                                text = "Ok",
-                                text_scale = 0.05,
-                                text_pos = (0.0, -0.1),
-                                pos = (-0.1, 0.0, -0.1),
-                                command = self.deleteConfirm)
+        self.dOk = DirectButton(parent=self.deletePanel,
+                                image=(buttons.find('**/ChtBx_OKBtn_UP'),
+                                       buttons.find('**/ChtBx_OKBtn_DN'),
+                                       buttons.find('**/ChtBx_OKBtn_Rllvr')),
+                                relief=None,
+                                text="Ok",
+                                text_scale=0.05,
+                                text_pos=(0.0, -0.1),
+                                pos=(-0.1, 0.0, -0.1),
+                                command=self.deleteConfirm)
 
-        self.dCancel = DirectButton(parent = self.deletePanel,
-                                    image = (buttons.find('**/CloseBtn_UP'),
-                                             buttons.find('**/CloseBtn_DN'),
-                                             buttons.find('**/CloseBtn_Rllvr')),
-                                    relief = None,
-                                    text = "Cancel",
-                                    text_scale = 0.05,
-                                    text_pos = (0.0, -0.1),
-                                    pos = (0.1, 0.0, -0.1),
-                                    command = self.deleteCancel)
+        self.dCancel = DirectButton(parent=self.deletePanel,
+                                    image=(buttons.find('**/CloseBtn_UP'),
+                                           buttons.find('**/CloseBtn_DN'),
+                                           buttons.find('**/CloseBtn_Rllvr')),
+                                    relief=None,
+                                    text="Cancel",
+                                    text_scale=0.05,
+                                    text_pos=(0.0, -0.1),
+                                    pos=(0.1, 0.0, -0.1),
+                                    command=self.deleteCancel)
         self.deletePanel.hide()
 
         self.leftArrow = DirectButton(
-            parent = self,
-            relief = None,
-            image = (gui.find("**/Horiz_Arrow_UP"),
-                     gui.find("**/Horiz_Arrow_DN"),
-                     gui.find("**/Horiz_Arrow_Rllvr"),
-                     gui.find("**/Horiz_Arrow_UP"),
-                     ),
+            parent=self,
+            relief=None,
+            image=(gui.find("**/Horiz_Arrow_UP"),
+                   gui.find("**/Horiz_Arrow_DN"),
+                   gui.find("**/Horiz_Arrow_Rllvr"),
+                   gui.find("**/Horiz_Arrow_UP"),
+                   ),
             # make the disabled color more transparent
-            image3_color = Vec4(1, 1, 1, 0.5),
-            scale = (-1.0, 1.0, 1.0),  # make the arrow point left
-            pos = (0.15, 0, -0.21),
-            command = self.prevPhoto,
-            )
+            image3_color=Vec4(1, 1, 1, 0.5),
+            scale=(-1.0, 1.0, 1.0),  # make the arrow point left
+            pos=(0.15, 0, -0.21),
+            command=self.prevPhoto,
+        )
 
         self.rightArrow = DirectButton(
-            parent = self,
-            relief = None,
-            image = (gui.find("**/Horiz_Arrow_UP"),
-                     gui.find("**/Horiz_Arrow_DN"),
-                     gui.find("**/Horiz_Arrow_Rllvr"),
-                     gui.find("**/Horiz_Arrow_UP"),
-                     ),
+            parent=self,
+            relief=None,
+            image=(gui.find("**/Horiz_Arrow_UP"),
+                   gui.find("**/Horiz_Arrow_DN"),
+                   gui.find("**/Horiz_Arrow_Rllvr"),
+                   gui.find("**/Horiz_Arrow_UP"),
+                   ),
             # make the disabled color more transparent
-            image3_color = Vec4(1, 1, 1, 0.5),
-            pos = (0.75, 0, -0.21),
-            command = self.nextPhoto,
-            )
+            image3_color=Vec4(1, 1, 1, 0.5),
+            pos=(0.75, 0, -0.21),
+            command=self.nextPhoto,
+        )
 
         gui.removeNode()
         buttons.removeNode()
@@ -283,7 +285,8 @@ class PhotoAlbumPage(ShtikerPage.ShtikerPage):
         oldName = self.selectedFileName
         numUnders = oldName.count(separator)
         if (numUnders == 0):
-            newName = oldName[0:11] + separator + str + separator + oldName[10:]
+            newName = oldName[0:11] + separator + \
+                str + separator + oldName[10:]
         elif (numUnders == 2):
             sp = oldName.split(separator)
             newName = sp[0] + separator + str + separator + sp[2]
@@ -298,7 +301,7 @@ class PhotoAlbumPage(ShtikerPage.ShtikerPage):
 
     def renameCancel(self):
         self.renameCleanup()
-        
+
     def renameCleanup(self):
         self.renamePanel.hide()
         # Restore the background focus on the chat entry.
@@ -326,27 +329,28 @@ class PhotoAlbumPage(ShtikerPage.ShtikerPage):
 
     def deleteCancel(self):
         self.deleteCleanup()
-        
+
     def deleteCleanup(self):
         self.deletePanel.hide()
 
     def deleteImage(self):
         self.renameCleanup()
-        self.deletePanel['text'] = "Delete Photo?\n%s" % self.getPhotoName(self.selectedFileName)
+        self.deletePanel['text'] = "Delete Photo?\n%s" % self.getPhotoName(
+            self.selectedFileName)
         self.deletePanel.show()
 
     def makePhotoButton(self, fileName):
         return DirectButton(
-            relief = None,
-            text = self.getPhotoName(fileName),
-            text_scale = 0.06,
-            text_align = TextNode.ALeft,
-            text1_bg = self.textDownColor,
-            text2_bg = self.textRolloverColor,
-            text3_fg = self.textDisabledColor,
-            command = self.chosePhoto,
-            extraArgs = [fileName],
-            )
+            relief=None,
+            text=self.getPhotoName(fileName),
+            text_scale=0.06,
+            text_align=TextNode.ALeft,
+            text1_bg=self.textDownColor,
+            text2_bg=self.textRolloverColor,
+            text3_fg=self.textDisabledColor,
+            command=self.chosePhoto,
+            extraArgs=[fileName],
+        )
 
     def getPhotoName(self, fileName):
         # Todo: limit length based on font
@@ -366,7 +370,7 @@ class PhotoAlbumPage(ShtikerPage.ShtikerPage):
             photoTexture = loader.loadTexture(fileName)
             photoName = self.getPhotoName(fileName)
             self.pictureFg.setTexture(photoTexture, 1)
-            self.pictureFg.setColor(1,1,1,1)
+            self.pictureFg.setColor(1, 1, 1, 1)
             self.pictureCaption['text'] = photoName
             self.renameButton['state'] = DGG.NORMAL
             self.deleteButton['state'] = DGG.NORMAL
@@ -374,7 +378,7 @@ class PhotoAlbumPage(ShtikerPage.ShtikerPage):
         else:
             self.selectedFileName = None
             self.pictureFg.clearTexture()
-            self.pictureFg.setColor(1,1,1,0.1)
+            self.pictureFg.setColor(1, 1, 1, 0.1)
             self.pictureCaption['text'] = ''
             self.renameButton['state'] = DGG.DISABLED
             self.deleteButton['state'] = DGG.DISABLED
@@ -385,7 +389,7 @@ class PhotoAlbumPage(ShtikerPage.ShtikerPage):
         photos = []
         for fileName in files:
             if ((fileName[0:10] == 'screenshot') and
-                (fileName[-4:] == '.jpg')):
+                    (fileName[-4:] == '.jpg')):
                 photos.append(fileName)
         return photos
 
@@ -394,7 +398,7 @@ class PhotoAlbumPage(ShtikerPage.ShtikerPage):
 
     def updateScrollList(self):
         newPhotos = self.getPhotos()
-        
+
         # Remove old buttons
         for photo in list(self.photos.keys()):
             if photo not in newPhotos:
@@ -402,7 +406,7 @@ class PhotoAlbumPage(ShtikerPage.ShtikerPage):
                 self.scrollList.removeItem(photoButton)
                 photoButton.destroy()
                 del self.photos[photo]
-                
+
         # Add new photos
         for photo in newPhotos:
             if photo not in self.photos:
@@ -414,7 +418,6 @@ class PhotoAlbumPage(ShtikerPage.ShtikerPage):
             self.chosePhoto(list(self.photos.keys())[0])
         else:
             self.chosePhoto(None)
-
 
     def enter(self):
         """enter(self)
@@ -443,4 +446,3 @@ class PhotoAlbumPage(ShtikerPage.ShtikerPage):
 
     def nextPhoto(self):
         pass
-

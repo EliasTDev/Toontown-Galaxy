@@ -14,15 +14,17 @@ the sum of the durations is less than 1, any time t that is greater than
 the sum will be evaluated as the end of the last action.
 """
 
+
+
+
 from direct.directnotify import DirectNotifyGlobal
 from . import RingAction
-
 class RingTrack:
     notify = DirectNotifyGlobal.directNotify.newCategory("RingTrack")
 
     def __init__(self, actions, actionDurations=None, reverseFlag=0):
         # if no durations specified, give each action an equal timeslice
-        if actionDurations == None:
+        if actionDurations is None:
             actionDurations = [1. / float(len(actions))] * len(actions)
 
         assert(len(actions) == len(actionDurations))
@@ -32,9 +34,9 @@ class RingTrack:
         for duration in actionDurations:
             sum += duration
         if sum != 1.:
-            self.notify.warning("action lengths do not sum to 1.; sum=" + \
+            self.notify.warning("action lengths do not sum to 1.; sum=" +
                                 str(sum))
-        
+
         self.actions = actions
         self.actionDurations = actionDurations
         self.reverseFlag = reverseFlag
@@ -54,7 +56,7 @@ class RingTrack:
         # start time of current 'action'
         actionStart = 0.
         # run through actions, see which one we're currently in
-        for action,duration in zip(self.actions,self.actionDurations):
+        for action, duration in zip(self.actions, self.actionDurations):
             actionEnd = actionStart + duration
             if t < actionEnd:
                 # calculate the normalized time within the action
@@ -65,12 +67,12 @@ class RingTrack:
                 actionStart = actionEnd
 
         if t == actionStart:
-            self.notify.debug("time value is at end of ring track: " + \
+            self.notify.debug("time value is at end of ring track: " +
                               str(t) + " == " + str(actionStart))
         else:
-            self.notify.debug("time value is beyond end of ring track: " + \
-                         str(t) + " > " + str(actionStart))
+            self.notify.debug("time value is beyond end of ring track: " +
+                              str(t) + " > " + str(actionStart))
 
         # return final result of final action
-        lastAction = self.actions[len(self.actions)-1]
+        lastAction = self.actions[len(self.actions) - 1]
         return lastAction.eval(1.)

@@ -430,7 +430,7 @@ QuestsRecoverItemQuestHeadline = "とりかえす"
 QuestsRecoverItemQuestSeeHQSCString = lHQOfficerM+"に会いに行かなくちゃ。"
 QuestsRecoverItemQuestReturnToHQSCString = lHQOfficerM+"に%sを返しに行かなくちゃ。"
 QuestsRecoverItemQuestReturnToSCString = "%(npcName)sに%(item)sを返しに行かなくちゃ。"
-QuestsRecoverItemQuestGoToHQSCString = "%sに行かなくちゃ。" % lToonHQ
+QuestsRecoverItemQuestGoToHQSCString = f"{lToonHQ}に行かなくちゃ。"
 QuestsRecoverItemQuestGoToPlaygroundSCString = "%sのプレイグラウンドに行かなくちゃ。"
 QuestsRecoverItemQuestGoToStreetSCString = "%(hood)sの%(street)s%(to)sに行かなくちゃ。" #★
 QuestsRecoverItemQuestVisitBuildingSCString = "%s%sに行かなくちゃ。"
@@ -2011,8 +2011,8 @@ QuestDialogDict = {
               },
     11001 : { GREETING : "",
               LEAVING : "",
-              QUEST : "はい、はい。確かにロウボット変装パーツなら持ってますよ。\a僕にとっては興味がないものなんですがね。\a僕はトゥーンタウン全体の天気の変化について研究をしているんだ。\aコグの持っている気温センサーとだったら、喜んで変装パーツと交換するよ。\aまずは%sから始めたらどうかな？" % GlobalStreetNames[2100][-1],
-              INCOMPLETE_PROGRESS : "ちゃんと%sを調べたかい？" % GlobalStreetNames[2100][-1],
+              QUEST : f"はい、はい。確かにロウボット変装パーツなら持ってますよ。僕にとっては興味がないものなんですがね。僕はトゥーンタウン全体の天気の変化について研究をしているんだ。コグの持っている気温センサーとだったら、喜んで変装パーツと交換するよ。まずは{GlobalStreetNames[2100][-1]}から始めたらどうかな？",
+              INCOMPLETE_PROGRESS : f"ちゃんと{GlobalStreetNames[2100][-1]}を調べたかい？",
               COMPLETE : "これはすばらしい！\a恐れていた通りだ…\aあ、そうそう。これが変装パーツだよ。",
              },
 
@@ -2022,8 +2022,8 @@ QuestDialogDict = {
               },
     11003 : { GREETING : "",
               LEAVING : "",
-              QUEST : "ロウボット変装パーツがまだ必要だって？\aキミがそこまで言うのなら…\aでももう一つセンサーが必要なんだ。\a今度は%sのを探してみて。" % GlobalStreetNames[2200][-1],
-              INCOMPLETE_PROGRESS : "キミは%sを調べているんだよね？" % GlobalStreetNames[2200][-1],
+              QUEST : f"ロウボット変装パーツがまだ必要だって？キミがそこまで言うのなら…でももう一つセンサーが必要なんだ。今度は{GlobalStreetNames[2200][-1]}のを探してみて。",
+              INCOMPLETE_PROGRESS : f"キミは{GlobalStreetNames[2200][-1]}を調べているんだよね？",
               COMPLETE : "ありがとう！\a変装パーツをどうぞ！",
              },
     11004 : { GREETING : "",
@@ -2032,8 +2032,8 @@ QuestDialogDict = {
               },
     11005 : { GREETING : "",
               LEAVING : "",
-              QUEST : "キミは本当に優秀だね！\a今度は%sを調べてみてくれないかい？" % GlobalStreetNames[2300][-1],
-              INCOMPLETE_PROGRESS : "ちゃんと%sを調べているのかい？" % GlobalStreetNames[2300][-1],
+              QUEST : f"キミは本当に優秀だね！今度は{GlobalStreetNames[2300][-1]}を調べてみてくれないかい？",
+              INCOMPLETE_PROGRESS : f"ちゃんと{GlobalStreetNames[2300][-1]}を調べているのかい？",
               COMPLETE : "ふーん、それにしてもこのセンサー見た目はあまりよくないが…\aありがとう。これがキミへのごほうびのパーツだ。",
              },
     11006 : { GREETING : "",
@@ -2042,8 +2042,8 @@ QuestDialogDict = {
               },
     11007 : { GREETING : "",
               LEAVING : "",
-              QUEST : "また戻ったのかい？\a非常に熱心だね。\a次の場所は%sだ。" % GlobalStreetNames[1100][-1],
-              INCOMPLETE_PROGRESS : "%sを探しているんだよね？" % GlobalStreetNames[1100][-1],
+              QUEST : f"また戻ったのかい？非常に熱心だね。次の場所は{GlobalStreetNames[1100][-1]}だ。",
+              INCOMPLETE_PROGRESS : f"{GlobalStreetNames[1100][-1]}を探しているんだよね？",
               COMPLETE : "おみごと！じゅんびがととのったね。\aほら、へんそうパーツだよ！",
              },
     11008 : { GREETING : "",
@@ -2052,8 +2052,8 @@ QuestDialogDict = {
               },
     11009 : { GREETING : "",
               LEAVING : "",
-              QUEST : "キミに会えてうれしいよ。\a次は%sのデータが欲しいんだ。お願いできるかな？" % GlobalStreetNames[1200][-1],
-              INCOMPLETE_PROGRESS : "ちゃんと%sを調べたのかい" % GlobalStreetNames[1200][-1],
+              QUEST : f"キミに会えてうれしいよ。次は{GlobalStreetNames[1200][-1]}のデータが欲しいんだ。お願いできるかな？",
+              INCOMPLETE_PROGRESS : f"ちゃんと{GlobalStreetNames[1200][-1]}を調べたのかい",
               COMPLETE : "どうもありがとう！\a変装パーツももうすぐ完成だね。",
              },
     11010 : { GREETING : "",
@@ -2062,8 +2062,8 @@ QuestDialogDict = {
               },
     11011 : { GREETING : "",
               LEAVING : "",
-              QUEST : "また会えてうれしいよ、_avName_！\a%sのデータを取ってきてもらえるかな？" % GlobalStreetNames[1300][-1],
-              INCOMPLETE_PROGRESS : "ちゃんと%sを調べたのかい？" % GlobalStreetNames[1300][-1],
+              QUEST : f"また会えてうれしいよ、_avName_！{GlobalStreetNames[1300][-1]}のデータを取ってきてもらえるかな？",
+              INCOMPLETE_PROGRESS : f"ちゃんと{GlobalStreetNames[1300][-1]}を調べたのかい？",
               COMPLETE : "すばらしい仕事だったね。\aよくがんばったキミへのごほうびだよ。",
              },
     11012 : { GREETING : "",
@@ -2072,8 +2072,8 @@ QuestDialogDict = {
               },
     11013 : { GREETING : "",
               LEAVING : "",
-              QUEST : "_avName_、僕の大切な友達！\a今度は%sへ行って別の温度センサーを見つけてくれないかい？" % GlobalStreetNames[5100][-1],
-              INCOMPLETE_PROGRESS : "%sを探しているんだよね？?" % GlobalStreetNames[5100][-1],
+              QUEST : f"_avName_、僕の大切な友達！今度は{GlobalStreetNames[5100][-1]}へ行って別の温度センサーを見つけてくれないかい？",
+              INCOMPLETE_PROGRESS : f"{GlobalStreetNames[5100][-1]}を探しているんだよね？?",
               COMPLETE : "すばらしい！\aキミのおかげで研究が本当にはかどるよ！\aはい、ごほうび！",
              },
     11014 : { GREETING : "",
@@ -2082,8 +2082,8 @@ QuestDialogDict = {
               },
     11015 : { GREETING : "",
               LEAVING : "",
-              QUEST : "よく戻ってきたね！\aキミのことを待っていたんだよ。\a次に必要なのが%sのデータさ。" % GlobalStreetNames[5200][-1],
-              INCOMPLETE_PROGRESS : "キミは%sを調べているんだよね？" % GlobalStreetNames[5200][-1],
+              QUEST : f"よく戻ってきたね！キミのことを待っていたんだよ。次に必要なのが{GlobalStreetNames[5200][-1]}のデータさ。",
+              INCOMPLETE_PROGRESS : f"キミは{GlobalStreetNames[5200][-1]}を調べているんだよね？",
               COMPLETE : "ありがとう！\aはい、キミへのごほうび！",
              },
     11016 : { GREETING : "",
@@ -2092,8 +2092,8 @@ QuestDialogDict = {
               },
     11017 : { GREETING : "",
               LEAVING : "",
-              QUEST : "やあ、研究者みならい君！\aさらに%sのデータが必要なんだよね。" % GlobalStreetNames[5300][-1],
-              INCOMPLETE_PROGRESS : "%sだからね。" % GlobalStreetNames[5300][-1],
+              QUEST : f"やあ、研究者みならい君！さらに{GlobalStreetNames[5300][-1]}のデータが必要なんだよね。",
+              INCOMPLETE_PROGRESS : f"{GlobalStreetNames[5300][-1]}だからね。",
               COMPLETE : "すばらしい仕事だったね！\aはい、ロウボットのパーツをどうぞ。",
              },
     11018 : { GREETING : "",
@@ -2102,8 +2102,8 @@ QuestDialogDict = {
               },
     11019 : { GREETING : "",
               LEAVING : "",
-              QUEST : "そっか…。\aさらに必要なんだね。\aそれなら今度は%sを試してみて！" % GlobalStreetNames[4100][-1],
-              INCOMPLETE_PROGRESS : "%sを探しているんだよね？" % GlobalStreetNames[4100][-1],
+              QUEST : f"そっか…。さらに必要なんだね。それなら今度は{GlobalStreetNames[4100][-1]}を試してみて！",
+              INCOMPLETE_PROGRESS : f"{GlobalStreetNames[4100][-1]}を探しているんだよね？",
               COMPLETE : "もうひとつ！\aキミはとってもスマートだね。",
              },
     11020 : { GREETING : "",
@@ -2112,8 +2112,8 @@ QuestDialogDict = {
               },
     11021 : { GREETING : "",
               LEAVING : "",
-              QUEST : "大体、察しがついているとは思うけど、\a今度は%sのデータが必要なんだ。" % GlobalStreetNames[4200][-1],
-              INCOMPLETE_PROGRESS : "キミは%sを調べているんだよね？" % GlobalStreetNames[4200][-1],
+              QUEST : f"大体、察しがついているとは思うけど、今度は{GlobalStreetNames[4200][-1]}のデータが必要なんだ。",
+              INCOMPLETE_PROGRESS : f"キミは{GlobalStreetNames[4200][-1]}を調べているんだよね？",
               COMPLETE : "あとちょっとだね！\aはいどうぞ。",
              },
     11022 : { GREETING : "",
@@ -2122,8 +2122,8 @@ QuestDialogDict = {
               },
     11023 : { GREETING : "",
               LEAVING : "",
-              QUEST : "キミは%sのことどう思う？センサーをゲットできると思う？" % GlobalStreetNames[4300][-1],
-              INCOMPLETE_PROGRESS : "ちゃんと%sを調べた？" % GlobalStreetNames[4300][-1],
+              QUEST : f"キミは{GlobalStreetNames[4300][-1]}のことどう思う？センサーをゲットできると思う？",
+              INCOMPLETE_PROGRESS : f"ちゃんと{GlobalStreetNames[4300][-1]}を調べた？",
               COMPLETE : "またいい仕事をしたね、_avName_。",
              },
     11024 : { GREETING : "",
@@ -2132,8 +2132,8 @@ QuestDialogDict = {
               },
     11025 : { GREETING : "",
               LEAVING : "",
-              QUEST : "残念ながら、%sのデータがまだ入手できてないんだ。" % GlobalStreetNames[9100][-1],
-              INCOMPLETE_PROGRESS : "キミは%sをちゃんと調べているんだよね？" % GlobalStreetNames[9100][-1],
+              QUEST : f"残念ながら、{GlobalStreetNames[9100][-1]}のデータがまだ入手できてないんだ。",
+              INCOMPLETE_PROGRESS : f"キミは{GlobalStreetNames[9100][-1]}をちゃんと調べているんだよね？",
               COMPLETE : "いい仕事をしたね。\aあともうちょっとのところだね。",
              },
     11026 : { GREETING : "",
@@ -2142,8 +2142,8 @@ QuestDialogDict = {
               },
     11027 : { GREETING : "",
               LEAVING : "",
-              QUEST : "すぐもどってきたね。\a最後のデータは%s。" % GlobalStreetNames[9200][-1],
-              INCOMPLETE_PROGRESS : "%sだからね。" % GlobalStreetNames[9200][-1],
+              QUEST : f"すぐもどってきたね。最後のデータは{GlobalStreetNames[9200][-1]}。",
+              INCOMPLETE_PROGRESS : f"{GlobalStreetNames[9200][-1]}だからね。",
               COMPLETE : "全部終わったね！\aこれでケンサツキョクに行って、ショウカンジョーを集められることができるね！\a今まで本当にありがとう。そして気をつけて！",
              },
     12000 : { GREETING : "",
@@ -2183,7 +2183,7 @@ QuestDialogDict = {
     12007 : { GREETING : "",
               LEAVING : "",
               QUEST : "ガミガミーナを倒したら次のをあげるよ。",
-              INCOMPLETE_PROGRESS : "%sを探してみたかい？" % GlobalStreetNames[1100][-1],
+              INCOMPLETE_PROGRESS : f"{GlobalStreetNames[1100][-1]}を探してみたかい？",
               COMPLETE : "おみごと！\a四つ目のへんそうパーツだよ。",
              },
     12008 : { GREETING : "",
@@ -2193,7 +2193,7 @@ QuestDialogDict = {
     12009 : { GREETING : "",
               LEAVING : "",
               QUEST : "次はリストラマンだ。",
-              INCOMPLETE_PROGRESS : "見つからないのかい？%sを探してごらん。" % GlobalStreetNames[3100][-1],
+              INCOMPLETE_PROGRESS : f"見つからないのかい？{GlobalStreetNames[3100][-1]}を探してごらん。",
               COMPLETE : "やつはめんどうだったかい？\a五つ目のへんそうパーツだよ。",
              },
     12010 : { GREETING : "",
@@ -2223,7 +2223,7 @@ QuestDialogDict = {
     12015 : { GREETING : "",
               LEAVING : "",
               QUEST : "さぁ、とどめだ！ビッグチーズを！！",
-              INCOMPLETE_PROGRESS : "%sにいるはずだぞ。" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"{GlobalStreetNames[10000][-1]}にいるはずだぞ。",
               COMPLETE : "キミはきたい通りのチーズ好き…\aあぁ、いや、なんでもない。\a次のへんそうパーツはこれだ。",
              },
     12016 : { GREETING : "",
@@ -2233,7 +2233,7 @@ QuestDialogDict = {
     12017 : { GREETING : "",
               LEAVING : "",
               QUEST : "実はキミに新しくてずるがしこいボスボットを倒してほしいんだ。",
-              INCOMPLETE_PROGRESS : "%sをさがしてみてくれ。" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"{GlobalStreetNames[10000][-1]}をさがしてみてくれ。",
               COMPLETE : "ヤツらは見た目よりつよいようだな。\aさぁ、へんそうパーツが必要なんだろ？",
              },
     12018 : { GREETING : "",
@@ -2243,7 +2243,7 @@ QuestDialogDict = {
     12019 : { GREETING : "",
               LEAVING : "",
               QUEST : "このバージョン2.0コグはとてもきょうみ深い。\aもっとさがしてきてくれるかい？",
-              INCOMPLETE_PROGRESS : "%sにならいるだろう。" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"{GlobalStreetNames[10000][-1]}にならいるだろう。",
               COMPLETE : "ありがとう！\aジャジャーン、へんそうパーツをどうぞ！",
              },
     12020 : { GREETING : "",
@@ -2253,7 +2253,7 @@ QuestDialogDict = {
     12021 : { GREETING : "",
               LEAVING : "",
               QUEST : "ヤツらはもしかしてどんどん強くなっているのか？",
-              INCOMPLETE_PROGRESS : "%sを探してみてくれ。" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"{GlobalStreetNames[10000][-1]}を探してみてくれ。",
               COMPLETE : "アレ？ヤツらそんなに強くはないの？\aそら、いつものだ。",
              },
     12022 : { GREETING : "",
@@ -2263,7 +2263,7 @@ QuestDialogDict = {
     12023 : { GREETING : "",
               LEAVING : "",
               QUEST : "た～ぶ～ん、ヤツらはボスボットじゃなくってなんか別のぉ...",
-              INCOMPLETE_PROGRESS : "こいつらは%sにいるぞ。" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"こいつらは{GlobalStreetNames[10000][-1]}にいるぞ。",
               COMPLETE : "あ、これはやっぱボスボットだわ。\aふむ、へんそうパーツはそこにあるから…",
              },
     12024 : { GREETING : "",
@@ -2273,7 +2273,7 @@ QuestDialogDict = {
     12025 : { GREETING : "",
               LEAVING : "",
               QUEST : "いや、た～ぶ～んなんだけど、…ヤツらってガイコグ系じゃない？",
-              INCOMPLETE_PROGRESS : "%sにいるだろう。" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"{GlobalStreetNames[10000][-1]}にいるだろう。",
               COMPLETE : "う～む、どうもはっきりしないなあ。\aあ、へんそうパーツを持っていってね。",
              },
     12026 : { GREETING : "",
@@ -2283,7 +2283,7 @@ QuestDialogDict = {
     12027 : { GREETING : "",
               LEAVING : "",
               QUEST : "どうもまだヤツらがガイコグのナカマなのかわからなくってねぇ。",
-              INCOMPLETE_PROGRESS : "%sをさがすといいよ。" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"{GlobalStreetNames[10000][-1]}をさがすといいよ。",
               COMPLETE : "あぁ～っと、ちがう…かな？\a…はい、次のパーツ！",
              },
     12028 : { GREETING : "",
@@ -2293,7 +2293,7 @@ QuestDialogDict = {
     12029 : { GREETING : "",
               LEAVING : "",
               QUEST : "いやぁ、スマン！ヤツらの事でなやんでしまっていてね。\aもう一体だけたのめないかな？",
-              INCOMPLETE_PROGRESS : "やはり%sにいるだろう。" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"やはり{GlobalStreetNames[10000][-1]}にいるだろう。",
               COMPLETE : "「すばらしい!」の一言につきるよ！\aへんそうパーツだ。受け取ってくれ。",
              },
     12030 : { GREETING : "",
@@ -2303,7 +2303,7 @@ QuestDialogDict = {
     12031 : { GREETING : "",
               LEAVING : "",
               QUEST : "もうヤツらの事はなんでも私に聞いてくれ！\aところでそうだんなんだけど…",
-              INCOMPLETE_PROGRESS : "きっと%sにならいるんじゃないか？" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"きっと{GlobalStreetNames[10000][-1]}にならいるんじゃないか？",
               COMPLETE : "よし、思った通りだ！\aあぁ、そうそう。\aこれはキミにだよ。",
              },
     12032 : { GREETING : "",
@@ -4337,8 +4337,8 @@ DaisyChatter = (
         "もし植木の下に砂が見えたら、水をあげてね。でないと、植木がかれちゃうよ！"
         ],
         [ # Goodbyes
-        "メロディーランドに%sに会いに行くところよ。" % Minnie,
-        "%sとのピクニックに遅れちゃうわ～！" % Donald,
+        f"メロディーランドに{Minnie}に会いに行くところよ。",
+        f"{Donald}とのピクニックに遅れちゃうわ～！",
         "これから"+lDonaldsDock+"に泳ぎに行こうかしら。",
         "ふぁ～っ。ちょっと眠くなったから、ドリームランドに行こうかしら。",
         ]
@@ -4346,7 +4346,7 @@ DaisyChatter = (
 
 ChipChatter = (
         [ # Greetings
-        "%sにようこそ!" % lOutdoorZone,
+        f"{lOutdoorZone}にようこそ!",
         "やぁ、僕は" + Chip + "。キミの名前は？",
         "僕が" + Chip + "だよ！",
         "%、会えてほんとうにうれしいよ！",
@@ -4358,8 +4358,8 @@ ChipChatter = (
         "火山があるゴルフコースが一番むずかしいとおもうよ。",
         ],
         [ # Goodbyes
-        "これから" + lTheBrrrgh +"に行って%sとあそぶんだ！" % Pluto,
-        "これから%sに会いに行ってくるんだ。" % Donald,
+        "これから" + lTheBrrrgh +f"に行って{Pluto}とあそぶんだ！",
+        f"これから{Donald}に会いに行ってくるんだ。",
         "今日は" + lDonaldsDock + "までおよぎに行こうかなぁ♪",
         "なんだかねむいなぁ…。ドリームランドでひとねむりしようかな。",
         ]
@@ -4371,7 +4371,7 @@ DaleChatter = (
         "%、よくきてくれたね！",
         "こんにちは、僕" + Dale + "だよ。キミの名前は？",
         "僕は" + Chip + "だよ。",
-        "%sへようこそ！" % lOutdoorZone,
+        f"{lOutdoorZone}へようこそ！",
         "僕たちがチップとデールだよ。",
         ],
         [ # Comments
@@ -4381,7 +4381,7 @@ DaleChatter = (
         ],
         [ # Goodbyes
         "ヒヒヒ、" + Pluto + "は遊びともだちなんだ！",
-        "よし、%sに行くじゅんびをしよう！" % Donald,
+        f"よし、{Donald}に行くじゅんびをしよう！",
         "のんびりと泳ぎにゆきたいなあ。",
         "うん、そろそろつかれてきたからきゅうけいしようよ。",
         ]
@@ -4437,8 +4437,8 @@ GoofySpeedwayChatter = (
         "ギャグショップのパイは笑いの保障つき！笑わなかったらジェリービーンをちゃんとキミに返すよ！"
         ],
         [ # Goodbyes
-        "ちょっと%sに会いにメロディーランドに行ってくるよ。" % Mickey,
-        "オヒョッ！%sとのゲームの約束におくれちゃう！" % Donald,
+        f"ちょっと{Mickey}に会いにメロディーランドに行ってくるよ。",
+        f"オヒョッ！{Donald}とのゲームの約束におくれちゃう！",
         "ねえねえ、キミ！"+lDonaldsDock+"で泳ぎに行こうかな？",
         "あっ、お昼寝の時間だ！ドリームランドに行こうかなー。",
         ]
@@ -8699,7 +8699,7 @@ def getTunnelSignName(trackId, padId):
         return "tunnel_countrysign1"
     else:
         genreId = RaceGlobals.getTrackGenre(trackId)
-        return "tunnel%s_%ssign" % (padId + 1, RaceGlobals.getTrackGenreString(genreId))
+        return f"tunnel{padId + 1}_{RaceGlobals.getTrackGenreString(genreId)}sign"
 
 # Kart Trophy Descriptions
 KartTrophyDescriptions = [
@@ -9082,20 +9082,19 @@ def getRecipeBeanText(beanTuple):
 
     if allTheSame:
         if len(beanTuple) > 1:
-            retval = "%d %s ジェリービーン" % (len(beanTuple),
-                                           BeanColorWords[beanTuple[0]])
+            retval = f"{len(beanTuple)} {BeanColorWords[beanTuple[0]]} ジェリービーン"
         else:
-            retval = "a %s ジェリービーン" % BeanColorWords[beanTuple[0]]
+            retval = f"a {BeanColorWords[beanTuple[0]]} ジェリービーン"
     else:
         retval += 'a'
         maxBeans = len(beanTuple)
         for index in range(maxBeans):
             if index == maxBeans - 1:
-                retval += " そして %s ジェリービーン" % BeanColorWords[beanTuple[index]]
+                retval += f" そして {BeanColorWords[beanTuple[index]]} ジェリービーン"
             elif index == 0:
-                retval += " %s" % BeanColorWords[beanTuple[index]]
+                retval += f" {BeanColorWords[beanTuple[index]]}"
             else:
-                retval += ", %s" % BeanColorWords[beanTuple[index]]
+                retval += f", {BeanColorWords[beanTuple[index]]}"
 
     return retval
     

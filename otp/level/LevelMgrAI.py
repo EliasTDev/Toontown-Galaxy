@@ -3,8 +3,10 @@
 from direct.showbase.PythonUtil import Functor
 from . import LevelMgrBase
 
+
 class LevelMgrAI(LevelMgrBase.LevelMgrBase):
     """This class manages editable AI level attributes"""
+
     def __init__(self, level, entId):
         LevelMgrBase.LevelMgrBase.__init__(self, level, entId)
 
@@ -45,8 +47,7 @@ class LevelMgrAI(LevelMgrBase.LevelMgrBase):
 
     def privCreateSortedZoneIdList(self):
         # sort the zoneNums
-        zoneNums = list(self.level.zoneNum2zoneId.keys())
-        zoneNums.sort()
+        zoneNums = sorted(self.level.zoneNum2zoneId.keys())
 
         # create a list of network zoneIds, ordered by their corresponding
         # sorted model zoneNum values

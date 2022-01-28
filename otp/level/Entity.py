@@ -5,6 +5,7 @@ from direct.showbase.PythonUtil import lineInfo
 import string
 from direct.directnotify import DirectNotifyGlobal
 
+
 class Entity(DirectObject):
     """
     Entity is the base class for all objects that exist in a Level
@@ -17,7 +18,7 @@ class Entity(DirectObject):
 
     def initializeEntity(self, level, entId):
         ###
-        ### THIS IS WHERE ENTITIES GET THEIR ATTRIBUTES SET
+        # THIS IS WHERE ENTITIES GET THEIR ATTRIBUTES SET
         ###
         """
         Distributed entities on the client don't know their level or
@@ -32,14 +33,14 @@ class Entity(DirectObject):
 
     def __str__(self):
         if hasattr(self, 'level') and self.level:
-            return 'ent%s(%s)' % (self.entId, self.level.getEntityType(self.entId))
+            return f'ent{self.entId}({self.level.getEntityType(self.entId)})'
         elif hasattr(self, 'name'):
             return self.name
         elif hasattr(self, 'entId'):
-            return '%s-%s' % (self.__class__.__name__, self.entId)
+            return f'{self.__class__.__name__}-{self.entId}'
         else:
             return self.__class__.__name__
-            
+
     def destroy(self):
         """
         This is called when the level wants this entity to go away.
@@ -49,25 +50,24 @@ class Entity(DirectObject):
         Distributed entities ought to be disabled and/or deleted shortly
         after this is called.
         """
-        Entity.notify.debug('Entity.destroy() %s' % self.entId)
+        Entity.notify.debug(f'Entity.destroy() {self.entId}')
         # client-side distributed entities might be doing this after
         # the level has been been destroyed...?
         if self.level:
             if self.level.isInitialized():
                 self.level.onEntityDestroy(self.entId)
             else:
-                Entity.notify.warning('Entity %s destroyed after level??' %
-                                      self.entId)
+                Entity.notify.warning(f'Entity {self.entId} destroyed after level??')
         self.ignoreAll()
         del self.level
         del self.entId
-        
+
     def getUniqueName(self, name, entId=None):
         """returns a name that is unique for a particular entity;
         defaults to this entity"""
         if entId is None:
             entId = self.entId
-        return '%s-%s-%s' % (name, self.level.levelId, entId)
+        return f'{name}-{self.level.levelId}-{entId}'
 
     def getParentToken(self):
         """returns a value that uniquely identifies this entity for purposes
@@ -95,7 +95,7 @@ class Entity(DirectObject):
         return self.getZoneEntity().getNodePath()
 
     def privGetSetter(self, attrib):
-        setFuncName = 'set%s%s' % (attrib[0].upper(), attrib[1:])
+        setFuncName = f'set{attrib[0].upper()}{attrib[1:]}'
         if hasattr(self, setFuncName):
             return getattr(self, setFuncName)
         return None
@@ -122,11 +122,11 @@ class Entity(DirectObject):
 
     # this will be called with each item of our spec data on initialization
     def setAttribInit(self, attrib, value):
-##         if __debug__:
-##             if hasattr(self, attrib):
-##                 Entity.notify.warning(
-##                     '%s already has member %s in setAttribInit' %
-##                     (self, attrib))
+        # if __debug__:
+        # if hasattr(self, attrib):
+        # Entity.notify.warning(
+        # '%s already has member %s in setAttribInit' %
+        # (self, attrib))
         # TODO: we should probably put this crep in a dictionary
         # rather than dump it into the entity's namespace
         self.__dict__[attrib] = value
@@ -135,7 +135,7 @@ class Entity(DirectObject):
         def debugPrint(self, message):
             """for debugging"""
             return self.notify.debug(
-                    str(self.__dict__.get('entId', '?'))+' '+message)
+                str(self.__dict__.get('entId', '?')) + ' ' + message)
 
     if __dev__:
         # support for level editing

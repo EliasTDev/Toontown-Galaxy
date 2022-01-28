@@ -10,6 +10,7 @@ from direct.fsm import ClassicFSM, State
 from direct.actor import Actor
 from toontown.toonbase import ToontownGlobals
 
+
 class MMPlayground(Playground.Playground):
     """
     ////////////////////////////////////////////////////////////////////
@@ -20,23 +21,24 @@ class MMPlayground(Playground.Playground):
     //
     ////////////////////////////////////////////////////////////////////
     """
+
     def __init__(self, loader, parentFSM, doneEvent):
         Playground.Playground.__init__(self, loader, parentFSM, doneEvent)
 
         self.activityFsm = ClassicFSM.ClassicFSM('Activity',
-                              [State.State('off',
-                                      self.enterOff,
-                                      self.exitOff,
-                                      ['OnPiano']),
-                              State.State('OnPiano',
-                                      self.enterOnPiano,
-                                      self.exitOnPiano,
-                                      ['off'])],
-                              # Initial state
-                              'off',
-                              # Final state
-                              'off',
-                              )
+                                                 [State.State('off',
+                                                              self.enterOff,
+                                                              self.exitOff,
+                                                              ['OnPiano']),
+                                                     State.State('OnPiano',
+                                                                 self.enterOnPiano,
+                                                                 self.exitOnPiano,
+                                                                 ['off'])],
+                                                 # Initial state
+                                                 'off',
+                                                 # Final state
+                                                 'off',
+                                                 )
         self.activityFsm.enterInitialState()
 
     def load(self):
@@ -48,7 +50,7 @@ class MMPlayground(Playground.Playground):
 
     def enter(self, requestStatus):
         Playground.Playground.enter(self, requestStatus)
-        
+
     def exit(self):
         Playground.Playground.exit(self)
 
@@ -79,8 +81,6 @@ class MMPlayground(Playground.Playground):
         unparent the local toon from the piano
         """
         base.localAvatar.b_setParent(ToontownGlobals.SPRender)
-
-
 
     def showPaths(self):
         # Overridden from Playground to fill in the correct parameters

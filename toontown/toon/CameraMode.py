@@ -4,6 +4,7 @@ from direct.showbase.PythonUtil import Enum
 from direct.fsm.FSM import FSM
 from otp.otpbase import OTPGlobals
 
+
 class CameraMode(FSM):
 
     def __init__(self):
@@ -44,7 +45,6 @@ class CameraMode(FSM):
     def exitActive(self):
         self.disableInput()
 
-
     def enableInput(self):
         self.__inputEnabled = True
         self.accept('mouse3', self.enableMouseControl)
@@ -70,14 +70,16 @@ class CameraMode(FSM):
         self.origMousePos = (mouseData.getX(), mouseData.getY())
         self._hideCursor()
 
-        base.win.movePointer(0, base.win.getXSize() // 2, base.win.getYSize() // 2)
+        base.win.movePointer(
+            0,
+            base.win.getXSize() // 2,
+            base.win.getYSize() // 2)
         self.lastMousePos = (base.win.getXSize() / 2, base.win.getYSize() / 2)
         if self.getCurrentOrNextState() == 'Active':
             self._startMouseControlTasks()
 
-
     def _hideCursor(self):
-        #From pirates guimanager
+        # From pirates guimanager
         wp = WindowProperties()
         wp.setCursorHidden(1)
         base.win.requestProperties(wp)
@@ -92,10 +94,13 @@ class CameraMode(FSM):
             self._stopMouseControlTasks()
             self._showCursor()
 
-            base.win.movePointer(0, int(self.origMousePos[0]), int(self.origMousePos[1]))
+            base.win.movePointer(
+                0, int(
+                    self.origMousePos[0]), int(
+                    self.origMousePos[1]))
 
     def _showCursor(self):
-        #From pirates guimanager
+        # From pirates guimanager
         wp = WindowProperties()
         wp.setCursorHidden(0)
         base.win.requestProperties(wp)
@@ -118,7 +123,11 @@ class CameraMode(FSM):
 
     def _startMouseReadTask(self):
         self._stopMouseReadTask()
-        taskMgr.add(self._mouseReadTask, '%s-MouseRead' % self._getTopNodeName(), priority=-29)
+        taskMgr.add(
+            self._mouseReadTask,
+            f'{self._getTopNodeName()}-MouseRead',
+            priority=-
+            29)
 
     def _mouseReadTask(self, task):
         if hasattr(base, 'oobeMode') and base.oobeMode:
@@ -128,24 +137,32 @@ class CameraMode(FSM):
             self.mouseDelta = (0, 0)
         else:
             winSize = (
-             base.win.getXSize(), base.win.getYSize())
+                base.win.getXSize(), base.win.getYSize())
             mouseData = base.win.getPointer(0)
             if mouseData.getX() > winSize[0] or mouseData.getY() > winSize[1]:
                 self.mouseDelta = (0, 0)
             else:
-                self.mouseDelta = (mouseData.getX() - self.lastMousePos[0], mouseData.getY() - self.lastMousePos[1])
+                self.mouseDelta = (
+                    mouseData.getX() - self.lastMousePos[0],
+                    mouseData.getY() - self.lastMousePos[1])
                 base.win.movePointer(0, winSize[0] // 2, winSize[1] // 2)
                 mouseData = base.win.getPointer(0)
                 self.lastMousePos = (mouseData.getX(), mouseData.getY())
         return task.cont
 
     def _stopMouseReadTask(self):
-        taskMgr.remove('%s-MouseRead' % self._getTopNodeName())
+        taskMgr.remove(f'{self._getTopNodeName()}-MouseRead')
 
     def _startMouseUpdateTask(self):
         self._stopMouseUpdateTask()
-        taskMgr.add(self._avatarFacingTask, '%s-AvatarFacing' % self._getTopNodeName(), priority=23)
-        taskMgr.add(self._mouseUpdateTask, '%s-MouseUpdate' % self._getTopNodeName(), priority=40)
+        taskMgr.add(
+            self._avatarFacingTask,
+            f'{self._getTopNodeName()}-AvatarFacing',
+            priority=23)
+        taskMgr.add(
+            self._mouseUpdateTask,
+            f'{self._getTopNodeName()}-MouseUpdate',
+            priority=40)
 
     def _avatarFacingTask(self, task):
         return task.cont
@@ -154,8 +171,8 @@ class CameraMode(FSM):
         return task.cont
 
     def _stopMouseUpdateTask(self):
-        taskMgr.remove('%s-MouseUpdate' % self._getTopNodeName())
-        taskMgr.remove('%s-AvatarFacing' % self._getTopNodeName())
+        taskMgr.remove(f'{self._getTopNodeName()}-MouseUpdate')
+        taskMgr.remove(f'{self._getTopNodeName()}-AvatarFacing')
 
     def avFaceCamera(self):
         pass

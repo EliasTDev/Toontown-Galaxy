@@ -3,14 +3,16 @@ from otp.otpbase import OTPGlobals
 from direct.directnotify import DirectNotifyGlobal
 from . import BasicEntities
 
+
 class CollisionSolidEntity(BasicEntities.NodePathEntity):
-    notify = DirectNotifyGlobal.directNotify.newCategory('CollisionSolidEntity')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'CollisionSolidEntity')
 
     def __init__(self, level, entId):
         self.collNodePath = None
         BasicEntities.NodePathEntity.__init__(self, level, entId)
         self.initSolid()
-        
+
     def destroy(self):
         self.destroySolid()
         BasicEntities.NodePathEntity.destroy(self)
@@ -40,4 +42,3 @@ class CollisionSolidEntity(BasicEntities.NodePathEntity):
         def attribChanged(self, attrib, value):
             print('attribChanged')
             self.initSolid()
-            

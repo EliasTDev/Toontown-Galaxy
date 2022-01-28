@@ -10,6 +10,7 @@ import types
 from panda3d.otp import *
 notify = DirectNotifyGlobal.directNotify.newCategory('MovieToonVictory')
 
+
 class ToonVictorySkipper(DirectObject):
 
     def __init__(self, numToons, noSkip):
@@ -36,7 +37,7 @@ class ToonVictorySkipper(DirectObject):
     def setStartTime(self, index, startT):
         self._startTimes[index] = startT
 
-    def setIvals(self, ivals, timeOffset = 0.0):
+    def setIvals(self, ivals, timeOffset=0.0):
         for index in self._startTimes:
             self._startTimes[index] += timeOffset
 
@@ -64,19 +65,31 @@ class ToonVictorySkipper(DirectObject):
         elif nextIndex in self._startTimes:
             for ival in self._ivals:
                 ival.setT(self._startTimes[nextIndex])
+
+
 def __findToonReward(rewards, toon):
     for r in rewards:
         if (r['toon'] == toon):
             return r
     return None
 
-def doToonVictory(localToonActive, toons, rewardToonIds, rewardDicts,
-                  deathList, rpanel, allowGroupShot = 1, uberList = [], helpfulToonsList= [], noSkip = False):
+
+def doToonVictory(
+        localToonActive,
+        toons,
+        rewardToonIds,
+        rewardDicts,
+        deathList,
+        rpanel,
+        allowGroupShot=1,
+        uberList=[],
+        helpfulToonsList=[],
+        noSkip=False):
     track = Sequence()
     if (localToonActive == 1):
         track.append(Func(rpanel.show))
         track.append(Func(NametagGlobals.setOnscreenChatForced, 1))
-        
+
     camTrack = Sequence()
     endTrack = Sequence()
     danceSound = globalBattleSoundCache.getSound('ENC_Win.ogg')
@@ -93,7 +106,6 @@ def doToonVictory(localToonActive, toons, rewardToonIds, rewardDicts,
             toonList.append(t)
             uberListNew.append(uberList[countToons])
         countToons += 1
-        
 
     # make a list of toons/None from the rewardToonIds list. This list
     # corresponds with the bitmasks embedded in the deathList. We need this
@@ -114,12 +126,22 @@ def doToonVictory(localToonActive, toons, rewardToonIds, rewardDicts,
         t = toonList[tIndex]
         rdict = __findToonReward(rewardDicts, t)
         # To prevent client from crashing in this case.
-        if rdict != None:
-            expTrack = rpanel.getExpTrack(t, rdict['origExp'], rdict['earnedExp'],
-                                          deathList, rdict['origQuests'], rdict['items'], rdict['missedItems'],
-                                          rdict['origMerits'], rdict['merits'],
-                                          rdict['parts'], rewardToonList, uberListNew[tIndex],
-                                          helpfulToonsList, noSkip=noSkip)
+        if rdict is not None:
+            expTrack = rpanel.getExpTrack(
+                t,
+                rdict['origExp'],
+                rdict['earnedExp'],
+                deathList,
+                rdict['origQuests'],
+                rdict['items'],
+                rdict['missedItems'],
+                rdict['origMerits'],
+                rdict['merits'],
+                rdict['parts'],
+                rewardToonList,
+                uberListNew[tIndex],
+                helpfulToonsList,
+                noSkip=noSkip)
             if expTrack:
                 skipper.setStartTime(tIndex, track.getDuration())
                 track.append(skipper.getTeardownFunc(lastListenIndex))
@@ -130,7 +152,7 @@ def doToonVictory(localToonActive, toons, rewardToonIds, rewardDicts,
                 camExpTrack = MovieCamera.chooseRewardShot(t, camDuration)
                 assert camDuration == camExpTrack.getDuration()
                 camTrack.append(MovieCamera.chooseRewardShot(
-                    t, camDuration, allowGroupShot = allowGroupShot))
+                    t, camDuration, allowGroupShot=allowGroupShot))
     track.append(skipper.getTeardownFunc(lastListenIndex))
     track.append(Func(skipper.destroy))
     if (localToonActive == 1):
@@ -145,4 +167,3 @@ def doToonVictory(localToonActive, toons, rewardToonIds, rewardDicts,
     mtrack = Parallel(track, soundTrack)
 
     return (mtrack, camTrack, skipper)
-

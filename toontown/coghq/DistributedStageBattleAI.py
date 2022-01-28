@@ -8,9 +8,12 @@ from . import CogDisguiseGlobals
 from toontown.toonbase.ToontownBattleGlobals import getStageCreditMultiplier
 from otp.otpbase.PythonUtil import addListsByValue, enumerate
 
-class DistributedStageBattleAI(DistributedLevelBattleAI.DistributedLevelBattleAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedStageBattleAI')
-    
+
+class DistributedStageBattleAI(
+        DistributedLevelBattleAI.DistributedLevelBattleAI):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedStageBattleAI')
+
     def __init__(self, air, battleMgr, pos, suit, toonId, zoneId,
                  level, battleCellId, roundCallback=None,
                  finishCallback=None, maxSuits=4):
@@ -28,9 +31,9 @@ class DistributedStageBattleAI(DistributedLevelBattleAI.DistributedLevelBattleAI
 
         # Add a new reward state to the battle ClassicFSM
         self.fsm.addState(State.State('StageReward',
-                                        self.enterStageReward,
-                                        self.exitStageReward,
-                                        ['Resume']))
+                                      self.enterStageReward,
+                                      self.exitStageReward,
+                                      ['Resume']))
         playMovieState = self.fsm.getStateNamed('PlayMovie')
         playMovieState.addTransition('StageReward')
 
@@ -46,7 +49,7 @@ class DistributedStageBattleAI(DistributedLevelBattleAI.DistributedLevelBattleAI
 
     def handleToonsWon(self, toons):
         # toons just beat the boss
-        extraMerits = [0,0,0,0]
+        extraMerits = [0, 0, 0, 0]
         amount = ToontownGlobals.StageNoticeRewards[self.level.stageId]
         index = ToontownGlobals.cogHQZoneId2deptIndex(self.level.stageId)
         extraMerits[index] = amount
@@ -56,29 +59,37 @@ class DistributedStageBattleAI(DistributedLevelBattleAI.DistributedLevelBattleAI
             meritArray = self.air.promotionMgr.recoverMerits(
                 toon, [], self.getTaskZoneId(), mult, extraMerits=extraMerits)
             if toon.doId in self.helpfulToons:
-                self.toonMerits[toon.doId] = addListsByValue(self.toonMerits[toon.doId], meritArray)
+                self.toonMerits[toon.doId] = addListsByValue(
+                    self.toonMerits[toon.doId], meritArray)
             else:
-                self.notify.debug("toon %d not helpful list, skipping merits" % toon.doId)
+                self.notify.debug(
+                    "toon %d not helpful list, skipping merits" %
+                    toon.doId)
 
         for floorNum, cogsThisFloor in enumerate(self.suitsKilledPerFloor):
-            self.notify.info('merits for floor %s' % floorNum)
+            self.notify.info(f'merits for floor {floorNum}')
             for toon in toons:
-                # Append the recovered and not recovered items to their respective lists
+                # Append the recovered and not recovered items to their
+                # respective lists
                 recovered, notRecovered = self.air.questManager.recoverItems(
                     toon, cogsThisFloor, self.getTaskZoneId())
                 self.toonItems[toon.doId][0].extend(recovered)
                 self.toonItems[toon.doId][1].extend(notRecovered)
 
-                # the new merit list must be added by value to the cumulative list
+                # the new merit list must be added by value to the cumulative
+                # list
                 meritArray = self.air.promotionMgr.recoverMerits(
                     toon, cogsThisFloor, self.getTaskZoneId(),
                     getStageCreditMultiplier(floorNum))
-                self.notify.info('toon %s: %s' % (toon.doId, meritArray))
+                self.notify.info(f'toon {toon.doId}: {meritArray}')
                 if toon.doId in self.helpfulToons:
-                    self.toonMerits[toon.doId] = addListsByValue(self.toonMerits[toon.doId], meritArray)
+                    self.toonMerits[toon.doId] = addListsByValue(
+                        self.toonMerits[toon.doId], meritArray)
                 else:
-                    self.notify.debug("toon %d not helpful list, skipping merits" % toon.doId)
-            
+                    self.notify.debug(
+                        "toon %d not helpful list, skipping merits" %
+                        toon.doId)
+
     ##### StageReward state #####
 
     def enterStageReward(self):
@@ -97,7 +108,9 @@ class DistributedStageBattleAI(DistributedLevelBattleAI.DistributedLevelBattleAI
 
         # Set an upper timeout for the reward movie.  If no toons
         # report back by this time, call it done anyway.
-        self.timer.startCallback(BUILDING_REWARD_TIMEOUT, self.serverRewardDone)
+        self.timer.startCallback(
+            BUILDING_REWARD_TIMEOUT,
+            self.serverRewardDone)
         return None
 
     def exitStageReward(self):
@@ -109,4 +122,3 @@ class DistributedStageBattleAI(DistributedLevelBattleAI.DistributedLevelBattleAI
         DistributedLevelBattleAI.DistributedLevelBattleAI.enterResume(self)
         if self.bossBattle and self.bossDefeated:
             self.battleMgr.level.b_setDefeated()
-

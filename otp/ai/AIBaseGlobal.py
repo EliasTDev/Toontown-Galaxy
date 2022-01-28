@@ -29,9 +29,11 @@ __builtins__["loader"] = simbase.loader
 # Set direct notify categories now that we have config
 directNotify.setDconfigLevels()
 
-def inspect(anObject):
+
+def inspect(anobject):
     from direct.tkpanels import Inspector
-    Inspector.inspect(anObject)
+    Inspector.inspect(anobject)
+
 
 __builtins__["inspect"] = inspect
 # this also appears in ShowBaseGlobal

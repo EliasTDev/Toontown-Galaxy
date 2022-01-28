@@ -17,6 +17,8 @@ from otp.otpbase import OTPGlobals
 from . import TagGameGlobals
 from . import Trajectory
 from panda3d.otp import *
+
+
 class DistributedTagGame(DistributedMinigame):
 
     DURATION = TagGameGlobals.DURATION
@@ -27,25 +29,25 @@ class DistributedTagGame(DistributedMinigame):
         DistributedMinigame.__init__(self, cr)
 
         self.gameFSM = ClassicFSM.ClassicFSM('DistributedTagGame',
-                               [
-                                State.State('off',
-                                            self.enterOff,
-                                            self.exitOff,
-                                            ['play']),
-                                State.State('play',
-                                            self.enterPlay,
-                                            self.exitPlay,
-                                            ['cleanup']),
-                                State.State('cleanup',
-                                            self.enterCleanup,
-                                            self.exitCleanup,
-                                            ['off']),
-                                ],
-                               # Initial State
-                               'off',
-                               # Final State
-                               'off',
-                               )
+                                             [
+                                                 State.State('off',
+                                                             self.enterOff,
+                                                             self.exitOff,
+                                                             ['play']),
+                                                 State.State('play',
+                                                             self.enterPlay,
+                                                             self.exitPlay,
+                                                             ['cleanup']),
+                                                 State.State('cleanup',
+                                                             self.enterCleanup,
+                                                             self.exitCleanup,
+                                                             ['off']),
+                                             ],
+                                             # Initial State
+                                             'off',
+                                             # Final State
+                                             'off',
+                                             )
 
         # Add our game ClassicFSM to the framework ClassicFSM
         self.addChildGameFSM(self.gameFSM)
@@ -54,10 +56,10 @@ class DistributedTagGame(DistributedMinigame):
 
         self.scorePanels = []
 
-        self.initialPositions = ((0,10,0,180,0,0),
-                                 (10,0,0,90,0,0),
-                                 (0,-10,0,0,0,0),
-                                 (-10,0,0,-90,0,0))
+        self.initialPositions = ((0, 10, 0, 180, 0, 0),
+                                 (10, 0, 0, 90, 0, 0),
+                                 (0, -10, 0, 0, 0, 0),
+                                 (-10, 0, 0, -90, 0, 0))
 
         # You are not it until told otherwise
         base.localAvatar.isIt = 0
@@ -79,13 +81,13 @@ class DistributedTagGame(DistributedMinigame):
 
         self.itText = OnscreenText.OnscreenText(
             "itText",
-            fg = (0.95, 0.95, 0.65, 1),
-            scale = 0.14,
-            font = ToontownGlobals.getSignFont(),
-            pos = (0.0, -0.8),
-            wordwrap = 15,
-            mayChange = 1,
-            )
+            fg=(0.95, 0.95, 0.65, 1),
+            scale=0.14,
+            font=ToontownGlobals.getSignFont(),
+            pos=(0.0, -0.8),
+            wordwrap=15,
+            mayChange=1,
+        )
         self.itText.hide()
 
         self.sky = loader.loadModel("phase_3.5/models/props/TT_sky")
@@ -132,7 +134,6 @@ class DistributedTagGame(DistributedMinigame):
         self.removeChildGameFSM(self.gameFSM)
         del self.gameFSM
 
-
     def onstage(self):
         self.notify.debug("onstage")
         DistributedMinigame.onstage(self)
@@ -142,7 +143,7 @@ class DistributedTagGame(DistributedMinigame):
         # base.localAvatar.startSky(self.sky)
 
         myPos = self.avIdList.index(self.localAvId)
-        assert(myPos>=0)
+        assert(myPos >= 0)
         base.localAvatar.setPosHpr(*self.initialPositions[myPos])
         base.localAvatar.reparentTo(render)
         base.localAvatar.loop('neutral')
@@ -161,7 +162,7 @@ class DistributedTagGame(DistributedMinigame):
         DistributedSmoothNode.activateSmoothing(1, 1)
 
         self.IT = None
-        
+
     def offstage(self):
         self.notify.debug("offstage")
         # Restore normal non-predictive smoothing.
@@ -181,16 +182,17 @@ class DistributedTagGame(DistributedMinigame):
         self.itText.hide()
 
     def setGameReady(self):
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         self.notify.debug("setGameReady")
         if DistributedMinigame.setGameReady(self):
             return
-        
+
         # Allow us to tag the other avatars
         for avId in self.avIdList:
             self.acceptTagEvent(avId)
         myPos = self.avIdList.index(self.localAvId)
-        assert(myPos>=0)
+        assert(myPos >= 0)
 
         # Turn smoothing on for all avatars.
         for i in range(self.numPlayers):
@@ -208,7 +210,8 @@ class DistributedTagGame(DistributedMinigame):
         base.localAvatar.b_setParent(ToontownGlobals.SPRender)
 
     def setGameStart(self, timestamp):
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         self.notify.debug("setGameStart")
         # base class will cause gameFSM to enter initial state
         DistributedMinigame.setGameStart(self, timestamp)
@@ -226,9 +229,9 @@ class DistributedTagGame(DistributedMinigame):
         for i in range(self.numPlayers):
             avId = self.avIdList[i]
             avName = self.getAvatarName(avId)
-            scorePanel = MinigameAvatarScorePanel.MinigameAvatarScorePanel(avId,
-                                                                           avName)
-            scorePanel.setPos(1.12, 0.0, 0.28*i - 0.34)
+            scorePanel = MinigameAvatarScorePanel.MinigameAvatarScorePanel(
+                avId, avName)
+            scorePanel.setPos(1.12, 0.0, 0.28 * i - 0.34)
             self.scorePanels.append(scorePanel)
 
         # We need the right edge of the screen for display of the
@@ -241,16 +244,15 @@ class DistributedTagGame(DistributedMinigame):
         # we need to set it again to be fast for the person who is IT first
         if base.localAvatar.isIt:
             # Make the IT toon run faster than everybody else
-            base.mouseInterfaceNode.setForwardSpeed(ToontownGlobals.ToonForwardSpeed *
-                                                    self.IT_SPEED_INCREASE)
+            base.mouseInterfaceNode.setForwardSpeed(
+                ToontownGlobals.ToonForwardSpeed * self.IT_SPEED_INCREASE)
 
             # And also turn in tighter circles.  This is necessary in
             # part to compensate for the above increase in forward
             # speed (which will also increase the turning radius).
-            base.mouseInterfaceNode.setRotateSpeed(ToontownGlobals.ToonRotateSpeed *
-                                                   self.IT_ROT_INCREASE)
-            
-        
+            base.mouseInterfaceNode.setRotateSpeed(
+                ToontownGlobals.ToonRotateSpeed * self.IT_ROT_INCREASE)
+
         # Start counting down the game clock,
         # call timerExpired when it reaches 0
         self.timer = ToontownTimer.ToontownTimer()
@@ -258,9 +260,9 @@ class DistributedTagGame(DistributedMinigame):
         self.timer.setTime(self.DURATION)
         self.timer.countdown(self.DURATION, self.timerExpired)
         # Start music
-        base.playMusic(self.music, looping = 1, volume = 0.9)
+        base.playMusic(self.music, looping=1, volume=0.9)
         # Get a nice camera shot where we can see around a little
-        base.localAvatar.setIdealCameraPos(Point3(0,-24,8))
+        base.localAvatar.setIdealCameraPos(Point3(0, -24, 8))
 
     def exitPlay(self):
         for task in self.tracks:
@@ -285,7 +287,8 @@ class DistributedTagGame(DistributedMinigame):
         # Restore the offscreen popups.
         base.setCellsAvailable(base.rightCells, 1)
         # Back to normal speed
-        base.mouseInterfaceNode.setForwardSpeed(ToontownGlobals.ToonForwardSpeed)
+        base.mouseInterfaceNode.setForwardSpeed(
+            ToontownGlobals.ToonForwardSpeed)
         base.mouseInterfaceNode.setRotateSpeed(ToontownGlobals.ToonRotateSpeed)
         self.itPointer.reparentTo(hidden)
         # Go back to the first camera index
@@ -310,15 +313,16 @@ class DistributedTagGame(DistributedMinigame):
         If you are it, set a flag on local toon so you will
         not be able to pick up treasure anymore
         """
-        if not self.hasLocalToon: return
-        
+        if not self.hasLocalToon:
+            return
+
         # Since the timer expires locally, we may still get a few
         # messages from the AI that were on the wire when we left
         # the play state, just ignore it
         if self.gameFSM.getCurrentState().getName() != "play":
             self.notify.debug("Ignoring setIt after done playing")
             return
-        
+
         self.itText.show()
         self.notify.debug(str(avId) + " is now it")
         if (avId == self.localAvId):
@@ -344,7 +348,7 @@ class DistributedTagGame(DistributedMinigame):
         if avatar:
             self.itPointer.reparentTo(avatar)
             self.itPointer.setZ(avatar.getHeight())
-        
+
         # Tag sound
         base.playSfx(self.tagSfx)
 
@@ -355,20 +359,20 @@ class DistributedTagGame(DistributedMinigame):
         # make sure the 'it' player has not disconnected
         if not toon:
             return
-        
+
         # spin the body
         spinTrack = LerpHprInterval(toon.getGeomNode(), duration,
-                                    Point3(0,0,0),
-                                    startHpr=Point3(-5.*360.,0,0),
+                                    Point3(0, 0, 0),
+                                    startHpr=Point3(-5. * 360., 0, 0),
                                     blendType='easeOut')
-        
+
         # scale up the head
         growTrack = Parallel()
         gs = 2.5
         for hi in range(toon.headParts.getNumPaths()):
             head = toon.headParts[hi]
             growTrack.append(LerpScaleInterval(head, duration,
-                                               Point3(gs,gs,gs)))
+                                               Point3(gs, gs, gs)))
 
         # make the toon bounce
         def bounceFunc(t, trajectory, node=toon.getGeomNode()):
@@ -385,8 +389,8 @@ class DistributedTagGame(DistributedMinigame):
         decay = 0.6
         while tLen < duration:
             trajectory = Trajectory.Trajectory(0,
-                                               Point3(0,0,startZ),
-                                               Point3(0,0,zVel),
+                                               Point3(0, 0, startZ),
+                                               Point3(0, 0, zVel),
                                                gravMult=5.)
             dur = trajectory.calcTimeOfImpactOnPlane(startZ)
             if dur <= 0:
@@ -404,7 +408,7 @@ class DistributedTagGame(DistributedMinigame):
             Func(toon.animFSM.request, 'off'),
             Parallel(spinTrack, growTrack, bounceTrack),
             Func(toon.animFSM.request, 'Happy'),
-            )
+        )
         self.tracks.append(tagTrack)
         tagTrack.start()
 
@@ -438,8 +442,9 @@ class DistributedTagGame(DistributedMinigame):
         Called from the AI whenever the score changes so the localToon
         can update his score display
         """
-        if not self.hasLocalToon: return
-        self.notify.debug("setTreasureScore: %s" % scores)
+        if not self.hasLocalToon:
+            return
+        self.notify.debug(f"setTreasureScore: {scores}")
 
         for i in range(len(self.scorePanels)):
             self.scorePanels[i].setScore(scores[i])

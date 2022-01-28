@@ -3,9 +3,10 @@ from direct.showbase.PythonUtil import reduceAngle
 from otp.movement import Impulse
 from otp.otpbase import OTPGlobals
 
+
 class PetCollider(Impulse.Impulse):
     SerialNum = 0
-    
+
     def __init__(self, petRadius, collTrav):
         Impulse.Impulse.__init__(self)
         self.petRadius = petRadius
@@ -18,8 +19,8 @@ class PetCollider(Impulse.Impulse):
         self.vH = 0
 
         # create collision solids
-        self.fwdCLine   = CollisionSegment(0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
-        self.leftCLine  = CollisionSegment(0.0, 0.0, 0.0,-1.0, 1.0, 0.0)
+        self.fwdCLine = CollisionSegment(0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+        self.leftCLine = CollisionSegment(0.0, 0.0, 0.0, -1.0, 1.0, 0.0)
         self.rightCLine = CollisionSegment(0.0, 0.0, 0.0, 1.0, 1.0, 0.0)
         self.calcCollLines()
 
@@ -49,7 +50,7 @@ class PetCollider(Impulse.Impulse):
 
     def destroy(self):
         self.ignore(self._getCollisionEvent())
-        
+
         self.collTrav.removeCollider(self.cLineNodePath)
         del self.cHandler
         del self.collTrav
@@ -72,13 +73,13 @@ class PetCollider(Impulse.Impulse):
 
     def _getCollisionEvent(self):
         # this event will be thrown by the Panda collision system
-        return 'petFeeler-%s' % self._getSerialNum()
-        
+        return f'petFeeler-{self._getSerialNum()}'
+
     def handleCollision(self, collEntry):
         print('collision!')
-        #print 'collision: %s' % collEntry
+        # print 'collision: %s' % collEntry
         #import pdb
-        #pdb.set_trace()
+        # pdb.set_trace()
         cPoint = collEntry.getSurfacePoint(self.cLineNodePath)
         cNormal = collEntry.getSurfaceNormal(self.cLineNodePath)
         messenger.send(self.mover.getCollisionEventName(),
@@ -106,4 +107,3 @@ class PetCollider(Impulse.Impulse):
             self.vH = 0
             self.mover.addRotShove(self.rotVel)
             """
-        

@@ -8,12 +8,22 @@ from toontown.coghq import CountryClubRoomBase, LevelSuitPlannerAI
 from toontown.coghq import DistributedCountryClubBattleAI
 from toontown.suit import DistributedMintSuitAI
 
-class DistributedCountryClubRoomAI(DistributedLevelAI.DistributedLevelAI,
-                            CountryClubRoomBase.CountryClubRoomBase):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCountryClubRoomAI')
 
-    def __init__(self, air, countryClubId, countryClubDoId, zoneId, roomId, roomNum, avIds,
-                 battleExpAggreg):
+class DistributedCountryClubRoomAI(DistributedLevelAI.DistributedLevelAI,
+                                   CountryClubRoomBase.CountryClubRoomBase):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedCountryClubRoomAI')
+
+    def __init__(
+            self,
+            air,
+            countryClubId,
+            countryClubDoId,
+            zoneId,
+            roomId,
+            roomNum,
+            avIds,
+            battleExpAggreg):
         # pass zero for the entrance id
         DistributedLevelAI.DistributedLevelAI.__init__(self, air, zoneId,
                                                        0, avIds)
@@ -29,14 +39,16 @@ class DistributedCountryClubRoomAI(DistributedLevelAI.DistributedLevelAI,
         return FactoryEntityCreatorAI.FactoryEntityCreatorAI(level=self)
 
     def getBattleCreditMultiplier(self):
-        return ToontownBattleGlobals.getCountryClubCreditMultiplier(self.countryClubId)
-    
+        return ToontownBattleGlobals.getCountryClubCreditMultiplier(
+            self.countryClubId)
+
     def generate(self):
-        self.notify.debug('generate %s: room=%s' % (self.doId, self.roomId))
+        self.notify.debug(f'generate {self.doId}: room={self.roomId}')
 
         # create our spec
         self.notify.debug('loading spec')
-        specModule = CountryClubRoomSpecs.getCountryClubRoomSpecModule(self.roomId)
+        specModule = CountryClubRoomSpecs.getCountryClubRoomSpecModule(
+            self.roomId)
         roomSpec = LevelSpec.LevelSpec(specModule)
 
         if __dev__:
@@ -44,7 +56,7 @@ class DistributedCountryClubRoomAI(DistributedLevelAI.DistributedLevelAI,
             self.notify.debug('creating entity type registry')
             typeReg = self.getCountryClubEntityTypeReg()
             roomSpec.setEntityTypeReg(typeReg)
-        
+
         self.notify.debug('creating entities')
         DistributedLevelAI.DistributedLevelAI.generate(self, roomSpec)
 
@@ -65,17 +77,16 @@ class DistributedCountryClubRoomAI(DistributedLevelAI.DistributedLevelAI,
             battleExpAggreg=self.battleExpAggreg)
         suitHandles = self.planner.genSuits()
         # alert battle blockers that planner has been created
-        messenger.send("plannerCreated-"+str(self.doId))
-        
+        messenger.send("plannerCreated-" + str(self.doId))
+
         self.suits = suitHandles['activeSuits']
         self.reserveSuits = suitHandles['reserveSuits']
         self.d_setSuits()
 
-        self.notify.debug('finish mint room %s %s creation' %
-                          (self.roomId, self.doId))
+        self.notify.debug(f'finish mint room {self.roomId} {self.doId} creation')
 
     def delete(self):
-        self.notify.debug('delete: %s' % self.doId)
+        self.notify.debug(f'delete: {self.doId}')
         suits = self.suits
         for reserve in self.reserveSuits:
             suits.append(reserve[0])
@@ -91,7 +102,7 @@ class DistributedCountryClubRoomAI(DistributedLevelAI.DistributedLevelAI,
     # required-field getters
     def getCountryClubId(self):
         return self.countryClubId
-    
+
     def getRoomId(self):
         # this is the id of the room in the context of the room pool
         return self.roomId
@@ -123,8 +134,7 @@ class DistributedCountryClubRoomAI(DistributedLevelAI.DistributedLevelAI,
     def d_setBossConfronted(self, toonId):
         if toonId not in self.avIdList:
             self.notify.warning(
-                'd_setBossConfronted: %s not in list of participants' %
-                toonId)
+                f'd_setBossConfronted: {toonId} not in list of participants')
             return
         self.sendUpdate('setBossConfronted', [toonId])
 
@@ -141,7 +151,7 @@ class DistributedCountryClubRoomAI(DistributedLevelAI.DistributedLevelAI,
                 activeVictorIds.append(victorId)
 
         # log that toons beat the mint
-        description = '%s|%s' % (self.countryClubId, activeVictorIds)
+        description = f'{self.countryClubId}|{activeVictorIds}'
         for avId in activeVictorIds:
             self.air.writeServerEvent('mintDefeated', avId, description)
 
@@ -151,8 +161,10 @@ class DistributedCountryClubRoomAI(DistributedLevelAI.DistributedLevelAI,
     def b_setDefeated(self):
         self.d_setDefeated()
         self.setDefeated()
+
     def d_setDefeated(self):
         self.sendUpdate('setDefeated')
+
     def setDefeated(self):
         # we add parts in the battle ai now...
         pass
@@ -166,11 +178,10 @@ class DistributedCountryClubRoomAI(DistributedLevelAI.DistributedLevelAI,
             if mint is not None:
                 mint.allToonsGone()
             else:
-                self.notify.warning('no mint %s in allToonsGone' %
-                                    self.countryClubDoId)
+                self.notify.warning(f'no mint {self.countryClubDoId} in allToonsGone')
+
     def challengeDefeated(self):
         """Handle the challenge is this room being defeated by the toons."""
         countryClub = simbase.air.doId2do.get(self.countryClubDoId)
         if countryClub:
             countryClub.roomDefeated(self)
-

@@ -3,14 +3,17 @@ from otp.level import DistributedEntityAI
 from direct.task import Task
 from toontown.coghq import BarrelBase
 
+
 class DistributedBarrelBaseAI(DistributedEntityAI.DistributedEntityAI,
                               BarrelBase.BarrelBase):
-    notify = DirectNotifyGlobal.directNotify.newCategory("DistributedBarrelBaseAI")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedBarrelBaseAI")
+
     def __init__(self, level, entId):
         self.rewardPerGrabMax = 0
         DistributedEntityAI.DistributedEntityAI.__init__(self, level, entId)
         self.usedAvIds = []
-        
+
     def delete(self):
         taskMgr.remove(self.taskName("resetGags"))
         del self.usedAvIds
@@ -19,8 +22,8 @@ class DistributedBarrelBaseAI(DistributedEntityAI.DistributedEntityAI,
 
     def requestGrab(self):
         avId = self.air.getAvatarIdFromSender()
-        self.notify.debug("requestGrab %s" % avId)
-        if not avId in self.usedAvIds:
+        self.notify.debug(f"requestGrab {avId}")
+        if avId not in self.usedAvIds:
             self.usedAvIds.append(avId)
             self.d_setGrab(avId)
         else:
@@ -28,7 +31,7 @@ class DistributedBarrelBaseAI(DistributedEntityAI.DistributedEntityAI,
 
     def d_setGrab(self, avId):
         # the base class d_setGrab just notifies the client that the prize
-        # was grabbed.  Subclass functions 
+        # was grabbed.  Subclass functions
         # should make the appropiate AI calls to credit
         # the avatar with the prize (i.e. jellybeans or gags)
         self.sendUpdate("setGrab", [avId])
@@ -51,11 +54,10 @@ class DistributedBarrelBaseAI(DistributedEntityAI.DistributedEntityAI,
         else:
             self.d_setReject()
         self.sendUpdate("setNumGags", [self.numGagsLeft])
-    
+
     def resetGags(self, task):
         self.numGagsLeft =  self.maxGags
         self.sendUpdate("setNumGags", [self.numGagsLeft])
         return Task.done
 
     """
-    

@@ -2,6 +2,7 @@
 
 from . import PlatformEntity
 
+
 class PaintMixer(PlatformEntity.PlatformEntity):
     def start(self):
         PlatformEntity.PlatformEntity.start(self)
@@ -20,4 +21,3 @@ class PaintMixer(PlatformEntity.PlatformEntity):
         self.setScale(1)
         model.flattenMedium()
         """
-        

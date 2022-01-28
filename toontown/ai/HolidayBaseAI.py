@@ -3,6 +3,7 @@ import random
 from direct.task import Task
 from toontown.effects import DistributedFireworkShowAI
 
+
 class HolidayBaseAI:
     """
     Base class for all holidays
@@ -17,6 +18,3 @@ class HolidayBaseAI:
 
     def stop(self):
         pass
-
-
-        

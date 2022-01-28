@@ -2,9 +2,11 @@
 from direct.distributed import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedBankMgrAI(DistributedObjectAI.DistributedObjectAI):
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBankMgrAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedBankMgrAI')
 
     def __init__(self, air):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
@@ -28,12 +30,20 @@ class DistributedBankMgrAI(DistributedObjectAI.DistributedObjectAI):
         # Deposit
         if amount > 0:
             if amount > walletBalance:
-                self.air.writeServerEvent('suspicious', avId, 'DistributedBankMgr.transferMoneyForAv deposit more than wallet')
-                self.notify.warning("av %s tried to deposit more than he was holding" % (avId))
+                self.air.writeServerEvent(
+                    'suspicious',
+                    avId,
+                    'DistributedBankMgr.transferMoneyForAv deposit more than wallet')
+                self.notify.warning(
+                    f"av {avId} tried to deposit more than he was holding")
                 return 0
             elif (amount + bankBalance) > maxBankBalance:
-                self.air.writeServerEvent('suspicious', avId, 'DistributedBankMgr.transferMoneyForAv deposit more than bank limit')
-                self.notify.warning("av %s tried to deposit more than his bank can hold" % (avId))
+                self.air.writeServerEvent(
+                    'suspicious',
+                    avId,
+                    'DistributedBankMgr.transferMoneyForAv deposit more than bank limit')
+                self.notify.warning(
+                    f"av {avId} tried to deposit more than his bank can hold")
                 return 0
             else:
                 # Everything checked out, actually do the transaction
@@ -42,21 +52,28 @@ class DistributedBankMgrAI(DistributedObjectAI.DistributedObjectAI):
                 av.b_setMoney(walletBalance - amount)
                 av.b_setBankMoney(bankBalance + amount)
                 # Debug the new values
-                self.notify.debug("av %s completed transfer: %s, oldWallet: %s, newWallet: %s, maxWallet: %s -- oldBank: %s, newBank: %s, maxBank: %s" %
-                                  (avId, amount,
-                                   walletBalance, av.getMoney(), maxWalletBalance,
-                                   bankBalance, av.getBankMoney(), maxBankBalance))
+                self.notify.debug(
+                    "av %s completed transfer: %s, oldWallet: %s, newWallet: %s, maxWallet: %s -- oldBank: %s, newBank: %s, maxBank: %s" %
+                    (avId, amount, walletBalance, av.getMoney(), maxWalletBalance, bankBalance, av.getBankMoney(), maxBankBalance))
                 return 1
 
         # Withdraw
         elif amount < 0:
             if abs(amount) > bankBalance:
-                self.air.writeServerEvent('suspicious', avId, 'DistributedBankMgr.transferMoneyForAv withdraw more than bank')
-                self.notify.warning("av %s tried to withdraw more than was in bank" % (avId))
+                self.air.writeServerEvent(
+                    'suspicious',
+                    avId,
+                    'DistributedBankMgr.transferMoneyForAv withdraw more than bank')
+                self.notify.warning(
+                    f"av {avId} tried to withdraw more than was in bank")
                 return 0
             elif (abs(amount) + walletBalance) > maxWalletBalance:
-                self.air.writeServerEvent('suspicious', avId, 'DistributedBankMgr.transferMoneyForAv withdraw more than limit')
-                self.notify.warning("av %s tried to withdraw more than he can hold" % (avId))
+                self.air.writeServerEvent(
+                    'suspicious',
+                    avId,
+                    'DistributedBankMgr.transferMoneyForAv withdraw more than limit')
+                self.notify.warning(
+                    f"av {avId} tried to withdraw more than he can hold")
                 return 0
             else:
                 # Everything checked out, actually do the transaction
@@ -65,15 +82,14 @@ class DistributedBankMgrAI(DistributedObjectAI.DistributedObjectAI):
                 av.b_setMoney(walletBalance - amount)
                 av.b_setBankMoney(bankBalance + amount)
                 # Debug the new values
-                self.notify.debug("av %s completed transfer: %s, oldWallet: %s, newWallet: %s, maxWallet: %s -- oldBank: %s, newBank: %s, maxBank: %s" %
-                                  (avId, amount,
-                                   walletBalance, av.getMoney(), maxWalletBalance,
-                                   bankBalance, av.getBankMoney(), maxBankBalance))
+                self.notify.debug(
+                    "av %s completed transfer: %s, oldWallet: %s, newWallet: %s, maxWallet: %s -- oldBank: %s, newBank: %s, maxBank: %s" %
+                    (avId, amount, walletBalance, av.getMoney(), maxWalletBalance, bankBalance, av.getBankMoney(), maxBankBalance))
                 return 1
-                
+
         else:
             # amount was 0, nothing to do here
-            return 1        
+            return 1
 
     def transferMoney(self, amount):
         # A client would like to transfer money to or from his bank
@@ -83,7 +99,9 @@ class DistributedBankMgrAI(DistributedObjectAI.DistributedObjectAI):
         avId = self.air.getAvatarIdFromSender()
         av = self.air.doId2do.get(avId)
         if not av:
-            self.air.writeServerEvent('suspicious', avId, 'DistributedBankMgr.transferMoney unknown avatar')
-            self.notify.warning("av %s not in doId2do tried to transfer money" % (avId))
+            self.air.writeServerEvent(
+                'suspicious', avId, 'DistributedBankMgr.transferMoney unknown avatar')
+            self.notify.warning(
+                f"av {avId} not in doId2do tried to transfer money")
             return 0
         return self.transferMoneyForAv(amount, av)

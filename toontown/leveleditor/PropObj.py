@@ -4,8 +4,15 @@ ToonTown Prop object
 
 from .ToonTownObj import *
 
+
 class PropObj(ToonTownObj):
-    def __init__(self, editor, propType, dna=None, nodePath=None, nameStr=None):
+    def __init__(
+            self,
+            editor,
+            propType,
+            dna=None,
+            nodePath=None,
+            nameStr=None):
         self.propType = propType
         if nameStr:
             self.name = nameStr

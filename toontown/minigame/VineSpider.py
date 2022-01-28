@@ -6,22 +6,23 @@ from direct.directnotify import DirectNotifyGlobal
 from panda3d.core import *
 from . import VineGameGlobals
 
+
 class VineSpider(NodePath, DirectObject):
     """
     Treasures toons can pickup swinging from vine to vine.  Based on MazeTreasure
     """
-    
+
     #notify = DirectNotifyGlobal.directNotify.newCategory("VineSpider")
 
     RADIUS = 1.7
 
-    def __init__(self ):
+    def __init__(self):
         # there are going to be MANY (~650) of these created and destroyed
         # all at once for 4-player games; make it lean
 
-        NodePath.__init__(self,'VineSpider')
+        NodePath.__init__(self, 'VineSpider')
         DirectObject.__init__(self)
-        pos = Point3(0,0,0)
+        pos = Point3(0, 0, 0)
         serialNum = 0
         gameId = 0
         self.serialNum = serialNum
@@ -45,35 +46,35 @@ class VineSpider(NodePath, DirectObject):
         self.spiderModelIcon = self.attachNewNode('spiderIcon')
         self.spiderModel.copyTo(self.spiderModelIcon)
         regularCamMask = BitMask32.bit(0)
-        self.spiderModelIcon.hide(regularCamMask)        
+        self.spiderModelIcon.hide(regularCamMask)
         self.spiderModelIcon.show(VineGameGlobals.RadarCameraBitmask)
-
 
         self.spiderModel.setScale(0.2)
         self.spiderModelIcon.setScale(0.75)
-        
-        self.setPos(-100,0,0)
+
+        self.setPos(-100, 0, 0)
         center = Point3(0, 0, 0)
 
         # Make a sphere, name it uniquely, and child it
         # to the nodepath.
-        self.sphereName = "spiderSphere-%s-%s" % (gameId, self.serialNum)
-        self.collSphere = CollisionSphere(center[0], center[1], center[2], self.RADIUS)
+        self.sphereName = f"spiderSphere-{gameId}-{self.serialNum}"
+        self.collSphere = CollisionSphere(
+            center[0], center[1], center[2], self.RADIUS)
         # Make the sphere intangible
         self.collSphere.setTangible(0)
         self.collNode = CollisionNode(self.sphereName)
         self.collNode.setIntoCollideMask(VineGameGlobals.SpiderBitmask)
-        
+
         self.collNode.addSolid(self.collSphere)
         self.collNodePath = self.attachNewNode(self.collNode)
         self.collNodePath.hide()
 
         # Add a hook looking for collisions with localToon
         self.accept('enter' + self.sphereName, self.__handleEnterSphere)
-        
+
         # now that the treasure and sphere have been placed, flatten the
         # whole silly thing
-        #self.flattenLight()
+        # self.flattenLight()
 
         self.reparentTo(render)
 

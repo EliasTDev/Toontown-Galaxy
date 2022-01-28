@@ -5,6 +5,8 @@ from direct.directnotify import DirectNotifyGlobal
 from . import LevelBattleManagerAI
 import types
 import random
+
+
 class LevelSuitPlannerAI(DirectObject.DirectObject):
 
     notify = DirectNotifyGlobal.directNotify.newCategory(
@@ -43,8 +45,8 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
         del self.cogCtor
         del self.level
         del self.air
-        
-    def __genJoinChances( self, num ):
+
+    def __genJoinChances(self, num):
         """
         ////////////////////////////////////////////////////////////////////
         // Function:
@@ -53,14 +55,14 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
         ////////////////////////////////////////////////////////////////////
         """
         joinChances = []
-        for currChance in range( num ):
-            joinChances.append( random.randint( 1, 100 ) )
+        for currChance in range(num):
+            joinChances.append(random.randint(1, 100))
         joinChances.sort()
         return joinChances
 
     def __genSuitInfos(self, level, track):
         if __dev__:
-            assert type(level) == int
+            assert isinstance(level, int)
 
         def getSuitDict(spec, cogId, level=level, track=track):
             suitDict = {}
@@ -74,7 +76,7 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
             suitDict['level'] += level
             suitDict['cogId'] = cogId
             return suitDict
-        
+
         # Build a dictionary with types, levels, and locations for suits
         self.suitInfos = {}
         self.suitInfos['activeSuits'] = []
@@ -83,7 +85,7 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
             self.suitInfos['activeSuits'].append(getSuitDict(spec, i))
 
         # reserveSuits
-        
+
         numReserve = len(self.reserveCogSpecs)
         joinChances = self.__genJoinChances(numReserve)
         self.suitInfos['reserveSuits'] = []
@@ -130,8 +132,10 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
         reserveSuits = []
         for reserveSuitInfo in self.suitInfos['reserveSuits']:
             suit = self.__genSuitObject(reserveSuitInfo, 1)
-            assert(self.notify.debug("creating reserve suit info: %s, %s" % (suit.doId, reserveSuitInfo)))
-            #suit.setBattleCellIndex(reserveSuitInfo['battleCell'])
+            assert(
+                self.notify.debug(
+                    f"creating reserve suit info: {suit.doId}, {reserveSuitInfo}"))
+            # suit.setBattleCellIndex(reserveSuitInfo['battleCell'])
             reserveSuits.append([suit, reserveSuitInfo['joinChance'],
                                  reserveSuitInfo['battleCell']])
         #assert(len(reserveSuits) > 0)
@@ -167,8 +171,8 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
                     # I guess we could also just let the suit carry on...
                     # except that it might collide with localToon and
                     # trigger another battle. Yech.
-                    ## This crashes; don't assign >4 suits to a battle cell
-                    ## for now
+                    # This crashes; don't assign >4 suits to a battle cell
+                    # for now
                     battle = self.battleMgr.getBattle(cellIndex)
                     if battle:
                         self.notify.warning(
@@ -176,15 +180,20 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
                             (len(battle.suits), battle.isJoinable(),
                              battle.fsm.getCurrentState().getName(), toonId))
                     else:
-                        self.notify.warning('battle not joinable: no battle for cell %s, toonId=%s' % (cellIndex, toonId))
-                        
+                        self.notify.warning(
+                            'battle not joinable: no battle for cell %s, toonId=%s' %
+                            (cellIndex, toonId))
+
                     return 0
 
         return 1
 
     def __handleRoundFinished(self, cellId, toonIds, totalHp, deadSuits):
         # Determine if any reserves need to join
-        assert(self.notify.debug('cell %s, handleRoundDone() - hp: %d' % (cellId,totalHp)))
+        assert(
+            self.notify.debug(
+                'cell %s, handleRoundDone() - hp: %d' %
+                (cellId, totalHp)))
         # Calculate the total max HP for all the suits currently on the floor
         totalMaxHp = 0
         level = self.level
@@ -195,21 +204,28 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
         for suit in deadSuits:
             level.suits.remove(suit)
 
-        assert(self.notify.debug('handleRoundDone() - reserveSuits: %d, battleSuits: %d' % (len(level.reserveSuits),
-                                                                                            len(battle.suits))))
+        assert(
+            self.notify.debug(
+                'handleRoundDone() - reserveSuits: %d, battleSuits: %d' %
+                (len(
+                    level.reserveSuits), len(
+                    battle.suits))))
 
         # get a list of reserve suits for this battle cell
         cellReserves = []
         for info in level.reserveSuits:
             if info[2] == cellId:
-                assert(self.notify.debug("adding suit %d to cellReserves list" % info[0].doId))
+                assert(
+                    self.notify.debug(
+                        "adding suit %d to cellReserves list" %
+                        info[0].doId))
                 cellReserves.append(info)
 
         # Determine if any reserve suits need to join
         numSpotsAvailable = 4 - len(battle.suits)
         if (len(cellReserves) > 0 and numSpotsAvailable > 0):
-            assert(self.notify.debug('potential reserve suits: %d' % \
-                len(level.reserveSuits)))
+            assert(self.notify.debug('potential reserve suits: %d' %
+                                     len(level.reserveSuits)))
             self.joinedReserves = []
             if __dev__:
                 assert(totalHp <= totalMaxHp)
@@ -217,13 +233,13 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
                 hpPercent = 100
             else:
                 hpPercent = 100 - (totalHp / totalMaxHp * 100.0)
-            assert(self.notify.debug('totalHp: %d totalMaxHp: %d percent: %f' \
-                % (totalHp, totalMaxHp, hpPercent)))
+            assert(self.notify.debug('totalHp: %d totalMaxHp: %d percent: %f'
+                                     % (totalHp, totalMaxHp, hpPercent)))
             for info in cellReserves:
                 if (info[1] <= hpPercent and
-                    len(self.joinedReserves) < numSpotsAvailable):
-                    assert(self.notify.debug('reserve: %d joining percent: %f' \
-                        % (info[0].doId, info[1])))
+                        len(self.joinedReserves) < numSpotsAvailable):
+                    assert(self.notify.debug('reserve: %d joining percent: %f'
+                                             % (info[0].doId, info[1])))
                     level.suits.append(info[0])
                     self.joinedReserves.append(info)
                     info[0].setBattleCellIndex(cellId)
@@ -234,7 +250,7 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
 
                 # SDN: fsm-ify this?
                 self.reservesJoining(battle)
-                
+
                 level.d_setSuits()
                 return
 
@@ -252,7 +268,7 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
 
     def __handleBattleFinished(self, zoneId):
         pass
-    
+
     def reservesJoining(self, battle):
         # note, once we put in the animation for suits joining battle
         # we should delay this code by the time it takes to play the animation
@@ -260,7 +276,7 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
             battle.suitRequestJoin(info[0])
         battle.resume()
         self.joinedReserves = []
-            
+
     def getDoId(self):
         # This is a dummy function so we don't need to modify DistributedSuit
         return 0
@@ -275,8 +291,10 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
             if oldCell in self.battleCellId2suits:
                 self.battleCellId2suits[oldCell].remove(suit)
             else:
-                self.notify.warning('FIXME crash bandaid suitBattleCellChange suit.doId =%s, oldCell=%s not in battleCellId2Suits.keys %s' %
-                                    (suit.doId, oldCell, list(self.battleCellId2suits.keys())))
+                self.notify.warning(
+                    'FIXME crash bandaid suitBattleCellChange suit.doId =%s, oldCell=%s not in battleCellId2Suits.keys %s' %
+                    (suit.doId, oldCell, list(
+                        self.battleCellId2suits.keys())))
             # remove suit from battle blocker
             blocker = self.battleMgr.battleBlockers.get(oldCell)
             if blocker:
@@ -286,7 +304,7 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
 
             # register suit with the blocker for this newCell
             def addSuitToBlocker(self=self):
-                blocker = self.battleMgr.battleBlockers.get(newCell) 
+                blocker = self.battleMgr.battleBlockers.get(newCell)
                 if blocker:
                     blocker.addSuit(suit)
                     return 1
@@ -294,7 +312,9 @@ class LevelSuitPlannerAI(DirectObject.DirectObject):
 
             if not addSuitToBlocker():
                 # wait for the creation of this blocker, then add this suit
-                self.accept(self.getBattleBlockerEvent(newCell), addSuitToBlocker)
-                
+                self.accept(
+                    self.getBattleBlockerEvent(newCell),
+                    addSuitToBlocker)
+
     def getBattleBlockerEvent(self, cellId):
-        return "battleBlockerAdded-"+str(self.level.doId)+"-"+str(cellId)
+        return "battleBlockerAdded-" + str(self.level.doId) + "-" + str(cellId)

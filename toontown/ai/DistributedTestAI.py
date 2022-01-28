@@ -1,10 +1,11 @@
 from direct.distributed import DistributedObjectAI
 
+
 class DistributedTestAI(DistributedObjectAI.DistributedObjectAI):
     def __init__(self, air):
         try:
             self.DistributedTestAI_initialized
-        except:
+        except BaseException:
             self.DistributedTestAI_initialized = 1
             DistributedObjectAI.DistributedObjectAI.__init__(self, air)
         return None
@@ -21,10 +22,10 @@ class DistributedTestAI(DistributedObjectAI.DistributedObjectAI):
         self.setA(a)
         self.d_setA(a)
         return None
-        
+
     def getA(self):
         return(self.a)
-    
+
     def setB(self, b):
         self.b = b
         return None
@@ -43,4 +44,3 @@ class DistributedTestAI(DistributedObjectAI.DistributedObjectAI):
 
     def setC(self, c):
         self.c = c
-        

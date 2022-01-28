@@ -11,7 +11,7 @@ GlobalEntities = {
         'farPlaneDistance': 1500,
         'modelFilename': 'phase_10/models/cashbotHQ/ZONE04a',
         'wantDoors': 1,
-        }, # end entity 1000
+    },  # end entity 1000
     # EDITMGR
     1001: {
         'type': 'editMgr',
@@ -21,7 +21,7 @@ GlobalEntities = {
         'removeEntity': None,
         'requestNewEntity': None,
         'requestSave': None,
-        }, # end entity 1001
+    },  # end entity 1001
     # ZONE
     0: {
         'type': 'zone',
@@ -31,10 +31,10 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 0
+    },  # end entity 0
     # ATTRIBMODIFIER
     # GAGBARREL
- 
+
     # MODEL
 
     # NODEPATH
@@ -43,21 +43,21 @@ GlobalEntities = {
         'name': 'crateField',
         'comment': '',
         'parentEntId': 0,
-        'pos': Point3(0.0,-51.0,0.0),
-        'hpr': Vec3(0.0,0.0,0.0),
-        'scale': Point3(1.0,1.0,1.0),
-        }, # end entity 10000
- 
+        'pos': Point3(0.0, -51.0, 0.0),
+        'hpr': Vec3(0.0, 0.0, 0.0),
+        'scale': Point3(1.0, 1.0, 1.0),
+    },  # end entity 10000
+
     # STOMPER
 
-    }
+}
 
 Scenario0 = {
-    }
+}
 
 levelSpec = {
     'globalEntities': GlobalEntities,
     'scenarios': [
         Scenario0,
-        ],
-    }
+    ],
+}

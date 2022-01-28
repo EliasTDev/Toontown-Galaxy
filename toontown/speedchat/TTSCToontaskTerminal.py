@@ -7,6 +7,7 @@ from toontown.toon import NPCToons
 # args: taskId, toNpcId, toonProgress, msgIndex
 TTSCToontaskMsgEvent = 'SCToontaskMsg'
 
+
 def decodeTTSCToontaskMsg(taskId, toNpcId, toonProgress, msgIndex):
     q = Quests.getQuest(taskId)
     if q is None:
@@ -16,15 +17,17 @@ def decodeTTSCToontaskMsg(taskId, toNpcId, toonProgress, msgIndex):
     if name is None:
         return None
     msgs = q.getSCStrings(toNpcId, toonProgress)
-    if type(msgs) != type([]):
+    if not isinstance(msgs, type([])):
         msgs = [msgs]
     if msgIndex >= len(msgs):
         return None
     return msgs[msgIndex]
 
+
 class TTSCToontaskTerminal(SCTerminal):
     """ TTSCToontaskTerminal represents a terminal SpeedChat node that
     contains a ToonTask-generated phrase. """
+
     def __init__(self, msg, taskId, toNpcId, toonProgress, msgIndex):
         SCTerminal.__init__(self)
         self.msg = msg

@@ -1,3 +1,5 @@
+from toontown.coderedemption import TTCodeRedemptionConsts
+from otp.uberdog.DBInterface import DBInterface
 import MySQLdb
 import direct
 from pandac.PandaModules import *
@@ -9,8 +11,6 @@ language = TTLocalizer.getLanguage()
 showbase = ShowBase(fStartDirect=False, windowType='none')
 config = getConfigShowbase()
 
-from otp.uberdog.DBInterface import DBInterface
-from toontown.coderedemption import TTCodeRedemptionConsts
 
 username = config.GetString("mysql-user")
 password = config.GetString("mysql-passwd")
@@ -29,13 +29,15 @@ print("Connected to MySQL at localhost.")
 
 cursor = db.cursor()
 
+
 def dropdb(dbname):
     try:
-        print("Dropping database %s:" % dbname)
-        cursor.execute("DROP DATABASE %s"%dbname)
+        print(f"Dropping database {dbname}:")
+        cursor.execute(f"DROP DATABASE {dbname}")
         print("  Success!")
     except Exception as e:
-        print("  Failed: %s" % e)
+        print(f"  Failed: {e}")
+
 
 if language == 'castillian':
     ttDbName = "es_toontownTopDb"

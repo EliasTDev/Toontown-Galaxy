@@ -2,6 +2,8 @@
 from . import TownLoader
 from . import MMStreet
 from toontown.suit import Suit
+
+
 class MMTownLoader(TownLoader.TownLoader):
     def __init__(self, hood, parentFSM, doneEvent):
         assert self.notify.debug("__init__()")
@@ -15,11 +17,11 @@ class MMTownLoader(TownLoader.TownLoader):
         assert self.notify.debug("__init__()")
         TownLoader.TownLoader.load(self, zoneId)
         Suit.loadSuits(2)
-        dnaFile = ("phase_6/dna/minnies_melody_land_" + str(self.canonicalBranchZone) + ".dna")
+        dnaFile = ("phase_6/dna/minnies_melody_land_" +
+                   str(self.canonicalBranchZone) + ".dna")
         self.createHood(dnaFile)
 
     def unload(self):
         assert self.notify.debug("__init__()")
         Suit.unloadSuits(2)
         TownLoader.TownLoader.unload(self)
-

@@ -31,33 +31,34 @@ SIGN_TOP = 1.5
 # room for long names like "FarrtKnocker".
 FrameScale = 1.4
 
+
 class DistributedToonInterior(DistributedObject.DistributedObject):
     if __debug__:
         notify = DirectNotifyGlobal.directNotify.newCategory(
-                'DistributedToonInterior')
+            'DistributedToonInterior')
 
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
         assert self.notify.debugStateCall(self)
         self.fsm = ClassicFSM.ClassicFSM('DistributedToonInterior',
-                               [State.State('toon',
-                                            self.enterToon,
-                                            self.exitToon,
-                                            ['beingTakenOver']),
-                                State.State('beingTakenOver',
-                                            self.enterBeingTakenOver,
-                                            self.exitBeingTakenOver,
-                                            []),
-                                State.State('off',
-                                            self.enterOff,
-                                            self.exitOff,
-                                            []),
-                                ],
-                               # Initial State
-                               'toon',
-                               # Final State
-                               'off',
-                               )
+                                         [State.State('toon',
+                                                      self.enterToon,
+                                                      self.exitToon,
+                                                      ['beingTakenOver']),
+                                          State.State('beingTakenOver',
+                                                      self.enterBeingTakenOver,
+                                                      self.exitBeingTakenOver,
+                                                      []),
+                                          State.State('off',
+                                                      self.enterOff,
+                                                      self.exitOff,
+                                                      []),
+                                          ],
+                                         # Initial State
+                                         'toon',
+                                         # Final State
+                                         'off',
+                                         )
         self.fsm.enterInitialState()
         # self.generate will be called automatically.
 
@@ -87,7 +88,7 @@ class DistributedToonInterior(DistributedObject.DistributedObject):
 
     def randomDNAItem(self, category, findFunc):
         codeCount = self.dnaStore.getNumCatalogCodes(category)
-        index = self.randomGenerator.randint(0, codeCount-1)
+        index = self.randomGenerator.randint(0, codeCount - 1)
         code = self.dnaStore.getCatalogCode(category, index)
         # findFunc will probably be findNode or findTexture
         return findFunc(code)
@@ -108,16 +109,16 @@ class DistributedToonInterior(DistributedObject.DistributedObject):
         let you have multiple nodes with the same name
         """
         assert self.notify.debugStateCall(self)
-        baseTag="random_"
-        npc=model.findAllMatches("**/"+baseTag+"???_*")
+        baseTag = "random_"
+        npc = model.findAllMatches("**/" + baseTag + "???_*")
         for i in range(npc.getNumPaths()):
-            np=npc.getPath(i)
-            name=np.getName()
+            np = npc.getPath(i)
+            name = np.getName()
 
-            b=len(baseTag)
-            category=name[b+4:]
-            key1=name[b]
-            key2=name[b+1]
+            b = len(baseTag)
+            category = name[b + 4:]
+            key1 = name[b]
+            key2 = name[b + 1]
 
             assert(key1 in ["m", "t"])
             assert(key2 in ["c", "o", "r"])
@@ -133,12 +134,14 @@ class DistributedToonInterior(DistributedObject.DistributedObject):
                     self.replaceRandomInModel(newNP)
             elif key1 == "t":
                 # ...texture.
-                texture=self.randomDNAItem(category, self.dnaStore.findTexture)
+                texture = self.randomDNAItem(
+                    category, self.dnaStore.findTexture)
                 assert(texture)
-                np.setTexture(texture,100)
-                newNP=np
+                np.setTexture(texture, 100)
+                newNP = np
             if key2 == "c":
-                if (category == "TI_wallpaper") or (category == "TI_wallpaper_border"):
+                if (category == "TI_wallpaper") or (
+                        category == "TI_wallpaper_border"):
                     self.randomGenerator.seed(self.zoneId)
                     newNP.setColorScale(
                         self.randomGenerator.choice(self.colors[category]))
@@ -146,11 +149,10 @@ class DistributedToonInterior(DistributedObject.DistributedObject):
                     newNP.setColorScale(
                         self.randomGenerator.choice(self.colors[category]))
 
-
     def setup(self):
         assert self.notify.debugStateCall(self)
-        self.dnaStore=base.cr.playGame.dnaStore
-        self.randomGenerator=random.Random()
+        self.dnaStore = base.cr.playGame.dnaStore
+        self.randomGenerator = random.Random()
 
         # The math here is a little arbitrary.  I'm trying to get a
         # substantially different seed for each zondId, even on the
@@ -177,16 +179,16 @@ class DistributedToonInterior(DistributedObject.DistributedObject):
         self.replaceRandomInModel(self.interior)
 
         # Door:
-        doorModelName="door_double_round_ul" # hack  zzzzzzz
+        doorModelName = "door_double_round_ul"  # hack  zzzzzzz
         # Switch leaning of the door:
         if doorModelName[-1:] == "r":
-            doorModelName=doorModelName[:-1]+"l"
+            doorModelName = doorModelName[:-1] + "l"
         else:
-            doorModelName=doorModelName[:-1]+"r"
-        door=self.dnaStore.findNode(doorModelName)
+            doorModelName = doorModelName[:-1] + "r"
+        door = self.dnaStore.findNode(doorModelName)
         # Determine where should we put the door:
-        door_origin=render.find("**/door_origin;+s")
-        doorNP=door.copyTo(door_origin)
+        door_origin = render.find("**/door_origin;+s")
+        doorNP = door.copyTo(door_origin)
         assert(not doorNP.isEmpty())
         assert(not door_origin.isEmpty())
         # The rooms are too small for doors:
@@ -194,7 +196,7 @@ class DistributedToonInterior(DistributedObject.DistributedObject):
         # Move the origin away from the wall so it does not shimmer
         # We do this instead of decals
         door_origin.setPos(door_origin, 0, -0.025, 0)
-        color=self.randomGenerator.choice(self.colors["TI_door"])
+        color = self.randomGenerator.choice(self.colors["TI_door"])
         DNADoor.setupDoor(doorNP,
                           self.interior, door_origin,
                           self.dnaStore,
@@ -209,18 +211,19 @@ class DistributedToonInterior(DistributedObject.DistributedObject):
 
         # Grab the sign off the front of the building and copy it into
         # the interior, here.
-        sign=hidden.find(
-            "**/tb%s:*_landmark_*_DNARoot/**/sign;+s"%(self.block,))
+        sign = hidden.find(
+            f"**/tb{self.block}:*_landmark_*_DNARoot/**/sign;+s")
         if not sign.isEmpty():
-            signOrigin=self.interior.find("**/sign_origin;+s")
+            signOrigin = self.interior.find("**/sign_origin;+s")
             assert(not signOrigin.isEmpty())
             # Copy, rather than instance, to avoid bug in flatten:
-            newSignNP=sign.copyTo(signOrigin)
+            newSignNP = sign.copyTo(signOrigin)
 
             # Restore the depth write flag, since the DNA turned it off.
             newSignNP.setDepthWrite(1, 1)
 
-            mat=self.dnaStore.getSignTransformFromBlockNumber(int(self.block))
+            mat = self.dnaStore.getSignTransformFromBlockNumber(
+                int(self.block))
 
             # Invert the sign transform matrix to undo the
             # transformation that has already placed it on the
@@ -262,9 +265,9 @@ class DistributedToonInterior(DistributedObject.DistributedObject):
                     scale, scale, scale)
 
         # Who Saved It:
-        trophyOrigin=self.interior.find("**/trophy_origin")
+        trophyOrigin = self.interior.find("**/trophy_origin")
         assert(not trophyOrigin.isEmpty())
-        trophy=self.buildTrophy()
+        trophy = self.buildTrophy()
         if trophy:
             trophy.reparentTo(trophyOrigin)
 
@@ -277,8 +280,8 @@ class DistributedToonInterior(DistributedObject.DistributedObject):
 
     def setZoneIdAndBlock(self, zoneId, block):
         assert self.notify.debugStateCall(self)
-        self.zoneId=zoneId
-        self.block=block
+        self.zoneId = zoneId
+        self.block = block
 
     def setToonData(self, toonData):
         assert self.notify.debugStateCall(self)
@@ -287,7 +290,7 @@ class DistributedToonInterior(DistributedObject.DistributedObject):
 
     def buildTrophy(self):
         assert self.notify.debugStateCall(self)
-        if self.savedBy == None:
+        if self.savedBy is None:
             return None
 
         numToons = len(self.savedBy)

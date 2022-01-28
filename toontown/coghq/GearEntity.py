@@ -5,11 +5,13 @@ from otp.level import BasicEntities
 from . import MovingPlatform
 from pandac.PandaModules import Vec3
 
+
 class GearEntity(BasicEntities.NodePathEntity):
     ModelPaths = {
         'factory': 'phase_9/models/cogHQ/FactoryGearB',
         'mint': 'phase_10/models/cashbotHQ/MintGear',
-        }
+    }
+
     def __init__(self, level, entId):
         self.modelType = 'factory'
         self.entInitialized = False
@@ -28,10 +30,10 @@ class GearEntity(BasicEntities.NodePathEntity):
             return
         # set the sentry
         self.in_initGear = True
-        
+
         self.destroyGear()
         model = loader.loadModel(GearEntity.ModelPaths[self.modelType])
-        self.gearParent = self.attachNewNode('gearParent-%s' % self.entId)
+        self.gearParent = self.attachNewNode(f'gearParent-{self.entId}')
 
         if self.orientation == 'horizontal':
             # stash vertical collisions
@@ -92,7 +94,7 @@ class GearEntity(BasicEntities.NodePathEntity):
     def startRotate(self):
         self.stopRotate()
         try:
-            ivalDur = 360./self.degreesPerSec
+            ivalDur = 360. / self.degreesPerSec
         except ZeroDivisionError:
             pass
         else:
@@ -101,9 +103,9 @@ class GearEntity(BasicEntities.NodePathEntity):
                 ivalDur = -ivalDur
                 hOffset = -hOffset
             self.rotateIval = LerpHprInterval(self.model, ivalDur,
-                                              Vec3(hOffset,0,0),
-                                              startHpr=Vec3(0,0,0),
-                                              name='gearRot-%s' % self.entId)
+                                              Vec3(hOffset, 0, 0),
+                                              startHpr=Vec3(0, 0, 0),
+                                              name=f'gearRot-{self.entId}')
             self.rotateIval.loop()
             self.rotateIval.setT(
                 (globalClock.getFrameTime() - self.level.startTime) +
@@ -134,14 +136,17 @@ class GearEntity(BasicEntities.NodePathEntity):
             BasicEntities.NodePathEntity.setScale(self, *args)
             if self.entInitialized:
                 self.initGear()
+
         def setSx(self, *args):
             BasicEntities.NodePathEntity.setSx(self, *args)
             if self.entInitialized:
                 self.initGear()
+
         def setSy(self, *args):
             BasicEntities.NodePathEntity.setSy(self, *args)
             if self.entInitialized:
                 self.initGear()
+
         def setSz(self, *args):
             BasicEntities.NodePathEntity.setSz(self, *args)
             if self.entInitialized:

@@ -2,20 +2,27 @@
 # http://pypi.python.org/pypi/recaptcha-client
 # http://recaptcha.net/resources.html
 
-import urllib.request, urllib.error, urllib.parse, urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.error
+import urllib.parse
+import urllib.request
+import urllib.parse
+import urllib.error
 
-API_SSL_SERVER="https://api-secure.recaptcha.net"
-API_SERVER="http://api.recaptcha.net"
-VERIFY_SERVER="api-verify.recaptcha.net"
+API_SSL_SERVER = "https://api-secure.recaptcha.net"
+API_SERVER = "http://api.recaptcha.net"
+VERIFY_SERVER = "api-verify.recaptcha.net"
+
 
 class RecaptchaResponse(object):
     def __init__(self, is_valid, error_code=None):
         self.is_valid = is_valid
         self.error_code = error_code
 
-def displayhtml (public_key,
-                 use_ssl = False,
-                 error = None):
+
+def displayhtml(public_key,
+                use_ssl=False,
+                error=None):
     """Gets the HTML to display for reCAPTCHA
 
     public_key -- The public api key
@@ -24,7 +31,7 @@ def displayhtml (public_key,
 
     error_param = ''
     if error:
-        error_param = '&error=%s' % error
+        error_param = f'&error={error}'
 
     if use_ssl:
         server = API_SSL_SERVER
@@ -39,16 +46,16 @@ def displayhtml (public_key,
   <input type='hidden' name='recaptcha_response_field' value='manual_challenge' />
 </noscript>
 """ % {
-        'ApiServer' : server,
-        'PublicKey' : public_key,
-        'ErrorParam' : error_param,
-        }
+        'ApiServer': server,
+        'PublicKey': public_key,
+        'ErrorParam': error_param,
+    }
 
 
-def submit (recaptcha_challenge_field,
-            recaptcha_response_field,
-            private_key,
-            remoteip):
+def submit(recaptcha_challenge_field,
+           recaptcha_response_field,
+           private_key,
+           remoteip):
     """
     Submits a reCAPTCHA request for verification. Returns RecaptchaResponse
     for the request
@@ -60,41 +67,42 @@ def submit (recaptcha_challenge_field,
     """
 
     if not (recaptcha_response_field and recaptcha_challenge_field and
-            len (recaptcha_response_field) and len (recaptcha_challenge_field)):
-        return RecaptchaResponse (is_valid = False, error_code = 'incorrect-captcha-sol')
-    
+            len(recaptcha_response_field) and len(recaptcha_challenge_field)):
+        return RecaptchaResponse(
+            is_valid=False,
+            error_code='incorrect-captcha-sol')
 
     def encode_if_necessary(s):
         if isinstance(s, str):
             return s.encode('utf-8')
         return s
 
-    params = urllib.parse.urlencode ({
-            'privatekey': encode_if_necessary(private_key),
-            'remoteip' :  encode_if_necessary(remoteip),
-            'challenge':  encode_if_necessary(recaptcha_challenge_field),
-            'response' :  encode_if_necessary(recaptcha_response_field),
-            })
+    params = urllib.parse.urlencode({
+        'privatekey': encode_if_necessary(private_key),
+        'remoteip': encode_if_necessary(remoteip),
+        'challenge': encode_if_necessary(recaptcha_challenge_field),
+        'response': encode_if_necessary(recaptcha_response_field),
+    })
 
-    request = urllib.request.Request (
-        url = "http://%s/verify" % VERIFY_SERVER,
-        data = params,
-        headers = {
+    request = urllib.request.Request(
+        url=f"http://{VERIFY_SERVER}/verify",
+        data=params,
+        headers={
             "Content-type": "application/x-www-form-urlencoded",
             "User-agent": "reCAPTCHA Python"
-            }
-        )
-    
-    httpresp = urllib.request.urlopen (request)
+        }
+    )
 
-    return_values = httpresp.read ().splitlines ();
+    httpresp = urllib.request.urlopen(request)
+
+    return_values = httpresp.read().splitlines()
     # DCR: prevent garbage leak (really)
     httpresp.fp._sock.recv = None
-    httpresp.close();
+    httpresp.close()
 
-    return_code = return_values [0]
+    return_code = return_values[0]
 
     if (return_code == "true"):
-        return RecaptchaResponse (is_valid=True)
+        return RecaptchaResponse(is_valid=True)
     else:
-        return RecaptchaResponse (is_valid=False, error_code = return_values [1])
+        return RecaptchaResponse(is_valid=False, error_code=return_values[1])

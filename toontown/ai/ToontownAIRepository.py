@@ -67,15 +67,19 @@ from otp.friends.FriendManagerAI import FriendManagerAI
 from toontown.effects import FireworkManagerAI
 from toontown.estate import DistributedBankMgrAI
 
+
 class ToontownAIRepository(ToontownInternalRepository):
-    notify = DirectNotifyGlobal.directNotify.newCategory('ToontownAIRepository')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'ToontownAIRepository')
 
     def __init__(self, baseChannel, serverId, districtName):
-        ToontownInternalRepository.__init__(self, baseChannel, serverId, dcSuffix='AI')
+        ToontownInternalRepository.__init__(
+            self, baseChannel, serverId, dcSuffix='AI')
         self.districtName = districtName
         self.doLiveUpdates = config.GetBool('want-live-updates', True)
         self.wantCogdominiums = config.GetBool('want-cogdominiums', True)
-        self.wantBanManager = config.GetBool('want-ban-manager', False) #change to true once we have a working one
+        # change to true once we have a working one
+        self.wantBanManager = config.GetBool('want-ban-manager', False)
         self.useAllMinigames = config.GetBool('want-all-minigames', True)
         self.districtId = None
         self.district = None
@@ -133,14 +137,16 @@ class ToontownAIRepository(ToontownInternalRepository):
         # used only for offline utilities.
         self.dbObjContext = 0
         self.dbObjMap = {}
+
     def handleConnected(self):
-        #ToontownInternalRepository.handleConnected(self)
+        # ToontownInternalRepository.handleConnected(self)
 
         # Generate our district...
         self.districtId = self.allocateChannel()
         self.district = ToontownDistrictAI(self)
         self.district.setName(self.districtName)
-        self.district.generateWithRequiredAndId(self.districtId, self.getGameDoId(), OTP_ZONE_ID_DISTRICTS)
+        self.district.generateWithRequiredAndId(
+            self.districtId, self.getGameDoId(), OTP_ZONE_ID_DISTRICTS)
 
         # Claim ownership of that district...
         self.district.setAI(self.ourChannel)
@@ -165,8 +171,8 @@ class ToontownAIRepository(ToontownInternalRepository):
         # seconds or so.
         self.__leaderboardFlush(None)
         taskMgr.doMethodLater(30, self.__leaderboardFlush,
-                              'leaderboardFlush', appendTask = True)
-                              
+                              'leaderboardFlush', appendTask=True)
+
     def __leaderboardFlush(self, task):
         messenger.send('leaderboardFlush')
         return Task.again
@@ -174,8 +180,10 @@ class ToontownAIRepository(ToontownInternalRepository):
     def createFirstObjs(self):
         self.districtStats = ToontownDistrictStatsAI(self)
         self.districtStats.toontownDistrictId = self.districtId
-        self.districtStats.generateWithRequiredAndId(self.allocateChannel(), self.district.getDoId(),
-                                                     OTP_ZONE_ID_DISTRICTS_STATS)
+        self.districtStats.generateWithRequiredAndId(
+            self.allocateChannel(),
+            self.district.getDoId(),
+            OTP_ZONE_ID_DISTRICTS_STATS)
 
         # Generate our news manager...
         self.newsManager = NewsManagerAI(self)
@@ -185,23 +193,24 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.estateMgr = EstateManagerAI(self)
         self.estateMgr.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
-        self.dataStoreManager = self.generateGlobalObject(OTP_DO_ID_TOONTOWN_TEMP_STORE_MANAGER, 'DistributedDataStoreManager')
+        self.dataStoreManager = self.generateGlobalObject(
+            OTP_DO_ID_TOONTOWN_TEMP_STORE_MANAGER, 'DistributedDataStoreManager')
 
-        #Generate our delivery manager
+        # Generate our delivery manager
         self.deliveryManager = self.generateGlobalObject(
             OTP_DO_ID_TOONTOWN_DELIVERY_MANAGER,
             "DistributedDeliveryManager")
-        #Generate our mail manager
+        # Generate our mail manager
         self.mailManager = self.generateGlobalObject(
             OTP_DO_ID_TOONTOWN_MAIL_MANAGER,
             "DistributedMailManager")
-            
+
         # Create our suit invasion manager...
         self.suitInvasionManager = SuitInvasionManagerAI(self)
         # The Firework Manager: This object really only exists so we can
         # fire off fireworks with magic words. Normally this is a holiday
         # manager driven event and therefore the constructor needs a
-        # holidayId. Pass in fourth of july as default.  To do: override 
+        # holidayId. Pass in fourth of july as default.  To do: override
         # holiday ID with a magic word
         self.fireworkManager = FireworkManagerAI.FireworkManagerAI(
             self, ToontownGlobals.NEWYEARS_FIREWORKS)
@@ -220,12 +229,14 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.petMgr = PetManagerAI(self)
 
         # Create our zone allocator...
-        self.zoneAllocator = UniqueIdAllocator(ToontownGlobals.DynamicZonesBegin, ToontownGlobals.DynamicZonesEnd)
+        self.zoneAllocator = UniqueIdAllocator(
+            ToontownGlobals.DynamicZonesBegin,
+            ToontownGlobals.DynamicZonesEnd)
 
         # Create our quest manager...
         self.questManager = QuestManagerAI(self)
 
-        #create our fish manager
+        # create our fish manager
         self.fishManager = FishManagerAI.FishManagerAI(self)
 
         # Create our promotion manager...
@@ -254,10 +265,10 @@ class ToontownAIRepository(ToontownInternalRepository):
 
         # Create our Toontown time manager...
         self.toontownTimeManager = ToontownTimeManager()
-        self.toontownTimeManager.updateLoginTimes(time.time(), time.time(), globalClock.getRealTime())
+        self.toontownTimeManager.updateLoginTimes(
+            time.time(), time.time(), globalClock.getRealTime())
         if self.wantBanManager:
             self.banManager = BanManagerAI.BanManagerAI()
-
 
     def createGlobals(self):
         """
@@ -307,23 +318,25 @@ class ToontownAIRepository(ToontownInternalRepository):
         # Generate our code redemption manager...
         self.codeRedemptionManager = TTCodeRedemptionMgrAI(self)
         self.codeRedemptionManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
-        
+
         # Generate our friend manager...
         self.friendManager = FriendManagerAI(self)
         self.friendManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
         self.bankMgr = DistributedBankMgrAI.DistributedBankMgrAI(self)
         self.bankMgr.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
-        
+
     def generateHood(self, hoodConstructor, zoneId):
         # Bossbot HQ doesn't use DNA, so we skip over that.
         if zoneId != ToontownGlobals.BossbotHQ:
             self.dnaStoreMap[zoneId] = DNAStorage()
-            self.dnaDataMap[zoneId] = loadDNAFileAI(self.dnaStoreMap[zoneId], self.genDNAFileName(zoneId))
+            self.dnaDataMap[zoneId] = loadDNAFileAI(
+                self.dnaStoreMap[zoneId], self.genDNAFileName(zoneId))
             if zoneId in ToontownGlobals.HoodHierarchy:
                 for streetId in ToontownGlobals.HoodHierarchy[zoneId]:
                     self.dnaStoreMap[streetId] = DNAStorage()
-                    self.dnaDataMap[streetId] = loadDNAFileAI(self.dnaStoreMap[streetId], self.genDNAFileName(streetId))
+                    self.dnaDataMap[streetId] = loadDNAFileAI(
+                        self.dnaStoreMap[streetId], self.genDNAFileName(streetId))
 
         hood = hoodConstructor(self, zoneId)
         hood.startup()
@@ -442,7 +455,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         if 'outdoor_zone' in hood or 'golf_zone' in hood:
             phase = '6'
 
-        return 'phase_%s/dna/%s_%s.dna' % (phase, hood, canonicalZoneId)
+        return f'phase_{phase}/dna/{hood}_{canonicalZoneId}.dna'
 
     def lookupDNAFileName(self, dnaFileName):
         searchPath = DSearchPath()
@@ -460,7 +473,8 @@ class ToontownAIRepository(ToontownInternalRepository):
         filename = Filename(dnaFileName)
         found = vfs.resolveFilename(filename, searchPath)
         if not found:
-            self.notify.warning('lookupDNAFileName - %s not found on:' % dnaFileName)
+            self.notify.warning(
+                f'lookupDNAFileName - {dnaFileName} not found on:')
             print(searchPath)
         else:
             return filename.getFullpath()
@@ -468,7 +482,7 @@ class ToontownAIRepository(ToontownInternalRepository):
     def loadDNAFileAI(self, dnaStore, dnaFileName):
         return loadDNAFileAI(dnaStore, dnaFileName)
 
-    def findFishingPonds(self, dnaGroup, zoneId, area, overrideDNAZone = 0):
+    def findFishingPonds(self, dnaGroup, zoneId, area, overrideDNAZone=0):
         """
         Recursively scans the given DNA tree for fishing ponds.  These
         are defined as all the groups whose code includes the string
@@ -481,8 +495,9 @@ class ToontownAIRepository(ToontownInternalRepository):
         fishingPondGroups = []
 
         if ((isinstance(dnaGroup, DNAGroup)) and
-            # If it is a DNAGroup, and the name starts with fishing_pond, count it
-            (str.find(dnaGroup.getName(), 'fishing_pond') >= 0)):
+            # If it is a DNAGroup, and the name starts with fishing_pond, count
+            # it
+                (str.find(dnaGroup.getName(), 'fishing_pond') >= 0)):
             # Here's a fishing pond!
             fishingPondGroups.append(dnaGroup)
             fp = DistributedFishingPondAI.DistributedFishingPondAI(self, area)
@@ -494,12 +509,13 @@ class ToontownAIRepository(ToontownInternalRepository):
             # so do not search the one we just found:
             # If we come across a visgroup, note the zoneId and then recurse
             if (isinstance(dnaGroup, DNAVisGroup) and not overrideDNAZone):
-                # Make sure we get the real zone id, in case we are in welcome valley
+                # Make sure we get the real zone id, in case we are in welcome
+                # valley
                 zoneId = ZoneUtil.getTrueZoneId(
-                        int(dnaGroup.getName().split(':')[0]), zoneId)
+                    int(dnaGroup.getName().split(':')[0]), zoneId)
             for i in range(dnaGroup.getNumChildren()):
                 childFishingPonds, childFishingPondGroups = self.findFishingPonds(
-                        dnaGroup.at(i), zoneId, area, overrideDNAZone)
+                    dnaGroup.at(i), zoneId, area, overrideDNAZone)
                 fishingPonds += childFishingPonds
                 fishingPondGroups += childFishingPondGroups
         return fishingPonds, fishingPondGroups
@@ -517,19 +533,20 @@ class ToontownAIRepository(ToontownInternalRepository):
         for i in range(dnaPondGroup.getNumChildren()):
             dnaGroup = dnaPondGroup.at(i)
             if ((isinstance(dnaGroup, DNAProp)) and
-                (str.find(dnaGroup.getCode(), 'fishing_spot') >= 0)):
+                    (str.find(dnaGroup.getCode(), 'fishing_spot') >= 0)):
                 # Here's a fishing spot!
                 pos = dnaGroup.getPos()
                 hpr = dnaGroup.getHpr()
                 fs = DistributedFishingSpotAI.DistributedFishingSpotAI(
-                     self, distPond, pos[0], pos[1], pos[2], hpr[0], hpr[1], hpr[2])
+                    self, distPond, pos[0], pos[1], pos[2], hpr[0], hpr[1], hpr[2])
                 fs.generateWithRequired(distPond.zoneId)
                 fishingSpots.append(fs)
             else:
-                self.notify.debug("Found dnaGroup that is not a fishing_spot under a pond group")
+                self.notify.debug(
+                    "Found dnaGroup that is not a fishing_spot under a pond group")
         return fishingSpots
 
-    def findPartyHats(self, dnaGroup, zoneId, overrideDNAZone = 0):
+    def findPartyHats(self, dnaGroup, zoneId, overrideDNAZone=0):
         """
         Recursively scans the given DNA tree for party hats.  These
         are defined as all the groups whose code includes the string
@@ -541,7 +558,7 @@ class ToontownAIRepository(ToontownInternalRepository):
 
         if ((isinstance(dnaGroup, DNAGroup)) and
             # If it is a DNAGroup, and the name has party_gate, count it
-            (str.find(dnaGroup.getName(), 'party_gate') >= 0)):
+                (str.find(dnaGroup.getName(), 'party_gate') >= 0)):
             # Here's a party hat!
             ph = DistributedPartyGateAI.DistributedPartyGateAI(self)
             ph.generateWithRequired(zoneId)
@@ -552,35 +569,47 @@ class ToontownAIRepository(ToontownInternalRepository):
             # so do not search the one we just found:
             # If we come across a visgroup, note the zoneId and then recurse
             if (isinstance(dnaGroup, DNAVisGroup) and not overrideDNAZone):
-                # Make sure we get the real zone id, in case we are in welcome valley
+                # Make sure we get the real zone id, in case we are in welcome
+                # valley
                 zoneId = ZoneUtil.getTrueZoneId(
-                        int(dnaGroup.getName().split(':')[0]), zoneId)
+                    int(dnaGroup.getName().split(':')[0]), zoneId)
             for i in range(dnaGroup.getNumChildren()):
-                childPartyHats = self.findPartyHats(dnaGroup.at(i), zoneId, overrideDNAZone)
+                childPartyHats = self.findPartyHats(
+                    dnaGroup.at(i), zoneId, overrideDNAZone)
                 partyHats += childPartyHats
 
         return partyHats
 
-    def findRacingPads(self, dnaGroup, zoneId, area, overrideDNAZone = 0, type = 'racing_pad'):
+    def findRacingPads(
+            self,
+            dnaGroup,
+            zoneId,
+            area,
+            overrideDNAZone=0,
+            type='racing_pad'):
         racingPads = []
         racingPadGroups = []
-        if ((isinstance(dnaGroup, DNAGroup)) and (str.find(dnaGroup.getName(), type) >= 0)):
+        if ((isinstance(dnaGroup, DNAGroup)) and (
+                str.find(dnaGroup.getName(), type) >= 0)):
             racingPadGroups.append(dnaGroup)
             if (type == 'racing_pad'):
                 nameInfo = dnaGroup.getName().split('_')
-                #pdb.set_trace()
-                #print "Name Info: ", nameInfo
-                #print "Race Info: ", raceInfo
-                racingPad = DistributedRacePadAI(self, area, nameInfo[3], int(nameInfo[2]))
+                # pdb.set_trace()
+                # print "Name Info: ", nameInfo
+                # print "Race Info: ", raceInfo
+                racingPad = DistributedRacePadAI(
+                    self, area, nameInfo[3], int(nameInfo[2]))
             else:
                 racingPad = DistributedViewPadAI(self, area)
             racingPad.generateWithRequired(zoneId)
             racingPads.append(racingPad)
         else:
             if (isinstance(dnaGroup, DNAVisGroup) and not overrideDNAZone):
-                zoneId = ZoneUtil.getTrueZoneId(int(dnaGroup.getName().split(':')[0]), zoneId)
+                zoneId = ZoneUtil.getTrueZoneId(
+                    int(dnaGroup.getName().split(':')[0]), zoneId)
             for i in range(dnaGroup.getNumChildren()):
-                childRacingPads, childRacingPadGroups = self.findRacingPads(dnaGroup.at(i), zoneId, area, overrideDNAZone, type)
+                childRacingPads, childRacingPadGroups = self.findRacingPads(
+                    dnaGroup.at(i), zoneId, area, overrideDNAZone, type)
                 racingPads += childRacingPads
                 racingPadGroups += childRacingPadGroups
         return racingPads, racingPadGroups
@@ -596,7 +625,8 @@ class ToontownAIRepository(ToontownInternalRepository):
                 x, y, z = block.getPos()
                 h, p, r = block.getHpr()
                 padLocationId = int(blockName[-1])
-                startingBlock = cls(self, kartPad, x, y, z, h, p, r, padLocationId)
+                startingBlock = cls(
+                    self, kartPad, x, y, z, h, p, r, padLocationId)
                 startingBlock.generateWithRequired(kartPad.zoneId)
                 startingBlocks.append(startingBlock)
 
@@ -608,11 +638,12 @@ class ToontownAIRepository(ToontownInternalRepository):
         '''
         leaderBoards = []
         if (str.find(dnaPool.getName(), 'leaderBoard') >= 0):
-            #found a leader board
+            # found a leader board
             pos = dnaPool.getPos()
             hpr = dnaPool.getHpr()
 
-            lb = DistributedLeaderBoardAI(self, dnaPool.getName(), zoneID, [], pos, hpr)
+            lb = DistributedLeaderBoardAI(
+                self, dnaPool.getName(), zoneID, [], pos, hpr)
             lb.generateWithRequired(zoneID)
             leaderBoards.append(lb)
         else:
@@ -623,8 +654,8 @@ class ToontownAIRepository(ToontownInternalRepository):
 
         return leaderBoards
 
+    # AIGEOM
 
-    #AIGEOM
     def loadDNAFile(self, dnaStore, dnaFile, cs=CSDefault):
         """
         load everything, including geometry
@@ -639,12 +670,13 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.dnaDataMap = {}
         for zones in self.zoneTable.values():
             for zone in zones:
-                zoneId=zone[0]
+                zoneId = zone[0]
                 dnaStore = DNAStorage()
                 dnaFileName = self.genDNAFileName(zoneId)
                 dnaData = self.loadDNAFileAI(dnaStore, dnaFileName)
                 self.dnaStoreMap[zoneId] = dnaStore
                 self.dnaDataMap[zoneId] = dnaData
+
     def getTrackClsends(self):
         return False
 
@@ -705,7 +737,7 @@ class ToontownAIRepository(ToontownInternalRepository):
 
     def getWelcomeValleyCount(self):
         # avatars in Welcom Vally
-        return self.welcomeValleyManager.getAvatarCount();
+        return self.welcomeValleyManager.getAvatarCount()
 
     def createPondBingoMgrAI(self, estate):
         """
@@ -720,7 +752,8 @@ class ToontownAIRepository(ToontownInternalRepository):
         # Guard for publish
         if simbase.wantBingo:
             if self.bingoMgr:
-                self.notify.info('createPondBingoMgrAI: Creating a DPBMAI for Dynamic Estate')
+                self.notify.info(
+                    'createPondBingoMgrAI: Creating a DPBMAI for Dynamic Estate')
                 self.bingoMgr.createPondBingoMgrAI(estate, 1)
 
     def getEstate(self, avId, zone, callback):
@@ -753,8 +786,9 @@ class ToontownAIRepository(ToontownInternalRepository):
         # to getEstate().
         context = di.getUint32()
         callback = self.__queryEstateFuncMap.get(context)
-        if callback == None:
-            self.notify.warning("Got unexpected estate context: %s" % (context))
+        if callback is None:
+            self.notify.warning(
+                f"Got unexpected estate context: {context}")
             return
         del self.__queryEstateFuncMap[context]
 
@@ -765,17 +799,17 @@ class ToontownAIRepository(ToontownInternalRepository):
         if (retCode == 0):
             estateId = di.getUint32()
             numFields = di.getUint16()
-            
+
             for i in range(numFields):
                 key = di.getString()
                 #key = key[2:]
-                #right why to do this???? ask Roger and/or Dave
+                # right why to do this???? ask Roger and/or Dave
                 value = di.getString()
                 found = di.getUint8()
-                
-                #print key;
-                #print value;
-                #print found;
+
+                # print key;
+                # print value;
+                # print found;
 
                 if found:
                     # create another datagram for this value
@@ -783,17 +817,16 @@ class ToontownAIRepository(ToontownInternalRepository):
                     #vdgi = PyDatagramIterator(vdg)
                     # do something with this data
                     estateVal[key] = value
-                
-                    
+
             numHouses = di.getUint16()
-            self.notify.debug("numHouses = %s" % numHouses)
+            self.notify.debug(f"numHouses = {numHouses}")
             houseId = [None] * numHouses
             for i in range(numHouses):
                 houseId[i] = di.getUint32()
-                self.notify.debug("houseId = %s" % houseId[i])
-                
+                self.notify.debug(f"houseId = {houseId[i]}")
+
             numHouseKeys = di.getUint16()
-            self.notify.debug("numHouseKeys = %s" % numHouseKeys)
+            self.notify.debug(f"numHouseKeys = {numHouseKeys}")
             houseKey = [None] * numHouseKeys
             for i in range(numHouseKeys):
                 houseKey[i] = di.getString()
@@ -809,22 +842,21 @@ class ToontownAIRepository(ToontownInternalRepository):
                     tempHouseVal[i][j] = di.getString()
                     # do we need a check for "value found" here?
 
-            #print houseKey
-            #print tempHouseVal
+            # print houseKey
+            # print tempHouseVal
 
             numHouseFound = di.getUint16()
-
 
             # keep track of which attributes are found
             foundVal = [None] * numHouses
             for i in range(numHouses):
                 foundVal[i] = [None] * numHouseVal
-                
+
             # create empty dictionaries for each house
             houseVal = []
             for i in range(numHouses):
                 houseVal.append({})
-                
+
             for i in range(numHouseVal):
                 hvLen = di.getUint16()
                 for j in range(numHouses):
@@ -858,7 +890,7 @@ class ToontownAIRepository(ToontownInternalRepository):
                 the catch.
         catch - a fish tuple of (genus, species)
         returns: None
-        
+
         This method instructs the BingoManagerAI to
         tell the appropriate PBMgrAI to update the
         catch of an avatar at the particular pond. This

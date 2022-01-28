@@ -15,8 +15,11 @@ if __dev__:
 
 # gives you the name of the bboard posting that will be made when a room is
 # ready for business
+
+
 def getMintRoomReadyPostName(doId):
-    return 'mintRoomReady-%s' % doId
+    return f'mintRoomReady-{doId}'
+
 
 class DistributedMintRoom(DistributedLevel.DistributedLevel,
                           MintRoomBase.MintRoomBase, MintRoom.MintRoom):
@@ -24,7 +27,7 @@ class DistributedMintRoom(DistributedLevel.DistributedLevel,
 
     # Any non-entrance mint room will not have an entrancePoint entity.
     EmulateEntrancePoint = False
-    
+
     def __init__(self, cr):
         DistributedLevel.DistributedLevel.__init__(self, cr)
         MintRoomBase.MintRoomBase.__init__(self)
@@ -50,18 +53,18 @@ class DistributedMintRoom(DistributedLevel.DistributedLevel,
         DistributedLevel.DistributedLevel.delete(self)
         MintRoom.MintRoom.delete(self)
         self.ignoreAll()
-        
+
     # required fields
     def setMintId(self, mintId):
-        self.notify.debug('mintId: %s' % mintId)
+        self.notify.debug(f'mintId: {mintId}')
         MintRoomBase.MintRoomBase.setMintId(self, mintId)
 
     def setRoomId(self, roomId):
-        self.notify.debug('roomId: %s' % roomId)
+        self.notify.debug(f'roomId: {roomId}')
         MintRoomBase.MintRoomBase.setRoomId(self, roomId)
 
     def setRoomNum(self, num):
-        self.notify.debug('roomNum: %s' % num)
+        self.notify.debug(f'roomNum: {num}')
         MintRoom.MintRoom.setRoomNum(self, num)
 
     def levelAnnounceGenerate(self):
@@ -76,7 +79,7 @@ class DistributedMintRoom(DistributedLevel.DistributedLevel,
             # give the spec a factory EntityTypeRegistry.
             typeReg = self.getMintEntityTypeReg()
             roomSpec.setEntityTypeReg(typeReg)
-        
+
         DistributedLevel.DistributedLevel.initializeLevel(self, roomSpec)
 
         # if the AI is sending us a spec, we won't have it yet and the
@@ -136,22 +139,31 @@ class DistributedMintRoom(DistributedLevel.DistributedLevel,
     # for now, let's ignore visibility, since we may not even need it
     def initVisibility(self, *args, **kw):
         pass
+
     def shutdownVisibility(self, *args, **kw):
         pass
+
     def lockVisibility(self, *args, **kw):
         pass
+
     def unlockVisibility(self, *args, **kw):
         pass
+
     def enterZone(self, *args, **kw):
         pass
+
     def updateVisibility(self, *args, **kw):
         pass
+
     def setVisibility(self, *args, **kw):
         pass
+
     def resetVisibility(self, *args, **kw):
         pass
+
     def handleVisChange(self, *args, **kw):
         pass
+
     def forceSetZoneThisFrame(self, *args, **kw):
         pass
 
@@ -192,20 +204,19 @@ class DistributedMintRoom(DistributedLevel.DistributedLevel,
             pos = base.localAvatar.getPos(thisZone)
             h = base.localAvatar.getH(thisZone)
             roomName = MintRoomSpecs.CashbotMintRoomId2RoomName[self.roomId]
-            print('mint pos: %s, h: %s, room: %s' % (
-                repr(pos), h, roomName))
+            print(f'mint pos: {repr(pos)}, h: {h}, room: {roomName}')
             if self.mint is not None:
                 floorNum = self.mint.floorNum
             else:
                 floorNum = '???'
-            posStr = "X: %.3f" % pos[0] + "\nY: %.3f" % pos[1] + \
-                     "\nZ: %.3f" % pos[2] + "\nH: %.3f" % h + \
-                     "\nmintId: %s" % self.mintId + \
-                     "\nfloor: %s" % floorNum + \
-                     "\nroomId: %s" % self.roomId + \
-                     "\nroomName: %s" % roomName
-            base.localAvatar.setChatAbsolute(posStr,CFThought | CFTimeout)
-        self.accept('f2',printPos)
+            posStr = f"X: {pos[0]:.3f}" + f"\nY: {pos[1]:.3f}" + \
+                     f"\nZ: {pos[2]:.3f}" + f"\nH: {h:.3f}" + \
+                     f"\nmintId: {self.mintId}" + \
+                     f"\nfloor: {floorNum}" + \
+                     f"\nroomId: {self.roomId}" + \
+                     f"\nroomName: {roomName}"
+            base.localAvatar.setChatAbsolute(posStr, CFThought | CFTimeout)
+        self.accept('f2', printPos)
 
     def handleSOSPanel(self, panel):
         # make a list of toons that are still in the factory
@@ -236,7 +247,7 @@ class DistributedMintRoom(DistributedLevel.DistributedLevel,
 
     def setSuits(self, suitIds, reserveSuitIds):
         assert(self.notify.debug(
-            "setSuits suits: %s, reserves: %s" % (suitIds, reserveSuitIds)))
+            f"setSuits suits: {suitIds}, reserves: {reserveSuitIds}"))
         oldSuitIds = list(self.suitIds)
         self.suitIds = suitIds
         self.reserveSuitIds = reserveSuitIds
@@ -284,6 +295,7 @@ class DistributedMintRoom(DistributedLevel.DistributedLevel,
 
     def getBossTaunt(self):
         return TTLocalizer.MintBossTaunt
+
     def getBossBattleTaunt(self):
         return TTLocalizer.MintBossBattleTaunt
 
@@ -295,5 +307,6 @@ class DistributedMintRoom(DistributedLevel.DistributedLevel,
                 MintRoomSpecs.CashbotMintRoomId2RoomName[self.roomId],)
         else:
             return 'DistributedMintRoom'
+
     def __repr__(self):
         return str(self)

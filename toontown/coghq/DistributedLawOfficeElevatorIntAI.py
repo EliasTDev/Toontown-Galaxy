@@ -8,13 +8,15 @@ from direct.fsm import ClassicFSM
 from direct.fsm import State
 from direct.task import Task
 
-class DistributedLawOfficeElevatorIntAI(DistributedElevatorFloorAI.DistributedElevatorFloorAI):
+
+class DistributedLawOfficeElevatorIntAI(
+        DistributedElevatorFloorAI.DistributedElevatorFloorAI):
 
     def __init__(self, air, lawOfficeId, bldg, avIds):
-        DistributedElevatorFloorAI.DistributedElevatorFloorAI.__init__(self, air, bldg, avIds)
+        DistributedElevatorFloorAI.DistributedElevatorFloorAI.__init__(
+            self, air, bldg, avIds)
         self.lawOfficeId = lawOfficeId
 
-        
     def getEntranceId(self):
         return self.entranceId
 
@@ -24,7 +26,7 @@ class DistributedLawOfficeElevatorIntAI(DistributedElevatorFloorAI.DistributedEl
         #print(" NUMBER OF PLAYERS IS %s" % (numPlayers))
         # It is possible the players exited the district
         if (numPlayers > 0):
-            
+
             # Create a factory interior just for us
 
             # Make a nice list for the factory
@@ -32,11 +34,11 @@ class DistributedLawOfficeElevatorIntAI(DistributedElevatorFloorAI.DistributedEl
             for i in self.seats:
                 if i not in [None, 0]:
                     players.append(i)
-            #lawOfficeZone = self.bldg.createLawOffice(self.lawOfficeId,
+            # lawOfficeZone = self.bldg.createLawOffice(self.lawOfficeId,
             #                                      self.entranceId, players)
-            
-            sittingAvIds = [];
-            
+
+            sittingAvIds = []
+
             for seatIndex in range(len(self.seats)):
                 avId = self.seats[seatIndex]
                 if avId:
@@ -44,21 +46,21 @@ class DistributedLawOfficeElevatorIntAI(DistributedElevatorFloorAI.DistributedEl
                     # And which zone it is in
                     #self.sendUpdateToAvatarId(avId, "setLawOfficeInteriorZone", [lawOfficeZone])
                     # Clear the fill slot
-                    #self.clearFullNow(seatIndex)
+                    # self.clearFullNow(seatIndex)
                     sittingAvIds.append(avId)
                     pass
             for avId in self.avIds:
-                if not avId in sittingAvIds:
-                    print(("THIS AV ID %s IS NOT ON BOARD" % (avId)))
-                    
-            self.bldg.startNextFloor()                    
-            
+                if avId not in sittingAvIds:
+                    print(f"THIS AV ID {avId} IS NOT ON BOARD")
+
+            self.bldg.startNextFloor()
+
         else:
             self.notify.warning("The elevator left, but was empty.")
         self.fsm.request("closed")
 
     def enterClosed(self):
-        print(("DistributedLawOfficeElevatorIntAI.elevatorClosed %s" % (self.doId)))
+        print(f"DistributedLawOfficeElevatorIntAI.elevatorClosed {self.doId}")
         #import pdb; pdb.set_trace()
         DistributedElevatorFloorAI.DistributedElevatorFloorAI.enterClosed(self)
         # Switch back into opening mode since we allow other Toons onboard
@@ -66,9 +68,3 @@ class DistributedLawOfficeElevatorIntAI(DistributedElevatorFloorAI.DistributedEl
             self.fsm.request("opening")
             if self.isLocked:
                 self.hasOpenedLocked = 1
-        
-
-
-
-
-

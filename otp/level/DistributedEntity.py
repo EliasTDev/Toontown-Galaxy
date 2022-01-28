@@ -2,6 +2,7 @@ from direct.distributed import DistributedObject
 from . import Entity
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedEntity(DistributedObject.DistributedObject, Entity.Entity):
     notify = DirectNotifyGlobal.directNotify.newCategory(
         'DistributedEntity')
@@ -24,25 +25,26 @@ class DistributedEntity(DistributedObject.DistributedObject, Entity.Entity):
         DistributedObject.DistributedObject.generate(self)
 
     def setLevelDoId(self, levelDoId):
-        DistributedEntity.notify.debug('setLevelDoId: %s' % levelDoId)
+        DistributedEntity.notify.debug(f'setLevelDoId: {levelDoId}')
         self.levelDoId = levelDoId
 
     def setEntId(self, entId):
-        DistributedEntity.notify.debug('setEntId: %s' % entId)
+        DistributedEntity.notify.debug(f'setEntId: {entId}')
         self.entId = entId
 
     def announceGenerate(self):
         ###
-        ### THIS IS WHERE CLIENT-SIDE DISTRIBUTED ENTITIES GET THEIR
-        ### ATTRIBUTES SET
+        # THIS IS WHERE CLIENT-SIDE DISTRIBUTED ENTITIES GET THEIR
+        # ATTRIBUTES SET
         ###
-        DistributedEntity.notify.debug('announceGenerate (%s)' % self.entId)
+        DistributedEntity.notify.debug(f'announceGenerate ({self.entId})')
 
         # ask our level obj for our spec data
         if self.levelDoId != 0:
             level = base.cr.doId2do[self.levelDoId]
             self.initializeEntity(level, self.entId)
-            # announce our presence (Level does this for non-distributed entities)
+            # announce our presence (Level does this for non-distributed
+            # entities)
             self.level.onEntityCreate(self.entId)
 
         else:
@@ -54,7 +56,7 @@ class DistributedEntity(DistributedObject.DistributedObject, Entity.Entity):
         DistributedObject.DistributedObject.announceGenerate(self)
 
     def disable(self):
-        DistributedEntity.notify.debug('disable (%s)' % self.entId)
+        DistributedEntity.notify.debug(f'disable ({self.entId})')
         # stop things
         self.destroy()
         DistributedObject.DistributedObject.disable(self)

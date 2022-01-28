@@ -1,11 +1,12 @@
 from toontown.toonbase import ToontownGlobals
 from toontown.pets import PetMood, PetTraits, PetDetail
 
+
 class PetHandle:
     """PetHandle
 
     This is a class object that serves as a structure to hold all the
-    details we are entitled to find out about a pet. 
+    details we are entitled to find out about a pet.
 
     """
 
@@ -88,4 +89,3 @@ class PetHandle:
             if callWhenDone:
                 callWhenDone()
         PetDetail.PetDetail(self.doId, handleGotDetails)
-        

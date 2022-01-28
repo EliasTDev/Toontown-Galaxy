@@ -21,12 +21,14 @@ import functools
 # Purpose: Stores all relevant information regarding an event,
 #          such as the type of event.
 #################################################################
+
+
 class HolidayInfo_Oncely(HolidayInfo_Base):
     #############################################################
     # Method: __init__
     # Purpose: Provides initial construction of the Oncely Holiday
     #          Info object. This type of holiday only happens once!
-    #   
+    #
     # Input: holidayClass - class type of the holiday, for
     #                       instance - Fireworks.
     #       dateDict - a dictionary containing the Months,
@@ -37,15 +39,22 @@ class HolidayInfo_Oncely(HolidayInfo_Base):
     #                  12pm PST on July 31st of Every Year.
     # Output: None
     ############################################################
-    def __init__(self, holidayClass, dateList, displayOnCalendar, phaseDates = None, testHolidays = None):
+    def __init__(
+            self,
+            holidayClass,
+            dateList,
+            displayOnCalendar,
+            phaseDates=None,
+            testHolidays=None):
         """Phase dates adds a way for a ramping up holiday to go to the next phase."""
         # I briefly considered putting phase dates in the definition of the HolidayAI class
         # but then that would put when it starts, and the different phase times in two
         # separate files.  This feels much safer.
-        # Implicit in this definition, if a holiday has 1 phase date, there are 2 phases
+        # Implicit in this definition, if a holiday has 1 phase date, there are
+        # 2 phases
         HolidayInfo_Base.__init__(self, holidayClass, displayOnCalendar)
         dateElemIter = ModifiedIter(dateList)
-        for i in range(len(dateList)//2):
+        for i in range(len(dateList) // 2):
             start = dateElemIter.current()
             end = next(dateElemIter)
 
@@ -57,7 +66,7 @@ class HolidayInfo_Oncely(HolidayInfo_Base):
         self.curPhase = 0
         if phaseDates:
             self.processPhaseDates(phaseDates)
-            
+
         self.testHolidays = testHolidays
 
     #############################################################
@@ -69,13 +78,14 @@ class HolidayInfo_Oncely(HolidayInfo_Base):
     #############################################################
     def getTime(self, date, t):
         # t is of the form (year, month, day, hour, min, sec)
-        # date is of the form (year, month, day, weekday) - not used in this class
-        return time.mktime((t[0], # year
-                            t[1], # month
-                            t[2], # day
-                            t[3], # hour
-                            t[4], # second
-                            t[5], # minute
+        # date is of the form (year, month, day, weekday) - not used in this
+        # class
+        return time.mktime((t[0],  # year
+                            t[1],  # month
+                            t[2],  # day
+                            t[3],  # hour
+                            t[4],  # second
+                            t[5],  # minute
                             0,
                             0,
                             -1))
@@ -83,7 +93,7 @@ class HolidayInfo_Oncely(HolidayInfo_Base):
     #############################################################
     # Method: getNextHolidayTime
     # Purpose: This type of holiday only happens once, so just return None
-    #          
+    #
     # Input: currTime - current time
     # Output: returns the next start time of the holiday
     #############################################################
@@ -108,22 +118,22 @@ class HolidayInfo_Oncely(HolidayInfo_Base):
 
             startNextTime = self.getTime(None, startTuple)
             endNextTime = self.getTime(None, endTuple)
-            
+
             if startNextTime <= currTime and \
                currTime <= endNextTime:
                 # we are between a start time and end time tuple
                 # start it now
                 result = currTime
-                break;
-            
+                break
+
             if currTime < startNextTime and \
                currTime < endNextTime:
                 # we are waiting for the next pair of start,end times to arrive
                 result = startNextTime
-                break;            
+                break
             next(self.currElemIter)
         return result
-    
+
     #############################################################
     # Method: adjustDate
     # Purpose: This method adjusts the current day by a year. This
@@ -133,13 +143,19 @@ class HolidayInfo_Oncely(HolidayInfo_Base):
     # Output: None
     #############################################################
     def adjustDate(self, date):
-        return (date[0]+1, date[1], date[2], date[3])
+        return (date[0] + 1, date[1], date[2], date[3])
 
     def processPhaseDates(self, phaseDates):
         """Convert the phase dates into datetimes."""
         self.phaseDates = []
         for curDate in phaseDates:
-            newTime = datetime.datetime(curDate[0], curDate[1], curDate[2], curDate[3], curDate[4], curDate[5])
+            newTime = datetime.datetime(
+                curDate[0],
+                curDate[1],
+                curDate[2],
+                curDate[3],
+                curDate[4],
+                curDate[5])
             self.phaseDates.append(newTime)
 
     def getPhaseDates(self):
@@ -152,11 +168,11 @@ class HolidayInfo_Oncely(HolidayInfo_Base):
             return True
         else:
             return False
-            
+
     #############################################################
     # Run holiday in test mode
-    # Used to invoke other holidays for debugging purposes        
-    #############################################################    
+    # Used to invoke other holidays for debugging purposes
+    #############################################################
 
     def isTestHoliday(self):
         """ Returns true if running the holiday in test mode """
@@ -164,6 +180,6 @@ class HolidayInfo_Oncely(HolidayInfo_Base):
             return True
         else:
             return False
-            
+
     def getTestHolidays(self):
         return self.testHolidays

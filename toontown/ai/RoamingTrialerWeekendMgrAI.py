@@ -2,6 +2,7 @@ from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import ToontownGlobals, TTLocalizer
 from toontown.ai import HolidayBaseAI
 
+
 class RoamingTrialerWeekendMgrAI(HolidayBaseAI.HolidayBaseAI):
 
     notify = DirectNotifyGlobal.directNotify.newCategory(

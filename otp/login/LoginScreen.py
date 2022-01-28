@@ -23,19 +23,22 @@ from otp.uberdog.AccountDetailRecord import AccountDetailRecord, SubDetailRecord
 from . import TTAccount
 from . import GuiScreen
 
+
 class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
     """
     Contains methods for displaying the login screen,
     getting and verifying the user's login name
     """
-    AutoLoginName = base.config.GetString("%s-auto-login%s"%(game.name, os.getenv("otp_client", "")), "")
-    AutoLoginPassword = base.config.GetString("%s-auto-password%s"%(game.name, os.getenv("otp_client", "")), "")
+    AutoLoginName = base.config.GetString(
+        f"{game.name}-auto-login{os.getenv('otp_client', '')}", "")
+    AutoLoginPassword = base.config.GetString(
+        f"{game.name}-auto-password{os.getenv('otp_client', '')}", "")
 
     # Create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("LoginScreen")
 
-    ActiveEntryColor = Vec4(1,1,1,1)
-    InactiveEntryColor = Vec4(0.8,0.8,0.8,1)
+    ActiveEntryColor = Vec4(1, 1, 1, 1)
+    InactiveEntryColor = Vec4(0.8, 0.8, 0.8, 1)
 
     def __init__(self, cr, doneEvent):
         """
@@ -52,215 +55,215 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         self.password = ''
 
         self.fsm = ClassicFSM.ClassicFSM('LoginScreen',
-                           [State.State('off',
-                                        self.enterOff,
-                                        self.exitOff,
-                                        ['login',
-                                         'waitForLoginResponse', # for autologin
-                                         ]),
-                            State.State('login',
-                                        self.enterLogin,
-                                        self.exitLogin,
-                                        ['waitForLoginResponse',
-                                         'login',
-                                         'showLoginFailDialog',
-                                         ]),
-                            State.State('showLoginFailDialog',
-                                        self.enterShowLoginFailDialog,
-                                        self.exitShowLoginFailDialog,
-                                        ['login',
-                                         'showLoginFailDialog',
-                                         ]),
-                            State.State('waitForLoginResponse',
-                                        self.enterWaitForLoginResponse,
-                                        self.exitWaitForLoginResponse,
-                                        ['login',
-                                         'showLoginFailDialog',
-                                         'showConnectionProblemDialog',
-                                         ]),
-                            State.State('showConnectionProblemDialog',
-                                        self.enterShowConnectionProblemDialog,
-                                        self.exitShowConnectionProblemDialog,
-                                        ['login',
-                                         ]),
-                            ],
-                           'off',
-                           'off',
-                           )
+                                         [State.State('off',
+                                                      self.enterOff,
+                                                      self.exitOff,
+                                                      ['login',
+                                                       'waitForLoginResponse',  # for autologin
+                                                       ]),
+                                             State.State('login',
+                                                         self.enterLogin,
+                                                         self.exitLogin,
+                                                         ['waitForLoginResponse',
+                                                          'login',
+                                                          'showLoginFailDialog',
+                                                          ]),
+                                             State.State('showLoginFailDialog',
+                                                         self.enterShowLoginFailDialog,
+                                                         self.exitShowLoginFailDialog,
+                                                         ['login',
+                                                          'showLoginFailDialog',
+                                                          ]),
+                                             State.State('waitForLoginResponse',
+                                                         self.enterWaitForLoginResponse,
+                                                         self.exitWaitForLoginResponse,
+                                                         ['login',
+                                                          'showLoginFailDialog',
+                                                          'showConnectionProblemDialog',
+                                                          ]),
+                                             State.State('showConnectionProblemDialog',
+                                                         self.enterShowConnectionProblemDialog,
+                                                         self.exitShowConnectionProblemDialog,
+                                                         ['login',
+                                                          ]),
+                                          ],
+                                         'off',
+                                         'off',
+                                         )
         self.fsm.enterInitialState()
 
     def load(self):
         self.notify.debug('load')
         masterScale = 0.8
 
-        textScale = 0.1*masterScale
-        entryScale = 0.08*masterScale
-        lineHeight = 0.21*masterScale
+        textScale = 0.1 * masterScale
+        entryScale = 0.08 * masterScale
+        lineHeight = 0.21 * masterScale
 
-        buttonScale = 1.15*masterScale
-        buttonLineHeight = 0.14*masterScale
+        buttonScale = 1.15 * masterScale
+        buttonLineHeight = 0.14 * masterScale
 
         # login screen
         self.frame = DirectFrame(
-            parent = aspect2d,
-            relief = None,
+            parent=aspect2d,
+            relief=None,
             sortOrder=20,
-            )
+        )
         self.frame.hide()
         linePos = -0.26
 
         self.nameLabel = DirectLabel(
-            parent = self.frame,
-            relief = None,
-            pos = (-0.21, 0, linePos),
-            text = OTPLocalizer.LoginScreenUserName,
-            text_scale = textScale,
-            text_align = TextNode.ARight,
-            )
+            parent=self.frame,
+            relief=None,
+            pos=(-0.21, 0, linePos),
+            text=OTPLocalizer.LoginScreenUserName,
+            text_scale=textScale,
+            text_align=TextNode.ARight,
+        )
         self.nameEntry = DirectEntry(
-            parent = self.frame,
-            relief = DGG.SUNKEN,
-            borderWidth = (0.1,0.1),
-            scale = entryScale,
-            pos = (-0.125, 0.0, linePos),
-            width = OTPGlobals.maxLoginWidth,
-            numLines = 1,
-            focus = 0,
-            cursorKeys = 1,
-            )
-        linePos-=lineHeight
+            parent=self.frame,
+            relief=DGG.SUNKEN,
+            borderWidth=(0.1, 0.1),
+            scale=entryScale,
+            pos=(-0.125, 0.0, linePos),
+            width=OTPGlobals.maxLoginWidth,
+            numLines=1,
+            focus=0,
+            cursorKeys=1,
+        )
+        linePos -= lineHeight
 
         self.passwordLabel = DirectLabel(
-            parent = self.frame,
-            relief = None,
-            pos = (-0.21, 0, linePos),
-            text = OTPLocalizer.LoginScreenPassword,
-            text_scale = textScale,
-            text_align = TextNode.ARight,
-            )
+            parent=self.frame,
+            relief=None,
+            pos=(-0.21, 0, linePos),
+            text=OTPLocalizer.LoginScreenPassword,
+            text_scale=textScale,
+            text_align=TextNode.ARight,
+        )
         self.passwordEntry = DirectEntry(
-            parent = self.frame,
-            relief = DGG.SUNKEN,
-            borderWidth = (0.1,0.1),
-            scale = entryScale,
-            pos = (-0.125, 0.0, linePos),
-            width = OTPGlobals.maxLoginWidth,
-            numLines = 1,
-            focus = 0,
-            cursorKeys = 1,
-            obscured = 1,
-            command = self.__handleLoginPassword,
-            )
-        linePos-=lineHeight
+            parent=self.frame,
+            relief=DGG.SUNKEN,
+            borderWidth=(0.1, 0.1),
+            scale=entryScale,
+            pos=(-0.125, 0.0, linePos),
+            width=OTPGlobals.maxLoginWidth,
+            numLines=1,
+            focus=0,
+            cursorKeys=1,
+            obscured=1,
+            command=self.__handleLoginPassword,
+        )
+        linePos -= lineHeight
 
         buttonImageScale = (1.7, 1.1, 1.1)
         self.loginButton = DirectButton(
-            parent = self.frame,
-            relief = DGG.RAISED,
-            borderWidth = (0.01,0.01),
-            pos = (0,0,linePos),
-            scale = buttonScale,
-            text = OTPLocalizer.LoginScreenLogin,
-            text_scale = 0.06,
-            text_pos = (0,-0.02),
-            command = self.__handleLoginButton,
-            )
-        linePos-=buttonLineHeight
+            parent=self.frame,
+            relief=DGG.RAISED,
+            borderWidth=(0.01, 0.01),
+            pos=(0, 0, linePos),
+            scale=buttonScale,
+            text=OTPLocalizer.LoginScreenLogin,
+            text_scale=0.06,
+            text_pos=(0, -0.02),
+            command=self.__handleLoginButton,
+        )
+        linePos -= buttonLineHeight
 
         self.createAccountButton = DirectButton(
-            parent = self.frame,
-            relief = DGG.RAISED,
-            borderWidth = (0.01,0.01),
-            pos = (0,0,linePos),
-            scale = buttonScale,
-            text = OTPLocalizer.LoginScreenCreateAccount,
-            text_scale = 0.06,
-            text_pos = (0,-0.02),
-            command = self.__handleCreateAccount,
-            )
-        linePos-=buttonLineHeight
+            parent=self.frame,
+            relief=DGG.RAISED,
+            borderWidth=(0.01, 0.01),
+            pos=(0, 0, linePos),
+            scale=buttonScale,
+            text=OTPLocalizer.LoginScreenCreateAccount,
+            text_scale=0.06,
+            text_pos=(0, -0.02),
+            command=self.__handleCreateAccount,
+        )
+        linePos -= buttonLineHeight
 
         self.quitButton = DirectButton(
-            parent = self.frame,
-            relief = DGG.RAISED,
-            borderWidth = (0.01,0.01),
-            pos = (0,0,linePos),
-            scale = buttonScale,
-            text = OTPLocalizer.LoginScreenQuit,
-            text_scale = 0.06,
-            text_pos = (0,-0.02),
-            command = self.__handleQuit,
-            )
-        linePos-=buttonLineHeight
+            parent=self.frame,
+            relief=DGG.RAISED,
+            borderWidth=(0.01, 0.01),
+            pos=(0, 0, linePos),
+            scale=buttonScale,
+            text=OTPLocalizer.LoginScreenQuit,
+            text_scale=0.06,
+            text_pos=(0, -0.02),
+            command=self.__handleQuit,
+        )
+        linePos -= buttonLineHeight
 
         self.dialogDoneEvent = "loginDialogAck"
         dialogClass = OTPGlobals.getGlobalDialogClass()
         self.dialog = dialogClass(
-            dialogName = 'loginDialog',
-            doneEvent = self.dialogDoneEvent,
-            message = "",
-            style = OTPDialog.Acknowledge,
+            dialogName='loginDialog',
+            doneEvent=self.dialogDoneEvent,
+            message="",
+            style=OTPDialog.Acknowledge,
             # make sure this dialog shows up over the email panel
-            sortOrder = DGG.NO_FADE_SORT_INDEX + 100,
-            )
+            sortOrder=DGG.NO_FADE_SORT_INDEX + 100,
+        )
         self.dialog.hide()
 
         self.failDialog = DirectFrame(
-            parent = aspect2dp,
-            relief = DGG.RAISED,
-            borderWidth = (0.01,0.01),
-            pos = (0,.1,0),
-            text = "",
-            text_scale = 0.08,
-            text_pos = (0.0, 0.3),
-            text_wordwrap = 15,
+            parent=aspect2dp,
+            relief=DGG.RAISED,
+            borderWidth=(0.01, 0.01),
+            pos=(0, .1, 0),
+            text="",
+            text_scale=0.08,
+            text_pos=(0.0, 0.3),
+            text_wordwrap=15,
             # make this panel modal-able
-            sortOrder = DGG.NO_FADE_SORT_INDEX,
-            )
+            sortOrder=DGG.NO_FADE_SORT_INDEX,
+        )
         linePos = -.05
         self.failTryAgainButton = DirectButton(
-            parent = self.failDialog,
-            relief = DGG.RAISED,
-            borderWidth = (0.01,0.01),
-            pos = (0,0,linePos),
-            scale = .9,
-            text = OTPLocalizer.LoginScreenTryAgain,
-            text_scale = 0.06,
-            text_pos = (0,-.02),
-            command = self.__handleFailTryAgain,
-            )
-        linePos-=buttonLineHeight
+            parent=self.failDialog,
+            relief=DGG.RAISED,
+            borderWidth=(0.01, 0.01),
+            pos=(0, 0, linePos),
+            scale=.9,
+            text=OTPLocalizer.LoginScreenTryAgain,
+            text_scale=0.06,
+            text_pos=(0, -.02),
+            command=self.__handleFailTryAgain,
+        )
+        linePos -= buttonLineHeight
 
         self.failCreateAccountButton = DirectButton(
-            parent = self.failDialog,
-            relief = DGG.RAISED,
-            borderWidth = (0.01,0.01),
-            pos = (0,0,linePos),
-            scale = .9,
-            text = OTPLocalizer.LoginScreenCreateAccount,
-            text_scale = 0.06,
-            text_pos = (0,-.02),
-            command = self.__handleFailCreateAccount,
-            )
-        linePos-=buttonLineHeight
+            parent=self.failDialog,
+            relief=DGG.RAISED,
+            borderWidth=(0.01, 0.01),
+            pos=(0, 0, linePos),
+            scale=.9,
+            text=OTPLocalizer.LoginScreenCreateAccount,
+            text_scale=0.06,
+            text_pos=(0, -.02),
+            command=self.__handleFailCreateAccount,
+        )
+        linePos -= buttonLineHeight
 
         self.failDialog.hide()
 
         self.connectionProblemDialogDoneEvent = "loginConnectionProblemDlgAck"
         dialogClass = OTPGlobals.getGlobalDialogClass()
         self.connectionProblemDialog = dialogClass(
-            dialogName = 'connectionProblemDialog',
-            doneEvent = self.connectionProblemDialogDoneEvent,
-            message = "",
-            style = OTPDialog.Acknowledge,
+            dialogName='connectionProblemDialog',
+            doneEvent=self.connectionProblemDialogDoneEvent,
+            message="",
+            style=OTPDialog.Acknowledge,
             # make sure this dialog shows up over the email panel
-            sortOrder = DGG.NO_FADE_SORT_INDEX + 100,
-            )
+            sortOrder=DGG.NO_FADE_SORT_INDEX + 100,
+        )
         self.connectionProblemDialog.hide()
 
-        #background.removeNode()
-        #guiButton.removeNode()
-        #nameBalloon.removeNode()
+        # background.removeNode()
+        # guiButton.removeNode()
+        # nameBalloon.removeNode()
 
     def unload(self):
         self.notify.debug('unload')
@@ -292,12 +295,12 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
             self.fsm.request("waitForLoginResponse")
         elif self.cr.playToken:
             # If we have a PlayToken, go straight to it.
-            self.userName = '*' # Junk value, but may help debugging.
+            self.userName = '*'  # Junk value, but may help debugging.
             self.password = self.cr.playToken
             self.fsm.request("waitForLoginResponse")
-        elif hasattr(self.cr,"DISLToken") and self.cr.DISLToken:
+        elif hasattr(self.cr, "DISLToken") and self.cr.DISLToken:
             # If we have a DISLToken, go straight to it.
-            self.userName = '*' # Junk value, but may help debugging.
+            self.userName = '*'  # Junk value, but may help debugging.
             self.password = self.cr.DISLToken
             self.fsm.request("waitForLoginResponse")
         elif self.AutoLoginName:
@@ -364,6 +367,7 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
 
     def __handleFailTryAgain(self):
         self.fsm.request("login")
+
     def __handleFailCreateAccount(self):
         messenger.send(self.doneEvent, [{'mode': 'createAccount'}])
 
@@ -399,7 +403,7 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         # a user will get an error message if they accidentally submit
         # a login with an empty pwd; not a big deal in terms of user
         # experience or wasted bandwidth
-        if (self.userName == ""): # or self.password == ""):
+        if (self.userName == ""):  # or self.password == ""):
             self.dialog.setMessage(OTPLocalizer.LoginScreenLoginPrompt)
             self.dialog.show()
             self.acceptOnce(self.dialogDoneEvent, self.__handleEnterLoginAck)
@@ -420,7 +424,7 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         self.cr.password = self.password
 
         try:
-            error=self.loginInterface.authorize(self.userName, self.password)
+            error = self.loginInterface.authorize(self.userName, self.password)
         except TTAccount.TTAccountException as e:
             self.fsm.request('showConnectionProblemDialog', [str(e)])
             return
@@ -479,7 +483,8 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         if len(errorString) < len(prefix):
             return errorString
         if errorString[:len(prefix)] == prefix:
-            return '%s%s' % (errorString, ', address=%s' % base.cr.getServerAddress())
+            return '%s%s' % (errorString, ', address=%s' %
+                             base.cr.getServerAddress())
         return errorString
 
     def handleLoginResponseMsg3(self, di):
@@ -496,12 +501,12 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         returnCode = di.getInt8()
         errorString = self.getExtendedErrorMsg(di.getString())
 
-        self.notify.info("Login response return code %s" % (returnCode))
+        self.notify.info(f"Login response return code {returnCode}")
 
         if returnCode != 0:
             # If the return code is non-zero, something went
             # wrong.  Better just go to reject mode and bail out.
-            self.notify.info("Login failed: %s" % (errorString))
+            self.notify.info(f"Login failed: {errorString}")
             messenger.send(self.doneEvent, [{'mode': 'reject'}])
             return
 
@@ -519,7 +524,7 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         elif access == "FULL":
             access = OTPGlobals.AccessFull
         else:
-            self.notify.warning("Unknown access: %s" % access)
+            self.notify.warning(f"Unknown access: {access}")
             access = OTPGlobals.AccessUnknown
         accountDetailRecord.piratesAccess = access
         accountDetailRecord.familyAccountId = di.getInt32()
@@ -565,11 +570,10 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
             self.cr.whiteListChatEnabled = 0
 
         self.notify.info("End of DISL token parse")
-        self.notify.info("accountDetailRecord: %s" % accountDetailRecord)
+        self.notify.info(f"accountDetailRecord: {accountDetailRecord}")
 
         self.cr.accountDetailRecord = accountDetailRecord
         self.__handleLoginSuccess()
-
 
     def handleLoginResponseMsg2(self, di):
         #print("LoginScreen - handleLoginResponseMsg2")
@@ -606,7 +610,7 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         # Chat:
         canChat = di.getUint8()
         self.cr.secretChatAllowed = canChat
-        self.notify.info("Chat from game server login: %s" % (canChat))
+        self.notify.info(f"Chat from game server login: {canChat}")
 
         # The current time of day at the server
         sec = di.getUint32()
@@ -627,7 +631,7 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         self.cr.setIsPaid(self.isPaid)
         if self.isPaid:
             launcher.setPaidUserLoggedIn()
-        self.notify.info("Paid from game server login: %s" % (self.isPaid))
+        self.notify.info(f"Paid from game server login: {self.isPaid}")
 
         # default
         self.cr.resetPeriodTimer(None)
@@ -635,17 +639,21 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
             # The amount of time remaining on the user's account for
             # this period, in minutes.
             minutesRemaining = di.getInt32()
-            self.notify.info("Minutes remaining from server %s" % (minutesRemaining))
+            self.notify.info(
+                f"Minutes remaining from server {minutesRemaining}")
 
             if (minutesRemaining >= 0):
                 self.notify.info("Spawning period timer")
                 self.cr.resetPeriodTimer(minutesRemaining * 60)
             elif (self.isPaid):
-                self.notify.warning("Negative minutes remaining for paid user (?)")
+                self.notify.warning(
+                    "Negative minutes remaining for paid user (?)")
             else:
-                self.notify.warning("Not paid, but also negative minutes remaining (?)")
+                self.notify.warning(
+                    "Not paid, but also negative minutes remaining (?)")
         else:
-            self.notify.info("Minutes remaining not returned from server; not spawning period timer")
+            self.notify.info(
+                "Minutes remaining not returned from server; not spawning period timer")
 
         familyStr = di.getString()
         WhiteListResponse = di.getString()
@@ -662,16 +670,17 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
 
         if di.getRemainingSize() > 0:
             self.lastLoggedInStr = di.getString()
-            self.notify.info("last logged in = %s" % self.lastLoggedInStr)
+            self.notify.info(f"last logged in = {self.lastLoggedInStr}")
         else:
             self.lastLoggedInStr = ""
         self.cr.lastLoggedIn = datetime.now()
         if hasattr(self.cr, 'toontownTimeManager'):
-            self.cr.lastLoggedIn = self.cr.toontownTimeManager.convertStrToToontownTime(self.lastLoggedInStr)
+            self.cr.lastLoggedIn = self.cr.toontownTimeManager.convertStrToToontownTime(
+                self.lastLoggedInStr)
         # old style login_2 does Not have an associated parent account
         self.cr.withParentAccount = False
 
-        self.notify.info("Login response return code %s" % (returnCode))
+        self.notify.info(f"Login response return code {returnCode}")
 
         if returnCode == 0:
             self.__handleLoginSuccess()
@@ -691,9 +700,8 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         else:
             # If the return code is anything else, something went
             # wrong.  Better just go to reject mode and bail out.
-            self.notify.info("Login failed: %s" % (errorString))
+            self.notify.info(f"Login failed: {errorString}")
             messenger.send(self.doneEvent, [{'mode': 'reject'}])
-
 
     def handleLoginResponseMsg(self, di):
         #print("LoginScreen - handleLoginResponseMsg2")
@@ -705,7 +713,6 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         if self.notify.getDebug():
             dgram = di.getDatagram()
             dgram.dumpHex(ostream)
-
 
         # First, get the local time of day that we receive the message
         # from the server, so we can compare our clock to the server's
@@ -751,15 +758,16 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
             self.cr.whiteListChatEnabled = 0
 
         # an example last logged in is "2009-11-09 17:51:51"
-        self.lastLoggedInStr = base.config.GetString('last-logged-in',"")
+        self.lastLoggedInStr = base.config.GetString('last-logged-in', "")
         self.cr.lastLoggedIn = datetime.now()
         if hasattr(self.cr, 'toontownTimeManager'):
-            self.cr.lastLoggedIn = self.cr.toontownTimeManager.convertStrToToontownTime(self.lastLoggedInStr)
+            self.cr.lastLoggedIn = self.cr.toontownTimeManager.convertStrToToontownTime(
+                self.lastLoggedInStr)
         # developer login with a config override
-        self.cr.withParentAccount = base.config.GetBool('dev-with-parent-account',0)
+        self.cr.withParentAccount = base.config.GetBool(
+            'dev-with-parent-account', 0)
 
-        self.notify.info("Login response return code %s" % (returnCode))
-
+        self.notify.info(f"Login response return code {returnCode}")
 
         if returnCode == 0:
             # if the return code is good, record the account code
@@ -782,12 +790,8 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
                 [OTPLocalizer.LoginScreenUserNameNotFound])
         else:
             # if the return code is bad, go to reject mode
-            self.notify.info("Login failed: %s" % (errorString))
+            self.notify.info(f"Login failed: {errorString}")
             messenger.send(self.doneEvent, [{'mode': 'reject'}])
-
-
-
-
 
     def __handleLoginSuccess(self):
         self.cr.logAccountInfo()
@@ -820,8 +824,8 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         if accountDays >= 0:
             result = accountDays
         else:
-            self.notify.warning('account days is negative %s' % accountDays)
-        self.notify.debug('result=%s' % result)
+            self.notify.warning(f'account days is negative {accountDays}')
+        self.notify.debug(f'result={result}')
         return result
 
     def handleLoginToontownResponse(self, responseBlob):
@@ -871,17 +875,23 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
 
         # this is CREATE_FRIENDS_WITH_CHAT
         createFriendsWithChat = responseData.get('createFriendsWithChat')
-        canChat = (createFriendsWithChat == 'YES') or (createFriendsWithChat=='CODE')
+        canChat = (
+            createFriendsWithChat == 'YES') or (
+            createFriendsWithChat == 'CODE')
         self.cr.secretChatAllowed = canChat
-        self.notify.info("CREATE_FRIENDS_WITH_CHAT from game server login: %s %s" % (createFriendsWithChat, canChat))
+        self.notify.info(
+            "CREATE_FRIENDS_WITH_CHAT from game server login: %s %s" %
+            (createFriendsWithChat, canChat))
 
         # this controls if he can make a true friend code,
         # valid values are NO, PARENT and YES
         self.chatCodeCreationRule = responseData.get('chatCodeCreationRule')
         self.cr.chatChatCodeCreationRule = self.chatCodeCreationRule
-        self.notify.info("Chat code creation rule = %s" % (self.chatCodeCreationRule))
+        self.notify.info(
+            f"Chat code creation rule = {self.chatCodeCreationRule}")
         # correct the default value from quick launcher
-        self.cr.secretChatNeedsParentPassword = (self.chatCodeCreationRule == 'PARENT')
+        self.cr.secretChatNeedsParentPassword = (
+            self.chatCodeCreationRule == 'PARENT')
 
         # The current time of day at the server
         sec = time.time()
@@ -897,7 +907,6 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         self.cr.setServerDelta(serverDelta)
         self.notify.setServerDelta(serverDelta, 28800)
 
-
         # Whether the user is paid
         access = responseData.get('access')
         self.isPaid = (access == 'FULL')
@@ -906,8 +915,7 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         self.cr.setIsPaid(self.isPaid)
         if self.isPaid:
             launcher.setPaidUserLoggedIn()
-        self.notify.info("Paid from game server login: %s" % (self.isPaid))
-
+        self.notify.info(f"Paid from game server login: {self.isPaid}")
 
         WhiteListResponse = responseData.get('WhiteListResponse')
 
@@ -919,7 +927,8 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         self.lastLoggedInStr = responseData.get('lastLoggedInStr')
         self.cr.lastLoggedIn = datetime.now()
         if hasattr(self.cr, 'toontownTimeManager'):
-            self.cr.lastLoggedIn = self.cr.toontownTimeManager.convertStrToToontownTime(self.lastLoggedInStr)
+            self.cr.lastLoggedIn = self.cr.toontownTimeManager.convertStrToToontownTime(
+                self.lastLoggedInStr)
 
         accountDaysFromServer = responseData.get('accountDays')
         if accountDaysFromServer is not None:
@@ -934,13 +943,14 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
             self.cr.withParentAccount = False
         else:
             # we really need one or the other,
-            self.notify.error('unknown toon account type %s' % self.toonAccountType)
+            self.notify.error(
+                f'unknown toon account type {self.toonAccountType}')
 
-        self.notify.info("toonAccountType=%s" % self.toonAccountType)
+        self.notify.info(f"toonAccountType={self.toonAccountType}")
         self.userName = responseData.get('userName')
         self.cr.userName = self.userName
 
-        self.notify.info("Login response return code %s" % (returnCode))
+        self.notify.info(f"Login response return code {returnCode}")
 
         if returnCode == 0:
             self.__handleLoginSuccess()
@@ -960,5 +970,5 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         else:
             # If the return code is anything else, something went
             # wrong.  Better just go to reject mode and bail out.
-            self.notify.info("Login failed: %s" % (errorString))
+            self.notify.info(f"Login failed: {errorString}")
             messenger.send(self.doneEvent, [{'mode': 'reject'}])

@@ -130,7 +130,7 @@ with open(configFilePath) as f:
     data.append('\n# Virtual file system...\nmodel-path /\n')
     if args.vfs is not None:
         for filepath in args.vfs:
-            data.append('vfs-mount %s /\n' % filepath)
+            data.append(f'vfs-mount {filepath} /\n')
 
     configData.append('\n'.join(data))
 
@@ -140,7 +140,7 @@ filepath = os.path.join(args.src_dir, 'etc')
 for filename in os.listdir(filepath):
     if filename.endswith('.dc'):
         fullpath = str(Filename.fromOsSpecific(os.path.join(filepath, filename)))
-        print('Reading %s...' % fullpath)
+        print(f'Reading {fullpath}...')
         with open(fullpath, 'r') as f:
             data = f.read()
             for line in data.split('\n'):
@@ -170,6 +170,6 @@ if args.build_mfs:
         filename = phase + '.mf'
         print('Writing...', filename)
         filepath = os.path.join(dest, filename)
-        os.system('multify -c -f "%s" "%s"' % (filepath, phase))
+        os.system(f'multify -c -f "{filepath}" "{path}"')
 
 print('Done preparing the client.')

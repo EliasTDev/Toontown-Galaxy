@@ -1,12 +1,14 @@
 """TTSCToontaskMenu.py: contains the SCToontaskMenu class"""
 
 from otp.speedchat.SCMenu import SCMenu
-from .TTSCToontaskTerminal   import TTSCToontaskTerminal
+from .TTSCToontaskTerminal import TTSCToontaskTerminal
 from otp.speedchat.SCStaticTextTerminal import SCStaticTextTerminal
 from toontown.quest import Quests
 
+
 class TTSCToontaskMenu(SCMenu):
     """ TTSCToontaskMenu represents a menu of SCToontaskTerminals. """
+
     def __init__(self):
         SCMenu.__init__(self)
 
@@ -27,12 +29,13 @@ class TTSCToontaskMenu(SCMenu):
         # if local toon has not been created, don't panic
         try:
             lt = base.localAvatar
-        except:
+        except BaseException:
             return
 
         # keep a list of the phrases we've added to the menu, to
         # detect duplicates
         phrases = []
+
         def addTerminal(terminal, self=self, phrases=phrases):
             displayText = terminal.getDisplayText()
             if displayText not in phrases:
@@ -47,11 +50,11 @@ class TTSCToontaskMenu(SCMenu):
                 continue
             msgs = q.getSCStrings(toNpcId, toonProgress)
             # getSCStrings might return a list of strings, or just a string
-            if type(msgs) != type([]):
+            if not isinstance(msgs, type([])):
                 msgs = [msgs]
             for i in range(len(msgs)):
                 addTerminal(TTSCToontaskTerminal(msgs[i], taskId, toNpcId,
-                                               toonProgress, i))
+                                                 toonProgress, i))
 
         # if toon has open task slots, or no task slots,
         # append 'i need a toontask'.

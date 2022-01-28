@@ -1,6 +1,7 @@
 from direct.distributed import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedGagshopInteriorAI(DistributedObjectAI.DistributedObjectAI):
     if __debug__:
         notify = DirectNotifyGlobal.directNotify.newCategory(
@@ -11,10 +12,7 @@ class DistributedGagshopInteriorAI(DistributedObjectAI.DistributedObjectAI):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
         self.block = block
         self.zoneId = zoneId
-        
-    def getZoneIdAndBlock(self):
-        r=[self.zoneId, self.block]
-        return r
 
-    
-        
+    def getZoneIdAndBlock(self):
+        r = [self.zoneId, self.block]
+        return r

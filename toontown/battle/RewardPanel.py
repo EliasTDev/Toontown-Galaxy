@@ -19,6 +19,7 @@ from toontown.shtiker import DisguisePage
 from . import Fanfare
 from otp.otpbase import OTPGlobals
 
+
 class RewardPanel(DirectFrame):
     """
     This panel shows experience gained during a battle
@@ -27,143 +28,144 @@ class RewardPanel(DirectFrame):
     SkipBattleMovieEvent = 'skip-battle-movie-event'
 
     def __init__(self, name):
-        gscale = (TTLocalizer.RPdirectFrame[0], TTLocalizer.RPdirectFrame[1], TTLocalizer.RPdirectFrame[2] * 1.1)
+        gscale = (
+            TTLocalizer.RPdirectFrame[0],
+            TTLocalizer.RPdirectFrame[1],
+            TTLocalizer.RPdirectFrame[2] * 1.1)
 
         DirectFrame.__init__(self,
                              relief=None,
-                             geom = DGG.getDefaultDialogGeom(),
-                             geom_color = ToontownGlobals.GlobalDialogColor,
+                             geom=DGG.getDefaultDialogGeom(),
+                             geom_color=ToontownGlobals.GlobalDialogColor,
                              geom_pos=Point3(0, 0, -.05),
                              geom_scale=gscale,
-                             pos = (0, 0, 0.587),
+                             pos=(0, 0, 0.587),
                              )
         self.initialiseoptions(RewardPanel)
 
         self.avNameLabel = DirectLabel(
-            parent = self,
-            relief = None,
-            pos = (0, 0, 0.3),
-            text = name,
-            text_scale = 0.08,
-            )
+            parent=self,
+            relief=None,
+            pos=(0, 0, 0.3),
+            text=name,
+            text_scale=0.08,
+        )
 
         self.gagExpFrame = DirectFrame(
-            parent = self,
-            relief = None,
-            pos = (-0.32, 0, 0.24),
-            )
+            parent=self,
+            relief=None,
+            pos=(-0.32, 0, 0.24),
+        )
 
         self.itemFrame = DirectFrame(
-            parent = self,
-            relief = None,
-            text = TTLocalizer.RewardPanelItems,
-            text_pos = (0, 0.2),
-            text_scale = 0.08,
-            )
+            parent=self,
+            relief=None,
+            text=TTLocalizer.RewardPanelItems,
+            text_pos=(0, 0.2),
+            text_scale=0.08,
+        )
 
         self.cogPartFrame = DirectFrame(
-            parent = self,
-            relief = None,
-            text = TTLocalizer.RewardPanelCogPart,
-            text_pos = (0, 0.2),
-            text_scale = 0.08,
-            )
+            parent=self,
+            relief=None,
+            text=TTLocalizer.RewardPanelCogPart,
+            text_pos=(0, 0.2),
+            text_scale=0.08,
+        )
 
         self.missedItemFrame = DirectFrame(
-            parent = self,
-            relief = None,
-            text = TTLocalizer.RewardPanelMissedItems,
-            text_pos = (0, 0.2),
-            text_scale = 0.08,
-            )
-        
+            parent=self,
+            relief=None,
+            text=TTLocalizer.RewardPanelMissedItems,
+            text_pos=(0, 0.2),
+            text_scale=0.08,
+        )
+
         self.itemLabel = DirectLabel(
-            parent = self.itemFrame,
-            text = "",
-            text_scale = 0.06,
-            )
+            parent=self.itemFrame,
+            text="",
+            text_scale=0.06,
+        )
 
         self.cogPartLabel = DirectLabel(
-            parent = self.cogPartFrame,
-            text = "",
-            text_scale = 0.06,
-            )
+            parent=self.cogPartFrame,
+            text="",
+            text_scale=0.06,
+        )
 
         self.missedItemLabel = DirectLabel(
-            parent = self.missedItemFrame,
-            text = "",
-            text_scale = 0.06,
-            )
+            parent=self.missedItemFrame,
+            text="",
+            text_scale=0.06,
+        )
 
         self.questFrame = DirectFrame(
-            parent = self,
-            relief = None,
-            text = TTLocalizer.RewardPanelToonTasks,
-            text_pos = (0, 0.2),
-            text_scale = 0.06,
-            )
-            
-        
+            parent=self,
+            relief=None,
+            text=TTLocalizer.RewardPanelToonTasks,
+            text_pos=(0, 0.2),
+            text_scale=0.06,
+        )
 
         self.questLabelList = []
         for i in range(ToontownGlobals.MaxQuestCarryLimit):
             label = DirectLabel(
-                parent = self.questFrame,
-                relief = None,
-                pos = (-0.85, 0, (-0.1*i)),                
-                text = (TTLocalizer.RewardPanelQuestLabel % (i)),
-                text_scale = 0.05,
-                text_align = TextNode.ALeft,
-                )
+                parent=self.questFrame,
+                relief=None,
+                pos=(-0.85, 0, (-0.1 * i)),
+                text=(TTLocalizer.RewardPanelQuestLabel % (i)),
+                text_scale=0.05,
+                text_align=TextNode.ALeft,
+            )
             label.hide()
             self.questLabelList.append(label)
 
         self.newGagFrame = DirectFrame(
-            parent = self,
-            relief = None,
-            pos = (0, 0, 0.24),
-            text = "",
-            text_wordwrap = 14.4,
-            text_pos = (0, -0.46),
-            text_scale = 0.06,
-            )
-        
+            parent=self,
+            relief=None,
+            pos=(0, 0, 0.24),
+            text="",
+            text_wordwrap=14.4,
+            text_pos=(0, -0.46),
+            text_scale=0.06,
+        )
+
         self.endTrackFrame = DirectFrame(
-            parent = self,
-            relief = None,
-            pos = (0,0,0.24),
-            text = "",
-            text_wordwrap = 14.4,
-            text_pos = (0,-0.46),
-            text_scale = 0.06,
-            )
-        
+            parent=self,
+            relief=None,
+            pos=(0, 0, 0.24),
+            text="",
+            text_wordwrap=14.4,
+            text_pos=(0, -0.46),
+            text_scale=0.06,
+        )
+
         self.congratsLeft = DirectLabel(
-            parent = self.newGagFrame,
-            pos = (-0.2, 0, -0.1),            
-            text = "",
-            text_pos = (0, 0),
-            text_scale = 0.06,            
-            )
+            parent=self.newGagFrame,
+            pos=(-0.2, 0, -0.1),
+            text="",
+            text_pos=(0, 0),
+            text_scale=0.06,
+        )
         self.congratsLeft.setHpr(0, 0, -30)
         self.congratsRight = DirectLabel(
-            parent = self.newGagFrame,
-            pos = (0.2, 0, -0.1),            
-            text = "",
-            text_pos = (0, 0),
-            text_scale = 0.06,
-            )
+            parent=self.newGagFrame,
+            pos=(0.2, 0, -0.1),
+            text="",
+            text_pos=(0, 0),
+            text_scale=0.06,
+        )
         self.congratsRight.setHpr(0, 0, 30)
 
         self.promotionFrame = DirectFrame(
-            parent = self,
-            relief = None,
-            pos = (0, 0, 0.24),
-            text = "",
-            text_wordwrap = 14.4,
-            text_pos = (0, -0.46),
-            text_scale = 0.06,
-            )
+            parent=self,
+            relief=None,
+            pos=(0, 0, 0.24),
+            text="",
+            text_wordwrap=14.4,
+            text_pos=(0, -0.46),
+            text_scale=0.06,
+        )
 
         self.trackLabels = []
         self.trackIncLabels = []
@@ -173,55 +175,56 @@ class RewardPanel(DirectFrame):
         self.meritLabels = []
         self.meritIncLabels = []
         self.meritBars = []
-        
+
         # loop and make all the cog merit bars
         for i in range(len(SuitDNA.suitDepts)):
-            deptName = TextEncoder.upper(SuitDNA.suitDeptFullnames[SuitDNA.suitDepts[i]])
+            deptName = TextEncoder.upper(
+                SuitDNA.suitDeptFullnames[SuitDNA.suitDepts[i]])
 
             # dept label
             self.meritLabels.append(DirectLabel(
-                parent = self.gagExpFrame,
-                relief = None,
-                text = deptName,
-                text_scale = 0.05,
-                text_align = TextNode.ARight,
-                pos = (TTLocalizer.RPmeritLabelXPosition, 0, (-0.09*i) - 0.125),
-                text_pos = (0, -0.02),
-                ))
+                parent=self.gagExpFrame,
+                relief=None,
+                text=deptName,
+                text_scale=0.05,
+                text_align=TextNode.ARight,
+                pos=(TTLocalizer.RPmeritLabelXPosition, 0, (-0.09 * i) - 0.125),
+                text_pos=(0, -0.02),
+            ))
 
             # increment indicator labels
             self.meritIncLabels.append(DirectLabel(
-                parent = self.gagExpFrame,
-                relief = None,
-                text = "",
-                text_scale = 0.05,
-                text_align = TextNode.ALeft,
-                pos = (0.7, 0, (-0.09*i) - 0.125),
-                text_pos = (0, -0.02),
-                ))
+                parent=self.gagExpFrame,
+                relief=None,
+                text="",
+                text_scale=0.05,
+                text_align=TextNode.ALeft,
+                pos=(0.7, 0, (-0.09 * i) - 0.125),
+                text_pos=(0, -0.02),
+            ))
 
             # merit progress bar
             self.meritBars.append(DirectWaitBar(
-                parent = self.gagExpFrame,
-                relief = DGG.SUNKEN,
-                frameSize = (-1, 1, -0.15, 0.15),
-                borderWidth = (0.02, 0.02),
-                scale = 0.25,
-                frameColor = (DisguisePage.DeptColors[i][0]*0.7,
-                              DisguisePage.DeptColors[i][1]*0.7,
-                              DisguisePage.DeptColors[i][2]*0.7,
-                              1),
-                barColor = (DisguisePage.DeptColors[i][0],
-                            DisguisePage.DeptColors[i][1],
-                            DisguisePage.DeptColors[i][2],
+                parent=self.gagExpFrame,
+                relief=DGG.SUNKEN,
+                frameSize=(-1, 1, -0.15, 0.15),
+                borderWidth=(0.02, 0.02),
+                scale=0.25,
+                frameColor=(DisguisePage.DeptColors[i][0] * 0.7,
+                            DisguisePage.DeptColors[i][1] * 0.7,
+                            DisguisePage.DeptColors[i][2] * 0.7,
                             1),
-                text = "0/0 " + TTLocalizer.RewardPanelMeritBarLabels[i],
-                text_scale = TTLocalizer.RPmeritBarLabels,
-                text_fg = (0, 0, 0, 1),
-                text_align = TextNode.ALeft,
-                text_pos = (-0.96, -0.05),
-                pos = (TTLocalizer.RPmeritBarsXPosition, 0, (-0.09*i) - 0.125),
-                ))
+                barColor=(DisguisePage.DeptColors[i][0],
+                          DisguisePage.DeptColors[i][1],
+                          DisguisePage.DeptColors[i][2],
+                          1),
+                text="0/0 " + TTLocalizer.RewardPanelMeritBarLabels[i],
+                text_scale=TTLocalizer.RPmeritBarLabels,
+                text_fg=(0, 0, 0, 1),
+                text_align=TextNode.ALeft,
+                text_pos=(-0.96, -0.05),
+                pos=(TTLocalizer.RPmeritBarsXPosition, 0, (-0.09 * i) - 0.125),
+            ))
 
         # loop and make all the track exp bars
         for i in range(len(ToontownBattleGlobals.Tracks)):
@@ -229,56 +232,84 @@ class RewardPanel(DirectFrame):
 
             # Name of track label
             self.trackLabels.append(DirectLabel(
-                parent = self.gagExpFrame,
-                relief = None,
-                text = trackName,
-                text_scale = TTLocalizer.RPtrackLabels,
-                text_align = TextNode.ARight,
-                pos = (0.13, 0, -0.09*i),
-                text_pos = (0, -0.02),
-                ))
+                parent=self.gagExpFrame,
+                relief=None,
+                text=trackName,
+                text_scale=TTLocalizer.RPtrackLabels,
+                text_align=TextNode.ARight,
+                pos=(0.13, 0, -0.09 * i),
+                text_pos=(0, -0.02),
+            ))
 
             # increment indicator labels
             self.trackIncLabels.append(DirectLabel(
-                parent = self.gagExpFrame,
-                relief = None,
-                text = "",
-                text_scale = 0.05,
-                text_align = TextNode.ALeft,
-                pos = (0.65, 0, -0.09*i),
-                text_pos = (0, -0.02),
-                ))
+                parent=self.gagExpFrame,
+                relief=None,
+                text="",
+                text_scale=0.05,
+                text_align=TextNode.ALeft,
+                pos=(0.65, 0, -0.09 * i),
+                text_pos=(0, -0.02),
+            ))
 
             # track exp bar
             self.trackBars.append(DirectWaitBar(
-                parent = self.gagExpFrame,
-                relief = DGG.SUNKEN,
-                frameSize = (-1, 1, -0.15, 0.15),
-                borderWidth = (0.02, 0.02),
-                scale = 0.25,
-                frameColor = (ToontownBattleGlobals.TrackColors[i][0]*0.7,
-                              ToontownBattleGlobals.TrackColors[i][1]*0.7,
-                              ToontownBattleGlobals.TrackColors[i][2]*0.7,
-                              1),
-                barColor = (ToontownBattleGlobals.TrackColors[i][0],
-                            ToontownBattleGlobals.TrackColors[i][1],
-                            ToontownBattleGlobals.TrackColors[i][2],
+                parent=self.gagExpFrame,
+                relief=DGG.SUNKEN,
+                frameSize=(-1, 1, -0.15, 0.15),
+                borderWidth=(0.02, 0.02),
+                scale=0.25,
+                frameColor=(ToontownBattleGlobals.TrackColors[i][0] * 0.7,
+                            ToontownBattleGlobals.TrackColors[i][1] * 0.7,
+                            ToontownBattleGlobals.TrackColors[i][2] * 0.7,
                             1),
-                text = "0/0",
-                text_scale = 0.18,
-                text_fg = (0, 0, 0, 1),
-                text_align = TextNode.ACenter,
-                text_pos = (0, -0.05),
-                pos = (0.40, 0, -0.09*i),
-                ))
+                barColor=(ToontownBattleGlobals.TrackColors[i][0],
+                          ToontownBattleGlobals.TrackColors[i][1],
+                          ToontownBattleGlobals.TrackColors[i][2],
+                          1),
+                text="0/0",
+                text_scale=0.18,
+                text_fg=(0, 0, 0, 1),
+                text_align=TextNode.ACenter,
+                text_pos=(0, -0.05),
+                pos=(0.40, 0, -0.09 * i),
+            ))
         self._battleGui = loader.loadModel('phase_3.5/models/gui/battle_gui')
-        self.skipButton = DirectButton(parent=self, relief=None, image=(self._battleGui.find('**/tt_t_gui_gen_skipSectionUp'),
-         self._battleGui.find('**/tt_t_gui_gen_skipSectionDown'),
-         self._battleGui.find('**/tt_t_gui_gen_skipSectionRollOver'),
-         self._battleGui.find('**/tt_t_gui_gen_skipSectionDisabled')), pos=(0.815, 0, -0.395), scale=(0.39, 1.0, 0.39), text=('',
-         TTLocalizer.RewardPanelSkip,
-         TTLocalizer.RewardPanelSkip,
-         ''), text_scale=TTLocalizer.RPskipScale, text_fg=Vec4(1, 1, 1, 1), text_shadow=Vec4(0, 0, 0, 1), text_pos=TTLocalizer.RPskipPos, textMayChange=0, command=self._handleSkip)
+        self.skipButton = DirectButton(
+            parent=self,
+            relief=None,
+            image=(
+                self._battleGui.find('**/tt_t_gui_gen_skipSectionUp'),
+                self._battleGui.find('**/tt_t_gui_gen_skipSectionDown'),
+                self._battleGui.find('**/tt_t_gui_gen_skipSectionRollOver'),
+                self._battleGui.find('**/tt_t_gui_gen_skipSectionDisabled')),
+            pos=(
+                0.815,
+                0,
+                -0.395),
+            scale=(
+                0.39,
+                1.0,
+                0.39),
+            text=(
+                '',
+                TTLocalizer.RewardPanelSkip,
+                TTLocalizer.RewardPanelSkip,
+                ''),
+            text_scale=TTLocalizer.RPskipScale,
+            text_fg=Vec4(
+                1,
+                1,
+                1,
+                1),
+            text_shadow=Vec4(
+                0,
+                0,
+                0,
+                1),
+            text_pos=TTLocalizer.RPskipPos,
+            textMayChange=0,
+            command=self._handleSkip)
         return
 
     # Elemental operations:
@@ -304,7 +335,7 @@ class RewardPanel(DirectFrame):
     # Play reward sequences(sequences)
     #   - for i = 1 to n, play reward sequences
 
-    #def clearGags(self):
+    # def clearGags(self):
     #    for gag in self.gagList:
     #        gag.removeNode()
     #    self.gagList = []
@@ -323,7 +354,7 @@ class RewardPanel(DirectFrame):
                 retVal = amount
                 return retVal
         return retVal
-        
+
     def getNextExpValueUber(self, curSkill, trackIndex):
         """
         Return the number of total experience to get to the next
@@ -343,7 +374,7 @@ class RewardPanel(DirectFrame):
         # The last value is the default
         retVal = totalMerits
         if curMerits > totalMerits:
-                retVal = amount
+            retVal = amount
         return retVal
 
     def initItemFrame(self, toon):
@@ -381,7 +412,7 @@ class RewardPanel(DirectFrame):
         self.endTrackFrame.hide()
         self.gagExpFrame.hide()
         self.newGagFrame.hide()
-        self.promotionFrame.hide()        
+        self.promotionFrame.hide()
         self.questFrame.show()
         self.itemFrame.hide()
         self.cogPartFrame.hide()
@@ -402,8 +433,11 @@ class RewardPanel(DirectFrame):
                 questString = quest.getString()
                 progressString = quest.getProgressString(toon, questDesc)
                 rewardString = quest.getRewardString(progressString)
-                rewardString = Quests.fillInQuestNames(rewardString, toNpcId = toNpcId)
-                completed = (quest.getCompletionStatus(toon, questDesc) == Quests.COMPLETE)
+                rewardString = Quests.fillInQuestNames(
+                    rewardString, toNpcId=toNpcId)
+                completed = (
+                    quest.getCompletionStatus(
+                        toon, questDesc) == Quests.COMPLETE)
                 questLabel = self.questLabelList[i]
                 questLabel.show()
 
@@ -438,13 +472,14 @@ class RewardPanel(DirectFrame):
             self.meritIncLabels[i].hide()
             # if we are have a full suit then we are working on promotions
             if CogDisguiseGlobals.isSuitComplete(toon.cogParts, i):
-                # if we don't show the merit bar, we must shift the skill bars left
+                # if we don't show the merit bar, we must shift the skill bars
+                # left
                 if not self.trackBarsOffset:
                     trackBarOffset = 0.47
                     # only do this once! :)
                     self.trackBarsOffset = 1
                 meritBar.show()
-                meritLabel.show()                
+                meritLabel.show()
                 meritLabel.show()
                 if totalMerits:
                     meritBar["range"] = totalMerits
@@ -452,9 +487,9 @@ class RewardPanel(DirectFrame):
                     if merits == totalMerits:
                         meritBar["text"] = TTLocalizer.RewardPanelMeritAlert
                     else:
-                        meritBar["text"] = ("%s/%s %s" % (merits,
-                                                          totalMerits,
-                                                          TTLocalizer.RewardPanelMeritBarLabels[i],))                    
+                        meritBar["text"] = (
+                            "%s/%s %s" %
+                            (merits, totalMerits, TTLocalizer.RewardPanelMeritBarLabels[i],))
                 else:
                     # if total merits = None, this dept is maxed out
                     meritBar["range"] = 1
@@ -462,14 +497,14 @@ class RewardPanel(DirectFrame):
                     meritBar["text"] = TTLocalizer.RewardPanelMeritsMaxed
                 self.resetMeritBarColor(i)
             else:
-                meritBar.hide()                
+                meritBar.hide()
                 meritLabel.hide()
 
         # Initialize all the bars with the current and next exp
         for i in range(len(expList)):
             curExp = expList[i]
             trackBar = self.trackBars[i]
-            trackLabel = self.trackLabels[i]            
+            trackLabel = self.trackLabels[i]
             trackIncLabel = self.trackIncLabels[i]
             trackBar.setX(trackBar.getX() - trackBarOffset)
             trackLabel.setX(trackLabel.getX() - trackBarOffset)
@@ -477,30 +512,32 @@ class RewardPanel(DirectFrame):
             trackIncLabel.hide()
             if toon.hasTrackAccess(i):
                 trackBar.show()
-                
-                if curExp >= ToontownBattleGlobals.UnpaidMaxSkill and toon.getGameAccess() != OTPGlobals.AccessFull:
+
+                if curExp >= ToontownBattleGlobals.UnpaidMaxSkill and toon.getGameAccess(
+                ) != OTPGlobals.AccessFull:
                     nextExp = self.getNextExpValue(curExp, i)
                     trackBar["range"] = nextExp
                     trackBar["value"] = ToontownBattleGlobals.UnpaidMaxSkill
                     trackBar["text"] = (TTLocalizer.InventoryGuestExp)
-                
+
                 elif curExp >= ToontownBattleGlobals.regMaxSkill:
                     nextExp = self.getNextExpValueUber(curExp, i)
                     trackBar["range"] = nextExp
                     uberCurrExp = curExp - ToontownBattleGlobals.regMaxSkill
                     trackBar["value"] = uberCurrExp
-                    trackBar["text"] = (TTLocalizer.InventoryUberTrackExp %
-                                                  {"nextExp": ToontownBattleGlobals.MaxSkill - curExp,})
+                    trackBar["text"] = (
+                        TTLocalizer.InventoryUberTrackExp % {
+                            "nextExp": ToontownBattleGlobals.MaxSkill - curExp,
+                        })
                 else:
                     nextExp = self.getNextExpValue(curExp, i)
                     trackBar["range"] = nextExp
                     trackBar["value"] = curExp
-                    trackBar["text"] = ("%s/%s" % (curExp, nextExp))
+                    trackBar["text"] = f"{curExp}/{nextExp}"
                 self.resetBarColor(i)
             else:
                 trackBar.hide()
 
-                
         return
 
     def incrementExp(self, track, newValue, toon):
@@ -508,18 +545,21 @@ class RewardPanel(DirectFrame):
         oldValue = trackBar["value"]
         newValue = min(ToontownBattleGlobals.MaxSkill, newValue)
         nextExp = self.getNextExpValue(newValue, track)
-        
-        if newValue >= ToontownBattleGlobals.UnpaidMaxSkill and toon.getGameAccess() != OTPGlobals.AccessFull:
+
+        if newValue >= ToontownBattleGlobals.UnpaidMaxSkill and toon.getGameAccess(
+        ) != OTPGlobals.AccessFull:
             newValue = oldValue
             trackBar["text"] = (TTLocalizer.InventoryGuestExp)
-        
+
         elif newValue >= ToontownBattleGlobals.regMaxSkill:
             newValue = newValue - ToontownBattleGlobals.regMaxSkill
             nextExp = self.getNextExpValueUber(newValue, track)
-            trackBar["text"] = (TTLocalizer.InventoryUberTrackExp %
-                                            {"nextExp": ToontownBattleGlobals.UberSkill - newValue,})
+            trackBar["text"] = (
+                TTLocalizer.InventoryUberTrackExp % {
+                    "nextExp": ToontownBattleGlobals.UberSkill - newValue,
+                })
         else:
-            trackBar["text"] = ("%s/%s" % (newValue, nextExp))  
+            trackBar["text"] = f"{newValue}/{nextExp}"
         trackBar["range"] = nextExp
         trackBar["value"] = newValue
         trackBar["barColor"] = (ToontownBattleGlobals.TrackColors[track][0],
@@ -529,11 +569,11 @@ class RewardPanel(DirectFrame):
         return
 
     def resetBarColor(self, track):
-        self.trackBars[track]["barColor"] = (ToontownBattleGlobals.TrackColors[track][0]*0.8,
-                                             ToontownBattleGlobals.TrackColors[track][1]*0.8,
-                                             ToontownBattleGlobals.TrackColors[track][2]*0.8,
-                                             1)
-
+        self.trackBars[track]["barColor"] = (
+            ToontownBattleGlobals.TrackColors[track][0] * 0.8,
+            ToontownBattleGlobals.TrackColors[track][1] * 0.8,
+            ToontownBattleGlobals.TrackColors[track][2] * 0.8,
+            1)
 
     def incrementMerits(self, toon, dept, newValue, totalMerits):
         meritBar = self.meritBars[dept]
@@ -550,25 +590,24 @@ class RewardPanel(DirectFrame):
                                         DisguisePage.DeptColors[dept][2],
                                         1)
             else:
-                meritBar["text"] = ("%s/%s %s" % (newValue,
-                                                  totalMerits,
-                                                  TTLocalizer.RewardPanelMeritBarLabels[dept],))                    
+                meritBar["text"] = (
+                    "%s/%s %s" %
+                    (newValue, totalMerits, TTLocalizer.RewardPanelMeritBarLabels[dept],))
         return
 
-
     def resetMeritBarColor(self, dept):
-        self.meritBars[dept]["barColor"] = (DisguisePage.DeptColors[dept][0]*0.8,
-                                            DisguisePage.DeptColors[dept][1]*0.8,
-                                            DisguisePage.DeptColors[dept][2]*0.8,
-                                            1)
-
+        self.meritBars[dept]["barColor"] = (
+            DisguisePage.DeptColors[dept][0] * 0.8,
+            DisguisePage.DeptColors[dept][1] * 0.8,
+            DisguisePage.DeptColors[dept][2] * 0.8,
+            1)
 
     def getRandomCongratsPair(self, toon):
         congratsStrings = TTLocalizer.RewardPanelCongratsStrings
 
         numStrings = len(congratsStrings)
         assert(numStrings >= 2)
-                           
+
         indexList = list(range(numStrings))
 
         index1 = random.choice(indexList)
@@ -579,25 +618,28 @@ class RewardPanel(DirectFrame):
         string2 = congratsStrings[index2]
 
         return(string1, string2)
-        
+
     def uberGagInterval(self, toon, track, level):
         #import pdb; pdb.set_trace()
         self.endTrackFrame.hide()
         self.gagExpFrame.hide()
         self.newGagFrame.show()
-        self.promotionFrame.hide()        
+        self.promotionFrame.hide()
         self.questFrame.hide()
         self.itemFrame.hide()
         self.missedItemFrame.hide()
-        
-        self.newGagFrame['text'] = (TTLocalizer.RewardPanelUberGag %
-                                    {"gagName": ToontownBattleGlobals.Tracks[track].capitalize(),
-                                     "exp": str(ToontownBattleGlobals.UberSkill),
-                                     "avName":  toon.getName(),})
+
+        self.newGagFrame['text'] = (
+            TTLocalizer.RewardPanelUberGag % {
+                "gagName": ToontownBattleGlobals.Tracks[track].capitalize(),
+                "exp": str(
+                    ToontownBattleGlobals.UberSkill),
+                "avName": toon.getName(),
+            })
         self.congratsLeft['text'] = ("")
         self.congratsRight['text'] = ("")
 
-        #self.gagText.setText(AvPropStrings[track][level])
+        # self.gagText.setText(AvPropStrings[track][level])
 
         # copy a gag
         gagOriginal = base.localAvatar.inventory.buttonLookup(track, level)
@@ -606,7 +648,7 @@ class RewardPanel(DirectFrame):
         self.newGagIcon.setPos(0, 0, -0.25)
         # Set scale (big)
         self.newGagIcon.setScale(1.5)
-        
+
         return
 
     def newGag(self, toon, track, level):
@@ -614,18 +656,20 @@ class RewardPanel(DirectFrame):
         self.endTrackFrame.hide()
         self.gagExpFrame.hide()
         self.newGagFrame.show()
-        self.promotionFrame.hide()        
+        self.promotionFrame.hide()
         self.questFrame.hide()
         self.itemFrame.hide()
         self.missedItemFrame.hide()
-        
-        self.newGagFrame['text'] = (TTLocalizer.RewardPanelNewGag %
-                                    {"gagName": ToontownBattleGlobals.Tracks[track].capitalize(),
-                                     "avName":  toon.getName(),})
+
+        self.newGagFrame['text'] = (
+            TTLocalizer.RewardPanelNewGag % {
+                "gagName": ToontownBattleGlobals.Tracks[track].capitalize(),
+                "avName": toon.getName(),
+            })
         self.congratsLeft['text'] = ("")
         self.congratsRight['text'] = ("")
 
-        #self.gagText.setText(AvPropStrings[track][level])
+        # self.gagText.setText(AvPropStrings[track][level])
 
         # copy a gag
         gagOriginal = base.localAvatar.inventory.buttonLookup(track, level)
@@ -634,7 +678,7 @@ class RewardPanel(DirectFrame):
         self.newGagIcon.setPos(0, 0, -0.25)
         # Set scale (big)
         self.newGagIcon.setScale(1.5)
-        
+
         return
 
     def cleanupNewGag(self):
@@ -644,11 +688,11 @@ class RewardPanel(DirectFrame):
             self.newGagIcon = None
         self.gagExpFrame.show()
         self.newGagFrame.hide()
-        self.promotionFrame.hide()        
+        self.promotionFrame.hide()
         self.questFrame.hide()
         self.itemFrame.hide()
         self.missedItemFrame.hide()
-    
+
     def getNewGagIntervalList(self, toon, track, level):
         leftCongratsAnticipate = 1.0
         rightCongratsAnticipate = 1.0
@@ -663,7 +707,7 @@ class RewardPanel(DirectFrame):
                         Func(self.cleanupNewGag),
                         ]
         return intervalList
-        
+
     def getUberGagIntervalList(self, toon, track, level):
         leftCongratsAnticipate = 1.0
         rightCongratsAnticipate = 1.0
@@ -678,7 +722,7 @@ class RewardPanel(DirectFrame):
                         Func(self.cleanupNewGag),
                         ]
         return intervalList
-    
+
     # hides everything, used for the endtrack to make sure everything vanishes
     # so we can see the fanfare
     def vanishFrames(self):
@@ -686,47 +730,50 @@ class RewardPanel(DirectFrame):
         self.endTrackFrame.hide()
         self.gagExpFrame.hide()
         self.newGagFrame.hide()
-        self.promotionFrame.hide()        
+        self.promotionFrame.hide()
         self.questFrame.hide()
         self.itemFrame.hide()
         self.missedItemFrame.hide()
         self.cogPartFrame.hide()
         self.missedItemFrame.hide()
-        
+
     def endTrack(self, toon, toonList, track):
-        #import pdb; pdb.set_trace()1
+        # import pdb; pdb.set_trace()1
         # we make the RewardPanel show up again for all toons in combat
         for t in toonList:
             if t == base.localAvatar:
                 self.show()
         self.endTrackFrame.show()
-        
-        self.endTrackFrame['text'] = (TTLocalizer.RewardPanelEndTrack %
-                                      {"gagName": ToontownBattleGlobals.Tracks[track].capitalize(),
-                                       "avName": toon.getName(),})
-        gagLast = base.localAvatar.inventory.buttonLookup(track, ToontownBattleGlobals.UBER_GAG_LEVEL_INDEX)
+
+        self.endTrackFrame['text'] = (
+            TTLocalizer.RewardPanelEndTrack % {
+                "gagName": ToontownBattleGlobals.Tracks[track].capitalize(),
+                "avName": toon.getName(),
+            })
+        gagLast = base.localAvatar.inventory.buttonLookup(
+            track, ToontownBattleGlobals.UBER_GAG_LEVEL_INDEX)
         self.gagIcon = gagLast.copyTo(self.endTrackFrame)
-        self.gagIcon.setPos(0,0,-0.25)
+        self.gagIcon.setPos(0, 0, -0.25)
         self.gagIcon.setScale(1.5)
-        
+
         return
-    
+
     # clears the icon on the endTrackFrame, just in case they happen
     # to get to the end of two tracks in one battle
     def cleanIcon(self):
         self.gagIcon.removeNode()
         self.gagIcon = None
-        
+
     # causes all other parts to show up again
     def cleanupEndTrack(self):
         self.endTrackFrame.hide()
         self.gagExpFrame.show()
         self.newGagFrame.hide()
-        self.promotionFrame.hide()        
+        self.promotionFrame.hide()
         self.questFrame.hide()
         self.itemFrame.hide()
         self.missedItemFrame.hide()
-    
+
     # shows a message frame telling the toon that they've reached the end
     # of one of the gag tracks.  Shows up after the fanfare
     def getEndTrackIntervalList(self, toon, toonList, track):
@@ -736,39 +783,56 @@ class RewardPanel(DirectFrame):
                         ]
         return intervalList
 
-    def showTrackIncLabel(self, track, earnedSkill, guestWaste = 0):
+    def showTrackIncLabel(self, track, earnedSkill, guestWaste=0):
         if guestWaste:
-            self.trackIncLabels[track]["text"] = " " + str(earnedSkill) + TTLocalizer.GuestLostExp
+            self.trackIncLabels[track]["text"] = " " + \
+                str(earnedSkill) + TTLocalizer.GuestLostExp
         elif earnedSkill > 0:
             self.trackIncLabels[track]["text"] = "+ " + str(earnedSkill)
         elif earnedSkill < 0:
             self.trackIncLabels[track]["text"] = " " + str(earnedSkill)
         self.trackIncLabels[track].show()
 
-
     def showMeritIncLabel(self, dept, earnedMerits):
         self.meritIncLabels[dept]["text"] = "+ " + str(earnedMerits)
         self.meritIncLabels[dept].show()
 
-        
-    def getTrackIntervalList(self, toon, track, origSkill, earnedSkill, hasUber, guestWaste = 0):
+    def getTrackIntervalList(
+            self,
+            toon,
+            track,
+            origSkill,
+            earnedSkill,
+            hasUber,
+            guestWaste=0):
         """
         returns a list of intervals that, if played, will show experience
         gained for the given track.
         """
-        
-        #check for corruptUberList
+
+        # check for corruptUberList
         #import pdb; pdb.set_trace()
         if hasUber < 0:
-            print((toon.doId, 'Reward Panel received an invalid hasUber from an uberList'))
-        #Changed to as fast as in 2013
-        tickDelay = 1.0/60
+            print(
+                (toon.doId, 'Reward Panel received an invalid hasUber from an uberList'))
+        # Changed to as fast as in 2013
+        tickDelay = 1.0 / 60
         intervalList = []
         if (origSkill + earnedSkill) >= ToontownBattleGlobals.UnpaidMaxSkill and toon.getGameAccess() != OTPGlobals.AccessFull:
-            lostExp = (origSkill + earnedSkill) - ToontownBattleGlobals.UnpaidMaxSkill
-            intervalList.append(Func(self.showTrackIncLabel, track, lostExp, 1))
+            lostExp = (origSkill + earnedSkill) - \
+                ToontownBattleGlobals.UnpaidMaxSkill
+            intervalList.append(
+                Func(
+                    self.showTrackIncLabel,
+                    track,
+                    lostExp,
+                    1))
         else:
-            intervalList.append(Func(self.showTrackIncLabel, track, earnedSkill))
+            intervalList.append(
+                Func(
+                    self.showTrackIncLabel,
+                    track,
+                    earnedSkill))
 
         # How much time should it take to increment the bar?  It
         # should take more time for a larger boost, but not linearly
@@ -800,7 +864,8 @@ class RewardPanel(DirectFrame):
                (not finalGagFlag)):
             # Add the new gag interval... Look up the new gag level based on
             # the nextExpValue
-            if newValue >= ToontownBattleGlobals.UnpaidMaxSkill and toon.getGameAccess() != OTPGlobals.AccessFull:
+            if newValue >= ToontownBattleGlobals.UnpaidMaxSkill and toon.getGameAccess(
+            ) != OTPGlobals.AccessFull:
                 pass
             elif nextExpValue != ToontownBattleGlobals.MaxSkill:
                 intervalList += self.getNewGagIntervalList(
@@ -815,39 +880,47 @@ class RewardPanel(DirectFrame):
                 finalGagFlag = 1
             else:
                 nextExpValue = newNextExpValue
-                
-        #test for Uber gag
+
+        # test for Uber gag
         uberIndex = ToontownBattleGlobals.LAST_REGULAR_GAG_LEVEL + 1
         #hasUber = toon.inventory.numItem(track, uberIndex)
-        
+
         currentSkill = origSkill + earnedSkill
-        uberSkill = ToontownBattleGlobals.UberSkill + ToontownBattleGlobals.Levels[track][ToontownBattleGlobals.LAST_REGULAR_GAG_LEVEL + 1]
+        uberSkill = ToontownBattleGlobals.UberSkill + \
+            ToontownBattleGlobals.Levels[track][ToontownBattleGlobals.LAST_REGULAR_GAG_LEVEL + 1]
         #print("Track %s hasUber %s current %s req %s" % (track, hasUber, currentSkill, uberSkill))
         if (currentSkill >= uberSkill) and not (hasUber > 0):
             #print("adding Uber track")
             intervalList += self.getUberGagIntervalList(
-               toon, track, (ToontownBattleGlobals.LAST_REGULAR_GAG_LEVEL + 1))
+                toon, track, (ToontownBattleGlobals.LAST_REGULAR_GAG_LEVEL + 1))
             intervalList.append(Wait(0.4))
-            skillDiff = currentSkill - ToontownBattleGlobals.Levels[track][ToontownBattleGlobals.LAST_REGULAR_GAG_LEVEL + 1]
-            
+            skillDiff = currentSkill - \
+                ToontownBattleGlobals.Levels[track][ToontownBattleGlobals.LAST_REGULAR_GAG_LEVEL + 1]
+
             barTime = math.log(skillDiff + 1)
             numTicks = int(math.ceil(barTime / tickDelay))
-            
+
             displayedSkillDiff = skillDiff
             if displayedSkillDiff > ToontownBattleGlobals.UberSkill:
                 displayedSkillDiff = ToontownBattleGlobals.UberSkill
-            
-            intervalList.append(Func(self.showTrackIncLabel, track, -displayedSkillDiff))
+
+            intervalList.append(
+                Func(self.showTrackIncLabel, track, -displayedSkillDiff))
 
             for i in range(numTicks):
                 t = (i + 1) / float(numTicks)
                 newValue = int(currentSkill - t * skillDiff + 0.5)
-                intervalList.append(Func(self.incrementExp, track, newValue, toon))
+                intervalList.append(
+                    Func(
+                        self.incrementExp,
+                        track,
+                        newValue,
+                        toon))
                 intervalList.append(Wait(tickDelay * 0.5))
             intervalList.append(Wait(0.4))
-                
+
         return intervalList
-            
+
     def getMeritIntervalList(self, toon, dept, origMerits, earnedMerits):
         """
         returns a list of intervals that, if played, will show merits
@@ -857,11 +930,14 @@ class RewardPanel(DirectFrame):
         intervalList = []
         totalMerits = CogDisguiseGlobals.getTotalMerits(toon, dept)
         neededMerits = 0
-        
+
         # Only show the inc value if we are not maxed
         if totalMerits and (origMerits != totalMerits):
             neededMerits = totalMerits - origMerits
-            intervalList.append(Func(self.showMeritIncLabel, dept, min(neededMerits, earnedMerits)))
+            intervalList.append(
+                Func(
+                    self.showMeritIncLabel, dept, min(
+                        neededMerits, earnedMerits)))
 
         # How much time should it take to increment the bar?
         barTime = 0.5
@@ -870,7 +946,13 @@ class RewardPanel(DirectFrame):
         for i in range(numTicks):
             t = (i + 1) / float(numTicks)
             newValue = int(origMerits + t * earnedMerits + 0.5)
-            intervalList.append(Func(self.incrementMerits, toon, dept, newValue, totalMerits))
+            intervalList.append(
+                Func(
+                    self.incrementMerits,
+                    toon,
+                    dept,
+                    newValue,
+                    totalMerits))
             intervalList.append(Wait(tickDelay))
 
         intervalList.append(Func(self.resetMeritBarColor, dept))
@@ -879,7 +961,7 @@ class RewardPanel(DirectFrame):
         # we don't need a promotion if we've reach level 50
         if (toon.cogLevels[dept] < ToontownGlobals.MaxCogSuitLevel):
             if neededMerits and toon.readyForPromotion(dept):
-                intervalList.append(Wait(0.4))            
+                intervalList.append(Wait(0.4))
                 intervalList += self.getPromotionIntervalList(toon, dept)
 
         return intervalList
@@ -888,30 +970,36 @@ class RewardPanel(DirectFrame):
         self.endTrackFrame.hide()
         self.gagExpFrame.hide()
         self.newGagFrame.hide()
-        self.promotionFrame.show()        
+        self.promotionFrame.show()
         self.questFrame.hide()
         self.itemFrame.hide()
         self.missedItemFrame.hide()
         name = SuitDNA.suitDepts[dept]
-        self.promotionFrame['text'] = (TTLocalizer.RewardPanelPromotion % (SuitDNA.suitDeptFullnames[name]))
+        self.promotionFrame['text'] = (
+            TTLocalizer.RewardPanelPromotion %
+            (SuitDNA.suitDeptFullnames[name]))
 
         # copy a gag
         icons = loader.loadModel('phase_3/models/gui/cog_icons')
         if dept == 0:
-            self.deptIcon = icons.find('**/CorpIcon').copyTo(self.promotionFrame)
+            self.deptIcon = icons.find(
+                '**/CorpIcon').copyTo(self.promotionFrame)
         elif dept == 1:
-            self.deptIcon = icons.find('**/LegalIcon').copyTo(self.promotionFrame)
+            self.deptIcon = icons.find(
+                '**/LegalIcon').copyTo(self.promotionFrame)
         elif dept == 2:
-            self.deptIcon = icons.find('**/MoneyIcon').copyTo(self.promotionFrame)
+            self.deptIcon = icons.find(
+                '**/MoneyIcon').copyTo(self.promotionFrame)
         elif dept == 3:
-            self.deptIcon = icons.find('**/SalesIcon').copyTo(self.promotionFrame)
+            self.deptIcon = icons.find(
+                '**/SalesIcon').copyTo(self.promotionFrame)
         icons.removeNode()
         # Set position... x is x, z is y
         self.deptIcon.setPos(0, 0, -0.225)
         # Set scale (big)
         self.deptIcon.setScale(0.33)
         return
-    
+
     def cleanupPromotion(self):
         # protect against multiple cleanups
         if not hasattr(self, 'deptIcon'):
@@ -921,7 +1009,7 @@ class RewardPanel(DirectFrame):
         self.endTrackFrame.hide()
         self.gagExpFrame.show()
         self.newGagFrame.hide()
-        self.promotionFrame.hide()        
+        self.promotionFrame.hide()
         self.questFrame.hide()
         self.itemFrame.hide()
         self.missedItemFrame.hide()
@@ -933,8 +1021,15 @@ class RewardPanel(DirectFrame):
                         Func(self.cleanupPromotion),
                         ]
         return intervalList
-    
-    def getQuestIntervalList(self, toon, deathList, toonList, origQuestsList, itemList, helpfulToonsList = []):
+
+    def getQuestIntervalList(
+            self,
+            toon,
+            deathList,
+            toonList,
+            origQuestsList,
+            itemList,
+            helpfulToonsList=[]):
         # This is the battle notifying us that a toon killed some cogs
         # See if this toon has a quest on these cogs. If so, update the
         # progress.
@@ -955,9 +1050,9 @@ class RewardPanel(DirectFrame):
         cogList = []
         for i in range(0, len(deathList), 4):
             cogIndex = deathList[i]
-            cogLevel = deathList[i+1]
-            activeToonBits = deathList[i+2]
-            flags = deathList[i+3]
+            cogLevel = deathList[i + 1]
+            activeToonBits = deathList[i + 2]
+            flags = deathList[i + 3]
             activeToonIds = []
             for j in range(8):
                 if activeToonBits & (1 << j):
@@ -989,22 +1084,22 @@ class RewardPanel(DirectFrame):
                             'activeToons': activeToonIds,
                             })
 
-        # It would be nice if there were some more elegant way to get the zoneId.
+        # It would be nice if there were some more elegant way to get the
+        # zoneId.
         try:
             zoneId = base.cr.playGame.getPlace().getTaskZoneId()
-        except:
+        except BaseException:
             # Maybe the local toon is just teleporting in, and we
             # haven't got a place yet.  This is a band-aid; we should
             # revisit this later.
             zoneId = 0
 
-        
         # We could not trust the toons quests not to be updated by the AI, so now we pass in original
         # quests, just like we do original experience
         # unflatten orig quest list
         avQuests = []
         for i in range(0, len(origQuestsList), 5):
-            avQuests.append(origQuestsList[i:i+5])
+            avQuests.append(origQuestsList[i:i + 5])
 
         # Now append intervals that will show our quests
         for i in range(len(avQuests)):
@@ -1016,7 +1111,7 @@ class RewardPanel(DirectFrame):
                 progressString = quest.getProgressString(toon, questDesc)
                 questLabel = self.questLabelList[i]
                 earned = 0
-                orig = questDesc[4] & (pow(2,16) - 1)
+                orig = questDesc[4] & (pow(2, 16) - 1)
                 num = 0
 
                 # Did we recovered items?
@@ -1038,23 +1133,28 @@ class RewardPanel(DirectFrame):
                             num = quest.doesCogCount(avId, cogDict,
                                                      zoneId, toonShortList)
                         if num:
-                            if base.config.GetBool('battle-passing-no-credit', True):
+                            if base.config.GetBool(
+                                    'battle-passing-no-credit', True):
                                 if avId in helpfulToonsList:
                                     earned += num
                                 else:
-                                    self.notify.debug('avId=%d not getting %d kill cog quest credit' % (avId,num))
+                                    self.notify.debug(
+                                        'avId=%d not getting %d kill cog quest credit' %
+                                        (avId, num))
                             else:
                                 earned += num
-                                
+
                 # import pdb; pdb.set_trace()
-                
+
                 # if we are not in the tutorial
                 if base.localAvatar.tutorialAck:
                     # make sure we still need some items before playing movie
                     if earned > 0:
-                        earned = min(earned, quest.getNumQuestItems() - questDesc[4])
+                        earned = min(
+                            earned, quest.getNumQuestItems() - questDesc[4])
 
-                if earned > 0 or (base.localAvatar.tutorialAck==0 and num==1):
+                if earned > 0 or (
+                        base.localAvatar.tutorialAck == 0 and num == 1):
                     # See getTrackIntervalList() for timing comments.
                     barTime = 0.5
                     numTicks = int(math.ceil(barTime / tickDelay))
@@ -1065,15 +1165,18 @@ class RewardPanel(DirectFrame):
 
                         # Add num to progress
                         questDesc[4] = newValue
-                        progressString = quest.getProgressString(toon, questDesc)
-                        str = ("%s : %s" % (questString, progressString))
-                        if (quest.getCompletionStatus(toon, questDesc) == Quests.COMPLETE):
-                            intervalList.append(Func(questLabel.setProp, 'text_fg', (0, 0.3, 0, 1)))
-                        intervalList.append(Func(questLabel.setProp, 'text', str))
-                        intervalList.append(Wait(tickDelay))                    
-                
-        return intervalList
+                        progressString = quest.getProgressString(
+                            toon, questDesc)
+                        str = f"{questString} : {progressString}"
+                        if (quest.getCompletionStatus(toon,
+                                                      questDesc) == Quests.COMPLETE):
+                            intervalList.append(
+                                Func(questLabel.setProp, 'text_fg', (0, 0.3, 0, 1)))
+                        intervalList.append(
+                            Func(questLabel.setProp, 'text', str))
+                        intervalList.append(Wait(tickDelay))
 
+        return intervalList
 
     def getItemIntervalList(self, toon, itemList):
         intervalList = []
@@ -1084,7 +1187,7 @@ class RewardPanel(DirectFrame):
         return intervalList
 
     def getCogPartIntervalList(self, toon, cogPartList):
-        itemName = CogDisguiseGlobals.getPartName(cogPartList) 
+        itemName = CogDisguiseGlobals.getPartName(cogPartList)
         intervalList = []
         intervalList.append(Func(self.cogPartLabel.setProp, 'text', itemName))
         intervalList.append(Wait(1))
@@ -1094,14 +1197,30 @@ class RewardPanel(DirectFrame):
         intervalList = []
         for itemId in missedItemList:
             itemName = Quests.getItemName(itemId)
-            intervalList.append(Func(self.missedItemLabel.setProp, 'text', itemName))
+            intervalList.append(
+                Func(
+                    self.missedItemLabel.setProp,
+                    'text',
+                    itemName))
             intervalList.append(Wait(1))
         return intervalList
 
-
-    def getExpTrack(self, toon, origExp, earnedExp, deathList, origQuestsList, itemList,
-                    missedItemList, origMeritList, meritList, partList,
-                    toonList, uberEntry, helpfulToonsList, noSkip=False):
+    def getExpTrack(
+            self,
+            toon,
+            origExp,
+            earnedExp,
+            deathList,
+            origQuestsList,
+            itemList,
+            missedItemList,
+            origMeritList,
+            meritList,
+            partList,
+            toonList,
+            uberEntry,
+            helpfulToonsList,
+            noSkip=False):
         """
         Assumes for input:
         origExp: a list of 7 values, corresponding to current experience
@@ -1112,7 +1231,7 @@ class RewardPanel(DirectFrame):
         list will be flattened triplets of (suitIndex, level, involvedToonBits)
         suitIndex is the index of the suit in SuitDNA.suitHeadTypes.
         For example, Flunky is suitIndex 0, Yes Man is suitIndex 2.
-        
+
         toonList is a list of toons that positionally corresponds to the
         bitmasks embedded in the deathlist; toons that are no longer
         present are represented as 'None'. Note that this might be
@@ -1120,28 +1239,39 @@ class RewardPanel(DirectFrame):
         have just recently dropped.
         """
 
-        track = Sequence(Func(self.initGagFrame, toon, origExp, origMeritList, noSkip=noSkip),
-                         Wait(1.0))
-                         
-        endTracks = [0,0,0,0,0,0,0]
+        track = Sequence(
+            Func(
+                self.initGagFrame,
+                toon,
+                origExp,
+                origMeritList,
+                noSkip=noSkip),
+            Wait(1.0))
+
+        endTracks = [0, 0, 0, 0, 0, 0, 0]
         trackEnded = 0
-        
+
         #uberField = ToontownBattleGlobals.decodeUber(uberEntry)
-                
+
         for trackIndex in range(len(earnedExp)):
             # Create a track for each gag track in which we gained experience
             if earnedExp[trackIndex] > 0 or origExp[trackIndex] >= ToontownBattleGlobals.MaxSkill:
-                track += self.getTrackIntervalList(toon, trackIndex,
-                                                            origExp[trackIndex],
-                                                            earnedExp[trackIndex],
-                                                            ToontownBattleGlobals.getUberFlagSafe(uberEntry, trackIndex))
+                track += self.getTrackIntervalList(
+                    toon,
+                    trackIndex,
+                    origExp[trackIndex],
+                    earnedExp[trackIndex],
+                    ToontownBattleGlobals.getUberFlagSafe(
+                        uberEntry,
+                        trackIndex))
                 # if we weren't at the end of the track yet, but we will be there
                 # after experience is divvied up, make a note of it
                 maxExp = ToontownBattleGlobals.MaxSkill - ToontownBattleGlobals.UberSkill
-                if (origExp[trackIndex] < maxExp) and (earnedExp[trackIndex] + origExp[trackIndex] >= maxExp):
+                if (origExp[trackIndex] < maxExp) and (
+                        earnedExp[trackIndex] + origExp[trackIndex] >= maxExp):
                     endTracks[trackIndex] = 1
                     trackEnded = 1
-                
+
         for dept in range(len(SuitDNA.suitDepts)):
             # Create a track for each cog dept in which we gained merits
             if meritList[dept]:
@@ -1159,7 +1289,8 @@ class RewardPanel(DirectFrame):
             track += itemInterval
             track.append(Wait(1.0))
 
-        missedItemInterval = self.getMissedItemIntervalList(toon, missedItemList) 
+        missedItemInterval = self.getMissedItemIntervalList(
+            toon, missedItemList)
         if missedItemInterval:
             track.append(Func(self.initMissedItemFrame, toon))
             track.append(Wait(1.0))
@@ -1167,8 +1298,8 @@ class RewardPanel(DirectFrame):
             track.append(Wait(1.0))
 
         # debug
-        self.notify.debug("partList = %s" % partList)
-        
+        self.notify.debug(f"partList = {partList}")
+
         newPart = 0
         for part in partList:
             if part != 0:
@@ -1183,51 +1314,62 @@ class RewardPanel(DirectFrame):
                 track.append(Wait(1.0))
 
         # Add on any quest progress intervals
-        questList = self.getQuestIntervalList(toon, deathList, toonList, origQuestsList, itemList, helpfulToonsList)
+        questList = self.getQuestIntervalList(
+            toon,
+            deathList,
+            toonList,
+            origQuestsList,
+            itemList,
+            helpfulToonsList)
         if questList:
             # We have to make a copy of the toon's quest data now,
             # when we build up the tracks, rather than later, while
             # we're playing them back.  This is because the AI will
             # send our quest progress update any moment.
-            track.append(Func(self.initQuestFrame, toon, copy.deepcopy(toon.quests)))
+            track.append(
+                Func(
+                    self.initQuestFrame,
+                    toon,
+                    copy.deepcopy(
+                        toon.quests)))
             track.append(Wait(1.0))
             track += questList
             track.append(Wait(2.0))
-        
+
         # if the player has reached the end of a track, queue up the frames vanishing
         # and a fanfare occurring
         if trackEnded:
             track.append(Func(self.vanishFrames))
-            track.append(Fanfare.makeFanfare(0,toon)[0])
-            
-            # for each track we've reached the end up, create an end track interval
+            track.append(Fanfare.makeFanfare(0, toon)[0])
+
+            # for each track we've reached the end up, create an end track
+            # interval
             for i in range(len(endTracks)):
                 if endTracks[i] == 1:
-                        track += self.getEndTrackIntervalList(toon,toonList,i)
-                        
+                    track += self.getEndTrackIntervalList(toon, toonList, i)
+
             # at the end, cleanup and cause all the endtrack frames to vanish
             track.append(Func(self.cleanupEndTrack))
-            
-        return track
 
+        return track
 
     def testMovie(self, otherToons=[]):
         track = Sequence()
         # Add a show at the beginning
         track.append(Func(self.show))
         expTrack = self.getExpTrack(
-            base.localAvatar, # toon
-            [1999, 0, 20, 30, 10, 0, 60], # origExp
-            [2, 0, 2, 6, 1, 0, 8], # earnedExp
-            [3, 1, 3, 0, 2, 2, 1, 1, 30, 2, 1, 0], # deathList
-            [], # origQuestsList
-            [], # itemList
-            [], # missedItemList
-            [0, 0, 0, 0], # origMeritList            
-            [0, 0, 0, 0], # meritList
-            [], # cogPartList
-            [base.localAvatar] + otherToons, # toonList
-            )
+            base.localAvatar,  # toon
+            [1999, 0, 20, 30, 10, 0, 60],  # origExp
+            [2, 0, 2, 6, 1, 0, 8],  # earnedExp
+            [3, 1, 3, 0, 2, 2, 1, 1, 30, 2, 1, 0],  # deathList
+            [],  # origQuestsList
+            [],  # itemList
+            [],  # missedItemList
+            [0, 0, 0, 0],  # origMeritList
+            [0, 0, 0, 0],  # meritList
+            [],  # cogPartList
+            [base.localAvatar] + otherToons,  # toonList
+        )
         track.append(expTrack)
         if len(track) > 0:
             # Put a hide at the end
@@ -1240,7 +1382,7 @@ class RewardPanel(DirectFrame):
             track.start()
             # Make localToon dance
             base.localAvatar.loop('victory')
-            #base.localAvatar.avCam.stopUpdate()
+            # base.localAvatar.avCam.stopUpdate()
             base.localAvatar.stopUpdateSmartCamera()
             camera.setPosHpr(0, 8, base.localAvatar.getHeight() * 0.66,
                              179, 15, 0)

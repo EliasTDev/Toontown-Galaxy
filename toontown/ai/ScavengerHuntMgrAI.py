@@ -15,21 +15,22 @@ import pickle
 # This dictionary defines the relationship between the scavenger hunt goal id and the zone where the goal is located.
 # goalId: zoneId
 GOALS = {
-    # 0 : 2649,   # TTC    
+    # 0 : 2649,   # TTC
     # 1 : 1834,   # DD
     # 2 : 4835,   # MM
     # 3 : 5620,   # DG
     # 4 : 3707,   # BR
     # 5 : 9619,   # DL
-    0 : 1000,
-    1 : 2000,
-    }
+    0: 1000,
+    1: 2000,
+}
 
 # This dictionary defines the milestones for this scavenger hunt
 MILESTONES = {
-    #0: (GOALS.keys(), 'All Trick-or-Treat goals found'),
+    # 0: (GOALS.keys(), 'All Trick-or-Treat goals found'),
     0: ((0, 1), 'All Scavenger hunt goals found'),
-    }
+}
+
 
 class ScavengerHuntMgrAI(HolidayBaseAI.HolidayBaseAI):
     """
@@ -50,15 +51,15 @@ class ScavengerHuntMgrAI(HolidayBaseAI.HolidayBaseAI):
         self.storeClient = DataStoreAIClient(air,
                                              DataStoreGlobals.SH,
                                              self.receiveScavengerHuntResults)
-    
+
     @property
     def goals(self):
         return GOALS
-    
+
     @property
     def milestones(self):
         return MILESTONES
-        
+
     def start(self):
         # Create a unique id for this hunt based on it's start date and time
         localTime = time.localtime()
@@ -68,7 +69,8 @@ class ScavengerHuntMgrAI(HolidayBaseAI.HolidayBaseAI):
                 localTime[6],
                 )
         from toontown.ai import HolidayManagerAI
-        startTime = HolidayManagerAI.HolidayManagerAI.holidays[self.holidayId].getStartTime(date)
+        startTime = HolidayManagerAI.HolidayManagerAI.holidays[self.holidayId].getStartTime(
+            date)
         scavengerHuntId = abs(hash(time.ctime(startTime)))
 
         # Create the hunt
@@ -77,29 +79,26 @@ class ScavengerHuntMgrAI(HolidayBaseAI.HolidayBaseAI):
         # Send a list with one item in it: [0, (0, 1, 2, 3, 4, 5)]
         # This milestone defines the end of the hunt.
 
-        self.hunt.defineMilestones((x[0],x[1][0]) for x in list(self.milestones.items()))
-        
+        self.hunt.defineMilestones((x[0], x[1][0])
+                                   for x in list(self.milestones.items()))
+
         self.createListeners()
-            
+
         # let the holiday system know we started
         bboard.post(ScavengerHuntMgrAI.PostName)
 
         # make sure the uberdog data store is up for this hunt
         self.storeClient.openStore()
-        
+
     def createListeners(self):
         """
         Create the listeners that will look for an event in the relavent zone
         """
         for id in list(self.goals.keys()):
-            mgrAI = DistributedScavengerHuntTargetAI.DistributedScavengerHuntTargetAI(self.air,
-                                                                                self.hunt,
-                                                                                id,
-                                                                                self,
-                                                                                )
+            mgrAI = DistributedScavengerHuntTargetAI.DistributedScavengerHuntTargetAI(
+                self.air, self.hunt, id, self, )
             self.targets[id] = mgrAI
             self.targets[id].generateWithRequired(self.goals[id])
-                                                                             
 
     def stop(self):
         # let the holiday system know we stopped
@@ -107,7 +106,7 @@ class ScavengerHuntMgrAI(HolidayBaseAI.HolidayBaseAI):
         # remove the targetAI's and their distributed counterparts
         for zone in list(self.goals.keys()):
             self.targets[zone].requestDelete()
-        
+
         self.storeClient.closeStore()
 
     def avatarAttemptingGoal(self, avId, goal):
@@ -127,7 +126,7 @@ class ScavengerHuntMgrAI(HolidayBaseAI.HolidayBaseAI):
     def sendScavengerHuntQuery(self, qTypeString, qData):
         # send a finalized query to the Uberdog.
         self.storeClient.sendQuery(qTypeString, qData)
-        
+
     def receiveScavengerHuntResults(self, results):
         # This function handles the result message from
         # the Uberdog.  See the ScavengerHuntDataStore
@@ -135,13 +134,13 @@ class ScavengerHuntMgrAI(HolidayBaseAI.HolidayBaseAI):
 
         # Indicates that the qId was invalid for this store.
         # Should never really happen
-        if results == None:
+        if results is None:
             return
         else:
             # extract the queryId, and translate it to it's string
-            qId, data = results            
+            qId, data = results
             qType = self.storeClient.getQueryTypeString(qId)
-            
+
             # We're receiving an avatar's new goal and list of completed goals
             if qType == 'GetGoals':
                 avId, goal, done_goals = data
@@ -157,60 +156,69 @@ class ScavengerHuntMgrAI(HolidayBaseAI.HolidayBaseAI):
         # if the scavenger hunt is complete and respond accordingly.
         if goal in done_goals:
             ScavengerHuntMgrAI.notify.debug(
-                repr(avId)+' already found Scavenger hunt target '+repr(goal)+': '+repr(self.goals.get(goal, 'INVALID GOAL ID IN '+self.PostName)))
+                repr(avId) + ' already found Scavenger hunt target ' + repr(goal) + ': ' + repr(
+                    self.goals.get(
+                        goal, 'INVALID GOAL ID IN ' + self.PostName)))
             av = self.air.doId2do.get(avId)
-            
-            milestoneIds = self.hunt.getRecentMilestonesHit(done_goals+[goal], goal)
+
+            milestoneIds = self.hunt.getRecentMilestonesHit(
+                done_goals + [goal], goal)
 
             if milestoneIds:
                 for id in milestoneIds:
                     ScavengerHuntMgrAI.notify.debug(
-                        repr(avId)+' hit milestone ' + repr(id) + ': ' + self.milestones.get(milestoneIds[id], [None, 'Undefined milestone id in '+self.PostName])[1])
-                        
-                    if (id == 0): # handle found all targets
+                        repr(avId) + ' hit milestone ' + repr(id) + ': ' + self.milestones.get(
+                            milestoneIds[id], [
+                                None, 'Undefined milestone id in ' + self.PostName])[1])
+
+                    if (id == 0):  # handle found all targets
                         self.huntCompletedReward(avId, goal)
                     else:
                         self.huntGoalFound(avId, goal)
-            else:            
+            else:
                 self.huntGoalAlreadyFound(avId)
         elif 0 <= goal <= len(list(self.goals.keys())):
             ScavengerHuntMgrAI.notify.debug(
-                repr(avId)+' found Scavenger hunt target '+repr(goal))
+                repr(avId) + ' found Scavenger hunt target ' + repr(goal))
             av = self.air.doId2do.get(avId)
-            
+
             if not av:
                 ScavengerHuntMgrAI.notify.warning(
-                    'Tried to send goal feedback to av %s, but they left' % avId)
+                    f'Tried to send goal feedback to av {avId}, but they left')
             else:
-                milestoneIds = self.hunt.getRecentMilestonesHit(done_goals+[goal], goal)
+                milestoneIds = self.hunt.getRecentMilestonesHit(
+                    done_goals + [goal], goal)
 
                 if milestoneIds:
                     for id in milestoneIds:
                         ScavengerHuntMgrAI.notify.debug(
-                            repr(avId)+' hit milestone ' + repr(id) + ': ' + self.milestones.get(milestoneIds[id], [None, 'Undefined milestone id in '+self.PostName])[1])
+                            repr(avId) + ' hit milestone ' + repr(id) + ': ' + self.milestones.get(
+                                milestoneIds[id], [
+                                    None, 'Undefined milestone id in ' + self.PostName])[1])
 
-                        if (id == 0): # handle found all targets
+                        if (id == 0):  # handle found all targets
                             # Wait for the goal found reward to complete
-                            taskMgr.doMethodLater(10, self.huntCompletedReward, repr(avId)+'-huntCompletedReward', extraArgs = [avId, goal, True])
+                            taskMgr.doMethodLater(10, self.huntCompletedReward, repr(
+                                avId) + '-huntCompletedReward', extraArgs=[avId, goal, True])
                             self.huntGoalFound(avId, goal)
                 else:
                     self.huntGoalFound(avId, goal)
 
-    def huntCompletedReward(self, avId, goal, firstTime = False):
+    def huntCompletedReward(self, avId, goal, firstTime=False):
         """
         Reward the Toon
         """
         pass
-            
+
     def huntGoalAlreadyFound(self, avId):
         """
         This goal has already been found
         """
-        pass 
-            
+        pass
+
     def huntGoalFound(self, avId, goal):
         """
         One of the goals in the milestone were found,
         so we reward the toon.
         """
-        pass 
+        pass

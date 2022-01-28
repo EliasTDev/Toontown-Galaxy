@@ -54,13 +54,13 @@ stylesheet = '''
   margin-bottom: 0px;
   padding-bottom: 10px;
   }
-  
+
   a
   {
   text-decoration: none;
   color: #333;
   }
-  
+
   a:hover
   {
   text-decoration: underline;
@@ -157,7 +157,7 @@ stylesheet = '''
   background:#E7E7E7;
   color:#333;
   }
-  
+
   caption
   {
   border: #666666;
@@ -169,13 +169,13 @@ stylesheet = '''
   font: 15px 'Verdana', Arial, Helvetica, sans-serif;
   font-weight: bold;
   }
-  
+
   td, th
   {
   font:13px 'Courier New',monospace;
   padding: 4px;
   }
-  
+
   thead th
   {
   text-align: center;
@@ -184,7 +184,7 @@ stylesheet = '''
   border: 1px solid #ffffff;
   text-transform: uppercase;
   }
-  
+
   tbody th
   {
   font-weight: bold;
@@ -195,18 +195,18 @@ stylesheet = '''
   background: #efeffc;
   text-align: left;
   }
-  
+
   tbody tr.odd
   {
   background: #ffffff;
   border-top: 1px solid #ffffff;
   }
-  
+
   tbody th a:hover
   {
   color: #009900;
   }
-  
+
   tbody tr td
   {
   text-align: left
@@ -215,37 +215,37 @@ stylesheet = '''
   border: 1px solid #ffffff;
   color: #333;
   }
-  
+
   tbody tr.odd td
   {
   background: #efeffc;
   border-top: 1px solid #ffffff;
   }
-  
+
   tbody tr[altColoring="1"] td
   {
   background: LightCyan;
   border-top: 1px solid #ffffff;
   }
-  
+
   tbody tr[altColoring="1"].odd td
   {
   background: PaleTurquoise;
   border-top: 1px solid #ffffff;
   }
-  
+
   tbody tr[altColoring="2"] td
   {
   background: LightSalmon;
   border-top: 1px solid #ffffff;
   }
-  
+
   tbody tr[altColoring="2"].odd td
   {
   background: SandyBrown;
   border-top: 1px solid #ffffff;
   }
-  
+
   tbody tr.dead td
   {
   background:#ff0000;
@@ -261,15 +261,15 @@ stylesheet = '''
   text-decoration: none;
   color: #333;
   }
-  
+
   html>body #navcontainer li a { width: auto; }
-  
+
   table td a:hover
   {
   color: #000000;
   background: #aae;
   }
-  
+
   tfoot th, tfoot td
   {
   background: #dfdfdf;
@@ -314,7 +314,10 @@ header = '''
 
 '''
 
-# caller must remove '</div>' from end of output string derived from what is returned
+# caller must remove '</div>' from end of output string derived from what
+# is returned
+
+
 def addBodyHeaderAndContent(bodyTag, titleString, menuTags):
     SE = ET.SubElement
     bodyTag.append(ET.Comment('HEADER'))
@@ -330,6 +333,7 @@ def addBodyHeaderAndContent(bodyTag, titleString, menuTags):
     center = SE(contents, 'center')
     # for ease of removal of center tag closer
     center.append(ET.Comment(''))
+
 
 mainPageBody = '''
 <P>%(description)s</P>
@@ -357,8 +361,9 @@ def getRowClassString(rowNum):
     else:
         return " class=\"odd\""
 
-def getURITable(title,uriList,uriToHandler):
-    output = "\n<P>\n<table>\n<caption>%s</caption><thead><tr><th scope=col>URI</th><th scope=col>Handler</th></tr></thead>\n" % title
+
+def getURITable(title, uriList, uriToHandler):
+    output = f"\n<P>\n<table>\n<caption>{title}</caption><thead><tr><th scope=col>URI</th><th scope=col>Handler</th></tr></thead>\n"
     output += "<tbody>\n"
 
     rowNum = 0
@@ -371,20 +376,21 @@ def getURITable(title,uriList,uriToHandler):
                    uri,
                    handlerFunc)
         rowNum += 1
-            
+
     output += "</tbody>\n</table>\n</P>\n"
 
     return output
 
-def getTabs(menu,activeTab):
+
+def getTabs(menu, activeTab):
     tabList = list(menu.keys())
     if "Main" in tabList:
         tabList.remove("Main")
     if "Services" in tabList:
         tabList.remove("Services")
-        
+
     tabList.sort()
-    
+
     if "Main" in list(menu.keys()):
         tabList.insert(0, "Main")
     if "Services" in list(menu.keys()):
@@ -399,28 +405,27 @@ def getTabs(menu,activeTab):
                 s += "<li id=\"active\" class=\"first\"><a href=\"%s\" id=\"current\">%s</a></li>\n" % \
                      (menu[tab], tab)
             else:
-                s += "<li class=\"first\"><a href=\"%s\">%s</a></li>\n" % \
-                     (menu[tab], tab)
+                s += f"<li class=\"first\"><a href=\"{menu[tab]}\">{tab}</a></li>\n"
         else:
             if tab == activeTab:
                 s += "<li id=\"active\"><a href=\"%s\" id=\"current\">%s</a></li>\n" % \
                      (menu[tab], tab)
             else:
-                s += "<li><a href=\"%s\">%s</a></li>\n" % \
-                     (menu[tab], tab)
+                s += f"<li><a href=\"{menu[tab]}\">{tab}</a></li>\n"
         tabNum += 1
 
-    return s    
+    return s
 
-def getTabTags(menu,activeTab):
+
+def getTabTags(menu, activeTab):
     tabList = list(menu.keys())
     if "Main" in tabList:
         tabList.remove("Main")
     if "Services" in tabList:
         tabList.remove("Services")
-        
+
     tabList.sort()
-    
+
     if "Main" in list(menu.keys()):
         tabList.insert(0, "Main")
     if "Services" in list(menu.keys()):
@@ -459,6 +464,7 @@ def getTabTags(menu,activeTab):
 
     return tags
 
+
 def getQuickStatsTable(quickStats):
     output = "\n<table>\n<caption>Quick Stats</caption>\n<thead><tr><th scope=col>Item</th><th scope=col>Value</th></tr></thead>\n"
     output += "<tbody>\n"
@@ -470,7 +476,7 @@ def getQuickStatsTable(quickStats):
                    item,
                    quickStats[1][item])
         rowNum += 1
-            
+
     output += "</tbody>\n</table>\n"
 
-    return output        
+    return output

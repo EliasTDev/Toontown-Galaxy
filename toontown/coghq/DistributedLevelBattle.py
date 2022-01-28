@@ -12,6 +12,8 @@ from direct.fsm import State
 from direct.fsm import ClassicFSM
 from toontown.toonbase import ToontownGlobals
 from panda3d.otp import *
+
+
 class DistributedLevelBattle(DistributedBattle.DistributedBattle):
     notify = DirectNotifyGlobal.directNotify.newCategory(
         'DistributedLevelBattle')
@@ -20,7 +22,7 @@ class DistributedLevelBattle(DistributedBattle.DistributedBattle):
         """
         cr is a ClientRepository.
         """
-        DistributedBattle.DistributedBattle.__init__(self,cr)
+        DistributedBattle.DistributedBattle.__init__(self, cr)
         self.levelRequest = None
         self.levelBattle = 1
 
@@ -39,29 +41,29 @@ class DistributedLevelBattle(DistributedBattle.DistributedBattle):
         # can set up our position and orientation immediately.  It is
         # important that we set up the battle position before we get
         # the call to setMembers, which will be coming momentarily.
-        
+
         def doPlacement(levelList, self=self):
             self.levelRequest = None
             self.level = levelList[0]
             spec = self.level.getBattleCellSpec(self.battleCellId)
             self.level.requestReparent(self, spec['parentEntId'])
             self.setPos(spec['pos'])
-            print("spec = %s" % (spec))
-            print("h = %s" % (spec.get('h')))
+            print(f"spec = {spec}")
+            print(f"h = {spec.get('h')}")
             # Battles really want to be parented to render.
             self.wrtReparentTo(render)
 
         level = base.cr.doId2do.get(self.levelDoId)
         if level is None:
-            self.notify.warning('level %s not in doId2do yet, battle %s will be mispositioned.' %
-                                self.levelDoId, self.doId)
+            self.notify.warning(
+                'level %s not in doId2do yet, battle %s will be mispositioned.' %
+                self.levelDoId, self.doId)
             self.levelRequest = self.cr.relatedObjectMgr.requestObjects(
                 [self.levelDoId], doPlacement)
 
         else:
             # We already have the level, great.
             doPlacement([level])
-
 
     def setPosition(self, *args):
         # The level battle doesn't try to position itself according
@@ -101,8 +103,7 @@ class DistributedLevelBattle(DistributedBattle.DistributedBattle):
         if level:
             level.lockVisibility(zoneId=self.zoneId)
         else:
-            self.notify.warning("lockLevelViz: couldn't find level %s" %
-                                self.levelDoId)
+            self.notify.warning(f"lockLevelViz: couldn't find level {self.levelDoId}")
 
     def unlockLevelViz(self):
         level = base.cr.doId2do.get(self.levelDoId)
@@ -148,7 +149,8 @@ class DistributedLevelBattle(DistributedBattle.DistributedBattle):
                         leaderIndex = self.suits.index(suit)
                         break
             else:
-                # otherwise __genSuitInfos ensures nothing, so pick the suit with the highest type to be the leader
+                # otherwise __genSuitInfos ensures nothing, so pick the suit
+                # with the highest type to be the leader
                 maxTypeNum = -1
                 for suit in self.suits:
                     suitTypeNum = SuitDNA.getSuitType(suit.dna.name)
@@ -192,13 +194,15 @@ class DistributedLevelBattle(DistributedBattle.DistributedBattle):
             oneSuitTrack.append(Wait(delay))
             if (suitIsLeader == 1):
                 oneSuitTrack.append(Func(suit.clearChat))
-            oneSuitTrack.append(self.createAdjustInterval(suit, destPos, destHpr))
+            oneSuitTrack.append(
+                self.createAdjustInterval(
+                    suit, destPos, destHpr))
             suitTrack.append(oneSuitTrack)
 
         suitHeight = suitLeader.getHeight()
         suitOffsetPnt = Point3(0, 0, suitHeight)
 
-        # Do the toons faceoff 
+        # Do the toons faceoff
         toonTrack = Parallel()
         for toon in self.toons:
             oneToonTrack = Sequence()
@@ -209,23 +213,31 @@ class DistributedLevelBattle(DistributedBattle.DistributedBattle):
             toonTrack.append(oneToonTrack)
 
         if (self.hasLocalToon()):
-            # empirical hack to pick a mid-height view, left in to sortof match the old view
-            MidTauntCamHeight = suitHeight*0.66
-            MidTauntCamHeightLim = suitHeight-1.8
+            # empirical hack to pick a mid-height view, left in to sortof match
+            # the old view
+            MidTauntCamHeight = suitHeight * 0.66
+            MidTauntCamHeightLim = suitHeight - 1.8
             if(MidTauntCamHeight < MidTauntCamHeightLim):
-               MidTauntCamHeight = MidTauntCamHeightLim
+                MidTauntCamHeight = MidTauntCamHeightLim
             TauntCamY = 18
             TauntCamX = 0
-            TauntCamHeight = random.choice((MidTauntCamHeight,1,11))
+            TauntCamHeight = random.choice((MidTauntCamHeight, 1, 11))
 
             # Put the camera somewhere
             camTrack = Sequence()
             camTrack.append(Func(camera.reparentTo, suitLeader))
-            camTrack.append(Func(base.camLens.setMinFov, self.camFOFov/(4./3.)))
-            camTrack.append(Func(camera.setPos, TauntCamX, TauntCamY, TauntCamHeight))
+            camTrack.append(Func(base.camLens.setMinFov,
+                            self.camFOFov / (4. / 3.)))
+            camTrack.append(
+                Func(
+                    camera.setPos,
+                    TauntCamX,
+                    TauntCamY,
+                    TauntCamHeight))
             camTrack.append(Func(camera.lookAt, suitLeader, suitOffsetPnt))
             camTrack.append(Wait(delay))
-            camTrack.append(Func(base.camLens.setMinFov, self.camFOFov/(4./3.)))
+            camTrack.append(Func(base.camLens.setMinFov,
+                            self.camFOFov / (4. / 3.)))
             camTrack.append(Func(camera.wrtReparentTo, self))
             camTrack.append(Func(camera.setPos, self.camFOPos))
             camTrack.append(Func(camera.lookAt, suit))
@@ -238,15 +250,16 @@ class DistributedLevelBattle(DistributedBattle.DistributedBattle):
             mtrack = Parallel(mtrack, camTrack)
 
         done = Func(callback)
-        track = Sequence(mtrack, done, name = name)
+        track = Sequence(mtrack, done, name=name)
         track.start(ts)
         self.storeInterval(track, name)
 
     def enterFaceOff(self, ts):
         assert(self.notify.debug('enterFaceOff()'))
         if (len(self.toons) > 0 and
-            base.localAvatar == self.toons[0]):
-            Emote.globalEmote.disableAll(self.toons[0], "dbattlebldg, enterFaceOff")
+                base.localAvatar == self.toons[0]):
+            Emote.globalEmote.disableAll(
+                self.toons[0], "dbattlebldg, enterFaceOff")
         self.delayDeleteMembers()
         self.__faceOff(ts, self.faceOffName, self.__handleFaceOffDone)
 
@@ -258,7 +271,8 @@ class DistributedLevelBattle(DistributedBattle.DistributedBattle):
     def exitFaceOff(self):
         self.notify.debug('exitFaceOff()')
         if (len(self.toons) > 0 and base.localAvatar == self.toons[0]):
-            Emote.globalEmote.releaseAll(self.toons[0], "dbattlebldg exitFaceOff")
+            Emote.globalEmote.releaseAll(
+                self.toons[0], "dbattlebldg exitFaceOff")
         self.clearInterval(self.faceOffName)
         self._removeMembersKeep()
 

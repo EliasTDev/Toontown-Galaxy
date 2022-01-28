@@ -3,6 +3,7 @@ from toontown.coghq import CogHQExterior
 
 # aka "The Pit"
 
+
 class SellbotHQExterior(CogHQExterior.CogHQExterior):
     notify = DirectNotifyGlobal.directNotify.newCategory("SellbotHQExterior")
 
@@ -17,4 +18,3 @@ class SellbotHQExterior(CogHQExterior.CogHQExterior):
         self.loader.hood.stopSky()
 
         CogHQExterior.CogHQExterior.exit(self)
-

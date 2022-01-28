@@ -7,35 +7,36 @@ from direct.fsm import State
 from . import CatchGameGlobals
 from . import MinigameGlobals
 
+
 class DistributedCatchGameAI(DistributedMinigameAI):
 
     def __init__(self, air, minigameId):
         try:
             self.DistributedCatchGameAI_initialized
-        except:
+        except BaseException:
             self.DistributedCatchGameAI_initialized = 1
             DistributedMinigameAI.__init__(self, air, minigameId)
 
             self.gameFSM = ClassicFSM.ClassicFSM('DistributedCatchGameAI',
-                                   [
-                                    State.State('inactive',
-                                                self.enterInactive,
-                                                self.exitInactive,
-                                                ['play']),
-                                    State.State('play',
-                                                self.enterPlay,
-                                                self.exitPlay,
-                                                ['cleanup']),
-                                    State.State('cleanup',
-                                                self.enterCleanup,
-                                                self.exitCleanup,
-                                                ['inactive']),
-                                    ],
-                                   # Initial State
-                                   'inactive',
-                                   # Final State
-                                   'inactive',
-                                   )
+                                                 [
+                                                     State.State('inactive',
+                                                                 self.enterInactive,
+                                                                 self.exitInactive,
+                                                                 ['play']),
+                                                     State.State('play',
+                                                                 self.enterPlay,
+                                                                 self.exitPlay,
+                                                                 ['cleanup']),
+                                                     State.State('cleanup',
+                                                                 self.enterCleanup,
+                                                                 self.exitCleanup,
+                                                                 ['inactive']),
+                                                 ],
+                                                 # Initial State
+                                                 'inactive',
+                                                 # Final State
+                                                 'inactive',
+                                                 )
 
             # Add our game ClassicFSM to the framework ClassicFSM
             self.addChildGameFSM(self.gameFSM)
@@ -83,7 +84,7 @@ class DistributedCatchGameAI(DistributedMinigameAI):
                           (self.numFruits, self.fruitsCaught))
         perfect = (self.fruitsCaught >= self.numFruits)
         for avId in self.avIdList:
-            self.scoreDict[avId] = max(1, int(self.scoreDict[avId]/2))
+            self.scoreDict[avId] = max(1, int(self.scoreDict[avId] / 2))
             if perfect:
                 self.notify.debug("PERFECT GAME!")
                 self.scoreDict[avId] += round(self.numFruits / 4.)
@@ -106,9 +107,9 @@ class DistributedCatchGameAI(DistributedMinigameAI):
         self.caughtList = [0] * 100
 
         # get the number of fruits that will be dropped
-        table = CatchGameGlobals.NumFruits[self.numPlayers-1]
+        table = CatchGameGlobals.NumFruits[self.numPlayers - 1]
         self.numFruits = table[self.getSafezoneId()]
-        self.notify.debug('numFruits: %s' % self.numFruits)
+        self.notify.debug(f'numFruits: {self.numFruits}')
         # and keep track of how many are caught
         self.fruitsCaught = 0
 
@@ -121,8 +122,7 @@ class DistributedCatchGameAI(DistributedMinigameAI):
 
         def handleTimeout(avIds, self=self):
             self.notify.debug(
-                'handleTimeout: avatars %s did not report "done"' %
-                avIds)
+                f'handleTimeout: avatars {avIds} did not report "done"')
             self.setGameAbort()
 
         self.doneBarrier = ToonBarrier(
@@ -143,14 +143,19 @@ class DistributedCatchGameAI(DistributedMinigameAI):
             return
 
         # range check DropObjTypeId
-        if DropObjTypeId < 0 or DropObjTypeId >= len(CatchGameGlobals.DOTypeId2Name):
-            self.air.writeServerEvent('warning', DropObjTypeId, 'CatchGameAI.claimCatch DropObjTypeId out of range')
+        if DropObjTypeId < 0 or DropObjTypeId >= len(
+                CatchGameGlobals.DOTypeId2Name):
+            self.air.writeServerEvent(
+                'warning',
+                DropObjTypeId,
+                'CatchGameAI.claimCatch DropObjTypeId out of range')
             return
 
         # sanity check; don't allow hackers to allocate unlimited memory
-        if objNum < 0 or objNum > 5000 or objNum >= 2*len(self.caughtList):
+        if objNum < 0 or objNum > 5000 or objNum >= 2 * len(self.caughtList):
             # self.notify.debug('object num %s is too high. ignoring' % objNum)
-            self.air.writeServerEvent('warning', objNum, 'CatchGameAI.claimCatch objNum is too high or negative')
+            self.air.writeServerEvent(
+                'warning', objNum, 'CatchGameAI.claimCatch objNum is too high or negative')
             return
 
         # double the size of the caught table as needed
@@ -164,8 +169,7 @@ class DistributedCatchGameAI(DistributedMinigameAI):
             self.sendUpdate('setObjectCaught', [avId, objNum])
             # if it's a good obj, update the score
             objName = CatchGameGlobals.DOTypeId2Name[DropObjTypeId]
-            self.notify.debug('avatar %s caught object %s: %s' %
-                              (avId, objNum, objName))
+            self.notify.debug(f'avatar {avId} caught object {objNum}: {objName}')
             if CatchGameGlobals.Name2DropObjectType[objName].good:
                 self.scoreDict[avId] += 1
                 self.fruitsCaught += 1
@@ -177,7 +181,7 @@ class DistributedCatchGameAI(DistributedMinigameAI):
         avId = self.air.getAvatarIdFromSender()
         # all of the objects on this avatar's client have landed
         # or been caught
-        self.notify.debug('reportDone: avatar %s is done' % avId)
+        self.notify.debug(f'reportDone: avatar {avId} is done')
         self.doneBarrier.clear(avId)
 
     def enterCleanup(self):

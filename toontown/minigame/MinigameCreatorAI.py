@@ -25,14 +25,15 @@ from . import DistributedTwoDGameAI
 from . import DistributedTravelGameAI
 from . import TravelGameGlobals
 
-#------------------------------------------------------------------------------
-# This config allows devs to temporarily register temp games created with the minigame framework
+# ------------------------------------------------------------------------------
+# This config allows devs to temporarily register temp games created with
+# the minigame framework
 ALLOW_TEMP_MINIGAMES = simbase.config.GetBool('allow-temp-minigames', False)
 
 if ALLOW_TEMP_MINIGAMES:
     # Import temp minigames
     from toontown.minigame.TempMinigameAI import *
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # put this on simbase so that it's easy to change on-the-fly
 simbase.forcedMinigameId = simbase.config.GetInt('minigame-id', 0)
@@ -43,14 +44,15 @@ RequestMinigame = {}
 # this map is used to track minigame zone reference counts
 MinigameZoneRefs = {}
 
+
 def createMinigame(air, playerArray, trolleyZone,
-                   minigameZone = None,
-                   previousGameId = ToontownGlobals.NoPreviousGameId,
-                   newbieIds = [],
-                   startingVotes = None,
-                   metagameRound = -1,
-                   desiredNextGame = None):
-    if minigameZone == None:
+                   minigameZone=None,
+                   previousGameId=ToontownGlobals.NoPreviousGameId,
+                   newbieIds=[],
+                   startingVotes=None,
+                   metagameRound=-1,
+                   desiredNextGame=None):
+    if minigameZone is None:
         minigameZone = air.allocateZone()
 
     acquireMinigameZone(minigameZone)
@@ -61,13 +63,13 @@ def createMinigame(air, playerArray, trolleyZone,
     # Check for a specifically requested minigame from one of the players.
     for avId in playerArray:
         request = RequestMinigame.get(avId)
-        if request != None:
+        if request is not None:
             mgId, mgKeep, mgDiff, mgSzId = request
             if not mgKeep:
                 del RequestMinigame[avId]
             break
 
-    if mgId != None:
+    if mgId is not None:
         # One of the players requested a particular minigame via
         # ~minigame; no need to pick another one.
         pass
@@ -77,7 +79,8 @@ def createMinigame(air, playerArray, trolleyZone,
         mgId = simbase.forcedMinigameId
     else:
         # The normal path: choose a random minigame.
-        randomList = list(copy.copy(ToontownGlobals.MinigamePlayerMatrix[len(playerArray)]))
+        randomList = list(
+            copy.copy(ToontownGlobals.MinigamePlayerMatrix[len(playerArray)]))
 
         # when debugging minigames, it's useful to be able to play all
         # of the multi-player games with only two toons, even if some of
@@ -110,7 +113,7 @@ def createMinigame(air, playerArray, trolleyZone,
 
         if (metagameRound > -1):
             if (metagameRound % 2 == 0):
-                #we must start a trolley metagame
+                # we must start a trolley metagame
                 mgId = ToontownGlobals.TravelGameId
             elif desiredNextGame:
                 mgId = desiredNextGame
@@ -128,15 +131,14 @@ def createMinigame(air, playerArray, trolleyZone,
         ToontownGlobals.DivingGameId: DistributedDivingGameAI.DistributedDivingGameAI,
         ToontownGlobals.TargetGameId: DistributedTargetGameAI.DistributedTargetGameAI,
         ToontownGlobals.MinigameTemplateId: DistributedMinigameTemplateAI.DistributedMinigameTemplateAI,
-        ToontownGlobals.PairingGameId : DistributedPairingGameAI.DistributedPairingGameAI,
+        ToontownGlobals.PairingGameId: DistributedPairingGameAI.DistributedPairingGameAI,
         ToontownGlobals.VineGameId: DistributedVineGameAI.DistributedVineGameAI,
-        ToontownGlobals.IceGameId : DistributedIceGameAI.DistributedIceGameAI,
-        ToontownGlobals.CogThiefGameId : DistributedCogThiefGameAI.DistributedCogThiefGameAI,
-        ToontownGlobals.TwoDGameId : DistributedTwoDGameAI.DistributedTwoDGameAI,
-        ToontownGlobals.TravelGameId : DistributedTravelGameAI.DistributedTravelGameAI,
+        ToontownGlobals.IceGameId: DistributedIceGameAI.DistributedIceGameAI,
+        ToontownGlobals.CogThiefGameId: DistributedCogThiefGameAI.DistributedCogThiefGameAI,
+        ToontownGlobals.TwoDGameId: DistributedTwoDGameAI.DistributedTwoDGameAI,
+        ToontownGlobals.TravelGameId: DistributedTravelGameAI.DistributedTravelGameAI,
         ToontownGlobals.PhotoGameId: DistributedPhotoGameAI.DistributedPhotoGameAI,
-        }
-
+    }
 
     if ALLOW_TEMP_MINIGAMES:
         # Adds the temp minigames to the list of minigame creators...
@@ -144,7 +146,6 @@ def createMinigame(air, playerArray, trolleyZone,
 
         for key, value in list(TempMgCtors.items()):
             mgCtors[key] = value
-
 
     """
     print "\n\n\n\n\n\n\n\n\n\n"
@@ -161,7 +162,7 @@ def createMinigame(air, playerArray, trolleyZone,
         #import pdb; pdb.set_trace()
         mg = mgCtors[mgId](air, mgId)
     except KeyError:
-        raise Exception("unknown minigame ID: %s" % mgId)
+        raise Exception(f"unknown minigame ID: {mgId}")
 
     # Tell the minigame who we are expecting
     # do this before generating the minigame;
@@ -175,22 +176,21 @@ def createMinigame(air, playerArray, trolleyZone,
     mg.setDifficultyOverrides(mgDiff, mgSzId)
 
     # set the needed info for the trolley metagame
-    if startingVotes == None:
+    if startingVotes is None:
         for avId in playerArray:
-            mg.setStartingVote(avId, TravelGameGlobals.DefaultStartingVotes )
+            mg.setStartingVote(avId, TravelGameGlobals.DefaultStartingVotes)
             #print('setting starting vote of %d to %d default' % (avId,TravelGameGlobals.DefaultStartingVotes))
     else:
         for index in range(len(startingVotes)):
             avId = playerArray[index]
             votes = startingVotes[index]
             if votes < 0:
-                print(('createMinigame negative votes, avId=%s votes=%s' %(avId, votes)))
+                print(f'createMinigame negative votes, avId={avId} votes={votes}')
                 votes = 0
-            mg.setStartingVote(avId, votes )
+            mg.setStartingVote(avId, votes)
             #print('setting starting vote of %d to %d' % (avId,votes))
 
     mg.setMetagameRound(metagameRound)
-
 
     # Generate it in that zone
     # this will kick off the minigame's ClassicFSM
@@ -204,7 +204,7 @@ def createMinigame(air, playerArray, trolleyZone,
     toons = []
     for id in playerArray:
         toon = simbase.air.doId2do.get(id)
-        if (toon != None):
+        if (toon is not None):
             toons.append(toon)
     for toon in toons:
         simbase.air.questManager.toonPlayedMinigame(toon, toons)
@@ -215,10 +215,12 @@ def createMinigame(air, playerArray, trolleyZone,
 
     return retVal
 
+
 def acquireMinigameZone(zoneId):
-    if not zoneId in MinigameZoneRefs:
+    if zoneId not in MinigameZoneRefs:
         MinigameZoneRefs[zoneId] = 0
     MinigameZoneRefs[zoneId] += 1
+
 
 def releaseMinigameZone(zoneId):
     MinigameZoneRefs[zoneId] -= 1
@@ -226,56 +228,58 @@ def releaseMinigameZone(zoneId):
         del MinigameZoneRefs[zoneId]
         simbase.air.deallocateZone(zoneId)
 
-def removeUnreleasedMinigames(startList, increaseChanceOfNewGames = 0):
+
+def removeUnreleasedMinigames(startList, increaseChanceOfNewGames=0):
     """Return a new list of minigames by removing the unreleased minigames."""
     randomList = startList[:]
     for gameId in ToontownGlobals.MinigameReleaseDates:
         dateTuple = ToontownGlobals.MinigameReleaseDates[gameId]
         currentTime = time.time()
-        releaseTime = time.mktime((dateTuple[0], # year
-                                   dateTuple[1], # month
-                                   dateTuple[2], # day
-                                   0, # hour
-                                   0, # min
-                                   0, # sec
-                                   0, # wday
-                                   0, # yday
-                                   -1, # dst flag
+        releaseTime = time.mktime((dateTuple[0],  # year
+                                   dateTuple[1],  # month
+                                   dateTuple[2],  # day
+                                   0,  # hour
+                                   0,  # min
+                                   0,  # sec
+                                   0,  # wday
+                                   0,  # yday
+                                   -1,  # dst flag
                                    ))
 
-        releaseTimePlus1Week = releaseTime + (7 * 24 *60 *60)
+        releaseTimePlus1Week = releaseTime + (7 * 24 * 60 * 60)
 
         if currentTime < releaseTime:
             if gameId in randomList:
                 doRemove = True
                 if gameId == ToontownGlobals.CogThiefGameId and \
-                   simbase.air.config.GetBool('force-allow-thief-game',0):
+                   simbase.air.config.GetBool('force-allow-thief-game', 0):
                     doRemove = False
                     if increaseChanceOfNewGames:
-                        randomList += [gameId]*4
+                        randomList += [gameId] * 4
                 elif gameId == ToontownGlobals.IceGameId and \
-                     simbase.air.config.GetBool('force-allow-ice-game',0):
+                        simbase.air.config.GetBool('force-allow-ice-game', 0):
                     doRemove = False
                     if increaseChanceOfNewGames:
-                        randomList += [gameId]*4
+                        randomList += [gameId] * 4
                 elif gameId == ToontownGlobals.TwoDGameId and \
-                     simbase.air.config.GetBool('force-allow-2d-game', 0):
+                        simbase.air.config.GetBool('force-allow-2d-game', 0):
                     doRemove = False
                     if increaseChanceOfNewGames:
-                        randomList += [gameId]*4
+                        randomList += [gameId] * 4
                 elif gameId == ToontownGlobals.PhotoGameId and \
-                     simbase.air.config.GetBool('force-allow-photo-game',0):
+                        simbase.air.config.GetBool('force-allow-photo-game', 0):
                     doRemove = False
                     if increaseChanceOfNewGames:
-                        randomList += [gameId]*4
+                        randomList += [gameId] * 4
                 if doRemove:
                     randomList.remove(gameId)
 
-        # on live, one week after a new minigame is released, increase its chances
+        # on live, one week after a new minigame is released, increase its
+        # chances
         if releaseTime < currentTime and \
            currentTime < releaseTimePlus1Week and \
            gameId in randomList and \
            increaseChanceOfNewGames:
-            randomList += [gameId]*4
+            randomList += [gameId] * 4
 
     return randomList

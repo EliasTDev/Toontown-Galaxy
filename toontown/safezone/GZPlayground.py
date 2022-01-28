@@ -11,49 +11,53 @@ from direct.fsm import State
 #from toontown.trolley import Trolley
 from toontown.safezone import GolfKart
 
+
 class GZPlayground(Playground.Playground):
     def __init__(self, loader, parentFSM, doneEvent):
         Playground.Playground.__init__(self, loader, parentFSM, doneEvent)
-        self.parentFSM=parentFSM
+        self.parentFSM = parentFSM
         self.golfKartBlockDoneEvent = "golfKartBlockDone"
 
-        self.fsm.addState( State.State('golfKartBlock',
-                                       self.enterGolfKartBlock,
-                                       self.exitGolfKartBlock,
-                                       ['walk']))
+        self.fsm.addState(State.State('golfKartBlock',
+                                      self.enterGolfKartBlock,
+                                      self.exitGolfKartBlock,
+                                      ['walk']))
         state = self.fsm.getStateNamed('walk')
         state.addTransition('golfKartBlock')
 
-        self.golfKartDoneEvent = "golfKartDone"        
+        self.golfKartDoneEvent = "golfKartDone"
 
     def load(self):
         Playground.Playground.load(self)
         self.hub = loader.loadModel("phase_6/models/golf/golf_hub2")
         self.hub.reparentTo(render)
         self.dnaroot = render.find('**/goofy_speedway_DNARoot')
-        self.dnaroot = base.cr.playGame.hood.loader.geom.find('**/goofy_speedway_DNARoot')
+        self.dnaroot = base.cr.playGame.hood.loader.geom.find(
+            '**/goofy_speedway_DNARoot')
         if not self.dnaroot.isEmpty():
             self.dnaroot.removeNode()
+
     def unload(self):
         Playground.Playground.unload(self)
         self.hub.removeNode()
 
     def enter(self, requestStatus):
         Playground.Playground.enter(self, requestStatus)
-        blimp=base.cr.playGame.hood.loader.geom.find("**/GS_blimp")
+        blimp = base.cr.playGame.hood.loader.geom.find("**/GS_blimp")
         if blimp.isEmpty():
             return
-        blimp.setPos(-70,250,-70)
-        blimpBase=NodePath("blimpBase")
-        blimpBase.setPos(0,-200,25)
+        blimp.setPos(-70, 250, -70)
+        blimpBase = NodePath("blimpBase")
+        blimpBase.setPos(0, -200, 25)
         blimpBase.setH(-40)
         blimp.reparentTo(blimpBase)
-        blimpRoot=NodePath("blimpRoot")
-        blimpRoot.setPos(0,-70,40)
+        blimpRoot = NodePath("blimpRoot")
+        blimpRoot.setPos(0, -70, 40)
         blimpRoot.reparentTo(base.cr.playGame.hood.loader.geom)
         blimpBase.reparentTo(blimpRoot)
-        self.rotateBlimp=blimpRoot.hprInterval(360,Vec3(360,0,0))
+        self.rotateBlimp = blimpRoot.hprInterval(360, Vec3(360, 0, 0))
         self.rotateBlimp.loop()
+
     def exit(self):
         Playground.Playground.exit(self)
         if hasattr(self, 'rotateBlimp'):
@@ -75,36 +79,38 @@ class GZPlayground(Playground.Playground):
         self.dfa = DownloadForceAcknowledge.DownloadForceAcknowledge(doneEvent)
         if requestStatus["hoodId"] == ToontownGlobals.MyEstate:
             # Ask if we can enter phase 5.5
-            self.dfa.enter(base.cr.hoodMgr.getPhaseFromHood(ToontownGlobals.MyEstate))
+            self.dfa.enter(
+                base.cr.hoodMgr.getPhaseFromHood(
+                    ToontownGlobals.MyEstate))
         else:
             # Ask if we can enter phase 5
             self.dfa.enter(5)
 
-
     # teleportIn
+
     def enterTeleportIn(self, requestStatus):
         reason = requestStatus.get("reason")
         if reason == RaceGlobals.Exit_Barrier:
             # we timed out of a race
             requestStatus['nextState'] = 'popup'
             self.dialog = TTDialog.TTDialog(
-                text = TTLocalizer.KartRace_RaceTimeout,
-                command = self.__cleanupDialog,
-                style = TTDialog.Acknowledge)
+                text=TTLocalizer.KartRace_RaceTimeout,
+                command=self.__cleanupDialog,
+                style=TTDialog.Acknowledge)
         elif reason == RaceGlobals.Exit_Slow:
             # we timed out of a race
             requestStatus['nextState'] = 'popup'
             self.dialog = TTDialog.TTDialog(
-                text = TTLocalizer.KartRace_RacerTooSlow,
-                command = self.__cleanupDialog,
-                style = TTDialog.Acknowledge)
+                text=TTLocalizer.KartRace_RacerTooSlow,
+                command=self.__cleanupDialog,
+                style=TTDialog.Acknowledge)
         elif reason == RaceGlobals.Exit_BarrierNoRefund:
             # we timed out of a race
             requestStatus['nextState'] = 'popup'
             self.dialog = TTDialog.TTDialog(
-                text = TTLocalizer.KartRace_RaceTimeoutNoRefund,
-                command = self.__cleanupDialog,
-                style = TTDialog.Acknowledge)
+                text=TTLocalizer.KartRace_RaceTimeoutNoRefund,
+                command=self.__cleanupDialog,
+                style=TTDialog.Acknowledge)
 
         Playground.Playground.enterTeleportIn(self, requestStatus)
 
@@ -133,6 +139,7 @@ class GZPlayground(Playground.Playground):
         self.golfKartBlock.exit()
         del self.golfKartBlock
     """
+
     def enterGolfKartBlock(self, golfKart):
         assert(self.notify.debug("enterGolfKartBlock()"))
         # Turn on the laff meter
@@ -140,10 +147,11 @@ class GZPlayground(Playground.Playground):
 
         # clear the anim state
         base.localAvatar.b_setAnimState("off", 1)
-        
+
         self.accept(self.golfKartDoneEvent, self.handleGolfKartDone)
         #self.trolley = GolfKart.GolfKart(self, self.fsm, self.golfKartDoneEvent, golfKart.golfCourse)
-        self.trolley = GolfKart.GolfKart(self, self.fsm, self.golfKartDoneEvent, golfKart.getDoId())
+        self.trolley = GolfKart.GolfKart(
+            self, self.fsm, self.golfKartDoneEvent, golfKart.getDoId())
         self.trolley.load()
         self.trolley.enter()
 
@@ -151,14 +159,12 @@ class GZPlayground(Playground.Playground):
         assert(self.notify.debug("exitGolfKartBlock()"))
 
         # Turn off the laff meter
-        base.localAvatar.laffMeter.stop()        
+        base.localAvatar.laffMeter.stop()
 
         self.ignore(self.trolleyDoneEvent)
         self.trolley.unload()
         self.trolley.exit()
         del self.trolley
-
-        
 
     def detectedGolfKartCollision(self, golfKart):
         assert(self.notify.debug("detectedGolfkartCollision()"))
@@ -181,7 +187,6 @@ class GZPlayground(Playground.Playground):
             self.notify.error("Unknown mode: " + where +
                               " in handleStartingBlockDone")
 
-
     def handleGolfKartDone(self, doneStatus):
         assert(self.notify.debug("handleGolfKartDone()"))
         self.notify.debug("handling golf kart  done event")
@@ -191,14 +196,17 @@ class GZPlayground(Playground.Playground):
         elif mode == "exit":
             self.fsm.request("walk")
         elif mode == "golfcourse":
-            self.doneStatus = {"loader" : "golfcourse",
-                               "where" : "golfcourse",
-                               "hoodId" : self.loader.hood.id,
-                               "zoneId" : doneStatus["zoneId"],
-                               "shardId" : None,
-                               "courseId" : doneStatus["courseId"]
+            self.doneStatus = {"loader": "golfcourse",
+                               "where": "golfcourse",
+                               "hoodId": self.loader.hood.id,
+                               "zoneId": doneStatus["zoneId"],
+                               "shardId": None,
+                               "courseId": doneStatus["courseId"]
                                }
             #self.doneStatus = doneStatus
             messenger.send(self.doneEvent)
         else:
-            self.notify.error("Unknown mode: " + mode + " in handleGolfKartDone")
+            self.notify.error(
+                "Unknown mode: " +
+                mode +
+                " in handleGolfKartDone")

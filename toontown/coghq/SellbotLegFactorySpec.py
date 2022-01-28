@@ -12,7 +12,7 @@ GlobalEntities = {
         'farPlaneDistance': 1500.0,
         'modelFilename': 'phase_9/models/cogHQ/SelbotLegFactory',
         'wantDoors': 1,
-        }, # end entity 1000
+    },  # end entity 1000
     # EDITMGR
     1001: {
         'type': 'editMgr',
@@ -22,7 +22,7 @@ GlobalEntities = {
         'removeEntity': None,
         'requestNewEntity': None,
         'requestSave': None,
-        }, # end entity 1001
+    },  # end entity 1001
     # ZONE
     0: {
         'type': 'zone',
@@ -32,7 +32,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 0
+    },  # end entity 0
     3: {
         'type': 'zone',
         'name': 'Main Entrance',
@@ -41,7 +41,7 @@ GlobalEntities = {
         'scale': Vec3(1, 1, 1),
         'description': TTLocalizer.SellbotLegFactorySpecMainEntrance,
         'visibility': [114],
-        }, # end entity 3
+    },  # end entity 3
     4: {
         'type': 'zone',
         'name': 'Lobby',
@@ -50,7 +50,7 @@ GlobalEntities = {
         'scale': Vec3(1, 1, 1),
         'description': TTLocalizer.SellbotLegFactorySpecLobby,
         'visibility': [113, 114],
-        }, # end entity 4
+    },  # end entity 4
     5: {
         'type': 'zone',
         'name': 'hallwayFromLobby',
@@ -59,7 +59,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [113, 116],
-        }, # end entity 5
+    },  # end entity 5
     6: {
         'type': 'zone',
         'name': 'hallwayToBoiler/Control/Lookout',
@@ -68,16 +68,16 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecLobbyHallway,
         'visibility': [109, 116, 117, 118],
-        }, # end entity 6
+    },  # end entity 6
     7: {
         'type': 'zone',
         'name': 'GearRoom',
         'comment': '',
         'parentEntId': 0,
         'scale': 1,
-        'description':  TTLocalizer.SellbotLegFactorySpecGearRoom,
+        'description': TTLocalizer.SellbotLegFactorySpecGearRoom,
         'visibility': [109, 110],
-        }, # end entity 7
+    },  # end entity 7
     8: {
         'type': 'zone',
         'name': 'BoilerRoom',
@@ -86,7 +86,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecBoilerRoom,
         'visibility': [108, 117],
-        }, # end entity 8
+    },  # end entity 8
     9: {
         'type': 'zone',
         'name': 'EastCatwalk',
@@ -95,7 +95,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecEastCatwalk,
         'visibility': [23, 25, 26, 33, 34, 35, 38, 41, 53, 110, 112, 115, 124, 200, 222],
-        }, # end entity 9
+    },  # end entity 9
     10: {
         'type': 'zone',
         'name': 'PaintMixer',
@@ -104,7 +104,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecPaintMixer,
         'visibility': [11, 111, 112],
-        }, # end entity 10
+    },  # end entity 10
     11: {
         'type': 'zone',
         'name': 'PaintMixerRewardRoom',
@@ -113,7 +113,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecPaintMixerStorageRoom,
         'visibility': [10, 111, 112],
-        }, # end entity 11
+    },  # end entity 11
     12: {
         'type': 'zone',
         'name': 'WestSiloCatwalk',
@@ -122,7 +122,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecWestSiloCatwalk,
         'visibility': [21, 26, 33, 34, 35, 36, 37, 40, 41, 53, 60, 61, 108, 110, 119, 120, 125, 127, 128, 129, 130, 200],
-        }, # end entity 12
+    },  # end entity 12
     13: {
         'type': 'zone',
         'name': 'PipeRoom',
@@ -131,7 +131,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecPipeRoom,
         'visibility': [119, 121],
-        }, # end entity 13
+    },  # end entity 13
     14: {
         'type': 'zone',
         'name': 'StairsToPipeRoom',
@@ -140,7 +140,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [17, 18, 121, 126, 131],
-        }, # end entity 14
+    },  # end entity 14
     15: {
         'type': 'zone',
         'name': 'DuctRoom',
@@ -149,7 +149,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecDuctRoom,
         'visibility': [106, 126],
-        }, # end entity 15
+    },  # end entity 15
     16: {
         'type': 'zone',
         'name': 'Side Entrance',
@@ -158,7 +158,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecSideEntrance,
         'visibility': [106],
-        }, # end entity 16
+    },  # end entity 16
     17: {
         'type': 'zone',
         'name': 'StomperAlley',
@@ -167,7 +167,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecStomperAlley,
         'visibility': [14, 121, 126, 131],
-        }, # end entity 17
+    },  # end entity 17
     18: {
         'type': 'zone',
         'name': 'LavaRoomFoyer',
@@ -176,7 +176,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecLavaRoomFoyer,
         'visibility': [19, 20, 102, 103, 105, 131],
-        }, # end entity 18
+    },  # end entity 18
     19: {
         'type': 'zone',
         'name': 'LavaRoom',
@@ -185,7 +185,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecLavaRoom,
         'visibility': [17, 18, 20, 105, 131],
-        }, # end entity 19
+    },  # end entity 19
     20: {
         'type': 'zone',
         'name': 'LavaRewardRoom',
@@ -194,7 +194,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecLavaStorageRoom,
         'visibility': [18, 19, 105],
-        }, # end entity 20
+    },  # end entity 20
     21: {
         'type': 'zone',
         'name': 'WestCatwalk',
@@ -203,7 +203,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecWestCatwalk,
         'visibility': [12, 23, 26, 33, 34, 35, 40, 41, 53, 60, 108, 119, 120, 125, 127, 200],
-        }, # end entity 21
+    },  # end entity 21
     22: {
         'type': 'zone',
         'name': 'OilRoom',
@@ -212,7 +212,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecOilRoom,
         'visibility': [107],
-        }, # end entity 22
+    },  # end entity 22
     23: {
         'type': 'zone',
         'name': 'Lookout',
@@ -221,7 +221,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecLookout,
         'visibility': [24, 39, 115, 118, 120, 123, 124, 125],
-        }, # end entity 23
+    },  # end entity 23
     24: {
         'type': 'zone',
         'name': 'Warehouse',
@@ -230,7 +230,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecWarehouse,
         'visibility': [23, 39, 115, 120, 123, 124, 125],
-        }, # end entity 24
+    },  # end entity 24
     25: {
         'type': 'zone',
         'name': 'PaintMixerExterior',
@@ -239,7 +239,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 25
+    },  # end entity 25
     26: {
         'type': 'zone',
         'name': 'WarehouseExterior',
@@ -248,7 +248,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 26
+    },  # end entity 26
     27: {
         'type': 'zone',
         'name': 'OilRoomHallway',
@@ -257,7 +257,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecOilRoomHallway,
         'visibility': [105, 107, 127],
-        }, # end entity 27
+    },  # end entity 27
     30: {
         'type': 'zone',
         'name': 'EastSiloControlRoom',
@@ -266,7 +266,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecEastSiloControlRoom,
         'visibility': [130],
-        }, # end entity 30
+    },  # end entity 30
     31: {
         'type': 'zone',
         'name': 'WestSiloControlRoom',
@@ -275,7 +275,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecWestSiloControlRoom,
         'visibility': [128],
-        }, # end entity 31
+    },  # end entity 31
     32: {
         'type': 'zone',
         'name': 'CenterSiloControlRoom',
@@ -284,7 +284,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecCenterSiloControlRoom,
         'visibility': [129],
-        }, # end entity 32
+    },  # end entity 32
     33: {
         'type': 'zone',
         'name': 'EastSilo',
@@ -293,7 +293,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecEastSilo,
         'visibility': [9, 12, 21, 25, 26, 34, 35, 36, 37, 38, 40, 41, 53, 60, 61, 108, 110, 112, 119, 124, 128, 129, 130, 200, 222],
-        }, # end entity 33
+    },  # end entity 33
     34: {
         'type': 'zone',
         'name': 'WestSilo',
@@ -302,7 +302,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecWestSilo,
         'visibility': [9, 12, 21, 25, 26, 33, 35, 36, 37, 40, 41, 53, 60, 61, 108, 110, 112, 119, 120, 125, 127, 128, 129, 130, 200],
-        }, # end entity 34
+    },  # end entity 34
     35: {
         'type': 'zone',
         'name': 'CenterSilo',
@@ -311,7 +311,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecCenterSilo,
         'visibility': [9, 21, 25, 26, 33, 34, 36, 37, 40, 41, 53, 60, 61, 108, 110, 112, 119, 128, 129, 130, 200],
-        }, # end entity 35
+    },  # end entity 35
     36: {
         'type': 'zone',
         'name': 'WestSiloBridge',
@@ -320,7 +320,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [9, 12, 21, 25, 26, 33, 34, 35, 36, 37, 40, 41, 53, 60, 61, 108, 110, 112, 119, 127, 128, 129, 130, 200],
-        }, # end entity 36
+    },  # end entity 36
     37: {
         'type': 'zone',
         'name': 'EastSiloBridge',
@@ -329,7 +329,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [9, 12, 21, 25, 26, 33, 34, 35, 36, 37, 38, 40, 41, 53, 60, 61, 108, 110, 112, 119, 128, 129, 130, 200, 222],
-        }, # end entity 37
+    },  # end entity 37
     38: {
         'type': 'zone',
         'name': 'EastSiloCatwalk',
@@ -338,7 +338,7 @@ GlobalEntities = {
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecEastSiloCatwalk,
         'visibility': [9, 25, 26, 33, 34, 35, 36, 37, 41, 53, 60, 110, 112, 115, 124, 200, 222],
-        }, # end entity 38
+    },  # end entity 38
     39: {
         'type': 'zone',
         'name': 'WarehouseCeiling',
@@ -347,7 +347,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 39
+    },  # end entity 39
     40: {
         'type': 'zone',
         'name': 'WestExterior',
@@ -356,7 +356,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 40
+    },  # end entity 40
     41: {
         'type': 'zone',
         'name': 'EastExterior',
@@ -365,7 +365,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 41
+    },  # end entity 41
     53: {
         'type': 'zone',
         'name': 'ExteriorFloor',
@@ -374,7 +374,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 53
+    },  # end entity 53
     60: {
         'type': 'zone',
         'name': 'WestElevatorShaft',
@@ -382,8 +382,8 @@ GlobalEntities = {
         'parentEntId': 0,
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecWestElevatorShaft,
-        'visibility': [12,34],
-        }, # end entity 60
+        'visibility': [12, 34],
+    },  # end entity 60
     61: {
         'type': 'zone',
         'name': 'EastElevatorShaft',
@@ -391,8 +391,8 @@ GlobalEntities = {
         'parentEntId': 0,
         'scale': 1,
         'description': TTLocalizer.SellbotLegFactorySpecEastElevatorShaft,
-        'visibility': [33,38],
-        }, # end entity 61
+        'visibility': [33, 38],
+    },  # end entity 61
     101: {
         'type': 'zone',
         'name': 'dwToLavaRewardRoom',
@@ -401,7 +401,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 101
+    },  # end entity 101
     102: {
         'type': 'zone',
         'name': 'dwToLavaRoom',
@@ -410,7 +410,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 102
+    },  # end entity 102
     103: {
         'type': 'zone',
         'name': 'dwToLavaRoomHallway',
@@ -419,7 +419,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 103
+    },  # end entity 103
     105: {
         'type': 'zone',
         'name': 'dwToOilRoomCatwalks',
@@ -428,7 +428,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 105
+    },  # end entity 105
     106: {
         'type': 'zone',
         'name': 'dwToDuctRoom',
@@ -437,7 +437,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 106
+    },  # end entity 106
     107: {
         'type': 'zone',
         'name': 'dwToOilRoom',
@@ -446,7 +446,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 107
+    },  # end entity 107
     108: {
         'type': 'zone',
         'name': 'dwFromBoilerRoom',
@@ -455,7 +455,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 108
+    },  # end entity 108
     109: {
         'type': 'zone',
         'name': 'dwToGearRoom',
@@ -464,7 +464,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 109
+    },  # end entity 109
     110: {
         'type': 'zone',
         'name': 'dwFromGearRoom',
@@ -473,7 +473,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 110
+    },  # end entity 110
     111: {
         'type': 'zone',
         'name': 'dwToPaintMixerRewardRoom',
@@ -482,7 +482,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 111
+    },  # end entity 111
     112: {
         'type': 'zone',
         'name': 'dwToPaintMixer',
@@ -491,7 +491,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 112
+    },  # end entity 112
     113: {
         'type': 'zone',
         'name': 'dwFromLobby',
@@ -500,7 +500,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 113
+    },  # end entity 113
     114: {
         'type': 'zone',
         'name': 'dwToLobby',
@@ -509,7 +509,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 114
+    },  # end entity 114
     115: {
         'type': 'zone',
         'name': 'dwToWarehouseFromRight',
@@ -518,7 +518,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 115
+    },  # end entity 115
     116: {
         'type': 'zone',
         'name': 'dwFromLobbyFar',
@@ -527,7 +527,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 116
+    },  # end entity 116
     117: {
         'type': 'zone',
         'name': 'dwToBoilerRoom',
@@ -536,7 +536,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 117
+    },  # end entity 117
     118: {
         'type': 'zone',
         'name': 'dwToLookout',
@@ -545,7 +545,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 118
+    },  # end entity 118
     119: {
         'type': 'zone',
         'name': 'dwFromPipeRoom',
@@ -554,7 +554,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 119
+    },  # end entity 119
     120: {
         'type': 'zone',
         'name': 'dwToWarehouseFromLeft',
@@ -563,7 +563,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 120
+    },  # end entity 120
     121: {
         'type': 'zone',
         'name': 'dwToPipeRoom',
@@ -572,7 +572,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 121
+    },  # end entity 121
     122: {
         'type': 'zone',
         'name': 'dwToWarehouseControlRoom',
@@ -581,7 +581,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 122
+    },  # end entity 122
     123: {
         'type': 'zone',
         'name': 'dwFromWarehouseFloor',
@@ -590,7 +590,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 123
+    },  # end entity 123
     124: {
         'type': 'zone',
         'name': 'dwFromWarehouseRight',
@@ -599,7 +599,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 124
+    },  # end entity 124
     125: {
         'type': 'zone',
         'name': 'dwFromWarehouseLeft',
@@ -608,7 +608,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 125
+    },  # end entity 125
     126: {
         'type': 'zone',
         'name': 'dwFromDuctRoom',
@@ -617,7 +617,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 126
+    },  # end entity 126
     127: {
         'type': 'zone',
         'name': 'dwFromOilRoomHallway',
@@ -626,7 +626,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 127
+    },  # end entity 127
     128: {
         'type': 'zone',
         'name': 'dwToWestSiloRoom',
@@ -635,7 +635,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 128
+    },  # end entity 128
     129: {
         'type': 'zone',
         'name': 'dwToCenterSiloRoom',
@@ -644,7 +644,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 129
+    },  # end entity 129
     130: {
         'type': 'zone',
         'name': 'dwToEastSiloRoom',
@@ -653,7 +653,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 130
+    },  # end entity 130
     131: {
         'type': 'zone',
         'name': 'dwFromStomperAlley',
@@ -662,7 +662,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 131
+    },  # end entity 131
     200: {
         'type': 'zone',
         'name': 'sky',
@@ -671,7 +671,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 200
+    },  # end entity 200
     201: {
         'type': 'zone',
         'name': 'extraZone201',
@@ -680,7 +680,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 201
+    },  # end entity 201
     202: {
         'type': 'zone',
         'name': 'extraZone202',
@@ -689,7 +689,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 202
+    },  # end entity 202
     203: {
         'type': 'zone',
         'name': 'extraZone203',
@@ -698,7 +698,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 203
+    },  # end entity 203
     204: {
         'type': 'zone',
         'name': 'extraZone204',
@@ -707,7 +707,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 204
+    },  # end entity 204
     205: {
         'type': 'zone',
         'name': 'extraZone205',
@@ -716,7 +716,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 205
+    },  # end entity 205
     206: {
         'type': 'zone',
         'name': 'extraZone206',
@@ -725,7 +725,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 206
+    },  # end entity 206
     207: {
         'type': 'zone',
         'name': 'extraZone207',
@@ -734,7 +734,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 207
+    },  # end entity 207
     208: {
         'type': 'zone',
         'name': 'extraZone208',
@@ -743,7 +743,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 208
+    },  # end entity 208
     209: {
         'type': 'zone',
         'name': 'extraZone209',
@@ -752,7 +752,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 209
+    },  # end entity 209
     210: {
         'type': 'zone',
         'name': 'extraZone210',
@@ -761,7 +761,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 210
+    },  # end entity 210
     211: {
         'type': 'zone',
         'name': 'extraZone211',
@@ -770,7 +770,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 211
+    },  # end entity 211
     212: {
         'type': 'zone',
         'name': 'extraZone212',
@@ -779,7 +779,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 212
+    },  # end entity 212
     213: {
         'type': 'zone',
         'name': 'extraZone213',
@@ -788,7 +788,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 213
+    },  # end entity 213
     214: {
         'type': 'zone',
         'name': 'extraZone214',
@@ -797,7 +797,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 214
+    },  # end entity 214
     215: {
         'type': 'zone',
         'name': 'extraZone215',
@@ -806,7 +806,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 215
+    },  # end entity 215
     216: {
         'type': 'zone',
         'name': 'extraZone216',
@@ -815,7 +815,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 216
+    },  # end entity 216
     217: {
         'type': 'zone',
         'name': 'extraZone217',
@@ -824,7 +824,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 217
+    },  # end entity 217
     218: {
         'type': 'zone',
         'name': 'extraZone218',
@@ -833,7 +833,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 218
+    },  # end entity 218
     219: {
         'type': 'zone',
         'name': 'extraZone219',
@@ -842,7 +842,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 219
+    },  # end entity 219
     220: {
         'type': 'zone',
         'name': 'extraZone220',
@@ -851,7 +851,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 220
+    },  # end entity 220
     221: {
         'type': 'zone',
         'name': 'extraZone221',
@@ -860,7 +860,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 221
+    },  # end entity 221
     222: {
         'type': 'zone',
         'name': 'dwToEastSiloInterior',
@@ -869,7 +869,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 222
+    },  # end entity 222
     # AMBIENTSOUND
     10010: {
         'type': 'ambientSound',
@@ -882,7 +882,7 @@ GlobalEntities = {
         'enabled': 1,
         'soundPath': 'phase_9/audio/sfx/CHQ_FACT_whistling_wind.ogg',
         'volume': 1,
-        }, # end entity 10010
+    },  # end entity 10010
     10016: {
         'type': 'ambientSound',
         'name': 'sndConveyorBelt',
@@ -894,7 +894,7 @@ GlobalEntities = {
         'enabled': 1,
         'soundPath': 'phase_9/audio/sfx/CHQ_FACT_conveyor_belt.ogg',
         'volume': 0.5,
-        }, # end entity 10016
+    },  # end entity 10016
     10053: {
         'type': 'ambientSound',
         'name': 'eastWind',
@@ -906,7 +906,7 @@ GlobalEntities = {
         'enabled': 1,
         'soundPath': 'phase_9/audio/sfx/CHQ_FACT_whistling_wind.ogg',
         'volume': 1,
-        }, # end entity 10053
+    },  # end entity 10053
     10055: {
         'type': 'ambientSound',
         'name': 'sndGears',
@@ -918,7 +918,7 @@ GlobalEntities = {
         'enabled': 1,
         'soundPath': 'phase_9/audio/sfx/CHQ_FACT_gears_turning.ogg',
         'volume': 1,
-        }, # end entity 10055
+    },  # end entity 10055
     # BATTLEBLOCKER
     10031: {
         'type': 'battleBlocker',
@@ -930,7 +930,7 @@ GlobalEntities = {
         'scale': Point3(1.75, 1, 1),
         'cellId': 1,
         'radius': 10.0,
-        }, # end entity 10031
+    },  # end entity 10031
     10035: {
         'type': 'battleBlocker',
         'name': '<unnamed>',
@@ -941,7 +941,7 @@ GlobalEntities = {
         'scale': Vec3(1, 1, 1),
         'cellId': 4,
         'radius': 10.0,
-        }, # end entity 10035
+    },  # end entity 10035
     10038: {
         'type': 'battleBlocker',
         'name': '<unnamed>',
@@ -952,7 +952,7 @@ GlobalEntities = {
         'scale': Vec3(1, 1, 1),
         'cellId': 5,
         'radius': 10.0,
-        }, # end entity 10038
+    },  # end entity 10038
     20048: {
         'type': 'battleBlocker',
         'name': '<unnamed>',
@@ -963,7 +963,7 @@ GlobalEntities = {
         'scale': Point3(1, 0.2, 1),
         'cellId': 0,
         'radius': 15.0,
-        }, # end entity 20048
+    },  # end entity 20048
     20063: {
         'type': 'battleBlocker',
         'name': '<unnamed>',
@@ -974,7 +974,7 @@ GlobalEntities = {
         'scale': Vec3(1, 1, 1),
         'cellId': 8,
         'radius': 1,
-        }, # end entity 20063
+    },  # end entity 20063
     20064: {
         'type': 'battleBlocker',
         'name': '<unnamed>',
@@ -985,7 +985,7 @@ GlobalEntities = {
         'scale': Vec3(1, 1, 1),
         'cellId': 8,
         'radius': 1,
-        }, # end entity 20064
+    },  # end entity 20064
     20065: {
         'type': 'battleBlocker',
         'name': '<unnamed>',
@@ -996,7 +996,7 @@ GlobalEntities = {
         'scale': Vec3(1, 1, 1),
         'cellId': 8,
         'radius': 1,
-        }, # end entity 20065
+    },  # end entity 20065
     20066: {
         'type': 'battleBlocker',
         'name': '<unnamed>',
@@ -1007,7 +1007,7 @@ GlobalEntities = {
         'scale': Vec3(1, 1, 1),
         'cellId': 8,
         'radius': 1,
-        }, # end entity 20066
+    },  # end entity 20066
     20086: {
         'type': 'battleBlocker',
         'name': '<unnamed>',
@@ -1018,7 +1018,7 @@ GlobalEntities = {
         'scale': Point3(2, 1, 1),
         'cellId': 6,
         'radius': 12.0,
-        }, # end entity 20086
+    },  # end entity 20086
     20112: {
         'type': 'battleBlocker',
         'name': '<unnamed>',
@@ -1029,7 +1029,7 @@ GlobalEntities = {
         'scale': Point3(10, 1, 5),
         'cellId': 10,
         'radius': 5.0,
-        }, # end entity 20112
+    },  # end entity 20112
     20113: {
         'type': 'battleBlocker',
         'name': '<unnamed>',
@@ -1040,7 +1040,7 @@ GlobalEntities = {
         'scale': Point3(10, 2, 6),
         'cellId': 9,
         'radius': 5.0,
-        }, # end entity 20113
+    },  # end entity 20113
     20114: {
         'type': 'battleBlocker',
         'name': '<unnamed>',
@@ -1051,7 +1051,7 @@ GlobalEntities = {
         'scale': Point3(1, 1, 0.5),
         'cellId': 8,
         'radius': 3.0,
-        }, # end entity 20114
+    },  # end entity 20114
     # BEANBARREL
     10003: {
         'type': 'beanBarrel',
@@ -1063,7 +1063,7 @@ GlobalEntities = {
         'scale': 1,
         'rewardPerGrab': 25,
         'rewardPerGrabMax': 0,
-        }, # end entity 10003
+    },  # end entity 10003
     10011: {
         'type': 'beanBarrel',
         'name': '<unnamed>',
@@ -1074,7 +1074,7 @@ GlobalEntities = {
         'scale': 1,
         'rewardPerGrab': 25,
         'rewardPerGrabMax': 0,
-        }, # end entity 10011
+    },  # end entity 10011
     20017: {
         'type': 'beanBarrel',
         'name': '<unnamed>',
@@ -1085,7 +1085,7 @@ GlobalEntities = {
         'scale': 1,
         'rewardPerGrab': 35,
         'rewardPerGrabMax': 0,
-        }, # end entity 20017
+    },  # end entity 20017
     # BUTTON
     10039: {
         'type': 'button',
@@ -1099,7 +1099,7 @@ GlobalEntities = {
         'isOn': 0,
         'isOnEvent': 0,
         'secondsOn': -1.0,
-        }, # end entity 10039
+    },  # end entity 10039
     20033: {
         'type': 'button',
         'name': '<unnamed>',
@@ -1112,7 +1112,7 @@ GlobalEntities = {
         'isOn': 0,
         'isOnEvent': 0,
         'secondsOn': 1,
-        }, # end entity 20033
+    },  # end entity 20033
     20034: {
         'type': 'button',
         'name': '<unnamed>',
@@ -1125,7 +1125,7 @@ GlobalEntities = {
         'isOn': 0,
         'isOnEvent': 0,
         'secondsOn': 1,
-        }, # end entity 20034
+    },  # end entity 20034
     20035: {
         'type': 'button',
         'name': '<unnamed>',
@@ -1138,7 +1138,7 @@ GlobalEntities = {
         'isOn': 0,
         'isOnEvent': 0,
         'secondsOn': 1,
-        }, # end entity 20035
+    },  # end entity 20035
     20036: {
         'type': 'button',
         'name': '<unnamed>',
@@ -1151,7 +1151,7 @@ GlobalEntities = {
         'isOn': 0,
         'isOnEvent': 0,
         'secondsOn': 1,
-        }, # end entity 20036
+    },  # end entity 20036
     30040: {
         'type': 'button',
         'name': 'door button',
@@ -1164,7 +1164,7 @@ GlobalEntities = {
         'isOn': 0,
         'isOnEvent': 0,
         'secondsOn': -1.0,
-        }, # end entity 30040
+    },  # end entity 30040
     30076: {
         'type': 'button',
         'name': 'open door 113',
@@ -1177,7 +1177,7 @@ GlobalEntities = {
         'isOn': 0,
         'isOnEvent': 0,
         'secondsOn': -1,
-        }, # end entity 30076
+    },  # end entity 30076
     60102: {
         'type': 'button',
         'name': 'door button',
@@ -1190,7 +1190,7 @@ GlobalEntities = {
         'isOn': 0,
         'isOnEvent': 0,
         'secondsOn': -1.0,
-        }, # end entity 60102
+    },  # end entity 60102
     60103: {
         'type': 'button',
         'name': 'door button',
@@ -1203,7 +1203,7 @@ GlobalEntities = {
         'isOn': 0,
         'isOnEvent': 0,
         'secondsOn': -1.0,
-        }, # end entity 60103
+    },  # end entity 60103
     60104: {
         'type': 'button',
         'name': '<unnamed>',
@@ -1216,7 +1216,7 @@ GlobalEntities = {
         'isOn': 0,
         'isOnEvent': 0,
         'secondsOn': -1.0,
-        }, # end entity 60104
+    },  # end entity 60104
     60105: {
         'type': 'button',
         'name': 'door button',
@@ -1229,7 +1229,7 @@ GlobalEntities = {
         'isOn': 0,
         'isOnEvent': 0,
         'secondsOn': -1.0,
-        }, # end entity 60105
+    },  # end entity 60105
     60118: {
         'type': 'button',
         'name': '<unnamed>',
@@ -1242,7 +1242,7 @@ GlobalEntities = {
         'isOn': 0,
         'isOnEvent': 0,
         'secondsOn': -1.0,
-        }, # end entity 60118
+    },  # end entity 60118
     # CONVEYORBELT
     10005: {
         'type': 'conveyorBelt',
@@ -1258,7 +1258,7 @@ GlobalEntities = {
         'treadLength': 10.0,
         'treadModelPath': 'phase_9/models/cogHQ/platform1',
         'widthScale': 0.84999999999999998,
-        }, # end entity 10005
+    },  # end entity 10005
     # CRATE
     20081: {
         'type': 'crate',
@@ -1271,7 +1271,7 @@ GlobalEntities = {
         'gridId': 20080,
         'modelType': 0,
         'pushable': 1,
-        }, # end entity 20081
+    },  # end entity 20081
     20091: {
         'type': 'crate',
         'name': '<unnamed>',
@@ -1283,7 +1283,7 @@ GlobalEntities = {
         'gridId': 20090,
         'modelType': 0,
         'pushable': 1,
-        }, # end entity 20091
+    },  # end entity 20091
     # CRUSHERCELL
     20024: {
         'type': 'crusherCell',
@@ -1296,7 +1296,7 @@ GlobalEntities = {
         'col': 1,
         'gridId': 20025,
         'row': 14,
-        }, # end entity 20024
+    },  # end entity 20024
     20026: {
         'type': 'crusherCell',
         'name': '<unnamed>',
@@ -1308,7 +1308,7 @@ GlobalEntities = {
         'col': 10,
         'gridId': 20025,
         'row': 14,
-        }, # end entity 20026
+    },  # end entity 20026
     20027: {
         'type': 'crusherCell',
         'name': 'copy of <unnamed>',
@@ -1320,7 +1320,7 @@ GlobalEntities = {
         'col': 21,
         'gridId': 20025,
         'row': 14,
-        }, # end entity 20027
+    },  # end entity 20027
     20028: {
         'type': 'crusherCell',
         'name': 'copy of copy of <unnamed>',
@@ -1332,7 +1332,7 @@ GlobalEntities = {
         'col': 28,
         'gridId': 20025,
         'row': 14,
-        }, # end entity 20028
+    },  # end entity 20028
     # CUTSCENE
     30078: {
         'type': 'cutScene',
@@ -1345,7 +1345,7 @@ GlobalEntities = {
         'effect': 'irisInOut',
         'motion': 'doorUnlock',
         'startStopEvent': 30077,
-        }, # end entity 30078
+    },  # end entity 30078
     # DOOR
     10002: {
         'type': 'door',
@@ -1368,7 +1368,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 10002
+    },  # end entity 10002
     10052: {
         'type': 'door',
         'name': 'door 127',
@@ -1390,7 +1390,7 @@ GlobalEntities = {
         'unlock1Event': 10039,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 10052
+    },  # end entity 10052
     30000: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1412,7 +1412,7 @@ GlobalEntities = {
         'unlock1Event': 60132,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30000
+    },  # end entity 30000
     30001: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1434,7 +1434,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30001
+    },  # end entity 30001
     30002: {
         'type': 'door',
         'name': 'door 106',
@@ -1456,7 +1456,7 @@ GlobalEntities = {
         'unlock1Event': 60132,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30002
+    },  # end entity 30002
     30003: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1478,7 +1478,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30003
+    },  # end entity 30003
     30004: {
         'type': 'door',
         'name': 'doorFromBoilerRoom',
@@ -1500,7 +1500,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30004
+    },  # end entity 30004
     30005: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1522,7 +1522,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30005
+    },  # end entity 30005
     30006: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1544,7 +1544,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30006
+    },  # end entity 30006
     30008: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1566,7 +1566,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30008
+    },  # end entity 30008
     30009: {
         'type': 'door',
         'name': 'door 113',
@@ -1588,7 +1588,7 @@ GlobalEntities = {
         'unlock1Event': 60119,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30009
+    },  # end entity 30009
     30010: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1610,7 +1610,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30010
+    },  # end entity 30010
     30011: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1632,7 +1632,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30011
+    },  # end entity 30011
     30012: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1654,7 +1654,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30012
+    },  # end entity 30012
     30013: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1676,7 +1676,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30013
+    },  # end entity 30013
     30014: {
         'type': 'door',
         'name': 'doorFromPipeRoom 119',
@@ -1698,7 +1698,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30014
+    },  # end entity 30014
     30015: {
         'type': 'door',
         'name': 'door 120',
@@ -1720,7 +1720,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30015
+    },  # end entity 30015
     30016: {
         'type': 'door',
         'name': 'door 121',
@@ -1742,7 +1742,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30016
+    },  # end entity 30016
     30017: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1764,7 +1764,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30017
+    },  # end entity 30017
     30018: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1786,7 +1786,7 @@ GlobalEntities = {
         'unlock1Event': 60103,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30018
+    },  # end entity 30018
     30019: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1808,7 +1808,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30019
+    },  # end entity 30019
     30020: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1830,7 +1830,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30020
+    },  # end entity 30020
     30021: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1852,7 +1852,7 @@ GlobalEntities = {
         'unlock1Event': 60119,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 30021
+    },  # end entity 30021
     60088: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1874,7 +1874,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 60088
+    },  # end entity 60088
     60094: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1896,7 +1896,7 @@ GlobalEntities = {
         'unlock1Event': 60104,
         'unlock2Event': 60105,
         'unlock3Event': 0,
-        }, # end entity 60094
+    },  # end entity 60094
     60095: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1918,7 +1918,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 60095
+    },  # end entity 60095
     60101: {
         'type': 'door',
         'name': '<unnamed>',
@@ -1940,194 +1940,194 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 60101
+    },  # end entity 60101
     # ENTITYGROUP
     10049: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 3,
-        }, # end entity 10049
+    },  # end entity 10049
     10051: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 4,
-        }, # end entity 10051
+    },  # end entity 10051
     60000: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 5,
-        }, # end entity 60000
+    },  # end entity 60000
     60001: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 6,
-        }, # end entity 60001
+    },  # end entity 60001
     60002: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 7,
-        }, # end entity 60002
+    },  # end entity 60002
     60003: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 9,
-        }, # end entity 60003
+    },  # end entity 60003
     60004: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 10,
-        }, # end entity 60004
+    },  # end entity 60004
     60005: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 8,
-        }, # end entity 60005
+    },  # end entity 60005
     60006: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 21,
-        }, # end entity 60006
+    },  # end entity 60006
     60007: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 24,
-        }, # end entity 60007
+    },  # end entity 60007
     60009: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 38,
-        }, # end entity 60009
+    },  # end entity 60009
     60011: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 12,
-        }, # end entity 60011
+    },  # end entity 60011
     60013: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 13,
-        }, # end entity 60013
+    },  # end entity 60013
     60014: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 14,
-        }, # end entity 60014
+    },  # end entity 60014
     60015: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 17,
-        }, # end entity 60015
+    },  # end entity 60015
     60016: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 15,
-        }, # end entity 60016
+    },  # end entity 60016
     60017: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 16,
-        }, # end entity 60017
+    },  # end entity 60017
     60018: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 19,
-        }, # end entity 60018
+    },  # end entity 60018
     60019: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 18,
-        }, # end entity 60019
+    },  # end entity 60019
     60024: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 22,
-        }, # end entity 60024
+    },  # end entity 60024
     60031: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 23,
-        }, # end entity 60031
+    },  # end entity 60031
     60044: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 33,
-        }, # end entity 60044
+    },  # end entity 60044
     60066: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 11,
-        }, # end entity 60066
+    },  # end entity 60066
     60067: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 27,
-        }, # end entity 60067
+    },  # end entity 60067
     60096: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 30,
-        }, # end entity 60096
+    },  # end entity 60096
     60108: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 34,
-        }, # end entity 60108
+    },  # end entity 60108
     60111: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 36,
-        }, # end entity 60111
+    },  # end entity 60111
     60114: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 37,
-        }, # end entity 60114
+    },  # end entity 60114
     60121: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 31,
-        }, # end entity 60121
+    },  # end entity 60121
     60126: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 35,
-        }, # end entity 60126
+    },  # end entity 60126
     60130: {
         'type': 'entityGroup',
         'name': 'viz',
         'comment': '',
         'parentEntId': 32,
-        }, # end entity 60130
+    },  # end entity 60130
     # ENTRANCEPOINT
     10028: {
         'type': 'entrancePoint',
@@ -2140,7 +2140,7 @@ GlobalEntities = {
         'entranceId': 0,
         'radius': 15,
         'theta': 20,
-        }, # end entity 10028
+    },  # end entity 10028
     10029: {
         'type': 'entrancePoint',
         'name': 'entrance2',
@@ -2152,7 +2152,7 @@ GlobalEntities = {
         'entranceId': 1,
         'radius': 15,
         'theta': 20,
-        }, # end entity 10029
+    },  # end entity 10029
     # GAGBARREL
     10021: {
         'type': 'gagBarrel',
@@ -2167,7 +2167,7 @@ GlobalEntities = {
         'gagTrack': 0,
         'rewardPerGrab': 3,
         'rewardPerGrabMax': 0,
-        }, # end entity 10021
+    },  # end entity 10021
     10024: {
         'type': 'gagBarrel',
         'name': '<unnamed>',
@@ -2181,7 +2181,7 @@ GlobalEntities = {
         'gagTrack': 4,
         'rewardPerGrab': 4,
         'rewardPerGrabMax': 0,
-        }, # end entity 10024
+    },  # end entity 10024
     10025: {
         'type': 'gagBarrel',
         'name': '<unnamed>',
@@ -2195,7 +2195,7 @@ GlobalEntities = {
         'gagTrack': 0,
         'rewardPerGrab': 3,
         'rewardPerGrabMax': 0,
-        }, # end entity 10025
+    },  # end entity 10025
     10026: {
         'type': 'gagBarrel',
         'name': '<unnamed>',
@@ -2209,7 +2209,7 @@ GlobalEntities = {
         'gagTrack': 5,
         'rewardPerGrab': 4,
         'rewardPerGrabMax': 0,
-        }, # end entity 10026
+    },  # end entity 10026
     20020: {
         'type': 'gagBarrel',
         'name': '<unnamed>',
@@ -2223,7 +2223,7 @@ GlobalEntities = {
         'gagTrack': 3,
         'rewardPerGrab': 5,
         'rewardPerGrabMax': 0,
-        }, # end entity 20020
+    },  # end entity 20020
     20021: {
         'type': 'gagBarrel',
         'name': '<unnamed>',
@@ -2237,7 +2237,7 @@ GlobalEntities = {
         'gagTrack': 5,
         'rewardPerGrab': 5,
         'rewardPerGrabMax': 0,
-        }, # end entity 20021
+    },  # end entity 20021
     20085: {
         'type': 'gagBarrel',
         'name': '<unnamed>',
@@ -2251,7 +2251,7 @@ GlobalEntities = {
         'gagTrack': 4,
         'rewardPerGrab': 5,
         'rewardPerGrabMax': 0,
-        }, # end entity 20085
+    },  # end entity 20085
     20093: {
         'type': 'gagBarrel',
         'name': '<unnamed>',
@@ -2265,7 +2265,7 @@ GlobalEntities = {
         'gagTrack': 0,
         'rewardPerGrab': 5,
         'rewardPerGrabMax': 0,
-        }, # end entity 20093
+    },  # end entity 20093
     # GEAR
     10006: {
         'type': 'gear',
@@ -2280,7 +2280,7 @@ GlobalEntities = {
         'modelType': 'factory',
         'orientation': 'vertical',
         'phaseShift': 0,
-        }, # end entity 10006
+    },  # end entity 10006
     10007: {
         'type': 'gear',
         'name': 'second',
@@ -2294,7 +2294,7 @@ GlobalEntities = {
         'modelType': 'factory',
         'orientation': 'vertical',
         'phaseShift': 0,
-        }, # end entity 10007
+    },  # end entity 10007
     10008: {
         'type': 'gear',
         'name': 'third',
@@ -2308,7 +2308,7 @@ GlobalEntities = {
         'modelType': 'factory',
         'orientation': 'vertical',
         'phaseShift': 0,
-        }, # end entity 10008
+    },  # end entity 10008
     10009: {
         'type': 'gear',
         'name': 'fourth',
@@ -2322,7 +2322,7 @@ GlobalEntities = {
         'modelType': 'factory',
         'orientation': 'vertical',
         'phaseShift': 0,
-        }, # end entity 10009
+    },  # end entity 10009
     # GOON
     20013: {
         'type': 'goon',
@@ -2339,7 +2339,7 @@ GlobalEntities = {
         'hFov': 70,
         'strength': 7,
         'velocity': 4,
-        }, # end entity 20013
+    },  # end entity 20013
     20014: {
         'type': 'goon',
         'name': '<unnamed>',
@@ -2355,7 +2355,7 @@ GlobalEntities = {
         'hFov': 70,
         'strength': 7,
         'velocity': 4,
-        }, # end entity 20014
+    },  # end entity 20014
     20016: {
         'type': 'goon',
         'name': '<unnamed>',
@@ -2371,7 +2371,7 @@ GlobalEntities = {
         'hFov': 70,
         'strength': 7,
         'velocity': 4,
-        }, # end entity 20016
+    },  # end entity 20016
     20041: {
         'type': 'goon',
         'name': '<unnamed>',
@@ -2387,7 +2387,7 @@ GlobalEntities = {
         'hFov': 80.0,
         'strength': 10,
         'velocity': 6.0,
-        }, # end entity 20041
+    },  # end entity 20041
     20043: {
         'type': 'goon',
         'name': '<unnamed>',
@@ -2403,7 +2403,7 @@ GlobalEntities = {
         'hFov': 80.0,
         'strength': 10,
         'velocity': 5.0,
-        }, # end entity 20043
+    },  # end entity 20043
     20046: {
         'type': 'goon',
         'name': '<unnamed>',
@@ -2419,7 +2419,7 @@ GlobalEntities = {
         'hFov': 70,
         'strength': 10,
         'velocity': 6.0,
-        }, # end entity 20046
+    },  # end entity 20046
     20047: {
         'type': 'goon',
         'name': '<unnamed>',
@@ -2435,7 +2435,7 @@ GlobalEntities = {
         'hFov': 80.0,
         'strength': 10,
         'velocity': 6.0,
-        }, # end entity 20047
+    },  # end entity 20047
     20052: {
         'type': 'goon',
         'name': '<unnamed>',
@@ -2451,7 +2451,7 @@ GlobalEntities = {
         'hFov': 70,
         'strength': 3,
         'velocity': 4.0,
-        }, # end entity 20052
+    },  # end entity 20052
     20054: {
         'type': 'goon',
         'name': '<unnamed>',
@@ -2467,7 +2467,7 @@ GlobalEntities = {
         'hFov': 80.0,
         'strength': 10,
         'velocity': 5.5,
-        }, # end entity 20054
+    },  # end entity 20054
     20056: {
         'type': 'goon',
         'name': '<unnamed>',
@@ -2483,7 +2483,7 @@ GlobalEntities = {
         'hFov': 70,
         'strength': 10,
         'velocity': 6.0,
-        }, # end entity 20056
+    },  # end entity 20056
     20060: {
         'type': 'goon',
         'name': '<unnamed>',
@@ -2499,7 +2499,7 @@ GlobalEntities = {
         'hFov': 90.0,
         'strength': 10,
         'velocity': 6.5,
-        }, # end entity 20060
+    },  # end entity 20060
     20062: {
         'type': 'goon',
         'name': '<unnamed>',
@@ -2515,7 +2515,7 @@ GlobalEntities = {
         'hFov': 70,
         'strength': 10,
         'velocity': 7.5,
-        }, # end entity 20062
+    },  # end entity 20062
     20071: {
         'type': 'goon',
         'name': '<unnamed>',
@@ -2531,7 +2531,7 @@ GlobalEntities = {
         'hFov': 70,
         'strength': 7,
         'velocity': 6.0,
-        }, # end entity 20071
+    },  # end entity 20071
     20072: {
         'type': 'goon',
         'name': '<unnamed>',
@@ -2547,7 +2547,7 @@ GlobalEntities = {
         'hFov': 80.0,
         'strength': 7,
         'velocity': 6.0,
-        }, # end entity 20072
+    },  # end entity 20072
     20074: {
         'type': 'goon',
         'name': '<unnamed>',
@@ -2563,7 +2563,7 @@ GlobalEntities = {
         'hFov': 70,
         'strength': 7,
         'velocity': 4,
-        }, # end entity 20074
+    },  # end entity 20074
     20089: {
         'type': 'goon',
         'name': '<unnamed>',
@@ -2579,7 +2579,7 @@ GlobalEntities = {
         'hFov': 70,
         'strength': 7,
         'velocity': 4,
-        }, # end entity 20089
+    },  # end entity 20089
     # GOONCLIPPLANE
     20115: {
         'type': 'goonClipPlane',
@@ -2590,7 +2590,7 @@ GlobalEntities = {
         'hpr': Point3(-90, 0, 0),
         'scale': Point3(5, 5, 5),
         'goonId': 20052,
-        }, # end entity 20115
+    },  # end entity 20115
     20116: {
         'type': 'goonClipPlane',
         'name': '<unnamed>',
@@ -2600,7 +2600,7 @@ GlobalEntities = {
         'hpr': Point3(90, 0, 0),
         'scale': 1,
         'goonId': None,
-        }, # end entity 20116
+    },  # end entity 20116
     20117: {
         'type': 'goonClipPlane',
         'name': '<unnamed>',
@@ -2610,7 +2610,7 @@ GlobalEntities = {
         'hpr': Point3(90, 0, 0),
         'scale': 1,
         'goonId': None,
-        }, # end entity 20117
+    },  # end entity 20117
     20118: {
         'type': 'goonClipPlane',
         'name': '<unnamed>',
@@ -2620,7 +2620,7 @@ GlobalEntities = {
         'hpr': Point3(0, 0, 0),
         'scale': 1,
         'goonId': None,
-        }, # end entity 20118
+    },  # end entity 20118
     # GRID
     20025: {
         'type': 'grid',
@@ -2632,7 +2632,7 @@ GlobalEntities = {
         'cellSize': 3,
         'numCol': 30,
         'numRow': 16,
-        }, # end entity 20025
+    },  # end entity 20025
     20080: {
         'type': 'grid',
         'name': '<unnamed>',
@@ -2643,7 +2643,7 @@ GlobalEntities = {
         'cellSize': 3,
         'numCol': 2,
         'numRow': 5,
-        }, # end entity 20080
+    },  # end entity 20080
     20090: {
         'type': 'grid',
         'name': '<unnamed>',
@@ -2654,7 +2654,7 @@ GlobalEntities = {
         'cellSize': 3,
         'numCol': 2,
         'numRow': 9,
-        }, # end entity 20090
+    },  # end entity 20090
     # HEALBARREL
     20011: {
         'type': 'healBarrel',
@@ -2666,7 +2666,7 @@ GlobalEntities = {
         'scale': 1,
         'rewardPerGrab': 10,
         'rewardPerGrabMax': 0,
-        }, # end entity 20011
+    },  # end entity 20011
     20092: {
         'type': 'healBarrel',
         'name': '<unnamed>',
@@ -2677,7 +2677,7 @@ GlobalEntities = {
         'scale': 1,
         'rewardPerGrab': 5,
         'rewardPerGrabMax': 0,
-        }, # end entity 20092
+    },  # end entity 20092
     # LIFT
     10041: {
         'type': 'lift',
@@ -2699,7 +2699,7 @@ GlobalEntities = {
         'startBoardSides': ['front'],
         'startGuardName': 'bottomGuard',
         'startPos': Point3(0, 0, 0),
-        }, # end entity 10041
+    },  # end entity 10041
     10048: {
         'type': 'lift',
         'name': 'eastLift',
@@ -2720,7 +2720,7 @@ GlobalEntities = {
         'startBoardSides': ['front'],
         'startGuardName': 'bottomGuard',
         'startPos': Point3(0, 0, 0),
-        }, # end entity 10048
+    },  # end entity 10048
     # LOGICGATE
     10057: {
         'type': 'logicGate',
@@ -2732,7 +2732,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 10057
+    },  # end entity 10057
     10059: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2743,7 +2743,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 10059
+    },  # end entity 10059
     10061: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2754,7 +2754,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 10061
+    },  # end entity 10061
     10063: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2765,7 +2765,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 10063
+    },  # end entity 10063
     30068: {
         'type': 'logicGate',
         'name': 'door 116 and door 118',
@@ -2776,7 +2776,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 30068
+    },  # end entity 30068
     60023: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2787,7 +2787,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60023
+    },  # end entity 60023
     60025: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2798,7 +2798,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60025
+    },  # end entity 60025
     60028: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2809,7 +2809,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60028
+    },  # end entity 60028
     60029: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2820,7 +2820,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60029
+    },  # end entity 60029
     60030: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2831,7 +2831,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60030
+    },  # end entity 60030
     60033: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2842,7 +2842,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60033
+    },  # end entity 60033
     60034: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2853,7 +2853,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60034
+    },  # end entity 60034
     60035: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2864,7 +2864,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60035
+    },  # end entity 60035
     60037: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2875,7 +2875,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60037
+    },  # end entity 60037
     60039: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2886,7 +2886,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60039
+    },  # end entity 60039
     60041: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2897,7 +2897,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60041
+    },  # end entity 60041
     60043: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2908,7 +2908,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60043
+    },  # end entity 60043
     60047: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2919,7 +2919,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60047
+    },  # end entity 60047
     60049: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2930,7 +2930,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60049
+    },  # end entity 60049
     60051: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2941,7 +2941,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60051
+    },  # end entity 60051
     60053: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2952,7 +2952,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60053
+    },  # end entity 60053
     60055: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2963,7 +2963,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60055
+    },  # end entity 60055
     60057: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2974,7 +2974,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60057
+    },  # end entity 60057
     60059: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2985,7 +2985,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60059
+    },  # end entity 60059
     60061: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -2996,7 +2996,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60061
+    },  # end entity 60061
     60064: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3007,7 +3007,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60064
+    },  # end entity 60064
     60065: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3018,7 +3018,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60065
+    },  # end entity 60065
     60074: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3029,7 +3029,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60074
+    },  # end entity 60074
     60075: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3040,7 +3040,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60075
+    },  # end entity 60075
     60076: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3051,7 +3051,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60076
+    },  # end entity 60076
     60078: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3062,7 +3062,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60078
+    },  # end entity 60078
     60080: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3073,7 +3073,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60080
+    },  # end entity 60080
     60082: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3084,7 +3084,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60082
+    },  # end entity 60082
     60084: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3095,7 +3095,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60084
+    },  # end entity 60084
     60086: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3106,7 +3106,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60086
+    },  # end entity 60086
     60091: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3117,7 +3117,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60091
+    },  # end entity 60091
     60093: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3128,7 +3128,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60093
+    },  # end entity 60093
     60100: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3139,7 +3139,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60100
+    },  # end entity 60100
     60119: {
         'type': 'logicGate',
         'name': 'open sesame Duct & Lobby',
@@ -3150,7 +3150,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'or',
-        }, # end entity 60119
+    },  # end entity 60119
     60132: {
         'type': 'logicGate',
         'name': 'open sesame Entrances',
@@ -3161,7 +3161,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'or',
-        }, # end entity 60132
+    },  # end entity 60132
     60138: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3172,7 +3172,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60138
+    },  # end entity 60138
     60141: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3183,7 +3183,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60141
+    },  # end entity 60141
     60142: {
         'type': 'logicGate',
         'name': '<unnamed>',
@@ -3194,7 +3194,7 @@ GlobalEntities = {
         'isInput1': 0,
         'isInput2': 0,
         'logicType': 'and',
-        }, # end entity 60142
+    },  # end entity 60142
     # MODEL
     10001: {
         'type': 'model',
@@ -3208,7 +3208,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_3/models/props/drop_shadow.bam',
-        }, # end entity 10001
+    },  # end entity 10001
     10012: {
         'type': 'model',
         'name': 'backCrate',
@@ -3221,7 +3221,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_9/models/cogHQ/metal_crateB.bam',
-        }, # end entity 10012
+    },  # end entity 10012
     10033: {
         'type': 'model',
         'name': 'dropshadow',
@@ -3234,7 +3234,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_3/models/props/drop_shadow.bam',
-        }, # end entity 10033
+    },  # end entity 10033
     10045: {
         'type': 'model',
         'name': 'dropshadow',
@@ -3247,7 +3247,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_3/models/props/drop_shadow.bam',
-        }, # end entity 10045
+    },  # end entity 10045
     10046: {
         'type': 'model',
         'name': 'dropshadow',
@@ -3260,7 +3260,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_3/models/props/drop_shadow.bam',
-        }, # end entity 10046
+    },  # end entity 10046
     10050: {
         'type': 'model',
         'name': 'sky',
@@ -3273,7 +3273,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_9/models/cogHQ/cog_sky.bam',
-        }, # end entity 10050
+    },  # end entity 10050
     10066: {
         'type': 'model',
         'name': 'frontCrate',
@@ -3286,7 +3286,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_9/models/cogHQ/metal_crateB.bam',
-        }, # end entity 10066
+    },  # end entity 10066
     10069: {
         'type': 'model',
         'name': 'backCrate',
@@ -3299,7 +3299,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_9/models/cogHQ/metal_crateB.bam',
-        }, # end entity 10069
+    },  # end entity 10069
     10070: {
         'type': 'model',
         'name': 'frontCrate',
@@ -3312,7 +3312,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_9/models/cogHQ/metal_crateB.bam',
-        }, # end entity 10070
+    },  # end entity 10070
     20082: {
         'type': 'model',
         'name': '<unnamed>',
@@ -3325,7 +3325,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_9/models/cogHQ/metal_crateB.bam',
-        }, # end entity 20082
+    },  # end entity 20082
     20083: {
         'type': 'model',
         'name': '<unnamed>',
@@ -3338,7 +3338,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_9/models/cogHQ/metal_crateB.bam',
-        }, # end entity 20083
+    },  # end entity 20083
     20088: {
         'type': 'model',
         'name': '<unnamed>',
@@ -3351,7 +3351,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_9/models/cogHQ/metal_crateB.bam',
-        }, # end entity 20088
+    },  # end entity 20088
     # NODEPATH
     10000: {
         'type': 'nodepath',
@@ -3361,7 +3361,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Point3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10000
+    },  # end entity 10000
     10004: {
         'type': 'nodepath',
         'name': 'gearGauntlet',
@@ -3370,7 +3370,7 @@ GlobalEntities = {
         'pos': Point3(0, -23.25, 6.85),
         'hpr': Point3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10004
+    },  # end entity 10004
     10014: {
         'type': 'nodepath',
         'name': 'cogs',
@@ -3379,7 +3379,7 @@ GlobalEntities = {
         'pos': Point3(0, 34.07, 0),
         'hpr': Point3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10014
+    },  # end entity 10014
     10015: {
         'type': 'nodepath',
         'name': 'paint mixer platforms',
@@ -3388,7 +3388,7 @@ GlobalEntities = {
         'pos': Point3(0, 5.15136, -2),
         'hpr': Point3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10015
+    },  # end entity 10015
     10022: {
         'type': 'nodepath',
         'name': 'gagBarrels',
@@ -3397,7 +3397,7 @@ GlobalEntities = {
         'pos': Point3(11.2328, 14.7959, 0),
         'hpr': Point3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10022
+    },  # end entity 10022
     10023: {
         'type': 'nodepath',
         'name': 'leftCogs',
@@ -3406,7 +3406,7 @@ GlobalEntities = {
         'pos': Point3(-42.0363, 0, 0),
         'hpr': Point3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10023
+    },  # end entity 10023
     10027: {
         'type': 'nodepath',
         'name': 'zoneNodeCompensate',
@@ -3415,7 +3415,7 @@ GlobalEntities = {
         'pos': Point3(-0.426482, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10027
+    },  # end entity 10027
     10030: {
         'type': 'nodepath',
         'name': 'cogs',
@@ -3424,7 +3424,7 @@ GlobalEntities = {
         'pos': Point3(2.5, 62.5, 10),
         'hpr': Point3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10030
+    },  # end entity 10030
     10032: {
         'type': 'nodepath',
         'name': 'rightCogs',
@@ -3433,7 +3433,7 @@ GlobalEntities = {
         'pos': Point3(46.88, 0, 0),
         'hpr': Point3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10032
+    },  # end entity 10032
     10034: {
         'type': 'nodepath',
         'name': 'cogs',
@@ -3442,7 +3442,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Point3(180, 0, 0),
         'scale': 1,
-        }, # end entity 10034
+    },  # end entity 10034
     10036: {
         'type': 'nodepath',
         'name': 'cogs',
@@ -3451,7 +3451,7 @@ GlobalEntities = {
         'pos': Point3(5.5, 0, 0),
         'hpr': Point3(161, 0, 0),
         'scale': 1,
-        }, # end entity 10036
+    },  # end entity 10036
     10037: {
         'type': 'nodepath',
         'name': 'cogs',
@@ -3460,7 +3460,7 @@ GlobalEntities = {
         'pos': Point3(3.1, -48.27, 0.05),
         'hpr': Point3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10037
+    },  # end entity 10037
     10040: {
         'type': 'nodepath',
         'name': 'FactoryBoss',
@@ -3469,7 +3469,7 @@ GlobalEntities = {
         'pos': Point3(0, 68.4457, 9.5669),
         'hpr': Point3(180, 0, 0),
         'scale': 1,
-        }, # end entity 10040
+    },  # end entity 10040
     10047: {
         'type': 'nodepath',
         'name': 'battleCell',
@@ -3478,7 +3478,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10047
+    },  # end entity 10047
     10056: {
         'type': 'nodepath',
         'name': 'sounds',
@@ -3487,7 +3487,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 15),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10056
+    },  # end entity 10056
     10064: {
         'type': 'nodepath',
         'name': 'battleCell',
@@ -3496,7 +3496,7 @@ GlobalEntities = {
         'pos': Point3(0, -5.20447, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10064
+    },  # end entity 10064
     10065: {
         'type': 'nodepath',
         'name': 'backSteps',
@@ -3505,7 +3505,7 @@ GlobalEntities = {
         'pos': Point3(0, 56.2652, 0),
         'hpr': Point3(0, 0, 0),
         'scale': Point3(1.5, 1.3, 0.73),
-        }, # end entity 10065
+    },  # end entity 10065
     10067: {
         'type': 'nodepath',
         'name': 'frontSteps',
@@ -3514,7 +3514,7 @@ GlobalEntities = {
         'pos': Point3(0, -44.7196, 0),
         'hpr': Point3(180, 0, 0),
         'scale': Point3(1.5, 1.3, 0.729057),
-        }, # end entity 10067
+    },  # end entity 10067
     10068: {
         'type': 'nodepath',
         'name': 'battleCell',
@@ -3523,7 +3523,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10068
+    },  # end entity 10068
     20000: {
         'type': 'nodepath',
         'name': 'stompers',
@@ -3532,7 +3532,7 @@ GlobalEntities = {
         'pos': Point3(0.75, 0, 0.5),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 20000
+    },  # end entity 20000
     20018: {
         'type': 'nodepath',
         'name': '<unnamed>',
@@ -3541,7 +3541,7 @@ GlobalEntities = {
         'pos': Point3(0, -24, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 20018
+    },  # end entity 20018
     20019: {
         'type': 'nodepath',
         'name': 'cogsJoin',
@@ -3550,7 +3550,7 @@ GlobalEntities = {
         'pos': Point3(16, 2, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 20019
+    },  # end entity 20019
     20022: {
         'type': 'nodepath',
         'name': 'StomperButtonsNodepath',
@@ -3559,7 +3559,7 @@ GlobalEntities = {
         'pos': Point3(-11.75, -35.8, 14.9),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 20022
+    },  # end entity 20022
     20023: {
         'type': 'nodepath',
         'name': '<unnamed>',
@@ -3568,7 +3568,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 20023
+    },  # end entity 20023
     20037: {
         'type': 'nodepath',
         'name': 'SignatureGoonNP',
@@ -3577,7 +3577,7 @@ GlobalEntities = {
         'pos': Point3(-48.4442, -24.9385, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 20037
+    },  # end entity 20037
     20058: {
         'type': 'nodepath',
         'name': 'SigRoomCogs',
@@ -3586,7 +3586,7 @@ GlobalEntities = {
         'pos': Point3(-1.0928, -45, 14.99),
         'hpr': Point3(90, 0, 0),
         'scale': 1,
-        }, # end entity 20058
+    },  # end entity 20058
     20087: {
         'type': 'nodepath',
         'name': '<unnamed>',
@@ -3595,7 +3595,7 @@ GlobalEntities = {
         'pos': Point3(-4, -117, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 20087
+    },  # end entity 20087
     20094: {
         'type': 'nodepath',
         'name': 'cogs',
@@ -3604,7 +3604,7 @@ GlobalEntities = {
         'pos': Point3(-0.720506, 27.5461, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 20094
+    },  # end entity 20094
     20095: {
         'type': 'nodepath',
         'name': 'cogs',
@@ -3613,7 +3613,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Point3(0, 0, 0),
         'scale': 1,
-        }, # end entity 20095
+    },  # end entity 20095
     20096: {
         'type': 'nodepath',
         'name': 'cogs',
@@ -3622,7 +3622,7 @@ GlobalEntities = {
         'pos': Point3(4.84921, 8.74482, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 20096
+    },  # end entity 20096
     # PAINTMIXER
     10017: {
         'type': 'paintMixer',
@@ -3641,7 +3641,7 @@ GlobalEntities = {
         'phaseShift': 0.5,
         'shaftScale': 1,
         'waitPercent': 0.10000000000000001,
-        }, # end entity 10017
+    },  # end entity 10017
     10018: {
         'type': 'paintMixer',
         'name': 'fourth',
@@ -3659,7 +3659,7 @@ GlobalEntities = {
         'phaseShift': 0.0,
         'shaftScale': 2.5,
         'waitPercent': 0.10000000000000001,
-        }, # end entity 10018
+    },  # end entity 10018
     10019: {
         'type': 'paintMixer',
         'name': 'third',
@@ -3677,7 +3677,7 @@ GlobalEntities = {
         'phaseShift': 0.0,
         'shaftScale': 2.5,
         'waitPercent': 0.10000000000000001,
-        }, # end entity 10019
+    },  # end entity 10019
     10020: {
         'type': 'paintMixer',
         'name': 'second',
@@ -3695,7 +3695,7 @@ GlobalEntities = {
         'phaseShift': 0.0,
         'shaftScale': 2.5,
         'waitPercent': 0.10000000000000001,
-        }, # end entity 10020
+    },  # end entity 10020
     10054: {
         'type': 'paintMixer',
         'name': 'first',
@@ -3713,7 +3713,7 @@ GlobalEntities = {
         'phaseShift': 0.0,
         'shaftScale': 1,
         'waitPercent': 0.10000000000000001,
-        }, # end entity 10054
+    },  # end entity 10054
     # PATH
     20008: {
         'type': 'path',
@@ -3725,7 +3725,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 0,
         'pathScale': 1.0,
-        }, # end entity 20008
+    },  # end entity 20008
     20009: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3736,7 +3736,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 17,
         'pathScale': 1.0,
-        }, # end entity 20009
+    },  # end entity 20009
     20010: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3747,7 +3747,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 36,
         'pathScale': 1.0,
-        }, # end entity 20010
+    },  # end entity 20010
     20012: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3758,7 +3758,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 34,
         'pathScale': 1.0,
-        }, # end entity 20012
+    },  # end entity 20012
     20015: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3769,7 +3769,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 37,
         'pathScale': 1.0,
-        }, # end entity 20015
+    },  # end entity 20015
     20038: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3780,7 +3780,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 38,
         'pathScale': 1.0,
-        }, # end entity 20038
+    },  # end entity 20038
     20039: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3791,7 +3791,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 12,
         'pathScale': 1.0,
-        }, # end entity 20039
+    },  # end entity 20039
     20040: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3802,7 +3802,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 0,
         'pathScale': 1.0,
-        }, # end entity 20040
+    },  # end entity 20040
     20042: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3813,7 +3813,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 0,
         'pathScale': 1.0,
-        }, # end entity 20042
+    },  # end entity 20042
     20044: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3824,7 +3824,7 @@ GlobalEntities = {
         'scale': Vec3(1, 1, 1),
         'pathIndex': 6,
         'pathScale': 1.0,
-        }, # end entity 20044
+    },  # end entity 20044
     20045: {
         'type': 'path',
         'name': 'copy of <unnamed>',
@@ -3835,7 +3835,7 @@ GlobalEntities = {
         'scale': Point3(1, 1, 1),
         'pathIndex': 7,
         'pathScale': 1.0,
-        }, # end entity 20045
+    },  # end entity 20045
     20049: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3846,7 +3846,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 13,
         'pathScale': 1.0,
-        }, # end entity 20049
+    },  # end entity 20049
     20051: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3857,7 +3857,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 42,
         'pathScale': 1.0,
-        }, # end entity 20051
+    },  # end entity 20051
     20053: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3868,7 +3868,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 8,
         'pathScale': 1.0,
-        }, # end entity 20053
+    },  # end entity 20053
     20055: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3879,7 +3879,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 9,
         'pathScale': 1.0,
-        }, # end entity 20055
+    },  # end entity 20055
     20059: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3890,7 +3890,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 10,
         'pathScale': 1.0,
-        }, # end entity 20059
+    },  # end entity 20059
     20061: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3901,7 +3901,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 11,
         'pathScale': 1.0,
-        }, # end entity 20061
+    },  # end entity 20061
     20067: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3912,7 +3912,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 39,
         'pathScale': 1.0,
-        }, # end entity 20067
+    },  # end entity 20067
     20068: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3923,7 +3923,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 40,
         'pathScale': 1.0,
-        }, # end entity 20068
+    },  # end entity 20068
     20069: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3934,7 +3934,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 5,
         'pathScale': 1.0,
-        }, # end entity 20069
+    },  # end entity 20069
     20070: {
         'type': 'path',
         'name': 'copy of <unnamed>',
@@ -3945,7 +3945,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 5,
         'pathScale': 1.0,
-        }, # end entity 20070
+    },  # end entity 20070
     20073: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3956,7 +3956,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 35,
         'pathScale': 1.0,
-        }, # end entity 20073
+    },  # end entity 20073
     20075: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3967,7 +3967,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 14,
         'pathScale': 1.0,
-        }, # end entity 20075
+    },  # end entity 20075
     20076: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3978,7 +3978,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 15,
         'pathScale': 1.0,
-        }, # end entity 20076
+    },  # end entity 20076
     20077: {
         'type': 'path',
         'name': '<unnamed>',
@@ -3989,7 +3989,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 16,
         'pathScale': 1.0,
-        }, # end entity 20077
+    },  # end entity 20077
     20078: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4000,7 +4000,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 18,
         'pathScale': 1.0,
-        }, # end entity 20078
+    },  # end entity 20078
     20079: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4011,7 +4011,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 0,
         'pathScale': 1.0,
-        }, # end entity 20079
+    },  # end entity 20079
     20084: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4022,7 +4022,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 41,
         'pathScale': 1.0,
-        }, # end entity 20084
+    },  # end entity 20084
     20097: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4033,7 +4033,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 19,
         'pathScale': 1.0,
-        }, # end entity 20097
+    },  # end entity 20097
     20098: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4044,7 +4044,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 20,
         'pathScale': 1.0,
-        }, # end entity 20098
+    },  # end entity 20098
     20099: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4055,7 +4055,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 21,
         'pathScale': 1.0,
-        }, # end entity 20099
+    },  # end entity 20099
     20100: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4066,7 +4066,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 22,
         'pathScale': 1.0,
-        }, # end entity 20100
+    },  # end entity 20100
     20101: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4077,7 +4077,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 23,
         'pathScale': 1.0,
-        }, # end entity 20101
+    },  # end entity 20101
     20102: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4088,7 +4088,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 24,
         'pathScale': 1.0,
-        }, # end entity 20102
+    },  # end entity 20102
     20103: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4099,7 +4099,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 25,
         'pathScale': 1.0,
-        }, # end entity 20103
+    },  # end entity 20103
     20104: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4110,7 +4110,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 26,
         'pathScale': 1.0,
-        }, # end entity 20104
+    },  # end entity 20104
     20105: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4121,7 +4121,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 27,
         'pathScale': 1.0,
-        }, # end entity 20105
+    },  # end entity 20105
     20106: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4132,7 +4132,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 28,
         'pathScale': 1.0,
-        }, # end entity 20106
+    },  # end entity 20106
     20107: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4143,7 +4143,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 29,
         'pathScale': 1.0,
-        }, # end entity 20107
+    },  # end entity 20107
     20108: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4154,7 +4154,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 30,
         'pathScale': 1.0,
-        }, # end entity 20108
+    },  # end entity 20108
     20109: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4165,7 +4165,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 31,
         'pathScale': 1.0,
-        }, # end entity 20109
+    },  # end entity 20109
     20110: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4176,7 +4176,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 32,
         'pathScale': 1.0,
-        }, # end entity 20110
+    },  # end entity 20110
     20111: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4187,7 +4187,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 33,
         'pathScale': 1.0,
-        }, # end entity 20111
+    },  # end entity 20111
     60133: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4198,7 +4198,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 0,
         'pathScale': 1.0,
-        }, # end entity 60133
+    },  # end entity 60133
     60134: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4209,7 +4209,7 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 0,
         'pathScale': 1.0,
-        }, # end entity 60134
+    },  # end entity 60134
     60135: {
         'type': 'path',
         'name': '<unnamed>',
@@ -4220,14 +4220,14 @@ GlobalEntities = {
         'scale': 1,
         'pathIndex': 0,
         'pathScale': 1.0,
-        }, # end entity 60135
+    },  # end entity 60135
     # PROPSPINNER
     10042: {
         'type': 'propSpinner',
         'name': '<unnamed>',
         'comment': '',
         'parentEntId': 7,
-        }, # end entity 10042
+    },  # end entity 10042
     # STOMPER
     20001: {
         'type': 'stomper',
@@ -4254,7 +4254,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 20001
+    },  # end entity 20001
     20002: {
         'type': 'stomper',
         'name': 'copy of <unnamed>',
@@ -4280,7 +4280,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 20002
+    },  # end entity 20002
     20003: {
         'type': 'stomper',
         'name': 'copy of copy of <unnamed>',
@@ -4306,7 +4306,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 20003
+    },  # end entity 20003
     20004: {
         'type': 'stomper',
         'name': 'copy of <unnamed>',
@@ -4332,7 +4332,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 20004
+    },  # end entity 20004
     20005: {
         'type': 'stomper',
         'name': 'copy of copy of <unnamed>',
@@ -4358,7 +4358,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 20005
+    },  # end entity 20005
     20006: {
         'type': 'stomper',
         'name': 'copy of copy of copy of <unnamed>',
@@ -4384,7 +4384,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 20006
+    },  # end entity 20006
     20007: {
         'type': 'stomper',
         'name': 'copy of copy of copy of copy of <unnamed>',
@@ -4410,7 +4410,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 20007
+    },  # end entity 20007
     20029: {
         'type': 'stomper',
         'name': '<unnamed>',
@@ -4437,7 +4437,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 20029
+    },  # end entity 20029
     20030: {
         'type': 'stomper',
         'name': 'copy of <unnamed>',
@@ -4464,7 +4464,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 20030
+    },  # end entity 20030
     20031: {
         'type': 'stomper',
         'name': 'copy of copy of <unnamed>',
@@ -4491,7 +4491,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 20031
+    },  # end entity 20031
     20032: {
         'type': 'stomper',
         'name': 'copy of copy of copy of <unnamed>',
@@ -4518,7 +4518,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 20032
+    },  # end entity 20032
     # TRIGGER
     20050: {
         'type': 'trigger',
@@ -4532,7 +4532,7 @@ GlobalEntities = {
         'isOnEvent': 0,
         'secondsOn': 1,
         'triggerName': 'signatureRoomView',
-        }, # end entity 20050
+    },  # end entity 20050
     20057: {
         'type': 'trigger',
         'name': '<unnamed>',
@@ -4545,7 +4545,7 @@ GlobalEntities = {
         'isOnEvent': 0,
         'secondsOn': 1,
         'triggerName': 'lookoutTrigger',
-        }, # end entity 20057
+    },  # end entity 20057
     30077: {
         'type': 'trigger',
         'name': 'button cutscene',
@@ -4558,7 +4558,7 @@ GlobalEntities = {
         'isOnEvent': 0,
         'secondsOn': 1,
         'triggerName': '',
-        }, # end entity 30077
+    },  # end entity 30077
     # VISIBILITYEXTENDER
     10013: {
         'type': 'visibilityExtender',
@@ -4567,7 +4567,7 @@ GlobalEntities = {
         'parentEntId': 60009,
         'event': 60101,
         'newZones': [61],
-        }, # end entity 10013
+    },  # end entity 10013
     10043: {
         'type': 'visibilityExtender',
         'name': 'beyondLobby',
@@ -4575,7 +4575,7 @@ GlobalEntities = {
         'parentEntId': 10049,
         'event': 10057,
         'newZones': [5, 116],
-        }, # end entity 10043
+    },  # end entity 10043
     10044: {
         'type': 'visibilityExtender',
         'name': 'intoEntrance1',
@@ -4583,7 +4583,7 @@ GlobalEntities = {
         'parentEntId': 10051,
         'event': 30000,
         'newZones': [3],
-        }, # end entity 10044
+    },  # end entity 10044
     10058: {
         'type': 'visibilityExtender',
         'name': 'intoFarHallway',
@@ -4591,7 +4591,7 @@ GlobalEntities = {
         'parentEntId': 10049,
         'event': 10059,
         'newZones': [6, 118],
-        }, # end entity 10058
+    },  # end entity 10058
     10060: {
         'type': 'visibilityExtender',
         'name': 'intoLookout',
@@ -4599,7 +4599,7 @@ GlobalEntities = {
         'parentEntId': 10049,
         'event': 10061,
         'newZones': [23],
-        }, # end entity 10060
+    },  # end entity 10060
     10062: {
         'type': 'visibilityExtender',
         'name': 'intoLobby',
@@ -4607,7 +4607,7 @@ GlobalEntities = {
         'parentEntId': 60031,
         'event': 10063,
         'newZones': [4, 114],
-        }, # end entity 10062
+    },  # end entity 10062
     30022: {
         'type': 'visibilityExtender',
         'name': 'intoLobby',
@@ -4615,7 +4615,7 @@ GlobalEntities = {
         'parentEntId': 10049,
         'event': 30000,
         'newZones': [4, 113],
-        }, # end entity 30022
+    },  # end entity 30022
     30023: {
         'type': 'visibilityExtender',
         'name': 'beyond door 106',
@@ -4623,7 +4623,7 @@ GlobalEntities = {
         'parentEntId': 60017,
         'event': 30002,
         'newZones': [15, 126],
-        }, # end entity 30023
+    },  # end entity 30023
     30024: {
         'type': 'visibilityExtender',
         'name': 'beyond door 106',
@@ -4631,7 +4631,7 @@ GlobalEntities = {
         'parentEntId': 60016,
         'event': 30002,
         'newZones': [16],
-        }, # end entity 30024
+    },  # end entity 30024
     30025: {
         'type': 'visibilityExtender',
         'name': 'beyond door 126',
@@ -4639,7 +4639,7 @@ GlobalEntities = {
         'parentEntId': 60016,
         'event': 30021,
         'newZones': [14, 17, 121],
-        }, # end entity 30025
+    },  # end entity 30025
     30026: {
         'type': 'visibilityExtender',
         'name': 'beyond door 121',
@@ -4647,7 +4647,7 @@ GlobalEntities = {
         'parentEntId': 60015,
         'event': 30016,
         'newZones': [13, 119],
-        }, # end entity 30026
+    },  # end entity 30026
     30027: {
         'type': 'visibilityExtender',
         'name': 'beyond door 126',
@@ -4655,7 +4655,7 @@ GlobalEntities = {
         'parentEntId': 60015,
         'event': 30021,
         'newZones': [15, 106],
-        }, # end entity 30027
+    },  # end entity 30027
     30029: {
         'type': 'visibilityExtender',
         'name': 'beyondLobby',
@@ -4663,7 +4663,7 @@ GlobalEntities = {
         'parentEntId': 10051,
         'event': 30009,
         'newZones': [5, 116],
-        }, # end entity 30029
+    },  # end entity 30029
     30030: {
         'type': 'visibilityExtender',
         'name': 'beyond door 113',
@@ -4671,7 +4671,7 @@ GlobalEntities = {
         'parentEntId': 60000,
         'event': 30009,
         'newZones': [4, 114],
-        }, # end entity 30030
+    },  # end entity 30030
     30031: {
         'type': 'visibilityExtender',
         'name': 'beyond door 116',
@@ -4679,7 +4679,7 @@ GlobalEntities = {
         'parentEntId': 60000,
         'event': 30011,
         'newZones': [6, 109, 117, 118],
-        }, # end entity 30031
+    },  # end entity 30031
     30032: {
         'type': 'visibilityExtender',
         'name': 'intoHallwayFromLobby',
@@ -4687,7 +4687,7 @@ GlobalEntities = {
         'parentEntId': 60001,
         'event': 30011,
         'newZones': [5, 113],
-        }, # end entity 30032
+    },  # end entity 30032
     30033: {
         'type': 'visibilityExtender',
         'name': 'intoBoilerRoom',
@@ -4695,7 +4695,7 @@ GlobalEntities = {
         'parentEntId': 60001,
         'event': 30012,
         'newZones': [8],
-        }, # end entity 30033
+    },  # end entity 30033
     30034: {
         'type': 'visibilityExtender',
         'name': 'intoLookout',
@@ -4703,7 +4703,7 @@ GlobalEntities = {
         'parentEntId': 60001,
         'event': 30013,
         'newZones': [23, 39],
-        }, # end entity 30034
+    },  # end entity 30034
     30035: {
         'type': 'visibilityExtender',
         'name': 'intoGearRoom',
@@ -4711,7 +4711,7 @@ GlobalEntities = {
         'parentEntId': 60001,
         'event': 30005,
         'newZones': [7],
-        }, # end entity 30035
+    },  # end entity 30035
     30036: {
         'type': 'visibilityExtender',
         'name': 'beyond door 109',
@@ -4719,7 +4719,7 @@ GlobalEntities = {
         'parentEntId': 60002,
         'event': 30005,
         'newZones': [6, 116, 117, 118],
-        }, # end entity 30036
+    },  # end entity 30036
     30037: {
         'type': 'visibilityExtender',
         'name': 'beyond door 110',
@@ -4727,7 +4727,7 @@ GlobalEntities = {
         'parentEntId': 60002,
         'event': 30006,
         'newZones': [9, 25, 26, 33, 34, 35, 38, 41, 53, 112, 115, 200],
-        }, # end entity 30037
+    },  # end entity 30037
     30038: {
         'type': 'visibilityExtender',
         'name': 'beyond door 117',
@@ -4735,7 +4735,7 @@ GlobalEntities = {
         'parentEntId': 60005,
         'event': 30012,
         'newZones': [6, 109, 116, 118],
-        }, # end entity 30038
+    },  # end entity 30038
     30039: {
         'type': 'visibilityExtender',
         'name': 'beyond door 108',
@@ -4743,7 +4743,7 @@ GlobalEntities = {
         'parentEntId': 60005,
         'event': 30004,
         'newZones': [12, 21, 26, 34, 35, 40, 41, 53, 60, 119, 120, 200],
-        }, # end entity 30039
+    },  # end entity 30039
     30041: {
         'type': 'visibilityExtender',
         'name': 'beyond door 110',
@@ -4751,7 +4751,7 @@ GlobalEntities = {
         'parentEntId': 60003,
         'event': 30006,
         'newZones': [7],
-        }, # end entity 30041
+    },  # end entity 30041
     30042: {
         'type': 'visibilityExtender',
         'name': 'beyond door 112',
@@ -4759,7 +4759,7 @@ GlobalEntities = {
         'parentEntId': 60003,
         'event': 30008,
         'newZones': [10, 11],
-        }, # end entity 30042
+    },  # end entity 30042
     30043: {
         'type': 'visibilityExtender',
         'name': 'intoWarehouse',
@@ -4767,7 +4767,7 @@ GlobalEntities = {
         'parentEntId': 60003,
         'event': 30010,
         'newZones': [24, 39],
-        }, # end entity 30043
+    },  # end entity 30043
     30044: {
         'type': 'visibilityExtender',
         'name': 'beyond door 112',
@@ -4775,7 +4775,7 @@ GlobalEntities = {
         'parentEntId': 60004,
         'event': 30008,
         'newZones': [9, 25, 26, 33, 34, 35, 38, 41, 53, 110, 115, 200],
-        }, # end entity 30044
+    },  # end entity 30044
     30046: {
         'type': 'visibilityExtender',
         'name': 'beyond door 112',
@@ -4783,7 +4783,7 @@ GlobalEntities = {
         'parentEntId': 60066,
         'event': 30008,
         'newZones': [9, 25, 26, 41, 200],
-        }, # end entity 30046
+    },  # end entity 30046
     30049: {
         'type': 'visibilityExtender',
         'name': 'beyond door 119',
@@ -4791,7 +4791,7 @@ GlobalEntities = {
         'parentEntId': 60013,
         'event': 30014,
         'newZones': [12, 21, 23, 26, 33, 34, 35, 41, 53, 60, 108, 112, 120, 200],
-        }, # end entity 30049
+    },  # end entity 30049
     30050: {
         'type': 'visibilityExtender',
         'name': 'beyond door 121',
@@ -4799,7 +4799,7 @@ GlobalEntities = {
         'parentEntId': 60013,
         'event': 30016,
         'newZones': [14, 17, 126],
-        }, # end entity 30050
+    },  # end entity 30050
     30051: {
         'type': 'visibilityExtender',
         'name': 'beyond door 121',
@@ -4807,7 +4807,7 @@ GlobalEntities = {
         'parentEntId': 60014,
         'event': 30016,
         'newZones': [13, 119],
-        }, # end entity 30051
+    },  # end entity 30051
     30052: {
         'type': 'visibilityExtender',
         'name': 'beyond door 126',
@@ -4815,7 +4815,7 @@ GlobalEntities = {
         'parentEntId': 60014,
         'event': 30021,
         'newZones': [15, 106],
-        }, # end entity 30052
+    },  # end entity 30052
     30055: {
         'type': 'visibilityExtender',
         'name': 'beyond door 105',
@@ -4823,7 +4823,7 @@ GlobalEntities = {
         'parentEntId': 60019,
         'event': 30001,
         'newZones': [27, 127],
-        }, # end entity 30055
+    },  # end entity 30055
     30056: {
         'type': 'visibilityExtender',
         'name': 'beyond door 105',
@@ -4831,7 +4831,7 @@ GlobalEntities = {
         'parentEntId': 60018,
         'event': 30001,
         'newZones': [27, 127],
-        }, # end entity 30056
+    },  # end entity 30056
     30057: {
         'type': 'visibilityExtender',
         'name': 'beyond door 103',
@@ -4839,7 +4839,7 @@ GlobalEntities = {
         'parentEntId': 60018,
         'event': 60088,
         'newZones': [17],
-        }, # end entity 30057
+    },  # end entity 30057
     30059: {
         'type': 'visibilityExtender',
         'name': 'beyond door 108',
@@ -4847,7 +4847,7 @@ GlobalEntities = {
         'parentEntId': 60006,
         'event': 30004,
         'newZones': [8, 117],
-        }, # end entity 30059
+    },  # end entity 30059
     30060: {
         'type': 'visibilityExtender',
         'name': 'beyond door 119',
@@ -4855,7 +4855,7 @@ GlobalEntities = {
         'parentEntId': 60006,
         'event': 30014,
         'newZones': [13, 121],
-        }, # end entity 30060
+    },  # end entity 30060
     30061: {
         'type': 'visibilityExtender',
         'name': 'intoWarehouse',
@@ -4863,7 +4863,7 @@ GlobalEntities = {
         'parentEntId': 60006,
         'event': 30015,
         'newZones': [24, 39],
-        }, # end entity 30061
+    },  # end entity 30061
     30062: {
         'type': 'visibilityExtender',
         'name': 'beyond door 107',
@@ -4871,7 +4871,7 @@ GlobalEntities = {
         'parentEntId': 60024,
         'event': 30003,
         'newZones': [27, 127],
-        }, # end entity 30062
+    },  # end entity 30062
     30063: {
         'type': 'visibilityExtender',
         'name': 'intoHallway',
@@ -4879,7 +4879,7 @@ GlobalEntities = {
         'parentEntId': 60031,
         'event': 30013,
         'newZones': [6, 109, 116, 117],
-        }, # end entity 30063
+    },  # end entity 30063
     30064: {
         'type': 'visibilityExtender',
         'name': 'beyondLowerWestDoor',
@@ -4887,7 +4887,7 @@ GlobalEntities = {
         'parentEntId': 60007,
         'event': 30015,
         'newZones': [12, 21, 26, 34, 40, 41, 53, 200],
-        }, # end entity 30064
+    },  # end entity 30064
     30066: {
         'type': 'visibilityExtender',
         'name': 'beyondLowerEastDoor',
@@ -4895,7 +4895,7 @@ GlobalEntities = {
         'parentEntId': 60007,
         'event': 30010,
         'newZones': [9, 25, 26, 33, 38, 41, 200],
-        }, # end entity 30066
+    },  # end entity 30066
     30067: {
         'type': 'visibilityExtender',
         'name': 'beyondUpperEastDoor',
@@ -4903,7 +4903,7 @@ GlobalEntities = {
         'parentEntId': 60007,
         'event': 30019,
         'newZones': [9, 33, 38, 41, 200, 222],
-        }, # end entity 30067
+    },  # end entity 30067
     30069: {
         'type': 'visibilityExtender',
         'name': 'beyond door 118',
@@ -4911,7 +4911,7 @@ GlobalEntities = {
         'parentEntId': 60000,
         'event': 30068,
         'newZones': [23],
-        }, # end entity 30069
+    },  # end entity 30069
     30071: {
         'type': 'visibilityExtender',
         'name': 'intoLobby',
@@ -4919,7 +4919,7 @@ GlobalEntities = {
         'parentEntId': 60001,
         'event': 60030,
         'newZones': [4, 114],
-        }, # end entity 30071
+    },  # end entity 30071
     30073: {
         'type': 'visibilityExtender',
         'name': 'intoLobbyHallway',
@@ -4927,7 +4927,7 @@ GlobalEntities = {
         'parentEntId': 60031,
         'event': 60033,
         'newZones': [5, 113],
-        }, # end entity 30073
+    },  # end entity 30073
     30075: {
         'type': 'visibilityExtender',
         'name': 'intoGearRoom',
@@ -4935,7 +4935,7 @@ GlobalEntities = {
         'parentEntId': 60031,
         'event': 60034,
         'newZones': [7],
-        }, # end entity 30075
+    },  # end entity 30075
     60008: {
         'type': 'visibilityExtender',
         'name': 'beyondUpperWestDoor',
@@ -4943,7 +4943,7 @@ GlobalEntities = {
         'parentEntId': 60007,
         'event': 30020,
         'newZones': [12, 21, 34, 40, 41, 60, 127, 200],
-        }, # end entity 60008
+    },  # end entity 60008
     60010: {
         'type': 'visibilityExtender',
         'name': 'intoWarehouse',
@@ -4951,7 +4951,7 @@ GlobalEntities = {
         'parentEntId': 60009,
         'event': 30019,
         'newZones': [24, 39, 125],
-        }, # end entity 60010
+    },  # end entity 60010
     60012: {
         'type': 'visibilityExtender',
         'name': 'beyond door 125',
@@ -4959,7 +4959,7 @@ GlobalEntities = {
         'parentEntId': 60011,
         'event': 30020,
         'newZones': [24, 39, 124],
-        }, # end entity 60012
+    },  # end entity 60012
     60020: {
         'type': 'visibilityExtender',
         'name': 'beyond door 106',
@@ -4967,7 +4967,7 @@ GlobalEntities = {
         'parentEntId': 60015,
         'event': 60076,
         'newZones': [16],
-        }, # end entity 60020
+    },  # end entity 60020
     60021: {
         'type': 'visibilityExtender',
         'name': 'beyond door 116',
@@ -4975,7 +4975,7 @@ GlobalEntities = {
         'parentEntId': 10051,
         'event': 60023,
         'newZones': [6, 118],
-        }, # end entity 60021
+    },  # end entity 60021
     60022: {
         'type': 'visibilityExtender',
         'name': 'beyond door 118',
@@ -4983,7 +4983,7 @@ GlobalEntities = {
         'parentEntId': 10051,
         'event': 60025,
         'newZones': [23],
-        }, # end entity 60022
+    },  # end entity 60022
     60026: {
         'type': 'visibilityExtender',
         'name': 'beyond door 109',
@@ -4991,7 +4991,7 @@ GlobalEntities = {
         'parentEntId': 60000,
         'event': 60028,
         'newZones': [7],
-        }, # end entity 60026
+    },  # end entity 60026
     60027: {
         'type': 'visibilityExtender',
         'name': 'beyond door 117',
@@ -4999,7 +4999,7 @@ GlobalEntities = {
         'parentEntId': 60000,
         'event': 60029,
         'newZones': [8],
-        }, # end entity 60027
+    },  # end entity 60027
     60032: {
         'type': 'visibilityExtender',
         'name': 'intoBoilerRoom',
@@ -5007,7 +5007,7 @@ GlobalEntities = {
         'parentEntId': 60031,
         'event': 60035,
         'newZones': [8],
-        }, # end entity 60032
+    },  # end entity 60032
     60036: {
         'type': 'visibilityExtender',
         'name': 'beyond door 117',
@@ -5015,7 +5015,7 @@ GlobalEntities = {
         'parentEntId': 60002,
         'event': 60037,
         'newZones': [8],
-        }, # end entity 60036
+    },  # end entity 60036
     60038: {
         'type': 'visibilityExtender',
         'name': 'beyond door 109',
@@ -5023,7 +5023,7 @@ GlobalEntities = {
         'parentEntId': 60005,
         'event': 60039,
         'newZones': [7],
-        }, # end entity 60038
+    },  # end entity 60038
     60040: {
         'type': 'visibilityExtender',
         'name': 'beyond door 124',
@@ -5031,7 +5031,7 @@ GlobalEntities = {
         'parentEntId': 60011,
         'event': 60041,
         'newZones': [38],
-        }, # end entity 60040
+    },  # end entity 60040
     60042: {
         'type': 'visibilityExtender',
         'name': 'beyondWarehouse',
@@ -5039,7 +5039,7 @@ GlobalEntities = {
         'parentEntId': 60009,
         'event': 60043,
         'newZones': [12, 200],
-        }, # end entity 60042
+    },  # end entity 60042
     60045: {
         'type': 'visibilityExtender',
         'name': 'beyond door 124',
@@ -5047,7 +5047,7 @@ GlobalEntities = {
         'parentEntId': 60044,
         'event': 60047,
         'newZones': [24],
-        }, # end entity 60045
+    },  # end entity 60045
     60046: {
         'type': 'visibilityExtender',
         'name': 'beyond door 128',
@@ -5055,7 +5055,7 @@ GlobalEntities = {
         'parentEntId': 60044,
         'event': 10002,
         'newZones': [31],
-        }, # end entity 60046
+    },  # end entity 60046
     60048: {
         'type': 'visibilityExtender',
         'name': 'beyond door 127',
@@ -5063,7 +5063,7 @@ GlobalEntities = {
         'parentEntId': 60024,
         'event': 60049,
         'newZones': [21, 200],
-        }, # end entity 60048
+    },  # end entity 60048
     60050: {
         'type': 'visibilityExtender',
         'name': 'beyond door 127',
@@ -5071,7 +5071,7 @@ GlobalEntities = {
         'parentEntId': 60019,
         'event': 60051,
         'newZones': [21, 34, 200],
-        }, # end entity 60050
+    },  # end entity 60050
     60052: {
         'type': 'visibilityExtender',
         'name': 'beyond door 121',
@@ -5079,7 +5079,7 @@ GlobalEntities = {
         'parentEntId': 60016,
         'event': 60053,
         'newZones': [13, 119],
-        }, # end entity 60052
+    },  # end entity 60052
     60054: {
         'type': 'visibilityExtender',
         'name': 'beyond door 126',
@@ -5087,7 +5087,7 @@ GlobalEntities = {
         'parentEntId': 60017,
         'event': 60055,
         'newZones': [14, 17, 121],
-        }, # end entity 60054
+    },  # end entity 60054
     60056: {
         'type': 'visibilityExtender',
         'name': 'beyond door 126',
@@ -5095,7 +5095,7 @@ GlobalEntities = {
         'parentEntId': 60013,
         'event': 60057,
         'newZones': [15, 106],
-        }, # end entity 60056
+    },  # end entity 60056
     60058: {
         'type': 'visibilityExtender',
         'name': 'beyond door 116',
@@ -5103,7 +5103,7 @@ GlobalEntities = {
         'parentEntId': 60005,
         'event': 60059,
         'newZones': [5],
-        }, # end entity 60058
+    },  # end entity 60058
     60060: {
         'type': 'visibilityExtender',
         'name': 'beyond door 118',
@@ -5111,7 +5111,7 @@ GlobalEntities = {
         'parentEntId': 60005,
         'event': 60061,
         'newZones': [23],
-        }, # end entity 60060
+    },  # end entity 60060
     60062: {
         'type': 'visibilityExtender',
         'name': 'beyond door 116',
@@ -5119,7 +5119,7 @@ GlobalEntities = {
         'parentEntId': 60002,
         'event': 60064,
         'newZones': [5],
-        }, # end entity 60062
+    },  # end entity 60062
     60063: {
         'type': 'visibilityExtender',
         'name': 'beyond door 118',
@@ -5127,7 +5127,7 @@ GlobalEntities = {
         'parentEntId': 60002,
         'event': 60065,
         'newZones': [23],
-        }, # end entity 60063
+    },  # end entity 60063
     60068: {
         'type': 'visibilityExtender',
         'name': 'beyond door 105',
@@ -5135,7 +5135,7 @@ GlobalEntities = {
         'parentEntId': 60067,
         'event': 30001,
         'newZones': [18, 19, 20, 131],
-        }, # end entity 60068
+    },  # end entity 60068
     60069: {
         'type': 'visibilityExtender',
         'name': 'beyond door 107',
@@ -5143,7 +5143,7 @@ GlobalEntities = {
         'parentEntId': 60067,
         'event': 30003,
         'newZones': [22],
-        }, # end entity 60069
+    },  # end entity 60069
     60070: {
         'type': 'visibilityExtender',
         'name': 'beyond door 127',
@@ -5151,7 +5151,7 @@ GlobalEntities = {
         'parentEntId': 60067,
         'event': 10052,
         'newZones': [12, 21, 26, 34, 35, 40, 41, 53, 60, 200],
-        }, # end entity 60070
+    },  # end entity 60070
     60071: {
         'type': 'visibilityExtender',
         'name': 'beyond door 127',
@@ -5159,7 +5159,7 @@ GlobalEntities = {
         'parentEntId': 60006,
         'event': 10052,
         'newZones': [27, 105, 107],
-        }, # end entity 60071
+    },  # end entity 60071
     60072: {
         'type': 'visibilityExtender',
         'name': 'beyond door 107',
@@ -5167,7 +5167,7 @@ GlobalEntities = {
         'parentEntId': 60006,
         'event': 60074,
         'newZones': [22],
-        }, # end entity 60072
+    },  # end entity 60072
     60073: {
         'type': 'visibilityExtender',
         'name': 'beyond door 105',
@@ -5175,7 +5175,7 @@ GlobalEntities = {
         'parentEntId': 60006,
         'event': 60075,
         'newZones': [18],
-        }, # end entity 60073
+    },  # end entity 60073
     60077: {
         'type': 'visibilityExtender',
         'name': 'beyond door 106',
@@ -5183,7 +5183,7 @@ GlobalEntities = {
         'parentEntId': 60014,
         'event': 60078,
         'newZones': [16],
-        }, # end entity 60077
+    },  # end entity 60077
     60079: {
         'type': 'visibilityExtender',
         'name': 'beyond door 106',
@@ -5191,7 +5191,7 @@ GlobalEntities = {
         'parentEntId': 60013,
         'event': 60080,
         'newZones': [16],
-        }, # end entity 60079
+    },  # end entity 60079
     60081: {
         'type': 'visibilityExtender',
         'name': 'beyond door 121',
@@ -5199,7 +5199,7 @@ GlobalEntities = {
         'parentEntId': 60017,
         'event': 60082,
         'newZones': [13],
-        }, # end entity 60081
+    },  # end entity 60081
     60083: {
         'type': 'visibilityExtender',
         'name': 'beyond door 119',
@@ -5207,7 +5207,7 @@ GlobalEntities = {
         'parentEntId': 60005,
         'event': 60084,
         'newZones': [13],
-        }, # end entity 60083
+    },  # end entity 60083
     60085: {
         'type': 'visibilityExtender',
         'name': 'beyond door 112',
@@ -5215,7 +5215,7 @@ GlobalEntities = {
         'parentEntId': 60002,
         'event': 60086,
         'newZones': [10],
-        }, # end entity 60085
+    },  # end entity 60085
     60087: {
         'type': 'visibilityExtender',
         'name': 'beyond door 105',
@@ -5223,7 +5223,7 @@ GlobalEntities = {
         'parentEntId': 60015,
         'event': 60091,
         'newZones': [27],
-        }, # end entity 60087
+    },  # end entity 60087
     60089: {
         'type': 'visibilityExtender',
         'name': 'beyond door 103',
@@ -5231,7 +5231,7 @@ GlobalEntities = {
         'parentEntId': 60019,
         'event': 60088,
         'newZones': [17],
-        }, # end entity 60089
+    },  # end entity 60089
     60090: {
         'type': 'visibilityExtender',
         'name': 'beyond door 103',
@@ -5239,7 +5239,7 @@ GlobalEntities = {
         'parentEntId': 60015,
         'event': 60088,
         'newZones': [18, 19, 105],
-        }, # end entity 60090
+    },  # end entity 60090
     60092: {
         'type': 'visibilityExtender',
         'name': 'beyond door 103',
@@ -5247,7 +5247,7 @@ GlobalEntities = {
         'parentEntId': 60067,
         'event': 60093,
         'newZones': [17],
-        }, # end entity 60092
+    },  # end entity 60092
     60097: {
         'type': 'visibilityExtender',
         'name': 'beyond door 130',
@@ -5255,7 +5255,7 @@ GlobalEntities = {
         'parentEntId': 60096,
         'event': 60095,
         'newZones': [33, 34, 35, 36, 37, 60, 61, 128, 129, 200],
-        }, # end entity 60097
+    },  # end entity 60097
     60098: {
         'type': 'visibilityExtender',
         'name': 'beyond door 130',
@@ -5263,7 +5263,7 @@ GlobalEntities = {
         'parentEntId': 60044,
         'event': 60095,
         'newZones': [30],
-        }, # end entity 60098
+    },  # end entity 60098
     60099: {
         'type': 'visibilityExtender',
         'name': 'beyond door 128',
@@ -5271,7 +5271,7 @@ GlobalEntities = {
         'parentEntId': 60096,
         'event': 60100,
         'newZones': [31],
-        }, # end entity 60099
+    },  # end entity 60099
     60106: {
         'type': 'visibilityExtender',
         'name': 'beyond door 129',
@@ -5279,7 +5279,7 @@ GlobalEntities = {
         'parentEntId': 60011,
         'event': 60094,
         'newZones': [32],
-        }, # end entity 60106
+    },  # end entity 60106
     60107: {
         'type': 'visibilityExtender',
         'name': 'beyond door 130',
@@ -5287,7 +5287,7 @@ GlobalEntities = {
         'parentEntId': 60011,
         'event': 60095,
         'newZones': [30],
-        }, # end entity 60107
+    },  # end entity 60107
     60109: {
         'type': 'visibilityExtender',
         'name': 'beyond door 129',
@@ -5295,7 +5295,7 @@ GlobalEntities = {
         'parentEntId': 60108,
         'event': 60094,
         'newZones': [32],
-        }, # end entity 60109
+    },  # end entity 60109
     60110: {
         'type': 'visibilityExtender',
         'name': 'beyond door 130',
@@ -5303,7 +5303,7 @@ GlobalEntities = {
         'parentEntId': 60108,
         'event': 60095,
         'newZones': [30],
-        }, # end entity 60110
+    },  # end entity 60110
     60112: {
         'type': 'visibilityExtender',
         'name': 'beyond door 129',
@@ -5311,7 +5311,7 @@ GlobalEntities = {
         'parentEntId': 60111,
         'event': 60094,
         'newZones': [32],
-        }, # end entity 60112
+    },  # end entity 60112
     60113: {
         'type': 'visibilityExtender',
         'name': 'beyond door 130',
@@ -5319,7 +5319,7 @@ GlobalEntities = {
         'parentEntId': 60111,
         'event': 60095,
         'newZones': [30],
-        }, # end entity 60113
+    },  # end entity 60113
     60115: {
         'type': 'visibilityExtender',
         'name': 'beyond door 129',
@@ -5327,7 +5327,7 @@ GlobalEntities = {
         'parentEntId': 60114,
         'event': 60094,
         'newZones': [32],
-        }, # end entity 60115
+    },  # end entity 60115
     60116: {
         'type': 'visibilityExtender',
         'name': 'beyond door 130',
@@ -5335,7 +5335,7 @@ GlobalEntities = {
         'parentEntId': 60114,
         'event': 60095,
         'newZones': [30],
-        }, # end entity 60116
+    },  # end entity 60116
     60117: {
         'type': 'visibilityExtender',
         'name': 'beyond door 103',
@@ -5343,7 +5343,7 @@ GlobalEntities = {
         'parentEntId': 60014,
         'event': 60088,
         'newZones': [18],
-        }, # end entity 60117
+    },  # end entity 60117
     60120: {
         'type': 'visibilityExtender',
         'name': 'beyond door 128',
@@ -5351,7 +5351,7 @@ GlobalEntities = {
         'parentEntId': 60108,
         'event': 10002,
         'newZones': [31],
-        }, # end entity 60120
+    },  # end entity 60120
     60122: {
         'type': 'visibilityExtender',
         'name': 'beyond door 128',
@@ -5359,7 +5359,7 @@ GlobalEntities = {
         'parentEntId': 60121,
         'event': 10002,
         'newZones': [33, 34, 35, 36, 37, 60, 61, 128, 129, 130, 200],
-        }, # end entity 60122
+    },  # end entity 60122
     60123: {
         'type': 'visibilityExtender',
         'name': 'beyond door 128',
@@ -5367,7 +5367,7 @@ GlobalEntities = {
         'parentEntId': 60111,
         'event': 10002,
         'newZones': [],
-        }, # end entity 60123
+    },  # end entity 60123
     60124: {
         'type': 'visibilityExtender',
         'name': 'beyond door 128',
@@ -5375,7 +5375,7 @@ GlobalEntities = {
         'parentEntId': 60114,
         'event': 10002,
         'newZones': [31],
-        }, # end entity 60124
+    },  # end entity 60124
     60125: {
         'type': 'visibilityExtender',
         'name': 'beyond door 128',
@@ -5383,7 +5383,7 @@ GlobalEntities = {
         'parentEntId': 60011,
         'event': 10002,
         'newZones': [31],
-        }, # end entity 60125
+    },  # end entity 60125
     60127: {
         'type': 'visibilityExtender',
         'name': 'beyond door 128',
@@ -5391,7 +5391,7 @@ GlobalEntities = {
         'parentEntId': 60126,
         'event': 10002,
         'newZones': [31],
-        }, # end entity 60127
+    },  # end entity 60127
     60128: {
         'type': 'visibilityExtender',
         'name': 'beyond door 129',
@@ -5399,7 +5399,7 @@ GlobalEntities = {
         'parentEntId': 60126,
         'event': 60094,
         'newZones': [32],
-        }, # end entity 60128
+    },  # end entity 60128
     60129: {
         'type': 'visibilityExtender',
         'name': 'beyond door 130',
@@ -5407,7 +5407,7 @@ GlobalEntities = {
         'parentEntId': 60126,
         'event': 60095,
         'newZones': [30],
-        }, # end entity 60129
+    },  # end entity 60129
     60131: {
         'type': 'visibilityExtender',
         'name': 'beyond door 129',
@@ -5415,7 +5415,7 @@ GlobalEntities = {
         'parentEntId': 60130,
         'event': 60094,
         'newZones': [33, 34, 35, 36, 37, 60, 61, 128, 130, 200],
-        }, # end entity 60131
+    },  # end entity 60131
     60136: {
         'type': 'visibilityExtender',
         'name': 'beyond door 129',
@@ -5423,7 +5423,7 @@ GlobalEntities = {
         'parentEntId': 60044,
         'event': 60094,
         'newZones': [32],
-        }, # end entity 60136
+    },  # end entity 60136
     60137: {
         'type': 'visibilityExtender',
         'name': 'beyond door 129',
@@ -5431,7 +5431,7 @@ GlobalEntities = {
         'parentEntId': 60096,
         'event': 60138,
         'newZones': [32],
-        }, # end entity 60137
+    },  # end entity 60137
     60139: {
         'type': 'visibilityExtender',
         'name': 'beyond door 129',
@@ -5439,7 +5439,7 @@ GlobalEntities = {
         'parentEntId': 60121,
         'event': 60141,
         'newZones': [32],
-        }, # end entity 60139
+    },  # end entity 60139
     60140: {
         'type': 'visibilityExtender',
         'name': 'beyond door 130',
@@ -5447,15 +5447,15 @@ GlobalEntities = {
         'parentEntId': 60121,
         'event': 60142,
         'newZones': [30],
-        }, # end entity 60140
-    }
+    },  # end entity 60140
+}
 
 Scenario0 = {
-    }
+}
 
 levelSpec = {
     'globalEntities': GlobalEntities,
     'scenarios': [
         Scenario0,
-        ],
-    }
+    ],
+}

@@ -6,6 +6,7 @@ from direct.showbase.PythonUtil import bound
 
 from otp.otpbase import OTPGlobals
 
+
 class OTPTimer(DirectFrame):
     """
     Implements a generic onscreen timer.
@@ -13,40 +14,40 @@ class OTPTimer(DirectFrame):
 
     ClockImage = None
     TimerId = 0
-    
+
     def __init__(self, useImage=True, highlightNearEnd=True):
         if useImage:
             image = self.getImage()
         else:
             image = None
-            
+
         DirectFrame.__init__(self,
-                             state = DGG.DISABLED,
-                             relief = None,
-                             scale = 0.45,
-                             image = image,
-                             image_pos = (0,0,0),
-                             text = "0",
-                             text_fg = (0, 0, 0, 1),
-                             text_font = OTPGlobals.getInterfaceFont(),
-                             text_pos = (-0.01, -0.15),
-                             text_scale = 0.35,
+                             state=DGG.DISABLED,
+                             relief=None,
+                             scale=0.45,
+                             image=image,
+                             image_pos=(0, 0, 0),
+                             text="0",
+                             text_fg=(0, 0, 0, 1),
+                             text_font=OTPGlobals.getInterfaceFont(),
+                             text_pos=(-0.01, -0.15),
+                             text_scale=0.35,
                              )
         self.initialiseoptions(OTPTimer)
-        
+
         self.timerId = OTPTimer.TimerId
         OTPTimer.TimerId += 1
-        
+
         self.highlightNearEnd = highlightNearEnd
         self.countdownTask = None
         self.currentTime = 0
         self.taskTime = 0.0
-        
+
         self.setFontColor(Vec4(0, 0, 0, 1))
-        
+
     def setFontColor(self, vColor):
         self.vFontColor = vColor
-        
+
     def getImage(self):
         """
         Returns the image suitable for rendering the clock face.  This
@@ -55,7 +56,7 @@ class OTPTimer(DirectFrame):
         it) every time a OTPTimer is created.  Derived classes can override
         this function to get a game-specific timer image
         """
-        if OTPTimer.ClockImage == None:
+        if OTPTimer.ClockImage is None:
             model = loader.loadModel("phase_3.5/models/gui/clock_gui")
             OTPTimer.ClockImage = model.find("**/alarm_clock")
             model.removeNode()
@@ -64,7 +65,7 @@ class OTPTimer(DirectFrame):
     def posInTopRightCorner(self):
         self.reparentTo(base.a2dTopRight)
         self.setPos(-0.17, 0, -0.17)
-        
+
     def posBelowTopRightCorner(self):
         self.reparentTo(base.a2dTopRight)
         self.setPos(-0.17, 0, -0.4)
@@ -72,7 +73,7 @@ class OTPTimer(DirectFrame):
     def posAboveShtikerBook(self):
         self.reparentTo(base.a2dBottomRight)
         self.setPos(-0.173, 0, 0.37)
-        
+
     def setTime(self, time):
         """
         Sets the timer's current time.
@@ -91,7 +92,8 @@ class OTPTimer(DirectFrame):
 
         if timeStrLen == 1:
             if time <= 5 and self.highlightNearEnd:
-                self.setTimeStr(timeStr, 0.34, (-0.025, -0.125), Vec4(1, 0, 0, 1))
+                self.setTimeStr(
+                    timeStr, 0.34, (-0.025, -0.125), Vec4(1, 0, 0, 1))
             else:
                 self.setTimeStr(timeStr, 0.34, (-0.025, -0.125))
         elif timeStrLen == 2:
@@ -99,7 +101,7 @@ class OTPTimer(DirectFrame):
         elif timeStrLen == 3:
             self.setTimeStr(timeStr, 0.2, (-0.01, -0.08))
 
-    def setTimeStr(self, timeStr, scale = 0.2, pos = (-0.01, -0.08), fg = None):
+    def setTimeStr(self, timeStr, scale=0.2, pos=(-0.01, -0.08), fg=None):
         """
         Sets the time label being displayed.
         """
@@ -109,10 +111,10 @@ class OTPTimer(DirectFrame):
         self["text_scale"] = scale
         self["text_pos"] = pos
         self["text"] = timeStr
-        
+
     def getElapsedTime(self):
         return self.taskTime
-    
+
     def _timerTask(self, task):
         """
         Task function called every frame to implement the timer
@@ -142,16 +144,16 @@ class OTPTimer(DirectFrame):
         self.countdownTask = Task.Task(self._timerTask)
         self.countdownTask.duration = duration
         self.countdownTask.callback = callback
-        taskMgr.remove("timerTask%s" % self.timerId)
-        
-        return taskMgr.add(self.countdownTask, "timerTask%s" % self.timerId)
+        taskMgr.remove(f"timerTask{self.timerId}")
+
+        return taskMgr.add(self.countdownTask, f"timerTask{self.timerId}")
 
     def timerExpired(self):
         """
         Add show elements here
         """
         return
-    
+
     def stop(self):
         """
         Stops the timer countdown. It gets rid of any countdowns.
@@ -162,12 +164,12 @@ class OTPTimer(DirectFrame):
     def reset(self):
         """
         Resets the timer. It geta rid of any countdowns and reset the clock to 0
-        """        
+        """
         self.stop()
         self.setTime(0)
-        taskMgr.remove("timerTask%s" % self.timerId)
+        taskMgr.remove(f"timerTask{self.timerId}")
         self.taskTime = 0.0
-        
+
     def destroy(self):
         self.reset()
         self.countdownTask = None
@@ -176,4 +178,3 @@ class OTPTimer(DirectFrame):
     def cleanup(self):
         self.destroy()
         self.notify.warning("Call destroy, not cleanup")
-    

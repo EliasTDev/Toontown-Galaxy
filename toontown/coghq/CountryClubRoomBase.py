@@ -2,8 +2,10 @@
 
 from toontown.toonbase import ToontownGlobals
 
+
 class CountryClubRoomBase:
     """ common functionality shared by DistributedCountryClubRoom/AI """
+
     def __init__(self):
         pass
 

@@ -10,7 +10,7 @@ from direct.fsm import State
 from direct.showbase.DirectObject import DirectObject
 from toontown.racing.KartShopGlobals import KartGlobals
 
-if( __debug__ ):
+if(__debug__):
     import pdb
 
 ##########################################################################
@@ -25,13 +25,14 @@ if( __debug__ ):
 # broken so that you can still get to the race instances.
 ##########################################################################
 
-###### NOTE
-###### If RacePad / Starting Block implementation changes, moving it
-###### more towards an elevator or trolley system. Remember that the
-###### DistributedViewingBlockAI code is derived from the Starting Block!
-###### See bottom class.
+# NOTE
+# If RacePad / Starting Block implementation changes, moving it
+# more towards an elevator or trolley system. Remember that the
+# DistributedViewingBlockAI code is derived from the Starting Block!
+# See bottom class.
 
-class DistributedStartingBlockAI( DistributedObjectAI.DistributedObjectAI ):
+
+class DistributedStartingBlockAI(DistributedObjectAI.DistributedObjectAI):
     """
     Purpose: MUST ADD COMMENTS HERE.
     """
@@ -39,17 +40,17 @@ class DistributedStartingBlockAI( DistributedObjectAI.DistributedObjectAI ):
     ######################################################################
     # Class Variables
     ######################################################################
-    notify = DirectNotifyGlobal.directNotify.newCategory( "DistributedStartingBlockAI" )
-    #notify.setDebug(True)
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedStartingBlockAI")
+    # notify.setDebug(True)
 
-
-    def __init__( self, air, kartPad, x, y, z, h, p, r, padLocationId ):
+    def __init__(self, air, kartPad, x, y, z, h, p, r, padLocationId):
         """
         Comments go here
         """
 
         # Initialize the Super Class
-        DistributedObjectAI.DistributedObjectAI.__init__( self, air )
+        DistributedObjectAI.DistributedObjectAI.__init__(self, air)
 
         # Initialize Instance Variables
         self.avId = 0
@@ -57,10 +58,10 @@ class DistributedStartingBlockAI( DistributedObjectAI.DistributedObjectAI ):
         self.kartPad = kartPad
         self.unexpectedEvent = None
         self.padLocationId = padLocationId
-        self.posHpr = ( x, y, z, h, p, r )
+        self.posHpr = (x, y, z, h, p, r)
         self.currentMovie = None
 
-    def delete( self ):
+    def delete(self):
         """
         Comments go here
         """
@@ -69,72 +70,72 @@ class DistributedStartingBlockAI( DistributedObjectAI.DistributedObjectAI ):
         self.kartPad = None
 
         # Perform Super Class Delete call
-        DistributedObjectAI.DistributedObjectAI.delete( self )
+        DistributedObjectAI.DistributedObjectAI.delete(self)
 
-    def getPadDoId( self ):
+    def getPadDoId(self):
         """
         Comment:
         """
         return self.kartPad.getDoId()
 
-    def getPadLocationId( self ):
+    def getPadLocationId(self):
         """
         Comment:
         """
         return self.padLocationId
 
-    def getPosHpr( self ):
+    def getPosHpr(self):
         """
         Comment:
         """
         return self.posHpr
 
-    def setActive( self, isActive ):
+    def setActive(self, isActive):
         """
         Comment:
         """
         self.isActive = isActive
 
-    def requestEnter( self, paid ):
+    def requestEnter(self, paid):
         """
         comment
         """
 
         avId = self.air.getAvatarIdFromSender()
-        if( self.isActive and ( self.avId == 0 ) ):
+        if(self.isActive and (self.avId == 0)):
             # Obtain the Avatar Id and attempt to add the avatar to the
             # kart pad.
-            success = self.kartPad.addAvBlock( avId, self, paid )
-
+            success = self.kartPad.addAvBlock(avId, self, paid)
 
             # Debug Notification of request entry.
-            self.notify.debug( "requestEnter: avId %s wants to enter the kart block." % ( avId ) )
+            self.notify.debug(
+                f"requestEnter: avId {avId} wants to enter the kart block.")
 
-            if( success == KartGlobals.ERROR_CODE.success ):
+            if(success == KartGlobals.ERROR_CODE.success):
                 # There is not currently an avatar occupying this kart block.
                 self.avId = avId
                 self.isActive = False
 
                 # Handle an unexpected exit by the avatar.
-                self.unexpectedEvent = self.air.getAvatarExitEvent( self.avId )
-                self.acceptOnce( self.unexpectedEvent, self.unexpectedExit )
+                self.unexpectedEvent = self.air.getAvatarExitEvent(self.avId)
+                self.acceptOnce(self.unexpectedEvent, self.unexpectedExit)
 
                 # Perform other operations here.
-                self.d_setOccupied( self.avId )
-                self.d_setMovie( KartGlobals.ENTER_MOVIE )
+                self.d_setOccupied(self.avId)
+                self.d_setMovie(KartGlobals.ENTER_MOVIE)
             else:
                 # The request for entry has been denied.
-                self.sendUpdateToAvatarId( avId, "rejectEnter", [ success ] )
+                self.sendUpdateToAvatarId(avId, "rejectEnter", [success])
         else:
-            if( hasattr( self.kartPad, 'state' ) and self.kartPad.state in [ 'WaitBoarding', 'AllAboard' ] ):
+            if(hasattr(self.kartPad, 'state') and self.kartPad.state in ['WaitBoarding', 'AllAboard']):
                 errorCode = KartGlobals.ERROR_CODE.eBoardOver
             else:
                 errorCode = KartGlobals.ERROR_CODE.eOccupied
 
             # The request for entry has been denied because the blocks are
-            self.sendUpdateToAvatarId( avId, "rejectEnter", [ errorCode ] )
+            self.sendUpdateToAvatarId(avId, "rejectEnter", [errorCode])
 
-    def requestExit( self ):
+    def requestExit(self):
         """
         Comment:
         """
@@ -143,10 +144,14 @@ class DistributedStartingBlockAI( DistributedObjectAI.DistributedObjectAI ):
         avId = self.air.getAvatarIdFromSender()
 
         # Debug Notification of exit request
-        self.notify.debug( "requestExit: avId %s wants to exit the Kart Block." % ( avId ) )
+        self.notify.debug(
+            f"requestExit: avId {avId} wants to exit the Kart Block.")
 
-        success = self.validate( avId, ( self.avId == avId ), "requestExit: avId is not occupying this kart block." )
-        if( not success ):
+        success = self.validate(
+            avId,
+            (self.avId == avId),
+            "requestExit: avId is not occupying this kart block.")
+        if(not success):
             return
 
         self.normalExit()
@@ -160,34 +165,34 @@ class DistributedStartingBlockAI( DistributedObjectAI.DistributedObjectAI ):
         self.currentMovie = None
         self.kartPad.kartMovieDone()
 
-    def cleanupAvatar( self ):
+    def cleanupAvatar(self):
         """
         Comment:
         """
 
         # Tell the KartPad that the toon is exiting the block.
 
-        self.ignore( self.unexpectedEvent )
-        self.kartPad.removeAvBlock( self.avId, self )
+        self.ignore(self.unexpectedEvent)
+        self.kartPad.removeAvBlock(self.avId, self)
         self.avId = 0
         self.isActive = True
-        self.d_setOccupied( 0 )
+        self.d_setOccupied(0)
 
-    def normalExit( self ):
+    def normalExit(self):
         """
         Comment:
         """
 
-        self.d_setMovie( KartGlobals.EXIT_MOVIE )
+        self.d_setMovie(KartGlobals.EXIT_MOVIE)
 
-    def raceExit( self ):
+    def raceExit(self):
         """
         Comment:
         """
         self.cleanupAvatar()
         self.movieFinished()
 
-    def unexpectedExit( self ):
+    def unexpectedExit(self):
         """
         Comment:
         """
@@ -199,20 +204,21 @@ class DistributedStartingBlockAI( DistributedObjectAI.DistributedObjectAI ):
     ######################################################################
     # Distributed Methods
     ######################################################################
-    def d_setOccupied( self, avId ):
+    def d_setOccupied(self, avId):
         """
         Comment:
         """
-        self.sendUpdate( "setOccupied", [ avId ] )
+        self.sendUpdate("setOccupied", [avId])
 
-    def d_setMovie( self, mode ):
+    def d_setMovie(self, mode):
         """
         Comment:
         """
         self.currentMovie = mode
-        self.sendUpdate( "setMovie", [ mode ] )
+        self.sendUpdate("setMovie", [mode])
 
-class DistributedViewingBlockAI( DistributedStartingBlockAI ):
+
+class DistributedViewingBlockAI(DistributedStartingBlockAI):
     """
     Derived from the Starting Block, mainly for use on the client-side
     since it will need different movies for the Viewer than it will
@@ -222,19 +228,19 @@ class DistributedViewingBlockAI( DistributedStartingBlockAI ):
     ######################################################################
     # Class Variables
     ######################################################################
-    notify = DirectNotifyGlobal.directNotify.newCategory( "DistributedViewingBlockAI" )
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedViewingBlockAI")
 
-    def __init__( self, air, kartPad, x, y, z, h, p, r, padLocationId ):
+    def __init__(self, air, kartPad, x, y, z, h, p, r, padLocationId):
         """
         """
         # Initialize the Super Class
-        DistributedStartingBlockAI.__init__( self, air, kartPad,
-                                             x, y, z, h, p, r,
-                                             padLocationId )
+        DistributedStartingBlockAI.__init__(self, air, kartPad,
+                                            x, y, z, h, p, r,
+                                            padLocationId)
 
-    def delete( self ):
+    def delete(self):
         """
         """
         # Call the Super Class delete
-        DistributedStartingBlockAI.delete( self )
-
+        DistributedStartingBlockAI.delete(self)

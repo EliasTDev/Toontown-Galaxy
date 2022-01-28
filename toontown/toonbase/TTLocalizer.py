@@ -7,6 +7,7 @@ to use in the game.
 
 # Do not import panda modules because it is not downloaded until Phase 3
 # This file is in phase 2
+from toontown.toonbase.TTLocalizerEnglish import *
 from panda3d.core import *
 import string
 import types
@@ -17,25 +18,28 @@ try:
     # before importing this file
     language = DConfig.GetString('language', 'english')
     checkLanguage = DConfig.GetBool('check-language', 0)
-except:
+except BaseException:
     # AI
     language = simbase.config.GetString("language", "english")
     checkLanguage = simbase.config.GetBool("check-language", 0)
 
 # Ask what language we are running in. Returns a string.
+
+
 def getLanguage():
     return language
 
-print(("TTLocalizer: Running in language: %s" % (language)))
+
+print(f"TTLocalizer: Running in language: {language}")
 if language == 'english':
-    _languageModule = "toontown.toonbase.TTLocalizer" + str.capitalize(language)
+    _languageModule = "toontown.toonbase.TTLocalizer" + \
+        str.capitalize(language)
 else:
-    checkLanguage = 1 
+    checkLanguage = 1
     _languageModule = "toontown.toonbase.TTLocalizer_" + language
 
 print("from " + _languageModule + " import *")
 #exec("from " + _languageModule + " import *")
-from toontown.toonbase.TTLocalizerEnglish import *
 if checkLanguage:
     l = {}
     g = {}
@@ -43,7 +47,7 @@ if checkLanguage:
     foreignModule = __import__(_languageModule, g, l)
     for key, val in list(englishModule.__dict__.items()):
         if key not in foreignModule.__dict__:
-            print(("WARNING: Foreign module: %s missing key: %s" % (_languageModule, key)))
+            print(f"WARNING: Foreign module: {_languageModule} missing key: {key}")
             # Add the english version to our local namespace so we do not crash
             locals()[key] = val
         else:
@@ -54,13 +58,14 @@ if checkLanguage:
                 fval = foreignModule.__dict__.get(key)
                 for dkey, dval in list(val.items()):
                     if dkey not in fval:
-                        print(("WARNING: Foreign module: %s missing key: %s.%s" % (_languageModule, key, dkey)))
+                        print(("WARNING: Foreign module: %s missing key: %s.%s" % (
+                            _languageModule, key, dkey)))
                         fval[dkey] = dval
                 for dkey in list(fval.keys()):
                     if dkey not in val:
-                        print(("WARNING: Foreign module: %s extra key: %s.%s" % (_languageModule, key, dkey)))
-
+                        print(("WARNING: Foreign module: %s extra key: %s.%s" %
+                              (_languageModule, key, dkey)))
 
     for key in list(foreignModule.__dict__.keys()):
         if key not in englishModule.__dict__:
-            print(("WARNING: Foreign module: %s extra key: %s" % (_languageModule, key)))
+            print(f"WARNING: Foreign module: {_languageModule} extra key: {key}")

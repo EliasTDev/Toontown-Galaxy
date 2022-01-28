@@ -4,12 +4,13 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
 import random
 
+
 class TreasurePlannerAI(DirectObject.DirectObject):
     notify = DirectNotifyGlobal.directNotify.newCategory(
         "TreasurePlannerAI")
 
     def __init__(self, zoneId, treasureConstructor, callback=None):
-        
+
         self.zoneId = zoneId
         self.treasureConstructor = treasureConstructor
         # Callback should be a function that takes one argument (avId)
@@ -52,7 +53,7 @@ class TreasurePlannerAI(DirectObject.DirectObject):
     def countEmptySpawnPoints(self):
         counter = 0
         for treasure in self.treasures:
-            if treasure == None:
+            if treasure is None:
                 counter += 1
         return counter
 
@@ -62,14 +63,14 @@ class TreasurePlannerAI(DirectObject.DirectObject):
         spawnPointCounter = -1
         while emptyCounter < n:
             spawnPointCounter += 1
-            if self.treasures[spawnPointCounter] == None:
+            if self.treasures[spawnPointCounter] is None:
                 emptyCounter += 1
         return spawnPointCounter
 
     def findIndexOfTreasureId(self, treasureId):
         counter = 0
         for treasure in self.treasures:
-            if treasure == None:
+            if treasure is None:
                 pass
             else:
                 if treasureId == treasure.getDoId():
@@ -86,8 +87,8 @@ class TreasurePlannerAI(DirectObject.DirectObject):
 
     def placeTreasure(self, index):
         # make sure this spot is empty
-        assert (self.treasures[index] == None)
-        
+        assert (self.treasures[index] is None)
+
         # Get the spawn point xyz
         spawnPoint = self.spawnPoints[index]
 
@@ -113,23 +114,26 @@ class TreasurePlannerAI(DirectObject.DirectObject):
             else:
                 secondsPerGrab = elapsed / self.requestCount
                 if self.requestCount >= 3 and secondsPerGrab <= 0.4:
-                    simbase.air.writeServerEvent('suspicious', avId, 'TreasurePlannerAI.grabAttempt %s treasures in %s seconds' % (self.requestCount, elapsed))
+                    simbase.air.writeServerEvent(
+                        'suspicious', avId, 'TreasurePlannerAI.grabAttempt %s treasures in %s seconds' %
+                        (self.requestCount, elapsed))
         else:
             self.lastRequestId = avId
             self.requestCount = 1
             self.requestStartTime = globalClock.getFrameTime()
 
         index = self.findIndexOfTreasureId(treasureId)
-        if index == None:
+        if index is None:
             # If it isn't here, it isn't here. Someone else must have
-            # grabbed it. 
+            # grabbed it.
             pass
         else:
             av = simbase.air.doId2do.get(avId)
-            if av == None:
+            if av is None:
                 # If avatar isn't here, do nothing
-                simbase.air.writeServerEvent('suspicious', avId, 'TreasurePlannerAI.grabAttempt unknown avatar')
-                self.notify.warning("avid: %s does not exist" % avId)
+                simbase.air.writeServerEvent(
+                    'suspicious', avId, 'TreasurePlannerAI.grabAttempt unknown avatar')
+                self.notify.warning(f"avid: {avId} does not exist")
 
             else:
                 # Find the treasure
@@ -154,7 +158,7 @@ class TreasurePlannerAI(DirectObject.DirectObject):
         # Spawns a task that waits five seconds, then deletes the treasure.
         taskName = treasure.uniqueName("deletingTreasure")
         taskMgr.doMethodLater(5, self.__deleteTreasureNow, taskName,
-                              extraArgs = (treasure,))
+                              extraArgs=(treasure,))
         self.deleteTaskNames.append(taskName)
 
     def deleteAllTreasuresNow(self):
@@ -175,6 +179,6 @@ class TreasurePlannerAI(DirectObject.DirectObject):
         self.treasures = []
         for spawnPoint in self.spawnPoints:
             self.treasures.append(None)
-            
+
     def __deleteTreasureNow(self, treasure):
         treasure.requestDelete()

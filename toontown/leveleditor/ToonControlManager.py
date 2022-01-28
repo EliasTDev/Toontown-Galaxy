@@ -11,6 +11,7 @@ from otp.otpbase import OTPGlobals
 
 from toontown.toon import RobotToon
 
+
 class ToonControlManager(ControlManager):
     def __init__(self, editor):
         self.fStarting = True
@@ -20,9 +21,9 @@ class ToonControlManager(ControlManager):
         self.oldFov = base.camLens.getFov()
 
         self.avatarMoving = 0
-        self.isPageUp=0
-        self.isPageDown=0
-        
+        self.isPageUp = 0
+        self.isPageDown = 0
+
         avatarRadius = 1.4
         floorOffset = OTPGlobals.FloorOffset
         reach = 4.0
@@ -37,7 +38,7 @@ class ToonControlManager(ControlManager):
         self.avatar.robot.loop('neutral')
 
         #walkControls=GravityWalker.GravityWalker(gravity = -32.1740 * 2.0)
-        walkControls=NonPhysicsWalker.NonPhysicsWalker()
+        walkControls = NonPhysicsWalker.NonPhysicsWalker()
         walkControls.setWallBitMask(OTPGlobals.WallBitmask)
         walkControls.setFloorBitMask(OTPGlobals.FloorBitmask)
         walkControls.initializeCollisions(self.cTrav, self.avatar,
@@ -51,32 +52,32 @@ class ToonControlManager(ControlManager):
             OTPGlobals.ToonJumpForce,
             OTPGlobals.ToonReverseSpeed,
             OTPGlobals.ToonRotateSpeed
-            )
+        )
 
         self.avatar.reparentTo(hidden)
         self.avatar.stopUpdateSmartCamera()
         self.fStarting = False
-        #ControlManager.disable(self)
-    
+        # ControlManager.disable(self)
+
     def enable(self):
         if self.fStarting:
             return
-        
+
         self.prepareToStart()
         ControlManager.enable(self)
 
         if base.direct.selected.last:
             base.direct.selected.deselect(base.direct.selected.last)
-        
-        self.avatarAnimTask = taskMgr.add(self.avatarAnimate, 'avatarAnimTask', 24)
+
+        self.avatarAnimTask = taskMgr.add(
+            self.avatarAnimate, 'avatarAnimTask', 24)
         self.avatar.startUpdateSmartCamera()
-        
+
         self.avatarMoving = 0
-        
+
     def disable(self):
         self.prepareToStop()
         ControlManager.disable(self)
-
 
     def lerpCameraP(self, p, time):
         """
@@ -85,6 +86,7 @@ class ToonControlManager(ControlManager):
         taskMgr.remove('cam-p-lerp')
         if self.avatar:
             self.avatar.stopUpdateSmartCamera()
+
         def setCamP(p):
             base.camera.setP(p)
 
@@ -95,9 +97,8 @@ class ToonControlManager(ControlManager):
         else:
             fromP = 0
 
-        self.camLerpInterval = LerpFunctionInterval(setCamP,
-            fromData=fromP, toData=p, duration=time,
-            name='cam-p-lerp')
+        self.camLerpInterval = LerpFunctionInterval(
+            setCamP, fromData=fromP, toData=p, duration=time, name='cam-p-lerp')
         self.camLerpInterval.start()
 
     def clearPageUpDown(self):
@@ -105,17 +106,17 @@ class ToonControlManager(ControlManager):
             self.lerpCameraP(0, 0.6)
             self.isPageDown = 0
             self.isPageUp = 0
-            #self.setCameraPositionByIndex(self.cameraIndex)
+            # self.setCameraPositionByIndex(self.cameraIndex)
 
         if self.avatar:
             self.avatar.startUpdateSmartCamera()
-            
+
     def pageUp(self):
         if not self.isPageUp:
             self.lerpCameraP(36.8699, 0.6)
             self.isPageDown = 0
             self.isPageUp = 1
-            #self.setCameraPositionByIndex(self.cameraIndex)
+            # self.setCameraPositionByIndex(self.cameraIndex)
         else:
             self.clearPageUpDown()
 
@@ -124,24 +125,24 @@ class ToonControlManager(ControlManager):
             self.lerpCameraP(-27.5607, 0.6)
             self.isPageUp = 0
             self.isPageDown = 1
-            #self.setCameraPositionByIndex(self.cameraIndex)
+            # self.setCameraPositionByIndex(self.cameraIndex)
         else:
-            self.clearPageUpDown()            
+            self.clearPageUpDown()
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # Function:   animate avatar model based on if it is moving
     # Parameters: none
     # Changes:
     # Returns:
-    #--------------------------------------------------------------------------
-    def avatarAnimate(self,task=None):
+    # --------------------------------------------------------------------------
+    def avatarAnimate(self, task=None):
         moving = self.currentControls.speed or self.currentControls.slideSpeed or self.currentControls.rotationSpeed
         if (moving and
-            self.avatarMoving == 0):
+                self.avatarMoving == 0):
             self.clearPageUpDown()
             # moving, play walk anim
             if (self.currentControls.speed < 0 or
-                self.currentControls.rotationSpeed):
+                    self.currentControls.rotationSpeed):
                 self.avatar.robot.loop('walk')
             else:
                 self.avatar.robot.loop('run')
@@ -267,7 +268,8 @@ class ToonControlManager(ControlManager):
             groupName = self.extractGroupName(groupFullName)
             zoneId = int(groupName)
             self.nodeDict[zoneId] = []
-            self.zoneDict[zoneId] = self.editor.NPToplevel.find("**/__vis_group__%s_*"%groupName)
+            self.zoneDict[zoneId] = self.editor.NPToplevel.find(
+                f"**/__vis_group__{groupName}_*")
 
             # TODO: we only need to look from the top of the hood
             # down one level to find the vis groups as an optimization
@@ -277,7 +279,8 @@ class ToonControlManager(ControlManager):
             self.nodeList.append(groupNode)
             for j in range(DNASTORE.getNumVisiblesInDNAVisGroup(i)):
                 visName = DNASTORE.getVisibleName(i, j)
-                visNode = self.editor.NPToplevel.find("**/__vis_group__%s_*"%visName)
+                visNode = self.editor.NPToplevel.find(
+                    f"**/__vis_group__{visName}_*")
                 self.nodeDict[zoneId].append(visNode)
         # Rename the floor polys to have the same name as the
         # visgroup they are in... This makes visibility possible.
@@ -330,18 +333,18 @@ class ToonControlManager(ControlManager):
             # Get the name of the collide node
             try:
                 newZoneId = int(newZone.getIntoNode().getName())
-            except:
+            except BaseException:
                 newZoneId = 0
         else:
             newZoneId = newZone
         # Ensure we have vis data
         assert self.nodeDict
         # Hide the old zone (if there is one)
-        if self.__zoneId != None:
+        if self.__zoneId is not None:
             for i in self.nodeDict[self.__zoneId]:
                 i.hide()
         # Show the new zone
-        if newZoneId != None:
+        if newZoneId is not None:
             for i in self.nodeDict[newZoneId]:
                 i.show()
         # Make sure we changed zones
@@ -349,9 +352,9 @@ class ToonControlManager(ControlManager):
             if self.panel.fVisZones.get():
                 # Set a color override on our zone to make it obvious what
                 # zone we're in.
-                if self.__zoneId != None:
+                if self.__zoneId is not None:
                     self.zoneDict[self.__zoneId].clearColor()
-                if newZoneId != None:
+                if newZoneId is not None:
                     self.zoneDict[newZoneId].setColor(0, 0, 1, 1, 100)
             # The new zone is now old
             self.__zoneId = newZoneId
@@ -362,24 +365,24 @@ class ToonControlManager(ControlManager):
         self.editor.ui.perspView.camera.setHpr(0)
         base.direct.fMouse1 = 0
         base.direct.fMouse2 = 0
-        base.direct.fMouse3 = 0        
+        base.direct.fMouse3 = 0
 
         base.direct.fAlt = 0
         base.direct.fConntrol = 0
-        base.direct.fShift = 0        
+        base.direct.fShift = 0
 
         self.editor.accept('page_up', self.pageUp)
-        self.editor.accept('page_down', self.pageDown)        
-        
+        self.editor.accept('page_down', self.pageDown)
+
         self.avatar.setPos(self.editor.ui.perspView.camera.getPos())
         self.avatar.reparentTo(render)
         """ Lerp down to eye level then switch to Drive mode """
 ##         pos = base.direct.camera.getPos()
-##         pos.setZ(4.0)
+# pos.setZ(4.0)
 ##         hpr = base.direct.camera.getHpr()
 ##         hpr.set(hpr[0], 0.0, 0.0)
-##         t = base.direct.camera.lerpPosHpr(pos, hpr, 1.0, blendType = 'easeInOut',
-##                                    task = 'manipulateCamera')
+# t = base.direct.camera.lerpPosHpr(pos, hpr, 1.0, blendType = 'easeInOut',
+# task = 'manipulateCamera')
         # Note, if this dies an unatural death, this could screw things up
         # t.uponDeath = self.switchToDriveMode
 
@@ -387,16 +390,16 @@ class ToonControlManager(ControlManager):
         base.camera.wrtReparentTo(self.avatar)
         base.camera.setHpr(0, 0, 0)
         base.camera.setPos(0, -11.8125, 3.9375)
-        base.camLens.setMinFov(VBase2(60, 46.8265) / (4.0/3.0))        
+        base.camLens.setMinFov(VBase2(60, 46.8265) / (4.0 / 3.0))
 
         # Turn on collisions
-        #if self.panel.fColl.get():
+        # if self.panel.fColl.get():
         self.collisionsOn()
         # Turn on visiblity
-        #if self.panel.fVis.get():
+        # if self.panel.fVis.get():
         self.visibilityOn()
         # Turn on collision traversal
-        #if self.panel.fColl.get() or self.panel.fVis.get():
+        # if self.panel.fColl.get() or self.panel.fVis.get():
         self.traversalOn()
 
         self.editor.ui.perspView.bt.node().setPrefix('')
@@ -413,10 +416,10 @@ class ToonControlManager(ControlManager):
         # Reset cam
         base.camera.setPos(base.direct.cam, 0, 0, 0)
         base.direct.cam.setPosHpr(0, 0, 0, 0, 0, 0)
-        base.camLens.setMinFov(self.oldFov/(4.0/3.0))
+        base.camLens.setMinFov(self.oldFov / (4.0 / 3.0))
         # Renable mouse
-        #self.editor.enableMouse()
-        #base.direct.enable()
+        # self.editor.enableMouse()
+        # base.direct.enable()
 
         self.editor.ui.perspView.camera.reparentTo(render)
         self.editor.ui.perspView.camera.setPos(base.camera.getPos())
@@ -430,9 +433,12 @@ class ToonControlManager(ControlManager):
         self.editor.ui.perspView.bt.node().setPrefix('_le_per_')
 
 # [gjeon] for LevelEditor specific Avatar
+
+
 class LEAvatar(LocalAvatar.LocalAvatar):
-    def __init__(self, cr, chatMgr, chatAssistant, passMessagesThrough = False):
-        LocalAvatar.LocalAvatar.__init__(self,  cr, chatMgr, chatAssistant, passMessagesThrough)
+    def __init__(self, cr, chatMgr, chatAssistant, passMessagesThrough=False):
+        LocalAvatar.LocalAvatar.__init__(
+            self, cr, chatMgr, chatAssistant, passMessagesThrough)
 
     def getAutoRun(self):
         return 0

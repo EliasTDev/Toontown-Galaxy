@@ -12,8 +12,9 @@ MIN_WAIT_TIME = 5
 MAX_WAIT_TIME = 30
 MAX_SCORE = 134217728
 
+
 class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
-    
+
     notify = directNotify.newCategory("DistributedTargetAI")
 
     def __init__(self, air, x, y, z):
@@ -37,7 +38,7 @@ class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
     def start(self):
         # start the score sometime in the future
         self.reset()
-        
+
     def reset(self):
         taskMgr.remove(self.taskName("reduce-score"))
         taskMgr.remove(self.taskName("start-score"))
@@ -50,7 +51,7 @@ class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
 
         # start again some random time later
         tWait = (random.random() * MAX_WAIT_TIME) + MIN_WAIT_TIME
-        self.notify.debug("waiting %s seconds to restart target" % tWait)
+        self.notify.debug(f"waiting {tWait} seconds to restart target")
         taskMgr.doMethodLater(tWait,
                               self.startScoreTask,
                               self.taskName("start-score"))
@@ -71,16 +72,16 @@ class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
                               self.timerExpiredTask,
                               self.taskName("scoreTimer"))
         return Task.done
-                              
-    ## These functions are written for a speed-type game where
-    ## the possible reward is doubled every time someone hits the
-    ## target, but the time allowed to hit the target is reduced
-    ## each time.  For instance, we have 10 seconds to hit the target the
-    ## first time, then 8 seconds to hit it again, then 6, 4, 2, 1, .5, etc.
-    ## At the same time the reward goes from 1 to 2,4,8,16, etc.
-        
+
+    # These functions are written for a speed-type game where
+    # the possible reward is doubled every time someone hits the
+    # target, but the time allowed to hit the target is reduced
+    # each time.  For instance, we have 10 seconds to hit the target the
+    # first time, then 8 seconds to hit it again, then 6, 4, 2, 1, .5, etc.
+    # At the same time the reward goes from 1 to 2,4,8,16, etc.
+
     def targetHit(self):
-        assert(self.notify.debug("targetHit, score = %s" % self.score))
+        assert(self.notify.debug(f"targetHit, score = {self.score}"))
         # kill current timer
         taskMgr.remove(self.taskName("scoreTimer"))
 
@@ -93,23 +94,24 @@ class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
         # cap score to something reasonable
         if self.score > MAX_SCORE:
             self.score = MAX_SCORE
-            
+
         if self.hitTime >= 4:
             self.hitTime -= 2
         else:
             self.hitTime /= 2.0
 
-        assert(self.notify.debug("targetHit, increase stakes: %s, time = %s" % (self.score, self.hitTime)))
+        assert(
+            self.notify.debug(
+                f"targetHit, increase stakes: {self.score}, time = {self.hitTime}"))
 
         # tell client about the new score level
         self.sendUpdate("setState", [1, self.score, self.hitTime])
-        
+
         # start another timer
         taskMgr.doMethodLater(self.hitTime,
                               self.timerExpiredTask,
                               self.taskName("scoreTimer"))
 
-        
     def targetMiss(self):
         assert(self.notify.debug("targetMiss"))
         # do nothing if we miss
@@ -123,7 +125,7 @@ class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
             self.sendUpdate("setReward", [self.score])
         self.reset()
         return Task.done
-    
+
     def doReward(self):
         # self.score > 0, so give a reward to all remaining
         # participants (toons that were around when the streak started and
@@ -137,16 +139,16 @@ class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
             visitors = simbase.air.estateMgr.refCount.get(self.zoneId)
             # now check our original participants against this list
             for avId in self.participants:
-                self.notify.debug("participant: %s" % avId)
+                self.notify.debug(f"participant: {avId}")
                 if (visitors and (avId in visitors)) or avId == ownerAvId:
                     # they are still around, give them the reward
                     av = simbase.air.doId2do.get(avId)
                     if av:
-                        self.notify.debug("giving a reward of %s" % reward)
+                        self.notify.debug(f"giving a reward of {reward}")
                         av.toonUp(reward)
-            
+
     def setResult(self, avId):
-        self.notify.debug("setResult: %s" % avId)
+        self.notify.debug(f"setResult: {avId}")
         # if we have a valid avId, increment the consecutiveHits count
         # else, just reward the points (if consecutiveHits > 0)
         if avId:
@@ -158,7 +160,7 @@ class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
         if self.enabled:
             self.score += bonus
             self.sendUpdate("setState", [1, self.score, self.hitTime])
-            
+
     def getPosition(self):
         # This is needed because setPosition is a required field.
         return self.pos
@@ -173,9 +175,8 @@ class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
             visitors = simbase.air.estateMgr.refCount.get(self.zoneId)
             if visitors:
                 self.participants += visitors
-            
-        self.notify.debug("participants = %s" % self.participants)
 
+        self.notify.debug(f"participants = {self.participants}")
 
     def getPinballHiScorer(self):
         return self.pinballHiScorer
@@ -190,10 +191,10 @@ class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
         self.pinballHiScore = score
 
     def d_setPinballHiScorer(self, name):
-        self.sendUpdate('setPinballHiScorer',[name])        
+        self.sendUpdate('setPinballHiScorer', [name])
 
     def d_setPinballHiScore(self, score):
-        self.sendUpdate('setPinballHiScore',[score ])
+        self.sendUpdate('setPinballHiScore', [score])
 
     def b_setPinballHiScorer(self, name):
         self.setPinballHiScorer(name)
@@ -203,9 +204,9 @@ class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
         self.setPinballHiScore(score)
         self.d_setPinballHiScore(score)
 
-
-    def setCurPinballScore(self, avId,  curScore, multiplier):
-        self.notify.debug('setCurPinballScore %s %s %s' % ( avId,  curScore, multiplier))
+    def setCurPinballScore(self, avId, curScore, multiplier):
+        self.notify.debug(
+            f'setCurPinballScore {avId} {curScore} {multiplier}')
         totalScore = curScore * multiplier
         if totalScore > self.pinballHiScore:
             name = ""
@@ -216,11 +217,6 @@ class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
             self.b_setPinballHiScorer(name)
             self.b_setPinballHiScore(totalScore)
 
-
-
-        
-        
-    
     """
     # These functions were written for more of a WeakestLink style game where
     # consecutive hits on the target add up until someone finally misses.  On a miss
@@ -266,9 +262,8 @@ class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
                     if av:
                         self.notify.debug("giving a reward of %s" % reward)
                         av.toonUp(reward)
-            
-    """
 
+    """
 
     """
     ## These functions are written for CannonGame style game in which the reward
@@ -277,11 +272,11 @@ class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
     def startScoreTask(self, task):
         self.enabled = 1
         self.score = MAX_SCORE
-        
+
         # keep track of people in the zone when the score starts
         # (We don't want to give the reward to people that walk in late)
         self.getParticipants()
-        
+
         taskMgr.remove(self.taskName("reduce-score"))
         taskMgr.doMethodLater(DECREMENT_TIME,
                               self.reduceScoreTask,
@@ -291,7 +286,7 @@ class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
         #self.sendUpdate("setState", [1])
         self.sendUpdate("setLevel", [self.score])
         return Task.done
-                              
+
     def reduceScoreTask(self, task):
         self.score -= 1
         self.sendUpdate("setLevel", [self.score])
@@ -308,12 +303,12 @@ class DistributedTargetAI(DistributedObjectAI.DistributedObjectAI):
         if self.score > 0:
             self.doReward()
         self.reset()
-        
+
     def targetMiss(self):
         assert(self.notify.debug("targetMiss"))
         # do nothing if we miss
         pass
-    
+
     def doReward(self):
         # self.score > 0, so give a reward to all remaining
         # participants (toons that were around when the streak started and

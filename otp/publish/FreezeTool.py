@@ -20,7 +20,7 @@ if not ctprojs:
 startupModules = [
     'site', 'sitecustomize', 'os', 'encodings.cp1252',
     'org',
-    ]
+]
 
 sourceTrees = ['direct', 'otp', 'toontown', 'pirates']
 packages = []
@@ -41,9 +41,9 @@ else:
     PythonLib = 'python2.5'
 
 
-winCompileObj = 'cl /nologo /c /Fo"%(basename)s.obj" /I"%(python)s\Include" /I"%(python)s\PC" /I"%(msvs)s\Vc7\PlatformSDK\include" /I"%(msvs)s\Vc7\include" /MD /O2 /Ob2 /G6 /GL /Zi /EHsc /Zm500 /W3 %(basename)s.c'
-winLinkExe = 'link /nologo /OUT:"%(basename)s.exe" /LIBPATH:"%(msvs)s\Vc7\PlatformSDK\lib" /LIBPATH:"%(msvs)s\Vc7\lib" /LIBPATH:"%(python)s\PCbuild"  /NODEFAULTLIB:LIBCI.LIB /NODEFAULTLIB:MSVCRTD.LIB /NODEFAULTLIB:LIBCMT.LIB /LTCG %(objList)s'
-winLinkDll = 'link /nologo /DLL /OUT:"%(basename)s.pyd" /LIBPATH:"%(msvs)s\Vc7\PlatformSDK\lib" /LIBPATH:"%(msvs)s\Vc7\lib" /LIBPATH:"%(python)s\PCbuild"  /NODEFAULTLIB:LIBCI.LIB /NODEFAULTLIB:MSVCRTD.LIB /NODEFAULTLIB:LIBCMT.LIB /LTCG %(objList)s'
+winCompileObj = 'cl /nologo /c /Fo"%(basename)s.obj" /I"%(python)s\\Include" /I"%(python)s\\PC" /I"%(msvs)s\\Vc7\\PlatformSDK\\include" /I"%(msvs)s\\Vc7\\include" /MD /O2 /Ob2 /G6 /GL /Zi /EHsc /Zm500 /W3 %(basename)s.c'
+winLinkExe = 'link /nologo /OUT:"%(basename)s.exe" /LIBPATH:"%(msvs)s\\Vc7\\PlatformSDK\\lib" /LIBPATH:"%(msvs)s\\Vc7\\lib" /LIBPATH:"%(python)s\\PCbuild"  /NODEFAULTLIB:LIBCI.LIB /NODEFAULTLIB:MSVCRTD.LIB /NODEFAULTLIB:LIBCMT.LIB /LTCG %(objList)s'
+winLinkDll = 'link /nologo /DLL /OUT:"%(basename)s.pyd" /LIBPATH:"%(msvs)s\\Vc7\\PlatformSDK\\lib" /LIBPATH:"%(msvs)s\\Vc7\\lib" /LIBPATH:"%(python)s\\PCbuild"  /NODEFAULTLIB:LIBCI.LIB /NODEFAULTLIB:MSVCRTD.LIB /NODEFAULTLIB:LIBCMT.LIB /LTCG %(objList)s'
 
 osxUniversal = '-arch i386 -arch ppc'
 #osxUniversal = ''
@@ -131,12 +131,13 @@ okMissing = [
     'MacOS', '_emx_link', 'ce', 'mac', 'org.python.core', 'os.path',
     'os2', 'posix', 'pwd', 'readline', 'riscos', 'riscosenviron',
     'riscospath', 'dbm', 'fcntl', 'win32api',
-    '_winreg', 'ctypes', 'ctypes.wintypes', 'nt','msvcrt',
+    '_winreg', 'ctypes', 'ctypes.wintypes', 'nt', 'msvcrt',
     'EasyDialogs', 'SOCKS', 'ic', 'rourl2path', 'termios',
     'OverrideFrom23._Res', 'email', 'email.Utils', 'email.Generator',
     'email.Iterators', '_subprocess', 'gestalt',
     'direct.extensions_native.extensions_darwin',
-    ]
+]
+
 
 def setupPackages():
     # First, get the list of packages, then reverse the list to
@@ -152,12 +153,12 @@ def setupPackages():
     packages.reverse()
 
     for moduleName in packages:
-        str = 'import %s' % (moduleName)
+        str = f'import {moduleName}'
         exec(str)
 
         module = sys.modules[moduleName]
         modulefinder.AddPackagePath(moduleName, module.__path__[0])
-    
+
 
 class Freezer:
     # Module tokens:
@@ -165,23 +166,23 @@ class Freezer:
     MTInclude = 1
     MTExclude = 2
     MTForbid = 3
-    
-    def __init__(self, previous = None, debugLevel = 0):
+
+    def __init__(self, previous=None, debugLevel=0):
         self.previousModules = {}
         self.modules = {}
 
         if previous:
             self.previousModules = dict(previous.modules)
             self.modules = dict(previous.modules)
-            
+
         self.mainModule = None
         self.mf = None
 
-    def excludeModule(self, moduleName, forbid = False):
+    def excludeModule(self, moduleName, forbid=False):
         """ Adds a module to the list of modules not to be exported by
         this tool.  If forbid is true, the module is furthermore
         forbidden to be imported, even if it exists on disk. """
-        
+
         if forbid:
             self.modules[moduleName] = self.MTForbid
         else:
@@ -197,14 +198,14 @@ class Freezer:
         # reliable answer, if it works.
         try:
             module = __import__(moduleName)
-        except:
+        except BaseException:
             module = None
 
-        if module != None:
+        if module is not None:
             for symbol in moduleName.split('.')[1:]:
                 module = getattr(module, symbol)
             return module.__path__
-        
+
         # If it didn't work--maybe the module is unimportable because
         # it makes certain assumptions about the builtins, or
         # whatever--then just look for file on disk.  That's usually
@@ -214,7 +215,7 @@ class Freezer:
         if '.' in baseName:
             parentName, baseName = moduleName.rsplit('.', 1)
             path = self.getModulePath(parentName)
-            if path == None:
+            if path is None:
                 return None
 
         file, pathname, description = imp.find_module(baseName, path)
@@ -223,8 +224,8 @@ class Freezer:
             return [pathname]
         else:
             return None
-            
-    def addModule(self, moduleName, implicit = False):
+
+    def addModule(self, moduleName, implicit=False):
         """ Adds a module to the list of modules to be exported by
         this tool.  If implicit is true, it is OK if the module does
         not actually exist.
@@ -243,7 +244,7 @@ class Freezer:
             parentName = moduleName[:-2]
             path = self.getModulePath(parentName)
 
-            if path == None:
+            if path is None:
                 # It's actually a regular module.
                 self.modules[parentName] = token
 
@@ -251,8 +252,9 @@ class Freezer:
                 # Now get all the py files in the parent directory.
                 for dirname in path:
                     for filename in os.listdir(dirname):
-                        if filename.endswith('.py') and filename != '__init__.py':
-                            moduleName = '%s.%s' % (parentName, filename[:-3])
+                        if filename.endswith(
+                                '.py') and filename != '__init__.py':
+                            moduleName = f'{parentName}.{filename[:-3]}'
                             self.modules[moduleName] = token
         else:
             # A normal, explicit module name.
@@ -263,7 +265,7 @@ class Freezer:
         self.mainModule = moduleName
 
     def done(self):
-        assert self.mf == None
+        assert self.mf is None
 
         if self.mainModule:
             # Ensure that each of our required startup modules is
@@ -271,7 +273,7 @@ class Freezer:
             for moduleName in startupModules:
                 if moduleName not in self.modules:
                     self.modules[moduleName] = self.MTAuto
-        
+
         excludes = []
         includes = []
         autoIncludes = []
@@ -283,7 +285,7 @@ class Freezer:
             elif token == self.MTExclude or token == self.MTForbid:
                 excludes.append(moduleName)
 
-        self.mf = modulefinder.ModuleFinder(excludes = excludes)
+        self.mf = modulefinder.ModuleFinder(excludes=excludes)
 
         # Attempt to import the explicit modules into the modulefinder.
         for moduleName in includes:
@@ -322,16 +324,16 @@ class Freezer:
                 # If it's in not one of our standard source trees, assume
                 # it's some whacky system file we don't need.
                 continue
-                
+
             missing.append(moduleName)
-                
+
         if missing:
-            error = "There are some missing modules: %r" % missing
+            error = f"There are some missing modules: {missing!r}"
             print(error)
             raise Exception(error)
 
     def mangleName(self, moduleName):
-        return 'M_' + moduleName.replace('.', '__')        
+        return 'M_' + moduleName.replace('.', '__')
 
     def generateCode(self, basename):
 
@@ -369,7 +371,7 @@ class Freezer:
         for moduleName, module in list(self.mf.modules.items()):
             if module.__code__:
                 co = self.mf.replace_paths_in_code(module.__code__)
-                module.__code__ = co;
+                module.__code__ = co
 
         # Now generate the actual export table.
         moduleNames.sort()
@@ -388,7 +390,8 @@ class Freezer:
             token = self.modules[moduleName]
             if token == self.MTForbid:
                 # Explicitly disallow importing this module.
-                moduleList.append(self.makeForbiddenModuleListEntry(moduleName))
+                moduleList.append(
+                    self.makeForbiddenModuleListEntry(moduleName))
             else:
                 assert token != self.MTExclude
                 # Allow importing this module.
@@ -396,7 +399,8 @@ class Freezer:
                 code = getattr(module, "__code__", None)
                 if not code and moduleName in startupModules:
                     # Forbid the loading of this startup module.
-                    moduleList.append(self.makeForbiddenModuleListEntry(moduleName))
+                    moduleList.append(
+                        self.makeForbiddenModuleListEntry(moduleName))
                 else:
                     if moduleName in packages:
                         # This is one of our Python source trees.
@@ -411,21 +415,28 @@ class Freezer:
                         code = marshal.dumps(code)
 
                         mangledName = self.mangleName(moduleName)
-                        moduleDefs.append(self.makeModuleDef(mangledName, code, isStatic))
-                        moduleExterns.append(self.makeModuleExtern(mangledName))
-                        moduleList.append(self.makeModuleListEntry(mangledName, code, moduleName, module))
+                        moduleDefs.append(
+                            self.makeModuleDef(
+                                mangledName, code, isStatic))
+                        moduleExterns.append(
+                            self.makeModuleExtern(mangledName))
+                        moduleList.append(
+                            self.makeModuleListEntry(
+                                mangledName, code, moduleName, module))
                         if moduleName == self.mainModule:
                             # Add a special entry for __main__.
-                            moduleList.append(self.makeModuleListEntry(mangledName, code, '__main__', module))
+                            moduleList.append(
+                                self.makeModuleListEntry(
+                                    mangledName, code, '__main__', module))
 
         if self.mainModule:
             frozenMainCode = self.getFrozenMainCode()
             if sys.platform == 'win32':
                 frozenMainCode += self.getFrozenDllMainCode()
             initCode = mainInitCode % {
-                'frozenMainCode' : frozenMainCode,
-                'programName' : basename,
-                }
+                'frozenMainCode': frozenMainCode,
+                'programName': basename,
+            }
             if sys.platform == 'win32':
                 initCode += FrozenExtensions
                 target = basename + '.exe'
@@ -433,7 +444,7 @@ class Freezer:
                 target = basename
 
             doCompile = self.compileExe
-            
+
         else:
             dllexport = ''
             if sys.platform == 'win32':
@@ -441,22 +452,22 @@ class Freezer:
                 target = basename + '.pyd'
             else:
                 target = basename + '.so'
-                
+
             initCode = dllInitCode % {
-                'dllexport' : dllexport,
-                'moduleName' : basename,
-                'newcount' : len(moduleList),
-                }
+                'dllexport': dllexport,
+                'moduleName': basename,
+                'newcount': len(moduleList),
+            }
             doCompile = self.compileDll
 
         if isStatic:
             # It all fits into one source file, no problem.
 
             text = ProgramFile % {
-                'moduleDefs' : '\n'.join(moduleDefs),
-                'moduleList' : '\n'.join(moduleList),
-                'initCode' : initCode,
-                }
+                'moduleDefs': '\n'.join(moduleDefs),
+                'moduleList': '\n'.join(moduleList),
+                'initCode': initCode,
+            }
 
             filename = basename + '.c'
             file = open(filename, 'w')
@@ -470,10 +481,10 @@ class Freezer:
             # size of each individual source file down.
 
             text = ProgramFile % {
-                'moduleDefs' : '\n'.join(moduleExterns),
-                'moduleList' : '\n'.join(moduleList),
-                'initCode' : initCode,
-                }
+                'moduleDefs': '\n'.join(moduleExterns),
+                'moduleList': '\n'.join(moduleList),
+                'initCode': initCode,
+            }
 
             filename = basename + '.c'
             file = open(filename, 'w')
@@ -485,18 +496,18 @@ class Freezer:
             for i in range(numSourceFiles):
                 nextLines = (i + 1) * maxPerFile
                 text = ExternProgramFile % {
-                    'moduleDefs' : '\n'.join(moduleDefs[prevLines : nextLines]),
-                    'initCode' : initCode,
-                    }
+                    'moduleDefs': '\n'.join(moduleDefs[prevLines: nextLines]),
+                    'initCode': initCode,
+                }
                 prevLines = nextLines
 
-                source = '%s_%s' % (basename, i)
+                source = f'{basename}_{i}'
                 filename = source + '.c'
                 file = open(filename, 'w')
                 file.write(text)
                 file.close()
                 sourceList.append(source)
-                
+
             doCompile(basename, sourceList)
 
         return target
@@ -504,79 +515,86 @@ class Freezer:
     def getFrozenMainCode(self):
         """ Reads frozenmain.c from the Python source directory."""
 
-        python = Filename(ExecutionEnvironment.expandString(Python)).toOsSpecific()
+        python = Filename(
+            ExecutionEnvironment.expandString(Python)).toOsSpecific()
         filename = os.path.join(python, 'Python', 'frozenmain.c')
         return open(filename, 'r').read()
 
     def getFrozenDllMainCode(self):
         """ Reads frozen_dllmain.c from the Python source directory."""
 
-        python = Filename(ExecutionEnvironment.expandString(Python)).toOsSpecific()
+        python = Filename(
+            ExecutionEnvironment.expandString(Python)).toOsSpecific()
         filename = os.path.join(python, 'PC', 'frozen_dllmain.c')
         return open(filename, 'r').read()
 
     def compileExe(self, basename, sourceList):
         if sys.platform == 'win32':
-            msvs = Filename(ExecutionEnvironment.expandString(MSVS)).toOsSpecific()
-            python = Filename(ExecutionEnvironment.expandString(Python)).toOsSpecific()
+            msvs = Filename(
+                ExecutionEnvironment.expandString(MSVS)).toOsSpecific()
+            python = Filename(
+                ExecutionEnvironment.expandString(Python)).toOsSpecific()
             compileList = []
             objList = []
             for source in sourceList:
                 compile = winCompileObj % {
-                    'python' : python,
-                    'msvs' : msvs,
-                    'basename' : source,
-                    }
+                    'python': python,
+                    'msvs': msvs,
+                    'basename': source,
+                }
                 compileList.append(compile)
                 objList.append(source + '.obj')
-                
+
             link = winLinkExe % {
-                'python' : python,
-                'pythonLib' : PythonLib,
-                'msvs' : msvs,
-                'objList' : ' '.join(objList),
-                'basename' : basename,
-                }
+                'python': python,
+                'pythonLib': PythonLib,
+                'msvs': msvs,
+                'objList': ' '.join(objList),
+                'basename': basename,
+            }
         elif sys.platform == 'darwin':
-            pythonIpath = Filename(ExecutionEnvironment.expandString(PythonIpath)).toOsSpecific()
-            pythonLpath = Filename(ExecutionEnvironment.expandString(PythonLpath)).toOsSpecific()
+            pythonIpath = Filename(
+                ExecutionEnvironment.expandString(PythonIpath)).toOsSpecific()
+            pythonLpath = Filename(
+                ExecutionEnvironment.expandString(PythonLpath)).toOsSpecific()
             compileList = []
             objList = []
             for source in sourceList:
                 compile = osxCompileObj % {
-                    'universal' : osxUniversal,
-                    'basename' : source,
-                    'pythonIpath' : pythonIpath,
-                    }
+                    'universal': osxUniversal,
+                    'basename': source,
+                    'pythonIpath': pythonIpath,
+                }
                 compileList.append(compile)
                 objList.append(source + '.o')
             link = osxLinkExe % {
-                'universal' : osxUniversal,
-                'objList' : ' '.join(objList),
-                'basename' : basename,
-                'pythonLpath' : pythonLpath,
-                'pythonLib' : PythonLib,
-                }
+                'universal': osxUniversal,
+                'objList': ' '.join(objList),
+                'basename': basename,
+                'pythonLpath': pythonLpath,
+                'pythonLib': PythonLib,
+            }
         else:
-            pythonIpath = Filename(ExecutionEnvironment.expandString(PythonIpath)).toOsSpecific()
-            pythonLpath = Filename(ExecutionEnvironment.expandString(PythonLpath)).toOsSpecific()
+            pythonIpath = Filename(
+                ExecutionEnvironment.expandString(PythonIpath)).toOsSpecific()
+            pythonLpath = Filename(
+                ExecutionEnvironment.expandString(PythonLpath)).toOsSpecific()
             compileList = []
             objList = []
             for source in sourceList:
                 compile = linuxCompileObj % {
-                    'basename' : source,
-                    'pythonIpath' : pythonIpath,
-                    }
+                    'basename': source,
+                    'pythonIpath': pythonIpath,
+                }
                 compileList.append(compile)
                 objList.append(source + '.o')
 
             link = linuxLinkExe % {
-                'objList' : ' '.join(objList),
-                'basename' : basename,
-                'pythonLpath' : pythonLpath,
-                'pythonLib' : PythonLib,
-                }
-
+                'objList': ' '.join(objList),
+                'basename': basename,
+                'pythonLpath': pythonLpath,
+                'pythonLib': PythonLib,
+            }
 
         for compile in compileList:
             print(compile)
@@ -589,62 +607,65 @@ class Freezer:
 
     def compileDll(self, basename, sourceList):
         if sys.platform == 'win32':
-            msvs = Filename(ExecutionEnvironment.expandString(MSVS)).toOsSpecific()
-            python = Filename(ExecutionEnvironment.expandString(Python)).toOsSpecific()
+            msvs = Filename(
+                ExecutionEnvironment.expandString(MSVS)).toOsSpecific()
+            python = Filename(
+                ExecutionEnvironment.expandString(Python)).toOsSpecific()
             compileList = []
             objList = []
             for source in sourceList:
                 compile = winCompileObj % {
-                    'python' : python,
-                    'msvs' : msvs,
-                    'basename' : source,
-                    }
+                    'python': python,
+                    'msvs': msvs,
+                    'basename': source,
+                }
                 compileList.append(compile)
                 objList.append(source + '.obj')
 
             link = winLinkDll % {
-                'python' : python,
-                'pythonLib' : PythonLib,
-                'msvs' : msvs,
-                'objList' : ' '.join(objList),
-                'basename' : basename,
-                }
+                'python': python,
+                'pythonLib': PythonLib,
+                'msvs': msvs,
+                'objList': ' '.join(objList),
+                'basename': basename,
+            }
         elif sys.platform == 'darwin':
-            pythonIpath = Filename(ExecutionEnvironment.expandString(PythonIpath)).toOsSpecific()
+            pythonIpath = Filename(
+                ExecutionEnvironment.expandString(PythonIpath)).toOsSpecific()
             compileList = []
             objList = []
             for source in sourceList:
                 compile = osxCompileObj % {
-                    'universal' : osxUniversal,
-                    'basename' : source,
-                    'pythonIpath' : pythonIpath,
-                    }
+                    'universal': osxUniversal,
+                    'basename': source,
+                    'pythonIpath': pythonIpath,
+                }
                 compileList.append(compile)
                 objList.append(source + '.o')
             link = osxLinkDll % {
-                'universal' : osxUniversal,
-                'objList' : ' '.join(objList),
-                'basename' : basename,
-                }
+                'universal': osxUniversal,
+                'objList': ' '.join(objList),
+                'basename': basename,
+            }
         else:
-            pythonIpath = Filename(ExecutionEnvironment.expandString(PythonIpath)).toOsSpecific()
+            pythonIpath = Filename(
+                ExecutionEnvironment.expandString(PythonIpath)).toOsSpecific()
             compileList = []
             objList = []
             for source in sourceList:
                 compile = linuxCompileObj % {
-                    'basename' : source,
-                    'pythonIpath' : pythonIpath,
-                    }
+                    'basename': source,
+                    'pythonIpath': pythonIpath,
+                }
                 compileList.append(compile)
                 objList.append(source + '.o')
 
             link = linuxLinkDll % {
-                'objList' : ' '.join(objList),
-                'basename' : basename,
-		'pythonLpath':  PythonLpath,
-		'pythonLib' : PythonLib,
-                }
-
+                'objList': ' '.join(objList),
+                'basename': basename,
+                'pythonLpath': PythonLpath,
+                'pythonLib': PythonLib,
+            }
 
         for compile in compileList:
             print(compile)
@@ -662,13 +683,13 @@ class Freezer:
         result += 'unsigned char %s[] = {' % (mangledName)
         for i in range(0, len(code), 16):
             result += '\n  '
-            for c in code[i:i+16]:
+            for c in code[i:i + 16]:
                 result += ('%d,' % ord(c))
         result += '\n};\n'
         return result
 
     def makeModuleExtern(self, mangledName):
-        result = 'extern unsigned char %s[];' % (mangledName)
+        result = f'extern unsigned char {mangledName}[];'
         return result
 
     def makeModuleListEntry(self, mangledName, code, moduleName, module):
@@ -680,5 +701,6 @@ class Freezer:
 
     def makeForbiddenModuleListEntry(self, moduleName):
         return '  {"%s", NULL, 0},' % (moduleName)
-    
+
+
 setupPackages()

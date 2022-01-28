@@ -9,6 +9,7 @@ from direct.gui.DirectGui import DGG
 from otp.otpbase import OTPGlobals
 from toontown.toonbase import TTLocalizer
 
+
 class GroupInvitee(ToonHeadDialog.ToonHeadDialog):
     """GroupInvitee:
     This is a panel that pops up in the middle of your screen whenever
@@ -20,8 +21,7 @@ class GroupInvitee(ToonHeadDialog.ToonHeadDialog):
     def __init__(self):
         pass
 
-        
-    def make(self, party,toon, leaderId, **kw):
+    def make(self, party, toon, leaderId, **kw):
         self.leaderId = leaderId
         self.avName = toon.getName()
         self.av = toon
@@ -29,7 +29,7 @@ class GroupInvitee(ToonHeadDialog.ToonHeadDialog):
         self.avDNA = toon.getStyle()
         self.party = party
         # Dialog depends upon number of friends in friends list
-   
+
         text = TTLocalizer.BoardingInviteeMessage % (self.avName)
         style = TTDialog.TwoChoice
         buttonTextList = [OTPLocalizer.FriendInviteeOK,
@@ -37,24 +37,24 @@ class GroupInvitee(ToonHeadDialog.ToonHeadDialog):
         command = self.__handleButton
 
         optiondefs = (
-            ('dialogName',    'GroupInvitee',        None),
-            ('text',          text,                   None),
-            ('style',         style,                  None),
-            ('buttonTextList',buttonTextList,         None),
-            ('command',       command,                None),
-            ('image_color',   (1.0, 0.89, 0.77, 1.0), None),
+            ('dialogName', 'GroupInvitee', None),
+            ('text', text, None),
+            ('style', style, None),
+            ('buttonTextList', buttonTextList, None),
+            ('command', command, None),
+            ('image_color', (1.0, 0.89, 0.77, 1.0), None),
             # Make the head smaller so the panel can be smaller
-            ('geom_scale',    0.2,                    None),
+            ('geom_scale', 0.2, None),
             # Don't have to move it over as much
-            ('geom_pos',      (-0.1,0,-0.025),        None),
+            ('geom_pos', (-0.1, 0, -0.025), None),
             # Reduce padding
-            ('pad',           (0.075,0.075),          None),
-            ('topPad',        0,                      None),
-            ('midPad',        0,                      None),
+            ('pad', (0.075, 0.075), None),
+            ('topPad', 0, None),
+            ('midPad', 0, None),
             # Position panel right next to friends panel
-            ('pos',           (0.45, 0, 0.75),        None),
-            ('scale',         0.75,                   None),
-            )
+            ('pos', (0.45, 0, 0.75), None),
+            ('scale', 0.75, None),
+        )
         # Merge keyword options with default options
         self.defineoptions(kw, optiondefs)
 
@@ -74,7 +74,7 @@ class GroupInvitee(ToonHeadDialog.ToonHeadDialog):
         Removes the panel from the screen.
         """
         ToonHeadDialog.ToonHeadDialog.cleanup(self)
-        
+
     def forceCleanup(self):
         """
         Cancels any pending request and removes the panel from the screen, unanswered.
@@ -83,12 +83,13 @@ class GroupInvitee(ToonHeadDialog.ToonHeadDialog):
         self.party.requestRejectInvite(self.leaderId, self.avId)
         self.cleanup()
 
-    ### Button handing methods
+    # Button handing methods
     def __handleButton(self, value):
         # Don't request to leave if the toon is already in the elevator.
         # Automatically send a reject if the toon is in the elevator.
         place = base.cr.playGame.getPlace()
-        if (value == DGG.DIALOG_OK) and place and not (place.getState() == 'elevator'):
+        if (value == DGG.DIALOG_OK) and place and not (
+                place.getState() == 'elevator'):
             self.party.requestAcceptInvite(self.leaderId, self.avId)
         else:
             self.party.requestRejectInvite(self.leaderId, self.avId)

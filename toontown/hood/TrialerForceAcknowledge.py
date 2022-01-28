@@ -4,6 +4,7 @@ from . import ZoneUtil
 from toontown.toonbase import ToontownGlobals
 from toontown.toontowngui import TeaserPanel
 
+
 class TrialerForceAcknowledge:
 
     def __init__(self, doneEvent):
@@ -15,6 +16,7 @@ class TrialerForceAcknowledge:
         """enter(phase)
         """
         doneStatus = {}
+
         def letThrough(self=self, doneStatus=doneStatus):
             doneStatus['mode'] = 'pass'
             messenger.send(self.doneEvent, [doneStatus])
@@ -31,12 +33,12 @@ class TrialerForceAcknowledge:
             # paid user, let them through
             letThrough()
             return
-        
+
         if ZoneUtil.getCanonicalHoodId(destHood) in \
            (ToontownGlobals.ToontownCentral,
-            ToontownGlobals.MyEstate,
-            ToontownGlobals.GoofySpeedway,
-            ):
+                ToontownGlobals.MyEstate,
+                ToontownGlobals.GoofySpeedway,
+                ):
             # trialer going to TTC/Estate/Goofy Speedway, let them through
             letThrough()
             return
@@ -45,9 +47,9 @@ class TrialerForceAcknowledge:
             try:
                 # Make the Toon stand still while the panel is up
                 base.localAvatar.b_setAnimState('neutral', 1)
-            except:
+            except BaseException:
                 pass
-            
+
         doneStatus['mode'] = 'fail'
         self.doneStatus = doneStatus
         self.dialog = TeaserPanel.TeaserPanel(pageName='otherHoods',

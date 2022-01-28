@@ -7,10 +7,20 @@ from direct.fsm import ClassicFSM
 from direct.fsm import State
 from direct.task import Task
 
-class DistributedFactoryElevatorExtAI(DistributedElevatorExtAI.DistributedElevatorExtAI):
 
-    def __init__(self, air, bldg, factoryId, entranceId, antiShuffle = 0, minLaff = 0):
-        DistributedElevatorExtAI.DistributedElevatorExtAI.__init__(self, air, bldg, antiShuffle = antiShuffle, minLaff = minLaff)
+class DistributedFactoryElevatorExtAI(
+        DistributedElevatorExtAI.DistributedElevatorExtAI):
+
+    def __init__(
+            self,
+            air,
+            bldg,
+            factoryId,
+            entranceId,
+            antiShuffle=0,
+            minLaff=0):
+        DistributedElevatorExtAI.DistributedElevatorExtAI.__init__(
+            self, air, bldg, antiShuffle=antiShuffle, minLaff=minLaff)
         self.factoryId = factoryId
         self.entranceId = entranceId
 
@@ -31,13 +41,14 @@ class DistributedFactoryElevatorExtAI(DistributedElevatorExtAI.DistributedElevat
                     players.append(i)
             factoryZone = self.bldg.createFactory(self.factoryId,
                                                   self.entranceId, players)
-            
+
             for seatIndex in range(len(self.seats)):
                 avId = self.seats[seatIndex]
                 if avId:
                     # Tell each player on the elevator that they should enter the factory
                     # And which zone it is in
-                    self.sendUpdateToAvatarId(avId, "setFactoryInteriorZone", [factoryZone])
+                    self.sendUpdateToAvatarId(
+                        avId, "setFactoryInteriorZone", [factoryZone])
                     # Clear the fill slot
                     self.clearFullNow(seatIndex)
         else:
@@ -48,18 +59,15 @@ class DistributedFactoryElevatorExtAI(DistributedElevatorExtAI.DistributedElevat
         DistributedElevatorExtAI.DistributedElevatorExtAI.enterClosed(self)
         # Switch back into opening mode since we allow other Toons onboard
         self.fsm.request('opening')
-        
+
     def sendAvatarsToDestination(self, avIdList):
         if (len(avIdList) > 0):
             factoryZone = self.bldg.createFactory(self.factoryId,
                                                   self.entranceId, avIdList)
             for avId in avIdList:
                 if avId:
-                    # Tell each player on the elevator that they should enter 
+                    # Tell each player on the elevator that they should enter
                     # the factory
                     # And which zone it is in
-                    self.sendUpdateToAvatarId(avId, 'setFactoryInteriorZoneForce', 
-                                        [factoryZone])
-
-
-
+                    self.sendUpdateToAvatarId(
+                        avId, 'setFactoryInteriorZoneForce', [factoryZone])

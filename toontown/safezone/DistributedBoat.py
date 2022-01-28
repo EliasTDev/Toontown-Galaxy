@@ -10,53 +10,54 @@ from pandac.PandaModules import NodePath
 from direct.directutil import Mopath
 from toontown.toonbase import ToontownGlobals
 
-class DistributedBoat(DistributedObject.DistributedObject): 
+
+class DistributedBoat(DistributedObject.DistributedObject):
 
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
 
         self.eastWestMopath = Mopath.Mopath()
         self.westEastMopath = Mopath.Mopath()
-        self.eastWestMopathInterval = None 
+        self.eastWestMopathInterval = None
         self.westEastMopathInterval = None
 
         self.fsm = ClassicFSM.ClassicFSM('DistributedBoat',
-                        [State.State('off',
-                                self.enterOff,
-                                self.exitOff,
-                                ['DockedEast',
-                                'SailingWest',
-                                'DockedWest',
-                                'SailingEast']),
-                        State.State('DockedEast',
-                                self.enterDockedEast,
-                                self.exitDockedEast,
-                                ['SailingWest',
-                                'SailingEast',
-                                'DockedWest']),
-                        State.State('SailingWest',
-                                self.enterSailingWest,
-                                self.exitSailingWest,
-                                ['DockedWest',
-                                'SailingEast',
-                                'DockedEast']),
-                        State.State('DockedWest',
-                                self.enterDockedWest,
-                                self.exitDockedWest,
-                                ['SailingEast',
-                                'SailingWest',
-                                'DockedEast']),
-                        State.State('SailingEast',
-                                self.enterSailingEast,
-                                self.exitSailingEast,
-                                ['DockedEast',
-                                'DockedWest',
-                                'SailingWest'])],
-                        # Initial State
-                        'off',
-                        # Final State
-                        'off',
-                        )
+                                         [State.State('off',
+                                                      self.enterOff,
+                                                      self.exitOff,
+                                                      ['DockedEast',
+                                                       'SailingWest',
+                                                       'DockedWest',
+                                                       'SailingEast']),
+                                             State.State('DockedEast',
+                                                         self.enterDockedEast,
+                                                         self.exitDockedEast,
+                                                         ['SailingWest',
+                                                          'SailingEast',
+                                                          'DockedWest']),
+                                             State.State('SailingWest',
+                                                         self.enterSailingWest,
+                                                         self.exitSailingWest,
+                                                         ['DockedWest',
+                                                          'SailingEast',
+                                                          'DockedEast']),
+                                             State.State('DockedWest',
+                                                         self.enterDockedWest,
+                                                         self.exitDockedWest,
+                                                         ['SailingEast',
+                                                          'SailingWest',
+                                                          'DockedEast']),
+                                             State.State('SailingEast',
+                                                         self.enterSailingEast,
+                                                         self.exitSailingEast,
+                                                         ['DockedEast',
+                                                          'DockedWest',
+                                                          'SailingWest'])],
+                                         # Initial State
+                                         'off',
+                                         # Final State
+                                         'off',
+                                         )
         self.fsm.enterInitialState()
 
     def generate(self):
@@ -67,7 +68,7 @@ class DistributedBoat(DistributedObject.DistributedObject):
         DistributedObject.DistributedObject.generate(self)
         self.boat = base.cr.playGame.hood.loader.boat
         base.cr.parentMgr.registerParent(ToontownGlobals.SPDonaldsBoat,
-                                              self.boat)
+                                         self.boat)
 
         self.setupTracks()
         self.accept('enterdonalds_boat_floor', self.__handleOnFloor)
@@ -148,14 +149,14 @@ class DistributedBoat(DistributedObject.DistributedObject):
         self.ewTrack = ParallelEndTogether(
             Parallel(ewBoatTrack,
                      ePierDownTrack),  # lower the pier as it leaves
-            wPierUpTrack, # and bring up the other pier as it arrives
-            name = 'ew-track')
+            wPierUpTrack,  # and bring up the other pier as it arrives
+            name='ew-track')
 
         self.weTrack = ParallelEndTogether(
             Parallel(weBoatTrack,
                      wPierDownTrack),  # lower the pier as it leaves
-            ePierUpTrack, # and bring up the other pier as it arrives
-            name = 'we-track')
+            ePierUpTrack,  # and bring up the other pier as it arrives
+            name='we-track')
 
     def disable(self):
         """disable(self)

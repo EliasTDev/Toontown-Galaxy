@@ -1,8 +1,10 @@
 from toontown.battle import DistributedBattle
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedBattleTutorial(DistributedBattle.DistributedBattle):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleTutorial')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedBattleTutorial')
 
     def startTimer(self, ts=0):
         # Instead of starting the countdown,

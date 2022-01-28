@@ -11,27 +11,33 @@ If you're starting a new project, you may want to copy this and remove
 this instructional text and create your own foo.uberdog.Start.
 ---------------------------
 """
+
+
+
+
+from direct.showbase.PythonUtil import *
+from otp.uberdog.UberDog import UberDog
+from otp.uberdog.UberDogGlobal import *
+import sys
+import os
+import time
 class game:
     name = "uberDog"
     process = "server"
+
+
 __builtins__["game"] = game()
 
-import time
-import os
-import sys
 
 # Initialize ihooks importer On the production servers, we run genPyCode -n
 # meaning no squeeze, so nobody else does this. When we squeeze, the
 # unpacker does this for us and it does not hurt to do in either case.
 #import ihooks
-#ihooks.install()
-#TODO find alternative for ihooks for python3
+# ihooks.install()
+# TODO find alternative for ihooks for python3
 
-print ("Initializing the UberDog (Uber Distributed Object Globals server)...")
+print("Initializing the UberDog (Uber Distributed Object Globals server)...")
 
-from otp.uberdog.UberDogGlobal import *
-from otp.uberdog.UberDog import UberDog
-from direct.showbase.PythonUtil import *
 
 uber.mdip = uber.config.GetString("msg-director-ip", "localhost")
 
@@ -45,13 +51,13 @@ uberDogMinChannel = uber.config.GetInt("uberdog-min-channel", 200400000)
 uberDogMaxChannel = uber.config.GetInt("uberdog-max-channel", 200449999)
 
 uber.air = UberDog(
-        uber.mdip,
-        uber.mdport,
-        uber.esip,
-        uber.esport,
-        serverId,
-        uberDogMinChannel,
-        uberDogMaxChannel)
+    uber.mdip,
+    uber.mdport,
+    uber.esip,
+    uber.esport,
+    serverId,
+    uberDogMinChannel,
+    uberDogMaxChannel)
 
 # How we let the world know we are not running a service
 uber.aiService = 0
@@ -60,9 +66,7 @@ try:
     uber.air.fsm.request("districtReset")
     uber.air.fsm.request("playGame")
     run()
-except:
+except BaseException:
     info = describeException()
     uber.air.writeServerEvent('uberdog-exception', 1, info)
     raise
-
-

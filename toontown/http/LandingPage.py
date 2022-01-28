@@ -7,8 +7,10 @@ from toontown.toonbase import ElementTree as ET
 from . import LandingPageHTML
 from io import StringIO
 
+
 class LandingPage:
-    notify  = directNotify.newCategory("LandingPage")
+    notify = directNotify.newCategory("LandingPage")
+
     def __init__(self):
         self.headerTemplate = LandingPageHTML.header
         self.footerTemplate = LandingPageHTML.footer
@@ -17,12 +19,11 @@ class LandingPage:
 
         self.uriToTitle = {}
 
-        self.quickStats = [[],{}]
+        self.quickStats = [[], {}]
 
         self.addQuickStat("Pages Served", 0, 0)
 
         self.favicon = self.readFavIcon()
-        
 
     def readFavIcon(self):
         vfs = VirtualFileSystem.getGlobalPtr()
@@ -31,27 +32,32 @@ class LandingPage:
         searchPath = DSearchPath()
         searchPath.appendDirectory(Filename('.'))
         searchPath.appendDirectory(Filename('etc'))
-        searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$DIRECT/src/http')))
-        searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('toontown/src/http')))
-        searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('toontown/http')))
-        found = vfs.resolveFilename(filename,searchPath)
+        searchPath.appendDirectory(
+            Filename.fromOsSpecific(
+                os.path.expandvars('$DIRECT/src/http')))
+        searchPath.appendDirectory(
+            Filename.fromOsSpecific(
+                os.path.expandvars('toontown/src/http')))
+        searchPath.appendDirectory(
+            Filename.fromOsSpecific(
+                os.path.expandvars('toontown/http')))
+        found = vfs.resolveFilename(filename, searchPath)
         if not found:
             raise "Couldn't find direct/http/favicon.ico"
 
         return vfs.readFile(filename, 1)
-
 
     def addTab(self, title, uri):
         self.menu[title] = uri
         self.uriToTitle[uri] = title
 
     def getMenu(self, activeTab):
-        return LandingPageHTML.getTabs(self.menu,activeTab)
+        return LandingPageHTML.getTabs(self.menu, activeTab)
 
     def getMenuTags(self, activeTab):
         return LandingPageHTML.getTabTags(self.menu, activeTab)
 
-    def getHeader(self, activeTab = "Main", headTag=None, bodyTag=None):
+    def getHeader(self, activeTab="Main", headTag=None, bodyTag=None):
         if headTag is None:
             headTag = ET.Element('head')
         if bodyTag is None:
@@ -71,44 +77,43 @@ class LandingPage:
         # fill in the prefab body tag content
         titleStr = LandingPageHTML.title
         landing = ET.Element('body')
-        LandingPageHTML.addBodyHeaderAndContent(landing, titleStr, self.getMenuTags(activeTab))
+        LandingPageHTML.addBodyHeaderAndContent(
+            landing, titleStr, self.getMenuTags(activeTab))
 
         fileStr = StringIO()
         ET.ElementTree(landing).write(fileStr, encoding='utf-8')
         landingStr = unicodeUtf8(fileStr.getvalue())
         # remove <body>
-        landingStr = landingStr[landingStr.index('>')+1:]
+        landingStr = landingStr[landingStr.index('>') + 1:]
         # remove tag closers
         for i in range(3):
             # </body>
             # contents </div>
             # </center>
             landingStr = landingStr[:landingStr.rindex('<')]
-        
+
         fileStr = StringIO()
         ET.ElementTree(bodyTag).write(fileStr, encoding='utf-8')
         bodyTagStr = unicodeUtf8(fileStr.getvalue())
         # extract <body>
-        bodyStr = bodyTagStr[bodyTagStr.index('>')+1:]
-        bodyTagStr = bodyTagStr[:bodyTagStr.index('>')+1]
+        bodyStr = bodyTagStr[bodyTagStr.index('>') + 1:]
+        bodyTagStr = bodyTagStr[:bodyTagStr.index('>') + 1]
 
         bodyStr = bodyTagStr + '\n' + landingStr + '\n' + bodyStr
 
         s = self.headerTemplate % {'titlestring': titleStr,
-                                   'headTag' : headTagStr,
+                                   'headTag': headTagStr,
                                    'bodyTag': bodyStr,
                                    }
         return s
 
     def getFooter(self):
-        return self.footerTemplate % {'contact' : LandingPageHTML.contactInfo}
+        return self.footerTemplate % {'contact': LandingPageHTML.contactInfo}
 
     def getServicesPage(self, uriToHandler):
         output = ""
-        
-        uriList = list(uriToHandler.keys())
 
-        uriList.sort()
+        uriList = sorted(uriToHandler.keys())
 
         autoList = []
 
@@ -125,10 +130,14 @@ class LandingPage:
             uriList.remove("/favicon.ico")
             autoList.append("/favicon.ico")
 
-        output += LandingPageHTML.getURITable(title="Application",uriList=uriList,uriToHandler=uriToHandler)
+        output += LandingPageHTML.getURITable(
+            title="Application",
+            uriList=uriList,
+            uriToHandler=uriToHandler)
 
-        output += LandingPageHTML.getURITable(title="Admin",uriList=autoList,uriToHandler=uriToHandler)
-        
+        output += LandingPageHTML.getURITable(
+            title="Admin", uriList=autoList, uriToHandler=uriToHandler)
+
         return output
 
     def populateMainPage(self, body):
@@ -140,13 +149,13 @@ class LandingPage:
         else:
             LandingPageHTML.title = LandingPageHTML.title + " + " + title
 
-    def setDescription(self,desc):
+    def setDescription(self, desc):
         if LandingPageHTML.description == LandingPageHTML.defaultDesc:
             LandingPageHTML.description = desc
         else:
             LandingPageHTML.description = LandingPageHTML.description + "</P>\n<P>" + desc
 
-    def setContactInfo(self,info):
+    def setContactInfo(self, info):
         LandingPageHTML.contactInfo = info
 
     def getDescription(self):
@@ -156,33 +165,36 @@ class LandingPage:
         return LandingPageHTML.getQuickStatsTable(self.quickStats)
 
     def getMainPage(self):
-        return LandingPageHTML.mainPageBody % {"description" : self.getDescription(),
-                                               "quickstats" : self.getQuickStatsTable()}
+        return LandingPageHTML.mainPageBody % {
+            "description": self.getDescription(),
+            "quickstats": self.getQuickStatsTable()}
 
     def getStyleSheet(self):
         return LandingPageHTML.stylesheet
 
     def getFavIcon(self):
         return self.favicon
-    
-    def skin(self, body, uri, headTag=None, bodyTag=None):
-        title = self.uriToTitle.get(uri,"Services")
-        return self.getHeader(title, headTag, bodyTag) + body + self.getFooter()
 
-    def addQuickStat(self,item,value,position):
+    def skin(self, body, uri, headTag=None, bodyTag=None):
+        title = self.uriToTitle.get(uri, "Services")
+        return self.getHeader(title, headTag, bodyTag) + \
+            body + self.getFooter()
+
+    def addQuickStat(self, item, value, position):
         if item in self.quickStats[1]:
-            assert self.notify.warning("Ignoring duplicate addition of quickstat %s." % item)
+            assert self.notify.warning(
+                f"Ignoring duplicate addition of quickstat {item}.")
             return
-                                
-        self.quickStats[0].insert(position,item)
+
+        self.quickStats[0].insert(position, item)
         self.quickStats[1][item] = value
-        
-    def updateQuickStat(self,item,value):
+
+    def updateQuickStat(self, item, value):
         assert item in self.quickStats[1]
 
         self.quickStats[1][item] = value
 
-    def incrementQuickStat(self,item):
+    def incrementQuickStat(self, item):
         assert item in self.quickStats[1]
 
         self.quickStats[1][item] += 1

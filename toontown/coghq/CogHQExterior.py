@@ -8,10 +8,12 @@ from panda3d.core import *
 from panda3d.otp import *
 from toontown.hood import ZoneUtil
 from panda3d.toontown import *
+
+
 class CogHQExterior(BattlePlace.BattlePlace):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("CogHQExterior")
-    
+
     # special methods
     def __init__(self, loader, parentFSM, doneEvent):
         assert(self.notify.debug("__init__()"))
@@ -19,94 +21,94 @@ class CogHQExterior(BattlePlace.BattlePlace):
         self.parentFSM = parentFSM
 
         self.fsm = ClassicFSM.ClassicFSM('CogHQExterior',
-                           [State.State('start',
-                                        self.enterStart,
-                                        self.exitStart,
-                                        ['walk', 'tunnelIn', 'teleportIn', 'doorIn',
-                                         ]),
-                            State.State('walk',
-                                        self.enterWalk,
-                                        self.exitWalk,
-                                        ['stickerBook', 'teleportOut',
-                                         'tunnelOut', 'DFA',
-                                         'doorOut', 'died', 'stopped',
-                                         'WaitForBattle', 'battle',
-                                         'squished', 'stopped',
-                                         ]),
-                            State.State('stopped',
-                                        self.enterStopped,
-                                        self.exitStopped,
-                                        ['walk', 'teleportOut', 'stickerBook',
-                                         ]),
-                            State.State('doorIn',
-                                        self.enterDoorIn,
-                                        self.exitDoorIn,
-                                        ['walk', 'stopped']),
-                            State.State('doorOut',
-                                        self.enterDoorOut,
-                                        self.exitDoorOut,
-                                        ['walk', 'stopped']),
-                            State.State('stickerBook',
-                                        self.enterStickerBook,
-                                        self.exitStickerBook,
-                                        ['walk', 'DFA',
-                                         'WaitForBattle', 'battle',
-                                         'tunnelOut', 'doorOut',
-                                         'squished', 'died'
-                                         ]),
-                            State.State('WaitForBattle',
-                                        self.enterWaitForBattle,
-                                        self.exitWaitForBattle,
-                                        ['battle', 'walk']),
-                            State.State('battle',
-                                        self.enterBattle,
-                                        self.exitBattle,
-                                        ['walk', 'teleportOut', 'died']),
-                            # Download Force Acknowlege:
-                            State.State('DFA',
-                                        self.enterDFA,
-                                        self.exitDFA,
-                                        ['DFAReject', 'teleportOut', 'tunnelOut']),
-                            State.State('DFAReject',
-                                        self.enterDFAReject,
-                                        self.exitDFAReject,
-                                        ['walk']),
-                            State.State('squished',
-                                        self.enterSquished,
-                                        self.exitSquished,
-                                        ['walk', 'died', 'teleportOut',]),
-                            State.State('teleportIn',
-                                        self.enterTeleportIn,
-                                        self.exitTeleportIn,
-                                        ['walk', 'WaitForBattle', 'battle',
-                                         ]),
-                            State.State('teleportOut',
-                                        self.enterTeleportOut,
-                                        self.exitTeleportOut,
-                                        ['teleportIn', 'final',
-                                         'WaitForBattle']),
-                            State.State('died',
-                                        self.enterDied,
-                                        self.exitDied,
-                                        ['quietZone']),
-                            State.State('tunnelIn',
-                                        self.enterTunnelIn,
-                                        self.exitTunnelIn,
-                                        ['walk', 'WaitForBattle', 'battle']),
-                            State.State('tunnelOut',
-                                        self.enterTunnelOut,
-                                        self.exitTunnelOut,
-                                        ['final']),
-                            State.State('final',
-                                        self.enterFinal,
-                                        self.exitFinal,
-                                        ['start'])],
+                                         [State.State('start',
+                                                      self.enterStart,
+                                                      self.exitStart,
+                                                      ['walk', 'tunnelIn', 'teleportIn', 'doorIn',
+                                                       ]),
+                                             State.State('walk',
+                                                         self.enterWalk,
+                                                         self.exitWalk,
+                                                         ['stickerBook', 'teleportOut',
+                                                          'tunnelOut', 'DFA',
+                                                          'doorOut', 'died', 'stopped',
+                                                          'WaitForBattle', 'battle',
+                                                          'squished', 'stopped',
+                                                          ]),
+                                             State.State('stopped',
+                                                         self.enterStopped,
+                                                         self.exitStopped,
+                                                         ['walk', 'teleportOut', 'stickerBook',
+                                                          ]),
+                                             State.State('doorIn',
+                                                         self.enterDoorIn,
+                                                         self.exitDoorIn,
+                                                         ['walk', 'stopped']),
+                                             State.State('doorOut',
+                                                         self.enterDoorOut,
+                                                         self.exitDoorOut,
+                                                         ['walk', 'stopped']),
+                                             State.State('stickerBook',
+                                                         self.enterStickerBook,
+                                                         self.exitStickerBook,
+                                                         ['walk', 'DFA',
+                                                          'WaitForBattle', 'battle',
+                                                          'tunnelOut', 'doorOut',
+                                                          'squished', 'died'
+                                                          ]),
+                                             State.State('WaitForBattle',
+                                                         self.enterWaitForBattle,
+                                                         self.exitWaitForBattle,
+                                                         ['battle', 'walk']),
+                                             State.State('battle',
+                                                         self.enterBattle,
+                                                         self.exitBattle,
+                                                         ['walk', 'teleportOut', 'died']),
+                                             # Download Force Acknowlege:
+                                             State.State('DFA',
+                                                         self.enterDFA,
+                                                         self.exitDFA,
+                                                         ['DFAReject', 'teleportOut', 'tunnelOut']),
+                                             State.State('DFAReject',
+                                                         self.enterDFAReject,
+                                                         self.exitDFAReject,
+                                                         ['walk']),
+                                             State.State('squished',
+                                                         self.enterSquished,
+                                                         self.exitSquished,
+                                                         ['walk', 'died', 'teleportOut', ]),
+                                             State.State('teleportIn',
+                                                         self.enterTeleportIn,
+                                                         self.exitTeleportIn,
+                                                         ['walk', 'WaitForBattle', 'battle',
+                                                          ]),
+                                             State.State('teleportOut',
+                                                         self.enterTeleportOut,
+                                                         self.exitTeleportOut,
+                                                         ['teleportIn', 'final',
+                                                          'WaitForBattle']),
+                                             State.State('died',
+                                                         self.enterDied,
+                                                         self.exitDied,
+                                                         ['quietZone']),
+                                             State.State('tunnelIn',
+                                                         self.enterTunnelIn,
+                                                         self.exitTunnelIn,
+                                                         ['walk', 'WaitForBattle', 'battle']),
+                                             State.State('tunnelOut',
+                                                         self.enterTunnelOut,
+                                                         self.exitTunnelOut,
+                                                         ['final']),
+                                             State.State('final',
+                                                         self.enterFinal,
+                                                         self.exitFinal,
+                                                         ['start'])],
 
-                           # Initial State
-                           'start',
-                           # Final State
-                           'final',
-                           )
+                                         # Initial State
+                                         'start',
+                                         # Final State
+                                         'final',
+                                         )
 
     def load(self):
         self.parentFSM.getStateNamed("cogHQExterior").addChild(self.fsm)
@@ -115,7 +117,7 @@ class CogHQExterior(BattlePlace.BattlePlace):
     def unload(self):
         self.parentFSM.getStateNamed("cogHQExterior").removeChild(self.fsm)
         del self.fsm
-        BattlePlace.BattlePlace.unload(self)        
+        BattlePlace.BattlePlace.unload(self)
 
     def enter(self, requestStatus):
         self.zoneId = requestStatus["zoneId"]
@@ -123,7 +125,7 @@ class CogHQExterior(BattlePlace.BattlePlace):
         BattlePlace.BattlePlace.enter(self)
         self.fsm.enterInitialState()
         # Play music
-        base.playMusic(self.loader.music, looping = 1, volume = 0.8)
+        base.playMusic(self.loader.music, looping=1, volume=0.8)
 
         self.loader.geom.reparentTo(render)
         self.nodeList = [self.loader.geom]
@@ -139,12 +141,13 @@ class CogHQExterior(BattlePlace.BattlePlace):
         NametagGlobals.setMasterArrowsOn(1)
 
         # Add hooks for the linktunnels
-        self.tunnelOriginList = base.cr.hoodMgr.addLinkTunnelHooks(self, self.nodeList, self.zoneId)
-        how=requestStatus["how"]
+        self.tunnelOriginList = base.cr.hoodMgr.addLinkTunnelHooks(
+            self, self.nodeList, self.zoneId)
+        how = requestStatus["how"]
         self.fsm.request(how, [requestStatus])
         if self.zoneId != ToontownGlobals.BossbotHQ:
             self.loadDNA()
-           
+
     def loadDNA(self):
         # First, we need to load the DNA file for this Cog HQ.
         dnaStore = DNAStorage()
@@ -165,13 +168,14 @@ class CogHQExterior(BattlePlace.BattlePlace):
             visibles.append(ZoneUtil.getBranchZone(visZoneId))
             self.zoneVisDict[visZoneId] = visibles
 
-        # Finally, we want interest in all visgroups due to this being a Cog HQ.
+        # Finally, we want interest in all visgroups due to this being a Cog
+        # HQ.
         visList = list(self.zoneVisDict.values())[0]
         if self.zoneId not in visList:
             visList.append(self.zoneId)
 
         base.cr.sendSetZoneMsg(self.zoneId, visList)
-        
+
     def exit(self):
         self.fsm.requestFinalState()
 
@@ -192,12 +196,13 @@ class CogHQExterior(BattlePlace.BattlePlace):
         tunnelName = base.cr.hoodMgr.makeLinkTunnelName(
             self.loader.hood.id, fromZoneId)
         requestStatus["tunnelName"] = tunnelName
-        
+
         BattlePlace.BattlePlace.enterTunnelOut(self, requestStatus)
 
     def enterTeleportIn(self, requestStatus):
-        x,y,z,h,p,r = base.cr.hoodMgr.getPlaygroundCenterFromId(self.loader.hood.id)
-        base.localAvatar.setPosHpr(render, x,y,z,h,p,r)
+        x, y, z, h, p, r = base.cr.hoodMgr.getPlaygroundCenterFromId(
+            self.loader.hood.id)
+        base.localAvatar.setPosHpr(render, x, y, z, h, p, r)
         BattlePlace.BattlePlace.enterTeleportIn(self, requestStatus)
 
     def enterTeleportOut(self, requestStatus, callback=None):
@@ -209,7 +214,7 @@ class CogHQExterior(BattlePlace.BattlePlace):
             self.__teleportOutDone(requestStatus)
         else:
             BattlePlace.BattlePlace.enterTeleportOut(self, requestStatus,
-                    self.__teleportOutDone)
+                                                     self.__teleportOutDone)
 
     def __teleportOutDone(self, requestStatus):
         assert(self.notify.debug("__teleportOutDone()"))
@@ -218,7 +223,8 @@ class CogHQExterior(BattlePlace.BattlePlace):
         zoneId = requestStatus["zoneId"]
         avId = requestStatus["avId"]
         shardId = requestStatus["shardId"]
-        if ((hoodId == self.loader.hood.hoodId) and (zoneId == self.loader.hood.hoodId) and (shardId == None)):
+        if ((hoodId == self.loader.hood.hoodId) and (
+                zoneId == self.loader.hood.hoodId) and (shardId is None)):
             # If you are teleporting to somebody in this exterior
             # TODO: might need to set the new zone
             self.fsm.request("teleportIn", [requestStatus])
@@ -243,15 +249,12 @@ class CogHQExterior(BattlePlace.BattlePlace):
         taskMgr.doMethodLater(2.0,
                               self.handleSquishDone,
                               base.localAvatar.uniqueName("finishSquishTask"))
-        
+
     def handleSquishDone(self, extraArgs=[]):
         # put place back in walk state after squish is done
         base.cr.playGame.getPlace().setState("walk")
-        
+
     def exitSquished(self):
         assert(CogHQExterior.notify.debug("exitSquished()"))
         taskMgr.remove(base.localAvatar.uniqueName("finishSquishTask"))
         base.localAvatar.laffMeter.stop()
-    
-
-  

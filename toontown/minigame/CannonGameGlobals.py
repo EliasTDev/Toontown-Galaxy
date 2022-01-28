@@ -15,11 +15,12 @@ FUSE_TIME = 0.
 # AI needs to validate inputs to these ranges
 CANNON_ROTATION_MIN = -20
 CANNON_ROTATION_MAX = 20
-CANNON_ROTATION_VEL = 15.0 # move 15 units every second
+CANNON_ROTATION_VEL = 15.0  # move 15 units every second
 
 CANNON_ANGLE_MIN = 10
 CANNON_ANGLE_MAX = 85
 CANNON_ANGLE_VEL = 15.0
+
 
 def calcScore(t):
     """ t: time in seconds since game start """

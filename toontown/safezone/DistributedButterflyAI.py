@@ -9,8 +9,9 @@ from direct.task import Task
 from . import ButterflyGlobals
 import random
 
+
 class DistributedButterflyAI(DistributedObjectAI.DistributedObjectAI):
-    
+
     def __init__(self, air, playground, area, ownerId):
         """__init__(air, area)
         """
@@ -21,28 +22,28 @@ class DistributedButterflyAI(DistributedObjectAI.DistributedObjectAI):
         self.ownerId = ownerId
 
         self.fsm = ClassicFSM.ClassicFSM('DistributedButterfliesAI',
-                           [State.State('off',
-                                        self.enterOff,
-                                        self.exitOff,
-                                        ['Flying', 'Landed']),
-                            State.State('Flying',
-                                        self.enterFlying,
-                                        self.exitFlying,
-                                        ['Landed']),
-                            State.State('Landed',
-                                        self.enterLanded,
-                                        self.exitLanded,
-                                        ['Flying']),],
-                           # Initial State
-                           'off',
-                           # Final State
-                           'off',
-                           )
+                                         [State.State('off',
+                                                      self.enterOff,
+                                                      self.exitOff,
+                                                      ['Flying', 'Landed']),
+                                             State.State('Flying',
+                                                         self.enterFlying,
+                                                         self.exitFlying,
+                                                         ['Landed']),
+                                             State.State('Landed',
+                                                         self.enterLanded,
+                                                         self.exitLanded,
+                                                         ['Flying']), ],
+                                         # Initial State
+                                         'off',
+                                         # Final State
+                                         'off',
+                                         )
         self.fsm.enterInitialState()
 
-        (self.curPos, self.curIndex, self.destPos, self.destIndex, 
-                self.time) = ButterflyGlobals.getFirstRoute(self.playground,
-                                                         self.area, self.ownerId)
+        (self.curPos, self.curIndex, self.destPos, self.destIndex,
+         self.time) = ButterflyGlobals.getFirstRoute(self.playground,
+                                                     self.area, self.ownerId)
 
         return None
 
@@ -50,11 +51,11 @@ class DistributedButterflyAI(DistributedObjectAI.DistributedObjectAI):
         try:
             self.butterfly_deleted
             assert(self.notify.debug("butterfly already deleted"))
-        except:
+        except BaseException:
             self.butterfly_deleted = 1
-            ButterflyGlobals.recycleIndex(self.curIndex, self.playground, 
+            ButterflyGlobals.recycleIndex(self.curIndex, self.playground,
                                           self.area, self.ownerId)
-            ButterflyGlobals.recycleIndex(self.destIndex, self.playground, 
+            ButterflyGlobals.recycleIndex(self.destIndex, self.playground,
                                           self.area, self.ownerId)
             self.fsm.request('off')
             del self.fsm
@@ -78,7 +79,7 @@ class DistributedButterflyAI(DistributedObjectAI.DistributedObjectAI):
         self.fsm.request('Flying')
 
     def avatarEnter(self):
-        #print 'aha!'
+        # print 'aha!'
         if (self.fsm.getCurrentState().getName() == 'Landed'):
             self.__ready()
         return None
@@ -104,9 +105,13 @@ class DistributedButterflyAI(DistributedObjectAI.DistributedObjectAI):
         # We can let someone else fly to curPos now
         ButterflyGlobals.recycleIndex(self.curIndex, self.playground,
                                       self.area, self.ownerId)
-        self.d_setState(ButterflyGlobals.FLYING, self.curIndex, self.destIndex, self.time)
+        self.d_setState(
+            ButterflyGlobals.FLYING,
+            self.curIndex,
+            self.destIndex,
+            self.time)
         taskMgr.doMethodLater(self.time, self.__handleArrival,
-                                              self.uniqueName('butter-flying'))
+                              self.uniqueName('butter-flying'))
         return None
 
     def exitFlying(self):
@@ -124,20 +129,23 @@ class DistributedButterflyAI(DistributedObjectAI.DistributedObjectAI):
 
     def enterLanded(self):
         self.stateIndex = ButterflyGlobals.LANDED
-        self.time = random.random() * ButterflyGlobals.MAX_LANDED_TIME 
-        self.d_setState(ButterflyGlobals.LANDED, self.curIndex, self.destIndex, self.time)
+        self.time = random.random() * ButterflyGlobals.MAX_LANDED_TIME
+        self.d_setState(
+            ButterflyGlobals.LANDED,
+            self.curIndex,
+            self.destIndex,
+            self.time)
         taskMgr.doMethodLater(self.time, self.__ready,
-                                                self.uniqueName('butter-ready'))
+                              self.uniqueName('butter-ready'))
         return None
 
     def exitLanded(self):
         taskMgr.remove(self.uniqueName('butter-ready'))
         return None
 
-    def __ready(self, task = None):
+    def __ready(self, task=None):
         # Figure out where to go
-        (self.destPos, self.destIndex, 
-            self.time) = ButterflyGlobals.getNextPos(self.curPos, 
-                                    self.playground, self.area, self.ownerId)
+        (self.destPos, self.destIndex, self.time) = ButterflyGlobals.getNextPos(
+            self.curPos, self.playground, self.area, self.ownerId)
         self.fsm.request('Flying')
         return Task.done

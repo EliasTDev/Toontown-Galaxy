@@ -16,6 +16,8 @@ REASONS = [
     'MODERATION_FOUL_LANGUAGE', 'MODERATION_PERSONAL_INFO',
     'MODERATION_RUDE_BEHAVIOR', 'MODERATION_BAD_NAME', 'MODERATION_EXPLOITING',
 ]
+
+
 class AccountDB:
     """
     AccountDB is the base class for all account database interface implementations.
@@ -25,7 +27,9 @@ class AccountDB:
         self.loginManager = loginManager
 
         # Setup the dbm:
-        accountDbFile = config.GetString('accountdb-local-file', 'dependencies/astron/databases/accounts.db')
+        accountDbFile = config.GetString(
+            'accountdb-local-file',
+            'dependencies/astron/databases/accounts.db')
         self.dbm = dbm.open(accountDbFile, 'c')
 
     def lookup(self, playToken, callback):
@@ -37,7 +41,8 @@ class AccountDB:
             self.dbm.sync()
             callback(True)
         else:
-            self.loginManager.notify.warning('Unable to associate user %s with account %s!' % (databaseId, accountId))
+            self.loginManager.notify.warning(
+                f'Unable to associate user {databaseId} with account {accountId}!')
             callback(False)
 
 
@@ -46,23 +51,29 @@ class DeveloperAccountDB(AccountDB):
     def lookup(self, playToken, callback):
         # Check if this play token exists in the dbm:
         if str(playToken) not in self.dbm:
-            # It is not, so we'll associate them with a brand new account object.
+            # It is not, so we'll associate them with a brand new account
+            # object.
             callback({'success': True,
                       'accountId': 0,
                       'databaseId': playToken,
                       'staffAccess': 'USER'})
         else:
             def handleAccountInfo(dclass, fields):
-            # We already have an account object, so we'll just return what we have.
+                # We already have an account object, so we'll just return what
+                # we have.
                 callback({'success': True,
-                      'accountId': int(self.dbm[playToken]),
-                      'databaseId': playToken,
-                      'lastLogin': fields.get("LAST_LOGIN", time.ctime()),
-                      'staffAccess': fields.get('STAFF_ACCESS', 'USER')})
-            self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, int(self.dbm[playToken]), handleAccountInfo)
+                          'accountId': int(self.dbm[playToken]),
+                          'databaseId': playToken,
+                          'lastLogin': fields.get("LAST_LOGIN", time.ctime()),
+                          'staffAccess': fields.get('STAFF_ACCESS', 'USER')})
+            self.loginManager.air.dbInterface.queryObject(
+                self.loginManager.air.dbId, int(
+                    self.dbm[playToken]), handleAccountInfo)
+
 
 class GameOperation:
     CHOSEN_CONNECTION = False
+
     def __init__(self, loginManager, sender):
         self.loginManager = loginManager
         self.sender = sender
@@ -73,6 +84,7 @@ class GameOperation:
             self.loginManager.killConnection(self.sender, reason)
         else:
             self.loginManager.killAccount(self.sender, reason)
+
     def setCallback(self, callback):
         self.callback = callback
 
@@ -85,6 +97,7 @@ class GameOperation:
 
 class LoginOperation(GameOperation):
     CHOSEN_CONNECTION = True
+
     def __init__(self, loginManager, sender):
         GameOperation.__init__(self, loginManager, sender)
         self.playToken = ''
@@ -98,7 +111,11 @@ class LoginOperation(GameOperation):
 
     def __handleLookup(self, result):
         if not result.get('success'):
-            self.demand('Kill', result.get('reason', 'The database rejected your token.'))
+            self.demand(
+                'Kill',
+                result.get(
+                    'reason',
+                    'The database rejected your token.'))
             return
 
         self.databaseId = result.get('databaseId', 0)
@@ -112,12 +129,16 @@ class LoginOperation(GameOperation):
             self.__handleCreateAccount()
 
     def __handleRetrieveAccount(self):
-        self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, self.accountId,
-                                                      self.__handleAccountRetrieved)
+        self.loginManager.air.dbInterface.queryObject(
+            self.loginManager.air.dbId, self.accountId, self.__handleAccountRetrieved)
 
     def __handleAccountRetrieved(self, dclass, fields):
         if dclass != self.loginManager.air.dclassesByName['AccountUD']:
-            self.demand('Kill', result.get('reason', 'Account was not found in the database.'))
+            self.demand(
+                'Kill',
+                result.get(
+                    'reason',
+                    'Account was not found in the database.'))
             return
 
         self.account = fields
@@ -132,24 +153,35 @@ class LoginOperation(GameOperation):
                         'ACCOUNT_ID': str(self.databaseId),
                         'STAFF_ACCESS': self.staffAccess}
 
-        self.loginManager.air.dbInterface.createObject(self.loginManager.air.dbId,
-                                                       self.loginManager.air.dclassesByName['AccountUD'],
-                                                       self.account, self.__handleAccountCreated)
+        self.loginManager.air.dbInterface.createObject(
+            self.loginManager.air.dbId,
+            self.loginManager.air.dclassesByName['AccountUD'],
+            self.account,
+            self.__handleAccountCreated)
 
     def __handleAccountCreated(self, accountId):
         if not accountId:
-            self.demand('Kill', result.get('reason', 'Account could not be created.'))
+            self.demand(
+                'Kill',
+                result.get(
+                    'reason',
+                    'Account could not be created.'))
             return
 
         self.accountId = accountId
         self.__storeAccountId()
 
     def __storeAccountId(self):
-        self.loginManager.accountDb.storeAccountId(self.databaseId, self.accountId, self.__handleAccountIdStored)
+        self.loginManager.accountDb.storeAccountId(
+            self.databaseId, self.accountId, self.__handleAccountIdStored)
 
     def __handleAccountIdStored(self, success=True):
         if not success:
-            self.demand('Kill', result.get('reason', 'Could not store account id.'))
+            self.demand(
+                'Kill',
+                result.get(
+                    'reason',
+                    'Could not store account id.'))
             return
 
         self.__handleSetAccount()
@@ -157,27 +189,39 @@ class LoginOperation(GameOperation):
     def __handleSetAccount(self):
         # if somebody's already logged into this account, disconnect them
         datagram = PyDatagram()
-        datagram.addServerHeader(self.loginManager.GetAccountConnectionChannel(self.accountId),
-                                 self.loginManager.air.ourChannel, CLIENTAGENT_EJECT)
+        datagram.addServerHeader(
+            self.loginManager.GetAccountConnectionChannel(
+                self.accountId),
+            self.loginManager.air.ourChannel,
+            CLIENTAGENT_EJECT)
         datagram.addUint16(100)
         datagram.addString('This account has been logged in elsewhere.')
         self.loginManager.air.send(datagram)
 
         # add connection to account channel
         datagram = PyDatagram()
-        datagram.addServerHeader(self.sender, self.loginManager.air.ourChannel, CLIENTAGENT_OPEN_CHANNEL)
-        datagram.addChannel(self.loginManager.GetAccountConnectionChannel(self.accountId))
+        datagram.addServerHeader(
+            self.sender,
+            self.loginManager.air.ourChannel,
+            CLIENTAGENT_OPEN_CHANNEL)
+        datagram.addChannel(
+            self.loginManager.GetAccountConnectionChannel(
+                self.accountId))
         self.loginManager.air.send(datagram)
 
         # set sender channel to represent account affiliation
         datagram = PyDatagram()
-        datagram.addServerHeader(self.sender, self.loginManager.air.ourChannel, CLIENTAGENT_SET_CLIENT_ID)
-        datagram.addChannel(self.accountId << 32)  # accountId is in high 32 bits, 0 in low (no avatar).
+        datagram.addServerHeader(
+            self.sender,
+            self.loginManager.air.ourChannel,
+            CLIENTAGENT_SET_CLIENT_ID)
+        # accountId is in high 32 bits, 0 in low (no avatar).
+        datagram.addChannel(self.accountId << 32)
         self.loginManager.air.send(datagram)
 
         # set client state to established, thus un-sandboxing the sender
         self.loginManager.air.setClientState(self.sender, 2)
-       
+
         responseData = {
             'returnCode': 0,
             'respString': '',
@@ -193,7 +237,8 @@ class LoginOperation(GameOperation):
             'userName': str(self.databaseId)
         }
         responseBlob = json.dumps(responseData)
-        self.loginManager.sendUpdateToChannel(self.sender, 'loginResponse', [responseBlob])
+        self.loginManager.sendUpdateToChannel(
+            self.sender, 'loginResponse', [responseBlob])
         self._handleDone()
 
     def getLastLoggedInStr(self):
@@ -202,7 +247,8 @@ class LoginOperation(GameOperation):
     def getAccountCreationDate(self):
         accountCreationDate = self.account.get('CREATED', '')
         try:
-            accountCreationDate = datetime.fromtimestamp(time.mktime(time.strptime(accountCreationDate)))
+            accountCreationDate = datetime.fromtimestamp(
+                time.mktime(time.strptime(accountCreationDate)))
         except ValueError:
             accountCreationDate = ''
 
@@ -212,7 +258,8 @@ class LoginOperation(GameOperation):
         accountCreationDate = self.getAccountCreationDate()
         accountDays = -1
         if accountCreationDate:
-            now = datetime.fromtimestamp(time.mktime(time.strptime(time.ctime())))
+            now = datetime.fromtimestamp(
+                time.mktime(time.strptime(time.ctime())))
             accountDays = abs((now - accountCreationDate).days)
 
         return accountDays
@@ -229,12 +276,16 @@ class AvatarOperation(GameOperation):
         self.__handleRetrieveAccount()
 
     def __handleRetrieveAccount(self):
-        self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, self.sender,
-                                                      self.__handleAccountRetrieved)
+        self.loginManager.air.dbInterface.queryObject(
+            self.loginManager.air.dbId, self.sender, self.__handleAccountRetrieved)
 
     def __handleAccountRetrieved(self, dclass, fields):
         if dclass != self.loginManager.air.dclassesByName['AccountUD']:
-            self.demand('Kill', result.get('reason', 'Account could not be retrieved.'))
+            self.demand(
+                'Kill',
+                result.get(
+                    'reason',
+                    'Account could not be retrieved.'))
             return
 
         # Set the account & avList:
@@ -267,7 +318,9 @@ class GetAvatarsOperation(AvatarOperation):
 
                 def response(dclass, fields, avId=avId):
                     if dclass != self.loginManager.air.dclassesByName['DistributedToonUD']:
-                        self.demand('Kill', result.get('reason', 'One of the toons is invalid.'))
+                        self.demand(
+                            'Kill', result.get(
+                                'reason', 'One of the toons is invalid.'))
                         return
 
                     self.avatarFields[avId] = fields
@@ -275,7 +328,8 @@ class GetAvatarsOperation(AvatarOperation):
                     if not self.pendingAvatars:
                         self.__handleSendAvatars()
 
-                self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, avId, response)
+                self.loginManager.air.dbInterface.queryObject(
+                    self.loginManager.air.dbId, avId, response)
 
         if not self.pendingAvatars:
             self.__handleSendAvatars()
@@ -302,9 +356,11 @@ class GetAvatarsOperation(AvatarOperation):
                 # unknown name state.
                 nameState = 0
 
-            potentialAvatars.append([avId, name, fields['setDNAString'][0], index, nameState])
+            potentialAvatars.append(
+                [avId, name, fields['setDNAString'][0], index, nameState])
 
-        self.loginManager.sendUpdateToAccountId(self.sender, 'avatarListResponse', [potentialAvatars])
+        self.loginManager.sendUpdateToAccountId(
+            self.sender, 'avatarListResponse', [potentialAvatars])
         self._handleDone()
 
 
@@ -317,13 +373,21 @@ class CreateAvatarOperation(GameOperation):
 
     def start(self, avDNA, avPosition):
         if avPosition >= 6:
-            self.demand('Kill', result.get('reason', "Can't have position at 6"))
+            self.demand(
+                'Kill',
+                result.get(
+                    'reason',
+                    "Can't have position at 6"))
             return
 
         dna = ToonDNA()
         valid = dna.isValidNetString(avDNA)
         if not valid:
-            self.demand('Kill', result.get('reason', "Toon's DNA is not valid."))
+            self.demand(
+                'Kill',
+                result.get(
+                    'reason',
+                    "Toon's DNA is not valid."))
             return
 
         self.avPosition = avPosition
@@ -332,12 +396,16 @@ class CreateAvatarOperation(GameOperation):
         self.__handleRetrieveAccount()
 
     def __handleRetrieveAccount(self):
-        self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, self.sender,
-                                                      self.__handleAccountRetrieved)
+        self.loginManager.air.dbInterface.queryObject(
+            self.loginManager.air.dbId, self.sender, self.__handleAccountRetrieved)
 
     def __handleAccountRetrieved(self, dclass, fields):
         if dclass != self.loginManager.air.dclassesByName['AccountUD']:
-            self.demand('Kill', result.get('reason', 'Failed to retrieve account.'))
+            self.demand(
+                'Kill',
+                result.get(
+                    'reason',
+                    'Failed to retrieve account.'))
 
             return
 
@@ -346,7 +414,11 @@ class CreateAvatarOperation(GameOperation):
         self.avList = self.avList[:6]
         self.avList += [0] * (6 - len(self.avList))
         if self.avList[self.avPosition]:
-            self.demand('Kill', result.get('reason', 'Toon slot is already taken'))
+            self.demand(
+                'Kill',
+                result.get(
+                    'reason',
+                    'Toon slot is already taken'))
             return
 
         self.__handleCreateAvatar()
@@ -363,13 +435,19 @@ class CreateAvatarOperation(GameOperation):
                       'setDNAString': (self.avDNA,),
                       'setDISLid': (self.sender,)}
 
-        self.loginManager.air.dbInterface.createObject(self.loginManager.air.dbId,
-                                                       self.loginManager.air.dclassesByName['DistributedToonUD'],
-                                                       toonFields, self.__handleToonCreated)
+        self.loginManager.air.dbInterface.createObject(
+            self.loginManager.air.dbId,
+            self.loginManager.air.dclassesByName['DistributedToonUD'],
+            toonFields,
+            self.__handleToonCreated)
 
     def __handleToonCreated(self, avId):
         if not avId:
-            self.demand('Kill', result.get('reason', 'Failed to create a new toon.'))
+            self.demand(
+                'Kill',
+                result.get(
+                    'reason',
+                    'Failed to create a new toon.'))
             return
 
         self.avId = avId
@@ -377,18 +455,19 @@ class CreateAvatarOperation(GameOperation):
 
     def __handleStoreAvatar(self):
         self.avList[self.avPosition] = self.avId
-        self.loginManager.air.dbInterface.updateObject(self.loginManager.air.dbId, self.sender,
-                                                       self.loginManager.air.dclassesByName['AccountUD'],
-                                                       {'ACCOUNT_AV_SET': self.avList},
-                                                       {'ACCOUNT_AV_SET': self.account['ACCOUNT_AV_SET']},
-                                                       self.__handleAvatarStored)
+        self.loginManager.air.dbInterface.updateObject(
+            self.loginManager.air.dbId, self.sender, self.loginManager.air.dclassesByName['AccountUD'], {
+                'ACCOUNT_AV_SET': self.avList}, {
+                'ACCOUNT_AV_SET': self.account['ACCOUNT_AV_SET']}, self.__handleAvatarStored)
 
     def __handleAvatarStored(self, fields):
         if fields:
-            self.demand('Kill', 'Failed to associate new toon to your account!')
+            self.demand(
+                'Kill', 'Failed to associate new toon to your account!')
             return
 
-        self.loginManager.sendUpdateToAccountId(self.sender, 'createAvatarResponse', [self.avId])
+        self.loginManager.sendUpdateToAccountId(
+            self.sender, 'createAvatarResponse', [self.avId])
         self._handleDone()
 
 
@@ -410,8 +489,8 @@ class SetNamePatternOperation(AvatarOperation):
             self.demand('Kill', 'Tried to name a toon not in the account.')
             return
 
-        self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, self.avId,
-                                                      self.__handleAvatarRetrieved)
+        self.loginManager.air.dbInterface.queryObject(
+            self.loginManager.air.dbId, self.avId, self.__handleAvatarRetrieved)
 
     def __handleAvatarRetrieved(self, dclass, fields):
         if dclass != self.loginManager.air.dclassesByName['DistributedToonUD']:
@@ -427,7 +506,8 @@ class SetNamePatternOperation(AvatarOperation):
     def __handleSetName(self):
         parts = []
         for p, f in self.pattern:
-            part = self.loginManager.nameGenerator.nameDictionary.get(p, ('', ''))[1]
+            part = self.loginManager.nameGenerator.nameDictionary.get(p, ('', ''))[
+                1]
             if f:
                 part = part[:1].upper() + part[1:]
             else:
@@ -441,13 +521,15 @@ class SetNamePatternOperation(AvatarOperation):
 
         name = ' '.join(parts)
 
-        self.loginManager.air.dbInterface.updateObject(self.loginManager.air.dbId, self.avId,
-                                                       self.loginManager.air.dclassesByName['DistributedToonUD'],
-                                                       {'WishNameState': ('LOCKED',),
-                                                        'WishName': ('',),
-                                                        'setName': (name,)})
+        self.loginManager.air.dbInterface.updateObject(
+            self.loginManager.air.dbId, self.avId, self.loginManager.air.dclassesByName['DistributedToonUD'], {
+                'WishNameState': (
+                    'LOCKED',), 'WishName': (
+                    '',), 'setName': (
+                    name,)})
 
-        self.loginManager.sendUpdateToAccountId(self.sender, 'namePatternAnswer', [self.avId, 1])
+        self.loginManager.sendUpdateToAccountId(
+            self.sender, 'namePatternAnswer', [self.avId, 1])
         self._handleDone()
 
 
@@ -470,11 +552,13 @@ class SetNameTypedOperation(AvatarOperation):
 
     def __handleRetrieveAvatar(self):
         if self.avId and self.avId not in self.avList:
-            self.demand('Kill', 'Tried to set name of a toon not in the account.')
+            self.demand(
+                'Kill',
+                'Tried to set name of a toon not in the account.')
             return
 
-        self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, self.avId,
-                                                      self.__handleAvatarRetrieved)
+        self.loginManager.air.dbInterface.queryObject(
+            self.loginManager.air.dbId, self.avId, self.__handleAvatarRetrieved)
 
     def __handleAvatarRetrieved(self, dclass, fields):
         if dclass != self.loginManager.air.dclassesByName['DistributedToonUD']:
@@ -490,12 +574,14 @@ class SetNameTypedOperation(AvatarOperation):
     def __handleJudgeName(self):
         status = 1  # TODO Make this useful
         if self.avId and status:
-            self.loginManager.air.dbInterface.updateObject(self.loginManager.air.dbId, self.avId,
-                                                           self.loginManager.air.dclassesByName['DistributedToonUD'],
-                                                           {'WishNameState': ('PENDING',),
-                                                            'WishName': (self.name,)})
+            self.loginManager.air.dbInterface.updateObject(
+                self.loginManager.air.dbId, self.avId, self.loginManager.air.dclassesByName['DistributedToonUD'], {
+                    'WishNameState': (
+                        'PENDING',), 'WishName': (
+                        self.name,)})
 
-        self.loginManager.sendUpdateToAccountId(self.sender, 'nameTypedResponse', [self.avId, status])
+        self.loginManager.sendUpdateToAccountId(
+            self.sender, 'nameTypedResponse', [self.avId, status])
         self._handleDone()
 
 
@@ -512,11 +598,13 @@ class AcknowledgeNameOperation(AvatarOperation):
 
     def __handleGetTargetAvatar(self):
         if self.avId not in self.avList:
-            self.demand('Kill',"Tried to acknowledge name on a toon not in the account!")
+            self.demand(
+                'Kill',
+                "Tried to acknowledge name on a toon not in the account!")
             return
 
-        self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, self.avId,
-                                                      self.__handleAvatarRetrieved)
+        self.loginManager.air.dbInterface.queryObject(
+            self.loginManager.air.dbId, self.avId, self.__handleAvatarRetrieved)
 
     def __handleAvatarRetrieved(self, dclass, fields):
         if dclass != self.loginManager.air.dclassesByName['DistributedToonUD']:
@@ -544,7 +632,8 @@ class AcknowledgeNameOperation(AvatarOperation):
                                                         'WishName': fields['WishName'],
                                                         'setName': fields['setName']})
 
-        self.loginManager.sendUpdateToAccountId(self.sender, 'acknowledgeAvatarNameResponse', [])
+        self.loginManager.sendUpdateToAccountId(
+            self.sender, 'acknowledgeAvatarNameResponse', [])
         self._handleDone()
 
 
@@ -570,23 +659,32 @@ class RemoveAvatarOperation(GetAvatarsOperation):
         avatarsRemoved.append([self.avId, int(time.time())])
         estateId = self.account.get('ESTATE_ID', 0)
         if estateId != 0:
-            self.loginManager.air.dbInterface.updateObject(self.loginManager.air.dbId, estateId,
-                                                           self.loginManager.air.dclassesByName['DistributedEstateAI'],
-                                                           {'setSlot%sToonId' % index: [0],
-                                                            'setSlot%sItems' % index: [[]]})
+            self.loginManager.air.dbInterface.updateObject(
+                self.loginManager.air.dbId,
+                estateId,
+                self.loginManager.air.dclassesByName['DistributedEstateAI'],
+                {
+                    f'setSlot{index}ToonId': [0],
+                    f'setSlot{index}Items': [[]]})
 
-            #self.loginManager.air.send(datagram)
-        self.loginManager.air.dbInterface.updateObject(self.loginManager.air.dbId, self.sender,
-                                                       self.loginManager.air.dclassesByName['AccountUD'],
-                                                       {'ACCOUNT_AV_SET': self.avList,
-                                                        'ACCOUNT_AV_SET_DEL': avatarsRemoved},
-                                                       {'ACCOUNT_AV_SET': self.account['ACCOUNT_AV_SET'],
-                                                        'ACCOUNT_AV_SET_DEL': self.account['ACCOUNT_AV_SET_DEL']},
-                                                       self.__handleAvatarRemoved)
+            # self.loginManager.air.send(datagram)
+        self.loginManager.air.dbInterface.updateObject(
+            self.loginManager.air.dbId,
+            self.sender,
+            self.loginManager.air.dclassesByName['AccountUD'],
+            {
+                'ACCOUNT_AV_SET': self.avList,
+                'ACCOUNT_AV_SET_DEL': avatarsRemoved},
+            {
+                'ACCOUNT_AV_SET': self.account['ACCOUNT_AV_SET'],
+                'ACCOUNT_AV_SET_DEL': self.account['ACCOUNT_AV_SET_DEL']},
+            self.__handleAvatarRemoved)
 
     def __handleAvatarRemoved(self, fields):
         if fields:
-            self.demand('Kill', 'Database failed to associate the new avatar to your account!')
+            self.demand(
+                'Kill',
+                'Database failed to associate the new avatar to your account!')
             return
 
         self._handleQueryAvatars()
@@ -607,8 +705,8 @@ class LoadAvatarOperation(AvatarOperation):
         if self.avId not in self.avList:
             return
 
-        self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, self.avId,
-                                                      self.__handleAvatarRetrieved)
+        self.loginManager.air.dbInterface.queryObject(
+            self.loginManager.air.dbId, self.avId, self.__handleAvatarRetrieved)
 
     def __handleAvatarRetrieved(self, dclass, fields):
         if dclass != self.loginManager.air.dclassesByName['DistributedToonUD']:
@@ -621,27 +719,42 @@ class LoadAvatarOperation(AvatarOperation):
         channel = self.loginManager.GetAccountConnectionChannel(self.sender)
 
         cleanupDatagram = PyDatagram()
-        cleanupDatagram.addServerHeader(self.avId, channel, STATESERVER_OBJECT_DELETE_RAM)
+        cleanupDatagram.addServerHeader(
+            self.avId, channel, STATESERVER_OBJECT_DELETE_RAM)
         cleanupDatagram.addUint32(self.avId)
         datagram = PyDatagram()
-        datagram.addServerHeader(channel, self.loginManager.air.ourChannel, CLIENTAGENT_ADD_POST_REMOVE)
+        datagram.addServerHeader(
+            channel,
+            self.loginManager.air.ourChannel,
+            CLIENTAGENT_ADD_POST_REMOVE)
         datagram.addUint16(cleanupDatagram.getLength())
         datagram.appendData(cleanupDatagram.getMessage())
         self.loginManager.air.send(datagram)
         staffAccess = self.account.get('STAFF_ACCESS', 'USER')
         staffAccess = OTPGlobals.AccessLevelName2Int.get(staffAccess, 100)
-        self.loginManager.air.sendActivate(self.avId, 0, 0, self.loginManager.air.dclassesByName['DistributedToonUD'], {'setStaffAccess': [staffAccess]})
+        self.loginManager.air.sendActivate(
+            self.avId, 0, 0, self.loginManager.air.dclassesByName['DistributedToonUD'], {
+                'setStaffAccess': [staffAccess]})
 
         datagram = PyDatagram()
-        datagram.addServerHeader(channel, self.loginManager.air.ourChannel, CLIENTAGENT_OPEN_CHANNEL)
-        datagram.addChannel(self.loginManager.GetPuppetConnectionChannel(self.avId))
+        datagram.addServerHeader(
+            channel,
+            self.loginManager.air.ourChannel,
+            CLIENTAGENT_OPEN_CHANNEL)
+        datagram.addChannel(
+            self.loginManager.GetPuppetConnectionChannel(
+                self.avId))
         self.loginManager.air.send(datagram)
 
         self.loginManager.air.clientAddSessionObject(channel, self.avId)
 
         datagram = PyDatagram()
-        datagram.addServerHeader(channel, self.loginManager.air.ourChannel, CLIENTAGENT_SET_CLIENT_ID)
-        datagram.addChannel(self.sender << 32 | self.avId)  # accountId in high 32 bits, avatar in low.
+        datagram.addServerHeader(
+            channel,
+            self.loginManager.air.ourChannel,
+            CLIENTAGENT_SET_CLIENT_ID)
+        # accountId in high 32 bits, avatar in low.
+        datagram.addChannel(self.sender << 32 | self.avId)
         self.loginManager.air.send(datagram)
 
         self.loginManager.air.setOwner(self.avId, channel)
@@ -662,35 +775,51 @@ class UnloadAvatarOperation(GameOperation):
         channel = self.loginManager.GetAccountConnectionChannel(self.sender)
         self.loginManager.air.ttFriendsManager.goingOffline(self.avId)
         datagram = PyDatagram()
-        datagram.addServerHeader(channel, self.loginManager.air.ourChannel, CLIENTAGENT_CLEAR_POST_REMOVES)
+        datagram.addServerHeader(
+            channel,
+            self.loginManager.air.ourChannel,
+            CLIENTAGENT_CLEAR_POST_REMOVES)
         self.loginManager.air.send(datagram)
 
         datagram = PyDatagram()
-        datagram.addServerHeader(channel, self.loginManager.air.ourChannel, CLIENTAGENT_CLOSE_CHANNEL)
-        datagram.addChannel(self.loginManager.GetPuppetConnectionChannel(self.avId))
+        datagram.addServerHeader(
+            channel,
+            self.loginManager.air.ourChannel,
+            CLIENTAGENT_CLOSE_CHANNEL)
+        datagram.addChannel(
+            self.loginManager.GetPuppetConnectionChannel(
+                self.avId))
         self.loginManager.air.send(datagram)
 
         datagram = PyDatagram()
-        datagram.addServerHeader(channel, self.loginManager.air.ourChannel, CLIENTAGENT_SET_CLIENT_ID)
-        datagram.addChannel(self.sender << 32)  # accountId in high 32 bits, no avatar in low.
+        datagram.addServerHeader(
+            channel,
+            self.loginManager.air.ourChannel,
+            CLIENTAGENT_SET_CLIENT_ID)
+        # accountId in high 32 bits, no avatar in low.
+        datagram.addChannel(self.sender << 32)
         self.loginManager.air.send(datagram)
 
         datagram = PyDatagram()
-        datagram.addServerHeader(channel, self.loginManager.air.ourChannel, CLIENTAGENT_REMOVE_SESSION_OBJECT)
+        datagram.addServerHeader(
+            channel,
+            self.loginManager.air.ourChannel,
+            CLIENTAGENT_REMOVE_SESSION_OBJECT)
         datagram.addUint32(self.avId)
         self.loginManager.air.send(datagram)
 
         datagram = PyDatagram()
-        datagram.addServerHeader(self.avId, channel, STATESERVER_OBJECT_DELETE_RAM)
+        datagram.addServerHeader(
+            self.avId, channel, STATESERVER_OBJECT_DELETE_RAM)
         datagram.addUint32(self.avId)
         self.loginManager.air.send(datagram)
-
 
         self._handleDone()
 
 
 class AstronLoginManagerUD(DistributedObjectGlobalUD):
-    notify = DirectNotifyGlobal.directNotify.newCategory('AstronLoginManagerUD')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'AstronLoginManagerUD')
 
     def __init__(self, air):
         DistributedObjectGlobalUD.__init__(self, air)
@@ -706,10 +835,9 @@ class AstronLoginManagerUD(DistributedObjectGlobalUD):
         self.nameGenerator = NameGenerator()
 
         # Instantiate the account database backend.
-        # TODO: In the future, add more database interfaces & make this configurable.
+        # TODO: In the future, add more database interfaces & make this
+        # configurable.
         self.accountDb = DeveloperAccountDB(self)
-
-
 
     def runLoginOperation(self, playToken):
         # Runs a login operation on the sender. First, get the sender:
@@ -739,7 +867,9 @@ class AstronLoginManagerUD(DistributedObjectGlobalUD):
 
         if sender in self.account2operation:
             # Sender is already currently running a game operation.
-            self.demand('Kill', 'Sender is already currently running a game operation.')
+            self.demand(
+                'Kill',
+                'Sender is already currently running a game operation.')
             return
 
         # Run the game operation:
@@ -759,11 +889,11 @@ class AstronLoginManagerUD(DistributedObjectGlobalUD):
         # Someone wants to create a new avatar; run a CreateAvatarOperation:
         self.runGameOperation(CreateAvatarOperation, avDNA, avPosition)
 
-
     def setNamePattern(self, avId, p1, f1, p2, f2, p3, f3, p4, f4):
         # Someone wants to use a pattern name; run a SetNamePatternOperation:
-        self.runGameOperation(SetNamePatternOperation, avId, [(p1, f1), (p2, f2),
-                                                              (p3, f3), (p4, f4)])
+        self.runGameOperation(
+            SetNamePatternOperation, avId, [
+                (p1, f1), (p2, f2), (p3, f3), (p4, f4)])
 
     def setNameTyped(self, avId, name):
         # Someone has typed a name; run a SetNameTypedOperation:
@@ -774,7 +904,8 @@ class AstronLoginManagerUD(DistributedObjectGlobalUD):
         self.runGameOperation(AcknowledgeNameOperation, avId)
 
     def requestRemoveAvatar(self, avId):
-        # Someone is requesting to have an avatar removed; run a RemoveAvatarOperation:
+        # Someone is requesting to have an avatar removed; run a
+        # RemoveAvatarOperation:
         self.runGameOperation(RemoveAvatarOperation, avId)
 
     def requestPlayAvatar(self, avId):
@@ -794,12 +925,16 @@ class AstronLoginManagerUD(DistributedObjectGlobalUD):
             # to load an avatar; run a LoadAvatarOperation.
             self.runGameOperation(LoadAvatarOperation, avId)
         else:
-            # Otherwise, the client wants to unload the avatar; run an UnloadAvatarOperation.
+            # Otherwise, the client wants to unload the avatar; run an
+            # UnloadAvatarOperation.
             self.runGameOperation(UnloadAvatarOperation, currentAvId)
 
     def killConnection(self, connectionId, reason):
         dg = PyDatagram()
-        dg.addServerHeader(connectionId, self.air.ourChannel, CLIENTAGENT_EJECT)
+        dg.addServerHeader(
+            connectionId,
+            self.air.ourChannel,
+            CLIENTAGENT_EJECT)
         dg.addUint16(122)
         dg.addString(reason)
         self.air.send(dg)
@@ -810,9 +945,16 @@ class AstronLoginManagerUD(DistributedObjectGlobalUD):
     def reportAccount(self, avId, category):
         reporterId = self.air.getAvatarIdFromSender()
         if len(REASONS) <= category:
-            self.air.writeServerEvent("suspicious", avId=reporterId, issue="Invalid report reason index (%d) sent by avatar." % category)
+            self.air.writeServerEvent(
+                "suspicious",
+                avId=reporterId,
+                issue="Invalid report reason index (%d) sent by avatar." %
+                category)
             return
-        self.air.writeServerEvent("player-reported", reporterId=reporterId, avId=avId, category=REASONS[category])
+        self.air.writeServerEvent(
+            "player-reported",
+            reporterId=reporterId,
+            avId=avId,
+            category=REASONS[category])
 
-        #TODO send report to the website for mods to look at
-
+        # TODO send report to the website for mods to look at

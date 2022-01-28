@@ -4,8 +4,9 @@ import socket
 import queue
 from . import sbConfig
 
+
 class sbLog:
-    def __init__(self,name,clHost=None,clPort=6060):
+    def __init__(self, name, clHost=None, clPort=6060):
         self.name = name
         self.clHost = clHost
         self.clPort = clPort
@@ -14,25 +15,26 @@ class sbLog:
 
         if clHost:
             # init UDP stuff
-            self.sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     def timeString(self):
         tup = time.localtime()
-        return "%d-%02d-%02d %02d:%02d:%02d" % (tup[0],tup[1],tup[2],tup[3],tup[4],tup[5])
+        return "%d-%02d-%02d %02d:%02d:%02d" % (
+            tup[0], tup[1], tup[2], tup[3], tup[4], tup[5])
 
-    def output(self,level,msg):
-        str = "%s %s(%s): %s"%(self.timeString(),self.name,level,msg)
+    def output(self, level, msg):
+        str = f"{self.timeString()} {self.name}({level}): {msg}"
         print(str)
         self.memLog(str)
         sys.stdout.flush()
 
-    def chatoutput(self,msg):
-        str = "%s %s(chat): %s"%(self.timeString(),self.name,msg)
+    def chatoutput(self, msg):
+        str = f"{self.timeString()} {self.name}(chat): {msg}"
         print(str)
         self.memLog(str)
         sys.stdout.flush()
 
-    def memLog(self,str):
+    def memLog(self, str):
         self.inMemLog.put(str)
         while self.inMemLog.qsize() > sbConfig.logMaxLinesInMemory:
             self.inMemLog.get()
@@ -57,60 +59,71 @@ class sbLog:
                   filtered,
                   chatText):
         assert self.clHost is not None
-        outstr = "%s|%s|%d|%d|%s|%d|%d|%s|%s|%s" % (eventName,sourceSys,sourceAcctId,sourceAvId,
-                                                    destSys,destAcctId,destAvId,chatType,filtered,
+        outstr = "%s|%s|%d|%d|%s|%d|%d|%s|%s|%s" % (eventName,
+                                                    sourceSys,
+                                                    sourceAcctId,
+                                                    sourceAvId,
+                                                    destSys,
+                                                    destAcctId,
+                                                    destAvId,
+                                                    chatType,
+                                                    filtered,
                                                     chatText)
-        self.debug("Remote log entry sent: %s"%outstr)
-        self.sock.sendto(outstr,(self.clHost,self.clPort))
+        self.debug(f"Remote log entry sent: {outstr}")
+        self.sock.sendto(outstr, (self.clHost, self.clPort))
 
-    def fatal(self,message):
+    def fatal(self, message):
         if sbConfig.logFatal:
-            self.output("FATAL",message)
+            self.output("FATAL", message)
 
-    def error(self,message):
+    def error(self, message):
         if sbConfig.logError:
-            self.output("ERROR",message)
+            self.output("ERROR", message)
 
-    def security(self,message):
+    def security(self, message):
         if sbConfig.logSecurity:
-            self.output("SECURITY",message)
+            self.output("SECURITY", message)
 
-    def warning(self,message):
+    def warning(self, message):
         if sbConfig.logWarning:
-            self.output("warning",message)
+            self.output("warning", message)
 
-    def log(self,message):
+    def log(self, message):
         if sbConfig.logLog:
-            self.output("log",message)
+            self.output("log", message)
 
-    def info(self,message):
+    def info(self, message):
         if sbConfig.logInfo:
-            self.output("info",message)
+            self.output("info", message)
 
-    def debug(self,message):
+    def debug(self, message):
         if sbConfig.logDebug:
-            self.output("debug",message)
+            self.output("debug", message)
 
-    def chat(self,dest,sender,msg):
+    def chat(self, dest, sender, msg):
         if sbConfig.logChat:
-            self.chatoutput("WHISPER %d->%d: %s" % (sender,dest,msg))
+            self.chatoutput("WHISPER %d->%d: %s" % (sender, dest, msg))
         if self.clHost:
-            self.remoteLog("Client Chat",self.name,sender,-1,"",dest,-1,"PEER","N",msg)
+            self.remoteLog("Client Chat", self.name, sender, -
+                           1, "", dest, -1, "PEER", "N", msg)
 
-    def mail(self,dest,sender,msg):
+    def mail(self, dest, sender, msg):
         if sbConfig.logChat:
-            self.chatoutput("MAIL %d->%d: %s" % (sender,dest,msg))
+            self.chatoutput("MAIL %d->%d: %s" % (sender, dest, msg))
         if self.clHost:
-            self.remoteLog("Client Chat",self.name,sender,-1,"",dest,-1,"MAIL","N",msg)
-        
-    def badChat(self,dest,sender,msg):
-        if sbConfig.logChat:
-            self.chatoutput("DIRTYCHAT %d->%d: %s" % (sender,dest,msg))
-        if self.clHost:
-            self.remoteLog("Client Chat",self.name,sender,-1,"",dest,-1,"PEER","Y",msg)
+            self.remoteLog("Client Chat", self.name, sender, -
+                           1, "", dest, -1, "MAIL", "N", msg)
 
-    def badMail(self,dest,sender,msg):
+    def badChat(self, dest, sender, msg):
         if sbConfig.logChat:
-            self.chatoutput("DIRTYMAIL %d->%d: %s" % (sender,dest,msg))
+            self.chatoutput("DIRTYCHAT %d->%d: %s" % (sender, dest, msg))
         if self.clHost:
-            self.remoteLog("Client Chat",self.name,sender,-1,"",dest,-1,"MAIL","Y",msg)
+            self.remoteLog("Client Chat", self.name, sender, -
+                           1, "", dest, -1, "PEER", "Y", msg)
+
+    def badMail(self, dest, sender, msg):
+        if sbConfig.logChat:
+            self.chatoutput("DIRTYMAIL %d->%d: %s" % (sender, dest, msg))
+        if self.clHost:
+            self.remoteLog("Client Chat", self.name, sender, -
+                           1, "", dest, -1, "MAIL", "Y", msg)

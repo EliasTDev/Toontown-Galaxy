@@ -8,39 +8,40 @@ from direct.task.Task import Task
 from . import MazeGameGlobals
 from . import MazeData
 
+
 class DistributedMazeGameAI(DistributedMinigameAI):
     def __init__(self, air, minigameId):
         try:
             self.DistributedMinigameTemplateAI_initialized
-        except:
+        except BaseException:
             self.DistributedMinigameTemplateAI_initialized = 1
             DistributedMinigameAI.__init__(self, air, minigameId)
 
             self.gameFSM = ClassicFSM.ClassicFSM('DistributedMazeGameAI',
-                                   [
-                                    State.State('inactive',
-                                                self.enterInactive,
-                                                self.exitInactive,
-                                                ['play']),
-                                    State.State('play',
-                                                self.enterPlay,
-                                                self.exitPlay,
-                                                ['waitShowScores',
-                                                 'cleanup']),
-                                    State.State('waitShowScores',
-                                                self.enterWaitShowScores,
-                                                self.exitWaitShowScores,
-                                                ['cleanup']),
-                                    State.State('cleanup',
-                                                self.enterCleanup,
-                                                self.exitCleanup,
-                                                ['inactive']),
-                                    ],
-                                   # Initial State
-                                   'inactive',
-                                   # Final State
-                                   'inactive',
-                                   )
+                                                 [
+                                                     State.State('inactive',
+                                                                 self.enterInactive,
+                                                                 self.exitInactive,
+                                                                 ['play']),
+                                                     State.State('play',
+                                                                 self.enterPlay,
+                                                                 self.exitPlay,
+                                                                 ['waitShowScores',
+                                                                  'cleanup']),
+                                                     State.State('waitShowScores',
+                                                                 self.enterWaitShowScores,
+                                                                 self.exitWaitShowScores,
+                                                                 ['cleanup']),
+                                                     State.State('cleanup',
+                                                                 self.enterCleanup,
+                                                                 self.exitCleanup,
+                                                                 ['inactive']),
+                                                 ],
+                                                 # Initial State
+                                                 'inactive',
+                                                 # Final State
+                                                 'inactive',
+                                                 )
 
             # Add our game ClassicFSM to the framework ClassicFSM
             self.addChildGameFSM(self.gameFSM)
@@ -120,7 +121,8 @@ class DistributedMazeGameAI(DistributedMinigameAI):
 
     def claimTreasure(self, treasureNum):
         # if the game just ended, ignore this message
-        if (self.gameFSM.getCurrentState() is None) or (self.gameFSM.getCurrentState().getName() != 'play'):
+        if (self.gameFSM.getCurrentState() is None) or (
+                self.gameFSM.getCurrentState().getName() != 'play'):
             return
 
         # we're getting strange AI crashes where a toon claims
@@ -133,12 +135,15 @@ class DistributedMazeGameAI(DistributedMinigameAI):
                 (avId, treasureNum, self.scoreDict, self.avIdList))
             return
 
-        #self.notify.debug("treasure %s claimed by %s" % \
+        # self.notify.debug("treasure %s claimed by %s" % \
         #                  (treasureNum, self.air.getAvatarIdFromSender()))
 
         # give the treasure to the first toon that claims it
         if treasureNum < 0 or treasureNum >= self.numTreasures:
-            self.air.writeServerEvent('warning', treasureNum, 'MazeGameAI.claimTreasure treasureNum out of range')
+            self.air.writeServerEvent(
+                'warning',
+                treasureNum,
+                'MazeGameAI.claimTreasure treasureNum out of range')
             return
         if self.takenTable[treasureNum]:
             return
@@ -175,7 +180,7 @@ class DistributedMazeGameAI(DistributedMinigameAI):
         # tone down the scores, and make sure everyone has
         # at least one jellybean
         for key in list(self.scoreDict.keys()):
-            self.scoreDict[key] = max(1, self.scoreDict[key]/12)
+            self.scoreDict[key] = max(1, self.scoreDict[key] / 12)
 
         if self.numTreasuresTaken >= self.numTreasures:
             # increase everybody's score

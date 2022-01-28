@@ -3,7 +3,9 @@ from toontown.toonbase import ToontownGlobals
 from otp.otpbase import OTPGlobals
 from . import DistributedCashbotBossObjectAI
 
-class DistributedCashbotBossSafeAI(DistributedCashbotBossObjectAI.DistributedCashbotBossObjectAI):
+
+class DistributedCashbotBossSafeAI(
+        DistributedCashbotBossObjectAI.DistributedCashbotBossObjectAI):
 
     """ This is a safe sitting around in the Cashbot CFO final battle
     room.  It's used as a prop for toons to pick up and throw at the
@@ -17,7 +19,8 @@ class DistributedCashbotBossSafeAI(DistributedCashbotBossObjectAI.DistributedCas
     wantsWatchDrift = 0
 
     def __init__(self, air, boss, index):
-        DistributedCashbotBossObjectAI.DistributedCashbotBossObjectAI.__init__(self, air, boss)
+        DistributedCashbotBossObjectAI.DistributedCashbotBossObjectAI.__init__(
+            self, air, boss)
         self.index = index
 
         self.avoidHelmet = 0
@@ -34,7 +37,6 @@ class DistributedCashbotBossSafeAI(DistributedCashbotBossObjectAI.DistributedCas
 
     ### Messages ###
 
-
     def getIndex(self):
         return self.index
 
@@ -42,11 +44,11 @@ class DistributedCashbotBossSafeAI(DistributedCashbotBossObjectAI.DistributedCas
         avId = self.air.getAvatarIdFromSender()
 
         self.validate(avId, impact <= 1.0,
-                      'invalid hitBoss impact %s' % (impact))
+                      f'invalid hitBoss impact {impact}')
 
         if avId not in self.boss.involvedToons:
             return
-        
+
         if self.state != 'Dropped' and self.state != 'Grabbed':
             return
 
@@ -56,7 +58,7 @@ class DistributedCashbotBossSafeAI(DistributedCashbotBossObjectAI.DistributedCas
 
         # The client reports successfully striking the boss in the
         # head with this object.
-        if self.boss.heldObject == None:
+        if self.boss.heldObject is None:
             if self.boss.attackCode == ToontownGlobals.BossCogDizzy:
                 # While the boss is dizzy, a safe hitting him in the
                 # head does lots of damage.
@@ -83,22 +85,22 @@ class DistributedCashbotBossSafeAI(DistributedCashbotBossObjectAI.DistributedCas
     def requestInitial(self):
         # The client controlling the safe dropped it through the
         # world; reset it to its initial state.
-        
+
         avId = self.air.getAvatarIdFromSender()
 
         if avId == self.avId:
             self.demand('Initial')
 
-
     ### FSM States ###
 
     def enterGrabbed(self, avId, craneId):
-        DistributedCashbotBossObjectAI.DistributedCashbotBossObjectAI.enterGrabbed(self, avId, craneId)
+        DistributedCashbotBossObjectAI.DistributedCashbotBossObjectAI.enterGrabbed(
+            self, avId, craneId)
         self.avoidHelmet = 0
 
     def enterInitial(self):
         # The safe is in its initial, resting position.
-        
+
         self.avoidHelmet = 0
         self.resetToInitialPosition()
 
@@ -108,7 +110,7 @@ class DistributedCashbotBossSafeAI(DistributedCashbotBossObjectAI.DistributedCas
             self.stash()
 
         self.d_setObjectState('I', 0, 0)
-            
+
     def exitInitial(self):
         if self.index == 0:
             self.unstash()
@@ -117,6 +119,7 @@ class DistributedCashbotBossSafeAI(DistributedCashbotBossObjectAI.DistributedCas
         # The safe is somewhere on the floor, but not under anyone's
         # control.  This can only happen to a safe when the player who
         # was controlling it disconnects during battle.
-        
-        DistributedCashbotBossObjectAI.DistributedCashbotBossObjectAI.enterFree(self)
+
+        DistributedCashbotBossObjectAI.DistributedCashbotBossObjectAI.enterFree(
+            self)
         self.avoidHelmet = 0

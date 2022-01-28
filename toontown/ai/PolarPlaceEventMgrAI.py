@@ -3,7 +3,8 @@ from toontown.ai import HolidayBaseAI
 from toontown.toonbase import ToontownGlobals
 from toontown.ai import DistributedPolarPlaceEffectMgrAI
 
-EVENT_ZONE = 3821 # 'Hibernation Vacations' interior
+EVENT_ZONE = 3821  # 'Hibernation Vacations' interior
+
 
 class PolarPlaceEventMgrAI(HolidayBaseAI.HolidayBaseAI):
 
@@ -15,7 +16,7 @@ class PolarPlaceEventMgrAI(HolidayBaseAI.HolidayBaseAI):
     def __init__(self, air, holidayId):
         HolidayBaseAI.HolidayBaseAI.__init__(self, air, holidayId)
         self.polarPlaceEmoteMgr = None
-        
+
     def start(self):
         # instantiate the object
         self.polarPlaceEmoteMgr = DistributedPolarPlaceEffectMgrAI.DistributedPolarPlaceEffectMgrAI(

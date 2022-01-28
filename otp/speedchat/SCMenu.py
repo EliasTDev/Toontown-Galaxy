@@ -9,6 +9,7 @@ from .SCObject import SCObject
 from direct.showbase.PythonUtil import makeTuple
 import types
 
+
 class SCMenu(SCObject, NodePath):
     """ SCMenu is a menu of SCElements """
 
@@ -39,23 +40,24 @@ class SCMenu(SCObject, NodePath):
         self.SerialNum = SCMenu.SerialNum
         SCMenu.SerialNum += 1
 
-        node = hidden.attachNewNode('SCMenu%s' % self.SerialNum)
+        node = hidden.attachNewNode(f'SCMenu{self.SerialNum}')
         NodePath.__init__(self, node)
 
         # if 'None', this menu is a top-level menu (it's not under anything)
         self.setHolder(holder)
 
-        self.FinalizeTaskName = 'SCMenu%s_Finalize' % self.SerialNum
+        self.FinalizeTaskName = f'SCMenu{self.SerialNum}_Finalize'
         self.ActiveMemberSwitchTaskName = (
-            'SCMenu%s_SwitchActiveMember' % self.SerialNum)
+            f'SCMenu{self.SerialNum}_SwitchActiveMember')
 
         self.bg = loader.loadModel(self.BackgroundModelName)
+
         def findNodes(names, model=self.bg):
             results = []
             for name in names:
                 # if name is a tuple we need to look for the first match
                 for nm in makeTuple(name):
-                    node = model.find('**/%s' % nm)
+                    node = model.find(f'**/{nm}')
                     if not node.isEmpty():
                         results.append(node)
                         break
@@ -171,7 +173,7 @@ class SCMenu(SCObject, NodePath):
             for child in childList:
                 # if it's a dictionary, there's an emote attached
                 emote = None
-                if type(child) == type({}):
+                if isinstance(child, type({})):
                     assert len(list(child.keys())) == 1
                     item = list(child.keys())[0]
                     emote = child[item]
@@ -184,7 +186,7 @@ class SCMenu(SCObject, NodePath):
                 #        terminal.setLinkedEmote(emote)
                 #    menu.append(terminal)
 
-                if type(child) == type(0):
+                if isinstance(child, type(0)):
                     # it's a static text ID
                     assert child in OTPLocalizer.SpeedChatStaticText
                     terminal = SCStaticTextTerminal(child)
@@ -192,10 +194,10 @@ class SCMenu(SCObject, NodePath):
                         terminal.setLinkedEmote(emote)
                     menu.append(terminal)
                     # addTerminal(SCStaticTextTerminal(child))
-                elif type(child) == type([]):
+                elif isinstance(child, type([])):
                     # we've got a menu holder and a menu to be held
                     # if first element of list is string, it's a plain SCMenu
-                    if type(child[0]) == type(''):
+                    if isinstance(child[0], type('')):
                         holderTitle = child[0]
                         subMenu = SCMenu()
                         subMenuChildren = child[1:]
@@ -210,12 +212,11 @@ class SCMenu(SCObject, NodePath):
                     holder = SCMenuHolder(holderTitle, menu=subMenu)
                     menu.append(holder)
                     addChildren(subMenu, subMenuChildren)
-                elif type(child) == type('') and child[:2] == 'gm':
+                elif isinstance(child, type('')) and child[:2] == 'gm':
                     terminal = SCGMTextTerminal(child)
                     menu.append(terminal)
                 else:
                     raise 'error parsing speedchat structure. invalid child: %s '
-
 
         addChildren(self, structure)
         # clean up memory leak
@@ -223,7 +224,7 @@ class SCMenu(SCObject, NodePath):
 
     def fadeFunc(self, t):
         cs = self.getColorScale()
-        self.setColorScale(cs[0],cs[1],cs[2],t)
+        self.setColorScale(cs[0], cs[1], cs[2], t)
 
     def stopFade(self):
         if self.fadeIval is not None:
@@ -258,7 +259,7 @@ class SCMenu(SCObject, NodePath):
                 self.stopFade()
                 self.fadeIval = LerpFunctionInterval(
                     self.fadeFunc, fromData=0., toData=1.,
-                    duration = SCMenu.FadeDuration)
+                    duration=SCMenu.FadeDuration)
                 self.fadeIval.play()
                 if parentMenu is not None:
                     parentMenu.childHasFaded = 1
@@ -278,13 +279,15 @@ class SCMenu(SCObject, NodePath):
 
     """ The 'holder' is an element that 'owns' this menu; if 'None', this
     is a free-standing menu. """
+
     def setHolder(self, holder):
         self.holder = holder
+
     def getHolder(self):
         return self.holder
 
     def isTopLevel(self):
-        return (self.holder == None)
+        return (self.holder is None)
 
     def memberSelected(self, member):
         """ non-terminal member elements should call this when they are
@@ -316,6 +319,7 @@ class SCMenu(SCObject, NodePath):
     """ Member elements will call these functions to inform us that they
     have gained/lost the input focus. Based on calls to these functions,
     we will instruct our elements to go active or inactive. """
+
     def memberGainedInputFocus(self, member):
         """ member elements will call this function to let us know that
         they have gained the input focus """
@@ -341,7 +345,7 @@ class SCMenu(SCObject, NodePath):
         # is above the candidate in the menu.
         if ((self.activeMember is None) or
             (SCMenu.SpeedChatRolloverTolerance == 0) or
-            (member.posInParentMenu < self.activeMember.posInParentMenu)):
+                (member.posInParentMenu < self.activeMember.posInParentMenu)):
             self.__setActiveMember(member)
         else:
             # otherwise, don't switch the active member right away.
@@ -370,7 +374,7 @@ class SCMenu(SCObject, NodePath):
             #    mouse     reg    doLater  results
             #    enter   doLater    run    visible
 
-            minFrameRate = 1./SCMenu.SpeedChatRolloverTolerance
+            minFrameRate = 1. / SCMenu.SpeedChatRolloverTolerance
             if globalClock.getAverageFrameRate() > minFrameRate:
                 taskMgr.doMethodLater(SCMenu.SpeedChatRolloverTolerance,
                                       doActiveMemberSwitch,
@@ -461,7 +465,6 @@ class SCMenu(SCObject, NodePath):
 
         SCObject.finalize(self)
 
-
         # we aren't interested in members that aren't viewable.
         # build a list of viewable members. Also parent viewable
         # members to us, parent non-viewable members to hidden.
@@ -481,7 +484,7 @@ class SCMenu(SCObject, NodePath):
         maxWidth = 0.
         maxHeight = 0.
         for member in visibleMembers:
-            width,height = member.getMinDimensions()
+            width, height = member.getMinDimensions()
             maxWidth = max(maxWidth, width)
             maxHeight = max(maxHeight, height)
 
@@ -503,7 +506,7 @@ class SCMenu(SCObject, NodePath):
         # they should be
         for i in range(len(visibleMembers)):
             member = visibleMembers[i]
-            member.setPos(0,0,-i * maxHeight)
+            member.setPos(0, 0, -i * maxHeight)
             member.setDimensions(memberWidth, memberHeight)
             member.finalize()
 
@@ -513,7 +516,7 @@ class SCMenu(SCObject, NodePath):
             z2 = visibleMembers[0].getZ(aspect2d)
             visibleMembers[0].setZ(0)
 
-            actualHeight = (z2-z1) * len(visibleMembers)
+            actualHeight = (z2 - z1) * len(visibleMembers)
 
             # keep the menu from going off the bottom of the screen
             bottomZ = self.getZ(aspect2d) + actualHeight
@@ -527,11 +530,11 @@ class SCMenu(SCObject, NodePath):
         # set up the background frame
         sX = memberWidth
         sZ = memberHeight * len(visibleMembers)
-        self.bgMiddle.setScale(sX,1,sZ)
-        self.bgTop.setScale(sX,1,1)
-        self.bgBottom.setScale(sX,1,1)
-        self.bgLeft.setScale(1,1,sZ)
-        self.bgRight.setScale(1,1,sZ)
+        self.bgMiddle.setScale(sX, 1, sZ)
+        self.bgTop.setScale(sX, 1, 1)
+        self.bgBottom.setScale(sX, 1, 1)
+        self.bgLeft.setScale(1, 1, sZ)
+        self.bgRight.setScale(1, 1, sZ)
         self.bgBottomLeft.setZ(-sZ)
         self.bgBottom.setZ(-sZ)
         self.bgTopRight.setX(sX)
@@ -555,9 +558,9 @@ class SCMenu(SCObject, NodePath):
         self.bgLeft.setSx(aspect2d, sB)
         self.bgRight.setSx(aspect2d, sB)
 
-        r,g,b = self.getColorScheme().getFrameColor()
+        r, g, b = self.getColorScheme().getFrameColor()
         a = self.getColorScheme().getAlpha()
-        self.bg.setColorScale(r,g,b,a)
+        self.bg.setColorScale(r, g, b, a)
 
         # if we have an active member, reparent it to us, so that
         # it and its children show up over the rest of the menu elements
@@ -695,4 +698,4 @@ class SCMenu(SCObject, NodePath):
         return self.width
 
     def __str__(self):
-        return '%s: menu%s' % (self.__class__.__name__, self.SerialNum)
+        return f'{self.__class__.__name__}: menu{self.SerialNum}'

@@ -7,15 +7,18 @@ under the minigame framework without hard-coding them in.
 """
 from toontown.toonbase import ToontownGlobals
 
-# This config allows devs to temporarily register temp games created with the minigame framework
+# This config allows devs to temporarily register temp games created with
+# the minigame framework
 ALLOW_TEMP_MINIGAMES = simbase.config.GetBool('allow-temp-minigames', False)
 
 TEMP_MG_ID_COUNTER = ToontownGlobals.TravelGameId - 1
 
 TempMgCtors = {}
 
+
 def _printMessage(message):
     print("\n\n!!!", message, "\n\n")
+
 
 def _registerTempMinigame(name, Class, id, minPlayers=1, maxPlayers=4):
     """
@@ -24,12 +27,14 @@ def _registerTempMinigame(name, Class, id, minPlayers=1, maxPlayers=4):
     allow-temp-minigames config has to be set to true
     """
     if not ALLOW_TEMP_MINIGAMES:
-        _printMessage("registerTempMinigame WARNING: allow-temp-minigames config is set to false, but we are trying to register temp minigame " + name)
+        _printMessage(
+            "registerTempMinigame WARNING: allow-temp-minigames config is set to false, but we are trying to register temp minigame " +
+            name)
         import traceback
         traceback.print_stack()
         return
 
-    assert minPlayers >= 1 and minPlayers <= 4 and maxPlayers >=1 and maxPlayers <= 4 and minPlayers <= maxPlayers
+    assert minPlayers >= 1 and minPlayers <= 4 and maxPlayers >= 1 and maxPlayers <= 4 and minPlayers <= maxPlayers
     assert (name in ToontownGlobals.MinigameNames) == False
     assert id is not None and id not in ToontownGlobals.MinigameIDs and id < ToontownGlobals.TravelGameId
 
@@ -44,7 +49,7 @@ def _registerTempMinigame(name, Class, id, minPlayers=1, maxPlayers=4):
     _printMessage("registerTempMinigame: " + name)
 
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Temp Minigames
 # Please remove when done with them!
 # What to do:
@@ -59,4 +64,3 @@ if ALLOW_TEMP_MINIGAMES:
     _registerTempMinigame("cogdoflying", DistCogdoFlyingGameAI, id=51)
 
     pass
-

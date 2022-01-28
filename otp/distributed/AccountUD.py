@@ -7,6 +7,7 @@ appropriately in the db web interface.
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObjectUD
 
+
 class AccountUD(DistributedObjectUD.DistributedObjectUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('AccountUD')
 

@@ -10,7 +10,9 @@ from toontown.suit import SuitDNA
 from direct.directnotify import DirectNotifyGlobal
 from toontown.suit import DistributedSuitAI
 from . import SuitBuildingGlobals
-import types, functools
+import types
+import functools
+
 
 class SuitPlannerInteriorAI:
     """
@@ -27,13 +29,20 @@ class SuitPlannerInteriorAI:
     notify = DirectNotifyGlobal.directNotify.newCategory(
         'SuitPlannerInteriorAI')
 
-    def __init__( self, numFloors, bldgLevel, bldgTrack, zone, respectInvasions=0):
+    def __init__(
+            self,
+            numFloors,
+            bldgLevel,
+            bldgTrack,
+            zone,
+            respectInvasions=0):
         # when the suit planner interior is created, create information
         # about all suits that will exist in this building
         #
 
         self.dbg_4SuitsPerFloor = config.GetBool("4-suits-per-floor", 0)
-        self.dbg_1SuitPerFloor = config.GetBool("1-suit-per-floor", 0)  # formerly called 'wuss-suits'
+        self.dbg_1SuitPerFloor = config.GetBool(
+            "1-suit-per-floor", 0)  # formerly called 'wuss-suits'
 
         self.zoneId = zone
         self.numFloors = numFloors
@@ -43,7 +52,8 @@ class SuitPlannerInteriorAI:
         # behavior.
         self.respectInvasions = False
 
-        # This dbg var forces the creations of all 1 suit type (overrides level/type restrictions)
+        # This dbg var forces the creations of all 1 suit type (overrides
+        # level/type restrictions)
         dbg_defaultSuitName = simbase.config.GetString('suit-type', 'random')
         if (dbg_defaultSuitName == 'random'):
             self.dbg_defaultSuitType = None
@@ -53,17 +63,17 @@ class SuitPlannerInteriorAI:
         if (isinstance(bldgLevel, str)):
             self.notify.warning('bldgLevel is a string!')
             bldgLevel = int(bldgLevel)
-        self._genSuitInfos( numFloors, bldgLevel, bldgTrack )
+        self._genSuitInfos(numFloors, bldgLevel, bldgTrack)
         assert(len(self.suitInfos) > 0)
 
-    def __genJoinChances( self, num ):
+    def __genJoinChances(self, num):
         joinChances = []
-        for currChance in range( num ):
-            joinChances.append( random.randint( 1, 100 ) )
+        for currChance in range(num):
+            joinChances.append(random.randint(1, 100))
         joinChances.sort(key=functools.cmp_to_key(cmp))
         return joinChances
 
-    def _genSuitInfos( self, numFloors, bldgLevel, bldgTrack ):
+    def _genSuitInfos(self, numFloors, bldgLevel, bldgTrack):
         """
         // Function:   create information about all suits that will exist
         //             in this building
@@ -75,12 +85,12 @@ class SuitPlannerInteriorAI:
         // Changes:
         """
         self.suitInfos = []
-        self.notify.debug( "\n\ngenerating suitsInfos with numFloors (" +
-                           str( numFloors ) +
-                           ") bldgLevel (" +
-                           str( bldgLevel ) +
-                           "+1) and bldgTrack (" +
-                           str( bldgTrack ) + ")" )
+        self.notify.debug("\n\ngenerating suitsInfos with numFloors (" +
+                          str(numFloors) +
+                          ") bldgLevel (" +
+                          str(bldgLevel) +
+                          "+1) and bldgTrack (" +
+                          str(bldgTrack) + ")")
 
         assert(bldgLevel >= 0 and
                bldgLevel < len(SuitBuildingGlobals.SuitBuildingInfo))
@@ -104,7 +114,7 @@ class SuitPlannerInteriorAI:
             if (self.dbg_4SuitsPerFloor):
                 numActive = 4
             else:
-                numActive = random.randint( 1, min( 4, len( lvls ) ) )
+                numActive = random.randint(1, min(4, len(lvls)))
 
             if ((currFloor + 1) == numFloors and len(lvls) > 1):
                 # Make the boss be suit 1 (unless there is only 1 active suit)
@@ -117,14 +127,14 @@ class SuitPlannerInteriorAI:
                 lvls[newBossSpot] = lvls[origBossSpot]
                 lvls[origBossSpot] = tmp
 
-            bldgInfo = SuitBuildingGlobals.SuitBuildingInfo[ bldgLevel ]
+            bldgInfo = SuitBuildingGlobals.SuitBuildingInfo[bldgLevel]
             if len(bldgInfo) > SuitBuildingGlobals.SUIT_BLDG_INFO_REVIVES:
-                revives = bldgInfo[ SuitBuildingGlobals.SUIT_BLDG_INFO_REVIVES ][0]
+                revives = bldgInfo[SuitBuildingGlobals.SUIT_BLDG_INFO_REVIVES][0]
             else:
                 revives = 0
-            for currActive in range( numActive - 1, -1, -1 ):
-                level = lvls[ currActive ]
-                type = self.__genNormalSuitType( level )
+            for currActive in range(numActive - 1, -1, -1):
+                level = lvls[currActive]
+                type = self.__genNormalSuitType(level)
                 activeDict = {}
                 activeDict['type'] = type
                 activeDict['track'] = bldgTrack
@@ -139,11 +149,11 @@ class SuitPlannerInteriorAI:
             # done to the suits currently in the battle
             #
             reserveDicts = []
-            numReserve = len( lvls ) - numActive
-            joinChances = self.__genJoinChances( numReserve )
-            for currReserve in range( numReserve ):
-                level = lvls[ currReserve + numActive ]
-                type = self.__genNormalSuitType( level )
+            numReserve = len(lvls) - numActive
+            joinChances = self.__genJoinChances(numReserve)
+            for currReserve in range(numReserve):
+                level = lvls[currReserve + numActive]
+                type = self.__genNormalSuitType(level)
                 reserveDict = {}
                 reserveDict['type'] = type
                 reserveDict['track'] = bldgTrack
@@ -155,9 +165,9 @@ class SuitPlannerInteriorAI:
 
             self.suitInfos.append(infoDict)
 
-        #self.print()
+        # self.print()
 
-    def __genNormalSuitType( self, lvl ):
+    def __genNormalSuitType(self, lvl):
         """
         // Function:   generate info for a normal suit that we might find
         //             in this particular building
@@ -173,12 +183,12 @@ class SuitPlannerInteriorAI:
         # TODO: track this formula down and make it use
         # SuitDNA.getRandomSuitType
 
-        if (self.dbg_defaultSuitType != None):
+        if (self.dbg_defaultSuitType is not None):
             return self.dbg_defaultSuitType
 
         return SuitDNA.getRandomSuitType(lvl)
 
-    def __genLevelList( self, bldgLevel, currFloor, numFloors ):
+    def __genLevelList(self, bldgLevel, currFloor, numFloors):
         """
         // Function:   based on a few parameters from the building, create
         //             a list of suit levels for a specific floor
@@ -190,66 +200,66 @@ class SuitPlannerInteriorAI:
         // Changes:
         // returns:    list of suit levels
         """
-        assert(self.notify.debug('genLevelList(): floor: %d numFloors: %d' % \
-                (currFloor + 1, numFloors)))
-        bldgInfo = SuitBuildingGlobals.SuitBuildingInfo[ bldgLevel ]
+        assert(self.notify.debug('genLevelList(): floor: %d numFloors: %d' %
+                                 (currFloor + 1, numFloors)))
+        bldgInfo = SuitBuildingGlobals.SuitBuildingInfo[bldgLevel]
 
         # For quick building battles during debug.
         if (self.dbg_1SuitPerFloor):
             return [1]    # 1 suit of max level 1
         elif (self.dbg_4SuitsPerFloor):
-            return [5,6,7,10]  # a typical level with a higher level boss (must be at end)
+            # a typical level with a higher level boss (must be at end)
+            return [5, 6, 7, 10]
 
-        lvlPoolRange = bldgInfo[ SuitBuildingGlobals.SUIT_BLDG_INFO_LVL_POOL ]
-        maxFloors =  bldgInfo[ SuitBuildingGlobals.SUIT_BLDG_INFO_FLOORS ][1]
+        lvlPoolRange = bldgInfo[SuitBuildingGlobals.SUIT_BLDG_INFO_LVL_POOL]
+        maxFloors = bldgInfo[SuitBuildingGlobals.SUIT_BLDG_INFO_FLOORS][1]
 
         # now figure out which level pool multiplier to use
         #
         lvlPoolMults = bldgInfo[
-            SuitBuildingGlobals.SUIT_BLDG_INFO_LVL_POOL_MULTS ]
+            SuitBuildingGlobals.SUIT_BLDG_INFO_LVL_POOL_MULTS]
         floorIdx = min(currFloor, maxFloors - 1)
 
         # now adjust the min and max level pool range based on the multipliers
         # we just got
         #
-        lvlPoolMin = lvlPoolRange[ 0 ] * lvlPoolMults[ floorIdx ]
-        lvlPoolMax = lvlPoolRange[ 1 ] * lvlPoolMults[ floorIdx ]
+        lvlPoolMin = lvlPoolRange[0] * lvlPoolMults[floorIdx]
+        lvlPoolMax = lvlPoolRange[1] * lvlPoolMults[floorIdx]
 
         # now randomly choose a level pool between the max and min
         #
-        lvlPool = random.randint( int(lvlPoolMin), int(lvlPoolMax) )
+        lvlPool = random.randint(int(lvlPoolMin), int(lvlPoolMax))
 
         # find the min and max possible suit levels that we can create
         # for this level of building
         #
-        lvlMin = bldgInfo[ SuitBuildingGlobals.SUIT_BLDG_INFO_SUIT_LVLS ][ 0 ]
-        lvlMax = bldgInfo[ SuitBuildingGlobals.SUIT_BLDG_INFO_SUIT_LVLS ][ 1 ]
+        lvlMin = bldgInfo[SuitBuildingGlobals.SUIT_BLDG_INFO_SUIT_LVLS][0]
+        lvlMax = bldgInfo[SuitBuildingGlobals.SUIT_BLDG_INFO_SUIT_LVLS][1]
 
         # now randomly generate levels within our min and max, pulling
         # from our pool until we run out
         #
-        self.notify.debug( "Level Pool: " + str( lvlPool ) )
+        self.notify.debug("Level Pool: " + str(lvlPool))
         lvlList = []
         while lvlPool >= lvlMin:
-            newLvl =  random.randint( lvlMin, min( lvlPool, lvlMax ) )
-            lvlList.append( newLvl )
+            newLvl = random.randint(lvlMin, min(lvlPool, lvlMax))
+            lvlList.append(newLvl)
             lvlPool -= newLvl
 
         # now if we are on the top floor of the building, make sure to
         # add in a slot for the building boss
         #
         if currFloor + 1 == numFloors:
-            bossLvlRange=bldgInfo[SuitBuildingGlobals.SUIT_BLDG_INFO_BOSS_LVLS]
-            newLvl = random.randint( bossLvlRange[ 0 ], bossLvlRange[ 1 ] )
+            bossLvlRange = bldgInfo[SuitBuildingGlobals.SUIT_BLDG_INFO_BOSS_LVLS]
+            newLvl = random.randint(bossLvlRange[0], bossLvlRange[1])
             assert(self.notify.debug('boss level: %d' % newLvl))
-            lvlList.append( newLvl )
-
+            lvlList.append(newLvl)
 
         lvlList.sort(key=functools.cmp_to_key(cmp))
-        self.notify.debug( "LevelList: " + repr( lvlList ) )
+        self.notify.debug("LevelList: " + repr(lvlList))
         return lvlList
 
-    def __setupSuitInfo( self, suit, bldgTrack, suitLevel, suitType ):
+    def __setupSuitInfo(self, suit, bldgTrack, suitLevel, suitType):
         """
         create dna information for the given suit with the given track
         and suit type
@@ -265,35 +275,40 @@ class SuitPlannerInteriorAI:
             suitLevel = min(max(suitLevel, suitType), suitType + 4)
 
         dna = SuitDNA.SuitDNA()
-        dna.newSuitRandom( suitType, bldgTrack )
+        dna.newSuitRandom(suitType, bldgTrack)
         suit.dna = dna
         self.notify.debug("Creating suit type " + suit.dna.name +
-                          " of level " + str( suitLevel ) +
-                          " from type " + str( suitType ) +
-                          " and track " + str( bldgTrack ) )
-        suit.setLevel( suitLevel )
+                          " of level " + str(suitLevel) +
+                          " from type " + str(suitType) +
+                          " and track " + str(bldgTrack))
+        suit.setLevel(suitLevel)
 
         # We can't make a suit a skeleton until after generate.
         # Pass this info back so we know whether to do it or not
         return skeleton
 
-
-    def __genSuitObject(self, suitZone, suitType, bldgTrack, suitLevel, revives = 0):
+    def __genSuitObject(
+            self,
+            suitZone,
+            suitType,
+            bldgTrack,
+            suitLevel,
+            revives=0):
         """
         // Function:   generate a distributed suit object
         // Parameters:
         // Changes:
         // Returns:    the suit object created
         """
-        newSuit = DistributedSuitAI.DistributedSuitAI( simbase.air, None )
-        skel = self.__setupSuitInfo( newSuit, bldgTrack, suitLevel, suitType )
+        newSuit = DistributedSuitAI.DistributedSuitAI(simbase.air, None)
+        skel = self.__setupSuitInfo(newSuit, bldgTrack, suitLevel, suitType)
         if skel:
             newSuit.setSkelecog(1)
         newSuit.setSkeleRevives(revives)
-        newSuit.generateWithRequired( suitZone )
+        newSuit.generateWithRequired(suitZone)
 
         # Fill in the name so we can tell one suit from another in printouts.
-        newSuit.node().setName('suit-%s' % (newSuit.doId))
+        newSuit.node().setName(f'suit-{newSuit.doId}')
         return newSuit
 
     def myPrint(self):
@@ -306,37 +321,37 @@ class SuitPlannerInteriorAI:
         """
         self.notify.info("Generated suits for building: ")
         for currInfo in suitInfos:
-            whichSuitInfo = suitInfos.index( currInfo ) + 1
-            self.notify.debug( " Floor " + str( whichSuitInfo ) +
-                               " has " +
-                               str( len( currInfo[ 0 ] ) ) +
-                               " active suits." )
-            for currActive in range( len( currInfo [ 0 ] ) ):
-                self.notify.debug( "  Active suit " +
-                                   str( currActive + 1 ) +
-                                   " is of type " +
-                                   str( currInfo[ 0 ][ currActive ][ 0 ] ) +
-                                   " and of track " +
-                                   str( currInfo[ 0 ][ currActive ][ 1 ] ) +
-                                   " and of level " +
-                                   str( currInfo[ 0 ][ currActive ][ 2 ] ) )
+            whichSuitInfo = suitInfos.index(currInfo) + 1
+            self.notify.debug(" Floor " + str(whichSuitInfo) +
+                              " has " +
+                              str(len(currInfo[0])) +
+                              " active suits.")
+            for currActive in range(len(currInfo[0])):
+                self.notify.debug("  Active suit " +
+                                  str(currActive + 1) +
+                                  " is of type " +
+                                  str(currInfo[0][currActive][0]) +
+                                  " and of track " +
+                                  str(currInfo[0][currActive][1]) +
+                                  " and of level " +
+                                  str(currInfo[0][currActive][2]))
 
-            self.notify.debug( " Floor " + str( whichSuitInfo ) +
-                               " has " +
-                               str( len( currInfo[ 1 ] ) ) +
-                               " reserve suits." )
-            for currReserve in range( len( currInfo[ 1 ] ) ):
-                self.notify.debug( "  Reserve suit " +
-                                   str( currReserve + 1 ) +
-                                   " is of type " +
-                                   str( currInfo[ 1 ][ currReserve ][ 0 ] ) +
-                                   " and of track " +
-                                   str( currInfo[ 1 ][ currReserve ][ 1 ] ) +
-                                   " and of lvel " +
-                                   str( currInfo[ 1 ][ currReserve ][ 2 ] ) +
-                                   " and has " +
-                                   str( currInfo[ 1 ][ currReserve ][ 3 ] ) +
-                                   "% join restriction." )
+            self.notify.debug(" Floor " + str(whichSuitInfo) +
+                              " has " +
+                              str(len(currInfo[1])) +
+                              " reserve suits.")
+            for currReserve in range(len(currInfo[1])):
+                self.notify.debug("  Reserve suit " +
+                                  str(currReserve + 1) +
+                                  " is of type " +
+                                  str(currInfo[1][currReserve][0]) +
+                                  " and of track " +
+                                  str(currInfo[1][currReserve][1]) +
+                                  " and of lvel " +
+                                  str(currInfo[1][currReserve][2]) +
+                                  " and has " +
+                                  str(currInfo[1][currReserve][3]) +
+                                  "% join restriction.")
 
     def genFloorSuits(self, floor):
         """
@@ -349,10 +364,10 @@ class SuitPlannerInteriorAI:
         activeSuits = []
         for activeSuitInfo in floorInfo['activeSuits']:
             suit = self.__genSuitObject(self.zoneId,
-                                activeSuitInfo['type'],
-                                activeSuitInfo['track'],
-                                activeSuitInfo['level'],
-                                activeSuitInfo['revives'])
+                                        activeSuitInfo['type'],
+                                        activeSuitInfo['track'],
+                                        activeSuitInfo['level'],
+                                        activeSuitInfo['revives'])
 
             activeSuits.append(suit)
         assert(len(activeSuits) > 0)
@@ -361,16 +376,16 @@ class SuitPlannerInteriorAI:
         reserveSuits = []
         for reserveSuitInfo in floorInfo['reserveSuits']:
             suit = self.__genSuitObject(self.zoneId,
-                                reserveSuitInfo['type'],
-                                reserveSuitInfo['track'],
-                                reserveSuitInfo['level'],
-                                reserveSuitInfo['revives'])
+                                        reserveSuitInfo['type'],
+                                        reserveSuitInfo['track'],
+                                        reserveSuitInfo['level'],
+                                        reserveSuitInfo['revives'])
             reserveSuits.append((suit, reserveSuitInfo['joinChance']))
         suitHandles['reserveSuits'] = reserveSuits
 
         return suitHandles
 
-    def genSuits( self ):
+    def genSuits(self):
         """
         // Function:   for each floor, create a list of active and reserve
         //             suits that should exist inside of a suit building

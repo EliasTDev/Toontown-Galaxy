@@ -31,9 +31,9 @@ class LoginGoAccount(LoginBase.LoginBase):
         """
         # Separating authorize() and sendLoginMsg() is used more by
         # other login methods.  For us, we'll just store the parameters:
-        self.loginName=loginName
-        self.password=password
-        return None # no error.
+        self.loginName = loginName
+        self.password = password
+        return None  # no error.
 
     def supportsRelogin(self):
         """
@@ -46,7 +46,7 @@ class LoginGoAccount(LoginBase.LoginBase):
         """
         Send a message to the server with our loginName
         """
-        cr=self.cr
+        cr = self.cr
         # Time to send a login message
         datagram = PyDatagram()
         # Add message type
@@ -72,7 +72,7 @@ class LoginGoAccount(LoginBase.LoginBase):
         properties in-game, for instance when we enable chat.
         """
         return
-    
+
     def requestPwdReminder(self, email=None, acctName=None):
         """
         Request a password-reminder email, given an email address OR

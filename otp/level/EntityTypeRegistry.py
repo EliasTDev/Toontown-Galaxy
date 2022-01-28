@@ -10,6 +10,7 @@ import os
 import string
 import importlib
 
+
 class EntityTypeRegistry:
     notify = DirectNotifyGlobal.directNotify.newCategory('EntityTypeRegistry')
 
@@ -45,7 +46,9 @@ class EntityTypeRegistry:
         s += '.'
         # avoid CR/LF issues by reading the file line by line
         # readlines() converts \r\n to \n
-        fileLines = open(getPyExtVersion(self.entTypeModule.__file__)).readlines()
+        fileLines = open(
+            getPyExtVersion(
+                self.entTypeModule.__file__)).readlines()
         hv.hashString(''.join(fileLines))
         s += str(hv.asHex())
         self.hashStr = s
@@ -55,7 +58,7 @@ class EntityTypeRegistry:
         # get a list of the EntityTypeDesc classes in the type module
         classes = []
         for key, value in list(entityTypeModule.__dict__.items()):
-            if type(value) is type:
+            if isinstance(value, type):
                 if issubclass(value, EntityTypeDesc.EntityTypeDesc):
                     classes.append(value)
 
@@ -111,11 +114,11 @@ class EntityTypeRegistry:
     def getTypeDesc(self, entTypeName):
         """returns EntityTypeDesc instance for concrete Entity type"""
         assert entTypeName in self.entTypeName2typeDesc,\
-               "unknown entity type '%s'" % entTypeName
+            f"unknown entity type '{entTypeName}'"
         # the table has descriptors for abstract entity types, but I don't
         # think there's any need for anyone outside this class to access them
         assert self.entTypeName2typeDesc[entTypeName].isConcrete(),\
-               "entity type '%s' is abstract" % entTypeName
+            f"entity type '{entTypeName}' is abstract"
         return self.entTypeName2typeDesc[entTypeName]
 
     def getTypeNamesFromOutputType(self, outputType):
@@ -126,7 +129,7 @@ class EntityTypeRegistry:
         """return Entity typenames that are of or derive from an entity type,
         which may be concrete or abstract"""
         assert entTypeName in self.typeName2derivedTypeNames,\
-               "unknown entity type '%s'" % entTypeName
+            f"unknown entity type '{entTypeName}'"
         return self.typeName2derivedTypeNames[entTypeName]
 
     def isDerivedAndBase(self, entType, baseEntType):
@@ -142,6 +145,7 @@ class EntityTypeRegistry:
         # THIS IS NOT GUARANTEED TO PRODUCE THE SAME VALUE ACROSS DIFFERENT
         # MACHINES; use getHashStr instead
         return hash(repr(self))
+
     def __repr__(self):
         # this is used to produce a hash value
         return str(self.entTypeName2typeDesc)

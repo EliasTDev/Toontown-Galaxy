@@ -15,7 +15,7 @@ ERROR_NO_GUILD_CHAT = 4
 ERROR_NO_CREW_CHAT = 5
 ERROR_NO_SHIPPVP_CHAT = 6
 
-#CHAT TYPES
+# CHAT TYPES
 TYPEDCHAT = 0
 SPEEDCHAT_NORMAL = 1
 SPEEDCHAT_EMOTE = 2
@@ -49,10 +49,12 @@ Thought = 2
 ThoughtPrefix = '.'
 
 # thought methods
+
+
 def isThought(message):
     """
     message is a string.
-    
+
     Return 1 if the given string contains the thought prefix,
     Return 0 otherwise
     """
@@ -60,15 +62,16 @@ def isThought(message):
         # empty string cannot be a thought
         return 0
     elif (str.find(message, ThoughtPrefix, 0,
-                      len(ThoughtPrefix)) >= 0):
+                   len(ThoughtPrefix)) >= 0):
         return 1
     else:
         return 0
 
+
 def removeThoughtPrefix(message):
     """
     message is a string.
-    
+
     Return the string with the thought prefix removed
     """
     if (isThought(message)):

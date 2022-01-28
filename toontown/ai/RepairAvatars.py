@@ -19,6 +19,7 @@ THROW_TRACK = 4
 SQUIRT_TRACK = 5
 DROP_TRACK = 6
 
+
 class AvatarGetter(DirectObject.DirectObject):
     # Gets just one avatar at a time.  You can munge properties on the
     # avatar and write it back to the database.  self.av is the
@@ -31,7 +32,7 @@ class AvatarGetter(DirectObject.DirectObject):
         self.air = air
         self.dclass = self.air.dclassesByName['DistributedToonAI']
         self.av = None
-        self.gotAvatarEvent = 'AvatarGetter-%s' % (self.nextSequence)
+        self.gotAvatarEvent = f'AvatarGetter-{self.nextSequence}'
         AvatarGetter.nextSequence += 1
 
     def getAvatar(self, avId, fields=None, event=None):
@@ -51,24 +52,26 @@ class AvatarGetter(DirectObject.DirectObject):
             # we need this to check if it's a Toon
             fields.append('setDNAString')
         db.getFields(fields)
-        print("Avatar %s requested." % avId)
+        print(f"Avatar {avId} requested.")
 
     def saveAvatarAll(self):
         # Writes all the fields on the current avatar back to the
         # database.
         db = DatabaseObject.DatabaseObject(self.air, self.av.doId)
         db.storeObject(self.av)
-        print("Saved avatar %s." % (self.av.doId))
+        print(f"Saved avatar {self.av.doId}.")
 
     def saveAvatar(self, *fields):
         # Writes only the named fields (strings passed as parameters)
         # on the current avatar back to the database.
         if (len(fields) == 0):
-            print("Specify the fields to save in the parameter list, or use saveAvatarAll().")
+            print(
+                "Specify the fields to save in the parameter list, or use saveAvatarAll().")
         else:
             db = DatabaseObject.DatabaseObject(self.air, self.av.doId)
             db.storeObject(self.av, fields)
-            print("Saved %d fields on avatar %s." % (len(fields), self.av.doId))
+            print(
+                f"Saved {len(fields)} fields on avatar {self.av.doId}.")
 
     def __gotData(self, db, retcode):
         if retcode == 0 and 'setDNAString' in db.values:
@@ -81,13 +84,15 @@ class AvatarGetter(DirectObject.DirectObject):
             # to prevent mem leaks, you should call toon.patchDelete at
             # some point.
 
-            print('Got avatar %s, "%s".' % (self.av.doId, self.av._name))
+            print(f'Got avatar {self.av.doId}, "{self.av._name}".')
             if self.event is not None:
                 messenger.send(self.event, [self.av])
         else:
-            print("Could not get avatar %s, retcode = %s." % (db.doId, retcode))
+            print(
+                f"Could not get avatar {db.doId}, retcode = {retcode}.")
             if self.event is not None:
                 messenger.send(self.event, [None])
+
 
 class AvatarIterator(DirectObject.DirectObject):
 
@@ -111,15 +116,16 @@ class AvatarIterator(DirectObject.DirectObject):
         self.dclass = self.air.dclassesByName['DistributedToonAI']
         self.dnaDict = {}
         self.nextObjId = None
-        self.objIdList = None  # Fill this with a list of objId's to iterate through the list.
+        # Fill this with a list of objId's to iterate through the list.
+        self.objIdList = None
         self.requested = []
         self.nonAvatar = 0
-        self.gotAvatarEvent = 'AvatarIterator-%s' % (self.nextSequence)
+        self.gotAvatarEvent = f'AvatarIterator-{self.nextSequence}'
         AvatarIterator.nextSequence += 1
 
-    def start(self, startId = 100000000):
+    def start(self, startId=100000000):
         self.startTime = time.time()
-        if self.objIdList != None:
+        if self.objIdList is not None:
             # Iterate through an explicit list
             self.nextObjId = None
             self.objIdIndex = 0
@@ -133,16 +139,16 @@ class AvatarIterator(DirectObject.DirectObject):
 
     def stop(self):
         self.ignoreAll()
-        
+
     def getNextAvatar(self):
         while len(self.requested) < self.maxRequests:
-            if self.nextObjId != None:
+            if self.nextObjId is not None:
                 db = DatabaseObject.DatabaseObject(self.air, self.nextObjId)
                 db.doneEvent = self.gotAvatarEvent
                 db.getFields(self.fieldsToGet(db))
                 self.requested.append(self.nextObjId)
 
-            if self.objIdList != None:
+            if self.objIdList is not None:
                 # Iterate through an explicit list
                 if self.objIdIndex >= len(self.objIdList):
                     # Done.
@@ -150,14 +156,14 @@ class AvatarIterator(DirectObject.DirectObject):
                     if len(self.requested) == 0:
                         self.done()
                     return
-                
+
                 self.nextObjId = int(self.objIdList[self.objIdIndex])
                 self.objIdIndex += 1
 
             else:
                 # Iterate through the whole database
                 self.nextObjId += 2
-        
+
     def fieldsToGet(self, db):
         return db.getDatabaseFields(self.dclass)
 
@@ -172,11 +178,11 @@ class AvatarIterator(DirectObject.DirectObject):
             self.processAvatar(av, db)
             self.nonAvatar = 0
         else:
-            if self.objIdList != None:
-                print("Not an avatar: %s" % (db.doId))
+            if self.objIdList is not None:
+                print(f"Not an avatar: {db.doId}")
             self.nonAvatar += 1
 
-        if self.objIdList != None or self.nonAvatar < self.endOfListCount:
+        if self.objIdList is not None or self.nonAvatar < self.endOfListCount:
             self.getNextAvatar()
         elif len(self.requested) == 0:
             self.stop()
@@ -193,7 +199,7 @@ class AvatarIterator(DirectObject.DirectObject):
 
     def done(self):
         now = time.time()
-        print("done, %s seconds." % (now - self.startTime))
+        print(f"done, {now - self.startTime} seconds.")
 
 
 class HouseIterator(DirectObject.DirectObject):
@@ -218,15 +224,16 @@ class HouseIterator(DirectObject.DirectObject):
         self.dclass = self.air.dclassesByName['DistributedHouseAI']
         self.dnaDict = {}
         self.nextObjId = None
-        self.objIdList = None  # Fill this with a list of objId's to iterate through the list.
+        # Fill this with a list of objId's to iterate through the list.
+        self.objIdList = None
         self.requested = []
         self.nonHouse = 0
-        self.gotHouseEvent = 'HouseIterator-%s' % (self.nextSequence)
+        self.gotHouseEvent = f'HouseIterator-{self.nextSequence}'
         HouseIterator.nextSequence += 1
 
-    def start(self, startId = 100000000):
+    def start(self, startId=100000000):
         self.startTime = time.time()
-        if self.objIdList != None:
+        if self.objIdList is not None:
             # Iterate through an explicit list
             self.nextObjId = None
             self.objIdIndex = 0
@@ -240,16 +247,16 @@ class HouseIterator(DirectObject.DirectObject):
 
     def stop(self):
         self.ignoreAll()
-        
+
     def getNextHouse(self):
         while len(self.requested) < self.maxRequests:
-            if self.nextObjId != None:
+            if self.nextObjId is not None:
                 db = DatabaseObject.DatabaseObject(self.air, self.nextObjId)
                 db.doneEvent = self.gotHouseEvent
                 db.getFields(self.fieldsToGet(db))
                 self.requested.append(self.nextObjId)
 
-            if self.objIdList != None:
+            if self.objIdList is not None:
                 # Iterate through an explicit list
                 if self.objIdIndex >= len(self.objIdList):
                     # Done.
@@ -257,14 +264,14 @@ class HouseIterator(DirectObject.DirectObject):
                     if len(self.requested) == 0:
                         self.done()
                     return
-                
+
                 self.nextObjId = int(self.objIdList[self.objIdIndex])
                 self.objIdIndex += 1
 
             else:
                 # Iterate through the whole database
                 self.nextObjId += 2
-        
+
     def fieldsToGet(self, db):
         return db.getDatabaseFields(self.dclass)
 
@@ -279,11 +286,11 @@ class HouseIterator(DirectObject.DirectObject):
             self.processHouse(house, db)
             self.nonHouse = 0
         else:
-            if self.objIdList != None:
-                print("Not a house: %s" % (db.doId))
+            if self.objIdList is not None:
+                print(f"Not a house: {db.doId}")
             self.nonHouse += 1
 
-        if self.objIdList != None or self.nonHouse < self.endOfListCount:
+        if self.objIdList is not None or self.nonHouse < self.endOfListCount:
             self.getNextHouse()
         elif len(self.requested) == 0:
             self.stop()
@@ -300,7 +307,7 @@ class HouseIterator(DirectObject.DirectObject):
 
     def done(self):
         now = time.time()
-        print("done, %s seconds." % (now - self.startTime))
+        print(f"done, {now - self.startTime} seconds.")
 
 
 class PetIterator(DirectObject.DirectObject):
@@ -327,21 +334,22 @@ class PetIterator(DirectObject.DirectObject):
         self.startId = None
         self.endId = None
         self.nextObjId = None
-        self.objIdList = None  # Fill this with a list of objId's to iterate through the list.
+        # Fill this with a list of objId's to iterate through the list.
+        self.objIdList = None
         self.requested = []
         self.nonPet = 0
-        self.gotPetEvent = 'PetIterator-%s' % (self.nextSequence)
+        self.gotPetEvent = f'PetIterator-{self.nextSequence}'
         PetIterator.nextSequence += 1
 
-    def start(self, startId = 100000000):
+    def start(self, startId=100000000):
         self.startTime = time.time()
-        if self.objIdList != None:
+        if self.objIdList is not None:
             # Iterate through an explicit list
             self.nextObjId = None
             self.objIdIndex = 0
         else:
             # Iterate through the whole database
-            if self.startId == None:
+            if self.startId is None:
                 self.startId = startId
             self.nextObjId = self.startId
         self.accept(self.gotPetEvent, self.__gotData)
@@ -351,24 +359,24 @@ class PetIterator(DirectObject.DirectObject):
 
     def timeToStop(self):
         # override this and return True when appropriate
-        if self.objIdList != None:
+        if self.objIdList is not None:
             return False
         return self.nonPet >= self.endOfListCount
-    
+
     def stop(self):
         self.ignoreAll()
-        
+
     def getNextPet(self):
         if self.timeToStop():
             return
         while len(self.requested) < self.maxRequests:
-            if self.nextObjId != None:
+            if self.nextObjId is not None:
                 db = DatabaseObject.DatabaseObject(self.air, self.nextObjId)
                 db.doneEvent = self.gotPetEvent
                 db.getFields(self.fieldsToGet(db))
                 self.requested.append(self.nextObjId)
 
-            if self.objIdList != None:
+            if self.objIdList is not None:
                 # Iterate through an explicit list
                 if self.objIdIndex >= len(self.objIdList):
                     # Done.
@@ -376,14 +384,14 @@ class PetIterator(DirectObject.DirectObject):
                     if len(self.requested) == 0:
                         self.done()
                     return
-                
+
                 self.nextObjId = int(self.objIdList[self.objIdIndex])
                 self.objIdIndex += 1
 
             else:
                 # Iterate through the whole database
                 self.nextObjId += 2
-        
+
     def fieldsToGet(self, db):
         return db.getDatabaseFields(self.dclass)
 
@@ -396,8 +404,8 @@ class PetIterator(DirectObject.DirectObject):
             self.processPet(pet, db)
             self.nonPet = 0
         else:
-            if self.objIdList != None:
-                print("Not a pet: %s" % (db.doId))
+            if self.objIdList is not None:
+                print(f"Not a pet: {db.doId}")
             self.nonPet += 1
             self.getNextPet()
 
@@ -409,14 +417,13 @@ class PetIterator(DirectObject.DirectObject):
         now = time.time()
         if now - self.lastPrintTime > self.printInterval:
             percent = None
-            if self.objIdList != None:
+            if self.objIdList is not None:
                 percent = 100. * self.objIdIndex / len(self.objIdList)
             elif self.endId is not None:
                 percent = 100. * ((self.nextObjId - self.startId) /
-                                 (self.endId - self.startId))
+                                  (self.endId - self.startId))
             if percent is not None:
-                print("%s%% complete, %s seconds" % (percent,
-                                                     (now - self.startTime)))
+                print(f"{percent}% complete, {now - self.startTime} seconds")
             else:
                 print("%d: %s, %s seconds" % (pet.doId, pet.petName,
                                               (now - self.startTime)))
@@ -427,7 +434,7 @@ class PetIterator(DirectObject.DirectObject):
 
     def done(self):
         now = time.time()
-        print("done, %s seconds." % (now - self.startTime))
+        print(f"done, {now - self.startTime} seconds.")
 
 
 class AvatarFixer(AvatarIterator):
@@ -438,12 +445,14 @@ class AvatarFixer(AvatarIterator):
         if changed:
             db2 = DatabaseObject.DatabaseObject(self.air, av.doId)
             db2.storeObject(av, list(db.values.keys()))
-            print("%d: %s repaired (account %s)." % (av.doId, av._name, av.accountName))
+            print(
+                "%d: %s repaired (account %s)." %
+                (av.doId, av._name, av.accountName))
         return
 
-        numTracks = reduce(lambda a, b: a+b, av.trackArray)
+        numTracks = reduce(lambda a, b: a + b, av.trackArray)
         hp = av.maxHp
-        healExp, trapExp, lureExp, soundExp, throwExp, squirtExp, dropExp  = av.experience.experience
+        healExp, trapExp, lureExp, soundExp, throwExp, squirtExp, dropExp = av.experience.experience
         trackProgressId, trackProgress = av.getTrackProgress()
         trackAccess = av.getTrackAccess()
         maxMoney = av.getMaxMoney()
@@ -456,27 +465,46 @@ class AvatarFixer(AvatarIterator):
             toNpc = questDesc[2]
 
             if (not Quests.questExists(questId)):
-                print('WARNING: av has quest that is not in quest dict: ', av.doId, questId)
+                print(
+                    'WARNING: av has quest that is not in quest dict: ',
+                    av.doId,
+                    questId)
                 continue
 
             if (questId in [160, 161, 162, 161]):
                 if rewardId != 100:
-                    print(('WARNING: av has quest: %s with reward: %s' % (questId, rewardId)))
+                    print(('WARNING: av has quest: %s with reward: %s' %
+                          (questId, rewardId)))
                     questDesc[3] = 100
                     fixed = 1
                     continue
 
             if (rewardId == 1000):
-                if (questId in [1100, 1101, 1102, 1103, 2500, 2501, 3500, 3501, 4500, 4501, 5500, 5501, 7500, 7501, 9500, 9501]):
+                if (questId in [1100,
+                                1101,
+                                1102,
+                                1103,
+                                2500,
+                                2501,
+                                3500,
+                                3501,
+                                4500,
+                                4501,
+                                5500,
+                                5501,
+                                7500,
+                                7501,
+                                9500,
+                                9501]):
                     # not fixing because this clothing quest is valid
                     break
                 av.removeAllTracesOfQuest(questId, rewardId)
                 fixed = 1
                 continue
-            
+
             if ((toNpc != 1000) and
-                (NPCToons.NPCToonDict[toNpc][5] == NPCToons.NPC_HQ)):
-                print(('WARNING: av has quest: %s to visit NPC_HQ: %s' % (questId, toNpc)))
+                    (NPCToons.NPCToonDict[toNpc][5] == NPCToons.NPC_HQ)):
+                print(f'WARNING: av has quest: {questId} to visit NPC_HQ: {toNpc}')
                 print('before: ', av.quests)
                 questDesc[2] = Quests.ToonHQ
                 print('after: ', av.quests)
@@ -489,7 +517,7 @@ class AvatarFixer(AvatarIterator):
 
         # Make sure they are not training any tracks they have already trained
         if (trackProgressId >= 0) and (trackAccess[trackProgressId] == 1):
-            print ("WARNING: av training track he already has")
+            print("WARNING: av training track he already has")
             print("Track progress id: ", trackProgressId)
             print("Track access: ", trackAccess)
             print("Tier: ", av.rewardTier)
@@ -506,7 +534,7 @@ class AvatarFixer(AvatarIterator):
                 av.b_setTrackProgress(trackProgressId, trackProgress)
                 print("Fixed trackProgressId: ", trackProgressId)
                 fixed = 1
-                
+
             elif av.rewardTier in [4]:
                 print("ERROR: You should not be here")
             elif av.rewardTier in [5, 6]:
@@ -517,7 +545,7 @@ class AvatarFixer(AvatarIterator):
                     trackProgressId = DROP_TRACK
                 else:
                     trackProgressId = DROP_TRACK
-                av.b_setTrackProgress(trackProgressId, trackProgress)                    
+                av.b_setTrackProgress(trackProgressId, trackProgress)
                 print("Fixed trackProgressId: ", trackProgressId)
                 fixed = 1
             elif av.rewardTier in [7]:
@@ -532,7 +560,7 @@ class AvatarFixer(AvatarIterator):
                     trackProgressId = SOUND_TRACK
                 else:
                     trackProgressId = TRAP_TRACK
-                av.b_setTrackProgress(trackProgressId, trackProgress)                    
+                av.b_setTrackProgress(trackProgressId, trackProgress)
                 print("Fixed trackProgressId: ", trackProgressId)
                 fixed = 1
             elif av.rewardTier in [11]:
@@ -551,7 +579,7 @@ class AvatarFixer(AvatarIterator):
                     trackProgressId = TRAP_TRACK
                 else:
                     print("ERROR")
-                av.b_setTrackProgress(trackProgressId, trackProgress)                    
+                av.b_setTrackProgress(trackProgressId, trackProgress)
                 print("Fixed trackProgressId: ", trackProgressId)
                 fixed = 1
             else:
@@ -618,6 +646,7 @@ class AvatarFixer(AvatarIterator):
 
         return
 
+
 class AvatarPrinter(AvatarIterator):
 
     def __init__(self, air):
@@ -637,7 +666,7 @@ class AvatarPrinter(AvatarIterator):
         for cogTotal in av.cogCounts:
             cogCount += cogTotal
 
-        #if ((av.maxHp == 15) and
+        # if ((av.maxHp == 15) and
         #    (av.experience.experience[0] +
         #     av.experience.experience[1] +
         #     av.experience.experience[2] +
@@ -649,29 +678,31 @@ class AvatarPrinter(AvatarIterator):
         #    # Do not count this fella
         #    return
 
-
         #oldDna = self.backupDict.get(av.doId)
         #newDna = av.dna.asTuple()
-        #if oldDna and (oldDna != newDna):
+        # if oldDna and (oldDna != newDna):
         #    print '================'
         #    print av.doId
         #    print oldDna
         #    print newDna
-            
+
         #self.dnaDict[av.doId] = av.dna.asTuple()
-        #print av.doId, ' finished' #, av._name, "dna: ", av.dna.asTuple()
-        #return
+        # print av.doId, ' finished' #, av._name, "dna: ", av.dna.asTuple()
+        # return
         #import ToonDNA
         #newDNA = ToonDNA.ToonDNA()
-        #newDNA.newToonFromProperties(*av.dna.asTuple())
-        #print 'old: ', av.dna
-        #print 'new: ', newDNA
+        # newDNA.newToonFromProperties(*av.dna.asTuple())
+        # print 'old: ', av.dna
+        # print 'new: ', newDNA
 
         if av.doId % 10000 == 0:
-            print(("Working on avatar: %s" % av.doId))
-        #print ("%s, %s, %s, %s, %s" %
+            print(f"Working on avatar: {av.doId}")
+        # print ("%s, %s, %s, %s, %s" %
         # (av.doId, av.maxHp, len(av.hoodsVisited), len(av.safeZonesVisited), cogCount))
-        self.hoodInfoStore.record(av.maxHp, len(av.hoodsVisited), len(av.safeZonesVisited))
+        self.hoodInfoStore.record(
+            av.maxHp, len(
+                av.hoodsVisited), len(
+                av.safeZonesVisited))
         return
 
         print(("%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s" %
@@ -700,33 +731,32 @@ class AvatarPrinter(AvatarIterator):
                 av.experience.experience[5],
                 av.experience.experience[6],
                 )))
-                                     
 
 
 class HoodInfoStore:
     def __init__(self):
         self.__printCount = 0
         # Init the values to 0
-        self.avatarCount = {15:0,
-                            16:0,
-                            17:0,
-                            18:0,
-                            19:0,
-                            20:0,
+        self.avatarCount = {15: 0,
+                            16: 0,
+                            17: 0,
+                            18: 0,
+                            19: 0,
+                            20: 0,
                             }
-        self.hoodsVisited = {15: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
-                             16: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
-                             17: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
-                             18: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
-                             19: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
-                             20: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
+        self.hoodsVisited = {15: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+                             16: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+                             17: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+                             18: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+                             19: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+                             20: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
                              }
-        self.safeZonesVisited = {15: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
-                                 16: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
-                                 17: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
-                                 18: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
-                                 19: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
-                                 20: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
+        self.safeZonesVisited = {15: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+                                 16: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+                                 17: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+                                 18: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+                                 19: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+                                 20: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
                                  }
 
     def maybePrint(self):
@@ -734,10 +764,10 @@ class HoodInfoStore:
         if self.__printCount % 100 == 0:
             for hp, count in list(self.avatarCount.items()):
                 if count > 0:
-                    print(("hp: %d  count: %d  hoods: %s  sz: %s" %
-                           (hp, count, self.hoodsVisited[hp], self.safeZonesVisited[hp])))
+                    print(("hp: %d  count: %d  hoods: %s  sz: %s" % (
+                        hp, count, self.hoodsVisited[hp], self.safeZonesVisited[hp])))
             print()
-                
+
     def record(self, hp, numHoods, numSafeZones):
         self.maybePrint()
         if hp < 21:
@@ -745,7 +775,7 @@ class HoodInfoStore:
             self.hoodsVisited[hp][numHoods] += 1
             self.safeZonesVisited[hp][numSafeZones] += 1
 
-    
+
 """
 import UtilityStart
 import RepairAvatars
@@ -791,7 +821,7 @@ def fixAv(doId):
     print 'done'
 
 def fixAv(doId):
-    
+
 av = DistributedToonAI.DistributedToonAI(simbase.air)
 av.doId = doId
 db = DatabaseObject.DatabaseObject(simbase.air, av.doId)
@@ -806,5 +836,5 @@ print "Tier: ", av.rewardTier
 # av.b_setTrackProgress(trackId, progress)
 # db.storeObject(av, ["setTrackProgress"])
 print 'done'
-    
+
 """

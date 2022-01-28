@@ -19,6 +19,7 @@ from toontown.hood import Place
 from . import Estate
 from . import HouseGlobals
 
+
 class DistributedGarden(DistributedObject.DistributedObject):
     """
     This is the garden object on the client
@@ -39,9 +40,9 @@ class DistributedGarden(DistributedObject.DistributedObject):
         self.propTable = [None] * self.gridCells
         for i in range(len(self.propTable)):
             self.propTable[i] = [None] * self.gridCells
-        self.dx = 1.0/self.gridCells
+        self.dx = 1.0 / self.gridCells
         self.occupied = []
-        
+
     def generate(self):
         DistributedObject.DistributedObject.generate(self)
 
@@ -53,7 +54,7 @@ class DistributedGarden(DistributedObject.DistributedObject):
 
     def unload(self):
         pass
-    
+
     def delete(self):
         for prop in self.props:
             prop[0].removeNode()
@@ -61,45 +62,49 @@ class DistributedGarden(DistributedObject.DistributedObject):
             del prop
         del self.props
         self.props = None
-        
+
         self.unload()
 
     def sendNewProp(self, prop, x, y, z):
         self.notify.debug("sendNewProp")
-        print(("new prop (%d) = %s,%s,%s" % (prop,x,y,z)))
+        print(("new prop (%d) = %s,%s,%s" % (prop, x, y, z)))
         if prop == HouseGlobals.PROP_ICECUBE:
             model = loader.loadModel("phase_8/models/props/icecube.bam")
         elif prop == HouseGlobals.PROP_FLOWER:
-            model = loader.loadModel("phase_8/models/props/flower_treasure.bam")
+            model = loader.loadModel(
+                "phase_8/models/props/flower_treasure.bam")
         elif prop == HouseGlobals.PROP_SNOWFLAKE:
-            model = loader.loadModel("phase_8/models/props/snowflake_treasure.bam")
+            model = loader.loadModel(
+                "phase_8/models/props/snowflake_treasure.bam")
 
         model.reparentTo(hidden)
-        model.setPos(x,y,z)
+        model.setPos(x, y, z)
         model.setScale(.2)
         model.setBillboardPointEye()
         model.reparentTo(render)
-        self.props.append([model,x,y,z])
+        self.props.append([model, x, y, z])
 
     def getPropPos(self, i, j):
-        pos = [(self.pos[0] - self.radius + 2*self.radius*i),
-               (self.pos[1] - self.radius + 2*self.radius*j),
+        pos = [(self.pos[0] - self.radius + 2 * self.radius * i),
+               (self.pos[1] - self.radius + 2 * self.radius * j),
                self.pos[2]]
         return pos
 
     def loadProp(self, prop, i, j):
-        pos = self.getPropPos(i,j)
+        pos = self.getPropPos(i, j)
         if prop == HouseGlobals.PROP_ICECUBE:
             model = loader.loadModel("phase_8/models/props/icecube.bam")
         elif prop == HouseGlobals.PROP_FLOWER:
-            model = loader.loadModel("phase_8/models/props/flower_treasure.bam")
+            model = loader.loadModel(
+                "phase_8/models/props/flower_treasure.bam")
         elif prop == HouseGlobals.PROP_SNOWFLAKE:
-            model = loader.loadModel("phase_8/models/props/snowflake_treasure.bam")
+            model = loader.loadModel(
+                "phase_8/models/props/snowflake_treasure.bam")
         else:
-            self.notify.error("cant find prop: %s" % prop)
+            self.notify.error(f"cant find prop: {prop}")
 
         model.reparentTo(hidden)
-        model.setPos(pos[0],pos[1],pos[2])
+        model.setPos(pos[0], pos[1], pos[2])
         model.setScale(.2)
         model.setBillboardPointEye()
         model.reparentTo(render)
@@ -110,7 +115,7 @@ class DistributedGarden(DistributedObject.DistributedObject):
         self.notify.debug("addProp")
         self.props.append([prop, i, j])
         self.loadProp(prop, i, j)
-        
+
         # update the client and server
         self.b_setProps(self, props)
 
@@ -129,16 +134,11 @@ class DistributedGarden(DistributedObject.DistributedObject):
         for prop in props:
             aProps = aProps + prop
         self.sendUpdate("setProps", [aProps])
-        
+
     def setProps(self, props):
         self.notify.debug("setProps")
         self.props = props
         # fill table
         for prop in self.props:
-            pInd,i,j = prop
-            self.propTable[i,j] = pInd
-        
-    
-        
-        
-        
+            pInd, i, j = prop
+            self.propTable[i, j] = pInd

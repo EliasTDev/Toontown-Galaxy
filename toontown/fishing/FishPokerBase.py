@@ -8,19 +8,19 @@ LOCK_INDEX = 1
 # Reward base for varios hands
 # These are modified by the rarity level of the various fish
 RewardDict = {
-    (5,) : (100, TTLocalizer.FishPoker5OfKind),
-    (4,1) : (50, TTLocalizer.FishPoker4OfKind),
-    (3,2) : (25, TTLocalizer.FishPokerFullHouse),
-    (3,1,1) : (10, TTLocalizer.FishPoker3OfKind),
-    (2,2,1) : (5, TTLocalizer.FishPoker2Pair),
-    (2,1,1,1) : (2, TTLocalizer.FishPokerPair),
-    }
+    (5,): (100, TTLocalizer.FishPoker5OfKind),
+    (4, 1): (50, TTLocalizer.FishPoker4OfKind),
+    (3, 2): (25, TTLocalizer.FishPokerFullHouse),
+    (3, 1, 1): (10, TTLocalizer.FishPoker3OfKind),
+    (2, 2, 1): (5, TTLocalizer.FishPoker2Pair),
+    (2, 1, 1, 1): (2, TTLocalizer.FishPokerPair),
+}
 
 
 class FishPokerBase:
 
     NumSlots = 5
-    
+
     def __init__(self):
         self.__cards = {}
         self.clear()
@@ -89,8 +89,7 @@ class FishPokerBase:
                     cards[genus] += 1
                 else:
                     cards[genus] = 1
-        cardList = list(cards.values())
-        cardList.sort()
+        cardList = sorted(cards.values())
         cardList.reverse()
         cardList.extend(noneList)
         # Convert to tuple for dictionary lookup
@@ -111,10 +110,8 @@ class FishPokerBase:
                 lockedStr = "Locked"
             else:
                 lockedStr = "Unlocked"
-            s += ("%s : %s, %s" % (i, card, lockedStr)) 
+            s += f"{i} : {card}, {lockedStr}"
             if (i == availIndex):
                 s += " <--"
             s += "\n"
         return s
-    
-        

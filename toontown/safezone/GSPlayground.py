@@ -9,39 +9,41 @@ from toontown.toonbase import TTLocalizer
 from toontown.racing import RaceGlobals
 from direct.fsm import State
 
+
 class GSPlayground(Playground.Playground):
     def __init__(self, loader, parentFSM, doneEvent):
         Playground.Playground.__init__(self, loader, parentFSM, doneEvent)
-        self.parentFSM=parentFSM
+        self.parentFSM = parentFSM
         self.startingBlockDoneEvent = "startingBlockDone"
 
-        self.fsm.addState( State.State('startingBlock',
-                                       self.enterStartingBlock,
-                                       self.exitStartingBlock,
-                                       ['walk']))
+        self.fsm.addState(State.State('startingBlock',
+                                      self.enterStartingBlock,
+                                      self.exitStartingBlock,
+                                      ['walk']))
         state = self.fsm.getStateNamed('walk')
         state.addTransition('startingBlock')
 
     def load(self):
         Playground.Playground.load(self)
-    
+
     def unload(self):
         Playground.Playground.unload(self)
 
     def enter(self, requestStatus):
         Playground.Playground.enter(self, requestStatus)
-        blimp=base.cr.playGame.hood.loader.geom.find("**/GS_blimp")
-        blimp.setPos(-70,250,-70)
-        blimpBase=NodePath("blimpBase")
-        blimpBase.setPos(0,-200,25)
+        blimp = base.cr.playGame.hood.loader.geom.find("**/GS_blimp")
+        blimp.setPos(-70, 250, -70)
+        blimpBase = NodePath("blimpBase")
+        blimpBase.setPos(0, -200, 25)
         blimpBase.setH(-40)
         blimp.reparentTo(blimpBase)
-        blimpRoot=NodePath("blimpRoot")
-        blimpRoot.setPos(0,-70,40)
+        blimpRoot = NodePath("blimpRoot")
+        blimpRoot.setPos(0, -70, 40)
         blimpRoot.reparentTo(base.cr.playGame.hood.loader.geom)
         blimpBase.reparentTo(blimpRoot)
-        self.rotateBlimp=blimpRoot.hprInterval(360,Vec3(360,0,0))
+        self.rotateBlimp = blimpRoot.hprInterval(360, Vec3(360, 0, 0))
         self.rotateBlimp.loop()
+
     def exit(self):
         Playground.Playground.exit(self)
         self.rotateBlimp.finish()
@@ -62,36 +64,38 @@ class GSPlayground(Playground.Playground):
         self.dfa = DownloadForceAcknowledge.DownloadForceAcknowledge(doneEvent)
         if requestStatus["hoodId"] == ToontownGlobals.MyEstate:
             # Ask if we can enter phase 5.5
-            self.dfa.enter(base.cr.hoodMgr.getPhaseFromHood(ToontownGlobals.MyEstate))
+            self.dfa.enter(
+                base.cr.hoodMgr.getPhaseFromHood(
+                    ToontownGlobals.MyEstate))
         else:
             # Ask if we can enter phase 5
             self.dfa.enter(5)
 
-
     # teleportIn
+
     def enterTeleportIn(self, requestStatus):
         reason = requestStatus.get("reason")
         if reason == RaceGlobals.Exit_Barrier:
             # we timed out of a race
             requestStatus['nextState'] = 'popup'
             self.dialog = TTDialog.TTDialog(
-                text = TTLocalizer.KartRace_RaceTimeout,
-                command = self.__cleanupDialog,
-                style = TTDialog.Acknowledge)
+                text=TTLocalizer.KartRace_RaceTimeout,
+                command=self.__cleanupDialog,
+                style=TTDialog.Acknowledge)
         elif reason == RaceGlobals.Exit_Slow:
             # we timed out of a race
             requestStatus['nextState'] = 'popup'
             self.dialog = TTDialog.TTDialog(
-                text = TTLocalizer.KartRace_RacerTooSlow,
-                command = self.__cleanupDialog,
-                style = TTDialog.Acknowledge)
+                text=TTLocalizer.KartRace_RacerTooSlow,
+                command=self.__cleanupDialog,
+                style=TTDialog.Acknowledge)
         elif reason == RaceGlobals.Exit_BarrierNoRefund:
             # we timed out of a race
             requestStatus['nextState'] = 'popup'
             self.dialog = TTDialog.TTDialog(
-                text = TTLocalizer.KartRace_RaceTimeoutNoRefund,
-                command = self.__cleanupDialog,
-                style = TTDialog.Acknowledge)
+                text=TTLocalizer.KartRace_RaceTimeoutNoRefund,
+                command=self.__cleanupDialog,
+                style=TTDialog.Acknowledge)
 
         Playground.Playground.enterTeleportIn(self, requestStatus)
 
@@ -105,12 +109,14 @@ class GSPlayground(Playground.Playground):
     # startingblock state
     def enterStartingBlock(self, distStartingBlock):
         assert(self.notify.debug("enterStartingBlock()"))
-        import pdb; pdb.set_trace()
+        import pdb
+        pdb.set_trace()
         self.accept(self.startingBlockDoneEvent, self.handleStartingBlockDone)
-        self.startingBlock = Elevator.Elevator(self.fsm.getStateNamed("startingBlock"),
-                                               self.startingBlockDoneEvent,
-                                               distStartingBlock)
-        distStartingBlock.elevatorFSM=self.startingBlock
+        self.startingBlock = Elevator.Elevator(
+            self.fsm.getStateNamed("startingBlock"),
+            self.startingBlockDoneEvent,
+            distStartingBlock)
+        distStartingBlock.elevatorFSM = self.startingBlock
         self.startingBlock.load()
         self.startingBlock.enter()
 
@@ -123,7 +129,8 @@ class GSPlayground(Playground.Playground):
 
     def detectedStartingBlockCollision(self, distStartingBlock):
         assert(self.notify.debug("detectedStartingBlockCollision()"))
-        import pdb; pdb.set_trace()
+        import pdb
+        pdb.set_trace()
         self.fsm.request("startingBlock", [distStartingBlock])
 
     def handleStartingBlockDone(self, doneStatus):
@@ -141,5 +148,3 @@ class GSPlayground(Playground.Playground):
         else:
             self.notify.error("Unknown mode: " + where +
                               " in handleStartingBlockDone")
-
-

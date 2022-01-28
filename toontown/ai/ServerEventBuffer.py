@@ -1,7 +1,9 @@
 """ServerEventBuffer: buffers up information for multiple server events and writes single event"""
 
+
 class ServerEventBuffer:
     """Buffers up events that you want to be logged in the server event log."""
+
     def __init__(self, air, name, avId, period=None):
         # name is the name of the event that we'll be writing to the server
         # period in minutes
@@ -10,7 +12,7 @@ class ServerEventBuffer:
         self.avId = avId
         if period is None:
             # every 6 hours
-            period = 6*60.
+            period = 6 * 60.
         self.period = period
         self.lastFlushTime = None
 
@@ -30,7 +32,7 @@ class ServerEventBuffer:
         if self.lastFlushTime is None:
             self.lastFlushTime = globalClock.getFrameTime()
         elif ((globalClock.getFrameTime() - self.lastFlushTime) >
-              (self.period*60.)):
+              (self.period * 60.)):
             self.flush()
 
 
@@ -44,12 +46,13 @@ class ServerEventAccumulator(ServerEventBuffer):
         ServerEventBuffer.flush(self)
         if not self.count:
             return
-        self.writeEvent("%s" % self.count)
+        self.writeEvent(f"{self.count}")
         self.count = 0
 
     def addEvent(self):
         self.count += 1
         self.considerFlush()
+
 
 class ServerEventMultiAccumulator(ServerEventBuffer):
     # counts # of times multiple related events occur
@@ -63,10 +66,9 @@ class ServerEventMultiAccumulator(ServerEventBuffer):
         if not len(self.events):
             return
         msg = ""
-        eventNames = list(self.events.keys())
-        eventNames.sort()
+        eventNames = sorted(self.events.keys())
         for eventName in eventNames:
-            msg += "%s:%s" % (eventName, self.events[eventName])
+            msg += f"{eventName}:{self.events[eventName]}"
             if eventName != eventNames[-1]:
                 msg += ','
         self.writeEvent(msg)

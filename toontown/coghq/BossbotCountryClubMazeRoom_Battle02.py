@@ -11,7 +11,7 @@ GlobalEntities = {
         'farPlaneDistance': 1500,
         'modelFilename': 'phase_12/models/bossbotHQ/BossbotMazex4_C',
         'wantDoors': 1,
-        }, # end entity 1000
+    },  # end entity 1000
     # EDITMGR
     1001: {
         'type': 'editMgr',
@@ -21,7 +21,7 @@ GlobalEntities = {
         'removeEntity': None,
         'requestNewEntity': None,
         'requestSave': None,
-        }, # end entity 1001
+    },  # end entity 1001
     # ZONE
     0: {
         'type': 'zone',
@@ -31,7 +31,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 0
+    },  # end entity 0
     # BATTLEBLOCKER
     110000: {
         'type': 'battleBlocker',
@@ -43,7 +43,7 @@ GlobalEntities = {
         'scale': Vec3(1, 1, 1),
         'cellId': 0,
         'radius': 10,
-        }, # end entity 110000
+    },  # end entity 110000
     # DOOR
     110202: {
         'type': 'door',
@@ -66,7 +66,7 @@ GlobalEntities = {
         'unlock1Event': 110000,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 110202
+    },  # end entity 110202
     # MAZE
     110002: {
         'type': 'maze',
@@ -77,7 +77,7 @@ GlobalEntities = {
         'hpr': Vec3(0, 0, 0),
         'scale': Vec3(1, 1, 1),
         'numSections': 3,
-        }, # end entity 110002
+    },  # end entity 110002
     # NODEPATH
     10002: {
         'type': 'nodepath',
@@ -87,7 +87,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10002
+    },  # end entity 10002
     110001: {
         'type': 'nodepath',
         'name': '<unnamed>',
@@ -96,15 +96,15 @@ GlobalEntities = {
         'pos': Point3(60.0276, 82.0315, 0),
         'hpr': Point3(270, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 110001
-    }
+    },  # end entity 110001
+}
 
 Scenario0 = {
-    }
+}
 
 levelSpec = {
     'globalEntities': GlobalEntities,
     'scenarios': [
         Scenario0,
-        ],
-    }
+    ],
+}

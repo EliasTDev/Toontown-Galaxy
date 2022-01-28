@@ -7,10 +7,20 @@ from direct.fsm import ClassicFSM
 from direct.fsm import State
 from direct.task import Task
 
-class DistributedLawOfficeElevatorExtAI(DistributedElevatorExtAI.DistributedElevatorExtAI):
 
-    def __init__(self, air, bldg, lawOfficeId, entranceId, antiShuffle = 0, minLaff = 0):
-        DistributedElevatorExtAI.DistributedElevatorExtAI.__init__(self, air, bldg, antiShuffle = antiShuffle, minLaff = minLaff)
+class DistributedLawOfficeElevatorExtAI(
+        DistributedElevatorExtAI.DistributedElevatorExtAI):
+
+    def __init__(
+            self,
+            air,
+            bldg,
+            lawOfficeId,
+            entranceId,
+            antiShuffle=0,
+            minLaff=0):
+        DistributedElevatorExtAI.DistributedElevatorExtAI.__init__(
+            self, air, bldg, antiShuffle=antiShuffle, minLaff=minLaff)
         self.lawOfficeId = lawOfficeId
         self.entranceId = entranceId
 
@@ -30,14 +40,15 @@ class DistributedLawOfficeElevatorExtAI(DistributedElevatorExtAI.DistributedElev
                 if i not in [None, 0]:
                     players.append(i)
             lawOfficeZone = self.bldg.createLawOffice(self.lawOfficeId,
-                                                  self.entranceId, players)
-            
+                                                      self.entranceId, players)
+
             for seatIndex in range(len(self.seats)):
                 avId = self.seats[seatIndex]
                 if avId:
                     # Tell each player on the elevator that they should enter the factory
                     # And which zone it is in
-                    self.sendUpdateToAvatarId(avId, "setLawOfficeInteriorZone", [lawOfficeZone])
+                    self.sendUpdateToAvatarId(
+                        avId, "setLawOfficeInteriorZone", [lawOfficeZone])
                     # Clear the fill slot
                     self.clearFullNow(seatIndex)
         else:
@@ -48,18 +59,15 @@ class DistributedLawOfficeElevatorExtAI(DistributedElevatorExtAI.DistributedElev
         DistributedElevatorExtAI.DistributedElevatorExtAI.enterClosed(self)
         # Switch back into opening mode since we allow other Toons onboard
         self.fsm.request('opening')
-        
-        
+
     def sendAvatarsToDestination(self, avIdList):
         if (len(avIdList) > 0):
-            officeZone = self.bldg.createLawOffice(self.lawOfficeId, self.entranceId, avIdList)
+            officeZone = self.bldg.createLawOffice(
+                self.lawOfficeId, self.entranceId, avIdList)
             for avId in avIdList:
                 if avId:
-                    # Tell each player on the elevator that they should enter 
+                    # Tell each player on the elevator that they should enter
                     # the factory
                     # And which zone it is in
-                    self.sendUpdateToAvatarId(avId, 'setLawOfficeInteriorZoneForce', 
-                                        [officeZone])
-
-
-
+                    self.sendUpdateToAvatarId(
+                        avId, 'setLawOfficeInteriorZoneForce', [officeZone])

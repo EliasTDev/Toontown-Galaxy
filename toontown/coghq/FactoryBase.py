@@ -4,8 +4,10 @@ from . import FactorySpecs
 from otp.level import LevelSpec
 from toontown.toonbase import ToontownGlobals
 
+
 class FactoryBase:
     """ common functionality shared by DistributedFactory/AI """
+
     def __init__(self):
         pass
 

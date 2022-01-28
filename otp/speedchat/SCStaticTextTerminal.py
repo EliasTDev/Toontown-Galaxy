@@ -6,8 +6,10 @@ from otp.otpbase.OTPLocalizer import SpeedChatStaticText
 # args: textId
 SCStaticTextMsgEvent = 'SCStaticTextMsg'
 
+
 def decodeSCStaticTextMsg(textId):
     return SpeedChatStaticText.get(textId, None)
+
 
 class SCStaticTextTerminal(SCTerminal):
     """ SCStaticTextTerminal represents a terminal SpeedChat entry that
@@ -16,6 +18,7 @@ class SCStaticTextTerminal(SCTerminal):
     When selected, generates a 'SCStaticTextMsg' event, with arguments:
     - textId (16-bit; use as index into OTPLocalizer.SpeedChatStaticText)
     """
+
     def __init__(self, textId):
         SCTerminal.__init__(self)
         self.textId = textId

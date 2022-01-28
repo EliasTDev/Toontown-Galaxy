@@ -21,12 +21,13 @@ from toontown.toonbase import TTLocalizer
 from toontown.fishing import FishPhoto
 from toontown.fishing import BingoGlobals
 
+
 class BingoCardCell(DirectButton, FSM.FSM):
     """ Create a BingoCard Cell that houses all of the
         relevant information about that particular BINGO
         spot of the card. """
     notify = DirectNotifyGlobal.directNotify.newCategory('BingoCardCell')
-    #notify.setDebug(True)
+    # notify.setDebug(True)
     #################################################################
     # Method: __init__
     # Purpose: This method provides initial construction of the Cell.
@@ -40,6 +41,7 @@ class BingoCardCell(DirectButton, FSM.FSM):
     #        **kw - OptionDefs for the DirectButton.
     # Output: None
     #################################################################
+
     def __init__(self, cellId, fish, model, color, parent, **kw):
         assert self.notify.debugStateCall(self)
 
@@ -49,20 +51,20 @@ class BingoCardCell(DirectButton, FSM.FSM):
         # Option Definitions for the Cell. This should override any
         # FishPanel specific optiondefs.
         optiondefs = (
-            ('relief',                                    None, None),
-            ('state',                                 DGG.DISABLED, None),
-            ('image',                               buttonToUse, None),
-            ('image_color',                          self.color, None),
-            ('image_hpr',                              (0,90,0), None),
-            ('image_pos',                               (0,0,0), None),
-            ('pressEffect',                               False, None),
-            )
-       
+            ('relief', None, None),
+            ('state', DGG.DISABLED, None),
+            ('image', buttonToUse, None),
+            ('image_color', self.color, None),
+            ('image_hpr', (0, 90, 0), None),
+            ('image_pos', (0, 0, 0), None),
+            ('pressEffect', False, None),
+        )
+
         self.defineoptions(kw, optiondefs)
         DirectButton.__init__(self, parent)
         FSM.FSM.__init__(self, 'BingoCardCell')
         self.initialiseoptions(BingoCardCell)
-       
+
         # FishPanel Initialization should be completed by this point.
         # Finalize the remaining BingoCardCell initialization.
         self._parent = parent
@@ -88,10 +90,14 @@ class BingoCardCell(DirectButton, FSM.FSM):
     # Output: None
     #################################################################
     def setImageTo(self, button):
-        button.setHpr(0,90,0)
-        button.setPos(0,0,0)
+        button.setHpr(0, 90, 0)
+        button.setPos(0, 0, 0)
         button.setScale(BingoGlobals.CellImageScale)
-        button.setColor(self.color[0], self.color[1], self.color[2], self.color[3])
+        button.setColor(
+            self.color[0],
+            self.color[1],
+            self.color[2],
+            self.color[3])
 
         self['image'] = button
         self.setImage()
@@ -135,7 +141,7 @@ class BingoCardCell(DirectButton, FSM.FSM):
     #          represents.
     # Input: fish - The fish the cell instance represents.
     # Output: None
-    ################################################################# 
+    #################################################################
     def setFish(self, fish):
         if self.fish:
             del self.fish
@@ -147,7 +153,7 @@ class BingoCardCell(DirectButton, FSM.FSM):
     #          instance represents.
     # Input: None
     # Output: fish - The fish the cell isntance represents.
-    ################################################################# 
+    #################################################################
     def getFish(self):
         return self.fish
 
@@ -157,20 +163,20 @@ class BingoCardCell(DirectButton, FSM.FSM):
     #          the cell instance represents.
     # Input: None
     # Output: genus - The fish genus the cell instance represents.
-    ################################################################# 
+    #################################################################
     def getFishGenus(self):
         if self.fish == "Free":
             return -1
-        
+
         return self.fish.getGenus()
 
     #################################################################
     # Method: getFishSpecies
-    # Purpose: This method returns the type of Species of the Fish 
+    # Purpose: This method returns the type of Species of the Fish
     #          that the cell instance represents.
     # Input: None
     # Output: species - The fish species the cell instance represents
-    ################################################################# 
+    #################################################################
     def getFishSpecies(self):
         return self.fish.getSpecies()
 
@@ -181,7 +187,7 @@ class BingoCardCell(DirectButton, FSM.FSM):
     # Input: callback - the callback routine to be called when the
     #                   cell is pressed.
     # Output: None
-    ################################################################# 
+    #################################################################
     def enable(self, callback=None):
         self.request('On', callback)
 
@@ -192,12 +198,12 @@ class BingoCardCell(DirectButton, FSM.FSM):
     #          logo if it exists.
     # Input: None
     # Output: None
-    ################################################################# 
+    #################################################################
     def disable(self):
         self.request('Off')
         if not self.fish == 'Free':
             # Load the new logo
-            self.generateMarkedLogo()  
+            self.generateMarkedLogo()
 
 #################################################################
 # Finite State Machine Methods
@@ -213,7 +219,7 @@ class BingoCardCell(DirectButton, FSM.FSM):
     #          callback method reference.
     # Input: None
     # Output: None
-    ################################################################# 
+    #################################################################
     def enterOff(self):
         self['state'] = DGG.DISABLED
         self['command'] = None
@@ -226,14 +232,15 @@ class BingoCardCell(DirectButton, FSM.FSM):
     # Input: request - The Transition State
     #        args - additional arguments
     # Output: None
-    ################################################################# 
+    #################################################################
     def filterOff(self, request, args):
         if request == 'On':
             return (request, args)
         elif request == 'Off':
             return request
         else:
-            self.notify.debug("filterOff: Invalid State Transition from Off to %s" %(request))
+            self.notify.debug(
+                f"filterOff: Invalid State Transition from Off to {request}")
 
     #################################################################
     # Method: enterOn
@@ -241,12 +248,12 @@ class BingoCardCell(DirectButton, FSM.FSM):
     #          callback method reference.
     # Input: None
     # Output: None
-    ################################################################# 
+    #################################################################
     def enterOn(self, args):
         # Enable DirectButton Capabilities.
         self['state'] = DGG.NORMAL
         if args[0]:
-            self['command'] = Func(args[0],self.cellId).start
+            self['command'] = Func(args[0], self.cellId).start
 
     #################################################################
     # Method: filterOn
@@ -256,14 +263,10 @@ class BingoCardCell(DirectButton, FSM.FSM):
     # Input: request - The Transition State
     #        args - additional arguments
     # Output: None
-    ################################################################# 
+    #################################################################
     def filterOn(self, request, args):
         if request == 'Off':
             return request
         else:
-            self.notify.debug("filterOn: Invalid State Transition from Off to %s" %(request))
-
-
-
-    
-    
+            self.notify.debug(
+                f"filterOn: Invalid State Transition from Off to {request}")

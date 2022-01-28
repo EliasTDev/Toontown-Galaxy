@@ -9,7 +9,8 @@ from toontown.fishing import FishGlobals
 from . import GardenGlobals
 from direct.actor import Actor
 
-#WARNING Specials Photo is used in both GardenPage.py and PlantingGUI.py
+# WARNING Specials Photo is used in both GardenPage.py and PlantingGUI.py
+
 
 class DirectRegion(NodePath):
     notify = DirectNotifyGlobal.directNotify.newCategory("DirectRegion")
@@ -30,7 +31,7 @@ class DirectRegion(NodePath):
         """
         assert self.notify.debugStateCall(self)
         assert len(bounds) == 4
-        self.bounds=bounds
+        self.bounds = bounds
 
     def setColor(self, *colors):
         """
@@ -38,7 +39,7 @@ class DirectRegion(NodePath):
         """
         assert self.notify.debugStateCall(self)
         assert len(colors) == 4
-        self.color=colors
+        self.color = colors
 
     def show(self):
         assert self.notify.debugStateCall(self)
@@ -56,7 +57,7 @@ class DirectRegion(NodePath):
             self.fishSwimCamera = self.cRender.attachNewNode('fishSwimCamera')
             self.cCamNode = Camera('fishSwimCam')
             self.cLens = PerspectiveLens()
-            self.cLens.setFov(40,40)
+            self.cLens.setFov(40, 40)
             self.cLens.setNear(0.1)
             self.cLens.setFar(100.0)
             self.cCamNode.setLens(self.cLens)
@@ -72,12 +73,13 @@ class DirectRegion(NodePath):
             assert hasattr(self, "color")
             card.setColor(*self.color)
 
-            newBounds=card.getTightBounds()
-            ll=render2d.getRelativePoint(card, newBounds[0])
-            ur=render2d.getRelativePoint(card, newBounds[1])
-            newBounds=[ll.getX(), ur.getX(), ll.getZ(), ur.getZ()]
+            newBounds = card.getTightBounds()
+            ll = render2d.getRelativePoint(card, newBounds[0])
+            ur = render2d.getRelativePoint(card, newBounds[1])
+            newBounds = [ll.getX(), ur.getX(), ll.getZ(), ur.getZ()]
             # scale the -1.0..2.0 range to 0.0..1.0:
-            newBounds=[max(0.0, min(1.0, (x+1.0)/2.0)) for x in newBounds]
+            newBounds = [max(0.0, min(1.0, (x + 1.0) / 2.0))
+                         for x in newBounds]
 
             self.cDr = base.win.makeDisplayRegion(*newBounds)
             self.cDr.setSort(10)
@@ -97,6 +99,7 @@ class DirectRegion(NodePath):
             del self.cLens
             del self.fishSwimCam
             del self.cDr
+
 
 class SpecialsPhoto(NodePath):
     """
@@ -122,7 +125,11 @@ class SpecialsPhoto(NodePath):
         if hasattr(self, "background"):
             self.background.destroy()
             del self.background
-        if hasattr(self, "specialsFrame") and hasattr(self.specialsFrame,'destroy'):
+        if hasattr(
+                self,
+                "specialsFrame") and hasattr(
+                self.specialsFrame,
+                'destroy'):
             self.specialsFrame.destroy()
         if hasattr(self, 'toonStatuary'):
             if self.toonStatuary.toon:
@@ -141,14 +148,14 @@ class SpecialsPhoto(NodePath):
         bounds are floats: left, right, top, bottom
         """
         assert len(bounds) == 4
-        self.backBounds=bounds
+        self.backBounds = bounds
 
     def setBackColor(self, *colors):
         """
         colors are floats: red, green, blue, alpha
         """
         assert len(colors) == 4
-        self.backColor=colors
+        self.backColor = colors
 
     def load(self):
         assert self.notify.debugStateCall(self)
@@ -171,13 +178,12 @@ class SpecialsPhoto(NodePath):
         actor.reparentTo(scale)
         # Translate actor to the center.
         if actor.getTightBounds():
-            bMin,bMax = actor.getTightBounds()
-            center = (bMin + bMax)/2.0
+            bMin, bMax = actor.getTightBounds()
+            center = (bMin + bMax) / 2.0
             actor.setPos(-center[0], -center[1], -center[2])
         else:
             actor.setPos(0, 0, 0)
         pitch.setY(2.5)
-
 
         return frame
 
@@ -187,11 +193,15 @@ class SpecialsPhoto(NodePath):
             return nodePath
 
         # Handle the ToonStatues separately because we have to load a toon statue of the
-        # local avatar with a predefined pose instead of a predefined static model
-        if specialsIndex >= 105 and specialsIndex <= 108: # This is the range of Special indices in GardenGlobals.py
-            # Don't import this at the top of the file, since this code must run on the AI.
+        # local avatar with a predefined pose instead of a predefined static
+        # model
+        # This is the range of Special indices in GardenGlobals.py
+        if specialsIndex >= 105 and specialsIndex <= 108:
+            # Don't import this at the top of the file, since this code must
+            # run on the AI.
             from toontown.estate import DistributedToonStatuary
-            self.toonStatuary = DistributedToonStatuary.DistributedToonStatuary(None)
+            self.toonStatuary = DistributedToonStatuary.DistributedToonStatuary(
+                None)
             self.toonStatuary.setupStoneToon(base.localAvatar.style)
             self.toonStatuary.poseToonFromSpecialsIndex(specialsIndex)
             self.toonStatuary.toon.setH(180)
@@ -199,7 +209,8 @@ class SpecialsPhoto(NodePath):
             pedestalModelPath = GardenGlobals.Specials[specialsIndex]['photoModel']
             pedestal = loader.loadModel(pedestalModelPath)
             self.toonStatuary.toon.reparentTo(pedestal)
-            pedestal.setScale(GardenGlobals.Specials[specialsIndex]['photoScale'] * 0.5)
+            pedestal.setScale(
+                GardenGlobals.Specials[specialsIndex]['photoScale'] * 0.5)
             return pedestal
 
         else:
@@ -207,20 +218,21 @@ class SpecialsPhoto(NodePath):
             nodePath = loader.loadModel(modelName)
             desat = None
 
-            colorTuple = (1,1,1)
+            colorTuple = (1, 1, 1)
 
             if desat and not desat.isEmpty():
-                desat.setColorScale( colorTuple[0],
-                                        colorTuple[1],
-                                        colorTuple[2],
-                                        1.0)
+                desat.setColorScale(colorTuple[0],
+                                    colorTuple[1],
+                                    colorTuple[2],
+                                    1.0)
             else:
-                nodePath.setColorScale( colorTuple[0],
-                                        colorTuple[1],
-                                        colorTuple[2],
-                                        1.0)
+                nodePath.setColorScale(colorTuple[0],
+                                       colorTuple[1],
+                                       colorTuple[2],
+                                       1.0)
 
-            nodePath.setScale(GardenGlobals.Specials[specialsIndex]['photoScale'] * 0.5)
+            nodePath.setScale(
+                GardenGlobals.Specials[specialsIndex]['photoScale'] * 0.5)
             return nodePath
 
     def show(self, showBackground=0):
@@ -228,7 +240,7 @@ class SpecialsPhoto(NodePath):
         assert self.notify.debugStateCall(self)
         messenger.send('wakeup')
         if self.specialsFrame:
-            if hasattr(self.actor,'cleanup'):
+            if hasattr(self.actor, 'cleanup'):
                 self.actor.cleanup()
             if hasattr(self, "specialsDisplayRegion"):
                 self.specialsDisplayRegion.unload()
@@ -238,25 +250,25 @@ class SpecialsPhoto(NodePath):
 
         if showBackground:
             if not hasattr(self, "background"):
-                background = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+                background = loader.loadModel(
+                    "phase_3.5/models/gui/stickerbook_gui")
                 background = background.find("**/Fish_BG")
                 self.background = background
             self.background.setPos(0, 15, 0)
             self.background.setScale(11)
             self.background.reparentTo(self.specialsFrame)
 
-
     def hide(self):
         NodePath.hide(self)
         assert self.notify.debugStateCall(self)
         if hasattr(self, "specialsDisplayRegion"):
             self.specialsDisplayRegion.unload()
-            #self.specialsDisplayRegion.hide()
+            # self.specialsDisplayRegion.hide()
         if hasattr(self, "background"):
             self.background.hide()
             #import pdb; pdb.set_trace()
         if self.actor:
-            if hasattr(self.actor,'stop'):
+            if hasattr(self.actor, 'stop'):
                 self.actor.stop()
             self.actor.hide()
         if self.sound:
@@ -274,5 +286,3 @@ class SpecialsPhoto(NodePath):
 
     def changeVariety(self, variety):
         self.variety = variety
-
-

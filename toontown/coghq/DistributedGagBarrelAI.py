@@ -16,7 +16,7 @@ class DistributedGagBarrelAI(DistributedBarrelBaseAI.DistributedBarrelBaseAI):
 
     def d_setGrab(self, avId):
         # override the base class d_setGrab
-        self.notify.debug("d_setGrab %s" % avId)
+        self.notify.debug(f"d_setGrab {avId}")
         self.sendUpdate("setGrab", [avId])
 
         # Update the inventory
@@ -29,12 +29,12 @@ class DistributedGagBarrelAI(DistributedBarrelBaseAI.DistributedBarrelBaseAI):
             track = self.getGagTrack()
             level = self.getGagLevel()
             #level = len(Levels[track]) - 1
-            
+
             # only add up to max carry
             maxGags = av.getMaxCarry()
             av.inventory.calcTotalProps()
             numGags = av.inventory.totalProps
-            numReward = min(self.getRewardPerGrab(), maxGags-numGags)
+            numReward = min(self.getRewardPerGrab(), maxGags - numGags)
 
             # start adding from the indicated level down, so we max out
             # on higher level gags first
@@ -48,7 +48,7 @@ class DistributedGagBarrelAI(DistributedBarrelBaseAI.DistributedBarrelBaseAI):
             # use this code if we are just giving out a particular
             # level of gag.  usually though we will just want to give the
             # highest level of this track
-            #for i in range(self.getRewardPerGrab()):
+            # for i in range(self.getRewardPerGrab()):
             #    ret = av.inventory.addItem(self.getGagTrack(), self.gagLevel)
 
             # Finally, set the inventory on the client

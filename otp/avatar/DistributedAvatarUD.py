@@ -7,6 +7,7 @@ from otp.otpbase import OTPGlobals
 from direct.distributed.DistributedNodeAI import DistributedNodeAI
 #from direct.task import Task
 
+
 class DistributedAvatarUD(DistributedNodeAI):
     def __init__(self, air):
         DistributedNodeAI.__init__(self, air)

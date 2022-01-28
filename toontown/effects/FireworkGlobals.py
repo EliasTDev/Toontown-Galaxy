@@ -45,7 +45,7 @@ Names = ["Pow",
          "Pop",
          "Widow\nMaker",
          ]
-         
+
 # Firework colors
 WHITE = 0
 RED = 1
@@ -75,19 +75,20 @@ ICECREAM = 3
 STARFISH = 4
 ZZZ = 5
 
-skyTransitionDuration = 2.0 # duration (in seconds) of sky color
-                            # transition from light to dark or
-                            # vice versa
-preShowPauseDuration = 2.0 # duration of pause between sky
-                           # darkening and when the actual show
-                           # starts (in seconds)
-postShowPauseDuration = 4.0 # duration of pause between when show
-                            # ends and when sky returns to normal
-                            # daylight color
-preNormalMusicPauseDuration = 0.5 # wait this long (in seconds) 
-                                  # after sky has returned to
-                                  # normal to play the default
-                                  # music 
+skyTransitionDuration = 2.0  # duration (in seconds) of sky color
+# transition from light to dark or
+# vice versa
+preShowPauseDuration = 2.0  # duration of pause between sky
+# darkening and when the actual show
+# starts (in seconds)
+postShowPauseDuration = 4.0  # duration of pause between when show
+# ends and when sky returns to normal
+# daylight color
+preNormalMusicPauseDuration = 0.5  # wait this long (in seconds)
+# after sky has returned to
+# normal to play the default
+# music
+
 
 class FireworkTrailType:
     Default = 0
@@ -97,6 +98,7 @@ class FireworkTrailType:
     GlowSparkle = 4
     LongSparkle = 5
     LongGlowSparkle = 6
+
 
 class FireworkBurstType:
     Sparkles = 0
@@ -111,6 +113,7 @@ class FireworkBurstType:
     SkullBlast = 9
     TrailExplosion = 10
     IceCream = 11
+
 
 class FireworkType:
     BasicPeony = 0

@@ -11,28 +11,35 @@ from otp.otpbase import OTPGlobals
 # Always change its state via this function, instead of monkeying with
 # it directly.
 globalDropShadowFlag = 1
+
+
 def setGlobalDropShadowFlag(flag):
     global globalDropShadowFlag
     if flag != globalDropShadowFlag:
         globalDropShadowFlag = flag
         messenger.send('globalDropShadowFlagChanged')
 
+
 # A similar trick to control the global gray level of the drop shadows.
 globalDropShadowGrayLevel = 0.5
+
+
 def setGlobalDropShadowGrayLevel(grayLevel):
     global globalDropShadowGrayLevel
     if grayLevel != globalDropShadowGrayLevel:
         globalDropShadowGrayLevel = grayLevel
         messenger.send('globalDropShadowGrayLevelChanged')
 
-# I made this inherit from DirectObject so that non-distributed things can cast shadows
+# I made this inherit from DirectObject so that non-distributed things can
+# cast shadows
 
-class ShadowCaster: 
+
+class ShadowCaster:
 
     notify = DirectNotifyGlobal.directNotify.newCategory("ShadowCaster")
-    #notify.setDebug(1)
-    
-    def __init__(self, squareShadow = False):
+    # notify.setDebug(1)
+
+    def __init__(self, squareShadow=False):
         assert self.notify.debugStateCall(self)
         # some shadow initialization stuff
         if squareShadow:
@@ -48,16 +55,22 @@ class ShadowCaster:
 
         # Only create these hooks if we're running a game that cares
         # about them.
-        if hasattr(base,"wantDynamicShadows") and base.wantDynamicShadows:
-            messenger.accept('globalDropShadowFlagChanged', self, self.__globalDropShadowFlagChanged)
-            messenger.accept('globalDropShadowGrayLevelChanged', self, self.__globalDropShadowGrayLevelChanged)
+        if hasattr(base, "wantDynamicShadows") and base.wantDynamicShadows:
+            messenger.accept(
+                'globalDropShadowFlagChanged',
+                self,
+                self.__globalDropShadowFlagChanged)
+            messenger.accept(
+                'globalDropShadowGrayLevelChanged',
+                self,
+                self.__globalDropShadowGrayLevelChanged)
 
     def delete(self):
         assert self.notify.debugStateCall(self)
 
         # Only remove these hooks if we're running a game that cares
         # about them.
-        if hasattr(base,"wantDynamicShadows") and base.wantDynamicShadows:
+        if hasattr(base, "wantDynamicShadows") and base.wantDynamicShadows:
             messenger.ignore('globalDropShadowFlagChanged', self)
             messenger.ignore('globalDropShadowGrayLevelChanged', self)
         self.deleteDropShadow()
@@ -79,15 +92,17 @@ class ShadowCaster:
 
         # make the object float above the shadow slightly
         # not necessarily a good idea for all avatars
-        #self.getGeomNode().setZ(0.025)
+        # self.getGeomNode().setZ(0.025)
 
         # load and prep the drop shadow
         dropShadow = loader.loadModel(self.shadowFileName)
-        dropShadow.setScale(0.4) # Slightly smaller to compensate for billboard
-        
+        # Slightly smaller to compensate for billboard
+        dropShadow.setScale(0.4)
+
         dropShadow.flattenMedium()
-        dropShadow.setBillboardAxis(2) # slide the shadow towards the camera
-        dropShadow.setColor(0.0, 0.0, 0.0, globalDropShadowGrayLevel, 1) # override of 1 to prevent avatar.setColor() from affecting shadows.
+        dropShadow.setBillboardAxis(2)  # slide the shadow towards the camera
+        # override of 1 to prevent avatar.setColor() from affecting shadows.
+        dropShadow.setColor(0.0, 0.0, 0.0, globalDropShadowGrayLevel, 1)
         self.shadowPlacer = ShadowPlacer(
             base.shadowTrav, dropShadow,
             OTPGlobals.WallBitmask, OTPGlobals.FloorBitmask)
@@ -98,11 +113,11 @@ class ShadowCaster:
             dropShadow.reparentTo(self.getShadowJoint())
         else:
             self.dropShadow.hide()
-        
+
         # Set the state of the shadow placers (in case someone set the
         # value before now):
         self.setActiveShadow(self.wantsActive)
-        
+
         self.__globalDropShadowFlagChanged()
         self.__globalDropShadowGrayLevelChanged()
 
@@ -135,7 +150,7 @@ class ShadowCaster:
         if(not globalDropShadowFlag):
             self.storedActiveState = isActive
         # changed logic to prevent crash (test remark 13203) - grw
-        if self.shadowPlacer != None:
+        if self.shadowPlacer is not None:
             isActive = isActive and globalDropShadowFlag
             if self.activeShadow != isActive:
                 self.activeShadow = isActive
@@ -143,7 +158,6 @@ class ShadowCaster:
                     self.shadowPlacer.on()
                 else:
                     self.shadowPlacer.off()
-
 
     def setShadowHeight(self, shadowHeight):
         """
@@ -182,9 +196,9 @@ class ShadowCaster:
             self.dropShadow.hide()
         else:
             self.dropShadow.show()
-    
+
     def __globalDropShadowFlagChanged(self):
-        if (self.dropShadow != None):
+        if (self.dropShadow is not None):
             if(globalDropShadowFlag == 0):
                 if(self.activeShadow == 1):
                     self.storedActiveState = 1
@@ -192,7 +206,8 @@ class ShadowCaster:
             elif(self.activeShadow == 0):
                 self.setActiveShadow(1)
             self.showShadow()
-            
+
     def __globalDropShadowGrayLevelChanged(self):
-        if (self.dropShadow != None):
-            self.dropShadow.setColor(0.0, 0.0, 0.0, globalDropShadowGrayLevel, 1)
+        if (self.dropShadow is not None):
+            self.dropShadow.setColor(
+                0.0, 0.0, 0.0, globalDropShadowGrayLevel, 1)

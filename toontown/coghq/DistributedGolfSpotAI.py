@@ -1,6 +1,7 @@
 from direct.distributed import DistributedObjectAI
 from direct.fsm import FSM
 
+
 class DistributedGolfSpotAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM):
     """ This is one of four golf spots to appear in the corner of the CEO banquet
     room.  """
@@ -10,12 +11,12 @@ class DistributedGolfSpotAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM):
         FSM.FSM.__init__(self, 'DistributedGolfSpotAI')
         self.boss = boss
         self.index = index
-        self.avId = 0 # which toon is controlling us
+        self.avId = 0  # which toon is controlling us
         self.allowControl = True
 
     def delete(self):
         """Delete ourself."""
-        DistributedObjectAI.DistributedObjectAI.delete(self)        
+        DistributedObjectAI.DistributedObjectAI.delete(self)
 
     def getBossCogId(self):
         return self.boss.doId
@@ -31,7 +32,7 @@ class DistributedGolfSpotAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM):
         if not self.allowControl:
             return
         avId = self.air.getAvatarIdFromSender()
-        
+
         if avId in self.boss.involvedToons and self.avId == 0 and \
            self.state != 'Off':
             # Also make sure the client isn't controlling some other
@@ -48,14 +49,14 @@ class DistributedGolfSpotAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM):
     def requestFree(self, gotHitByBoss):
         # The client is done controlling the golfSpot.
         avId = self.air.getAvatarIdFromSender()
-        
+
         if avId == self.avId and self.state == 'Controlled':
             self.request('Free', gotHitByBoss)
 
     def forceFree(self):
         """Force us into the free state."""
         self.request('Free', 0)
-    
+
     def removeToon(self, avId):
         if avId == self.avId:
             self.request('Free')
@@ -64,7 +65,7 @@ class DistributedGolfSpotAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM):
         # Returns the golfSpotId for the golfSpot that the indicated avatar
         # is controlling, or 0 if none.
 
-        if self.boss and self.boss.golfSpots != None:
+        if self.boss and self.boss.golfSpots is not None:
             for golfSpot in self.boss.golfSpots:
                 if golfSpot.avId == avId:
                     return golfSpot.doId
@@ -72,16 +73,15 @@ class DistributedGolfSpotAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM):
         return 0
 
     def turnOff(self):
-        # 
+        #
         self.request('Off')
         self.allowControl = False
-
 
     ### FSM States ###
 
     def enterOff(self):
-        self.sendUpdate('setGoingToReward',[])
-        self.d_setState('O',0)
+        self.sendUpdate('setGoingToReward', [])
+        self.d_setState('O', 0)
         pass
 
     def exitOff(self):

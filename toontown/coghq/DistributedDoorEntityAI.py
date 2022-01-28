@@ -18,8 +18,8 @@ class Lock(DistributedDoorEntityBase.LockBase,
     """
     The Lock is not distributed itself, instead it relies on the door
     to get messages and state changes to and from the client.
-    
-    This was a nested class in DistributedDoorEntity, but the class 
+
+    This was a nested class in DistributedDoorEntity, but the class
     reloader that I'm using doesn't work with nested classes.  Until
     that gets changed I've moved this here.
     """
@@ -28,19 +28,21 @@ class Lock(DistributedDoorEntityBase.LockBase,
         self.door = door
         self.lockIndex = lockIndex
         assert(self.debugPrint(
-                "Lock(door=%s, lockIndex=%s, event=%s, isUnlocked=%s)"%
-                (door, lockIndex, event, isUnlocked)))
+            "Lock(door=%s, lockIndex=%s, event=%s, isUnlocked=%s)" %
+            (door, lockIndex, event, isUnlocked)))
         FourStateAI.FourStateAI.__init__(
-                self, self.stateNames, durations = self.stateDurations)
+            self, self.stateNames, durations=self.stateDurations)
         self.unlockEvent = None
         self.setUnlockEvent(event)
         self.setIsUnlocked(isUnlocked)
 
     def getLockState(self):
-        assert(self.debugPrint("getLockState() returning %s"%(self.stateIndex,)))
+        assert(
+            self.debugPrint(
+                f"getLockState() returning {self.stateIndex}"))
         assert 0 <= self.stateIndex <= 4
         return self.stateIndex
-        
+
     def setup(self):
         assert(self.debugPrint("takedown()"))
         pass
@@ -52,7 +54,7 @@ class Lock(DistributedDoorEntityBase.LockBase,
         del self.door
 
     def setUnlockEvent(self, event):
-        assert(self.debugPrint("setUnlockEvent(event=%s)"%(event,)))
+        assert(self.debugPrint(f"setUnlockEvent(event={event})"))
         if self.unlockEvent:
             self.ignore(self.unlockEvent)
         self.unlockEvent = self.door.getOutputEventName(event)
@@ -66,7 +68,7 @@ class Lock(DistributedDoorEntityBase.LockBase,
         self.door.sendLocksState()
 
     def setIsUnlocked(self, isUnlocked):
-        assert(self.debugPrint("setIsUnlocked(isUnlocked=%s)"%(isUnlocked,)))
+        assert(self.debugPrint(f"setIsUnlocked(isUnlocked={isUnlocked})"))
         self.setIsOn(isUnlocked)
         if not isUnlocked:
             # if the door is locking then close the door:
@@ -74,25 +76,22 @@ class Lock(DistributedDoorEntityBase.LockBase,
         # locks don't announce their state change: messenger.send(...)
 
     def setLockState(self, stateIndex):
-        assert(self.debugPrint("setLockState(stateIndex=%s)"%(stateIndex,)))
+        assert(self.debugPrint(f"setLockState(stateIndex={stateIndex})"))
         assert 0 <= self.stateIndex <= 4
-        if self.stateIndex!=stateIndex:
+        if self.stateIndex != stateIndex:
             self.fsm.request(self.states[stateIndex])
 
     def isUnlocked(self):
-        assert(self.debugPrint("isUnlocked() returning %s"%(self.isOn(),)))
+        assert(self.debugPrint(f"isUnlocked() returning {self.isOn()}"))
         return self.isOn()
 
     if __debug__:
         def debugPrint(self, message):
             """for debugging"""
             return self.door.notify.debug(
-                    "%s (%s) %s"%(self.door.__dict__.get('entId', '?'), 
-                                self.lockIndex, 
-                                message))
+                f"{self.door.__dict__.get('entId', '?')} ({self.lockIndex}) {message}")
 
 
-
 class DistributedDoorEntityAI(
         DistributedDoorEntityBase.DistributedDoorEntityBase,
         DistributedEntityAI.DistributedEntityAI, FourStateAI.FourStateAI):
@@ -104,7 +103,7 @@ class DistributedDoorEntityAI(
     """
     if __debug__:
         notify = DirectNotifyGlobal.directNotify.newCategory(
-                'DistributedDoorEntityAI')
+            'DistributedDoorEntityAI')
 
     def __init__(self, level, entId, zoneId=None):
         """
@@ -112,33 +111,34 @@ class DistributedDoorEntityAI(
         entId is an Entity ID (int).
         zoneId is an int.
         """
-        self.entId = entId # used in debugPrint.
+        self.entId = entId  # used in debugPrint.
         assert(self.debugPrint(
-                "DistributedDoorEntityAI(levelDoId=%s, entId=%s, zoneId=%s)"
-                %(level.doId, entId, zoneId)))
+            "DistributedDoorEntityAI(levelDoId=%s, entId=%s, zoneId=%s)"
+            % (level.doId, entId, zoneId)))
         # don't overwrite isGenerated()
-        self._isGenerated=0
+        self._isGenerated = 0
         self.isOpenInput = None
         DistributedEntityAI.DistributedEntityAI.__init__(
-                self, level, entId)
+            self, level, entId)
         self.stateDurations[2] = self.secondsOpen
         FourStateAI.FourStateAI.__init__(
-                self, self.stateNames, durations = self.stateDurations)
+            self, self.stateNames, durations=self.stateDurations)
         self.setup()
         if zoneId is not None:
             self.generateWithRequired(zoneId)
-    
+
     def generateWithRequired(self, zoneId):
-        assert(self.debugPrint("generateWithRequired(zoneId=%s)"%(zoneId,)))
-        DistributedEntityAI.DistributedEntityAI.generateWithRequired(self, zoneId)
-        self._isGenerated=1
+        assert(self.debugPrint(f"generateWithRequired(zoneId={zoneId})"))
+        DistributedEntityAI.DistributedEntityAI.generateWithRequired(
+            self, zoneId)
+        self._isGenerated = 1
 
     def delete(self):
         assert(self.debugPrint("delete()"))
         self.takedown()
         FourStateAI.FourStateAI.delete(self)
         DistributedEntityAI.DistributedEntityAI.delete(self)
-    
+
     def getLocksState(self):
         """
         returns stateBits:
@@ -151,37 +151,37 @@ class DistributedDoorEntityAI(
         Required dc field.
         """
         stateBits = 0x00000000
-        
-        if hasattr(self, 'locks'): #hack for the editor JML
+
+        if hasattr(self, 'locks'):  # hack for the editor JML
             stateBits = (
-                  ((self.locks[0].getLockState()      ) & 0x0000000f)
-                | ((self.locks[1].getLockState() <<  4) & 0x000000f0)
-                | ((self.locks[2].getLockState() <<  8) & 0x00000f00)
-                #| ((self.locks[3].getLockState() << 12) & 0x0000f000) # fourth lock not yet used.
-                )
-        assert(self.debugPrint("getLocksState() returning 0x%x"%(stateBits)))
+                ((self.locks[0].getLockState()) & 0x0000000f)
+                | ((self.locks[1].getLockState() << 4) & 0x000000f0)
+                | ((self.locks[2].getLockState() << 8) & 0x00000f00)
+                # | ((self.locks[3].getLockState() << 12) & 0x0000f000) # fourth lock not yet used.
+            )
+        assert(self.debugPrint(f"getLocksState() returning 0x{stateBits:x}"))
         return stateBits
-    
+
     def sendLocksState(self):
         assert(self.debugPrint("sendLocksState()"))
         if self._isGenerated:
             self.sendUpdate('setLocksState', [self.getLocksState()])
-    
+
     def getDoorState(self):
         """
         Required dc field.
         """
         r = (self.stateIndex, globalClockDelta.getRealNetworkTime())
-        assert(self.debugPrint("getDoorState() returning %s"%(r,)))
+        assert(self.debugPrint(f"getDoorState() returning {r}"))
         return r
-    
+
     def getName(self):
-        return "door-%s"%(self.entId,)
-    
+        return f"door-{self.entId}"
+
     def setup(self):
         assert(self.debugPrint("setup()"))
-        
-        #hack to make this sucker not break the editor JML
+
+        # hack to make this sucker not break the editor JML
         if not hasattr(self, 'unlock0Event'):
             self.unlock0Event = None
         if not hasattr(self, 'unlock1Event'):
@@ -198,13 +198,14 @@ class DistributedDoorEntityAI(
             self.isLock2Unlocked = None
         if not hasattr(self, 'isLock3Unlocked'):
             self.isLock3Unlocked = None
-            
+
         self.locks = [
-                Lock(self, 0, self.unlock0Event, self.isLock0Unlocked),
-                Lock(self, 1, self.unlock1Event, self.isLock1Unlocked),
-                Lock(self, 2, self.unlock2Event, self.isLock2Unlocked),
-                #Lock(self, 3, self.unlock3Event, self.isLock3Unlocked), # fourth lock not yet used.
-                ]
+            Lock(self, 0, self.unlock0Event, self.isLock0Unlocked),
+            Lock(self, 1, self.unlock1Event, self.isLock1Unlocked),
+            Lock(self, 2, self.unlock2Event, self.isLock2Unlocked),
+            # Lock(self, 3, self.unlock3Event, self.isLock3Unlocked), # fourth
+            # lock not yet used.
+        ]
         del self.unlock0Event
         del self.unlock1Event
         del self.unlock2Event
@@ -219,21 +220,21 @@ class DistributedDoorEntityAI(
         if hasattr(self, 'isOpen'):
             self.setIsOpen(self.isOpen)
             del self.isOpen
-        
+
     def takedown(self):
         assert(self.debugPrint("takedown()"))
         self.ignoreAll()
         for i in self.locks:
             i.takedown()
         del self.locks
-        
+
     # These stubbed out functions are not used on the AI (Client Only):
     setScale = DistributedDoorEntityBase.stubFunction
     setColor = DistributedDoorEntityBase.stubFunction
     setModel = DistributedDoorEntityBase.stubFunction
-   
+
     def setIsOpenEvent(self, event):
-        assert(self.debugPrint("setIsOpenEvent(event=%s)"%(event,)))
+        assert(self.debugPrint(f"setIsOpenEvent(event={event})"))
         if self.isOpenEvent:
             self.ignore(self.isOpenEvent)
         self.isOpenEvent = self.getOutputEventName(event)
@@ -241,24 +242,28 @@ class DistributedDoorEntityAI(
             self.accept(self.isOpenEvent, self.setIsOpen)
 
     def changedOnState(self, isOn):
-        assert(self.debugPrint("changedOnState(isOn=%s)"%(isOn,)))
+        assert(self.debugPrint(f"changedOnState(isOn={isOn})"))
         if hasattr(self, "entId"):
             # The open state is the inverse of the FourState's On value.
             messenger.send(self.getOutputEventName(), [not isOn])
         # else, we're being deleted, ignore the change (do not send message).
-    
+
     def setIsOpen(self, isOpen):
-        assert(self.debugPrint("setIsOpen(isOpen=%s)"%(isOpen,)))
+        assert(self.debugPrint(f"setIsOpen(isOpen={isOpen})"))
         # The open state is the inverse of the FourState's On value.
         self.setIsOn(not isOpen)
-    
+
     def getIsOpen(self):
-        assert(self.debugPrint("getIsOpen() returning %s"%(not self.getIsOn(),)))
+        assert(
+            self.debugPrint(
+                f"getIsOpen() returning {not self.getIsOn()}"))
         # The open state is the inverse of the FourState's On value.
         return not self.getIsOn()
-    
+
     def setSecondsOpen(self, secondsOpen):
-        assert(self.debugPrint("setSecondsOpen(secondsOpen=%s)"%(secondsOpen,)))
+        assert(
+            self.debugPrint(
+                f"setSecondsOpen(secondsOpen={secondsOpen})"))
         if self.secondsOpen != secondsOpen:
             self.secondsOpen = secondsOpen
             if secondsOpen < 0.0:
@@ -275,7 +280,7 @@ class DistributedDoorEntityAI(
     #                        self.closeDoorTask,
     #                        self.uniqueName('door-entity-timer'))
 
-    #def closeDoorTask(self, task):
+    # def closeDoorTask(self, task):
     #    assert(self.debugPrint("closeDoorTask()"))
     #    self.setIsOpen(0)
     #    self.fsm.request(self.states[3])
@@ -294,41 +299,49 @@ class DistributedDoorEntityAI(
         # else:  This door is already closing or closed.
 
     ##### locks #####
-    
+
     def setUnlock0Event(self, event):
-        assert(self.debugPrint("setUnlock0Event(event=%s)"%(event,)))
+        assert(self.debugPrint(f"setUnlock0Event(event={event})"))
         self.locks[0].setUnlockEvent(event)
-    
+
     def setUnlock1Event(self, event):
-        assert(self.debugPrint("setUnlock1Event(event=%s)"%(event,)))
+        assert(self.debugPrint(f"setUnlock1Event(event={event})"))
         self.locks[1].setUnlockEvent(event)
-    
+
     def setUnlock2Event(self, event):
-        assert(self.debugPrint("setUnlock2Event(event=%s)"%(event,)))
+        assert(self.debugPrint(f"setUnlock2Event(event={event})"))
         self.locks[2].setUnlockEvent(event)
-    
+
     def setUnlock3Event(self, event):
-        assert(self.debugPrint("setUnlock3Event(event=%s)"%(event,)))
-        #self.locks[3].setUnlockEvent(event) # fourth lock not yet used.
-    
+        assert(self.debugPrint(f"setUnlock3Event(event={event})"))
+        # self.locks[3].setUnlockEvent(event) # fourth lock not yet used.
+
     def setIsLock0Unlocked(self, unlocked):
-        assert(self.debugPrint("setIsLock0Unlocked(unlocked=%s)"%(unlocked,)))
+        assert(
+            self.debugPrint(
+                f"setIsLock0Unlocked(unlocked={unlocked})"))
         self.locks[0].setIsUnlocked(unlocked)
-    
+
     def setIsLock1Unlocked(self, unlocked):
-        assert(self.debugPrint("setIsLock1Unlocked(unlocked=%s)"%(unlocked,)))
+        assert(
+            self.debugPrint(
+                f"setIsLock1Unlocked(unlocked={unlocked})"))
         self.locks[1].setIsUnlocked(unlocked)
-    
+
     def setIsLock2Unlocked(self, unlocked):
-        assert(self.debugPrint("setIsLock2Unlocked(unlocked=%s)"%(unlocked,)))
+        assert(
+            self.debugPrint(
+                f"setIsLock2Unlocked(unlocked={unlocked})"))
         self.locks[2].setIsUnlocked(unlocked)
-    
+
     def setIsLock3Unlocked(self, unlocked):
-        assert(self.debugPrint("setIsLock3Unlocked(unlocked=%s)"%(unlocked,)))
-        #self.locks[3].setIsUnlocked(unlocked) # fourth lock not yet used.
+        assert(
+            self.debugPrint(
+                f"setIsLock3Unlocked(unlocked={unlocked})"))
+        # self.locks[3].setIsUnlocked(unlocked) # fourth lock not yet used.
 
     ##### states #####
-    
+
     def isUnlocked(self):
         """
         Check with each lock and return true if they are all unlocked.
@@ -336,27 +349,29 @@ class DistributedDoorEntityAI(
         """
         isUnlocked = (
             self.locks[0].isUnlocked()
-            and self.locks[1].isUnlocked() 
+            and self.locks[1].isUnlocked()
             and self.locks[2].isUnlocked()
-            #and self.locks[3].isUnlocked() # fourth lock not yet used.
-            )
-        assert(self.debugPrint("isUnlocked() returning %s"%(isUnlocked,)))
+            # and self.locks[3].isUnlocked() # fourth lock not yet used.
+        )
+        assert(self.debugPrint(f"isUnlocked() returning {isUnlocked}"))
         return isUnlocked
 
     def distributeStateChange(self):
         if self._isGenerated:
             self.sendUpdate('setDoorState', self.getDoorState())
-    
+
     def requestOpen(self):
         assert(self.debugPrint("requestOpen() ...checking locks"))
         if self.isUnlocked():
-            assert(self.notify.debug("  avatarId:%s"%(self.air.getAvatarIdFromSender(),)))
+            assert(
+                self.notify.debug(
+                    f"  avatarId:{self.air.getAvatarIdFromSender()}"))
             #stateName = self.fsm.getCurrentState().getName()
             if self.fsm.getCurrentState() is not self.states[2]:
                 # ...the door is not open.
                 # Request the opening state:
                 self.fsm.request(self.states[1])
-            #else:
+            # else:
             #    self.sendUpdateToAvatarId(avatarId, "rejectInteract", [])
         else:
             # ...the door is locked.
@@ -368,10 +383,9 @@ class DistributedDoorEntityAI(
         def debugPrint(self, message):
             """for debugging"""
             return self.notify.debug(
-                    str(self.__dict__.get('entId', '?'))+' '+message)
+                str(self.__dict__.get('entId', '?')) + ' ' + message)
 
     if __dev__:
         def attribChanged(self, attrib, value):
             self.takedown()
             self.setup()
-

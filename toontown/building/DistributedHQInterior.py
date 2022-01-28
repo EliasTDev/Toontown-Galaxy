@@ -11,6 +11,7 @@ import pickle
 from toontown.toonbase import TTLocalizer
 from panda3d.toontown import DNADoor
 
+
 class DistributedHQInterior(DistributedObject.DistributedObject):
     if __debug__:
         notify = DirectNotifyGlobal.directNotify.newCategory(
@@ -18,7 +19,7 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
 
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
-        self.dnaStore=cr.playGame.dnaStore
+        self.dnaStore = cr.playGame.dnaStore
         # These are stored in sorted order, highest score first
         self.leaderAvIds = []
         self.leaderNames = []
@@ -28,7 +29,8 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
 
     def generate(self):
         DistributedObject.DistributedObject.generate(self)
-        self.interior = loader.loadModel('phase_3.5/models/modules/HQ_interior')
+        self.interior = loader.loadModel(
+            'phase_3.5/models/modules/HQ_interior')
         self.interior.reparentTo(render)
         # hide these props until we intergrate them fully
         self.interior.find("**/cream").hide()
@@ -71,11 +73,11 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
         # TODO: do we want avatar dna / faces here?
         self.leaderBoard = hidden.attachNewNode('leaderBoard')
         # Away from the wall by 0.1 since the decal does not seem to be working
-        self.leaderBoard.setPosHprScale(0.1,0,4.5,90,0,0,0.9,0.9,0.9)
+        self.leaderBoard.setPosHprScale(0.1, 0, 4.5, 90, 0, 0, 0.9, 0.9, 0.9)
         z = 0
         row = self.buildTitleRow()
         row.reparentTo(self.leaderBoard)
-        row.setPos(0,0,z)
+        row.setPos(0, 0, z)
         z -= 1
         # Store the text nodes so we can setText() them later with
         # score updates
@@ -92,7 +94,7 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
             self.scoreTextNodes.append(scoreText)
             self.trophyStars.append(trophyStar)
             row.reparentTo(self.leaderBoard)
-            row.setPos(0,0,z)
+            row.setPos(0, 0, z)
             z -= 1
 
     def updateLeaderBoard(self):
@@ -123,7 +125,7 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
         nameText.setText(TTLocalizer.LeaderboardTitle)
         namePath = row.attachNewNode(nameText)
         # Centered
-        namePath.setPos(0,0,0)
+        namePath.setPos(0, 0, 0)
         return row
 
     def buildLeaderRow(self):
@@ -161,7 +163,8 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
         # or we are in our generate
         avIds, names, scores = pickle.loads(leaderData)
         # Note, these lists are in order, highest score first
-        self.notify.debug("setLeaderBoard: avIds: %s, names: %s, scores: %s" % (avIds, names, scores))
+        self.notify.debug(
+            f"setLeaderBoard: avIds: {avIds}, names: {names}, scores: {scores}")
         self.leaderAvIds = avIds
         self.leaderNames = names
         self.leaderScores = scores
@@ -172,13 +175,13 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
         # I copy/pasted this door string choosing code from
         # DistributedToonInterior.
         # Door:
-        doorModelName="door_double_round_ul" # hack  zzzzzzz
+        doorModelName = "door_double_round_ul"  # hack  zzzzzzz
         # Switch leaning of the door:
         if doorModelName[-1:] == "r":
-            doorModelName=doorModelName[:-1]+"l"
+            doorModelName = doorModelName[:-1] + "l"
         else:
-            doorModelName=doorModelName[:-1]+"r"
-        door=self.dnaStore.findNode(doorModelName)
+            doorModelName = doorModelName[:-1] + "r"
+        door = self.dnaStore.findNode(doorModelName)
         return door
 
     def setupDoors(self):
@@ -214,7 +217,7 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
                               self.dnaStore, triggerId,
                               doorColor)
             doorFrame = doorNP.find("door_*_flat")
-            #doorFrame.wrtReparentTo(self.interior)
+            # doorFrame.wrtReparentTo(self.interior)
             doorFrame.setColor(doorColor)
 
         del self.dnaStore
@@ -250,7 +253,9 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
             trophyStar.setColor(ToontownGlobals.TrophyStarColors[4])
             if score >= ToontownGlobals.TrophyStarLevels[5]:
                 # Spinning!
-                task = taskMgr.add(self.__starSpin, self.uniqueName("starSpinHQ"))
+                task = taskMgr.add(
+                    self.__starSpin,
+                    self.uniqueName("starSpinHQ"))
                 task.trophyStarSpeed = 15
                 task.trophyStar = trophyStar
 
@@ -261,7 +266,9 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
             trophyStar.setColor(ToontownGlobals.TrophyStarColors[2])
             # Spinning!
             if score >= ToontownGlobals.TrophyStarLevels[3]:
-                task = taskMgr.add(self.__starSpin, self.uniqueName("starSpinHQ"))
+                task = taskMgr.add(
+                    self.__starSpin,
+                    self.uniqueName("starSpinHQ"))
                 task.trophyStarSpeed = 10
                 task.trophyStar = trophyStar
 
@@ -272,7 +279,9 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
             trophyStar.setColor(ToontownGlobals.TrophyStarColors[0])
             # Spinning!
             if score >= ToontownGlobals.TrophyStarLevels[1]:
-                task = taskMgr.add(self.__starSpin, self.uniqueName("starSpinHQ"))
+                task = taskMgr.add(
+                    self.__starSpin,
+                    self.uniqueName("starSpinHQ"))
                 task.trophyStarSpeed = 8
                 task.trophyStar = trophyStar
 
@@ -285,6 +294,7 @@ class DistributedHQInterior(DistributedObject.DistributedObject):
         r = now * task.trophyStarSpeed % 360.0
         task.trophyStar.setR(r)
         return Task.cont
+
 
 """
 from toontown.makeatoon import NameGenerator

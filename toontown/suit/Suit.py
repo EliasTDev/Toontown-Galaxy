@@ -60,6 +60,7 @@ SellBot (Sales): 's'
  Mr.Hollywood:    mh
 """
 
+
 from direct.actor import Actor
 from otp.avatar import Avatar
 from . import SuitDNA
@@ -71,7 +72,6 @@ from toontown.battle import BattleProps
 from toontown.toonbase import TTLocalizer
 import string
 from panda3d.otp import NametagGroup
-
 aSize = 6.06
 bSize = 5.29
 cSize = 4.14
@@ -84,7 +84,7 @@ SkelSuitDialogArray = []
 AllSuits = (
     ("walk", "walk"),
     ("run", "walk"),
-    )
+)
 
 AllSuitsMinigame = (
     ("victory", "victory"),
@@ -92,13 +92,13 @@ AllSuitsMinigame = (
     ("tug-o-war", "tug-o-war"),
     ("slip-backward", "slip-backward"),
     ("slip-forward", "slip-forward"),
-    )
+)
 
 AllSuitsTutorialBattle = (
     ("lose", "lose"),
     ("pie-small-react", "pie-small"),
     ("squirt-small-react", "squirt-small"),
-    )
+)
 
 AllSuitsBattle = (
     ("drop-react", "anvil-drop"),
@@ -111,7 +111,7 @@ AllSuitsBattle = (
     ("rake-react", "rake"),
     ("hypnotized", "hypnotize"),
     ("soak", "soak"),
-    )
+)
 
 SuitsCEOBattle = (
     ("sit", "sit"),
@@ -125,7 +125,7 @@ SuitsCEOBattle = (
     ("tray-walk", "tray-walk"),
     ("tray-neutral", "tray-neutral"),
     ("sit-lose", "sit-lose"),
-    )
+)
 
 # corp anims per type
 # Flunky (C) Corp 1
@@ -134,7 +134,7 @@ f = (
     ("throw-paper", "throw-paper", 3.5),
     ("phone", "phone", 3.5),
     ("shredder", "shredder", 3.5),
-    )
+)
 # PencilPusher (B) Corp 2
 p = (
     ("pencil-sharpener", "pencil-sharpener", 5),
@@ -142,7 +142,7 @@ p = (
     ("hold-eraser", "hold-eraser", 5),
     ("finger-wag", "finger-wag", 5),
     ("hold-pencil", "hold-pencil", 5),
-    )
+)
 # YesMan (A) Corp 3
 ym = (
     ("throw-paper", "throw-paper", 5),
@@ -151,7 +151,7 @@ ym = (
     ("magic3", "magic3", 5),
     ("rubber-stamp", "rubber-stamp", 5),
     ("smile", "smile", 5),
-    )
+)
 # MicroManager (C) Corp 4
 mm = (
     ("speak", "speak", 5),
@@ -159,15 +159,15 @@ mm = (
     ("magic1", "magic1", 5),
     ("pen-squirt", "fountain-pen", 5),
     ("finger-wag", "finger-wag", 5),
-    )
+)
 
 # Downsizer (B) Corp 5
 ds = (
-    ("magic1", "magic1", 5), # just as default for now
+    ("magic1", "magic1", 5),  # just as default for now
     ("magic2", "magic2", 5),
     ("throw-paper", "throw-paper", 5),
     ("magic3", "magic3", 5),
-    )
+)
 
 # Head Hunter (A) Corp 6
 hh = (
@@ -176,14 +176,14 @@ hh = (
     ("throw-paper", "throw-paper", 5),
     ("magic1", "magic1", 5),
     ("roll-o-dex", "roll-o-dex", 5),
-    )
+)
 
 # Corporate Raider (C) Corp 7
 cr = (
-    ("pickpocket", "pickpocket", 5), # just as default for now
+    ("pickpocket", "pickpocket", 5),  # just as default for now
     ("throw-paper", "throw-paper", 3.5),
     ("glower", "glower", 5),
-    )
+)
 
 # The Big Cheese (A) Corp 8
 tbc = (
@@ -191,7 +191,7 @@ tbc = (
     ("glower", "glower", 5),
     ("song-and-dance", "song-and-dance", 8),
     ("golf-club-swing", "golf-club-swing", 5),
-    )
+)
 
 # sales anims per type
 # ColdCaller (C) Sales 1
@@ -199,23 +199,25 @@ cc = (
     ("speak", "speak", 5),
     ("glower", "glower", 5),
     ("phone", "phone", 3.5),
-    ("finger-wag", "finger-wag", 5), # place holder for speak animation, won't need it
-    )
+    # place holder for speak animation, won't need it
+    ("finger-wag", "finger-wag", 5),
+)
 # TeleMarketer (B) Sales 2
 tm = (
     ("speak", "speak", 5),
     ("throw-paper", "throw-paper", 5),
     ("pickpocket", "pickpocket", 5),
     ("roll-o-dex", "roll-o-dex", 5),
-    ("finger-wag", "finger-wag", 5), # place holder for speak animation, won't need it
-    )
+    # place holder for speak animation, won't need it
+    ("finger-wag", "finger-wag", 5),
+)
 # NameDropper (A) Sales 3
 nd = (
     ("pickpocket", "pickpocket", 5),
     ("roll-o-dex", "roll-o-dex", 5),
     ("magic3", "magic3", 5),
     ("smile", "smile", 5),
-    )
+)
 # GladHander (C) Sales 4
 gh = (
     ("speak", "speak", 5),
@@ -226,7 +228,7 @@ gh = (
     # But until we have the talk animations,
     # these will stay...
     ("rubber-stamp", "rubber-stamp", 5),
-    )
+)
 
 # Mover & Shaker (B) Sales 5
 ms = (
@@ -234,7 +236,7 @@ ms = (
     ("throw-paper", "throw-paper", 5),
     ("stomp", "stomp", 5),
     ("quick-jump", "jump", 6),
-    )
+)
 
 # Two-Face (A) Sales 6
 tf = (
@@ -242,7 +244,7 @@ tf = (
     ("smile", "smile", 5),
     ("throw-object", "throw-object", 5),
     ("glower", "glower", 5),
-    )
+)
 
 # The Mingler (A) Sales 7
 m = (
@@ -250,7 +252,7 @@ m = (
     ("magic2", "magic2", 5),
     ("magic1", "magic1", 5),
     ("golf-club-swing", "golf-club-swing", 5),
-    )
+)
 
 # Mr. Hollywood (A) Sales 8
 mh = (
@@ -258,7 +260,7 @@ mh = (
     ("smile", "smile", 5),
     ("golf-club-swing", "golf-club-swing", 5),
     ("song-and-dance", "song-and-dance", 5),
-    )
+)
 
 # money anims per type
 # ShortChange (C) Cash 1
@@ -266,13 +268,13 @@ sc = (
     ("throw-paper", "throw-paper", 3.5),
     ("watercooler", "watercooler", 5),
     ("pickpocket", "pickpocket", 5),
-    )
+)
 # PennyPincher (A) Cash 2
 pp = (
     ("throw-paper", "throw-paper", 5),
     ("glower", "glower", 5),
     ("finger-wag", "fingerwag", 5),
-    )
+)
 
 # TightWad (C) Cash 3
 tw = (
@@ -280,38 +282,38 @@ tw = (
     ("glower", "glower", 5),
     ("magic2", "magic2", 5),
     ("finger-wag", "finger-wag", 5),
-    )
+)
 # BeanCounter (B) Cash 4
 bc = (
     ("phone", "phone", 5),
     ("hold-pencil", "hold-pencil", 5),
-    )
+)
 
 # Number Cruncher (A) Cash 5
 nc = (
     ("phone", "phone", 5),
     ("throw-object", "throw-object", 5),
-    )
+)
 
 # Money Bags (C) Cash 6
 mb = (
     ("magic1", "magic1", 5),
     ("throw-paper", "throw-paper", 3.5),
-    )
+)
 
 # Loan Shark (B) Cash 7
 ls = (
     ("throw-paper", "throw-paper", 5),
     ("throw-object", "throw-object", 5),
     ("hold-pencil", "hold-pencil", 5),
-    )
+)
 
 # Robber Baron (A) Cash 8
 rb = (
     ("glower", "glower", 5),
     ("magic1", "magic1", 5),
     ("golf-club-swing", "golf-club-swing", 5),
-    )
+)
 
 # legal anims per type
 # BottomFeeder (C) Law 1
@@ -320,14 +322,14 @@ bf = (
     ("rubber-stamp", "rubber-stamp", 5),
     ("shredder", "shredder", 3.5),
     ("watercooler", "watercooler", 5),
-    )
+)
 # BloodSucker (B) Law 2
 b = (
     ("effort", "effort", 5),
     ("throw-paper", "throw-paper", 5),
     ("throw-object", "throw-object", 5),
-    ("magic1", "magic1", 5), # also used as place holder for liquidate (glower anim)
-    )
+    ("magic1", "magic1", 5),  # also used as place holder for liquidate (glower anim)
+)
 # DoubleTalker (A) Law 3
 dt = (
     # TODO:
@@ -338,9 +340,10 @@ dt = (
     ("rubber-stamp", "rubber-stamp", 5),
     ("throw-paper", "throw-paper", 5),
     ("speak", "speak", 5),
-    ("finger-wag", "fingerwag", 5), # place holder for speak animation, won't need it
-    ("throw-paper", "throw-paper", 5),    #added for lawbot boss battle
-    )
+    # place holder for speak animation, won't need it
+    ("finger-wag", "fingerwag", 5),
+    ("throw-paper", "throw-paper", 5),  # added for lawbot boss battle
+)
 
 # AmbulanceChaser (B) Law 4
 ac = (
@@ -348,15 +351,15 @@ ac = (
     ("roll-o-dex", "roll-o-dex", 5),
     ("stomp", "stomp", 5),
     ("phone", "phone", 5),
-    ("throw-paper", "throw-paper", 5),    #added for lawbot boss battle
-    )
+    ("throw-paper", "throw-paper", 5),  # added for lawbot boss battle
+)
 
 # Back Stabber (A) Law 5
 bs = (
     ("magic1", "magic1", 5),
     ("throw-paper", "throw-paper", 5),
     ("finger-wag", "fingerwag", 5),
-    )
+)
 
 # Spin Doctor (B) Law 6
 sd = (
@@ -365,38 +368,39 @@ sd = (
     ("stomp", "stomp", 5),
     ("magic3", "magic3", 5),
     ("hold-pencil", "hold-pencil", 5),
-    ("throw-paper", "throw-paper", 5),    #added for lawbot boss battle
-    )
+    ("throw-paper", "throw-paper", 5),  # added for lawbot boss battle
+)
 
 # Legal Eagle (A) Law 7
 le = (
     ("speak", "speak", 5),
     ("throw-object", "throw-object", 5),
     ("glower", "glower", 5),
-    ("throw-paper", "throw-paper", 5),     #added for lawbot boss battle
-    )
+    ("throw-paper", "throw-paper", 5),  # added for lawbot boss battle
+)
 
 # Big Wig (A) Law 8
 bw = (
-    ("finger-wag", "fingerwag", 5), # just as default for now
+    ("finger-wag", "fingerwag", 5),  # just as default for now
     ("cigar-smoke", "cigar-smoke", 8),
-    ("gavel", "gavel", 8), # incomplete?
+    ("gavel", "gavel", 8),  # incomplete?
     ("magic1", "magic1", 5),
     ("throw-object", "throw-object", 5),
-    ("throw-paper", "throw-paper", 5),     #added for lawbot boss battle
-    )
+    ("throw-paper", "throw-paper", 5),  # added for lawbot boss battle
+)
 
 ModelDict = {
     "a": ("/models/char/suitA-", 4),
     "b": ("/models/char/suitB-", 4),
     "c": ("/models/char/suitC-", 3.5),
-    }
+}
 
 TutorialModelDict = {
     "a": ("/models/char/suitA-", 4),
     "b": ("/models/char/suitB-", 4),
     "c": ("/models/char/suitC-", 3.5),
-    }
+}
+
 
 def loadTutorialSuit():
     """
@@ -405,21 +409,24 @@ def loadTutorialSuit():
     loader.loadModelNode("phase_3.5/models/char/suitC-mod")
     loadDialog(1)
 
+
 def loadSuits(level):
     """loadSuits(int)
     Preload all suit anims and models for given suit level.
     """
-    loadSuitModelsAndAnims(level, flag = 1)
+    loadSuitModelsAndAnims(level, flag=1)
     loadDialog(level)
+
 
 def unloadSuits(level):
     """unloadSuits(int)
     Unload all suit anims and models for given suit level.
     """
-    loadSuitModelsAndAnims(level, flag = 0)
+    loadSuitModelsAndAnims(level, flag=0)
     unloadDialog(level)
 
-def loadSuitModelsAndAnims(level, flag = 0):
+
+def loadSuitModelsAndAnims(level, flag=0):
     """
     Load (flag = 1) or unload (flag = 0) all suit anims and
     models for given suit level.
@@ -428,17 +435,23 @@ def loadSuitModelsAndAnims(level, flag = 0):
 
     for key in list(ModelDict.keys()):
         # load/unload the models
-        # All the mods are in 3.5 now, except the suita and B headsd which are in 4
+        # All the mods are in 3.5 now, except the suita and B headsd which are
+        # in 4
         model, phase = ModelDict[key]
         headModel, headPhase = ModelDict[key]
         if flag:
             loader.loadModelNode("phase_3.5" + model + "mod")
-            loader.loadModelNode("phase_" + str(headPhase) + headModel + "heads")
+            loader.loadModelNode(
+                "phase_" +
+                str(headPhase) +
+                headModel +
+                "heads")
         else:
             loader.unloadModel("phase_3.5" + model + "mod")
             loader.unloadModel("phase_" + str(headPhase) + headModel + "heads")
 
-def loadSuitAnims(suit, flag = 1):
+
+def loadSuitAnims(suit, flag=1):
     """loadSuitAnims(string, int):
     Load or unload (flag = 1 or 0) the special anims for the given suit.
     Expects strings as in SuitDNA.suitHeadTypes.
@@ -473,16 +486,19 @@ def loadDialog(level):
         return
     else:
         loadPath = "phase_3.5/audio/dial/"
-        SuitDialogFiles = [ "COG_VO_grunt",
-                            "COG_VO_murmur",
-                            "COG_VO_statement",
-                            "COG_VO_question"
-                            ]
+        SuitDialogFiles = ["COG_VO_grunt",
+                           "COG_VO_murmur",
+                           "COG_VO_statement",
+                           "COG_VO_question"
+                           ]
         # load the audio files and store into the dialogue array
         for file in SuitDialogFiles:
-            SuitDialogArray.append(base.loader.loadSfx(loadPath + file + ".ogg"))
+            SuitDialogArray.append(
+                base.loader.loadSfx(
+                    loadPath + file + ".ogg"))
         SuitDialogArray.append(SuitDialogArray[2])
         SuitDialogArray.append(SuitDialogArray[2])
+
 
 def loadSkelDialog():
     # use the new dialog
@@ -492,17 +508,27 @@ def loadSkelDialog():
     else:
         grunt = loader.loadSfx('phase_5/audio/sfx/Skel_COG_VO_grunt.ogg')
         murmur = loader.loadSfx('phase_5/audio/sfx/Skel_COG_VO_murmur.ogg')
-        statement = loader.loadSfx('phase_5/audio/sfx/Skel_COG_VO_statement.ogg')
+        statement = loader.loadSfx(
+            'phase_5/audio/sfx/Skel_COG_VO_statement.ogg')
         question = loader.loadSfx('phase_5/audio/sfx/Skel_COG_VO_question.ogg')
-        SkelSuitDialogArray = [grunt, murmur, statement, question, statement, statement]
+        SkelSuitDialogArray = [
+            grunt,
+            murmur,
+            statement,
+            question,
+            statement,
+            statement]
+
 
 def unloadDialog(level):
     global SuitDialogArray
     SuitDialogArray = []
 
+
 def unloadSkelDialog():
     global SkelSuitDialogArray
     SkelSuitDialogArray = []
+
 
 def attachSuitHead(node, suitName):
     """ gets a suit head whose scale and vertical pos has been
@@ -539,6 +565,7 @@ def attachSuitHead(node, suitName):
                         s, s, s)
     return head
 
+
 class Suit(Avatar.Avatar):
     """Suit class:"""
 
@@ -548,26 +575,26 @@ class Suit(Avatar.Avatar):
                     Vec4(1, 0, 0, 1),
                     Vec4(0.3, 0.3, 0.3, 1))
     healthGlowColors = (Vec4(0.25, 1, 0.25, 0.5),
-                    Vec4(1, 1, 0.25, 0.5),
-                    Vec4(1, 0.5, 0.25, 0.5),
-                    Vec4(1, 0.25, 0.25, 0.5),
-                    Vec4(0.3, 0.3, 0.3, 0))
+                        Vec4(1, 1, 0.25, 0.5),
+                        Vec4(1, 0.5, 0.25, 0.5),
+                        Vec4(1, 0.25, 0.25, 0.5),
+                        Vec4(0.3, 0.3, 0.3, 0))
     medallionColors = {
         # Corporate
-        'c' : Vec4(0.863, 0.776, 0.769, 1.000),
+        'c': Vec4(0.863, 0.776, 0.769, 1.000),
         # Sales
-        's' : Vec4(0.843, 0.745, 0.745, 1.000),
+        's': Vec4(0.843, 0.745, 0.745, 1.000),
         # Legal
-        'l' : Vec4(0.749, 0.776, 0.824, 1.000),
+        'l': Vec4(0.749, 0.776, 0.824, 1.000),
         # Marketing
-        'm' : Vec4(0.749, 0.769, 0.749, 1.000),
-        }
+        'm': Vec4(0.749, 0.769, 0.749, 1.000),
+    }
 
     def __init__(self):
         try:
             self.Suit_initialized
             return
-        except:
+        except BaseException:
             self.Suit_initialized = 1
 
         Avatar.Avatar.__init__(self)
@@ -590,7 +617,7 @@ class Suit(Avatar.Avatar):
     def delete(self):
         try:
             self.Suit_deleted
-        except:
+        except BaseException:
             self.Suit_deleted = 1
             if self.leftHand:
                 self.leftHand.removeNode()
@@ -665,7 +692,7 @@ class Suit(Avatar.Avatar):
         # corporate dept
         if (dna.name == 'f'):
             # flunky
-            self.scale = 4.0/cSize
+            self.scale = 4.0 / cSize
             self.handColor = SuitDNA.corpPolyColor
             self.generateBody()
             # this suit has two head parts
@@ -674,42 +701,42 @@ class Suit(Avatar.Avatar):
             self.setHeight(4.88)
         elif (dna.name == 'p'):
             # pencil pusher
-            self.scale = 3.35/bSize
+            self.scale = 3.35 / bSize
             self.handColor = SuitDNA.corpPolyColor
             self.generateBody()
             self.generateHead("pencilpusher")
             self.setHeight(5.00)
         elif (dna.name == 'ym'):
             # yes man
-            self.scale = 4.125/aSize
+            self.scale = 4.125 / aSize
             self.handColor = SuitDNA.corpPolyColor
             self.generateBody()
             self.generateHead("yesman")
             self.setHeight(5.28)
         elif (dna.name == 'mm'):
             # micromanager
-            self.scale = 2.5/cSize
+            self.scale = 2.5 / cSize
             self.handColor = SuitDNA.corpPolyColor
             self.generateBody()
             self.generateHead("micromanager")
             self.setHeight(3.25)
         elif (dna.name == 'ds'):
             # downsizer - DEFAULT
-            self.scale = 4.5/bSize
+            self.scale = 4.5 / bSize
             self.handColor = SuitDNA.corpPolyColor
             self.generateBody()
             self.generateHead("beancounter")
             self.setHeight(6.08)
         elif (dna.name == 'hh'):
             # head hunter
-            self.scale = 6.5/aSize
+            self.scale = 6.5 / aSize
             self.handColor = SuitDNA.corpPolyColor
             self.generateBody()
             self.generateHead("headhunter")
             self.setHeight(7.45)
         elif (dna.name == 'cr'):
             # corporate raider
-            self.scale = 6.75/cSize
+            self.scale = 6.75 / cSize
             self.handColor = VBase4(0.85, 0.55, 0.55, 1.0)
             self.generateBody()
             self.headTexture = "corporate-raider.jpg"
@@ -717,7 +744,7 @@ class Suit(Avatar.Avatar):
             self.setHeight(8.23)
         elif (dna.name == 'tbc'):
             # the big cheese
-            self.scale = 7.0/aSize
+            self.scale = 7.0 / aSize
             self.handColor = VBase4(0.75, 0.95, 0.75, 1.0)
             self.generateBody()
             self.generateHead("bigcheese")
@@ -726,7 +753,7 @@ class Suit(Avatar.Avatar):
         # legal dept
         elif (dna.name == 'bf'):
             # bottom feeder
-            self.scale = 4.0/cSize
+            self.scale = 4.0 / cSize
             self.handColor = SuitDNA.legalPolyColor
             self.generateBody()
             self.headTexture = "bottom-feeder.jpg"
@@ -734,7 +761,7 @@ class Suit(Avatar.Avatar):
             self.setHeight(4.81)
         elif (dna.name == 'b'):
             # blood sucker
-            self.scale = 4.375/bSize
+            self.scale = 4.375 / bSize
             self.handColor = VBase4(0.95, 0.95, 1.0, 1.0)
             self.generateBody()
             self.headTexture = "blood-sucker.jpg"
@@ -742,7 +769,7 @@ class Suit(Avatar.Avatar):
             self.setHeight(6.17)
         elif (dna.name == 'dt'):
             # double talker
-            self.scale = 4.25/aSize
+            self.scale = 4.25 / aSize
             self.handColor = SuitDNA.legalPolyColor
             self.generateBody()
             self.headTexture = "double-talker.jpg"
@@ -750,21 +777,21 @@ class Suit(Avatar.Avatar):
             self.setHeight(5.63)
         elif (dna.name == 'ac'):
             # ambulance chaser
-            self.scale = 4.35/bSize
+            self.scale = 4.35 / bSize
             self.handColor = SuitDNA.legalPolyColor
             self.generateBody()
             self.generateHead("ambulancechaser")
             self.setHeight(6.39)
         elif (dna.name == 'bs'):
             # back stabber
-            self.scale = 4.5/aSize
+            self.scale = 4.5 / aSize
             self.handColor = SuitDNA.legalPolyColor
             self.generateBody()
             self.generateHead("backstabber")
             self.setHeight(6.71)
         elif (dna.name == 'sd'):
             # spin doctor
-            self.scale = 5.65/bSize
+            self.scale = 5.65 / bSize
             self.handColor = VBase4(0.5, 0.8, 0.75, 1.0)
             self.generateBody()
             self.headTexture = "spin-doctor.jpg"
@@ -772,14 +799,14 @@ class Suit(Avatar.Avatar):
             self.setHeight(7.90)
         elif (dna.name == 'le'):
             # legal eagle
-            self.scale = 7.125/aSize
+            self.scale = 7.125 / aSize
             self.handColor = VBase4(0.25, 0.25, 0.5, 1.0)
             self.generateBody()
             self.generateHead("legaleagle")
             self.setHeight(8.27)
         elif (dna.name == 'bw'):
             # bigwig
-            self.scale = 7.0/aSize
+            self.scale = 7.0 / aSize
             self.handColor = SuitDNA.legalPolyColor
             self.generateBody()
             self.generateHead("bigwig")
@@ -788,56 +815,56 @@ class Suit(Avatar.Avatar):
         # money dept
         elif (dna.name == 'sc'):
             # short changer
-            self.scale = 3.6/cSize
+            self.scale = 3.6 / cSize
             self.handColor = SuitDNA.moneyPolyColor
             self.generateBody()
             self.generateHead("coldcaller")
             self.setHeight(4.77)
         elif (dna.name == 'pp'):
             # penny pincher
-            self.scale = 3.55/aSize
-            self.handColor = VBase4( 1.0, 0.5, 0.6, 1.0)
+            self.scale = 3.55 / aSize
+            self.handColor = VBase4(1.0, 0.5, 0.6, 1.0)
             self.generateBody()
             self.generateHead("pennypincher")
             self.setHeight(5.26)
         elif (dna.name == 'tw'):
             # tightwad
-            self.scale = 4.5/cSize
+            self.scale = 4.5 / cSize
             self.handColor = SuitDNA.moneyPolyColor
             self.generateBody()
             self.generateHead("tightwad")
             self.setHeight(5.41)
         elif (dna.name == 'bc'):
             # bean counter
-            self.scale = 4.4/bSize
+            self.scale = 4.4 / bSize
             self.handColor = SuitDNA.moneyPolyColor
             self.generateBody()
             self.generateHead("beancounter")
             self.setHeight(5.95)
         elif (dna.name == 'nc'):
             # number cruncher
-            self.scale = 5.25/aSize
+            self.scale = 5.25 / aSize
             self.handColor = SuitDNA.moneyPolyColor
             self.generateBody()
             self.generateHead("numbercruncher")
             self.setHeight(7.22)
         elif (dna.name == 'mb'):
             # money bags
-            self.scale = 5.3/cSize
+            self.scale = 5.3 / cSize
             self.handColor = SuitDNA.moneyPolyColor
             self.generateBody()
             self.generateHead("moneybags")
             self.setHeight(6.97)
         elif (dna.name == 'ls'):
             # load shark
-            self.scale = 6.5/bSize
+            self.scale = 6.5 / bSize
             self.handColor = VBase4(0.5, 0.85, 0.75, 1.0)
             self.generateBody()
             self.generateHead("loanshark")
             self.setHeight(8.58)
         elif (dna.name == 'rb'):
             # robber baron
-            self.scale = 7.0/aSize
+            self.scale = 7.0 / aSize
             self.handColor = SuitDNA.moneyPolyColor
             self.generateBody()
             self.headTexture = "robber-baron.jpg"
@@ -847,7 +874,7 @@ class Suit(Avatar.Avatar):
         # sales dept
         elif (dna.name == 'cc'):
             # cold caller
-            self.scale = 3.5/cSize
+            self.scale = 3.5 / cSize
             self.handColor = VBase4(0.55, 0.65, 1.0, 1.0)
             self.headColor = VBase4(0.25, 0.35, 1.0, 1.0)
             self.generateBody()
@@ -855,14 +882,14 @@ class Suit(Avatar.Avatar):
             self.setHeight(4.63)
         elif (dna.name == 'tm'):
             # telemarketer
-            self.scale = 3.75/bSize
+            self.scale = 3.75 / bSize
             self.handColor = SuitDNA.salesPolyColor
             self.generateBody()
             self.generateHead("telemarketer")
             self.setHeight(5.24)
         elif (dna.name == 'nd'):
             # name dropper
-            self.scale = 4.35/aSize
+            self.scale = 4.35 / aSize
             self.handColor = SuitDNA.salesPolyColor
             self.generateBody()
             self.headTexture = "name-dropper.jpg"
@@ -870,28 +897,28 @@ class Suit(Avatar.Avatar):
             self.setHeight(5.98)
         elif (dna.name == 'gh'):
             # glad hander
-            self.scale = 4.75/cSize
+            self.scale = 4.75 / cSize
             self.handColor = SuitDNA.salesPolyColor
             self.generateBody()
             self.generateHead("gladhander")
             self.setHeight(6.40)
         elif (dna.name == 'ms'):
             # mover & shaker
-            self.scale = 4.75/bSize
+            self.scale = 4.75 / bSize
             self.handColor = SuitDNA.salesPolyColor
             self.generateBody()
             self.generateHead("movershaker")
             self.setHeight(6.70)
         elif (dna.name == 'tf'):
             # two-face
-            self.scale = 5.25/aSize
+            self.scale = 5.25 / aSize
             self.handColor = SuitDNA.salesPolyColor
             self.generateBody()
             self.generateHead("twoface")
             self.setHeight(6.95)
         elif (dna.name == 'm'):
             # the mingler
-            self.scale = 5.75/aSize
+            self.scale = 5.75 / aSize
             self.handColor = SuitDNA.salesPolyColor
             self.generateBody()
             self.headTexture = "mingler.jpg"
@@ -899,7 +926,7 @@ class Suit(Avatar.Avatar):
             self.setHeight(7.61)
         elif (dna.name == 'mh'):
             # Mr. Hollywood
-            self.scale = 7.0/aSize
+            self.scale = 7.0 / aSize
             self.handColor = SuitDNA.salesPolyColor
             self.generateBody()
             self.generateHead("yesman")
@@ -934,14 +961,16 @@ class Suit(Avatar.Avatar):
         # load all shared anims
         for anim in AllSuits:
             # a=4, b=4, c=3.5
-            animDict[anim[0]] = "phase_" + str(bodyPhase) + filePrefix + anim[1]
+            animDict[anim[0]] = "phase_" + \
+                str(bodyPhase) + filePrefix + anim[1]
         for anim in AllSuitsMinigame:
             # a=4, b=4, c=4
             animDict[anim[0]] = "phase_4" + filePrefix + anim[1]
         for anim in AllSuitsTutorialBattle:
             # a = 4, b = 4, c = 3.5
             filePrefix, bodyPhase = TutorialModelDict[self.style.body]
-            animDict[anim[0]] = "phase_" + str(bodyPhase) + filePrefix + anim[1]
+            animDict[anim[0]] = "phase_" + \
+                str(bodyPhase) + filePrefix + anim[1]
         for anim in AllSuitsBattle:
             # a=5, b=5, c=5
             animDict[anim[0]] = "phase_5" + filePrefix + anim[1]
@@ -979,7 +1008,8 @@ class Suit(Avatar.Avatar):
         Avatar.Avatar.initializeBodyCollisions(self, collIdStr)
 
         if not self.ghostMode:
-            self.collNode.setCollideMask(self.collNode.getIntoCollideMask() | ToontownGlobals.PieBitmask)
+            self.collNode.setCollideMask(
+                self.collNode.getIntoCollideMask() | ToontownGlobals.PieBitmask)
 
     def setSuitClothes(self, modelRoot=None):
         """
@@ -993,13 +1023,15 @@ class Suit(Avatar.Avatar):
         phase = 3.5
 
         # set the clothes textures for the suit dept
-        torsoTex = loader.loadTexture("phase_%s/maps/%s_blazer.jpg" % (phase, dept))
+        torsoTex = loader.loadTexture(
+            f"phase_{phase}/maps/{dept}_blazer.jpg")
         torsoTex.setMinfilter(Texture.FTLinearMipmapLinear)
         torsoTex.setMagfilter(Texture.FTLinear)
-        legTex = loader.loadTexture("phase_%s/maps/%s_leg.jpg" % (phase, dept))
+        legTex = loader.loadTexture(f"phase_{phase}/maps/{dept}_leg.jpg")
         legTex.setMinfilter(Texture.FTLinearMipmapLinear)
         legTex.setMagfilter(Texture.FTLinear)
-        armTex = loader.loadTexture("phase_%s/maps/%s_sleeve.jpg" % (phase, dept))
+        armTex = loader.loadTexture(
+            f"phase_{phase}/maps/{dept}_sleeve.jpg")
         armTex.setMinfilter(Texture.FTLinearMipmapLinear)
         armTex.setMagfilter(Texture.FTLinear)
 
@@ -1040,14 +1072,14 @@ class Suit(Avatar.Avatar):
         modelRoot.find("**/arms").setTexture(armTex, 1)
         modelRoot.find("**/legs").setTexture(legTex, 1)
 
-
     def generateHead(self, headType):
         """generateHead(self, string)
         Manipulate the head model to display only the appropriate head
         """
         # load the multi-head models
         filePrefix, phase = ModelDict[self.style.body]
-        headModel = loader.loadModel("phase_" + str(phase) + filePrefix + "heads")
+        headModel = loader.loadModel(
+            "phase_" + str(phase) + filePrefix + "heads")
 
         # search for the appropriate parts
         headReferences = headModel.findAllMatches("**/" + headType)
@@ -1080,7 +1112,7 @@ class Suit(Avatar.Avatar):
         if tie.isEmpty():
             self.notify.warning('skelecog has no tie model!!!')
             return
-        #print '### loading %s tie' % (dept)
+        # print '### loading %s tie' % (dept)
         if dept == 'c':
             tieTex = loader.loadTexture("phase_5/maps/cog_robot_tie_boss.jpg")
         elif dept == 's':
@@ -1140,7 +1172,6 @@ class Suit(Avatar.Avatar):
     def reseatHealthBarForSkele(self):
         self.healthBar.setPos(0.0, 0.1, 0.0)
 
-
     def updateHealthBar(self, hp, forceUpdate=0):
 
         if (hp > self.currHP):
@@ -1180,7 +1211,8 @@ class Suit(Avatar.Avatar):
                 taskMgr.add(blinkTask, self.uniqueName('blink-task'))
             else:
                 self.healthBar.setColor(self.healthColors[condition], 1)
-                self.healthBarGlow.setColor(self.healthGlowColors[condition], 1)
+                self.healthBarGlow.setColor(
+                    self.healthGlowColors[condition], 1)
             self.healthCondition = condition
 
     def __blinkRed(self, task):
@@ -1213,7 +1245,7 @@ class Suit(Avatar.Avatar):
         Return the lose geometry and anim for this type of suit
         as an actor. If we are a skelecog, get that lose actor instead
         """
-        if (self.loseActor == None):
+        if (self.loseActor is None):
             if not self.isSkeleton:
                 # standard cog
                 filePrefix, phase = TutorialModelDict[self.style.body]
@@ -1221,7 +1253,7 @@ class Suit(Avatar.Avatar):
                 loseAnim = "phase_" + str(phase) + filePrefix + "lose"
 
                 # make the actor
-                self.loseActor = Actor.Actor(loseModel, {"lose":loseAnim})
+                self.loseActor = Actor.Actor(loseModel, {"lose": loseAnim})
 
                 # copy the current head to the lose actor
                 loseNeck = self.loseActor.find("**/joint_head")
@@ -1235,16 +1267,17 @@ class Suit(Avatar.Avatar):
                     self.setSuitClothes(self.loseActor)
             else:
                 # skelecog
-                loseModel = "phase_5/models/char/cog" + self.style.body.upper() + "_robot-lose-mod"
+                loseModel = "phase_5/models/char/cog" + \
+                    self.style.body.upper() + "_robot-lose-mod"
                 filePrefix, phase = TutorialModelDict[self.style.body]
                 loseAnim = "phase_" + str(phase) + filePrefix + "lose"
 
                 # make the actor
-                self.loseActor = Actor.Actor(loseModel, {"lose":loseAnim})
+                self.loseActor = Actor.Actor(loseModel, {"lose": loseAnim})
 
                 # set the appropriate tie texture
                 self.generateCorporateTie(self.loseActor)
-                
+
         self.loseActor.setBlend(base.wantSmoothAnimations)
         # set the scale on the lose actor
         self.loseActor.setScale(self.scale)
@@ -1264,7 +1297,7 @@ class Suit(Avatar.Avatar):
 
     def cleanupLoseActor(self):
         self.notify.debug('cleanupLoseActor()')
-        if (self.loseActor != None):
+        if (self.loseActor is not None):
             self.notify.debug('cleanupLoseActor() - got one')
             self.loseActor.cleanup()
         self.loseActor = None
@@ -1292,7 +1325,8 @@ class Suit(Avatar.Avatar):
         self.loadModel(model)
         self.loadAnims(anims)
 
-        # set the scale on the skeleton actor (plus a little extra to make it look right)
+        # set the scale on the skeleton actor (plus a little extra to make it
+        # look right)
         self.getGeomNode().setScale(self.scale * 1.0173)
         self.generateHealthBar()
         self.generateCorporateMedallion()
@@ -1300,20 +1334,21 @@ class Suit(Avatar.Avatar):
         self.generateCorporateTie()
         self.setHeight(self.height)
 
-
         # some of the geometry needs to be backfaced and billboarded
         parts = self.findAllMatches('**/pPlane*')
         for partNum in range(0, parts.getNumPaths()):
-            #print 'found billboarded part!'
+            # print 'found billboarded part!'
             bb = parts.getPath(partNum)
             bb.setTwoSided(1)
 
         # redo the nametag and drop shadow
         self.setName(TTLocalizer.Skeleton)
-        nameInfo = TTLocalizer.SuitBaseNameWithLevel % {"name":  self.name,
-                                                        "dept":  self.getStyleDept(),
-                                                        "level": self.getActualLevel(),}
-        self.setDisplayName( nameInfo )
+        nameInfo = TTLocalizer.SuitBaseNameWithLevel % {
+            "name": self.name,
+            "dept": self.getStyleDept(),
+            "level": self.getActualLevel(),
+        }
+        self.setDisplayName(nameInfo)
 
         # re-find the useful nulls
         self.leftHand = self.find("**/joint_Lhold")

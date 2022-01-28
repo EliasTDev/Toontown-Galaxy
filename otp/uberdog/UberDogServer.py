@@ -10,6 +10,7 @@ from direct.distributed import DistributedObjectAI
 from otp.guild import DistributedGuildBase
 from otp.guild import DistributedGuildAI
 
+
 class UberDogServer(DistributedObjectAI.DistributedObjectAI):
 
     def __init__(self, air):
@@ -27,21 +28,22 @@ class UberDogServer(DistributedObjectAI.DistributedObjectAI):
 
     def requestCreate(self, newGuildName):
         avatarId = self.air.getAvatarIdFromSender()
-        assert self.notify.debugCall("avatarId:%s" % (str(avatarId),))
+        assert self.notify.debugCall(f"avatarId:{str(avatarId)}")
         #assert avatarId in self.air.doId2do
         # we don't have avtar info! avatar = self.air.doId2do[avatarId]
-        if 0 and     not avatar.may("createGuild"):
+        if 0 and not avatar.may("createGuild"):
             # ...this avatar does not have permission to create a guild:
-            self.sendReject(avatarId, DistributedGuildBase.MAY_NOT_CREATE_GUILD)
-        elif 0 and     not avatar.has("guild"):
+            self.sendReject(
+                avatarId, DistributedGuildBase.MAY_NOT_CREATE_GUILD)
+        elif 0 and not avatar.has("guild"):
             # ...this avatar already has a guild:
             self.sendReject(avatarId, DistributedGuildBase.ALREADY_HAS_GUILD)
-        elif 0 and      guildNameUsed(newGuildName):
+        elif 0 and guildNameUsed(newGuildName):
             # ...this guild name is taken:
             self.sendReject(avatarId, DistributedGuildBase.GUILD_NAME_TAKEN)
         else:
             # ...ready to create:
             guild = DistributedGuildAI.DistributedGuildAI(
-                    self.air, newGuildName, avatarId)
+                self.air, newGuildName, avatarId)
             guild.generateOtpObject(self.getDoId(), avatarId)
-            self.guilds[guild.getDoId()]=guild
+            self.guilds[guild.getDoId()] = guild

@@ -1,21 +1,23 @@
-import time 
+import time
 from ctypes import *
-from direct.task import Task 
+from direct.task import Task
 from pypresence import Presence
-clientId  = "796502813353050122"
+clientId = "796502813353050122"
 try:
     RPC = Presence(clientId)
-except:
+except BaseException:
     print("DiscordRPC: Warning : Discord not found for this client.")
-    RPC = None    
+    RPC = None
 try:
     RPC.connect()
-except:
+except BaseException:
     print("DiscordRPC: Warning : Failed to connect to discord client.")
     RPC = None
+
+
 class DiscordRPC(object):
 
-    zone2imgdesc = { # A dict of ZoneID -> An image and a description
+    zone2imgdesc = {  # A dict of ZoneID -> An image and a description
         1000: ["donalds-dock", "In Donald's Dock"],
         1100: ["donalds-dock", "On Barnacle Boulevard"],
         1200: ["donalds-dock", "On Seaweed Street"],
@@ -88,11 +90,11 @@ class DiscordRPC(object):
 
     def __init__(self):
         self.updateTask = None
-        self.details = "Loading" # text next to photo
-        self.image = 'toontown-logo' #Main image
-        self.imageTxt = 'Toontown: Event Horizon' #Hover text for main image 
-        self.smallLogo = 'discord-icon' #small image in corner
-        self.state = '   ' #Displayed underneath details, used for boarding groups
+        self.details = "Loading"  # text next to photo
+        self.image = 'toontown-logo'  # Main image
+        self.imageTxt = 'Toontown: Event Horizon'  # Hover text for main image
+        self.smallLogo = 'discord-icon'  # small image in corner
+        self.state = '   '  # Displayed underneath details, used for boarding groups
         self.smallTxt = 'Loading'
         self.partySize = 1
         self.maxParty = 1
@@ -114,11 +116,11 @@ class DiscordRPC(object):
         self.setData()
 
     def setData(self, details=None, image=None, imageTxt=None):
-        if details == None:
+        if details is None:
             details = self.details
-        if image == None:
+        if image is None:
             image = self.image
-        if imageTxt == None:
+        if imageTxt is None:
             imageTxt = self.imageTxt
         smallLogo = self.smallLogo
         smallTxt = self.smallTxt
@@ -126,18 +128,26 @@ class DiscordRPC(object):
         party = self.partySize
         maxSize = self.maxParty
         if RPC is not None:
-            RPC.update(state=state,details=details , large_image=image, large_text=imageTxt,  small_image=smallLogo, small_text=smallTxt, party_size=[party, maxSize])
+            RPC.update(
+                state=state,
+                details=details,
+                large_image=image,
+                large_text=imageTxt,
+                small_image=smallLogo,
+                small_text=smallTxt,
+                party_size=[
+                    party,
+                    maxSize])
 
     def setLaff(self, hp, maxHp):
-        self.state = '{0}: {1}/{2}'.format(base.localAvatar.name, hp, maxHp)
+        self.state = f'{base.localAvatar.name}: {hp}/{maxHp}'
         self.setData()
-
 
     def updateTasks(self, task):
         self.updateTask = True
         self.setData()
         return task.again
-    
+
     def avChoice(self):
         self.image = 'toontown-logo'
         self.details = 'Picking a Toon.'
@@ -172,20 +182,17 @@ class DiscordRPC(object):
         self.image = 'ceo'
         self.details = 'Fighting the ceo.'
 
-
-    
-
     def startTasks(self):
         taskMgr.doMethodLater(10, self.updateTasks, 'UpdateTask')
 
     def setDistrict(self, name):
         self.smallTxt = name
 
-    def setZone(self,zone): # Set image and text based on the zone
+    def setZone(self, zone):  # Set image and text based on the zone
         if not isinstance(zone, int):
             return
         zone -= zone % 100
-        data = self.zone2imgdesc.get(zone,None)
+        data = self.zone2imgdesc.get(zone, None)
         if data:
             self.image = data[0]
             self.details = data[1]

@@ -19,13 +19,16 @@ class GuildManagerAI(DistributedObjectGlobalAI):
     def __init__(self, cr):
         DistributedObjectGlobalAI.__init__(self, cr)
         self.doNotListenToChannel = True
-        
+
     def avatarOnline(self, avatarId):
         pass
 
     def avatarOffline(self, avatarId, rep):
-        simbase.air.sendUpdateToChannel(self, self.doId, "updateRep", [avatarId, rep])
+        simbase.air.sendUpdateToChannel(
+            self, self.doId, "updateRep", [
+                avatarId, rep])
 
     def d_sendAvatarBandId(self, avatarId, bandManagerId, bandId):
-        simbase.air.sendUpdateToChannel(self, self.doId, "sendAvatarBandId", [avatarId, bandManagerId, bandId])
-        
+        simbase.air.sendUpdateToChannel(
+            self, self.doId, "sendAvatarBandId", [
+                avatarId, bandManagerId, bandId])

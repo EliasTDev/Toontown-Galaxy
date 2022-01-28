@@ -12,7 +12,7 @@ TutorialParticleEffects = (
     "gearExplosionBig.ptf",
     "gearExplosionSmall.ptf",
     "gearExplosion.ptf",
-    )
+)
 
 ParticleNames = (
     "audit-div",
@@ -70,24 +70,28 @@ ParticleNames = (
     "checkmark",
     "dollar-sign",
     "spark",
-     )
+)
 
 particleModel = None
 
 # Where should we look to find a particle file?
 particleSearchPath = None
 
+
 def loadParticles():
     global particleModel
-    if (particleModel == None):
-        particleModel = loader.loadModel("phase_3.5/models/props/suit-particles")
+    if (particleModel is None):
+        particleModel = loader.loadModel(
+            "phase_3.5/models/props/suit-particles")
+
 
 def unloadParticles():
     global particleModel
-    if (particleModel != None):
+    if (particleModel is not None):
         particleModel.removeNode()
     del(particleModel)
     particleModel = None
+
 
 def getParticle(name):
     global particleModel
@@ -95,21 +99,27 @@ def getParticle(name):
         particle = particleModel.find("**/" + str(name))
         return particle
     else:
-        notify.warning('getParticle() - no name: %s' % name)
+        notify.warning(f'getParticle() - no name: {name}')
         return None
+
 
 def loadParticleFile(name):
     global particleSearchPath
-    if particleSearchPath == None:
+    if particleSearchPath is None:
         particleSearchPath = DSearchPath()
         if AppRunnerGlobal.appRunner:
             # In the web-publish runtime, it will always be here:
-            particleSearchPath.appendDirectory(Filename.expandFrom('$TT_3_5_ROOT/phase_3.5/etc'))
+            particleSearchPath.appendDirectory(
+                Filename.expandFrom('$TT_3_5_ROOT/phase_3.5/etc'))
         else:
             # In other environments, including the dev environment, look here:
             basePath = os.path.expandvars('$TOONTOWN') or './toontown'
-            particleSearchPath.appendDirectory(Filename.fromOsSpecific(basePath+'/src/battle'))
-            particleSearchPath.appendDirectory(Filename.fromOsSpecific(basePath+'/src/safezone'))
+            particleSearchPath.appendDirectory(
+                Filename.fromOsSpecific(
+                    basePath + '/src/battle'))
+            particleSearchPath.appendDirectory(
+                Filename.fromOsSpecific(
+                    basePath + '/src/safezone'))
             particleSearchPath.appendDirectory(Filename('phase_3.5/etc'))
             particleSearchPath.appendDirectory(Filename('phase_4/etc'))
             particleSearchPath.appendDirectory(Filename('phase_5/etc'))
@@ -118,28 +128,35 @@ def loadParticleFile(name):
             particleSearchPath.appendDirectory(Filename('.'))
 
         if __debug__:
-            particleSearchPath.appendDirectory(Filename('resources/phase_3.5/etc'))
-            particleSearchPath.appendDirectory(Filename('resources/phase_4/etc'))
-            particleSearchPath.appendDirectory(Filename('resources/phase_5/etc'))
-            particleSearchPath.appendDirectory(Filename('resources/phase_8/etc'))
-            particleSearchPath.appendDirectory(Filename('resources/phase_9/etc'))
+            particleSearchPath.appendDirectory(
+                Filename('resources/phase_3.5/etc'))
+            particleSearchPath.appendDirectory(
+                Filename('resources/phase_4/etc'))
+            particleSearchPath.appendDirectory(
+                Filename('resources/phase_5/etc'))
+            particleSearchPath.appendDirectory(
+                Filename('resources/phase_8/etc'))
+            particleSearchPath.appendDirectory(
+                Filename('resources/phase_9/etc'))
 
     pfile = Filename(name)
     found = vfs.resolveFilename(pfile, particleSearchPath)
 
     if not found:
-        notify.warning('loadParticleFile() - no path: %s' % name)
+        notify.warning(f'loadParticleFile() - no path: {name}')
         return
-    notify.debug('Loading particle file: %s' % pfile)
+    notify.debug(f'Loading particle file: {pfile}')
     effect = ParticleEffect()
     # print "particle filename = ", pfile.getFullpath()
     effect.loadConfig(pfile)
     return effect
 
+
 def createParticleEffect(name=None, file=None, numParticles=None, color=None):
-    # If don't provide name, grabbing the particle effect straight from the file name given
+    # If don't provide name, grabbing the particle effect straight from the
+    # file name given
     if not name:
-        assert (file != None)
+        assert (file is not None)
         fileName = file + '.ptf'
         return loadParticleFile(fileName)
 
@@ -200,11 +217,12 @@ def createParticleEffect(name=None, file=None, numParticles=None, color=None):
     elif (name == 'Withdrawal'):
         return loadParticleFile('withdrawal.ptf')
     else:
-        notify.warning('createParticleEffect() - no name: %s' % name)
+        notify.warning(f'createParticleEffect() - no name: {name}')
     return None
 
+
 def setEffectTexture(effect, name, color=None):
-    assert(effect != None)
+    assert(effect is not None)
     particles = effect.getParticlesNamed('particles-1')
     np = getParticle(name)
     assert(not np.isEmpty())
@@ -212,7 +230,8 @@ def setEffectTexture(effect, name, color=None):
         particles.renderer.setColor(color)
     particles.renderer.setFromNode(np)
 
-def __makeGearExplosion(numParticles=None, style = 'Normal'):
+
+def __makeGearExplosion(numParticles=None, style='Normal'):
     if style == 'Normal':
         effect = loadParticleFile('gearExplosion.ptf')
     elif style == 'Big':
@@ -223,6 +242,7 @@ def __makeGearExplosion(numParticles=None, style = 'Normal'):
         particles = effect.getParticlesNamed('particles-1')
         particles.setPoolSize(numParticles)
     return effect
+
 
 def __makeRubOut(color=None):
     effect = loadParticleFile('demotionUnFreeze.ptf')
@@ -239,6 +259,7 @@ def __makeRubOut(color=None):
         particles.renderer.setColor(Vec4(0.54, 0.92, 0.32, 0.7))
     return effect
 
+
 def __makeShiftLift():
     effect = loadParticleFile('pixieDrop.ptf')
     particles = effect.getParticlesNamed('particles-1')
@@ -248,6 +269,3 @@ def __makeShiftLift():
     effect.setHpr(0, 180, 0)
     effect.setPos(0, 0, 0)
     return effect
-
-
-

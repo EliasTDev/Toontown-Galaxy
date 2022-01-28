@@ -18,16 +18,16 @@ AnimDict = {
            ("right-point", "right", 3.5),
            ),
     "vmk": (("walk", "sneak", 3),
-             ("run", "run", 3),
-             ("neutral", "idle", 3),
-             ("sneak", "sneak",3),
-             ("into_sneak", "into_sneak", 3),
-             ("chat", "run", 3),
-             ("into_idle", "into_idle", 3),
-             ),
-    "wmn":(("walk", "walkHalloween3", 3),
-                ("neutral", "neutral2", 3),
-             ),
+            ("run", "run", 3),
+            ("neutral", "idle", 3),
+            ("sneak", "sneak", 3),
+            ("into_sneak", "into_sneak", 3),
+            ("chat", "run", 3),
+            ("into_idle", "into_idle", 3),
+            ),
+    "wmn": (("walk", "walkHalloween3", 3),
+            ("neutral", "neutral2", 3),
+            ),
     "mn": (("walk", "walk", 3),
            ("run", "run", 3),
            ("neutral", "wait", 3),
@@ -45,15 +45,15 @@ AnimDict = {
           ("neutral", "Wait", 6),
           ),
     "sg": (("walk", "walkStrut2", 6),
-              ("neutral", "neutral", 6),
-            ),
+           ("neutral", "neutral", 6),
+           ),
     "d": (("walk", "walk", 6),
           ("trans", "transition", 6),
           ("neutral", "neutral", 6),
           ("trans-back", "transBack", 6),
           ),
     "dw": (("wheel", "wheel", 6),
-              ("neutral", "wheel", 6),
+           ("neutral", "wheel", 6),
            ),
     "p": (("walk", "walk", 6),
           ("sit", "sit", 6),
@@ -61,39 +61,38 @@ AnimDict = {
           ("stand", "stand", 6),
           ),
     "wp": (("walk", "walk", 6),
-             ("sit", "sitStart", 6),
-             ("neutral", "sitLoop", 6),
-             ("stand", "sitStop", 6),
-             ),
-    "cl":(),
-    "dd" : (("walk", "walk", 4),
-          ("neutral", "idle", 4),
-          ),
-    "ch" : (("walk", "walk", 6),
-          ("neutral", "idle", 6),
-          ),
-    "da" : (("walk", "walk", 6),
-          ("neutral", "idle", 6),
-          ),
-    }
+           ("sit", "sitStart", 6),
+           ("neutral", "sitLoop", 6),
+           ("stand", "sitStop", 6),
+           ),
+    "cl": (),
+    "dd": (("walk", "walk", 4),
+           ("neutral", "idle", 4),
+           ),
+    "ch": (("walk", "walk", 6),
+           ("neutral", "idle", 6),
+           ),
+    "da": (("walk", "walk", 6),
+           ("neutral", "idle", 6),
+           ),
+}
 
 ModelDict = {
     "mk": "phase_3/models/char/mickey-",
     "vmk": "phase_3.5/models/char/tt_a_chr_csc_mickey_vampire_",
     "mn": "phase_3/models/char/minnie-",
-    "wmn" : "phase_3.5/models/char/tt_a_chr_csc_witchMinnie_",
-    "g" : "phase_6/models/char/TT_G",
-    "sg" : "phase_6/models/char/tt_a_chr_csc_goofyCostume_",
-    "d" : "phase_6/models/char/DL_donald-",
+    "wmn": "phase_3.5/models/char/tt_a_chr_csc_witchMinnie_",
+    "g": "phase_6/models/char/TT_G",
+    "sg": "phase_6/models/char/tt_a_chr_csc_goofyCostume_",
+    "d": "phase_6/models/char/DL_donald-",
     "dw": "phase_6/models/char/donald-wheel-",
-    "p" : "phase_6/models/char/pluto-",
-    "wp" : "phase_6/models/char/tt_a_chr_csc_plutoCostume_",
+    "p": "phase_6/models/char/pluto-",
+    "wp": "phase_6/models/char/tt_a_chr_csc_plutoCostume_",
     "cl": "phase_5.5/models/estate/Clara_pose2-",
     "dd": "phase_4/models/char/daisyduck_",
     "ch": "phase_6/models/char/chip_",
     "da": "phase_6/models/char/dale_",
-    }
-
+}
 
 
 LODModelDict = {
@@ -101,17 +100,18 @@ LODModelDict = {
     "vmk": [1200, 800, 400],
     "wmn": [1200, 800, 400],
     "mn": [1200, 800, 400],
-    "g" : [1500, 1000, 500],
+    "g": [1500, 1000, 500],
     "sg": [1200, 800, 400],
-    "d" : [1000, 500, 250],
+    "d": [1000, 500, 250],
     "dw": [1000],
-    "p" : [1000, 500, 300],
-    "wp" : [1200, 800, 400],
+    "p": [1000, 500, 300],
+    "wp": [1200, 800, 400],
     "cl": [],
-    "dd" : [1600, 800, 400],
-    "ch" : [1000, 500, 250],
-    "da" : [1000, 500, 250],
-    }
+    "dd": [1600, 800, 400],
+    "ch": [1000, 500, 250],
+    "da": [1000, 500, 250],
+}
+
 
 class Char(Avatar.Avatar):
     """
@@ -123,7 +123,7 @@ class Char(Avatar.Avatar):
     def __init__(self):
         try:
             self.Char_initialized
-        except:
+        except BaseException:
             self.Char_initialized = 1
             Avatar.Avatar.__init__(self)
 
@@ -134,13 +134,13 @@ class Char(Avatar.Avatar):
             # Chars are generally non-player avatars.
             self.setPlayerType(NametagGroup.CCNonPlayer)
 
-            self.dialogueArray =  []
+            self.dialogueArray = []
             self.chatterArray = [[], [], []]
 
     def delete(self):
         try:
             self.Char_deleted
-        except:
+        except BaseException:
             self.Char_deleted = 1
             self.unloadDialogue()
 
@@ -178,7 +178,6 @@ class Char(Avatar.Avatar):
             if (self._name == "chip") or (self._name == "dale"):
                 self.find("**/drop-shadow").setScale(0.33)
 
-
     def setLODs(self):
         """
         Get LOD switch distances from dconfig, or use defaults
@@ -197,7 +196,8 @@ class Char(Avatar.Avatar):
         # add the LODs
         self.addLOD(LODModelDict[self.style.name][0], levelOneIn, levelOneOut)
         self.addLOD(LODModelDict[self.style.name][1], levelTwoIn, levelTwoOut)
-        self.addLOD(LODModelDict[self.style.name][2], levelThreeIn, levelThreeOut)
+        self.addLOD(LODModelDict[self.style.name]
+                    [2], levelThreeIn, levelThreeOut)
 
     def generateChar(self):
         """
@@ -277,8 +277,8 @@ class Char(Avatar.Avatar):
         # set up the mouse ears for rotation
         self.ears = []
         # or self._name == "vampire_mickey"
-        if (self._name == "mickey" or self._name == "vampire_mickey" \
-            or self._name == "minnie"):
+        if (self._name == "mickey" or self._name == "vampire_mickey"
+                or self._name == "minnie"):
             # Clear the net transforms first, in case we have
             # merge-lod-bundles on (which would mean this is really
             # just one bundle).
@@ -328,7 +328,7 @@ class Char(Avatar.Avatar):
             self.eyesClosed = loader.loadTexture(
                 "phase_3/maps/mickey_eyes_closed.jpg",
                 "phase_3/maps/mickey_eyes_closed_a.rgb")
-                # TODO: other LODs
+            # TODO: other LODs
             self.eyes = self.find("**/1200/**/eyes")
             # this fixes a dual-mode transparency problem
             # that makes the pupils render poorly
@@ -338,7 +338,7 @@ class Char(Avatar.Avatar):
             # make them render correctly
             for lodName in self.getLODNames():
                 self.drawInFront("joint_pupil?", "eyes*", -3, lodName=lodName)
-        elif (self._name == "witch_minnie" or self._name == "vampire_mickey" \
+        elif (self._name == "witch_minnie" or self._name == "vampire_mickey"
                 or self._name == "super_goofy" or self._name == "western_pluto"):
             self.geoEyes = 1
             self.eyeOpenList = []
@@ -417,7 +417,7 @@ class Char(Avatar.Avatar):
         # Bump up the override parameter on the pupil
         # textures so they won't get overridden when we set
         # the blink texture.
-        if self.lpupil != None:
+        if self.lpupil is not None:
             self.lpupil.adjustAllPriorities(1)
             self.rpupil.adjustAllPriorities(1)
 
@@ -478,13 +478,13 @@ class Char(Avatar.Avatar):
         else:
             self.notify.error("unrecognized dialogue type: ", type)
 
-        if sfxIndex != None and sfxIndex < len(self.dialogueArray) and \
-           self.dialogueArray[sfxIndex] != None:
+        if sfxIndex is not None and sfxIndex < len(self.dialogueArray) and \
+           self.dialogueArray[sfxIndex] is not None:
             return self.dialogueArray[sfxIndex]
         else:
             return None
 
-    def playDialogue(self, type, length, delay = None):
+    def playDialogue(self, type, length, delay=None):
         dialogue = self.getDialogue(type, length)
         base.playSfx(dialogue)
 
@@ -497,7 +497,7 @@ class Char(Avatar.Avatar):
     def getShadowJoint(self):
         return self.getGeomNode()
 
-    #def getShadowJoints(self): #*
+    # def getShadowJoints(self): #*
     #    return [self.getGeomNode()]
 
     def getNametagJoints(self):
@@ -506,7 +506,6 @@ class Char(Avatar.Avatar):
         """
         # Chars don't animate their nametags.
         return []
-
 
     def loadChatterDialogue(self, name, audioIndexArray,
                             loadPath, language):
@@ -520,9 +519,9 @@ class Char(Avatar.Avatar):
             for fileIndex in audioIndexArray[categoryIndex]:
                 if fileIndex:
                     self.chatterArray[categoryIndex].append(
-                        base.loader.loadSfx("%s/CC_%s_chatter_%s%02d.ogg" %
-                                     (loadPath, name, chatterType, fileIndex))
-                        )
+                        base.loader.loadSfx(
+                            "%s/CC_%s_chatter_%s%02d.ogg" %
+                            (loadPath, name, chatterType, fileIndex)))
                 else:
                     # Just in case you have non contiguous chatter files
                     self.chatterArray[categoryIndex].append(None)
@@ -542,139 +541,138 @@ class Char(Avatar.Avatar):
         if (char == "mk"):
             # load Mickey's dialogue array
             dialogueFile = base.loader.loadSfx("phase_3/audio/dial/mickey.wav")
-            for i in range(0,6):
+            for i in range(0, 6):
                 self.dialogueArray.append(dialogueFile)
             # load Mickey's chatter
             if language == 'japanese':
                 chatterIndexArray = (
                     # Greetings
-                    [1,2],
+                    [1, 2],
                     # Comments
-                    [1,2,3,4],
+                    [1, 2, 3, 4],
                     # Goodbyes
-                    [1,2,3,4,5],
-                    )
+                    [1, 2, 3, 4, 5],
+                )
                 self.loadChatterDialogue("mickey", chatterIndexArray,
                                          "phase_3/audio/dial", language)
         elif (char == "vmk"):
             # load Mickey's dialogue array
             dialogueFile = base.loader.loadSfx("phase_3/audio/dial/mickey.wav")
-            for i in range(0,6):
+            for i in range(0, 6):
                 self.dialogueArray.append(dialogueFile)
             # load Mickey's chatter
             if language == 'japanese':
                 chatterIndexArray = (
                     # Greetings
-                    [1,2],
+                    [1, 2],
                     # Comments
-                    [1,2,3,4],
+                    [1, 2, 3, 4],
                     # Goodbyes
-                    [1,2,3,4,5],
-                    )
+                    [1, 2, 3, 4, 5],
+                )
                 self.loadChatterDialogue("mickey", chatterIndexArray,
                                          "phase_3/audio/dial", language)
         elif (char == "mn" or char == "wmn"):
             # load Minnie's dialogue array
             dialogueFile = base.loader.loadSfx("phase_3/audio/dial/minnie.wav")
-            for i in range(0,6):
+            for i in range(0, 6):
                 self.dialogueArray.append(dialogueFile)
             # load Minnie's chatter
             if language == 'japanese':
                 chatterIndexArray = (
                     # Greetings
-                    [1,2],
+                    [1, 2],
                     # Comments
-                    [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
                     # Goodbyes
-                    [1,2,3],
-                    )
+                    [1, 2, 3],
+                )
                 self.loadChatterDialogue("minnie", chatterIndexArray,
                                          "phase_3/audio/dial", language)
         elif (char == "dd"):
             # load Daisy's dialogue array
             dialogueFile = base.loader.loadSfx("phase_4/audio/dial/daisy.wav")
-            for i in range(0,6):
+            for i in range(0, 6):
                 self.dialogueArray.append(dialogueFile)
             # load Diasy's chatter
             if language == 'japanese':
                 chatterIndexArray = (
                     # Greetings
-                    [1,2,3],
+                    [1, 2, 3],
                     # Comments
-                    [1,2,3,4,5,6,7,8,9,10,11,12],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     # Goodbyes
-                    [1,2,3,4],
-                    )
+                    [1, 2, 3, 4],
+                )
                 self.loadChatterDialogue("daisy", chatterIndexArray,
                                          "phase_8/audio/dial", language)
         elif (char == "g" or char == "sg"):
             # load Goofy's dialogue array
             dialogueFile = base.loader.loadSfx("phase_6/audio/dial/goofy.wav")
-            for i in range(0,6):
+            for i in range(0, 6):
                 self.dialogueArray.append(dialogueFile)
             # load Goofy's chatter
             if language == 'japanese':
                 chatterIndexArray = (
                     # Greetings
-                    [1,2,3],
+                    [1, 2, 3],
                     # Comments
-                    [1,2,3,4,5,6,7,8,9,10,11,12],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     # Goodbyes
-                    [1,2,3,4],
-                    )
+                    [1, 2, 3, 4],
+                )
                 self.loadChatterDialogue("goofy", chatterIndexArray,
                                          "phase_6/audio/dial", language)
         elif (char == "d" or char == "dw"):
             # load Donald's dialogue array
             dialogueFile = base.loader.loadSfx("phase_6/audio/dial/donald.wav")
-            for i in range(0,6):
+            for i in range(0, 6):
                 self.dialogueArray.append(dialogueFile)
             if char == 'd':
                 # load Donalds's chatter
                 if language == 'japanese':
                     chatterIndexArray = (
                         # Greetings
-                        [1,2],
+                        [1, 2],
                         # Comments
-                        [1,2,3,4,5,6,7,8,9,10,11],
+                        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                         # Goodbyes
-                        [1,2,3,4],
-                        )
+                        [1, 2, 3, 4],
+                    )
                     self.loadChatterDialogue("donald", chatterIndexArray,
                                              "phase_6/audio/dial", language)
         elif (char == "p" or char == "wp"):
             # load Pluto's dialogue array
-            dialogueFile = base.loader.loadSfx("phase_3.5/audio/dial/AV_dog_med.ogg")
-            for i in range(0,6):
+            dialogueFile = base.loader.loadSfx(
+                "phase_3.5/audio/dial/AV_dog_med.ogg")
+            for i in range(0, 6):
                 self.dialogueArray.append(dialogueFile)
         elif (char == "cl"):
             # TODO: load Clarabelle's dialog array
-            dialogueFile = base.loader.loadSfx("phase_3.5/audio/dial/AV_dog_med.ogg")
-            for i in range(0,6):
+            dialogueFile = base.loader.loadSfx(
+                "phase_3.5/audio/dial/AV_dog_med.ogg")
+            for i in range(0, 6):
                 self.dialogueArray.append(dialogueFile)
         elif (char == "ch"):
             dialogueFile = base.loader.loadSfx("phase_6/audio/dial/chip.wav")
-            for i in range(0,6):
+            for i in range(0, 6):
                 self.dialogueArray.append(dialogueFile)
         elif (char == "da"):
             dialogueFile = base.loader.loadSfx("phase_6/audio/dial/dale.wav")
-            for i in range(0,6):
+            for i in range(0, 6):
                 self.dialogueArray.append(dialogueFile)
         else:
-            self.notify.error("unknown character %s" % char)
-
-
+            self.notify.error(f"unknown character {char}")
 
     def unloadDialogue(self):
         """
         Unload the dialogue audio samples
         """
-        self.dialogueArray =  []
+        self.dialogueArray = []
         self.chatterArray = [[], [], []]
 
-
     ###
-    ### Tasks
+    # Tasks
     ###
 
     def __blinkOpenEyes(self, task):
@@ -708,7 +706,6 @@ class Char(Avatar.Avatar):
             self.lpupil.show()
             self.rpupil.show()
 
-
     def closeEyes(self):
         if (self.geoEyes):
             for part in self.eyeOpenList:
@@ -721,7 +718,6 @@ class Char(Avatar.Avatar):
             self.lpupil.hide()
             self.rpupil.hide()
 
-
     def startBlink(self):
         """
         Starts the Blink task.
@@ -730,23 +726,26 @@ class Char(Avatar.Avatar):
             # remove any old
             taskMgr.remove(self.__blinkName)
             # spawn the new task
-            taskMgr.doMethodLater(random.random() * 4 + 1, self.__blinkCloseEyes, self.__blinkName)
+            taskMgr.doMethodLater(
+                random.random() * 4 + 1,
+                self.__blinkCloseEyes,
+                self.__blinkName)
 
     def stopBlink(self):
         if (self.eyesOpen or self.geoEyes):
             taskMgr.remove(self.__blinkName)
             self.openEyes()
 
-##     def startEarTask(self):
-##         if self.ears:
-##             def earTask(task):
-##                 for ear in self.ears:
-##                     ear.headsUp(base.camera)
-##                 return Task.cont
+# def startEarTask(self):
+# if self.ears:
+# def earTask(task):
+# for ear in self.ears:
+# ear.headsUp(base.camera)
+# return Task.cont
 ##             taskMgr.add(earTask, self.style.getCharName() + "-earTask")
 
-##     def stopEarTask(self):
-##         if self.ears:
+# def stopEarTask(self):
+# if self.ears:
 ##             taskMgr.remove(self.style.getCharName() + "-earTask")
 
     def startEarTask(self):

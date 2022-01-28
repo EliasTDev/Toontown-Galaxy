@@ -12,29 +12,33 @@ from toontown.hood import ZoneUtil
 
 globalTeleport = None
 
+
 def showTeleportPanel(avId, avName, avDisableName):
     # A module function to open the global avatar detail panel.
     global globalTeleport
-    if globalTeleport != None:
+    if globalTeleport is not None:
         globalTeleport.cleanup()
         globalTeleport = None
-        
+
     globalTeleport = ToonTeleportPanel(avId, avName, avDisableName)
+
 
 def hideTeleportPanel():
     # A module function to close the global avatar detail if it is open.
     global globalTeleport
-    if globalTeleport != None:
+    if globalTeleport is not None:
         globalTeleport.cleanup()
         globalTeleport = None
+
 
 def unloadTeleportPanel():
     # A module function to completely unload the global friend
     # inviter.  This is the same thing as hideTeleportPanel, actually.
     global globalTeleport
-    if globalTeleport != None:
+    if globalTeleport is not None:
         globalTeleport.cleanup()
         globalTeleport = None
+
 
 class ToonTeleportPanel(DirectFrame):
     """ToonTeleportPanel:
@@ -51,14 +55,14 @@ class ToonTeleportPanel(DirectFrame):
 
         # initialize our base class.
         DirectFrame.__init__(self,
-                             pos = (-1.01, 0.1, -0.4),
-                             parent = base.a2dTopRight,
-                             image_color = ToontownGlobals.GlobalDialogColor,
-                             image_scale = (1.0, 1.0, 0.6),
-                             text = '',
-                             text_wordwrap = 13.5,
-                             text_scale = 0.06,
-                             text_pos = (0.0, 0.18), 
+                             pos=(-1.01, 0.1, -0.4),
+                             parent=base.a2dTopRight,
+                             image_color=ToontownGlobals.GlobalDialogColor,
+                             image_scale=(1.0, 1.0, 0.6),
+                             text='',
+                             text_wordwrap=13.5,
+                             text_scale=0.06,
+                             text_pos=(0.0, 0.18),
                              )
 
         # If we're currently in move-furniture mode, stop it.
@@ -73,49 +77,48 @@ class ToonTeleportPanel(DirectFrame):
         self.avDisableName = avDisableName
 
         self.fsm = ClassicFSM.ClassicFSM('ToonTeleportPanel',
-                           [State.State('off',
-                                        self.enterOff,
-                                        self.exitOff),
-                            State.State('begin',
-                                        self.enterBegin,
-                                        self.exitBegin),
-                            State.State('checkAvailability',
-                                        self.enterCheckAvailability,
-                                        self.exitCheckAvailability),
-                            State.State('notAvailable',
-                                        self.enterNotAvailable,
-                                        self.exitNotAvailable),
-                            State.State('ignored',
-                                        self.enterIgnored,
-                                        self.exitIgnored),
-                            State.State('notOnline',
-                                        self.enterNotOnline,
-                                        self.exitNotOnline),
-                            State.State('wentAway',
-                                        self.enterWentAway,
-                                        self.exitWentAway),
-                            State.State('self',
-                                        self.enterSelf,
-                                        self.exitSelf),
-                            State.State('unknownHood',
-                                        self.enterUnknownHood,
-                                        self.exitUnknownHood),
-                            State.State('unavailableHood',
-                                        self.enterUnavailableHood,
-                                        self.exitUnavailableHood),
-                            State.State('otherShard',
-                                        self.enterOtherShard,
-                                        self.exitOtherShard),
-                            State.State('teleport',
-                                        self.enterTeleport,
-                                        self.exitTeleport),
-                            ],
-                           # Initial State
-                           'off',
-                           # Final State
-                           'off',
-                           )
-
+                                         [State.State('off',
+                                                      self.enterOff,
+                                                      self.exitOff),
+                                          State.State('begin',
+                                                      self.enterBegin,
+                                                      self.exitBegin),
+                                             State.State('checkAvailability',
+                                                         self.enterCheckAvailability,
+                                                         self.exitCheckAvailability),
+                                             State.State('notAvailable',
+                                                         self.enterNotAvailable,
+                                                         self.exitNotAvailable),
+                                             State.State('ignored',
+                                                         self.enterIgnored,
+                                                         self.exitIgnored),
+                                             State.State('notOnline',
+                                                         self.enterNotOnline,
+                                                         self.exitNotOnline),
+                                             State.State('wentAway',
+                                                         self.enterWentAway,
+                                                         self.exitWentAway),
+                                             State.State('self',
+                                                         self.enterSelf,
+                                                         self.exitSelf),
+                                             State.State('unknownHood',
+                                                         self.enterUnknownHood,
+                                                         self.exitUnknownHood),
+                                             State.State('unavailableHood',
+                                                         self.enterUnavailableHood,
+                                                         self.exitUnavailableHood),
+                                             State.State('otherShard',
+                                                         self.enterOtherShard,
+                                                         self.exitOtherShard),
+                                             State.State('teleport',
+                                                         self.enterTeleport,
+                                                         self.exitTeleport),
+                                          ],
+                                         # Initial State
+                                         'off',
+                                         # Final State
+                                         'off',
+                                         )
 
         # This is imported here instead of at the top of the file to
         # protect against circular imports.
@@ -129,51 +132,51 @@ class ToonTeleportPanel(DirectFrame):
         buttons = loader.loadModel('phase_3/models/gui/dialog_box_buttons_gui')
 
         self.bOk = DirectButton(self,
-                                image = (buttons.find('**/ChtBx_OKBtn_UP'),
-                                         buttons.find('**/ChtBx_OKBtn_DN'),
-                                         buttons.find('**/ChtBx_OKBtn_Rllvr')),
-                                relief = None,
-                                text = TTLocalizer.TeleportPanelOK,
-                                text_scale = 0.05,
-                                text_pos = (0.0, -0.1),
-                                pos = (0.0, 0.0, -0.1),
-                                command = self.__handleOk)
+                                image=(buttons.find('**/ChtBx_OKBtn_UP'),
+                                       buttons.find('**/ChtBx_OKBtn_DN'),
+                                       buttons.find('**/ChtBx_OKBtn_Rllvr')),
+                                relief=None,
+                                text=TTLocalizer.TeleportPanelOK,
+                                text_scale=0.05,
+                                text_pos=(0.0, -0.1),
+                                pos=(0.0, 0.0, -0.1),
+                                command=self.__handleOk)
         self.bOk.hide()
 
         self.bCancel = DirectButton(self,
-                                    image = (buttons.find('**/CloseBtn_UP'),
-                                             buttons.find('**/CloseBtn_DN'),
-                                             buttons.find('**/CloseBtn_Rllvr')),
-                                    relief = None,
-                                    text = TTLocalizer.TeleportPanelCancel,
-                                    text_scale = 0.05,
-                                    text_pos = (0.0, -0.1),
-                                    pos = (0.0, 0.0, -0.1),
-                                    command = self.__handleCancel)
+                                    image=(buttons.find('**/CloseBtn_UP'),
+                                           buttons.find('**/CloseBtn_DN'),
+                                           buttons.find('**/CloseBtn_Rllvr')),
+                                    relief=None,
+                                    text=TTLocalizer.TeleportPanelCancel,
+                                    text_scale=0.05,
+                                    text_pos=(0.0, -0.1),
+                                    pos=(0.0, 0.0, -0.1),
+                                    command=self.__handleCancel)
         self.bCancel.hide()
 
         self.bYes = DirectButton(self,
-                                 image = (buttons.find('**/ChtBx_OKBtn_UP'),
-                                          buttons.find('**/ChtBx_OKBtn_DN'),
-                                          buttons.find('**/ChtBx_OKBtn_Rllvr')),
-                                 relief = None,
-                                 text = TTLocalizer.TeleportPanelYes,
-                                 text_scale = 0.05,
-                                 text_pos = (0.0, -0.1),
-                                 pos = (-0.15, 0.0, -0.15),
-                                 command = self.__handleYes)
+                                 image=(buttons.find('**/ChtBx_OKBtn_UP'),
+                                        buttons.find('**/ChtBx_OKBtn_DN'),
+                                        buttons.find('**/ChtBx_OKBtn_Rllvr')),
+                                 relief=None,
+                                 text=TTLocalizer.TeleportPanelYes,
+                                 text_scale=0.05,
+                                 text_pos=(0.0, -0.1),
+                                 pos=(-0.15, 0.0, -0.15),
+                                 command=self.__handleYes)
         self.bYes.hide()
 
         self.bNo = DirectButton(self,
-                                image = (buttons.find('**/CloseBtn_UP'),
-                                         buttons.find('**/CloseBtn_DN'),
-                                         buttons.find('**/CloseBtn_Rllvr')),
-                                relief = None,
-                                text = TTLocalizer.TeleportPanelNo,
-                                text_scale = 0.05,
-                                text_pos = (0.0, -0.1),
-                                pos = (0.15, 0.0, -0.15),
-                                command = self.__handleNo)
+                                image=(buttons.find('**/CloseBtn_UP'),
+                                       buttons.find('**/CloseBtn_DN'),
+                                       buttons.find('**/CloseBtn_Rllvr')),
+                                relief=None,
+                                text=TTLocalizer.TeleportPanelNo,
+                                text_scale=0.05,
+                                text_pos=(0.0, -0.1),
+                                pos=(0.15, 0.0, -0.15),
+                                command=self.__handleNo)
         self.bNo.hide()
 
         buttons.removeNode()
@@ -184,13 +187,12 @@ class ToonTeleportPanel(DirectFrame):
         self.fsm.enterInitialState()
         self.fsm.request('begin')
 
-
     def cleanup(self):
         """cleanup(self):
 
         Cancels any pending request and removes the panel from the
         screen.
-        
+
         """
         self.fsm.request('off')
         del self.fsm
@@ -201,7 +203,7 @@ class ToonTeleportPanel(DirectFrame):
 
     # Represents the initial state of the teleport query: no query in
     # progress.
-    
+
     def enterOff(self):
         pass
 
@@ -212,7 +214,7 @@ class ToonTeleportPanel(DirectFrame):
 
     # We have clicked on the "go to" button from the Avatar detail
     # panel.  Perform a few sanity checks.
-    
+
     def enterBegin(self):
         myId = base.localAvatar.doId
         hasManager = hasattr(base.cr, "playerFriendsManager")
@@ -230,16 +232,14 @@ class ToonTeleportPanel(DirectFrame):
                 self.fsm.request('checkAvailability')
             else:
                 self.fsm.request('notOnline')
-                
 
-            
         else:
             # The avatar is not our friend and isn't around.
             self.fsm.request('wentAway')
 
     def exitBegin(self):
         pass
-        
+
     ##### Checking availability state #####
 
     # Ask the other avatar if he's available to be teleported to, and
@@ -249,7 +249,8 @@ class ToonTeleportPanel(DirectFrame):
 
         myId = base.localAvatar.getDoId()
         base.localAvatar.d_teleportQuery(myId, sendToId=self.avId)
-        self['text'] = TTLocalizer.TeleportPanelCheckAvailability % (self.avName)
+        self['text'] = TTLocalizer.TeleportPanelCheckAvailability % (
+            self.avName)
         self.accept('teleportResponse', self.__teleportResponse)
         self.bCancel.show()
 
@@ -264,7 +265,7 @@ class ToonTeleportPanel(DirectFrame):
     # minigame or something.
 
     def enterNotAvailable(self):
-        self['text'] = TTLocalizer.TeleportPanelNotAvailable  % (self.avName)
+        self['text'] = TTLocalizer.TeleportPanelNotAvailable % (self.avName)
         self.bOk.show()
 
     def exitNotAvailable(self):
@@ -276,7 +277,7 @@ class ToonTeleportPanel(DirectFrame):
     # ignoring us.  Too bad for us.
 
     def enterIgnored(self):
-        self['text'] = TTLocalizer.TeleportPanelNotAvailable  % (self.avName)
+        self['text'] = TTLocalizer.TeleportPanelNotAvailable % (self.avName)
         self.bOk.show()
 
     def exitIgnored(self):
@@ -310,7 +311,7 @@ class ToonTeleportPanel(DirectFrame):
 
     def enterUnknownHood(self, hoodId):
         self['text'] = TTLocalizer.TeleportPanelUnknownHood % \
-                       base.cr.hoodMgr.getFullnameFromId(hoodId)
+            base.cr.hoodMgr.getFullnameFromId(hoodId)
         self.bOk.show()
 
     def exitUnknownHood(self):
@@ -321,7 +322,7 @@ class ToonTeleportPanel(DirectFrame):
     # Invalid attempt to teleport to a hood we haven't downloaded yet.
 
     def enterUnavailableHood(self, hoodId):
-        self['text'] = (TTLocalizer.TeleportPanelUnavailableHood % 
+        self['text'] = (TTLocalizer.TeleportPanelUnavailableHood %
                         base.cr.hoodMgr.getFullnameFromId(hoodId))
         self.bOk.show()
 
@@ -338,7 +339,6 @@ class ToonTeleportPanel(DirectFrame):
 
     def exitSelf(self):
         self.bOk.hide()
-
 
     ##### OtherShard state #####
 
@@ -358,17 +358,18 @@ class ToonTeleportPanel(DirectFrame):
         for shard in base.cr.listActiveShards():
             if shard[0] == shardId:
                 pop = shard[2]
- 
+
         # if we got a pop for the shard in question and it's full
         if pop and pop > localAvatar.shardPage.oggPop:
-            self.notify.warning("Entering full shard: issuing performance warning")
+            self.notify.warning(
+                "Entering full shard: issuing performance warning")
             self['text'] = (TTLocalizer.TeleportPanelBusyShard %
-                            ({"avName" : self.avName}))
+                            ({"avName": self.avName}))
         else:
             self['text'] = (TTLocalizer.TeleportPanelOtherShard %
-                            ({"avName" : self.avName,
-                              "shardName" : shardName,
-                              "myShardName" : myShardName,
+                            ({"avName": self.avName,
+                              "shardName": shardName,
+                              "myShardName": myShardName,
                               }))
         self.bYes.show()
         self.bNo.show()
@@ -421,14 +422,13 @@ class ToonTeleportPanel(DirectFrame):
             place = base.cr.playGame.getPlace()
             place.requestTeleport(hoodId, zoneId, shardId, self.avId)
             unloadTeleportPanel()
-            
+
         return
 
     def exitTeleport(self):
         pass
 
-
-    ### Button handing methods
+    # Button handing methods
 
     def __handleOk(self):
         unloadTeleportPanel()
@@ -443,14 +443,13 @@ class ToonTeleportPanel(DirectFrame):
     def __handleNo(self):
         unloadTeleportPanel()
 
-
-    ### Support methods
+    # Support methods
 
     def __teleportResponse(self, avId, available, shardId, hoodId, zoneId):
         if avId != self.avId:
             # Ignore responses from an unexpected avatar.
             return
-        
+
         if available == 0:
             # The other avatar is not available to teleport to.
             self.fsm.request('notAvailable')
@@ -461,7 +460,6 @@ class ToonTeleportPanel(DirectFrame):
             self.fsm.request('otherShard', [shardId, hoodId, zoneId])
         else:
             self.fsm.request('teleport', [shardId, hoodId, zoneId])
-        
 
     def __handleDisableAvatar(self):
         """__handleDisableAvatar(self)

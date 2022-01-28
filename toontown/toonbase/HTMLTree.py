@@ -1,5 +1,6 @@
 from toontown.toonbase import ElementTree as ET
 
+
 class HTMLTree(ET.ElementTree):
     def __init__(self, title):
         root = ET.Element('HTML')
@@ -16,4 +17,3 @@ class HTMLTree(ET.ElementTree):
 
     def getHead(self):
         return self.find('HEAD')
-    

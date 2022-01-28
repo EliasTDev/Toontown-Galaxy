@@ -1,7 +1,5 @@
 
 
-
-
 from pandac.PandaModules import *
 
 # Create a DNA Store
@@ -31,7 +29,7 @@ fb = dnaFB.traverse(render, dnaStore, 1)
 # Test parenting
 assert(dnaWin.getParent() == dnaWall)
 assert(dnaWall.getParent() == dnaFB)
-assert(dnaFB.getParent() == None)
+assert(dnaFB.getParent() is None)
 # Test finding the node in the storage
 assert(dnaStore.findDNAGroup(fb.node()) == dnaFB)
 # Test removing the node from the storage

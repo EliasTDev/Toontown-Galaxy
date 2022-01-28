@@ -2,21 +2,23 @@ from toontown.toonbase.ToontownGlobals import *
 from . import RegenTreasurePlannerAI
 from . import DistributedEFlyingTreasureAI
 
+
 class EFlyingTreasurePlannerAI(RegenTreasurePlannerAI.RegenTreasurePlannerAI):
     def __init__(self, estateAI, zoneId):
         self.healAmount = 3
         RegenTreasurePlannerAI.RegenTreasurePlannerAI.__init__(
             self,
             zoneId,
-            DistributedEFlyingTreasureAI.DistributedEFlyingTreasureAI, # Constructor
+            DistributedEFlyingTreasureAI.DistributedEFlyingTreasureAI,  # Constructor
             "EFlyingTreasurePlanner",
-            20, # Frequency of spawn
+            20,  # Frequency of spawn
             7   # Max number of treasures
-            )
+        )
         # keep reference to estateAI, so we can tell the estate
-        # when the treasures are updated (needed for cannon fire intersection calc)
+        # when the treasures are updated (needed for cannon fire intersection
+        # calc)
         self.estateAI = estateAI
-        
+
     def initSpawnPoints(self):
         self.spawnPoints = [
             (-14, -47.06, 25.177),
@@ -40,13 +42,11 @@ class EFlyingTreasurePlannerAI(RegenTreasurePlannerAI.RegenTreasurePlannerAI):
             (47.26, -62.193, 30.05),
             (-63.865, 24.788, 30.025),
             (-28.826, 25.024, 28.559),
-            ]
+        ]
         return self.spawnPoints
-            
+
     def placeRandomTreasure(self):
         RegenTreasurePlannerAI.RegenTreasurePlannerAI.placeRandomTreasure(self)
 
         # Update the estate's list of treasures
         self.estateAI.updateFlyingTreasureList()
-                                                     
-                       

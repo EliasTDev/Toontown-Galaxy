@@ -17,39 +17,41 @@ from direct.directnotify import DirectNotifyGlobal
 # this must be a distributed class so the AI can tell all the clients
 # when the platform has been entered or exited.
 
+
 class DistributedSinkingPlatform(BasicEntities.DistributedNodePathEntity):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedSinkingPlatform')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedSinkingPlatform')
 
     def __init__(self, cr):
-        BasicEntities.DistributedNodePathEntity.__init__(self,cr)
+        BasicEntities.DistributedNodePathEntity.__init__(self, cr)
         self.moveIval = None
-        
+
     def generateInit(self):
         self.notify.debug('generateInit')
         BasicEntities.DistributedNodePathEntity.generateInit(self)
 
         self.fsm = ClassicFSM.ClassicFSM('DistributedSinkingPlatform',
-                           [
-                            State.State('off',
-                                        self.enterOff,
-                                        self.exitOff,
-                                        ['sinking']),
-                            State.State('sinking',
-                                        self.enterSinking,
-                                        self.exitSinking,
-                                        ['rising']),
-                            State.State('rising',
-                                        self.enterRising,
-                                        self.exitRising,
-                                        ['sinking', 'off']),
-                            ],
-                           # Initial State
-                           'off',
-                           # Final State
-                           'off',
-                           )
+                                         [
+                                             State.State('off',
+                                                         self.enterOff,
+                                                         self.exitOff,
+                                                         ['sinking']),
+                                             State.State('sinking',
+                                                         self.enterSinking,
+                                                         self.exitSinking,
+                                                         ['rising']),
+                                             State.State('rising',
+                                                         self.enterRising,
+                                                         self.exitRising,
+                                                         ['sinking', 'off']),
+                                         ],
+                                         # Initial State
+                                         'off',
+                                         # Final State
+                                         'off',
+                                         )
         self.fsm.enterInitialState()
-        
+
     def generate(self):
         self.notify.debug('generate')
         BasicEntities.DistributedNodePathEntity.generate(self)
@@ -66,7 +68,6 @@ class DistributedSinkingPlatform(BasicEntities.DistributedNodePathEntity):
         # can send messages to the AI about the state of the platform
         self.accept(self.platform.getEnterEvent(), self.localToonEntered)
         self.accept(self.platform.getExitEvent(), self.localToonLeft)
-
 
     def disable(self):
         self.notify.debug('disable')
@@ -94,28 +95,30 @@ class DistributedSinkingPlatform(BasicEntities.DistributedNodePathEntity):
         self.platform.setupCopyModel(self.getParentToken(), model,
                                      'platformcollision')
         self.platform.reparentTo(self)
-        self.platform.setPos(0,0,0)
-        
+        self.platform.setPos(0, 0, 0)
+
     def localToonEntered(self):
-        ts = globalClockDelta.localToNetworkTime(globalClock.getFrameTime(), bits=32)
+        ts = globalClockDelta.localToNetworkTime(
+            globalClock.getFrameTime(), bits=32)
         self.sendUpdate('setOnOff', [1, ts])
         # TODO: make this smoother for the local toon
         # Since we are the local toon, this should happen immediately, so
         # we don't see any jumps as a result of the server roundtrip
         #self.fsm.request('sinking', [ts])
-        
+
     def localToonLeft(self):
-        ts = globalClockDelta.localToNetworkTime(globalClock.getFrameTime(), bits=32)
+        ts = globalClockDelta.localToNetworkTime(
+            globalClock.getFrameTime(), bits=32)
         self.sendUpdate('setOnOff', [0, ts])
         # TODO: make this smoother for the local toon
         #self.fsm.request('rising', [ts])
-    
+
     # ClassicFSM state enter/exit funcs
     def enterOff(self):
         self.notify.debug('enterOff')
+
     def exitOff(self):
         self.notify.debug('exitOff')
-
 
     def enterSinking(self, ts=0):
         self.notify.debug('enterSinking')
@@ -127,11 +130,11 @@ class DistributedSinkingPlatform(BasicEntities.DistributedNodePathEntity):
             self.moveIval.pause()
             del self.moveIval
             self.moveIval = None
-        
+
     def enterRising(self, ts=0):
         self.notify.debug('enterRising')
         self.startMoving(SinkingPlatformGlobals.RISING, ts)
-        
+
     def exitRising(self):
         self.notify.debug('exitRising')
         if self.moveIval:
@@ -139,11 +142,10 @@ class DistributedSinkingPlatform(BasicEntities.DistributedNodePathEntity):
             del self.moveIval
             self.moveIval = None
 
-    
     def setSinkMode(self, avId, mode, ts):
         # AI tells us if the platform is sinking, rising, or off
         # and at what time it started moving
-        self.notify.debug("setSinkMode %s" % mode)
+        self.notify.debug(f"setSinkMode {mode}")
         if mode == SinkingPlatformGlobals.OFF:
             # this is a clear message sitting on wire
             self.fsm.requestInitialState()
@@ -152,29 +154,30 @@ class DistributedSinkingPlatform(BasicEntities.DistributedNodePathEntity):
         # the localToon reacts to the exit event without the server
         # round trip)
         elif mode == SinkingPlatformGlobals.RISING:
-            #if avId != base.localAvatar.doId:
+            # if avId != base.localAvatar.doId:
             self.fsm.request('rising', [ts])
-            #else:
+            # else:
             #    print "ignoring server rise message"
         elif mode == SinkingPlatformGlobals.SINKING:
-            #if avId != base.localAvatar.doId:
+            # if avId != base.localAvatar.doId:
             self.fsm.request('sinking', [ts])
-            #else:
+            # else:
             #    print "ignoring server sink message"
-                
+
     def startMoving(self, direction, ts):
         if direction == SinkingPlatformGlobals.RISING:
-            endPos = Vec3(0,0,0)
+            endPos = Vec3(0, 0, 0)
             pause = self.pauseBeforeRise
             duration = self.riseDuration
         else:
-            endPos = Vec3(0,0,-self.verticalRange)
+            endPos = Vec3(0, 0, -self.verticalRange)
             pause = None
             duration = self.sinkDuration
 
         # For non-local toons, we will have less time than "duration" to
         # actually complete the interval, because of the server roundtrip.
-        # Calculate the actual time (ivalTime) we have to complete the interval.
+        # Calculate the actual time (ivalTime) we have to complete the
+        # interval.
         startT = globalClockDelta.networkToLocalTime(ts, bits=32)
         curT = globalClock.getFrameTime()
         ivalTime = curT - startT
@@ -186,7 +189,7 @@ class DistributedSinkingPlatform(BasicEntities.DistributedNodePathEntity):
         duration = duration - ivalTime
         duration = max(0., duration)
 
-        #print "ivalTime = %s" % ivalTime
+        # print "ivalTime = %s" % ivalTime
 
         moveNode = self.platform
         self.moveIval = Sequence()
@@ -194,15 +197,12 @@ class DistributedSinkingPlatform(BasicEntities.DistributedNodePathEntity):
             self.moveIval.append(WaitInterval(pause))
         self.moveIval.append(
             LerpPosInterval(moveNode, duration,
-                            endPos, startPos = moveNode.getPos(),
+                            endPos, startPos=moveNode.getPos(),
                             blendType='easeInOut',
-                            name='%s-move' % self.platform.name,
-                            fluid = 1),
-            )
+                            name=f'{self.platform.name}-move',
+                            fluid=1),
+        )
 
-        #print "timeStamp = %s, ivalStartT = %s, startTime = %s, curT = %s, duration= %s" % (
+        # print "timeStamp = %s, ivalStartT = %s, startTime = %s, curT = %s, duration= %s" % (
         #    timestamp, ivalStartT, startT, curT, duration)
         self.moveIval.start()
-        
-
-  

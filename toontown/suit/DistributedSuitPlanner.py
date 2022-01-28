@@ -6,8 +6,9 @@ from direct.distributed import DistributedObject
 from . import SuitPlannerBase
 from toontown.toonbase import ToontownGlobals
 
-class DistributedSuitPlanner( DistributedObject.DistributedObject,
-                              SuitPlannerBase.SuitPlannerBase ):
+
+class DistributedSuitPlanner(DistributedObject.DistributedObject,
+                             SuitPlannerBase.SuitPlannerBase):
     """
     /////////////////////////////////////////////////////////////////////////
     //
@@ -20,18 +21,18 @@ class DistributedSuitPlanner( DistributedObject.DistributedObject,
     /////////////////////////////////////////////////////////////////////////
     """
 
-    def __init__( self, cr ):
+    def __init__(self, cr):
 
         # initialize some values that we will be using
         #
-        DistributedObject.DistributedObject.__init__( self, cr )
-        SuitPlannerBase.SuitPlannerBase.__init__( self )
+        DistributedObject.DistributedObject.__init__(self, cr)
+        SuitPlannerBase.SuitPlannerBase.__init__(self)
         self.suitList = []
         self.buildingList = [0, 0, 0, 0]
         self.pathViz = None
         return None
 
-    def generate( self ):
+    def generate(self):
         """
         ////////////////////////////////////////////////////////////////////
         // Function:    This method is called when the DistributedObject is
@@ -43,11 +44,11 @@ class DistributedSuitPlanner( DistributedObject.DistributedObject,
         """
         self.notify.info("DistributedSuitPlanner %d: generating" %
                          self.getDoId())
-        DistributedObject.DistributedObject.generate( self )
+        DistributedObject.DistributedObject.generate(self)
         # register with the cr
         base.cr.currSuitPlanner = self
 
-    def disable( self ):
+    def disable(self):
         """
         ////////////////////////////////////////////////////////////////////
         // Function:    This method is called when the DistributedObject is
@@ -59,15 +60,14 @@ class DistributedSuitPlanner( DistributedObject.DistributedObject,
         self.notify.info("DistributedSuitPlanner %d: disabling" %
                          self.getDoId())
         self.hidePaths()
-        DistributedObject.DistributedObject.disable( self )
+        DistributedObject.DistributedObject.disable(self)
         # unregister with the cr
         base.cr.currSuitPlanner = None
-
 
     #
     # the following functions let client objects query the state of the suit world
     #
-    
+
     def d_suitListQuery(self):
         self.sendUpdate('suitListQuery')
 
@@ -78,7 +78,7 @@ class DistributedSuitPlanner( DistributedObject.DistributedObject,
 
     def d_buildingListQuery(self):
         self.sendUpdate('buildingListQuery')
-        
+
     def buildingListResponse(self, buildingList):
         self.buildingList = buildingList
         # let anyone know that might care
@@ -90,16 +90,17 @@ class DistributedSuitPlanner( DistributedObject.DistributedObject,
         if self.pathViz:
             self.pathViz.detachNode()
             self.pathViz = None
-    
+
     def showPaths(self):
         # Draw a visualization of the suit paths at runtime for the
         # user's convenience.
-        
+
         self.hidePaths()
         vizNode = GeomNode(self.uniqueName('PathViz'))
         lines = LineSegs()
         self.pathViz = render.attachNewNode(vizNode)
-        points = self.frontdoorPointList + self.sidedoorPointList + self.cogHQDoorPointList + self.streetPointList
+        points = self.frontdoorPointList + self.sidedoorPointList + \
+            self.cogHQDoorPointList + self.streetPointList
         while len(points) > 0:
             self.__doShowPoints(vizNode, lines, None, points)
 
@@ -110,14 +111,14 @@ class DistributedSuitPlanner( DistributedObject.DistributedObject,
         for zoneId, cellPos in list(self.battlePosDict.items()):
             cnode.addSolid(CollisionSphere(cellPos, 9))
 
-            text = "%s" % (zoneId)
-            self.__makePathVizText(text, cellPos[0], cellPos[1], cellPos[2] + 9,
-                                   (1, 1, 1, 1))
+            text = f"{zoneId}"
+            self.__makePathVizText(
+                text, cellPos[0], cellPos[1], cellPos[2] + 9, (1, 1, 1, 1))
 
         self.pathViz.attachNewNode(cnode).show()
 
     def __doShowPoints(self, vizNode, lines, p, points):
-        if p == None:
+        if p is None:
             # Choose a new point at random.  We arbitrarily take the
             # last one on the list.
             pi = len(points) - 1
@@ -131,20 +132,20 @@ class DistributedSuitPlanner( DistributedObject.DistributedObject,
                 # We've already visited this point, and presumably
                 # already drawn the edge.
                 return
-            
+
             pi = points.index(p)
             del points[pi]
 
         # Draw a label for the point.
-        text = "%s" % (p.getIndex())
+        text = f"{p.getIndex()}"
         pos = p.getPos()
 
         if (p.getPointType() == DNASuitPoint.FRONTDOORPOINT):
-            color = (1, 0, 0, 1)            
+            color = (1, 0, 0, 1)
         elif (p.getPointType() == DNASuitPoint.SIDEDOORPOINT):
-            color = (0, 0, 1, 1)            
+            color = (0, 0, 1, 1)
         else:
-            color = (0, 1, 0, 1)            
+            color = (0, 1, 0, 1)
 
         self.__makePathVizText(text, pos[0], pos[1], pos[2], color)
 
@@ -165,7 +166,7 @@ class DistributedSuitPlanner( DistributedObject.DistributedObject,
             p1a = pp + v * 2 + c * 0.5
             p1b = pp + v * 3
             p1c = pp + v * 2 - c * 0.5
-            
+
             lines.reset()
             lines.moveTo(pp)
             lines.drawTo(qp)
@@ -174,7 +175,7 @@ class DistributedSuitPlanner( DistributedObject.DistributedObject,
             lines.moveTo(p1a)
             lines.drawTo(p1b)
             lines.drawTo(p1c)
-            
+
             lines.create(vizNode, 0)
             self.__doShowPoints(vizNode, lines, q, points)
 

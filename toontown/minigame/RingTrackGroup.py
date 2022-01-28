@@ -1,8 +1,10 @@
 """RingTrackGroup.py: contains RingTrackGroup functions"""
 
+
 class RingTrackGroup:
     """RingTrackGroups are groupings of ring tracks to be used with
     RingGroup objects."""
+
     def __init__(self, tracks, period,
                  trackTOffsets=None, reverseFlag=0, tOffset=0.):
         """
@@ -16,7 +18,7 @@ class RingTrackGroup:
         assert(len(tracks) >= 1 and len(tracks) <= 4)
         assert(period >= 0.)
         # create a default set of track time offsets if none provided
-        if trackTOffsets == None:
+        if trackTOffsets is None:
             trackTOffsets = [0] * len(tracks)
         assert(len(tracks) == len(trackTOffsets))
 

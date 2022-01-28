@@ -5,6 +5,7 @@ from otp.avatar import DistributedAvatarAI
 from otp.avatar import PlayerBase
 from otp.otpbase import OTPGlobals
 
+
 class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI,
                           PlayerBase.PlayerBase):
     def __init__(self, air):
@@ -55,18 +56,22 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI,
 
     def isPlayerControlled(self):
         return True
-    
+
     def setLocation(self, parentId, zoneId, teleport=0):
-        DistributedAvatarAI.DistributedAvatarAI.setLocation(self, parentId, zoneId, teleport)
+        DistributedAvatarAI.DistributedAvatarAI.setLocation(
+            self, parentId, zoneId, teleport)
         if self.isPlayerControlled():
-            # hmm, did this come from a hacker trying to get somewhere they shouldn't be?
+            # hmm, did this come from a hacker trying to get somewhere they
+            # shouldn't be?
             if not self.air._isValidPlayerLocation(parentId, zoneId):
-                self.notify.info('booting player %s for doing setLocation to (%s, %s)' % (
-                    self.doId, parentId, zoneId))
-                self.air.writeServerEvent('suspicious', self.doId,
-                                          'invalid setLocation: (%s, %s)' % (parentId, zoneId))
+                self.notify.info(
+                    'booting player %s for doing setLocation to (%s, %s)' %
+                    (self.doId, parentId, zoneId))
+                self.air.writeServerEvent(
+                    'suspicious', self.doId, 'invalid setLocation: (%s, %s)' %
+                    (parentId, zoneId))
                 self.requestDelete()
-            
+
     def _doPlayerEnter(self):
         self.incrementPopulation()
         self._announceArrival()
@@ -79,6 +84,7 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI,
     # particular PlayerAI
     def incrementPopulation(self):
         self.air.incrementPopulation()
+
     def decrementPopulation(self):
         # use simbase in case we've already deleted self.air
         simbase.air.decrementPopulation()
@@ -98,15 +104,15 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI,
 
     def d_setMaxHp(self, maxHp):
         DistributedAvatarAI.DistributedAvatarAI.d_setMaxHp(self, maxHp)
-        self.air.writeServerEvent('setMaxHp', self.doId, '%s' % maxHp)
+        self.air.writeServerEvent('setMaxHp', self.doId, f'{maxHp}')
 
     def d_setSystemMessage(self, aboutId, chatString):
         self.sendUpdate("setSystemMessage", [aboutId, chatString])
 
-    #def d_setCommonChatFlags(self, flags):
+    # def d_setCommonChatFlags(self, flags):
       #  self.sendUpdate("setCommonChatFlags", [flags])
 
-    #def setCommonChatFlags(self, flags):
+    # def setCommonChatFlags(self, flags):
        # pass
 
     def d_friendsNotify(self, avId, status):
@@ -122,14 +128,14 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI,
         return self.accountName
 
     def setDISLid(self, id):
-        self.DISLid = id        
+        self.DISLid = id
 
     def d_setFriendsList(self, friendsList):
         self.sendUpdate("setFriendsList", [friendsList])
 
     def setFriendsList(self, friendsList):
         self.friendsList = friendsList
-        self.notify.debug("setting friends list to %s" % self.friendsList)
+        self.notify.debug(f"setting friends list to {self.friendsList}")
 
     def getFriendsList(self):
         return self.friendsList
@@ -159,6 +165,6 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI,
 
     def setStaffAccess(self, staffAccess):
         self.staffAccess = staffAccess
-    
+
     def getStaffAccess(self):
         return self.staffAccess

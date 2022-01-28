@@ -21,12 +21,14 @@ import functools
 
 Day = Enum('MONDAY, TUESDAY, WEDNESDAY, THURSDAY, \
             FRIDAY, SATURDAY, SUNDAY')
-            
+
 #################################################################
 # Class: HolidayInfo_Relatively
 # Purpose: Stores all relevant information regarding an event,
 #          such as the type of event.
 #################################################################
+
+
 class HolidayInfo_Relatively(HolidayInfo_Base):
     #############################################################
     # Method: __init__
@@ -47,7 +49,7 @@ class HolidayInfo_Relatively(HolidayInfo_Base):
         HolidayInfo_Base.__init__(self, holidayClass, displayOnCalendar)
 
         dateElemIter = ModifiedIter(dateList)
-        for i in range(len(dateList)//2):
+        for i in range(len(dateList) // 2):
             start = dateElemIter.current()
             end = next(dateElemIter)
 
@@ -55,24 +57,26 @@ class HolidayInfo_Relatively(HolidayInfo_Base):
             next(dateElemIter)
 
         self.tupleList.sort(key=functools.cmp_to_key(cmpDates))
-        self.weekDaysInMonth = []                       # A matrix of the number of times a weekday repeats in a month
-        self.numDaysCorMatrix = [(28,0), (29, 1),
-                            (30, 2), (31, 3)]           # A matrix of the number of weekdays that repeat one extra
-                                                        # time based on the number of days in the month. For instance
-                                                        # in a month with 31 days, the first two week days occur
-                                                        # one more time than the other days.
-        for i in range(7):                              # The minimum number of times a day repeats in a month
-            self.weekDaysInMonth.append((i,4))
-            
+        # A matrix of the number of times a weekday repeats in a month
+        self.weekDaysInMonth = []
+        # A matrix of the number of weekdays that repeat one extra
+        self.numDaysCorMatrix = [(28, 0), (29, 1), (30, 2), (31, 3)]
+        # time based on the number of days in the month. For instance
+        # in a month with 31 days, the first two week days occur
+        # one more time than the other days.
+        for i in range(
+                7):                              # The minimum number of times a day repeats in a month
+            self.weekDaysInMonth.append((i, 4))
+
     ############################################################
     # Method: initRepMatrix
     # Initialize the number of times weekdays get
     # repeated in a month method.
     ############################################################
     def initRepMatrix(self, year, month):
-        
+
         for i in range(7):
-            self.weekDaysInMonth[i] = (i,4)
+            self.weekDaysInMonth[i] = (i, 4)
 
         startingWeekDay, numDays = calendar.monthrange(year, month)
 
@@ -80,10 +84,13 @@ class HolidayInfo_Relatively(HolidayInfo_Base):
             if(numDays == self.numDaysCorMatrix[i][0]):
                 break
 
-        for j in range(self.numDaysCorMatrix[i][1]):                                                  # At this point we have a matrix of the weekdays and
-            self.weekDaysInMonth[startingWeekDay] = (self.weekDaysInMonth[startingWeekDay][0],
-                                                     self.weekDaysInMonth[startingWeekDay][1]+1)   # the number of times they repeat for the current month
-            startingWeekDay = (startingWeekDay+1)%7
+        # At this point we have a matrix of the weekdays and
+        for j in range(self.numDaysCorMatrix[i][1]):
+            self.weekDaysInMonth[startingWeekDay] = (
+                self.weekDaysInMonth[startingWeekDay][0],
+                self.weekDaysInMonth[startingWeekDay][1] +
+                1)  # the number of times they repeat for the current month
+            startingWeekDay = (startingWeekDay + 1) % 7
 
     #############################################################
     # Method: getTime
@@ -95,24 +102,24 @@ class HolidayInfo_Relatively(HolidayInfo_Base):
     def getTime(self, date, t):
         # t is of the form (day, hour, min, sec)
         # date is of the form (year, month, day, weekday)
-         repNum = t[1]
-         weekday = t[2]
-         self.initRepMatrix(date[0],t[0])
-         while(self.weekDaysInMonth[weekday][1] < repNum):
+        repNum = t[1]
+        weekday = t[2]
+        self.initRepMatrix(date[0], t[0])
+        while(self.weekDaysInMonth[weekday][1] < repNum):
             repNum -= 1
 
-         day = self.dayForWeekday(date[0], t[0], weekday, repNum)
+        day = self.dayForWeekday(date[0], t[0], weekday, repNum)
 
-         return time.mktime((date[0], # year
-                            t[0], # month
-                            day,  # day
-                            t[3], # hour
-                            t[4], # second
-                            t[5], # minute
-                            0,
-                            0,
-                            -1))
-                            
+        return time.mktime((date[0],  # year
+                           t[0],  # month
+                           day,  # day
+                           t[3],  # hour
+                           t[4],  # second
+                           t[5],  # minute
+                           0,
+                           0,
+                           -1))
+
     #############################################################
     # Method: getStartTime
     # Purpose: This method returns the current start time of
@@ -121,7 +128,8 @@ class HolidayInfo_Relatively(HolidayInfo_Base):
     # Output: returns current start time
     #############################################################
     def getStartTime(self, date):
-        startTuple, endTuple = self.getUpdatedTuples(self.currElemIter.current())
+        startTuple, endTuple = self.getUpdatedTuples(
+            self.currElemIter.current())
         return self.getTime(date, startTuple)
 
     #############################################################
@@ -132,7 +140,8 @@ class HolidayInfo_Relatively(HolidayInfo_Base):
     # Output: returns current end time
     #############################################################
     def getEndTime(self, date):
-        startTuple, endTuple = self.getUpdatedTuples(self.currElemIter.current())
+        startTuple, endTuple = self.getUpdatedTuples(
+            self.currElemIter.current())
         return self.getTime(date, endTuple)
 
     #############################################################
@@ -147,9 +156,10 @@ class HolidayInfo_Relatively(HolidayInfo_Base):
     def getNextHolidayTime(self, currTime):
         sCurrYear = time.localtime()[0]
         eCurrYear = sCurrYear
-                
+
         for i in range(len(self.tupleList)):
-            startTuple, endTuple = self.getUpdatedTuples(self.currElemIter.peekNext())
+            startTuple, endTuple = self.getUpdatedTuples(
+                self.currElemIter.peekNext())
             sMonth = startTuple[0]
             nMonth = endTuple[0]
             # If the end month is less than the start month, it is
@@ -181,8 +191,8 @@ class HolidayInfo_Relatively(HolidayInfo_Base):
                 if cMonth > nMonth:
                     # We have not crossed over into the new week
                     # as found in case 1.
-                    sTime = self.getTime((sCurrYear+1,), startTuple)
-                    eTime = self.getTime((eCurrYear+1,), endTuple)
+                    sTime = self.getTime((sCurrYear + 1,), startTuple)
+                    eTime = self.getTime((eCurrYear + 1,), endTuple)
                 else:
                     # We have already started the new year as found
                     # in case 2. Adjust time normally.
@@ -193,8 +203,8 @@ class HolidayInfo_Relatively(HolidayInfo_Base):
                     # Since the next day is less than the current day,
                     # then we have reached the end of the list and the next
                     # date should be in the proceeding year.
-                    sTime = self.getTime((sCurrYear+1,), startTuple)
-                    eTime = self.getTime((eCurrYear+1,), endTuple)
+                    sTime = self.getTime((sCurrYear + 1,), startTuple)
+                    eTime = self.getTime((eCurrYear + 1,), endTuple)
                 elif sDay == nDay:
                     # Since the next tuple is of the same day, we must check
                     # the time tuples to see if the next time is greater than
@@ -206,8 +216,8 @@ class HolidayInfo_Relatively(HolidayInfo_Base):
                     time2 = (startTuple[3], startTuple[4], startTuple[5])
 
                     if time1 > time2:
-                        sTime = self.getTime((sCurrYear+1,), startTuple)
-                        eTime = self.getTime((eCurrYear+1,), endTuple)
+                        sTime = self.getTime((sCurrYear + 1,), startTuple)
+                        eTime = self.getTime((eCurrYear + 1,), endTuple)
                     else:
                         sTime = self.getTime((sCurrYear,), startTuple)
                         eTime = self.getTime((eCurrYear,), endTuple)
@@ -229,7 +239,7 @@ class HolidayInfo_Relatively(HolidayInfo_Base):
         # We are back to the original element, thus we should
         # schedule it for the next year.
         start = self.currElemIter.current()[0]
-        return self.getTime((sCurrYear+1,), start)
+        return self.getTime((sCurrYear + 1,), start)
 
     ############################################################
     # Method: getUpdatedTuples
@@ -247,16 +257,18 @@ class HolidayInfo_Relatively(HolidayInfo_Base):
             self.initRepMatrix(time.localtime()[0], sTuple[0])
             while(self.weekDaysInMonth[sWeekday][1] < sRepNum):
                 sRepNum -= 1
-            sDay = self.dayForWeekday(time.localtime()[0], sTuple[0], sWeekday, sRepNum)
+            sDay = self.dayForWeekday(
+                time.localtime()[0], sTuple[0], sWeekday, sRepNum)
 
             self.initRepMatrix(time.localtime()[0], eTuple[0])
             while(self.weekDaysInMonth[eWeekday][1] < eRepNum):
                 eRepNum -= 1
-            nDay = self.dayForWeekday(time.localtime()[0], eTuple[0], eWeekday, eRepNum)
-            if(((nDay>sDay) and (eTuple[0] == sTuple[0]) \
-                and ((eTuple[1] - sTuple[1]) <= (nDay-sDay+abs(eWeekday-sWeekday))/7)) \
-                or (eTuple[0] != sTuple[0])):
-                    break
+            nDay = self.dayForWeekday(
+                time.localtime()[0], eTuple[0], eWeekday, eRepNum)
+            if(((nDay > sDay) and (eTuple[0] == sTuple[0])
+                    and ((eTuple[1] - sTuple[1]) <= (nDay - sDay + abs(eWeekday - sWeekday)) / 7))
+                    or (eTuple[0] != sTuple[0])):
+                break
 
             # Handles the case when the end weekday is less than the start
             if(self.weekDaysInMonth[eWeekday][1] > eRepNum):
@@ -265,7 +277,7 @@ class HolidayInfo_Relatively(HolidayInfo_Base):
                 eTuple[0] += 1
                 eTuple[1] = 1
         return sTuple, eTuple
-    
+
     ############################################################
     # Method: dayForWeekday(month, weekday, repNum)
     # Returns the day for a given weekday that has repeated
@@ -275,4 +287,4 @@ class HolidayInfo_Relatively(HolidayInfo_Base):
         monthDays = calendar.monthcalendar(year, month)
         if(monthDays[0][weekday] == 0):
             repNum += 1
-        return monthDays[(repNum-1)][weekday]
+        return monthDays[(repNum - 1)][weekday]

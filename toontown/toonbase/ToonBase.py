@@ -15,12 +15,14 @@ import os
 from toontown.toonbase import TTLocalizer
 from toontown.toonbase import ToontownBattleGlobals
 from toontown.launcher import ToontownDownloadWatcher
-from otp.otpbase import OTPGlobals 
+from otp.otpbase import OTPGlobals
 from settings.Settings import Settings
 from toontown.toonbase import ControlManager as TTControlManager
 from ctypes import cdll
 
 from panda3d.otp import *
+
+
 class ToonBase(OTPBase.OTPBase):
     """ToonBase class"""
 
@@ -32,7 +34,7 @@ class ToonBase(OTPBase.OTPBase):
         """__init__(self)
         ToonBase constructor: create a toon and launch it into the world
         """
-        if not config.GetInt('ignore-user-options',0):
+        if not config.GetInt('ignore-user-options', 0):
             self.settings = Settings()
             self.loadFromSettings()
         else:
@@ -45,7 +47,7 @@ class ToonBase(OTPBase.OTPBase):
                 # because of a graphics card issue. In that case, take
                 # user to the appropriate page.
                 launcher.setPandaErrorCode(7)
-            except:
+            except BaseException:
                 pass
             sys.exit(1)
 
@@ -56,12 +58,14 @@ class ToonBase(OTPBase.OTPBase):
 
         # Toontown doesn't care about dynamic shadows for now.
         self.wantDynamicShadows = 0
-        # this is temporary until we pull in the new launcher code in production
+        # this is temporary until we pull in the new launcher code in
+        # production
         self.exitErrorCode = 0
 
         camera.setPosHpr(0, 0, 0, 0, 0, 0)
-        #TODO when adding settings for this use the settings to grab the FOV, use the globals as default
-        self.camLens.setMinFov(ToontownGlobals.DefaultCameraFov / (4.0/3.0))
+        # TODO when adding settings for this use the settings to grab the FOV,
+        # use the globals as default
+        self.camLens.setMinFov(ToontownGlobals.DefaultCameraFov / (4.0 / 3.0))
         self.camLens.setNearFar(ToontownGlobals.DefaultCameraNear,
                                 ToontownGlobals.DefaultCameraFar)
 
@@ -131,7 +135,8 @@ class ToonBase(OTPBase.OTPBase):
         # self.win.getGsg().enableFrameClear(0, 1)
 
         # Accept the screenshot key
-        self.SCREENSHOT = self.controlManager.getKeyName("HotKeys", ToontownGlobals.HotkeyScreenshot).lower()
+        self.SCREENSHOT = self.controlManager.getKeyName(
+            "HotKeys", ToontownGlobals.HotkeyScreenshot).lower()
 
         self.accept(self.SCREENSHOT, self.takeScreenShot)
 
@@ -156,9 +161,11 @@ class ToonBase(OTPBase.OTPBase):
         self.wantNewSpecies = self.config.GetBool('want-new-species', 0)
 
         # tell panda to ignore repeated key presses
-        self.inactivityTimeout = self.config.GetFloat("inactivity-timeout", ToontownGlobals.KeyboardTimeout)
+        self.inactivityTimeout = self.config.GetFloat(
+            "inactivity-timeout", ToontownGlobals.KeyboardTimeout)
         if self.inactivityTimeout:
-            self.notify.debug('Enabling Panda timeout: %s' % self.inactivityTimeout)
+            self.notify.debug(
+                f'Enabling Panda timeout: {self.inactivityTimeout}')
             self.mouseWatcherNode.setInactivityTimeout(self.inactivityTimeout)
 
         # minigame debug flags
@@ -224,8 +231,8 @@ class ToonBase(OTPBase.OTPBase):
         # cloud platforms in estates
         self.cloudPlatformsEnabled = self.config.GetBool(
             'estate-clouds', 0)
-        
-        # Tutorial at the beginning of the game 
+
+        # Tutorial at the beginning of the game
         self.wantTutorial = self.config.GetBool('want-tutorial', 0)
 
         # greySpacing Allowed?
@@ -249,14 +256,14 @@ class ToonBase(OTPBase.OTPBase):
         self.killInterestResponse = self.config.GetBool(
             'kill-interest-response', 0)
 
-        #whitelist text styles
+        # whitelist text styles
         tpMgr = TextPropertiesManager.getGlobalPtr()
 
         WLDisplay = TextProperties()
         WLDisplay.setSlant(0.3)
 
         WLEnter = TextProperties()
-        WLEnter.setTextColor(1.0,0.0,0.0,1)
+        WLEnter.setTextColor(1.0, 0.0, 0.0, 1)
 
         tpMgr.setProperties('WLDisplay', WLDisplay)
         tpMgr.setProperties('WLEnter', WLEnter)
@@ -265,13 +272,20 @@ class ToonBase(OTPBase.OTPBase):
         cogGray.setShadow(0.01)
         tpMgr.setProperties('cogGray', cogGray)
         del tpMgr
-        self.MOVE_FORWARD = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyUp).lower()
-        self.MOVE_BACKWARDS = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyDown).lower()
-        self.MOVE_LEFT = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyLeft).lower()
-        self.MOVE_RIGHT = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyRight).lower()
-        self.JUMP = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyJump).lower()
-        self.THROW = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyThrow).lower()
-        self.SPRINT = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeySprint).lower()
+        self.MOVE_FORWARD = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyUp).lower()
+        self.MOVE_BACKWARDS = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyDown).lower()
+        self.MOVE_LEFT = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyLeft).lower()
+        self.MOVE_RIGHT = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyRight).lower()
+        self.JUMP = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyJump).lower()
+        self.THROW = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyThrow).lower()
+        self.SPRINT = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeySprint).lower()
         """
         From toontownglobals
         HotkeyBook = 0
@@ -282,12 +296,18 @@ class ToonBase(OTPBase.OTPBase):
         HotkeyScreenshot = 5
         HotkeyChat = 6
         """
-        self.BOOK = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyBook).lower()
-        self.TASKS = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyTasks).lower()
-        self.INVENTORY = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyInventory).lower()
-        self.FRIENDS = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyFriends).lower()
-        self.STREET_MAP = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyMap).lower()
-        self.CHAT = self.controlManager.getKeyName("HotKeys", ToontownGlobals.HotkeyChat).lower()
+        self.BOOK = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyBook).lower()
+        self.TASKS = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyTasks).lower()
+        self.INVENTORY = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyInventory).lower()
+        self.FRIENDS = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyFriends).lower()
+        self.STREET_MAP = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyMap).lower()
+        self.CHAT = self.controlManager.getKeyName(
+            "HotKeys", ToontownGlobals.HotkeyChat).lower()
         self.lastScreenShotTime = globalClock.getRealTime()
         self.accept('InputState-forward', self.__walking)
         self.canScreenShot = 1
@@ -301,7 +321,7 @@ class ToonBase(OTPBase.OTPBase):
         else:
             base.setFrameRateMeter(False)
         #self.resetMusic = self.loader.loadMusic("phase_3/audio/bgm/MIDI_Events_16channels.ogg")
-        self.wantWASD =  base.MOVE_FORWARD != 'arrow_up' and base.MOVE_BACKWARDS != 'arrow_down' and base.MOVE_LEFT != 'arrow_left' and base.MOVE_RIGHT != 'arrow_right'
+        self.wantWASD = base.MOVE_FORWARD != 'arrow_up' and base.MOVE_BACKWARDS != 'arrow_down' and base.MOVE_LEFT != 'arrow_left' and base.MOVE_RIGHT != 'arrow_right'
         self.accept("winow-event", self.windowEvent)
         if not self.win.getGsg().getSupportsBasicShaders():
             self.notify.error("Video driver doesn't support shaders")
@@ -309,28 +329,46 @@ class ToonBase(OTPBase.OTPBase):
             render.setShaderAuto()
             render2d.setShaderAuto()
             render2dp.setShaderAuto()
-        #TODO add gui setting in shticker book
-        self.wantSmoothAnimations = self.settings.getBool('game', 'smooth-animations', False)
+        # TODO add gui setting in shticker book
+        self.wantSmoothAnimations = self.settings.getBool(
+            'game', 'smooth-animations', False)
 
-        self.wantLaffMeterOverHead = self.settings.getBool('game', 'want-laff-meter-over-head', True)
+        self.wantLaffMeterOverHead = self.settings.getBool(
+            'game', 'want-laff-meter-over-head', True)
+
     def reloadControls(self):
         self.ignore(self.SCREENSHOT)
-        self.MOVE_FORWARD = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyUp).lower()
-        self.MOVE_BACKWARDS = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyDown).lower()
-        self.MOVE_LEFT = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyLeft).lower()
-        self.MOVE_RIGHT = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyRight).lower()
-        self.JUMP = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyJump).lower()
-        self.THROW = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyThrow).lower()
-        self.SPRINT = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeySprint).lower()
-        self.BOOK = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyBook).lower()
-        self.TASKS = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyTasks).lower()
-        self.INVENTORY = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyInventory).lower()
-        self.FRIENDS = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyFriends).lower()
-        self.STREET_MAP = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyMap).lower()
-        self.CHAT = self.controlManager.getKeyName("HotKeys", ToontownGlobals.HotkeyChat).lower()
-        self.SCREENSHOT = self.controlManager.getKeyName("HotKeys", ToontownGlobals.HotkeyScreenshot).lower()
+        self.MOVE_FORWARD = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyUp).lower()
+        self.MOVE_BACKWARDS = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyDown).lower()
+        self.MOVE_LEFT = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyLeft).lower()
+        self.MOVE_RIGHT = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyRight).lower()
+        self.JUMP = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyJump).lower()
+        self.THROW = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyThrow).lower()
+        self.SPRINT = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeySprint).lower()
+        self.BOOK = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyBook).lower()
+        self.TASKS = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyTasks).lower()
+        self.INVENTORY = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyInventory).lower()
+        self.FRIENDS = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyFriends).lower()
+        self.STREET_MAP = self.controlManager.getKeyName(
+            'HotKeys', ToontownGlobals.HotkeyMap).lower()
+        self.CHAT = self.controlManager.getKeyName(
+            "HotKeys", ToontownGlobals.HotkeyChat).lower()
+        self.SCREENSHOT = self.controlManager.getKeyName(
+            "HotKeys", ToontownGlobals.HotkeyScreenshot).lower()
         self.accept(self.SCREENSHOT, self.takeScreenShot)
-        self.wantWASD =  base.MOVE_FORWARD != 'arrow_up' and base.MOVE_BACKWARDS != 'arrow_down' and base.MOVE_LEFT != 'arrow_left' and base.MOVE_RIGHT != 'arrow_right'
+        self.wantWASD = base.MOVE_FORWARD != 'arrow_up' and base.MOVE_BACKWARDS != 'arrow_down' and base.MOVE_LEFT != 'arrow_left' and base.MOVE_RIGHT != 'arrow_right'
+
     def disableShowbaseMouse(self):
         # Hack:
         # Enable drive mode but turn it off, and reset the camera
@@ -357,11 +395,11 @@ class ToonBase(OTPBase.OTPBase):
     def takeScreenShot(self):
         if not os.path.exists('user/screenshots/'):
             os.mkdir('user')
-            os.mkdir('user/logs')   
+            os.mkdir('user/logs')
         namePrefix = 'screenshot'
         namePrefix = 'user/screenshots/' + namePrefix
 
-        #requires that you have at least 1 second between shots
+        # requires that you have at least 1 second between shots
         timedif = globalClock.getRealTime() - self.lastScreenShotTime
         if self.glitchCount > 10 and self.walking:
             return
@@ -369,7 +407,7 @@ class ToonBase(OTPBase.OTPBase):
             self.glitchCount += 1
             return
         if not hasattr(self, "localAvatar"):
-            self.screenshot(namePrefix = namePrefix)
+            self.screenshot(namePrefix=namePrefix)
             self.lastScreenShotTime = globalClock.getRealTime()
             return
         coordOnScreen = self.config.GetBool('screenshot-coords', 0)
@@ -377,7 +415,7 @@ class ToonBase(OTPBase.OTPBase):
         # avoid problems where the toon can run through collision barriers
         # if they hold down arrow_up while saving screenshots because
         # scrnshot saves take so long.
-        self.localAvatar.stopThisFrame=1
+        self.localAvatar.stopThisFrame = 1
 
         ctext = self.localAvatar.getAvPosStr()
 
@@ -388,31 +426,31 @@ class ToonBase(OTPBase.OTPBase):
             # add coord text to lower left corner so our user's bug report
             # screenshots contain better info
             coordTextLabel = DirectLabel(
-                pos = (-0.81,0.001,-0.87),
-                text = ctext,
-                text_scale = 0.05,
-                text_fg = VBase4(1.0,1.0,1.0,1.0),
-                text_bg = (0,0,0,0),
-                text_shadow = (0,0,0,1),
-                relief = None)
+                pos=(-0.81, 0.001, -0.87),
+                text=ctext,
+                text_scale=0.05,
+                text_fg=VBase4(1.0, 1.0, 1.0, 1.0),
+                text_bg=(0, 0, 0, 0),
+                text_shadow=(0, 0, 0, 1),
+                relief=None)
             # make sure it appears in front of arrows and other gui items
-            coordTextLabel.setBin("gui-popup",0)
+            coordTextLabel.setBin("gui-popup", 0)
             strTextLabel = None
             if len(self.screenshotStr):
                 strTextLabel = DirectLabel(
-                    pos = (0.,0.001,0.9),
-                    text = self.screenshotStr,
-                    text_scale = 0.05,
-                    text_fg = VBase4(1.0,1.0,1.0,1.0),
-                    text_bg = (0,0,0,0),
-                    text_shadow = (0,0,0,1),
-                    relief = None)
+                    pos=(0., 0.001, 0.9),
+                    text=self.screenshotStr,
+                    text_scale=0.05,
+                    text_fg=VBase4(1.0, 1.0, 1.0, 1.0),
+                    text_bg=(0, 0, 0, 0),
+                    text_shadow=(0, 0, 0, 1),
+                    relief=None)
                 # make sure it appears in front of arrows and other gui items
-                strTextLabel.setBin("gui-popup",0)
+                strTextLabel.setBin("gui-popup", 0)
 
         self.graphicsEngine.renderFrame()
-        self.screenshot(namePrefix = namePrefix,
-                        imageComment = ctext+' '+self.screenshotStr)
+        self.screenshot(namePrefix=namePrefix,
+                        imageComment=ctext + ' ' + self.screenshotStr)
         self.lastScreenShotTime = globalClock.getRealTime()
 
         if coordOnScreen:
@@ -433,9 +471,12 @@ class ToonBase(OTPBase.OTPBase):
 
         arrow = loader.loadModel('phase_3/models/props/arrow')
         card = loader.loadModel('phase_3/models/props/panel')
-        speech3d = ChatBalloon(loader.loadModel('phase_3/models/props/chatbox').node())
-        thought3d = ChatBalloon(loader.loadModel('phase_3/models/props/chatbox_thought_cutout').node())
-        speech2d = ChatBalloon(loader.loadModel('phase_3/models/props/chatbox_noarrow').node())
+        speech3d = ChatBalloon(loader.loadModel(
+            'phase_3/models/props/chatbox').node())
+        thought3d = ChatBalloon(loader.loadModel(
+            'phase_3/models/props/chatbox_thought_cutout').node())
+        speech2d = ChatBalloon(loader.loadModel(
+            'phase_3/models/props/chatbox_noarrow').node())
 
         chatButtonGui = loader.loadModel("phase_3/models/gui/chat_button_gui")
 
@@ -448,12 +489,24 @@ class ToonBase(OTPBase.OTPBase):
         NametagGlobals.setThoughtBalloon3d(thought3d)
         NametagGlobals.setSpeechBalloon2d(speech2d)
         NametagGlobals.setThoughtBalloon2d(thought3d)
-        NametagGlobals.setPageButton(PGButton.SReady, chatButtonGui.find("**/Horiz_Arrow_UP"))
-        NametagGlobals.setPageButton(PGButton.SDepressed, chatButtonGui.find("**/Horiz_Arrow_DN"))
-        NametagGlobals.setPageButton(PGButton.SRollover, chatButtonGui.find("**/Horiz_Arrow_Rllvr"))
-        NametagGlobals.setQuitButton(PGButton.SReady, chatButtonGui.find("**/CloseBtn_UP"))
-        NametagGlobals.setQuitButton(PGButton.SDepressed, chatButtonGui.find("**/CloseBtn_DN"))
-        NametagGlobals.setQuitButton(PGButton.SRollover, chatButtonGui.find("**/CloseBtn_Rllvr"))
+        NametagGlobals.setPageButton(
+            PGButton.SReady,
+            chatButtonGui.find("**/Horiz_Arrow_UP"))
+        NametagGlobals.setPageButton(
+            PGButton.SDepressed,
+            chatButtonGui.find("**/Horiz_Arrow_DN"))
+        NametagGlobals.setPageButton(
+            PGButton.SRollover,
+            chatButtonGui.find("**/Horiz_Arrow_Rllvr"))
+        NametagGlobals.setQuitButton(
+            PGButton.SReady,
+            chatButtonGui.find("**/CloseBtn_UP"))
+        NametagGlobals.setQuitButton(
+            PGButton.SDepressed,
+            chatButtonGui.find("**/CloseBtn_DN"))
+        NametagGlobals.setQuitButton(
+            PGButton.SRollover,
+            chatButtonGui.find("**/CloseBtn_Rllvr"))
 
         rolloverSound = DirectGuiGlobals.getDefaultRolloverSound()
         if rolloverSound:
@@ -470,8 +523,8 @@ class ToonBase(OTPBase.OTPBase):
         # messages along the margins.  This should be in front of many
         # things, but not all things.
         self.marginManager = MarginManager()
-        self.margins = \
-          self.aspect2d.attachNewNode(self.marginManager, DirectGuiGlobals.MIDGROUND_SORT_INDEX + 1)
+        self.margins = self.aspect2d.attachNewNode(
+            self.marginManager, DirectGuiGlobals.MIDGROUND_SORT_INDEX + 1)
 
         # And define a bunch of cells along the margins.
         mm = self.marginManager
@@ -488,9 +541,20 @@ class ToonBase(OTPBase.OTPBase):
             mm.addGridCell(4.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
         ]
         self.rightCells = [
-            mm.addGridCell(5, 2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(5, 1, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
-        ]
+            mm.addGridCell(
+                5,
+                2,
+                base.a2dLeft,
+                base.a2dRight,
+                base.a2dBottom,
+                base.a2dTop),
+            mm.addGridCell(
+                5,
+                1,
+                base.a2dLeft,
+                base.a2dRight,
+                base.a2dBottom,
+                base.a2dTop)]
         self.oldAspectRatio = self.get_aspect_ratio()
 
     def windowEvent(self, win):
@@ -499,7 +563,7 @@ class ToonBase(OTPBase.OTPBase):
 
     def reloadNametagCells(self, win):
 
-        if  self.oldAspectRatio == self.get_aspect_ratio():
+        if self.oldAspectRatio == self.get_aspect_ratio():
             return
 
         mm = self.marginManager
@@ -522,9 +586,20 @@ class ToonBase(OTPBase.OTPBase):
             mm.addGridCell(4.5, 0, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
         ]
         self.rightCells = [
-            mm.addGridCell(5, 2, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
-            mm.addGridCell(5, 1, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)
-        ]
+            mm.addGridCell(
+                5,
+                2,
+                base.a2dLeft,
+                base.a2dRight,
+                base.a2dBottom,
+                base.a2dTop),
+            mm.addGridCell(
+                5,
+                1,
+                base.a2dLeft,
+                base.a2dRight,
+                base.a2dBottom,
+                base.a2dTop)]
         self.oldAspectRatio = self.get_aspect_ratio()
 
     def setCellsAvailable(self, cell_list, available):
@@ -554,11 +629,14 @@ class ToonBase(OTPBase.OTPBase):
         # force the screen to update
         base.graphicsEngine.renderFrame()
 
-        self.downloadWatcher = ToontownDownloadWatcher.ToontownDownloadWatcher(TTLocalizer.LauncherPhaseNames)
+        self.downloadWatcher = ToontownDownloadWatcher.ToontownDownloadWatcher(
+            TTLocalizer.LauncherPhaseNames)
         if launcher.isDownloadComplete():
             self.cleanupDownloadWatcher()
         else:
-            self.acceptOnce("launcherAllPhasesComplete", self.cleanupDownloadWatcher)
+            self.acceptOnce(
+                "launcherAllPhasesComplete",
+                self.cleanupDownloadWatcher)
         # Find the right server
         gameServer = os.environ.get('TTG_GAMESERVER', '52.147.202.54')
 
@@ -593,7 +671,7 @@ class ToonBase(OTPBase.OTPBase):
                     port = int(arg)
                     url = URLSpec(serverURL)
                     url.setPort(port)
-                except:
+                except BaseException:
                     url = URLSpec(arg, 1)
 
                 if url != serverURL:
@@ -606,9 +684,8 @@ class ToonBase(OTPBase.OTPBase):
         self.ignore('InputState-forward')
         print("ignoring InputState-forward")
 
-
-    def exitShow(self, errorCode = None):
-        self.notify.info("Exiting Toontown: errorCode = %s" % errorCode)
+    def exitShow(self, errorCode=None):
+        self.notify.info(f"Exiting Toontown: errorCode = {errorCode}")
         if errorCode:
             # tell the activeX control we exited cleanly
             launcher.setPandaErrorCode(errorCode)
@@ -625,9 +702,10 @@ class ToonBase(OTPBase.OTPBase):
                 OTPLauncherGlobals.ExitEnableChat: "chat",
                 OTPLauncherGlobals.ExitSetParentPassword: "setparentpassword",
                 OTPLauncherGlobals.ExitPurchase: "purchase",
-                }
+            }
             if code in exitCode2exitPage:
                 launcher.setRegistry("EXIT_PAGE", exitCode2exitPage[code])
+
     def getExitErrorCode(self):
         return self.exitErrorCode
 
@@ -641,12 +719,13 @@ class ToonBase(OTPBase.OTPBase):
         # out (if we have a toon).
         try:
             self.localAvatar.d_setAnimState('TeleportOut', 1)
-        except:
+        except BaseException:
             pass
 
         # Tell the AI (if we have one) why we're going down.
         if self.cr.timeManager:
-            self.cr.timeManager.setDisconnectReason(ToontownGlobals.DisconnectCloseWindow)
+            self.cr.timeManager.setDisconnectReason(
+                ToontownGlobals.DisconnectCloseWindow)
 
         # in case the user has started logging out through the book, reset this flag
         # to indicate that they have forcibly closed the window and will not be going
@@ -656,7 +735,7 @@ class ToonBase(OTPBase.OTPBase):
         # the playgame/login FSMs
         try:
             localAvatar
-        except:
+        except BaseException:
             pass
         else:
             messenger.send('clientLogout')
@@ -676,7 +755,8 @@ class ToonBase(OTPBase.OTPBase):
         launcher.setPandaErrorCode(14)
 
         if self.cr.timeManager:
-            self.cr.timeManager.setDisconnectReason(ToontownGlobals.DisconnectGraphicsError)
+            self.cr.timeManager.setDisconnectReason(
+                ToontownGlobals.DisconnectGraphicsError)
 
         # Disconnect cleanly from the server
         self.cr.sendDisconnect()
@@ -685,31 +765,56 @@ class ToonBase(OTPBase.OTPBase):
     def getShardPopLimits(self):
         # returns (low, mid, high)
         if self.cr.productName == "JP":
-            return (config.GetInt("shard-low-pop", ToontownGlobals.LOW_POP_JP),
-                    config.GetInt("shard-mid-pop", ToontownGlobals.MID_POP_JP),
-                    config.GetInt("shard-high-pop", ToontownGlobals.HIGH_POP_JP),)
+            return (
+                config.GetInt(
+                    "shard-low-pop",
+                    ToontownGlobals.LOW_POP_JP),
+                config.GetInt(
+                    "shard-mid-pop",
+                    ToontownGlobals.MID_POP_JP),
+                config.GetInt(
+                    "shard-high-pop",
+                    ToontownGlobals.HIGH_POP_JP),
+            )
         elif self.cr.productName in ["BR", "FR"]:
-            return (config.GetInt("shard-low-pop", ToontownGlobals.LOW_POP_INTL),
-                    config.GetInt("shard-mid-pop", ToontownGlobals.MID_POP_INTL),
-                    config.GetInt("shard-high-pop", ToontownGlobals.HIGH_POP_INTL),)
+            return (
+                config.GetInt(
+                    "shard-low-pop",
+                    ToontownGlobals.LOW_POP_INTL),
+                config.GetInt(
+                    "shard-mid-pop",
+                    ToontownGlobals.MID_POP_INTL),
+                config.GetInt(
+                    "shard-high-pop",
+                    ToontownGlobals.HIGH_POP_INTL),
+            )
         else:
             return (config.GetInt("shard-low-pop", ToontownGlobals.LOW_POP),
                     config.GetInt("shard-mid-pop", ToontownGlobals.MID_POP),
                     config.GetInt("shard-high-pop", ToontownGlobals.HIGH_POP),)
 
-    def playMusic(self, music, looping = 0, interrupt = 1, volume = 1, time = 0.0):
+    def playMusic(self, music, looping=0, interrupt=1, volume=1, time=0.0):
         # play the reset midi file to kill stuck notes
         #OTPBase.OTPBase.playMusic(self, self.resetMusic)
-        OTPBase.OTPBase.playMusic(self, music, looping, interrupt, volume, time)
+        OTPBase.OTPBase.playMusic(
+            self, music, looping, interrupt, volume, time)
 
     def playSfx(
-            self, sfx, looping = 0, interrupt = 1, volume = 1,
-            time = 0.0, node = None, listener = None, cutoff = None):
+            self, sfx, looping=0, interrupt=1, volume=1,
+            time=0.0, node=None, listener=None, cutoff=None):
         # This goes through a special player for potential localization
-        return self.sfxPlayer.playSfx(sfx, looping, interrupt, volume  , time, node, listener, cutoff)
+        return self.sfxPlayer.playSfx(
+            sfx,
+            looping,
+            interrupt,
+            volume,
+            time,
+            node,
+            listener,
+            cutoff)
 
     def isMainWindowOpen(self):
-        if self.win != None:
+        if self.win is not None:
             return self.win.isValid()
         return 0
 
@@ -718,11 +823,19 @@ class ToonBase(OTPBase.OTPBase):
             if base.localAvatar.getState() == 'Sad':
                 base.localAvatar.currentSpeed = OTPGlobals.ToonForwardSadSprintSpeed
                 base.localAvatar.currentReverseSpeed = OTPGlobals.ToonReverseSprintSpeed
-                base.localAvatar.controlManager.setSpeeds(OTPGlobals.ToonForwardSadSprintSpeed, OTPGlobals.ToonJumpForce, OTPGlobals.ToonReverseSprintSpeed, OTPGlobals.ToonRotateSpeed)
+                base.localAvatar.controlManager.setSpeeds(
+                    OTPGlobals.ToonForwardSadSprintSpeed,
+                    OTPGlobals.ToonJumpForce,
+                    OTPGlobals.ToonReverseSprintSpeed,
+                    OTPGlobals.ToonRotateSpeed)
             else:
                 base.localAvatar.currentSpeed = OTPGlobals.ToonForwardSprintSpeed
                 base.localAvatar.currentReverseSpeed = OTPGlobals.ToonReverseSprintSpeed
-                base.localAvatar.controlManager.setSpeeds(OTPGlobals.ToonForwardSprintSpeed, OTPGlobals.ToonJumpForce, OTPGlobals.ToonReverseSprintSpeed, OTPGlobals.ToonRotateSpeed)
+                base.localAvatar.controlManager.setSpeeds(
+                    OTPGlobals.ToonForwardSprintSpeed,
+                    OTPGlobals.ToonJumpForce,
+                    OTPGlobals.ToonReverseSprintSpeed,
+                    OTPGlobals.ToonRotateSpeed)
             self.isSprinting = 1
         else:
             if self.isSprinting == 1:
@@ -732,40 +845,77 @@ class ToonBase(OTPBase.OTPBase):
         if hasattr(base, 'localAvatar'):
             base.localAvatar.currentSpeed = OTPGlobals.ToonForwardSpeed
             base.localAvatar.currentReverseSpeed = OTPGlobals.ToonReverseSpeed
-            base.localAvatar.controlManager.setSpeeds(OTPGlobals.ToonForwardSpeed, OTPGlobals.ToonJumpForce, OTPGlobals.ToonReverseSpeed, OTPGlobals.ToonRotateSpeed)
+            base.localAvatar.controlManager.setSpeeds(
+                OTPGlobals.ToonForwardSpeed,
+                OTPGlobals.ToonJumpForce,
+                OTPGlobals.ToonReverseSpeed,
+                OTPGlobals.ToonRotateSpeed)
             self.isSprinting = 0
 
     def loadFromSettings(self):
         if not config.GetInt('ignore-user-options', 0):
-            wantCustomControls = self.settings.getBool('game', 'customControls', False)
+            wantCustomControls = self.settings.getBool(
+                'game', 'customControls', False)
             controls = self.settings.getOption('game', 'controls', {})
             fullscreen = self.settings.getBool('game', 'fullscreen', False)
             music = self.settings.getBool('game', 'music', True)
             sfx = self.settings.getBool('game', 'sfx', True)
-            toonChatSounds = self.settings.getBool('game', 'toonChatSounds', True)
+            toonChatSounds = self.settings.getBool(
+                'game', 'toonChatSounds', True)
             musicVolume = self.settings.getFloat('game', 'musicVolume', 1.0)
             sfxVolume = self.settings.getFloat('game', 'sfxVolume', 1.0)
-            res = self.settings.getList('game', 'resolution', [cdll.user32.GetSystemMetrics(0)*5/6, cdll.user32.GetSystemMetrics(1)*5/6])
-            smoothAnimations = self.settings.getBool('game', 'smooth-animations', False)
+            res = self.settings.getList('game', 'resolution', [cdll.user32.GetSystemMetrics(
+                0) * 5 / 6, cdll.user32.GetSystemMetrics(1) * 5 / 6])
+            smoothAnimations = self.settings.getBool(
+                'game', 'smooth-animations', False)
             antialiasing = self.settings.getBool('game', 'antialiasing', 0)
-            wantLaffMeterOverHead = self.settings.getBool('game', 'want-laff-meter-over-head', True)
+            wantLaffMeterOverHead = self.settings.getBool(
+                'game', 'want-laff-meter-over-head', True)
             if antialiasing:
-                loadPrcFileData('toonBase Settings Framebuffer MSAA', 'framebuffer-multisample 1')
-                loadPrcFileData('toonBase Settings MSAA Level', 'multisamples %i' % antialiasing)
+                loadPrcFileData(
+                    'toonBase Settings Framebuffer MSAA',
+                    'framebuffer-multisample 1')
+                loadPrcFileData(
+                    'toonBase Settings MSAA Level',
+                    'multisamples %i' %
+                    antialiasing)
             else:
-                self.settings.updateSetting('game', 'antialiasing', antialiasing)
-                loadPrcFileData('toonBase Settings Framebuffer MSAA', 'framebuffer-multisample 0')
-            loadPrcFileData('toonBase Settings Window Res', 'win-size %s %s' % (res[0], res[1]))
-            loadPrcFileData('toonBase Settings Window FullScreen', 'fullscreen %s' % fullscreen)
-            loadPrcFileData('toonBase Settings Music Active', 'audio-music-active %s' % music)
-            loadPrcFileData('toonBase Settings Sound Active', 'audio-sfx-active %s' % sfx)
-            loadPrcFileData('toonBase Settings Music Volume', 'audio-master-music-volume %s' % musicVolume)
-            loadPrcFileData('toonBase Settings Sfx Volume', 'audio-master-sfx-volume %s' % sfxVolume)
-            loadPrcFileData('toonBase Settings Toon Chat Sounds', 'toon-chat-sounds %s' % toonChatSounds)
-            loadPrcFileData(f'toonBase Settings Custom Controls', 'customControls {wantCustomControls}')
-            loadPrcFileData(f'toonBase Settings Controls', 'controls {controls}' )
-            loadPrcFileData(f'toonBase Settings smooth animations', 'smooth animations: {smoothAnimations}' )
-            loadPrcFileData(f'toonBase Settings Laff Meter Over Head', 'laff-meter-overhead: {wantLaffMeterOverHead}' )
+                self.settings.updateSetting(
+                    'game', 'antialiasing', antialiasing)
+                loadPrcFileData(
+                    'toonBase Settings Framebuffer MSAA',
+                    'framebuffer-multisample 0')
+            loadPrcFileData(
+                'toonBase Settings Window Res', f'win-size {res[0]} {res[1]}')
+            loadPrcFileData(
+                'toonBase Settings Window FullScreen',
+                f'fullscreen {fullscreen}')
+            loadPrcFileData(
+                'toonBase Settings Music Active',
+                f'audio-music-active {music}')
+            loadPrcFileData(
+                'toonBase Settings Sound Active',
+                f'audio-sfx-active {sfx}')
+            loadPrcFileData(
+                'toonBase Settings Music Volume',
+                f'audio-master-music-volume {musicVolume}')
+            loadPrcFileData(
+                'toonBase Settings Sfx Volume',
+                f'audio-master-sfx-volume {sfxVolume}')
+            loadPrcFileData(
+                'toonBase Settings Toon Chat Sounds',
+                f'toon-chat-sounds {toonChatSounds}')
+            loadPrcFileData(
+                f'toonBase Settings Custom Controls',
+                'customControls {wantCustomControls}')
+            loadPrcFileData(
+                f'toonBase Settings Controls',
+                'controls {controls}')
+            loadPrcFileData(
+                f'toonBase Settings smooth animations',
+                'smooth animations: {smoothAnimations}')
+            loadPrcFileData(
+                f'toonBase Settings Laff Meter Over Head',
+                'laff-meter-overhead: {wantLaffMeterOverHead}')
 
             self.settings.loadFromSettings()
-

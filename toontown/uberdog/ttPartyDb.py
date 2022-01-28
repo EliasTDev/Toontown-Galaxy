@@ -9,17 +9,18 @@ import MySQLdb.constants.CR
 from direct.directnotify import DirectNotifyGlobal
 from toontown.uberdog import ttSQL
 from toontown.parties import PartyGlobals
-from toontown.parties.PartyGlobals import PartyStatus,InviteTheme
+from toontown.parties.PartyGlobals import PartyStatus, InviteTheme
 
 SERVER_GONE_ERROR = MySQLdb.constants.CR.SERVER_GONE_ERROR
 SERVER_LOST = MySQLdb.constants.CR.SERVER_LOST
+
 
 class ttPartyDb:
     """Based on sbMaildb.py in $OTP/src/switchboard."""
 
     notify = DirectNotifyGlobal.directNotify.newCategory("ttPartyDb")
-    
-    def __init__(self,host,port,user,passwd,db):
+
+    def __init__(self, host, port, user, passwd, db):
         self.sqlAvailable = True
         self.host = host
         self.port = port
@@ -34,35 +35,41 @@ class ttPartyDb:
                                       password=passwd,
                                       )
         except MySQLdb.OperationalError as e:
-            self.notify.warning("Failed to connect to MySQL db=%s at %s:%d.  ttMaildb DB is disabled."%(db,host,port))
-            self.notify.warning("Error detail: %s"%str(e))
+            self.notify.warning(
+                "Failed to connect to MySQL db=%s at %s:%d.  ttMaildb DB is disabled." %
+                (db, host, port))
+            self.notify.warning(f"Error detail: {str(e)}")
             self.sqlAvailable = False
             return
 
-        self.notify.info("Connected to maildb=%s at %s:%d."%(db,host,port))
+        self.notify.info("Connected to maildb=%s at %s:%d." % (db, host, port))
 
-        #temp hack for initial dev, create DB structure if it doesn't exist already
+        # temp hack for initial dev, create DB structure if it doesn't exist
+        # already
         cursor = self.db.cursor()
         try:
-            cursor.execute("CREATE DATABASE `%s`"%self.dbname)
+            cursor.execute(f"CREATE DATABASE `{self.dbname}`")
             if __debug__:
-                ttPartyDb.notify.info("Database '%s' did not exist, created a new one!"%self.dbname)
+                ttPartyDb.notify.info(
+                    f"Database '{self.dbname}' did not exist, created a new one!")
         except MySQLdb.ProgrammingError as e:
             # ttPartyDb.notify.info('%s' % str(e))
             pass
         except MySQLdb.OperationalError as e:
-            ttPartyDb.notify.info('%s' % str(e))            
+            ttPartyDb.notify.info(f'{str(e)}')
             pass
 
-        cursor.execute("USE `%s`"%self.dbname)
+        cursor.execute(f"USE `{self.dbname}`")
         if __debug__:
-            ttPartyDb.notify.debug("Using database '%s'"%self.dbname)
+            ttPartyDb.notify.debug(f"Using database '{self.dbname}'")
         try:
             # well if we're creating the party table again,
-            # might as well create the party status lookup table for the benefit of database reporting
+            # might as well create the party status lookup table for the
+            # benefit of database reporting
             cursor.execute("Show tables like 'ttPartyStatus';")
             if not cursor.rowcount:
-                # we know the ttPartyStatus table doesn't exist, create it again
+                # we know the ttPartyStatus table doesn't exist, create it
+                # again
                 cursor.execute("""
                 DROP TABLE IF EXISTS ttPartyStatus;
                 """)
@@ -71,7 +78,7 @@ class ttPartyDb:
                 CREATE TABLE ttPartyStatus(
                   statusId      TINYINT NOT NULL,
                   description   VARCHAR(20) NOT NULL,
-                  lastupdate    TIMESTAMP  NOT NULL 
+                  lastupdate    TIMESTAMP  NOT NULL
                                       DEFAULT   CURRENT_TIMESTAMP
                                       ON UPDATE CURRENT_TIMESTAMP,
                   PRIMARY KEY (statusId),
@@ -80,13 +87,15 @@ class ttPartyDb:
                 ENGINE=Innodb
                 DEFAULT CHARSET=utf8;
                 """)
-                # this ensure that the table values come directly from PartyGlobals.PartyStatus
+                # this ensure that the table values come directly from
+                # PartyGlobals.PartyStatus
                 for index in range(len(PartyGlobals.PartyStatus)):
-                    cursor.execute(\
+                    cursor.execute(
                         "INSERT INTO ttPartyStatus(statusId, description) VALUES (%d, '%s')" %
-                    (index, PartyGlobals.PartyStatus.getString(index)))
+                        (index, PartyGlobals.PartyStatus.getString(index)))
 
-            # TODO is it better to do a show tables than to do a try create Table except block?
+            # TODO is it better to do a show tables than to do a try create
+            # Table except block?
             cursor.execute("""
             CREATE TABLE ttParty (
               partyId             BIGINT     NOT NULL AUTO_INCREMENT,
@@ -99,16 +108,16 @@ class ttPartyDb:
               decorations         VARBINARY(252),
               statusId              TINYINT default 0,
               creationTime          TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
-              lastupdate          TIMESTAMP  NOT NULL 
+              lastupdate          TIMESTAMP  NOT NULL
                                   DEFAULT   CURRENT_TIMESTAMP
                                   ON UPDATE CURRENT_TIMESTAMP,
 
               PRIMARY KEY  (partyId),
               INDEX idx_hostId (hostId),
               INDEX idx_statusId(statusId)
-            ) 
-            ENGINE=InnoDB 
-            DEFAULT CHARSET=utf8;            
+            )
+            ENGINE=InnoDB
+            DEFAULT CHARSET=utf8;
 
             """)
 
@@ -126,30 +135,35 @@ class ttPartyDb:
             # lastupdate 4 bytes
             # TOTAL = 539 bytes
             if __debug__:
-                ttPartyDb.notify.info("Table ttParty did not exist, created a new one!")
+                ttPartyDb.notify.info(
+                    "Table ttParty did not exist, created a new one!")
         except MySQLdb.OperationalError as e:
-            pass            
+            pass
 
         try:
             cursor = self.db.cursor()
-            cursor.execute("USE `%s`"%self.dbname)
-            self.notify.debug("Using database '%s'"%self.dbname)
-        except:
-            self.notify.debug("%s database not found, ttPartydb not active."%self.dbname)
+            cursor.execute(f"USE `{self.dbname}`")
+            self.notify.debug(f"Using database '{self.dbname}'")
+        except BaseException:
+            self.notify.debug(
+                f"{self.dbname} database not found, ttPartydb not active.")
             self.sqlAvailable = False
-
 
     def reconnect(self):
         self.notify.debug("MySQL server was missing, attempting to reconnect.")
-        try: self.db.close()
-        except: pass
+        try:
+            self.db.close()
+        except BaseException:
+            pass
         self.db = MySQLdb.connect(host=self.host,
                                   port=self.port,
                                   user=self.user,
                                   password=self.passwd)
         cursor = self.db.cursor()
-        cursor.execute("USE `%s`"%self.dbname)
-        self.notify.debug("Reconnected to MySQL server at %s:%d."%(self.host,self.port))
+        cursor.execute(f"USE `{self.dbname}`")
+        self.notify.debug(
+            "Reconnected to MySQL server at %s:%d." %
+            (self.host, self.port))
 
     def disconnect(self):
         if not self.sqlAvailable:
@@ -164,38 +178,59 @@ class ttPartyDb:
         if not self.sqlAvailable:
             self.notify.debug("sqlAvailable was false when calling getParty")
             return ()
-        
+
         cursor = MySQLdb.cursors.DictCursor(self.db)
         try:
-            cursor.execute("USE `%s`"%self.dbname)
-            cursor.execute(ttSQL.getPartySELECT,(partyId,))
+            cursor.execute(f"USE `{self.dbname}`")
+            cursor.execute(ttSQL.getPartySELECT, (partyId,))
             res = cursor.fetchall()
-            self.notify.debug("Select was successful in ttMaildb, returning %s" % str(res))
+            self.notify.debug(
+                f"Select was successful in ttMaildb, returning {str(res)}")
             return res
-        
+
         except MySQLdb.OperationalError as e:
             if isRetry:
-                self.notify.warning("Error on getParty retry. Giving up:\n%s" % str(e))
+                self.notify.warning(
+                    f"Error on getParty retry. Giving up:\n{str(e)}")
                 return ()
             elif e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
-                return self.getParty(partyId,True)
+                return self.getParty(partyId, True)
             else:
-                self.notify.warning("Unknown error in getParty, retrying:\n%s" % str(e))
+                self.notify.warning(
+                    f"Unknown error in getParty, retrying:\n{str(e)}")
                 self.reconnect()
-                return self.getParty(partyId,True)
+                return self.getParty(partyId, True)
         except Exception as e:
-            self.notify.warning("Unknown error in getParty, giving up:\n%s" % str(e))
+            self.notify.warning(
+                f"Unknown error in getParty, giving up:\n{str(e)}")
             return ()
 
-
-    def putParty(self, hostId, startTime, endTime, isPrivate, inviteTheme, activities, decorations, status, isRetry=False):
+    def putParty(
+            self,
+            hostId,
+            startTime,
+            endTime,
+            isPrivate,
+            inviteTheme,
+            activities,
+            decorations,
+            status,
+            isRetry=False):
         """
         Returns False if the operation failed for any reason.
-        
+
         isRetry indicates whether this attempt is a retry or not.
         """
-        self.notify.debug("putParty( hostId=%s, startTime=%s, endTime=%s, isPrivate=%s, inviteTheme=%s, ... status=%s, isRetry=%s )" %(hostId, startTime, endTime, isPrivate, InviteTheme.getString(inviteTheme), PartyStatus.getString(status), isRetry) )
+        self.notify.debug(
+            "putParty( hostId=%s, startTime=%s, endTime=%s, isPrivate=%s, inviteTheme=%s, ... status=%s, isRetry=%s )" %
+            (hostId,
+             startTime,
+             endTime,
+             isPrivate,
+             InviteTheme.getString(inviteTheme),
+             PartyStatus.getString(status),
+             isRetry))
         if not self.sqlAvailable:
             self.notify.warning("sqlAvailable is False in putParty call.")
             return False
@@ -214,35 +249,67 @@ class ttPartyDb:
         countcursor = self.db.cursor()
 
         try:
-            countcursor.execute("USE `%s`"%self.dbname)
-            countcursor.execute(ttSQL.getPartyOfHostMatchingStatusSELECT,(hostId,PartyStatus.Pending))
+            countcursor.execute(f"USE `{self.dbname}`")
+            countcursor.execute(
+                ttSQL.getPartyOfHostMatchingStatusSELECT, (hostId, PartyStatus.Pending))
             if countcursor.rowcount >= PartyGlobals.MaxHostedPartiesPerToon:
-                self.notify.debug("%d can't host another party, over the limit " %(hostId))
+                self.notify.debug(
+                    "%d can't host another party, over the limit " %
+                    (hostId))
                 return False
 
             cursor = MySQLdb.cursors.DictCursor(self.db)
 
-            cursor.execute(ttSQL.putPartyINSERT,
-                           (hostId, startTime, endTime, isPrivate, inviteTheme, activityStr, decorStr, status))
-            self.db.commit() 
+            cursor.execute(
+                ttSQL.putPartyINSERT,
+                (hostId,
+                 startTime,
+                 endTime,
+                 isPrivate,
+                 inviteTheme,
+                 activityStr,
+                 decorStr,
+                 status))
+            self.db.commit()
         except MySQLdb.OperationalError as e:
             if isRetry:
-                self.notify.warning("putParty failed with error '%s' on retry. Giving up." % str(e))
+                self.notify.warning(
+                    f"putParty failed with error '{str(e)}' on retry. Giving up.")
                 return False
             elif e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
-                return self.putParty(hostId, startTime, endTime, isPrivate, inviteTheme, activityStr, decorStr, status, True)
+                return self.putParty(
+                    hostId,
+                    startTime,
+                    endTime,
+                    isPrivate,
+                    inviteTheme,
+                    activityStr,
+                    decorStr,
+                    status,
+                    True)
             else:
-                self.notify.warning("putParty failed with error '%s'. Retrying." % str(e))
+                self.notify.warning(
+                    f"putParty failed with error '{str(e)}'. Retrying.")
                 self.reconnect()
-                return self.putParty(hostId, startTime, endTime, isPrivate, inviteTheme, activityStr, decorStr, status, True)
+                return self.putParty(
+                    hostId,
+                    startTime,
+                    endTime,
+                    isPrivate,
+                    inviteTheme,
+                    activityStr,
+                    decorStr,
+                    status,
+                    True)
         except Exception as e:
-            self.notify.warning("putParty failed with error '%s'. Giving up." % str(e))
+            self.notify.warning(
+                f"putParty failed with error '{str(e)}'. Giving up.")
             return False
         else:
-            return True # if we got this far without an exception, we're good
+            return True  # if we got this far without an exception, we're good
 
-    def deleteParty(self,partyId,isRetry=False):
+    def deleteParty(self, partyId, isRetry=False):
         """
         isRetry indicates whether this attempt is a retry or not.
         """
@@ -252,33 +319,37 @@ class ttPartyDb:
         cursor = MySQLdb.cursors.DictCursor(self.db)
 
         try:
-            cursor.execute("USE `%s`"%self.dbname)
-            cursor.execute(ttSQL.deletePartyDELETE,(messageId, partyId))
+            cursor.execute(f"USE `{self.dbname}`")
+            cursor.execute(ttSQL.deletePartyDELETE, (messageId, partyId))
 
             if cursor.rowcount < 1:
-                self.notify.warning("%d tried to delete party %d which didn't exist or wasn't his!" % (accountId,messageId))
+                self.notify.warning(
+                    "%d tried to delete party %d which didn't exist or wasn't his!" %
+                    (accountId, messageId))
 
             self.db.commit()
-                
+
         except MySQLdb.OperationalError as e:
             if isRetry:
-                self.notify.warning("Error in deleteParty retry, giving up:\n%s" % str(e))
+                self.notify.warning(
+                    f"Error in deleteParty retry, giving up:\n{str(e)}")
                 return
             elif e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
-                self.deleteParty(partyId,True)
+                self.deleteParty(partyId, True)
             else:
-                self.notify.warning("Unnown error in deleteParty, retrying:\n%s" % str(e))
+                self.notify.warning(
+                    f"Unnown error in deleteParty, retrying:\n{str(e)}")
                 self.reconnect()
-                self.deleteParty(partyId,True)
+                self.deleteParty(partyId, True)
         except Exception as e:
-            self.notify.warning("Unknown error in deleteParty, giving up:\n%s" % str(e))
-            return            
-
+            self.notify.warning(
+                f"Unknown error in deleteParty, giving up:\n{str(e)}")
+            return
 
     def dumpPartyTable(self):
         cursor = MySQLdb.cursors.DictCursor(self.db)
-        cursor.execute("USE `%s`"%self.dbname)
+        cursor.execute(f"USE `{self.dbname}`")
         cursor.execute("SELECT * FROM ttPartyDb")
         return cursor.fetchall()
 
@@ -289,73 +360,85 @@ class ttPartyDb:
         time is past it's start time.
         """
         if not self.sqlAvailable:
-            self.notify.debug("sqlAvailable was false when calling getPartiesAvailableToStart")
+            self.notify.debug(
+                "sqlAvailable was false when calling getPartiesAvailableToStart")
             return ()
 
         cursor = MySQLdb.cursors.DictCursor(self.db)
         try:
-            cursor.execute("USE `%s`"%self.dbname)
-            cursor.execute(ttSQL.getPartiesAvailableToStart,(currentTime, PartyGlobals.PartyStatus.Pending))
+            cursor.execute(f"USE `{self.dbname}`")
+            cursor.execute(ttSQL.getPartiesAvailableToStart,
+                           (currentTime, PartyGlobals.PartyStatus.Pending))
             res = cursor.fetchall()
-            # Ok, these parties can start, go ahead and set their status to CanStart
+            # Ok, these parties can start, go ahead and set their status to
+            # CanStart
             self._setPartyStatusToCanStart(res)
             return res
-        
+
         except MySQLdb.OperationalError as e:
             if isRetry:
-                self.notify.warning("Error on getPartiesAvailableToStart retry, giving up:\n%s" % str(e))
+                self.notify.warning(
+                    f"Error on getPartiesAvailableToStart retry, giving up:\n{str(e)}")
                 return ()
             elif e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
                 return self.getPartiesAvailableToStart(currentTime, True)
             else:
-                self.notify.warning("Unknown error in getPartiesAvailableToStart, retrying:\n%s" % str(e))
+                self.notify.warning(
+                    "Unknown error in getPartiesAvailableToStart, retrying:\n%s" %
+                    str(e))
                 self.reconnect()
-                return self.getPartiesAvailableToStart(currentTime,True)
+                return self.getPartiesAvailableToStart(currentTime, True)
         except Exception as e:
-            self.notify.warning("Unknown error in getPartiesAvailableToStart, giving up:\n%s" % str(e))
+            self.notify.warning(
+                f"Unknown error in getPartiesAvailableToStart, giving up:\n{str(e)}")
             return ()
-
 
     def _setPartyStatusToCanStart(self, tupleOfResultDictionaries):
         """ Set the status on the following parties to CanStart """
         for resDict in tupleOfResultDictionaries:
-            self.changePartyStatus(resDict['partyId'], PartyGlobals.PartyStatus.CanStart)
+            self.changePartyStatus(
+                resDict['partyId'],
+                PartyGlobals.PartyStatus.CanStart)
 
-    def getPartiesOfHost(self, hostId, sortedByStartTime = False, isRetry=False):
+    def getPartiesOfHost(self, hostId, sortedByStartTime=False, isRetry=False):
         """
         Returns a tuple, which could be empty.
-        
+
         isRetry indicates whether this attempt is a retry or not.
         """
         if not self.sqlAvailable:
-            self.notify.debug("sqlAvailable was false when calling getPartiesOfHost")
+            self.notify.debug(
+                "sqlAvailable was false when calling getPartiesOfHost")
             return ()
-        
+
         cursor = MySQLdb.cursors.DictCursor(self.db)
         try:
-            cursor.execute("USE `%s`"%self.dbname)            
+            cursor.execute(f"USE `{self.dbname}`")
             if sortedByStartTime:
-                cursor.execute(ttSQL.getPartyOfHostSortedSELECT,(hostId,))                
+                cursor.execute(ttSQL.getPartyOfHostSortedSELECT, (hostId,))
             else:
-                cursor.execute(ttSQL.getPartyOfHostSELECT,(hostId,))
+                cursor.execute(ttSQL.getPartyOfHostSELECT, (hostId,))
             res = cursor.fetchall()
             #self.notify.debug("Select was successful in ttMaildb, returning %s" % str(res))
             return res
-        
+
         except MySQLdb.OperationalError as e:
             if isRetry:
-                self.notify.warning("Error on getPartiesOfHost retry, giving up:\n%s" % str(e))
+                self.notify.warning(
+                    f"Error on getPartiesOfHost retry, giving up:\n{str(e)}")
                 return ()
             elif e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
                 return self.getPartiesOfHost(hostId, sortedByStartTime, True)
             else:
-                self.notify.warning("Unknown error in getPartiesOfHost, retrying:\n%s" % str(e))
+                self.notify.warning(
+                    f"Unknown error in getPartiesOfHost, retrying:\n{str(e)}")
                 self.reconnect()
                 return self.getPartiesOfHost(hostId, sortedByStartTime, True)
         except Exception as e:
-            self.notify.warning("Unknown error in getPartiesOfHost, giving up:\n%s" % str(e))
+            self.notify.warning(
+                f"Unknown error in getPartiesOfHost, giving up:\n{str(e)}")
             return ()
 
     def getPartiesOfHostThatCanStart(self, hostId, isRetry=False):
@@ -364,29 +447,36 @@ class ttPartyDb:
         isRetry indicates whether this attempt is a retry or not.
         """
         if not self.sqlAvailable:
-            self.notify.debug("sqlAvailable was false when calling getPartiesOfHostThatCanStart")
+            self.notify.debug(
+                "sqlAvailable was false when calling getPartiesOfHostThatCanStart")
             return ()
-        
+
         cursor = MySQLdb.cursors.DictCursor(self.db)
         try:
-            cursor.execute("USE `%s`"%self.dbname)            
-            cursor.execute(ttSQL.getPartyOfHostMatchingStatusSELECT,(hostId,PartyGlobals.PartyStatus.CanStart))
+            cursor.execute(f"USE `{self.dbname}`")
+            cursor.execute(ttSQL.getPartyOfHostMatchingStatusSELECT,
+                           (hostId, PartyGlobals.PartyStatus.CanStart))
             res = cursor.fetchall()
             return res
-        
+
         except MySQLdb.OperationalError as e:
             if isRetry:
-                self.notify.warning("Error on getPartiesOfHostThatCanStart retry, giving up:\n%s" % str(e))
+                self.notify.warning(
+                    "Error on getPartiesOfHostThatCanStart retry, giving up:\n%s" %
+                    str(e))
                 return ()
             elif e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
                 return self.getPartiesOfHostThatCanStart(hostId, True)
             else:
-                self.notify.warning("Unknown error in getPartiesOfHostThatCanStart, retrying:\n%s" % str(e))
+                self.notify.warning(
+                    "Unknown error in getPartiesOfHostThatCanStart, retrying:\n%s" %
+                    str(e))
                 self.reconnect()
                 return self.getPartiesOfHostThatCanStart(hostId, True)
         except Exception as e:
-            self.notify.warning("Unknown error in getPartiesOfHostThatCanStart, giving up:\n%s" % str(e))
+            self.notify.warning(
+                f"Unknown error in getPartiesOfHostThatCanStart, giving up:\n{str(e)}")
             return ()
 
     def changePrivate(self, partyId, newPrivateStatus, isRetry=False):
@@ -394,131 +484,156 @@ class ttPartyDb:
         isRetry indicates whether this attempt is a retry or not.
         """
         if not self.sqlAvailable:
-            self.notify.debug("sqlAvailable was false when calling changePrivate")
+            self.notify.debug(
+                "sqlAvailable was false when calling changePrivate")
             return ()
-        
+
         cursor = MySQLdb.cursors.DictCursor(self.db)
         try:
-            cursor.execute("USE `%s`"%self.dbname)
-            cursor.execute(ttSQL.partyPrivateUPDATE,( newPrivateStatus, partyId))
+            cursor.execute(f"USE `{self.dbname}`")
+            cursor.execute(ttSQL.partyPrivateUPDATE,
+                           (newPrivateStatus, partyId))
             self.db.commit()
             res = cursor.fetchall()
             #self.notify.debug("Select was successful in ttMaildb, returning %s" % str(res))
             return res
-        
+
         except MySQLdb.OperationalError as e:
             if isRetry:
-                self.notify.warning("Error on changePrivate retry, giving up:\n%s" % str(e))
+                self.notify.warning(
+                    f"Error on changePrivate retry, giving up:\n{str(e)}")
                 return ()
             elif e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
                 return self.changePrivate(newPrivateStatus, partyId, True)
             else:
-                self.notify.warning("Unknown error in changePrivate, retrying:\n%s" % str(e))
+                self.notify.warning(
+                    f"Unknown error in changePrivate, retrying:\n{str(e)}")
                 self.reconnect()
-                return self.changePrivate( newPrivateStatus, partyId, True)
+                return self.changePrivate(newPrivateStatus, partyId, True)
         except Exception as e:
-            self.notify.warning("Unknown error in changePrivate, giving up:\n%s" % str(e))
-            return ()                
-
+            self.notify.warning(
+                f"Unknown error in changePrivate, giving up:\n{str(e)}")
+            return ()
 
     def changePartyStatus(self, partyId, newPartyStatus, isRetry=False):
         """
         isRetry indicates whether this attempt is a retry or not.
         """
         if not self.sqlAvailable:
-            self.notify.debug("sqlAvailable was false when calling changePartyStatus")
+            self.notify.debug(
+                "sqlAvailable was false when calling changePartyStatus")
             return ()
-        
+
         cursor = MySQLdb.cursors.DictCursor(self.db)
         try:
-            cursor.execute("USE `%s`"%self.dbname)
-            cursor.execute(ttSQL.partyStatusUPDATE,( newPartyStatus, partyId))
+            cursor.execute(f"USE `{self.dbname}`")
+            cursor.execute(ttSQL.partyStatusUPDATE, (newPartyStatus, partyId))
             self.db.commit()
             res = cursor.fetchall()
             #self.notify.debug("Select was successful in ttMaildb, returning %s" % str(res))
             return res
-        
+
         except MySQLdb.OperationalError as e:
             if isRetry:
-                self.notify.warning("Error on changePartyStatus retry, giving up:\n%s" % str(e))
+                self.notify.warning(
+                    f"Error on changePartyStatus retry, giving up:\n{str(e)}")
                 return ()
             elif e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
                 return self.changePartyStatus(newPartyStatus, partyId, True)
             else:
-                self.notify.warning("Unknown error in changePartyStatus, retrying:\n%s" % str(e))
+                self.notify.warning(
+                    f"Unknown error in changePartyStatus, retrying:\n{str(e)}")
                 self.reconnect()
-                return self.changePartyStatus( newPartyStatus, partyId, True)
+                return self.changePartyStatus(newPartyStatus, partyId, True)
         except Exception as e:
-            self.notify.warning("Unknown error in changePartyStatus, giving up:\n%s" % str(e))
+            self.notify.warning(
+                f"Unknown error in changePartyStatus, giving up:\n{str(e)}")
             return ()
 
     def convertListToSQLString(self, partyIds):
         """Convert a list of integers to a string sql recognizes."""
-        # string version of partyIds is so close to what we need, but it adds the L
+        # string version of partyIds is so close to what we need, but it adds
+        # the L
         inClause = "("
-        for index in range(len(partyIds)):                
+        for index in range(len(partyIds)):
             inClause += "%d" % partyIds[index]
             if index < len(partyIds) - 1:
                 inClause += ","
         inClause += ")"
         return inClause
 
-    def getMultipleParties(self, partyIds, sortByStartTime = False, isRetry=False):
+    def getMultipleParties(
+            self,
+            partyIds,
+            sortByStartTime=False,
+            isRetry=False):
         """
         Return all the partyInfo matching the partyIds list,
         It may return nothing if there are no matches.
         isRetry indicates whether this attempt is a retry or not.
         """
         if not self.sqlAvailable:
-            self.notify.debug("sqlAvailable was false when calling getMultipleParties")
+            self.notify.debug(
+                "sqlAvailable was false when calling getMultipleParties")
             return ()
 
         if not partyIds:
             self.notify.debug("empty list in partyIds for getMultipleParties")
             return()
-        
+
         cursor = MySQLdb.cursors.DictCursor(self.db)
         try:
-            cursor.execute("USE `%s`"%self.dbname)
+            cursor.execute(f"USE `{self.dbname}`")
             inClause = self.convertListToSQLString(partyIds)
-            
+
             if sortByStartTime:
                 cursor.execute(ttSQL.getMultiplePartiesSortedSELECT % inClause)
             else:
                 cursor.execute(ttSQL.getMultiplePartiesSELECT % inClause)
             res = cursor.fetchall()
-            self.notify.debug("Select was successful in getMultipleParties, returning %s" % str(res))
+            self.notify.debug(
+                f"Select was successful in getMultipleParties, returning {str(res)}")
             return res
-        
+
         except MySQLdb.OperationalError as e:
             if isRetry:
-                self.notify.warning("Error on getMultipleParties retry. Giving up:\n%s" % str(e))
+                self.notify.warning(
+                    f"Error on getMultipleParties retry. Giving up:\n{str(e)}")
                 return ()
             elif e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
                 return self.getMultipleParties(partyIds, sortByStartTime, True)
             else:
-                self.notify.warning("Unknown error in getMultipleParties, retrying:\n%s" % str(e))
+                self.notify.warning(
+                    f"Unknown error in getMultipleParties, retrying:\n{str(e)}")
                 self.reconnect()
-                return self.getMultipleParties(partyIds,sortByStartTime, True)
+                return self.getMultipleParties(partyIds, sortByStartTime, True)
         except Exception as e:
-            self.notify.warning("Unknown error in getMultipleParties, giving up:\n%s" % str(e))
+            self.notify.warning(
+                f"Unknown error in getMultipleParties, giving up:\n{str(e)}")
             return ()
 
-
-
-    def getPrioritizedParties(self, partyIds, thresholdTime, limit, future, cancelled, isRetry=False):
+    def getPrioritizedParties(
+            self,
+            partyIds,
+            thresholdTime,
+            limit,
+            future,
+            cancelled,
+            isRetry=False):
         """Return parties from the database using the criteria specified in future and cancelled."""
         if not self.sqlAvailable:
-            self.notify.debug("sqlAvailable was false when calling getCancelledFutureParties")
+            self.notify.debug(
+                "sqlAvailable was false when calling getCancelledFutureParties")
             return ()
 
         if not partyIds:
-            self.notify.debug("empty list in partyIds for getCancelledFutureParties")
+            self.notify.debug(
+                "empty list in partyIds for getCancelledFutureParties")
             return()
-        
+
         sqlString = ""
         if future and cancelled:
             sqlString = ttSQL.getCancelledFuturePartiesSELECT
@@ -528,47 +643,64 @@ class ttPartyDb:
             sqlString = ttSQL.getCancelledPastPartiesSELECT
         else:
             sqlString = ttSQL.getNonCancelledPastPartiesSELECT
-            
+
         cursor = MySQLdb.cursors.DictCursor(self.db)
 
         try:
-            cursor.execute("USE `%s`"%self.dbname)
+            cursor.execute(f"USE `{self.dbname}`")
             inClause = self.convertListToSQLString(partyIds)
-            
-            parameters = (inClause, thresholdTime,  str(limit))
+
+            parameters = (inClause, thresholdTime, str(limit))
             execStr = sqlString % parameters
             cursor.execute(execStr)
-             
+
             res = cursor.fetchall()
-            self.notify.debug("Select was successful in getPrioritizedParties, returning %s" % str(res))
-            return res        
-        
+            self.notify.debug(
+                "Select was successful in getPrioritizedParties, returning %s" %
+                str(res))
+            return res
+
         except MySQLdb.OperationalError as e:
             if isRetry:
-                self.notify.warning("Error on getPrioritizedParties retry. Giving up:\n%s" % str(e))
+                self.notify.warning(
+                    f"Error on getPrioritizedParties retry. Giving up:\n{str(e)}")
                 return ()
             elif e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
-                return self.getPrioritizedParties( partyIds, thresholdTime, limit, future, cancelled, isRetry=True)
+                return self.getPrioritizedParties(
+                    partyIds, thresholdTime, limit, future, cancelled, isRetry=True)
             else:
-                self.notify.warning("Unknown error in getPrioritizedParties getCancelledFutureParties, retrying:\n%s" % str(e))
+                self.notify.warning(
+                    "Unknown error in getPrioritizedParties getCancelledFutureParties, retrying:\n%s" %
+                    str(e))
                 self.reconnect()
-                return self.getPrioritizedParties( partyIds, thresholdTime, limit, future, cancelled, isRetry=True)
+                return self.getPrioritizedParties(
+                    partyIds, thresholdTime, limit, future, cancelled, isRetry=True)
         except Exception as e:
-            self.notify.warning("Unknown error in getPrioritizedParties getCancelledFutureParties, giving up:\n%s" % str(e))
+            self.notify.warning(
+                "Unknown error in getPrioritizedParties getCancelledFutureParties, giving up:\n%s" %
+                str(e))
             return ()
-        
 
-    def getHostPrioritizedParties(self, hostId, thresholdTime, limit, future, cancelled, isRetry=False):
+    def getHostPrioritizedParties(
+            self,
+            hostId,
+            thresholdTime,
+            limit,
+            future,
+            cancelled,
+            isRetry=False):
         """Return parties from the database using the criteria specified in future and cancelled."""
         if not self.sqlAvailable:
-            self.notify.debug("sqlAvailable was false when calling getCancelledFutureParties")
+            self.notify.debug(
+                "sqlAvailable was false when calling getCancelledFutureParties")
             return ()
 
         if not hostId:
-            self.notify.debug("empty list in hostId for getCancelledFutureParties")
+            self.notify.debug(
+                "empty list in hostId for getCancelledFutureParties")
             return()
-        
+
         sqlString = ""
         if future and cancelled:
             sqlString = ttSQL.getHostCancelledFuturePartiesSELECT
@@ -578,67 +710,82 @@ class ttPartyDb:
             sqlString = ttSQL.getHostCancelledPastPartiesSELECT
         else:
             sqlString = ttSQL.getHostNonCancelledPastPartiesSELECT
-            
+
         cursor = MySQLdb.cursors.DictCursor(self.db)
 
         try:
-            cursor.execute("USE `%s`"%self.dbname)
-            parameters = (hostId, thresholdTime,  str(limit))
+            cursor.execute(f"USE `{self.dbname}`")
+            parameters = (hostId, thresholdTime, str(limit))
             execStr = sqlString % parameters
             cursor.execute(execStr)
-             
+
             res = cursor.fetchall()
-            self.notify.debug("Select was successful in getHostPrioritizedParties, returning %s" % str(res))
-            return res        
-        
+            self.notify.debug(
+                "Select was successful in getHostPrioritizedParties, returning %s" %
+                str(res))
+            return res
+
         except MySQLdb.OperationalError as e:
             if isRetry:
-                self.notify.warning("Error on getHostPrioritizedParties retry. Giving up:\n%s" % str(e))
+                self.notify.warning(
+                    f"Error on getHostPrioritizedParties retry. Giving up:\n{str(e)}")
                 return ()
             elif e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
-                return self.getHostPrioritizedParties( hostId, thresholdTime, limit, future, cancelled, isRetry=True)
+                return self.getHostPrioritizedParties(
+                    hostId, thresholdTime, limit, future, cancelled, isRetry=True)
             else:
-                self.notify.warning("Unknown error in getHostPrioritizedParties getCancelledFutureParties, retrying:\n%s" % str(e))
+                self.notify.warning(
+                    "Unknown error in getHostPrioritizedParties getCancelledFutureParties, retrying:\n%s" %
+                    str(e))
                 self.reconnect()
-                return self.getHostPrioritizedParties( hostId, thresholdTime, limit, future, cancelled, isRetry=True)
+                return self.getHostPrioritizedParties(
+                    hostId, thresholdTime, limit, future, cancelled, isRetry=True)
         except Exception as e:
-            self.notify.warning("Unknown error in getHostPrioritizedParties getCancelledFutureParties, giving up:\n%s" % str(e))
+            self.notify.warning(
+                "Unknown error in getHostPrioritizedParties getCancelledFutureParties, giving up:\n%s" %
+                str(e))
             return ()
-        
+
     def forceFinishForStarted(self, thresholdTime, isRetry=False):
         """
         isRetry indicates whether this attempt is a retry or not.
         Returns a list of (partyId,hostId) for the ones that were forced to finished
         """
         if not self.sqlAvailable:
-            self.notify.debug("sqlAvailable was false when calling forceFinishForStarted")
+            self.notify.debug(
+                "sqlAvailable was false when calling forceFinishForStarted")
             return ()
-        
+
         cursor = MySQLdb.cursors.DictCursor(self.db)
         try:
-            cursor.execute("USE `%s`"%self.dbname)
-            cursor.execute(ttSQL.partyGetPartiesGoingToFinishedSELECT,(thresholdTime,))
+            cursor.execute(f"USE `{self.dbname}`")
+            cursor.execute(
+                ttSQL.partyGetPartiesGoingToFinishedSELECT, (thresholdTime,))
             res = cursor.fetchall()
-            cursor.execute(ttSQL.partyForceFinishForStartedUPDATE,(thresholdTime,))
+            cursor.execute(
+                ttSQL.partyForceFinishForStartedUPDATE, (thresholdTime,))
             self.db.commit()
-            
+
             #self.notify.debug("Select was successful in ttMaildb, returning %s" % str(res))
             return res
-        
+
         except MySQLdb.OperationalError as e:
             if isRetry:
-                self.notify.warning("Error on forceFinishForStarted retry, giving up:\n%s" % str(e))
+                self.notify.warning(
+                    f"Error on forceFinishForStarted retry, giving up:\n{str(e)}")
                 return ()
             elif e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
                 return self.forceFinishForStarted(thresholdTime, True)
             else:
-                self.notify.warning("Unknown error in forceFinishForStarted, retrying:\n%s" % str(e))
+                self.notify.warning(
+                    f"Unknown error in forceFinishForStarted, retrying:\n{str(e)}")
                 self.reconnect()
-                return self.forceFinishForStarted( thresholdTime, True)
+                return self.forceFinishForStarted(thresholdTime, True)
         except Exception as e:
-            self.notify.warning("Unknown error in forceFinishForStarted, giving up:\n%s" % str(e))
+            self.notify.warning(
+                f"Unknown error in forceFinishForStarted, giving up:\n{str(e)}")
             return ()
 
     def forceNeverStartedForCanStart(self, thresholdTime, isRetry=False):
@@ -646,72 +793,92 @@ class ttPartyDb:
         isRetry indicates whether this attempt is a retry or not.
         """
         if not self.sqlAvailable:
-            self.notify.debug("sqlAvailable was false when calling forceNeverStartedForCanStart")
+            self.notify.debug(
+                "sqlAvailable was false when calling forceNeverStartedForCanStart")
             return ()
-        
+
         cursor = MySQLdb.cursors.DictCursor(self.db)
         try:
-            cursor.execute("USE `%s`"%self.dbname)
-            cursor.execute(ttSQL.partyGetPartiesGoingToNeverStartedSELECT,(thresholdTime,))
+            cursor.execute(f"USE `{self.dbname}`")
+            cursor.execute(
+                ttSQL.partyGetPartiesGoingToNeverStartedSELECT, (thresholdTime,))
             res = cursor.fetchall()
-            cursor.execute(ttSQL.partyForceNeverStartedForCanStartUPDATE ,(thresholdTime,))
+            cursor.execute(
+                ttSQL.partyForceNeverStartedForCanStartUPDATE, (thresholdTime,))
             self.db.commit()
-            
+
             #self.notify.debug("Select was successful in ttMaildb, returning %s" % str(res))
             return res
-        
+
         except MySQLdb.OperationalError as e:
             if isRetry:
-                self.notify.warning("Error on forceNeverStartedForCanStart retry, giving up:\n%s" % str(e))
+                self.notify.warning(
+                    "Error on forceNeverStartedForCanStart retry, giving up:\n%s" %
+                    str(e))
                 return ()
             elif e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
                 return self.forceNeverStartedForCanStart(thresholdTime, True)
             else:
-                self.notify.warning("Unknown error in forceNeverStartedForCanStart, retrying:\n%s" % str(e))
+                self.notify.warning(
+                    "Unknown error in forceNeverStartedForCanStart, retrying:\n%s" %
+                    str(e))
                 self.reconnect()
-                return self.forceNeverStartedForCanStart( thresholdTime, True)
+                return self.forceNeverStartedForCanStart(thresholdTime, True)
         except Exception as e:
-            self.notify.warning("Unknown error in forceNeverStartedForCanStart, giving up:\n%s" % str(e))
+            self.notify.warning(
+                f"Unknown error in forceNeverStartedForCanStart, giving up:\n{str(e)}")
             return ()
 
-
-    def changeMultiplePartiesStatus(self, partyIds, newPartyStatus, isRetry=False):
+    def changeMultiplePartiesStatus(
+            self,
+            partyIds,
+            newPartyStatus,
+            isRetry=False):
         """
         isRetry indicates whether this attempt is a retry or not.
         """
         if not self.sqlAvailable:
-            self.notify.debug("sqlAvailable was false when calling changeMultiplePartiesStatus")
+            self.notify.debug(
+                "sqlAvailable was false when calling changeMultiplePartiesStatus")
             return ()
 
         if not partyIds:
-            self.notify.debug("empty list in partyIds for changeMultiplePartiesStatus")
-            return()        
-        
+            self.notify.debug(
+                "empty list in partyIds for changeMultiplePartiesStatus")
+            return()
+
         cursor = MySQLdb.cursors.DictCursor(self.db)
         try:
-            cursor.execute("USE `%s`"%self.dbname)
+            cursor.execute(f"USE `{self.dbname}`")
             inClause = self.convertListToSQLString(partyIds)
             sqlString = ttSQL.partyMultipleStatusUPDATE
-            parameters = ( newPartyStatus, inClause)
+            parameters = (newPartyStatus, inClause)
             execStr = sqlString % parameters
             cursor.execute(execStr)
             self.db.commit()
             res = cursor.fetchall()
             #self.notify.debug("Select was successful in ttMaildb, returning %s" % str(res))
             return res
-        
+
         except MySQLdb.OperationalError as e:
             if isRetry:
-                self.notify.warning("Error on changeMultiplePartiesStatus retry, giving up:\n%s" % str(e))
+                self.notify.warning(
+                    "Error on changeMultiplePartiesStatus retry, giving up:\n%s" %
+                    str(e))
                 return ()
             elif e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
-                return self.changeMultiplePartiesStatus(partyIds, newPartyStatus,  True)
+                return self.changeMultiplePartiesStatus(
+                    partyIds, newPartyStatus, True)
             else:
-                self.notify.warning("Unknown error in changeMultiplePartiesStatus, retrying:\n%s" % str(e))
+                self.notify.warning(
+                    "Unknown error in changeMultiplePartiesStatus, retrying:\n%s" %
+                    str(e))
                 self.reconnect()
-                return self.changeMultiplePartiesStatus( partyIds, newPartyStatus,  True)
+                return self.changeMultiplePartiesStatus(
+                    partyIds, newPartyStatus, True)
         except Exception as e:
-            self.notify.warning("Unknown error in changeMultiplePartiesStatus, giving up:\n%s" % str(e))
+            self.notify.warning(
+                f"Unknown error in changeMultiplePartiesStatus, giving up:\n{str(e)}")
             return ()

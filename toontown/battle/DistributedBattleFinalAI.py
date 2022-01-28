@@ -13,9 +13,13 @@ import random
 import types
 
 # attack properties table
-class DistributedBattleFinalAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleFinalAI')
+
+class DistributedBattleFinalAI(
+        DistributedBattleBaseAI.DistributedBattleBaseAI):
+
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedBattleFinalAI')
 
     def __init__(self, air, bossCog, roundCallback,
                  finishCallback, battleSide):
@@ -82,7 +86,12 @@ class DistributedBattleFinalAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
 
     ##### PlayMovie state #####
 
-    def localMovieDone(self, needUpdate, deadToons, deadSuits, lastActiveSuitDied):
+    def localMovieDone(
+            self,
+            needUpdate,
+            deadToons,
+            deadSuits,
+            lastActiveSuitDied):
         # Stop the server timeout for the movie
         self.timer.stop()
 
@@ -96,9 +105,9 @@ class DistributedBattleFinalAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
             self.d_setMembers()
             self.b_setState('Resume')
         else:
-            # Calculate the total hp of all the suits to see if any 
+            # Calculate the total hp of all the suits to see if any
             # reserves need to join
-            assert(self.roundCallback != None)
+            assert(self.roundCallback is not None)
             totalHp = 0
             for suit in self.suits:
                 if (suit.currHP > 0):
@@ -115,7 +124,7 @@ class DistributedBattleFinalAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
                 assert(joined)
             self.d_setMembers()
             self.b_setState('ReservesJoining')
-            
+
         elif (len(self.suits) == 0):
             # Toons won - award experience, etc.
             assert(self.resumeNeedUpdate == 1)
@@ -123,13 +132,14 @@ class DistributedBattleFinalAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
             for toonId in self.activeToons:
                 toon = self.getToon(toonId)
                 if toon:
-                    # Append the recovered and not recovered items to their respective lists
+                    # Append the recovered and not recovered items to their
+                    # respective lists
                     recovered, notRecovered = self.air.questManager.recoverItems(
-                      toon, self.suitsKilledThisBattle, self.zoneId)
+                        toon, self.suitsKilledThisBattle, self.zoneId)
                     self.toonItems[toonId][0].extend(recovered)
                     self.toonItems[toonId][1].extend(notRecovered)
                     # No need to recover merits - you are about to get a promotion!
-                    #meritArray = self.air.promotionMgr.recoverMerits(
+                    # meritArray = self.air.promotionMgr.recoverMerits(
                     #    toon, self.suitsKilledThisBattle, self.zoneId, battleMultiplier)
                     #self.toonMerits[toonId] = addListsByValue(self.toonMerits[toonId], meritArray)
             self.d_setMembers()
@@ -140,9 +150,9 @@ class DistributedBattleFinalAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
             # Continue with the battle
             if (self.resumeNeedUpdate == 1):
                 self.d_setMembers()
-                if ((len(self.resumeDeadSuits) > 0 and 
+                if ((len(self.resumeDeadSuits) > 0 and
                      self.resumeLastActiveSuitDied == 0) or
-                     (len(self.resumeDeadToons) > 0)):
+                        (len(self.resumeDeadToons) > 0)):
                     self.needAdjust = 1
                 # Wait for input will call __requestAdjust()
             self.setState('WaitForJoin')
@@ -158,10 +168,10 @@ class DistributedBattleFinalAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
         assert(self.notify.debug('enterReservesJoining()'))
         self.beginBarrier("ReservesJoining", self.toons, 15,
                           self.__doneReservesJoining)
-        
+
     def __doneReservesJoining(self, avIds):
         self.b_setState('WaitForJoin')
-        
+
     def exitReservesJoining(self, ts=0):
         return None
 
@@ -173,7 +183,9 @@ class DistributedBattleFinalAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
         # In the building battles, we don't expect any toons to send a
         # done message before this (short) timer expires.  This is
         # just the between-floor reward dance, very brief.
-        self.timer.startCallback(FLOOR_REWARD_TIMEOUT + 5, self.serverRewardDone) 
+        self.timer.startCallback(
+            FLOOR_REWARD_TIMEOUT + 5,
+            self.serverRewardDone)
         return None
 
     def exitReward(self):
@@ -187,5 +199,5 @@ class DistributedBattleFinalAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
         self.runableFsm.request('Unrunable')
         DistributedBattleBaseAI.DistributedBattleBaseAI.enterResume(self)
 
-        assert(self.finishCallback != None)
+        assert(self.finishCallback is not None)
         self.finishCallback(self.zoneId, self.activeToons)

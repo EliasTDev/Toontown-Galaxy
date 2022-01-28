@@ -4,6 +4,7 @@ from toontown.ai import PhasedHolidayAI
 from toontown.ai import DistributedSillyMeterMgrAI
 from toontown.toonbase import ToontownGlobals
 
+
 class SillyMeterHolidayAI(PhasedHolidayAI.PhasedHolidayAI):
 
     notify = DirectNotifyGlobal.directNotify.newCategory(
@@ -12,10 +13,11 @@ class SillyMeterHolidayAI(PhasedHolidayAI.PhasedHolidayAI):
     PostName = 'SillyMeterHoliday'
 
     def __init__(self, air, holidayId, startAndEndTimes, phaseDates):
-        PhasedHolidayAI.PhasedHolidayAI.__init__(self, air, holidayId, startAndEndTimes, phaseDates)
-        
+        PhasedHolidayAI.PhasedHolidayAI.__init__(
+            self, air, holidayId, startAndEndTimes, phaseDates)
+
         self.runningState = 1
-        
+
     def start(self):
         # instantiate the object
         PhasedHolidayAI.PhasedHolidayAI.start(self)
@@ -36,13 +38,13 @@ class SillyMeterHolidayAI(PhasedHolidayAI.PhasedHolidayAI):
         """Force our holiday to a certain phase."""
         try:
             newPhase = int(newPhase)
-        except:
+        except BaseException:
             newPhase = 0
         if newPhase >= self.SillyMeterMgr.getNumPhases():
             self.notify.warning("newPhase %d invalid in forcePhase" % newPhase)
             return
         self.curPhase = newPhase
         self.SillyMeterMgr.forcePhase(newPhase)
-        
+
     def getRunningState(self):
         return self.runningState

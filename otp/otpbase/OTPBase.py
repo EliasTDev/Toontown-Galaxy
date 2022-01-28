@@ -9,53 +9,57 @@ import time
 import math
 import re
 
-class OTPBase(ShowBase):
-    def __init__(self, windowType = None):
-       self.wantEnviroDR = False
-       ShowBase.__init__(self, windowType = windowType)
 
-       if config.GetBool("want-phase-checker", 0):
+class OTPBase(ShowBase):
+    def __init__(self, windowType=None):
+        self.wantEnviroDR = False
+        ShowBase.__init__(self, windowType=windowType)
+
+        if config.GetBool("want-phase-checker", 0):
             from direct.showbase import Loader
             Loader.phaseChecker = self.loaderPhaseChecker
             self.errorAccumulatorBuffer = ''
-            taskMgr.add(self.delayedErrorCheck, "delayedErrorCheck", priority = 10000)
+            taskMgr.add(
+                self.delayedErrorCheck,
+                "delayedErrorCheck",
+                priority=10000)
 
+        # Turn nametags on and off for video capture
+        self.wantNametags = self.config.GetBool('want-nametags', 1)
 
-       # Turn nametags on and off for video capture
-       self.wantNametags = self.config.GetBool('want-nametags', 1)
+        self.slowCloseShard = self.config.GetBool(
+            'slow-close-shard', 0)
+        self.slowCloseShardDelay = self.config.GetFloat(
+            'slow-close-shard-delay', 10.)
 
-       self.slowCloseShard = self.config.GetBool(
-           'slow-close-shard', 0)
-       self.slowCloseShardDelay = self.config.GetFloat(
-           'slow-close-shard-delay', 10.)
-
-       self.fillShardsToIdealPop = self.config.GetBool(
+        self.fillShardsToIdealPop = self.config.GetBool(
             'fill-shards-to-ideal-pop', 1)
 
-       # By default, we want to use dynamic shadows.  ToonBase.py
-       # turns this off.
-       self.wantDynamicShadows = 1
+        # By default, we want to use dynamic shadows.  ToonBase.py
+        # turns this off.
+        self.wantDynamicShadows = 1
 
-       self.stereoEnabled = False
-       self.enviroDR = None
-       self.enviroCam = None
-       self.pixelZoomSetup = False
+        self.stereoEnabled = False
+        self.enviroDR = None
+        self.enviroCam = None
+        self.pixelZoomSetup = False
 
-       # These are mainly for reporting to the AI.  They're filled in
-       # by the application at startup, and as we move from place to
-       # place.
-       self.gameOptionsCode = ''
-       self.locationCode = ''
-       self.locationCodeChanged = time.time()
+        # These are mainly for reporting to the AI.  They're filled in
+        # by the application at startup, and as we move from place to
+        # place.
+        self.gameOptionsCode = ''
+        self.locationCode = ''
+        self.locationCodeChanged = time.time()
 
-       # Set the default camera to use the appropriate bitmask.
-       if (base.cam):
-           if(self.wantEnviroDR):
-               base.cam.node().setCameraMask(OTPRender.MainCameraBitmask)
-           else:
-               base.cam.node().setCameraMask(OTPRender.MainCameraBitmask | OTPRender.EnviroCameraBitmask)
+        # Set the default camera to use the appropriate bitmask.
+        if (base.cam):
+            if(self.wantEnviroDR):
+                base.cam.node().setCameraMask(OTPRender.MainCameraBitmask)
+            else:
+                base.cam.node().setCameraMask(
+                    OTPRender.MainCameraBitmask | OTPRender.EnviroCameraBitmask)
 
-       taskMgr.setupTaskChain('net')
+        taskMgr.setupTaskChain('net')
 
     def setTaskChainNetThreaded(self):
         """ If want-threaded-network is true, move the network tasks
@@ -69,15 +73,15 @@ class OTPBase(ShowBase):
         # direct.stdpy.threading module for this).  Currently
         # EXPERIMENTAL; enable this at your own risk!
         if base.config.GetBool('want-threaded-network', 0):
-            taskMgr.setupTaskChain('net', numThreads = 1, frameBudget = 0.001,
-                                   threadPriority = TPLow)
+            taskMgr.setupTaskChain('net', numThreads=1, frameBudget=0.001,
+                                   threadPriority=TPLow)
 
     def setTaskChainNetNonthreaded(self):
         """ Move the network tasks to the main thread, so they will
         execute in the foreground.  This is normally done during a
         loading screen. """
 
-        taskMgr.setupTaskChain('net', numThreads = 0, frameBudget = -1)
+        taskMgr.setupTaskChain('net', numThreads=0, frameBudget=-1)
 
     def toggleStereo(self):
         """ Enables or disables a red-blue stereo mode.  This can also
@@ -93,7 +97,10 @@ class OTPBase(ShowBase):
             # (i.e. true hardware stereo), then we need to enable
             # red-blue stereo.
             if not base.win.isStereo():
-                base.win.setRedBlueStereo(True, ColorWriteAttrib.CRed, ColorWriteAttrib.CGreen | ColorWriteAttrib.CBlue)
+                base.win.setRedBlueStereo(
+                    True,
+                    ColorWriteAttrib.CRed,
+                    ColorWriteAttrib.CGreen | ColorWriteAttrib.CBlue)
 
         if self.wantEnviroDR:
             # Reset the environment DR if we're using it.  This also
@@ -133,7 +140,6 @@ class OTPBase(ShowBase):
 
         if not self.enviroCam:
             self.enviroCam = self.cam.attachNewNode(Camera('enviroCam'))
-            
 
         mainDR = self.camNode.getDisplayRegion(0)
         if self.stereoEnabled:
@@ -149,7 +155,7 @@ class OTPBase(ShowBase):
                 self.win.removeDisplayRegion(mainDR)
                 mainDR = self.win.makeStereoDisplayRegion()
                 mainDR.setCamera(self.cam)
-            
+
             ml = mainDR.getLeftEye()
             mr = mainDR.getRightEye()
             el = self.enviroDR.getLeftEye()
@@ -172,7 +178,7 @@ class OTPBase(ShowBase):
                 mainDR.setCamera(self.cam)
 
             self.enviroDR.setSort(-10)
-            
+
         self.enviroDR.setClearColor(clearColor)
         self.win.setClearColor(clearColor)
         self.enviroDR.setCamera(self.enviroCam)
@@ -192,7 +198,6 @@ class OTPBase(ShowBase):
             # If we want pixel zoom, enable it for the new display
             # region.
             self.setupAutoPixelZoom()
-            
 
     def setupAutoPixelZoom(self):
         """ Sets up the system to zoom the pixel resolution of the
@@ -221,7 +226,7 @@ class OTPBase(ShowBase):
             self.win.setClearColorActive(True)
             self.win.setClearDepthActive(True)
             self.backgroundDrawable = self.win
-        
+
         self.pixelZoomSetup = True
         self.targetPixelZoom = 1.0
         self.pixelZoomTask = None
@@ -231,7 +236,6 @@ class OTPBase(ShowBase):
 
         flag = self.config.GetBool('enable-pixel-zoom', True)
         self.enablePixelZoom(flag)
-
 
     def enablePixelZoom(self, flag):
         """ Enables a special mode in which the display region that
@@ -248,14 +252,14 @@ class OTPBase(ShowBase):
         hardware accelerated rendering, but since it checks for the
         presence of a hardware renderer and does nothing in this case,
         it is always safe to call this method. """
-        
+
         if not self.backgroundDrawable.supportsPixelZoom():
             flag = False
 
         self.pixelZoomEnabled = flag
         taskMgr.remove('chasePixelZoom')
         if flag:
-            taskMgr.add(self.__chasePixelZoom, 'chasePixelZoom', priority = -52)
+            taskMgr.add(self.__chasePixelZoom, 'chasePixelZoom', priority=-52)
         else:
             self.backgroundDrawable.setPixelZoom(1)
 
@@ -277,7 +281,9 @@ class OTPBase(ShowBase):
             self.pixelZoomCamMovedList.append((now, d))
 
         # Delete any old move reports.
-        while (self.pixelZoomCamMovedList and self.pixelZoomCamMovedList[0][0] < now - self.pixelZoomCamHistory):
+        while (
+                self.pixelZoomCamMovedList and self.pixelZoomCamMovedList[0][0] < now -
+                self.pixelZoomCamHistory):
             del self.pixelZoomCamMovedList[0]
 
         # Now set the pixel zoom according to the average feet per
@@ -292,7 +298,7 @@ class OTPBase(ShowBase):
 
         elif speed > 10:
             # We're running.
-            if self.pixelZoomStart == None:
+            if self.pixelZoomStart is None:
                 self.pixelZoomStart = now
             elapsed = now - self.pixelZoomStart
 
@@ -304,10 +310,10 @@ class OTPBase(ShowBase):
         return task.cont
 
     def getShardPopLimits(self):
-         # returns (low, mid, high)
-         # override if desired
-         return 300, 600, 1200
-     
+        # returns (low, mid, high)
+        # override if desired
+        return 300, 600, 1200
+
     def setLocationCode(self, locationCode):
         if locationCode != self.locationCode:
             self.locationCode = locationCode
@@ -317,7 +323,7 @@ class OTPBase(ShowBase):
         if(self.errorAccumulatorBuffer):
             buffer = self.errorAccumulatorBuffer
             self.errorAccumulatorBuffer = ''
-            self.notify.error("\nAccumulated Phase Errors!:\n %s"%buffer)
+            self.notify.error(f"\nAccumulated Phase Errors!:\n {buffer}")
         return task.cont
 
     def loaderPhaseChecker(self, path, loaderOptions):
@@ -325,7 +331,8 @@ class OTPBase(ShowBase):
         # It should look something like "phase_5/models/char/joe"
 
         # HACK: let's try .bam if it has no extension
-        # Other way to do this: after we load the model, call model.node().getFullpath()
+        # Other way to do this: after we load the model, call
+        # model.node().getFullpath()
         if("audio/" in path):
             return 1
         file = Filename(path)
@@ -341,13 +348,14 @@ class OTPBase(ShowBase):
             if('dmodels' in path):
                 return
             else:
-                self.errorAccumulatorBuffer += "file not in phase (%s, %s)\n"%(file,path)
-                return        
+                self.errorAccumulatorBuffer += f"file not in phase ({file}, {path})\n"
+                return
 
         basePhase = float(match.groups()[0])
         if(not launcher.getPhaseComplete(basePhase)):
-            self.errorAccumulatorBuffer += "phase is not loaded for this model %s\n"%(path)
-        #grab the model
+            self.errorAccumulatorBuffer += "phase is not loaded for this model %s\n" % (
+                path)
+        # grab the model
         model = loader.loader.loadSync(Filename(path), loaderOptions)
 
         if(model):
@@ -358,7 +366,8 @@ class OTPBase(ShowBase):
                 if(match):
                     texPhase = float(match.groups()[0])
                     if(texPhase > basePhase):
-                        self.errorAccumulatorBuffer += "texture phase is higher than the models (%s, %s)\n"%(path, texPath)
+                        self.errorAccumulatorBuffer += "texture phase is higher than the models (%s, %s)\n" % (
+                            path, texPath)
 
     def getRepository(self):
         return self.cr
@@ -366,7 +375,9 @@ class OTPBase(ShowBase):
     def openMainWindow(self, *args, **kw):
         result = ShowBase.openMainWindow(self, *args, **kw)
         if result:
-            self.wantEnviroDR = (not self.win.getGsg().isHardware() or config.GetBool("want-background-region",1))
+            self.wantEnviroDR = (
+                not self.win.getGsg().isHardware() or config.GetBool(
+                    "want-background-region", 1))
             self.backgroundDrawable = self.win
             pass
         return result

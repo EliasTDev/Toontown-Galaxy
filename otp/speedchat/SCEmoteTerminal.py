@@ -12,14 +12,18 @@ SCEmoteNoAccessEvent = 'SCEmoteNoAccess'
 
 # emote terminals don't produce any spoken text
 # when whispered, they produce msgs like 'Flippy waves'
+
+
 def decodeSCEmoteWhisperMsg(emoteId, avName):
     if emoteId >= len(EmoteWhispers):
         return None
     return EmoteWhispers[emoteId] % avName
 
+
 class SCEmoteTerminal(SCTerminal):
     """ SCEmoteTerminal represents a terminal SpeedChat node that
     contains an emotion. """
+
     def __init__(self, emoteId):
         SCTerminal.__init__(self)
         self.emoteId = emoteId
@@ -40,14 +44,14 @@ class SCEmoteTerminal(SCTerminal):
         try:
             lt = base.localAvatar
             return lt.emoteAccess[self.emoteId]
-        except:
+        except BaseException:
             return 0
 
     def __emoteEnabled(self):
         # all of the emotes are always available for whispering
         if self.isWhispering():
             return 1
-        assert Emote.globalEmote != None
+        assert Emote.globalEmote is not None
         return Emote.globalEmote.isEnabled(self.emoteId)
 
     def finalize(self, dbArgs={}):
@@ -57,20 +61,20 @@ class SCEmoteTerminal(SCTerminal):
         args = {}
 
         if ((not self.__ltHasAccess()) or
-            (not self.__emoteEnabled())):
+                (not self.__emoteEnabled())):
             # make the button 'unclickable'
             args.update({
-                'rolloverColor': (0,0,0,0),
-                'pressedColor': (0,0,0,0),
+                'rolloverColor': (0, 0, 0, 0),
+                'pressedColor': (0, 0, 0, 0),
                 'rolloverSound': None,
-                'text_fg': self.getColorScheme().getTextDisabledColor()+(1,),
-                })
+                'text_fg': self.getColorScheme().getTextDisabledColor() + (1,),
+            })
         if not self.__ltHasAccess():
             # if localToon doesn't have access to this emote, the
             # button has a '?' on it. make sure it's centered
             args.update({
                 'text_align': TextNode.ACenter,
-                })
+            })
         elif not self.__emoteEnabled():
             # don't play a sound if user clicks on a disabled emote
             # that they have access to
@@ -79,7 +83,7 @@ class SCEmoteTerminal(SCTerminal):
             })
 
         self.lastEmoteEnableState = self.__emoteEnabled()
-        
+
         args.update(dbArgs)
         SCTerminal.finalize(self, dbArgs=args)
 
@@ -96,21 +100,21 @@ class SCEmoteTerminal(SCTerminal):
 
         btn = self.button
         if self.__emoteEnabled():
-            rolloverColor = self.getColorScheme().getRolloverColor()+(1,)
-            pressedColor = self.getColorScheme().getPressedColor()+(1,)
+            rolloverColor = self.getColorScheme().getRolloverColor() + (1,)
+            pressedColor = self.getColorScheme().getPressedColor() + (1,)
             btn.frameStyle[DGG.BUTTON_ROLLOVER_STATE].setColor(*rolloverColor)
             btn.frameStyle[DGG.BUTTON_DEPRESSED_STATE].setColor(*pressedColor)
             btn.updateFrameStyle()
             btn['text_fg'] = (
-                self.getColorScheme().getTextColor()+(1,))
+                self.getColorScheme().getTextColor() + (1,))
             btn['rolloverSound'] = DGG.getDefaultRolloverSound()
             btn['clickSound'] = DGG.getDefaultClickSound()
         else:
-            btn.frameStyle[DGG.BUTTON_ROLLOVER_STATE].setColor(0,0,0,0)
-            btn.frameStyle[DGG.BUTTON_DEPRESSED_STATE].setColor(0,0,0,0)
+            btn.frameStyle[DGG.BUTTON_ROLLOVER_STATE].setColor(0, 0, 0, 0)
+            btn.frameStyle[DGG.BUTTON_DEPRESSED_STATE].setColor(0, 0, 0, 0)
             btn.updateFrameStyle()
             btn['text_fg'] = (
-                self.getColorScheme().getTextDisabledColor()+(1,))
+                self.getColorScheme().getTextDisabledColor() + (1,))
             btn['rolloverSound'] = None
             btn['clickSound'] = None
 
@@ -122,7 +126,7 @@ class SCEmoteTerminal(SCTerminal):
             if hasattr(self, 'lastEmoteEnableState'):
                 if self.lastEmoteEnableState != self.__emoteEnabled():
                     self.invalidate()
-                    
+
             if not self.isWhispering():
                 self.accept(Emote.globalEmote.EmoteEnableStateChanged,
                             self.__emoteEnableStateChanged)

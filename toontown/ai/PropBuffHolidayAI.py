@@ -4,21 +4,24 @@ from toontown.ai import PhasedHolidayAI
 from toontown.ai import DistributedPhaseEventMgrAI
 from toontown.toonbase import ToontownGlobals
 
+
 class PropBuffHolidayAI(PhasedHolidayAI.PhasedHolidayAI):
 
     notify = DirectNotifyGlobal.directNotify.newCategory(
         'PropBuffHolidayAI')
 
     # PostName = 'propBuffHoliday' # deliberately not set so child classes forced to define this
-    # and we avoid a conflict of say the laff buf holiday stomping on the drop buff holiday
+    # and we avoid a conflict of say the laff buf holiday stomping on the drop
+    # buff holiday
 
     def __init__(self, air, holidayId, startAndEndTimes, phaseDates):
-        PhasedHolidayAI.PhasedHolidayAI.__init__(self, air, holidayId, startAndEndTimes, phaseDates)
-        
+        PhasedHolidayAI.PhasedHolidayAI.__init__(
+            self, air, holidayId, startAndEndTimes, phaseDates)
+
     def start(self):
         # instantiate the object
         PhasedHolidayAI.PhasedHolidayAI.start(self)
-        self.propBuffMgr = DistributedPhaseEventMgrAI.DistributedPhaseEventMgrAI (            
+        self.propBuffMgr = DistributedPhaseEventMgrAI.DistributedPhaseEventMgrAI(
             self.air, self.startAndEndTimes, self.phaseDates)
         self.propBuffMgr.generateWithRequired(ToontownGlobals.UberZone)
         # let the holiday system know we started
@@ -28,7 +31,7 @@ class PropBuffHolidayAI(PhasedHolidayAI.PhasedHolidayAI):
         # let the holiday system know we stopped
         bboard.remove(self.PostName)
         # remove the object
-        #self.resistanceEmoteMgr.requestDelete()
+        # self.resistanceEmoteMgr.requestDelete()
         self.propBuffMgr.requestDelete()
 
     def forcePhase(self, newPhase):
@@ -36,7 +39,7 @@ class PropBuffHolidayAI(PhasedHolidayAI.PhasedHolidayAI):
         result = False
         try:
             newPhase = int(newPhase)
-        except:
+        except BaseException:
             newPhase = 0
         if newPhase >= self.propBuffMgr.getNumPhases():
             self.notify.warning("newPhase %d invalid in forcePhase" % newPhase)
@@ -49,6 +52,6 @@ class PropBuffHolidayAI(PhasedHolidayAI.PhasedHolidayAI):
     def getCurPhase(self):
         """Returns the buffMgr's current phase, may return -1."""
         result = -1
-        if hasattr(self,"propBuffMgr"):
+        if hasattr(self, "propBuffMgr"):
             result = self.propBuffMgr.getCurPhase()
         return result

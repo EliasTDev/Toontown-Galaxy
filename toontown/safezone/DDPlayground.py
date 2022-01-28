@@ -10,9 +10,10 @@ from toontown.toonbase import ToontownGlobals
 from direct.directnotify import DirectNotifyGlobal
 from toontown.hood import Place
 
+
 class DDPlayground(Playground.Playground):
     notify = DirectNotifyGlobal.directNotify.newCategory("DDPlayground")
-    
+
     def __init__(self, loader, parentFSM, doneEvent):
         assert self.notify.debugStateCall(self)
         Playground.Playground.__init__(self, loader, parentFSM, doneEvent)
@@ -31,12 +32,12 @@ class DDPlayground(Playground.Playground):
                     self.enterOnBoat,
                     self.exitOnBoat,
                     ['off'])
-                ],
+            ],
             # Initial state
             'off',
             # Final state
             'off',
-            )
+        )
         self.activityFsm.enterInitialState()
 
     def load(self):
@@ -47,7 +48,7 @@ class DDPlayground(Playground.Playground):
         assert self.notify.debugStateCall(self)
         del self.activityFsm
         Playground.Playground.unload(self)
-        
+
     def enter(self, requestStatus):
         assert self.notify.debugStateCall(self)
         self.nextSeagullTime = 0
@@ -120,7 +121,7 @@ class DDPlayground(Playground.Playground):
             return
         assert self.notify.debugStateCall(self)
         self.loader.hood.setUnderwaterFog()
-        base.playSfx(self.loader.underwaterSound, looping = 1, volume = 0.8)
+        base.playSfx(self.loader.underwaterSound, looping=1, volume=0.8)
         self.loader.seagullSound.stop()
         taskMgr.remove('dd-seagulls')
         self.cameraSubmerged = 1
@@ -148,7 +149,7 @@ class DDPlayground(Playground.Playground):
         # becuase the Place was still in StickerBook state.
         if base.config.GetBool('disable-flying-glitch') == 0:
             self.fsm.request('walk')
-      
+
         # You have to pass in the swim sound effect to swim mode.
         self.walkStateData.fsm.request('swimming', [self.loader.swimSound])
         # Let everyone else see your splash

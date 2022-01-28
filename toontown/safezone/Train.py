@@ -16,10 +16,11 @@ from direct.actor import Actor
 # This class is more accurately a train TRACK, it handles many trains moving
 # across sequentially
 
-class Train(DirectObject): 
+
+class Train(DirectObject):
 
     notify = directNotify.newCategory('Train')
-    #notify.setDebug(True)
+    # notify.setDebug(True)
 
     nameId = 0
     Sfx_TrainPass = 'phase_10/audio/sfx/CBHQ_TRAIN_pass.ogg'
@@ -32,7 +33,7 @@ class Train(DirectObject):
     CarLength = 88
 
     # this indicates the longest a train will take to cross the track
-    MarkDelta = 15 #seconds
+    MarkDelta = 15  # seconds
 
     def __init__(self, trackStartPos, trackEndPos, trackNum, numTotalTracks):
         self.trackStartPos = trackStartPos
@@ -54,7 +55,7 @@ class Train(DirectObject):
             self.locomotive.setHpr(180, 0, 0)
             self.bFlipped = True
 
-        self.collNodeName = 'CollNode-%s' % self.trainId
+        self.collNodeName = f'CollNode-{self.trainId}'
 
         # get initial start time
         self.firstMark = (self.MarkDelta / numTotalTracks) * trackNum
@@ -75,16 +76,18 @@ class Train(DirectObject):
             self.locomotive.reparentTo(render)
 
     def __networkTimeInSeconds(self):
-        time = globalClockDelta.getRealNetworkTime(bits=32) / NetworkTimePrecision
+        time = globalClockDelta.getRealNetworkTime(
+            bits=32) / NetworkTimePrecision
         return time
-            
+
     # this gets a new set of cars, sets up a lerp track for the
     # next run and starts the run
 
     # A) first time through - get the last start time and start the interval in the middle
     # B) the last run started less than MarkDelta ago - start a new run sometime in the future
-    # C) the last run started more than MarkDelta ago - start a new run in the middle 
-    
+    # C) the last run started more than MarkDelta ago - start a new run in the
+    # middle
+
     def doNextRun(self, bFirstRun=False):
         if self.locomotive:
             if bFirstRun:
@@ -94,16 +97,16 @@ class Train(DirectObject):
                 nextMark = self.lastMark + self.MarkDelta
                 self.nextRun.finish()
 
-            self.notify.debug("Next mark %s" % nextMark)
+            self.notify.debug(f"Next mark {nextMark}")
             currentTime = self.__networkTimeInSeconds()
 
             # positive=not ready yet, negative=we're late
             timeTillNextMark = nextMark - currentTime
 
-            self.notify.debug("Time diff %s" % timeTillNextMark)
+            self.notify.debug(f"Time diff {timeTillNextMark}")
 
-            #the next run starts at the next multiple of self.MarkDelta
-            runNumber = int((nextMark-self.firstMark) / self.MarkDelta)
+            # the next run starts at the next multiple of self.MarkDelta
+            runNumber = int((nextMark - self.firstMark) / self.MarkDelta)
 
             # set up next Run Interval
             S = random.getstate()
@@ -122,8 +125,8 @@ class Train(DirectObject):
                 self.nextRun = Sequence(Wait(timeTillMark), self.nextRun)
                 self.nextRun.start()
             else:
-                #we're late!
-                self.nextRun.start(-1*timeTillMark)
+                # we're late!
+                self.nextRun.start(-1 * timeTillMark)
             self.__enableCollisions()
 
         return Task.done
@@ -145,12 +148,13 @@ class Train(DirectObject):
             carType = random.randrange(0, self.numCars)
             car = loader.loadModel(self.CarFiles[carType])
             car.reparentTo(self.locomotive)
-            car.setPos(self.CarLength*(nCar+1), 0, 0)
+            car.setPos(self.CarLength * (nCar + 1), 0, 0)
             self.cars.append(car)
 
     def __showStart(self):
-        self.notify.debug("Starting train %s at %s." % (self.trainId,self.__networkTimeInSeconds()))
-            
+        self.notify.debug(
+            f"Starting train {self.trainId} at {self.__networkTimeInSeconds()}.")
+
     # set up a Lerp track for the upcoming run.  The final task
     # is a call to doNextRun.  It is up to doNextRun to determine
     # if another run should be made
@@ -159,44 +163,60 @@ class Train(DirectObject):
         trainShouldStop = random.randrange(0, 4)
         nextRun = Sequence(Func(self.__showStart))
         if trainShouldStop == 0:
-            waitTime = 3 #this is how long the delay is in the effect
-            totalTime = random.randrange(4, (self.MarkDelta-waitTime)/2)
-            sfxStopTime = 4.3 #this is where the train stops in the effect
+            waitTime = 3  # this is how long the delay is in the effect
+            totalTime = random.randrange(4, (self.MarkDelta - waitTime) / 2)
+            sfxStopTime = 4.3  # this is where the train stops in the effect
             halfway = (self.trackStartPos + self.trackEndPos) / 2
             halfway.setX(150)
-            nextRun.append( \
+            nextRun.append(
                 Parallel(
                     Sequence(
-                        Wait(totalTime-sfxStopTime),
-                        SoundInterval(self.trainStopStartSfx, volume = 0.5 ),
-                        ),
+                        Wait(
+                            totalTime - sfxStopTime),
+                        SoundInterval(
+                            self.trainStopStartSfx,
+                            volume=0.5),
+                    ),
                     Sequence(
-                        LerpPosInterval(self.locomotive, totalTime, halfway, self.trackStartPos, blendType = "easeInOut"),
+                        LerpPosInterval(
+                            self.locomotive,
+                            totalTime,
+                            halfway,
+                            self.trackStartPos,
+                            blendType="easeInOut"),
                         WaitInterval(waitTime),
-                        LerpPosInterval(self.locomotive, totalTime, self.trackEndPos, halfway, blendType = "easeIn"),
-                        )
-                    )
-                )
+                        LerpPosInterval(
+                            self.locomotive,
+                            totalTime,
+                            self.trackEndPos,
+                            halfway,
+                            blendType="easeIn"),
+                    )))
         else:
-            totalTime = random.randrange(6, self.MarkDelta-1)
-            #match up the middle of the run time to the middle of the sfx time
+            totalTime = random.randrange(6, self.MarkDelta - 1)
+            # match up the middle of the run time to the middle of the sfx time
             sfxTime = 7
-            sfxStartTime = (totalTime/2) - (sfxTime/2)
+            sfxStartTime = (totalTime / 2) - (sfxTime / 2)
             if self.bFlipped:
                 sfxStartTime -= 1
             else:
                 sfxStartTime += 1
-            nextRun.append( \
+            nextRun.append(
                 Parallel(
                     Sequence(
                         Wait(sfxStartTime),
-                        SoundInterval(self.trainPassingSfx, volume = 0.5 ),
-                        ),
-                    LerpPosInterval(self.locomotive, totalTime, self.trackEndPos, self.trackStartPos),
-                    )
-                )
+                        SoundInterval(
+                            self.trainPassingSfx,
+                            volume=0.5),
+                    ),
+                    LerpPosInterval(
+                        self.locomotive,
+                        totalTime,
+                        self.trackEndPos,
+                        self.trackStartPos),
+                ))
 
-        nextRun.append( Func(self.doNextRun) )
+        nextRun.append(Func(self.doNextRun))
 
         return nextRun
 
@@ -220,18 +240,20 @@ class Train(DirectObject):
             carColls = car.findAllMatches('**/+CollisionNode')
             allColls += carColls
 
-        #rename these based off the trainId
+        # rename these based off the trainId
         for collNode in allColls:
             collNode.setName(self.collNodeName)
             collNode.setCollideMask(ToontownGlobals.WallBitmask)
 
-        self.accept('enter' + self.collNodeName, self.__handleCollisionSphereEnter)
+        self.accept(
+            'enter' + self.collNodeName,
+            self.__handleCollisionSphereEnter)
 
     def __disableCollisions(self):
         # stop listening for toons.
         self.ignore('enter' + self.collNodeName)
-        #self.collisionNode.setCollideMask(BitMask32(0))
-    
+        # self.collisionNode.setCollideMask(BitMask32(0))
+
     def __handleCollisionSphereEnter(self, collEntry=None):
         # Response for the train hitting a toon
         assert(self.notify.debug("Entering collision sphere..."))

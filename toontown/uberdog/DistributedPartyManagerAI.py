@@ -12,6 +12,7 @@ from toontown.parties.PartyInfo import PartyInfoAI
 from toontown.ai import RepairAvatars
 from toontown.toonbase import ToontownGlobals
 
+
 class DistributedPartyManagerAI(DistributedObjectAI):
     """AI side class for the party manager."""
 
@@ -21,24 +22,30 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         DistributedObjectAI.__init__(self, air)
         self.accept("avatarEntered", self.handleAvatarEntered)
 
-        self.allowUnreleased= False
-        self.canBuy = True # change this to True when boarding has had time on test
+        self.allowUnreleased = False
+        self.canBuy = True  # change this to True when boarding has had time on test
         self.avIdToPartyZoneId = {}
-        self.hostAvIdToPartiesRunning = {} # hostAvId to DistributedPartyAIs
-        self.hostAvIdToAllPartiesInfo = {} # hostAvId to ( public party start time, shardId, zoneId, isPrivate, number of toons there, hostName, activityIds, partyId)
-        self.avIdEnteringPartyToHostIdZoneId = {} # avIds of toons entering a party to (hostId, zoneId)
-        self.zoneIdToGuestAvIds = {} # zoneId to list of guest avIds at that party
-        self.zoneIdToHostAvId = {} # Zone id's mapped to party host Id's
+        self.hostAvIdToPartiesRunning = {}  # hostAvId to DistributedPartyAIs
+        # hostAvId to ( public party start time, shardId, zoneId, isPrivate,
+        # number of toons there, hostName, activityIds, partyId)
+        self.hostAvIdToAllPartiesInfo = {}
+        # avIds of toons entering a party to (hostId, zoneId)
+        self.avIdEnteringPartyToHostIdZoneId = {}
+        self.zoneIdToGuestAvIds = {}  # zoneId to list of guest avIds at that party
+        self.zoneIdToHostAvId = {}  # Zone id's mapped to party host Id's
         self.hostAvIdToClosingPartyZoneId = {}
-        self.hostIdToPlanningPartyZoneId = {} # Used for security checks when freeing zones that were used for planning
+        # Used for security checks when freeing zones that were used for
+        # planning
+        self.hostIdToPlanningPartyZoneId = {}
 
         # Number of seconds between spontaneous heals
-        self.healFrequency = 30 # seconds
+        self.healFrequency = 30  # seconds
 
     def generate(self):
         """We have zone info but not required fields, register for the special."""
         # PARTY_MANAGER_UD_TO_ALL_AI will arrive on this channel
-        self.air.registerForChannel(OtpDoGlobals.OTP_DO_ID_TOONTOWN_PARTY_MANAGER)
+        self.air.registerForChannel(
+            OtpDoGlobals.OTP_DO_ID_TOONTOWN_PARTY_MANAGER)
         DistributedObjectAI.generate(self)
 
     def announceGenerate(self):
@@ -49,67 +56,102 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         self.air.sendUpdateToDoId("DistributedPartyManager",
                                   'partyManagerAIStartingUp',
                                   OtpDoGlobals.OTP_DO_ID_TOONTOWN_PARTY_MANAGER,
-                                   [self.doId, self.air.districtId]
+                                  [self.doId, self.air.districtId]
                                   )
-        goingDownDg = self.air.createDgUpdateToDoId("DistributedPartyManager",
-                                  'partyManagerAIGoingDown',
-                                  OtpDoGlobals.OTP_DO_ID_TOONTOWN_PARTY_MANAGER,
-                                   [self.doId, self.air.districtId]
-                                  )
+        goingDownDg = self.air.createDgUpdateToDoId(
+            "DistributedPartyManager",
+            'partyManagerAIGoingDown',
+            OtpDoGlobals.OTP_DO_ID_TOONTOWN_PARTY_MANAGER,
+            [
+                self.doId,
+                self.air.districtId])
         if goingDownDg:
             self.air.addPostSocketClose(goingDownDg)
 
-
-
     def handleAvatarEntered(self, avatar):
         """A toon just logged in, check his party information."""
-        DistributedPartyManagerAI.notify.debug( "handleAvatarEntered" )
-        #self.air.sendUpdateToDoId("DistributedPartyManager",
+        DistributedPartyManagerAI.notify.debug("handleAvatarEntered")
+        # self.air.sendUpdateToDoId("DistributedPartyManager",
         #                      'avatarLoggedIn',
         #                      OtpDoGlobals.OTP_DO_ID_TOONTOWN_PARTY_MANAGER,
         #                      [avatar.doId])
 
     def partyUpdate(self, avId):
         """Force uberdog to resend all party related info from databases."""
-        DistributedPartyManagerAI.notify.debug( "partyUpdate" )
+        DistributedPartyManagerAI.notify.debug("partyUpdate")
         self.sendUpdate('avatarLoggedIn', [avId])
 
-    def sendAddParty(self, hostId, startTime, endTime, isPrivate, inviteTheme, activities, decorations, inviteeIds, costOfParty):
+    def sendAddParty(
+            self,
+            hostId,
+            startTime,
+            endTime,
+            isPrivate,
+            inviteTheme,
+            activities,
+            decorations,
+            inviteeIds,
+            costOfParty):
         """Pass add party request up to uberdog."""
-        DistributedPartyManagerAI.notify.debug( "sendAddParty" )
+        DistributedPartyManagerAI.notify.debug("sendAddParty")
         self.air.sendUpdateToDoId("DistributedPartyManager",
-                              'addParty',
-                              OtpDoGlobals.OTP_DO_ID_TOONTOWN_PARTY_MANAGER,
-                              [self.doId, hostId, startTime, endTime, isPrivate, inviteTheme, activities, decorations, inviteeIds, costOfParty])
+                                  'addParty',
+                                  OtpDoGlobals.OTP_DO_ID_TOONTOWN_PARTY_MANAGER,
+                                  [self.doId,
+                                   hostId,
+                                   startTime,
+                                   endTime,
+                                   isPrivate,
+                                   inviteTheme,
+                                   activities,
+                                   decorations,
+                                   inviteeIds,
+                                   costOfParty])
         # Set up a failsafe incase uberdog has crashed...
         taskMgr.doMethodLater(
             5.0,
             self.addPartyResponseUdToAi,
-            "NoResponseFromUberdog_%d_%d"%(self.doId,hostId),
-            [hostId,PartyGlobals.AddPartyErrorCode.DatabaseError,0]
+            "NoResponseFromUberdog_%d_%d" % (self.doId, hostId),
+            [hostId, PartyGlobals.AddPartyErrorCode.DatabaseError, 0]
         )
 
-    def addPartyRequest(self, hostId, startTime, endTime, isPrivate, inviteTheme, activities, decorations, inviteeIds):
+    def addPartyRequest(
+            self,
+            hostId,
+            startTime,
+            endTime,
+            isPrivate,
+            inviteTheme,
+            activities,
+            decorations,
+            inviteeIds):
         """Add a new party."""
-        DistributedPartyManagerAI.notify.debug( "addPartyRequest" )
+        DistributedPartyManagerAI.notify.debug("addPartyRequest")
         validPartyRequest = True
         senderId = self.air.getAvatarIdFromSender()
         toonSender = simbase.air.doId2do.get(senderId)
         if not toonSender:
-            # the toon is not on our district, let the party manager on that district handle it
-            DistributedPartyManagerAI.notify.debug('addPartyRequest toon %d is not in our district' % senderId)
+            # the toon is not on our district, let the party manager on that
+            # district handle it
+            DistributedPartyManagerAI.notify.debug(
+                'addPartyRequest toon %d is not in our district' % senderId)
             return
 
         if hostId != senderId:
             # really bad, potential hacker
-            self.air.writeServerEvent('suspicious', senderId,
-                                      'trying to create party but not host : hostId = %d' % hostId)
+            self.air.writeServerEvent(
+                'suspicious',
+                senderId,
+                'trying to create party but not host : hostId = %d' %
+                hostId)
             validPartyRequest = False
 
         if validPartyRequest:
-            validPartyRequest, costOfPartyOrError = self.validatePartyAndReturnCost(hostId, startTime, endTime, isPrivate, inviteTheme, activities, decorations, inviteeIds)
+            validPartyRequest, costOfPartyOrError = self.validatePartyAndReturnCost(
+                hostId, startTime, endTime, isPrivate, inviteTheme, activities, decorations, inviteeIds)
 
-        # assuming all is well, send this to uberdog, otherwise respond back immediately
+        # assuming all is well, send this to uberdog, otherwise respond back
+        # immediately
         if validPartyRequest:
             actList = []
             for actTuple in activities:
@@ -117,71 +159,99 @@ class DistributedPartyManagerAI(DistributedObjectAI):
             decList = []
             for decTuple in decorations:
                 decList.append(decTuple[0])
-            self.air.writeServerEvent("party_buy_attempt", hostId, "act=%s dec=%s" % ( str(actList), str(decList)))
-            self.sendAddParty(hostId, startTime,endTime, isPrivate, inviteTheme, activities, decorations, inviteeIds, costOfPartyOrError)
+            self.air.writeServerEvent(
+                "party_buy_attempt", hostId, f"act={str(actList)} dec={str(decList)}")
+            self.sendAddParty(
+                hostId,
+                startTime,
+                endTime,
+                isPrivate,
+                inviteTheme,
+                activities,
+                decorations,
+                inviteeIds,
+                costOfPartyOrError)
         else:
-            DistributedPartyManagerAI.notify.debug('inValid party because : %s' % costOfPartyOrError)
-            self.sendAddPartyResponse(hostId, PartyGlobals.AddPartyErrorCode.ValidationError)
+            DistributedPartyManagerAI.notify.debug(
+                f'inValid party because : {costOfPartyOrError}')
+            self.sendAddPartyResponse(
+                hostId, PartyGlobals.AddPartyErrorCode.ValidationError)
 
-    def validatePartyAndReturnCost(self, hostId, startTime, endTime, isPrivate, inviteTheme, activities, decorations, inviteeIds):
-        DistributedPartyManagerAI.notify.debug( "validatePartyAndReturnCost" )
+    def validatePartyAndReturnCost(
+            self,
+            hostId,
+            startTime,
+            endTime,
+            isPrivate,
+            inviteTheme,
+            activities,
+            decorations,
+            inviteeIds):
+        DistributedPartyManagerAI.notify.debug("validatePartyAndReturnCost")
         # First, check to see if this is his only party that isn't cancelled or
         # finished.
         host = simbase.air.doId2do[hostId]
         if not host.canPlanParty():
-            return (False,"Other Parties")
+            return (False, "Other Parties")
 
         # TODO-parties : We need to validate startTime and endTime to make sure
         #                they are valid strings, or will sql do that?
         try:
             startTm = time.strptime(startTime, "%Y-%m-%d %H:%M:%S")
             if PartyGlobals.MaxPlannedYear < startTm.tm_year:
-                return (False,"Start time too far in the future")
+                return (False, "Start time too far in the future")
             elif startTm.tm_year < PartyGlobals.MinPlannedYear:
-                return (False,"Start time too far in the future")
+                return (False, "Start time too far in the future")
         except ValueError:
             return (False, "Can't parse startTime")
 
         try:
             endTm = time.strptime(endTime, "%Y-%m-%d %H:%M:%S")
             if PartyGlobals.MaxPlannedYear < endTm.tm_year:
-                return (False,"End time too far in the future")
+                return (False, "End time too far in the future")
             elif endTm.tm_year < PartyGlobals.MinPlannedYear:
-                return (False,"End time too far in the future")
+                return (False, "End time too far in the future")
         except ValueError:
             return (False, "Can't parse endTime")
 
-        if isPrivate not in (0,1):
-            return (False,"Invalid isPrivate %s" % isPrivate)
+        if isPrivate not in (0, 1):
+            return (False, f"Invalid isPrivate {isPrivate}")
 
         if inviteTheme not in PartyGlobals.InviteTheme:
-            return (False,"Invalid inviteTheme %s" % inviteTheme)
+            return (False, f"Invalid inviteTheme {inviteTheme}")
 
         if hasattr(simbase.air, "holidayManager"):
             if ToontownGlobals.VALENTINES_DAY not in simbase.air.holidayManager.currentHolidays:
                 if inviteTheme == PartyGlobals.InviteTheme.Valentoons:
-                    return (False,"Invalid inviteTheme %s" % inviteTheme)
+                    return (False, f"Invalid inviteTheme {inviteTheme}")
             if ToontownGlobals.VICTORY_PARTY_HOLIDAY not in simbase.air.holidayManager.currentHolidays:
                 if inviteTheme == PartyGlobals.InviteTheme.VictoryParty:
-                    return (False,"Invalid inviteTheme %s" % inviteTheme)
+                    return (False, f"Invalid inviteTheme {inviteTheme}")
 
         costOfParty = 0
         activitiesUsedDict = {}
-        usedGridSquares = {} # key is a tuple (x,y), value isn't that important
+        # key is a tuple (x,y), value isn't that important
+        usedGridSquares = {}
         actSet = set([])
         for activityTuple in activities:
             if activityTuple[0] not in PartyGlobals.ActivityIds:
-                return (False,"Invalid activity id %s"%activityTuple[0])
+                return (False, f"Invalid activity id {activityTuple[0]}")
 
             activityId = activityTuple[0]
 
             # Check for holiday restrictions.
             if activityId in PartyGlobals.VictoryPartyActivityIds:
-                if not simbase.air.holidayManager.isHolidayRunning(ToontownGlobals.VICTORY_PARTY_HOLIDAY):
-                    return (False, "Can't add activity %s during Victory Party " %activityId)
+                if not simbase.air.holidayManager.isHolidayRunning(
+                        ToontownGlobals.VICTORY_PARTY_HOLIDAY):
+                    return (
+                        False,
+                        f"Can't add activity {activityId} during Victory Party ")
             if activityId in PartyGlobals.VictoryPartyReplacementActivityIds:
-                if simbase.air.holidayManager.isHolidayRunning(ToontownGlobals.VICTORY_PARTY_HOLIDAY):
-                    return (False, "Can't add activity %s during Victory Party " %activityId)
+                if simbase.air.holidayManager.isHolidayRunning(
+                        ToontownGlobals.VICTORY_PARTY_HOLIDAY):
+                    return (
+                        False,
+                        f"Can't add activity {activityId} during Victory Party ")
 
             actSet.add(activityTuple[0])
             if activityTuple[0] in activitiesUsedDict:
@@ -190,20 +260,28 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                 activitiesUsedDict[activityTuple[0]] = 1
             costOfParty += PartyGlobals.ActivityInformationDict[activityTuple[0]]["cost"]
             if activityTuple[1] < 0 or activityTuple[1] >= PartyGlobals.PartyEditorGridSize[0]:
-                return (False,"Invalid activity x %s"%activityTuple[1])
+                return (False, f"Invalid activity x {activityTuple[1]}")
             if activityTuple[2] < 0 or activityTuple[2] >= PartyGlobals.PartyEditorGridSize[1]:
-                return (False,"Invalid activity y %s"%activityTuple[2])
+                return (False, f"Invalid activity y {activityTuple[2]}")
             if activityTuple[3] < 0 or activityTuple[3] > 255:
-                return (False,"Invalid activity h %s"%activityTuple[3])
+                return (False, f"Invalid activity h {activityTuple[3]}")
             # check for unreleased activity
             if activityTuple[0] in PartyGlobals.UnreleasedActivityIds:
-                self.air.writeServerEvent('suspicious', hostId, "trying to buy unreleased activity %s" %
-                                          PartyGlobals.ActivityIds.getString(activityTuple[0]))
-                self.notify.warning("%d trying to buy unreleased activity %s" %
-                                    (hostId, PartyGlobals.ActivityIds.getString(activityTuple[0])))
+                self.air.writeServerEvent(
+                    'suspicious',
+                    hostId,
+                    "trying to buy unreleased activity %s" %
+                    PartyGlobals.ActivityIds.getString(
+                        activityTuple[0]))
+                self.notify.warning(
+                    "%d trying to buy unreleased activity %s" %
+                    (hostId, PartyGlobals.ActivityIds.getString(
+                        activityTuple[0])))
                 if not self.allowUnreleasedServer():
-                    return (False, "Activity %s is not released" %
-                            PartyGlobals.ActivityIds.getString(activityTuple[0]))
+                    return (
+                        False, "Activity %s is not released" %
+                        PartyGlobals.ActivityIds.getString(
+                            activityTuple[0]))
 
             # check if the grid squares are valid
             gridSize = PartyGlobals.ActivityInformationDict[activityId]["gridsize"]
@@ -216,48 +294,56 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                 for curGridX in xRange:
                     squareToTest = (curGridX, curGridY)
                     if squareToTest in usedGridSquares:
-                        self.notify.debug("activitities=%s decor=%s usedGridSquares=%s" %
-                                          (str(activities),
-                                           str(decorations),
-                                           str(usedGridSquares)))
-                        return (False, "Grid Square %s is used twice by %s and %s" %
-                                (str(squareToTest),
-                                 str(activityId),
-                                 str(usedGridSquares[squareToTest])))
+                        self.notify.debug(
+                            "activitities=%s decor=%s usedGridSquares=%s" %
+                            (str(activities), str(decorations), str(usedGridSquares)))
+                        return (
+                            False, "Grid Square %s is used twice by %s and %s" %
+                            (str(squareToTest), str(activityId), str(
+                                usedGridSquares[squareToTest])))
                     else:
-                        usedGridSquares[squareToTest]="activity-%d"%activityId
+                        usedGridSquares[squareToTest] = "activity-%d" % activityId
 
         # Check to see if an activity is used too many times
         for id in PartyGlobals.ActivityIds:
             if id in activitiesUsedDict:
                 if activitiesUsedDict[id] > PartyGlobals.ActivityInformationDict[id]["limitPerParty"]:
-                    return (False,"Too many of activity %s"%id)
+                    return (False, f"Too many of activity {id}")
 
         # Check for mutually exclusive activities
         for mutuallyExclusiveTuples in PartyGlobals.MutuallyExclusiveActivities:
             mutSet = set(mutuallyExclusiveTuples)
             inter = mutSet.intersection(actSet)
             if len(inter) > 1:
-                return (False, "Mutuallly exclusive activites %s" % str(inter))
+                return (False, f"Mutuallly exclusive activites {str(inter)}")
 
         decorationsUsedDict = {}
         for decorationTuple in decorations:
             decorId = decorationTuple[0]
             if decorId not in PartyGlobals.DecorationIds:
-                return (False,"%s is not a valid decoration" % decorId)
+                return (False, f"{decorId} is not a valid decoration")
             # Check if decorId is a holiday specific decoration.
             decorName = PartyGlobals.DecorationIds.getString(decorId)
             if (decorName == "HeartTarget") \
-            or (decorName == "HeartBanner") \
-            or (decorName == "FlyingHeart"):
-                if not simbase.air.holidayManager.isHolidayRunning(ToontownGlobals.VALENTINES_DAY):
-                    return (False, "Can't add ValenToons decoration %s" % decorId)
+                    or (decorName == "HeartBanner") \
+                    or (decorName == "FlyingHeart"):
+                if not simbase.air.holidayManager.isHolidayRunning(
+                        ToontownGlobals.VALENTINES_DAY):
+                    return (
+                        False,
+                        f"Can't add ValenToons decoration {decorId}")
             if decorId in PartyGlobals.VictoryPartyDecorationIds:
-                if not simbase.air.holidayManager.isHolidayRunning(ToontownGlobals.VICTORY_PARTY_HOLIDAY):
-                    return (False, "Can't add Victory Party decoration %s" % decorId)
+                if not simbase.air.holidayManager.isHolidayRunning(
+                        ToontownGlobals.VICTORY_PARTY_HOLIDAY):
+                    return (
+                        False,
+                        f"Can't add Victory Party decoration {decorId}")
             elif decorId in PartyGlobals.VictoryPartyReplacementDecorationIds:
-                if simbase.air.holidayManager.isHolidayRunning(ToontownGlobals.VICTORY_PARTY_HOLIDAY):
-                    return (False, "Can't add decoration during Victory Party %s" % decorId)
+                if simbase.air.holidayManager.isHolidayRunning(
+                        ToontownGlobals.VICTORY_PARTY_HOLIDAY):
+                    return (
+                        False,
+                        f"Can't add decoration during Victory Party {decorId}")
 
             if decorationTuple[0] in decorationsUsedDict:
                 decorationsUsedDict[decorationTuple[0]] += 1
@@ -265,20 +351,28 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                 decorationsUsedDict[decorationTuple[0]] = 1
             costOfParty += PartyGlobals.DecorationInformationDict[decorationTuple[0]]["cost"]
             if decorationTuple[1] < 0 or decorationTuple[1] >= PartyGlobals.PartyEditorGridSize[0]:
-                return (False,"Invalid decoration X %s" % decorationTuple[1])
+                return (False, f"Invalid decoration X {decorationTuple[1]}")
             if decorationTuple[2] < 0 or decorationTuple[2] >= PartyGlobals.PartyEditorGridSize[1]:
-                return (False,"Invalid decoration Y %s" % decorationTuple[2])
+                return (False, f"Invalid decoration Y {decorationTuple[2]}")
             if decorationTuple[3] < 0 or decorationTuple[3] > 255:
-                return (False,"Invalid decoration H %s" % decorationTuple[3])
+                return (False, f"Invalid decoration H {decorationTuple[3]}")
             # check for unreleased decoration
             if decorationTuple[0] in PartyGlobals.UnreleasedDecorationIds:
-                self.air.writeServerEvent('suspicious', hostId, "trying to buy unreleased decoration %s" %
-                                          PartyGlobals.DecorationIds.getString(decorationTuple[0]))
-                self.notify.warning("%d trying to buy unreleased decoration %s" %
-                                    (hostId, PartyGlobals.DecorationIds.getString(decorationTuple[0])))
+                self.air.writeServerEvent(
+                    'suspicious',
+                    hostId,
+                    "trying to buy unreleased decoration %s" %
+                    PartyGlobals.DecorationIds.getString(
+                        decorationTuple[0]))
+                self.notify.warning(
+                    "%d trying to buy unreleased decoration %s" %
+                    (hostId, PartyGlobals.DecorationIds.getString(
+                        decorationTuple[0])))
                 if not self.allowUnreleasedServer():
-                    return (False, "Decoration %s is not released" %
-                            PartyGlobals.DecorationIds.getString(decorationTuple[0]))
+                    return (
+                        False, "Decoration %s is not released" %
+                        PartyGlobals.DecorationIds.getString(
+                            decorationTuple[0]))
             # check if the grid squares are valid
             gridSize = PartyGlobals.DecorationInformationDict[decorId]["gridsize"]
             centerGridX = decorationTuple[1]
@@ -290,40 +384,42 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                 for curGridX in xRange:
                     squareToTest = (curGridX, curGridY)
                     if squareToTest in usedGridSquares:
-                        self.notify.debug("activitities=%s decor=%s usedGridSquares=%s" %
-                                          (str(activities),
-                                           str(decorations),
-                                           str(usedGridSquares)))
-                        return (False, "decor Grid Square %s is used twice" % str(squareToTest))
+                        self.notify.debug(
+                            "activitities=%s decor=%s usedGridSquares=%s" %
+                            (str(activities), str(decorations), str(usedGridSquares)))
+                        return (
+                            False, "decor Grid Square %s is used twice" %
+                            str(squareToTest))
                     else:
-                        usedGridSquares[squareToTest]="decor-%d"%decorId
+                        usedGridSquares[squareToTest] = "decor-%d" % decorId
 
         # Check to see if a decoration is used too many times
         for id in PartyGlobals.DecorationIds:
             if id in decorationsUsedDict:
                 if decorationsUsedDict[id] > PartyGlobals.DecorationInformationDict[id]["limitPerParty"]:
-                    return (False,"Decoration %s used too many times." % id)
+                    return (False, f"Decoration {id} used too many times.")
 
         # Can I afford this party, really?
         if costOfParty > host.getTotalMoney():
-            return (False,"Party too expensive, cost = %d"%costOfParty)
+            return (False, "Party too expensive, cost = %d" % costOfParty)
 
         # Can't have parties that have 0 empty grid squares.
         if len(usedGridSquares) >= PartyGlobals.AvailableGridSquares:
-            return (False,"Party uses %s grid squares." % len(usedGridSquares))
+            return (
+                False, f"Party uses {len(usedGridSquares)} grid squares.")
 
         # Wow, you passed all the tests I can think of, ship it!
         return (True, costOfParty)
 
     ####
-    ## Grid range computation note:
-    ## We must round with negative values otherwise for center=0, size=3, the
-    ## result will be [1, 0] when we expect [1, 0, -1].
-    ##   The range without rounding: range(int(1.5), int(-1.5), -1)
-    ##   The range with rounding:    range(int(1.5), int(-2), -1)
-    ## Not a problem with center>=2 in this example:
-    ##   The range without rounding: range(int(3.5), int(0.5), -1)
-    ##   The range with rounding:    range(int(3.5), int(0), -1)
+    # Grid range computation note:
+    # We must round with negative values otherwise for center=0, size=3, the
+    # result will be [1, 0] when we expect [1, 0, -1].
+    # The range without rounding: range(int(1.5), int(-1.5), -1)
+    # The range with rounding:    range(int(1.5), int(-2), -1)
+    # Not a problem with center>=2 in this example:
+    # The range without rounding: range(int(3.5), int(0.5), -1)
+    # The range with rounding:    range(int(3.5), int(0), -1)
     ####
 
     def computeGridYRange(self, centerGridY, size):
@@ -331,9 +427,9 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         if size == 1:
             result = [centerGridY]
         else:
-            result =  list(range(int(centerGridY + size/2),
-                            int(centerGridY - (size/2)),
-                            -1))
+            result = list(range(int(centerGridY + size / 2),
+                                int(centerGridY - (size / 2)),
+                                -1))
 
         # The result list should be the same size as given.
         #assert len(result) == size, "Bad result range: c=%s s=%s result=%s" % (centerGridY, size, result)
@@ -345,9 +441,9 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         if size == 1:
             result = [centerGridX]
         else:
-            result = list(range(int(centerGridX + size/2),
-                           int(centerGridX - (size/2)),
-                           -1))
+            result = list(range(int(centerGridX + size / 2),
+                                int(centerGridX - (size / 2)),
+                                -1))
 
         # The result list should be the same size as given.
         #assert len(result) == size, "Bad result range: c=%s s=%s result=%s" % (centerGridX, size, result)
@@ -356,7 +452,9 @@ class DistributedPartyManagerAI(DistributedObjectAI):
 
     def sendAddPartyResponse(self, hostId, errorCode):
         """Tell the client if he's add party request got accepted."""
-        self.sendUpdateToAvatarId(hostId, "addPartyResponse", [hostId, errorCode])
+        self.sendUpdateToAvatarId(
+            hostId, "addPartyResponse", [
+                hostId, errorCode])
 
     def markInviteReadButNotReplied(self, inviteKey):
         """Just flag the invite as read in the database."""
@@ -366,14 +464,22 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                                   [self.doId, inviteKey]
                                   )
 
-    def respondToInviteFromMailbox(self, context, inviteKey, newStatus, mailboxDoId):
+    def respondToInviteFromMailbox(
+            self,
+            context,
+            inviteKey,
+            newStatus,
+            mailboxDoId):
         """Send invite response to uberdog."""
-        DistributedPartyManagerAI.notify.debug( "respondToInvite" )
+        DistributedPartyManagerAI.notify.debug("respondToInvite")
         senderId = self.air.getAvatarIdFromSender()
         toonSender = simbase.air.doId2do.get(senderId)
         if not toonSender:
-            # the toon is not on our district, let the party manager on that district handle it
-            DistributedPartyManagerAI.notify.debug('respondToInviteFromMailbox toon %d is not in our district' % senderId)
+            # the toon is not on our district, let the party manager on that
+            # district handle it
+            DistributedPartyManagerAI.notify.debug(
+                'respondToInviteFromMailbox toon %d is not in our district' %
+                senderId)
             return
         self.air.sendUpdateToDoId("DistributedPartyManager",
                                   'respondToInvite',
@@ -381,24 +487,32 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                                   [self.doId, mailboxDoId, context, inviteKey, newStatus]
                                   )
 
-    def respondToInviteResponse(self, mailboxDoId, context, inviteKey,  retcode, newStatus):
+    def respondToInviteResponse(
+            self,
+            mailboxDoId,
+            context,
+            inviteKey,
+            retcode,
+            newStatus):
         """UD responding to our invite change."""
-        DistributedPartyManagerAI.notify.debug( "respondToInviteResponse" )
+        DistributedPartyManagerAI.notify.debug("respondToInviteResponse")
         mailboxAI = simbase.air.doId2do.get(mailboxDoId)
         if mailboxAI:
             if newStatus == PartyGlobals.InviteStatus.Rejected:
-                mailboxAI.respondToRejectInviteCallback(context, inviteKey, retcode)
+                mailboxAI.respondToRejectInviteCallback(
+                    context, inviteKey, retcode)
             else:
-                mailboxAI.respondToAcceptInviteCallback(context, inviteKey, retcode)
+                mailboxAI.respondToAcceptInviteCallback(
+                    context, inviteKey, retcode)
 
     def addPartyResponseUdToAi(self, hostId, errorCode, costOfParty):
         """Handle uberdog responding to our addParty message."""
-        taskMgr.remove("NoResponseFromUberdog_%d_%d"%(self.doId,hostId))
+        taskMgr.remove("NoResponseFromUberdog_%d_%d" % (self.doId, hostId))
         if errorCode == PartyGlobals.AddPartyErrorCode.AllOk:
             host = simbase.air.doId2do.get(hostId)
-            self.air.writeServerEvent("party_buy", hostId,"%d" % costOfParty)
-            if host :
-                host.takeMoney(costOfParty, bUseBank = True)
+            self.air.writeServerEvent("party_buy", hostId, "%d" % costOfParty)
+            if host:
+                host.takeMoney(costOfParty, bUseBank=True)
             else:
                 #  Woah, did he just get a free party?  Someone
                 # bought a party, and while the uberdog was putting it in the
@@ -413,22 +527,24 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         senderId = self.air.getAvatarIdFromSender()
         toonSender = simbase.air.doId2do.get(senderId)
         if not toonSender:
-            # the toon is not on our district, let the party manager on that district handle it
-            DistributedPartyManagerAI.notify.debug('changePrivateRequest toon %d is not in our district' % senderId)
+            # the toon is not on our district, let the party manager on that
+            # district handle it
+            DistributedPartyManagerAI.notify.debug(
+                'changePrivateRequest toon %d is not in our district' % senderId)
             return
 
         errorCode = self.partyFieldChangeValidate(partyId)
         if errorCode != PartyGlobals.ChangePartyFieldErrorCode.AllOk:
             # immediately say we have an error then return
-            self.sendUpdateToAvatarId(senderId,'changePrivateResponse',
-                            [partyId, newPrivateStatus, errorCode])
+            self.sendUpdateToAvatarId(senderId, 'changePrivateResponse',
+                                      [partyId, newPrivateStatus, errorCode])
             return
 
         # do whatever other sanity checks is necessary here
         self.air.sendUpdateToDoId("DistributedPartyManager",
                                   'changePrivateRequestAiToUd',
                                   OtpDoGlobals.OTP_DO_ID_TOONTOWN_PARTY_MANAGER,
-                                   [self.doId, partyId, newPrivateStatus]
+                                  [self.doId, partyId, newPrivateStatus]
                                   )
 
     def partyFieldChangeValidate(self, partyId):
@@ -450,21 +566,30 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         if not hostingThisParty:
             # the toon is not hosting this partyId
             # really bad, potential hacker
-            self.air.writeServerEvent('suspicious', senderId,
-                                      'trying to change field of party %s but not the host' % partyId)
+            self.air.writeServerEvent(
+                'suspicious',
+                senderId,
+                f'trying to change field of party {partyId} but not the host')
             errorCode = PartyGlobals.ChangePartyFieldErrorCode.ValidationError
             return errorCode
 
         if party.hostId != senderId:
             # really bad, potential hacker
-            self.air.writeServerEvent('suspicious', senderId,
-                                      'trying to change field of party %s but not the host' % partyId)
+            self.air.writeServerEvent(
+                'suspicious',
+                senderId,
+                f'trying to change field of party {partyId} but not the host')
             errorCode = PartyGlobals.ChangePartyFieldErrorCode.ValidationError
             return errorCode
 
         return errorCode
 
-    def changePrivateResponseUdToAi(self, hostId, partyId, newPrivateStatus, errorCode):
+    def changePrivateResponseUdToAi(
+            self,
+            hostId,
+            partyId,
+            newPrivateStatus,
+            errorCode):
         """Handle the Uberdog telling us if the change private succeeded or not."""
         if errorCode == PartyGlobals.ChangePartyFieldErrorCode.AllOk:
             if hostId in self.air.doId2do:
@@ -475,31 +600,36 @@ class DistributedPartyManagerAI(DistributedObjectAI):
             if hostId in self.hostAvIdToAllPartiesInfo:
                 self.hostAvIdToAllPartiesInfo[hostId][3] = newPrivateStatus
 
-        self.sendUpdateToAvatarId(hostId, "changePrivateResponse", [partyId, newPrivateStatus, errorCode])
+        self.sendUpdateToAvatarId(
+            hostId, "changePrivateResponse", [
+                partyId, newPrivateStatus, errorCode])
 
     def changePartyStatusRequest(self, partyId, newPartyStatus):
         """Handle the client requesting to change the party status."""
         senderId = self.air.getAvatarIdFromSender()
         toonSender = simbase.air.doId2do.get(senderId)
         if not toonSender:
-            # the toon is not on our district, let the party manager on that district handle it
-            DistributedPartyManagerAI.notify.debug('changePartyStatusRequest toon %d not in our district' % senderId)
+            # the toon is not on our district, let the party manager on that
+            # district handle it
+            DistributedPartyManagerAI.notify.debug(
+                'changePartyStatusRequest toon %d not in our district' % senderId)
             return
         errorCode = self.partyFieldChangeValidate(partyId)
         if errorCode != PartyGlobals.ChangePartyFieldErrorCode.AllOk:
             # immediately say we have an error then return
-            self.sendUpdateToAvatarId(senderId,'changePartyStatusResponse',
-                            [partyId, newPartyStatus, errorCode, 0])
+            self.sendUpdateToAvatarId(senderId, 'changePartyStatusResponse',
+                                      [partyId, newPartyStatus, errorCode, 0])
             return
 
         # do whatever other sanity checks is necessary here
         self.air.sendUpdateToDoId("DistributedPartyManager",
                                   'changePartyStatusRequestAiToUd',
                                   OtpDoGlobals.OTP_DO_ID_TOONTOWN_PARTY_MANAGER,
-                                   [self.doId, partyId, newPartyStatus]
+                                  [self.doId, partyId, newPartyStatus]
                                   )
 
-    def changePartyStatusResponseUdToAi(self, hostId, partyId, newPartyStatus, errorCode):
+    def changePartyStatusResponseUdToAi(
+            self, hostId, partyId, newPartyStatus, errorCode):
         """Handle the Uberdog telling us if the change partyStatus succeeded or not."""
         beansRefunded = 0
         if hostId in self.air.doId2do:
@@ -509,10 +639,15 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                     partyInfo.status = newPartyStatus
                     if newPartyStatus == PartyGlobals.PartyStatus.Cancelled:
                         beansRefunded = self.getCostOfParty(partyInfo)
-                        beansRefunded = int(PartyGlobals.PartyRefundPercentage * beansRefunded)
+                        beansRefunded = int(
+                            PartyGlobals.PartyRefundPercentage * beansRefunded)
                         av.addMoney(beansRefunded)
-                        self.air.writeServerEvent("party_cancel", hostId, "%d|%d|%d|%d" % (beansRefunded, partyId, newPartyStatus, errorCode))
-        self.sendUpdateToAvatarId(hostId, "changePartyStatusResponse", [partyId, newPartyStatus, errorCode, beansRefunded])
+                        self.air.writeServerEvent(
+                            "party_cancel", hostId, "%d|%d|%d|%d" %
+                            (beansRefunded, partyId, newPartyStatus, errorCode))
+        self.sendUpdateToAvatarId(
+            hostId, "changePartyStatusResponse", [
+                partyId, newPartyStatus, errorCode, beansRefunded])
 
     def getCostOfParty(self, partyInfo):
         newCost = 0
@@ -523,8 +658,7 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         return newCost
 
     def getAllPublicParties(self):
-        allParties = list(self.hostAvIdToAllPartiesInfo.values())
-        allParties.sort()
+        allParties = sorted(self.hostAvIdToAllPartiesInfo.values())
         returnParties = []
         curGmTime = time.time()
         for partyInfo in allParties:
@@ -532,18 +666,21 @@ class DistributedPartyManagerAI(DistributedObjectAI):
             if partyInfo[3]:
                 continue
             # We want to return a list that has positive time and isPrivate
-            minLeft = int( (PartyGlobals.DefaultPartyDuration *60)  - ( curGmTime - partyInfo[0]) / 60.0)
+            minLeft = int((PartyGlobals.DefaultPartyDuration *
+                          60) - (curGmTime - partyInfo[0]) / 60.0)
             if minLeft <= 0:
                 continue
             returnParties.append(partyInfo[1:3] + partyInfo[4:7] + [minLeft])
-        DistributedPartyManagerAI.notify.debug("getAllPublicParties : %s" % returnParties)
+        DistributedPartyManagerAI.notify.debug(
+            f"getAllPublicParties : {returnParties}")
         return returnParties
 
     def updateToPublicPartyCountUdToAllAi(self, hostId, newCount):
         """
         The count has changed on a public party.
         """
-        DistributedPartyManagerAI.notify.debug("updateToPublicPartyCountUdToAllAi : hostId=%s newCount=%s"%(hostId, newCount))
+        DistributedPartyManagerAI.notify.debug(
+            f"updateToPublicPartyCountUdToAllAi : hostId={hostId} newCount={newCount}")
         if hostId in self.hostAvIdToAllPartiesInfo:
             self.hostAvIdToAllPartiesInfo[hostId][4] = newCount
 
@@ -555,16 +692,37 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         if hostId in self.hostAvIdToAllPartiesInfo:
             del self.hostAvIdToAllPartiesInfo[hostId]
 
-    def updateToPublicPartyInfoUdToAllAi(self, hostId, time, shardId, zoneId, isPrivate, numberOfGuests, hostName, activityIds, partyId):
+    def updateToPublicPartyInfoUdToAllAi(
+            self,
+            hostId,
+            time,
+            shardId,
+            zoneId,
+            isPrivate,
+            numberOfGuests,
+            hostName,
+            activityIds,
+            partyId):
         """
         There is an update to a public party, might not be on this AI so just
         update the public party information.
         """
-        DistributedPartyManagerAI.notify.debug("updateToPublicPartyInfoUdToAllAi : hostId=%s time=%s shardId=%s zoneId=%s isPrivate=%s numberOfGuests=%s hostName=%s"%(hostId, time, shardId, zoneId, isPrivate, numberOfGuests, hostName))
-        self.hostAvIdToAllPartiesInfo[hostId] = [time, shardId, zoneId, isPrivate, numberOfGuests, hostName, activityIds, partyId]
+        DistributedPartyManagerAI.notify.debug(
+            "updateToPublicPartyInfoUdToAllAi : hostId=%s time=%s shardId=%s zoneId=%s isPrivate=%s numberOfGuests=%s hostName=%s" %
+            (hostId, time, shardId, zoneId, isPrivate, numberOfGuests, hostName))
+        self.hostAvIdToAllPartiesInfo[hostId] = [
+            time,
+            shardId,
+            zoneId,
+            isPrivate,
+            numberOfGuests,
+            hostName,
+            activityIds,
+            partyId]
 
     def delete(self):
-        DistributedPartyManagerAI.notify.debug("BASE: delete: deleting DistributedPartyManagerAI object")
+        DistributedPartyManagerAI.notify.debug(
+            "BASE: delete: deleting DistributedPartyManagerAI object")
         self.ignoreAll()
         DistributedObjectGlobalAI.DistributedObjectGlobalAI.delete(self)
         for party in list(self.hostAvIdToPartiesRunning.values()):
@@ -578,13 +736,15 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         del self.hostAvIdToClosingPartyZoneId
         del self.hostIdToPlanningPartyZoneId
 
-    ## -----------------------------------------------------------
-    ## Zone allocation and enter code
-    ## -----------------------------------------------------------
+    # -----------------------------------------------------------
+    # Zone allocation and enter code
+    # -----------------------------------------------------------
 
     # Gets the party zone based on the host's avatar ID
     def getPartyZone(self, hostId, zoneId, planningParty):
-        DistributedPartyManagerAI.notify.debug("getPartyZone: hostId=%s zoneId=%s planningParty=%s" % (hostId, zoneId, planningParty))
+        DistributedPartyManagerAI.notify.debug(
+            "getPartyZone: hostId=%s zoneId=%s planningParty=%s" %
+            (hostId, zoneId, planningParty))
         # Get the party the avatar is in.
         # If the party is running in this ai, and sender is allowed to go
         # (public or invited, and not full), then return the party zone.
@@ -602,7 +762,11 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         # dictionaries.
         if planningParty:
             if hostId != senderId:
-                self.air.writeServerEvent('suspicious', senderId, 'trying to plan party but not host : hostId = %d' % hostId)
+                self.air.writeServerEvent(
+                    'suspicious',
+                    senderId,
+                    'trying to plan party but not host : hostId = %d' %
+                    hostId)
                 self.__sendNoPartyZoneToClient(senderId)
                 return
             # let's allocate a zone for the client to plan the party in
@@ -610,24 +774,29 @@ class DistributedPartyManagerAI(DistributedObjectAI):
             # We'll need to free it later, and we want to make sure we're freeing
             # the right zone, so let's remember it.
             self.hostIdToPlanningPartyZoneId[senderId] = zoneId
-            DistributedPartyManagerAI.notify.debug("getPartyZone : Avatar %s is planning party in zone %s" % (senderId, zoneId))
-            self.sendUpdateToAvatarId(senderId, "receivePartyZone", [senderId, 0, zoneId])
+            DistributedPartyManagerAI.notify.debug(
+                f"getPartyZone : Avatar {senderId} is planning party in zone {zoneId}")
+            self.sendUpdateToAvatarId(
+                senderId, "receivePartyZone", [
+                    senderId, 0, zoneId])
             return
 
         # If they have a zoneId, that means they came from a public party gate
         # or they are teleporting directly to a toon in a party or they are the
         # host returning to their own party.
-        if zoneId > 0 :
+        if zoneId > 0:
             if zoneId not in self.zoneIdToHostAvId:
                 # this party is gone, you'cant go to it
-                self.notify.warning("Trying to go to a party that is gone. zoneId=%s" % zoneId)
+                self.notify.warning(
+                    f"Trying to go to a party that is gone. zoneId={zoneId}")
                 self.__sendNoPartyZoneToClient(senderId)
                 return
 
             partyHostId = self.zoneIdToHostAvId[zoneId]
             if partyHostId in self.hostAvIdToClosingPartyZoneId:
                 # This party is closing, you can't go to it.
-                self.notify.warning("Trying to go to a party that is closing. hostId=%s" % partyHostId)
+                self.notify.warning(
+                    f"Trying to go to a party that is closing. hostId={partyHostId}")
                 self.__sendNoPartyZoneToClient(senderId)
                 return
 
@@ -658,13 +827,15 @@ class DistributedPartyManagerAI(DistributedObjectAI):
             isSenderHost = True
 
             # If the host got here and there's no party for him, then start a party.
-            # TODO-parties: Double check on the party shard dict to make sure that toon's party is not happening somewhere else.
+            # TODO-parties: Double check on the party shard dict to make sure
+            # that toon's party is not happening somewhere else.
             if (
                 (senderId not in self.hostAvIdToPartiesRunning) and
                 (senderId not in self.hostAvIdToClosingPartyZoneId)
-               ):
+            ):
                 # The host is starting a party, let's clear him out of the avIdToPartyZoneId
-                #self.clearPartyZoneId(senderId) # this doesn't clear him out of guests
+                # self.clearPartyZoneId(senderId) # this doesn't clear him out
+                # of guests
                 self.__exitParty(senderId)
                 isHostStartingParty = True
         # Else sender is visiting or attending a party at this shard:
@@ -675,11 +846,14 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                 # SDN: tell the client and do something more graceful
                 # make sure we don't give this guy toonups
                 try:
-                    # stop tooning up this visitor, he hasn't reached the party yet
+                    # stop tooning up this visitor, he hasn't reached the party
+                    # yet
                     av = self.air.doId2do[senderId]
                     av.stopToonUp()
-                except:
-                    DistributedPartyManagerAI.notify.debug("couldn't stop toonUpTask for av %s" % self.air.getAvatarIdFromSender())
+                except BaseException:
+                    DistributedPartyManagerAI.notify.debug(
+                        "couldn't stop toonUpTask for av %s" %
+                        self.air.getAvatarIdFromSender())
                 self.__sendNoPartyZoneToClient(senderId)
                 return
 
@@ -689,31 +863,42 @@ class DistributedPartyManagerAI(DistributedObjectAI):
             # No need to update the party zone information in this case.
             try:
                 if senderPartyZoneId == avPartyZoneId and not isHostStartingParty:
-                    DistributedPartyManagerAI.notify.debug("We are staying in the same zone %s, don't delete." % senderPartyZoneId)
+                    DistributedPartyManagerAI.notify.debug(
+                        "We are staying in the same zone %s, don't delete." %
+                        senderPartyZoneId)
                     self.__sendPartyZoneToClient(senderId, hostId)
                     return
                 else:
-                    DistributedPartyManagerAI.notify.debug("Sender is goint to a different party. Party av zone = %s, sender zone = %s." % (avPartyZoneId, senderPartyZoneId))
-            except:
-                DistributedPartyManagerAI.notify.debug("Sender is not teleporting to the same party.")
+                    DistributedPartyManagerAI.notify.debug(
+                        "Sender is goint to a different party. Party av zone = %s, sender zone = %s." %
+                        (avPartyZoneId, senderPartyZoneId))
+            except BaseException:
+                DistributedPartyManagerAI.notify.debug(
+                    "Sender is not teleporting to the same party.")
 
-            # At this point, toon is at a party and is going/creating a different party
+            # At this point, toon is at a party and is going/creating a
+            # different party
             if senderPartyZoneId != avPartyZoneId:
                 if hostId in self.hostAvIdToClosingPartyZoneId:
                     # This party is closing, you can't go to it.
-                    self.notify.warning("Trying to go to a party that is closing. hostId=%s" % hostId)
+                    self.notify.warning(
+                        f"Trying to go to a party that is closing. hostId={hostId}")
                     self.__sendNoPartyZoneToClient(senderId)
                     return
                 else:
-                    self.notify.debug("644 calling exitParty for %s" % senderId)
+                    self.notify.debug(
+                        f"644 calling exitParty for {senderId}")
                     self.__exitParty(senderId)
 
         # Sender is host and he's starting a party, then start the party:
         if isSenderHost and isHostStartingParty:
             if self.checkHostHasPartiesThatCanStart(hostId):
                 # We need to ask DistributedPartyManagerUD for the party information
-                # self.partyInfoOfHostResponseUdToAi will be called with the response
-                self.notify.debug("starting party Asking uberdog for party ifnromation hostId=%d" % hostId)
+                # self.partyInfoOfHostResponseUdToAi will be called with the
+                # response
+                self.notify.debug(
+                    "starting party Asking uberdog for party ifnromation hostId=%d" %
+                    hostId)
                 self.air.sendUpdateToDoId(
                     "DistributedPartyManager",
                     'partyInfoOfHostRequestAiToUd',
@@ -723,17 +908,21 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                 taskMgr.doMethodLater(
                     3.0,
                     self.partyInfoOfHostFailedResponseUdToAi,
-                    "UberdogTimedOut_%d"%hostId,
+                    "UberdogTimedOut_%d" % hostId,
                     [hostId]
-                    )
+                )
             else:
                 # save a round trip asking the uberdog, fail immediately
-                self.air.writeServerEvent('suspicious', senderId,
-                                      'trying to start a party when none can start %d' % senderId)
-                self.notify.warning('suspicious %d trying to start a party when none can start' % senderId)
+                self.air.writeServerEvent(
+                    'suspicious',
+                    senderId,
+                    'trying to start a party when none can start %d' %
+                    senderId)
+                self.notify.warning(
+                    'suspicious %d trying to start a party when none can start' %
+                    senderId)
                 self.__sendNoPartyZoneToClient(senderId)
                 return
-
 
         # We have a toon visiting another toon's party or a host visiting an
         # already started party, update dicts
@@ -741,7 +930,8 @@ class DistributedPartyManagerAI(DistributedObjectAI):
             # Note: hostId is host of the party sender is trying to go to
             if hostId in self.hostAvIdToClosingPartyZoneId:
                 # This party is closing, you can't go to it.
-                self.notify.warning("Trying to go to a party that is closing. hostId=%s" % hostId)
+                self.notify.warning(
+                    f"Trying to go to a party that is closing. hostId={hostId}")
                 self.__sendNoPartyZoneToClient(senderId)
                 return
             self.__addReferences(senderId, hostId)
@@ -772,9 +962,10 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                 break
         else:
             result = True
-            self.notify.warning("checkHostedParties could not find toon %d " % hostId)
+            self.notify.warning(
+                "checkHostedParties could not find toon %d " %
+                hostId)
         return result
-
 
     def getAvEnterEvent(self):
         return 'avatarEnterParty'
@@ -787,7 +978,7 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         if avId is None:
             return 'avatarExitParty'
         else:
-            return 'avatarExitParty-%s' % avId
+            return f'avatarExitParty-{avId}'
 
     def __enterParty(self, avId, hostId):
         # Tasks that should always get called when entering a party
@@ -801,15 +992,14 @@ class DistributedPartyManagerAI(DistributedObjectAI):
             self.notify.warning(
                 '__waitForToonToEnterParty(avId=%s, ownerId=%s, zoneId=%s): '
                 '%s already in avIdToPendingEnter. overwriting' % (
-                avId, hostId, zoneId, avId))
+                    avId, hostId, zoneId, avId))
         self.avIdEnteringPartyToHostIdZoneId[avId] = (hostId, zoneId)
         self.accept(DistributedObjectAI.staticGetLogicalZoneChangeEvent(avId),
                     Functor(self.__toonChangedZone, avId))
 
     def __toonLeftBeforeArrival(self, avId):
         if avId not in self.avIdEnteringPartyToHostIdZoneId:
-            self.notify.warning('__toonLeftBeforeArrival: av %s not in table' %
-                                avId)
+            self.notify.warning(f'__toonLeftBeforeArrival: av {avId} not in table')
             return
         hostId, zoneId = self.avIdEnteringPartyToHostIdZoneId[avId]
         self.notify.warning(
@@ -821,24 +1011,25 @@ class DistributedPartyManagerAI(DistributedObjectAI):
     def __toonChangedZone(self, avId, newZoneId, oldZoneId):
         #DistributedPartyManagerAI.notify.debug('_toonChangedZone(avId=%s, newZoneId=%s, oldZoneId=%s)' % (avId, newZoneId, oldZoneId))
         if avId not in self.avIdEnteringPartyToHostIdZoneId:
-            self.notify.warning('__toonChangedZone: av %s not in table' %
-                                avId)
+            self.notify.warning(f'__toonChangedZone: av {avId} not in table')
             return
         av = self.air.doId2do.get(avId)
         if not av:
-            self.notify.warning('__toonChangedZone(%s): av not present' % avId)
+            self.notify.warning(f'__toonChangedZone({avId}): av not present')
             return
         hostId, zoneId = self.avIdEnteringPartyToHostIdZoneId[avId]
         if newZoneId == zoneId:
             del self.avIdEnteringPartyToHostIdZoneId[avId]
-            self.ignore(DistributedObjectAI.staticGetLogicalZoneChangeEvent(avId))
+            self.ignore(
+                DistributedObjectAI.staticGetLogicalZoneChangeEvent(avId))
             self.announceToonEnterPartyZone(avId, hostId, zoneId)
 
     def announceToonEnterPartyZone(self, avId, hostId, zoneId):
         """
         announce to the rest of the system that a toon is entering a party
         """
-        DistributedPartyManagerAI.notify.debug('announceToonEnterPartyZone: %s %s %s' % (avId, hostId, zoneId))
+        DistributedPartyManagerAI.notify.debug(
+            f'announceToonEnterPartyZone: {avId} {hostId} {zoneId}')
 
         av = self.air.doId2do[avId]
 
@@ -847,18 +1038,26 @@ class DistributedPartyManagerAI(DistributedObjectAI):
 
         if avId == hostId:
             # We have to tell the uberdog that we've started a new party so it can
-            # update all the other AIs with public party info (but only host does this)
+            # update all the other AIs with public party info (but only host
+            # does this)
             if avId not in self.hostAvIdToAllPartiesInfo:
                 self.air.sendUpdateToDoId(
                     "DistributedPartyManager",
                     'partyHasStartedAiToUd',
                     OtpDoGlobals.OTP_DO_ID_TOONTOWN_PARTY_MANAGER,
-                    [self.doId, self.hostAvIdToPartiesRunning[hostId].partyInfo.partyId, self.air.districtId, zoneId, av.getName()]
-                )
+                    [
+                        self.doId,
+                        self.hostAvIdToPartiesRunning[hostId].partyInfo.partyId,
+                        self.air.districtId,
+                        zoneId,
+                        av.getName()])
 
                 # tell host to whisper all his guests that the party has started.
-                # We have the host do this as host already has access to guest list.
-                av.sendUpdate( "announcePartyStarted", [self.hostAvIdToPartiesRunning[hostId].partyInfo.partyId] )
+                # We have the host do this as host already has access to guest
+                # list.
+                av.sendUpdate(
+                    "announcePartyStarted", [
+                        self.hostAvIdToPartiesRunning[hostId].partyInfo.partyId])
 
         messenger.send(self.getAvEnterEvent(), [avId, hostId, zoneId])
         # Tell the uberdog about the new count
@@ -886,13 +1085,19 @@ class DistributedPartyManagerAI(DistributedObjectAI):
 
     # Send Party Zone information back to the client
     def __sendPartyZoneToClient(self, avId, hostId):
-        self.notify.warning("__sendPartyZoneToClient called with avId=%d, hostId=%d" % (avId, hostId))
+        self.notify.warning(
+            "__sendPartyZoneToClient called with avId=%d, hostId=%d" %
+            (avId, hostId))
         try:
             zoneId = self.avIdToPartyZoneId[avId]
             partyId = self.hostAvIdToPartiesRunning[hostId].partyInfo.partyId
-            self.sendUpdateToAvatarId(avId, "receivePartyZone", [hostId, partyId, zoneId])
-        except:
-            self.notify.warning("__sendPartyZoneToClient : zone did not exist for party host %d, and visitor %d" % (hostId, avId))
+            self.sendUpdateToAvatarId(
+                avId, "receivePartyZone", [
+                    hostId, partyId, zoneId])
+        except BaseException:
+            self.notify.warning(
+                "__sendPartyZoneToClient : zone did not exist for party host %d, and visitor %d" %
+                (hostId, avId))
             self.sendUpdateToAvatarId(avId, "receivePartyZone", [0, 0, 0])
 
     # Send empty Party Zone information back to the client
@@ -900,7 +1105,9 @@ class DistributedPartyManagerAI(DistributedObjectAI):
     # running on this shard or if the uberdog doesn't think this party can be
     # created.
     def __sendNoPartyZoneToClient(self, avId):
-        self.notify.warning("__sendNoPartyZoneToClient : not sending avId %d to a party." % avId)
+        self.notify.warning(
+            "__sendNoPartyZoneToClient : not sending avId %d to a party." %
+            avId)
         self.sendUpdateToAvatarId(avId, "receivePartyZone", [0, 0, 0])
 
     def partyInfoOfHostFailedResponseUdToAi(self, hostId):
@@ -910,8 +1117,10 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         If you want to test parties using magic words, be sure to set
         allow-random-party-creation 1 in your config overrides.
         """
-        self.notify.warning("Host with avId %d tried to create a party it wasn't time for." % hostId)
-        taskMgr.remove("UberdogTimedOut_%d"%hostId)
+        self.notify.warning(
+            "Host with avId %d tried to create a party it wasn't time for." %
+            hostId)
+        taskMgr.remove("UberdogTimedOut_%d" % hostId)
         self.__sendNoPartyZoneToClient(hostId)
 
     def partyInfoOfHostResponseUdToAi(self, partyInfoTuple, inviteeIds):
@@ -920,7 +1129,7 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         party.
         """
         assert self.notify.debugStateCall(self)
-        taskMgr.remove("UberdogTimedOut_%d"%partyInfoTuple[1])
+        taskMgr.remove("UberdogTimedOut_%d" % partyInfoTuple[1])
         # Note this method will send the zone info back to the client
         # after it creates the party
         partyInfo = PartyInfoAI(*partyInfoTuple)
@@ -940,13 +1149,14 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         self.handleGetPartyInfo(partyInfo, inviteeIds)
 
     def __addReferences(self, senderId, hostId):
-        DistributedPartyManagerAI.notify.debug("__addReferences : senderId = %s  hostId = %s" % (senderId, hostId))
+        DistributedPartyManagerAI.notify.debug(
+            f"__addReferences : senderId = {senderId}  hostId = {hostId}")
         party = self.hostAvIdToPartiesRunning.get(hostId)
         if party is not None:
             self.setPartyZoneId(senderId, party.zoneId)
             ref = self.zoneIdToGuestAvIds.get(party.zoneId)
             if ref is not None:
-                if not senderId in ref:
+                if senderId not in ref:
                     ref.append(senderId)
             else:
                 self.zoneIdToGuestAvIds[party.zoneId] = [senderId]
@@ -955,8 +1165,9 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         try:
             self.clearPartyZoneId(avId)
             self.zoneIdToGuestAvIds[zoneId].remove(avId)
-        except:
-            DistributedPartyManagerAI.notify.debug("we weren't in the zoneIdToGuestAvIds for %s." % zoneId)
+        except BaseException:
+            DistributedPartyManagerAI.notify.debug(
+                f"we weren't in the zoneIdToGuestAvIds for {zoneId}.")
             pass
 
     def setPartyZoneId(self, avId, zoneId):
@@ -964,9 +1175,10 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         frame = sys._getframe(1)
         lineno = frame.f_lineno
         defName = frame.f_code.co_name
-        DistributedPartyManagerAI.notify.debug("%s(%s):Added %s:%s" % (defName, lineno, avId, zoneId))
+        DistributedPartyManagerAI.notify.debug(
+            f"{defName}({lineno}):Added {avId}:{zoneId}")
 
-    def clearPartyZoneId(self, avId, zoneIdFromClient = None):
+    def clearPartyZoneId(self, avId, zoneIdFromClient=None):
         """Clear avId to partyzoneId dict, if zoneIdFromClient is not none, do it only if they match."""
         if avId not in self.avIdToPartyZoneId:
             return
@@ -975,21 +1187,24 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         lineno = frame.f_lineno
         defName = frame.f_code.co_name
         removeFromDict = False
-        if zoneIdFromClient != None:
+        if zoneIdFromClient is not None:
             if zoneId == zoneIdFromClient:
-                removeFromDict =True
+                removeFromDict = True
             else:
-                self.notify.debug("zoneIdFromClient=%s  AI thinks he's at zone %s, not removing" %
-                                  (zoneIdFromClient, zoneId))
+                self.notify.debug(
+                    "zoneIdFromClient=%s  AI thinks he's at zone %s, not removing" %
+                    (zoneIdFromClient, zoneId))
         else:
             removeFromDict = True
 
         if removeFromDict:
-            DistributedPartyManagerAI.notify.debug("%s(%s):Removed %s:%s" % (defName, lineno, avId, self.avIdToPartyZoneId[avId]))
+            DistributedPartyManagerAI.notify.debug(
+                f"{defName}({lineno}):Removed {avId}:{self.avIdToPartyZoneId[avId]}")
             del self.avIdToPartyZoneId[avId]
 
     def handleGetPartyInfo(self, partyInfo, inviteeIds):
-        DistributedPartyManagerAI.notify.debug("handleGetPartyInfo for host %s" % partyInfo.hostId)
+        DistributedPartyManagerAI.notify.debug(
+            f"handleGetPartyInfo for host {partyInfo.hostId}")
         # this function is called after the party data is pulled
         # from the database.  the DistributedPartyAI object is initialized
         # here
@@ -999,18 +1214,27 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         # there is a chance that the owner will already have left (by
         # closing the window).  We need to handle that gracefully.
         if partyInfo.hostId not in self.avIdToPartyZoneId:
-            self.notify.warning("Party Zone info was requested, but the guest left before it could be recived: %d" % estateId)
+            self.notify.warning(
+                "Party Zone info was requested, but the guest left before it could be recived: %d" %
+                estateId)
             return
 
         # create the DistributedPartyAI object for this hostId
         if partyInfo.hostId in self.hostAvIdToPartiesRunning:
-            self.notify.warning("Already have distobj %s, not generating again" % (partyInfo.partyId))
+            self.notify.warning(
+                f"Already have distobj {partyInfo.partyId}, not generating again")
         else:
-            self.notify.info('start party %s init, owner=%s, frame=%s' %
-                             (partyInfo.partyId, partyInfo.hostId, globalClock.getFrameCount()))
+            self.notify.info(
+                'start party %s init, owner=%s, frame=%s' %
+                (partyInfo.partyId, partyInfo.hostId, globalClock.getFrameCount()))
 
             partyZoneId = self.avIdToPartyZoneId[partyInfo.hostId]
-            partyAI = DistributedPartyAI(self.air, partyInfo.hostId, partyZoneId, partyInfo, inviteeIds)
+            partyAI = DistributedPartyAI(
+                self.air,
+                partyInfo.hostId,
+                partyZoneId,
+                partyInfo,
+                inviteeIds)
 
             partyAI.generateOtpObject(
                 parentId=self.air.districtId,
@@ -1028,32 +1252,35 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                 PartyGlobals.DefaultPartyDuration * 3600.0,
                 self.__setPartyEnded,
                 "DistributedPartyManagerAI_PartyEnding_%d" % partyZoneId,
-                [partyInfo.hostId,partyZoneId]
-                )
+                [partyInfo.hostId, partyZoneId]
+            )
 
             # Boot the guests
             taskMgr.doMethodLater(
                 PartyGlobals.DefaultPartyDuration * 3600.0 + PartyGlobals.DelayBeforeAutoKick,
                 self.__bootGuests,
                 "DistributedPartyManagerAI_BootGuests_%d" % partyZoneId,
-                [partyInfo.hostId,partyZoneId]
-                )
+                [partyInfo.hostId, partyZoneId]
+            )
 
             # We need to clean this party up after everybody is gone
             taskMgr.doMethodLater(
                 PartyGlobals.DefaultPartyDuration * 3600.0 + PartyGlobals.DelayBeforeAutoKick + 10.0,
                 self.__cleanupParty,
                 "DistributedPartyManagerAI_CleanUpPartyZone_%d" % partyZoneId,
-                [partyInfo.hostId,partyZoneId]
-                )
+                [partyInfo.hostId, partyZoneId]
+            )
 
-            self.notify.info('Finished creating party : partyId %s init, host = %s' % (partyInfo.partyId, partyInfo.hostId))
+            self.notify.info(
+                'Finished creating party : partyId %s init, host = %s' %
+                (partyInfo.partyId, partyInfo.hostId))
 
         # Now that the zone is set up, send the notification back to
         # the client.
         zoneId = self.avIdToPartyZoneId[partyInfo.hostId]
         self.__sendPartyZoneToClient(partyInfo.hostId, partyInfo.hostId)
-        self.__waitForToonToEnterParty(partyInfo.hostId, partyInfo.hostId, zoneId)
+        self.__waitForToonToEnterParty(
+            partyInfo.hostId, partyInfo.hostId, zoneId)
 
     def requestShardIdZoneIdForHostId(self, hostId):
         """
@@ -1064,44 +1291,51 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         if hostId in self.hostAvIdToAllPartiesInfo:
             shardId = self.hostAvIdToAllPartiesInfo[hostId][1]
             zoneId = self.hostAvIdToAllPartiesInfo[hostId][2]
-            self.sendUpdateToAvatarId(senderId, 'sendShardIdZoneIdToAvatar', [shardId, zoneId])
+            self.sendUpdateToAvatarId(
+                senderId, 'sendShardIdZoneIdToAvatar', [
+                    shardId, zoneId])
         else:
             # The host's id is not in our dictionary... that most likely means
             # that the AI server has crashed, send back 0
-            self.sendUpdateToAvatarId(senderId, 'sendShardIdZoneIdToAvatar', [0, 0])
+            self.sendUpdateToAvatarId(
+                senderId, 'sendShardIdZoneIdToAvatar', [0, 0])
 
-    ## -----------------------------------------------------------
-    ## Cleanup and exit functions
-    ## -----------------------------------------------------------
+    # -----------------------------------------------------------
+    # Cleanup and exit functions
+    # -----------------------------------------------------------
 
     def exitParty(self, zoneId):
         senderId = self.air.getAvatarIdFromSender()
-        DistributedPartyManagerAI.notify.debug("exitParty(%s)" % senderId)
+        DistributedPartyManagerAI.notify.debug(f"exitParty({senderId})")
         # This function is called from client in the normal case,
         # such as teleporting out, door out, exiting the game, etc
         self.__exitParty(senderId, zoneId)
 
     def __handleUnexpectedExit(self, avId):
-        DistributedPartyManagerAI.notify.debug("we got an unexpected exit on av: %s:  deleting." % avId)
+        DistributedPartyManagerAI.notify.debug(
+            f"we got an unexpected exit on av: {avId}:  deleting.")
         taskMgr.remove("estateToonUp-" + str(avId))
         if avId in self.avIdEnteringPartyToHostIdZoneId:
             self.__toonLeftBeforeArrival(avId)
         if avId in self.avIdToPartyZoneId:
             self.__exitParty(avId)
         else:
-            DistributedPartyManagerAI.notify.debug("unexpected exit and %s is not in avIdToPartyZoneId" % avId)
+            DistributedPartyManagerAI.notify.debug(
+                f"unexpected exit and {avId} is not in avIdToPartyZoneId")
         return None
 
-    def __exitParty(self, avId, zoneIdFromClient = None):
+    def __exitParty(self, avId, zoneIdFromClient=None):
         DistributedPartyManagerAI.notify.debug("__exitParty(%d)" % avId)
         DistributedPartyManagerAI.notify.info("__exitParty(%d)" % avId)
         # This is called whenever avId leaves a party.
         # Just remove references of avId from the party
         avZoneId = self.avIdToPartyZoneId.get(avId)
-        if zoneIdFromClient != None:
-            # We get a very weird case when you're starting a party from another party
+        if zoneIdFromClient is not None:
+            # We get a very weird case when you're starting a party from
+            # another party
             if avZoneId != zoneIdFromClient:
-                self.notify.debug("overriding avZoneId to %s" % zoneIdFromClient)
+                self.notify.debug(
+                    f"overriding avZoneId to {zoneIdFromClient}")
             avZoneId = zoneIdFromClient
 
         partyId = -1
@@ -1111,12 +1345,16 @@ class DistributedPartyManagerAI(DistributedObjectAI):
             self.clearPartyZoneId(avId, zoneIdFromClient)
             if avZoneId in self.zoneIdToGuestAvIds:
                 if avId in self.zoneIdToGuestAvIds[avZoneId]:
-                    self.notify.debug("removing guest %d from zone %d" % (avId, avZoneId))
+                    self.notify.debug(
+                        "removing guest %d from zone %d" %
+                        (avId, avZoneId))
                     self.zoneIdToGuestAvIds[avZoneId].remove(avId)
                 else:
-                    DistributedPartyManagerAI.notify.debug("wasn't in zoneIdToGuestAvIds list: %s, %s" % (avZoneId, avId))
+                    DistributedPartyManagerAI.notify.debug(
+                        f"wasn't in zoneIdToGuestAvIds list: {avZoneId}, {avId}")
             else:
-                DistributedPartyManagerAI.notify.debug("wasn't in zoneIdToGuestAvIds: %s, %s" % (avZoneId, avId))
+                DistributedPartyManagerAI.notify.debug(
+                    f"wasn't in zoneIdToGuestAvIds: {avZoneId}, {avId}")
             # Tell the uberdog that this host's party has lost a guest
             hostAvId = self.zoneIdToHostAvId.get(avZoneId)
             if hostAvId:
@@ -1125,16 +1363,19 @@ class DistributedPartyManagerAI(DistributedObjectAI):
                     'toonHasExitedPartyAiToUd',
                     OtpDoGlobals.OTP_DO_ID_TOONTOWN_PARTY_MANAGER,
                     [self.zoneIdToHostAvId[avZoneId]]
-                    )
+                )
                 info = self.hostAvIdToAllPartiesInfo.get(hostAvId)
                 if info:
                     partyId = info[7]
 
             else:
-                self.notify.warning("__exitParty() avZoneId=%d not in self.zoneIdToHostAvId" % avZoneId)
+                self.notify.warning(
+                    "__exitParty() avZoneId=%d not in self.zoneIdToHostAvId" %
+                    avZoneId)
 
         else:
-            DistributedPartyManagerAI.notify.debug("__exitParty can't find zone for %d" % avId)
+            DistributedPartyManagerAI.notify.debug(
+                "__exitParty can't find zone for %d" % avId)
 
         totalMoney = -1
         # stop the healing
@@ -1146,26 +1387,42 @@ class DistributedPartyManagerAI(DistributedObjectAI):
             totalMoney = av.getTotalMoney()
 
         if not isPlanning:
-            self.air.writeServerEvent("party_exit", partyId,"%d|%d" % (avId, totalMoney))
+            self.air.writeServerEvent(
+                "party_exit", partyId, "%d|%d" %
+                (avId, totalMoney))
 
     def freeZoneIdFromPlannedParty(self, hostId, zoneId):
         """ Free a zone that was allocated for the planning of a party """
         senderId = self.air.getAvatarIdFromSender()
         if senderId != hostId:
-            self.air.writeServerEvent('suspicious', senderId, 'someone else trying to free a zone for this avatar: hostId = %d' % hostId)
+            self.air.writeServerEvent(
+                'suspicious',
+                senderId,
+                'someone else trying to free a zone for this avatar: hostId = %d' %
+                hostId)
             return
         if hostId in self.hostIdToPlanningPartyZoneId:
-            self.notify.debug("freeZoneIdFromPlannedParty : freeing zone : hostId = %d, zoneId = %d" % (hostId, zoneId))
+            self.notify.debug(
+                "freeZoneIdFromPlannedParty : freeing zone : hostId = %d, zoneId = %d" %
+                (hostId, zoneId))
             self.air.deallocateZone(self.hostIdToPlanningPartyZoneId[hostId])
             del self.hostIdToPlanningPartyZoneId[hostId]
             return
         else:
-            self.notify.warning('suspicious senderId=%d trying to free a zone that this avatar did not allocate: hostId = %d' % (senderId,hostId))
-            self.air.writeServerEvent('suspicious', senderId, 'trying to free a zone that this avatar did not allocate: hostId = %d' % hostId)
+            self.notify.warning(
+                'suspicious senderId=%d trying to free a zone that this avatar did not allocate: hostId = %d' %
+                (senderId, hostId))
+            self.air.writeServerEvent(
+                'suspicious',
+                senderId,
+                'trying to free a zone that this avatar did not allocate: hostId = %d' %
+                hostId)
             return
 
     def __cleanupParty(self, hostId, zoneId):
-        DistributedPartyManagerAI.notify.debug("__cleanupParty hostId = %d, zoneId = %d" % (hostId, zoneId))
+        DistributedPartyManagerAI.notify.debug(
+            "__cleanupParty hostId = %d, zoneId = %d" %
+            (hostId, zoneId))
 
         self.clearPartyZoneId(hostId)
         if hostId in self.hostAvIdToClosingPartyZoneId:
@@ -1187,58 +1444,71 @@ class DistributedPartyManagerAI(DistributedObjectAI):
 
     def __deleteParty(self, hostId):
         # remove all our objects from the stateserver
-        DistributedPartyManagerAI.notify.debug("__deleteParty(hostId=%s)" % hostId)
+        DistributedPartyManagerAI.notify.debug(
+            f"__deleteParty(hostId={hostId})")
 
         # delete from state server
         if hostId in self.hostAvIdToPartiesRunning:
-            if self.hostAvIdToPartiesRunning[hostId] != None:
+            if self.hostAvIdToPartiesRunning[hostId] is not None:
                 self.hostAvIdToPartiesRunning[hostId].destroyPartyData()
-                DistributedPartyManagerAI.notify.debug('DistributedPartyAI requestDelete, doId=%d' % getattr(self.hostAvIdToPartiesRunning[hostId], 'doId'))
+                DistributedPartyManagerAI.notify.debug(
+                    'DistributedPartyAI requestDelete, doId=%d' %
+                    getattr(
+                        self.hostAvIdToPartiesRunning[hostId], 'doId'))
                 self.hostAvIdToPartiesRunning[hostId].requestDelete()
                 del self.hostAvIdToPartiesRunning[hostId]
 
     def __bootGuests(self, hostId, zoneId):
-        DistributedPartyManagerAI.notify.debug("__bootGuests (hostId=%s  zoneId=%s)" % (hostId,zoneId))
+        DistributedPartyManagerAI.notify.debug(
+            f"__bootGuests (hostId={hostId}  zoneId={zoneId})")
         try:
-            # we need a copy of the list, otherwise we skip some people in booting out
+            # we need a copy of the list, otherwise we skip some people in
+            # booting out
             visitors = self.zoneIdToGuestAvIds[zoneId][:]
             for avId in visitors:
                 # people get left behind in the party if we boot the host first
                 if avId == hostId:
                     continue
-                self.notify.debug("booting %d from zone %d host=%d" %(avId, zoneId, hostId))
+                self.notify.debug(
+                    "booting %d from zone %d host=%d" %
+                    (avId, zoneId, hostId))
                 self.__bootAv(avId, zoneId, hostId)
             if hostId in visitors:
                 self.__bootAv(hostId, zoneId, hostId)
-                self.notify.debug("booting %d from zone %d host=%d" %(avId, zoneId, hostId))
-        except:
+                self.notify.debug(
+                    "booting %d from zone %d host=%d" %
+                    (avId, zoneId, hostId))
+        except BaseException:
             # refCount might have already gotten deleted
             pass
 
     def __bootAv(self, avId, zoneId, hostId):
         # Let anyone who might be doing something with this avatar in the party
         assert self.notify.debugStateCall(self)
-        messenger.send("bootAvFromParty-"+str(avId))
+        messenger.send("bootAvFromParty-" + str(avId))
         self.__exitParty(avId)
         # Pass the message to the client, who will pass it to the PartyHood
-        self.sendUpdateToAvatarId(avId, "sendAvToPlayground", [avId, 1]) # 0 is a warning, 1 is final
+        self.sendUpdateToAvatarId(
+            avId, "sendAvToPlayground", [
+                avId, 1])  # 0 is a warning, 1 is final
 
     def getPartyEndedEvent(self, hostId):
-        return 'partyEnded-%s' % hostId
+        return f'partyEnded-{hostId}'
 
     def __setPartyEnded(self, hostId, zoneId):
         """
         This party has ended, so no one can go to it, and we'll
         warn people there to get out!
         """
-        DistributedPartyManagerAI.notify.debug("__setPartyEnded (hostId=%s  zoneId=%s)" % (hostId,zoneId))
+        DistributedPartyManagerAI.notify.debug(
+            f"__setPartyEnded (hostId={hostId}  zoneId={zoneId})")
         # Tell uberdog about it so it can update hostAvIdToAllPartiesInfo
-        self.air.sendUpdateToDoId(
-            "DistributedPartyManager",
-            'changePartyStatusRequestAiToUd',
-            OtpDoGlobals.OTP_DO_ID_TOONTOWN_PARTY_MANAGER,
-            [self.doId, self.hostAvIdToPartiesRunning[hostId].partyInfo.partyId, PartyGlobals.PartyStatus.Finished]
-        )
+        self.air.sendUpdateToDoId("DistributedPartyManager",
+                                  'changePartyStatusRequestAiToUd',
+                                  OtpDoGlobals.OTP_DO_ID_TOONTOWN_PARTY_MANAGER,
+                                  [self.doId,
+                                   self.hostAvIdToPartiesRunning[hostId].partyInfo.partyId,
+                                   PartyGlobals.PartyStatus.Finished])
 
         self.hostAvIdToClosingPartyZoneId[hostId] = zoneId
 
@@ -1248,8 +1518,11 @@ class DistributedPartyManagerAI(DistributedObjectAI):
         guests = self.zoneIdToGuestAvIds.get(zoneId)
         if guests:
             for avId in guests:
-                # Pass the message to the client, who will pass it to the PartyHood
-                self.sendUpdateToAvatarId(avId, "sendAvToPlayground", [avId, 0]) # 0 is a warning, 1 is final
+                # Pass the message to the client, who will pass it to the
+                # PartyHood
+                self.sendUpdateToAvatarId(
+                    avId, "sendAvToPlayground", [
+                        avId, 0])  # 0 is a warning, 1 is final
 
         self.hostAvIdToPartiesRunning[hostId].b_setPartyState(True)
 
@@ -1286,18 +1559,20 @@ class DistributedPartyManagerAI(DistributedObjectAI):
 
     def setCanBuyParties(self, newValue):
         """Set if we allow player to buy unreleased activities and decorations on the client."""
-        self.canBuy= newValue
+        self.canBuy = newValue
 
     def toggleCanBuyParties(self):
         """Toggle allow unreleased on the client, then return the new value."""
-        self.canBuy= not self.canBuy
+        self.canBuy = not self.canBuy
         return self.canBuy
 
     def partyManagerUdStartingUp(self):
         """The uberdog is restarting, tell it about parties running on this district."""
         for hostId in self.hostAvIdToAllPartiesInfo:
             if hostId not in self.hostAvIdToPartiesRunning:
-                self.notify.warning('hostId %d is in self.hostAvIdToAllPartiesInfo but not in self.hostAvIdToPartiesRunning' % hostId)
+                self.notify.warning(
+                    'hostId %d is in self.hostAvIdToAllPartiesInfo but not in self.hostAvIdToPartiesRunning' %
+                    hostId)
                 # really check we have a DistributedPartyAI for the host
                 continue
             partyInfo = self.hostAvIdToAllPartiesInfo[hostId]
@@ -1322,7 +1597,7 @@ class DistributedPartyManagerAI(DistributedObjectAI):
     def partyManagerUdDead(self):
         # SHIT uberdog died :(
         self.notify.warning("uberdog died!")
-        
+
     def magicWordEnd(self, senderId):
         """End the party prematurely as the sender said a magic word."""
         # first test if we are hosting a party
@@ -1335,57 +1610,84 @@ class DistributedPartyManagerAI(DistributedObjectAI):
             return "sender %d is not host (%d is)" % (senderId, hostId)
 
         # nuke the old tasks
-        taskMgr.remove("DistributedPartyManagerAI_PartyEnding_%d"%partyZoneId)
-        taskMgr.remove("DistributedPartyManagerAI_BootGuests_%d"%partyZoneId)
-        taskMgr.remove("DistributedPartyManagerAI_CleanUpPartyZone_%d"%partyZoneId)
+        taskMgr.remove(
+            "DistributedPartyManagerAI_PartyEnding_%d" %
+            partyZoneId)
+        taskMgr.remove("DistributedPartyManagerAI_BootGuests_%d" % partyZoneId)
+        taskMgr.remove(
+            "DistributedPartyManagerAI_CleanUpPartyZone_%d" %
+            partyZoneId)
 
         # now start up new tasks to end the party right now
-        taskMgr.doMethodLater(0.1, self.__setPartyEnded, "DistributedPartyManagerAI_PartyEnding_%d"%partyZoneId, [hostId,partyZoneId])
-        kickDelay = simbase.config.GetInt("party-kick-delay",PartyGlobals.DelayBeforeAutoKick)
-        taskMgr.doMethodLater(0.1 + kickDelay, self.__bootGuests, "DistributedPartyManagerAI_BootGuests_%d"%partyZoneId, [hostId,partyZoneId])
-        taskMgr.doMethodLater(0.1 + kickDelay + 10.0, self.__cleanupParty, "DistributedPartyManagerAI_CleanUpPartyZone_%d"%partyZoneId, [hostId,partyZoneId])
+        taskMgr.doMethodLater(
+            0.1, self.__setPartyEnded, "DistributedPartyManagerAI_PartyEnding_%d" %
+            partyZoneId, [
+                hostId, partyZoneId])
+        kickDelay = simbase.config.GetInt(
+            "party-kick-delay", PartyGlobals.DelayBeforeAutoKick)
+        taskMgr.doMethodLater(
+            0.1 + kickDelay, self.__bootGuests, "DistributedPartyManagerAI_BootGuests_%d" %
+            partyZoneId, [
+                hostId, partyZoneId])
+        taskMgr.doMethodLater(
+            0.1 + kickDelay + 10.0, self.__cleanupParty, "DistributedPartyManagerAI_CleanUpPartyZone_%d" %
+            partyZoneId, [
+                hostId, partyZoneId])
 
         return ("Party Zone %d Ending Soon" % partyZoneId)
-
 
     def deductMoneyFromOfflineToon(self, toonId, cost):
         """Deduct the cost of the party from an offline toon."""
         # it's possible for someone to alt f4 out in between the time it takes for
         # the uberdog to respond to AI that buying the party was a success
         ag = RepairAvatars.AvatarGetter(self.air)
-        event = 'gotOfflineToon-%s' % toonId
+        event = f'gotOfflineToon-{toonId}'
         ag.getAvatar(toonId, fields=['setName', 'setMaxHp',
-                                               'setMaxMoney',
-                                               'setMaxBankMoney',
+                                     'setMaxMoney',
+                                     'setMaxBankMoney',
                                      'setMoney',
                                      'setBankMoney'],
-                     event = event)
-        self.acceptOnce(event, Functor(self.gotOfflineToon, cost = cost, toonId = toonId))
+                     event=event)
+        self.acceptOnce(
+            event,
+            Functor(
+                self.gotOfflineToon,
+                cost=cost,
+                toonId=toonId))
 
     def gotOfflineToon(self, toon, cost, toonId):
         """Handle a response to our request to get an offline toon, deduct the money from him."""
         if toon is None:
             # prevent mem leak
-            self.notify.warning("gotOfflineToon - toon %s not found. buying a party for free!cost=%s"
-                                % (toonId, cost))
-            self.air.writeServerEvent('suspicious', toonId,
-                                      "gotOfflineToon - toon %s not found. buying a party for free!cost=%s"
-                                      % (toonId, cost))
+            self.notify.warning(
+                "gotOfflineToon - toon %s not found. buying a party for free!cost=%s" %
+                (toonId, cost))
+            self.air.writeServerEvent(
+                'suspicious',
+                toonId,
+                "gotOfflineToon - toon %s not found. buying a party for free!cost=%s" %
+                (toonId,
+                 cost))
             return
 
         totalMoney = toon.getTotalMoney()
-        result = toon.takeMoney(cost, bUseBank = True)
+        result = toon.takeMoney(cost, bUseBank=True)
         if result:
             newTotalMoney = toon.getTotalMoney()
-            self.notify.info("gotOfflineToon - deducting %s from offline toon %s newTotalMoney=%s"
-                             % (cost, toonId,newTotalMoney))
+            self.notify.info(
+                "gotOfflineToon - deducting %s from offline toon %s newTotalMoney=%s" %
+                (cost, toonId, newTotalMoney))
         else:
-            self.notify.warning("gotOfflineToon - Host %s got away with buying a party he can't afford! totalMoney=%s cost=%s"
-                                % (toonId,totalMoney, cost))
-            self.air.writeServerEvent('suspicious', toonId,
-                                      "gotOfflineToon - Host %s got away with buying a party he can't afford! totalMoney=%s cost=%s"
-                                      % (toonId,totalMoney, cost))
-
+            self.notify.warning(
+                "gotOfflineToon - Host %s got away with buying a party he can't afford! totalMoney=%s cost=%s" %
+                (toonId, totalMoney, cost))
+            self.air.writeServerEvent(
+                'suspicious',
+                toonId,
+                "gotOfflineToon - Host %s got away with buying a party he can't afford! totalMoney=%s cost=%s" %
+                (toonId,
+                 totalMoney,
+                 cost))
 
         # takeMoney is doing a b_setMoney, so that gets written into the otp database
         # db = DatabaseObject.DatabaseObject(self.air, toon.doId)

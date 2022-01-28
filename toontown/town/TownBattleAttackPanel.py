@@ -6,6 +6,8 @@ import string
 from direct.fsm import StateData
 
 AttackPanelHidden = 0
+
+
 def hideAttackPanel(flag):
     """
     This function is just called by the ~hideAttack or ~showAttack
@@ -16,6 +18,7 @@ def hideAttackPanel(flag):
     global AttackPanelHidden
     AttackPanelHidden = flag
     messenger.send('hide-attack-panel')
+
 
 class TownBattleAttackPanel(StateData.StateData):
     """
@@ -29,7 +32,7 @@ class TownBattleAttackPanel(StateData.StateData):
 
     def load(self):
         StateData.StateData.load(self)
-    
+
     def unload(self):
         StateData.StateData.unload(self)
 
@@ -65,27 +68,27 @@ class TownBattleAttackPanel(StateData.StateData):
         # Restore the normal chat behavior.
         # NametagGlobals.setOnscreenChatForced(0)
         return
-    
+
     def __handleRun(self):
-        doneStatus = {'mode':'Run'}
+        doneStatus = {'mode': 'Run'}
         messenger.send(self.doneEvent, [doneStatus])
         return
-        
+
     def __handleSOS(self):
-        doneStatus = {'mode':'SOS'}
+        doneStatus = {'mode': 'SOS'}
         messenger.send(self.doneEvent, [doneStatus])
         return
 
     def __handlePass(self):
-        doneStatus = {'mode':'Pass'}
+        doneStatus = {'mode': 'Pass'}
         messenger.send(self.doneEvent, [doneStatus])
         return
-        
+
     def __handleFire(self):
-        doneStatus = {'mode':'Fire'}
+        doneStatus = {'mode': 'Fire'}
         messenger.send(self.doneEvent, [doneStatus])
         return
-    
+
     def __handleInventory(self, track, level):
         if (base.localAvatar.inventory.numItem(track, level) > 0):
             # Report the selection

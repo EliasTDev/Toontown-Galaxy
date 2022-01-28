@@ -17,23 +17,27 @@ SUIT_LURE_DOLLAR_DISTANCE = 5.1
 SUIT_EXTRA_REACH_DISTANCE = 0.9
 SUIT_EXTRA_RAKE_DISTANCE = 1.1
 SUIT_TRAP_DISTANCE = 2.6
-SUIT_TRAP_RAKE_DISTANCE = 4.5 # Rake is farther from suit for it to walk into the rake
-SUIT_TRAP_MARBLES_DISTANCE = 3.7 # Marbles are out farther
+# Rake is farther from suit for it to walk into the rake
+SUIT_TRAP_RAKE_DISTANCE = 4.5
+SUIT_TRAP_MARBLES_DISTANCE = 3.7  # Marbles are out farther
 SUIT_TRAP_TNT_DISTANCE = 5.1
 
 PNT3_NEARZERO = Point3(0.01, 0.01, 0.01)
 PNT3_ZERO = Point3(0.0, 0.0, 0.0)
 PNT3_ONE = Point3(1.0, 1.0, 1.0)
 
-# Certain suits are so large that their movement needs curtail on the reach animation
-largeSuits = ['f', 'cc', 'gh', 'tw', 'bf', 'sc', \
-               'ds', 'hh', 'cr', 'tbc', 'bs', 'sd', 'le', 'bw', \
-               'nc', 'mb', 'ls', 'rb', 'ms', 'tf', 'm', 'mh']
+# Certain suits are so large that their movement needs curtail on the
+# reach animation
+largeSuits = ['f', 'cc', 'gh', 'tw', 'bf', 'sc',
+              'ds', 'hh', 'cr', 'tbc', 'bs', 'sd', 'le', 'bw',
+              'nc', 'mb', 'ls', 'rb', 'ms', 'tf', 'm', 'mh']
 
 # The shot direction refers to which side of the battle the movie camera will
 # remain within during one series of toon and suit attacks.  This value is randomly set
-# to left or right (50% chance) in Movie.play right before the action is played.
+# to left or right (50% chance) in Movie.play right before the action is
+# played.
 shotDirection = 'left'
+
 
 def avatarDodge(leftAvatars, rightAvatars, leftData, rightData):
     # when an avatar dodges, other avatars may need to dodge as well
@@ -60,12 +64,14 @@ def avatarDodge(leftAvatars, rightAvatars, leftData, rightData):
 
     return avDodgeList, data
 
+
 def avatarHide(avatar):
     notify.debug('avatarHide(%d)' % avatar.doId)
     #import pdb; pdb.set_trace()
-    if hasattr(avatar,'battleTrapProp'):
-        notify.debug('avatar.battleTrapProp = %s' % avatar.battleTrapProp)
+    if hasattr(avatar, 'battleTrapProp'):
+        notify.debug(f'avatar.battleTrapProp = {avatar.battleTrapProp}')
     avatar.detachNode()
+
 
 def copyProp(prop):
     from direct.actor import Actor
@@ -73,6 +79,7 @@ def copyProp(prop):
         return Actor.Actor(other=prop)
     else:
         return prop.copyTo(hidden)
+
 
 def showProp(prop, hand, pos=None, hpr=None, scale=None):
     prop.reparentTo(hand)
@@ -89,6 +96,7 @@ def showProp(prop, hand, pos=None, hpr=None, scale=None):
             scale = scale()
         prop.setScale(scale)
 
+
 def showProps(props, hands, pos=None, hpr=None, scale=None):
     assert(len(props) <= len(hands))
     index = 0
@@ -102,13 +110,15 @@ def showProps(props, hands, pos=None, hpr=None, scale=None):
             prop.setScale(scale)
         index += 1
 
+
 def hideProps(props):
     for prop in props:
         prop.detachNode()
 
+
 def removeProp(prop):
     from direct.actor import Actor
-    if ((prop.isEmpty() == 1) or (prop == None)):
+    if ((prop.isEmpty() == 1) or (prop is None)):
         return
     prop.detachNode()
     if (isinstance(prop, Actor.Actor)):
@@ -116,15 +126,18 @@ def removeProp(prop):
     else:
         prop.removeNode()
 
+
 def removeProps(props):
     for prop in props:
         removeProp(prop)
+
 
 def getActorIntervals(props, anim):
     tracks = Parallel()
     for prop in props:
         tracks.append(ActorInterval(prop, anim))
     return tracks
+
 
 def getScaleIntervals(props, duration, startScale, endScale):
     tracks = Parallel()
@@ -133,79 +146,82 @@ def getScaleIntervals(props, duration, startScale, endScale):
                                         startScale=startScale))
     return tracks
 
+
 def avatarFacePoint(av, other=render):
     pnt = av.getPos(other)
     pnt.setZ(pnt[2] + av.getHeight())
     return pnt
+
 
 def insertDeathSuit(suit, deathSuit, battle=None, pos=None, hpr=None):
     holdParent = suit.getParent()
     if suit.getVirtual():
         virtualize(deathSuit)
     avatarHide(suit)
-    if (deathSuit != None and not deathSuit.isEmpty()):
-        if holdParent and 0:# seems like a good idea if everything wasn't hosed JML
+    if (deathSuit is not None and not deathSuit.isEmpty()):
+        if holdParent and 0:  # seems like a good idea if everything wasn't hosed JML
             #import pdb; pdb.set_trace()
             deathSuit.reparentTo(holdParent)
         else:
             deathSuit.reparentTo(render)
-        if (battle != None and pos != None):
+        if (battle is not None and pos is not None):
             deathSuit.setPos(battle, pos)
-        if (battle != None and hpr != None):
+        if (battle is not None and hpr is not None):
             deathSuit.setHpr(battle, hpr)
-            
+
+
 def removeDeathSuit(suit, deathSuit):
     notify.debug('removeDeathSuit()')
     if (not deathSuit.isEmpty()):
         deathSuit.detachNode()
         suit.cleanupLoseActor()
-        
-            
+
+
 def insertReviveSuit(suit, deathSuit, battle=None, pos=None, hpr=None):
     holdParent = suit.getParent()
     if suit.getVirtual():
         virtualize(deathSuit)
-    #avatarHide(suit)
+    # avatarHide(suit)
     suit.hide()
-    if (deathSuit != None and not deathSuit.isEmpty()):
-        if holdParent and 0:# seems like a good idea if everything wasn't hosed JML
+    if (deathSuit is not None and not deathSuit.isEmpty()):
+        if holdParent and 0:  # seems like a good idea if everything wasn't hosed JML
             #import pdb; pdb.set_trace()
             deathSuit.reparentTo(holdParent)
         else:
             deathSuit.reparentTo(render)
-        if (battle != None and pos != None):
+        if (battle is not None and pos is not None):
             deathSuit.setPos(battle, pos)
-        if (battle != None and hpr != None):
+        if (battle is not None and hpr is not None):
             deathSuit.setHpr(battle, hpr)
-            
+
+
 def removeReviveSuit(suit, deathSuit):
     notify.debug('removeDeathSuit()')
     suit.setSkelecog(1)
-    #suit.makeSkeleton()
+    # suit.makeSkeleton()
     suit.show()
     if (not deathSuit.isEmpty()):
         deathSuit.detachNode()
         suit.cleanupLoseActor()
-    #suit.removeHealthBar()
+    # suit.removeHealthBar()
     suit.healthBar.show()
     suit.reseatHealthBarForSkele()
-          
+
+
 def virtualize(deathsuit):
-        actorNode = deathsuit.find("**/__Actor_modelRoot")
-        actorCollection = actorNode.findAllMatches("*")
-        parts = ()
-        for thingIndex in range(0,actorCollection.getNumPaths()):
-            thing = actorCollection[thingIndex]
-            if thing.getName() not in ('joint_attachMeter', 'joint_nameTag'):
-                thing.setColorScale(1.0,0.0,0.0,1.0)
-                thing.setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
-                thing.setDepthWrite(False)
-                thing.setBin('fixed', 1)
+    actorNode = deathsuit.find("**/__Actor_modelRoot")
+    actorCollection = actorNode.findAllMatches("*")
+    parts = ()
+    for thingIndex in range(0, actorCollection.getNumPaths()):
+        thing = actorCollection[thingIndex]
+        if thing.getName() not in ('joint_attachMeter', 'joint_nameTag'):
+            thing.setColorScale(1.0, 0.0, 0.0, 1.0)
+            thing.setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
+            thing.setDepthWrite(False)
+            thing.setBin('fixed', 1)
 
 
-
-
-def createTrainTrackAppearTrack( dyingSuit, toon, battle, npcs):
+def createTrainTrackAppearTrack(dyingSuit, toon, battle, npcs):
     """
     so if the suit which has the visible train track dies
     we need to make it visible for the other suits which have survived, if any
@@ -214,95 +230,130 @@ def createTrainTrackAppearTrack( dyingSuit, toon, battle, npcs):
     retval = Sequence()
     return retval
     possibleSuits = []
-    #we assume that if a suit attacked, it's still alive
-    #darn we need to consider lured suits... well maybe not, 
-    #can it have a train trap and be lured at the same time?
+    # we assume that if a suit attacked, it's still alive
+    # darn we need to consider lured suits... well maybe not,
+    # can it have a train trap and be lured at the same time?
     for suitAttack in battle.movie.suitAttackDicts:
         suit = suitAttack['suit']
         if not suit == dyingSuit:
-            if hasattr(suit,'battleTrapProp') and suit.battleTrapProp and \
+            if hasattr(suit, 'battleTrapProp') and suit.battleTrapProp and \
                suit.battleTrapProp.getName() == 'traintrack':
                 possibleSuits.append(suitAttack['suit'])
 
-    #so we have the possible suits, see which one is closest to the center
+    # so we have the possible suits, see which one is closest to the center
     closestXDistance = 10000
     closestSuit = None
     for suit in possibleSuits:
-        suitPoint, suitHpr = battle.getActorPosHpr(suit)        
+        suitPoint, suitHpr = battle.getActorPosHpr(suit)
         xDistance = abs(suitPoint.getX())
         if xDistance < closestXDistance:
             closestSuit = suit
             closestXDistance = xDistance
 
     if closestSuit and closestSuit.battleTrapProp.isHidden():
-        #immediately set the alpha to zero, and show the the train track
-        #this will prevent this sequence happening twice when 2 cogs die
+        # immediately set the alpha to zero, and show the the train track
+        # this will prevent this sequence happening twice when 2 cogs die
         #import pdb; pdb.set_trace()
-        
-        closestSuit.battleTrapProp.setColorScale(1,1,1,0)
+
+        closestSuit.battleTrapProp.setColorScale(1, 1, 1, 0)
         closestSuit.battleTrapProp.show()
         newRelativePos = dyingSuit.battleTrapProp.getPos(closestSuit)
         newHpr = dyingSuit.battleTrapProp.getHpr(closestSuit)
         closestSuit.battleTrapProp.setPos(newRelativePos)
         closestSuit.battleTrapProp.setHpr(newHpr)
-        
-        
-        retval.append(LerpColorScaleInterval(closestSuit.battleTrapProp, 3.0, Vec4(1,1,1,1)))
+
+        retval.append(
+            LerpColorScaleInterval(
+                closestSuit.battleTrapProp, 3.0, Vec4(
+                    1, 1, 1, 1)))
     else:
         notify.debug('could not find closest suit, returning empty sequence')
 
     return retval
-    
-    
-def createSuitReviveTrack(suit, toon, battle, npcs = []):
+
+
+def createSuitReviveTrack(suit, toon, battle, npcs=[]):
     suitTrack = Sequence()
 
     suitPos, suitHpr = battle.getActorPosHpr(suit)
 
     #import pdb; pdb.set_trace()
 
-    if hasattr(suit,'battleTrapProp') and suit.battleTrapProp and \
+    if hasattr(suit, 'battleTrapProp') and suit.battleTrapProp and \
        suit.battleTrapProp.getName() == 'traintrack' and \
        not suit.battleTrapProp.isHidden():
-        suitTrack.append( createTrainTrackAppearTrack( suit, toon, battle, npcs))
-    
+        suitTrack.append(createTrainTrackAppearTrack(suit, toon, battle, npcs))
+
     deathSuit = suit.getLoseActor()
-    assert(deathSuit != None)
-    #suitTrack.append(Wait(10))
+    assert(deathSuit is not None)
+    # suitTrack.append(Wait(10))
     suitTrack.append(Func(notify.debug, 'before insertDeathSuit'))
-    suitTrack.append(Func(insertReviveSuit, suit, deathSuit, battle, suitPos, suitHpr))
-    #suitTrack.append(Wait(10))    
-    suitTrack.append(Func(notify.debug, 'before actorInterval lose'))    
-    suitTrack.append(ActorInterval(deathSuit, 'lose', duration=SUIT_LOSE_DURATION))
-    #suitTrack.append(Wait(10))
-    suitTrack.append(Func(notify.debug, 'before removeDeathSuit'))        
-    suitTrack.append(Func(removeReviveSuit, suit, deathSuit, name='remove-death-suit'))
-    #suitTrack.append(Wait(10))
+    suitTrack.append(
+        Func(
+            insertReviveSuit,
+            suit,
+            deathSuit,
+            battle,
+            suitPos,
+            suitHpr))
+    # suitTrack.append(Wait(10))
+    suitTrack.append(Func(notify.debug, 'before actorInterval lose'))
+    suitTrack.append(
+        ActorInterval(
+            deathSuit,
+            'lose',
+            duration=SUIT_LOSE_DURATION))
+    # suitTrack.append(Wait(10))
+    suitTrack.append(Func(notify.debug, 'before removeDeathSuit'))
+    suitTrack.append(
+        Func(
+            removeReviveSuit,
+            suit,
+            deathSuit,
+            name='remove-death-suit'))
+    # suitTrack.append(Wait(10))
     suitTrack.append(Func(notify.debug, 'after removeDeathSuit'))
     suitTrack.append(Func(suit.loop, 'neutral'))
 
-
-
-
     spinningSound = base.loader.loadSfx("phase_3.5/audio/sfx/Cog_Death.ogg")
-    deathSound = base.loader.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.ogg")
+    deathSound = base.loader.loadSfx(
+        "phase_3.5/audio/sfx/ENC_cogfall_apart.ogg")
     deathSoundTrack = Sequence(
         Wait(0.8),
-        SoundInterval(spinningSound, duration=1.2, startTime = 1.5, volume=0.2, node=suit),
-        SoundInterval(spinningSound, duration=3.0, startTime = 0.6, volume=0.8, node=suit),
-        SoundInterval(deathSound, volume = 0.32, node=suit),
-        )
+        SoundInterval(
+            spinningSound,
+            duration=1.2,
+            startTime=1.5,
+            volume=0.2,
+            node=suit),
+        SoundInterval(
+            spinningSound,
+            duration=3.0,
+            startTime=0.6,
+            volume=0.8,
+            node=suit),
+        SoundInterval(
+            deathSound,
+            volume=0.32,
+            node=suit),
+    )
 
     BattleParticles.loadParticles()
-    smallGears = BattleParticles.createParticleEffect(file='gearExplosionSmall')
-    singleGear = BattleParticles.createParticleEffect('GearExplosion', 
-                                                                numParticles=1)
+    smallGears = BattleParticles.createParticleEffect(
+        file='gearExplosionSmall')
+    singleGear = BattleParticles.createParticleEffect('GearExplosion',
+                                                      numParticles=1)
     smallGearExplosion = BattleParticles.createParticleEffect('GearExplosion',
                                                               numParticles=10)
     bigGearExplosion = BattleParticles.createParticleEffect('BigGearExplosion',
-                                                              numParticles=30)
+                                                            numParticles=30)
 
-    gearPoint = Point3(suitPos.getX(), suitPos.getY(), suitPos.getZ()+suit.height-0.2)
+    gearPoint = Point3(
+        suitPos.getX(),
+        suitPos.getY(),
+        suitPos.getZ() +
+        suit.height -
+        0.2)
     smallGears.setPos(gearPoint)
     singleGear.setPos(gearPoint)
     smallGears.setDepthWrite(False)
@@ -314,20 +365,27 @@ def createSuitReviveTrack(suit, toon, battle, npcs = []):
 
     explosionTrack = Sequence()
     explosionTrack.append(Wait(5.4))
-    explosionTrack.append(createKapowExplosionTrack(battle, explosionPoint=gearPoint))
+    explosionTrack.append(
+        createKapowExplosionTrack(
+            battle, explosionPoint=gearPoint))
 
     gears1Track = Sequence(
         Wait(2.1),
-        ParticleInterval(smallGears, battle, worldRelative=0, duration=4.3, cleanup = True),
+        ParticleInterval(
+            smallGears,
+            battle,
+            worldRelative=0,
+            duration=4.3,
+            cleanup=True),
         name='gears1Track')
     gears2MTrack = Track(
         (0.0, explosionTrack),
         (0.7, ParticleInterval(singleGear, battle, worldRelative=0,
-                               duration=5.7, cleanup = True)),
+                               duration=5.7, cleanup=True)),
         (5.2, ParticleInterval(smallGearExplosion, battle,
-                               worldRelative=0, duration=1.2, cleanup = True)),
+                               worldRelative=0, duration=1.2, cleanup=True)),
         (5.4, ParticleInterval(bigGearExplosion, battle,
-                               worldRelative=0, duration=1.0, cleanup = True)),
+                               worldRelative=0, duration=1.0, cleanup=True)),
         name='gears2MTrack')
     toonMTrack = Parallel(name='toonMTrack')
     for mtoon in battle.toons:
@@ -344,58 +402,92 @@ def createSuitReviveTrack(suit, toon, battle, npcs = []):
             ActorInterval(mtoon, 'duck', startTime=1.8),
             Func(mtoon.loop, 'neutral'),
         ))
-        
-    return Parallel(suitTrack, deathSoundTrack, gears1Track, gears2MTrack, 
+
+    return Parallel(suitTrack, deathSoundTrack, gears1Track, gears2MTrack,
                     toonMTrack)
-    
-def createSuitDeathTrack(suit, toon, battle, npcs = []):
+
+
+def createSuitDeathTrack(suit, toon, battle, npcs=[]):
     suitTrack = Sequence()
 
     suitPos, suitHpr = battle.getActorPosHpr(suit)
 
     #import pdb; pdb.set_trace()
 
-    if hasattr(suit,'battleTrapProp') and suit.battleTrapProp and \
+    if hasattr(suit, 'battleTrapProp') and suit.battleTrapProp and \
        suit.battleTrapProp.getName() == 'traintrack' and \
        not suit.battleTrapProp.isHidden():
-        suitTrack.append( createTrainTrackAppearTrack( suit, toon, battle, npcs))
-    
+        suitTrack.append(createTrainTrackAppearTrack(suit, toon, battle, npcs))
+
     deathSuit = suit.getLoseActor()
-    assert(deathSuit != None)
-    #suitTrack.append(Wait(10))
+    assert(deathSuit is not None)
+    # suitTrack.append(Wait(10))
     suitTrack.append(Func(notify.debug, 'before insertDeathSuit'))
-    suitTrack.append(Func(insertDeathSuit, suit, deathSuit, battle, suitPos, suitHpr))
-    #suitTrack.append(Wait(10))    
-    suitTrack.append(Func(notify.debug, 'before actorInterval lose'))    
-    suitTrack.append(ActorInterval(deathSuit, 'lose', duration=SUIT_LOSE_DURATION))
-    #suitTrack.append(Wait(10))
-    suitTrack.append(Func(notify.debug, 'before removeDeathSuit'))        
-    suitTrack.append(Func(removeDeathSuit, suit, deathSuit, name='remove-death-suit'))
-    #suitTrack.append(Wait(10))
-    suitTrack.append(Func(notify.debug, 'after removeDeathSuit'))            
-
-
-
+    suitTrack.append(
+        Func(
+            insertDeathSuit,
+            suit,
+            deathSuit,
+            battle,
+            suitPos,
+            suitHpr))
+    # suitTrack.append(Wait(10))
+    suitTrack.append(Func(notify.debug, 'before actorInterval lose'))
+    suitTrack.append(
+        ActorInterval(
+            deathSuit,
+            'lose',
+            duration=SUIT_LOSE_DURATION))
+    # suitTrack.append(Wait(10))
+    suitTrack.append(Func(notify.debug, 'before removeDeathSuit'))
+    suitTrack.append(
+        Func(
+            removeDeathSuit,
+            suit,
+            deathSuit,
+            name='remove-death-suit'))
+    # suitTrack.append(Wait(10))
+    suitTrack.append(Func(notify.debug, 'after removeDeathSuit'))
 
     spinningSound = base.loader.loadSfx("phase_3.5/audio/sfx/Cog_Death.ogg")
-    deathSound = base.loader.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.ogg")
+    deathSound = base.loader.loadSfx(
+        "phase_3.5/audio/sfx/ENC_cogfall_apart.ogg")
     deathSoundTrack = Sequence(
         Wait(0.8),
-        SoundInterval(spinningSound, duration=1.2, startTime = 1.5, volume=0.2, node=deathSuit),
-        SoundInterval(spinningSound, duration=3.0, startTime = 0.6, volume=0.8, node=deathSuit),
-        SoundInterval(deathSound, volume = 0.32, node=deathSuit),
-        )
+        SoundInterval(
+            spinningSound,
+            duration=1.2,
+            startTime=1.5,
+            volume=0.2,
+            node=deathSuit),
+        SoundInterval(
+            spinningSound,
+            duration=3.0,
+            startTime=0.6,
+            volume=0.8,
+            node=deathSuit),
+        SoundInterval(
+            deathSound,
+            volume=0.32,
+            node=deathSuit),
+    )
 
     BattleParticles.loadParticles()
-    smallGears = BattleParticles.createParticleEffect(file='gearExplosionSmall')
-    singleGear = BattleParticles.createParticleEffect('GearExplosion', 
-                                                                numParticles=1)
+    smallGears = BattleParticles.createParticleEffect(
+        file='gearExplosionSmall')
+    singleGear = BattleParticles.createParticleEffect('GearExplosion',
+                                                      numParticles=1)
     smallGearExplosion = BattleParticles.createParticleEffect('GearExplosion',
                                                               numParticles=10)
     bigGearExplosion = BattleParticles.createParticleEffect('BigGearExplosion',
-                                                              numParticles=30)
+                                                            numParticles=30)
 
-    gearPoint = Point3(suitPos.getX(), suitPos.getY(), suitPos.getZ()+suit.height-0.2)
+    gearPoint = Point3(
+        suitPos.getX(),
+        suitPos.getY(),
+        suitPos.getZ() +
+        suit.height -
+        0.2)
     smallGears.setPos(gearPoint)
     singleGear.setPos(gearPoint)
     smallGears.setDepthWrite(False)
@@ -407,20 +499,27 @@ def createSuitDeathTrack(suit, toon, battle, npcs = []):
 
     explosionTrack = Sequence()
     explosionTrack.append(Wait(5.4))
-    explosionTrack.append(createKapowExplosionTrack(battle, explosionPoint=gearPoint))
+    explosionTrack.append(
+        createKapowExplosionTrack(
+            battle, explosionPoint=gearPoint))
 
     gears1Track = Sequence(
         Wait(2.1),
-        ParticleInterval(smallGears, battle, worldRelative=0, duration=4.3, cleanup = True),
+        ParticleInterval(
+            smallGears,
+            battle,
+            worldRelative=0,
+            duration=4.3,
+            cleanup=True),
         name='gears1Track')
     gears2MTrack = Track(
         (0.0, explosionTrack),
         (0.7, ParticleInterval(singleGear, battle, worldRelative=0,
-                               duration=5.7, cleanup = True)),
+                               duration=5.7, cleanup=True)),
         (5.2, ParticleInterval(smallGearExplosion, battle,
-                               worldRelative=0, duration=1.2, cleanup = True)),
+                               worldRelative=0, duration=1.2, cleanup=True)),
         (5.4, ParticleInterval(bigGearExplosion, battle,
-                               worldRelative=0, duration=1.0, cleanup = True)),
+                               worldRelative=0, duration=1.0, cleanup=True)),
         name='gears2MTrack')
     toonMTrack = Parallel(name='toonMTrack')
     for mtoon in battle.toons:
@@ -437,14 +536,15 @@ def createSuitDeathTrack(suit, toon, battle, npcs = []):
             ActorInterval(mtoon, 'duck', startTime=1.8),
             Func(mtoon.loop, 'neutral'),
         ))
-        
-    return Parallel(suitTrack, deathSoundTrack, gears1Track, gears2MTrack, 
+
+    return Parallel(suitTrack, deathSoundTrack, gears1Track, gears2MTrack,
                     toonMTrack)
+
 
 def createSuitDodgeMultitrack(tDodge, suit, leftSuits, rightSuits):
     suitTracks = Parallel()
-    suitDodgeList, sidestepAnim = avatarDodge(leftSuits, rightSuits,
-                                              'sidestep-left', 'sidestep-right')
+    suitDodgeList, sidestepAnim = avatarDodge(
+        leftSuits, rightSuits, 'sidestep-left', 'sidestep-right')
     # make the other suits dodge
     for s in suitDodgeList:
         suitTracks.append(Sequence(ActorInterval(s, sidestepAnim),
@@ -455,15 +555,16 @@ def createSuitDodgeMultitrack(tDodge, suit, leftSuits, rightSuits):
     # indicate that the suit was missed
     suitTracks.append(Func(indicateMissed, suit))
 
-    ## play the dodge sounds
+    # play the dodge sounds
     #jumpSound = base.loader.loadSfx("phase_5/audio/sfx/ENC_cogjump_to_side.ogg")
     #stepSound = base.loader.loadSfx("phase_5/audio/sfx/ENC_cogside_step.ogg")
-    #if jumpSound:
+    # if jumpSound:
     #    suitTracks.append(SoundInterval(jumpSound))
-    #if stepSound:
+    # if stepSound:
     #    suitTracks.append(Sequence(Wait(1.5), SoundInterval(stepSound)))
 
     return Sequence(Wait(tDodge), suitTracks)
+
 
 def createToonDodgeMultitrack(tDodge, toon, leftToons, rightToons):
     # Unlike suits, the toon side step right animation occurs behind
@@ -488,7 +589,7 @@ def createToonDodgeMultitrack(tDodge, toon, leftToons, rightToons):
         toonDodgeList = PoLR
     else:
         toonDodgeList = PoMR
-        
+
     # select the correct data
     if toonDodgeList is leftToons:
         sidestepAnim = 'sidestep-left'
@@ -507,17 +608,18 @@ def createToonDodgeMultitrack(tDodge, toon, leftToons, rightToons):
 
     return Sequence(Wait(tDodge), toonTracks)
 
+
 def createSuitTeaseMultiTrack(suit, delay=0.01):
     # Used if the suit teases a toon for missing an attack, (large drops)
     suitTrack = Sequence(
         Wait(delay),
         ActorInterval(suit, 'victory', startTime=0.5, endTime=1.9),
         Func(suit.loop, 'neutral'),
-        )
-    missedTrack = Sequence(Wait(delay+0.2),
+    )
+    missedTrack = Sequence(Wait(delay + 0.2),
                            Func(indicateMissed, suit, 0.9))
     return Parallel(suitTrack, missedTrack)
-    
+
 
 # spray intervals
 
@@ -525,8 +627,10 @@ SPRAY_LEN = 1.5
 
 # spray head extends from origin to target, holds,
 # then spray tail extends from origin to target
+
+
 def getSprayTrack(battle, color, origin, target, dScaleUp, dHold,
-                  dScaleDown, horizScale = 1.0, vertScale = 1.0, parent = render):
+                  dScaleDown, horizScale=1.0, vertScale=1.0, parent=render):
     track = Sequence()
 
     # sprayRot
@@ -564,7 +668,11 @@ def getSprayTrack(battle, color, origin, target, dScaleUp, dHold,
                       origin, target, parent))
 
     # scale the spray up
-    def calcTargetScale(target = target, origin = origin, horizScale = horizScale, vertScale = vertScale):
+    def calcTargetScale(
+            target=target,
+            origin=origin,
+            horizScale=horizScale,
+            vertScale=vertScale):
         if callable(target):
             target = target()
         if callable(origin):
@@ -572,9 +680,14 @@ def getSprayTrack(battle, color, origin, target, dScaleUp, dHold,
         distance = Vec3(target - origin).length()
         yScale = distance / SPRAY_LEN
         #targetScale = Point3(yScale, yScale*horizScale, yScale*vertScale)
-        targetScale = Point3(yScale*horizScale, yScale, yScale*vertScale)
+        targetScale = Point3(yScale * horizScale, yScale, yScale * vertScale)
         return targetScale
-    track.append(LerpScaleInterval(sprayScale, dScaleUp, calcTargetScale, startScale=PNT3_NEARZERO))
+    track.append(
+        LerpScaleInterval(
+            sprayScale,
+            dScaleUp,
+            calcTargetScale,
+            startScale=PNT3_NEARZERO))
 
     # hold the spray
     track.append(Wait(dHold))
@@ -610,9 +723,11 @@ def getSprayTrack(battle, color, origin, target, dScaleUp, dHold,
 
     return track
 
+
 T_HOLE_LEAVES_HAND = 1.708
 T_TELEPORT_ANIM = 3.3
 T_HOLE_CLOSES = 0.3
+
 
 def getToonTeleportOutInterval(toon):
     """ getToonTeleportOutInterval(toon)
@@ -622,7 +737,7 @@ def getToonTeleportOutInterval(toon):
     hole = holes[0]
     hole2 = holes[1]
     hands = toon.getRightHands()
-    delay = T_HOLE_LEAVES_HAND 
+    delay = T_HOLE_LEAVES_HAND
     dur = T_TELEPORT_ANIM
     holeTrack = Sequence()
     holeTrack.append(Func(showProps, holes, hands))
@@ -640,6 +755,7 @@ def getToonTeleportOutInterval(toon):
                         Func(toon.detachNode))
     return Parallel(runTrack, holeAnimTrack, holeTrack)
 
+
 def getToonTeleportInInterval(toon):
     """ getToonTeleportInInterval(toon)
     """
@@ -650,10 +766,10 @@ def getToonTeleportInInterval(toon):
     pos = Point3(0, -2.4, 0)
     holeAnimTrack.append(Func(hole.setPos, toon, pos))
     holeAnimTrack.append(ActorInterval(hole, 'hole', startTime=T_TELEPORT_ANIM,
-                                endTime=T_HOLE_LEAVES_HAND))
-    holeAnimTrack.append(ActorInterval(hole, 'hole', 
-                                startTime=T_HOLE_LEAVES_HAND, 
-                                endTime=T_TELEPORT_ANIM))
+                                       endTime=T_HOLE_LEAVES_HAND))
+    holeAnimTrack.append(ActorInterval(hole, 'hole',
+                                       startTime=T_HOLE_LEAVES_HAND,
+                                       endTime=T_TELEPORT_ANIM))
     holeAnimTrack.append(Func(hole.reparentTo, hidden))
 
     delay = T_TELEPORT_ANIM - T_HOLE_LEAVES_HAND
@@ -661,6 +777,7 @@ def getToonTeleportInInterval(toon):
                          Func(toon.reparentTo, render),
                          ActorInterval(toon, 'jump'))
     return Parallel(holeAnimTrack, jumpTrack)
+
 
 def getSuitRakeOffset(suit):
     """ getSuitRakeOffset(suit)
@@ -729,19 +846,26 @@ def getSuitRakeOffset(suit):
     elif (suitName == 'mh'):
         return 1.3
     else:
-        notify.warning('getSuitRakeOffset(suit) - Unknown suit name: %s' % suitName)
+        notify.warning(
+            f'getSuitRakeOffset(suit) - Unknown suit name: {suitName}')
         return 0
+
 
 def startSparksIval(tntProp):
     tip = tntProp.find("**/joint_attachEmitter")
     sparks = BattleParticles.createParticleEffect(file='tnt')
     return Func(sparks.start, tip)
 
+
 def indicateMissed(actor, duration=1.1, scale=0.7):
     """ indicateMissed() shows the text missed above an actor """
-    actor.showHpString(TTLocalizer.AttackMissed, duration=duration, scale=scale)
+    actor.showHpString(
+        TTLocalizer.AttackMissed,
+        duration=duration,
+        scale=scale)
 
-def createKapowExplosionTrack(parent, explosionPoint=None, scale = 1.0):
+
+def createKapowExplosionTrack(parent, explosionPoint=None, scale=1.0):
     explosionTrack = Sequence()
     explosion = loader.loadModel("phase_3.5/models/props/explosion.bam")
     explosion.setBillboardPointEye()
@@ -778,13 +902,12 @@ def createSuitStunInterval(suit, before, after):
                     Func(stars.removeNode))
 
 
-        
 def calcAvgSuitPos(throw):
     """
     Calculate the average suit positions for the all the targets in this throw
     """
     battle = throw['battle']
-    avgSuitPos = Point3(0,0,0)
+    avgSuitPos = Point3(0, 0, 0)
     numTargets = len(throw['target'])
     for i in range(numTargets):
         suit = throw['target'][i]['suit']

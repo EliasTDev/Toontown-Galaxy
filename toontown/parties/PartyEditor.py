@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Contact: Shawn Patton
 # Created: Oct 2008
 #
@@ -6,12 +6,12 @@
 #          decorations onto a grid representing the party grounds. It also
 #          calculates the amount of jellybeans required for the party and
 #          displays information about the activities and decorations.
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 import time
 #from sets import Set
-from pandac.PandaModules import Vec3,Vec4,Point3,TextNode,VBase4
+from pandac.PandaModules import Vec3, Vec4, Point3, TextNode, VBase4
 
-from direct.gui.DirectGui import DirectFrame,DirectButton,DirectLabel,DirectScrolledList,DirectCheckButton
+from direct.gui.DirectGui import DirectFrame, DirectButton, DirectLabel, DirectScrolledList, DirectCheckButton
 from direct.gui import DirectGuiGlobals
 from direct.showbase.DirectObject import DirectObject
 from direct.showbase import PythonUtil
@@ -25,6 +25,7 @@ from toontown.parties import PartyUtils
 from toontown.parties.PartyEditorGrid import PartyEditorGrid
 from toontown.parties.PartyEditorListElement import PartyEditorListElement
 
+
 class PartyEditor(FSM):
     """
     This class creates the grid and scrolled list needed for players to
@@ -33,16 +34,16 @@ class PartyEditor(FSM):
     notify = directNotify.newCategory("PartyEditor")
 
     def __init__(self, partyPlanner, parent):
-        FSM.__init__( self, self.__class__.__name__ )
+        FSM.__init__(self, self.__class__.__name__)
         self.partyPlanner = partyPlanner
         self._parent = parent
         self.partyEditorGrid = PartyEditorGrid(self)
         self.currentElement = None
 
         self.defaultTransitions = {
-            "Hidden" : ["Idle", "Cleanup"],
-            "Idle" : ["DraggingElement", "Hidden", "Cleanup"],
-            "DraggingElement" : ["Idle", "DraggingElement", "Hidden", "Cleanup"],
+            "Hidden": ["Idle", "Cleanup"],
+            "Idle": ["DraggingElement", "Hidden", "Cleanup"],
+            "DraggingElement": ["Idle", "DraggingElement", "Hidden", "Cleanup"],
             "Cleanup": [],
         }
         self.initElementList()
@@ -50,36 +51,45 @@ class PartyEditor(FSM):
         self.initTrashCan()
 
     def initElementList(self):
-        self.activityIconsModel = loader.loadModel("phase_4/models/parties/eventSignIcons")
-        self.decorationModels = loader.loadModel("phase_4/models/parties/partyDecorations")
-        pos = self.partyPlanner.gui.find("**/step_05_activitiesIcon_locator").getPos()
+        self.activityIconsModel = loader.loadModel(
+            "phase_4/models/parties/eventSignIcons")
+        self.decorationModels = loader.loadModel(
+            "phase_4/models/parties/partyDecorations")
+        pos = self.partyPlanner.gui.find(
+            "**/step_05_activitiesIcon_locator").getPos()
         self.elementList = DirectScrolledList(
 
-            parent = self._parent,
-            relief = None,
+            parent=self._parent,
+            relief=None,
             # inc and dec are DirectButtons
-            decButton_image = (self.partyPlanner.gui.find("**/activitiesButtonUp_up"),
-                               self.partyPlanner.gui.find("**/activitiesButtonUp_down"),
-                               self.partyPlanner.gui.find("**/activitiesButtonUp_rollover"),
-                               self.partyPlanner.gui.find("**/activitiesButtonUp_inactive"),
-                               ),
-            decButton_relief = None,
-            decButton_pos = (-0.05, 0.0, -0.38),
+            decButton_image=(self.partyPlanner.gui.find("**/activitiesButtonUp_up"),
+                             self.partyPlanner.gui.find(
+                                 "**/activitiesButtonUp_down"),
+                             self.partyPlanner.gui.find(
+                                 "**/activitiesButtonUp_rollover"),
+                             self.partyPlanner.gui.find(
+                                 "**/activitiesButtonUp_inactive"),
+                             ),
+            decButton_relief=None,
+            decButton_pos=(-0.05, 0.0, -0.38),
 
-            incButton_image = (self.partyPlanner.gui.find("**/activitiesButtonDown_up"),
-                               self.partyPlanner.gui.find("**/activitiesButtonDown_down"),
-                               self.partyPlanner.gui.find("**/activitiesButtonDown_rollover"),
-                               self.partyPlanner.gui.find("**/activitiesButtonDown_inactive"),
-                               ),
-            incButton_relief = None,
-            incButton_pos = (-0.05, 0.0, -0.94),
+            incButton_image=(self.partyPlanner.gui.find("**/activitiesButtonDown_up"),
+                             self.partyPlanner.gui.find(
+                                 "**/activitiesButtonDown_down"),
+                             self.partyPlanner.gui.find(
+                                 "**/activitiesButtonDown_rollover"),
+                             self.partyPlanner.gui.find(
+                                 "**/activitiesButtonDown_inactive"),
+                             ),
+            incButton_relief=None,
+            incButton_pos=(-0.05, 0.0, -0.94),
 
             # itemFrame is a DirectFrame
-            itemFrame_pos = (pos[0], pos[1], pos[2]+0.04),
-            itemFrame_relief = None,
+            itemFrame_pos=(pos[0], pos[1], pos[2] + 0.04),
+            itemFrame_relief=None,
             # each item is a button with text on it
-            numItemsVisible = 1,
-            items = [],
+            numItemsVisible=1,
+            items=[],
         )
 
         for activityId in PartyGlobals.PartyEditorActivityOrder:
@@ -90,7 +100,7 @@ class PartyEditor(FSM):
                     self.elementList.addItem(pele)
             elif activityId in PartyGlobals.VictoryPartyReplacementActivityIds:
                 holidayIds = base.cr.newsManager.getHolidayIdList()
-                if not ToontownGlobals.VICTORY_PARTY_HOLIDAY in holidayIds:
+                if ToontownGlobals.VICTORY_PARTY_HOLIDAY not in holidayIds:
                     pele = PartyEditorListElement(self, activityId)
                     self.elementList.addItem(pele)
             else:
@@ -102,39 +112,43 @@ class PartyEditor(FSM):
         for decorationId in PartyGlobals.DecorationIds:
             decorName = PartyGlobals.DecorationIds.getString(decorationId)
             if (decorName == "HeartTarget") \
-            or (decorName == "HeartBanner") \
-            or (decorName == "FlyingHeart"):
+                    or (decorName == "HeartBanner") \
+                    or (decorName == "FlyingHeart"):
                 holidayIds = base.cr.newsManager.getHolidayIdList()
                 if ToontownGlobals.VALENTINES_DAY in holidayIds:
-                    pele = PartyEditorListElement(self, decorationId, isDecoration=True)
+                    pele = PartyEditorListElement(
+                        self, decorationId, isDecoration=True)
                     self.elementList.addItem(pele)
             elif decorationId in PartyGlobals.VictoryPartyDecorationIds:
                 holidayIds = base.cr.newsManager.getHolidayIdList()
                 if ToontownGlobals.VICTORY_PARTY_HOLIDAY in holidayIds:
-                    pele = PartyEditorListElement(self, decorationId, isDecoration=True)
+                    pele = PartyEditorListElement(
+                        self, decorationId, isDecoration=True)
                     self.elementList.addItem(pele)
             elif decorationId in PartyGlobals.VictoryPartyReplacementDecorationIds:
                 holidayIds = base.cr.newsManager.getHolidayIdList()
-                if not ToontownGlobals.VICTORY_PARTY_HOLIDAY in holidayIds:
-                    pele = PartyEditorListElement(self, decorationId, isDecoration=True)
+                if ToontownGlobals.VICTORY_PARTY_HOLIDAY not in holidayIds:
+                    pele = PartyEditorListElement(
+                        self, decorationId, isDecoration=True)
                     self.elementList.addItem(pele)
             else:
-                pele = PartyEditorListElement(self, decorationId, isDecoration=True)
+                pele = PartyEditorListElement(
+                    self, decorationId, isDecoration=True)
                 self.elementList.addItem(pele)
         self.elementList.refresh()
         self.elementList['command'] = self.scrollItemChanged
 
     def initPartyClock(self):
-        self.partyClockElement.buyButtonClicked((8,7))
+        self.partyClockElement.buyButtonClicked((8, 7))
 
     def initTrashCan(self):
         trashcanGui = loader.loadModel("phase_3/models/gui/trashcan_gui")
         self.trashCanButton = DirectButton(
-            parent = self._parent,
-            relief = None,
-            pos = Point3(*PartyGlobals.TrashCanPosition),
-            scale = PartyGlobals.TrashCanScale,
-            geom = (
+            parent=self._parent,
+            relief=None,
+            pos=Point3(*PartyGlobals.TrashCanPosition),
+            scale=PartyGlobals.TrashCanScale,
+            geom=(
                 trashcanGui.find("**/TrashCan_CLSD"),
                 trashcanGui.find("**/TrashCan_OPEN"),
                 trashcanGui.find("**/TrashCan_RLVR"),
@@ -152,9 +166,12 @@ class PartyEditor(FSM):
         if not self.elementList["items"]:
             # we are probably closing the gui, do nothing
             return
-        self.currentElement = self.elementList["items"][self.elementList.getSelectedIndex()]
-        self.elementList["items"][self.elementList.getSelectedIndex()].elementSelectedFromList()
-        if self.elementList["items"][self.elementList.getSelectedIndex()].isDecoration:
+        self.currentElement = self.elementList["items"][self.elementList.getSelectedIndex(
+        )]
+        self.elementList["items"][self.elementList.getSelectedIndex(
+        )].elementSelectedFromList()
+        if self.elementList["items"][self.elementList.getSelectedIndex()
+                                     ].isDecoration:
             self.partyPlanner.instructionLabel["text"] = TTLocalizer.PartyPlannerEditorInstructionsClickedElementDecoration
         else:
             self.partyPlanner.instructionLabel["text"] = TTLocalizer.PartyPlannerEditorInstructionsClickedElementActivity
@@ -199,7 +216,6 @@ class PartyEditor(FSM):
         self.mouseOverTrash = False
         self.partyPlanner.instructionLabel["text"] = self.oldInstructionText
 
-
     ### FSM Methods ###
 
     def enterHidden(self):
@@ -213,7 +229,8 @@ class PartyEditor(FSM):
         if not fromDragging:
             self.elementList.scrollTo(0)
             self.elementList["items"][0].elementSelectedFromList()
-            self.currentElement = self.elementList["items"][self.elementList.getSelectedIndex()]
+            self.currentElement = self.elementList["items"][self.elementList.getSelectedIndex(
+            )]
             self.currentElement.checkSoldOutAndPaidStatusAndAffordability()
         self.partyPlanner.instructionLabel["text"] = TTLocalizer.PartyPlannerEditorInstructionsIdle
         self.updateCostsAndBank()
@@ -233,7 +250,7 @@ class PartyEditor(FSM):
                 removedName = TTLocalizer.PartyActivityNameDict[act.id]["editor"]
                 addedName = TTLocalizer.PartyActivityNameDict[lastActivity]["editor"]
                 instr = TTLocalizer.PartyPlannerEditorInstructionsRemoved % \
-                        {"removed" : removedName, "added" : addedName}
+                    {"removed": removedName, "added": addedName}
                 self.partyPlanner.instructionLabel["text"] = instr
                 self.updateCostsAndBank()
                 # deliberately no break here, in case they manage to
@@ -267,13 +284,14 @@ class PartyEditor(FSM):
             newCost += PartyGlobals.ActivityInformationDict[elementTuple[0]]["cost"]
         for elementTuple in currentDecorations:
             newCost += PartyGlobals.DecorationInformationDict[elementTuple[0]]["cost"]
-        self.partyPlanner.costLabel["text"] = TTLocalizer.PartyPlannerTotalCost%newCost
+        self.partyPlanner.costLabel["text"] = TTLocalizer.PartyPlannerTotalCost % newCost
         if len(currentActivities) > 0 or len(currentDecorations) > 0:
             self.partyPlanner.setNextButtonState(enabled=True)
         else:
             self.partyPlanner.setNextButtonState(enabled=False)
         self.partyPlanner.totalCost = newCost
-        self.partyPlanner.beanBank["text"] = str(int(self.partyPlanner.totalMoney - self.partyPlanner.totalCost))
+        self.partyPlanner.beanBank["text"] = str(
+            int(self.partyPlanner.totalMoney - self.partyPlanner.totalCost))
 
     def exitIdle(self):
         PartyEditor.notify.debug("Exit Idle")
@@ -299,5 +317,3 @@ class PartyEditor(FSM):
 
     def exitCleanup(self):
         PartyEditor.notify.debug("Exit Cleanup")
-
-

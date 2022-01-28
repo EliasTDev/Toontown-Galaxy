@@ -26,9 +26,10 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
     def __init__(self, cr):
         try:
             self.DistributedGoon_initialized
-        except:
+        except BaseException:
             self.DistributedGoon_initialized = 1
-            DistributedCrushableEntity.DistributedCrushableEntity.__init__(self, cr)
+            DistributedCrushableEntity.DistributedCrushableEntity.__init__(
+                self, cr)
             Goon.Goon.__init__(self)
             FSM.FSM.__init__(self, 'DistributedGoon')
 
@@ -51,18 +52,23 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         self.animMultiplier = 1.0
         self.isDead = 0
         self.isStunned = 0
-        self.collapseSound = loader.loadSfx("phase_9/audio/sfx/CHQ_GOON_hunker_down.ogg")
-        self.recoverSound = loader.loadSfx("phase_9/audio/sfx/CHQ_GOON_rattle_shake.ogg")
-        self.attackSound = loader.loadSfx("phase_9/audio/sfx/CHQ_GOON_tractor_beam_alarmed.ogg")
+        self.collapseSound = loader.loadSfx(
+            "phase_9/audio/sfx/CHQ_GOON_hunker_down.ogg")
+        self.recoverSound = loader.loadSfx(
+            "phase_9/audio/sfx/CHQ_GOON_rattle_shake.ogg")
+        self.attackSound = loader.loadSfx(
+            "phase_9/audio/sfx/CHQ_GOON_tractor_beam_alarmed.ogg")
 
     def announceGenerate(self):
-        DistributedCrushableEntity.DistributedCrushableEntity.announceGenerate(self)
+        DistributedCrushableEntity.DistributedCrushableEntity.announceGenerate(
+            self)
 
-        # if the goonType is set by the Spec use it, otherwise make a default goon
+        # if the goonType is set by the Spec use it, otherwise make a default
+        # goon
         if hasattr(self, 'goonType'):
             self.initGoon(self.goonType)
         else:
-            self.initGoon('pg')            
+            self.initGoon('pg')
 
         # scale the radar depending on fov and attackRadius.
         self.scaleRadar()
@@ -88,11 +94,11 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         # Figure out walk rate to anim speed multiplier
         self.animMultiplier = self.velocity / (ANIM_WALK_RATE * self.scale)
         self.setPlayRate(self.animMultiplier, 'walk')
-        
+
     def initPath(self):
         """
         Initialize this goon's position and then setup its collision.
-        This avoids issues with delays in positioning causing undesired 
+        This avoids issues with delays in positioning causing undesired
         collisions. We found this sequence of events in a bug:
             1.) Goon created at origin, waits for path to load in level.
             2.) Goon's collision activated.
@@ -101,15 +107,14 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         Clearly there is something wrong in step 4, but this at least sets
         position before collision.
         """
-        
+
         self.enterOff()
         self.setPath()
 
         taskMgr.doMethodLater(0.1,
                               self.makeCollidable,
                               self.taskName("makeCollidable"))
-        
-        
+
     def makeCollidable(self, task):
         """
         Initialize the collision and trigger for this goon. After this
@@ -117,12 +122,12 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         """
 
         self.initCollisions()
-    
+
         # set up stun collisions and body sphere for goon
         self.initializeBodyCollisions()
         triggerName = self.uniqueName('GoonTrigger')
         self.trigger.setName(triggerName)
-        self.triggerEvent = 'enter%s' % (triggerName)
+        self.triggerEvent = f'enter{triggerName}'
 
         # Start listening for the local toon.
         self.startToonDetect()
@@ -132,7 +137,7 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
 
     def scaleRadar(self):
         Goon.Goon.scaleRadar(self)
-        
+
         self.trigger = self.radar.find('**/trigger')
 
         # Make sure the trigger name is set.
@@ -143,20 +148,21 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         # Setup a collision sphere that we can't walk through
         self.cSphere = CollisionSphere(0.0, 0.0, 1.0, 1.0)
         #self.cSphereNode = CollisionNode(self.uniqueName("goonCollSphere"))
-        self.cSphereNode = CollisionNode("goonCollSphere")  # change name on generate
+        self.cSphereNode = CollisionNode(
+            "goonCollSphere")  # change name on generate
         self.cSphereNode.addSolid(self.cSphere)
-        self.cSphereNodePath=self.head.attachNewNode(self.cSphereNode)
+        self.cSphereNodePath = self.head.attachNewNode(self.cSphereNode)
         self.cSphereNodePath.hide()
         self.cSphereBitMask = ToontownGlobals.WallBitmask
         self.cSphereNode.setCollideMask(self.cSphereBitMask)
         self.cSphere.setTangible(1)
 
         # Setup a sphere to detect "stun" collision with the toon
-        self.sSphere = CollisionSphere(0.0, 0.0, self.headHeight+.8, .2)
+        self.sSphere = CollisionSphere(0.0, 0.0, self.headHeight + .8, .2)
         #self.sSphereNode = CollisionNode(self.uniqueName("toonSphere"))
         self.sSphereNode = CollisionNode("toonSphere")
         self.sSphereNode.addSolid(self.sSphere)
-        self.sSphereNodePath=self.head.attachNewNode(self.sSphereNode)
+        self.sSphereNodePath = self.head.attachNewNode(self.sSphereNode)
         self.sSphereNodePath.hide()
         self.sSphereBitMask = ToontownGlobals.WallBitmask
         self.sSphereNode.setCollideMask(self.sSphereBitMask)
@@ -165,7 +171,7 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
     def initializeBodyCollisions(self):
         self.cSphereNode.setName(self.uniqueName("goonCollSphere"))
         self.sSphereNode.setName(self.uniqueName("toonSphere"))
-       
+
         # If a toon runs directly into the goon without being detected,
         # the goon becomes stunned
         self.accept(self.uniqueName("entertoonSphere"), self.__handleStun)
@@ -179,7 +185,7 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
             del self.sSphereNodePath
             del self.sSphereNode
             del self.sSphere
-        
+
         if hasattr(self, 'cSphereNodePath'):
             self.cSphereNodePath.removeNode()
             del self.cSphereNodePath
@@ -194,7 +200,6 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
             for id in clipList:
                 clipPlane = self.level.getEntity(id)
                 self.radar.setClipPlane(clipPlane.getPlane())
-
 
     def disableClipPlanes(self):
         if self.radar:
@@ -218,15 +223,15 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
             self.walkTrack = None
         self.walkTrack = self.path.makePathTrack(self, self.velocity,
                                                  self.uniqueName("goonWalk"),
-                                                 turnTime = T_TURN)
+                                                 turnTime=T_TURN)
 
         # if we are on a grid, tell the AI to parameterize the path
-        if self.gridId != None:
+        if self.gridId is not None:
             self.sendUpdate("setParameterize", [self.path.pos[0],
                                                 self.path.pos[1],
                                                 self.path.pos[2],
                                                 self.path.pathIndex])
-        
+
     def disable(self):
         """
         This method is called when the DistributedObject
@@ -246,9 +251,9 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         if self.walkTrack:
             self.walkTrack.pause()
             self.walkTrack = None
-                
+
         DistributedCrushableEntity.DistributedCrushableEntity.disable(self)
-        
+
     def delete(self):
         """
         This method is called when the DistributedObject is
@@ -257,10 +262,10 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         """
         try:
             self.DistributedSuit_deleted
-        except:
+        except BaseException:
             self.DistributedSuit_deleted = 1
             self.notify.debug("DistributedGoon %d: deleting" % self.getDoId())
-            
+
             # stop waiting to set collisions
             taskMgr.remove(self.taskName("makeCollidable"))
 
@@ -300,7 +305,7 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
     ##### Walk state #####
     # The goon is walking around trying to detect toons
     def enterWalk(self, avId=None, ts=0):
-        self.notify.debug('enterWalk, ts = %s' % ts)
+        self.notify.debug(f'enterWalk, ts = {ts}')
         # start the toon detection on enterWalk.
         self.startToonDetect()
         self.loop('walk', 0)
@@ -310,11 +315,10 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         if self.path:
             if not self.walkTrack:
                 # this should only happen in debug when using ~resyncGoons
-                self.walkTrack = self.path.makePathTrack(self, self.velocity,
-                                                         self.uniqueName("goonWalk"),
-                                                         turnTime = T_TURN)
+                self.walkTrack = self.path.makePathTrack(
+                    self, self.velocity, self.uniqueName("goonWalk"), turnTime=T_TURN)
             self.startWalk(ts)
-            
+
     def startWalk(self, ts):
         tOffset = ts % self.walkTrack.getDuration()
         self.walkTrack.loop()
@@ -330,11 +334,11 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
             self.pauseTime = self.walkTrack.pause()
             self.paused = 1
         self.stop()
-    
 
     # The goon has just detected a toon
+
     def enterBattle(self, avId=None, ts=0):
-        
+
         self.notify.debug('enterBattle')
         self.stopToonDetect()
         if self.animTrack:
@@ -350,34 +354,33 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         # self.__startResumeWalkTask(ts)
 
         # stun toon in battle with goon
-        #if avId != None:
+        # if avId != None:
         #    self.stunToon(avId)
         if avId == base.localAvatar.doId:
             if self.level:
-                
+
                 #self.level.b_setOuch(self.strength, "Fall")
                 self.level.b_setOuch(self.strength)
         # Get the track for the attack.  Since it is just blinking
         # the eye color, it isn't necessary to sinc with the timestamp
         self.animTrack = self.makeAttackTrack()
         self.animTrack.loop()
-        
-    
+
     def exitBattle(self):
         self.notify.debug('exitBattle')
         if self.animTrack:
             self.animTrack.finish()
             self.animTrack = None
-        self.head.setHpr(0,0,0)
-
+        self.head.setHpr(0, 0, 0)
 
     # The toon has temporarily stunned the goon
+
     def enterStunned(self, ts=0):
         # disable stun sphere
         self.ignore(self.uniqueName("entertoonSphere"))
 
         self.isStunned = 1
-        
+
         self.notify.debug("enterStunned")
         if self.radar:
             self.radar.hide()
@@ -386,7 +389,7 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         # This might kick us to enterWalk before even playing the stun
         # track, in high latency cases
         # on second thought, let the AI tell us when to resume walking
-        #self.__startRecoverTask(ts)
+        # self.__startRecoverTask(ts)
 
         self.animTrack = Parallel(Sequence(ActorInterval(self, 'collapse'),
                                            Func(self.pose, 'collapse', 48)),
@@ -394,7 +397,7 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
                                   )
 
         self.animTrack.start(ts)
-    
+
     def exitStunned(self):
         self.notify.debug("exitStunned")
         if self.radar:
@@ -406,8 +409,8 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         # reenable stun sphere
         self.accept(self.uniqueName("entertoonSphere"), self.__handleStun)
 
-
     # Goon recovery from being stunned
+
     def enterRecovery(self, ts=0, pauseTime=0):
         # set a timer to restart the walk track
         self.notify.debug("enterRecovery")
@@ -421,28 +424,28 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
             self.animTrack = None
 
         self.animTrack = self.getRecoveryTrack()
-                                  
+
         duration = self.animTrack.getDuration()
         self.animTrack.start(ts)
 
         # start walk track after recovery plays
-        delay = max(0, duration-ts)
+        delay = max(0, duration - ts)
         taskMgr.remove(self.taskName("recoveryDone"))
         taskMgr.doMethodLater(delay,
                               self.recoveryDone,
                               self.taskName("recoveryDone"),
-                              extraArgs = (pauseTime,))
-        
+                              extraArgs=(pauseTime,))
+
     def getRecoveryTrack(self):
         return Parallel(Sequence(ActorInterval(self, 'recovery'),
                                  Func(self.pose, 'recovery', 96),
                                  ),
-                        Func(base.playSfx,self.recoverSound, node=self),
+                        Func(base.playSfx, self.recoverSound, node=self),
                         )
-    
+
     def recoveryDone(self, pauseTime):
         self.request('Walk', None, pauseTime)
-        
+
     def exitRecovery(self):
         self.notify.debug("exitRecovery")
         taskMgr.remove(self.taskName("recoveryDone"))
@@ -458,29 +461,29 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         freakDeg = 60
         hatZ = self.hat.getZ()
         track = Parallel(Sequence(LerpColorScaleInterval(self.eye, .2,
-                                                         Vec4(1,0,0,1)),
+                                                         Vec4(1, 0, 0, 1)),
                                   LerpColorScaleInterval(self.eye, .2,
-                                                         Vec4(0,0,1,1)),
+                                                         Vec4(0, 0, 1, 1)),
                                   LerpColorScaleInterval(self.eye, .2,
-                                                         Vec4(1,0,0,1)),
+                                                         Vec4(1, 0, 0, 1)),
                                   LerpColorScaleInterval(self.eye, .2,
-                                                         Vec4(0,0,1,1)),
+                                                         Vec4(0, 0, 1, 1)),
                                   Func(self.eye.clearColorScale),
                                   ),
                          SoundInterval(self.attackSound, node=self, volume=.4))
         return track
-    
-    
+
     # doDetect looks around for toons
     # Subclasses can override this to use a different detection
     # method
+
     def doDetect(self):
         pass
-        
-        
+
     # doAttack penalizes the toon for being caught by this goon
     # Subclasses can override this to do a different type
     # of attack
+
     def doAttack(self, avId):
         return
 
@@ -490,16 +493,16 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         if ts < resumeTime:
             # set a timer to put us back in walk mode
             taskMgr.remove(self.taskName("resumeWalk"))
-            taskMgr.doMethodLater(resumeTime-ts,
+            taskMgr.doMethodLater(resumeTime - ts,
                                   self.request,
                                   self.taskName("resumeWalk"),
-                                  extraArgs = ('Walk',))
+                                  extraArgs=('Walk',))
         else:
-            self.request('Walk', ts-resumeTime)
-        
+            self.request('Walk', ts - resumeTime)
+
     def __reverseWalk(self, task):
         self.request('Walk')
-            
+
         return Task.done
 
     def __startRecoverTask(self, ts):
@@ -510,13 +513,12 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         if ts < stunTime:
             # set a timer to put us back in walk mode
             taskMgr.remove(self.taskName("resumeWalk"))
-            taskMgr.doMethodLater(stunTime-ts,
+            taskMgr.doMethodLater(stunTime - ts,
                                   self.request,
                                   self.taskName("resumeWalk"),
-                                  extraArgs = ('Recovery',))
+                                  extraArgs=('Recovery',))
         else:
-            self.request('Recovery', ts-stunTime)
-        
+            self.request('Recovery', ts - stunTime)
 
     def startToonDetect(self):
         self.radar.show()  # just in case.
@@ -527,85 +529,85 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         if self.triggerEvent:
             self.ignore(self.triggerEvent)
 
-##     def __detectLocalToon(self, task):
+# def __detectLocalToon(self, task):
 ##         toon = base.localAvatar
-##         # check distance from local toon
+# check distance from local toon
 ##         toonPos = toon.getPos()
 ##         goonPos = self.head.getPos(render)
-##         # hack:  the ray is facing backwards if we don't flip the direction manually?!
+# hack:  the ray is facing backwards if we don't flip the direction manually?!
 ##         v = goonPos - toonPos
 ##         distToToon = Vec3(v).length()
 
-##         if (not toon.isStunned) and distToToon < self.attackRadius:
-##             # the toon is close enough, and not already stunned
-##             # now check if toon is in field of view
+# if (not toon.isStunned) and distToToon < self.attackRadius:
+# the toon is close enough, and not already stunned
+# now check if toon is in field of view
 
-##             # get v relative to radar.  Radar is facing Vec3(0,1,0) in its
-##             # own coordinate system
+# get v relative to radar.  Radar is facing Vec3(0,1,0) in its
+# own coordinate system
 ##             vRelToRadar = self.radar.getRelativeVector(render, v)
-            
+
 ##             rayDir = Vec3(vRelToRadar)
-##             vRelToRadar.normalize()
+# vRelToRadar.normalize()
 
-##             vDotR = vRelToRadar[1] # == vRelToRadar.dot(Vec3(0,1,0)
+# vDotR = vRelToRadar[1] # == vRelToRadar.dot(Vec3(0,1,0)
 
-##             # err on the side of the player
+# err on the side of the player
 ##             fudge = .05
-            
-##             if vDotR < 1.0 and vDotR > self.cosHalfFov + fudge:
-##                 if self.checkForWalls:
-##                     # THIS CODE ISN'T WORKING RIGHT, NOR DO WE NEED
-##                     # IT FOR THE CURRENT FACTORY LAYOUT.
-                    
-##                     # the toon is in the fov,
-##                     # now make sure he is not occluded
-##                     #rayOrigin = Point3(0,1.5,base.localAvatar.getHeight()/2.0)
+
+# if vDotR < 1.0 and vDotR > self.cosHalfFov + fudge:
+# if self.checkForWalls:
+# THIS CODE ISN'T WORKING RIGHT, NOR DO WE NEED
+# IT FOR THE CURRENT FACTORY LAYOUT.
+
+# the toon is in the fov,
+# now make sure he is not occluded
+# rayOrigin = Point3(0,1.5,base.localAvatar.getHeight()/2.0)
 ##                     rayOrigin = Point3(0,0,self.headHeight)
 ##                     ray = CollisionRay(rayOrigin, rayDir)
 ##                     rayNode = CollisionNode(self.uniqueName('goonRay'))
-##                     #rayNode.setCollideMask(BitMask32.allOff())
+# rayNode.setCollideMask(BitMask32.allOff())
 ##                     rayBitMask = ToontownGlobals.WallBitmask | ToontownGlobals.FloorBitmask
-##                     rayNode.setFromCollideMask(rayBitMask)
-##                     rayNode.setIntoCollideMask(BitMask32.allOff())
-##                     #rayNode.setCollideGeom(1)
-##                     rayNode.addSolid(ray)
+# rayNode.setFromCollideMask(rayBitMask)
+# rayNode.setIntoCollideMask(BitMask32.allOff())
+# rayNode.setCollideGeom(1)
+# rayNode.addSolid(ray)
 ##                     rayNodePath = self.head.attachNewNode(rayNode)
-##                     #rayNodePath.show()
+# rayNodePath.show()
 
 ##                     cqueue = CollisionHandlerQueue()
 ##                     world = self.level.geom
 ##                     trav = CollisionTraverser("DistributedGoon")
 ##                     trav.addCollider(rayNodePath, cqueue)
-##                     trav.traverse(world)
+# trav.traverse(world)
 
-##                     cqueue.sortEntries()
+# cqueue.sortEntries()
 
-##                     if cqueue.getNumEntries() == 0:
-##                         # No objects were between the toon and goon
+# if cqueue.getNumEntries() == 0:
+# No objects were between the toon and goon
 ##                         self.notify.warning("%s: Couldn't find ANYTHING!" % (self.doId))
-##                         self.handleToonDetect()
-##                     else:
+# self.handleToonDetect()
+# else:
 ##                         entry = cqueue.getEntry(0)
-                        
-##                         # if the closest interseciton point is behind our toon
-##                         # then we can start the attack, otherwise consider the toon
-##                         # hidden from the goon
+
+# if the closest interseciton point is behind our toon
+# then we can start the attack, otherwise consider the toon
+# hidden from the goon
 ##                         dist = Vec3(self.getPos(render) - entry.getIntoIntersectionPoint()).length()
-##                         if dist > distToToon:
+# if dist > distToToon:
 ##                             colName = entry.getIntoNode().getName()
 ##                             self.notify.debug("collider (%s) at d=%s, toon at %s" % (colName, dist,distToToon))
-##                             self.handleToonDetect(entry)
-##                         else:
+# self.handleToonDetect(entry)
+# else:
 ##                             colName = entry.getIntoNode().getName()
 ##                             self.notify.debug("toon is occluded by %s, %s > %s" % (colName, distToToon, dist))
 
-##                     rayNodePath.removeNode()
-##                 else:
-##                     # not checking for walls
-##                     # Battle the toon
-##                     self.handleToonDetect()
-                    
-##         return Task.cont
+# rayNodePath.removeNode()
+# else:
+# not checking for walls
+# Battle the toon
+# self.handleToonDetect()
+
+# return Task.cont
 
     def handleToonDetect(self, collEntry=None):
         if base.localAvatar.isStunned:
@@ -630,16 +632,19 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         if self.dclass and hasattr(self, 'dclass'):
             self.sendUpdate("requestBattle", [self.pauseTime])
         else:
-            self.notify.info( "Goon deleted and still trying to call handleToonDetect()" )
+            self.notify.info(
+                "Goon deleted and still trying to call handleToonDetect()")
             # Need to get more information on why this case happens.
-            
+
     def __handleStun(self, collEntry):
-        # Client side check first to see if we're in a reasonable distance to the goon to stun it.
+        # Client side check first to see if we're in a reasonable distance to
+        # the goon to stun it.
         toon = base.localAvatar
         if toon:
             toonDistance = self.getPos(toon).length()
             if toonDistance > self.attackRadius:
-                self.notify.warning("Stunned a good, but outside of attack radius")
+                self.notify.warning(
+                    "Stunned a good, but outside of attack radius")
                 return
             else:
                 self.request("Stunned")
@@ -652,7 +657,7 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
 
         # Tell the AI we are stunned
         self.sendUpdate("requestStunned", [self.pauseTime])
-        
+
     def setMovie(self, mode, avId, pauseTime, timestamp):
         """
         This is a message from the AI describing a movie for this goon
@@ -660,21 +665,24 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         # do nothing if dead
         if self.isDead:
             return
-        
+
         ts = ClockDelta.globalClockDelta.localElapsedTime(timestamp)
-        self.notify.debug("%s: setMovie(%s,%s,%s,%s)" % (self.doId, mode,avId,pauseTime,ts))
-        
+        self.notify.debug(
+            f"{self.doId}: setMovie({mode},{avId},{pauseTime},{ts})")
+
         if mode == GOON_MOVIE_BATTLE:
             if self.state != "Battle":
                 self.request("Battle", avId, ts)
         elif mode == GOON_MOVIE_STUNNED:
             if self.state != "Stunned":
-                # Client side check first to see if we're in a reasonable distance to the goon to stun it.
+                # Client side check first to see if we're in a reasonable
+                # distance to the goon to stun it.
                 toon = base.cr.doId2do.get(avId)
                 if toon:
                     toonDistance = self.getPos(toon).length()
                     if toonDistance > self.attackRadius:
-                        self.notify.warning("Stunned a goon, but outside of attack radius")
+                        self.notify.warning(
+                            "Stunned a goon, but outside of attack radius")
                         return
                     else:
                         self.request("Stunned", ts)
@@ -686,26 +694,26 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
                 self.walkTrack.pause()
                 self.paused = 1
             if self.state == "Off" or self.state == "Walk":
-                self.request("Walk", avId, pauseTime+ts)
+                self.request("Walk", avId, pauseTime + ts)
         else:
             # walk
             if self.walkTrack:
                 self.walkTrack.pause()
                 self.walkTrack = None
-            self.request("Walk", avId, pauseTime+ts)
-        
+            self.request("Walk", avId, pauseTime + ts)
+
     def stunToon(self, avId):
-        self.notify.debug("stunToon(%s)" % avId)
+        self.notify.debug(f"stunToon({avId})")
         # Stun localtoon
         av = base.cr.doId2do.get(avId)
-        if av != None:
+        if av is not None:
             av.stunToon()
-        
+
     def isLocalToon(self, avId):
         if avId == base.localAvatar.doId:
             return 1
         return 0
-        
+
     def playCrushMovie(self, crusherId, axis):
         goonPos = self.getPos()
         # randomize the x and z scale a little
@@ -714,8 +722,8 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
         crushTrack = Sequence(
             GoonDeath.createGoonExplosion(self.getParent(),
                                           goonPos, VBase3(sx, 1, sz)),
-            name = self.uniqueName('crushTrack'),
-            autoFinish = 1)
+            name=self.uniqueName('crushTrack'),
+            autoFinish=1)
         self.dead()
         crushTrack.start()
 
@@ -759,19 +767,19 @@ class DistributedGoon(DistributedCrushableEntity.DistributedCrushableEntity,
             # get the AI and client on the same page again
             # (used only in dev environment for now)
             self.sendUpdate("requestResync")
-            
+
     def setHFov(self, hFov):
         if hFov != self.hFov:
             self.hFov = hFov
             if self.isGenerated():
                 self.scaleRadar()
-            
+
     def setAttackRadius(self, attackRadius):
         if attackRadius != self.attackRadius:
             self.attackRadius = attackRadius
             if self.isGenerated():
                 self.scaleRadar()
-        
+
     def setStrength(self, strength):
         if strength != self.strength:
             self.strength = strength

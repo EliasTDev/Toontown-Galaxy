@@ -17,6 +17,7 @@ from toontown.racing.KartShopGlobals import KartGlobals
 if(__debug__):
     import pdb
 
+
 class DistributedKartPadAI(DistributedObjectAI):
     """
     Purpose: ...
@@ -25,8 +26,9 @@ class DistributedKartPadAI(DistributedObjectAI):
     ######################################################################
     # Class Variables
     ######################################################################
-    notify = DirectNotifyGlobal.directNotify.newCategory("DistributedKartPadAI")
-    #notify.setDebug(True)
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedKartPadAI")
+    # notify.setDebug(True)
 
     def __init__(self, air, area):
         """
@@ -84,24 +86,28 @@ class DistributedKartPadAI(DistributedObjectAI):
                 block - the Starting Block object that the avatar will enter.
         Return: None
         """
-        self.notify.debug("addAvBlock: adding avId: %s to a starting block" %(avId))
+        self.notify.debug(
+            f"addAvBlock: adding avId: {avId} to a starting block")
 
         # Retrieve the avatar
         av = self.air.doId2do.get(avId, None)
         if(av and not av.hasKart()):
-            self.notify.debug("Avatar %s does not own a kart, don't let him into the spot!")
+            self.notify.debug(
+                "Avatar %s does not own a kart, don't let him into the spot!")
             return KartGlobals.ERROR_CODE.eNoKart
 
         # Make certain that the avatar is not currently in another block.
         currentBlock = self.avId2BlockDict.get(avId, None)
         if(currentBlock):
-            self.notify.warning("addAvBlock: avId: %s already in a block" % (avId))
+            self.notify.warning(
+                f"addAvBlock: avId: {avId} already in a block")
             return KartGlobals.ERROR_CODE.eGeneric
 
         # The avatar is not currently in a kart block, which is what
         # should be expected.
         self.avId2BlockDict[avId] = block
-        self.notify.debug("RacePad %s has added Toon %s to block %s" % (self.doId, avId, block.doId))
+        self.notify.debug(
+            f"RacePad {self.doId} has added Toon {avId} to block {block.doId}")
         return KartGlobals.ERROR_CODE.success
 
     def removeAvBlock(self, avId, block):
@@ -117,17 +123,20 @@ class DistributedKartPadAI(DistributedObjectAI):
         currentBlock = self.avId2BlockDict.get(avId, None)
         if(currentBlock):
             if(currentBlock == block):
-                self.notify.debug("removeAvBlock: removing avId %s from a starting block" % (avId))
+                self.notify.debug(
+                    f"removeAvBlock: removing avId {avId} from a starting block")
                 del self.avId2BlockDict[avId]
             else:
-                self.notify.warning("removeAvBlock: blocks do not match, remove av anyways")
+                self.notify.warning(
+                    "removeAvBlock: blocks do not match, remove av anyways")
                 del self.avId2BlockDict[avId]
 
-            self.notify.debug("RacePad %s has removed Toon %s from block %s" % (self.doId, avId, block.doId))
+            self.notify.debug(
+                f"RacePad {self.doId} has removed Toon {avId} from block {block.doId}")
         else:
-            self.notify.warning("removeAvBlock: avId %s not found" % (avId))
+            self.notify.warning(f"removeAvBlock: avId {avId} not found")
 
-    def startCountdown(self, name, callback, time, params = []):
+    def startCountdown(self, name, callback, time, params=[]):
         """
         Purpose: The __startCountdown Method generates a task that acts as
         a timer. It calls a specified callback method after the time period
@@ -142,11 +151,11 @@ class DistributedKartPadAI(DistributedObjectAI):
         """
 
         countdownTask = taskMgr.doMethodLater(time, callback,
-                                               self.taskName(name),
-                                               params)
+                                              self.taskName(name),
+                                              params)
         return countdownTask
 
-    def stopCountdown(self, task = None):
+    def stopCountdown(self, task=None):
         """
         Comment:
         """
@@ -172,5 +181,3 @@ class DistributedKartPadAI(DistributedObjectAI):
         if self.allMoviesDone():
             self.stopCountdown(self.timerTask)
             self.handleWaitTimeout('AllAboard')
-
-

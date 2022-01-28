@@ -1,5 +1,6 @@
 from direct.distributed.DistributedObject import ESGenerating, ESGenerated
 
+
 class DelayDeletable:
     # mixin for DistributedObjects that can be DelayDeleted via
     # toontown.distributed.DelayDelete.DelayDelete
@@ -16,10 +17,10 @@ class DelayDeletable:
         # Also see DelayDelete.py
         global ESGenerating, ESGenerated
         if ((not self._delayDeleteForceAllow) and
-            (self.activeState not in (ESGenerating, ESGenerated))):
+                (self.activeState not in (ESGenerating, ESGenerated))):
             self.notify.error(
                 'cannot acquire DelayDelete "%s" on %s because it is in state %s' % (
-                name, self.__class__.__name__, ESNum2Str[self.activeState]))
+                    name, self.__class__.__name__, ESNum2Str[self.activeState]))
 
         if self.getDelayDeleteCount() == 0:
             self.cr._addDelayDeletedDO(self)
@@ -36,10 +37,10 @@ class DelayDeletable:
 
     def releaseDelayDelete(self, token):
         name = self._token2delayDeleteName.pop(token)
-        assert self.notify.debug("releasing delayDelete '%s'" % name)
+        assert self.notify.debug(f"releasing delayDelete '{name}'")
         if len(self._token2delayDeleteName) == 0:
             assert self.notify.debug(
-                "delayDelete count for doId %s now 0" % (self.doId))
+                f"delayDelete count for doId {self.doId} now 0")
             self.cr._removeDelayDeletedDO(self)
             # do we have a pending delete?
             if self._delayDeleted:

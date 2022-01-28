@@ -8,6 +8,7 @@ from direct.directnotify import DirectNotifyGlobal
 from toontown.suit import DistributedTutorialSuitAI
 from . import TutorialBattleManagerAI
 
+
 class SuitPlannerTutorialAI:
     """
     SuitPlannerTutorialAI: manages the single suit that you fight during
@@ -31,7 +32,8 @@ class SuitPlannerTutorialAI:
             self.air)
 
         # Create a flunky
-        newSuit = DistributedTutorialSuitAI.DistributedTutorialSuitAI(self.air, self)
+        newSuit = DistributedTutorialSuitAI.DistributedTutorialSuitAI(
+            self.air, self)
         newSuit.setupSuitDNA(1, 1, "c")
         # This is a special tutorial path state
         newSuit.generateWithRequired(self.zoneId)
@@ -44,13 +46,14 @@ class SuitPlannerTutorialAI:
             self.suit.requestDelete()
             self.suit = None
         if self.battle:
-            #self.battle.requestDelete()
-            #RAU made to kill the mem leak when you close the window in the middle of the battle tutorial
+            # self.battle.requestDelete()
+            # RAU made to kill the mem leak when you close the window in the
+            # middle of the battle tutorial
             cellId = self.battle.battleCellId
             battleMgr = self.battle.battleMgr
             if cellId in battleMgr.cellId2battle:
                 battleMgr.destroy(self.battle)
-            
+
             self.battle = None
 
     def getDoId(self):
@@ -72,5 +75,3 @@ class SuitPlannerTutorialAI:
         # Get rid of the suit.
         suit.requestDelete()
         self.suit = None
-        
-        

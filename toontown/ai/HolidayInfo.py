@@ -23,6 +23,8 @@ import time
 # Input: None
 # Output: returns the comparison value
 #############################################################
+
+
 def cmpDates(tuple1, tuple2):
     numValues = len(tuple1)
 
@@ -32,7 +34,7 @@ def cmpDates(tuple1, tuple2):
         elif tuple1[i] < tuple2[i]:
             return -1
 
-    return 0  
+    return 0
 
 #################################################################
 # Class: ModfiedIter
@@ -42,11 +44,13 @@ def cmpDates(tuple1, tuple2):
 #       will handle removals from the sequence gracefully. This
 #       currently does not do so.
 #################################################################
+
+
 class ModifiedIter:
     def __init__(self, seq):
-       self._seq = seq
-       self._idx = 0
-       self._storedIndex = 0
+        self._seq = seq
+        self._idx = 0
+        self._storedIndex = 0
 
     #############################################################
     # Method: current
@@ -73,7 +77,7 @@ class ModifiedIter:
     def __next__(self):
         try:
             lastIdx = len(self._seq) - 1
-            self._idx = ((lastIdx == self._idx) and [0] or [self._idx+1])[0]
+            self._idx = ((lastIdx == self._idx) and [0] or [self._idx + 1])[0]
             return self._seq[self._idx]
         except IndexError:
             raise StopIteration
@@ -90,7 +94,7 @@ class ModifiedIter:
     def prev(self):
         try:
             lastIdx = len(self._seq) - 1
-            self._idx = ((self._idx == 0) and [lastIdx] or [self._idx-1])[0]
+            self._idx = ((self._idx == 0) and [lastIdx] or [self._idx - 1])[0]
             return self._seq[self._idx]
         except IndexError:
             raise StopIteration
@@ -106,9 +110,9 @@ class ModifiedIter:
         try:
             idx = self._idx
             lastIdx = len(self._seq) - 1
-            idx = ((lastIdx == idx) and [0] or [idx+1])[0]
+            idx = ((lastIdx == idx) and [0] or [idx + 1])[0]
             return self._seq[idx]
-        except:
+        except BaseException:
             raise StopIteration
 
     #############################################################
@@ -122,7 +126,7 @@ class ModifiedIter:
         try:
             idx = self._idx
             lastIdx = len(self._seq) - 1
-            idx = ((idx == 0) and [lastIdx] or [idx-1])[0]
+            idx = ((idx == 0) and [lastIdx] or [idx - 1])[0]
             return self._seq[idx]
         except IndexError:
             raise StopIteration
@@ -163,6 +167,8 @@ class ModifiedIter:
 # Class: HolidayInfo_Base
 # Purpose: A Base Class for all derived.
 #################################################################
+
+
 class HolidayInfo_Base:
     #############################################################
     # Method: __init__
@@ -218,10 +224,10 @@ class HolidayInfo_Base:
     #############################################################
     def getDate(self):
         localtime = time.localtime()
-        date = (localtime[0], # Year
-                localtime[1], # Month
-                localtime[2], # Day
-                localtime[6]) # WDay
+        date = (localtime[0],  # Year
+                localtime[1],  # Month
+                localtime[2],  # Day
+                localtime[6])  # WDay
 
         return date
 

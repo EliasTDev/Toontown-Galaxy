@@ -11,6 +11,7 @@ from direct.showbase.EventManagerGlobal import *
 from direct.task.TaskManagerGlobal import *
 from direct.task.Task import Task
 
+
 class DummyLauncherBase:
     def __init__(self):
         self.logPrefix = ''
@@ -32,7 +33,8 @@ class DummyLauncherBase:
 
     def startFakeDownload(self):
         if ConfigVariableBool('fake-downloads', 0).getValue():
-            duration = ConfigVariableDouble('fake-download-duration', 60).getValue()
+            duration = ConfigVariableDouble(
+                'fake-download-duration', 60).getValue()
             self.fakeDownload(duration)
         else:
             for phase in self.LauncherPhases:
@@ -50,7 +52,7 @@ class DummyLauncherBase:
     def setPhaseComplete(self, phase, percent):
         # again, for testing
         self.phaseComplete[phase] = percent
-        
+
     def getPhaseComplete(self, phase):
         return (self.phaseComplete[phase] >= 100)
 
@@ -69,17 +71,17 @@ class DummyLauncherBase:
     def setDisconnectDetailsNormal(self):
         self.disconnectCode = 0
         self.disconnectMsg = 'normal'
-        
+
     def setDisconnectDetails(self, newCode, newMsg):
         self.disconnectCode = newCode
         self.disconnectMsg = newMsg
-        
+
     def setServerVersion(self, version):
         """
         Set the server version.
         """
         self.ServerVersion = version
-        
+
     def getServerVersion(self):
         return self.ServerVersion
 
@@ -111,7 +113,7 @@ class DummyLauncherBase:
 
     def getDeployment(self):
         """
-        Get the language version 
+        Get the language version
         """
         return 'US'
 
@@ -119,7 +121,8 @@ class DummyLauncherBase:
         # This is a test DMC blue - this does not get downloaded though
         # return "aW8gkhzXUIDxVBr4ywXMGYTZFCMVkg0JNzu5lOqqOUAQL9efNvxfVd3TDWeiyHmCNUW5wMgroVq0YzWdSkcbG$StvC4$9RsVmKhuRQSNHV#080siG5BFfNSwuK#vogKAETqbCKnyfAZmC372Y$ndW4YwQMu9MyQ9RgyZWtEYbvy5lgzmHIJr9gJHTS#EQ9nQViRSuKU9ilWUVVABNJrtOXo1kYtcyF#O"
         # return "ummm8ChuwvpzE9X6pCY4XaW9ae3LEx4XAmzdkJN#j5xLOHLnW9YDd#HKs4PTXYrH2GZE0k1vhD0sASZeE5Vp3$3qF#yVLqfeh2We6$eUkwLhZgCGpdihiPWpx9Kc8eHah5dAd$muaI2t2ABaAGaKwNVXpKVuU0Yr9DeXwT1lKS27ZX33Oqhh$bJQgaPw5nc1PIydLhBFOLlxccKN83A4EpM0uxoACo2C";
-        # return "EyHDPTHdCX5VFYXS8nvKPudKxaMRyUU4115r2wxO9RLQK7biOax1K9gKPwpzDSdeb8pa9PXni8mYdE#OvdsHorNoyjCMvMkWndpEcBytKp$Hq15PUKIXW2txZ$RyT8m7xPT$CSIMiXf#jCYXtt8gsa9zB2jQXd0SD7f#rm3Xz#6gA9Vv#fE0tIlifz8QK4e3eS7OFxPh$C#wuN4HR$K8KudnUq$VALfZQ5KyL4RlNFH#MnLNyu#lTg"
+        # return
+        # "EyHDPTHdCX5VFYXS8nvKPudKxaMRyUU4115r2wxO9RLQK7biOax1K9gKPwpzDSdeb8pa9PXni8mYdE#OvdsHorNoyjCMvMkWndpEcBytKp$Hq15PUKIXW2txZ$RyT8m7xPT$CSIMiXf#jCYXtt8gsa9zB2jQXd0SD7f#rm3Xz#6gA9Vv#fE0tIlifz8QK4e3eS7OFxPh$C#wuN4HR$K8KudnUq$VALfZQ5KyL4RlNFH#MnLNyu#lTg"
         return None
 
     def getPlayToken(self):
@@ -131,10 +134,13 @@ class DummyLauncherBase:
         return None
 
     def fakeDownloadPhaseTask(self, task):
-        percentComplete = min(100, int(round((task.time/float(task.timePerPhase) * 100))))
+        percentComplete = min(
+            100, int(round((task.time / float(task.timePerPhase) * 100))))
         # The position in the array is phase-1 because it counts from 0
         self.setPhaseComplete(task.phase, percentComplete)
-        messenger.send("launcherPercentPhaseComplete", [task.phase, percentComplete, 0, 0])
+        messenger.send(
+            "launcherPercentPhaseComplete", [
+                task.phase, percentComplete, 0, 0])
         if (percentComplete >= 100.0):
             messenger.send('phaseComplete-' + repr(task.phase))
             return Task.done
@@ -148,27 +154,29 @@ class DummyLauncherBase:
 
     def fakeDownload(self, timePerPhase):
         self.phaseComplete = {
-            1 : 100,
-            2 : 100,
-            3 : 0,
-            3.5 : 0,
-            4 : 0,
-            5 : 0,
-            5.5 : 0,
-            6 : 0,
-            7 : 0,
-            8 : 0,
-            9 : 0,
-            10 : 0,
-            11 : 0,
-            12 : 0,
-            13 : 0,
-            }
+            1: 100,
+            2: 100,
+            3: 0,
+            3.5: 0,
+            4: 0,
+            5: 0,
+            5.5: 0,
+            6: 0,
+            7: 0,
+            8: 0,
+            9: 0,
+            10: 0,
+            11: 0,
+            12: 0,
+            13: 0,
+        }
         phaseTaskList = []
         # Some phases should already be downloaded
         firstPhaseIndex = self.LauncherPhases.index(self.firstPhase)
         for phase in self.LauncherPhases[firstPhaseIndex:]:
-            phaseTask = Task(self.fakeDownloadPhaseTask, ("phaseDownload"+str(phase)))
+            phaseTask = Task(
+                self.fakeDownloadPhaseTask,
+                ("phaseDownload" + str(phase)))
             phaseTask.timePerPhase = timePerPhase
             phaseTask.phase = phase
             phaseTaskList.append(phaseTask)

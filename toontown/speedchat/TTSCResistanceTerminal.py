@@ -6,12 +6,15 @@ from toontown.chat import ResistanceChat
 # args: textId
 TTSCResistanceMsgEvent = 'TTSCResistanceMsg'
 
+
 def decodeTTSCResistanceMsg(textId):
     return ResistanceChat.getChatText(textId)
+
 
 class TTSCResistanceTerminal(SCTerminal):
     """ TTSCResistanceTerminal represents a terminal SpeedChat entry that
     contains a phrase that was purchased from the catalog. """
+
     def __init__(self, textId, charges):
         SCTerminal.__init__(self)
         self.setCharges(charges)

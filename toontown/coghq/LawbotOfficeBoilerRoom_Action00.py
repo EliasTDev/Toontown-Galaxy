@@ -11,7 +11,7 @@ GlobalEntities = {
         'farPlaneDistance': 1500,
         'modelFilename': 'phase_11/models/lawbotHQ/LB_Zone08a',
         'wantDoors': 1,
-        }, # end entity 1000
+    },  # end entity 1000
     # EDITMGR
     1001: {
         'type': 'editMgr',
@@ -21,7 +21,7 @@ GlobalEntities = {
         'removeEntity': None,
         'requestNewEntity': None,
         'requestSave': None,
-        }, # end entity 1001
+    },  # end entity 1001
     # ZONE
     0: {
         'type': 'zone',
@@ -31,7 +31,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 0
+    },  # end entity 0
     # ATTRIBMODIFIER
     10055: {
         'type': 'attribModifier',
@@ -42,7 +42,7 @@ GlobalEntities = {
         'recursive': 1,
         'typeName': 'model',
         'value': '',
-        }, # end entity 10055
+    },  # end entity 10055
     # GAGBARREL
     10045: {
         'type': 'gagBarrel',
@@ -57,7 +57,7 @@ GlobalEntities = {
         'gagTrack': 'random',
         'rewardPerGrab': 5,
         'rewardPerGrabMax': 0,
-        }, # end entity 10045
+    },  # end entity 10045
     10047: {
         'type': 'gagBarrel',
         'name': 'gag',
@@ -71,7 +71,7 @@ GlobalEntities = {
         'gagTrack': 'random',
         'rewardPerGrab': 5,
         'rewardPerGrabMax': 0,
-        }, # end entity 10047
+    },  # end entity 10047
     10054: {
         'type': 'gagBarrel',
         'name': 'gag',
@@ -85,7 +85,7 @@ GlobalEntities = {
         'gagTrack': 'random',
         'rewardPerGrab': 5,
         'rewardPerGrabMax': 0,
-        }, # end entity 10054
+    },  # end entity 10054
     # GEAR
     10020: {
         'type': 'gear',
@@ -100,7 +100,7 @@ GlobalEntities = {
         'modelType': 'mint',
         'orientation': 'horizontal',
         'phaseShift': 0,
-        }, # end entity 10020
+    },  # end entity 10020
     # HEALBARREL
     10004: {
         'type': 'healBarrel',
@@ -112,7 +112,7 @@ GlobalEntities = {
         'scale': Vec3(1, 1, 1),
         'rewardPerGrab': 6,
         'rewardPerGrabMax': 8,
-        }, # end entity 10004
+    },  # end entity 10004
     10005: {
         'type': 'healBarrel',
         'name': 'heal',
@@ -123,7 +123,7 @@ GlobalEntities = {
         'scale': Vec3(1, 1, 1),
         'rewardPerGrab': 6,
         'rewardPerGrabMax': 8,
-        }, # end entity 10005
+    },  # end entity 10005
     10037: {
         'type': 'healBarrel',
         'name': 'atTheEnd',
@@ -134,7 +134,7 @@ GlobalEntities = {
         'scale': Vec3(1, 1, 1),
         'rewardPerGrab': 5,
         'rewardPerGrabMax': 0,
-        }, # end entity 10037
+    },  # end entity 10037
     # LASERFIELD
     100000: {
         'type': 'laserField',
@@ -147,7 +147,7 @@ GlobalEntities = {
         'cellId': 0,
         'laserFactor': 3,
         'modelPath': 0,
-        }, # end entity 100000
+    },  # end entity 100000
     # MODEL
     10000: {
         'type': 'model',
@@ -161,7 +161,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10000
+    },  # end entity 10000
     10007: {
         'type': 'model',
         'name': 'upper',
@@ -174,7 +174,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10007
+    },  # end entity 10007
     10008: {
         'type': 'model',
         'name': 'crate',
@@ -187,7 +187,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10008
+    },  # end entity 10008
     10012: {
         'type': 'model',
         'name': 'copy of crate',
@@ -200,7 +200,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10012
+    },  # end entity 10012
     10013: {
         'type': 'model',
         'name': 'copy of crate (2)',
@@ -213,7 +213,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10013
+    },  # end entity 10013
     10014: {
         'type': 'model',
         'name': 'copy of crate (2)',
@@ -226,7 +226,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10014
+    },  # end entity 10014
     10015: {
         'type': 'model',
         'name': 'copy of crate (2)',
@@ -239,7 +239,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10015
+    },  # end entity 10015
     10016: {
         'type': 'model',
         'name': 'copy of crate (3)',
@@ -252,7 +252,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10016
+    },  # end entity 10016
     10018: {
         'type': 'model',
         'name': 'copy of upper',
@@ -265,7 +265,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10018
+    },  # end entity 10018
     10019: {
         'type': 'model',
         'name': 'copy of upper (2)',
@@ -278,7 +278,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10019
+    },  # end entity 10019
     10030: {
         'type': 'model',
         'name': 'lastCrateStack',
@@ -291,7 +291,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10030
+    },  # end entity 10030
     10031: {
         'type': 'model',
         'name': 'upper',
@@ -304,7 +304,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10031
+    },  # end entity 10031
     10033: {
         'type': 'model',
         'name': '<unnamed>',
@@ -317,7 +317,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/pipes_D1.bam',
-        }, # end entity 10033
+    },  # end entity 10033
     10034: {
         'type': 'model',
         'name': 'crateStack',
@@ -330,7 +330,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10034
+    },  # end entity 10034
     10035: {
         'type': 'model',
         'name': 'upper',
@@ -343,7 +343,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10035
+    },  # end entity 10035
     10036: {
         'type': 'model',
         'name': '<unnamed>',
@@ -356,7 +356,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/pipes_C.bam',
-        }, # end entity 10036
+    },  # end entity 10036
     10041: {
         'type': 'model',
         'name': 'crateStack',
@@ -369,7 +369,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10041
+    },  # end entity 10041
     10042: {
         'type': 'model',
         'name': 'upper',
@@ -382,7 +382,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10042
+    },  # end entity 10042
     10043: {
         'type': 'model',
         'name': '<unnamed>',
@@ -395,7 +395,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/boiler_B1.bam',
-        }, # end entity 10043
+    },  # end entity 10043
     10048: {
         'type': 'model',
         'name': 'crate',
@@ -408,7 +408,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10048
+    },  # end entity 10048
     10050: {
         'type': 'model',
         'name': 'support',
@@ -421,7 +421,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/gears_C2.bam',
-        }, # end entity 10050
+    },  # end entity 10050
     10052: {
         'type': 'model',
         'name': 'crate',
@@ -434,7 +434,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10052
+    },  # end entity 10052
     10053: {
         'type': 'model',
         'name': 'support',
@@ -447,7 +447,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/gears_C2.bam',
-        }, # end entity 10053
+    },  # end entity 10053
     10056: {
         'type': 'model',
         'name': 'collision',
@@ -460,7 +460,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/CBMetalCrate.bam',
-        }, # end entity 10056
+    },  # end entity 10056
     10057: {
         'type': 'model',
         'name': '<unnamed>',
@@ -473,7 +473,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/RoundShadow.bam',
-        }, # end entity 10057
+    },  # end entity 10057
     10058: {
         'type': 'model',
         'name': 'shelf',
@@ -486,7 +486,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cashbotHQ/shelf_A1.bam',
-        }, # end entity 10058
+    },  # end entity 10058
     10062: {
         'type': 'model',
         'name': 'copy of upper',
@@ -499,7 +499,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10062
+    },  # end entity 10062
     10063: {
         'type': 'model',
         'name': 'copy of upper (2)',
@@ -512,7 +512,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10063
+    },  # end entity 10063
     10064: {
         'type': 'model',
         'name': 'upper',
@@ -525,7 +525,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_10/models/cogHQ/CBMetalCrate2.bam',
-        }, # end entity 10064
+    },  # end entity 10064
     # NODEPATH
     10001: {
         'type': 'nodepath',
@@ -535,7 +535,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': Vec3(1.3, 1.3, 1.64892),
-        }, # end entity 10001
+    },  # end entity 10001
     10002: {
         'type': 'nodepath',
         'name': 'rewardBarrels',
@@ -544,7 +544,7 @@ GlobalEntities = {
         'pos': Point3(-0.719734, 56.9691, 10.0021),
         'hpr': Vec3(61.6992, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10002
+    },  # end entity 10002
     10003: {
         'type': 'nodepath',
         'name': 'upperWall',
@@ -553,7 +553,7 @@ GlobalEntities = {
         'pos': Point3(-20.3203, 52.6549, 9.90873),
         'hpr': Vec3(270, 0, 0),
         'scale': Vec3(1.1143, 1.1143, 1.1143),
-        }, # end entity 10003
+    },  # end entity 10003
     10009: {
         'type': 'nodepath',
         'name': 'toGear0',
@@ -562,7 +562,7 @@ GlobalEntities = {
         'pos': Point3(-26.5593, 31.856, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10009
+    },  # end entity 10009
     10011: {
         'type': 'nodepath',
         'name': 'toGear1',
@@ -571,7 +571,7 @@ GlobalEntities = {
         'pos': Point3(-25.884, 13.6749, 0),
         'hpr': Vec3(41.6335, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10011
+    },  # end entity 10011
     10023: {
         'type': 'nodepath',
         'name': 'leftWall',
@@ -580,7 +580,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10023
+    },  # end entity 10023
     10024: {
         'type': 'nodepath',
         'name': 'rightWall',
@@ -589,7 +589,7 @@ GlobalEntities = {
         'pos': Point3(-26.7112, 6.85982, 0),
         'hpr': Point3(180, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10024
+    },  # end entity 10024
     10028: {
         'type': 'nodepath',
         'name': 'lowerPuzzle',
@@ -598,7 +598,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0.05),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10028
+    },  # end entity 10028
     10029: {
         'type': 'nodepath',
         'name': 'entranceWall',
@@ -607,7 +607,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10029
+    },  # end entity 10029
     10032: {
         'type': 'nodepath',
         'name': 'props',
@@ -616,7 +616,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10032
+    },  # end entity 10032
     10038: {
         'type': 'nodepath',
         'name': 'archStompers',
@@ -625,7 +625,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10038
+    },  # end entity 10038
     10040: {
         'type': 'nodepath',
         'name': 'backWall',
@@ -634,7 +634,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10040
+    },  # end entity 10040
     10044: {
         'type': 'nodepath',
         'name': 'gear',
@@ -643,7 +643,7 @@ GlobalEntities = {
         'pos': Point3(11.85, -11.38, 12.528),
         'hpr': Vec3(0, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10044
+    },  # end entity 10044
     10046: {
         'type': 'nodepath',
         'name': 'supportedCrateBackWall',
@@ -652,7 +652,7 @@ GlobalEntities = {
         'pos': Point3(34.9045, -34.0589, -1.51687),
         'hpr': Vec3(63.4349, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10046
+    },  # end entity 10046
     10051: {
         'type': 'nodepath',
         'name': 'supportedCrateEntrance',
@@ -661,7 +661,7 @@ GlobalEntities = {
         'pos': Point3(48.5077, 7.75915, 0.357897),
         'hpr': Point3(0, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10051
+    },  # end entity 10051
     10059: {
         'type': 'nodepath',
         'name': 'largeStack',
@@ -670,7 +670,7 @@ GlobalEntities = {
         'pos': Point3(47.98, -16.98, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10059
+    },  # end entity 10059
     10061: {
         'type': 'nodepath',
         'name': 'lower',
@@ -679,7 +679,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10061
+    },  # end entity 10061
     100001: {
         'type': 'nodepath',
         'name': 'trap1 cog node',
@@ -688,7 +688,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 100001
+    },  # end entity 100001
     # STOMPER
     10049: {
         'type': 'stomper',
@@ -718,15 +718,15 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10049
-    }
+    },  # end entity 10049
+}
 
 Scenario0 = {
-    }
+}
 
 levelSpec = {
     'globalEntities': GlobalEntities,
     'scenarios': [
         Scenario0,
-        ],
-    }
+    ],
+}

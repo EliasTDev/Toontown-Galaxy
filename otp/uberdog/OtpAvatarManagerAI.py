@@ -10,6 +10,7 @@ from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
 notify = directNotify.newCategory('AvatarManagerAI')
 
+
 class OtpAvatarManagerAI(DistributedObjectAI):
     """
     The Avatar Manager AI is a global object.
@@ -32,6 +33,6 @@ class OtpAvatarManagerAI(DistributedObjectAI):
         assert self.notify.debugCall()
         self.notify.warning("AvatarManagerAI going offline")
         DistributedObjectAI.delete(self)
-    
+
     def online(self):
         assert self.notify.debugCall()

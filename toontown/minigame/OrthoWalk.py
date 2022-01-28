@@ -6,6 +6,7 @@ from direct.interval.IntervalGlobal import *
 from .OrthoDrive import *
 from direct.directnotify import DirectNotifyGlobal
 
+
 class OrthoWalk:
     """
     holds OrthoDrive object and broadcasts new positions
@@ -23,7 +24,7 @@ class OrthoWalk:
         self.collisions = collisions
         self.broadcast = broadcast
         self.broadcastPeriod = broadcastPeriod
-        self.priority = self.orthoDrive.priority+1
+        self.priority = self.orthoDrive.priority + 1
         self.lt = base.localAvatar
 
     def destroy(self):
@@ -81,11 +82,10 @@ class OrthoWalk:
         dt = globalClock.getDt()
         self.timeSinceLastPosBroadcast += dt
         if self.timeSinceLastPosBroadcast >= self.broadcastPeriod:
-            self.timeSinceLastPosBroadcast = 0            
+            self.timeSinceLastPosBroadcast = 0
             # broadcast the current position, if changed
             self.lt.cnode.broadcastPosHprXyh()
         return Task.cont
-
 
     def sendCurrentPosition(self):
         self.timeSinceLastPosBroadcast -= self.broadcastPeriod

@@ -2,8 +2,10 @@
 FlatBuilding object
 """
 
-import random, string
+import random
+import string
 from .ToonTownObj import *
+
 
 class FlatBuildingObj(ToonTownObj):
     def __init__(self, editor, buildingType, dna=None, nodePath=None):
@@ -16,8 +18,11 @@ class FlatBuildingObj(ToonTownObj):
     def initDNA(self):
         # Create new building
         dnaNode = DNAFlatBuilding()
-        self.setRandomBuildingStyle(dnaNode,
-                                    name = 'tb0:'+ self.buildingType + '_DNARoot')
+        self.setRandomBuildingStyle(
+            dnaNode,
+            name='tb0:' +
+            self.buildingType +
+            '_DNARoot')
         # Now place new building in the world
         return dnaNode
 
@@ -89,7 +94,7 @@ class FlatBuildingObj(ToonTownObj):
             return None
 
     def getRandomWindowCount(self):
-        if ((self.lastWall != None) and (self.lastBuilding != None)):
+        if ((self.lastWall is not None) and (self.lastBuilding is not None)):
             h = ROUND_INT(self.lastWall.getHeight())
             w = ROUND_INT(self.lastBuilding.getWidth())
             # Otherwise....
@@ -117,7 +122,7 @@ class FlatBuildingObj(ToonTownObj):
         """ Return specified attribute for current neighborhood """
         return self.styleManager.getAttribute(attribute)
 
-    def setRandomBuildingStyle(self, dnaNode, name = 'building'):
+    def setRandomBuildingStyle(self, dnaNode, name='building'):
         """ Initialize a new DNA Flat building to a random building style """
         # What is the current building type?
         buildingType = self.buildingType
@@ -130,7 +135,8 @@ class FlatBuildingObj(ToonTownObj):
             buildingType = createHeightCode(heightList)
         else:
             # Use specified height list
-            heightList = list(map(string.atof, string.split(buildingType, '_')))
+            heightList = list(
+                map(string.atof, string.split(buildingType, '_')))
             height = calcHeight(heightList)
             # Is this a never before seen height list?  If so, record it.
             try:
@@ -166,15 +172,15 @@ class FlatBuildingObj(ToonTownObj):
                     self.getDict('wall_style'))
                 styleList.append((wallStyle, height))
             # Create new random flat building style
-            style = DNAFlatBuildingStyle(styleList = styleList)
+            style = DNAFlatBuildingStyle(styleList=styleList)
         else:
             # Pick a style
             style = self.getRandomDictionaryEntry(dict)
 
         # Set style....finally
         self.styleManager.setDNAFlatBuildingStyle(
-            dnaNode, style, width = self.getRandomWallWidth(),
-            heightList = heightList, name = name)
+            dnaNode, style, width=self.getRandomWallWidth(),
+            heightList=heightList, name=name)
 
     def computeWallNum(self):
         heightList, offsetList = DNAGetWallHeights(self.dna)

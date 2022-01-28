@@ -4,6 +4,7 @@ from direct.fsm import ClassicFSM, State
 from direct.fsm import State
 from . import Hood
 
+
 class CogHood(Hood.Hood):
 
     notify = DirectNotifyGlobal.directNotify.newCategory("CogHood")
@@ -12,26 +13,26 @@ class CogHood(Hood.Hood):
         Hood.Hood.__init__(self, parentFSM, doneEvent, dnaStore, hoodId)
 
         self.fsm = ClassicFSM.ClassicFSM('Hood',
-                           [State.State('start',
-                                        self.enterStart,
-                                        self.exitStart,
-                                        ['cogHQLoader']),
-                            State.State('cogHQLoader',
-                                        self.enterCogHQLoader,
-                                        self.exitCogHQLoader,
-                                        ['quietZone']),
-                            State.State('quietZone',
-                                        self.enterQuietZone,
-                                        self.exitQuietZone,
-                                        ['cogHQLoader']),
-                            State.State('final',
-                                        self.enterFinal,
-                                        self.exitFinal,
-                                        [])
-                            ],
-                           'start',
-                           'final',
-                           )
+                                         [State.State('start',
+                                                      self.enterStart,
+                                                      self.exitStart,
+                                                      ['cogHQLoader']),
+                                             State.State('cogHQLoader',
+                                                         self.enterCogHQLoader,
+                                                         self.exitCogHQLoader,
+                                                         ['quietZone']),
+                                             State.State('quietZone',
+                                                         self.enterQuietZone,
+                                                         self.exitQuietZone,
+                                                         ['cogHQLoader']),
+                                             State.State('final',
+                                                         self.enterFinal,
+                                                         self.exitFinal,
+                                                         [])
+                                          ],
+                                         'start',
+                                         'final',
+                                         )
         self.fsm.enterInitialState()
 
     def load(self):
@@ -50,18 +51,20 @@ class CogHood(Hood.Hood):
         if not skyInner.isEmpty():
             skyInner.setDepthWrite(0)
             skyInner.setBin('background', 20)
-        
+
     def loadLoader(self, requestStatus):
         assert(self.notify.debug("loadLoader(requestStatus="
-                                 +str(requestStatus)+")"))
+                                 + str(requestStatus) + ")"))
         loaderName = requestStatus["loader"]
-        if loaderName=="cogHQLoader":
-            self.loader = self.cogHQLoaderClass(self, 
-                    self.fsm.getStateNamed("cogHQLoader"),
-                    self.loaderDoneEvent)
+        if loaderName == "cogHQLoader":
+            self.loader = self.cogHQLoaderClass(
+                self, self.fsm.getStateNamed("cogHQLoader"), self.loaderDoneEvent)
             self.loader.load(requestStatus["zoneId"])
         else:
-            assert(self.notify.debug("  unknown loaderName: "+str(loaderName)))
+            assert(
+                self.notify.debug(
+                    "  unknown loaderName: " +
+                    str(loaderName)))
 
     def enterCogHQLoader(self, requestStatus):
         self.accept(self.loaderDoneEvent, self.handleCogHQLoaderDone)

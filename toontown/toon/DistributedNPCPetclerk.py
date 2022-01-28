@@ -9,6 +9,8 @@ from toontown.pets import PetshopGUI
 from toontown.hood import ZoneUtil
 from toontown.toontowngui import TeaserPanel
 from panda3d.otp import CFSpeech, CFTimeout
+
+
 class DistributedNPCPetclerk(DistributedNPCToonBase):
 
     def __init__(self, cr):
@@ -20,7 +22,7 @@ class DistributedNPCPetclerk(DistributedNPCToonBase):
         self.petshopGui = None
         self.petSeeds = None
         self.waitingForPetSeeds = False
-            
+
     def disable(self):
         self.ignoreAll()
         taskMgr.remove(self.uniqueName('popupPetshopGUI'))
@@ -43,11 +45,11 @@ class DistributedNPCPetclerk(DistributedNPCToonBase):
         """
         DistributedNPCToonBase.generate(self)
         self.eventDict = {}
-        self.eventDict['guiDone']  = "guiDone"
-        self.eventDict['petAdopted']  = "petAdopted"
-        self.eventDict['petReturned']  = "petReturned"
-        self.eventDict['fishSold']  = "fishSold"
-        
+        self.eventDict['guiDone'] = "guiDone"
+        self.eventDict['petAdopted'] = "petAdopted"
+        self.eventDict['petReturned'] = "petReturned"
+        self.eventDict['fishSold'] = "fishSold"
+
     def getCollSphereRadius(self):
         """
         Override DistributedNPCToonBase here to spec a smaller radius
@@ -60,10 +62,10 @@ class DistributedNPCPetclerk(DistributedNPCToonBase):
             return True
         place = base.cr.playGame.getPlace()
         myHoodId = ZoneUtil.getCanonicalHoodId(place.zoneId)
-        if  myHoodId in \
+        if myHoodId in \
            (ToontownGlobals.ToontownCentral,
-            ToontownGlobals.MyEstate,
-            ToontownGlobals.GoofySpeedway,
+                ToontownGlobals.MyEstate,
+                ToontownGlobals.GoofySpeedway,
             ):
             # trialer going to TTC/Estate/Goofy Speedway, let them through
             return True
@@ -92,7 +94,7 @@ class DistributedNPCPetclerk(DistributedNPCToonBase):
             if place:
                 place.fsm.request('stopped')
             self.dialog = TeaserPanel.TeaserPanel(pageName='tricks',
-                                                  doneFunc=self.handleOkTeaser)            
+                                                  doneFunc=self.handleOkTeaser)
 
     def __handleUnexpectedExit(self):
         self.notify.warning('unexpected exit')
@@ -100,8 +102,8 @@ class DistributedNPCPetclerk(DistributedNPCToonBase):
 
     def resetPetshopClerk(self):
         if not self.isLocalToon:
-            return 
-        
+            return
+
         assert self.notify.debug('resetPetshopClerk')
         self.ignoreAll()
         taskMgr.remove(self.uniqueName('popupPetshopGUI'))
@@ -109,7 +111,7 @@ class DistributedNPCPetclerk(DistributedNPCToonBase):
         if self.petshopGui:
             self.petshopGui.destroy()
             self.petshopGui = None
-            
+
         self.show()
         self.startLookAround()
         self.detectAvatars()
@@ -124,23 +126,24 @@ class DistributedNPCPetclerk(DistributedNPCToonBase):
 
         self.petSeeds = None
         self.waitingForPetSeeds = False
-        
+
         return Task.done
 
     def ignoreEventDict(self):
         for event in list(self.eventDict.values()):
             self.ignore(event)
-            
+
     def setPetSeeds(self, petSeeds):
         self.petSeeds = petSeeds
         if self.waitingForPetSeeds:
             self.waitingForPetSeeds = False
-            self.popupPetshopGUI(None)  #re-call this now that we have the petseeds
-    
+            # re-call this now that we have the petseeds
+            self.popupPetshopGUI(None)
+
     def setMovie(self, mode, npcId, avId, extraArgs, timestamp):
         """
         This is a message from the AI describing a movie between this NPC
-        and a Toon that has approached us. 
+        and a Toon that has approached us.
         """
         timeStamp = ClockDelta.globalClockDelta.localElapsedTime(timestamp)
         self.remain = NPCToons.CLERK_COUNTDOWN_TIME - timeStamp
@@ -149,9 +152,9 @@ class DistributedNPCPetclerk(DistributedNPCToonBase):
 
         # See if this is the local toon
         self.isLocalToon = (avId == base.localAvatar.doId)
-            
+
         assert(self.notify.debug("setMovie: %s %s %s %s" %
-                          (mode, avId, timeStamp, self.isLocalToon)))
+                                 (mode, avId, timeStamp, self.isLocalToon)))
 
         # This is an old movie in the server ram that has been cleared.
         # Just return and do nothing
@@ -193,16 +196,19 @@ class DistributedNPCPetclerk(DistributedNPCToonBase):
                 camera.wrtReparentTo(render)
                 quat = Quat()
                 quat.setHpr((-150, -2, 0))
-                camera.posQuatInterval(1, Point3(-5, 9, base.localAvatar.getHeight()-0.5),
-                                  quat,
-                                  1,
-                                  other=self,
-                                  blendType="easeOut").start()
+                camera.posQuatInterval(1,
+                                       Point3(-5,
+                                              9,
+                                              base.localAvatar.getHeight() - 0.5),
+                                       quat,
+                                       1,
+                                       other=self,
+                                       blendType="easeOut").start()
 
             if (self.isLocalToon):
                 taskMgr.doMethodLater(1.0, self.popupPetshopGUI,
                                       self.uniqueName('popupPetshopGUI'))
-            
+
         elif (mode == NPCToons.SELL_MOVIE_COMPLETE):
             assert self.notify.debug('SELL_MOVIE_COMPLETE')
             self.setChatAbsolute(TTLocalizer.STOREOWNER_THANKSFISH_PETSHOP,
@@ -236,8 +242,9 @@ class DistributedNPCPetclerk(DistributedNPCToonBase):
                 return
             else:
                 numFish, totalNumFish = extraArgs
-                self.setChatAbsolute(TTLocalizer.STOREOWNER_TROPHY % (numFish, totalNumFish),
-                                     CFSpeech | CFTimeout)
+                self.setChatAbsolute(
+                    TTLocalizer.STOREOWNER_TROPHY %
+                    (numFish, totalNumFish), CFSpeech | CFTimeout)
             self.resetPetshopClerk()
 
         elif (mode == NPCToons.SELL_MOVIE_NOFISH):
@@ -253,10 +260,10 @@ class DistributedNPCPetclerk(DistributedNPCToonBase):
         return
 
     def __handlePetAdopted(self, whichPet, nameIndex):
-        #the pet adopted message automatically handles returning the
-        #current pet, so we need to do this here too
+        # the pet adopted message automatically handles returning the
+        # current pet, so we need to do this here too
         base.cr.removePetFromFriendsMap()
-        
+
         self.ignore(self.eventDict['petAdopted'])
         self.sendUpdate("petAdopted", [whichPet, nameIndex])
 
@@ -276,21 +283,21 @@ class DistributedNPCPetclerk(DistributedNPCToonBase):
         self.petshopGui = None
         if not bTimedOut:
             self.sendUpdate("transactionDone")
-        
+
     def popupPetshopGUI(self, task):
         if not self.petSeeds:
             self.waitingForPetSeeds = True
             return
-            
-        #print "popupPetshopGui"
+
+        # print "popupPetshopGui"
         assert self.notify.debug('popupPetshopGUI()')
         self.setChatAbsolute('', CFSpeech)
-        
+
         self.acceptOnce(self.eventDict['guiDone'], self.__handleGUIDone)
         self.acceptOnce(self.eventDict['petAdopted'], self.__handlePetAdopted)
-        self.acceptOnce(self.eventDict['petReturned'], self.__handlePetReturned)
+        self.acceptOnce(
+            self.eventDict['petReturned'],
+            self.__handlePetReturned)
         self.acceptOnce(self.eventDict['fishSold'], self.__handleFishSold)
-        
+
         self.petshopGui = PetshopGUI.PetshopGUI(self.eventDict, self.petSeeds)
-        
-        

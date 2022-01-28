@@ -3,6 +3,7 @@ from pandac.PandaModules import *
 from direct.showbase.DirectObject import DirectObject
 from otp.otpbase import OTPGlobals
 
+
 class PositionExaminer(DirectObject, NodePath):
     """
     This class defines an object that can be used to examine a point in
@@ -13,12 +14,12 @@ class PositionExaminer(DirectObject, NodePath):
     height is not too far from our target height, (b) is not already
     occupied, and (c) is not behind a wall.
     """
-    
+
     def __init__(self):
         try:
             self.__initialized
             return
-        except:
+        except BaseException:
             self.__initialized = 1
 
         # initialize our NodePath essence
@@ -103,7 +104,6 @@ class PositionExaminer(DirectObject, NodePath):
 
         del self.ccLineTrav
         del self.ccLineQueue
-        
 
     def consider(self, node, pos, eyeHeight):
         """consider(self, NodePath node, Point3 pos, eyeHeight)
@@ -130,13 +130,14 @@ class PositionExaminer(DirectObject, NodePath):
             # several floors we're over.
 
             self.cRayQueue.sortEntries()
-            floorPoint = self.cRayQueue.getEntry(0).getSurfacePoint(self.cRayNodePath)
-                    
+            floorPoint = self.cRayQueue.getEntry(
+                0).getSurfacePoint(self.cRayNodePath)
+
             if abs(floorPoint[2]) <= 4.0:
                 # And the floor is not too high or too low.
                 pos += floorPoint
                 self.setPos(pos)
-        
+
                 # Now check that no one else is standing right here.
                 self.cSphereTrav.traverse(render)
                 if self.cSphereQueue.getNumEntries() == 0:
@@ -156,4 +157,3 @@ class PositionExaminer(DirectObject, NodePath):
         self.ccLineQueue.clearEntries()
 
         return result
-    

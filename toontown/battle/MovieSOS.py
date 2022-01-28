@@ -7,6 +7,7 @@ from pandac.PandaModules import *
 from panda3d.otp import CFSpeech, CFTimeout
 notify = DirectNotifyGlobal.directNotify.newCategory('MovieSOS')
 
+
 def doSOSs(calls):
     """ doSOSs(calls)
         Calls for help occur in the following order:
@@ -15,13 +16,16 @@ def doSOSs(calls):
     if (len(calls) == 0):
         return (None, None)
     # setChatAbsolute gets around the speedchat
+
     def callerFunc(toon, handle):
         toon.setChatAbsolute(TTLocalizer.MovieSOSCallHelp %
                              handle.getName(), CFSpeech | CFTimeout)
         handle.d_battleSOS(base.localAvatar.doId)
+
     def calleeFunc(toon, handle):
         toon.setChatAbsolute(TTLocalizer.MovieSOSCallHelp %
                              handle.getName(), CFSpeech | CFTimeout)
+
     def observerFunc(toon):
         toon.setChatAbsolute(TTLocalizer.MovieSOSObserverHelp,
                              CFSpeech | CFTimeout)
@@ -38,11 +42,11 @@ def doSOSs(calls):
         elif (targetType == 'callee'):
             ival = Func(calleeFunc, toon, handle)
         else:
-            notify.error('invalid target type: %s' % targetType)
+            notify.error(f'invalid target type: {targetType}')
         mtrack.append(ival)
         # Hold on the word balloon for 2 seconds
         mtrack.append(Wait(2.0))
-        notify.debug('toon: %s calls for help' % toon.getName())
+        notify.debug(f'toon: {toon.getName()} calls for help')
 
     camDuration = mtrack.getDuration()
     camTrack = MovieCamera.chooseSOSShot(toon, camDuration)

@@ -18,8 +18,8 @@ from toontown.toonbase.ToontownGlobals import *
 from toontown.building import ToonInterior
 from toontown.hood import QuietZoneState
 from toontown.hood import HQTelescopeAnimatedProp
-from toontown.hood import HQPeriscopeAnimatedProp 
-from toontown.hood import HydrantInteractiveProp 
+from toontown.hood import HQPeriscopeAnimatedProp
+from toontown.hood import HydrantInteractiveProp
 from toontown.hood import MailboxOneAnimatedProp
 from toontown.hood import MailboxTwoAnimatedProp
 from toontown.hood import MailboxZeroAnimatedProp
@@ -39,48 +39,48 @@ class SafeZoneLoader(StateData.StateData):
 
     def __init__(self, hood, parentFSMState, doneEvent):
         """
-        SafeZoneLoader constructor: 
+        SafeZoneLoader constructor:
         """
-        assert(self.notify.debug("__init__(hood="+str(hood)
-                +", parentFSMState="+str(parentFSMState)
-                +", doneEvent="+str(doneEvent)+")"))
+        assert(self.notify.debug("__init__(hood=" + str(hood)
+                                 + ", parentFSMState=" + str(parentFSMState)
+                                 + ", doneEvent=" + str(doneEvent) + ")"))
         StateData.StateData.__init__(self, doneEvent)
         self.hood = hood
         self.parentFSMState = parentFSMState
         self.fsm = ClassicFSM.ClassicFSM('SafeZoneLoader',
-                           [State.State('start',
-                                        self.enterStart,
-                                        self.exitStart,
-                                        ['quietZone', 
-                                        'playground',
-                                         'toonInterior']),
-                            State.State('playground',
-                                        self.enterPlayground,
-                                        self.exitPlayground,
-                                        ['quietZone']),
-                            State.State('toonInterior',
-                                        self.enterToonInterior,
-                                        self.exitToonInterior,
-                                        ['quietZone']),
-                            State.State('quietZone',
-                                        self.enterQuietZone,
-                                        self.exitQuietZone,
-                                        ['playground', 'toonInterior']),
-                            State.State('golfcourse', #REMOVE THIS STATE
-                                           self.enterGolfcourse,
-                                           self.exitGolfcourse,
-                                           ['quietZone', 'playground']),
-                            State.State('final',
-                                        self.enterFinal,
-                                        self.exitFinal,
-                                        ['start'])],
-                           # Initial State
-                           'start',
-                           # Final State
-                           'final',
-                           )
+                                         [State.State('start',
+                                                      self.enterStart,
+                                                      self.exitStart,
+                                                      ['quietZone',
+                                                       'playground',
+                                                       'toonInterior']),
+                                             State.State('playground',
+                                                         self.enterPlayground,
+                                                         self.exitPlayground,
+                                                         ['quietZone']),
+                                             State.State('toonInterior',
+                                                         self.enterToonInterior,
+                                                         self.exitToonInterior,
+                                                         ['quietZone']),
+                                             State.State('quietZone',
+                                                         self.enterQuietZone,
+                                                         self.exitQuietZone,
+                                                         ['playground', 'toonInterior']),
+                                             State.State('golfcourse',  # REMOVE THIS STATE
+                                                         self.enterGolfcourse,
+                                                         self.exitGolfcourse,
+                                                         ['quietZone', 'playground']),
+                                             State.State('final',
+                                                         self.enterFinal,
+                                                         self.exitFinal,
+                                                         ['start'])],
+                                         # Initial State
+                                         'start',
+                                         # Final State
+                                         'final',
+                                         )
         self.placeDoneEvent = "placeDone"
-        self.place=None
+        self.place = None
         self.playgroundClass = None
 
     def load(self):
@@ -110,7 +110,11 @@ class SafeZoneLoader(StateData.StateData):
         TexturePool.garbageCollect()
 
     def enter(self, requestStatus):
-        assert(self.notify.debug("enter(requestStatus="+str(requestStatus)+")"))
+        assert(
+            self.notify.debug(
+                "enter(requestStatus=" +
+                str(requestStatus) +
+                ")"))
         self.fsm.enterInitialState()
         # Let the safe zone manager know that we are here.
         messenger.send("enterSafeZone")
@@ -122,10 +126,15 @@ class SafeZoneLoader(StateData.StateData):
         messenger.send("exitSafeZone")
 
     def setState(self, stateName, requestStatus):
-        assert(self.notify.debug("setState(stateName="
-                +str(stateName)+", requestStatus="+str(requestStatus)+")"))
+        assert(
+            self.notify.debug(
+                "setState(stateName=" +
+                str(stateName) +
+                ", requestStatus=" +
+                str(requestStatus) +
+                ")"))
         self.fsm.request(stateName, [requestStatus])
-    
+
     def createSafeZone(self, dnaFile):
         Discord.setZone(self.hood.id)
         assert(self.notify.debug("createSafeZone()"))
@@ -190,7 +199,7 @@ class SafeZoneLoader(StateData.StateData):
         npc = self.geom.findAllMatches("**/suit_building_origin")
         for i in range(npc.getNumPaths()):
             npc.getPath(i).removeNode()
-    
+
     # start state
 
     def enterStart(self):
@@ -198,14 +207,14 @@ class SafeZoneLoader(StateData.StateData):
 
     def exitStart(self):
         assert(self.notify.debug("exitStart()"))
-        
+
     # playground state
 
     def enterPlayground(self, requestStatus):
         assert(self.notify.debug("enterPlayground(requestStatus="
-                +str(requestStatus)+")"))
+                                 + str(requestStatus) + ")"))
         self.acceptOnce(self.placeDoneEvent, self.handlePlaygroundDone)
-        self.place=self.playgroundClass(self, self.fsm, self.placeDoneEvent)
+        self.place = self.playgroundClass(self, self.fsm, self.placeDoneEvent)
         self.place.load()
         self.place.enter(requestStatus)
         #self.hood.place = self.place
@@ -216,28 +225,28 @@ class SafeZoneLoader(StateData.StateData):
         self.ignore(self.placeDoneEvent)
         self.place.exit()
         self.place.unload()
-        self.place=None
+        self.place = None
         #self.hood.place = None
-        base.cr.playGame.setPlace(self.place) 
-   
+        base.cr.playGame.setPlace(self.place)
+
     def handlePlaygroundDone(self):
         assert(self.notify.debug("handlePlaygroundDone()"))
-        status=self.place.doneStatus
+        status = self.place.doneStatus
         if (ZoneUtil.getBranchZone(status["zoneId"]) == self.hood.hoodId and
-            status["shardId"] == None):
-            self.fsm.request("quietZone", [status])            
+                status["shardId"] is None):
+            self.fsm.request("quietZone", [status])
         else:
             self.doneStatus = status
             messenger.send(self.doneEvent)
-    
+
     # toonInterior state
 
     def enterToonInterior(self, requestStatus):
         assert(self.notify.debug("enterToonInterior(requestStatus="
-                +str(requestStatus)+")"))
+                                 + str(requestStatus) + ")"))
         self.acceptOnce(self.placeDoneEvent, self.handleToonInteriorDone)
-        self.place=ToonInterior.ToonInterior(self, 
-                self.fsm.getStateNamed("toonInterior"), self.placeDoneEvent)
+        self.place = ToonInterior.ToonInterior(
+            self, self.fsm.getStateNamed("toonInterior"), self.placeDoneEvent)
         base.cr.playGame.setPlace(self.place)
         self.place.load()
         self.place.enter(requestStatus)
@@ -247,15 +256,15 @@ class SafeZoneLoader(StateData.StateData):
         self.ignore(self.placeDoneEvent)
         self.place.exit()
         self.place.unload()
-        self.place=None 
+        self.place = None
         base.cr.playGame.setPlace(self.place)
-   
+
     def handleToonInteriorDone(self):
         assert(self.notify.debug("handleToonInteriorDone()"))
-        status=self.place.doneStatus
+        status = self.place.doneStatus
         if (ZoneUtil.getBranchZone(status["zoneId"]) == self.hood.hoodId and
-            status["shardId"] == None):
-            self.fsm.request("quietZone", [status])            
+                status["shardId"] is None):
+            self.fsm.request("quietZone", [status])
         else:
             self.doneStatus = status
             messenger.send(self.doneEvent)
@@ -267,7 +276,7 @@ class SafeZoneLoader(StateData.StateData):
         self.quietZoneDoneEvent = "quietZoneDone"
         self.acceptOnce(self.quietZoneDoneEvent, self.handleQuietZoneDone)
         self.quietZoneStateData = QuietZoneState.QuietZoneState(
-                self.quietZoneDoneEvent)
+            self.quietZoneDoneEvent)
         self.quietZoneStateData.load()
         self.quietZoneStateData.enter(requestStatus)
 
@@ -277,19 +286,18 @@ class SafeZoneLoader(StateData.StateData):
         del self.quietZoneDoneEvent
         self.quietZoneStateData.exit()
         self.quietZoneStateData.unload()
-        self.quietZoneStateData=None
+        self.quietZoneStateData = None
 
     def handleQuietZoneDone(self):
         assert(self.notify.debug("handleQuietZoneDone()\n  base.cr.handlerArgs="
-                +str(base.cr.handlerArgs)))
+                                 + str(base.cr.handlerArgs)))
         # Change to the destination state:
-        status=self.quietZoneStateData.getRequestStatus()
+        status = self.quietZoneStateData.getRequestStatus()
         if (status["where"] == "estate"):
             self.doneStatus = status
             messenger.send(self.doneEvent)
         else:
             self.fsm.request(status["where"], [status])
-        
 
     # final state
 
@@ -298,7 +306,6 @@ class SafeZoneLoader(StateData.StateData):
 
     def exitFinal(self):
         assert(self.notify.debug("exitFinal()"))
-
 
     def createAnimatedProps(self, nodeList):
         assert(self.notify.debug("createAnimatedProps()"))
@@ -339,7 +346,7 @@ class SafeZoneLoader(StateData.StateData):
                 # [gjeon] I think we can use animPropList to store interactive props
                 animPropList = self.animPropDict.get(i)
                 if animPropList is None:
-                    animPropList = self.animPropDict.setdefault(i, [])                    
+                    animPropList = self.animPropDict.setdefault(i, [])
                 animPropList.append(interactivePropObj)
 
     def deleteAnimatedProps(self):
@@ -355,19 +362,19 @@ class SafeZoneLoader(StateData.StateData):
     def exitAnimatedProps(self, zoneNode):
         for animProp in self.animPropDict.get(zoneNode, ()):
             animProp.exit()
-            
-    def enterGolfcourse( self, requestStatus ):
+
+    def enterGolfcourse(self, requestStatus):
         """
         """
         #import pdb; pdb.set_trace()
         # Racetrack will grab this off of us
         #self.trackId = requestStatus[ 'trackId' ]
-        #self.accept("golfOver",self.handleRaceOver)
-        #self.accept("leavingGolf",self.handleLeftRace)
+        # self.accept("golfOver",self.handleRaceOver)
+        # self.accept("leavingGolf",self.handleLeftRace)
 
         base.transitions.fadeOut(t=0)
 
-    def exitGolfcourse( self ):
+    def exitGolfcourse(self):
         """
         """
         pass

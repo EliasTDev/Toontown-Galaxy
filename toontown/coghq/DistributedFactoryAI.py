@@ -12,9 +12,11 @@ from toontown.suit import DistributedFactorySuitAI
 from toontown.toonbase import ToontownGlobals, ToontownBattleGlobals
 from toontown.coghq import DistributedBattleFactoryAI
 
+
 class DistributedFactoryAI(DistributedLevelAI.DistributedLevelAI,
                            FactoryBase.FactoryBase):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedFactoryAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedFactoryAI')
 
     def __init__(self, air, factoryId, zoneId, entranceId, avIds):
         # entranceId is the entrance the toons will come in (based on
@@ -29,7 +31,7 @@ class DistributedFactoryAI(DistributedLevelAI.DistributedLevelAI,
 
     def getBattleCreditMultiplier(self):
         return ToontownBattleGlobals.getFactoryCreditMultiplier(self.factoryId)
-    
+
     def generate(self):
         self.notify.info('generate')
 
@@ -50,7 +52,7 @@ class DistributedFactoryAI(DistributedLevelAI.DistributedLevelAI,
             self.notify.info('creating entity type registry')
             typeReg = self.getEntityTypeReg()
             factorySpec.setEntityTypeReg(typeReg)
-        
+
         self.notify.info('creating entities')
         DistributedLevelAI.DistributedLevelAI.generate(self, factorySpec)
 
@@ -70,24 +72,22 @@ class DistributedFactoryAI(DistributedLevelAI.DistributedLevelAI,
             cogSpecModule.BattleCells)
         suitHandles = self.planner.genSuits()
         # alert battle blockers that planner has been created
-        messenger.send("plannerCreated-"+str(self.doId))
-        
+        messenger.send("plannerCreated-" + str(self.doId))
+
         self.suits = suitHandles['activeSuits']
         self.reserveSuits = suitHandles['reserveSuits']
         self.d_setSuits()
 
         # log that toons entered the factory
-        scenario = 0 # placeholder until we have real scenarios
-        description = '%s|%s|%s|%s' % (
-            self.factoryId, self.entranceId, scenario, self.avIdList)
+        scenario = 0  # placeholder until we have real scenarios
+        description = f'{self.factoryId}|{self.entranceId}|{scenario}|{self.avIdList}'
         for avId in self.avIdList:
             self.air.writeServerEvent('factoryEntered', avId, description)
 
-        self.notify.info('finish factory %s %s creation' %
-                         (self.factoryId, self.doId))
+        self.notify.info(f'finish factory {self.factoryId} {self.doId} creation')
 
     def delete(self):
-        self.notify.info('delete: %s' % self.doId)
+        self.notify.info(f'delete: {self.doId}')
         if __dev__:
             if hasattr(simbase, 'factory') and simbase.factory is self:
                 del simbase.factory
@@ -131,12 +131,12 @@ class DistributedFactoryAI(DistributedLevelAI.DistributedLevelAI,
                 activeVictorIds.append(victorId)
 
         # log that toons beat the factory
-        scenario = 0 # placeholder until we have real scenarios
+        scenario = 0  # placeholder until we have real scenarios
         description = '%s|%s|%s|%s' % (
             self.factoryId, self.entranceId, scenario, activeVictorIds)
         for avId in activeVictorIds:
             self.air.writeServerEvent('factoryDefeated', avId, description)
-            
+
         for toon in activeVictors:
             # update toon's quests
             # WE ASSUME THAT self.factoryId IS THE 'FAUX-ZONE' OF THE FACTORY
@@ -145,7 +145,7 @@ class DistributedFactoryAI(DistributedLevelAI.DistributedLevelAI,
 
         # this causes the toons to leave in the middle of the reward movie
         # see DistributedBattleFactoryAI.enterResume
-        #self.b_setDefeated()
+        # self.b_setDefeated()
 
     # call this when the factory boss has been defeated and we're ready
     # for the toons to leave
@@ -153,8 +153,10 @@ class DistributedFactoryAI(DistributedLevelAI.DistributedLevelAI,
     def b_setDefeated(self):
         self.d_setDefeated()
         self.setDefeated()
+
     def d_setDefeated(self):
         self.sendUpdate('setDefeated')
+
     def setDefeated(self):
         # we add parts in the battle ai now...
         pass

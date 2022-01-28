@@ -1,5 +1,6 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
+
 class SettingsMgrBase:
     notify = directNotify.newCategory('SettingsMgrBase')
 
@@ -26,11 +27,11 @@ class SettingsMgrBase:
     def _addSetting(self, setting):
         name = setting.getName()
         if name in self._settings:
-            self.notify.error('duplicate setting "%s"' % name)
+            self.notify.error(f'duplicate setting "{name}"')
         self._settings[name] = setting
         self._originalValueReprs[name] = repr(setting.getValue())
         self._currentValueReprs[name] = repr(setting.getValue())
-        
+
     def _getOriginalValueRepr(self, settingName):
         return self._originalValueReprs.get(settingName)
 
@@ -48,18 +49,19 @@ class SettingsMgrBase:
     def _isSettingModified(self, settingName):
         return (self._getOriginalValueRepr(settingName) !=
                 self._getCurrentValueRepr(settingName))
-    
+
     def _changeSetting(self, settingName, valueStr):
         try:
             val = eval(valueStr)
-        except:
-            self.notify.warning('error evaling "%s" for setting "%s"' % (valueStr, settingName))
+        except BaseException:
+            self.notify.warning(
+                f'error evaling "{valueStr}" for setting "{settingName}"')
             return
 
         try:
             setting = self._getSetting(settingName)
-        except:
-            self.notify.warning('unknown setting %s' % settingName)
+        except BaseException:
+            self.notify.warning(f'unknown setting {settingName}')
             return
 
         setting.setValue(val)

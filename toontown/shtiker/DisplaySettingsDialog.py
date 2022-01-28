@@ -8,6 +8,8 @@ from toontown.toonbase import TTLocalizer
 from toontown.toontowngui import TTDialog
 from toontown.toonbase import ToontownGlobals
 from panda3d.otp import *
+
+
 class DisplaySettingsDialog(DirectFrame, StateData.StateData):
     """DisplaySettingsDialog:
 
@@ -20,24 +22,25 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
 
     WindowedMode = 0
     FullscreenMode = 1
-    EmbeddedMode = 2 # embedded inside the web browser
+    EmbeddedMode = 2  # embedded inside the web browser
 
-    notify = DirectNotifyGlobal.directNotify.newCategory("DisplaySettingsDialog")
-    
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DisplaySettingsDialog")
+
     def __init__(self):
         """__init__(self)
         """
         DirectFrame.__init__(self,
-                             pos = (0, 0, 0.30),
-                             relief = None,
-                             image = DGG.getDefaultDialogGeom(),
-                             image_scale = (1.6, 1, 1.2),
-                             image_pos = (0,0,-0.05),
-                             image_color = ToontownGlobals.GlobalDialogColor,
-                             text = TTLocalizer.DisplaySettingsTitle,
-                             text_scale = 0.12,
-                             text_pos = (0, 0.4),
-                             borderWidth = (0.01, 0.01),
+                             pos=(0, 0, 0.30),
+                             relief=None,
+                             image=DGG.getDefaultDialogGeom(),
+                             image_scale=(1.6, 1, 1.2),
+                             image_pos=(0, 0, -0.05),
+                             image_color=ToontownGlobals.GlobalDialogColor,
+                             text=TTLocalizer.DisplaySettingsTitle,
+                             text_scale=0.12,
+                             text_pos=(0, 0.4),
+                             borderWidth=(0.01, 0.01),
                              )
         StateData.StateData.__init__(self, "display-settings-done")
         self.setBin('gui-popup', 0)
@@ -66,7 +69,6 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
                             (2560, 1440),
 
                             (4096, 2160))
-                            
 
         guiButton = loader.loadModel("phase_3/models/gui/quit_button")
         gui = loader.loadModel("phase_3.5/models/gui/friendslist_gui")
@@ -101,160 +103,160 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
         self.c3b.setScale(0.4)
         c3f = circle.copyTo(self.c3b)
         c3f.setColor(1, 1, 1, 1)
-        c3f.setScale(0.8)        
-        
+        c3f.setScale(0.8)
+
         self.introText = DirectLabel(
-            parent = self,
-            relief = None,
-            scale = TTLocalizer.DSDintroText,
-            text = TTLocalizer.DisplaySettingsIntro,
-            text_wordwrap = TTLocalizer.DSDintroTextwordwrap,
-            text_align = TextNode.ALeft,
-            pos = (-0.725, 0, 0.3),
-            )
-        
+            parent=self,
+            relief=None,
+            scale=TTLocalizer.DSDintroText,
+            text=TTLocalizer.DisplaySettingsIntro,
+            text_wordwrap=TTLocalizer.DSDintroTextwordwrap,
+            text_align=TextNode.ALeft,
+            pos=(-0.725, 0, 0.3),
+        )
+
         self.introTextSimple = DirectLabel(
-            parent = self,
-            relief = None,
-            scale = 0.06,
-            text = TTLocalizer.DisplaySettingsIntroSimple,
-            text_wordwrap = 25,
-            text_align = TextNode.ALeft,
-            pos = (-0.725, 0, 0.3),
-            )
+            parent=self,
+            relief=None,
+            scale=0.06,
+            text=TTLocalizer.DisplaySettingsIntroSimple,
+            text_wordwrap=25,
+            text_align=TextNode.ALeft,
+            pos=(-0.725, 0, 0.3),
+        )
 
         self.apiLabel = DirectLabel(
-            parent = self,
-            relief = None,
-            scale = 0.06,
-            text = TTLocalizer.DisplaySettingsApi,
-            text_align = TextNode.ARight,
-            pos = (-0.08, 0, 0),
-            )
+            parent=self,
+            relief=None,
+            scale=0.06,
+            text=TTLocalizer.DisplaySettingsApi,
+            text_align=TextNode.ARight,
+            pos=(-0.08, 0, 0),
+        )
         self.apiMenu = DirectOptionMenu(
-            parent = self,
-            relief = DGG.RAISED,
-            scale = 0.06,
-            items = ['x'],
-            pos = (0, 0, 0),
-            )
-        
+            parent=self,
+            relief=DGG.RAISED,
+            scale=0.06,
+            items=['x'],
+            pos=(0, 0, 0),
+        )
+
         self.screenSizeLabel = DirectLabel(
-            parent = self,
-            relief = None,
-            scale = 0.06,
-            text = TTLocalizer.DisplaySettingsResolution,
-            text_align = TextNode.ARight,
-            pos = (-0.08, 0, -0.10),
-            )
+            parent=self,
+            relief=None,
+            scale=0.06,
+            text=TTLocalizer.DisplaySettingsResolution,
+            text_align=TextNode.ARight,
+            pos=(-0.08, 0, -0.10),
+        )
         self.screenSizeLeftArrow = DirectButton(
-            parent = self,
-            relief = None,
-            image = (gui.find("**/Horiz_Arrow_UP"),
-                     gui.find("**/Horiz_Arrow_DN"),
-                     gui.find("**/Horiz_Arrow_Rllvr"),
-                     gui.find("**/Horiz_Arrow_UP"),
-                     ),
-            scale = (-1.0, 1.0, 1.0),  # make arrow point the other way
-            pos = (0.04, 0, -0.085),
-            command = self.__doScreenSizeLeft,
-            )
-        
+            parent=self,
+            relief=None,
+            image=(gui.find("**/Horiz_Arrow_UP"),
+                   gui.find("**/Horiz_Arrow_DN"),
+                   gui.find("**/Horiz_Arrow_Rllvr"),
+                   gui.find("**/Horiz_Arrow_UP"),
+                   ),
+            scale=(-1.0, 1.0, 1.0),  # make arrow point the other way
+            pos=(0.04, 0, -0.085),
+            command=self.__doScreenSizeLeft,
+        )
+
         self.screenSizeRightArrow = DirectButton(
-            parent = self,
-            relief = None,
-            image = (gui.find("**/Horiz_Arrow_UP"),
-                     gui.find("**/Horiz_Arrow_DN"),
-                     gui.find("**/Horiz_Arrow_Rllvr"),
-                     gui.find("**/Horiz_Arrow_UP"),
-                     ),
-            pos = (0.54, 0, -0.085),
-            command = self.__doScreenSizeRight,
-            )
-        
+            parent=self,
+            relief=None,
+            image=(gui.find("**/Horiz_Arrow_UP"),
+                   gui.find("**/Horiz_Arrow_DN"),
+                   gui.find("**/Horiz_Arrow_Rllvr"),
+                   gui.find("**/Horiz_Arrow_UP"),
+                   ),
+            pos=(0.54, 0, -0.085),
+            command=self.__doScreenSizeRight,
+        )
+
         self.screenSizeValueText = DirectLabel(
-            parent = self,
-            relief = None,
-            text = "x",
-            text_align = TextNode.ACenter,
-            text_scale = 0.06,
-            pos = (0.29, 0, -0.10),
-            )
+            parent=self,
+            relief=None,
+            text="x",
+            text_align=TextNode.ACenter,
+            text_scale=0.06,
+            pos=(0.29, 0, -0.10),
+        )
 
         self.windowedButton = DirectCheckButton(
-            parent = self,
-            relief = None,
-            text = TTLocalizer.DisplaySettingsWindowed,
-            text_align = TextNode.ALeft,
-            text_scale = 0.6,
-            scale = 0.1,
-            boxImage = innerCircle,
-            boxImageScale = 2.5,
-            boxImageColor = VBase4(0, 0.25, 0.5, 1),
-            boxRelief = None,
-            pos = TTLocalizer.DSDwindowedButtonPos,
-            command = self.__doWindowed,
-            )
+            parent=self,
+            relief=None,
+            text=TTLocalizer.DisplaySettingsWindowed,
+            text_align=TextNode.ALeft,
+            text_scale=0.6,
+            scale=0.1,
+            boxImage=innerCircle,
+            boxImageScale=2.5,
+            boxImageColor=VBase4(0, 0.25, 0.5, 1),
+            boxRelief=None,
+            pos=TTLocalizer.DSDwindowedButtonPos,
+            command=self.__doWindowed,
+        )
 
         self.fullscreenButton = DirectCheckButton(
-            parent = self,
-            relief = None,
-            text = TTLocalizer.DisplaySettingsFullscreen,
-            text_align = TextNode.ALeft,
-            text_scale = 0.6,
-            scale = 0.1,
-            boxImage = innerCircle,
-            boxImageScale = 2.5,
-            boxImageColor = VBase4(0, 0.25, 0.5, 1),
-            boxRelief = None,
-            pos = TTLocalizer.DSDfullscreenButtonPos,
-            command = self.__doFullscreen,
-            )
+            parent=self,
+            relief=None,
+            text=TTLocalizer.DisplaySettingsFullscreen,
+            text_align=TextNode.ALeft,
+            text_scale=0.6,
+            scale=0.1,
+            boxImage=innerCircle,
+            boxImageScale=2.5,
+            boxImageColor=VBase4(0, 0.25, 0.5, 1),
+            boxRelief=None,
+            pos=TTLocalizer.DSDfullscreenButtonPos,
+            command=self.__doFullscreen,
+        )
 
         self.embeddedButton = DirectCheckButton(
-            parent = self,
-            relief = None,
-            text = TTLocalizer.DisplaySettingsEmbedded,
-            text_align = TextNode.ALeft,
-            text_scale = 0.6,
-            scale = 0.1,
-            boxImage = innerCircle,
-            boxImageScale = 2.5,
-            boxImageColor = VBase4(0, 0.25, 0.5, 1),
-            boxRelief = None,
-            pos = TTLocalizer.DSDembeddedButtonPos,
-            command = self.__doEmbedded,
-            )        
+            parent=self,
+            relief=None,
+            text=TTLocalizer.DisplaySettingsEmbedded,
+            text_align=TextNode.ALeft,
+            text_scale=0.6,
+            scale=0.1,
+            boxImage=innerCircle,
+            boxImageScale=2.5,
+            boxImageColor=VBase4(0, 0.25, 0.5, 1),
+            boxRelief=None,
+            pos=TTLocalizer.DSDembeddedButtonPos,
+            command=self.__doEmbedded,
+        )
 
         self.apply = DirectButton(
-            parent = self,
-            relief = None,
-            image = (guiButton.find("**/QuitBtn_UP"),
-                     guiButton.find("**/QuitBtn_DN"),
-                     guiButton.find("**/QuitBtn_RLVR"),
-                     ),
-            image_scale = (0.6,1,1),
-            text = TTLocalizer.DisplaySettingsApply,
-            text_scale = 0.06,
-            text_pos = (0,-0.02),
-            pos = (0.52, 0, -0.53),
-            command = self.__apply,
-            )
+            parent=self,
+            relief=None,
+            image=(guiButton.find("**/QuitBtn_UP"),
+                   guiButton.find("**/QuitBtn_DN"),
+                   guiButton.find("**/QuitBtn_RLVR"),
+                   ),
+            image_scale=(0.6, 1, 1),
+            text=TTLocalizer.DisplaySettingsApply,
+            text_scale=0.06,
+            text_pos=(0, -0.02),
+            pos=(0.52, 0, -0.53),
+            command=self.__apply,
+        )
 
         self.cancel = DirectButton(
-            parent = self,
-            relief = None,
-            text = TTLocalizer.DisplaySettingsCancel,
-            image = (guiButton.find("**/QuitBtn_UP"),
-                     guiButton.find("**/QuitBtn_DN"),
-                     guiButton.find("**/QuitBtn_RLVR"),
-                     ),
-            image_scale = (0.6,1,1),
-            text_scale = TTLocalizer.DSDcancel,
-            text_pos = (TTLocalizer.DSDcancelButtonPositionX,-0.02),
-            pos = (0.20, 0, -0.53),
-            command = self.__cancel,
-            )
+            parent=self,
+            relief=None,
+            text=TTLocalizer.DisplaySettingsCancel,
+            image=(guiButton.find("**/QuitBtn_UP"),
+                   guiButton.find("**/QuitBtn_DN"),
+                   guiButton.find("**/QuitBtn_RLVR"),
+                   ),
+            image_scale=(0.6, 1, 1),
+            text_scale=TTLocalizer.DSDcancel,
+            text_pos=(TTLocalizer.DSDcancelButtonPositionX, -0.02),
+            pos=(0.20, 0, -0.53),
+            command=self.__cancel,
+        )
 
         guiButton.removeNode()
         gui.removeNode()
@@ -289,7 +291,7 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
 
         # at this point we need to figure out correct display mode
         # TODO check if we are embedded
-        if self.isCurrentlyEmbedded(): # check if embedded
+        if self.isCurrentlyEmbedded():  # check if embedded
             self.displayMode = self.EmbeddedMode
             pass
         elif self.isFullscreen:
@@ -356,19 +358,19 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
         return
 
     def cleanupDialogs(self):
-        if self.applyDialog != None:
+        if self.applyDialog is not None:
             self.applyDialog.cleanup()
             self.applyDialog = None
 
-        if self.timeoutDialog != None:
+        if self.timeoutDialog is not None:
             self.timeoutDialog.cleanup()
             self.timeoutDialog = None
 
-        if self.restoreDialog != None:
+        if self.restoreDialog is not None:
             self.restoreDialog.cleanup()
             self.restoreDialog = None
 
-        if self.revertDialog != None:
+        if self.revertDialog is not None:
             self.revertDialog.cleanup()
             self.revertDialog = None
 
@@ -400,11 +402,10 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
             self.windowedButton['indicatorValue'] = 0
             self.fullscreenButton['indicatorValue'] = 0
             self.embeddedButton['indicatorValue'] = 1
-            
 
     def updateScreenSize(self):
         xSize, ySize = self.screenSizes[self.screenSizeIndex]
-        self.screenSizeValueText['text'] = '%s x %s' % (xSize, ySize)
+        self.screenSizeValueText['text'] = f'{xSize} x {ySize}'
         if self.screenSizeIndex > 0:
             self.screenSizeLeftArrow.show()
         else:
@@ -429,7 +430,7 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
         for i in range(len(self.screenSizes)):
             xSize, ySize = self.screenSizes[i]
             diff = abs(xSize * ySize - currentCount)
-            if bestI == None or diff < bestDiff:
+            if bestI is None or diff < bestDiff:
                 bestI = i
                 bestDiff = diff
 
@@ -440,10 +441,10 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
         self.updateWindowed()
 
     def __doFullscreen(self, value):
-        self.displayMode = self.FullscreenMode 
+        self.displayMode = self.FullscreenMode
         self.updateWindowed()
 
-    def __doEmbedded(self,value):
+    def __doEmbedded(self, value):
         """Change the cur settings embedded mode."""
         self.displayMode = self.EmbeddedMode
         self.updateWindowed()
@@ -463,14 +464,15 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
 
         # Move our dialog under the fade screen.
         self.clearBin()
-            
+
         self.applyDialog = TTDialog.TTDialog(
-            dialogName = 'DisplaySettingsApply',
-            style = TTDialog.TwoChoice,
-            text = TTLocalizer.DisplaySettingsApplyWarning % (self.ApplyTimeoutSeconds),
-            text_wordwrap = 15,
-            command = self.__applyDone,
-            )
+            dialogName='DisplaySettingsApply',
+            style=TTDialog.TwoChoice,
+            text=TTLocalizer.DisplaySettingsApplyWarning %
+            (self.ApplyTimeoutSeconds),
+            text_wordwrap=15,
+            command=self.__applyDone,
+        )
         self.applyDialog.setBin('gui-popup', 0)
 
     def __applyDone(self, command):
@@ -500,10 +502,12 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
                 # yeah you can go embedded
                 pass
             else:
-                self.notify.warning("how was the player able to choose embedded")
+                self.notify.warning(
+                    "how was the player able to choose embedded")
                 embedded = False
-        #if not self.resetDisplayProperties(pipe, properties):
-        if not self.changeDisplayProperties(pipe, xSize, ySize, fullscreen, embedded):
+        # if not self.resetDisplayProperties(pipe, properties):
+        if not self.changeDisplayProperties(
+                pipe, xSize, ySize, fullscreen, embedded):
             # If we couldn't open the window, go back without
             # bothering to prompt the user.
             self.__revertBack(1)
@@ -513,21 +517,27 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
         # that the new settings worked.
 
         # Move our dialog back under the fade screen.
-        self.clearBin();
-        
+        self.clearBin()
+
         self.timeoutDialog = TTDialog.TTDialog(
-            dialogName = 'DisplaySettingsTimeout',
-            style = TTDialog.TwoChoice,
-            text = TTLocalizer.DisplaySettingsAccept % (self.ApplyTimeoutSeconds),
-            text_wordwrap = 15,
-            command = self.__timeoutDone
-            )
+            dialogName='DisplaySettingsTimeout',
+            style=TTDialog.TwoChoice,
+            text=TTLocalizer.DisplaySettingsAccept %
+            (self.ApplyTimeoutSeconds),
+            text_wordwrap=15,
+            command=self.__timeoutDone)
         self.timeoutDialog.setBin('gui-popup', 0)
         self.timeoutRemaining = self.ApplyTimeoutSeconds
         self.timeoutStart = None
         taskMgr.add(self.__timeoutCountdown, self.TimeoutCountdownTask)
 
-    def changeDisplayProperties(self, pipe, width, height, fullscreen = False, embedded = False):
+    def changeDisplayProperties(
+            self,
+            pipe,
+            width,
+            height,
+            fullscreen=False,
+            embedded=False):
         """Do some processing before we call resetDisplayProperties."""
         result = False
         self.notify.info("changeDisplayProperties")
@@ -539,22 +549,23 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
         self.current_properties = WindowProperties(base.win.getProperties())
         properties = self.current_properties
         self.notify.debug("DISPLAY PREVIOUS:")
-        self.notify.debug("  EMBEDDED:   %s" % bool(properties.getParentWindow ( )))
-        self.notify.debug("  FULLSCREEN: %s" % bool(properties.getFullscreen ( )))
-        self.notify.debug("  X SIZE:     %s" % properties.getXSize ( ))
-        self.notify.debug("  Y SIZE:     %s" % properties.getYSize ( ))
+        self.notify.debug(
+            f"  EMBEDDED:   {bool(properties.getParentWindow())}")
+        self.notify.debug(
+            f"  FULLSCREEN: {bool(properties.getFullscreen())}")
+        self.notify.debug(f"  X SIZE:     {properties.getXSize()}")
+        self.notify.debug(f"  Y SIZE:     {properties.getYSize()}")
         self.notify.debug("DISPLAY REQUESTED:")
-        self.notify.debug("  EMBEDDED:   %s" % bool(embedded))
-        self.notify.debug("  FULLSCREEN: %s" % bool(fullscreen))
-        self.notify.debug("  X SIZE:     %s" % width)
-        self.notify.debug("  Y SIZE:     %s" % height)
-            
+        self.notify.debug(f"  EMBEDDED:   {bool(embedded)}")
+        self.notify.debug(f"  FULLSCREEN: {bool(fullscreen)}")
+        self.notify.debug(f"  X SIZE:     {width}")
+        self.notify.debug(f"  Y SIZE:     {height}")
 
-        if ((self.current_pipe == pipe) and \
-            (bool(self.current_properties.getParentWindow( )) == bool(embedded)) and \
-            (self.current_properties.getFullscreen ( ) == fullscreen) and \
-            (self.current_properties.getXSize ( ) == width) and \
-            (self.current_properties.getYSize ( ) == height)):
+        if ((self.current_pipe == pipe) and
+            (bool(self.current_properties.getParentWindow()) == bool(embedded)) and
+            (self.current_properties.getFullscreen() == fullscreen) and
+            (self.current_properties.getXSize() == width) and
+                (self.current_properties.getYSize() == height)):
             # no display change required
             self.notify.info("DISPLAY NO CHANGE REQUIRED")
             state = True
@@ -566,10 +577,10 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
 
             if embedded:
                 properties = base.appRunner.windowProperties
-            
+
             # get current sort order
-            original_sort = base.win.getSort ( )
-            
+            original_sort = base.win.getSort()
+
             if self.resetDisplayProperties(pipe, properties):
                 self.notify.debug("DISPLAY CHANGE SET")
 
@@ -577,19 +588,22 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
                 properties = base.win.getProperties()
 
                 self.notify.debug("DISPLAY ACHIEVED:")
-                self.notify.debug("  EMBEDDED:   %s" % bool(properties.getParentWindow ( )))
-                self.notify.debug("  FULLSCREEN: %s" % bool(properties.getFullscreen ( )))
-                self.notify.debug("  X SIZE:     %s" % properties.getXSize ( ))
-                self.notify.debug("  Y SIZE:     %s" % properties.getYSize ( ))
+                self.notify.debug(
+                    f"  EMBEDDED:   {bool(properties.getParentWindow())}")
+                self.notify.debug(
+                    f"  FULLSCREEN: {bool(properties.getFullscreen())}")
+                self.notify.debug(f"  X SIZE:     {properties.getXSize()}")
+                self.notify.debug(f"  Y SIZE:     {properties.getYSize()}")
 
-                if ((bool(properties.getParentWindow( )) == bool(embedded)) and \
-                    (properties.getFullscreen ( ) == fullscreen) and \
-                    (properties.getXSize ( ) == width) and \
-                    (properties.getYSize ( ) == height)):
+                if ((bool(properties.getParentWindow()) == bool(embedded)) and
+                    (properties.getFullscreen() == fullscreen) and
+                    (properties.getXSize() == width) and
+                        (properties.getYSize() == height)):
                     self.notify.info("DISPLAY CHANGE VERIFIED")
                     result = True
                 else:
-                    self.notify.warning("DISPLAY CHANGE FAILED, RESTORING PREVIOUS DISPLAY")
+                    self.notify.warning(
+                        "DISPLAY CHANGE FAILED, RESTORING PREVIOUS DISPLAY")
                     #self.restoreWindowProperties ( options )
             else:
                 self.notify.warning("DISPLAY CHANGE FAILED")
@@ -598,13 +612,12 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
                 #self.notify.warning("DISPLAY SET - AFTER RESTORE")
 
             # set current sort order
-            base.win.setSort (original_sort)
+            base.win.setSort(original_sort)
 
             base.graphicsEngine.renderFrame()
             base.graphicsEngine.renderFrame()
-                
+
         return result
-    
 
     def __timeoutCountdown(self, task):
         # This task monitors the countdown timer for accepting the new
@@ -614,13 +627,14 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
         # We do it this way, instead of setting it when we spawn the
         # task, to ensure we don't start counting until after the new
         # window is created.
-        if self.timeoutStart == None:
+        if self.timeoutStart is None:
             self.timeoutStart = globalClock.getRealTime()
         elapsed = int(globalClock.getFrameTime() - self.timeoutStart)
         remaining = max(self.ApplyTimeoutSeconds - elapsed, 0)
         if remaining < self.timeoutRemaining:
             self.timeoutRemaining = remaining
-            self.timeoutDialog['text'] = TTLocalizer.DisplaySettingsAccept % (remaining),
+            self.timeoutDialog['text'] = TTLocalizer.DisplaySettingsAccept % (
+                remaining),
         if remaining == 0:
             # Automatically cancel when the time is up.
             self.__timeoutDone('cancel')
@@ -659,7 +673,7 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
             base.panda3dRenderError()
 
         # Now open a dialog telling the user they've been restored.
-        
+
         # Move our dialog under the fade screen.
         self.clearBin()
 
@@ -667,14 +681,14 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
             revertText = TTLocalizer.DisplaySettingsRevertUser
         else:
             revertText = TTLocalizer.DisplaySettingsRevertFailed
-            
+
         self.revertDialog = TTDialog.TTDialog(
-            dialogName = 'DisplaySettingsRevert',
-            style = TTDialog.Acknowledge,
-            text = revertText,
-            text_wordwrap = 15,
-            command = self.__revertDone,
-            )
+            dialogName='DisplaySettingsRevert',
+            style=TTDialog.Acknowledge,
+            text=revertText,
+            text_wordwrap=15,
+            command=self.__revertDone,
+        )
         self.revertDialog.setBin('gui-popup', 0)
 
     def __revertDone(self, command):
@@ -689,7 +703,7 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
 
     def __cancel(self):
         self.exit()
-    
+
     def resetDisplayProperties(self, pipe, properties):
         if base.win:
             currentProperties = base.win.getProperties()
@@ -707,22 +721,22 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
             self.apiChanged = 1
             gsg = None
 
-        if gsg == None or \
+        if gsg is None or \
            currentProperties.getFullscreen() != newProperties.getFullscreen() or \
            (currentProperties.getParentWindow() != newProperties.getParentWindow()):
             # For now, assume that if we change fullscreen state, we
             # need to destroy the window and create a new one.
 
-            self.notify.debug("window properties: %s" % properties)
-            self.notify.debug("gsg: %s" % gsg)
-            
+            self.notify.debug(f"window properties: {properties}")
+            self.notify.debug(f"gsg: {gsg}")
+
             base.pipe = pipe
-            if not base.openMainWindow(props = properties, gsg = gsg,
-                                       keepCamera = True):
+            if not base.openMainWindow(props=properties, gsg=gsg,
+                                       keepCamera=True):
                 self.notify.warning("OPEN MAIN WINDOW FAILED")
                 return 0
             self.notify.info("OPEN MAIN WINDOW PASSED")
-            
+
             base.disableShowbaseMouse()
             NametagGlobals.setCamera(base.cam)
             NametagGlobals.setMouseWatcher(base.mouseWatcherNode)
@@ -740,7 +754,7 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
                 self.notify.info("Window did not open, removing.")
                 base.closeWindow(base.win)
                 return 0
-                
+
         else:
             # If the properties are changing only slightly
             # (e.g. window size), we can keep the current window and
@@ -748,21 +762,20 @@ class DisplaySettingsDialog(DirectFrame, StateData.StateData):
             self.notify.debug("Adjusting properties")
             base.win.requestProperties(properties)
             base.graphicsEngine.renderFrame()
-            
+
         return 1
 
     def isEmbeddedPossible(self):
         """Returns True if embedded in the browser is a valid option."""
         result = False
         # RAU per Robin we don't want embedded, uncomment if they change their minds
-        #if base.appRunner and base.appRunner.windowProperties:
+        # if base.appRunner and base.appRunner.windowProperties:
         #    result = True
         return result
-    
+
     def isCurrentlyEmbedded(self):
         """Returns true if the current game window is inside a browser."""
         result = False
         if base.win.getProperties().getParentWindow():
             result = True
         return result
-        

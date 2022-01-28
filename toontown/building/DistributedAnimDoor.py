@@ -3,21 +3,21 @@
 
 from pandac.PandaModules import NodePath, VBase3
 from direct.directnotify import DirectNotifyGlobal
-from direct.interval.IntervalGlobal import  Parallel, Sequence, Wait, \
-     HprInterval, LerpHprInterval, SoundInterval
+from direct.interval.IntervalGlobal import Parallel, Sequence, Wait, \
+    HprInterval, LerpHprInterval, SoundInterval
 from toontown.building import DistributedDoor
 from toontown.building import DoorTypes
 
-if( __debug__ ):
+if(__debug__):
     import pdb
 
-class DistributedAnimDoor(DistributedDoor.DistributedDoor):   
+
+class DistributedAnimDoor(DistributedDoor.DistributedDoor):
     """
     DistributedAnimDoor class:  The client side representation of a
     animated 'landmark door'.
     Too much stuff has changed to put them in DistributedDoor.py
     """
-
 
     def __init__(self, cr):
         """constructor for the DistributedDoor"""
@@ -31,15 +31,18 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
         """
         if ('building' not in self.__dict__):
             if self.doorType == DoorTypes.EXT_ANIM_STANDARD:
-                searchStr = "**/??"+str(self.block)+":animated_building_*_DNARoot;+s"
-                self.notify.debug("searchStr=%s" % searchStr)
-                self.building = self.cr.playGame.hood.loader.geom.find(searchStr)
+                searchStr = "**/??" + \
+                    str(self.block) + ":animated_building_*_DNARoot;+s"
+                self.notify.debug(f"searchStr={searchStr}")
+                self.building = self.cr.playGame.hood.loader.geom.find(
+                    searchStr)
             else:
-                self.notify.error("DistributedAnimDoor.getBuiding with doorType=%s"% self.doorType)
+                self.notify.error(
+                    f"DistributedAnimDoor.getBuiding with doorType={self.doorType}")
 
         assert(not self.building.isEmpty())
-        return self.building       
-   
+        return self.building
+
     def getDoorNodePath(self):
         """Return the nodepath to door origin."""
         if self.doorType == DoorTypes.EXT_ANIM_STANDARD:
@@ -47,20 +50,24 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
                 return self.tempDoorNodePath
             else:
                 # tempDoorNodePath gets removed in disable
-                # ...exterior door.                
+                # ...exterior door.
                 building = self.getBuilding()
                 doorNP = building.find("**/door_origin")
-                self.notify.debug("creating doorOrigin at %s %s" % (str(doorNP.getPos()),
-                                                                   str(doorNP.getHpr())))
-                otherNP=NodePath("doorOrigin")
+                self.notify.debug(
+                    "creating doorOrigin at %s %s" %
+                    (str(
+                        doorNP.getPos()), str(
+                        doorNP.getHpr())))
+                otherNP = NodePath("doorOrigin")
                 otherNP.setPos(doorNP.getPos())
-                otherNP.setHpr(doorNP.getHpr()) #
+                otherNP.setHpr(doorNP.getHpr())
                 otherNP.reparentTo(doorNP.getParent())
-                assert(not otherNP.isEmpty())                
+                assert(not otherNP.isEmpty())
                 # Store this for clean up later
-                self.tempDoorNodePath=otherNP                
+                self.tempDoorNodePath = otherNP
         else:
-            self.notify.error("DistributedAnimDoor.getDoorNodePath with doorType=%s"% self.doorType)
+            self.notify.error(
+                f"DistributedAnimDoor.getDoorNodePath with doorType={self.doorType}")
         return otherNP
 
     def setTriggerName(self):
@@ -77,23 +84,25 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
             else:
                 self.notify.warning("setTriggerName failed no building")
         else:
-            self.notify.error("setTriggerName doorTYpe=%s" % self.doorType)
+            self.notify.error(f"setTriggerName doorTYpe={self.doorType}")
 
     def getAnimBuilding(self):
         """Return a handle on the animated building prop."""
         # Once we find it, we store it, so we don't have to find it again.
-        if ('animBuilding' not in self.__dict__):            
+        if ('animBuilding' not in self.__dict__):
             if self.doorType == DoorTypes.EXT_ANIM_STANDARD:
-                #self.building = self.cr.playGame.hood.loader.geom.find(
+                # self.building = self.cr.playGame.hood.loader.geom.find(
                 #        "**/??"+str(self.block)+":animated_building_*_DNARoot;+s")
-                bldg= self.getBuilding()
+                bldg = self.getBuilding()
                 key = bldg.getParent().getParent()
-                animPropList = self.cr.playGame.hood.loader.animPropDict.get(key)
-                
+                animPropList = self.cr.playGame.hood.loader.animPropDict.get(
+                    key)
+
                 if animPropList:
                     for prop in animPropList:
-                        # TODO string matching is such a hack, maybe test paths?
-                        if bldg ==  prop.getActor().getParent():
+                        # TODO string matching is such a hack, maybe test
+                        # paths?
+                        if bldg == prop.getActor().getParent():
                             self.animBuilding = prop
                             break
                 else:
@@ -111,7 +120,7 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
 
     ##### opening state #####
     def enterOpening(self, ts):
-        #if( __debug__ ):
+        # if( __debug__ ):
         #    import pdb
         #    pdb.set_trace()
 
@@ -122,7 +131,7 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
             self.notify.warning("enterOpening(): did not find rightDoor")
             return
         # Open the door:
-        otherNP=self.getDoorNodePath()
+        otherNP = self.getDoorNodePath()
         trackName = "doorOpen-%d" % (self.doId)
         if self.rightSwing:
             h = 100
@@ -130,25 +139,25 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
             h = -100
         # Stop animation:
         self.finishDoorTrack()
-        self.doorTrack=Parallel(
+        self.doorTrack = Parallel(
             SoundInterval(self.openSfx, node=rightDoor),
             Sequence(
                 HprInterval(
                     rightDoor,
                     VBase3(0, 0, 0),
-                    #other=otherNP,
-                    ),
+                    # other=otherNP,
+                ),
                 Wait(0.4),
-                #Func(rightDoor.show),
-                #Func(doorFrameHoleRight.show),
+                # Func(rightDoor.show),
+                # Func(doorFrameHoleRight.show),
                 LerpHprInterval(
                     nodePath=rightDoor,
                     duration=0.6,
                     hpr=VBase3(h, 0, 0),
                     startHpr=VBase3(0, 0, 0),
-                    #other=otherNP,
+                    # other=otherNP,
                     blendType="easeInOut")),
-            name = trackName)
+            name=trackName)
         # Start the tracks:
         self.doorTrack.start(ts)
 
@@ -161,9 +170,9 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
         if (rightDoor.isEmpty()):
             self.notify.warning("enterClosing(): did not find rightDoor")
             return
-        
+
         # Close the door:
-        otherNP=self.getDoorNodePath()
+        otherNP = self.getDoorNodePath()
         trackName = "doorClose-%d" % (self.doId)
         if self.rightSwing:
             h = 100
@@ -171,18 +180,18 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
             h = -100
         # Stop animation:
         self.finishDoorTrack()
-        self.doorTrack=Sequence(
-                LerpHprInterval(
-                    nodePath=rightDoor,
-                    duration=1.0,
-                    hpr=VBase3(0, 0, 0),
-                    startHpr=VBase3(h, 0, 0),
-                    #other=otherNP,
-                    blendType="easeInOut"),
-                #Func(doorFrameHoleRight.hide),
-                #Func(self.hideIfHasFlat, rightDoor),
-                SoundInterval(self.closeSfx, node=rightDoor),
-                name = trackName)
+        self.doorTrack = Sequence(
+            LerpHprInterval(
+                nodePath=rightDoor,
+                duration=1.0,
+                hpr=VBase3(0, 0, 0),
+                startHpr=VBase3(h, 0, 0),
+                # other=otherNP,
+                blendType="easeInOut"),
+            # Func(doorFrameHoleRight.hide),
+            #Func(self.hideIfHasFlat, rightDoor),
+            SoundInterval(self.closeSfx, node=rightDoor),
+            name=trackName)
         self.doorTrack.start(ts)
         if hasattr(self, "done"):
             request = self.getRequestStatus()
@@ -196,38 +205,39 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
         if self.leftSwing:
             h = -100
         else:
-            h = 100        
+            h = 100
         if (not leftDoor.isEmpty()):
             # Open the door:
-            otherNP=self.getDoorNodePath()
+            otherNP = self.getDoorNodePath()
             trackName = "doorDoorExitTrack-%d" % (self.doId)
             self.finishDoorExitTrack()
             self.doorExitTrack = Parallel(
                 SoundInterval(self.openSfx, node=leftDoor),
                 Sequence(
-                    #Func(leftDoor.show),
-                    #Func(doorFrameHoleLeft.show),
+                    # Func(leftDoor.show),
+                    # Func(doorFrameHoleLeft.show),
                     LerpHprInterval(nodePath=leftDoor,
                                     duration=0.6,
                                     hpr=VBase3(h, 0, 0),
                                     startHpr=VBase3(0, 0, 0),
-                                    #other=otherNP,
+                                    # other=otherNP,
                                     blendType="easeInOut")),
-                name = trackName)
+                name=trackName)
             # Start the tracks:
             self.doorExitTrack.start(ts)
         else:
-            self.notify.warning("exitDoorEnterOpening(): did not find leftDoor")
+            self.notify.warning(
+                "exitDoorEnterOpening(): did not find leftDoor")
 
     ##### Exit Door closing state #####
-    
+
     def exitDoorEnterClosing(self, ts):
         # Start animation:
 
         bldgActor = self.getBuildingActor()
         leftDoor = bldgActor.controlJoint(None, "modelRoot", "def_left_door")
 
-        #if ZoneUtil.isInterior(self.zoneId):
+        # if ZoneUtil.isInterior(self.zoneId):
         #    doorFrameHoleLeft.setColor(1., 1., 1., 1.)
         # Left door:
         if self.leftSwing:
@@ -237,22 +247,21 @@ class DistributedAnimDoor(DistributedDoor.DistributedDoor):
 
         if (not leftDoor.isEmpty()):
             # Close the door:
-            otherNP=self.getDoorNodePath()
+            otherNP = self.getDoorNodePath()
             trackName = "doorExitTrack-%d" % (self.doId)
             self.finishDoorExitTrack()
             self.doorExitTrack = Sequence(
-                    LerpHprInterval(
-                        nodePath=leftDoor,
-                        duration=1.0,
-                        hpr=VBase3(0, 0, 0),
-                        startHpr=VBase3(h, 0, 0),
-                        #other=otherNP,
-                        blendType="easeInOut"),
-                    #Func(doorFrameHoleLeft.hide),
-                    #Func(self.hideIfHasFlat, leftDoor),
-                    SoundInterval(self.closeSfx, node=leftDoor),
-                    name = trackName)
+                LerpHprInterval(
+                    nodePath=leftDoor,
+                    duration=1.0,
+                    hpr=VBase3(0, 0, 0),
+                    startHpr=VBase3(h, 0, 0),
+                    # other=otherNP,
+                    blendType="easeInOut"),
+                # Func(doorFrameHoleLeft.hide),
+                #Func(self.hideIfHasFlat, leftDoor),
+                SoundInterval(self.closeSfx, node=leftDoor),
+                name=trackName)
             self.doorExitTrack.start(ts)
-        #else:
+        # else:
         #    self.notify.error("enterOpening(): did not find leftDoor")
-    

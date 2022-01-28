@@ -7,6 +7,7 @@ from otp.level import BasicEntities
 
 # TODO: fix cracks between treads
 
+
 class ConveyorBelt(BasicEntities.NodePathEntity):
     """
     Conveyer belt is made up of a series of contiguous MovingPlatforms,
@@ -33,7 +34,7 @@ class ConveyorBelt(BasicEntities.NodePathEntity):
         BasicEntities.NodePathEntity.__init__(self, level, entId)
 
         self.initBelt()
-        
+
     def destroy(self):
         self.destroyBelt()
         BasicEntities.NodePathEntity.destroy(self)
@@ -42,11 +43,11 @@ class ConveyorBelt(BasicEntities.NodePathEntity):
         treadModel = loader.loadModel(self.treadModelPath)
         treadModel.setSx(self.widthScale)
         treadModel.flattenLight()
-        
+
         # add one to cover the full belt length, one to compensate for
         # the tread's origin placement, then one more to cover a tread's
         # length of movement
-        self.numTreads = int(self.length/self.treadLength) + 3
+        self.numTreads = int(self.length / self.treadLength) + 3
 
         self.beltNode = self.attachNewNode('belt')
 
@@ -55,7 +56,7 @@ class ConveyorBelt(BasicEntities.NodePathEntity):
         for i in range(self.numTreads):
             mp = MovingPlatform.MovingPlatform()
             mp.parentingNode = render.attachNewNode('parentTarget')
-            mp.setupCopyModel('conv%s-%s' % (self.getParentToken(), i),
+            mp.setupCopyModel(f'conv{self.getParentToken()}-{i}',
                               treadModel, self.floorName,
                               parentingNode=mp.parentingNode)
             # we can't attach the parenting node until we've called
@@ -76,7 +77,7 @@ class ConveyorBelt(BasicEntities.NodePathEntity):
         self.beltNode.removeNode()
 
         del self.beltNode
-            
+
     def start(self):
         startTime = self.level.startTime
         treadsIval = Parallel(name='treads')
@@ -90,12 +91,26 @@ class ConveyorBelt(BasicEntities.NodePathEntity):
             periodsFromStart = self.numTreads - periodsToEnd
             ival = Sequence()
             if periodsToEnd != 0:
-                ival.append(LerpPosInterval(
-                    self.treads[i], duration=treadPeriod*periodsToEnd,
-                    pos=Point3(0,startY+self.numTreads*self.treadLength,0),
-                    startPos=Point3(0,startY+i*self.treadLength,0),
-                    fluid = 1,
+                ival.append(
+                    LerpPosInterval(
+                        self.treads[i],
+                        duration=treadPeriod *
+                        periodsToEnd,
+                        pos=Point3(
+                            0,
+                            startY +
+                            self.numTreads *
+                            self.treadLength,
+                            0),
+                        startPos=Point3(
+                            0,
+                            startY +
+                            i *
+                            self.treadLength,
+                            0),
+                        fluid=1,
                     ))
+
             def dumpContents(tread=self.treads[i]):
                 # wrtReparent everything to render
                 # shouldn't have to do this, but it's better to
@@ -109,19 +124,19 @@ class ConveyorBelt(BasicEntities.NodePathEntity):
                 # now that we've dumped localToon, make SURE the tread
                 # goes away so he can't get back on
                 Func(self.treads[i].setPos,
-                     Point3(0,startY+self.numTreads*self.treadLength,0)),
-                ))
+                     Point3(0, startY + self.numTreads * self.treadLength, 0)),
+            ))
             if periodsFromStart != 0:
                 ival.append(LerpPosInterval(
-                    self.treads[i], duration=treadPeriod*periodsFromStart,
-                    pos=Point3(0,startY+i*self.treadLength,0),
-                    startPos=Point3(0,startY,0),
-                    fluid = 1,
-                    ))
+                    self.treads[i], duration=treadPeriod * periodsFromStart,
+                    pos=Point3(0, startY + i * self.treadLength, 0),
+                    startPos=Point3(0, startY, 0),
+                    fluid=1,
+                ))
             treadsIval.append(ival)
 
         self.beltIval = Sequence(treadsIval,
-                                 name='ConveyorBelt-%s' % self.entId,
+                                 name=f'ConveyorBelt-{self.entId}',
                                  )
         playRate = 1.
         startT = 0.
@@ -174,6 +189,7 @@ class ConveyorBelt(BasicEntities.NodePathEntity):
         def attribChanged(self, attrib, value):
             self.destroyBelt()
             self.initBelt()
+
 
 """
 import ConveyorBelt

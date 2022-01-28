@@ -1,10 +1,10 @@
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Contact: Shawn Patton
 # Created: Sep 2008
 #
 # Purpose: DistributedPartyAI controls message passing to the client for parties
 #
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 
 from toontown.parties import PartyGlobals
@@ -23,19 +23,20 @@ from toontown.parties.DistributedPartyDance20ActivityAI import DistributedPartyD
 from toontown.parties.DistributedPartyCogActivityAI import DistributedPartyCogActivityAI
 
 ActivityIdsToClasses = {
-    PartyGlobals.ActivityIds.PartyJukebox : DistributedPartyJukeboxActivityAI,
-    PartyGlobals.ActivityIds.PartyCannon : DistributedPartyCannonActivityAI,
-    PartyGlobals.ActivityIds.PartyTrampoline : DistributedPartyTrampolineActivityAI,
-    PartyGlobals.ActivityIds.PartyVictoryTrampoline : DistributedPartyVictoryTrampolineActivityAI,
-    PartyGlobals.ActivityIds.PartyCatch : DistributedPartyCatchActivityAI,
-    PartyGlobals.ActivityIds.PartyDance : DistributedPartyDanceActivityAI, 
-    PartyGlobals.ActivityIds.PartyTugOfWar : DistributedPartyTugOfWarActivityAI,
-    PartyGlobals.ActivityIds.PartyFireworks : DistributedPartyFireworksActivityAI,
-    PartyGlobals.ActivityIds.PartyClock : None,
-    PartyGlobals.ActivityIds.PartyJukebox40 : DistributedPartyJukebox40ActivityAI,
-    PartyGlobals.ActivityIds.PartyDance20 : DistributedPartyDance20ActivityAI,
-    PartyGlobals.ActivityIds.PartyCog : DistributedPartyCogActivityAI,
-    }
+    PartyGlobals.ActivityIds.PartyJukebox: DistributedPartyJukeboxActivityAI,
+    PartyGlobals.ActivityIds.PartyCannon: DistributedPartyCannonActivityAI,
+    PartyGlobals.ActivityIds.PartyTrampoline: DistributedPartyTrampolineActivityAI,
+    PartyGlobals.ActivityIds.PartyVictoryTrampoline: DistributedPartyVictoryTrampolineActivityAI,
+    PartyGlobals.ActivityIds.PartyCatch: DistributedPartyCatchActivityAI,
+    PartyGlobals.ActivityIds.PartyDance: DistributedPartyDanceActivityAI,
+    PartyGlobals.ActivityIds.PartyTugOfWar: DistributedPartyTugOfWarActivityAI,
+    PartyGlobals.ActivityIds.PartyFireworks: DistributedPartyFireworksActivityAI,
+    PartyGlobals.ActivityIds.PartyClock: None,
+    PartyGlobals.ActivityIds.PartyJukebox40: DistributedPartyJukebox40ActivityAI,
+    PartyGlobals.ActivityIds.PartyDance20: DistributedPartyDance20ActivityAI,
+    PartyGlobals.ActivityIds.PartyCog: DistributedPartyCogActivityAI,
+}
+
 
 class DistributedPartyAI(DistributedObjectAI):
     notify = directNotify.newCategory("DistributedPartyAI")
@@ -43,14 +44,16 @@ class DistributedPartyAI(DistributedObjectAI):
     def __init__(self, air, avId, zoneId, partyInfo, inviteeIds):
         DistributedObjectAI.__init__(self, air)
 
-        self.notify.debug("created with avId = %s, zoneId = %s, and partyInfo=%s" % (avId, zoneId, partyInfo))
+        self.notify.debug(
+            "created with avId = %s, zoneId = %s, and partyInfo=%s" %
+            (avId, zoneId, partyInfo))
         self.avId = avId
         self.zoneId = zoneId
         self.partyInfo = partyInfo
         self.inviteeIds = inviteeIds
         self.partyStartedTime = self.air.toontownTimeManager.getCurServerDateTime()
-        self.partyClockInfo = (0,0,0)
-        
+        self.partyClockInfo = (0, 0, 0)
+
         # For the party clock, we need to set aside the x, y, and h
         for activity in self.partyInfo.activityList:
             if activity.activityId == PartyGlobals.ActivityIds.PartyClock:
@@ -60,32 +63,38 @@ class DistributedPartyAI(DistributedObjectAI):
         # try to get the host name at this point here
         toon = simbase.air.doId2do.get(self.partyInfo.hostId)
         if toon:
-            self.hostName = toon.getName()            
-                                                
+            self.hostName = toon.getName()
+
         # Keep track of the parties state for toon's coming in to the party
         self.isPartyEnding = False
         self.activityObjects = []
-                
-    def getPartyState(self):    
-        return self.isPartyEnding        
-        
-    def b_setPartyState(self, partyState):    
-        self.isPartyEnding = partyState 
-        self.sendUpdate("setPartyState", [partyState])       
-    
+
+    def getPartyState(self):
+        return self.isPartyEnding
+
+    def b_setPartyState(self, partyState):
+        self.isPartyEnding = partyState
+        self.sendUpdate("setPartyState", [partyState])
+
     def generate(self):
-        DistributedPartyAI.notify.debug("DistParty generate: %s" % self.doId)
+        DistributedPartyAI.notify.debug(f"DistParty generate: {self.doId}")
         DistributedObjectAI.generate(self)
 
-        self.air.writeServerEvent("party_generate",self.partyInfo.partyId, "%d|%d" % (self.doId,self.partyInfo.hostId))
-        
+        self.air.writeServerEvent(
+            "party_generate", self.partyInfo.partyId, "%d|%d" %
+            (self.doId, self.partyInfo.hostId))
+
         # Log that a GM party has been generated.
         try:
             host = simbase.air.doId2do.get(self.partyInfo.hostId)
             if host.hasGMName():
-                self.air.writeServerEvent("party_generate_gm", self.partyInfo.partyId, "%s" % self.partyInfo.hostId)
-                assert self.notify.debug("GM-%s's party has started." % self.partyInfo.hostId)
-        except:
+                self.air.writeServerEvent(
+                    "party_generate_gm",
+                    self.partyInfo.partyId,
+                    f"{self.partyInfo.hostId}")
+                assert self.notify.debug(
+                    f"GM-{self.partyInfo.hostId}'s party has started.")
+        except BaseException:
             pass
 
         # We want to initialize all the activities that are at this party.
@@ -99,7 +108,7 @@ class DistributedPartyAI(DistributedObjectAI):
         for activity in self.partyInfo.activityList:
            # if activity not in  ActivityIdsToClasses:
             #    self.notify.warning('DistributedPartyAI: unknown activity: {0} continuing to next one'.format(activity))
-             #   continue
+            #   continue
             # Location and heading in the activityList is in party space, so
             # we convert them to Panda space before passing them into the
             # activities
@@ -119,10 +128,10 @@ class DistributedPartyAI(DistributedObjectAI):
                 continue
 
             actClass = ActivityIdsToClasses[activity.activityId]
-            newAct = actClass(self.air, self.doId, x, y ,h)
+            newAct = actClass(self.air, self.doId, x, y, h)
             newAct.generateWithRequired(self.zoneId)
             self.activityObjects.append(newAct)
-                
+
     def getCannonActivity(self):
         result = None
         for act in self.activityObjects:
@@ -164,7 +173,7 @@ class DistributedPartyAI(DistributedObjectAI):
             formattedDecors.append(oneDecor)
         isPrivate = self.partyInfo.isPrivate
         inviteTheme = self.partyInfo.inviteTheme
-            
+
         return (
             self.partyInfo.partyId,
             self.partyInfo.hostId,
@@ -186,20 +195,23 @@ class DistributedPartyAI(DistributedObjectAI):
         )
 
     def delete(self):
-        DistributedPartyAI.notify.debug("DistParty delete: %s" % self.doId)
+        DistributedPartyAI.notify.debug(f"DistParty delete: {self.doId}")
         self.ignoreAll()
         try:
             self.Party_deleted
-            DistributedPartyAI.notify.debug("party already deleted: %s" % self.Party_deleted)
-        except:
-            DistributedPartyAI.notify.debug("completing party delete: %s" % self.__dict__.get("zoneId"))
-            self.air.writeServerEvent("party_delete",self.partyInfo.partyId, "%d|%d" % (self.doId,self.partyInfo.hostId))
+            DistributedPartyAI.notify.debug(
+                f"party already deleted: {self.Party_deleted}")
+        except BaseException:
+            DistributedPartyAI.notify.debug(
+                f"completing party delete: {self.__dict__.get('zoneId')}")
+            self.air.writeServerEvent(
+                "party_delete", self.partyInfo.partyId, "%d|%d" %
+                (self.doId, self.partyInfo.hostId))
             self.Party_deleted = self.zoneId
             for activityObj in self.activityObjects:
                 activityObj.requestDelete()
             self.activityObjects = []
             DistributedObjectAI.delete(self)
-            
 
     def unload(self):
         self.notify.debug("unload")
@@ -207,7 +219,11 @@ class DistributedPartyAI(DistributedObjectAI):
     def avIdEnteredParty(self, avId):
         senderId = self.air.getAvatarIdFromSender()
         if senderId != avId:
-            self.air.writeServerEvent('suspicious', senderId, 'someone else trying to enter a party for this avatar: avId = %d' % avId)
+            self.air.writeServerEvent(
+                'suspicious',
+                senderId,
+                'someone else trying to enter a party for this avatar: avId = %d' %
+                avId)
             return
         if not self.hostName and self.avId == self.partyInfo.hostId:
             # if we don't have a hostname yet try again
@@ -216,22 +232,27 @@ class DistributedPartyAI(DistributedObjectAI):
                 toonName = toon.getName()
                 if toonName:
                     self.b_setHostName(toonName)
-            
-        self.sendUpdate("setAvIdsAtParty", [self.air.partyManager.zoneIdToGuestAvIds[self.zoneId]])
+
+        self.sendUpdate("setAvIdsAtParty",
+                        [self.air.partyManager.zoneIdToGuestAvIds[self.zoneId]])
         totalMoney = -1
         av = simbase.air.doId2do.get(avId)
         if av:
             totalMoney = av.getTotalMoney()
-        self.air.writeServerEvent("party_enter",self.partyInfo.partyId, "%d|%d" % (avId,totalMoney))
+        self.air.writeServerEvent(
+            "party_enter", self.partyInfo.partyId, "%d|%d" %
+            (avId, totalMoney))
 
     def initPartyData(self):
         pass
 
     def destroyPartyData(self):
         if hasattr(self, "Party_deleted"):
-            DistributedPartyAI.notify.debug("destroyPartyData: party already deleted: %s" % self.Party_deleted)
+            DistributedPartyAI.notify.debug(
+                f"destroyPartyData: party already deleted: {self.Party_deleted}")
             return
-        DistributedPartyAI.notify.debug("destroyPartyData: %s" % self.__dict__.get("zoneId"))
+        DistributedPartyAI.notify.debug(
+            f"destroyPartyData: {self.__dict__.get('zoneId')}")
         self.releaseZoneData()
 
     def getHostName(self):
@@ -249,8 +270,8 @@ class DistributedPartyAI(DistributedObjectAI):
 
     def d_setHostName(self, newName):
         """Send the host name to the client."""
-        self.sendUpdate("setHostName", [newName])        
-    
+        self.sendUpdate("setHostName", [newName])
+
     def isInActivity(self, avId):
         """Return true if the avId is busy with an activity."""
         result = False
@@ -259,6 +280,3 @@ class DistributedPartyAI(DistributedObjectAI):
                 result = True
                 break
         return result
-        
-    
-    

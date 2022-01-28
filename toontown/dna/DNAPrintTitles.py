@@ -30,7 +30,7 @@ dnaStorageFiles = [
     'phase_8/dna/storage_DL.dna',
     'phase_8/dna/storage_DL_sz.dna',
     'phase_8/dna/storage_DL_town.dna',
-    ]
+]
 
 dnaFiles = [
     "phase_4/dna/toontown_central_sz.dna",
@@ -56,25 +56,25 @@ dnaFiles = [
     "phase_8/dna/the_burrrgh_3100.dna",
     "phase_8/dna/the_burrrgh_3200.dna",
     "phase_8/dna/the_burrrgh_3300.dna",
-    ]
+]
 
 dnaStore = DNAStorage()
 
 for file in dnaStorageFiles:
     loadDNAFile(dnaStore, file, CSDefault, 1)
 
-print ("zone2TitleDict = {")
+print("zone2TitleDict = {")
 for file in dnaFiles:
-    print(("    # titles for: %s" % (file)))
+    print(f"    # titles for: {file}")
     loadDNAFile(dnaStore, file, CSDefault, 0)
     for blockIndex in range(dnaStore.getNumBlockTitles()):
         blockNumber = dnaStore.getTitleBlockAt(blockIndex)
         title = dnaStore.getTitleFromBlockNumber(blockNumber)
         zone = dnaStore.getZoneFromBlockNumber(blockNumber)
-        article = dnaStore.getArticleFromBlockNumber(blockNumber)        
-        branchZone = zone-(zone%100)
+        article = dnaStore.getArticleFromBlockNumber(blockNumber)
+        branchZone = zone - (zone % 100)
         finalZone = branchZone + 500 + blockNumber
-        print(('    %s : ("%s", "%s"),' % (finalZone, title, article)))
+        print(f'    {finalZone} : ("{title}", "{article}"),')
     dnaStore.resetBlockTitle()
     dnaStore.resetBlockNumbers()
     dnaStore.resetBlockArticle()

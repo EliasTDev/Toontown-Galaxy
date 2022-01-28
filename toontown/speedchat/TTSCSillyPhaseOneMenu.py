@@ -7,24 +7,25 @@ from otp.speedchat.SCStaticTextTerminal import SCStaticTextTerminal
 from otp.otpbase import OTPLocalizer
 
 
-#this is the structure of the racing menu
-SillyPhaseOneMenu = [     
+# this is the structure of the racing menu
+SillyPhaseOneMenu = [
     (OTPLocalizer.SillyHolidayMenuSections[1],            # WORLD
-        [60303, 60304, 60305, 60306,]),
+        [60303, 60304, 60305, 60306, ]),
     (OTPLocalizer.SillyHolidayMenuSections[2],            # BATTLE
-        [60307, 60308,]),
+        [60307, 60308, ]),
     (OTPLocalizer.SillyHolidayMenuSections[0],            # SILLY METER
-        [60301, 60302,]),
-    ]
-        
+        [60301, 60302, ]),
+]
+
+
 class TTSCSillyPhaseOneMenu(SCMenu):
     """
     Speedchat phrases for Silly PhaseOne
     """
-    
+
     def __init__(self):
-        SCMenu.__init__(self)        
-        
+        SCMenu.__init__(self)
+
         self.__SillyPhaseOneMessagesChanged()
         submenus = []
 
@@ -41,23 +42,25 @@ class TTSCSillyPhaseOneMenu(SCMenu):
         # if local toon has not been created, don't panic
         try:
             lt = base.localAvatar
-        except:
-            return 
+        except BaseException:
+            return
         for section in SillyPhaseOneMenu:
             if section[0] == -1:
-                #This is not a submenu but a terminal!
+                # This is not a submenu but a terminal!
                 for phrase in section[1]:
                     if phrase not in OTPLocalizer.SpeedChatStaticText:
-                        print(('warning: tried to link Silly PhaseOne phrase %s which does not seem to exist' % phrase))
+                        print(
+                            f'warning: tried to link Silly PhaseOne phrase {phrase} which does not seem to exist')
                         break
                     self.append(SCStaticTextTerminal(phrase))
-            else: #this should be a submenu
+            else:  # this should be a submenu
                 menu = SCMenu()
                 for phrase in section[1]:
                     if phrase not in OTPLocalizer.SpeedChatStaticText:
-                        print(('warning: tried to link Silly PhaseOne phrase %s which does not seem to exist' % phrase))                                
+                        print(
+                            f'warning: tried to link Silly PhaseOne phrase {phrase} which does not seem to exist')
                         break
-                    menu.append(SCStaticTextTerminal(phrase))                    
-                                        
+                    menu.append(SCStaticTextTerminal(phrase))
+
                 menuName = str(section[0])
-                self.append( SCMenuHolder(menuName, menu) )
+                self.append(SCMenuHolder(menuName, menu))

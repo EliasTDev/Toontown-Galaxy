@@ -12,6 +12,8 @@ from direct.task import Task
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 from panda3d.otp import *
+
+
 class House(Place.Place):
     """House class"""
 
@@ -27,99 +29,98 @@ class House(Place.Place):
         Place.Place.__init__(self, loader, doneEvent)
         self.id = ToontownGlobals.MyEstate
         self.ownersAvId = avId
-        self.dnaFile="phase_7/models/modules/toon_interior"
-        self.isInterior=1
+        self.dnaFile = "phase_7/models/modules/toon_interior"
+        self.isInterior = 1
         self.tfaDoneEvent = "tfaDoneEvent"
         self.oldStyle = None
         # shared state
         self.fsm = ClassicFSM.ClassicFSM('House',
-                           [State.State('start',
-                                        self.enterStart,
-                                        self.exitStart,
-                                        ['doorIn', 'teleportIn', 'tutorial',]),
-                            State.State('walk',
-                                        self.enterWalk,
-                                        self.exitWalk,
-                                        ['sit', 'stickerBook', 'doorOut',
-                                         'DFA', 'teleportOut', 'quest',
-                                         'purchase', 'closet', 'banking', 'phone', 'stopped']),
-                            State.State('sit',
-                                        self.enterSit,
-                                        self.exitSit,
-                                        ['walk',]),
-                            State.State('stickerBook',
-                                        self.enterStickerBook,
-                                        self.exitStickerBook,
-                                        ['walk', 'DFA',
-                                         'sit', 'doorOut',
-                                         'teleportOut', 'quest',
-                                         'purchase', 'closet', 'banking', 'phone', 'stopped',
-                                         ]),
-                            # Download Force Acknowlege:
-                            State.State('DFA',
-                                        self.enterDFA,
-                                        self.exitDFA,
-                                        ['DFAReject', 'teleportOut', 
-                                        'doorOut']),
-                            State.State('DFAReject',
-                                        self.enterDFAReject,
-                                        self.exitDFAReject,
-                                        ['walk']),
-                            State.State('doorIn',
-                                        self.enterDoorIn,
-                                        self.exitDoorIn,
-                                        ['walk']),
-                            State.State('doorOut',
-                                        self.enterDoorOut,
-                                        self.exitDoorOut,
-                                        ['walk']), # 'final'
-                            State.State('teleportIn',
-                                        self.enterTeleportIn,
-                                        self.exitTeleportIn,
-                                        ['walk']),
-                            State.State('teleportOut',
-                                        self.enterTeleportOut,
-                                        self.exitTeleportOut,
-                                        ['teleportIn']), # 'final'
-                            State.State('quest',
-                                        self.enterQuest,
-                                        self.exitQuest,
-                                        ['walk', 'doorOut',]),
-                            State.State('tutorial',
-                                        self.enterTutorial,
-                                        self.exitTutorial,
-                                        ['walk', 'quest',]),
-                            State.State('purchase',
-                                        self.enterPurchase,
-                                        self.exitPurchase,
-                                        ['walk', 'doorOut']),
-                            State.State('closet',
-                                        self.enterCloset,
-                                        self.exitCloset,
-                                        ['walk',]),
-                            State.State('banking',
-                                        self.enterBanking,
-                                        self.exitBanking,
-                                        ['walk',]),
-                            State.State('phone',
-                                        self.enterPhone,
-                                        self.exitPhone,
-                                        ['walk',]),
-                            State.State('stopped',
-                                        self.enterStopped,
-                                        self.exitStopped,
-                                        ['walk',]),
-                            State.State('final',
-                                        self.enterFinal,
-                                        self.exitFinal,
-                                        ['start', 'teleportIn'])],
-                           # Initial State
-                           'start',
-                           # Final State
-                           'final',
-                           )
+                                         [State.State('start',
+                                                      self.enterStart,
+                                                      self.exitStart,
+                                                      ['doorIn', 'teleportIn', 'tutorial', ]),
+                                             State.State('walk',
+                                                         self.enterWalk,
+                                                         self.exitWalk,
+                                                         ['sit', 'stickerBook', 'doorOut',
+                                                          'DFA', 'teleportOut', 'quest',
+                                                          'purchase', 'closet', 'banking', 'phone', 'stopped']),
+                                             State.State('sit',
+                                                         self.enterSit,
+                                                         self.exitSit,
+                                                         ['walk', ]),
+                                             State.State('stickerBook',
+                                                         self.enterStickerBook,
+                                                         self.exitStickerBook,
+                                                         ['walk', 'DFA',
+                                                          'sit', 'doorOut',
+                                                          'teleportOut', 'quest',
+                                                          'purchase', 'closet', 'banking', 'phone', 'stopped',
+                                                          ]),
+                                             # Download Force Acknowlege:
+                                             State.State('DFA',
+                                                         self.enterDFA,
+                                                         self.exitDFA,
+                                                         ['DFAReject', 'teleportOut',
+                                                          'doorOut']),
+                                             State.State('DFAReject',
+                                                         self.enterDFAReject,
+                                                         self.exitDFAReject,
+                                                         ['walk']),
+                                             State.State('doorIn',
+                                                         self.enterDoorIn,
+                                                         self.exitDoorIn,
+                                                         ['walk']),
+                                             State.State('doorOut',
+                                                         self.enterDoorOut,
+                                                         self.exitDoorOut,
+                                                         ['walk']),  # 'final'
+                                             State.State('teleportIn',
+                                                         self.enterTeleportIn,
+                                                         self.exitTeleportIn,
+                                                         ['walk']),
+                                             State.State('teleportOut',
+                                                         self.enterTeleportOut,
+                                                         self.exitTeleportOut,
+                                                         ['teleportIn']),  # 'final'
+                                             State.State('quest',
+                                                         self.enterQuest,
+                                                         self.exitQuest,
+                                                         ['walk', 'doorOut', ]),
+                                             State.State('tutorial',
+                                                         self.enterTutorial,
+                                                         self.exitTutorial,
+                                                         ['walk', 'quest', ]),
+                                             State.State('purchase',
+                                                         self.enterPurchase,
+                                                         self.exitPurchase,
+                                                         ['walk', 'doorOut']),
+                                             State.State('closet',
+                                                         self.enterCloset,
+                                                         self.exitCloset,
+                                                         ['walk', ]),
+                                             State.State('banking',
+                                                         self.enterBanking,
+                                                         self.exitBanking,
+                                                         ['walk', ]),
+                                             State.State('phone',
+                                                         self.enterPhone,
+                                                         self.exitPhone,
+                                                         ['walk', ]),
+                                             State.State('stopped',
+                                                         self.enterStopped,
+                                                         self.exitStopped,
+                                                         ['walk', ]),
+                                             State.State('final',
+                                                         self.enterFinal,
+                                                         self.exitFinal,
+                                                         ['start', 'teleportIn'])],
+                                         # Initial State
+                                         'start',
+                                         # Final State
+                                         'final',
+                                         )
         self.parentFSMState = parentFSMState
-
 
     def load(self):
         assert(self.notify.debug("load()"))
@@ -132,28 +133,32 @@ class House(Place.Place):
         assert(self.notify.debug("unload()"))
         # Call up the chain
         Place.Place.unload(self)
-        
+
         self.parentFSMState.removeChild(self.fsm)
         del self.parentFSMState
         del self.fsm
-        #self.geom.removeNode()
+        # self.geom.removeNode()
         #del self.geom
-        #self.ignoreAll()
+        # self.ignoreAll()
         # Get rid of any references to models or textures from this safe zone
         ModelPool.garbageCollect()
         TexturePool.garbageCollect()
 
     def enter(self, requestStatus):
-        assert(self.notify.debug("enter(requestStatus="+str(requestStatus)+")"))
-        self.zoneId=requestStatus["zoneId"]
+        assert(
+            self.notify.debug(
+                "enter(requestStatus=" +
+                str(requestStatus) +
+                ")"))
+        self.zoneId = requestStatus["zoneId"]
         self.fsm.enterInitialState()
         # Let the safe zone manager know that we are here.
         messenger.send("enterHouse")
         self.accept("doorDoneEvent", self.handleDoorDoneEvent)
         self.accept("DistributedDoor_doorTrigger", self.handleDoorTrigger)
 
-        #self.geom.reparentTo(render)
-        
+        # self.geom.reparentTo(render)
+
         # Turn on the little red arrows.
         NametagGlobals.setMasterArrowsOn(1)
         # Request the state change:
@@ -168,26 +173,23 @@ class House(Place.Place):
         if (hasattr(self, 'fsm')):
             self.fsm.requestFinalState()
 
-
         # Let the safe zone manager know that we are leaving
         messenger.send("exitHouse")
-        #self.geom.reparentTo(hidden)
+        # self.geom.reparentTo(hidden)
 
         # Turn off the little red arrows.
         NametagGlobals.setMasterArrowsOn(0)
 
-
     def setState(self, state):
-        assert(self.notify.debug("setState(state="+str(state)+")"))
+        assert(self.notify.debug("setState(state=" + str(state) + ")"))
         if hasattr(self, 'fsm'):
             self.fsm.request(state)
-    
+
     def getZoneId(self):
         """
         Returns the current zone ID.
         """
         return self.zoneId
-
 
     def enterTutorial(self, requestStatus):
         self.fsm.request("walk")
@@ -195,7 +197,6 @@ class House(Place.Place):
         globalClock.tick()
         base.transitions.irisIn()
         messenger.send("enterTutorialInterior")
-        
 
     def exitTutorial(self):
         pass
@@ -203,7 +204,7 @@ class House(Place.Place):
     # walk state inherited from Place.py
 
     # sticker book state inherited from Place.py
-        
+
     # doorIn/Out state inherited from Place.py
 
     # teleport in state
@@ -215,7 +216,7 @@ class House(Place.Place):
         # the avatar has moved on), we'll at least be in a sensible
         # place.
         base.localAvatar.setPosHpr(2.5, 11.5, ToontownGlobals.FloorOffset,
-                                     45.0, 0.0, 0.0)
+                                   45.0, 0.0, 0.0)
 
         Place.Place.enterTeleportIn(self, requestStatus)
 
@@ -224,7 +225,7 @@ class House(Place.Place):
     def enterTeleportOut(self, requestStatus):
         assert(self.notify.debug("enterTeleportOut()"))
         Place.Place.enterTeleportOut(self, requestStatus,
-                self.__teleportOutDone)
+                                     self.__teleportOutDone)
 
     def __teleportOutDone(self, requestStatus):
         assert(self.notify.debug("__teleportOutDone()"))
@@ -232,12 +233,14 @@ class House(Place.Place):
         # activityFsm to the final state
         if (hasattr(self, 'fsm')):
             self.fsm.requestFinalState()
-        self.notify.debug("House: teleportOutDone: requestStatus = %s" % requestStatus)
+        self.notify.debug(
+            f"House: teleportOutDone: requestStatus = {requestStatus}")
         hoodId = requestStatus["hoodId"]
         zoneId = requestStatus["zoneId"]
         avId = requestStatus["avId"]
         shardId = requestStatus["shardId"]
-        if ((hoodId == ToontownGlobals.MyEstate) and (zoneId == self.getZoneId())):
+        if ((hoodId == ToontownGlobals.MyEstate)
+                and (zoneId == self.getZoneId())):
             self.fsm.request("teleportIn", [requestStatus])
         elif (hoodId == ToontownGlobals.MyEstate):
             self.getEstateZoneAndGoHome(requestStatus)
@@ -252,8 +255,8 @@ class House(Place.Place):
         self.notifyUserGoHomeFailed()
         #  ignore the setLocalEstateZone message
         self.ignore("setLocalEstateZone")
-        self.doneStatus["avId"] =  -1
-        self.doneStatus["zoneId"] =  self.getZoneId()
+        self.doneStatus["avId"] = -1
+        self.doneStatus["zoneId"] = self.getZoneId()
         self.fsm.request("teleportIn", [self.doneStatus])
         return Task.done
 
@@ -271,23 +274,23 @@ class House(Place.Place):
     # closet state
     def enterCloset(self):
         base.localAvatar.b_setAnimState('neutral', 1)
-        # People can still teleport to us 
+        # People can still teleport to us
         self.accept("teleportQuery", self.handleTeleportQuery)
         base.localAvatar.setTeleportAvailable(1)
         base.localAvatar.laffMeter.start()
         base.localAvatar.obscureMoveFurnitureButton(1)
         # Spawn the task that checks to see if toon has fallen asleep
         base.localAvatar.startSleepWatch(self.__handleFallingAsleepCloset)
-        self.enablePeriodTimer()        
+        self.enablePeriodTimer()
 
     def __handleFallingAsleepCloset(self, arg):
         if hasattr(self, "fsm"):
-            #the place has been unloaded... ignore this request
+            # the place has been unloaded... ignore this request
             self.fsm.request("walk")
         # this message will make sure the clothes picking GUI goes away
         messenger.send("closetAsleep")
         base.localAvatar.forceGotoSleep()
-                
+
     def exitCloset(self):
         # Turn off what we turned on
         base.localAvatar.setTeleportAvailable(0)
@@ -304,5 +307,3 @@ class House(Place.Place):
 
     def exitBanking(self):
         Place.Place.exitBanking(self)
-
-

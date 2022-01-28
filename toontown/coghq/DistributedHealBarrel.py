@@ -6,6 +6,7 @@ from toontown.toonbase.ToontownGlobals import *
 from direct.directnotify import DirectNotifyGlobal
 from . import DistributedBarrelBase
 
+
 class DistributedHealBarrel(DistributedBarrelBase.DistributedBarrelBase):
 
     def __init__(self, cr):
@@ -21,14 +22,13 @@ class DistributedHealBarrel(DistributedBarrelBase.DistributedBarrelBase):
         self.gagModel.removeNode()
         del self.gagModel
         DistributedBarrelBase.DistributedBarrelBase.delete(self)
-    
+
     def applyLabel(self):
         self.gagModel = loader.loadModel("phase_4/models/props/icecream")
         self.gagModel.reparentTo(self.gagNode)
         self.gagModel.find("**/p1_2").clearBillboard()
         self.gagModel.setScale(self.gagScale)
-        self.gagModel.setPos(0,-0.1,-.1-self.gagScale)
-        
+        self.gagModel.setPos(0, -0.1, -.1 - self.gagScale)
+
     def setGrab(self, avId):
-        DistributedBarrelBase.DistributedBarrelBase.setGrab(self,avId)
-    
+        DistributedBarrelBase.DistributedBarrelBase.setGrab(self, avId)

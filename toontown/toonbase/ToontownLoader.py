@@ -7,6 +7,7 @@ from toontown.toontowngui import ToontownLoadingScreen
 from panda3d.otp import CImpulse
 from panda3d.toontown import loadDNAFile, loadDNAFileAI
 
+
 class ToontownLoader(Loader.Loader):
     """ToontownLoader class"""
 
@@ -24,9 +25,11 @@ class ToontownLoader(Loader.Loader):
 
     # our extentions
     def beginBulkLoad(self, name, label, range, gui, tipCategory):
-        Loader.Loader.notify.info("starting bulk load of block '%s'" % (name))
+        Loader.Loader.notify.info(f"starting bulk load of block '{name}'")
         if self.inBulkBlock:
-            Loader.Loader.notify.warning("Tried to start a block ('%s'), but am already in a block ('%s')" % (name, self.blockName))
+            Loader.Loader.notify.warning(
+                "Tried to start a block ('%s'), but am already in a block ('%s')" %
+                (name, self.blockName))
             return None
         self.inBulkBlock = 1
         self.blockName = name
@@ -34,22 +37,27 @@ class ToontownLoader(Loader.Loader):
 
     def endBulkLoad(self, name):
         if not self.inBulkBlock:
-            Loader.Loader.notify.warning("Tried to end a block ('%s'), but not in one" % (name))
+            Loader.Loader.notify.warning(
+                f"Tried to end a block ('{name}'), but not in one")
             return None
         if name != self.blockName:
-            Loader.Loader.notify.warning("Tried to end a block ('%s'), other then the current one ('%s')" % (name, self.blockName))
+            Loader.Loader.notify.warning(
+                "Tried to end a block ('%s'), other then the current one ('%s')" %
+                (name, self.blockName))
             return None
         self.inBulkBlock = None
         expectedCount, loadedCount = self.loadingScreen.end()
-        Loader.Loader.notify.info("At end of block '%s', expected %s, loaded %s" %
-                                  (self.blockName, expectedCount, loadedCount))
+        Loader.Loader.notify.info(
+            "At end of block '%s', expected %s, loaded %s" %
+            (self.blockName, expectedCount, loadedCount))
 
     def abortBulkLoad(self):
         """
         Aborts whatever bulk load is in process, and cleans up neatly.
         """
         if self.inBulkBlock:
-            Loader.Loader.notify.info("Aborting block ('%s')" % (self.blockName))
+            Loader.Loader.notify.info(
+                f"Aborting block ('{self.blockName}')")
             self.inBulkBlock = None
             self.loadingScreen.abort()
 
@@ -60,7 +68,7 @@ class ToontownLoader(Loader.Loader):
             # Keep those heartbeats coming!
             try:
                 base.cr.considerHeartbeat()
-            except:
+            except BaseException:
                 pass
 
     # overload Loader.py functions
@@ -75,8 +83,9 @@ class ToontownLoader(Loader.Loader):
         self.tick()
         return ret
 
-    def loadTexture(self, texturePath, alphaPath = None, okMissing=False):
-        ret = Loader.Loader.loadTexture(self, texturePath, alphaPath, okMissing=okMissing)
+    def loadTexture(self, texturePath, alphaPath=None, okMissing=False):
+        ret = Loader.Loader.loadTexture(
+            self, texturePath, alphaPath, okMissing=okMissing)
         self.tick()
         if alphaPath:
             self.tick()

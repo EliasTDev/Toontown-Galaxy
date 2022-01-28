@@ -4,12 +4,13 @@ from direct.particles import ParticleEffect, Particles, ForceGroup
 from .EffectController import EffectController
 from .PooledEffect import PooledEffect
 
+
 class IceCream(PooledEffect, EffectController):
-    
+
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
-        
+
         # model = loader.loadModel("phase_4/models/props/tt_m_efx_ext_fireworkCards")
         # self.card = model.find("**/tt_t_efx_ext_particleStars")
         # model = loader.loadModel("phase_4/models/props/tot_jar")
@@ -22,11 +23,11 @@ class IceCream(PooledEffect, EffectController):
         self.setLightOff()
 
         self.effectScale = 1.0
-        self.effectColor = Vec4(1,1,1,1)
-        
+        self.effectColor = Vec4(1, 1, 1, 1)
+
         self.f = ParticleEffect.ParticleEffect("IceCream")
         self.f.reparentTo(self)
-        
+
         self.p0 = Particles.Particles('particles-0')
         self.p0.setFactory("ZSpinParticleFactory")
         self.p0.setRenderer("SpriteParticleRenderer")
@@ -74,9 +75,10 @@ class IceCream(PooledEffect, EffectController):
         self.p0.renderer.setYScaleFlag(2)
         self.p0.renderer.setAnimAngleFlag(1)
         self.p0.renderer.setNonanimatedTheta(0.0)
-        self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
+        self.p0.renderer.setAlphaBlendMethod(
+            BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        #self.p0.renderer.getColorInterpolationManager().addLinear(0.0,.1,Vec4(0,0,0,0),self.effectColor,1)
+        # self.p0.renderer.getColorInterpolationManager().addLinear(0.0,.1,Vec4(0,0,0,0),self.effectColor,1)
         # Emitter parameters
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 0.0))
@@ -94,17 +96,17 @@ class IceCream(PooledEffect, EffectController):
             Func(self.p0.setBirthRate, 100.0),
             Wait(4.0),
             Func(self.cleanUpEffect)
-            )
+        )
 
     def setEffectScale(self, scale):
         self.effectScale = scale
-        self.p0.renderer.setInitialXScale(.5*self.cardScale*scale)
-        self.p0.renderer.setFinalXScale(1.0*self.cardScale*scale)
-        self.p0.renderer.setInitialYScale(.5*self.cardScale*scale)
-        self.p0.renderer.setFinalYScale(1.0*self.cardScale*scale)
-        self.p0.emitter.setAmplitude(20.0*scale)
-        self.p0.emitter.setAmplitudeSpread(2.00*scale)
-        self.p0.emitter.setRadius(150.0*scale)
+        self.p0.renderer.setInitialXScale(.5 * self.cardScale * scale)
+        self.p0.renderer.setFinalXScale(1.0 * self.cardScale * scale)
+        self.p0.renderer.setInitialYScale(.5 * self.cardScale * scale)
+        self.p0.renderer.setFinalYScale(1.0 * self.cardScale * scale)
+        self.p0.emitter.setAmplitude(20.0 * scale)
+        self.p0.emitter.setAmplitudeSpread(2.00 * scale)
+        self.p0.emitter.setRadius(150.0 * scale)
 
     def setEffectColor(self, color):
         self.effectColor = color

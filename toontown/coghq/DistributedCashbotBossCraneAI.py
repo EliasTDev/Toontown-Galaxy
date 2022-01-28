@@ -4,7 +4,10 @@ from toontown.toonbase import ToontownGlobals
 from otp.otpbase import OTPGlobals
 from direct.fsm import FSM
 
-class DistributedCashbotBossCraneAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM):
+
+class DistributedCashbotBossCraneAI(
+        DistributedObjectAI.DistributedObjectAI,
+        FSM.FSM):
 
     """ This is one of four magnet cranes in the corner of the CFO
     boss battle room.  """
@@ -22,7 +25,8 @@ class DistributedCashbotBossCraneAI(DistributedObjectAI.DistributedObjectAI, FSM
         cs = CollisionSphere(0, -6, 0, 6)
         cn.addSolid(cs)
         self.goonShield = NodePath(cn)
-        self.goonShield.setPosHpr(*ToontownGlobals.CashbotBossCranePosHprs[self.index])
+        self.goonShield.setPosHpr(
+            *ToontownGlobals.CashbotBossCranePosHprs[self.index])
 
         self.avId = 0
         self.objectId = 0
@@ -39,7 +43,7 @@ class DistributedCashbotBossCraneAI(DistributedObjectAI.DistributedObjectAI, FSM
     def requestControl(self):
         # A client wants to start controlling the crane.
         avId = self.air.getAvatarIdFromSender()
-        
+
         if avId in self.boss.involvedToons and self.avId == 0:
             # Also make sure the client isn't controlling some other
             # crane.
@@ -50,10 +54,10 @@ class DistributedCashbotBossCraneAI(DistributedObjectAI.DistributedObjectAI, FSM
     def requestFree(self):
         # The client is done controlling the crane.
         avId = self.air.getAvatarIdFromSender()
-        
+
         if avId == self.avId:
             self.request('Free')
-    
+
     def removeToon(self, avId):
         if avId == self.avId:
             self.request('Free')
@@ -62,13 +66,12 @@ class DistributedCashbotBossCraneAI(DistributedObjectAI.DistributedObjectAI, FSM
         # Returns the craneId for the crane that the indicated avatar
         # is controlling, or 0 if none.
 
-        if self.boss and self.boss.cranes != None:
+        if self.boss and self.boss.cranes is not None:
             for crane in self.boss.cranes:
                 if crane.avId == avId:
                     return crane.doId
 
         return 0
-
 
     ### FSM States ###
 

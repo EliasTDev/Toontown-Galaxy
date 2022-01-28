@@ -5,6 +5,7 @@ if __dev__:
     from direct.showbase.PythonUtil import list2dict
     from . import EditorGlobals
 
+
 class EditMgrAI(EditMgrBase.EditMgrBase):
     """This class handles AI-side editor-specific functionality"""
     if __dev__:
@@ -28,7 +29,7 @@ class EditMgrAI(EditMgrBase.EditMgrBase):
                 # last-allocated id
                 for id in range(self.lastAllocatedEntId, allocRange[1]):
                     print(id)
-                    if not id in entIdDict:
+                    if id not in entIdDict:
                         idChosen = 1
                         break
                 else:
@@ -52,7 +53,8 @@ class EditMgrAI(EditMgrBase.EditMgrBase):
                                              None)
 
         def getSpecSaveEvent(self):
-            return 'requestSave-%s' % self.level.levelId
+            return f'requestSave-{self.level.levelId}'
+
         def setRequestSave(self, data):
             messenger.send(self.getSpecSaveEvent())
             # clear out the attrib, it shouldn't be kept in the spec

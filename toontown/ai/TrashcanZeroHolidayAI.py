@@ -4,6 +4,7 @@ from toontown.ai import PhasedHolidayAI
 from toontown.ai import DistributedTrashcanZeroMgrAI
 from toontown.toonbase import ToontownGlobals
 
+
 class TrashcanZeroHolidayAI(PhasedHolidayAI.PhasedHolidayAI):
 
     notify = DirectNotifyGlobal.directNotify.newCategory(
@@ -12,12 +13,13 @@ class TrashcanZeroHolidayAI(PhasedHolidayAI.PhasedHolidayAI):
     PostName = 'trashcanZeroHoliday'
 
     def __init__(self, air, holidayId, startAndEndTimes, phaseDates):
-        PhasedHolidayAI.PhasedHolidayAI.__init__(self, air, holidayId, startAndEndTimes, phaseDates)
-        
+        PhasedHolidayAI.PhasedHolidayAI.__init__(
+            self, air, holidayId, startAndEndTimes, phaseDates)
+
     def start(self):
         # instantiate the object
         PhasedHolidayAI.PhasedHolidayAI.start(self)
-        self.trashcanZeroMgr = DistributedTrashcanZeroMgrAI.DistributedTrashcanZeroMgrAI (
+        self.trashcanZeroMgr = DistributedTrashcanZeroMgrAI.DistributedTrashcanZeroMgrAI(
             self.air, self.startAndEndTimes, self.phaseDates)
         self.trashcanZeroMgr.generateWithRequired(ToontownGlobals.UberZone)
         # let the holiday system know we started
@@ -27,7 +29,7 @@ class TrashcanZeroHolidayAI(PhasedHolidayAI.PhasedHolidayAI):
         # let the holiday system know we stopped
         bboard.remove(self.PostName)
         # remove the object
-        #self.resistanceEmoteMgr.requestDelete()
+        # self.resistanceEmoteMgr.requestDelete()
         self.trashcanZeroMgr.requestDelete()
 
     def forcePhase(self, newPhase):
@@ -35,7 +37,7 @@ class TrashcanZeroHolidayAI(PhasedHolidayAI.PhasedHolidayAI):
         result = False
         try:
             newPhase = int(newPhase)
-        except:
+        except BaseException:
             newPhase = 0
         if newPhase >= self.trashcanZeroMgr.getNumPhases():
             self.notify.warning("newPhase %d invalid in forcePhase" % newPhase)
@@ -44,4 +46,3 @@ class TrashcanZeroHolidayAI(PhasedHolidayAI.PhasedHolidayAI):
         self.trashcanZeroMgr.forcePhase(newPhase)
         result = True
         return result
-        

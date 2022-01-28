@@ -1,15 +1,15 @@
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Contact: Shawn Patton
 # Created: Sep 2008
 #
 # Purpose: Contains the catch activity toon statedata.  Used by local and remote
 #          avatars
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 from pandac.PandaModules import Vec3
 
 from direct.interval.IntervalGlobal import Sequence, Parallel, Wait, Func
-from direct.interval.IntervalGlobal import LerpScaleInterval 
+from direct.interval.IntervalGlobal import LerpScaleInterval
 from direct.interval.IntervalGlobal import WaitInterval, ActorInterval, FunctionInterval
 from direct.task.Task import Task
 from direct.directnotify import DirectNotifyGlobal
@@ -21,16 +21,18 @@ from direct.fsm import ClassicFSM, State
 
 #from toontown.distributed.DelayDelete import DelayDelete
 
+
 class PartyCatchActivityToonSD(StateData.StateData):
     """ PartyCatchActivityToonSD catching activity char anim statedata """
-    notify = DirectNotifyGlobal.directNotify.newCategory("PartyCatchActivityToonSD")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "PartyCatchActivityToonSD")
 
-    FallBackAnim     = 'slip-backward'
-    FallFwdAnim      = 'slip-forward'
+    FallBackAnim = 'slip-backward'
+    FallFwdAnim = 'slip-forward'
     CatchNeutralAnim = 'catch-neutral'
-    CatchRunAnim     = 'catch-run'
-    EatNeutralAnim   = 'catch-eatneutral'
-    EatNRunAnim      = 'catch-eatnrun'
+    CatchRunAnim = 'catch-run'
+    EatNeutralAnim = 'catch-eatneutral'
+    EatNRunAnim = 'catch-eatnrun'
 
     animList = [FallBackAnim, FallFwdAnim,
                 CatchNeutralAnim, CatchRunAnim,
@@ -38,53 +40,54 @@ class PartyCatchActivityToonSD(StateData.StateData):
                 ]
 
     def __init__(self, avId, activity):
-        PartyCatchActivityToonSD.notify.debug("init : avId = %s, activity = %s " % (avId, activity))
+        PartyCatchActivityToonSD.notify.debug(
+            f"init : avId = {avId}, activity = {activity} ")
         self.avId = avId
         self.activity = activity
         self.isLocal = (avId == base.localAvatar.doId)
         self.toon = self.activity.getAvatar(self.avId)
         # prevent crash during cleanup if this client exits during the activity
-        self.unexpectedExit = False        
+        self.unexpectedExit = False
 
         self.fsm = ClassicFSM.ClassicFSM(
-            'CatchActivityAnimFSM-%s' % self.avId,
+            f'CatchActivityAnimFSM-{self.avId}',
             [
-            State.State('init',
-                        self.enterInit,
-                        self.exitInit,
-                        ['notPlaying', 'normal', 'rules', ]),
-            State.State('notPlaying',
-                        self.enterNotPlaying,
-                        self.exitNotPlaying,
-                        ['normal', 'rules', 'cleanup']),
-            State.State('rules',
-                        self.enterRules,
-                        self.exitRules,
-                        ['normal', 'cleanup']),
-            State.State('normal',
-                        self.enterNormal,
-                        self.exitNormal,
-                        ['eatFruit', 'fallBack', 'fallForward', 'notPlaying']),
-            State.State('eatFruit',
-                        self.enterEatFruit,
-                        self.exitEatFruit,
-                        ['normal', 'fallBack', 'fallForward', 'eatFruit', 'notPlaying']),
-            State.State('fallBack',
-                        self.enterFallBack,
-                        self.exitFallBack,
-                        ['normal', 'notPlaying']),
-            State.State('fallForward',
-                        self.enterFallForward,
-                        self.exitFallForward,
-                        ['normal', 'notPlaying']),
-            State.State('cleanup',
-                        self.enterCleanup,
-                        self.exitCleanup,
-                        []),
+                State.State('init',
+                            self.enterInit,
+                            self.exitInit,
+                            ['notPlaying', 'normal', 'rules', ]),
+                State.State('notPlaying',
+                            self.enterNotPlaying,
+                            self.exitNotPlaying,
+                            ['normal', 'rules', 'cleanup']),
+                State.State('rules',
+                            self.enterRules,
+                            self.exitRules,
+                            ['normal', 'cleanup']),
+                State.State('normal',
+                            self.enterNormal,
+                            self.exitNormal,
+                            ['eatFruit', 'fallBack', 'fallForward', 'notPlaying']),
+                State.State('eatFruit',
+                            self.enterEatFruit,
+                            self.exitEatFruit,
+                            ['normal', 'fallBack', 'fallForward', 'eatFruit', 'notPlaying']),
+                State.State('fallBack',
+                            self.enterFallBack,
+                            self.exitFallBack,
+                            ['normal', 'notPlaying']),
+                State.State('fallForward',
+                            self.enterFallForward,
+                            self.exitFallForward,
+                            ['normal', 'notPlaying']),
+                State.State('cleanup',
+                            self.enterCleanup,
+                            self.exitCleanup,
+                            []),
             ],
             'init',
             'cleanup',
-            )
+        )
         self.enteredAlready = False
 
     def load(self):
@@ -92,7 +95,7 @@ class PartyCatchActivityToonSD(StateData.StateData):
         # cache the animations
         for anim in self.animList:
             self.toon.pose(anim, 0)
-        
+
     def unload(self):
         del self.fsm
 
@@ -102,13 +105,13 @@ class PartyCatchActivityToonSD(StateData.StateData):
             self.fsm.enterInitialState()
             self._exiting = False
 
-    def exit(self, unexpectedExit = False):
+    def exit(self, unexpectedExit=False):
         # prevent re-entry
         if self._exiting:
             return
         self._exiting = True
-        self.unexpectedExit = unexpectedExit        
-        
+        self.unexpectedExit = unexpectedExit
+
         if not self.unexpectedExit:
             self.fsm.requestFinalState()
         del self._exiting
@@ -124,7 +127,7 @@ class PartyCatchActivityToonSD(StateData.StateData):
         self.origDropShadowColor = self.dropShadow.getColor()
         c = self.origDropShadowColor
         alpha = 0.35
-        self.dropShadow.setColor(c[0],c[1],c[2], alpha)
+        self.dropShadow.setColor(c[0], c[1], c[2], alpha)
 
     def exitInit(self):
         pass
@@ -143,7 +146,7 @@ class PartyCatchActivityToonSD(StateData.StateData):
         self.origDropShadowColor = self.dropShadow.getColor()
         c = self.origDropShadowColor
         alpha = 0.35
-        self.dropShadow.setColor(c[0],c[1],c[2], alpha)
+        self.dropShadow.setColor(c[0], c[1], c[2], alpha)
 
     def enterRules(self):
         if self.isLocal:
@@ -153,7 +156,8 @@ class PartyCatchActivityToonSD(StateData.StateData):
 
             # show the rules panel
             # most activities show the rules as part of their FSM
-            # catch is always in 'Active' state, so show the rules as part of this separate FSM
+            # catch is always in 'Active' state, so show the rules as part of
+            # this separate FSM
 
             self.accept(self.activity.rulesDoneEvent, self.handleRulesDone)
             # The rules panel is an onscreen panel
@@ -166,7 +170,8 @@ class PartyCatchActivityToonSD(StateData.StateData):
             )
             # turn off use of all the bottom cells, and the cell nearest the bottom
             # on each side
-            base.setCellsAvailable(base.bottomCells + [base.leftCells[0], base.rightCells[1]], False)
+            base.setCellsAvailable(base.bottomCells +
+                                   [base.leftCells[0], base.rightCells[1]], False)
             self.rulesPanel.load()
             self.rulesPanel.enter()
         else:
@@ -183,8 +188,9 @@ class PartyCatchActivityToonSD(StateData.StateData):
             self.rulesPanel.exit()
             self.rulesPanel.unload()
             del self.rulesPanel
-            
-            base.setCellsAvailable(base.bottomCells + [base.leftCells[0], base.rightCells[1]], True)
+
+            base.setCellsAvailable(base.bottomCells +
+                                   [base.leftCells[0], base.rightCells[1]], True)
 
     def enterNormal(self):
         self.notify.debug('enterNormal')
@@ -205,7 +211,8 @@ class PartyCatchActivityToonSD(StateData.StateData):
         transition to the current state.
         """
         if self.fsm.getCurrentState().getName() == 'eatFruit':
-            assert(self.notify.debug("eatFruit() already in eatFruit state, requesting Normal first."))
+            assert(self.notify.debug(
+                "eatFruit() already in eatFruit state, requesting Normal first."))
             self.fsm.request('normal')
         self.fsm.request('eatFruit', [fruitModel, handNode])
 
@@ -227,15 +234,15 @@ class PartyCatchActivityToonSD(StateData.StateData):
         self.eatIval = Sequence(
             Parallel(WaitInterval(duration),
                      # toon eats the fruit halfway through animation
-                     Sequence(LerpScaleInterval(fruitModel, duration/2.,
-                                                fruitModel.getScale()*.5,
+                     Sequence(LerpScaleInterval(fruitModel, duration / 2.,
+                                                fruitModel.getScale() * .5,
                                                 blendType='easeInOut'),
                               Func(fruitModel.hide),
                               ),
                      ),
             Func(self.fsm.request, "normal"),
             name=self.toon.uniqueName('eatingIval')
-            )
+        )
         self.eatIval.start()
 
     def exitEatFruit(self):
@@ -263,7 +270,7 @@ class PartyCatchActivityToonSD(StateData.StateData):
         animName = self.FallBackAnim
         startFrame = 12
         totalFrames = self.toon.getNumFrames(animName)
-        frames = (totalFrames-1) - startFrame
+        frames = (totalFrames - 1) - startFrame
         frameRate = self.toon.getFrameRate(animName)
         newRate = frames / duration
         playRate = newRate / frameRate
@@ -272,10 +279,10 @@ class PartyCatchActivityToonSD(StateData.StateData):
             self.fsm.request('normal')
 
         self.fallBackIval = Sequence(
-            ActorInterval(self.toon, animName, startTime=startFrame/newRate,
-                          endTime=totalFrames/newRate, playRate=playRate),
+            ActorInterval(self.toon, animName, startTime=startFrame / newRate,
+                          endTime=totalFrames / newRate, playRate=playRate),
             FunctionInterval(resume),
-            )
+        )
 
         self.fallBackIval.start()
 
@@ -297,7 +304,7 @@ class PartyCatchActivityToonSD(StateData.StateData):
         animName = self.FallFwdAnim
         startFrame = 12
         totalFrames = self.toon.getNumFrames(animName)
-        frames = (totalFrames-1) - startFrame
+        frames = (totalFrames - 1) - startFrame
         pauseFrame = 19
         frameRate = self.toon.getFrameRate(animName)
         newRate = frames / (duration * .5)
@@ -307,16 +314,16 @@ class PartyCatchActivityToonSD(StateData.StateData):
             self.fsm.request('normal')
 
         self.fallFwdIval = Sequence(
-            ActorInterval(self.toon, animName, startTime=startFrame/newRate,
-                          endTime=pauseFrame/newRate, playRate=playRate),
+            ActorInterval(self.toon, animName, startTime=startFrame / newRate,
+                          endTime=pauseFrame / newRate, playRate=playRate),
             WaitInterval(duration / 2.),
-            ActorInterval(self.toon, animName, startTime=pauseFrame/newRate,
-                          endTime=totalFrames/newRate, playRate=playRate),
+            ActorInterval(self.toon, animName, startTime=pauseFrame / newRate,
+                          endTime=totalFrames / newRate, playRate=playRate),
             FunctionInterval(resume),
-            )
+        )
 
         self.fallFwdIval.start()
-        
+
     def exitFallForward(self):
         # don't 'stop/finish' the stunnedIval; it will attempt to
         # transition to 'normal', when we're already in the process
@@ -332,7 +339,7 @@ class PartyCatchActivityToonSD(StateData.StateData):
             self.activity.orthoWalk.stop()
             self.activity.destroyOrthoWalk()
         # restore the LODs
-        #self.toon.resetLOD()
+        # self.toon.resetLOD()
         self.dropShadow.setColor(self.origDropShadowColor)
 
     def exitCleanup(self):
@@ -344,4 +351,5 @@ class PartyCatchActivityToonSD(StateData.StateData):
             # we do this to stop an animFSM state in flux error
             self.toon.setAnimState(newState, playRate)
         else:
-            self.notify.debug("setAnimState(): Toon unexpectedExit flag is set.")
+            self.notify.debug(
+                "setAnimState(): Toon unexpectedExit flag is set.")

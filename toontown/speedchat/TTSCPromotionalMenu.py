@@ -13,8 +13,9 @@ holidayId2menuInfo = {
     ToontownGlobals.ELECTION_PROMOTION:
     (OTPLocalizer.SCMenuElection,
      # third election (pig/goat)
-     [10000, 10001, 10006, 10007,]),
-    }
+     [10000, 10001, 10006, 10007, ]),
+}
+
 
 class TTSCPromotionalMenu(SCMenu):
     """
@@ -40,8 +41,7 @@ class TTSCPromotionalMenu(SCMenu):
     def startHoliday(self, holidayId):
         if self.curHolidayId is not None:
             TTSCPromotionalMenu.notify.warning(
-                'overriding existing holidayId %s with %s' % (
-                self.curHolidayId, holidayId))
+                f'overriding existing holidayId {self.curHolidayId} with {holidayId}')
         self.curHolidayId = holidayId
         # rebuild our menu
         title, structure = holidayId2menuInfo[holidayId]
@@ -50,7 +50,7 @@ class TTSCPromotionalMenu(SCMenu):
     def endHoliday(self, holidayId):
         if holidayId != self.curHolidayId:
             TTSCPromotionalMenu.notify.warning(
-                'unexpected holidayId: %s' % holidayId)
+                f'unexpected holidayId: {holidayId}')
             return
         self.curHolidayId = None
         self.clearMenu()

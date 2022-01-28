@@ -7,6 +7,7 @@ from direct.task.Task import Task
 from toontown.coghq import DistributedCrushableEntityAI
 import random
 
+
 class DistributedGridGoonAI(DistributedGoonAI.DistributedGoonAI):
     """
     A simple, dumb robot.
@@ -15,7 +16,8 @@ class DistributedGridGoonAI(DistributedGoonAI.DistributedGoonAI):
     movement, discovery, and attack methods be modular, so different behavior
     types can be easily plugged in.
     """
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGridGoonAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedGridGoonAI')
 
     def __init__(self, level, entId):
         self.grid = None
@@ -26,7 +28,8 @@ class DistributedGridGoonAI(DistributedGoonAI.DistributedGoonAI):
         self.notify.debug('generate')
         # don't call GoonAI's generate, since it sends a walk
         # movie to the client
-        DistributedCrushableEntityAI.DistributedCrushableEntityAI.generate(self)
+        DistributedCrushableEntityAI.DistributedCrushableEntityAI.generate(
+            self)
 
     def initGridDependents(self):
         # anything that needs the grid to be set up before running should
@@ -35,7 +38,7 @@ class DistributedGridGoonAI(DistributedGoonAI.DistributedGoonAI):
         taskMgr.doMethodLater(2,
                               self.goToNextPoint,
                               self.taskName("walkTask"))
-        
+
     def getPosition(self):
         if self.grid:
             return self.grid.getObjPos(self.entId)
@@ -57,14 +60,14 @@ class DistributedGridGoonAI(DistributedGoonAI.DistributedGoonAI):
             #  - get new position
             ptB = Point3(*self.getPosition())
             #  - tell the client to move the goon
-            self.sendUpdate("setPathPts", [ptA[0],ptA[1],ptA[2],
-                                           ptB[0],ptB[1],ptB[2]])
+            self.sendUpdate("setPathPts", [ptA[0], ptA[1], ptA[2],
+                                           ptB[0], ptB[1], ptB[2]])
             # calculate the time in takes to walk to the next cell
             tPathSegment = Vec3(ptA - ptB).length() / self.velocity
-            
+
         else:
             # if it isn't clear, turn some amount and try again
-            turn = int(random.randrange(1,4) * 90)
+            turn = int(random.randrange(1, 4) * 90)
             self.h = (self.h + turn) % 360
             tPathSegment = .1
 
@@ -74,4 +77,3 @@ class DistributedGridGoonAI(DistributedGoonAI.DistributedGoonAI):
                               self.taskName("walkTask"))
 
         return Task.done
-                              

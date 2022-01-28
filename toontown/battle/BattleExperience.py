@@ -14,7 +14,7 @@ def genRewardDicts(entries):
         if (toonId != -1):
             dict = {}
             toon = base.cr.doId2do.get(toonId)
-            if (toon == None):
+            if (toon is None):
                 continue
             dict['toon'] = toon
             dict['origExp'] = origExp

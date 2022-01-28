@@ -5,12 +5,13 @@ from toontown.safezone import DistributedTrolleyAI
 from toontown.safezone import BRTreasurePlannerAI
 from toontown.toon import DistributedNPCFishermanAI
 
+
 class BRHoodDataAI(HoodDataAI.HoodDataAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("BRHoodDataAI")
 
-    def __init__(self, air, zoneId = None):
+    def __init__(self, air, zoneId=None):
         hoodId = ToontownGlobals.TheBrrrgh
-        if zoneId == None:
+        if zoneId is None:
             zoneId = hoodId
         HoodDataAI.HoodDataAI.__init__(self, air, zoneId, hoodId)
 
@@ -22,6 +23,6 @@ class BRHoodDataAI(HoodDataAI.HoodDataAI):
         trolley.start()
         self.addDistObj(trolley)
 
-        self.treasurePlanner = BRTreasurePlannerAI.BRTreasurePlannerAI(self.zoneId)
+        self.treasurePlanner = BRTreasurePlannerAI.BRTreasurePlannerAI(
+            self.zoneId)
         self.treasurePlanner.start()
-

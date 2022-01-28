@@ -1,3 +1,5 @@
+from . import UtilityAIRepository
+from otp.ai.AIBaseGlobal import *
 import time
 import os
 import sys
@@ -6,12 +8,10 @@ import sys
 # meaning no squeeze, so nobody else does this. When we squeeze, the
 # unpacker does this for us and it does not hurt to do in either case.
 #import ihooks
-#ihooks.install()
+# ihooks.install()
 
 print("Initializing...")
-    
-from otp.ai.AIBaseGlobal import *
-from . import UtilityAIRepository
+
 
 simbase.mdip = simbase.config.GetString("msg-director-ip", "localhost")
 simbase.mdport = simbase.config.GetInt("msg-director-port", 6665)

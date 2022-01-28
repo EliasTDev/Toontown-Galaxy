@@ -12,20 +12,23 @@ from direct.fsm import State
 from direct.fsm import ClassicFSM, State
 from toontown.toonbase import ToontownGlobals
 from panda3d.otp import *
+
+
 class DistributedMintBattle(DistributedLevelBattle.DistributedLevelBattle):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedMintBattle')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedMintBattle')
 
     def __init__(self, cr):
         """
         cr is a ClientRepository.
         """
-        DistributedLevelBattle.DistributedLevelBattle.__init__(self,cr)
+        DistributedLevelBattle.DistributedLevelBattle.__init__(self, cr)
 
         # Add a new reward state to the battle ClassicFSM
         self.fsm.addState(State.State('MintReward',
-                                        self.enterMintReward,
-                                        self.exitMintReward,
-                                        ['Resume']))
+                                      self.enterMintReward,
+                                      self.exitMintReward,
+                                      ['Resume']))
         offState = self.fsm.getStateNamed('Off')
         offState.addTransition('MintReward')
         playMovieState = self.fsm.getStateNamed('PlayMovie')

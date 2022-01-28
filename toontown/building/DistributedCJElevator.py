@@ -4,6 +4,7 @@ from .ElevatorConstants import *
 from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import TTLocalizer
 
+
 class DistributedCJElevator(DistributedBossElevator.DistributedBossElevator):
 
     def __init__(self, cr):
@@ -22,13 +23,13 @@ class DistributedCJElevator(DistributedBossElevator.DistributedBossElevator):
 
         # The big cog icon on the top is only visible at the BossRoom.
         #icon = self.elevatorModel.find('**/big_frame/')
-        #if not icon.isEmpty():
+        # if not icon.isEmpty():
         #    icon.hide()
 
         self.leftDoor = self.elevatorModel.find("**/left-door")
         if self.leftDoor.isEmpty():
             self.leftDoor = self.elevatorModel.find("**/left_door")
-            
+
         self.rightDoor = self.elevatorModel.find("**/right-door")
         if self.rightDoor.isEmpty():
             self.rightDoor = self.elevatorModel.find("**/right_door")
@@ -36,10 +37,9 @@ class DistributedCJElevator(DistributedBossElevator.DistributedBossElevator):
         geom = base.cr.playGame.hood.loader.geom
         locator = geom.find('**/elevator_locator')
         self.elevatorModel.reparentTo(locator)
-        #self.elevatorModel.setH(180)
+        # self.elevatorModel.setH(180)
 
         DistributedElevator.DistributedElevator.setupElevator(self)
-        
+
     def getDestName(self):
         return TTLocalizer.ElevatorLawBotBoss
-

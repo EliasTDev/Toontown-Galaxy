@@ -15,13 +15,15 @@ and the toon can pass through it without triggering a battle """
 
 # TODO: allow other geometry than a collision sphere
 
+
 class BattleBlocker(BasicEntities.DistributedNodePathEntity):
     notify = DirectNotifyGlobal.directNotify.newCategory("BattleBlocker")
+
     def __init__(self, cr):
         BasicEntities.DistributedNodePathEntity.__init__(self, cr)
         self.suitIds = []
         self.battleId = None
-        
+
     def setActive(self, active):
         self.active = active
 
@@ -45,15 +47,15 @@ class BattleBlocker(BasicEntities.DistributedNodePathEntity):
 
     def setBattleFinished(self):
         # this is only called if the Toons won the battle
-        assert(self.notify.debug("setBattleFinished, %s" % self.entId))
+        assert(self.notify.debug(f"setBattleFinished, {self.entId}"))
         # A message is already sent on the AI, so we probably
         # don't need to send one on the client
-        #messenger.send("battleBlocker-"+str(self.entId))
+        # messenger.send("battleBlocker-"+str(self.entId))
         # no need to listen for collision events anymore
         self.ignoreAll()
-        
+
     def initCollisionGeom(self):
-        self.cSphere = CollisionSphere(0,0,0,self.radius)
+        self.cSphere = CollisionSphere(0, 0, 0, self.radius)
         self.cSphereNode = CollisionNode("battleBlocker-%s-%s" %
                                          (self.level.getLevelId(), self.entId))
         self.cSphereNode.addSolid(self.cSphere)
@@ -69,7 +71,7 @@ class BattleBlocker(BasicEntities.DistributedNodePathEntity):
             from otp.otpbase import OTPGlobals
             self.showCS(OTPGlobals.WallBitmask)
             """
-            
+
     def unloadCollisionGeom(self):
         if hasattr(self, 'cSphereNodePath'):
             self.ignore(self.enterEvent)
@@ -79,24 +81,25 @@ class BattleBlocker(BasicEntities.DistributedNodePathEntity):
             del self.cSphereNodePath
 
     def __handleToonEnter(self, collEntry):
-        self.notify.debug ("__handleToonEnter, %s" % self.entId)
+        self.notify.debug(f"__handleToonEnter, {self.entId}")
         self.startBattle()
 
-        
     def startBattle(self):
         if not self.active:
             return
 
         # don't listen for any more events from the blocker
         # this Toon might not win the battle
-        #self.ignoreAll()                    
+        # self.ignoreAll()
 
         callback = None
         # first check if there is a valid battle going on
-        if self.battleId != None and self.battleId in base.cr.doId2do:
+        if self.battleId is not None and self.battleId in base.cr.doId2do:
             battle = base.cr.doId2do.get(self.battleId)
             if battle:
-                self.notify.debug("act like we collided with battle %d" % self.battleId)
+                self.notify.debug(
+                    "act like we collided with battle %d" %
+                    self.battleId)
                 callback = battle.handleBattleBlockerCollision
         elif len(self.suitIds) > 0:
             # a battle has not been created yet, pick the first
@@ -104,13 +107,15 @@ class BattleBlocker(BasicEntities.DistributedNodePathEntity):
             for suitId in self.suitIds:
                 suit = base.cr.doId2do.get(suitId)
                 if suit:
-                    self.notify.debug("act like we collided with Suit %d ( in state %s )" % (suitId, suit.fsm.getCurrentState().getName()))
+                    self.notify.debug(
+                        "act like we collided with Suit %d ( in state %s )" %
+                        (suitId, suit.fsm.getCurrentState().getName()))
                     callback = suit.handleBattleBlockerCollision
                     break
-                
-        # the show to explain the local toon getting stopped by this collision sphere
+
+        # the show to explain the local toon getting stopped by this collision
+        # sphere
         self.showReaction(callback)
-        
 
     def showReaction(self, callback=None):
         if not base.localAvatar.wantBattles:
@@ -118,12 +123,12 @@ class BattleBlocker(BasicEntities.DistributedNodePathEntity):
 
         track = Sequence()
         # add some minimal show
-        #track = Sequence(Func(base.cr.playGame.place.setState,'WaitForBattle'),
-        #                 ActorInterval(base.localAvatar, animName = 'slip-backward'))
+        # track = Sequence(Func(base.cr.playGame.place.setState,'WaitForBattle'),
+        # ActorInterval(base.localAvatar, animName = 'slip-backward'))
         if callback:
             track.append(Func(callback))
         track.start()
-        
+
     if __dev__:
         def attribChanged(self, *args):
             self.unloadCollisionGeom()

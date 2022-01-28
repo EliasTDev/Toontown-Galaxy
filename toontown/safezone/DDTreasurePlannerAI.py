@@ -2,17 +2,18 @@ from toontown.toonbase.ToontownGlobals import *
 from . import RegenTreasurePlannerAI
 from . import DistributedDDTreasureAI
 
+
 class DDTreasurePlannerAI(RegenTreasurePlannerAI.RegenTreasurePlannerAI):
     def __init__(self, zoneId):
         self.healAmount = 10
         RegenTreasurePlannerAI.RegenTreasurePlannerAI.__init__(
             self,
             zoneId,
-            DistributedDDTreasureAI.DistributedDDTreasureAI, # Constructor
+            DistributedDDTreasureAI.DistributedDDTreasureAI,  # Constructor
             "DDTreasurePlanner",
-            20, # seconds per spawn
+            20,  # seconds per spawn
             2   # Max of two treasures
-            )
+        )
         return None
 
     def initSpawnPoints(self):
@@ -43,8 +44,5 @@ class DDTreasurePlannerAI(RegenTreasurePlannerAI.RegenTreasurePlannerAI):
             (-14.1068, 83.2043, -12.308),
             (53.2685, 24.3585, -12.308),
             (41.4197, 4.35384, -12.308),
-            ]
+        ]
         return self.spawnPoints
-            
-            
-                                                     

@@ -4,8 +4,10 @@ from . import FactorySpecs
 from otp.level import LevelSpec
 from toontown.toonbase import ToontownGlobals
 
+
 class LawOfficeBase:
     """ common functionality shared by DistributedLawOffice/AI """
+
     def __init__(self):
         pass
 

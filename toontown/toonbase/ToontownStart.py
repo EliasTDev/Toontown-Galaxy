@@ -1,5 +1,5 @@
 # This is the file that gets imported by the Launcher as soon as phase 3 is
-# complete. This will happen once during the install/download process as soon
+# complete. This will happen once during the installation/download process as soon
 # as phase 3 is finished downloading. When the Launcher is run after the
 # download/install is complete, it will import this file after realizing
 # phase 3 is already complete.
@@ -26,16 +26,17 @@ if __debug__:
 
 import builtins
 
+
 class game:
     name = "toontown"
     process = "client"
+
+
 builtins.game = game()
 
 
 import time
-import os
 import sys
-import random
 # Need to import __builtin__ and use the __builtin__.foo = x
 # technique here in case you start toontown from the command line
 import builtins
@@ -46,7 +47,7 @@ Discord.launching()
 # See if we have a launcher, if we do not, make an empty one
 try:
     launcher
-except:
+except BaseException:
     from toontown.launcher.ToontownDummyLauncher import ToontownDummyLauncher
     launcher = ToontownDummyLauncher()
     builtins.launcher = launcher
@@ -54,7 +55,7 @@ except:
 
 # Default to "normal" web exit page.  This should be set early
 # so that the right thing will get done on a crash.  "normal"
-# may be marketting info, thanks for playing, or the report
+# may be marketing info, thanks for playing, or the report
 # bug page.  The installer.php file will use this setting.
 launcher.setRegistry("EXIT_PAGE", "normal")
 
@@ -65,7 +66,7 @@ launcher.setRegistry("EXIT_PAGE", "normal")
 pollingDelay = 0.5
 
 print('ToontownStart: Polling for game2 to finish...')
-while (not launcher.getGame2Done()):
+while not launcher.getGame2Done():
     time.sleep(pollingDelay)
 print('ToontownStart: Game2 is finished.')
 
@@ -74,7 +75,7 @@ print('ToontownStart: Starting the game.')
 
 
 if launcher.isDummy():
-    # Create a dummy HTTPClient so we can get that stupid openSSL
+    # Create a dummy HTTPClient, so we can get that stupid openSSL
     # random seed computed before we attempt to open the window.  (We
     # only need do this if we don't have a launcher.  If we do have a
     # launcher, it's already been created.)
@@ -93,7 +94,7 @@ print('ToontownStart: setting default font')
 from . import ToontownGlobals
 DirectGuiGlobals.setDefaultFontFunc(ToontownGlobals.getInterfaceFont)
 
-# First open a window so we can show the loading screen
+# First open a window, so we can show the loading screen
 
 # Set the error code indicating failure opening a window in case we
 # crash while opening it (the GSG code will just exit if it fails to
@@ -103,14 +104,14 @@ launcher.setPandaErrorCode(7)
 # Make sure we create a ToonBase first
 from . import ToonBase
 ToonBase.ToonBase()
-if (base.win == None):
+if base.win is None:
     print("Unable to open window; aborting.")
     sys.exit()
 
 # Ok, we got the window open.
 launcher.setPandaErrorCode(0)
-# Tell the launcher that our panda window is open now so
-# it can tell the browser and flash to shutdown
+# Tell the launcher that our panda window is open now, so
+# it can tell the browser and flash to shut down
 launcher.setPandaWindowOpen()
 
 # Also, once we open the window, dramatically drop the timeslice
@@ -125,12 +126,13 @@ backgroundNodePath.setPos(0.0, 0.0, 0.0)
 backgroundNodePath.setScale(render2d, VBase3(1))
 backgroundNodePath.find('**/fg').hide()
 
-#load our logo
+# load our logo
 
-galaxyLogo = OnscreenImage(image='phase_3/maps/toontown-logo.png', scale=(1 / (4.0/3.0), 1, 1 / (4.0/3.0)), pos=backgroundNodePath.find('**/fg').getPos())
+galaxyLogo = OnscreenImage(image='phase_3/maps/toontown-logo.png', scale=(1 / (4.0/3.0), 1, 1 / (4.0/3.0)),
+                           pos=backgroundNodePath.find('**/fg').getPos())
 galaxyLogo.setTransparency(TransparencyAttrib.MAlpha)
 galaxyLogo.setBin('fixed', 20)
-#set parent to backgroundNodePath
+# set parent to backgroundNodePath
 galaxyLogo.reparentTo(backgroundNodePath)
 # Set the draw order explicitly
 backgroundNodePath.find("**/fg").setBin('fixed', 20)
@@ -140,7 +142,7 @@ base.graphicsEngine.renderFrame()
 
 # do the quest sanity check
 if __debug__:
-    if ConfigVariableBool('quest-sanity-check',0).value:
+    if ConfigVariableBool('quest-sanity-check', 0).value:
         from toontown.quest import Quests
         Quests.assertAllQuestsValid()
 
@@ -153,7 +155,7 @@ DirectGuiGlobals.setDefaultDialogGeom(loader.loadModel('phase_3/models/gui/dialo
 from . import TTLocalizer
 from otp.otpbase import OTPGlobals
 OTPGlobals.setDefaultProductPrefix(TTLocalizer.ProductPrefix)
-#TODO check if winter holiday is running, this is quite difficult as newsmanager can't be initalized yet 
+# TODO check if winter holiday is running, this is quite difficult as newsmanager can't be initialized yet
 winter = ConfigVariableBool('is-winter-running', 0).value
 # Play music at startup
 # This is a bit strange because the music is created here, then
@@ -189,10 +191,10 @@ from direct.gui.DirectGui import *
 serverVersion = base.config.GetString("server-version", "no_version_set")
 print('ToontownStart: serverVersion: ', serverVersion)
 version = OnscreenText(serverVersion,
-                       pos = (-1.3, -0.975),
-                       scale = 0.06,
-                       fg = Vec4(0,0,1,0.6),
-                       align = TextNode.ALeft
+                       pos=(-1.3, -0.975),
+                       scale=0.06,
+                       fg=Vec4(0, 0, 1, 0.6),
+                       align=TextNode.ALeft
                        )
 
 # Now fire up toon base
@@ -215,7 +217,6 @@ base.initNametagGlobals()
 base.cr = cr
 
 loader.endBulkLoad("init")
-
 
 
 #
@@ -257,7 +258,7 @@ import sentry_sdk
 sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
 
 if autoRun and launcher.isDummy():
-    # This try .. except block exists solely to test the logic of
+    # This try . except block exists solely to test the logic of
     # PythonUtil.describeException.  It's not at all necessary, and is
     # useful only to those debugging that function; remove it if it
     # bugs you.

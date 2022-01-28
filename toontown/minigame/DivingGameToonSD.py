@@ -10,19 +10,20 @@ from direct.fsm import ClassicFSM
 from direct.fsm import State
 from . import CatchGameGlobals
 
+
 class DivingGameToonSD(StateData.StateData):
     """ DivingGameToonSD catching game char anim statedata """
     notify = DirectNotifyGlobal.directNotify.newCategory("DivingGameToonSD")
 
-    FallBackAnim     = 'slip-backward'
-    FallFwdAnim      = 'slip-forward'
+    FallBackAnim = 'slip-backward'
+    FallFwdAnim = 'slip-forward'
     CatchNeutralAnim = 'catch-neutral'
-    CatchRunAnim     = 'catch-run'
-    EatNeutralAnim   = 'catch-eatneutral'
-    EatNRunAnim      = 'catch-eatnrun'
+    CatchRunAnim = 'catch-run'
+    EatNeutralAnim = 'catch-eatneutral'
+    EatNRunAnim = 'catch-eatnrun'
 
     status = ""
-    
+
     animList = [FallBackAnim, FallFwdAnim,
                 CatchNeutralAnim, CatchRunAnim,
                 EatNeutralAnim, EatNRunAnim,
@@ -34,41 +35,41 @@ class DivingGameToonSD(StateData.StateData):
         self.isLocal = (avId == base.localAvatar.doId)
         self.toon = self.game.getAvatar(self.avId)
         self.unexpectedExit = False
-        
+
         self.fsm = ClassicFSM.ClassicFSM(
-            'CatchGameAnimFSM-%s' % self.avId,
+            f'CatchGameAnimFSM-{self.avId}',
             [
-            State.State('init',
-                        self.enterInit,
-                        self.exitInit,
-                        ['normal']),
-            State.State('normal',
-                        self.enterNormal,
-                        self.exitNormal,
-                        ['freeze','treasure']),
-            State.State('treasure',
-                        self.enterTreasure,
-                        self.exitTreasure,
-                        ['freeze','normal']),
-            State.State('freeze',
-                        self.enterFreeze,
-                        self.exitFreeze,
-                        ['normal']),
-            State.State('cleanup',
-                        self.enterCleanup,
-                        self.exitCleanup,
-                        []),
+                State.State('init',
+                            self.enterInit,
+                            self.exitInit,
+                            ['normal']),
+                State.State('normal',
+                            self.enterNormal,
+                            self.exitNormal,
+                            ['freeze', 'treasure']),
+                State.State('treasure',
+                            self.enterTreasure,
+                            self.exitTreasure,
+                            ['freeze', 'normal']),
+                State.State('freeze',
+                            self.enterFreeze,
+                            self.exitFreeze,
+                            ['normal']),
+                State.State('cleanup',
+                            self.enterCleanup,
+                            self.exitCleanup,
+                            []),
             ],
             'init',
             'cleanup',
-            )
+        )
 
     def load(self):
         self.setAnimState('off', 1.)
         # cache the animations
         for anim in self.animList:
             self.toon.pose(anim, 0)
-        
+
     def unload(self):
         del self.fsm
         self.game = None
@@ -76,7 +77,7 @@ class DivingGameToonSD(StateData.StateData):
     def enter(self):
         self.fsm.enterInitialState()
 
-    def exit(self, unexpectedExit = False):
+    def exit(self, unexpectedExit=False):
         self.unexpectedExit = unexpectedExit
         # Can puts us into a recursive internalState
         # flux problem if not gated (e.g. another player
@@ -98,12 +99,12 @@ class DivingGameToonSD(StateData.StateData):
 
     def exitNormal(self):
         self.setAnimState('off', 1.)
-        
+
     def enterTreasure(self):
         self.status = "treasure"
         self.notify.debug('enterTreasure')
         self.setAnimState('swimhold', 1.0)
-        
+
     def exitTreasure(self):
         self.notify.debug('exitTreasure')
 

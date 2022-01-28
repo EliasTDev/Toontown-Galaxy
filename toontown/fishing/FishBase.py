@@ -5,6 +5,7 @@ from . import FishGlobals
 from toontown.toonbase import TTLocalizer
 from direct.directnotify import DirectNotifyGlobal
 
+
 class FishBase:
     notify = DirectNotifyGlobal.directNotify.newCategory('FishBase')
 
@@ -12,7 +13,7 @@ class FishBase:
         self.genus = genus
         self.species = species
         self.weight = weight
- 
+
     def getGenus(self):
         return self.genus
 
@@ -56,20 +57,20 @@ class FishBase:
         dict = FishGlobals.FishFileDict
         fileInfo = dict.get(self.genus, dict[-1])
         return fileInfo[0]
-        
+
     def getActor(self):
         """
         Returns an actor comprised of the fish model and it's swim cycle.
         If no model present, returns a default model and animation.
         """
-        prefix = "phase_%s/models/char/" % self.getPhase()
+        prefix = f"phase_{self.getPhase()}/models/char/"
         dict = FishGlobals.FishFileDict
         fileInfo = dict.get(self.genus, dict[-1])
         from direct.actor import Actor
         actor = Actor.Actor(prefix + fileInfo[1], {
             "intro": prefix + fileInfo[2],
-            "swim":  prefix + fileInfo[3],
-            })
+            "swim": prefix + fileInfo[3],
+        })
         actor.setBlend(base.wantSmoothAnimations)
         return actor
 
@@ -85,13 +86,13 @@ class FishBase:
             soundDict = FishGlobals.FishAudioFileDict
             fileInfo = soundDict.get(self.genus, None)
             if fileInfo:
-                prefix = "phase_%s/audio/sfx/" % self.getPhase()
+                prefix = f"phase_{self.getPhase()}/audio/sfx/"
                 sound = loader.loadSfx(prefix + soundDict[self.genus][0])
                 loop = soundDict[self.genus][1]
                 delay = soundDict[self.genus][2]
                 playRate = soundDict[self.genus][3]
         return (sound, loop, delay, playRate)
-        
+
     def __str__(self):
         return ("%s, weight: %s value: %s" %
                 (self.getSpeciesName(), self.weight, self.getValue()))

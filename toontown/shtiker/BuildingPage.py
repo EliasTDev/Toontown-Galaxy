@@ -5,6 +5,7 @@ from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 from toontown.toonbase import TTLocalizer
 
+
 class BuildingPage(ShtikerPage.ShtikerPage):
     """BuildingPage class"""
 
@@ -18,12 +19,12 @@ class BuildingPage(ShtikerPage.ShtikerPage):
     def load(self):
         ShtikerPage.ShtikerPage.load(self)
         self.title = DirectLabel(
-            parent = self,
-            relief = None,
-            text = TTLocalizer.BuildingPageTitle,
-            text_scale = 0.12,
-            pos = (0,0,0.6),
-            )
+            parent=self,
+            relief=None,
+            text=TTLocalizer.BuildingPageTitle,
+            text_scale=0.12,
+            pos=(0, 0, 0.6),
+        )
 
     def unload(self):
         del self.title

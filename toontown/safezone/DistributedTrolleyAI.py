@@ -10,9 +10,10 @@ from direct.task import Task
 from direct.directnotify import DirectNotifyGlobal
 from toontown.minigame import MinigameCreatorAI
 from toontown.quest import Quests
-from toontown.minigame import  TrolleyHolidayMgrAI
-from toontown.minigame import  TrolleyWeekendMgrAI
+from toontown.minigame import TrolleyHolidayMgrAI
+from toontown.minigame import TrolleyWeekendMgrAI
 from toontown.toonbase import ToontownAccessAI
+
 
 class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
 
@@ -30,39 +31,39 @@ class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
         self.accepting = 0
 
         self.trolleyCountdownTime = \
-                          simbase.config.GetFloat("trolley-countdown-time",
-                                                  TROLLEY_COUNTDOWN_TIME)
-        
+            simbase.config.GetFloat("trolley-countdown-time",
+                                    TROLLEY_COUNTDOWN_TIME)
+
         self.fsm = ClassicFSM.ClassicFSM('DistributedTrolleyAI',
-                           [State.State('off',
-                                        self.enterOff,
-                                        self.exitOff,
-                                        ['entering']),
-                            State.State('entering',
-                                        self.enterEntering,
-                                        self.exitEntering,
-                                        ['waitEmpty']),
-                            State.State('waitEmpty',
-                                        self.enterWaitEmpty,
-                                        self.exitWaitEmpty,
-                                        ['waitCountdown']),
-                            State.State('waitCountdown',
-                                        self.enterWaitCountdown,
-                                        self.exitWaitCountdown,
-                                        ['waitEmpty', 'allAboard']),
-                            State.State('allAboard',
-                                        self.enterAllAboard,
-                                        self.exitAllAboard,
-                                        ['leaving', 'waitEmpty']),
-                            State.State('leaving',
-                                        self.enterLeaving,
-                                        self.exitLeaving,
-                                        ['entering'])],
-                           # Initial State
-                           'off',
-                           # Final State
-                           'off',
-                           )
+                                         [State.State('off',
+                                                      self.enterOff,
+                                                      self.exitOff,
+                                                      ['entering']),
+                                             State.State('entering',
+                                                         self.enterEntering,
+                                                         self.exitEntering,
+                                                         ['waitEmpty']),
+                                             State.State('waitEmpty',
+                                                         self.enterWaitEmpty,
+                                                         self.exitWaitEmpty,
+                                                         ['waitCountdown']),
+                                             State.State('waitCountdown',
+                                                         self.enterWaitCountdown,
+                                                         self.exitWaitCountdown,
+                                                         ['waitEmpty', 'allAboard']),
+                                             State.State('allAboard',
+                                                         self.enterAllAboard,
+                                                         self.exitAllAboard,
+                                                         ['leaving', 'waitEmpty']),
+                                             State.State('leaving',
+                                                         self.enterLeaving,
+                                                         self.exitLeaving,
+                                                         ['entering'])],
+                                         # Initial State
+                                         'off',
+                                         # Final State
+                                         'off',
+                                         )
         self.fsm.enterInitialState()
 
     def delete(self):
@@ -70,10 +71,9 @@ class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
         del self.fsm
         DistributedObjectAI.DistributedObjectAI.delete(self)
 
-
     def findAvailableSeat(self):
         for i in range(len(self.seats)):
-            if self.seats[i] == None:
+            if self.seats[i] is None:
                 return i
         return None
 
@@ -99,7 +99,7 @@ class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
     def acceptingBoardersHandler(self, avId):
         self.notify.debug("acceptingBoardersHandler")
         seatIndex = self.findAvailableSeat()
-        if seatIndex == None:
+        if seatIndex is None:
             self.rejectBoarder(avId)
         else:
             self.acceptBoarder(avId, seatIndex)
@@ -107,11 +107,11 @@ class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
     def acceptBoarder(self, avId, seatIndex):
         self.notify.debug("acceptBoarder")
         # Make sure we have a valid seat number
-        assert((seatIndex >= 0) and (seatIndex <=3))
+        assert((seatIndex >= 0) and (seatIndex <= 3))
         # Make sure the seat is empty
-        assert(self.seats[seatIndex] == None)
+        assert(self.seats[seatIndex] is None)
         # Make sure this avatar isn't already seated
-        if (self.findAvatar(avId) != None):
+        if (self.findAvatar(avId) is not None):
             return
         # Put the avatar in that seat
         self.seats[seatIndex] = avId
@@ -134,14 +134,14 @@ class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
         # Find the exiter's seat index
         seatIndex = self.findAvatar(avId)
         # Make sure the avatar is really here
-        if seatIndex == None:
+        if seatIndex is None:
             pass
         else:
             # If the avatar is here, his seat is now empty.
             self.clearFullNow(seatIndex)
             # Tell the clients that the avatar is leaving that seat
             self.clearEmptyNow(seatIndex)
-            #self.sendUpdate("emptySlot" + str(seatIndex),
+            # self.sendUpdate("emptySlot" + str(seatIndex),
             #                [avId, globalClockDelta.getRealNetworkTime()])
             # If all the seats are empty, go back into waitEmpty state
             if self.countFullSeats() == 0:
@@ -162,7 +162,7 @@ class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
         # Find the exiter's seat index
         seatIndex = self.findAvatar(avId)
         # It is possible that the avatar exited the shard unexpectedly.
-        if seatIndex == None:
+        if seatIndex is None:
             pass
         else:
             # Empty that seat
@@ -177,8 +177,8 @@ class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
             # declare the emptying overwith...
             taskMgr.doMethodLater(TOON_EXIT_TIME,
                                   self.clearEmptyNow,
-                                  self.uniqueName("clearEmpty-%s" % seatIndex),
-                                  extraArgs = (seatIndex,))
+                                  self.uniqueName(f"clearEmpty-{seatIndex}"),
+                                  extraArgs=(seatIndex,))
 
     def clearEmptyNow(self, seatIndex):
         self.sendUpdate("emptySlot" + str(seatIndex),
@@ -202,7 +202,9 @@ class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
             self.ignore(simbase.air.getAvatarExitEvent(avId))
 
     def d_setState(self, state):
-        self.sendUpdate('setState', [state, globalClockDelta.getRealNetworkTime()])
+        self.sendUpdate(
+            'setState', [
+                state, globalClockDelta.getRealNetworkTime()])
 
     def getState(self):
         return self.fsm.getCurrentState().getName()
@@ -210,19 +212,21 @@ class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
     def requestBoard(self, *args):
         self.notify.debug("requestBoard")
         avId = self.air.getAvatarIdFromSender()
-        if (self.findAvatar(avId) != None):
-            self.notify.warning("Ignoring multiple requests from %s to board." % (avId))
-            return        
+        if (self.findAvatar(avId) is not None):
+            self.notify.warning(
+                f"Ignoring multiple requests from {avId} to board.")
+            return
 
         av = self.air.doId2do.get(avId)
         if av:
             newArgs = (avId,) + args
-            
+
             if not ToontownAccessAI.canAccess(avId, self.zoneId):
-                self.notify.warning("Tooon %s does not have access to the trolley." % (avId))
+                self.notify.warning(
+                    f"Tooon {avId} does not have access to the trolley.")
                 self.rejectingBoardersHandler(*newArgs)
                 return
-                
+
             # Only toons with hp greater than 0 may board the trolley.
             if (av.hp > 0) and self.accepting:
                 self.acceptingBoardersHandler(*newArgs)
@@ -230,8 +234,8 @@ class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
                 self.rejectingBoardersHandler(*newArgs)
         else:
             self.notify.warning(
-                "avid: %s does not exist, but tried to board a trolley" % avId
-                )
+                f"avid: {avId} does not exist, but tried to board a trolley"
+            )
 
     def requestExit(self, *args):
         self.notify.debug("requestExit")
@@ -245,8 +249,8 @@ class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
                 self.rejectingExitersHandler(*newArgs)
         else:
             self.notify.warning(
-                "avId: %s does not exist, but tried to exit a trolley" % avId
-                )
+                f"avId: {avId} does not exist, but tried to exit a trolley"
+            )
 
     ##### How you start up the trolley #####
     def start(self):
@@ -267,7 +271,7 @@ class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
         if hasattr(self, "doId"):
             for seatIndex in range(4):
                 taskMgr.remove(self.uniqueName("clearEmpty-" +
-                                                         str(seatIndex)))
+                                               str(seatIndex)))
 
     def exitOff(self):
         self.accepting = 0
@@ -295,7 +299,7 @@ class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
         return Task.done
 
     def waitEmpty(self):
-        if hasattr(self,'fsm') and self.fsm:
+        if hasattr(self, 'fsm') and self.fsm:
             self.fsm.request("waitEmpty")
         else:
             self.notify.warning("waitEmpty no fsm avoided AI crash TOON-1984")
@@ -399,7 +403,7 @@ class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
             toonRodeTrolley() was only being used for the single first-time
             trolley quest, so I renamed it to toonRodeTrolleyFirstTime() and
             only call it from the newbie PurchaseMgr.
-            
+
             # Update the quest manager in case any toon had a trolley quest
             for avId in self.seats:
                 if avId:
@@ -416,22 +420,27 @@ class DistributedTrolleyAI(DistributedObjectAI.DistributedObjectAI):
 
             startingVotes = None
             metagameRound = -1
-            trolleyGoesToMetagame = simbase.config.GetBool('trolley-goes-to-metagame', 0)
-            trolleyHoliday = bboard.get( TrolleyHolidayMgrAI.TrolleyHolidayMgrAI.PostName)
-            trolleyWeekend = bboard.get( TrolleyWeekendMgrAI.TrolleyWeekendMgrAI.PostName)
+            trolleyGoesToMetagame = simbase.config.GetBool(
+                'trolley-goes-to-metagame', 0)
+            trolleyHoliday = bboard.get(
+                TrolleyHolidayMgrAI.TrolleyHolidayMgrAI.PostName)
+            trolleyWeekend = bboard.get(
+                TrolleyWeekendMgrAI.TrolleyWeekendMgrAI.PostName)
             if trolleyGoesToMetagame or trolleyHoliday or trolleyWeekend:
                 metagameRound = 0
                 if simbase.config.GetBool('metagame-min-2-players', 1) and \
                    len(playerArray) == 1:
-                    # but if there's only 1, bring it back to a regular minigame
+                    # but if there's only 1, bring it back to a regular
+                    # minigame
                     metagameRound = -1
 
-            mgDict = MinigameCreatorAI.createMinigame(self.air,
-                                                      playerArray,
-                                                      self.zoneId,
-                                                      newbieIds=newbieIds,
-                                                      startingVotes = startingVotes,
-                                                      metagameRound = metagameRound)
+            mgDict = MinigameCreatorAI.createMinigame(
+                self.air,
+                playerArray,
+                self.zoneId,
+                newbieIds=newbieIds,
+                startingVotes=startingVotes,
+                metagameRound=metagameRound)
             minigameZone = mgDict["minigameZone"]
             minigameId = mgDict["minigameId"]
 

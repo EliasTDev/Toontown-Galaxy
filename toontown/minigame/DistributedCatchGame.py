@@ -34,6 +34,7 @@ from .DropPlacer import *
 from .DropScheduler import *
 from functools import reduce
 
+
 class DistributedCatchGame(DistributedMinigame):
 
     DropTaskName = 'dropSomething'
@@ -41,38 +42,38 @@ class DistributedCatchGame(DistributedMinigame):
     SuitWalkTaskName = 'catchGameSuitWalk'
 
     DropObjectPlurals = {
-        'apple'      : TTLocalizer.CatchGameApples,
-        'orange'     : TTLocalizer.CatchGameOranges,
-        'pear'       : TTLocalizer.CatchGamePears,
-        'coconut'    : TTLocalizer.CatchGameCoconuts,
-        'watermelon' : TTLocalizer.CatchGameWatermelons,
-        'pineapple'  : TTLocalizer.CatchGamePineapples,
-        'anvil'      : TTLocalizer.CatchGameAnvils,
-        }
+        'apple': TTLocalizer.CatchGameApples,
+        'orange': TTLocalizer.CatchGameOranges,
+        'pear': TTLocalizer.CatchGamePears,
+        'coconut': TTLocalizer.CatchGameCoconuts,
+        'watermelon': TTLocalizer.CatchGameWatermelons,
+        'pineapple': TTLocalizer.CatchGamePineapples,
+        'anvil': TTLocalizer.CatchGameAnvils,
+    }
 
     def __init__(self, cr):
         DistributedMinigame.__init__(self, cr)
 
         self.gameFSM = ClassicFSM.ClassicFSM('DistributedCatchGame',
-                               [
-                                State.State('off',
-                                            self.enterOff,
-                                            self.exitOff,
-                                            ['play']),
-                                State.State('play',
-                                            self.enterPlay,
-                                            self.exitPlay,
-                                            ['cleanup']),
-                                State.State('cleanup',
-                                            self.enterCleanup,
-                                            self.exitCleanup,
-                                            []),
-                                ],
-                               # Initial State
-                               'off',
-                               # Final State
-                               'cleanup',
-                               )
+                                             [
+                                                 State.State('off',
+                                                             self.enterOff,
+                                                             self.exitOff,
+                                                             ['play']),
+                                                 State.State('play',
+                                                             self.enterPlay,
+                                                             self.exitPlay,
+                                                             ['cleanup']),
+                                                 State.State('cleanup',
+                                                             self.enterCleanup,
+                                                             self.exitCleanup,
+                                                             []),
+                                             ],
+                                             # Initial State
+                                             'off',
+                                             # Final State
+                                             'cleanup',
+                                             )
 
         # it's important for the final state to do cleanup;
         # on disconnect, the ClassicFSM will be forced into the
@@ -90,8 +91,8 @@ class DistributedCatchGame(DistributedMinigame):
 
     def getInstructions(self):
         return TTLocalizer.CatchGameInstructions % {
-            'fruit'    : self.DropObjectPlurals[self.fruitName],
-            'badThing' : self.DropObjectPlurals['anvil']}
+            'fruit': self.DropObjectPlurals[self.fruitName],
+            'badThing': self.DropObjectPlurals['anvil']}
 
     def getMaxDuration(self):
         # how many seconds can this minigame possibly last (within reason)?
@@ -109,10 +110,10 @@ class DistributedCatchGame(DistributedMinigame):
             "phase_4/models/minigames/treehouse_2players",
             "phase_4/models/minigames/treehouse_3players",
             "phase_4/models/minigames/treehouse_4players",
-            ]
-        index = self.getNumPlayers()-1
+        ]
+        index = self.getNumPlayers() - 1
         self.ground = loader.loadModel(groundModels[index])
-        self.ground.setHpr(180,-90,0)
+        self.ground.setHpr(180, -90, 0)
 
         self.dropShadow = loader.loadModel(
             'phase_3/models/props/drop_shadow')
@@ -125,19 +126,19 @@ class DistributedCatchGame(DistributedMinigame):
             # only load those two models
             if objType.name not in ['anvil', self.fruitName]:
                 continue
-            
+
             model = loader.loadModel(objType.modelPath)
             self.dropObjModels[objType.name] = model
 
             # all of the models need to be rescaled
             modelScales = {
-                'apple' : .7,
-                'orange' : .7,
-                'pear' : .5,
-                'coconut' : .7,
-                'watermelon' : .6,
-                'pineapple' : .45,
-                }
+                'apple': .7,
+                'orange': .7,
+                'pear': .5,
+                'coconut': .7,
+                'watermelon': .6,
+                'pineapple': .45,
+            }
             if objType.name in modelScales:
                 model.setScale(modelScales[objType.name])
 
@@ -164,7 +165,8 @@ class DistributedCatchGame(DistributedMinigame):
             model.flattenMedium()
 
         self.music = base.loader.loadMusic("phase_4/audio/bgm/MG_toontag.ogg")
-        self.sndGoodCatch = base.loader.loadSfx('phase_4/audio/sfx/SZ_DD_treasure.ogg')
+        self.sndGoodCatch = base.loader.loadSfx(
+            'phase_4/audio/sfx/SZ_DD_treasure.ogg')
         self.sndOof = base.loader.loadSfx(
             'phase_4/audio/sfx/MG_cannon_hit_dirt.ogg')
         self.sndAnvilLand = base.loader.loadSfx(
@@ -185,9 +187,9 @@ class DistributedCatchGame(DistributedMinigame):
         # create a few suits that will be walked across the play area
         if self.WantSuits:
             suitTypes = ['f',  # flunky
-                         'tm', # telemarketer
-                         'pp', # penny pincher
-                         'dt', # double talker
+                         'tm',  # telemarketer
+                         'pp',  # penny pincher
+                         'dt',  # double talker
                          ]
             self.suits = []
             for type in suitTypes:
@@ -239,7 +241,7 @@ class DistributedCatchGame(DistributedMinigame):
         for model in list(self.dropObjModels.values()):
             model.removeNode()
         del self.dropObjModels
-            
+
         del self.music
         del self.sndGoodCatch
         del self.sndOof
@@ -276,7 +278,7 @@ class DistributedCatchGame(DistributedMinigame):
         self.SuitPeriodRange = [lerp(5., 3., self.getDifficulty()),
                                 lerp(15., 8., self.getDifficulty())]
 
-        def scaledDimensions(widthHeight,scale):
+        def scaledDimensions(widthHeight, scale):
             """
             returns [w2,h2], where (w2*h2 == scale*w*h) and w/h==w2/h2
             In other words, it returns a width and height whose area is
@@ -302,29 +304,29 @@ class DistributedCatchGame(DistributedMinigame):
             # since width and height cannot be negative:
             # w2 = sqrt(s*w^2)
             # h2 = sqrt(s*h^2)
-            w,h = widthHeight
+            w, h = widthHeight
             return [math.sqrt(scale * w * w),
                     math.sqrt(scale * h * h),
                     ]
 
         # width, height (in feet)
-        BaseStageDimensions = [20,15]
+        BaseStageDimensions = [20, 15]
         # scale up the stage for 3 and 4 players
-        areaScales = [1.,1.,3./2,4./2]
-        self.StageAreaScale = areaScales[numPlayers-1]
+        areaScales = [1., 1., 3. / 2, 4. / 2]
+        self.StageAreaScale = areaScales[numPlayers - 1]
         self.StageLinearScale = math.sqrt(self.StageAreaScale)
-        self.notify.debug("StageLinearScale: %s" % self.StageLinearScale)
+        self.notify.debug(f"StageLinearScale: {self.StageLinearScale}")
         self.StageDimensions = scaledDimensions(BaseStageDimensions,
                                                 self.StageAreaScale)
-        self.notify.debug("StageDimensions: %s" % self.StageDimensions)
-        self.StageHalfWidth = self.StageDimensions[0]/2.
-        self.StageHalfHeight = self.StageDimensions[1]/2.
+        self.notify.debug(f"StageDimensions: {self.StageDimensions}")
+        self.StageHalfWidth = self.StageDimensions[0] / 2.
+        self.StageHalfHeight = self.StageDimensions[1] / 2.
 
         # MinOffscreenHeight (moH): this is a Z height that is just
         # off the top of the screen; it's safe for objects to pop
         # into existence at this height.
-        MOHs = [24]*2 + [26,28]
-        self.MinOffscreenHeight = MOHs[self.getNumPlayers()-1]
+        MOHs = [24] * 2 + [26, 28]
+        self.MinOffscreenHeight = MOHs[self.getNumPlayers() - 1]
 
         # Calculate an onscreen time for the baseline falling objects so
         # that toons can reasonably run from one corner of the stage
@@ -364,7 +366,7 @@ class DistributedCatchGame(DistributedMinigame):
         # (offscreen and on, from the moment the shadow shows up to the
         # moment the obj hits the ground) during which the toon should be
         # able to run the full diagonal of the stage
-        fraction = (1/3)*.85
+        fraction = (1 / 3) * .85
         # ToonRunDuration = fraction * (FallDur)
         # ToonRunDuration = fraction * (OnscreenDur + OffscreenDur)
         # ToonRunDuration = fraction * (OnscreenDur + (OnscreenDur*OffOnratio))
@@ -380,7 +382,7 @@ class DistributedCatchGame(DistributedMinigame):
         # period, you just see the shadow growing on the ground)
         self.OffscreenTime = (offScreenOnScreenRatio *
                               self.BaselineOnscreenDropDuration)
-        self.notify.debug("OffscreenTime=%s" % self.OffscreenTime)
+        self.notify.debug(f"OffscreenTime={self.OffscreenTime}")
 
         # at this point, we can calculate the total drop duration for
         # baseline objects
@@ -403,11 +405,11 @@ class DistributedCatchGame(DistributedMinigame):
 
         # relative probabilities that a given drop object will
         # be of a particular type
-        typeProbs = {'fruit' : 3,
-                     'anvil' : 1,
+        typeProbs = {'fruit': 3,
+                     'anvil': 1,
                      }
         # normalize the probabilities to [0..1]
-        probSum = reduce(lambda x,y: x+y, list(typeProbs.values()))
+        probSum = reduce(lambda x, y: x + y, list(typeProbs.values()))
         for key in list(typeProbs.keys()):
             typeProbs[key] = float(typeProbs[key]) / probSum
 
@@ -436,10 +438,10 @@ class DistributedCatchGame(DistributedMinigame):
         number of players should use self.numPlayers directly
         """
         # uncomment for debugging
-        #return 4
-        #return 3
-        #return 2
-        #return 1
+        # return 4
+        # return 3
+        # return 2
+        # return 1
         return self.numPlayers
 
     def defineConstants(self):
@@ -453,13 +455,13 @@ class DistributedCatchGame(DistributedMinigame):
 
         # determine what fruit we'll be using
         fruits = {
-            ToontownGlobals.ToontownCentral:   'apple',
-            ToontownGlobals.DonaldsDock:       'orange',
-            ToontownGlobals.DaisyGardens:      'pear',
+            ToontownGlobals.ToontownCentral: 'apple',
+            ToontownGlobals.DonaldsDock: 'orange',
+            ToontownGlobals.DaisyGardens: 'pear',
             ToontownGlobals.MinniesMelodyland: 'coconut',
-            ToontownGlobals.TheBrrrgh:         'watermelon',
-            ToontownGlobals.DonaldsDreamland:  'pineapple',
-            }
+            ToontownGlobals.TheBrrrgh: 'watermelon',
+            ToontownGlobals.DonaldsDreamland: 'pineapple',
+        }
         self.fruitName = fruits[self.getSafezoneId()]
         # override
         #self.fruitName = 'watermelon'
@@ -484,7 +486,7 @@ class DistributedCatchGame(DistributedMinigame):
         self.FirstDropDelay = .5
 
         # after this many seconds, the game starts dropping things faster
-        self.FasterDropDelay = int((2./3) * CatchGameGlobals.GameDuration)
+        self.FasterDropDelay = int((2. / 3) * CatchGameGlobals.GameDuration)
         self.notify.debug('will start dropping fast after %s seconds' %
                           self.FasterDropDelay)
 
@@ -492,49 +494,48 @@ class DistributedCatchGame(DistributedMinigame):
         # drops) during the 'faster drop' interval at the end of
         # the game? .5 == 2x as fast, 1. == no difference
         self.FasterDropPeriodMult = .5
-        
 
         self.calcDifficultyConstants(self.getDifficulty(),
-                                    self.getNumPlayers())
+                                     self.getNumPlayers())
 
-        self.notify.debug("ToonSpeed: %s" % self.ToonSpeed)
-        self.notify.debug("total drops: %s" % self.totalDrops)
-        self.notify.debug("numFruits: %s" % self.numFruits)
-        self.notify.debug("numAnvils: %s" % self.numAnvils)
+        self.notify.debug(f"ToonSpeed: {self.ToonSpeed}")
+        self.notify.debug(f"total drops: {self.totalDrops}")
+        self.notify.debug(f"numFruits: {self.numFruits}")
+        self.notify.debug(f"numAnvils: {self.numAnvils}")
 
         self.ObjRadius = 1.
 
         # objects fall on a grid; these are the dimensions of the grid
         dropGridDimensions = [
-            [5,5],
-            [5,5],
-            [6,6],
-            [7,7],
-            ]
+            [5, 5],
+            [5, 5],
+            [6, 6],
+            [7, 7],
+        ]
         self.DropRows, self.DropColumns = dropGridDimensions[
-            self.getNumPlayers()-1]
+            self.getNumPlayers() - 1]
 
         self.cameraPosTable = [
-            [0,-29.36,28.17]] * 2 + [
-            [0,-32.87,30.43],
-            [0,-35.59,32.10],
-            ]
-        self.cameraHpr = [0,-35,0]
+            [0, -29.36, 28.17]] * 2 + [
+            [0, -32.87, 30.43],
+            [0, -35.59, 32.10],
+        ]
+        self.cameraHpr = [0, -35, 0]
 
-        self.CameraPosHpr = (self.cameraPosTable[self.getNumPlayers()-1] +
-                                self.cameraHpr)
+        self.CameraPosHpr = (self.cameraPosTable[self.getNumPlayers() - 1] +
+                             self.cameraHpr)
 
     # fix up the drop object table according to the difficulty level,
     # set up per-object-type Trajectory objects and related variables
         for objType in DropObjectTypes:
-            self.notify.debug("*** Object Type: %s" % objType.name)
+            self.notify.debug(f"*** Object Type: {objType.name}")
 
             # each object type has an onscreen drop duration multiplier
             # that specifies how long the object should be onscreen,
             # relative to the baseline duration.
             objType.onscreenDuration = (objType.onscreenDurMult *
                                         self.BaselineOnscreenDropDuration)
-            self.notify.debug("onscreenDuration=%s" % objType.onscreenDuration)
+            self.notify.debug(f"onscreenDuration={objType.onscreenDuration}")
 
             # calculate a value of gravity that will make the object
             # fall from moH to the ground in the correct amount of time.
@@ -548,13 +549,13 @@ class DistributedCatchGame(DistributedMinigame):
             v_0 = 0.
             t = objType.onscreenDuration
             x_0 = self.MinOffscreenHeight
-            x = 0. # the ground
+            x = 0.  # the ground
 
             # this will come out negative, but it doesn't really matter
             # one way or the other; we specify a positive gravity ratio
             # for the Trajectory object
             g = (2. * (x - x_0 - (v_0 * t))) / (t * t)
-            self.notify.debug("gravity=%s" % g)
+            self.notify.debug(f"gravity={g}")
 
         # create a Trajectory object that will be used by all instances of
         # this object type
@@ -562,14 +563,14 @@ class DistributedCatchGame(DistributedMinigame):
                 # start time
                 0,
                 # start pos
-                Vec3(0,0,x_0),
+                Vec3(0, 0, x_0),
                 # start vel
-                Vec3(0,0,v_0),
+                Vec3(0, 0, v_0),
                 # gravity multiplier
-                gravMult = abs(g / Trajectory.Trajectory.gravity))
+                gravMult=abs(g / Trajectory.Trajectory.gravity))
 
-                # the total 'fall' duration for this object type is its
-                # onscreen time plus the universally constant OffscreenTime
+            # the total 'fall' duration for this object type is its
+            # onscreen time plus the universally constant OffscreenTime
             objType.fallDuration = objType.onscreenDuration + self.OffscreenTime
 
     def grid2world(self, column, row):
@@ -579,8 +580,8 @@ class DistributedCatchGame(DistributedMinigame):
         returns (x, y) pair
         """
         # x,y in [0..1]
-        x = column / float(self.DropColumns-1)
-        y = row / float(self.DropRows-1)
+        x = column / float(self.DropColumns - 1)
+        y = row / float(self.DropRows - 1)
         # x,y in [-1..1]
         x = (x * 2.) - 1.
         y = (y * 2.) - 1.
@@ -592,21 +593,21 @@ class DistributedCatchGame(DistributedMinigame):
     def showPosts(self):
         """ debugging aid; show the extremes of the playfield """
         self.hidePosts()
-        self.posts=[
+        self.posts = [
             Toon.Toon(), Toon.Toon(),
             Toon.Toon(), Toon.Toon(),
-            ]
+        ]
         for i in range(len(self.posts)):
-            toon=self.posts[i]
+            toon = self.posts[i]
             toon.setDNA(base.localAvatar.getStyle())
             toon.reparentTo(render)
-            x=self.StageHalfWidth
-            y=self.StageHalfHeight
-            if i>1:
-                 x=-x
-            if i%2:
-                y=-y
-            toon.setPos(x,y,0)
+            x = self.StageHalfWidth
+            y = self.StageHalfHeight
+            if i > 1:
+                x = -x
+            if i % 2:
+                y = -y
+            toon.setPos(x, y, 0)
 
     def hidePosts(self):
         if hasattr(self, 'posts'):
@@ -618,8 +619,8 @@ class DistributedCatchGame(DistributedMinigame):
         """ debugging aid; show the drop grid """
         self.hideDropGrid()
         self.dropMarkers = []
-        print("dropRows: %s" % self.DropRows)
-        print("dropCols: %s" % self.DropColumns)
+        print(f"dropRows: {self.DropRows}")
+        print(f"dropCols: {self.DropColumns}")
         for row in range(self.DropRows):
             self.dropMarkers.append([])
             rowList = self.dropMarkers[row]
@@ -627,9 +628,9 @@ class DistributedCatchGame(DistributedMinigame):
                 toon = Toon.Toon()
                 toon.setDNA(base.localAvatar.getStyle())
                 toon.reparentTo(render)
-                toon.setScale(1./3)
-                x,y = self.grid2world(column, row)
-                toon.setPos(x,y,0)
+                toon.setScale(1. / 3)
+                x, y = self.grid2world(column, row)
+                toon.setPos(x, y, 0)
                 rowList.append(toon)
 
     def hideDropGrid(self):
@@ -655,7 +656,7 @@ class DistributedCatchGame(DistributedMinigame):
         lt = base.localAvatar
         lt.reparentTo(render)
         self.__placeToon(self.localAvId)
-        lt.setSpeed(0,0, 0)
+        lt.setSpeed(0, 0, 0)
 
         toonSD = self.toonSDs[self.localAvId]
         toonSD.enter()
@@ -705,18 +706,20 @@ class DistributedCatchGame(DistributedMinigame):
             headCollNodepath.show()
             lHandCollNodepath.show()
             rHandCollNodepath.show()
-        self.ltLegsCollNode.addSolid( CollisionSphere(0,0, radius, radius))
-        self.ltHeadCollNode.addSolid( CollisionSphere(0,0,0, radius))
-        self.ltLHandCollNode.addSolid( CollisionSphere(0,0,0, 2*radius/3.))
-        self.ltRHandCollNode.addSolid( CollisionSphere(0,0,0, 2*radius/3.))
+        self.ltLegsCollNode.addSolid(CollisionSphere(0, 0, radius, radius))
+        self.ltHeadCollNode.addSolid(CollisionSphere(0, 0, 0, radius))
+        self.ltLHandCollNode.addSolid(
+            CollisionSphere(0, 0, 0, 2 * radius / 3.))
+        self.ltRHandCollNode.addSolid(
+            CollisionSphere(0, 0, 0, 2 * radius / 3.))
         self.toonCollNodes = [legsCollNodepath,
                               headCollNodepath,
                               lHandCollNodepath,
                               rHandCollNodepath,
                               ]
 
-        #self.showPosts()
-        #self.showDropGrid()
+        # self.showPosts()
+        # self.showDropGrid()
 
         if self.PredictiveSmoothing:
             # Turn on predictive smoothing!
@@ -778,7 +781,7 @@ class DistributedCatchGame(DistributedMinigame):
         self.notify.debug("handleDisabledAvatar")
         self.notify.debug("avatar " + str(avId) + " disabled")
         # clean up any references to the disabled avatar before he disappears
-        self.toonSDs[avId].exit(unexpectedExit = True)
+        self.toonSDs[avId].exit(unexpectedExit=True)
         del self.toonSDs[avId]
 
         # then call the base class
@@ -789,17 +792,18 @@ class DistributedCatchGame(DistributedMinigame):
         toon = self.getAvatar(avId)
         idx = self.avIdList.index(avId)
         x = lineupPos(idx, self.numPlayers, 4.)
-        toon.setPos(x,0,0)
-        toon.setHpr(180,0,0)
+        toon.setPos(x, 0, 0)
+        toon.setHpr(180, 0, 0)
 
     def setGameReady(self):
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         self.notify.debug("setGameReady")
         if DistributedMinigame.setGameReady(self):
             return
         # all of the remote toons have joined the game;
         # it's safe to show them now.
-        
+
         # Cheezy effects change the ordering of the scene graph
         headCollNP = base.localAvatar.find("**/catchHeadCollNode")
         if headCollNP and not headCollNP.isEmpty():
@@ -822,7 +826,8 @@ class DistributedCatchGame(DistributedMinigame):
                 toon.startSmooth()
 
     def setGameStart(self, timestamp):
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         self.notify.debug("setGameStart")
         # base class will cause gameFSM to enter initial state
         DistributedMinigame.setGameStart(self, timestamp)
@@ -859,7 +864,7 @@ class DistributedCatchGame(DistributedMinigame):
             # Make a sphere, give it a unique name, and parent it
             # to the suit.
             suitCollSphere = CollisionSphere(0, 0, 0, 1.)
-            suit.collSphereName = 'suitCollSphere%s' % self.suits.index(suit)
+            suit.collSphereName = f'suitCollSphere{self.suits.index(suit)}'
             # Make the sphere intangible
             suitCollSphere.setTangible(0)
             suitCollNode = CollisionNode(self.uniqueName(suit.collSphereName))
@@ -881,10 +886,11 @@ class DistributedCatchGame(DistributedMinigame):
             avId = self.avIdList[i]
             avName = self.getAvatarName(avId)
             scorePanel = \
-                       MinigameAvatarScorePanel.MinigameAvatarScorePanel(avId,
-                                                                         avName)
+                MinigameAvatarScorePanel.MinigameAvatarScorePanel(avId,
+                                                                  avName)
             scorePanel.setScale(.9)
-            scorePanel.setPos(-0.58 - spacing*((self.numPlayers-1)-i), 0.0, -0.15)
+            scorePanel.setPos(-0.58 - spacing *
+                              ((self.numPlayers - 1) - i), 0.0, -0.15)
             scorePanel.reparentTo(base.a2dTopRight)
             # make the panels slightly transparent
             scorePanel.makeTransparent(.75)
@@ -920,10 +926,10 @@ class DistributedCatchGame(DistributedMinigame):
         self.timer.setTime(CatchGameGlobals.GameDuration)
         self.timer.countdown(CatchGameGlobals.GameDuration, self.timerExpired)
         self.timer.setTransparency(1)
-        self.timer.setColorScale(1,1,1,.75)
+        self.timer.setColorScale(1, 1, 1, .75)
 
         # Start music
-        base.playMusic(self.music, looping = 0, volume = 0.9)
+        base.playMusic(self.music, looping=0, volume=0.9)
 
     def exitPlay(self):
         self.stopDropTask()
@@ -955,14 +961,15 @@ class DistributedCatchGame(DistributedMinigame):
 
         del self.dropSchedule
 
-        # this may have been added by the last drop interval that was 'finish'ed
+        # this may have been added by the last drop interval that was
+        # 'finish'ed
         taskMgr.remove(self.EndGameTaskName)
 
     def timerExpired(self):
         pass
 
     def __handleCatch(self, objNum):
-        self.notify.debug("catch: %s" % objNum)
+        self.notify.debug(f"catch: {objNum}")
         # localtoon just caught obj (serial number 'objNum')
         self.showCatch(self.localAvId, objNum)
         # tell the AI we caught this obj
@@ -999,16 +1006,16 @@ class DistributedCatchGame(DistributedMinigame):
 
     def setObjectCaught(self, avId, objNum):
         """ called by the AI to announce a catch """
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         if self.gameFSM.getCurrentState().getName() != 'play':
-            self.notify.warning('ignoring msg: object %s caught by %s' %
-                                (objNum, avId))
+            self.notify.warning(f'ignoring msg: object {objNum} caught by {avId}')
             return
 
         isLocal = (avId == self.localAvId)
 
         if not isLocal:
-            self.notify.debug("AI: avatar %s caught %s" % (avId, objNum))
+            self.notify.debug(f"AI: avatar {avId} caught {objNum}")
             # if remote av caught an object, its interval might still
             # be playing. make sure it's finished
             self.finishDropInterval(objNum)
@@ -1077,8 +1084,8 @@ class DistributedCatchGame(DistributedMinigame):
             dropTime, objName, dropCoords = drop
             objNum = self.numItemsDropped
             lastDrop = (len(self.dropSchedule) == 0)
-            x,y = self.grid2world(*dropCoords)
-            
+            x, y = self.grid2world(*dropCoords)
+
             dropIval = self.getDropIval(x, y, objName, objNum)
 
             def cleanup(self=self, objNum=objNum, lastDrop=lastDrop):
@@ -1093,7 +1100,8 @@ class DistributedCatchGame(DistributedMinigame):
             # and increment the tally of dropped objects
             self.numItemsDropped += 1
 
-            # Interval.start takes # seconds into the interval at which to start
+            # Interval.start takes # seconds into the interval at which to
+            # start
             dropIval.start(curT - dropTime)
 
             if lastDrop:
@@ -1102,19 +1110,21 @@ class DistributedCatchGame(DistributedMinigame):
         return Task.cont
 
     def setEveryoneDone(self):
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         if self.gameFSM.getCurrentState().getName() != 'play':
             self.notify.warning('ignoring setEveryoneDone msg')
             return
 
         self.notify.debug('setEveryoneDone')
+
         def endGame(task, self=self):
             if not CatchGameGlobals.EndlessGame:
                 self.gameOver()
             return Task.done
 
-        self.notify.debug("num fruits: %s" % self.numFruits)
-        self.notify.debug("num catches: %s" % self.fruitsCaught)
+        self.notify.debug(f"num fruits: {self.numFruits}")
+        self.notify.debug(f"num catches: {self.fruitsCaught}")
 
         # hide the timer
         self.timer.hide()
@@ -1130,13 +1140,14 @@ class DistributedCatchGame(DistributedMinigame):
             # offset the subnode so that the text is centered on both axes
             # we need the parent node so that the text will scale correctly
             frame = self.__textGen.getCardActual()
-            offsetY = -abs(frame[2] + frame[3])/2.
-            perfectTextSubnode.setPos(0,0,offsetY)
+            offsetY = -abs(frame[2] + frame[3]) / 2.
+            perfectTextSubnode.setPos(0, 0, offsetY)
 
-            perfectText.setColor(1,.1,.1,1)
+            perfectText.setColor(1, .1, .1, 1)
 
             def fadeFunc(t, text=perfectText):
-                text.setColorScale(1,1,1,t)
+                text.setColorScale(1, 1, 1, t)
+
             def destroyText(text=perfectText):
                 text.removeNode()
 
@@ -1159,8 +1170,8 @@ class DistributedCatchGame(DistributedMinigame):
                 Func(destroyText),
                 WaitInterval(.5),
                 Func(endGame, None),
-                )
-            
+            )
+
             soundTrack = SoundInterval(self.sndPerfect)
 
             self.perfectIval = Parallel(textTrack,
@@ -1173,22 +1184,22 @@ class DistributedCatchGame(DistributedMinigame):
         """ x, y: -1..1 """
         objType = Name2DropObjectType[dropObjName]
 
-        dropNode = hidden.attachNewNode('catchDropNode%s' % num)
+        dropNode = hidden.attachNewNode(f'catchDropNode{num}')
         dropNode.setPos(x, y, 0)
         # must be copy, not instance
         shadow = self.dropShadow.copyTo(dropNode)
         shadow.setZ(.2)
-        shadow.setColor(1,1,1,1)
+        shadow.setColor(1, 1, 1, 1)
         # must be copy, not instance
         object = self.getObjModel(dropObjName)
         object.reparentTo(dropNode)
 
         # turn the obj
-        if dropObjName in ['watermelon','anvil']:
+        if dropObjName in ['watermelon', 'anvil']:
             # these objs shouldn't stray too far from their original heading
             objH = object.getH()
-            absDelta = {'watermelon' : 12,
-                        'anvil' : 15,
+            absDelta = {'watermelon': 12,
+                        'anvil': 15,
                         }[dropObjName]
             delta = ((self.randomNumGen.random() * 2.) - 1.) * absDelta
             newH = objH + delta
@@ -1197,13 +1208,13 @@ class DistributedCatchGame(DistributedMinigame):
         object.setH(newH)
 
         # give the object a collision sphere
-        sphereName = 'FallObj%s' % num
+        sphereName = f'FallObj{num}'
         # x,y,z,radius
         radius = self.ObjRadius
         # make the sphere larger on higher difficulty levels
         if objType.good:
             radius *= lerp(1., 1.3, self.getDifficulty())
-        collSphere = CollisionSphere(0,0,0,radius)
+        collSphere = CollisionSphere(0, 0, 0, radius)
         # don't let it push the toons
         collSphere.setTangible(0)
         collNode = CollisionNode(sphereName)
@@ -1219,6 +1230,7 @@ class DistributedCatchGame(DistributedMinigame):
         # collision callback accepts a 'collision entry' object
         # with details about the collision; we forward through a function
         # whose sole purpose is to 'eat' the collision entry object
+
         def eatCollEntry(forward, collEntry):
             forward()
         self.accept(catchEventName,
@@ -1249,23 +1261,23 @@ class DistributedCatchGame(DistributedMinigame):
             # the object is on-screen
             shadowScaleIval.append(
                 LerpScaleInterval(shadow,
-                                  duration-self.OffscreenTime,
+                                  duration - self.OffscreenTime,
                                   targetShadowScale,
                                   startScale=intermedScale))
         else:
-            shadowScaleIval = LerpScaleInterval(shadow, duration,
-                                                targetShadowScale, startScale=0)
+            shadowScaleIval = LerpScaleInterval(
+                shadow, duration, targetShadowScale, startScale=0)
 
         # gradually alpha the shadow in
         targetShadowAlpha = .4
         shadowAlphaIval = LerpColorScaleInterval(
-            shadow, self.OffscreenTime, Point4(1,1,1,targetShadowAlpha),
-            startColorScale = Point4(1,1,1,0))
+            shadow, self.OffscreenTime, Point4(1, 1, 1, targetShadowAlpha),
+            startColorScale=Point4(1, 1, 1, 0))
 
         shadowIval = Parallel(
             shadowScaleIval,
             shadowAlphaIval,
-            )
+        )
 
         if self.UseGravity:
             # object should drop according to the path defined by
@@ -1273,7 +1285,7 @@ class DistributedCatchGame(DistributedMinigame):
             def setObjPos(t, objType=objType, object=object):
                 z = objType.trajectory.calcZ(t)
                 object.setZ(z)
-                
+
             # put the object at its starting position, which happens to be
             # off-screen
             setObjPos(0)
@@ -1283,12 +1295,12 @@ class DistributedCatchGame(DistributedMinigame):
                                             toData=onscreenDuration,
                                             duration=onscreenDuration)
         else:
-            startPos = Point3(0,0,self.MinOffscreenHeight)
+            startPos = Point3(0, 0, self.MinOffscreenHeight)
             # put the object at its starting position, which happens to be
             # off-screen
             object.setPos(startPos)
             dropIval = LerpPosInterval(object, onscreenDuration,
-                                       Point3(0,0,0), startPos = startPos,
+                                       Point3(0, 0, 0), startPos=startPos,
                                        blendType='easeIn')
 
         ival = Sequence(
@@ -1299,8 +1311,8 @@ class DistributedCatchGame(DistributedMinigame):
                      shadowIval,
                      ),
             Func(cleanup),
-            name = 'drop%s' % num,
-            )
+            name=f'drop{num}',
+        )
 
         # conditionally play a 'land' sound
         # note that if the interval is explicitly 'finish'ed,
@@ -1326,14 +1338,14 @@ class DistributedCatchGame(DistributedMinigame):
         # with some of the walk intervals potentially overlapping
         # each other in time.
         ival = Parallel(name='catchGameMetaSuitWalk')
-        
+
         # since the suit intervals will be generating random numbers
         # on-the-fly, we need to fork off an rng for the suit ivals
         # to use
         rng = RandomNumGen(self.randomNumGen)
 
         delay = 0.
-        
+
         # keep adding suit walk ivals until we've reached the length
         # of the game
         while delay < CatchGameGlobals.GameDuration:
@@ -1343,16 +1355,17 @@ class DistributedCatchGame(DistributedMinigame):
             # add the wait
             walkIval.append(Wait(delay))
             # add a suit walk
+
             def pickY(self=self, rng=rng):
-                #return self.StageHalfHeight
+                # return self.StageHalfHeight
                 return lerp(-self.StageHalfHeight, self.StageHalfHeight,
                             rng.random())
             # mult for suit X positions
-            m = [2.5,2.5,2.3,2.1][self.getNumPlayers()-1]
-            startPos = Point3(-(self.StageHalfWidth*m), pickY(), 0)
-            stopPos = Point3((self.StageHalfWidth*m), pickY(), 0)
+            m = [2.5, 2.5, 2.3, 2.1][self.getNumPlayers() - 1]
+            startPos = Point3(-(self.StageHalfWidth * m), pickY(), 0)
+            stopPos = Point3((self.StageHalfWidth * m), pickY(), 0)
             # randomly walk from right-to-left or left-to-right
-            if rng.choice([0,1]):
+            if rng.choice([0, 1]):
                 startPos, stopPos = stopPos, startPos
             walkIval.append(self.getSuitWalkIval(startPos, stopPos, rng))
             # add this suit to the overall parallel interval
@@ -1376,7 +1389,7 @@ class DistributedCatchGame(DistributedMinigame):
         # on the suit; instead, we create a nodepath, put the suit
         # under that nodepath, and lerp it (instead of the suit).
         lerpNP = render.attachNewNode('catchGameSuitParent')
-        
+
         def setup(self=self, startPos=startPos, stopPos=stopPos,
                   data=data, lerpNP=lerpNP, rng=rng):
             if len(self.suits) == 0:
@@ -1393,7 +1406,7 @@ class DistributedCatchGame(DistributedMinigame):
             suit.loop('walk')
             suit.setPlayRate(
                 self.SuitSpeed / ToontownGlobals.SuitWalkSpeed, 'walk')
-            suit.setPos(0,0,0)
+            suit.setPos(0, 0, 0)
             lerpNP.setPos(startPos)
             suit.lookAt(stopPos)
 
@@ -1414,29 +1427,30 @@ class DistributedCatchGame(DistributedMinigame):
             FunctionInterval(setup),
             LerpPosInterval(lerpNP, duration, stopPos),
             FunctionInterval(cleanup),
-            )
+        )
         return ival
 
     def handleSuitCollision(self, collEntry):
         """ called when suit collides with localToon """
         self.toonSDs[self.localAvId].fsm.request('fallBack')
-        timestamp = globalClockDelta.localToNetworkTime(\
+        timestamp = globalClockDelta.localToNetworkTime(
             globalClock.getFrameTime())
         self.sendUpdate('hitBySuit', [self.localAvId, timestamp])
 
     def hitBySuit(self, avId, timestamp):
         """ called when remote toon is hit by suit """
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         if self.gameFSM.getCurrentState().getName() != 'play':
-            self.notify.warning('ignoring msg: av %s hit by suit' % avId)
+            self.notify.warning(f'ignoring msg: av {avId} hit by suit')
             return
 
         # try to see if the avId is valid, return if not
         toon = self.getAvatar(avId)
-        if toon == None:
+        if toon is None:
             return
-        
-        self.notify.debug("avatar %s hit by a suit" % avId)
+
+        self.notify.debug(f"avatar {avId} hit by a suit")
         if avId != self.localAvId:
             self.toonSDs[avId].fsm.request('fallBack')
     #### END SUIT WALK ##################################################
@@ -1462,7 +1476,7 @@ class DistributedCatchGame(DistributedMinigame):
         orthoDrive = OrthoDrive(
             self.ToonSpeed,
             customCollisionCallback=doCollisions,
-            )
+        )
         self.orthoWalk = OrthoWalk(orthoDrive,
                                    broadcast=not self.isSinglePlayer())
 
@@ -1477,7 +1491,7 @@ class DistributedCatchGame(DistributedMinigame):
         locNode = self.ground.find("**/locator_tree")
         treeNode = locNode.attachNewNode('treeNode')
         # align the node's axes with render's axes
-        treeNode.setHpr(render,0,0,0)
+        treeNode.setHpr(render, 0, 0, 0)
 
         def cleanupTree(treeNode=treeNode):
             treeNode.removeNode()
@@ -1495,17 +1509,17 @@ class DistributedCatchGame(DistributedMinigame):
             LerpPosHprInterval(camera, 2.,
                                Point3(*suitViewCamPosHpr[:3]),
                                Point3(*suitViewCamPosHpr[3:]),
-                               blendType = 'easeInOut',
-                               name = 'lerpToSuitView',
+                               blendType='easeInOut',
+                               name='lerpToSuitView',
                                ),
             WaitInterval(4.),
             LerpPosHprInterval(camera, 3.,
                                Point3(*finalCamPosHpr[:3]),
                                Point3(*finalCamPosHpr[3:]),
-                               blendType = 'easeInOut',
-                               name = 'lerpToPlayView',
+                               blendType='easeInOut',
+                               name='lerpToPlayView',
                                ),
-            )
+        )
 
         # create the toons that will throw things from the tree
 
@@ -1529,7 +1543,7 @@ class DistributedCatchGame(DistributedMinigame):
             anim = 'catch-intro-throw'
             grabFrame = 12
             fullSizeFrame = 30
-            framePeriod = 1./toon.getFrameRate(anim)
+            framePeriod = 1. / toon.getFrameRate(anim)
             objScaleDur = (fullSizeFrame - grabFrame) * framePeriod
 
             releaseFrame = 35
@@ -1544,7 +1558,7 @@ class DistributedCatchGame(DistributedMinigame):
 
             def getThrowDest(object=object, offset=trajDistance):
                 dest = object.getPos(render)
-                dest += Point3(0,-offset,0)
+                dest += Point3(0, -offset, 0)
                 dest.setZ(0)
                 return dest
 
@@ -1552,12 +1566,12 @@ class DistributedCatchGame(DistributedMinigame):
             # the anvil up in the air
             if leftToon:
                 trajIval = ProjectileInterval(object,
-                                              startVel = Point3(0,0,0),
-                                              duration = trajDuration)
+                                              startVel=Point3(0, 0, 0),
+                                              duration=trajDuration)
             else:
                 trajIval = ProjectileInterval(object,
-                                              endPos = getThrowDest,
-                                              duration = trajDuration)
+                                              endPos=getThrowDest,
+                                              duration=trajDuration)
 
             trajIval = Sequence(Func(object.wrtReparentTo, render),
                                 trajIval,
@@ -1575,7 +1589,7 @@ class DistributedCatchGame(DistributedMinigame):
                                             startScale=.1,
                                             blendType='easeInOut'))),
                 (releaseFrame * framePeriod, trajIval),
-                )
+            )
 
             def cleanup(object=object):
                 object.reparentTo(hidden)
@@ -1586,7 +1600,7 @@ class DistributedCatchGame(DistributedMinigame):
                          objIval,
                          ),
                 Func(cleanup),
-                )
+            )
             return throwIval
 
         # their positions share identical Y and Z
@@ -1625,10 +1639,10 @@ class DistributedCatchGame(DistributedMinigame):
 
         # it just happens that the left toon's right hand and the right
         # toon's left hand have good coordinate systems
-        leftToonIval  = getThrowIval(leftToon,
-                                     leftToon.getRightHands()[0],
-                                     fruit,
-                                     leftToon=1)
+        leftToonIval = getThrowIval(leftToon,
+                                    leftToon.getRightHands()[0],
+                                    fruit,
+                                    leftToon=1)
         rightToonIval = getThrowIval(rightToon,
                                      rightToon.getLeftHands()[0],
                                      anvil,
@@ -1643,7 +1657,7 @@ class DistributedCatchGame(DistributedMinigame):
                               Func(leftToon.loop, 'neutral'),
                               ),
                      Sequence(Func(rightToon.loop, 'neutral'),
-                              WaitInterval(animDur/2.),
+                              WaitInterval(animDur / 2.),
                               rightToonIval,
                               Func(rightToon.loop, 'neutral'),
                               ),
@@ -1651,7 +1665,7 @@ class DistributedCatchGame(DistributedMinigame):
                      ),
             Func(cleanupIntroToon, leftToon),
             Func(cleanupIntroToon, rightToon),
-            )
+        )
 
         # keep handles around for debugging
         self.treeNode = treeNode
@@ -1663,6 +1677,6 @@ class DistributedCatchGame(DistributedMinigame):
         introMovie = Sequence(
             Parallel(cameraIval, toonIval),
             Func(cleanupTree),
-            )
+        )
 
         return introMovie

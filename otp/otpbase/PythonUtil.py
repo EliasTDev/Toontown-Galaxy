@@ -6,7 +6,15 @@ import time
 from html.parser import HTMLParser
 from direct.showbase.PythonUtil import *
 
-__all__ = ['enumerate', 'nonRepeatingRandomList', 'describeException', 'pdir', 'choice', 'cmp', 'lerp', 'triglerp']
+__all__ = [
+    'enumerate',
+    'nonRepeatingRandomList',
+    'describeException',
+    'pdir',
+    'choice',
+    'cmp',
+    'lerp',
+    'triglerp']
 
 if not hasattr(builtins, 'enumerate'):
     def enumerate(L):
@@ -25,13 +33,14 @@ if not hasattr(builtins, 'enumerate'):
 else:
     enumerate = builtins.enumerate
 
+
 def nonRepeatingRandomList(vals, max):
     random.seed(time.time())
-    #first generate a set of random values
-    valueList=list(range(max))
-    finalVals=[]
+    # first generate a set of random values
+    valueList = list(range(max))
+    finalVals = []
     for i in range(vals):
-        index=int(random.random()*len(valueList))
+        index = int(random.random() * len(valueList))
         finalVals.append(valueList[index])
         valueList.remove(valueList[index])
     return finalVals
@@ -39,17 +48,23 @@ def nonRepeatingRandomList(vals, max):
 # class 'decorator' that records the stack at the time of creation
 # be careful with this, it creates a StackTrace, and that can take a
 # lot of CPU
+
+
 def recordCreationStack(cls):
     if not hasattr(cls, '__init__'):
-        raise 'recordCreationStack: class \'%s\' must define __init__' % cls.__name__
+        raise f'recordCreationStack: class \'{cls.__name__}\' must define __init__'
     cls.__moved_init__ = cls.__init__
+
     def __recordCreationStack_init__(self, *args, **kArgs):
         self._creationStackTrace = StackTrace(start=1)
         return self.__moved_init__(*args, **kArgs)
+
     def getCreationStackTrace(self):
         return self._creationStackTrace
+
     def getCreationStackTraceCompactStr(self):
         return self._creationStackTrace.compact()
+
     def printCreationStackTrace(self):
         print((self._creationStackTrace))
     cls.__init__ = __recordCreationStack_init__
@@ -59,6 +74,8 @@ def recordCreationStack(cls):
     return cls
 
 # __dev__ is not defined at import time, call this after it's defined
+
+
 def recordFunctorCreationStacks():
     global Functor
     from pandac.PandaModules import getConfigShowbase
@@ -70,7 +87,8 @@ def recordFunctorCreationStacks():
             Functor._functorCreationStacksRecorded = True
             Functor.__call__ = Functor._exceptionLoggedCreationStack__call__
 
-def describeException(backTrace = 4):
+
+def describeException(backTrace=4):
     # When called in an exception handler, returns a string describing
     # the current exception.
 
@@ -81,12 +99,12 @@ def describeException(backTrace = 4):
         import array
         lnotab = array.array('B', code.co_lnotab)
 
-        line   = code.co_firstlineno
+        line = code.co_firstlineno
         for i in range(0, len(lnotab), 2):
             byte -= lnotab[i]
             if byte <= 0:
                 return line
-            line += lnotab[i+1]
+            line += lnotab[i + 1]
 
         return line
 
@@ -105,27 +123,28 @@ def describeException(backTrace = 4):
         frame = trace.tb_frame
         module = frame.f_globals.get('__name__', None)
         lineno = byteOffsetToLineno(frame.f_code, frame.f_lasti)
-        stack.append("%s:%s, " % (module, lineno))
+        stack.append(f"{module}:{lineno}, ")
         trace = trace.tb_next
 
     frame = trace.tb_frame
     module = frame.f_globals.get('__name__', None)
     lineno = byteOffsetToLineno(frame.f_code, frame.f_lasti)
-    stack.append("%s:%s, " % (module, lineno))
+    stack.append(f"{module}:{lineno}, ")
 
     description = ""
     for i in range(len(stack) - 1, max(len(stack) - backTrace, 0) - 1, -1):
         description += stack[i]
 
-    description += "%s: %s" % (exceptionName, extraInfo)
+    description += f"{exceptionName}: {extraInfo}"
     return description
 
-def pdir(obj, str = None, width = None,
-            fTruncate = 1, lineWidth = 75, wantPrivate = 0):
+
+def pdir(obj, str=None, width=None,
+         fTruncate=1, lineWidth=75, wantPrivate=0):
     # Remove redundant class entries
     uniqueLineage = []
     for l in getClassLineage(obj):
-        if type(l) == type:
+        if isinstance(l, type):
             if l in uniqueLineage:
                 break
         uniqueLineage.append(l)
@@ -135,6 +154,7 @@ def pdir(obj, str = None, width = None,
         _pdir(obj, str, width, fTruncate, lineWidth, wantPrivate)
         print()
 
+
 def lerp(v0, v1, t):
     """
     returns a value lerped between v0 and v1, according to t
@@ -142,13 +162,15 @@ def lerp(v0, v1, t):
     """
     return v0 + ((v1 - v0) * t)
 
+
 def triglerp(v0, v1, t):
     """
     lerp using the curve of sin(-pi/2) -> sin(pi/2)
     """
-    x = lerp(-math.pi/2, math.pi/2, t)
+    x = lerp(-math.pi / 2, math.pi / 2, t)
     v = math.sin(x)
     return lerp(v0, v1, (v + 1.) / 2.)
+
 
 def choice(condition, ifTrue, ifFalse):
     # equivalent of C++ (condition ? ifTrue : ifFalse)
@@ -157,9 +179,11 @@ def choice(condition, ifTrue, ifFalse):
     else:
         return ifFalse
 
+
 def quantize(value, divisor):
     # returns new value that is multiple of (1. / divisor)
     return float(int(value * int(divisor))) / int(divisor)
+
 
 def quantizeVec(vec, divisor):
     # in-place
@@ -167,13 +191,16 @@ def quantizeVec(vec, divisor):
     vec[1] = quantize(vec[1], divisor)
     vec[2] = quantize(vec[2], divisor)
 
+
 def isClient():
     if hasattr(builtins, 'simbase') and not hasattr(builtins, 'base'):
         return False
     return True
 
+
 def cmp(a, b):
     return (a > b) - (a < b)
+
 
 def addListsByValue(a, b):
     """
@@ -185,16 +212,19 @@ def addListsByValue(a, b):
         c.append(x + y)
     return c
 
+
 def nonRepeatingRandomList(vals, max):
     random.seed(time.time())
-    #first generate a set of random values
-    valueList=list(range(max))
-    finalVals=[]
+    # first generate a set of random values
+    valueList = list(range(max))
+    finalVals = []
     for i in range(vals):
-        index=int(random.random()*len(valueList))
+        index = int(random.random() * len(valueList))
         finalVals.append(valueList[index])
         valueList.remove(valueList[index])
     return finalVals
+
+
 class HTMLStringToElements(HTMLParser):
     def __init__(self, str, *a, **kw):
         self._elements = []
@@ -205,7 +235,7 @@ class HTMLStringToElements(HTMLParser):
 
     def getElements(self):
         return self._elements
-        
+
     def _handleNewElement(self, element):
         if len(self._elementStack):
             self._elementStack.top().append(element)
@@ -232,7 +262,7 @@ class HTMLStringToElements(HTMLParser):
             # force it to create a tag closer a la </tag>
             # prevents problems in certain browsers
             if top.tag == 'script' and top.get('type') == 'text/javascript':
-                if top.text == None:
+                if top.text is None:
                     top.text = '// force tag closer'
             else:
                 self.handle_comment('force tag closer')
@@ -247,6 +277,7 @@ class HTMLStringToElements(HTMLParser):
 def str2elements(str):
     return HTMLStringToElements(str).getElements()
 
+
 def unescapeHtmlString(s):
     # converts %## to corresponding character
     # replaces '+' with ' '
@@ -257,18 +288,20 @@ def unescapeHtmlString(s):
         if char == '+':
             char = ' '
         elif char == '%':
-            if i < (len(s)-2):
-                num = eval('0x' + s[i+1:i+3])
+            if i < (len(s) - 2):
+                num = eval('0x' + s[i + 1:i + 3])
                 char = chr(num)
                 i += 2
         i += 1
         result += char
     return result
-    
+
+
 def randUint32(rng=random.random):
     """returns a random integer in [0..2^32).
     rng must return float in [0..1]"""
     return int(rng() * 0xFFFFFFFF)
+
 
 """
 ParamObj/ParamSet
@@ -376,6 +409,7 @@ savedSettings.applyTo(cam)
 del savedSettings
 """
 
+
 class ParamObj:
     # abstract base for classes that want to support a formal parameter
     # set whose values may be queried, changed, 'bulk' changed (defer reaction
@@ -403,7 +437,7 @@ class ParamObj:
             #             'spawnIndices': Functor(list, [1,5,22]),
             #         }
             #
-            }
+        }
 
         def __init__(self, *args, **kwArgs):
             self.__class__._compileDefaultParams()
@@ -419,27 +453,32 @@ class ParamObj:
                     for arg in list(kwArgs.keys()):
                         assert arg in self.getParams()
                 self.paramVals = dict(kwArgs)
+
         def getValue(self, param):
             if param in self.paramVals:
                 return self.paramVals[param]
             return self._Params[param]
+
         def applyTo(self, obj):
             # Apply our entire set of params to a ParamObj
             obj.lockParams()
             for param in self.getParams():
                 getSetter(obj, param)(self.getValue(param))
             obj.unlockParams()
+
         def extractFrom(self, obj):
             # Extract our entire set of params from a ParamObj
             obj.lockParams()
             for param in self.getParams():
                 self.paramVals[param] = getSetter(obj, param, 'get')()
             obj.unlockParams()
+
         @classmethod
         def getParams(cls):
             # returns safely-mutable list of param names
             cls._compileDefaultParams()
             return list(cls._Params.keys())
+
         @classmethod
         def getDefaultValue(cls, param):
             cls._compileDefaultParams()
@@ -447,6 +486,7 @@ class ParamObj:
             if hasattr(dv, '__call__'):
                 dv = dv()
             return dv
+
         @classmethod
         def _compileDefaultParams(cls):
             if '_Params' in cls.__dict__:
@@ -469,10 +509,8 @@ class ParamObj:
         def __repr__(self):
             argStr = ''
             for param in self.getParams():
-                argStr += '%s=%s,' % (param,
-                                      repr(self.getValue(param)))
-            return '%s.%s(%s)' % (
-                self.__class__.__module__, self.__class__.__name__, argStr)
+                argStr += f'{param}={repr(self.getValue(param))},'
+            return f'{self.__class__.__module__}.{self.__class__.__name__}({argStr})'
     # END PARAMSET SUBCLASS
 
     def __init__(self, *args, **kwArgs):
@@ -507,7 +545,7 @@ class ParamObj:
             if not hasattr(self, setterName):
                 # no; provide the default
                 def defaultSetter(self, value, param=param):
-                    #print '%s=%s for %s' % (param, value, id(self))
+                    # print '%s=%s for %s' % (param, value, id(self))
                     setattr(self, param, value)
                 #self.__class__.__dict__[setterName] = defaultSetter
                 setattr(self, setterName, defaultSetter)
@@ -515,14 +553,16 @@ class ParamObj:
             if not hasattr(self, getterName):
                 # no; provide the default. If there is no value set, return
                 # the default
-                def defaultGetter(self, param=param,
-                                  default=self.ParamSet.getDefaultValue(param)):
+                def defaultGetter(
+                        self,
+                        param=param,
+                        default=self.ParamSet.getDefaultValue(param)):
                     return getattr(self, param, default)
                 setattr(self, getterName, defaultGetter)
                 #self.__class__.__dict__[getterName] = defaultGetter
 
             # have we already installed a setter stub?
-            origSetterName = '%s_ORIG' % (setterName,)
+            origSetterName = f'{setterName}_ORIG'
             if not hasattr(self, origSetterName):
                 # move the original setter aside
                 origSetterFunc = getattr(self.__class__, setterName)
@@ -541,7 +581,12 @@ class ParamObj:
                 setattr(self, setterName, types.MethodType(
                     Functor(setterStub, param, setterFunc), self, self.__class__))
                     """
-                def setterStub(self, value, param=param, origSetterName=origSetterName):
+
+                def setterStub(
+                        self,
+                        value,
+                        param=param,
+                        origSetterName=origSetterName):
                     # should we apply the value now or should we wait?
                     # if this obj's params are locked, we track which values have
                     # been set, and on unlock, we'll call the applyers for those
@@ -551,7 +596,7 @@ class ParamObj:
                         if param not in priorValues:
                             try:
                                 priorValue = getSetter(self, param, 'get')()
-                            except:
+                            except BaseException:
                                 priorValue = None
                             priorValues[param] = priorValue
                         self._paramsSet[param] = None
@@ -560,14 +605,16 @@ class ParamObj:
                         # prepare for call to getPriorValue
                         try:
                             priorValue = getSetter(self, param, 'get')()
-                        except:
+                        except BaseException:
                             priorValue = None
                         self._priorValuesStack.append({
                             param: priorValue,
-                            })
+                        })
                         getattr(self, origSetterName)(value)
                         # call the applier, if there is one
-                        applier = getattr(self, getSetterName(param, 'apply'), None)
+                        applier = getattr(
+                            self, getSetterName(
+                                param, 'apply'), None)
                         if applier is not None:
                             self._curParamStack.append(param)
                             applier()
@@ -603,17 +650,20 @@ class ParamObj:
         self._paramLockRefCount += 1
         if self._paramLockRefCount == 1:
             self._handleLockParams()
+
     def unlockParams(self):
         if self._paramLockRefCount > 0:
             self._paramLockRefCount -= 1
             if self._paramLockRefCount == 0:
                 self._handleUnlockParams()
+
     def _handleLockParams(self):
         # this will store the names of the parameters that are modified
         self._paramsSet = {}
         # this will store the values of modified params (from prior to
         # the lock).
         self._priorValuesStack.append({})
+
     def _handleUnlockParams(self):
         for param in self._paramsSet:
             # call the applier, if there is one
@@ -626,8 +676,10 @@ class ParamObj:
         if hasattr(self, 'handleParamChange'):
             self.handleParamChange(tuple(self._paramsSet.keys()))
         del self._paramsSet
+
     def paramsLocked(self):
         return self._paramLockRefCount > 0
+
     def getPriorValue(self):
         # call this within an apply function to find out what the prior value
         # of the param was
@@ -638,10 +690,11 @@ class ParamObj:
         for param in self.ParamSet.getParams():
             try:
                 value = getSetter(self, param, 'get')()
-            except:
+            except BaseException:
                 value = '<unknown>'
-            argStr += '%s=%s,' % (param, repr(value))
-        return '%s(%s)' % (self.__class__.__name__, argStr)
+            argStr += f'{param}={repr(value)},'
+        return f'{self.__class__.__name__}({argStr})'
+
 
 if __debug__ and __name__ == '__main__':
     class ParamObjTest(ParamObj):
@@ -649,6 +702,7 @@ if __debug__ and __name__ == '__main__':
             Params = {
                 'num': 0,
             }
+
         def applyNum(self):
             self.priorValue = self.getPriorValue()
     pto = ParamObjTest()

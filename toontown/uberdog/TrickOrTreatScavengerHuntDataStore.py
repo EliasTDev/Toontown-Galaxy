@@ -1,6 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from toontown.uberdog.DataStore import *
 
+
 class TrickOrTreatScavengerHuntDataStore(DataStore):
     """
     This is a specialized DataStore class designed to handle
@@ -16,18 +17,18 @@ class TrickOrTreatScavengerHuntDataStore(DataStore):
     # in the subclass use the following line:
     # QueryTypes = TrickOrTreatScavengerHuntDataStore.addQueryTypes(['Type_1',...])
     QueryTypes = DataStore.addQueryTypes(['GetGoals', 'AddGoal'])
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory(
         'TrickOrTreatScavengerHuntDataStore')
-    
+
     def __init__(self, filepath):
         """
         filepath is where this store's data will be held on the disk.
         This path should be unique to this data store.
         """
-        DataStore.__init__(self,filepath)
+        DataStore.__init__(self, filepath)
 
-    def handleQuery(self,query):
+    def handleQuery(self, query):
         """
         This function parses the query and performs the
         necessary operations on the data store.  If a
@@ -54,21 +55,20 @@ class TrickOrTreatScavengerHuntDataStore(DataStore):
 
         # they're requesting a list of the toon's goals
         if qId == self.QueryTypes['GetGoals']:
-            avId,goal = qData
+            avId, goal = qData
             goals = self.__getGoalsForAvatarId(avId)
             # build the return message
-            return (qId,(avId,goal,goals))
+            return (qId, (avId, goal, goals))
         # they're trying to add a goal to the toon's list
         elif qId == self.QueryTypes['AddGoal']:
-            avId,goal = qData
-            self.__addGoalToAvatarId(avId,goal)
+            avId, goal = qData
+            self.__addGoalToAvatarId(avId, goal)
             # confirm the update
-            return (qId,(avId,))
+            return (qId, (avId,))
 
         # if not a valid queryId, return an empty result
         return None
 
-    
     def __addGoalToAvatarId(self, avId, goal):
         """
         Add the goal to avId's list of completed goals.
@@ -79,8 +79,8 @@ class TrickOrTreatScavengerHuntDataStore(DataStore):
         if self.wantAnyDbm:
             pAvId = cPickle.dumps(avId)
             pGoal = cPickle.dumps(goal)
-            
-            pData = self.data.get(pAvId,None)
+
+            pData = self.data.get(pAvId, None)
             if pData is not None:
                 data = cPickle.loads(pData)
             else:
@@ -91,10 +91,9 @@ class TrickOrTreatScavengerHuntDataStore(DataStore):
             pData = cPickle.dumps(data)
             self.data[pAvId] = pData
         else:
-            self.data.setdefault(avId,set())
+            self.data.setdefault(avId, set())
             self.data[avId].add(goal)
         self.incrementWriteCount()
-
 
     def __getGoalsForAvatarId(self, avId):
         """
@@ -102,13 +101,11 @@ class TrickOrTreatScavengerHuntDataStore(DataStore):
         """
         if self.wantAnyDbm:
             pAvId = cPickle.dumps(avId)
-            pData = self.data.get(pAvId,None)
+            pData = self.data.get(pAvId, None)
             if pData is not None:
                 data = list(cPickle.loads(pData))
             else:
                 data = []
             return data
         else:
-            return list(self.data.get(avId,[]))
-
-
+            return list(self.data.get(avId, []))

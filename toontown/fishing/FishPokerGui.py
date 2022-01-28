@@ -6,24 +6,25 @@ from . import FishGlobals
 from toontown.toonbase import TTLocalizer
 from toontown.toonbase import ToontownGlobals
 
+
 class FishPokerCard(DirectFrame):
 
     UnlockedColor = Vec4(*ToontownGlobals.GlobalDialogColor)
-    LockedColor = Vec4(0.8,0.4,0.4,1)
-    
+    LockedColor = Vec4(0.8, 0.4, 0.4, 1)
+
     def __init__(self, index, lockCallback, **kw):
         optiondefs = (
-            ('relief',                                    None,    None),
-            ('image',                   DGG.getDefaultDialogGeom(),    None),
-            ('image_color',  ToontownGlobals.GlobalDialogColor,    None),
-            ('image_scale',                    (0.35, 1, 0.45),    None),
-            ('text',                                        "",    None),
-            ('text_scale',                                0.06,    None),
-            ('text_fg',                           (0, 0, 0, 1),    None),
-            ('text_pos',                          (0, 0.35, 0),    None),
-            ('text_font',   ToontownGlobals.getInterfaceFont(),    None),
-            ('text_wordwrap',                             13.5,    None),
-            )
+            ('relief', None, None),
+            ('image', DGG.getDefaultDialogGeom(), None),
+            ('image_color', ToontownGlobals.GlobalDialogColor, None),
+            ('image_scale', (0.35, 1, 0.45), None),
+            ('text', "", None),
+            ('text_scale', 0.06, None),
+            ('text_fg', (0, 0, 0, 1), None),
+            ('text_pos', (0, 0.35, 0), None),
+            ('text_font', ToontownGlobals.getInterfaceFont(), None),
+            ('text_wordwrap', 13.5, None),
+        )
         # Merge keyword options with default options
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self)
@@ -33,27 +34,27 @@ class FishPokerCard(DirectFrame):
         guiButton = loader.loadModel("phase_3/models/gui/quit_button")
         self.lockCallback = lockCallback
         self.lockButton = DirectButton(
-            parent = self,
-            relief = None,
-            image = (guiButton.find("**/QuitBtn_UP"),
-                     guiButton.find("**/QuitBtn_DN"),
-                     guiButton.find("**/QuitBtn_RLVR"),
-                     ),
-            image_scale = 1,
-            text = TTLocalizer.FishPokerLock,
-            text_scale = 0.06,
-            textMayChange = 1,
-            pos = (0,0,0.2),
-            command = self.toggleLock,
-            )
+            parent=self,
+            relief=None,
+            image=(guiButton.find("**/QuitBtn_UP"),
+                   guiButton.find("**/QuitBtn_DN"),
+                   guiButton.find("**/QuitBtn_RLVR"),
+                   ),
+            image_scale=1,
+            text=TTLocalizer.FishPokerLock,
+            text_scale=0.06,
+            textMayChange=1,
+            pos=(0, 0, 0.2),
+            command=self.toggleLock,
+        )
         # TODO: image of fish here
         self.fishFrame = DirectFrame(
-            parent = self,
-            relief = None,
-            text = "",
-            text_scale = 0.05,
-            pos = (0,0,-0.2),
-            )
+            parent=self,
+            relief=None,
+            text="",
+            text_scale=0.05,
+            pos=(0, 0, -0.2),
+        )
         guiButton.removeNode()
 
     def toggleLock(self):
@@ -83,14 +84,14 @@ class FishPokerCard(DirectFrame):
     def clear(self):
         self.update(None, 0)
         return
-    
+
 
 class FishPokerGui(FishPokerBase.FishPokerBase,
                    DirectFrame):
     def __init__(self, lockCallback, cashInCallback):
         DirectFrame.__init__(self, relief=None)
         self.initialiseoptions(FishPokerGui)
-        self.setPos(0,0,0.8)
+        self.setPos(0, 0, 0.8)
         self.setScale(0.7)
         self.lockCallback = lockCallback
         self.cashInCallback = cashInCallback
@@ -99,33 +100,34 @@ class FishPokerGui(FishPokerBase.FishPokerBase,
         for i in range(self.NumSlots):
             card = FishPokerCard(i, self.toggleLock)
             card.reparentTo(self)
-            card.setPos(-0.8 + i*0.4, 0, 0)
+            card.setPos(-0.8 + i * 0.4, 0, 0)
             self.__cardGuis[i] = card
 
         guiButton = loader.loadModel("phase_3/models/gui/quit_button")
         self.cashInButton = DirectButton(
-            parent = self,
-            relief = None,
-            image = (guiButton.find("**/QuitBtn_UP"),
-                     guiButton.find("**/QuitBtn_DN"),
-                     guiButton.find("**/QuitBtn_RLVR"),
-                     ),
-            image_scale = 1.15,
-            text = TTLocalizer.FishPokerCashIn % (0, ""),
-            text_scale = 0.06,
+            parent=self,
+            relief=None,
+            image=(guiButton.find("**/QuitBtn_UP"),
+                   guiButton.find("**/QuitBtn_DN"),
+                   guiButton.find("**/QuitBtn_RLVR"),
+                   ),
+            image_scale=1.15,
+            text=TTLocalizer.FishPokerCashIn % (0, ""),
+            text_scale=0.06,
             # textMayChange = 0,
-            pos = (0,0,-0.3),
-            command = self.cashIn,
-            )
+            pos=(0, 0, -0.3),
+            command=self.cashIn,
+        )
         guiButton.removeNode()
-        
+
         # Now update the base class, since it touched some of the
         # buttons on initialization
         FishPokerBase.FishPokerBase.__init__(self)
 
     def updateCashIn(self):
         value, handName = self.getCurrentValue()
-        self.cashInButton['text'] = TTLocalizer.FishPokerCashIn % (handName, value)
+        self.cashInButton['text'] = TTLocalizer.FishPokerCashIn % (
+            handName, value)
 
     def cashIn(self):
         # Gui will be update by the call to clear inside FishPokerBase
@@ -141,7 +143,8 @@ class FishPokerGui(FishPokerBase.FishPokerBase,
             self.setLockStatus(index, 1)
 
     def setLockStatus(self, index, lockStatus):
-        result = FishPokerBase.FishPokerBase.setLockStatus(self, index, lockStatus)
+        result = FishPokerBase.FishPokerBase.setLockStatus(
+            self, index, lockStatus)
         # Update the gui
         self.__cardGuis[index].setLockStatus(lockStatus)
         # Call back to the spot, which sends the update to the AI

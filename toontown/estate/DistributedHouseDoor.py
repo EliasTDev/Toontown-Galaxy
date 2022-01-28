@@ -16,6 +16,7 @@ from toontown.suit import Suit
 from toontown.building import FADoorCodes
 from toontown.building import DoorTypes
 
+
 class DistributedHouseDoor(DistributedDoor.DistributedDoor):
     """
     DistributedHouseDoor class: a slightly different version
@@ -23,7 +24,6 @@ class DistributedHouseDoor(DistributedDoor.DistributedDoor):
     for a message from the AI that tells it the doId of the
     house that owns it.
     """
-
 
     def __init__(self, cr):
         """constructor for the DistributedHouseDoor"""
@@ -37,12 +37,11 @@ class DistributedHouseDoor(DistributedDoor.DistributedDoor):
         DistributedDoor.DistributedDoor.disable(self)
         self.ignoreAll()
 
-        
     def setZoneIdAndBlock(self, zoneId, block):
-        # We override DistributedDoor's function so we can also set the houseId to the block
+        # We override DistributedDoor's function so we can also set the houseId
+        # to the block
         self.houseId = block
         DistributedDoor.DistributedDoor.setZoneIdAndBlock(self, zoneId, block)
-        
 
     def getTriggerName(self):
         # HQ doors need to have an index appended, since they are
@@ -64,12 +63,17 @@ class DistributedHouseDoor(DistributedDoor.DistributedDoor):
             if house and house.house_loaded:
                 self.__gotRelatedHouse()
             else:
-                self.acceptOnce("houseLoaded-%d" % self.houseId, self.__gotRelatedHouse)
+                self.acceptOnce(
+                    "houseLoaded-%d" %
+                    self.houseId, self.__gotRelatedHouse)
         elif self.doorType == DoorTypes.INT_STANDARD:
-            # wish there was a better way to test if houseInterior has already called setup
-            door=render.find("**/leftDoor;+s")
+            # wish there was a better way to test if houseInterior has already
+            # called setup
+            door = render.find("**/leftDoor;+s")
             if door.isEmpty():
-                self.acceptOnce("houseInteriorLoaded-%d" % self.zoneId, self.__gotRelatedHouse)
+                self.acceptOnce(
+                    "houseInteriorLoaded-%d" %
+                    self.zoneId, self.__gotRelatedHouse)
             else:
                 self.__gotRelatedHouse()
 
@@ -77,8 +81,8 @@ class DistributedHouseDoor(DistributedDoor.DistributedDoor):
         """Handle the callback that we have the related house."""
         # this used to be done in DistributedDoor.announceGenerate
         # and DistributedHouseDoor.announceGenerate
-        self.doPostAnnounceGenerate() # in DistributedDoor
-        
+        self.doPostAnnounceGenerate()  # in DistributedDoor
+
         # This is called when the door is completely created, so we know
         # that we have all the info we need to get a proper trigger event.
 
@@ -96,26 +100,26 @@ class DistributedHouseDoor(DistributedDoor.DistributedDoor):
         self.acceptOnce("clearOutToonInterior", self.doorTrigger)
 
         self.zoneDoneLoading = 0
-        
 
     def getBuilding(self, allowEmpty=False):
         # Once we find it, we store it, so we don't have to find it again.
         if ('building' not in self.__dict__):
             if self.doorType == DoorTypes.INT_STANDARD:
-                #if ZoneUtil.isInterior(self.zoneId):
+                # if ZoneUtil.isInterior(self.zoneId):
                 # building interior.
                 # Hack: assume that the node above the door is the building:
-                door=render.find("**/leftDoor;+s")
+                door = render.find("**/leftDoor;+s")
                 assert(not door.isEmpty())
                 # Cut the door off of the nodePath to get the building:
                 self.building = door.getParent()
             elif self.doorType == DoorTypes.EXT_STANDARD:
                 if self.houseId:
-                    self.building = self.cr.playGame.hood.loader.houseId2house.get(self.houseId, None)
+                    self.building = self.cr.playGame.hood.loader.houseId2house.get(
+                        self.houseId, None)
 
         if allowEmpty:
             return self.building
-                    
+
         assert(not self.building.isEmpty())
         return self.building
 
@@ -123,13 +127,13 @@ class DistributedHouseDoor(DistributedDoor.DistributedDoor):
         if (self.doorType == DoorTypes.INT_STANDARD):
             return 1
         return 0
-                
+
     def getDoorNodePath(self):
-        #("getDoorNodePath()"))
+        # ("getDoorNodePath()"))
         if self.doorType == DoorTypes.INT_STANDARD:
             # ...interior door.
-            #("getDoorNodePath() -- isInterior"))
-            otherNP=render.find("**/door_origin")
+            # ("getDoorNodePath() -- isInterior"))
+            otherNP = render.find("**/door_origin")
             assert(not otherNP.isEmpty())
         elif self.doorType == DoorTypes.EXT_STANDARD:
             building = self.getBuilding()
@@ -139,68 +143,68 @@ class DistributedHouseDoor(DistributedDoor.DistributedDoor):
             assert(not otherNP.isEmpty())
         else:
             self.notify.error("No such door type as " + str(self.doorType))
-                
+
         return otherNP
-        
+
     def enterClosing(self, ts):
-        #("enterClosing()"))
+        # ("enterClosing()"))
         # Start animation:
-        #building=self.getBuilding()
+        # building=self.getBuilding()
         # The right hole (aka doorway):
-        #doorFrameHoleRight=building.find("**/doorFrameHoleRight;+s")
-        doorFrameHoleRight=self.findDoorNode("doorFrameHoleRight")
+        # doorFrameHoleRight=building.find("**/doorFrameHoleRight;+s")
+        doorFrameHoleRight = self.findDoorNode("doorFrameHoleRight")
         if (doorFrameHoleRight.isEmpty()):
-            self.notify.warning("enterClosing(): did not find doorFrameHoleRight")
+            self.notify.warning(
+                "enterClosing(): did not find doorFrameHoleRight")
             return
-        
+
         # Right door:
-        #rightDoor=building.find("rightDoor")
-        rightDoor=self.findDoorNode("rightDoor")
+        # rightDoor=building.find("rightDoor")
+        rightDoor = self.findDoorNode("rightDoor")
         if (rightDoor.isEmpty()):
             self.notify.warning("enterClosing(): did not find rightDoor")
             return
-        
+
         # Close the door:
-        otherNP=self.getDoorNodePath()
+        otherNP = self.getDoorNodePath()
         trackName = "doorClose-%d" % (self.doId)
         if self.rightSwing:
             h = 100
         else:
             h = -100
-        self.finishDoorTrack()            
-        self.doorTrack=Sequence(
-                LerpHprInterval(
-                    nodePath=rightDoor,
-                    duration=1.0,
-                    hpr=VBase3(0, 0, 0),
-                    startHpr=VBase3(h, 0, 0),
-                    other=otherNP,
-                    blendType="easeInOut"),
-                Func(doorFrameHoleRight.hide),
-                Func(self.hideIfHasFlat, rightDoor),
-                SoundInterval(self.closeSfx, node=rightDoor),
-                name = trackName)
+        self.finishDoorTrack()
+        self.doorTrack = Sequence(
+            LerpHprInterval(
+                nodePath=rightDoor,
+                duration=1.0,
+                hpr=VBase3(0, 0, 0),
+                startHpr=VBase3(h, 0, 0),
+                other=otherNP,
+                blendType="easeInOut"),
+            Func(doorFrameHoleRight.hide),
+            Func(self.hideIfHasFlat, rightDoor),
+            SoundInterval(self.closeSfx, node=rightDoor),
+            name=trackName)
         self.doorTrack.start(ts)
         if hasattr(self, "done"):
-            #("exiting the estate, to a house"))
+            # ("exiting the estate, to a house"))
             base.cr.playGame.hood.loader.setHouse(self.houseId)
-            zoneId=self.otherZoneId
+            zoneId = self.otherZoneId
             if self.doorType == DoorTypes.EXT_STANDARD:
                 whereTo = "house"
             else:
                 whereTo = "estate"
             # We must set allowRedirect to 0 because we expect to meet
             # our other door on the other side.
-            request={
-                    #"loader": "estateLoader" ,
-                    "loader": "safeZoneLoader" ,
-                    "where": whereTo,
-                    "how": "doorIn",
-                    "hoodId": ToontownGlobals.MyEstate,
-                    "zoneId": zoneId,
-                    "shardId": None,
-                    "avId": -1,
-                    "allowRedirect" : 0,
-                    "doorDoId":self.otherDoId}
+            request = {
+                # "loader": "estateLoader" ,
+                "loader": "safeZoneLoader",
+                "where": whereTo,
+                "how": "doorIn",
+                "hoodId": ToontownGlobals.MyEstate,
+                "zoneId": zoneId,
+                "shardId": None,
+                "avId": -1,
+                "allowRedirect": 0,
+                "doorDoId": self.otherDoId}
             messenger.send("doorDoneEvent", [request])
-

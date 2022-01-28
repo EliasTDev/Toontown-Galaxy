@@ -32,6 +32,8 @@ from direct.controls.SwimWalker import SwimWalker
 from direct.controls.TwoDWalker import TwoDWalker
 from toontown.toon.OrbitalCamera import OrbitCamera
 from toontown.toonbase import ToontownGlobals
+
+
 class LocalAvatar(DistributedAvatar.DistributedAvatar,
                   DistributedSmoothNode.DistributedSmoothNode):
     """
@@ -39,7 +41,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
     """
     notify = DirectNotifyGlobal.directNotify.newCategory("LocalAvatar")
 
-    wantDevCameraPositions = base.config.GetBool('want-dev-camera-positions', 0)
+    wantDevCameraPositions = base.config.GetBool(
+        'want-dev-camera-positions', 0)
     wantMouse = base.config.GetBool('want-mouse', 0)
 
     sleepTimeout = base.config.GetInt('sleep-timeout', 120)
@@ -50,14 +53,19 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
     acceptingNewFriends = base.config.GetBool('accepting-new-friends', 1)
 
     # special methods
-    def __init__(self, cr, chatMgr, talkAssistant = None, passMessagesThrough = False):
+    def __init__(
+            self,
+            cr,
+            chatMgr,
+            talkAssistant=None,
+            passMessagesThrough=False):
         """
         cr is a ClientRepository
         """
         try:
             self.LocalAvatar_initialized
             return
-        except:
+        except BaseException:
             pass
 
         self.LocalAvatar_initialized = 1
@@ -69,8 +77,9 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         base.pushCTrav(self.cTrav)
         self.cTrav.setRespectPrevTransform(1)
 
-        self.avatarControlsEnabled=0
-        self.controlManager = ToontownControlManager.ToontownControlManager(True, passMessagesThrough)
+        self.avatarControlsEnabled = 0
+        self.controlManager = ToontownControlManager.ToontownControlManager(
+            True, passMessagesThrough)
         # Set up collisions:
         self.initializeCollisions()
         # Set up camera:
@@ -108,13 +117,12 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         # player may take.
         self.lockedDown = 0
 
-        self.isPageUp=0
-        self.isPageDown=0
+        self.isPageUp = 0
+        self.isPageDown = 0
 
         # Let derived classes fill these in
         self.soundRun = None
         self.soundWalk = None
-
 
         # Is the toon sleeping?
         self.sleepFlag = 0
@@ -125,7 +133,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         # is the toon moving?
         self.movingFlag = 0
         self.swimmingFlag = 0
-
 
         self.lastNeedH = None
 
@@ -176,7 +183,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
     def useTwoDControls(self):
         self.controlManager.use("twoD", self)
 
-
     def isLockedDown(self):
         return self.lockedDown
 
@@ -217,7 +223,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         try:
             self.LocalAvatar_deleted
             return
-        except:
+        except BaseException:
             self.LocalAvatar_deleted = 1
         self.ignoreAll()
         self.stopJumpLandTask()
@@ -251,9 +257,9 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         DistributedAvatar.DistributedAvatar.delete(self)
 
     def shadowReach(self, state):
-        if  base.localAvatar.shadowPlacer:
+        if base.localAvatar.shadowPlacer:
             base.localAvatar.shadowPlacer.lifter.setReach(
-                base.localAvatar.getAirborneHeight()+4.0)
+                base.localAvatar.getAirborneHeight() + 4.0)
         return Task.cont
 
     def wantLegacyLifter(self):
@@ -261,33 +267,34 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
     def setupControls(
             self,
-            avatarRadius = 1.4,
-            floorOffset = OTPGlobals.FloorOffset,
-            reach = 4.0,
-            wallBitmask = OTPGlobals.WallBitmask,
-            floorBitmask = OTPGlobals.FloorBitmask,
-            ghostBitmask = OTPGlobals.GhostBitmask,
-            ):
+            avatarRadius=1.4,
+            floorOffset=OTPGlobals.FloorOffset,
+            reach=4.0,
+            wallBitmask=OTPGlobals.WallBitmask,
+            floorBitmask=OTPGlobals.FloorBitmask,
+            ghostBitmask=OTPGlobals.GhostBitmask,
+    ):
         """
         Set up the local avatar for collisions
         """
         if 0:
             # Physics Walker:
-            physControls=PhysicsWalker(gravity = -32.1740 * 2.0) # * 2.0 is a hack
+            physControls = PhysicsWalker(
+                gravity=-32.1740 * 2.0)  # * 2.0 is a hack
             physControls.setWallBitMask(wallBitmask)
             physControls.setFloorBitMask(floorBitmask)
             physControls.initializeCollisions(self.cTrav, self,
-                    avatarRadius, floorOffset, reach)
+                                              avatarRadius, floorOffset, reach)
             physControls.setAirborneHeightFunc(self.getAirborneHeight)
             self.controlManager.add(physControls, "phys")
             self.physControls = physControls
 
         # Avatar Gravity Walker:
-        walkControls=GravityWalker(legacyLifter=self.wantLegacyLifter())
+        walkControls = GravityWalker(legacyLifter=self.wantLegacyLifter())
         walkControls.setWallBitMask(wallBitmask)
         walkControls.setFloorBitMask(floorBitmask)
         walkControls.initializeCollisions(self.cTrav, self,
-                avatarRadius, floorOffset, reach)
+                                          avatarRadius, floorOffset, reach)
         walkControls.setAirborneHeightFunc(self.getAirborneHeight)
         self.controlManager.add(walkControls, "walk")
         self.physControls = walkControls
@@ -297,34 +304,34 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         twoDControls.setWallBitMask(wallBitmask)
         twoDControls.setFloorBitMask(floorBitmask)
         twoDControls.initializeCollisions(self.cTrav, self,
-                avatarRadius, floorOffset, reach)
+                                          avatarRadius, floorOffset, reach)
         twoDControls.setAirborneHeightFunc(self.getAirborneHeight)
         self.controlManager.add(twoDControls, "twoD")
 
         # Avatar swimming:
-        swimControls=SwimWalker()
+        swimControls = SwimWalker()
         swimControls.setWallBitMask(wallBitmask)
         swimControls.setFloorBitMask(floorBitmask)
         swimControls.initializeCollisions(self.cTrav, self,
-                avatarRadius, floorOffset, reach)
+                                          avatarRadius, floorOffset, reach)
         swimControls.setAirborneHeightFunc(self.getAirborneHeight)
         self.controlManager.add(swimControls, "swim")
 
         # Ghost mode (moving furniture, for example):
-        ghostControls=GhostWalker()
+        ghostControls = GhostWalker()
         ghostControls.setWallBitMask(ghostBitmask)
         ghostControls.setFloorBitMask(floorBitmask)
         ghostControls.initializeCollisions(self.cTrav, self,
-                avatarRadius, floorOffset, reach)
+                                           avatarRadius, floorOffset, reach)
         ghostControls.setAirborneHeightFunc(self.getAirborneHeight)
         self.controlManager.add(ghostControls, "ghost")
 
         # Observer mode (following ai avatars, for example):
-        observerControls=ObserverWalker()
+        observerControls = ObserverWalker()
         observerControls.setWallBitMask(ghostBitmask)
         observerControls.setFloorBitMask(floorBitmask)
         observerControls.initializeCollisions(self.cTrav, self,
-                avatarRadius, floorOffset, reach)
+                                              avatarRadius, floorOffset, reach)
         observerControls.setAirborneHeightFunc(self.getAirborneHeight)
         self.controlManager.add(observerControls, "observer")
 
@@ -377,11 +384,11 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         # set up camera obstruction collision reciever
         self.ccTrav.addCollider(self.ccLineNodePath, self.camCollisionQueue)
 
-        ## set up a sphere around camera to keep it away from the walls
+        # set up a sphere around camera to keep it away from the walls
 
         # make the sphere
         # the sphere attribs will be calculated later
-        self.ccSphere = CollisionSphere(0,0,0,1)
+        self.ccSphere = CollisionSphere(0, 0, 0, 1)
         self.ccSphereNode = CollisionNode('ccSphereNode')
         self.ccSphereNode.addSolid(self.ccSphere)
         self.ccSphereNodePath = base.camera.attachNewNode(self.ccSphereNode)
@@ -520,22 +527,22 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         hFov = base.camLens.getHfov()
         vFov = base.camLens.getVfov()
 
-        hOff = nearPlaneDist * math.tan(deg2Rad(hFov/2.))
-        vOff = nearPlaneDist * math.tan(deg2Rad(vFov/2.))
+        hOff = nearPlaneDist * math.tan(deg2Rad(hFov / 2.))
+        vOff = nearPlaneDist * math.tan(deg2Rad(vFov / 2.))
 
         # average the points together to get the sphere center
-        camPnts = [Point3( hOff, nearPlaneDist,  vOff),
-                   Point3(-hOff, nearPlaneDist,  vOff),
-                   Point3( hOff, nearPlaneDist, -vOff),
+        camPnts = [Point3(hOff, nearPlaneDist, vOff),
+                   Point3(-hOff, nearPlaneDist, vOff),
+                   Point3(hOff, nearPlaneDist, -vOff),
                    Point3(-hOff, nearPlaneDist, -vOff),
                    Point3(0.0, 0.0, 0.0)]
 
-        avgPnt = Point3(0.0,0.0,0.0)
+        avgPnt = Point3(0.0, 0.0, 0.0)
         for camPnt in camPnts:
             avgPnt = avgPnt + camPnt
         avgPnt = avgPnt / len(camPnts)
 
-        #calculate a minimum bounding sphere
+        # calculate a minimum bounding sphere
         sphereRadius = 0.0
         for camPnt in camPnts:
             dist = Vec3(camPnt - avgPnt).length()
@@ -551,14 +558,14 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
     def putCameraFloorRayOnAvatar(self):
         """place the camera ray on the avatar itself"""
-        self.camFloorRayNode.setPos(self, 0,0,5)
+        self.camFloorRayNode.setPos(self, 0, 0, 5)
 
     def putCameraFloorRayOnCamera(self):
         """place the camera ray in the center of the camera's collision
         sphere"""
-        self.camFloorRayNode.setPos(self.ccSphereNodePath, 0,0,0)
+        self.camFloorRayNode.setPos(self.ccSphereNodePath, 0, 0, 0)
 
-    #def collidedWithWall(self, collisionEntry):
+    # def collidedWithWall(self, collisionEntry):
     #    base.playSfx(self.soundWalkCollision)
 
     # set-up
@@ -573,7 +580,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         base.setMouseOnNode(self.node())
 
         # Do we want mouse navigation?
-        self.ignoreMouse=not self.wantMouse
+        self.ignoreMouse = not self.wantMouse
 
         self.setWalkSpeedNormal()
 
@@ -585,7 +592,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             self.jumpLandAnimFixTask.remove()
             self.jumpLandAnimFixTask = None
 
-    if 1: # HACK: These are to fix the anmation aftar a jump -- the anim fsm needs to be redone so these are not necessary
+    if 1:  # HACK: These are to fix the anmation aftar a jump -- the anim fsm needs to be redone so these are not necessary
         def jumpStart(self):
             if not self.sleepFlag and self.hp > 0:
                 self.b_setAnimState("jumpAirborne", 1.0)
@@ -667,11 +674,12 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         """
         assert self.notify.debugStateCall(self)
         if self.avatarControlsEnabled:
-           
+
             return
-        self.avatarControlsEnabled=1
+        self.avatarControlsEnabled = 1
         self.setupAnimationEvents()
         self.controlManager.enable()
+
     def disableAvatarControls(self):
         """
         Ignore the tab, page up, arrow keys, etc.
@@ -679,7 +687,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         assert self.notify.debugStateCall(self)
         if not self.avatarControlsEnabled:
             return
-        self.avatarControlsEnabled=0
+        self.avatarControlsEnabled = 0
         self.ignoreAnimationEvents()
         self.controlManager.setWASDTurn(1)
         self.controlManager.disable()
@@ -718,7 +726,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         if not self.isPageDown:
             self.isPageUp = 0
             self.isPageDown = 1
-            self.lerpCameraFov(70,0.6)
+            self.lerpCameraFov(70, 0.6)
             self.setCameraPositionByIndex(self.cameraIndex)
         else:
             self.clearPageUpDown()
@@ -737,7 +745,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         if not self.avatarControlsEnabled:
             return
         self.wakeUp()
-        self.__cameraHasBeenMoved = 1 # force the camera to process
+        self.__cameraHasBeenMoved = 1  # force the camera to process
 
         if (forward):
             self.cameraIndex += 1
@@ -746,7 +754,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         else:
             self.cameraIndex -= 1
             if (self.cameraIndex < 0):
-                self.cameraIndex = len(self.cameraPositions)-1
+                self.cameraIndex = len(self.cameraPositions) - 1
         self.setCameraPositionByIndex(self.cameraIndex)
 
     def initCameraPositions(self):
@@ -756,9 +764,9 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         # default LookAt point is at avatar's height, some distance in front
         defLookAt = Point3(0.0, 1.5, camHeight)
 
-        scXoffset  = 3.0
+        scXoffset = 3.0
         # high, places toon under speedchat
-        scPosition = (Point3(scXoffset-1, -10.0, camHeight+5.0),
+        scPosition = (Point3(scXoffset - 1, -10.0, camHeight + 5.0),
                       Point3(scXoffset, 2.0, camHeight))
 
         # In general, the camera shots move forward, until you're
@@ -767,94 +775,94 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         #
         # (position, neutral lookat, up lookat, down lookat, disableSmartCam)
         self.cameraPositions = [
-            #close shot
-            (Point3(0.0, (-9.0 * heightScaleFactor), camHeight),        #pos
-             defLookAt,                                                 #fwd
-             Point3(0.0, camHeight, camHeight*4.0),                    #up
-             Point3(0.0, camHeight, camHeight*-1.0),                    #down
+            # close shot
+            (Point3(0.0, (-9.0 * heightScaleFactor), camHeight),  # pos
+             defLookAt,  # fwd
+             Point3(0.0, camHeight, camHeight * 4.0),  # up
+             Point3(0.0, camHeight, camHeight * -1.0),  # down
              0,
              ),
-            #fireworks shot
-            #(Point3(0.0, (-8.0 * heightScaleFactor), camHeight/2.0),        #pos
+            # fireworks shot
+            # (Point3(0.0, (-8.0 * heightScaleFactor), camHeight/2.0),        #pos
             # Point3(0.0, 1.5, camHeight*1.8),
             # Point3(0.0, camHeight, camHeight*4.0),                    #up
             # Point3(0.0, camHeight, camHeight*-1.0),                    #down
             # 0,
             # ),
-            #first-person
-            (Point3(0.0, 0.5, camHeight),                               #pos
-             defLookAt,                                                 #fwd
-             Point3(0.0, camHeight, camHeight*1.33),                    #up
-             Point3(0.0, camHeight, camHeight*0.66),                    #down
-             1, # disable the smart cam
+            # first-person
+            (Point3(0.0, 0.5, camHeight),  # pos
+             defLookAt,  # fwd
+             Point3(0.0, camHeight, camHeight * 1.33),  # up
+             Point3(0.0, camHeight, camHeight * 0.66),  # down
+             1,  # disable the smart cam
              ),
             # If you move this shot out of index 2, be sure to adjust
             # self.nextCameraPos() to match.  Maybe we should at a flag,
             # rather than use a hard coded index.
             # up shot:
-            #(Point3(0.0, (1.0 * heightScaleFactor), camHeight),
+            # (Point3(0.0, (1.0 * heightScaleFactor), camHeight),
             #    Point3(0.0, camHeight, camHeight*1.33)),
-            #scPosition,
-            #third person
-            (Point3((5.7 * heightScaleFactor),                          #pos
+            # scPosition,
+            # third person
+            (Point3((5.7 * heightScaleFactor),  # pos
                     (7.65 * heightScaleFactor),
                     (camHeight + 2.0)),
              Point3(0.0, 1.0, camHeight),
-             Point3(0.0, 1.0, camHeight*4.0),
-             Point3(0.0, 1.0, camHeight*-1.0),
+             Point3(0.0, 1.0, camHeight * 4.0),
+             Point3(0.0, 1.0, camHeight * -1.0),
              0,
              ),
-            #extra wide shot
+            # extra wide shot
             (Point3(0.0, (-24.0 * heightScaleFactor), (camHeight + 4.0)),
              defLookAt,
              Point3(0.0, 1.5, camHeight * 4.0),
              Point3(0.0, 1.5, camHeight * -1.0),
              0,
              ),
-            #wide shot (default)
+            # wide shot (default)
             (Point3(0.0, (-12.0 * heightScaleFactor), (camHeight + 4.0)),
              defLookAt,
              Point3(0.0, 1.5, camHeight * 4.0),
              Point3(0.0, 1.5, camHeight * -1.0),
              0,
              ),
-            ] + self.auxCameraPositions
+        ] + self.auxCameraPositions
         if self.wantDevCameraPositions:
-            self.cameraPositions+=[
+            self.cameraPositions += [
                 # Overhead:
-                (Point3(0.0, 0.0, camHeight*3),           #pos
-                 Point3(0.0, 0.0, 0.0),                   #fwd
-                 Point3(0.0, camHeight*2, 0.0),           #up
-                 Point3(0.0, -camHeight*2, 0.0),          #down
-                 1, # disable the smart cam
+                (Point3(0.0, 0.0, camHeight * 3),  # pos
+                 Point3(0.0, 0.0, 0.0),  # fwd
+                 Point3(0.0, camHeight * 2, 0.0),  # up
+                 Point3(0.0, -camHeight * 2, 0.0),  # down
+                 1,  # disable the smart cam
                  ),
                 # From right:
-                (Point3(camHeight*3, 0.0, camHeight),     #pos
-                 Point3(0.0, 0.0, camHeight),             #fwd
-                 Point3(0.0, camHeight, camHeight*1.1),  #up
-                 Point3(0.0, camHeight, camHeight*0.9),  #down
-                 1, # disable the smart cam
+                (Point3(camHeight * 3, 0.0, camHeight),  # pos
+                 Point3(0.0, 0.0, camHeight),  # fwd
+                 Point3(0.0, camHeight, camHeight * 1.1),  # up
+                 Point3(0.0, camHeight, camHeight * 0.9),  # down
+                 1,  # disable the smart cam
                  ),
                 # Close-up of feet (good for physics testing):
-                (Point3(camHeight*3, 0.0, 0.0),          #pos
-                 Point3(0.0, 0.0, camHeight),             #fwd
-                 Point3(0.0, camHeight, camHeight*1.1),  #up
-                 Point3(0.0, camHeight, camHeight*0.9),  #down
-                 1, # disable the smart cam
+                (Point3(camHeight * 3, 0.0, 0.0),  # pos
+                 Point3(0.0, 0.0, camHeight),  # fwd
+                 Point3(0.0, camHeight, camHeight * 1.1),  # up
+                 Point3(0.0, camHeight, camHeight * 0.9),  # down
+                 1,  # disable the smart cam
                  ),
                 # Dramatic from floor (just for fun):
-                #(Point3(1.5, 4.0, -2.0),     #pos
+                # (Point3(1.5, 4.0, -2.0),     #pos
                 # Point3(0.0, 0.0, camHeight),             #fwd
                 # Point3(0.0, camHeight, camHeight*1.1),  #up
                 # Point3(0.0, camHeight, camHeight*0.9),  #down
                 # 1, # disable the smart cam
                 # ),
                 # From left:
-                (Point3(-camHeight*3, 0.0, camHeight),     #pos
-                 Point3(0.0, 0.0, camHeight),             #fwd
-                 Point3(0.0, camHeight, camHeight*1.1),  #up
-                 Point3(0.0, camHeight, camHeight*0.9),  #down
-                 1, # disable the smart cam
+                (Point3(-camHeight * 3, 0.0, camHeight),  # pos
+                 Point3(0.0, 0.0, camHeight),  # fwd
+                 Point3(0.0, camHeight, camHeight * 1.1),  # up
+                 Point3(0.0, camHeight, camHeight * 0.9),  # down
+                 1,  # disable the smart cam
                  ),
                 # daisy gardens maze solver
                 # This shot is too drastic to include in the release
@@ -863,7 +871,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
                  (defLookAt + Point3(0, 15, 0)),
                  (defLookAt + Point3(0, 15, 0)),
                  (defLookAt + Point3(0, 15, 0)),
-                 1, # disable the smart cam
+                 1,  # disable the smart cam
                  ),
                 # platformer
                 # This is an attempt at a good general purpose
@@ -873,14 +881,14 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
                  (defLookAt + Point3(0, 5, 0)),
                  (defLookAt + Point3(0, 5, 0)),
                  (defLookAt + Point3(0, 5, 0)),
-                 1, # disable the smart cam
+                 1,  # disable the smart cam
                  ),
-                ]
+            ]
 
-    def addCameraPosition(self, camPos = None):
-        if camPos == None:
+    def addCameraPosition(self, camPos=None):
+        if camPos is None:
             lookAtNP = self.attachNewNode('lookAt')
-            lookAtNP.setPos(base.cam,0,1,0)
+            lookAtNP.setPos(base.cam, 0, 1, 0)
             lookAtPos = lookAtNP.getPos()
             camHeight = self.getClampedAvatarHeight()
             camPos = (base.cam.getPos(self),
@@ -915,10 +923,10 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
     def printCameraPosition(self, index):
         cp = self.cameraPositions[index]
-        print('(Point3(%0.2f, %0.2f, %0.2f),' % (cp[0][0],cp[0][1],cp[0][2]))
-        print('Point3(%0.2f, %0.2f, %0.2f),' % (cp[1][0],cp[1][1],cp[1][2]))
-        print('Point3(%0.2f, %0.2f, %0.2f),' % (cp[2][0],cp[2][1],cp[2][2]))
-        print('Point3(%0.2f, %0.2f, %0.2f),' % (cp[3][0],cp[3][1],cp[3][2]))
+        print(f'(Point3({cp[0][0]:0.2f}, {cp[0][1]:0.2f}, {cp[0][2]:0.2f}),')
+        print(f'Point3({cp[1][0]:0.2f}, {cp[1][1]:0.2f}, {cp[1][2]:0.2f}),')
+        print(f'Point3({cp[2][0]:0.2f}, {cp[2][1]:0.2f}, {cp[2][2]:0.2f}),')
+        print(f'Point3({cp[3][0]:0.2f}, {cp[3][1]:0.2f}, {cp[3][2]:0.2f}),')
         print('%d,' % cp[4])
         print(')', end=' ')
 
@@ -960,7 +968,10 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             if self.cameraLerp:
                 self.cameraLerp.finish()
                 self.cameraLerp = None
-            self.cameraLerp = LerpPosHprInterval(camera, time, Point3(x, y, z), Point3(h, p, r), other=self, name='posCamera')
+            self.cameraLerp = LerpPosHprInterval(
+                camera, time, Point3(
+                    x, y, z), Point3(
+                    h, p, r), other=self, name='posCamera')
             self.cameraLerp.start()
 
     def getClampedAvatarHeight(self):
@@ -1009,12 +1020,12 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         sets the camera's ideal position, lookat point, etc.
         based on an index into the cameraPositions table
         """
-        self.notify.debug('switching to camera position %s' % index)
+        self.notify.debug(f'switching to camera position {index}')
         self.setCameraSettings(self.cameraPositions[index])
 
     def setCameraPosForPetInteraction(self):
         height = self.getClampedAvatarHeight()
-        point = Point3(height*(7/3.), height*(-7/3.), height)
+        point = Point3(height * (7 / 3.), height * (-7 / 3.), height)
 
         self.prevIdealPos = self.getIdealCameraPos()
         # TODO: ADD look at functionality
@@ -1032,14 +1043,14 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.setIdealCameraPos(camSettings[0])
 
         if ((self.isPageUp and self.isPageDown) or
-            ((not self.isPageUp) and (not self.isPageDown))):
-            self.__cameraHasBeenMoved = 1 # force the camera to process
+                ((not self.isPageUp) and (not self.isPageDown))):
+            self.__cameraHasBeenMoved = 1  # force the camera to process
             self.setLookAtPoint(camSettings[1])
         elif self.isPageUp:
-            self.__cameraHasBeenMoved = 1 # force the camera to process
+            self.__cameraHasBeenMoved = 1  # force the camera to process
             self.setLookAtPoint(camSettings[2])
         elif self.isPageDown:
-            self.__cameraHasBeenMoved = 1 # force the camera to process
+            self.__cameraHasBeenMoved = 1  # force the camera to process
             self.setLookAtPoint(camSettings[3])
         else:
             self.notify.error("This case should be impossible.")
@@ -1074,10 +1085,10 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             ratio = self.closestObstructionDistance / distance
             compromisePos = (idealPos * ratio) + (visPnt * (1 - ratio))
             # lift the camera up a bit, the closer it gets to the avatar
-            liftMult = (1.0 - (ratio*ratio))
+            liftMult = (1.0 - (ratio * ratio))
             compromisePos = Point3(compromisePos[0], compromisePos[1],
-                                   compromisePos[2] + \
-                                     ((self.getHeight()*0.4) * liftMult))
+                                   compromisePos[2] +
+                                   ((self.getHeight() * 0.4) * liftMult))
         compromisePos.setZ(compromisePos[2] + self.cameraZOffset)
         return compromisePos
 
@@ -1114,7 +1125,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             self.ccLine.setPointA(pointA)
             self.ccLine.setPointB(pointB)
 
-
     def initializeSmartCamera(self):
         self.__idealCameraObstructed = 0
         self.closestObstructionDistance = 0.0
@@ -1145,11 +1155,11 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
     def setGeom(self, geom):
         # optimization 1
         self.__geom = geom
-    
+
     def getGeom(self):
         return self.__geom
 
-    def startUpdateSmartCamera(self, push = 1):
+    def startUpdateSmartCamera(self, push=1):
         """
         Spawn a task to update the smart camera every frame
         """
@@ -1160,7 +1170,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
         # We use getKey() as a temporary workaround for problem with
         # inherited ==.
-
 
        # self._smartCamEnabled = True
 
@@ -1323,15 +1332,15 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             camera.setPos(targetCamPos)
             posDone = 1
 
-        ## do this here to get correct HPR
+        # do this here to get correct HPR
         #targetCamPos.setZ(targetCamPos[2] + self.cameraZOffset)
 
         ####################
         # we've got a target camera position and look-at point
         # we need to figure out our desired HPR from this info
 
-        ## this is more correct, but slower; it takes the pusher's
-        ## effect on the camera HPR into account
+        # this is more correct, but slower; it takes the pusher's
+        # effect on the camera HPR into account
         #self.positionCameraWithPusher(targetCamPos, targetCamLookAt)
 
         # this is less correct but quicker; it ignores the influence
@@ -1358,7 +1367,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         lerpRatio = 0.15
 
         # account for dt
-        lerpRatio = 1 - pow((1-lerpRatio), globalClock.getDt()*30.0)
+        lerpRatio = 1 - pow((1 - lerpRatio), globalClock.getDt() * 30.0)
 
         # calc new instantaneous position
         # (this will be modified if necessary by collision pusher)
@@ -1405,8 +1414,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
         self.popCameraToDest()
 
-
     # camera's floor-ray collision handler
+
     def handleCameraFloorInteraction(self):
         # figure out a Z offset for the camera
 
@@ -1453,8 +1462,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             self.__floorDetected = 1
             self.popCameraToDest()
 
-
-
     def lerpCameraFov(self, fov, time):
         """
         lerp the camera fov over time (used by the battle)
@@ -1465,9 +1472,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         if (abs(fov - oldFov) > 0.1):
             def setCamFov(fov):
                 base.camLens.setFov(fov)
-            self.camLerpInterval = LerpFunctionInterval(setCamFov,
-                fromData=oldFov, toData=fov, duration=time,
-                name='cam-fov-lerp')
+            self.camLerpInterval = LerpFunctionInterval(
+                setCamFov, fromData=oldFov, toData=fov, duration=time, name='cam-fov-lerp')
             self.camLerpInterval.start()
 
     def setCameraFov(self, fov):
@@ -1479,7 +1485,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         if not (self.isPageDown or self.isPageUp):
             base.camLens.setFov(self.fov)
 
-    def gotoNode(self, node, eyeHeight = 3):
+    def gotoNode(self, node, eyeHeight=3):
         """gotoNode(self, NodePath node)
 
         Puts the avatar at a suitable point nearby, and facing, the
@@ -1569,9 +1575,9 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         # MPG we need to identify the sender in a non-toontown specific way
         #sender = base.cr.identifyAvatar(fromId)
 
-        if (whisperType == WhisperPopup.WTNormal or \
-            whisperType == WhisperPopup.WTQuickTalker):
-            if sender == None:
+        if (whisperType == WhisperPopup.WTNormal or
+                whisperType == WhisperPopup.WTQuickTalker):
+            if sender is None:
                 return
             # Prefix the sender's name to the message.
             chatString = sender.getName() + ": " + chatString
@@ -1579,7 +1585,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         whisper = WhisperPopup(chatString,
                                OTPGlobals.getInterfaceFont(),
                                whisperType)
-        if sender != None:
+        if sender is not None:
             whisper.setClickable(sender.getName(), fromId)
 
         whisper.manage(base.marginManager)
@@ -1591,7 +1597,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
         #Displays the whisper message in whatever capacity makes sense.
         #This function overrides a similar function in DistributedAvatar.
-        
+
         sender = None
         playerInfo = None
         sfx = self.soundWhisper
@@ -1633,9 +1639,9 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         return self.animMultiplier
 
     def enableRun(self):
-        #Get hotkey name for moving forward
+        # Get hotkey name for moving forward
         moveForward = base.MOVE_FORWARD
-        #Get hotkey name for moving backwards
+        # Get hotkey name for moving backwards
         moveBackwards = base.MOVE_BACKWARDS
         self.accept(moveForward, self.startRunWatch)
         self.accept(moveBackwards, self.stopRunWatch)
@@ -1647,7 +1653,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.accept(f"shift-{moveForward}-up", self.stopRunWatch)
 
     def disableRun(self):
-        #Get hotkey name for moving forward
+        # Get hotkey name for moving forward
         moveForward = base.MOVE_FORWARD
         self.ignore(f"{moveForward}")
         self.ignore(f"{moveForward}-up")
@@ -1673,11 +1679,11 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
     def runSound(self):
         self.soundWalk.stop()
-        base.playSfx(self.soundRun, looping = 1)
+        base.playSfx(self.soundRun, looping=1)
 
     def walkSound(self):
         self.soundRun.stop()
-        base.playSfx(self.soundWalk, looping = 1)
+        base.playSfx(self.soundWalk, looping=1)
 
     def stopSound(self):
         self.soundRun.stop()
@@ -1686,7 +1692,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
     def wakeUp(self):
         # If we are watching to see if Toon falls asleep, there should be
         # a callback set, which tells us we need to restart the task.
-        if (self.sleepCallback != None):
+        if (self.sleepCallback is not None):
             taskMgr.remove(self.uniqueName('sleepwatch'))
             self.startSleepWatch(self.sleepCallback)
         self.lastMoved = globalClock.getFrameTime()
@@ -1707,7 +1713,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
     def startSleepWatch(self, callback):
         self.sleepCallback = callback
         taskMgr.doMethodLater(self.sleepTimeout, callback,
-                                self.uniqueName('sleepwatch'))
+                              self.uniqueName('sleepwatch'))
 
     def stopSleepWatch(self):
         taskMgr.remove(self.uniqueName('sleepwatch'))
@@ -1742,7 +1748,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         now = globalClock.getFrameTime()
         speed, rotSpeed, slideSpeed = self.controlManager.getSpeeds()
         if (speed != 0.0 or rotSpeed != 0.0 or inputState.isSet("jump")):
-        # did we just start moving?
+            # did we just start moving?
             if not self.swimmingFlag:
                 self.swimmingFlag = 1
         else:
@@ -1758,10 +1764,9 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             if not self.sleepFlag:
                 now = globalClock.getFrameTime()
                 if now - self.lastMoved > self.swimTimeout:
-                    #self.gotoSleep()
+                    # self.gotoSleep()
                     self.swimTimeoutAction()
                     return Task.done
-
 
         return Task.cont
 
@@ -1772,7 +1777,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         #print("trackAnimToSpeed %s" % (random.random()))
         speed, rotSpeed, slideSpeed = self.controlManager.getSpeeds()
 
-        if (speed != 0.0 or rotSpeed != 0.0 or slideSpeed != 0.0 or inputState.isSet("jump")):
+        if (speed != 0.0 or rotSpeed != 0.0 or slideSpeed !=
+                0.0 or inputState.isSet("jump")):
             # did we just start moving?
             if not self.movingFlag:
                 self.movingFlag = 1
@@ -1828,12 +1834,12 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             elif speed != 0.0:
                 needH = 0
 
-            if needH != None and self.lastNeedH != needH:
+            if needH is not None and self.lastNeedH != needH:
                 node = self.getGeomNode().getChild(0)
                 lerp = Sequence(LerpHprInterval(node, 0.5, Vec3(needH, 0, 0),
-                                                blendType = 'easeInOut'),
-                                name = 'cheesy-lerp-hpr',
-                                autoPause = 1)
+                                                blendType='easeInOut'),
+                                name='cheesy-lerp-hpr',
+                                autoPause=1)
                 lerp.start()
                 self.lastNeedH = needH
         else:
@@ -1847,7 +1853,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
                 self.emoteTrack = None
             if action == OTPGlobals.WALK_INDEX or action == OTPGlobals.REVERSE_INDEX:
                 self.walkSound()
-            elif (action == OTPGlobals.RUN_INDEX or action == OTPGlobals.STRAFE_LEFT_INDEX  
+            elif (action == OTPGlobals.RUN_INDEX or action == OTPGlobals.STRAFE_LEFT_INDEX
                   or action == OTPGlobals.STRAFE_RIGHT_INDEX):
                 self.runSound()
             else:
@@ -1911,14 +1917,14 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
     def stopChat(self):
         self.chatMgr.stop()
-        #self.ignore("chatUpdate")
-        #self.ignore("chatUpdateSC")
-        #self.ignore("chatUpdateSCCustom")
-        #self.ignore("chatUpdateSCEmote")
-        #self.ignore("whisperUpdate")
-        #self.ignore("whisperUpdateSC")
-        #self.ignore("whisperUpdateSCCustom")
-        #self.ignore("whisperUpdateSCEmote")
+        # self.ignore("chatUpdate")
+        # self.ignore("chatUpdateSC")
+        # self.ignore("chatUpdateSCCustom")
+        # self.ignore("chatUpdateSCEmote")
+        # self.ignore("whisperUpdate")
+        # self.ignore("whisperUpdateSC")
+        # self.ignore("whisperUpdateSCCustom")
+        # self.ignore("whisperUpdateSCEmote")
         self.ignore(OTPGlobals.WhisperIncomingEvent)
         self.ignore(OTPGlobals.ThinkPosHotkey)
         self.ignore(OTPGlobals.PrintCamPosHotkey)
@@ -1930,7 +1936,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         node = base.camera.getParent()
         pos = base.cam.getPos(node)
         hpr = base.cam.getHpr(node)
-        print('cam pos = ',repr(pos),', cam hpr = ',repr(hpr))
+        print('cam pos = ', repr(pos), ', cam hpr = ', repr(hpr))
 
     def d_broadcastPositionNow(self):
         """
@@ -1943,21 +1949,20 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.d_clearSmoothing()
         self.d_broadcastPosHpr()
 
-    def travCollisionsLOS(self, n = None):
-        if n == None:
+    def travCollisionsLOS(self, n=None):
+        if n is None:
             n = self.__geom
         self.ccTrav.traverse(n)
 
-    def travCollisionsFloor(self, n = None):
-        if n == None:
+    def travCollisionsFloor(self, n=None):
+        if n is None:
             n = self.__geom
         self.ccTravFloor.traverse(n)
 
-    def travCollisionsPusher(self, n = None):
-        if n == None:
+    def travCollisionsPusher(self, n=None):
+        if n is None:
             n = self.__geom
         self.ccPusherTrav.traverse(n)
-
 
     def __friendOnline(self, doId, alert=False):
         """
@@ -1967,7 +1972,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         # The first "online" message we get immediately after adding a
         # new friend is suspect.
         friend = base.cr.identifyFriend(doId)
-        if self.oldFriendsList != None:
+        if self.oldFriendsList is not None:
             now = globalClock.getFrameTime()
             elapsed = now - self.timeFriendsListChanged
             if elapsed < 10.0 and self.oldFriendsList.count(doId) == 0:
@@ -1976,8 +1981,10 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
                 self.oldFriendsList.append(doId)
                 return
 
-        if friend != None:
-            self.setSystemMessage(doId, OTPLocalizer.WhisperFriendComingOnline % (friend.getName()))
+        if friend is not None:
+            self.setSystemMessage(
+                doId, OTPLocalizer.WhisperFriendComingOnline %
+                (friend.getName()))
 
     def __friendOffline(self, doId):
         """
@@ -1985,27 +1992,31 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         news to the user.
         """
         friend = base.cr.identifyFriend(doId)
-        if friend != None:
-            self.setSystemMessage(0, OTPLocalizer.WhisperFriendLoggedOut % (friend.getName()))
+        if friend is not None:
+            self.setSystemMessage(
+                0, OTPLocalizer.WhisperFriendLoggedOut %
+                (friend.getName()))
 
-    #def __playerOnline(self, playerId):
+    # def __playerOnline(self, playerId):
         #playerInfo = base.cr.playerFriendsManager.playerId2Info[playerId]
-        #if playerInfo:
+        # if playerInfo:
          #   self.setSystemMessage(playerId, OTPLocalizer.WhisperPlayerOnline % (playerInfo.playerName, playerInfo.location))
 
     def __playerOffline(self, playerId):
         playerInfo = base.cr.playerFriendsManager.playerId2Info[playerId]
         if playerInfo:
-            self.setSystemMessage(playerId, OTPLocalizer.WhisperPlayerOffline % (playerInfo.playerName))
+            self.setSystemMessage(
+                playerId, OTPLocalizer.WhisperPlayerOffline %
+                (playerInfo.playerName))
 
-    def clickedWhisper(self, doId, isPlayer = None):
+    def clickedWhisper(self, doId, isPlayer=None):
         """
         Called from the C++ code when the user clicks on a whisper
         message from a friend.
         """
         if not isPlayer:
             friend = base.cr.identifyFriend(doId)
-            if friend != None:
+            if friend is not None:
                 # We request an avatar panel *and* simultaneously open up
                 # the whisper-to panel.  We want the avatar panel to allow
                 # going to the friend; but sometimes (for instance, in a
@@ -2014,15 +2025,13 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
                 messenger.send("clickedNametag", [friend])
                 self.chatMgr.whisperTo(friend.getName(), doId)
 
-
-
     # this is here to ensure that the correct overloaded method is called
+
     def d_setParent(self, parentToken):
         DistributedSmoothNode.DistributedSmoothNode.d_setParent(
-                self, parentToken)
+            self, parentToken)
 
-
-  #def handlePlayerFriendWhisper(self, playerId, charMessage):
+  # def handlePlayerFriendWhisper(self, playerId, charMessage):
         """
         handle player friend message.
         """
@@ -2035,4 +2044,3 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         """
         assert(0)
         return 0
-

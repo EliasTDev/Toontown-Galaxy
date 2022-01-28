@@ -11,7 +11,7 @@ GlobalEntities = {
         'farPlaneDistance': 1500,
         'modelFilename': 'phase_11/models/lawbotHQ/LB_Zone04a',
         'wantDoors': 1,
-        }, # end entity 1000
+    },  # end entity 1000
     # EDITMGR
     1001: {
         'type': 'editMgr',
@@ -21,7 +21,7 @@ GlobalEntities = {
         'removeEntity': None,
         'requestNewEntity': None,
         'requestSave': None,
-        }, # end entity 1001
+    },  # end entity 1001
     # ZONE
     0: {
         'type': 'zone',
@@ -31,7 +31,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 0
+    },  # end entity 0
     # BUTTON
     100018: {
         'type': 'button',
@@ -45,7 +45,7 @@ GlobalEntities = {
         'isOn': 0,
         'isOnEvent': 0,
         'secondsOn': -1.0,
-        }, # end entity 100018
+    },  # end entity 100018
     100019: {
         'type': 'button',
         'name': '<unnamed>',
@@ -58,7 +58,7 @@ GlobalEntities = {
         'isOn': 0,
         'isOnEvent': 0,
         'secondsOn': -1.0,
-        }, # end entity 100019
+    },  # end entity 100019
     # DOOR
     100015: {
         'type': 'door',
@@ -81,7 +81,7 @@ GlobalEntities = {
         'unlock1Event': 0,
         'unlock2Event': 100017,
         'unlock3Event': 0,
-        }, # end entity 100015
+    },  # end entity 100015
     # LASERFIELD
     100016: {
         'type': 'laserField',
@@ -99,7 +99,7 @@ GlobalEntities = {
         'modelPath': 0,
         'projector': Point3(20, 40, 45),
         'switchId': 100019,
-        }, # end entity 100016
+    },  # end entity 100016
     100017: {
         'type': 'laserField',
         'name': '<unnamed>',
@@ -116,7 +116,7 @@ GlobalEntities = {
         'modelPath': 0,
         'projector': Point3(20, 40, 45),
         'switchId': 100018,
-        }, # end entity 100017
+    },  # end entity 100017
     # MODEL
     100001: {
         'type': 'model',
@@ -130,7 +130,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100001
+    },  # end entity 100001
     100002: {
         'type': 'model',
         'name': 'copy of partition (4)',
@@ -143,7 +143,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100002
+    },  # end entity 100002
     100003: {
         'type': 'model',
         'name': 'copy of partition (5)',
@@ -156,7 +156,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100003
+    },  # end entity 100003
     100004: {
         'type': 'model',
         'name': 'copy of partition (6)',
@@ -169,7 +169,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100004
+    },  # end entity 100004
     100007: {
         'type': 'model',
         'name': 'copy of partition',
@@ -182,7 +182,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100007
+    },  # end entity 100007
     100008: {
         'type': 'model',
         'name': 'copy of partition (2)',
@@ -195,7 +195,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100008
+    },  # end entity 100008
     100009: {
         'type': 'model',
         'name': 'copy of partition (3)',
@@ -208,7 +208,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100009
+    },  # end entity 100009
     100010: {
         'type': 'model',
         'name': 'copy of partition (4)',
@@ -221,7 +221,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100010
+    },  # end entity 100010
     100012: {
         'type': 'model',
         'name': 'copy of partition (3)',
@@ -234,7 +234,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100012
+    },  # end entity 100012
     100013: {
         'type': 'model',
         'name': 'copy of partition (4)',
@@ -247,7 +247,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100013
+    },  # end entity 100013
     100014: {
         'type': 'model',
         'name': 'copy of partition (5)',
@@ -260,7 +260,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100014
+    },  # end entity 100014
     100023: {
         'type': 'model',
         'name': 'copy of partition (6)',
@@ -273,7 +273,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100023
+    },  # end entity 100023
     100025: {
         'type': 'model',
         'name': 'copy of partition (7)',
@@ -286,7 +286,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100025
+    },  # end entity 100025
     100026: {
         'type': 'model',
         'name': 'copy of partition (8)',
@@ -299,7 +299,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100026
+    },  # end entity 100026
     100027: {
         'type': 'model',
         'name': 'copy of partition (5)',
@@ -312,7 +312,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100027
+    },  # end entity 100027
     100028: {
         'type': 'model',
         'name': 'copy of partition (6)',
@@ -325,7 +325,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100028
+    },  # end entity 100028
     100029: {
         'type': 'model',
         'name': 'scenary',
@@ -338,7 +338,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_couchA.bam',
-        }, # end entity 100029
+    },  # end entity 100029
     100030: {
         'type': 'model',
         'name': 'copy of scenary',
@@ -351,7 +351,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_couchA.bam',
-        }, # end entity 100030
+    },  # end entity 100030
     100031: {
         'type': 'model',
         'name': 'copy of scenary (2)',
@@ -364,7 +364,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 100031
+    },  # end entity 100031
     100032: {
         'type': 'model',
         'name': 'copy of scenary (3)',
@@ -377,7 +377,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 100032
+    },  # end entity 100032
     100033: {
         'type': 'model',
         'name': 'copy of scenary (4)',
@@ -390,7 +390,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_filing_cabA.bam',
-        }, # end entity 100033
+    },  # end entity 100033
     100037: {
         'type': 'model',
         'name': 'partition',
@@ -403,7 +403,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100037
+    },  # end entity 100037
     100038: {
         'type': 'model',
         'name': 'copy of partition',
@@ -416,7 +416,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100038
+    },  # end entity 100038
     100039: {
         'type': 'model',
         'name': 'copy of partition',
@@ -429,7 +429,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100039
+    },  # end entity 100039
     100040: {
         'type': 'model',
         'name': 'copy of partition (2)',
@@ -442,7 +442,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100040
+    },  # end entity 100040
     100041: {
         'type': 'model',
         'name': 'copy of scenary (5)',
@@ -455,7 +455,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_filing_cabA.bam',
-        }, # end entity 100041
+    },  # end entity 100041
     100042: {
         'type': 'model',
         'name': 'copy of scenary (6)',
@@ -468,7 +468,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfA.bam',
-        }, # end entity 100042
+    },  # end entity 100042
     100043: {
         'type': 'model',
         'name': 'box',
@@ -481,7 +481,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100043
+    },  # end entity 100043
     100044: {
         'type': 'model',
         'name': 'copy of box',
@@ -494,7 +494,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100044
+    },  # end entity 100044
     100045: {
         'type': 'model',
         'name': 'copy of box (2)',
@@ -507,7 +507,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100045
+    },  # end entity 100045
     100046: {
         'type': 'model',
         'name': 'copy of box (3)',
@@ -520,7 +520,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 100046
+    },  # end entity 100046
     # NODEPATH
     10000: {
         'type': 'nodepath',
@@ -530,7 +530,7 @@ GlobalEntities = {
         'pos': Point3(-64.0541, 7.6285, 0),
         'hpr': Vec3(90, 0, 0),
         'scale': Point3(1, 1, 1),
-        }, # end entity 10000
+    },  # end entity 10000
     100020: {
         'type': 'nodepath',
         'name': 'battle place 1',
@@ -539,7 +539,7 @@ GlobalEntities = {
         'pos': Point3(-35.0928, 6.21518, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 100020
+    },  # end entity 100020
     100021: {
         'type': 'nodepath',
         'name': 'cogparent2',
@@ -548,7 +548,7 @@ GlobalEntities = {
         'pos': Point3(64.2291, 5.46719, 0),
         'hpr': Vec3(270, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 100021
+    },  # end entity 100021
     100022: {
         'type': 'nodepath',
         'name': 'BattlePlace2',
@@ -557,7 +557,7 @@ GlobalEntities = {
         'pos': Point3(32.4809, 7.68949, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 100022
+    },  # end entity 100022
     100035: {
         'type': 'nodepath',
         'name': 'cogparent1',
@@ -566,7 +566,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 100035
+    },  # end entity 100035
     # RENDERING
     100000: {
         'type': 'rendering',
@@ -583,7 +583,7 @@ GlobalEntities = {
         'colorR': 1.0,
         'fogOn': 0,
         'renderBin': 'transparent',
-        }, # end entity 100000
+    },  # end entity 100000
     100005: {
         'type': 'rendering',
         'name': 'doorparent',
@@ -599,7 +599,7 @@ GlobalEntities = {
         'colorR': 0.80000000000000004,
         'fogOn': 0,
         'renderBin': 'transparent',
-        }, # end entity 100005
+    },  # end entity 100005
     100006: {
         'type': 'rendering',
         'name': 'wallparent3',
@@ -615,7 +615,7 @@ GlobalEntities = {
         'colorR': 1.0,
         'fogOn': 0,
         'renderBin': 'transparent',
-        }, # end entity 100006
+    },  # end entity 100006
     100011: {
         'type': 'rendering',
         'name': 'wallprent4',
@@ -631,7 +631,7 @@ GlobalEntities = {
         'colorR': 1.0,
         'fogOn': 0,
         'renderBin': 'transparent',
-        }, # end entity 100011
+    },  # end entity 100011
     100024: {
         'type': 'rendering',
         'name': 'cogrenderingparent2',
@@ -647,7 +647,7 @@ GlobalEntities = {
         'colorR': 1.0,
         'fogOn': 0,
         'renderBin': 'fixed',
-        }, # end entity 100024
+    },  # end entity 100024
     100034: {
         'type': 'rendering',
         'name': 'scenaryLight',
@@ -663,7 +663,7 @@ GlobalEntities = {
         'colorR': 0.59999999999999998,
         'fogOn': 0,
         'renderBin': 'transparent',
-        }, # end entity 100034
+    },  # end entity 100034
     100036: {
         'type': 'rendering',
         'name': 'partitionwall1',
@@ -679,15 +679,15 @@ GlobalEntities = {
         'colorR': 1.0,
         'fogOn': 0,
         'renderBin': 'transparent',
-        }, # end entity 100036
-    }
+    },  # end entity 100036
+}
 
 Scenario0 = {
-    }
+}
 
 levelSpec = {
     'globalEntities': GlobalEntities,
     'scenarios': [
         Scenario0,
-        ],
-    }
+    ],
+}

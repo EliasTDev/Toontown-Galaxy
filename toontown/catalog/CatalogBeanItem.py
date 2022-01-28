@@ -4,17 +4,18 @@ from toontown.toonbase import TTLocalizer
 from otp.otpbase import OTPLocalizer
 from direct.interval.IntervalGlobal import *
 
+
 class CatalogBeanItem(CatalogItem.CatalogItem):
     """
     This represents jellybeans sent in the gift system
     """
 
     sequenceNumber = 0
-    
-    def makeNewItem(self, beanAmount, tagCode = 1):
+
+    def makeNewItem(self, beanAmount, tagCode=1):
         self.beanAmount = beanAmount
         self.giftCode = tagCode
-        
+
         CatalogItem.CatalogItem.makeNewItem(self)
 
     def getPurchaseLimit(self):
@@ -30,7 +31,7 @@ class CatalogBeanItem(CatalogItem.CatalogItem):
            or self in avatar.awardMailboxContents or self in avatar.onAwardOrder:
             return 1
         return 0
-        
+
     def getAcceptItemErrorText(self, retcode):
         # Returns a string describing the error that occurred on
         # attempting to accept the item from the mailbox.  The input
@@ -52,7 +53,7 @@ class CatalogBeanItem(CatalogItem.CatalogItem):
         return TTLocalizer.BeanTypeName
 
     def getName(self):
-        name = ("%s %s" % (self.beanAmount , TTLocalizer.BeanTypeName))
+        name = f"{self.beanAmount} {TTLocalizer.BeanTypeName}"
         return name
 
     def recordPurchase(self, avatar, optional):
@@ -60,30 +61,28 @@ class CatalogBeanItem(CatalogItem.CatalogItem):
             avatar.addMoney(self.beanAmount)
 
         #avatar.emoteAccess[self.emoteIndex] = 1
-        #avatar.d_setEmoteAccess(avatar.emoteAccess)
-        #TODO: increase the toon's money here
+        # avatar.d_setEmoteAccess(avatar.emoteAccess)
+        # TODO: increase the toon's money here
         return ToontownGlobals.P_ItemAvailable
 
     def getPicture(self, avatar):
         #chatBalloon = loader.loadModel("phase_3/models/props/chatbox.bam")
         beanJar = loader.loadModel("phase_3.5/models/gui/jar_gui")
-        #chatBalloon.find("**/top").setPos(1,0,5)
-        #chatBalloon.find("**/middle").setScale(1,1,3)
+        # chatBalloon.find("**/top").setPos(1,0,5)
+        # chatBalloon.find("**/middle").setScale(1,1,3)
         frame = self.makeFrame()
         beanJar.reparentTo(frame)
 
-        beanJar.setPos(0,0,0)
+        beanJar.setPos(0, 0, 0)
         beanJar.setScale(2.5)
 
         assert (not self.hasPicture)
-        self.hasPicture=True
+        self.hasPicture = True
 
         return (frame, None)
 
-    def output(self, store = ~0):
-        return "CatalogBeanItem(%s%s)" % (
-            self.beanAmount,
-            self.formatOptionalData(store))
+    def output(self, store=~0):
+        return f"CatalogBeanItem({self.beanAmount}{self.formatOptionalData(store)})"
 
     def compareTo(self, other):
         return self.beanAmount - other.beanAmount
@@ -98,8 +97,7 @@ class CatalogBeanItem(CatalogItem.CatalogItem):
     def decodeDatagram(self, di, versionNumber, store):
         CatalogItem.CatalogItem.decodeDatagram(self, di, versionNumber, store)
         self.beanAmount = di.getUint16()
-        
+
     def encodeDatagram(self, dg, store):
         CatalogItem.CatalogItem.encodeDatagram(self, dg, store)
         dg.addUint16(self.beanAmount)
-        

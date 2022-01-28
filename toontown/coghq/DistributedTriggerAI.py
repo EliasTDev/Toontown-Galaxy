@@ -12,5 +12,5 @@ class DistributedTriggerAI(DistributedSwitchAI.DistributedSwitchAI):
     trigger is doing.  The DistributedTrigger, is the client side
     version.
     """
-    
+
     pass

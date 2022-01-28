@@ -6,6 +6,7 @@ from . import ArrowKeys
 from direct.task.Task import Task
 from otp.otpbase import OTPGlobals
 
+
 class OrthoDrive:
     """
     monitors the arrow keys and moves the localtoon orthogonally and
@@ -56,16 +57,17 @@ class OrthoDrive:
 
     def __placeToonHOG(self, pos, h=None):
         # place the toon unconditionally in a new position
-        if h == None:
+        if h is None:
             h = self.lt.getH()
 
         self.lt.setPos(pos)
         self.lt.setH(h)
 
-        self.lastPos=pos
+        self.lastPos = pos
 
-        self.atRestHeading=h
-        self.lastXVel=0; self.lastYVel=0
+        self.atRestHeading = h
+        self.lastXVel = 0
+        self.lastYVel = 0
 
     def stop(self):
         self.notify.debug("stop")
@@ -76,11 +78,11 @@ class OrthoDrive:
                 self.turnLocalToonIval.pause()
             del self.turnLocalToonIval
         # make localToon stop running
-        base.localAvatar.setSpeed(0,0)
+        base.localAvatar.setSpeed(0, 0)
 
     def __update(self, task):
         # move the local toon
-        vel = Vec3(0,0,0)
+        vel = Vec3(0, 0, 0)
 
         # first figure out which direction to move
         xVel = 0
@@ -101,7 +103,7 @@ class OrthoDrive:
         vel.normalize()
         vel *= self.speed
 
-        ## animate the toon
+        # animate the toon
         speed = vel.length()
         action = self.lt.setSpeed(speed, 0, 0)
         if action != self.lastAction:
@@ -136,11 +138,12 @@ class OrthoDrive:
             if posOffsetLen > self.maxFrameMove:
                 posOffset *= self.maxFrameMove
                 posOffset /= posOffsetLen
-                #self.notify.debug("clipped to: " + `posOffset.length()`)
+                # self.notify.debug("clipped to: " + `posOffset.length()`)
 
         # do custom collisions
         if self.customCollisionCallback:
-            toonPos = self.customCollisionCallback(toonPos, toonPos + posOffset)
+            toonPos = self.customCollisionCallback(
+                toonPos, toonPos + posOffset)
         else:
             toonPos = toonPos + posOffset
 
@@ -156,19 +159,19 @@ class OrthoDrive:
             # -1 wraps to end of lists
             angTab = [
                 #y = 0, 1, -1
-                [None,   0,  180], # x = 0
-                [ -90, -45, -135], # x = 1
-                [  90,  45,  135], # x = -1
-                ]
+                [None, 0, 180],  # x = 0
+                [-90, -45, -135],  # x = 1
+                [90, 45, 135],  # x = -1
+            ]
             return angTab[xVel][yVel] + self.upHeading
 
         def orientToon(angle, self=self):
             startAngle = self.lt.getH()
-            startAngle = fitSrcAngle2Dest(startAngle,angle)
-            dur = .1 * abs(startAngle-angle)/90
+            startAngle = fitSrcAngle2Dest(startAngle, angle)
+            dur = .1 * abs(startAngle - angle) / 90
             self.turnLocalToonIval = LerpHprInterval(
-                self.lt, dur, Point3(angle,0,0),
-                startHpr = Point3(startAngle,0,0),
+                self.lt, dur, Point3(angle, 0, 0),
+                startHpr=Point3(startAngle, 0, 0),
                 name='OrthoDriveLerpHpr')
             if self.instantTurn:
                 self.turnLocalToonIval.finish()
@@ -201,7 +204,7 @@ class OrthoDrive:
                 curHeading = getHeading(xVel, yVel)
                 # test: were they pressing a diagonal, and now are not?
                 if ((self.lastXVel and self.lastYVel) and
-                    not (xVel and yVel)):
+                        not (xVel and yVel)):
                     # delay a little bit before accepting this new
                     # heading as the at-rest heading
                     def setAtRestHeading(task, self=self,
@@ -214,4 +217,5 @@ class OrthoDrive:
                     self.atRestHeading = curHeading
                 orientToon(curHeading)
 
-        self.lastXVel = xVel; self.lastYVel = yVel
+        self.lastXVel = xVel
+        self.lastYVel = yVel

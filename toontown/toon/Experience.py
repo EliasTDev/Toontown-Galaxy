@@ -1,4 +1,4 @@
-### Experience module: contains the Experience class"""
+# Experience module: contains the Experience class"""
 
 from pandac.PandaModules import *
 from toontown.toonbase.ToontownBattleGlobals import *
@@ -7,19 +7,20 @@ from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from otp.otpbase import OTPGlobals
 
+
 class Experience:
 
     notify = DirectNotifyGlobal.directNotify.newCategory('Experience')
 
     # special methods
-    
+
     def __init__(self, expStr=None, owner=None):
         """__init__(self, netString=None)
         Create a default experience if no netString given, or
         create an experience from the given netString
         """
         self.owner = owner
-        if (expStr == None):
+        if (expStr is None):
             # create default level one inv
             self.experience = []
             for track in range(0, len(Tracks)):
@@ -33,7 +34,7 @@ class Experience:
         Experience print function
         """
         return str(self.experience)
-        
+
     def makeNetString(self):
         """makeNetString(self)
         Make a network packet out of the experience
@@ -44,7 +45,7 @@ class Experience:
             datagram.addUint16(dataList[track])
         dgi = PyDatagramIterator(datagram)
         return dgi.getRemainingBytes()
-        
+
     def makeFromNetString(self, netString):
         """makeFromNetString(self)
         Make an experience from a network packet
@@ -56,17 +57,16 @@ class Experience:
             dataList.append(dgi.getUint16())
         return dataList
 
-
     # setters and getters
 
-    def addExp(self, track, amount=1):                        
+    def addExp(self, track, amount=1):
         """addExp(self, [int | string], int=1)
         Add 'amount' (defaults to 1) of experience to the given track.
         Track may be specified by an index (ie Tracks[index]) or
         by string (ie 'drop')
         """
         # if string, convert to index
-        if (type(track) == type('')):
+        if (isinstance(track, type(''))):
             track = Tracks.index(track)
 
         self.notify.debug("adding %d exp to track %d" % (amount, track))
@@ -79,11 +79,11 @@ class Experience:
             if (self.experience[track] + amount <= UnpaidMaxSkill):
                 self.experience[track] += amount
             else:
-                if  self.experience[track] > UnpaidMaxSkill:
-                    self.experience[track] += 0 #remain unchanged
+                if self.experience[track] > UnpaidMaxSkill:
+                    self.experience[track] += 0  # remain unchanged
                 else:
                     self.experience[track] = UnpaidMaxSkill
-        
+
     def maxOutExp(self):
         """maxOutExp(self):
         Set all experience fields to MaxSkill
@@ -97,16 +97,19 @@ class Experience:
         """
         for track in range(0, len(Tracks)):
             self.experience[track] = MaxSkill - 1
-            
+
     def makeExpHigh(self):
         for track in range(0, len(Tracks)):
             self.experience[track] = Levels[track][len(Levels[track]) - 1] - 1
-            
+
     def makeExpRegular(self):
         import random
         for track in range(0, len(Tracks)):
-            rank = random.choice((0,int(random.random() * 1500.0),int(random.random() * 2000.0)))
-            self.experience[track] = Levels[track][len(Levels[track]) - 1] - rank
+            rank = random.choice((0,
+                                  int(random.random() * 1500.0),
+                                  int(random.random() * 2000.0)))
+            self.experience[track] = Levels[track][len(
+                Levels[track]) - 1] - rank
 
     def zeroOutExp(self):
         """zeroOutExp(self):
@@ -122,7 +125,7 @@ class Experience:
         """
         for track in range(0, len(Tracks)):
             self.experience[track] = num
-        
+
     def getExp(self, track):
         """getExp(self, [int | string])
         Return the raw experience of the given track.
@@ -130,11 +133,11 @@ class Experience:
         by string (ie 'drop')
         """
         # if string, convert to index
-        if (type(track) == type('')):
+        if (isinstance(track, type(''))):
             track = Tracks.index(track)
 
         return self.experience[track]
-        
+
     def setExp(self, track, exp):
         """setExp(self, [int | string])
         Sets the raw experience of the given track.
@@ -142,7 +145,7 @@ class Experience:
         by string (ie 'drop')
         """
         # if string, convert to index
-        if (type(track) == type('')):
+        if (isinstance(track, type(''))):
             track = Tracks.index(track)
 
         self.experience[track] = exp
@@ -154,7 +157,7 @@ class Experience:
         by string (ie 'drop')
         """
         # if string, convert to index
-        if (type(track) == type('')):
+        if (isinstance(track, type(''))):
             track = Tracks.index(track)
 
         level = 0
@@ -163,20 +166,20 @@ class Experience:
                 level = Levels[track].index(amount)
 
         return level
-            
+
     def getTotalExp(self):
         total = 0
         for level in self.experience:
             total += level
         return total
-            
+
     def getNextExpValue(self, track, curSkill=None):
         """
         Return the number of total experience to get to the next
         track. If the current experience equals or exceeds the highest
         next value, the highest next value is returned.
         """
-        if curSkill == None:
+        if curSkill is None:
             curSkill = self.experience[track]
         # The last value is the default
         retVal = Levels[track][len(Levels[track]) - 1]
@@ -206,7 +209,3 @@ class Experience:
             else:
                 nextExpValue = newNextExpValue
         return retList
-        
-
-
-

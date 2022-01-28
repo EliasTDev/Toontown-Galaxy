@@ -21,7 +21,9 @@ from direct.showbase import RandomNumGen
 from . import MinigameAvatarScorePanel
 from . import MinigameGlobals
 from direct.task.Task import Task
-import functools 
+import functools
+
+
 class DistributedMazeGame(DistributedMinigame):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedMazeGame')
     # define constants that you won't want to tweak here
@@ -34,30 +36,30 @@ class DistributedMazeGame(DistributedMinigame):
         DistributedMinigame.__init__(self, cr)
 
         self.gameFSM = ClassicFSM.ClassicFSM('DistributedMazeGame',
-                               [
-                                State.State('off',
-                                            self.enterOff,
-                                            self.exitOff,
-                                            ['play']),
-                                State.State('play',
-                                            self.enterPlay,
-                                            self.exitPlay,
-                                            ['cleanup',
-                                             'showScores']),
-                                State.State('showScores',
-                                            self.enterShowScores,
-                                            self.exitShowScores,
-                                            ['cleanup']),
-                                State.State('cleanup',
-                                            self.enterCleanup,
-                                            self.exitCleanup,
-                                            []),
-                                ],
-                               # Initial State
-                               'off',
-                               # Final State
-                               'cleanup',
-                               )
+                                             [
+                                                 State.State('off',
+                                                             self.enterOff,
+                                                             self.exitOff,
+                                                             ['play']),
+                                                 State.State('play',
+                                                             self.enterPlay,
+                                                             self.exitPlay,
+                                                             ['cleanup',
+                                                              'showScores']),
+                                                 State.State('showScores',
+                                                             self.enterShowScores,
+                                                             self.exitShowScores,
+                                                             ['cleanup']),
+                                                 State.State('cleanup',
+                                                             self.enterCleanup,
+                                                             self.exitCleanup,
+                                                             []),
+                                             ],
+                                             # Initial State
+                                             'off',
+                                             # Final State
+                                             'cleanup',
+                                             )
 
         # Add our game ClassicFSM to the framework ClassicFSM
         self.addChildGameFSM(self.gameFSM)
@@ -128,162 +130,158 @@ class DistributedMazeGame(DistributedMinigame):
 
         # compute the suit periods
 
-     
+        # calculate the corresponding suit periods
 
-            # calculate the corresponding suit periods
-
-            #periods = list(map(calcUpdatePeriod, speeds))
-
+        #periods = list(map(calcUpdatePeriod, speeds))
 
         #    str += '%s%s : %s,\n%s%s' % (numSuits, filler, periods,
-                         #                   ' '*4, ' '*8)
+        #                   ' '*4, ' '*8)
        # str += '},\n'
     #str += '%s}' % (' '*4)
-    #print(str)
+    # print(str)
 
     # these helper functions are used to distort the t time value.
-
 
     # these tables were generated from the code above
     # and pasted in
         self.slowerSuitPeriods = {
-        2000 : {4  : [128, 76],
-                8  : [128, 99, 81, 68],
-                12 : [128, 108, 93, 82, 74, 67],
-                16 : [128, 112, 101, 91, 83, 76, 71, 66],
-                },
-        1000 : {4  : [110, 69],
-                8  : [110, 88, 73, 62],
-                12 : [110, 95, 83, 74, 67, 61],
-                16 : [110, 98, 89, 81, 75, 69, 64, 60],
-                },
-        5000 : {4  : [96, 63],
-                8  : [96, 79, 66, 57],
-                12 : [96, 84, 75, 67, 61, 56],
-                16 : [96, 87, 80, 73, 68, 63, 59, 55],
-                },
-        4000 : {4  : [86, 58],
-                8  : [86, 71, 61, 53],
-                12 : [86, 76, 68, 62, 56, 52],
-                16 : [86, 78, 72, 67, 62, 58, 54, 51],
-                },
-        3000 : {4  : [78, 54],
-                8  : [78, 65, 56, 49],
-                12 : [78, 69, 62, 57, 52, 48],
-                16 : [78, 71, 66, 61, 57, 54, 51, 48],
-                },
-        9000 : {4  : [71, 50],
-                8  : [71, 60, 52, 46],
-                12 : [71, 64, 58, 53, 49, 45],
-                16 : [71, 65, 61, 57, 53, 50, 47, 45],
-                },
+            2000: {4: [128, 76],
+                   8: [128, 99, 81, 68],
+                   12: [128, 108, 93, 82, 74, 67],
+                   16: [128, 112, 101, 91, 83, 76, 71, 66],
+                   },
+            1000: {4: [110, 69],
+                   8: [110, 88, 73, 62],
+                   12: [110, 95, 83, 74, 67, 61],
+                   16: [110, 98, 89, 81, 75, 69, 64, 60],
+                   },
+            5000: {4: [96, 63],
+                   8: [96, 79, 66, 57],
+                   12: [96, 84, 75, 67, 61, 56],
+                   16: [96, 87, 80, 73, 68, 63, 59, 55],
+                   },
+            4000: {4: [86, 58],
+                   8: [86, 71, 61, 53],
+                   12: [86, 76, 68, 62, 56, 52],
+                   16: [86, 78, 72, 67, 62, 58, 54, 51],
+                   },
+            3000: {4: [78, 54],
+                   8: [78, 65, 56, 49],
+                   12: [78, 69, 62, 57, 52, 48],
+                   16: [78, 71, 66, 61, 57, 54, 51, 48],
+                   },
+            9000: {4: [71, 50],
+                   8: [71, 60, 52, 46],
+                   12: [71, 64, 58, 53, 49, 45],
+                   16: [71, 65, 61, 57, 53, 50, 47, 45],
+                   },
         }
         self.slowerSuitPeriodsCurve = {
-        2000 : {4  : [128, 65],
-                8  : [128, 78, 66, 64],
-                12 : [128, 88, 73, 67, 64, 64],
-                16 : [128, 94, 79, 71, 67, 65, 64, 64],
-                },
-        1000 : {4  : [110, 59],
-                8  : [110, 70, 60, 58],
-                12 : [110, 78, 66, 61, 59, 58],
-                16 : [110, 84, 72, 65, 61, 59, 58, 58],
-                },
-        5000 : {4  : [96, 55],
-                8  : [96, 64, 56, 54],
-                12 : [96, 71, 61, 56, 54, 54],
-                16 : [96, 76, 65, 59, 56, 55, 54, 54],
-                },
-        4000 : {4  : [86, 51],
-                8  : [86, 59, 52, 50],
-                12 : [86, 65, 56, 52, 50, 50],
-                16 : [86, 69, 60, 55, 52, 51, 50, 50],
-                },
-        3000 : {4  : [78, 47],
-                8  : [78, 55, 48, 47],
-                12 : [78, 60, 52, 48, 47, 47],
-                16 : [78, 63, 55, 51, 49, 47, 47, 47],
-                },
-        9000 : {4  : [71, 44],
-                8  : [71, 51, 45, 44],
-                12 : [71, 55, 48, 45, 44, 44],
-                16 : [71, 58, 51, 48, 45, 44, 44, 44],
-                },
+            2000: {4: [128, 65],
+                   8: [128, 78, 66, 64],
+                   12: [128, 88, 73, 67, 64, 64],
+                   16: [128, 94, 79, 71, 67, 65, 64, 64],
+                   },
+            1000: {4: [110, 59],
+                   8: [110, 70, 60, 58],
+                   12: [110, 78, 66, 61, 59, 58],
+                   16: [110, 84, 72, 65, 61, 59, 58, 58],
+                   },
+            5000: {4: [96, 55],
+                   8: [96, 64, 56, 54],
+                   12: [96, 71, 61, 56, 54, 54],
+                   16: [96, 76, 65, 59, 56, 55, 54, 54],
+                   },
+            4000: {4: [86, 51],
+                   8: [86, 59, 52, 50],
+                   12: [86, 65, 56, 52, 50, 50],
+                   16: [86, 69, 60, 55, 52, 51, 50, 50],
+                   },
+            3000: {4: [78, 47],
+                   8: [78, 55, 48, 47],
+                   12: [78, 60, 52, 48, 47, 47],
+                   16: [78, 63, 55, 51, 49, 47, 47, 47],
+                   },
+            9000: {4: [71, 44],
+                   8: [71, 51, 45, 44],
+                   12: [71, 55, 48, 45, 44, 44],
+                   16: [71, 58, 51, 48, 45, 44, 44, 44],
+                   },
         }
         self.fasterSuitPeriods = {
-        2000 : {4  : [54, 42],
-                8  : [59, 52, 47, 42],
-                12 : [61, 56, 52, 48, 45, 42],
-                16 : [61, 58, 54, 51, 49, 46, 44, 42],
-                },
-        1000 : {4  : [50, 40],
-                8  : [55, 48, 44, 40],
-                12 : [56, 52, 48, 45, 42, 40],
-                16 : [56, 53, 50, 48, 45, 43, 41, 40],
-                },
-        5000 : {4  : [47, 37],
-                8  : [51, 45, 41, 37],
-                12 : [52, 48, 45, 42, 39, 37],
-                16 : [52, 49, 47, 44, 42, 40, 39, 37],
-                },
-        4000 : {4  : [44, 35],
-                8  : [47, 42, 38, 35],
-                12 : [48, 45, 42, 39, 37, 35],
-                16 : [49, 46, 44, 42, 40, 38, 37, 35],
-                },
-        3000 : {4  : [41, 33],
-                8  : [44, 40, 36, 33],
-                12 : [45, 42, 39, 37, 35, 33],
-                16 : [45, 43, 41, 39, 38, 36, 35, 33],
-                },
-        9000 : {4  : [39, 32],
-                8  : [41, 37, 34, 32],
-                12 : [42, 40, 37, 35, 33, 32],
-                16 : [43, 41, 39, 37, 35, 34, 33, 32],
-                },
+            2000: {4: [54, 42],
+                   8: [59, 52, 47, 42],
+                   12: [61, 56, 52, 48, 45, 42],
+                   16: [61, 58, 54, 51, 49, 46, 44, 42],
+                   },
+            1000: {4: [50, 40],
+                   8: [55, 48, 44, 40],
+                   12: [56, 52, 48, 45, 42, 40],
+                   16: [56, 53, 50, 48, 45, 43, 41, 40],
+                   },
+            5000: {4: [47, 37],
+                   8: [51, 45, 41, 37],
+                   12: [52, 48, 45, 42, 39, 37],
+                   16: [52, 49, 47, 44, 42, 40, 39, 37],
+                   },
+            4000: {4: [44, 35],
+                   8: [47, 42, 38, 35],
+                   12: [48, 45, 42, 39, 37, 35],
+                   16: [49, 46, 44, 42, 40, 38, 37, 35],
+                   },
+            3000: {4: [41, 33],
+                   8: [44, 40, 36, 33],
+                   12: [45, 42, 39, 37, 35, 33],
+                   16: [45, 43, 41, 39, 38, 36, 35, 33],
+                   },
+            9000: {4: [39, 32],
+                   8: [41, 37, 34, 32],
+                   12: [42, 40, 37, 35, 33, 32],
+                   16: [43, 41, 39, 37, 35, 34, 33, 32],
+                   },
         }
         self.fasterSuitPeriodsCurve = {
-        2000 : {4  : [62, 42],
-                8  : [63, 61, 54, 42],
-                12 : [63, 63, 61, 56, 50, 42],
-                16 : [63, 63, 62, 60, 57, 53, 48, 42],
-                },
-        1000 : {4  : [57, 40],
-                8  : [58, 56, 50, 40],
-                12 : [58, 58, 56, 52, 46, 40],
-                16 : [58, 58, 57, 56, 53, 49, 45, 40],
-                },
-        5000 : {4  : [53, 37],
-                8  : [54, 52, 46, 37],
-                12 : [54, 53, 52, 48, 43, 37],
-                16 : [54, 54, 53, 51, 49, 46, 42, 37],
-                },
-        4000 : {4  : [49, 35],
-                8  : [50, 48, 43, 35],
-                12 : [50, 49, 48, 45, 41, 35],
-                16 : [50, 50, 49, 48, 46, 43, 39, 35],
-                },
-        3000 : {4  : [46, 33],
-                8  : [47, 45, 41, 33],
-                12 : [47, 46, 45, 42, 38, 33],
-                16 : [47, 46, 46, 45, 43, 40, 37, 33],
-                },
-        9000 : {4  : [43, 32],
-                8  : [44, 42, 38, 32],
-                12 : [44, 43, 42, 40, 36, 32],
-                16 : [44, 44, 43, 42, 40, 38, 35, 32],
-                },
+            2000: {4: [62, 42],
+                   8: [63, 61, 54, 42],
+                   12: [63, 63, 61, 56, 50, 42],
+                   16: [63, 63, 62, 60, 57, 53, 48, 42],
+                   },
+            1000: {4: [57, 40],
+                   8: [58, 56, 50, 40],
+                   12: [58, 58, 56, 52, 46, 40],
+                   16: [58, 58, 57, 56, 53, 49, 45, 40],
+                   },
+            5000: {4: [53, 37],
+                   8: [54, 52, 46, 37],
+                   12: [54, 53, 52, 48, 43, 37],
+                   16: [54, 54, 53, 51, 49, 46, 42, 37],
+                   },
+            4000: {4: [49, 35],
+                   8: [50, 48, 43, 35],
+                   12: [50, 49, 48, 45, 41, 35],
+                   16: [50, 50, 49, 48, 46, 43, 39, 35],
+                   },
+            3000: {4: [46, 33],
+                   8: [47, 45, 41, 33],
+                   12: [47, 46, 45, 42, 38, 33],
+                   16: [47, 46, 46, 45, 43, 40, 37, 33],
+                   },
+            9000: {4: [43, 32],
+                   8: [44, 42, 38, 32],
+                   12: [44, 43, 42, 40, 36, 32],
+                   16: [44, 44, 43, 42, 40, 38, 35, 32],
+                   },
         }
 
         self.CELL_WIDTH = MazeData.CELL_WIDTH
-        self.MAX_FRAME_MOVE = self.CELL_WIDTH/2 # maximum movement in one frame
+        self.MAX_FRAME_MOVE = self.CELL_WIDTH / 2  # maximum movement in one frame
 
         startOffset = 3
         self.startPosHTable = [
-        [Point3(0, startOffset,self.TOON_Z),  0],
-        [Point3(0,-startOffset,self.TOON_Z),180],
-        [Point3( startOffset,0,self.TOON_Z),270],
-        [Point3(-startOffset,0,self.TOON_Z), 90],
+            [Point3(0, startOffset, self.TOON_Z), 0],
+            [Point3(0, -startOffset, self.TOON_Z), 180],
+            [Point3(startOffset, 0, self.TOON_Z), 270],
+            [Point3(-startOffset, 0, self.TOON_Z), 90],
         ]
 
         self.camOffset = Vec3(0, -19, 45)
@@ -303,20 +301,20 @@ class DistributedMazeGame(DistributedMinigame):
         self.treasureModel = model.find("**/mickeySZ")
         model.removeNode()
         self.treasureModel.setScale(1.6)
-        #self.treasureModel.setP(-80) # tilt the mickey heads toward the camera
+        # self.treasureModel.setP(-80) # tilt the mickey heads toward the
+        # camera
         self.treasureModel.setP(-90)
 
         self.music = base.loader.loadMusic(
             "phase_4/audio/bgm/MG_toontag.ogg"
-            #"phase_4/audio/bgm/TC_SZ.ogg"
-            )
+            # "phase_4/audio/bgm/TC_SZ.ogg"
+        )
 
         # make a dictionary of tracks for showing each toon
         # getting hit by a suit
         self.toonHitTracks = {}
 
         self.scorePanels = []
-
 
     def unload(self):
         self.notify.debug("unload")
@@ -332,7 +330,7 @@ class DistributedMazeGame(DistributedMinigame):
         del self.treasureModel
 
         del self.music
-        
+
         # remove our game ClassicFSM from the framework ClassicFSM
         self.removeChildGameFSM(self.gameFSM)
         del self.gameFSM
@@ -355,12 +353,12 @@ class DistributedMazeGame(DistributedMinigame):
         lt.hideName()
         self.__placeToon(self.localAvId)
         lt.setAnimState('Happy', 1.0)
-        lt.setSpeed(0,0, 0)
+        lt.setSpeed(0, 0, 0)
 
         self.camParent = render.attachNewNode('mazeGameCamParent')
         self.camParent.reparentTo(base.localAvatar)
-        self.camParent.setPos(0,0,0)
-        self.camParent.setHpr(render, 0,0,0)
+        self.camParent.setPos(0, 0, 0)
+        self.camParent.setHpr(render, 0, 0, 0)
         camera.reparentTo(self.camParent)
         camera.setPos(self.camOffset)
 
@@ -374,8 +372,12 @@ class DistributedMazeGame(DistributedMinigame):
         # create the treasures
         self.treasures = []
         for i in range(self.maze.numTreasures):
-            self.treasures.append(MazeTreasure.MazeTreasure(
-                self.treasureModel, self.maze.treasurePosList[i], i, self.doId))
+            self.treasures.append(
+                MazeTreasure.MazeTreasure(
+                    self.treasureModel,
+                    self.maze.treasurePosList[i],
+                    i,
+                    self.doId))
 
         self.__loadSuits()
         for suit in self.suits:
@@ -387,14 +389,14 @@ class DistributedMazeGame(DistributedMinigame):
         # we don't know how many players there will be until the
         # minigame has recieved all required fields
         self.sndTable = {
-            "hitBySuit" : [None] * self.numPlayers,
-            "falling"   : [None] * self.numPlayers,
-            }
+            "hitBySuit": [None] * self.numPlayers,
+            "falling": [None] * self.numPlayers,
+        }
         for i in range(self.numPlayers):
-            self.sndTable["hitBySuit"][i] =  base.loader.loadSfx(
+            self.sndTable["hitBySuit"][i] = base.loader.loadSfx(
                 "phase_4/audio/sfx/MG_Tag_C.ogg"
-                #"phase_4/audio/sfx/MG_cannon_fire_alt.ogg"
-                )
+                # "phase_4/audio/sfx/MG_cannon_fire_alt.ogg"
+            )
             self.sndTable["falling"][i] = base.loader.loadSfx(
                 "phase_4/audio/sfx/MG_cannon_whizz.ogg")
 
@@ -403,7 +405,7 @@ class DistributedMazeGame(DistributedMinigame):
         for i in range(5):
             self.grabSounds.append(base.loader.loadSfx(
                 "phase_4/audio/sfx/MG_maze_pickup.ogg"
-                ))
+            ))
         # play the sounds round-robin
         self.grabSoundIndex = 0
 
@@ -416,14 +418,14 @@ class DistributedMazeGame(DistributedMinigame):
         # this will show what percentage of the treasures
         # have been picked up
         self.goalBar = DirectWaitBar(
-            parent = render2d,
-            relief = DGG.SUNKEN,
-            frameSize = (-0.35, 0.35, -0.15, 0.15),
-            borderWidth = (0.02, 0.02),
-            scale = 0.42,
-            pos = (.84, 0, (0.5 - .28*self.numPlayers) + .05),
-            barColor = (0, 0.7, 0, 1),
-            )
+            parent=render2d,
+            relief=DGG.SUNKEN,
+            frameSize=(-0.35, 0.35, -0.15, 0.15),
+            borderWidth=(0.02, 0.02),
+            scale=0.42,
+            pos=(.84, 0, (0.5 - .28 * self.numPlayers) + .05),
+            barColor=(0, 0.7, 0, 1),
+        )
         self.goalBar.setBin('unsorted', 0)
         self.goalBar.hide()
 
@@ -474,7 +476,7 @@ class DistributedMazeGame(DistributedMinigame):
         del self.toonRNGs
 
         self.maze.offstage()
-        
+
         base.localAvatar.showName()
 
         # this parents toons to hidden, so do it last
@@ -485,19 +487,20 @@ class DistributedMazeGame(DistributedMinigame):
         """ places a toon in its starting position """
         toon = self.getAvatar(avId)
         if self.numPlayers == 1:
-            toon.setPos(0,0,self.TOON_Z)
-            toon.setHpr(180,0,0)
+            toon.setPos(0, 0, self.TOON_Z)
+            toon.setHpr(180, 0, 0)
         else:
             posIndex = self.avIdList.index(avId)
             toon.setPos(self.startPosHTable[posIndex][0])
-            toon.setHpr(self.startPosHTable[posIndex][1],0,0)
+            toon.setHpr(self.startPosHTable[posIndex][1], 0, 0)
 
     def setGameReady(self):
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         self.notify.debug("setGameReady")
         if DistributedMinigame.setGameReady(self):
             return
-        
+
         # all of the remote toons have joined the game;
         # it's safe to show them now.
 
@@ -513,7 +516,8 @@ class DistributedMazeGame(DistributedMinigame):
                 toon.startLookAround()
 
     def setGameStart(self, timestamp):
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         self.notify.debug("setGameStart")
         # base class will cause gameFSM to enter initial state
         DistributedMinigame.setGameStart(self, timestamp)
@@ -558,9 +562,9 @@ class DistributedMazeGame(DistributedMinigame):
             avId = self.avIdList[i]
             avName = self.getAvatarName(avId)
             scorePanel = \
-                       MinigameAvatarScorePanel.MinigameAvatarScorePanel(avId,
-                                                                         avName)
-            scorePanel.setPos(1.12, 0.0, .5 - 0.28*i)
+                MinigameAvatarScorePanel.MinigameAvatarScorePanel(avId,
+                                                                  avName)
+            scorePanel.setPos(1.12, 0.0, .5 - 0.28 * i)
             self.scorePanels.append(scorePanel)
 
         self.goalBar.show()
@@ -576,8 +580,8 @@ class DistributedMazeGame(DistributedMinigame):
             self.TOON_SPEED,
             maxFrameMove=self.MAX_FRAME_MOVE,
             customCollisionCallback=self.__doMazeCollisions,
-            priority = 1
-            )
+            priority=1
+        )
         self.orthoWalk = OrthoWalk(orthoDrive,
                                    broadcast=not self.isSinglePlayer())
         self.orthoWalk.start()
@@ -598,7 +602,7 @@ class DistributedMazeGame(DistributedMinigame):
         # listen for resetClock messages so we can keep our clock in sync
         self.accept("resetClock", self.__resetClock)
 
-        base.playMusic(self.music, looping = 0, volume = .8)
+        base.playMusic(self.music, looping=0, volume=.8)
 
     def exitPlay(self):
         self.notify.debug("exitPlay")
@@ -643,7 +647,8 @@ class DistributedMazeGame(DistributedMinigame):
         self.sendUpdate("claimTreasure", [treasureNum])
 
     def setTreasureGrabbed(self, avId, treasureNum):
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         #self.notify.debug("treasure %s grabbed by %s" % (treasureNum, avId))
 
         if avId != self.localAvId:
@@ -660,29 +665,30 @@ class DistributedMazeGame(DistributedMinigame):
         for score in self.scores:
             total += score
         self.goalBar['value'] = 100. * \
-                                (float(total) / float(self.maze.numTreasures))
+            (float(total) / float(self.maze.numTreasures))
 
     def __hitBySuit(self, suitNum):
         # localtoon was hit by a suit
         self.notify.debug("hitBySuit")
-        timestamp = globalClockDelta.localToNetworkTime(\
+        timestamp = globalClockDelta.localToNetworkTime(
             globalClock.getFrameTime())
         self.sendUpdate("hitBySuit", [self.localAvId, timestamp])
         self.__showToonHitBySuit(self.localAvId, timestamp)
 
     def hitBySuit(self, avId, timestamp):
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         if self.gameFSM.getCurrentState().getName() not in [
-            'play', 'showScores']:
-            self.notify.warning('ignoring msg: av %s hit by suit' % avId)
+                'play', 'showScores']:
+            self.notify.warning(f'ignoring msg: av {avId} hit by suit')
             return
         self.notify.debug("avatar " + repr(avId) + " hit by a suit")
         if avId != self.localAvId:
             self.__showToonHitBySuit(avId, timestamp)
-        
+
     def __showToonHitBySuit(self, avId, timestamp):
         toon = self.getAvatar(avId)
-        if toon == None:
+        if toon is None:
             return
         rng = self.toonRNGs[self.avIdList.index(avId)]
 
@@ -698,10 +704,10 @@ class DistributedMazeGame(DistributedMinigame):
 
         # put the toon under a new node
         assert (toon.getParent() == render)
-        parentNode = render.attachNewNode('mazeFlyToonParent-'+repr(avId))
+        parentNode = render.attachNewNode('mazeFlyToonParent-' + repr(avId))
         parentNode.setPos(toon.getPos())
         toon.reparentTo(parentNode)
-        toon.setPos(0,0,0)
+        toon.setPos(0, 0, 0)
 
         # shoot the toon up into the air
         startPos = parentNode.getPos()
@@ -709,29 +715,29 @@ class DistributedMazeGame(DistributedMinigame):
         # make a copy of the toon's dropshadow
         dropShadow = toon.dropShadow.copyTo(parentNode)
         dropShadow.setScale(toon.dropShadow.getScale(render))
-        
+
         trajectory = Trajectory.Trajectory(0,
-                                           Point3(0,0,0),
-                                           Point3(0,0,50),
+                                           Point3(0, 0, 0),
+                                           Point3(0, 0, 50),
                                            gravMult=1.)
         flyDur = trajectory.calcTimeOfImpactOnPlane(0.)
         assert(flyDur > 0)
 
         # choose a random landing point
-        while 1:
-            endTile = [rng.randint(2,self.maze.width-1),
-                       rng.randint(2,self.maze.height-1)]
-            if self.maze.isWalkable(endTile[0],endTile[1]):
+        while True:
+            endTile = [rng.randint(2, self.maze.width - 1),
+                       rng.randint(2, self.maze.height - 1)]
+            if self.maze.isWalkable(endTile[0], endTile[1]):
                 break
 
-        endWorldCoords = self.maze.tile2world(endTile[0],endTile[1])
+        endWorldCoords = self.maze.tile2world(endTile[0], endTile[1])
         endPos = Point3(endWorldCoords[0], endWorldCoords[1], startPos[2])
 
         def flyFunc(t, trajectory, startPos=startPos, endPos=endPos,
                     dur=flyDur, moveNode=parentNode, flyNode=toon):
-            u = (t/dur)
-            moveNode.setX(startPos[0] + (u * (endPos[0]-startPos[0])))
-            moveNode.setY(startPos[1] + (u * (endPos[1]-startPos[1])))
+            u = (t / dur)
+            moveNode.setX(startPos[0] + (u * (endPos[0] - startPos[0])))
+            moveNode.setY(startPos[1] + (u * (endPos[1] - startPos[1])))
             # set the full position, since the toon might get banged
             # by telemetry
             flyNode.setPos(trajectory.getPos(t))
@@ -754,7 +760,7 @@ class DistributedMazeGame(DistributedMinigame):
 
             destCamPos = camera.getPos()
             # trajectory starts at Z==0, ends at Z==0
-            zenith = trajectory.getPos(flyDur/2.)[2]
+            zenith = trajectory.getPos(flyDur / 2.)[2]
             # make the camera go up above the toon's zenith...
             destCamPos.setZ(zenith * 1.3)
             # and pull in fairly far towards the toon
@@ -762,9 +768,9 @@ class DistributedMazeGame(DistributedMinigame):
 
             # make sure the camera keeps looking at the toon
             def camTask(task, zenith=zenith,
-                              flyNode=toon,
-                              startCamPos=startCamPos,
-                              camOffset=destCamPos-startCamPos):
+                        flyNode=toon,
+                        startCamPos=startCamPos,
+                        camOffset=destCamPos - startCamPos):
                 # move the camera proportional to the current height
                 # of the toon wrt the height of its total trajectory
                 u = flyNode.getZ() / zenith
@@ -772,7 +778,7 @@ class DistributedMazeGame(DistributedMinigame):
                 camera.lookAt(toon)
                 return Task.cont
 
-            camTaskName = "mazeToonFlyCam-"+repr(avId)
+            camTaskName = "mazeToonFlyCam-" + repr(avId)
             taskMgr.add(camTask, camTaskName, priority=20)
 
             def cleanupCamTask(self=self, toon=toon,
@@ -792,38 +798,38 @@ class DistributedMazeGame(DistributedMinigame):
         # it seems like we need to put the rotations on two different
         # nodes in order to avoid interactions between the rotations
         geomNode = toon.getGeomNode()
-        
+
         # apply the H rotation around the geomNode, since it's OK
         # to spin the toon in H at a node at his feet
         startHpr = geomNode.getHpr()
         destHpr = Point3(startHpr)
         # make the toon rotate in h 1..7 times
-        hRot = rng.randrange(1,8)
-        if rng.choice([0,1]):
+        hRot = rng.randrange(1, 8)
+        if rng.choice([0, 1]):
             hRot = -hRot
-        destHpr.setX(destHpr[0]+(hRot*360))
+        destHpr.setX(destHpr[0] + (hRot * 360))
         spinHTrack = Sequence(
             LerpHprInterval(geomNode, flyDur, destHpr, startHpr=startHpr),
             Func(geomNode.setHpr, startHpr),
             name=toon.uniqueName("hitBySuit-spinH"))
-        
+
         # put an extra node above the geomNode, so we can spin the
         # toon in P around his waist
         parent = geomNode.getParent()
         rotNode = parent.attachNewNode('rotNode')
         geomNode.reparentTo(rotNode)
-        rotNode.setZ(toon.getHeight()/2.)
+        rotNode.setZ(toon.getHeight() / 2.)
         oldGeomNodeZ = geomNode.getZ()
-        geomNode.setZ(-toon.getHeight()/2.)
+        geomNode.setZ(-toon.getHeight() / 2.)
 
         # spin the toon in P around his waist
         startHpr = rotNode.getHpr()
         destHpr = Point3(startHpr)
         # make the toon rotate in P 1..2 times
-        pRot = rng.randrange(1,3)
-        if rng.choice([0,1]):
+        pRot = rng.randrange(1, 3)
+        if rng.choice([0, 1]):
             pRot = -pRot
-        destHpr.setY(destHpr[1]+(pRot*360))
+        destHpr.setY(destHpr[1] + (pRot * 360))
         spinPTrack = Sequence(
             LerpHprInterval(rotNode, flyDur, destHpr, startHpr=startHpr),
             Func(rotNode.setHpr, startHpr),
@@ -833,9 +839,9 @@ class DistributedMazeGame(DistributedMinigame):
         i = self.avIdList.index(avId)
         soundTrack = Sequence(
             Func(base.playSfx, self.sndTable['hitBySuit'][i]),
-            Wait(flyDur * (2./3.)),
+            Wait(flyDur * (2. / 3.)),
             SoundInterval(self.sndTable['falling'][i],
-                          duration=(flyDur*(1./3.))),
+                          duration=(flyDur * (1. / 3.))),
             name=toon.uniqueName("hitBySuit-soundTrack"))
 
         def preFunc(self=self, avId=avId, toon=toon, dropShadow=dropShadow):
@@ -847,7 +853,7 @@ class DistributedMazeGame(DistributedMinigame):
                 self.orthoWalk.stop()
             else:
                 toon.stopSmooth()
-            
+
             # preserve old bug/feature where toon would be running in the air
             # if toon was moving, make him continue to run
             if forwardSpeed or rotateSpeed:
@@ -855,7 +861,7 @@ class DistributedMazeGame(DistributedMinigame):
 
             # set toon's speed to zero to stop any walk animations
             # leave it, it's funny to see toon running in mid-air
-            #toon.setSpeed(0,0)
+            # toon.setSpeed(0,0)
 
             # hide the toon's dropshadow
             toon.dropShadow.hide()
@@ -866,7 +872,8 @@ class DistributedMazeGame(DistributedMinigame):
                 base.localAvatar.setPos(endPos)
                 # game may have ended by now, check
                 if hasattr(self, 'orthoWalk'):
-                    # re-enable control of local toon only if we're still in the play state.
+                    # re-enable control of local toon only if we're still in
+                    # the play state.
                     if (self.gameFSM.getCurrentState().getName() == "play"):
                         self.orthoWalk.start()
 
@@ -906,9 +913,10 @@ class DistributedMazeGame(DistributedMinigame):
 
         self.toonHitTracks[avId] = hitTrack
         hitTrack.start(globalClockDelta.localElapsedTime(timestamp))
-        
+
     def allTreasuresTaken(self):
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         # all of the treasures are gone, move on
         self.notify.debug("all treasures taken")
         if not MazeGameGlobals.ENDLESS_GAME:
@@ -928,7 +936,8 @@ class DistributedMazeGame(DistributedMinigame):
         WALL_OFFSET = 1.
 
         # make sure we're not in a wall already
-        curX = oldPos[0]; curY = oldPos[1]
+        curX = oldPos[0]
+        curY = oldPos[1]
         curTX, curTY = self.maze.world2tile(curX, curY)
         assert(not self.maze.collisionTable[curTY][curTX])
 
@@ -938,12 +947,13 @@ class DistributedMazeGame(DistributedMinigame):
             # newTile, where newTile is a wall
             EPSILON = 0.01
             if newTile > curTile:
-                return ((newTile-centerTile)*self.CELL_WIDTH)\
-                       -EPSILON-WALL_OFFSET
+                return ((newTile - centerTile) * self.CELL_WIDTH)\
+                    - EPSILON - WALL_OFFSET
             else:
-                return ((curTile-centerTile)*self.CELL_WIDTH)+WALL_OFFSET
+                return ((curTile - centerTile) * self.CELL_WIDTH) + WALL_OFFSET
 
-        offsetX = offset[0]; offsetY = offset[1]
+        offsetX = offset[0]
+        offsetY = offset[1]
 
         WALL_OFFSET_X = WALL_OFFSET
         if offsetX < 0:
@@ -953,7 +963,8 @@ class DistributedMazeGame(DistributedMinigame):
             WALL_OFFSET_Y = -WALL_OFFSET_Y
 
         # check movement in X direction
-        newX = curX + offsetX + WALL_OFFSET_X; newY = curY
+        newX = curX + offsetX + WALL_OFFSET_X
+        newY = curY
         newTX, newTY = self.maze.world2tile(newX, newY)
         if newTX != curTX:
             # we've crossed a tile boundary
@@ -962,9 +973,10 @@ class DistributedMazeGame(DistributedMinigame):
                 # adjust the X offset so that the toon
                 # hits the wall exactly
                 offset.setX(calcFlushCoord(curTX, newTX,
-                                           self.maze.originTX)-curX)
+                                           self.maze.originTX) - curX)
 
-        newX = curX; newY = curY + offsetY + WALL_OFFSET_Y
+        newX = curX
+        newY = curY + offsetY + WALL_OFFSET_Y
         newTX, newTY = self.maze.world2tile(newX, newY)
         if newTY != curTY:
             # we've crossed a tile boundary
@@ -973,7 +985,7 @@ class DistributedMazeGame(DistributedMinigame):
                 # adjust the Y offset so that the toon
                 # hits the wall exactly
                 offset.setY(calcFlushCoord(curTY, newTY,
-                                           self.maze.originTY)-curY)
+                                           self.maze.originTY) - curY)
 
         # at this point, if our new position is in a wall, we're
         # running right into a protruding corner:
@@ -983,7 +995,8 @@ class DistributedMazeGame(DistributedMinigame):
         #   ###
         #   ###
         #
-        offsetX = offset[0]; offsetY = offset[1]
+        offsetX = offset[0]
+        offsetY = offset[1]
 
         newX = curX + offsetX + WALL_OFFSET_X
         newY = curY + offsetY + WALL_OFFSET_Y
@@ -1005,7 +1018,8 @@ class DistributedMazeGame(DistributedMinigame):
         camera.lookAt(base.localAvatar)
 
         taskMgr.remove(self.CAMERA_TASK)
-        # The camera control needs to run after the toon collision/movement processing
+        # The camera control needs to run after the toon collision/movement
+        # processing
         taskMgr.add(self.__cameraTask, self.CAMERA_TASK, priority=45)
 
     def __killCameraTask(self):
@@ -1016,10 +1030,10 @@ class DistributedMazeGame(DistributedMinigame):
         # simulate a compass node; always make sure the camera
         # parent node is rotated correctly, regardless of the
         # orientation of the parent (localtoon)
-        self.camParent.setHpr(render, 0,0,0)
+        self.camParent.setHpr(render, 0, 0, 0)
         return Task.cont
 
-    ## SUITS
+    # SUITS
     def __loadSuits(self):
         self.notify.debug("loadSuits")
         self.suits = []
@@ -1041,7 +1055,7 @@ class DistributedMazeGame(DistributedMinigame):
         self.notify.debug("suit periods: " + repr(suitPeriods))
 
         self.randomNumGen.shuffle(suitPeriods)
-        
+
         for i in range(self.numSuits):
             self.suits.append(MazeSuit(i, self.maze, self.randomNumGen,
                                        suitPeriods[i], self.getDifficulty()))
@@ -1068,8 +1082,8 @@ class DistributedMazeGame(DistributedMinigame):
             suit.gameEnd()
 
     def __updateSuitsTask(self, task):
-        #print "__updateSuitsTask"
-        
+        # print "__updateSuitsTask"
+
         curT = globalClock.getFrameTime() - self.gameStartTime
         curTic = int(curT * float(MazeGameGlobals.SUIT_TIC_FREQ))
 
@@ -1081,9 +1095,9 @@ class DistributedMazeGame(DistributedMinigame):
         # aggregate a list of all the suit update times
         for i in range(len(self.suits)):
             updateTics = self.suits[i].getThinkTimestampTics(curTic)
-            suitUpdates.extend(list(zip(updateTics, [i]*len(updateTics))))
+            suitUpdates.extend(list(zip(updateTics, [i] * len(updateTics))))
         # sort the list in-place
-        suitUpdates.sort(key=functools.cmp_to_key(lambda a,b: a[0]-b[0]))
+        suitUpdates.sort(key=functools.cmp_to_key(lambda a, b: a[0] - b[0]))
 
         if len(suitUpdates) > 0:
             # see below
@@ -1114,7 +1128,7 @@ class DistributedMazeGame(DistributedMinigame):
                 unwalkables = []
                 for si in range(suitIndex):
                     unwalkables.extend(self.suits[si].occupiedTiles)
-                for si in range(suitIndex+1,len(self.suits)):
+                for si in range(suitIndex + 1, len(self.suits)):
                     unwalkables.extend(self.suits[si].occupiedTiles)
 
                 # do the actual update
@@ -1130,41 +1144,44 @@ class DistributedMazeGame(DistributedMinigame):
         lerpDur = .5
         # goal panel
         lerpTrack.append(Parallel(
-            LerpPosInterval(self.goalBar, lerpDur, Point3(0,0,-.6),
+            LerpPosInterval(self.goalBar, lerpDur, Point3(0, 0, -.6),
                             blendType='easeInOut'),
             LerpScaleInterval(self.goalBar, lerpDur,
-                              Vec3(self.goalBar.getScale())*2.,
+                              Vec3(self.goalBar.getScale()) * 2.,
                               blendType='easeInOut'),
-            ))
+        ))
         # score panels
         # top/bottom Y
-        tY = .6; bY = -.05
+        tY = .6
+        bY = -.05
         # left/center/right X
-        lX = -.5; cX = 0; rX = .5
+        lX = -.5
+        cX = 0
+        rX = .5
         scorePanelLocs = (
-            ((cX,bY),),
-            ((lX,bY),(rX,bY)),
-            ((cX,tY),(lX,bY),(rX,bY)),
-            ((lX,tY),(rX,tY),(lX,bY),(rX,bY)),
-            )
-        scorePanelLocs = scorePanelLocs[self.numPlayers-1]
+            ((cX, bY),),
+            ((lX, bY), (rX, bY)),
+            ((cX, tY), (lX, bY), (rX, bY)),
+            ((lX, tY), (rX, tY), (lX, bY), (rX, bY)),
+        )
+        scorePanelLocs = scorePanelLocs[self.numPlayers - 1]
         for i in range(self.numPlayers):
             panel = self.scorePanels[i]
             pos = scorePanelLocs[i]
             lerpTrack.append(Parallel(
-                LerpPosInterval(panel, lerpDur, Point3(pos[0],0,pos[1]),
+                LerpPosInterval(panel, lerpDur, Point3(pos[0], 0, pos[1]),
                                 blendType='easeInOut'),
                 LerpScaleInterval(panel, lerpDur,
-                                  Vec3(panel.getScale())*2.,
+                                  Vec3(panel.getScale()) * 2.,
                                   blendType='easeInOut'),
-                ))
+            ))
 
         self.showScoreTrack = Parallel(
             lerpTrack,
             Sequence(Wait(MazeGameGlobals.SHOWSCORES_DURATION),
                      Func(self.gameOver),
                      ),
-            )
+        )
 
         self.showScoreTrack.start()
 
@@ -1207,7 +1224,7 @@ class DistributedMazeGame(DistributedMinigame):
         camera.reparentTo(iCamParent)
         toonHeight = base.localAvatar.getHeight()
         camera.setPos(0, -15, toonHeight * 3)
-        camera.lookAt(0, 0, toonHeight/2.)
+        camera.lookAt(0, 0, toonHeight / 2.)
 
         # put the new parent node under the original parent node
         # so that all we have to do to make the new parent node
@@ -1226,17 +1243,17 @@ class DistributedMazeGame(DistributedMinigame):
         startHpr.setX(reduceAngle(startHpr[0]))
         lerpTrack.append(
             LerpPosHprInterval(iCamParent, lerpDur,
-                               pos = Point3(0,0,0),
-                               hpr = Point3(0,0,0),
-                               startHpr = startHpr,
+                               pos=Point3(0, 0, 0),
+                               hpr=Point3(0, 0, 0),
+                               startHpr=startHpr,
                                name=self.uniqueName('introLerpParent')))
 
         # lerp the camera to its old offset/orientation
         lerpTrack.append(
             LerpPosHprInterval(camera, lerpDur,
-                               pos = origCamPos,
-                               hpr = origCamHpr,
-                               blendType = 'easeInOut',
+                               pos=origCamPos,
+                               hpr=origCamHpr,
+                               blendType='easeInOut',
                                name=self.uniqueName('introLerpCameraPos')))
 
         base.localAvatar.startLookAround()
@@ -1251,9 +1268,9 @@ class DistributedMazeGame(DistributedMinigame):
             iCamParent.removeNode()
             del iCamParent
             base.localAvatar.stopLookAround()
-            
+
         return Sequence(
             Wait(waitDur),
             lerpTrack,
             Func(cleanup),
-            )
+        )

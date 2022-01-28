@@ -6,30 +6,31 @@ from direct.fsm import State
 from direct.task import Task
 from . import CannonGameGlobals
 
+
 class DistributedCannonGameAI(DistributedMinigameAI):
 
     def __init__(self, air, minigameId):
         DistributedMinigameAI.__init__(self, air, minigameId)
 
         self.gameFSM = ClassicFSM.ClassicFSM('DistributedCannonGameAI',
-                               [State.State('inactive',
-                                            self.enterInactive,
-                                            self.exitInactive,
-                                            ['play']),
-                                State.State('play',
-                                            self.enterPlay,
-                                            self.exitPlay,
-                                            ['cleanup']),
-                                State.State('cleanup',
-                                            self.enterCleanup,
-                                            self.exitCleanup,
-                                            ['inactive']),
-                                ],
-                               # Initial State
-                               'inactive',
-                               # Final State
-                               'inactive',
-                               )
+                                             [State.State('inactive',
+                                                          self.enterInactive,
+                                                          self.exitInactive,
+                                                          ['play']),
+                                                 State.State('play',
+                                                             self.enterPlay,
+                                                             self.exitPlay,
+                                                             ['cleanup']),
+                                                 State.State('cleanup',
+                                                             self.enterCleanup,
+                                                             self.exitCleanup,
+                                                             ['inactive']),
+                                              ],
+                                             # Initial State
+                                             'inactive',
+                                             # Final State
+                                             'inactive',
+                                             )
 
         # Add our game ClassicFSM to the framework ClassicFSM
         self.addChildGameFSM(self.gameFSM)
@@ -106,17 +107,16 @@ class DistributedCannonGameAI(DistributedMinigameAI):
            zRot > CannonGameGlobals.CANNON_ROTATION_MAX:
             self.air.writeServerEvent(
                 'suspicious', avId,
-                'Cannon game z-rotation out of range: %s' % zRot)
-            self.notify.warning('av %s cannon z-rotation out of range: %s' %
-                                (avId, zRot))
+                f'Cannon game z-rotation out of range: {zRot}')
+            self.notify.warning(f'av {avId} cannon z-rotation out of range: {zRot}')
             outOfRange = 1
         if angle < CannonGameGlobals.CANNON_ANGLE_MIN or \
            angle > CannonGameGlobals.CANNON_ANGLE_MAX:
             self.air.writeServerEvent(
                 'suspicious', avId,
-                'Cannon game vertical angle out of range: %s' % angle)
+                f'Cannon game vertical angle out of range: {angle}')
             self.notify.warning(
-                'av %s cannon vertical angle out of range: %s' % (avId, angle))
+                f'av {avId} cannon vertical angle out of range: {angle}')
             outOfRange = 1
         return outOfRange
 
@@ -162,11 +162,10 @@ class DistributedCannonGameAI(DistributedMinigameAI):
         # give everyone that many jbeans
         for avId in self.avIdList:
             self.scoreDict[avId] = score
-        self.notify.debug("setToonWillLandInWater: time=%s, score=%s" % \
-                          (landTime, score))
+        self.notify.debug(f"setToonWillLandInWater: time={landTime}, score={score}")
 
         taskMgr.remove(self.taskName("gameTimer"))
-        delay = max(0,landTime - self.getCurrentGameTime())
+        delay = max(0, landTime - self.getCurrentGameTime())
         #self.notify.debug("setToonWillLandInWater: delay=%s" % delay)
         taskMgr.doMethodLater(delay,
                               self.toonLandedInWater,

@@ -6,6 +6,7 @@ from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from . import FishGlobals
 
+
 class DirectRegion(NodePath):
     notify = DirectNotifyGlobal.directNotify.newCategory("DirectRegion")
 
@@ -13,7 +14,7 @@ class DirectRegion(NodePath):
         assert self.notify.debugStateCall(self)
         NodePath.__init__(self)
         self.assign(parent.attachNewNode("DirectRegion"))
-    
+
     def destroy(self):
         assert self.notify.debugStateCall(self)
         self.unload()
@@ -24,19 +25,19 @@ class DirectRegion(NodePath):
         """
         assert self.notify.debugStateCall(self)
         assert len(bounds) == 4
-        self.bounds=bounds
-        
+        self.bounds = bounds
+
     def setColor(self, *colors):
         """
         colors are floats: red, green, blue, alpha
         """
         assert self.notify.debugStateCall(self)
         assert len(colors) == 4
-        self.color=colors
+        self.color = colors
 
     def show(self):
         assert self.notify.debugStateCall(self)
-    
+
     def hide(self):
         assert self.notify.debugStateCall(self)
 
@@ -49,7 +50,7 @@ class DirectRegion(NodePath):
             self.fishSwimCamera = self.cRender.attachNewNode('fishSwimCamera')
             self.cCamNode = Camera('fishSwimCam')
             self.cLens = PerspectiveLens()
-            self.cLens.setFov(40,40)
+            self.cLens.setFov(40, 40)
             self.cLens.setNear(0.1)
             self.cLens.setFar(100.0)
             self.cCamNode.setLens(self.cLens)
@@ -57,20 +58,21 @@ class DirectRegion(NodePath):
             self.fishSwimCam = self.fishSwimCamera.attachNewNode(self.cCamNode)
 
             cm = CardMaker('displayRegionCard')
-            
+
             assert hasattr(self, "bounds")
             cm.setFrame(*self.bounds)
-            
+
             self.card = card = self.attachNewNode(cm.generate())
             assert hasattr(self, "color")
             card.setColor(*self.color)
-            
-            newBounds=card.getTightBounds()
-            ll=render2d.getRelativePoint(card, newBounds[0])
-            ur=render2d.getRelativePoint(card, newBounds[1])
-            newBounds=[ll.getX(), ur.getX(), ll.getZ(), ur.getZ()]
+
+            newBounds = card.getTightBounds()
+            ll = render2d.getRelativePoint(card, newBounds[0])
+            ur = render2d.getRelativePoint(card, newBounds[1])
+            newBounds = [ll.getX(), ur.getX(), ll.getZ(), ur.getZ()]
             # scale the -1.0..2.0 range to 0.0..1.0:
-            newBounds=[max(0.0, min(1.0, (x+1.0)/2.0)) for x in newBounds]
+            newBounds = [max(0.0, min(1.0, (x + 1.0) / 2.0))
+                         for x in newBounds]
 
             self.cDr = base.win.makeDisplayRegion(*newBounds)
             self.cDr.setSort(10)
@@ -91,6 +93,7 @@ class DirectRegion(NodePath):
             del self.fishSwimCam
             del self.cDr
 
+
 class FishPhoto(NodePath):
     notify = DirectNotifyGlobal.directNotify.newCategory("FishPhoto")
 
@@ -105,7 +108,7 @@ class FishPhoto(NodePath):
         self.soundTrack = None
         self.track = None
         self.fishFrame = None
-        
+
     def destroy(self):
         assert self.notify.debugStateCall(self)
         self.hide()
@@ -114,7 +117,7 @@ class FishPhoto(NodePath):
         self.fish = None
         del self.soundTrack
         del self.track
-        
+
     def update(self, fish):
         assert self.notify.debugStateCall(self)
         self.fish = fish
@@ -124,18 +127,18 @@ class FishPhoto(NodePath):
         bounds are floats: left, right, top, bottom
         """
         assert len(bounds) == 4
-        self.swimBounds=bounds
-        
+        self.swimBounds = bounds
+
     def setSwimColor(self, *colors):
         """
         colors are floats: red, green, blue, alpha
         """
         assert len(colors) == 4
-        self.swimColor=colors
+        self.swimColor = colors
 
     def load(self):
         assert self.notify.debugStateCall(self)
-    
+
     def makeFishFrame(self, actor):
         assert self.notify.debugStateCall(self)
         # NOTE: this may need to go in FishBase eventually
@@ -153,11 +156,12 @@ class FishPhoto(NodePath):
         scale = rotate.attachNewNode('scale')
         actor.reparentTo(scale)
         # Translate actor to the center.
-        bMin,bMax = actor.getTightBounds()
-        center = (bMin + bMax)/2.0
+        bMin, bMax = actor.getTightBounds()
+        center = (bMin + bMax) / 2.0
         actor.setPos(-center[0], -center[1], -center[2])
         genus = self.fish.getGenus()
-        fishInfo = FishGlobals.FishFileDict.get(genus, FishGlobals.FishFileDict[-1])
+        fishInfo = FishGlobals.FishFileDict.get(
+            genus, FishGlobals.FishFileDict[-1])
         fishPos = fishInfo[5]
         if fishPos:
             actor.setPos(fishPos[0], fishPos[1], fishPos[2])
@@ -183,7 +187,8 @@ class FishPhoto(NodePath):
 
         if showBackground:
             if not hasattr(self, "background"):
-                background = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+                background = loader.loadModel(
+                    "phase_3.5/models/gui/stickerbook_gui")
                 background = background.find("**/Fish_BG")
                 self.background = background
             self.background.setPos(0, 15, 0)
@@ -209,8 +214,8 @@ class FishPhoto(NodePath):
                 duration = max(introDuration, self.sound.length())
                 soundTrack.append(Wait(duration - delay))
                 track.append(Func(soundTrack.loop))
-                #soundTrack.setLoop(1)
-                #track.append(soundTrack)
+                # soundTrack.setLoop(1)
+                # track.append(soundTrack)
                 self.soundTrack = soundTrack
             else:
                 track.append(soundTrack)

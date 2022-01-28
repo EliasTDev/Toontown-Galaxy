@@ -7,6 +7,7 @@ from direct.showbase.PythonUtil import randFloat, lerp
 from toontown.pets import PetConstants
 import random
 
+
 class PetGoalMgr(DirectObject.DirectObject):
     """This class handles short- and long-term goals of the pet (PetGoals).
     For instance, if a pet wants to make his owner happy, he needs to get
@@ -14,7 +15,7 @@ class PetGoalMgr(DirectObject.DirectObject):
     tricks until his owner is happy. This multi-step goal can be encapsulated
     in a PetGoal."""
     notify = DirectNotifyGlobal.directNotify.newCategory("PetGoalMgr")
-    
+
     def __init__(self, pet):
         self.pet = pet
         # quick-access 'list' of all goals
@@ -24,9 +25,12 @@ class PetGoalMgr(DirectObject.DirectObject):
         # timestamp of primary goal start
         self.primaryStartT = 0
         if __dev__:
-            self.pscSetup = PStatCollector('App:Show code:petThink:UpdatePriorities:Setup')
-            self.pscFindPrimary = PStatCollector('App:Show code:petThink:UpdatePriorities:FindPrimary')
-            self.pscSetPrimary = PStatCollector('App:Show code:petThink:UpdatePriorities:SetPrimary')
+            self.pscSetup = PStatCollector(
+                'App:Show code:petThink:UpdatePriorities:Setup')
+            self.pscFindPrimary = PStatCollector(
+                'App:Show code:petThink:UpdatePriorities:FindPrimary')
+            self.pscSetPrimary = PStatCollector(
+                'App:Show code:petThink:UpdatePriorities:SetPrimary')
 
     def destroy(self):
         if __dev__:
@@ -41,13 +45,15 @@ class PetGoalMgr(DirectObject.DirectObject):
 
     def hasTrickGoal(self):
         return self._hasTrickGoal
+
     def _setHasTrickGoal(self, hasTrickGoal):
         self._hasTrickGoal = hasTrickGoal
 
     def addGoal(self, goal):
-        assert not goal in self.goals
+        assert goal not in self.goals
         self.goals[goal] = None
         goal.setGoalMgr(self)
+
     def removeGoal(self, goal):
         assert goal in self.goals
         if self.primaryGoal == goal:
@@ -118,13 +124,13 @@ class PetGoalMgr(DirectObject.DirectObject):
         self._setPrimaryGoal(None)
 
     def __repr__(self):
-        string = '%s' % self.__class__.__name__
-        string += '\n Primary: %s' % self.primaryGoal
+        string = f'{self.__class__.__name__}'
+        string += f'\n Primary: {self.primaryGoal}'
         goalPairs = []
         for goal in self.goals:
             goalPairs.append((goal.getPriority(), goal))
         goalPairs.sort()
         goalPairs.reverse()
         for goalPair in goalPairs:
-            string += '\n  %s' % goalPair[1]
+            string += f'\n  {goalPair[1]}'
         return string

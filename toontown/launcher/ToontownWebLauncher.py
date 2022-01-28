@@ -6,6 +6,7 @@ from pandac.PandaModules import *
 # it's important to derive from WebLauncherBase first so that Python
 # will find its methods before looking at the old launcher code.
 
+
 class ToontownWebLauncher(WebLauncherBase):
     GameName = 'Toontown'
 
@@ -23,14 +24,14 @@ class ToontownWebLauncher(WebLauncherBase):
         (11, 'tt_11'),
         (12, 'tt_12'),
         (13, 'tt_13'),
-        ]
-    
+    ]
+
     Localizer = TTLocalizer
 
     def __init__(self, appRunner):
         WebLauncherBase.__init__(self, appRunner)
         self.http = HTTPClient.getGlobalPtr()
-        
+
         # Before you go further, let's parse the web acct parameters
         self.webAcctParams = "WEB_ACCT_PARAMS"
         self.parseWebAcctParams()
@@ -63,7 +64,7 @@ class ToontownWebLauncher(WebLauncherBase):
         """
         Get the parent password set key
         """
-        # Everything is already parsed if parseWebAcctParams was called 
+        # Everything is already parsed if parseWebAcctParams was called
         return self.chatEligibleKey
 
     def setTutorialComplete(self):
@@ -74,7 +75,6 @@ class ToontownWebLauncher(WebLauncherBase):
 
     def getGame2Done(self):
         return True
-
 
     def parseWebAcctParams(self):
         """
@@ -88,7 +88,7 @@ class ToontownWebLauncher(WebLauncherBase):
 
         if not s:
             s = self.getValue(self.webAcctParams, '')
-       
+
         # Parse the web account params to get chat related values
         # split s to the '&'
         l = s.split('&')
@@ -106,12 +106,15 @@ class ToontownWebLauncher(WebLauncherBase):
                 name, value = args
                 dict[name] = int(value)
 
-        self.secretNeedsParentPasswordKey = 1                
+        self.secretNeedsParentPasswordKey = 1
         if 'secretsNeedsParentPassword' in dict:
             self.secretNeedsParentPasswordKey = 1 and dict['secretsNeedsParentPassword']
         else:
-            self.notify.warning('no secretNeedsParentPassword token in webAcctParams')
-        self.notify.info('secretNeedsParentPassword = %d' % self.secretNeedsParentPasswordKey)
+            self.notify.warning(
+                'no secretNeedsParentPassword token in webAcctParams')
+        self.notify.info(
+            'secretNeedsParentPassword = %d' %
+            self.secretNeedsParentPasswordKey)
 
         self.chatEligibleKey = 0
         if 'chatEligible' in dict:
@@ -120,9 +123,9 @@ class ToontownWebLauncher(WebLauncherBase):
             self.notify.warning('no chatEligible token in webAcctParams')
         self.notify.info('chatEligibleKey = %d' % self.chatEligibleKey)
 
-    #============================================================
+    # ============================================================
     # Interface of launcher to the rest of the game
-    #============================================================
+    # ============================================================
 
     def getBlue(self):
         """

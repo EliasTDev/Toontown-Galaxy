@@ -4,6 +4,7 @@ from direct.task.Task import Task
 from pandac.PandaModules import *
 from .DistributedNPCToonBaseAI import *
 
+
 class DistributedNPCClerkAI(DistributedNPCToonBaseAI):
 
     def __init__(self, air, npcId):
@@ -24,16 +25,17 @@ class DistributedNPCClerkAI(DistributedNPCToonBaseAI):
         # Do what the quest manager does for DistributedNPCToon
         av = self.air.doId2do.get(avId)
         if av is None:
-            self.notify.warning('toon isnt there! toon: %s' % avId)
+            self.notify.warning(f'toon isnt there! toon: {avId}')
             return
 
         # Handle unexpected exit
         self.acceptOnce(self.air.getAvatarExitEvent(avId),
-                                self.__handleUnexpectedExit, extraArgs=[avId])
+                        self.__handleUnexpectedExit, extraArgs=[avId])
 
         # If NPC is busy, free the avatar
         if (self.isBusy(avId)):
-            assert self.notify.debug('freeing avatar: %s because NPCClerk is busy' % avId)
+            assert self.notify.debug(
+                f'freeing avatar: {avId} because NPCClerk is busy')
             self.freeAvatar(avId)
             return
 
@@ -52,9 +54,9 @@ class DistributedNPCClerkAI(DistributedNPCToonBaseAI):
                         ClockDelta.globalClockDelta.getRealNetworkTime()])
 
         # Timeout
-        taskMgr.doMethodLater(NPCToons.CLERK_COUNTDOWN_TIME, 
-                                self.sendTimeoutMovie,
-                                self.uniqueName('clearMovie'))
+        taskMgr.doMethodLater(NPCToons.CLERK_COUNTDOWN_TIME,
+                              self.sendTimeoutMovie,
+                              self.uniqueName('clearMovie'))
 
     def sendNoMoneyMovie(self, avId):
         if avId not in self.busy:
@@ -76,9 +78,9 @@ class DistributedNPCClerkAI(DistributedNPCToonBaseAI):
         return Task.done
 
     def sendClearMovie(self, task):
-        avId = self.air.getAvatarIdFromSender() 
+        avId = self.air.getAvatarIdFromSender()
         assert self.notify.debug('sendClearMovie()')
-        
+
         # Ignore unexpected exits on whoever I was busy with
         self.ignore(self.air.getAvatarExitEvent(avId))
         self.busy.remove(avId)
@@ -100,26 +102,32 @@ class DistributedNPCClerkAI(DistributedNPCToonBaseAI):
         return
 
     def setInventory(self, blob, newMoney, done):
-        assert self.notify.debug('setInventory(): %s' % self.timedOut)
+        assert self.notify.debug(f'setInventory(): {self.timedOut}')
         avId = self.air.getAvatarIdFromSender()
 
         if avId not in self.busy:
-            self.air.writeServerEvent('suspicious', avId, 'DistributedNPCClerkAI.setInventory busy with %s' % (self.busy))
-            self.notify.warning('setInventory from unknown avId: %s busy: %s' % (avId, self.busy))
+            self.air.writeServerEvent(
+                'suspicious',
+                avId,
+                f'DistributedNPCClerkAI.setInventory busy with {self.busy}')
+            self.notify.warning(
+                f'setInventory from unknown avId: {avId} busy: {self.busy}')
             return
 
         if avId in self.air.doId2do:
             av = self.air.doId2do[avId]
             newInventory = av.inventory.makeFromNetString(blob)
             currentMoney = av.getMoney()
-            if (av.inventory.validatePurchase(newInventory, currentMoney, newMoney)):
+            if (av.inventory.validatePurchase(
+                    newInventory, currentMoney, newMoney)):
                 av.setMoney(newMoney)
                 if done:
                     # Tell the state server about the purchase
                     av.d_setInventory(av.inventory.makeNetString())
                     av.d_setMoney(newMoney)
             else:
-                self.air.writeServerEvent('suspicious', avId, 'DistributedNPCClerkAI.setInventory invalid purchase')
+                self.air.writeServerEvent(
+                    'suspicious', avId, 'DistributedNPCClerkAI.setInventory invalid purchase')
                 self.notify.warning("Avatar " + str(avId) +
                                     " attempted an invalid purchase.")
                 # Make sure the avatar is in sync with the AI.
@@ -135,4 +143,4 @@ class DistributedNPCClerkAI(DistributedNPCToonBaseAI):
     def __handleUnexpectedExit(self, avId):
         self.notify.warning('avatar:' + str(avId) + ' has exited unexpectedly')
         self.sendTimeoutMovie(None)
-        return None 
+        return None

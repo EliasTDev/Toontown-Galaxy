@@ -9,13 +9,14 @@ from toontown.toonbase import TTLocalizer
 
 notify = DirectNotifyGlobal.directNotify.newCategory('SuitDialog')
 
+
 def getBrushOffIndex(suitName):
     """ getBrushOffIndex(suitName)
 
     Chooses a suitable brushoff for a suit of the given type, and
     returns its index number (which can later be passed to
     getBrushOffText() to retrieve the message itself).
-    
+
     """
     if suitName in SuitBrushOffs:
         brushoffs = SuitBrushOffs[suitName]
@@ -34,12 +35,13 @@ def getBrushOffIndex(suitName):
         count += chunk
     notify.error('getBrushOffs() - no brush off found!')
 
+
 def getBrushOffText(suitName, index):
     """ getBrushOffText(suitName, index)
 
     Returns the text of the brushoff with the given index number for
     the given suit type.
-    
+
     """
     if suitName in SuitBrushOffs:
         brushoffs = SuitBrushOffs[suitName]
@@ -47,5 +49,6 @@ def getBrushOffText(suitName, index):
         brushoffs = SuitBrushOffs[None]
 
     return brushoffs[index]
+
 
 SuitBrushOffs = OTPLocalizer.SuitBrushOffs

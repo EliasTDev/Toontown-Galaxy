@@ -9,4 +9,4 @@ UberZoneEntId = 0
 
 # system-allocated entities start at 1000
 LevelMgrEntId = 1000
-EditMgrEntId  = 1001
+EditMgrEntId = 1001

@@ -15,32 +15,34 @@ import random
 import math
 from toontown.effects import Bubbles
 
+
 class DistributedFishingTarget(DistributedNode.DistributedNode):
     """
     This handles the graphic representation of the fish that are under
     the water.  They are shown as a shadow with bubbles coming up.  These
     are the things that the player 'shoots at' when fishing.
     """
-    
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedFishingTarget')
+
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedFishingTarget')
 
     radius = 2.5
-    
+
     def __init__(self, cr):
         DistributedNode.DistributedNode.__init__(self, cr)
         # Initialize our NodePath essense
         NodePath.__init__(self)
         self.pond = None
-        self.centerPoint = (0,0,0)
+        self.centerPoint = (0, 0, 0)
         self.maxRadius = 1.0
         self.track = None
 
     def generate(self):
         self.assign(render.attachNewNode("DistributedFishingTarget"))
         shadow = loader.loadModel('phase_3/models/props/drop_shadow')
-        shadow.setPos(0,0,-0.1)
+        shadow.setPos(0, 0, -0.1)
         shadow.setScale(0.33)
-        shadow.setColorScale(1,1,1,0.75)
+        shadow.setColorScale(1, 1, 1, 0.75)
         shadow.reparentTo(self)
         self.bubbles = Bubbles.Bubbles(self, render)
         self.bubbles.renderParent.setDepthWrite(0)
@@ -64,8 +66,10 @@ class DistributedFishingTarget(DistributedNode.DistributedNode):
     def setPondDoId(self, pondDoId):
         self.pond = base.cr.doId2do[pondDoId]
         self.pond.addTarget(self)
-        self.centerPoint = FishingTargetGlobals.getTargetCenter(self.pond.getArea())
-        self.maxRadius = FishingTargetGlobals.getTargetRadius(self.pond.getArea())
+        self.centerPoint = FishingTargetGlobals.getTargetCenter(
+            self.pond.getArea())
+        self.maxRadius = FishingTargetGlobals.getTargetRadius(
+            self.pond.getArea())
 
     def getDestPos(self, angle, radius):
         x = (radius * math.cos(angle)) + self.centerPoint[0]
@@ -74,8 +78,10 @@ class DistributedFishingTarget(DistributedNode.DistributedNode):
         return (x, y, z)
 
     def setState(self, stateIndex, angle, radius, time, timeStamp):
-        assert(self.notify.debug("setState: angle: %s radius: %s time: %s timeStamp: %s" %
-                                 (angle, radius, time, timeStamp)))
+        assert(
+            self.notify.debug(
+                "setState: angle: %s radius: %s time: %s timeStamp: %s" %
+                (angle, radius, time, timeStamp)))
         ts = globalClockDelta.localElapsedTime(timeStamp)
         pos = self.getDestPos(angle, radius)
         if (self.track and self.track.isPlaying()):
@@ -85,7 +91,7 @@ class DistributedFishingTarget(DistributedNode.DistributedNode):
                 self,
                 time - ts,
                 Point3(*pos),
-                blendType = 'easeInOut'))
+                blendType='easeInOut'))
         self.track.start()
 
     def getRadius(self):

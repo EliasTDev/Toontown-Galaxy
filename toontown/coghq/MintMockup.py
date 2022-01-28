@@ -2,19 +2,21 @@ from pandac.PandaModules import *
 from direct.showbase.PythonUtil import Enum
 import random
 
+
 def zoneNum2str(num):
     return 'ZONE%02i.mb' % num
+
 
 class Room(NodePath):
     ModulePath = '/i/beta/toons/maya/work/CogHeadquarters/CogFactoriesInteriors/AllFactories/MintFactory/'
 
-    StartingRooms  = ('ZONE03a.mb', 'ZONE16a.mb')
-    MiddleRooms    = ('ZONE04a.mb', 'ZONE07a.mb', 'ZONE08a.mb', 'ZONE10a.mb',
-                      'ZONE13a.mb', 'ZONE15a.mb', 'ZONE17a.mb', 'ZONE18a.mb',
-                      'ZONE19a.mb')
+    StartingRooms = ('ZONE03a.mb', 'ZONE16a.mb')
+    MiddleRooms = ('ZONE04a.mb', 'ZONE07a.mb', 'ZONE08a.mb', 'ZONE10a.mb',
+                   'ZONE13a.mb', 'ZONE15a.mb', 'ZONE17a.mb', 'ZONE18a.mb',
+                   'ZONE19a.mb')
     ConnectorRooms = ('connectors/connector_7cubeL2.mb',
                       'connectors/connector_7cubeR2.mb')
-    EndingRooms    = ('ZONE11a.mb', 'ZONE22a.mb', 'ZONE31a.mb')
+    EndingRooms = ('ZONE11a.mb', 'ZONE22a.mb', 'ZONE31a.mb')
 
     AllRooms = StartingRooms + MiddleRooms + ConnectorRooms + EndingRooms
 
@@ -23,7 +25,7 @@ class Room(NodePath):
         self.num = num
         self.name = name
         NodePath.__init__(self, hidden.attachNewNode(
-            'MintRoom-%s' % self._getModelName()))
+            f'MintRoom-{self._getModelName()}'))
         self.load()
         self.reparentTo(render)
         if dbg:
@@ -54,10 +56,10 @@ class Room(NodePath):
         self.reparentTo(otherDoor)
         self.clearMat()
         # position our door at our origin so that it's on top of the other door
-        self.model.setPos(Vec3(0)-thisDoor.getPos(self.model))
+        self.model.setPos(Vec3(0) - thisDoor.getPos(self.model))
         # rotate so that our door is facing the right way
         self.setH(-thisDoor.getH(otherDoor))
-        #print 'H: %s' % self.getH()
+        # print 'H: %s' % self.getH()
         self.wrtReparentTo(other.getParent())
 
     def showAxes(self):
@@ -65,7 +67,7 @@ class Room(NodePath):
         axis = loader.loadModel("models/misc/xyzAxis.bam")
         axis.setColorOff()
         # last 1 overrides default colorScale
-        axis.setColorScale(1,1,1,1,1)
+        axis.setColorScale(1, 1, 1, 1, 1)
         for doorway in self.entrances + self.exits:
             self.axes.append(axis.copyTo(doorway))
         self.axes.append(axis.copyTo(self.model))
@@ -96,8 +98,10 @@ class Room(NodePath):
 
     def _getEntrances(self):
         return self.model.findAllMatches('**/ENTRANCE*')
+
     def _getExits(self):
         return self.model.findAllMatches('**/EXIT*')
+
 
 class MintLevel(NodePath):
     def __init__(self, roomNames):
@@ -112,29 +116,31 @@ class MintLevel(NodePath):
                 room.attachTo(self.rooms[-1])
             self.rooms.append(room)
 
+
 def createLevel(numRooms=None, seed=None, rooms=None):
     # pass in # of rooms/rand seed, OR list of room #s/names
     # # of rooms & rand seed both default to 'pick at random'
     if rooms is None:
         if seed is None:
-            seed = random.randrange(0,50)
+            seed = random.randrange(0, 50)
         rng = random.Random(seed)
 
         if numRooms is None:
-            numRooms = rng.randrange(2,8)
-        assert numRooms>=2
+            numRooms = rng.randrange(2, 8)
+        assert numRooms >= 2
 
         StartingRooms = Room.StartingRooms
         EndingRooms = Room.EndingRooms
-        MiddleRooms = list(Room.MiddleRooms)
-        MiddleRooms.sort()
+        MiddleRooms = sorted(Room.MiddleRooms)
 
         roomNames = []
+
         def getARoom(choices, rng, alreadyChosen):
-            while 1:
+            while True:
                 room = rng.choice(choices)
                 if room not in alreadyChosen:
                     return room
+
         def addRoomWithConnector(roomName, rng):
             # no connector if this is the first room
             if len(roomNames):
@@ -143,48 +149,53 @@ def createLevel(numRooms=None, seed=None, rooms=None):
             roomNames.append(roomName)
         # pick a starting room
         addRoomWithConnector(getARoom(StartingRooms, rng, roomNames), rng)
-        for i in range(numRooms-2):
+        for i in range(numRooms - 2):
             addRoomWithConnector(getARoom(MiddleRooms, rng, roomNames), rng)
         # pick an ending room
         addRoomWithConnector(getARoom(EndingRooms, rng, roomNames), rng)
     else:
         roomNames = []
         for roomName in rooms:
-            if type(roomName) == type(1):
+            if isinstance(roomName, type(1)):
                 roomName = zoneNum2str(roomName)
             roomNames.append(roomName)
 
-    #print roomNames
+    # print roomNames
     return MintLevel(roomNames)
+
 
 class MintDemo:
     def __init__(self):
         self.level = None
         self.newLevel()
+
     def destroy(self):
         self.level.removeNode()
         try:
             base.cr.playGame.hood.loader.geom.unstash()
-        except:
+        except BaseException:
             pass
+
     def cache(self):
         # cache all the modules in memory
         for name in Room.AllRooms:
             r = Room(name=name)
             r.unload()
+
     def newLevel(self, numRooms=None):
-        if numRooms == None:
-            numRooms = random.randrange(3,7)
+        if numRooms is None:
+            numRooms = random.randrange(3, 7)
         if self.level is not None:
             self.level.removeNode()
             self.level = None
         try:
             base.cr.playGame.hood.loader.geom.stash()
-        except:
+        except BaseException:
             pass
         self.level = createLevel(numRooms=numRooms)
         self.level.reparentTo(render)
         base.localAvatar.clearMat()
+
 
 """
 from toontown.coghq import MintMockup

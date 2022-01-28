@@ -8,6 +8,7 @@ COUNT_DOWN_RATE = 0.075
 DELAY_AFTER_COUNT_DOWN = 0.0
 DELAY_AFTER_CELEBRATE = 3.0
 
+
 class ClerkPurchase(PurchaseBase):
 
     activateMode = 'storePurchase'
@@ -21,32 +22,33 @@ class ClerkPurchase(PurchaseBase):
 
         PurchaseBase.__init__(self, toon, doneEvent)
         self.remain = remain
-    
+
     def load(self):
-        purchaseModels = loader.loadModel("phase_4/models/gui/gag_shop_purchase_gui")
+        purchaseModels = loader.loadModel(
+            "phase_4/models/gui/gag_shop_purchase_gui")
 
         PurchaseBase.load(self, purchaseModels)
 
         self.backToPlayground = DirectButton(
-            parent = self.frame,
-            relief = None,
-            scale = 1.04,
-            pos = (0.71, 0, -0.045),
-            image = (purchaseModels.find("**/PurchScrn_BTN_UP"),
-                     purchaseModels.find("**/PurchScrn_BTN_DN"),
-                     purchaseModels.find("**/PurchScrn_BTN_RLVR"),
-                     ),
-            text = TTLocalizer.GagShopDoneShopping,
-            text_fg = (0, 0.1, 0.7, 1),
-            text_scale = 0.05,
-            text_pos = (0, 0.015, 0),
-            command = self.__handleBackToPlayground,
-            )
+            parent=self.frame,
+            relief=None,
+            scale=1.04,
+            pos=(0.71, 0, -0.045),
+            image=(purchaseModels.find("**/PurchScrn_BTN_UP"),
+                   purchaseModels.find("**/PurchScrn_BTN_DN"),
+                   purchaseModels.find("**/PurchScrn_BTN_RLVR"),
+                   ),
+            text=TTLocalizer.GagShopDoneShopping,
+            text_fg=(0, 0.1, 0.7, 1),
+            text_scale=0.05,
+            text_pos=(0, 0.015, 0),
+            command=self.__handleBackToPlayground,
+        )
 
         # The timer
         self.timer = ToontownTimer.ToontownTimer()
         self.timer.reparentTo(self.frame)
-        self.timer.posInTopRightCorner()        
+        self.timer.posInTopRightCorner()
 
         purchaseModels.removeNode()
 
@@ -65,7 +67,7 @@ class ClerkPurchase(PurchaseBase):
 
     def __timerExpired(self):
         # do something
-        #messenger.send("purchaseTimeout")
+        # messenger.send("purchaseTimeout")
         self.handleDone(0)
         return
 
@@ -75,21 +77,22 @@ class ClerkPurchase(PurchaseBase):
 
         PurchaseBase.enterPurchase(self)
 
-        self.backToPlayground.reparentTo(self.toon.inventory.storePurchaseFrame)
+        self.backToPlayground.reparentTo(
+            self.toon.inventory.storePurchaseFrame)
         self.pointDisplay.reparentTo(self.toon.inventory.storePurchaseFrame)
         self.statusLabel.reparentTo(self.toon.inventory.storePurchaseFrame)
 
         # Start the timer countdown
         self.timer.countdown(self.remain, self.__timerExpired)
-        #self.toon.inventory.enableUberGags(0)
+        # self.toon.inventory.enableUberGags(0)
         return
-        
+
     def exitPurchase(self):
         PurchaseBase.exitPurchase(self)
         self.backToPlayground.reparentTo(self.frame)
         self.pointDisplay.reparentTo(self.frame)
         self.statusLabel.reparentTo(self.frame)
-        #self.toon.inventory.enableUberGags(1)
+        # self.toon.inventory.enableUberGags(1)
 
         self.ignore("purchaseStateChange")
         return

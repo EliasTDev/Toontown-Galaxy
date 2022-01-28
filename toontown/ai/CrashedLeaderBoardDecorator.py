@@ -14,13 +14,14 @@ from pandac.PandaModules import Vec4, CSDefault, TransformState, NodePath, Trans
 from panda3d.toontown import loadDNAFile
 from toontown.hood import GSHood
 
+
 class CrashedLeaderBoardDecorator(HolidayDecorator.HolidayDecorator):
-    
-    notify = DirectNotifyGlobal.directNotify.newCategory("CrashedLeaderBoardDecorator")    
-    
+
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "CrashedLeaderBoardDecorator")
+
     def __init__(self):
-        HolidayDecorator.HolidayDecorator.__init__(self)        
-        
+        HolidayDecorator.HolidayDecorator.__init__(self)
 
     def decorate(self):
         # Load the specified seasonal storage file
@@ -31,26 +32,26 @@ class CrashedLeaderBoardDecorator(HolidayDecorator.HolidayDecorator):
 
         holidayIds = base.cr.newsManager.getDecorationHolidayId()
         if ToontownGlobals.CRASHED_LEADERBOARD not in holidayIds:
-            return            
-                
+            return
+
         if base.config.GetBool('want-crashedLeaderBoard-Smoke', 1):
-            self.startSmokeEffect()           
-            
-    def startSmokeEffect(self):   
+            self.startSmokeEffect()
+
+    def startSmokeEffect(self):
         if isinstance(base.cr.playGame.getPlace().loader.hood, GSHood.GSHood):
-            base.cr.playGame.getPlace().loader.startSmokeEffect()              
-                        
-    def stopSmokeEffect(self):    
+            base.cr.playGame.getPlace().loader.startSmokeEffect()
+
+    def stopSmokeEffect(self):
         if isinstance(base.cr.playGame.getPlace().loader.hood, GSHood.GSHood):
-            base.cr.playGame.getPlace().loader.stopSmokeEffect()  
-                        
-    def undecorate(self):    
+            base.cr.playGame.getPlace().loader.stopSmokeEffect()
+
+    def undecorate(self):
         if base.config.GetBool('want-crashedLeaderBoard-Smoke', 1):
-            self.stopSmokeEffect()                       
-            
+            self.stopSmokeEffect()
+
         # if there are any other decoration holidays running
         holidayIds = base.cr.newsManager.getDecorationHolidayId()
-        if len(holidayIds)>0:
+        if len(holidayIds) > 0:
             self.decorate()
             return
 

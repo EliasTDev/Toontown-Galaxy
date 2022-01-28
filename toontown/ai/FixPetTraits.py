@@ -16,6 +16,8 @@ from toontown.minigame import MinigameGlobals
 # better-behaved than DL pets. This is fixed as a by-product of the way we
 # recalculate the pet's traits.
 # Also fills in safezone-ID field with a sensible value
+
+
 class PetTraitFixer(RepairAvatars.PetIterator):
     def __init__(self, air, startId=None, endId=None):
         # startId will be the first id that is checked
@@ -35,15 +37,14 @@ class PetTraitFixer(RepairAvatars.PetIterator):
     def readIdsFromFile(self, filename='doodle.list'):
         file = open(filename)
         self.objIdList = file.readlines()
-        print('Fixing %s pets' % len(self.objIdList))
+        print(f'Fixing {len(self.objIdList)} pets')
 
     def processPet(self, pet, db):
         RepairAvatars.PetIterator.processPet(self, pet, db)
         # the safezone should be TTC
         if pet.getSafeZone() != ToontownGlobals.ToontownCentral:
             print((
-                'Warning: pet %s is a pet that does not need to be patched!' %
-                pet.doId))
+                f'Warning: pet {pet.doId} is a pet that does not need to be patched!'))
             # prevent mem leak
             pet.patchDelete()
             # this will request another pet if there are more to request
@@ -51,13 +52,13 @@ class PetTraitFixer(RepairAvatars.PetIterator):
             return
 
         # grab the pet's owner
-        print('requesting owner %s of pet %s' % (pet.getOwnerId(), pet.doId))
+        print(f'requesting owner {pet.getOwnerId()} of pet {pet.doId}')
         ag = RepairAvatars.AvatarGetter(self.air)
-        event = 'getOwner-%s' % pet.doId
+        event = f'getOwner-{pet.doId}'
         ag.getAvatar(pet.getOwnerId(), fields=['setName', 'setMaxHp',
                                                'setMaxMoney',
                                                'setMaxBankMoney'],
-                     event = event)
+                     event=event)
         self.acceptOnce(event, PythonUtil.Functor(self.gotOwner, pet=pet))
 
     def gotOwner(self, toon, pet):
@@ -87,13 +88,13 @@ class PetTraitFixer(RepairAvatars.PetIterator):
         szList = MinigameGlobals.SafeZones
         numSz = len(szList)
         for i in range(numSz):
-            if normHp < (float(i+1) / numSz):
+            if normHp < (float(i + 1) / numSz):
                 break
             # check that they can even afford a pet from the next sz
-            if i < (numSz-1):
-                if maxMoney < PetConstants.ZoneToCostRange[szList[i+1]][0]:
+            if i < (numSz - 1):
+                if maxMoney < PetConstants.ZoneToCostRange[szList[i + 1]][0]:
                     print("toon %s can't afford pet from sz %s" % (
-                        pet.getOwnerId(), szList[i+1]))
+                        pet.getOwnerId(), szList[i + 1]))
                     break
         newSz = szList[i]
 
@@ -101,23 +102,25 @@ class PetTraitFixer(RepairAvatars.PetIterator):
         fields = []
 
         if newSz != ToontownGlobals.ToontownCentral:
-            print('newSafezone: %s' % newSz)
+            print(f'newSafezone: {newSz}')
             # recalculate the pet's traits
             newTraits = PetTraits.PetTraits(pet.getTraitSeed(), newSz)
             pet.setTraits(newTraits.getValueList())
-            fields.extend(list(map(pet.getSetterName, PetTraits.getTraitNames())))
+            fields.extend(
+                list(map(pet.getSetterName, PetTraits.getTraitNames())))
 
             pet.setSafeZone(newSz)
             fields.append('setSafeZone')
 
         if len(fields):
-            print('== Fixing pet %s' % pet.doId)
+            print(f'== Fixing pet {pet.doId}')
             db = DatabaseObject.DatabaseObject(self.air, pet.doId)
             db.storeObject(pet, fields)
 
         # prevent mem leak
         pet.patchDelete()
         toon.patchDelete()
+
 
 """
 from toontown.ai import UtilityStart

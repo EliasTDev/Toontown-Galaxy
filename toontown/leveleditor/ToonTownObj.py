@@ -9,10 +9,11 @@ from .LevelStyleManager import *
 DNA_TYPE_DICT = {
     'cornice': DNA_CORNICE,
     'door': DNA_FLAT_DOOR,
-    'landmark_door' : DNA_DOOR,
-    'windows' : DNA_WINDOWS,
-    'sign' : DNA_SIGN,
-    }
+    'landmark_door': DNA_DOOR,
+    'windows': DNA_WINDOWS,
+    'sign': DNA_SIGN,
+}
+
 
 class ToonTownObjBase(NodePath):
     def __init__(self, editor, dna, nodePath):
@@ -28,11 +29,12 @@ class ToonTownObjBase(NodePath):
             np = nodePath
         else:
             np = self.dna.traverse(self.editor.NPParent, DNASTORE, 1)
-        self.assign(np)    
+        self.assign(np)
 
     def initDNA(self):
         # You should implement this in subclass
-        raise NotImplementedError('initDNA() must be implemented in subclasses')
+        raise NotImplementedError(
+            'initDNA() must be implemented in subclasses')
 
     # overriding NodePath's wrtReparentTo
     def wrtReparentTo(self, parent):
@@ -68,6 +70,7 @@ class ToonTownObjBase(NodePath):
         NodePath.setName(self, newName)
         self.dna.setName(newName)
 
+
 class ToonTownObj(ToonTownObjBase):
     def __init__(self, editor, dna, nodePath):
         self.styleManager = editor.styleManager
@@ -94,16 +97,17 @@ class ToonTownObj(ToonTownObjBase):
     def setScale(self, newScale):
         NodePath.setScale(self, newScale)
         self.dna.setScale(newScale)
-        
+
     def getNextLandmarkBlock(self):
-        self.editor.landmarkBlock=self.editor.landmarkBlock+1
+        self.editor.landmarkBlock = self.editor.landmarkBlock + 1
         return str(self.editor.landmarkBlock)
 
     def createSign(self):
-        defaultSignStyle = self.styleManager.attributeDictionary['sign_texture'].getList()[0]
+        defaultSignStyle = self.styleManager.attributeDictionary['sign_texture'].getList()[
+            0]
         newDNASign = DNASign('sign')
-        #newDNASign.setCode(self.getCurrent('sign_texture'))
-        #newDNASign.setColor(self.getCurrent('sign_color'))
+        # newDNASign.setCode(self.getCurrent('sign_texture'))
+        # newDNASign.setColor(self.getCurrent('sign_color'))
 
         baseline = DNASignBaseline('baseline')
         baseline.setCode("humanist")
@@ -118,34 +122,37 @@ class ToonTownObj(ToonTownObjBase):
     def createDoor(self, doorType):
         if (doorType == 'landmark_door'):
             newDNADoor = DNADoor('door')
-            doorStyles = self.styleManager.attributeDictionary['door_double_texture'].getList()[1:]
+            doorStyles = self.styleManager.attributeDictionary['door_double_texture'].getList()[
+                1:]
             newDNADoor.setCode(random.choice(doorStyles))
-            #newDNADoor.setCode(self.getCurrent('door_double_texture'))
-            #newDNADoor.setColor(self.getCurrent('door_color'))
+            # newDNADoor.setCode(self.getCurrent('door_double_texture'))
+            # newDNADoor.setColor(self.getCurrent('door_color'))
         elif (doorType == 'door'):
             newDNADoor = DNAFlatDoor('door')
-            doorStyles = self.styleManager.attributeDictionary['door_single_texture'].getList()[1:]
+            doorStyles = self.styleManager.attributeDictionary['door_single_texture'].getList()[
+                1:]
             newDNADoor.setCode(random.choice(doorStyles))
-            #newDNADoor.setCode(self.getCurrent('door_single_texture'))
-            #newDNADoor.setColor(self.getCurrent('door_color'))
+            # newDNADoor.setCode(self.getCurrent('door_single_texture'))
+            # newDNADoor.setColor(self.getCurrent('door_color'))
         return newDNADoor
 
     def createWindows(self):
         newDNAWindows = DNAWindows()
-        windowStyles = self.styleManager.attributeDictionary['window_texture'].getList()[1:]
+        windowStyles = self.styleManager.attributeDictionary['window_texture'].getList()[
+            1:]
         newDNAWindows.setCode(random.choice(windowStyles))
-        #newDNAWindows.setCode(self.getCurrent('window_texture'))
+        # newDNAWindows.setCode(self.getCurrent('window_texture'))
         newDNAWindows.setWindowCount(1)
-        #newDNAWindows.setColor(self.getCurrent('window_color'))
+        # newDNAWindows.setColor(self.getCurrent('window_color'))
         return newDNAWindows
 
     def setDNATargetCode(self, dnaType, dnaTarget, dnaParent, code):
         if dnaType != 'wall':
             dnaTarget = DNAGetChildOfClass(dnaParent, DNA_TYPE_DICT[dnaType])
-            
-        if (dnaTarget != None) and (code != None):
+
+        if (dnaTarget is not None) and (code is not None):
             dnaTarget.setCode(code)
-        elif (dnaTarget != None) and (code == None):
+        elif (dnaTarget is not None) and (code is None):
             # Delete object, record pertinant properties before
             # you delete the object so you can restore them later
             # Remove object
@@ -163,7 +170,7 @@ class ToonTownObj(ToonTownObjBase):
                 DNARemoveChildOfClass(dnaParent, DNA_WINDOWS)
             # Clear out DNATarget
             dnaTarget = None
-        elif (dnaTarget == None) and (code != None):
+        elif (dnaTarget is None) and (code is not None):
             # Add new object
             if (dnaType == 'cornice'):
                 dnaTarget = DNACornice('cornice')
@@ -187,22 +194,27 @@ class ToonTownObj(ToonTownObjBase):
         # Update visible representation
         self.replace()
 
-    def setDNATargetColor(self, dnaType,  dnaTarget, dnaParent, color):
+    def setDNATargetColor(self, dnaType, dnaTarget, dnaParent, color):
         if dnaParent and dnaType != 'wall':
             dnaTarget = DNAGetChildOfClass(dnaParent, DNA_TYPE_DICT[dnaType])
         if dnaTarget:
             dnaTarget.setColor(color)
             self.replace()
 
-    def setDNATargetOrientation(self, dnaType, dnaTarget, dnaParent, orientation):
+    def setDNATargetOrientation(
+            self,
+            dnaType,
+            dnaTarget,
+            dnaParent,
+            orientation):
         if dnaParent and dnaType != 'wall':
             dnaTarget = DNAGetChildOfClass(dnaParent, DNA_TYPE_DICT[dnaType])
-        if (dnaTarget != None) and (orientation != None):
+        if (dnaTarget is not None) and (orientation is not None):
             oldCode = dnaTarget.getCode()[:-2]
             # Suit walls only have two orientations!
             if oldCode.find('wall_suit') >= 0:
                 orientation = 'u' + orientation[1]
-            dnaTarget.setCode(oldCode+orientation)
+            dnaTarget.setCode(oldCode + orientation)
             self.replace()
 
     def setWindowCount(self, dnaTarget, dnaParent, count):
@@ -210,18 +222,18 @@ class ToonTownObj(ToonTownObjBase):
             # not allowing set windows count to 0
             # since they could remove windows from window texture menu
             return
-        if (dnaTarget != None) and (count != 0):
+        if (dnaTarget is not None) and (count != 0):
             dnaTarget.setWindowCount(count)
         self.replace()
 
     def setWallStyle(self, dnaTarget, style):
-        if (dnaTarget != None) and (style != None):
+        if (dnaTarget is not None) and (style is not None):
             self.styleManager.setDNAWallStyle(
                 dnaTarget, style,
                 dnaTarget.getHeight())
             self.replace()
-        
-    def replace(self, populateSubDna = True):
+
+    def replace(self, populateSubDna=True):
         parent = self.getParent()
         dnaParent = self.dna.getParent()
         dnaParent.remove(self.dna)
@@ -229,7 +241,7 @@ class ToonTownObj(ToonTownObjBase):
             DNASTORE.removeDNAGroup(self.dna)
         # Get rid of the old node path and remove its DNA and
         # node relations from the DNA Store
-        #self.remove()
+        # self.remove()
         oldNp = NodePath(self)
         obj = self.editor.objectMgr.findObjectByNodePath(oldNp)
         uid = obj[OG.OBJ_UID]
@@ -246,7 +258,7 @@ class ToonTownObj(ToonTownObjBase):
 
         # Traverse the old (modified) dna to create the new node path
         np = self.dna.traverse(parent, DNASTORE, 1)
-        np.setTag('OBJRoot','1')
+        np.setTag('OBJRoot', '1')
         np.setMat(oldMat)
         self.assign(np)
         obj[OG.OBJ_NP] = self
@@ -260,10 +272,10 @@ class ToonTownObj(ToonTownObjBase):
 
         if DNAClassEqual(self.dna, DNA_ANIM_BUILDING) or\
            DNAClassEqual(self.dna, DNA_ANIM_PROP) or\
-           DNAClassEqual(self.dna, DNA_INTERACTIVE_PROP): 
+           DNAClassEqual(self.dna, DNA_INTERACTIVE_PROP):
             self.createAnimatedProp()
 
         if populateSubDna:
             # update _subDna property
-            obj[OG.OBJ_PROP]['_subDna'] = self.editor.objectMgr.populateSubDna(self.dna)
-
+            obj[OG.OBJ_PROP]['_subDna'] = self.editor.objectMgr.populateSubDna(
+                self.dna)

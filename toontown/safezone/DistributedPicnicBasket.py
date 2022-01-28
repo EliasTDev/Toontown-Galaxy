@@ -21,11 +21,13 @@ from toontown.toon import ToonDNA
 from direct.showbase import RandomNumGen
 from toontown.battle.BattleSounds import *
 
+
 class DistributedPicnicBasket(DistributedObject.DistributedObject):
 
     seatState = Enum("Empty, Full, Eating")
-    notify = DirectNotifyGlobal.directNotify.newCategory("DistributedPicnicBasket")
-    
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedPicnicBasket")
+
     def __init__(self, cr):
         """__init__(cr)
         """
@@ -35,33 +37,35 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
         self.seed = 0
         self.random = None
         self.picnicCountdownTime = \
-                              base.config.GetFloat("picnic-countdown-time",
-                                                   ToontownGlobals.PICNIC_COUNTDOWN_TIME)
-        self.picnicBasketTrack = None # only one track contains the picnic basket shrink/grow
+            base.config.GetFloat("picnic-countdown-time",
+                                 ToontownGlobals.PICNIC_COUNTDOWN_TIME)
+        # only one track contains the picnic basket shrink/grow
+        self.picnicBasketTrack = None
 
         self.fsm = ClassicFSM.ClassicFSM('DistributedTrolley',
-                           [State.State('off',
-                                        self.enterOff,
-                                        self.exitOff,
-                                        ['waitEmpty','waitCountdown']),
-                            State.State('waitEmpty',
-                                        self.enterWaitEmpty,
-                                        self.exitWaitEmpty,
-                                        ['waitCountdown']),
-                            State.State('waitCountdown',
-                                        self.enterWaitCountdown,
-                                        self.exitWaitCountdown,
-                                        ['waitEmpty'])],
-                           # Initial State
-                           'off',
-                           # Final State
-                           'off',
-                           )
+                                         [State.State('off',
+                                                      self.enterOff,
+                                                      self.exitOff,
+                                                      ['waitEmpty', 'waitCountdown']),
+                                             State.State('waitEmpty',
+                                                         self.enterWaitEmpty,
+                                                         self.exitWaitEmpty,
+                                                         ['waitCountdown']),
+                                             State.State('waitCountdown',
+                                                         self.enterWaitCountdown,
+                                                         self.exitWaitCountdown,
+                                                         ['waitEmpty'])],
+                                         # Initial State
+                                         'off',
+                                         # Final State
+                                         'off',
+                                         )
         self.fsm.enterInitialState()
 
         # Tracks on toons, for starting and stopping
         # stored by avId : track. There is only a need for one at a time,
-        # in fact the point of the dict is to ensure only one is playing at a time
+        # in fact the point of the dict is to ensure only one is playing at a
+        # time
         self.__toonTracks = {}
 
     def generate(self):
@@ -84,11 +88,12 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
             self.food.append(None)
             self.fullSeat.append(self.seatState.Empty)
         self.picnicItem = 0
-     
+
     def announceGenerate(self):
         """Setup other fields dependent on the required fields."""
 
-        self.picnicTable = self.loader.geom.find("**/*picnic_table_" + str(self.tableNumber))
+        self.picnicTable = self.loader.geom.find(
+            "**/*picnic_table_" + str(self.tableNumber))
         self.picnicTableSphereNodes = []
 
         self.numSeats = 4
@@ -96,32 +101,41 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
         self.jumpOffsets = []
         self.basket = None
         for i in range(self.numSeats):
-            self.seats.append(self.picnicTable.find("**/*seat%d" % (i+1)))
-            self.jumpOffsets.append(self.picnicTable.find("**/*jumpOut%d" % (i+1)))
+            self.seats.append(self.picnicTable.find("**/*seat%d" % (i + 1)))
+            self.jumpOffsets.append(
+                self.picnicTable.find(
+                    "**/*jumpOut%d" %
+                    (i + 1)))
             #debugAxis = loader.loadModel('models/misc/xyzAxis')
             #debugAxis.setColorScale(1.0, 1.0, 1.0, 0.25)
-            #debugAxis.setTransparency(True)
-            #debugAxis.reparentTo(self.seats[i])
+            # debugAxis.setTransparency(True)
+            # debugAxis.reparentTo(self.seats[i])
 
         self.tablecloth = self.picnicTable.find("**/basket_locator")
-        
+
         DistributedObject.DistributedObject.announceGenerate(self)
         for i in range(self.numSeats):
-            self.picnicTableSphereNodes.append(self.seats[i].attachNewNode(CollisionNode('picnicTable_sphere_%d_%d' % (self.getDoId(), i))))
-            self.picnicTableSphereNodes[i].node().addSolid(CollisionSphere(0, 0, 0, 2))
+            self.picnicTableSphereNodes.append(
+                self.seats[i].attachNewNode(
+                    CollisionNode(
+                        'picnicTable_sphere_%d_%d' %
+                        (self.getDoId(), i))))
+            self.picnicTableSphereNodes[i].node().addSolid(
+                CollisionSphere(0, 0, 0, 2))
 
-        self.tableclothSphereNode = self.tablecloth.attachNewNode(CollisionNode('tablecloth_sphere'))
+        self.tableclothSphereNode = self.tablecloth.attachNewNode(
+            CollisionNode('tablecloth_sphere'))
         self.tableclothSphereNode.node().addSolid(CollisionSphere(0, 0, -1, 4))
 
         angle = self.startingHpr[0]
         angle -= 90
         radAngle = deg2Rad(angle)
-        unitVec = Vec3( math.cos(radAngle), math.sin(radAngle), 0)
+        unitVec = Vec3(math.cos(radAngle), math.sin(radAngle), 0)
         unitVec *= 30.0
-        self.endPos =  self.startingPos + unitVec
+        self.endPos = self.startingPos + unitVec
 
         dist = Vec3(self.endPos - self.enteringPos).length()
-        wheelAngle = dist/(0.5 * 1.4 * math.pi ) * 360
+        wheelAngle = dist / (0.5 * 1.4 * math.pi) * 360
 
         self.seatNumber = 0
 
@@ -141,21 +155,21 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
         for i in range(self.numSeats):
             del self.picnicTableSphereNodes[0]
         del self.picnicTableSphereNodes
-        
+
         self.notify.debug("Deleted self loader " + str(self.getDoId()))
         self.picnicTable.removeNode()
-        self.picnicBasketTrack = None        
-        #self.kart.removeNode()
+        self.picnicBasketTrack = None
+        # self.kart.removeNode()
         #del self.kart
 
         #import pdb;
-        #pdb.set_trace()
+        # pdb.set_trace()
 
     def delete(self):
-        self.notify.debug("Golf kart getting deleted: %s" % self.getDoId())        
+        self.notify.debug(f"Golf kart getting deleted: {self.getDoId()}")
         DistributedObject.DistributedObject.delete(self)
         del self.fsm
-    
+
     def setState(self, state, seed, timestamp):
         self.seed = seed
         if not self.random:
@@ -166,32 +180,33 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
         # collEntry):
         assert self.notify.debugStateCall(self)
         self.seatNumber = i
-        self.notify.debug("Entering Picnic Table Sphere.... %s" % self.getDoId())
+        self.notify.debug(
+            f"Entering Picnic Table Sphere.... {self.getDoId()}")
         # Put localToon into requestBoard mode.
         #import pdb; pdb.set_trace()
-        self.loader.place.detectedPicnicTableSphereCollision(self)  
-    
+        self.loader.place.detectedPicnicTableSphereCollision(self)
+
     def handleEnterPicnicTable(self, i):
         # Tell the server that this avatar wants to board.
         assert self.notify.debugStateCall(self)
         toon = base.localAvatar
-        self.sendUpdate("requestBoard",[i])        
+        self.sendUpdate("requestBoard", [i])
 
     def fillSlot0(self, avId):
         self.fillSlot(0, avId)
-    
+
     def fillSlot1(self, avId):
         self.fillSlot(1, avId)
-    
+
     def fillSlot2(self, avId):
         self.fillSlot(2, avId)
-    
+
     def fillSlot3(self, avId):
         self.fillSlot(3, avId)
 
     def fillSlot(self, index, avId):
         assert self.notify.debugStateCall(self)
-        self.notify.debug( "fill Slot: %d for %d" % (index, avId) )
+        self.notify.debug("fill Slot: %d for %d" % (index, avId))
         if avId == 0:
             # This means that the slot is now empty, and no action should
             # be taken.
@@ -202,12 +217,13 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
             if avId == base.localAvatar.getDoId():
                 # Start the countdown clock...
                 self.clockNode.show()
-                if index ==  0 or index == 3:
+                if index == 0 or index == 3:
                     side = -1
                 else:
                     side = 1
                 if hasattr(self.loader.place, "trolley"):
-                    self.loader.place.trolley.fsm.request("boarding", [self.tablecloth, side])
+                    self.loader.place.trolley.fsm.request(
+                        "boarding", [self.tablecloth, side])
                 else:
                     self.notify.warning('fillSlot no trolley in place')
                 self.localToonOnBoard = 1
@@ -231,11 +247,13 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
                 track = Sequence(
                     jumpTrack,
                     Func(toon.setAnimState, "Sit", 1.0))
-                # only add basket appear if there is no toons are already sitting
-                self.notify.debug( "### fillSlot: fullSeat = %s" % self.fullSeat)
+                # only add basket appear if there is no toons are already
+                # sitting
+                self.notify.debug(
+                    f"### fillSlot: fullSeat = {self.fullSeat}")
                 if self.fullSeat.count(0) == 3:
-                    self.notify.debug( "### fillSlot: adding basketAppear")
-                    #track.append(self.generateBasketAppearTrack())
+                    self.notify.debug("### fillSlot: adding basketAppear")
+                    # track.append(self.generateBasketAppearTrack())
                     if self.picnicBasketTrack:
                         self.picnicBasketTrack.finish()
                     waitDuration = track.getDuration()
@@ -248,14 +266,17 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
                 # finish the rest of the staging
                 track.append(
                     Sequence(
-                    Func(self.clearToonTrack, avId),
-                    name = toon.uniqueName("fillTrolley"),
-                    autoPause = 1)
-                    )
+                        Func(self.clearToonTrack, avId),
+                        name=toon.uniqueName("fillTrolley"),
+                        autoPause=1)
+                )
                 if avId == base.localAvatar.getDoId():
                     if hasattr(self.loader.place, "trolley"):
-                        track.append(Func(self.loader.place.trolley.exitButton.show))
-                track.delayDelete = DelayDelete.DelayDelete(toon, 'PicnicBasket.fillSlot')
+                        track.append(
+                            Func(
+                                self.loader.place.trolley.exitButton.show))
+                track.delayDelete = DelayDelete.DelayDelete(
+                    toon, 'PicnicBasket.fillSlot')
                 self.storeToonTrack(avId, track)
                 track.start()
 
@@ -263,7 +284,7 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
         self.emptySlot(0, avId, timestamp)
 
     def emptySlot1(self, avId, timestamp):
-        self.emptySlot(1, avId, timestamp)                
+        self.emptySlot(1, avId, timestamp)
 
     def emptySlot2(self, avId, timestamp):
         self.emptySlot(2, avId, timestamp)
@@ -273,18 +294,18 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
 
     def notifyToonOffTrolley(self, toon):
         toon.setAnimState("neutral", 1.0)
-        if hasattr(base,'localAvatar') and toon == base.localAvatar:
+        if hasattr(base, 'localAvatar') and toon == base.localAvatar:
             if hasattr(self.loader.place, "trolley"):
                 self.loader.place.trolley.handleOffTrolley()
             self.localToonOnBoard = 0
         else:
             toon.startSmooth()
         return
-                
+
     def emptySlot(self, index, avId, timestamp):
         def emptySeat(index):
             # If localToon is exiting, he needs to change state
-            self.notify.debug( "### seat %s now empty" % index)
+            self.notify.debug(f"### seat {index} now empty")
             self.fullSeat[index] = self.seatState.Empty
         if avId == 0:
             # This means that the slot is now empty, and no action should
@@ -294,14 +315,15 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
             # Special cardinal value for unexpected exit.
             # The toon is gone, but we may still need to clean up his food
             self.fullSeat[index] = self.seatState.Empty
-            track  = Sequence(self.generateFoodDisappearTrack(index))
+            track = Sequence(self.generateFoodDisappearTrack(index))
             # if no toons left, make the basket go away
-            self.notify.debug( "### empty slot - unexpetected: fullSeat = %s" % self.fullSeat)
+            self.notify.debug(
+                f"### empty slot - unexpetected: fullSeat = {self.fullSeat}")
             if self.fullSeat.count(0) == 4:
                 self.notify.debug("### empty slot - unexpected: losing basket")
                 if self.picnicBasketTrack:
                     self.picnicBasketTrack.finish()
-                #track.append(self.generateBasketDisappearTrack())
+                # track.append(self.generateBasketDisappearTrack())
                 waitDuration = track.getDuration()
                 self.picnicBasketTrack = Sequence(
                     Wait(waitDuration),
@@ -325,18 +347,19 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
                 # make the food go away
                 track.append(self.generateFoodDisappearTrack(index))
                 # if no toons left, make the basket go away
-                self.notify.debug( "### empty slot: fullSeat = %s" % self.fullSeat)
+                self.notify.debug(
+                    f"### empty slot: fullSeat = {self.fullSeat}")
                 if self.fullSeat.count(0) == 4:
-                    self.notify.debug( "### empty slot: losing basket")
+                    self.notify.debug("### empty slot: losing basket")
                     if self.picnicBasketTrack:
                         self.picnicBasketTrack.finish()
-                    #track.append(self.generateBasketDisappearTrack())
+                    # track.append(self.generateBasketDisappearTrack())
                     waitDuration = track.getDuration()
                     self.picnicBasketTrack = Sequence(
                         Wait(waitDuration),
                         self.generateBasketDisappearTrack())
                     self.picnicBasketTrack.start()
-                    
+
                     # let the toon loose
                 track.append(Sequence(
                     # Tell the toon he is free to roam now
@@ -344,9 +367,10 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
                     Func(self.clearToonTrack, avId),
                     Func(self.doneExit, avId),
                     Func(emptySeat, index),
-                    name = toon.uniqueName("emptyTrolley"),
-                    autoPause = 1))
-                track.delayDelete = DelayDelete.DelayDelete(toon, 'PicnicBasket.emptySlot')
+                    name=toon.uniqueName("emptyTrolley"),
+                    autoPause=1))
+                track.delayDelete = DelayDelete.DelayDelete(
+                    toon, 'PicnicBasket.emptySlot')
                 self.storeToonTrack(avId, track)
                 track.start()
 
@@ -359,21 +383,24 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
     def __enableCollisions(self):
         # start listening for toons to enter.
         assert self.notify.debugStateCall(self)
-        for i in range(self.numSeats): 
-            self.accept('enterpicnicTable_sphere_%d_%d' % (self.getDoId(), i), self.handleEnterPicnicTableSphere, [i])
-            self.accept('enterPicnicTableOK_%d_%d' % (self.getDoId(), i), self.handleEnterPicnicTable, [i])        
-            self.picnicTableSphereNodes[i].setCollideMask(ToontownGlobals.WallBitmask)        
+        for i in range(self.numSeats):
+            self.accept(
+                'enterpicnicTable_sphere_%d_%d' %
+                (self.getDoId(), i), self.handleEnterPicnicTableSphere, [i])
+            self.accept('enterPicnicTableOK_%d_%d' %
+                        (self.getDoId(), i), self.handleEnterPicnicTable, [i])
+            self.picnicTableSphereNodes[i].setCollideMask(
+                ToontownGlobals.WallBitmask)
 
     def __disableCollisions(self):
         assert self.notify.debugStateCall(self)
-        for i in range(self.numSeats): 
+        for i in range(self.numSeats):
             self.ignore('enterpicnicTable_sphere_%d_%d' % (self.getDoId(), i))
             self.ignore('enterPicnicTableOK_%d_%d' % (self.getDoId(), i))
 
         for i in range(self.numSeats):
-            self.picnicTableSphereNodes[i].setCollideMask(BitMask32(0))        
+            self.picnicTableSphereNodes[i].setCollideMask(BitMask32(0))
 
-    
     ##### Off state #####
 
     def enterOff(self):
@@ -399,14 +426,16 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
         self.__enableCollisions()
         self.accept("trolleyExitButton", self.handleExitButton)
         #self.clockNode.countdown(self.picnicCountdownTime - ts, self.handleExitButton)
-        self.clockNode.countdown(self.picnicCountdownTime, self.handleExitButton)
+        self.clockNode.countdown(
+            self.picnicCountdownTime,
+            self.handleExitButton)
 
     def handleExitButton(self):
         # This gets called when the exit button gets pushed.
         self.sendUpdate("requestExit")
         self.clockNode.hide()
         #import pdb; pdb.set_trace()
-        
+
     def exitWaitCountdown(self):
         # Toons may not attempt to board the trolley if it isn't waiting
         self.__disableCollisions()
@@ -414,8 +443,8 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
         self.clockNode.reset()
 
     def getStareAtNodeAndOffset(self):
-        return self.tablecloth, Point3(0,0,4)
-    
+        return self.tablecloth, Point3(0, 0, 4)
+
     def storeToonTrack(self, avId, track):
         # Clear out any currently playing tracks on this toon
         self.clearToonTrack(avId)
@@ -431,11 +460,11 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
             del self.__toonTracks[avId]
 
     def clearToonTracks(self):
-        #We can't use an iter because we are deleting keys
+        # We can't use an iter because we are deleting keys
         keyList = []
         for key in self.__toonTracks:
             keyList.append(key)
-            
+
         for key in keyList:
             if key in self.__toonTracks:
                 self.clearToonTrack(key)
@@ -444,17 +473,17 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
         if(avId == base.localAvatar.getDoId()):
             self.sendUpdate("doneExit")
 
-    def setPosHpr(self, x, y, z, h, p ,r):
+    def setPosHpr(self, x, y, z, h, p, r):
         """Set the pos hpr as dictated by the AI."""
-        self.startingPos =Vec3(x, y, z)
-        self.enteringPos = Vec3(x, y, z-10)
-        self.startingHpr =Vec3(h, 0, 0)
-        #self.golfKart.setPosHpr( x, y, z, h, 0, 0 )        
+        self.startingPos = Vec3(x, y, z)
+        self.enteringPos = Vec3(x, y, z - 10)
+        self.startingHpr = Vec3(h, 0, 0)
+        #self.golfKart.setPosHpr( x, y, z, h, 0, 0 )
 
     def setTableNumber(self, tn):
         self.tableNumber = tn
 
-    def generateToonJumpTrack( self, av, seatIndex ):
+    def generateToonJumpTrack(self, av, seatIndex):
         """Return an interval of the toon jumping into the golf kart."""
         # Maintain a reference to Parent and Scale of avatar in case they
         # exit from the kart.
@@ -462,234 +491,246 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
 
         av.pose('sit', 47)
         hipOffset = av.getHipsParts()[2].getPos(av)
-        
-        def getToonJumpTrack( av, seatIndex ):
+
+        def getToonJumpTrack(av, seatIndex):
             # using a local func allows the ProjectileInterval to
             # calculate this pos at run-time
-            def getJumpDest(av = av, node = self.tablecloth):
+            def getJumpDest(av=av, node=self.tablecloth):
                 dest = Vec3(self.tablecloth.getPos(av.getParent()))
-                seatNode = self.picnicTable.find("**/seat" + str(seatIndex + 1))
+                seatNode = self.picnicTable.find(
+                    "**/seat" + str(seatIndex + 1))
                 dest += seatNode.getPos(self.tablecloth)
                 dna = av.getStyle()
                 dest -= hipOffset
-                if(seatIndex  == 2 or seatIndex == 3):
-                    dest.setY( dest.getY() + 2 * hipOffset.getY())
+                if(seatIndex == 2 or seatIndex == 3):
+                    dest.setY(dest.getY() + 2 * hipOffset.getY())
                 dest.setZ(dest.getZ() + 0.2)
 
                 return dest
 
-            def getJumpHpr(av = av, node = self.tablecloth):
+            def getJumpHpr(av=av, node=self.tablecloth):
                 hpr = self.seats[seatIndex].getHpr(av.getParent())
-                #if(seatIndex < 2):
+                # if(seatIndex < 2):
                 #hpr.setX( hpr.getX() + 180)
-                #else:
+                # else:
                 #    hpr.setX( hpr.getX() )
                 angle = PythonUtil.fitDestAngle2Src(av.getH(), hpr.getX())
-                hpr.setX(angle)                
+                hpr.setX(angle)
                 return hpr
-            
+
             toonJumpTrack = Parallel(
-                ActorInterval( av, 'jump' ),
+                ActorInterval(av, 'jump'),
                 Sequence(
-                   Wait( 0.43 ),
-                   Parallel( LerpHprInterval( av,
-                                              hpr = getJumpHpr,
-                                              duration = .9 ),
-                             ProjectileInterval( av,
-                                                 endPos = getJumpDest,
-                                                 duration = .9 )
+                    Wait(0.43),
+                    Parallel(LerpHprInterval(av,
+                                             hpr=getJumpHpr,
+                                             duration=.9),
+                             ProjectileInterval(av,
+                                                endPos=getJumpDest,
+                                                duration=.9)
                              ),
-                   )
                 )
+            )
             return toonJumpTrack
 
-        def getToonSitTrack( av ):
+        def getToonSitTrack(av):
             toonSitTrack = Sequence(
 
-                ActorInterval( av, 'sit-start' ),
-                Func( av.loop, 'sit' )
-                )
+                ActorInterval(av, 'sit-start'),
+                Func(av.loop, 'sit')
+            )
             return toonSitTrack
 
-        toonJumpTrack = getToonJumpTrack( av, seatIndex )
-        toonSitTrack = getToonSitTrack( av )
-        
+        toonJumpTrack = getToonJumpTrack(av, seatIndex)
+        toonSitTrack = getToonSitTrack(av)
+
         jumpTrack = Sequence(
             Parallel(
                 toonJumpTrack,
-                Sequence( Wait(1),
-                          toonSitTrack,
-                          ),
-                ),
-            Func( av.wrtReparentTo, self.tablecloth ),            
-            )
-        
+                Sequence(Wait(1),
+                         toonSitTrack,
+                         ),
+            ),
+            Func(av.wrtReparentTo, self.tablecloth),
+        )
+
         return jumpTrack
 
-    def generateToonReverseJumpTrack( self, av, seatIndex ):
-        """Return an interval of the toon jumping out of the golf kart."""        
-        self.notify.debug("av.getH() = %s" % av.getH())
-        def getToonJumpTrack( av, destNode ):
+    def generateToonReverseJumpTrack(self, av, seatIndex):
+        """Return an interval of the toon jumping out of the golf kart."""
+        self.notify.debug(f"av.getH() = {av.getH()}")
+
+        def getToonJumpTrack(av, destNode):
             # using a local func allows the ProjectileInterval to
             # calculate this pos at run-time
-            def getJumpDest(av = av, node = destNode):
+            def getJumpDest(av=av, node=destNode):
                 dest = node.getPos(self.tablecloth)
                 dest += self.jumpOffsets[seatIndex].getPos(self.tablecloth)
                 return dest
 
-            def getJumpHpr(av = av, node = destNode):
+            def getJumpHpr(av=av, node=destNode):
                 hpr = node.getHpr(av.getParent())
-                hpr.setX( hpr.getX() + 180)
+                hpr.setX(hpr.getX() + 180)
                 angle = PythonUtil.fitDestAngle2Src(av.getH(), hpr.getX())
                 hpr.setX(angle)
                 return hpr
-            
+
             toonJumpTrack = Parallel(
-                ActorInterval( av, 'jump' ),
+                ActorInterval(av, 'jump'),
                 Sequence(
-                  Wait( 0.1), #43 ),
-                  Parallel( #LerpHprInterval( av,
-                            #                 hpr = getJumpHpr,
-                            #                 duration = .9 ),
-                            ProjectileInterval( av,
-                                                endPos = getJumpDest,
-                                                duration = .9 ) )
-                  )
-                )  
+                    Wait(0.1),  # 43 ),
+                    Parallel(  # LerpHprInterval( av,
+                        #                 hpr = getJumpHpr,
+                        #                 duration = .9 ),
+                        ProjectileInterval(av,
+                                           endPos=getJumpDest,
+                                           duration=.9))
+                )
+            )
             return toonJumpTrack
 
-        toonJumpTrack = getToonJumpTrack( av, self.tablecloth)
-                                          #self.seats[seatIndex])
+        toonJumpTrack = getToonJumpTrack(av, self.tablecloth)
+        # self.seats[seatIndex])
         jumpTrack = Sequence(
             toonJumpTrack,
-            Func( av.loop, 'neutral' ),
-            Func( av.wrtReparentTo, render ),
+            Func(av.loop, 'neutral'),
+            Func(av.wrtReparentTo, render),
             #Func( self.av.setPosHpr, self.exitMovieNode, 0,0,0,0,0,0 ),
-            )
+        )
         return jumpTrack
 
-    def generateBasketAppearTrack( self ):
+    def generateBasketAppearTrack(self):
         """
         """
-        if(self.basket == None):
-            self.basket = loader.loadModel('phase_6/models/golf/picnic_basket.bam')
-            
-        self.basket.setScale( 0.1 )
+        if(self.basket is None):
+            self.basket = loader.loadModel(
+                'phase_6/models/golf/picnic_basket.bam')
+
+        self.basket.setScale(0.1)
 
         basketTrack = Sequence(
-            Func( self.basket.show ),
-            SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.ogg'), node=self.basket),
-            Func( self.basket.reparentTo, self.tablecloth ),
-            Func( self.basket.setPos, 0, 0, .2 ),
-            Func( self.basket.setHpr, 45, 0, 0),
-            Func( self.basket.wrtReparentTo, render ),
-            Func( self.basket.setShear, 0, 0, 0),
+            Func(self.basket.show),
+            SoundInterval(globalBattleSoundCache.getSound(
+                'GUI_balloon_popup.ogg'), node=self.basket),
+            Func(self.basket.reparentTo, self.tablecloth),
+            Func(self.basket.setPos, 0, 0, .2),
+            Func(self.basket.setHpr, 45, 0, 0),
+            Func(self.basket.wrtReparentTo, render),
+            Func(self.basket.setShear, 0, 0, 0),
             #Func( self.basket.setActiveShadow, True ),
             # Must be a cleaner way to do this.
-            Sequence( LerpScaleInterval( self.basket,
-                                         scale = Point3( 1.1, 1.1, .1),
-                                         duration = 0.2),
-                      LerpScaleInterval( self.basket,
-                                         scale = Point3(1.6, 1.6, 0.2 ),
-                                         duration = 0.1 ),
-                      LerpScaleInterval( self.basket,
-                                         scale = Point3( 1., 1., 0.4 ),
-                                         duration = 0.1 ),
-                      LerpScaleInterval( self.basket,
-                                         scale = Point3( 1.5, 1.5, 2.5 ),
-                                         duration = 0.2 ),
-                      LerpScaleInterval( self.basket,
-                                         scale = Point3(2.5,2.5, 1.5 ),
-                                         duration = 0.1 ),
-                      LerpScaleInterval( self.basket,
-                                         scale = Point3( 2., 2., 2. ),
-                                         duration = 0.1 ),
-                      Func( self.basket.wrtReparentTo, self.tablecloth ),
-                      Func( self.basket.setPos, 0, 0, 0) ),
-            )
-        
-        return basketTrack
+            Sequence(LerpScaleInterval(self.basket,
+                                       scale=Point3(1.1, 1.1, .1),
+                                       duration=0.2),
+                     LerpScaleInterval(self.basket,
+                                       scale=Point3(1.6, 1.6, 0.2),
+                                       duration=0.1),
+                     LerpScaleInterval(self.basket,
+                                       scale=Point3(1., 1., 0.4),
+                                       duration=0.1),
+                     LerpScaleInterval(self.basket,
+                                       scale=Point3(1.5, 1.5, 2.5),
+                                       duration=0.2),
+                     LerpScaleInterval(self.basket,
+                                       scale=Point3(2.5, 2.5, 1.5),
+                                       duration=0.1),
+                     LerpScaleInterval(self.basket,
+                                       scale=Point3(2., 2., 2.),
+                                       duration=0.1),
+                     Func(self.basket.wrtReparentTo, self.tablecloth),
+                     Func(self.basket.setPos, 0, 0, 0)),
+        )
 
+        return basketTrack
 
     def generateBasketDisappearTrack(self):
         if not self.basket:
             return Sequence()
-        
+
         pos = self.basket.getPos()
         pos.addZ(-1)
 
         basketTrack = Sequence(
-            LerpScaleInterval( self.basket,
-                               scale = Point3( 2., 2., 1.8 ),
-                               duration = 0.1 ),
-            LerpScaleInterval( self.basket,
-                               scale = Point3( 1., 1., 2.5 ),
-                               duration = 0.1 ),
-            LerpScaleInterval( self.basket,
-                               scale = Point3( 2., 2., 0.5 ),
-                               duration = 0.2 ),
-            LerpScaleInterval( self.basket,
-                               scale = Point3( 0.5, 0.5, 1.0 ),
-                               duration = 0.1 ),
-            LerpScaleInterval( self.basket,
-                               scale = Point3( 1.1, 1.1, .1 ),
-                               duration = 0.1 ),
-            LerpScaleInterval( self.basket,
-                               scale = Point3( .1, .1, .1 ),
-                               duration = 0.2 ),
+            LerpScaleInterval(self.basket,
+                              scale=Point3(2., 2., 1.8),
+                              duration=0.1),
+            LerpScaleInterval(self.basket,
+                              scale=Point3(1., 1., 2.5),
+                              duration=0.1),
+            LerpScaleInterval(self.basket,
+                              scale=Point3(2., 2., 0.5),
+                              duration=0.2),
+            LerpScaleInterval(self.basket,
+                              scale=Point3(0.5, 0.5, 1.0),
+                              duration=0.1),
+            LerpScaleInterval(self.basket,
+                              scale=Point3(1.1, 1.1, .1),
+                              duration=0.1),
+            LerpScaleInterval(self.basket,
+                              scale=Point3(.1, .1, .1),
+                              duration=0.2),
             SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.ogg'), node=self.basket),
-            Wait( 0.2 ),
-            LerpPosInterval( self.basket,
-                             pos = pos,
-                             duration = 0.2 ),
-            Func( self.basket.hide ),
-            )
+            Wait(0.2),
+            LerpPosInterval(self.basket,
+                            pos=pos,
+                            duration=0.2),
+            Func(self.basket.hide),
+        )
         return basketTrack
 
     def generateFoodAppearTrack(self, seat):
         """
         """
         if(self.fullSeat[seat] == self.seatState.Full):
-            self.notify.debug( "### food appear: self.fullSeat = %s" % self.fullSeat)
+            self.notify.debug(
+                f"### food appear: self.fullSeat = {self.fullSeat}")
             if not self.food[seat]:
-                self.food[seat] = loader.loadModel(self.random.choice(self.foodLoader))
-                self.notify.debug( "### food appear: self.food = %s" % self.food)
-                
+                self.food[seat] = loader.loadModel(
+                    self.random.choice(self.foodLoader))
+                self.notify.debug(
+                    f"### food appear: self.food = {self.food}")
+
             self.food[seat].setScale(0.1)
             self.food[seat].reparentTo(self.tablecloth)
-            self.food[seat].setPos(self.seats[seat].getPos(self.tablecloth)[0]/2, self.seats[seat].getPos(self.tablecloth)[1]/2, 0)
-            
+            self.food[seat].setPos(
+                self.seats[seat].getPos(
+                    self.tablecloth)[0] / 2,
+                self.seats[seat].getPos(
+                    self.tablecloth)[1] / 2,
+                0)
+
             # Func( self.food[seat].setActiveShadow, False ),
             foodTrack = Sequence(
-                Func( self.food[seat].show ),
-                SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.ogg'), node=self.food[seat]),
-                Func( self.food[seat].reparentTo, self.tablecloth ),
-                Func( self.food[seat].setHpr, 45, 0, 0),
-                Func( self.food[seat].wrtReparentTo, render ),
-                Func( self.food[seat].setShear, 0, 0, 0),
+                Func(self.food[seat].show),
+                SoundInterval(globalBattleSoundCache.getSound(
+                    'GUI_balloon_popup.ogg'), node=self.food[seat]),
+                Func(self.food[seat].reparentTo, self.tablecloth),
+                Func(self.food[seat].setHpr, 45, 0, 0),
+                Func(self.food[seat].wrtReparentTo, render),
+                Func(self.food[seat].setShear, 0, 0, 0),
                 #Func( self.food[seat].setActiveShadow, True ),
                 # Must be a cleaner way to do this.
-                Sequence( LerpScaleInterval( self.food[seat],
-                                             scale = Point3( 1.1, 1.1, .1),
-                                             duration = 0.2),
-                          LerpScaleInterval( self.food[seat],
-                                             scale = Point3(1.6, 1.6, 0.2 ),
-                                             duration = 0.1 ),
-                          LerpScaleInterval( self.food[seat],
-                                             scale = Point3( 1., 1., 0.4 ),
-                                             duration = 0.1 ),
-                          LerpScaleInterval( self.food[seat],
-                                             scale = Point3( 1.5, 1.5, 2.5 ),
-                                             duration = 0.2 ),
-                          LerpScaleInterval( self.food[seat],
-                                             scale = Point3(2.5,2.5, 1.5 ),
-                                             duration = 0.1 ),
-                          LerpScaleInterval( self.food[seat],
-                                             scale = Point3( 2., 2., 2. ),
-                                             duration = 0.1 ),
-                          Func( self.food[seat].wrtReparentTo, self.tablecloth )
-                          ),
-                )
+                Sequence(LerpScaleInterval(self.food[seat],
+                                           scale=Point3(1.1, 1.1, .1),
+                                           duration=0.2),
+                         LerpScaleInterval(self.food[seat],
+                                           scale=Point3(1.6, 1.6, 0.2),
+                                           duration=0.1),
+                         LerpScaleInterval(self.food[seat],
+                                           scale=Point3(1., 1., 0.4),
+                                           duration=0.1),
+                         LerpScaleInterval(self.food[seat],
+                                           scale=Point3(1.5, 1.5, 2.5),
+                                           duration=0.2),
+                         LerpScaleInterval(self.food[seat],
+                                           scale=Point3(2.5, 2.5, 1.5),
+                                           duration=0.1),
+                         LerpScaleInterval(self.food[seat],
+                                           scale=Point3(2., 2., 2.),
+                                           duration=0.1),
+                         Func(self.food[seat].wrtReparentTo, self.tablecloth)
+                         ),
+            )
             return foodTrack
         else:
             return Sequence()
@@ -698,33 +739,33 @@ class DistributedPicnicBasket(DistributedObject.DistributedObject):
         if not self.food[seat]:
             return Sequence()
         pos = self.food[seat].getPos()
-        pos.addZ( -1. )
+        pos.addZ(-1.)
         foodTrack = Sequence(
-            LerpScaleInterval( self.food[seat],
-                               scale = Point3( 2., 2., 1.8 ),
-                               duration = 0.1 ),
-            LerpScaleInterval( self.food[seat],
-                               scale = Point3( 1., 1., 2.5 ),
-                               duration = 0.1 ),
-            LerpScaleInterval( self.food[seat],
-                               scale = Point3( 2., 2., 0.5 ),
-                               duration = 0.2 ),
-            LerpScaleInterval( self.food[seat],
-                               scale = Point3( 0.5, 0.5, 1.0 ),
-                               duration = 0.1 ),
-            LerpScaleInterval( self.food[seat],
-                               scale = Point3( 1.1, 1.1, .1 ),
-                               duration = 0.1 ),
-            LerpScaleInterval( self.food[seat],
-                               scale = Point3( .1, .1, .1 ),
-                               duration = 0.2 ),
+            LerpScaleInterval(self.food[seat],
+                              scale=Point3(2., 2., 1.8),
+                              duration=0.1),
+            LerpScaleInterval(self.food[seat],
+                              scale=Point3(1., 1., 2.5),
+                              duration=0.1),
+            LerpScaleInterval(self.food[seat],
+                              scale=Point3(2., 2., 0.5),
+                              duration=0.2),
+            LerpScaleInterval(self.food[seat],
+                              scale=Point3(0.5, 0.5, 1.0),
+                              duration=0.1),
+            LerpScaleInterval(self.food[seat],
+                              scale=Point3(1.1, 1.1, .1),
+                              duration=0.1),
+            LerpScaleInterval(self.food[seat],
+                              scale=Point3(.1, .1, .1),
+                              duration=0.2),
             SoundInterval(globalBattleSoundCache.getSound('GUI_balloon_popup.ogg'), node=self.food[seat]),
-            Wait( 0.2 ),
-            LerpPosInterval( self.food[seat],
-                             pos = pos,
-                             duration = 0.2 ),
-            Func( self.food[seat].hide ),
-            )
+            Wait(0.2),
+            LerpPosInterval(self.food[seat],
+                            pos=pos,
+                            duration=0.2),
+            Func(self.food[seat].hide),
+        )
         return foodTrack
 
     def destroy(self, node):

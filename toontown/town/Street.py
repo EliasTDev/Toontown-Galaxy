@@ -23,6 +23,7 @@ from panda3d.otp import NametagGlobals
 
 visualizeZones = ConfigVariableBool("visualize-zones", 0).value
 
+
 class Street(BattlePlace.BattlePlace):
     """
     Street class
@@ -40,139 +41,139 @@ class Street(BattlePlace.BattlePlace):
         assert self.notify.debug("__init__()")
         BattlePlace.BattlePlace.__init__(self, loader, doneEvent)
         self.fsm = ClassicFSM.ClassicFSM('Street',
-                           [State.State('start',
-                                        self.enterStart,
-                                        self.exitStart,
-                                        ['walk', 'tunnelIn',
-                                         'doorIn', 'teleportIn',
-                                         'elevatorIn']),
-                            State.State('walk',
-                                        self.enterWalk,
-                                        self.exitWalk,
-                                        ['push', 'sit', 'stickerBook',
-                                         'WaitForBattle', 'battle',
-                                         'DFA', 'trialerFA',
-                                         'doorOut', 'elevator',
-                                         'tunnelIn', 'tunnelOut',
-                                         'teleportOut', 'quest',
-                                         'stopped', 'fishing', 'purchase',
-                                         'died']),
-                            State.State('sit',
-                                        self.enterSit,
-                                        self.exitSit,
-                                        ['walk',]),
-                            State.State('push',
-                                        self.enterPush,
-                                        self.exitPush,
-                                        ['walk',]),
-                            State.State('stickerBook',
-                                        self.enterStickerBook,
-                                        self.exitStickerBook,
-                                        ['walk', 'push', 'sit', 'battle',
-                                         'DFA', 'trialerFA',
-                                         'doorOut', 'elevator',
-                                         'tunnelIn', 'tunnelOut',
-                                         'WaitForBattle', 'teleportOut', 'quest',
-                                         'stopped', 'fishing', 'purchase',
-                                         ]),
-                            State.State('WaitForBattle',
-                                        self.enterWaitForBattle,
-                                        self.exitWaitForBattle,
-                                        ['battle', 'walk']),
-                            State.State('battle',
-                                        self.enterBattle,
-                                        self.exitBattle,
-                                        ['walk', 'teleportOut', 'died']),
-                            State.State('doorIn',
-                                        self.enterDoorIn,
-                                        self.exitDoorIn,
-                                        ['walk']),
-                            State.State('doorOut',
-                                        self.enterDoorOut,
-                                        self.exitDoorOut,
-                                        ['walk']),
-                            State.State('elevatorIn',
-                                        self.enterElevatorIn,
-                                        self.exitElevatorIn,
-                                        ['walk']),
-                            State.State('elevator',
-                                        self.enterElevator,
-                                        self.exitElevator,
-                                        ['walk']),
-                            # Trialer Force Acknowledge:
-                            State.State('trialerFA',
-                                        self.enterTrialerFA,
-                                        self.exitTrialerFA,
-                                        ['trialerFAReject', 'DFA']),
-                            State.State('trialerFAReject',
-                                        self.enterTrialerFAReject,
-                                        self.exitTrialerFAReject,
-                                        ['walk']),
-                            # Download Force Acknowlege:
-                            State.State('DFA',
-                                        self.enterDFA,
-                                        self.exitDFA,
-                                        ['DFAReject', 'teleportOut', 'tunnelOut']),
-                            State.State('DFAReject',
-                                        self.enterDFAReject,
-                                        self.exitDFAReject,
-                                        ['walk']),
-                            State.State('teleportIn',
-                                        self.enterTeleportIn,
-                                        self.exitTeleportIn,
-                                        ['walk', 'teleportOut', 'quietZone',
-                                         'WaitForBattle', 'battle']),
-                            State.State('teleportOut',
-                                        self.enterTeleportOut,
-                                        self.exitTeleportOut,
-                                        ['teleportIn', 'quietZone',
-                                         'WaitForBattle']),
-                            State.State('died',
-                                        self.enterDied,
-                                        self.exitDied,
-                                        ['quietZone']),
-                            State.State('tunnelIn',
-                                        self.enterTunnelIn,
-                                        self.exitTunnelIn,
-                                        ['walk']),
-                            State.State('tunnelOut',
-                                        self.enterTunnelOut,
-                                        self.exitTunnelOut,
-                                        ['final']),
-                            State.State('quietZone',
-                                        self.enterQuietZone,
-                                        self.exitQuietZone,
-                                        ['teleportIn']),
-                            State.State('quest',
-                                        self.enterQuest,
-                                        self.exitQuest,
-                                        ['walk','stopped']),
-                            State.State('stopped',
-                                        self.enterStopped,
-                                        self.exitStopped,
-                                        ['walk']),
-                            State.State('stopped',
-                                        self.enterStopped,
-                                        self.exitStopped,
-                                        ['walk']),
-                            State.State('fishing',
-                                        self.enterFishing,
-                                        self.exitFishing,
-                                        ['walk']),
-                            State.State('purchase',
-                                        self.enterPurchase,
-                                        self.exitPurchase,
-                                        ['walk']),
-                            State.State('final',
-                                        self.enterFinal,
-                                        self.exitFinal,
-                                        ['start'])],
+                                         [State.State('start',
+                                                      self.enterStart,
+                                                      self.exitStart,
+                                                      ['walk', 'tunnelIn',
+                                                       'doorIn', 'teleportIn',
+                                                       'elevatorIn']),
+                                             State.State('walk',
+                                                         self.enterWalk,
+                                                         self.exitWalk,
+                                                         ['push', 'sit', 'stickerBook',
+                                                          'WaitForBattle', 'battle',
+                                                          'DFA', 'trialerFA',
+                                                          'doorOut', 'elevator',
+                                                          'tunnelIn', 'tunnelOut',
+                                                          'teleportOut', 'quest',
+                                                          'stopped', 'fishing', 'purchase',
+                                                          'died']),
+                                             State.State('sit',
+                                                         self.enterSit,
+                                                         self.exitSit,
+                                                         ['walk', ]),
+                                             State.State('push',
+                                                         self.enterPush,
+                                                         self.exitPush,
+                                                         ['walk', ]),
+                                             State.State('stickerBook',
+                                                         self.enterStickerBook,
+                                                         self.exitStickerBook,
+                                                         ['walk', 'push', 'sit', 'battle',
+                                                          'DFA', 'trialerFA',
+                                                          'doorOut', 'elevator',
+                                                          'tunnelIn', 'tunnelOut',
+                                                          'WaitForBattle', 'teleportOut', 'quest',
+                                                          'stopped', 'fishing', 'purchase',
+                                                          ]),
+                                             State.State('WaitForBattle',
+                                                         self.enterWaitForBattle,
+                                                         self.exitWaitForBattle,
+                                                         ['battle', 'walk']),
+                                             State.State('battle',
+                                                         self.enterBattle,
+                                                         self.exitBattle,
+                                                         ['walk', 'teleportOut', 'died']),
+                                             State.State('doorIn',
+                                                         self.enterDoorIn,
+                                                         self.exitDoorIn,
+                                                         ['walk']),
+                                             State.State('doorOut',
+                                                         self.enterDoorOut,
+                                                         self.exitDoorOut,
+                                                         ['walk']),
+                                             State.State('elevatorIn',
+                                                         self.enterElevatorIn,
+                                                         self.exitElevatorIn,
+                                                         ['walk']),
+                                             State.State('elevator',
+                                                         self.enterElevator,
+                                                         self.exitElevator,
+                                                         ['walk']),
+                                             # Trialer Force Acknowledge:
+                                             State.State('trialerFA',
+                                                         self.enterTrialerFA,
+                                                         self.exitTrialerFA,
+                                                         ['trialerFAReject', 'DFA']),
+                                             State.State('trialerFAReject',
+                                                         self.enterTrialerFAReject,
+                                                         self.exitTrialerFAReject,
+                                                         ['walk']),
+                                             # Download Force Acknowlege:
+                                             State.State('DFA',
+                                                         self.enterDFA,
+                                                         self.exitDFA,
+                                                         ['DFAReject', 'teleportOut', 'tunnelOut']),
+                                             State.State('DFAReject',
+                                                         self.enterDFAReject,
+                                                         self.exitDFAReject,
+                                                         ['walk']),
+                                             State.State('teleportIn',
+                                                         self.enterTeleportIn,
+                                                         self.exitTeleportIn,
+                                                         ['walk', 'teleportOut', 'quietZone',
+                                                          'WaitForBattle', 'battle']),
+                                             State.State('teleportOut',
+                                                         self.enterTeleportOut,
+                                                         self.exitTeleportOut,
+                                                         ['teleportIn', 'quietZone',
+                                                          'WaitForBattle']),
+                                             State.State('died',
+                                                         self.enterDied,
+                                                         self.exitDied,
+                                                         ['quietZone']),
+                                             State.State('tunnelIn',
+                                                         self.enterTunnelIn,
+                                                         self.exitTunnelIn,
+                                                         ['walk']),
+                                             State.State('tunnelOut',
+                                                         self.enterTunnelOut,
+                                                         self.exitTunnelOut,
+                                                         ['final']),
+                                             State.State('quietZone',
+                                                         self.enterQuietZone,
+                                                         self.exitQuietZone,
+                                                         ['teleportIn']),
+                                             State.State('quest',
+                                                         self.enterQuest,
+                                                         self.exitQuest,
+                                                         ['walk', 'stopped']),
+                                             State.State('stopped',
+                                                         self.enterStopped,
+                                                         self.exitStopped,
+                                                         ['walk']),
+                                             State.State('stopped',
+                                                         self.enterStopped,
+                                                         self.exitStopped,
+                                                         ['walk']),
+                                             State.State('fishing',
+                                                         self.enterFishing,
+                                                         self.exitFishing,
+                                                         ['walk']),
+                                             State.State('purchase',
+                                                         self.enterPurchase,
+                                                         self.exitPurchase,
+                                                         ['walk']),
+                                             State.State('final',
+                                                         self.enterFinal,
+                                                         self.exitFinal,
+                                                         ['start'])],
 
-                           # Initial State
-                           'start',
-                           # Final State
-                           'final',
-                           )
+                                         # Initial State
+                                         'start',
+                                         # Final State
+                                         'final',
+                                         )
         self.parentFSM = parentFSM
         self.tunnelOriginList = []
         self.elevatorDoneEvent = "elevatorDone"
@@ -184,20 +185,20 @@ class Street(BattlePlace.BattlePlace):
         # Note: The visibilityFlag was added for the tutorial, which
         # doesn't want visibility. TutorialStreet overrides this function,
         # calling it with visibilityFlag=0.
-        assert self.notify.debug("enter(requestStatus="+str(requestStatus)
-                                 +")")
+        assert self.notify.debug("enter(requestStatus=" + str(requestStatus)
+                                 + ")")
         self.fsm.enterInitialState()
         # Play music
-        base.playMusic(self.loader.music, looping = 1, volume = 0.8)
+        base.playMusic(self.loader.music, looping=1, volume=0.8)
         self.loader.geom.reparentTo(render)
         if visibilityFlag:
             self.visibilityOn()
 
-        ## give the camera a nodepath to the geometry
-        #base.localAvatar.camera.setGeom(self.geom)
+        # give the camera a nodepath to the geometry
+        # base.localAvatar.camera.setGeom(self.geom)
         base.localAvatar.setGeom(self.loader.geom)
-        ## tell the camera that we're in a level area
-        #base.localAvatar.camera.onLevelGround(1)
+        # tell the camera that we're in a level area
+        # base.localAvatar.camera.onLevelGround(1)
         base.localAvatar.setOnLevelGround(1)
 
         # Turn on the little red arrows.
@@ -207,12 +208,12 @@ class Street(BattlePlace.BattlePlace):
         # For halloween
         def __lightDecorationOn__():
             geom = base.cr.playGame.getPlace().loader.geom
-            self.halloweenLights  = geom.findAllMatches("**/*light*")
+            self.halloweenLights = geom.findAllMatches("**/*light*")
             self.halloweenLights += geom.findAllMatches("**/*lamp*")
             self.halloweenLights += geom.findAllMatches("**/prop_snow_tree*")
 
             for light in self.halloweenLights:
-                #light.reparentTo(render)
+                # light.reparentTo(render)
                 light.setColorScaleOff(1)
 
         newsManager = base.cr.newsManager
@@ -227,7 +228,7 @@ class Street(BattlePlace.BattlePlace):
                     Vec4(0.55, 0.55, 0.65, 1)),
                     Func(self.loader.hood.startSpookySky),
                     # Func(__lightDecorationOn__),
-                    )
+                )
 
                 lightsOff.start()
             else:
@@ -253,8 +254,8 @@ class Street(BattlePlace.BattlePlace):
         self.enterZone(requestStatus["zoneId"])
 
         # Add hooks for the linktunnels
-        self.tunnelOriginList = base.cr.hoodMgr.addLinkTunnelHooks(self,
-                self.loader.nodeList, self.zoneId)
+        self.tunnelOriginList = base.cr.hoodMgr.addLinkTunnelHooks(
+            self, self.loader.nodeList, self.zoneId)
 
         # Note that the following fsm request *could* result in an
         # immediate request to teleportOut, which will call exit() and
@@ -279,13 +280,13 @@ class Street(BattlePlace.BattlePlace):
 
         newsManager = base.cr.newsManager
 
-##        if newsManager:
+# if newsManager:
 ##            holidayIds = base.cr.newsManager.getDecorationHolidayId()
-##            if (ToontownGlobals.HALLOWEEN_COSTUMES in holidayIds) and self.loader.hood.spookySkyFile:
-##                __lightDecorationOff__()
+# if (ToontownGlobals.HALLOWEEN_COSTUMES in holidayIds) and self.loader.hood.spookySkyFile:
+# __lightDecorationOff__()
 
-##        for node in self.tunnelOriginList:
-##            node.removeNode()
+# for node in self.tunnelOriginList:
+# node.removeNode()
 ##        del self.tunnelOriginList
 
         # Turn off the little red arrows.
@@ -297,13 +298,12 @@ class Street(BattlePlace.BattlePlace):
         # Stop music
         self.loader.music.stop()
 
-        ## reset the camera to collide against everything and anything
-        #base.localAvatar.camera.setGeom(render)
+        # reset the camera to collide against everything and anything
+        # base.localAvatar.camera.setGeom(render)
         base.localAvatar.setGeom(render)
-        ## tell the camera we're leaving an area with level ground
-        #base.localAvatar.camera.onLevelGround(0)
+        # tell the camera we're leaving an area with level ground
+        # base.localAvatar.camera.onLevelGround(0)
         base.localAvatar.setOnLevelGround(0)
-
 
     def load(self):
         assert self.notify.debug("load()")
@@ -334,7 +334,12 @@ class Street(BattlePlace.BattlePlace):
     # elevatorIn state
     # (for coming off of an elevator for a victory dance)
     def enterElevatorIn(self, requestStatus):
-        self._elevatorWaitBuildingTask = taskMgr.add(Functor(self._startElevatorWaitBuildingTask, requestStatus['bldgDoId']), uniqueName('elevatorInWaitBuilding'))
+        self._elevatorWaitBuildingTask = taskMgr.add(
+            Functor(
+                self._startElevatorWaitBuildingTask,
+                requestStatus['bldgDoId']),
+            uniqueName('elevatorInWaitBuilding'))
+
     def _startElevatorWaitBuildingTask(self, bldgDoId, task):
 
         # Whew! Where did bldgDoId get set?
@@ -354,17 +359,19 @@ class Street(BattlePlace.BattlePlace):
                     return Task.done
         return Task.cont
         #assert bldg
+
     def _enterElevatorGotElevator(self):
         if not messenger.whoAccepts('insideVictorElevator'):
             return False
         messenger.send('insideVictorElevator')
         return True
-    def exitElevatorIn(self):
-       taskMgr.remove(self._elevatorWaitBuildingTask)
 
+    def exitElevatorIn(self):
+        taskMgr.remove(self._elevatorWaitBuildingTask)
 
     # elevator state
     # (For boarding a building elevator)
+
     def enterElevator(self, distElevator):
         assert self.notify.debug("enterElevator()")
 
@@ -403,8 +410,11 @@ class Street(BattlePlace.BattlePlace):
             # Don't request the walk state here. Let the the toon be stuck in the
             # stopped state till the player removes that message from his screen.
             # Removing the message will automatically put him in the walk state there.
-            # Put the player in the walk state only if there is no elevator message.
-            if hasattr(base.localAvatar, "elevatorNotifier") and base.localAvatar.elevatorNotifier.isNotifierOpen():
+            # Put the player in the walk state only if there is no elevator
+            # message.
+            if hasattr(
+                    base.localAvatar,
+                    "elevatorNotifier") and base.localAvatar.elevatorNotifier.isNotifierOpen():
                 pass
             else:
                 self.fsm.request("walk")
@@ -432,7 +442,8 @@ class Street(BattlePlace.BattlePlace):
         correct zone ID as your current zone, in case anyone needs
         to know your zone ID in the next few milliseconds.
         """
-        assert self.notify.debug("enterTunnelIn(requestStatus="+str(requestStatus)+")")
+        assert self.notify.debug(
+            "enterTunnelIn(requestStatus=" + str(requestStatus) + ")")
         self.enterZone(requestStatus["zoneId"])
         BattlePlace.BattlePlace.enterTunnelIn(self, requestStatus)
 
@@ -441,7 +452,8 @@ class Street(BattlePlace.BattlePlace):
     # teleportIn state partly inherited from Place.py
 
     def enterTeleportIn(self, requestStatus):
-        assert self.notify.debug("enterTeleportIn(requestStatus="+str(requestStatus)+")")
+        assert self.notify.debug(
+            "enterTeleportIn(requestStatus=" + str(requestStatus) + ")")
         avId = requestStatus["avId"]
         hoodId = requestStatus["hoodId"]
         zoneId = requestStatus["zoneId"]
@@ -451,13 +463,13 @@ class Street(BattlePlace.BattlePlace):
                 # We're trying to teleport to a toon who isn't here
                 # any more.  Forget it, and bail to the safezone.
                 handle = base.cr.identifyFriend(avId)
-                requestStatus = {"how" : "teleportIn",
-                                 "hoodId" : hoodId,
-                                 "zoneId" : hoodId,
-                                 "shardId" : None,
-                                 "loader" : "safeZoneLoader",
-                                 "where" : "playground",
-                                 "avId" : avId}
+                requestStatus = {"how": "teleportIn",
+                                 "hoodId": hoodId,
+                                 "zoneId": hoodId,
+                                 "shardId": None,
+                                 "loader": "safeZoneLoader",
+                                 "where": "playground",
+                                 "avId": avId}
 
                 # We don't actually want to switch to the teleportOut
                 # state, because that will play the jump-in-the-hole
@@ -485,7 +497,8 @@ class Street(BattlePlace.BattlePlace):
     # teleport out state
 
     def enterTeleportOut(self, requestStatus):
-        assert self.notify.debug("enterTeleportOut(requestStatus="+str(requestStatus)+")")
+        assert self.notify.debug(
+            "enterTeleportOut(requestStatus=" + str(requestStatus) + ")")
         # If the request comes from a battle, let the battle handle
         # the teleport animation sequence, otherwise use the distributed
         # toon version
@@ -493,22 +506,23 @@ class Street(BattlePlace.BattlePlace):
             self.__teleportOutDone(requestStatus)
         else:
             BattlePlace.BattlePlace.enterTeleportOut(self, requestStatus,
-                    self.__teleportOutDone)
+                                                     self.__teleportOutDone)
 
     def __teleportOutDone(self, requestStatus):
-        assert self.notify.debug("__teleportOutDone(requestStatus="+str(requestStatus)+")")
+        assert self.notify.debug(
+            "__teleportOutDone(requestStatus=" + str(requestStatus) + ")")
         hoodId = requestStatus["hoodId"]
         zoneId = requestStatus["zoneId"]
         shardId = requestStatus["shardId"]
-        if (hoodId == self.loader.hood.id and shardId == None):
+        if (hoodId == self.loader.hood.id and shardId is None):
             # We are in the same hood
             if (zoneId == self.zoneId):
                 # We are teleporting to somebody in the same zone,
                 # just do it
                 self.fsm.request("teleportIn", [requestStatus])
-            elif (requestStatus["where"]=="street"
+            elif (requestStatus["where"] == "street"
                   and ZoneUtil.getBranchZone(zoneId)
-                  ==self.loader.branchZone):
+                  == self.loader.branchZone):
                 # If you are teleporting to somebody in this branch.
                 # In this case, we don't need to leave the town or
                 # anything, but we do need to be careful with the set
@@ -540,8 +554,8 @@ class Street(BattlePlace.BattlePlace):
         self.notifyUserGoHomeFailed()
         #  ignore the setLocalEstateZone message
         self.ignore("setLocalEstateZone")
-        self.doneStatus["avId"] =  -1
-        self.doneStatus["zoneId"] =  self.getZoneId()
+        self.doneStatus["avId"] = -1
+        self.doneStatus["zoneId"] = self.getZoneId()
         self.fsm.request("teleportIn", [self.doneStatus])
         return Task.done
 
@@ -588,7 +602,7 @@ class Street(BattlePlace.BattlePlace):
         assert self.loader.nodeDict and self.loader.hood
 
         # Hide the old zone (if there is one)
-        if self.zoneId != None:
+        if self.zoneId is not None:
             for i in self.loader.nodeDict[self.zoneId]:
                 if newZoneId:
                     if (i not in self.loader.nodeDict[newZoneId]):
@@ -599,7 +613,7 @@ class Street(BattlePlace.BattlePlace):
                     self.loader.exitAnimatedProps(i)
 
         # Show the new zone
-        if newZoneId != None:
+        if newZoneId is not None:
 
             for i in self.loader.nodeDict[newZoneId]:
                 # self.notify.debug(str(newZoneId)+" Visgroup: "+ i.getIntoNode().getName())
@@ -623,27 +637,28 @@ class Street(BattlePlace.BattlePlace):
             if visualizeZones:
                 # Set a color override on our zone to make it obvious what
                 # zone we're in.
-                if self.zoneId != None:
+                if self.zoneId is not None:
                     self.loader.zoneDict[self.zoneId].clearColor()
-                if newZoneId != None:
+                if newZoneId is not None:
                     self.loader.zoneDict[newZoneId].setColor(0, 0, 1, 1, 100)
 
             # Tell the server that we changed zones
-            if newZoneId != None:
-                visZones = [self.loader.nodeToZone[x] for x in self.loader.nodeDict[newZoneId]]
+            if newZoneId is not None:
+                visZones = [self.loader.nodeToZone[x]
+                            for x in self.loader.nodeDict[newZoneId]]
                 visZones.append(ZoneUtil.getBranchZone(newZoneId))
                 base.cr.sendSetZoneMsg(newZoneId, visZones)
                 self.notify.debug("Entering Zone %d" % (newZoneId))
 
             # The new zone is now old
             self.zoneId = newZoneId
-        assert self.notify.debug("  newZoneId="+str(newZoneId))
+        assert self.notify.debug("  newZoneId=" + str(newZoneId))
 
         geom = base.cr.playGame.getPlace().loader.geom
-        self.halloweenLights  = geom.findAllMatches("**/*light*")
+        self.halloweenLights = geom.findAllMatches("**/*light*")
         self.halloweenLights += geom.findAllMatches("**/*lamp*")
         self.halloweenLights += geom.findAllMatches("**/prop_snow_tree*")
 
         for light in self.halloweenLights:
-            #light.reparentTo(render)
+            # light.reparentTo(render)
             light.setColorScaleOff(1)

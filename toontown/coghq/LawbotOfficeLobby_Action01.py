@@ -11,7 +11,7 @@ GlobalEntities = {
         'farPlaneDistance': 1500,
         'modelFilename': 'phase_11/models/lawbotHQ/LB_Zone04a',
         'wantDoors': 1,
-        }, # end entity 1000
+    },  # end entity 1000
     # EDITMGR
     1001: {
         'type': 'editMgr',
@@ -21,7 +21,7 @@ GlobalEntities = {
         'removeEntity': None,
         'requestNewEntity': None,
         'requestSave': None,
-        }, # end entity 1001
+    },  # end entity 1001
     # ZONE
     0: {
         'type': 'zone',
@@ -31,7 +31,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 0
+    },  # end entity 0
     # COLLISIONSOLID
     10055: {
         'type': 'collisionSolid',
@@ -45,7 +45,7 @@ GlobalEntities = {
         'radius': 15.0,
         'showSolid': 0,
         'solidType': 'tube',
-        }, # end entity 10055
+    },  # end entity 10055
     10058: {
         'type': 'collisionSolid',
         'name': '<unnamed>',
@@ -58,7 +58,7 @@ GlobalEntities = {
         'radius': 3.0,
         'showSolid': 0,
         'solidType': 'tube',
-        }, # end entity 10058
+    },  # end entity 10058
     10059: {
         'type': 'collisionSolid',
         'name': 'copy of <unnamed>',
@@ -71,7 +71,7 @@ GlobalEntities = {
         'radius': 3.0,
         'showSolid': 0,
         'solidType': 'tube',
-        }, # end entity 10059
+    },  # end entity 10059
     # MODEL
     10001: {
         'type': 'model',
@@ -85,7 +85,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_pillar.bam',
-        }, # end entity 10001
+    },  # end entity 10001
     10002: {
         'type': 'model',
         'name': 'leftCouch',
@@ -98,7 +98,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_couchA.bam',
-        }, # end entity 10002
+    },  # end entity 10002
     10003: {
         'type': 'model',
         'name': 'rightCouch',
@@ -111,7 +111,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_couchA.bam',
-        }, # end entity 10003
+    },  # end entity 10003
     10004: {
         'type': 'model',
         'name': 'frontChair',
@@ -124,7 +124,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_chairA.bam',
-        }, # end entity 10004
+    },  # end entity 10004
     10005: {
         'type': 'model',
         'name': 'backChair',
@@ -137,7 +137,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_chairA.bam',
-        }, # end entity 10005
+    },  # end entity 10005
     10006: {
         'type': 'model',
         'name': 'frontlamp',
@@ -150,7 +150,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_torch_lampB.bam',
-        }, # end entity 10006
+    },  # end entity 10006
     10007: {
         'type': 'model',
         'name': 'backLamp',
@@ -163,7 +163,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_torch_lampB.bam',
-        }, # end entity 10007
+    },  # end entity 10007
     10009: {
         'type': 'model',
         'name': 'movingShelf',
@@ -176,7 +176,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 10009
+    },  # end entity 10009
     10012: {
         'type': 'model',
         'name': 'leftShelf',
@@ -189,7 +189,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 10012
+    },  # end entity 10012
     10013: {
         'type': 'model',
         'name': 'rightShelf',
@@ -202,7 +202,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 10013
+    },  # end entity 10013
     10015: {
         'type': 'model',
         'name': 'copy of leftShelf',
@@ -215,7 +215,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 10015
+    },  # end entity 10015
     10017: {
         'type': 'model',
         'name': 'copy of leftShelf (2)',
@@ -228,7 +228,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 10017
+    },  # end entity 10017
     10018: {
         'type': 'model',
         'name': 'copy of leftShelf (3)',
@@ -241,7 +241,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 10018
+    },  # end entity 10018
     10019: {
         'type': 'model',
         'name': 'copy of leftShelf',
@@ -254,7 +254,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 10019
+    },  # end entity 10019
     10020: {
         'type': 'model',
         'name': 'copy of rightShelf',
@@ -267,7 +267,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 10020
+    },  # end entity 10020
     10023: {
         'type': 'model',
         'name': 'copy of rightShelf (2)',
@@ -280,7 +280,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 10023
+    },  # end entity 10023
     10024: {
         'type': 'model',
         'name': 'copy of rightShelf (3)',
@@ -293,7 +293,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 10024
+    },  # end entity 10024
     10025: {
         'type': 'model',
         'name': 'copy of rightShelf (4)',
@@ -306,7 +306,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 10025
+    },  # end entity 10025
     10026: {
         'type': 'model',
         'name': 'copy of rightShelf (3)',
@@ -319,7 +319,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 10026
+    },  # end entity 10026
     10027: {
         'type': 'model',
         'name': 'copy of rightShelf (4)',
@@ -332,7 +332,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 10027
+    },  # end entity 10027
     10028: {
         'type': 'model',
         'name': 'copy of rightShelf (5)',
@@ -345,7 +345,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB.bam',
-        }, # end entity 10028
+    },  # end entity 10028
     10030: {
         'type': 'model',
         'name': '<unnamed>',
@@ -358,7 +358,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfA.bam',
-        }, # end entity 10030
+    },  # end entity 10030
     10031: {
         'type': 'model',
         'name': 'moveWall',
@@ -371,7 +371,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfA.bam',
-        }, # end entity 10031
+    },  # end entity 10031
     10033: {
         'type': 'model',
         'name': 'copy of <unnamed>',
@@ -384,7 +384,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfA.bam',
-        }, # end entity 10033
+    },  # end entity 10033
     10034: {
         'type': 'model',
         'name': 'copy of <unnamed> (2)',
@@ -397,7 +397,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfA.bam',
-        }, # end entity 10034
+    },  # end entity 10034
     10046: {
         'type': 'model',
         'name': '<unnamed>',
@@ -410,7 +410,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 10046
+    },  # end entity 10046
     10047: {
         'type': 'model',
         'name': 'copy of <unnamed>',
@@ -423,7 +423,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 10047
+    },  # end entity 10047
     10048: {
         'type': 'model',
         'name': 'copy of <unnamed> (2)',
@@ -436,7 +436,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 10048
+    },  # end entity 10048
     10049: {
         'type': 'model',
         'name': 'copy of <unnamed> (3)',
@@ -449,7 +449,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 10049
+    },  # end entity 10049
     10051: {
         'type': 'model',
         'name': 'copy of <unnamed> (2)',
@@ -462,7 +462,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 10051
+    },  # end entity 10051
     10052: {
         'type': 'model',
         'name': 'copy of <unnamed> (3)',
@@ -475,7 +475,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 10052
+    },  # end entity 10052
     10053: {
         'type': 'model',
         'name': 'copy of <unnamed> (3)',
@@ -488,7 +488,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 10053
+    },  # end entity 10053
     10054: {
         'type': 'model',
         'name': 'copy of <unnamed> (4)',
@@ -501,7 +501,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/PartitionA.bam',
-        }, # end entity 10054
+    },  # end entity 10054
     # MOVER
     10010: {
         'type': 'mover',
@@ -521,7 +521,7 @@ GlobalEntities = {
         'pos1Wait': 3.0,
         'startOn': 1,
         'switchId': 0,
-        }, # end entity 10010
+    },  # end entity 10010
     10035: {
         'type': 'mover',
         'name': 'wallMover',
@@ -540,7 +540,7 @@ GlobalEntities = {
         'pos1Wait': 2,
         'startOn': 1,
         'switchId': 0,
-        }, # end entity 10035
+    },  # end entity 10035
     10037: {
         'type': 'mover',
         'name': 'copy of wallMover',
@@ -559,7 +559,7 @@ GlobalEntities = {
         'pos1Wait': 2.0,
         'startOn': 1,
         'switchId': 0,
-        }, # end entity 10037
+    },  # end entity 10037
     # NODEPATH
     10000: {
         'type': 'nodepath',
@@ -569,7 +569,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10000
+    },  # end entity 10000
     10008: {
         'type': 'nodepath',
         'name': 'maze',
@@ -578,7 +578,7 @@ GlobalEntities = {
         'pos': Point3(-11.32, 35.7767, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': Vec3(1.4, 1.4, 1.4),
-        }, # end entity 10008
+    },  # end entity 10008
     10011: {
         'type': 'nodepath',
         'name': 'movetarget',
@@ -587,7 +587,7 @@ GlobalEntities = {
         'pos': Point3(7, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10011
+    },  # end entity 10011
     10014: {
         'type': 'nodepath',
         'name': 'frontDoor',
@@ -596,7 +596,7 @@ GlobalEntities = {
         'pos': Point3(0, 0.75, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10014
+    },  # end entity 10014
     10016: {
         'type': 'nodepath',
         'name': 'firstInnerWall',
@@ -605,7 +605,7 @@ GlobalEntities = {
         'pos': Point3(-1.4, 9.5, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10016
+    },  # end entity 10016
     10021: {
         'type': 'nodepath',
         'name': 'rightWall',
@@ -614,7 +614,7 @@ GlobalEntities = {
         'pos': Point3(28.038, 16.5374, 0),
         'hpr': Point3(90, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10021
+    },  # end entity 10021
     10022: {
         'type': 'nodepath',
         'name': 'leftWall',
@@ -623,7 +623,7 @@ GlobalEntities = {
         'pos': Point3(-12.3934, 5.78821, 0),
         'hpr': Point3(270, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10022
+    },  # end entity 10022
     10029: {
         'type': 'nodepath',
         'name': 'rearRightWall',
@@ -632,7 +632,7 @@ GlobalEntities = {
         'pos': Point3(19.8603, 23.5345, 0),
         'hpr': Point3(90, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10029
+    },  # end entity 10029
     10032: {
         'type': 'nodepath',
         'name': 'rearLeftWall',
@@ -641,7 +641,7 @@ GlobalEntities = {
         'pos': Point3(-5.06744, 23.3692, 0),
         'hpr': Point3(270, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 10032
+    },  # end entity 10032
     10036: {
         'type': 'nodepath',
         'name': 'moveTarget',
@@ -650,7 +650,7 @@ GlobalEntities = {
         'pos': Point3(8.7, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10036
+    },  # end entity 10036
     10038: {
         'type': 'nodepath',
         'name': 'copy of moveTarget',
@@ -659,7 +659,7 @@ GlobalEntities = {
         'pos': Point3(-8.7, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10038
+    },  # end entity 10038
     10039: {
         'type': 'nodepath',
         'name': 'stompers',
@@ -668,7 +668,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10039
+    },  # end entity 10039
     10044: {
         'type': 'nodepath',
         'name': 'walls',
@@ -677,7 +677,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10044
+    },  # end entity 10044
     10045: {
         'type': 'nodepath',
         'name': 'leftWall',
@@ -686,7 +686,7 @@ GlobalEntities = {
         'pos': Point3(-40, -2, 0),
         'hpr': Point3(270, 0, 0),
         'scale': Point3(1, 1, 1),
-        }, # end entity 10045
+    },  # end entity 10045
     10050: {
         'type': 'nodepath',
         'name': 'rightWall',
@@ -695,7 +695,7 @@ GlobalEntities = {
         'pos': Point3(40, -2, 0),
         'hpr': Point3(90, 0, 0),
         'scale': Point3(1, 1, 1),
-        }, # end entity 10050
+    },  # end entity 10050
     10062: {
         'type': 'nodepath',
         'name': 'cameras',
@@ -704,7 +704,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10062
+    },  # end entity 10062
     10063: {
         'type': 'nodepath',
         'name': '<unnamed>',
@@ -713,7 +713,7 @@ GlobalEntities = {
         'pos': Point3(5, 6, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10063
+    },  # end entity 10063
     10065: {
         'type': 'nodepath',
         'name': 'copy of <unnamed>',
@@ -722,7 +722,7 @@ GlobalEntities = {
         'pos': Point3(-10, 6, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10065
+    },  # end entity 10065
     10066: {
         'type': 'nodepath',
         'name': 'copy of <unnamed> (2)',
@@ -731,7 +731,7 @@ GlobalEntities = {
         'pos': Point3(5, 17, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10066
+    },  # end entity 10066
     10067: {
         'type': 'nodepath',
         'name': 'copy of <unnamed> (3)',
@@ -740,7 +740,7 @@ GlobalEntities = {
         'pos': Point3(-10, 17, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10067
+    },  # end entity 10067
     10068: {
         'type': 'nodepath',
         'name': 'scaleNode',
@@ -749,7 +749,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': Point3(1.7, 1, 1),
-        }, # end entity 10068
+    },  # end entity 10068
     10069: {
         'type': 'nodepath',
         'name': 'scaleNode',
@@ -758,7 +758,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': Point3(1.7, 1, 1),
-        }, # end entity 10069
+    },  # end entity 10069
     10070: {
         'type': 'nodepath',
         'name': 'cameras',
@@ -767,7 +767,7 @@ GlobalEntities = {
         'pos': Point3(4, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10070
+    },  # end entity 10070
     10073: {
         'type': 'nodepath',
         'name': '<unnamed>',
@@ -776,7 +776,7 @@ GlobalEntities = {
         'pos': Point3(5, 6, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10073
+    },  # end entity 10073
     10074: {
         'type': 'nodepath',
         'name': 'copy of <unnamed>',
@@ -785,7 +785,7 @@ GlobalEntities = {
         'pos': Point3(-10, 6, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10074
+    },  # end entity 10074
     10075: {
         'type': 'nodepath',
         'name': 'copy of <unnamed> (2)',
@@ -794,7 +794,7 @@ GlobalEntities = {
         'pos': Point3(5, 17, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10075
+    },  # end entity 10075
     10076: {
         'type': 'nodepath',
         'name': 'copy of <unnamed> (3)',
@@ -803,7 +803,7 @@ GlobalEntities = {
         'pos': Point3(-10, 17, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10076
+    },  # end entity 10076
     # SECURITYCAMERA
     10056: {
         'type': 'securityCamera',
@@ -824,7 +824,7 @@ GlobalEntities = {
         'trackTarget1': 10063,
         'trackTarget2': 10065,
         'trackTarget3': 10066,
-        }, # end entity 10056
+    },  # end entity 10056
     10057: {
         'type': 'securityCamera',
         'name': '<unnamed>',
@@ -844,7 +844,7 @@ GlobalEntities = {
         'trackTarget1': 10065,
         'trackTarget2': 10066,
         'trackTarget3': 10067,
-        }, # end entity 10057
+    },  # end entity 10057
     10071: {
         'type': 'securityCamera',
         'name': '<unnamed>',
@@ -864,7 +864,7 @@ GlobalEntities = {
         'trackTarget1': 10073,
         'trackTarget2': 10074,
         'trackTarget3': 10075,
-        }, # end entity 10071
+    },  # end entity 10071
     10072: {
         'type': 'securityCamera',
         'name': '<unnamed>',
@@ -884,7 +884,7 @@ GlobalEntities = {
         'trackTarget1': 10074,
         'trackTarget2': 10075,
         'trackTarget3': 10076,
-        }, # end entity 10072
+    },  # end entity 10072
     # STOMPER
     10040: {
         'type': 'stomper',
@@ -915,7 +915,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10040
+    },  # end entity 10040
     10041: {
         'type': 'stomper',
         'name': 'copy of <unnamed>',
@@ -945,7 +945,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 1,
         'zOffset': 0,
-        }, # end entity 10041
+    },  # end entity 10041
     10042: {
         'type': 'stomper',
         'name': 'copy of <unnamed> (2)',
@@ -975,7 +975,7 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 0,
         'zOffset': 0,
-        }, # end entity 10042
+    },  # end entity 10042
     10043: {
         'type': 'stomper',
         'name': 'copy of <unnamed> (3)',
@@ -1005,15 +1005,15 @@ GlobalEntities = {
         'wantShadow': 1,
         'wantSmoke': 0,
         'zOffset': 0,
-        }, # end entity 10043
-    }
+    },  # end entity 10043
+}
 
 Scenario0 = {
-    }
+}
 
 levelSpec = {
     'globalEntities': GlobalEntities,
     'scenarios': [
         Scenario0,
-        ],
-    }
+    ],
+}

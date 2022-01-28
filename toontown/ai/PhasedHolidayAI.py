@@ -32,11 +32,12 @@ class StartAndEndTime:
         return self.__str__()
 
     def __str__(self):
-        return ("(%s %s)" % (self.start, self.end))
+        return (f"({self.start} {self.end})")
+
 
 class PhasedHolidayAI(HolidayBaseAI.HolidayBaseAI):
     """This is the base class for holidays which have different phases.
-    
+
     They ramp up over time, such as hydrant zero, silly meter.
     While each phase could have been implemented as a different holiday,
     this makes sure the start and end times for each phase match up."""
@@ -52,7 +53,8 @@ class PhasedHolidayAI(HolidayBaseAI.HolidayBaseAI):
         self.oldPhase = 0
         self.curPhase = 0
         self.phaseDates = phaseDates
-        self.startAndEndTimes = self.convertStartAndEndListToDateTimes(startAndEndTupleList)
+        self.startAndEndTimes = self.convertStartAndEndListToDateTimes(
+            startAndEndTupleList)
         self.sanityCheckPhaseDates()
         # we assume phase 0 is before phaseDates[0],
         # phase 1 is between phaseDates[0], phaseDates[1]
@@ -65,18 +67,22 @@ class PhasedHolidayAI(HolidayBaseAI.HolidayBaseAI):
         result = []
         for startAndEnd in startAndEndTupleList:
             startInfo = startAndEnd[0]
-            startTime = datetime.datetime(startInfo[0], startInfo[1], startInfo[2],
-                                          startInfo[3], startInfo[4], startInfo[5])
+            startTime = datetime.datetime(
+                startInfo[0],
+                startInfo[1],
+                startInfo[2],
+                startInfo[3],
+                startInfo[4],
+                startInfo[5])
             endInfo = startAndEnd[1]
             endTime = datetime.datetime(endInfo[0], endInfo[1], endInfo[2],
-                                          endInfo[3], endInfo[4], endInfo[5])
+                                        endInfo[3], endInfo[4], endInfo[5])
             result.append(StartAndEndTime(startTime, endTime))
         return result
 
-
     def sanityCheckPhaseDates(self):
         """Do some sanity checking on our phase dates."""
-        #Check phase dates are between end and start times."""
+        # Check phase dates are between end and start times."""
         for phaseDate in self.phaseDates:
             foundInBetween = False
             for startAndEnd in self.startAndEndTimes:
@@ -84,14 +90,15 @@ class PhasedHolidayAI(HolidayBaseAI.HolidayBaseAI):
                     foundInBetween = True
                     break
             if not foundInBetween:
-                self.notify.error("holiday %d, phaseDate=%s not in between start and end times" %
-                                  (self.holidayId, phaseDate))
+                self.notify.error(
+                    "holiday %d, phaseDate=%s not in between start and end times" %
+                    (self.holidayId, phaseDate))
         # check the phase dates are ascending
-        for index in range( len(self.phaseDates) -1):
-            if not (self.phaseDates[index] < self.phaseDates[index +1]):
-                    self.notify.error("phaseDate=%s coming before phaseDate=%s" %
-                                      (self.phaseDates[index], self.phaseDates[index+1]))
-    
+        for index in range(len(self.phaseDates) - 1):
+            if not (self.phaseDates[index] < self.phaseDates[index + 1]):
+                self.notify.error("phaseDate=%s coming before phaseDate=%s" % (
+                    self.phaseDates[index], self.phaseDates[index + 1]))
+
     def calcPhase(self, myTime):
         """Return which phase we should be given parameter time.
 
@@ -99,16 +106,16 @@ class PhasedHolidayAI(HolidayBaseAI.HolidayBaseAI):
         and return the last phase if its way after the end time
         """
         result = self.getNumPhases()
-        for index, phaseDate in enumerate( self.phaseDates):
+        for index, phaseDate in enumerate(self.phaseDates):
             if myTime < phaseDate:
                 result = index
                 break
         return result
-            
+
     def getNumPhases(self):
         """Return how many phases we have."""
-        result =  len(self.phaseDates) + 1
-        return result        
+        result = len(self.phaseDates) + 1
+        return result
 
     def isValidStart(self, curStartTime):
         """Print out a message if we're starting at a valid time.
@@ -119,22 +126,23 @@ class PhasedHolidayAI(HolidayBaseAI.HolidayBaseAI):
             if startAndEnd.isInBetweenInclusive(curStartTime):
                 result = True
                 break
-        
+
     def start(self):
         """Start the holiday and set us to the correct phase."""
         # start the holiday
-        # this equivalent to the same bit of code we use in HolidayManagerAI.createHolidays
+        # this equivalent to the same bit of code we use in
+        # HolidayManagerAI.createHolidays
         curTime = datetime.datetime.today()
         isValidStart = self.isValidStart(curTime)
         if not isValidStart:
-            self.notify.warning("starting holiday %d at %s but self.startAndEndTimes= %s " %
-                                (self.holidayId, curTime, self.startAndEndTimes))
-        
+            self.notify.warning(
+                "starting holiday %d at %s but self.startAndEndTimes= %s " %
+                (self.holidayId, curTime, self.startAndEndTimes))
+
         pass
-    
-    
+
     def stop(self):
         pass
-    
+
     def forcePhase(self, newPhase):
         self.notify.warning("Child class must defined forcePhase")

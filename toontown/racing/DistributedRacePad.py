@@ -21,24 +21,25 @@ from panda3d.core import TextNode
 if __debug__:
     import pdb
 
+
 class DistributedRacePad(DistributedKartPad, FSM):
     notify = DirectNotifyGlobal.directNotify.newCategory("DistributedRacePad")
-    #notify.setDebug(True)
+    # notify.setDebug(True)
 
     defaultTransitions = {
-        'Off'           : ['WaitEmpty'],
-        'WaitEmpty'     : ['WaitCountdown', 'Off'],
-        'WaitCountdown' : ['WaitEmpty', 'WaitBoarding', 'Off', 'AllAboard'],
-        'WaitBoarding'  : ['AllAboard', 'WaitEmpty', 'Off'],
-        'AllAboard'     : ['Off', 'WaitEmpty', 'WaitCountdown'],
+        'Off': ['WaitEmpty'],
+        'WaitEmpty': ['WaitCountdown', 'Off'],
+        'WaitCountdown': ['WaitEmpty', 'WaitBoarding', 'Off', 'AllAboard'],
+        'WaitBoarding': ['AllAboard', 'WaitEmpty', 'Off'],
+        'AllAboard': ['Off', 'WaitEmpty', 'WaitCountdown'],
     }
     id = 0
 
     def __init__(self, cr):
-        self.cr=cr
+        self.cr = cr
         # Initialize the KartPad Super Class
         DistributedKartPad.__init__(self, cr)
-        FSM.__init__(self, "RacePad_%s_FSM" % (self.id))
+        FSM.__init__(self, f"RacePad_{self.id}_FSM")
 
         # Intialize Instance Variables
         self.id = DistributedRacePad.id
@@ -71,7 +72,7 @@ class DistributedRacePad(DistributedKartPad, FSM):
 
     def disableStartingBlocks(self):
         for block in self.startingBlocks:
-            self.notify.debug("Disabling kart block: %s" % block.getDoId())
+            self.notify.debug(f"Disabling kart block: {block.getDoId()}")
             block.setActive(1)
 
     def isPractice(self):
@@ -88,15 +89,15 @@ class DistributedRacePad(DistributedKartPad, FSM):
             if(block.avId == base.localAvatar.getDoId()):
                 hoodId = self.cr.playGame.hood.hoodId
                 self.cr.playGame.getPlace().doneStatus = {
-                    'loader'  : "racetrack",
-                    'where'   : "racetrack",
-                    'zoneId'  : zoneId,
-                    'trackId' : self.trackId,
-                    'hoodId'  : hoodId,
-                    }
+                    'loader': "racetrack",
+                    'where': "racetrack",
+                    'zoneId': zoneId,
+                    'trackId': self.trackId,
+                    'hoodId': hoodId,
+                }
 
                 # Temporary Call.
-                #self.cr.playGame.getPlace().handleStartingBlockDone(doneStatus)
+                # self.cr.playGame.getPlace().handleStartingBlockDone(doneStatus)
 
                 messenger.send(base.cr.playGame.getPlace().doneEvent)
 
@@ -118,36 +119,44 @@ class DistributedRacePad(DistributedKartPad, FSM):
     # FSM State Methods
     ######################################################################
     def enterOff(self):
-        self.notify.debug("enterOff: Entering Off State for RacePad %s" % (self.id))
+        self.notify.debug(
+            f"enterOff: Entering Off State for RacePad {self.id}")
         if self.tunnelSignInterval:
             self.tunnelSignInterval.finish()
         self.cleanupTunnelText()
 
     def exitOff(self):
-        self.notify.debug("exitOff: Exiting Off state for RacePad %s" % (self.id))
+        self.notify.debug(
+            f"exitOff: Exiting Off state for RacePad {self.id}")
 
     def enterWaitEmpty(self, args):
-        self.notify.debug("enterWaitEmpty: Entering WaitEmpty State for RacePad %s" % (self.id))
+        self.notify.debug(
+            f"enterWaitEmpty: Entering WaitEmpty State for RacePad {self.id}")
 
-        #I got a case where the "Going to the race GUI came up" and then the
-        #updateTunnelSignText function got called, so we do this to try to kill that crash
+        # I got a case where the "Going to the race GUI came up" and then the
+        # updateTunnelSignText function got called, so we do this to try to
+        # kill that crash
         if self.tunnelSignInterval:
             self.tunnelSignInterval.finish()
 
     def exitWaitEmpty(self):
-        self.notify.debug("exitWaitEmpty: Exiting WaitEmpty State for RacePad %s" % (self.id))
+        self.notify.debug(
+            f"exitWaitEmpty: Exiting WaitEmpty State for RacePad {self.id}")
 
     def enterWaitCountdown(self, args):
-        self.notify.debug("enterWaitCountdown: Entering WaitCountdown State for RacePad %s" % (self.id))
+        self.notify.debug(
+            f"enterWaitCountdown: Entering WaitCountdown State for RacePad {self.id}")
         self.timeStamp = args[0]
         self.startCountdown()
 
     def exitWaitCountdown(self):
-        self.notify.debug("exitWaitCountdown: Exiting WaitCountdown State for RacePad %s" % (self.id))
+        self.notify.debug(
+            f"exitWaitCountdown: Exiting WaitCountdown State for RacePad {self.id}")
         self.stopCountdown()
 
     def enterWaitBoarding(self, args):
-        self.notify.debug("enterWaitBoarding: Entering WaitBoarding State for RacePad %s" % (self.id))
+        self.notify.debug(
+            f"enterWaitBoarding: Entering WaitBoarding State for RacePad {self.id}")
         self.timeStamp = args[0]
 
         # Disable exit gui
@@ -155,10 +164,12 @@ class DistributedRacePad(DistributedKartPad, FSM):
             block.hideGui()
 
     def exitWaitBoarding(self):
-        self.notify.debug("exitWaitBoarding: Exiting WaitBording State for RacePad %s" % (self.id))
+        self.notify.debug(
+            f"exitWaitBoarding: Exiting WaitBording State for RacePad {self.id}")
 
     def enterAllAboard(self, args):
-        self.notify.debug("enterAllAboard: Entering AllAboard State for RacePad %s" % (self.id))
+        self.notify.debug(
+            f"enterAllAboard: Entering AllAboard State for RacePad {self.id}")
 
         # By this point, all starting block movies should be finished.
 
@@ -166,16 +177,18 @@ class DistributedRacePad(DistributedKartPad, FSM):
             block.request("Off")
 
             if block.av and block.kartNode:
-                self.notify.debug("enterAllAboard: Avatar %s is in the race." % (block.av.doId))
+                self.notify.debug(
+                    f"enterAllAboard: Avatar {block.av.doId} is in the race.")
 
                 block.doExitToRaceTrack()
 
     def exitAllAboard(self):
-        self.notify.debug("enterAllAboard: Exiting AllAboard State for RacePad %s" % (self.id))
+        self.notify.debug(
+            f"enterAllAboard: Exiting AllAboard State for RacePad {self.id}")
 
-    def getTimestamp(self, avId = None):
+    def getTimestamp(self, avId=None):
         error = "DistributedRacePad::getTimeStamp - timestamp not yet set!"
-        assert not self.timeStamp is None, error
+        assert self.timeStamp is not None, error
         return self.timeStamp
 
     def stopCountdown(self):
@@ -201,20 +214,22 @@ class DistributedRacePad(DistributedKartPad, FSM):
     def startCountdown(self):
         if not self.timerTask and self.startingBlocks:
             self.makeClockGui()
-            duration = KartGlobals.COUNTDOWN_TIME - globalClockDelta.localElapsedTime(self.getTimestamp())
+            duration = KartGlobals.COUNTDOWN_TIME - \
+                globalClockDelta.localElapsedTime(self.getTimestamp())
             countdownTask = Task(self.updateTimerTask)
             countdownTask.duration = duration
-            self.timerTask = taskMgr.add(countdownTask, self.uniqueName("racePadTimerTask"))
+            self.timerTask = taskMgr.add(
+                countdownTask, self.uniqueName("racePadTimerTask"))
 
     def addStartingBlock(self, block):
         DistributedKartPad.addStartingBlock(self, block)
         if self.state == 'WaitCountdown':
             self.startCountdown()
 
-
     ######################################################################
     # Tunnel Sign Methods
     ######################################################################
+
     def makeClockGui(self):
         self.notify.debugStateCall(self)
 
@@ -223,22 +238,24 @@ class DistributedRacePad(DistributedKartPad, FSM):
         if self.clockNodepath is not None:
             return
 
-        self.clockNode, self.clockNodepath = self.getSignTextNodes("racePadClock")
+        self.clockNode, self.clockNodepath = self.getSignTextNodes(
+            "racePadClock")
         self.clockNodepath.setPos(0, 0.125, -3.0)
         self.clockNodepath.setScale(2.5)
         self.clockNodepath.flattenLight()
 
         # can't figure out where to put this =[
-        #self.setTunnelSignText()
+        # self.setTunnelSignText()
 
     def getTunnelSign(self):
         cPadId = RaceGlobals.RaceInfo2RacePadId(self.trackId, self.trackType)
         genreId = RaceGlobals.getTrackGenre(self.trackId)
         tunnelName = RaceGlobals.getTunnelSignName(genreId, cPadId)
-        self.tunnelSign = self.cr.playGame.hood.loader.geom.find("**/" + tunnelName)
+        self.tunnelSign = self.cr.playGame.hood.loader.geom.find(
+            "**/" + tunnelName)
 
     def getSignTextNodes(self, nodeName, font=ToontownGlobals.getSignFont()):
-        #if not self.tunnelSign:
+        # if not self.tunnelSign:
         #    self.getTunnelSign()
         signTextNode = TextNode(nodeName)
         signTextNode.setFont(font)
@@ -253,7 +270,7 @@ class DistributedRacePad(DistributedKartPad, FSM):
     def setTunnelSignText(self):
         self.notify.debugStateCall(self)
 
-        #if self.tunnelSign:
+        # if self.tunnelSign:
         #    # tunnelSign already created
         #    return
 
@@ -281,7 +298,7 @@ class DistributedRacePad(DistributedKartPad, FSM):
             Wait(0.2),
             Func(self.updateTunnelSignText),
             Func(self.showTunnelSignText),
-            )
+        )
         self.tunnelSignInterval.start()
 
     def hideTunnelSignText(self):
@@ -329,23 +346,27 @@ class DistributedRacePad(DistributedKartPad, FSM):
     def makeTextNodes(self):
         self.notify.debugStateCall(self)
 
-        self.trackNameNode, trackNameNodePath = self.getSignTextNodes("trackNameNode")
+        self.trackNameNode, trackNameNodePath = self.getSignTextNodes(
+            "trackNameNode")
         trackNameNodePath.setZ(0.7)
         trackNameNodePath.setScale(0.875)
         trackNameNodePath.flattenLight()
 
-        self.trackTypeNode, trackTypeNodePath = self.getSignTextNodes("trackTypeNode")
+        self.trackTypeNode, trackTypeNodePath = self.getSignTextNodes(
+            "trackTypeNode")
         trackTypeNodePath.setZ(-0.35)
         trackTypeNodePath.setScale(0.875)
         trackTypeNodePath.flattenLight()
 
-        self.depositNode, depositNodePath = self.getSignTextNodes("depositNode", ToontownGlobals.getToonFont())
+        self.depositNode, depositNodePath = self.getSignTextNodes(
+            "depositNode", ToontownGlobals.getToonFont())
         self.depositNode.setTextColor(0, 0, 0, 1)
         depositNodePath.setPos(4.0, -1.0, -2.0)
         depositNodePath.setScale(0.75)
         depositNodePath.flattenLight()
 
-        self.qualifyNode, qualifyNodePath = self.getSignTextNodes("qualifyNode",  ToontownGlobals.getToonFont())
+        self.qualifyNode, qualifyNodePath = self.getSignTextNodes(
+            "qualifyNode", ToontownGlobals.getToonFont())
         self.qualifyNode.setTextColor(0, 0, 0, 1)
         qualifyNodePath.setPos(-4.0, 1.2, -2.0)
         qualifyNodePath.setScale(0.75)
@@ -363,4 +384,3 @@ class DistributedRacePad(DistributedKartPad, FSM):
 
         self.tunnelSign = None
         self.trackNameNode = None
-

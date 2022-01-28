@@ -4,15 +4,16 @@ Landmark object
 
 from .ToonTownObj import *
 
+
 class LandmarkObj(ToonTownObj):
     def __init__(self, editor, landmarkType, dna=None, nodePath=None):
         self.landmarkType = landmarkType
         ToonTownObj.__init__(self, editor, dna, nodePath)
 
     def initDNA(self):
-        block=self.getNextLandmarkBlock()
+        block = self.getNextLandmarkBlock()
         dnaNode = DNALandmarkBuilding(
-            'tb'+block+':'+self.landmarkType + '_DNARoot')
+            'tb' + block + ':' + self.landmarkType + '_DNARoot')
         dnaNode.setCode(self.landmarkType)
         dnaNode.setPos(VBase3(0))
         dnaNode.setHpr(VBase3(0))

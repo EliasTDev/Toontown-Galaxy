@@ -19,20 +19,21 @@ from direct.distributed.PyDatagramIterator import PyDatagramIterator
 if __debug__:
     import pdb
 
+
 class AIDistrict(AIRepository):
     notify = DirectNotifyGlobal.directNotify.newCategory("AIDistrict")
 
     def __init__(
             self, mdip, mdport, esip, esport, dcFileNames,
             districtId, districtName, districtType, serverId,
-            minChannel, maxChannel, dcSuffix = 'AI'):
+            minChannel, maxChannel, dcSuffix='AI'):
         assert self.notify.debugStateCall(self)
-        
+
         # Save the district Id (needed for calculations in AIRepository code)
         self.districtId = districtId
         self.districtName = districtName
         self.districtType = districtType
-        
+
         AIRepository.__init__(
             self, mdip, mdport, esip, esport, dcFileNames,
             serverId,
@@ -59,48 +60,49 @@ class AIDistrict(AIRepository):
 
         # The AI State machine
         self.fsm = ClassicFSM.ClassicFSM('AIDistrict',
-                       [State.State('off',
-                                    self.enterOff,
-                                    self.exitOff,
-                                    ['connect']),
-                        State.State('connect',
-                                    self.enterConnect,
-                                    self.exitConnect,
-                                    ['districtReset', 'noConnection',
-                                     # I added this because Skyler removed the transition to
-                                     # districtReset -- Joe
-                                     'playGame',
-                                     ]),
-                        State.State('districtReset',
-                                    self.enterDistrictReset,
-                                    self.exitDistrictReset,
-                                    ['playGame','noConnection']),
-                        State.State('playGame',
-                                    self.enterPlayGame,
-                                    self.exitPlayGame,
-                                    ['noConnection']),
-                        State.State('noConnection',
-                                    self.enterNoConnection,
-                                    self.exitNoConnection,
-                                    ['connect'])],
-                       # initial state
-                       'off',
-                       # final state
-                       'off',
-                       )
+                                         [State.State('off',
+                                                      self.enterOff,
+                                                      self.exitOff,
+                                                      ['connect']),
+                                             State.State('connect',
+                                                         self.enterConnect,
+                                                         self.exitConnect,
+                                                         ['districtReset', 'noConnection',
+                                                          # I added this because Skyler removed the transition to
+                                                          # districtReset -- Joe
+                                                          'playGame',
+                                                          ]),
+                                             State.State('districtReset',
+                                                         self.enterDistrictReset,
+                                                         self.exitDistrictReset,
+                                                         ['playGame', 'noConnection']),
+                                             State.State('playGame',
+                                                         self.enterPlayGame,
+                                                         self.exitPlayGame,
+                                                         ['noConnection']),
+                                             State.State('noConnection',
+                                                         self.enterNoConnection,
+                                                         self.exitNoConnection,
+                                                         ['connect'])],
+                                         # initial state
+                                         'off',
+                                         # final state
+                                         'off',
+                                         )
 
         self.fsm.enterInitialState()
 
         self.fsm.request("connect")
 
     def uniqueName(self, desc):
-        return desc+"-"+str(self.districtId)
+        return desc + "-" + str(self.districtId)
 
     def getGameDoId(self):
         self.notify.error('derived must override')
 
     def incrementPopulation(self):
         self._population += 1
+
     def decrementPopulation(self):
         if __dev__:
             assert self._population > 0
@@ -115,7 +117,9 @@ class AIDistrict(AIRepository):
         return self._population
 
     def printPopulationToLog(self, task):
-        self.notify.info("district-name %s | district-id %s | population %s" % (self.districtName, self.districtId, self._population))
+        self.notify.info(
+            "district-name %s | district-id %s | population %s" %
+            (self.districtName, self.districtId, self._population))
         return Task.again
 
     # check if this is a player avatar in a location where they should not be
@@ -139,12 +143,12 @@ class AIDistrict(AIRepository):
     def handleDistrictReset(self, msgType, di):
         if msgType == STATESERVER_OBJECT_DELETE_RAM:
             doId = di.getUint32()
-            self.notify.info("Got request to delete doId: " +str(doId))
+            self.notify.info("Got request to delete doId: " + str(doId))
             if(doId == self.districtId):
                 self.fsm.request("playGame")
         elif msgType == STATESERVER_OBJECT_NOTFOUND:
             doId = di.getUint32()
-            self.notify.info("Got Not Found For  doId: " +str(doId))
+            self.notify.info("Got Not Found For  doId: " + str(doId))
             if(doId == self.districtId):
                 self.fsm.request("playGame")
         else:
@@ -156,11 +160,14 @@ class AIDistrict(AIRepository):
         AIRepository.enterPlayGame(self)
         if ConfigVariableBool('game-server-tests', 0).value:
             from otp.distributed import DistributedTestObjectAI
-            self.testObject = DistributedTestObjectAI.DistributedTestObjectAI(self)
+            self.testObject = DistributedTestObjectAI.DistributedTestObjectAI(
+                self)
             self.testObject.generateOtpObject(self.getGameDoId(), 3)
-        
-        taskMgr.doMethodLater(300, self.printPopulationToLog, self.uniqueName("printPopulationTask"))
 
+        taskMgr.doMethodLater(
+            300,
+            self.printPopulationToLog,
+            self.uniqueName("printPopulationTask"))
 
     def getZoneDataStore(self):
         """This will crash (as designed) if called outside of the PlayGame state."""
@@ -215,8 +222,8 @@ class AIDistrict(AIRepository):
         self.lastMessageTime = 0
 
         self.connect([self.mdurl],
-                     successCallback = self._connected,
-                     failureCallback = self._failedToConnect)
+                     successCallback=self._connected,
+                     failureCallback=self._failedToConnect)
 
     def _failedToConnect(self, statusCode, statusString):
         self.fsm.request("noConnection")
@@ -277,14 +284,14 @@ class AIDistrict(AIRepository):
         try:
             return AIRepository.readerPollUntilEmpty(self, task)
         except Exception as e:
-            appendStr(e, '\nSENDER ID: %s' % self.getAvatarIdFromSender())
+            appendStr(e, f'\nSENDER ID: {self.getAvatarIdFromSender()}')
             raise
 
     def handleReaderOverflow(self):
         # may as well delete the shard at this point
         self.deleteDistrict(self.districtId)
         raise Exception("incoming-datagram buffer overflowed, "
-                              "aborting AI process")
+                        "aborting AI process")
 
     ##### General Purpose functions #####
 
@@ -310,12 +317,12 @@ class AIDistrict(AIRepository):
         messenger.send(self.getAvatarExitEvent(avId))
 
         # This announces generally that an avatar has left.
-        #messenger.send("avatarExited")
+        # messenger.send("avatarExited")
 
         # Now we don't need to store the disconnect reason any more.
         try:
             del self._avatarDisconnectReasons[avId]
-        except:
+        except BaseException:
             pass
 
     def setAvatarDisconnectReason(self, avId, disconnectReason):
@@ -377,8 +384,11 @@ class AIDistrict(AIRepository):
         secret = di.getString()
         requesterId = di.getUint32()
         avId = di.getUint32()
-        self.writeServerEvent('entered-secret', requesterId, '%s|%s|%s' % (result, secret, avId))
-        messenger.send("submitSecretReply", [result, secret, requesterId, avId])
+        self.writeServerEvent(
+            'entered-secret', requesterId, f'{result}|{secret}|{avId}')
+        messenger.send(
+            "submitSecretReply", [
+                result, secret, requesterId, avId])
 
     def registerShardDownMessage(self, stateserverid):
         datagram = PyDatagram()
@@ -387,11 +397,11 @@ class AIDistrict(AIRepository):
         datagram.addChannel(self.ourChannel)
         # schedule for execution on socket close
         self.addPostSocketClose(datagram)
-            
+
     def sendSetZone(self, distobj, zoneId):
         datagram = PyDatagram()
         datagram.addServerHeader(
-            distobj.doId, self.ourChannel, STATESERVER_OBJECT_SET_ZONE)        
+            distobj.doId, self.ourChannel, STATESERVER_OBJECT_SET_ZONE)
         # Add the zone parent id
         # HACK:
         parentId = oldParentId = self.districtId
@@ -403,7 +413,7 @@ class AIDistrict(AIRepository):
         # The servers don't inform us of this zone change, because we're the
         # one that requested it. Update immediately.
         # TODO: pass in the old parent and old zone
-        distobj.setLocation(parentId, zoneId) #, oldParentId, distobj.zoneId)
+        distobj.setLocation(parentId, zoneId)  # , oldParentId, distobj.zoneId)
 
     def deleteDistrict(self, districtId):
         # Create a message
@@ -428,8 +438,8 @@ class AIDistrict(AIRepository):
         """
         datagram = PyDatagram()
         datagram.addServerHeader(
-            DBSERVER_ID, self.ourChannel, DBSERVER_MAKE_FRIENDS)        
-        
+            DBSERVER_ID, self.ourChannel, DBSERVER_MAKE_FRIENDS)
+
         # Indicate the two avatars who are making friends
         datagram.addUint32(avatarAId)
         datagram.addUint32(avatarBId)
@@ -451,8 +461,8 @@ class AIDistrict(AIRepository):
         """
         datagram = PyDatagram()
         datagram.addServerHeader(
-            DBSERVER_ID,self.ourChannel,DBSERVER_REQUEST_SECRET)        
-        
+            DBSERVER_ID, self.ourChannel, DBSERVER_REQUEST_SECRET)
+
         # Indicate the number we want to associate with the new secret.
         datagram.addUint32(requesterId)
         # Send it off!

@@ -41,35 +41,35 @@ class BlinkingArrows:
         self.arrow2.reparentTo(hidden)
 
     def startArrowsFlashing(self):
-        onColor = Vec4(1,1,1,1)
-        offColor = Vec4(1,1,1,0.25)
+        onColor = Vec4(1, 1, 1, 1)
+        offColor = Vec4(1, 1, 1, 0.25)
         self.arrow1.show()
         self.arrow2.show()
         if self.otherNode:
             self.otherNode.show()
             self.arrowTrack = Sequence(
                 Parallel(
-                self.arrow1.colorScaleInterval(self.onTime, onColor, offColor),
-                self.arrow2.colorScaleInterval(self.onTime, onColor, offColor),
-                self.otherNode.colorScaleInterval(self.onTime, onColor, offColor),
+                    self.arrow1.colorScaleInterval(self.onTime, onColor, offColor),
+                    self.arrow2.colorScaleInterval(self.onTime, onColor, offColor),
+                    self.otherNode.colorScaleInterval(self.onTime, onColor, offColor),
                 ),
                 Parallel(
-                self.arrow1.colorScaleInterval(self.offTime, offColor, onColor),
-                self.arrow2.colorScaleInterval(self.offTime, offColor, onColor),
-                self.otherNode.colorScaleInterval(self.offTime, offColor, onColor),
+                    self.arrow1.colorScaleInterval(self.offTime, offColor, onColor),
+                    self.arrow2.colorScaleInterval(self.offTime, offColor, onColor),
+                    self.otherNode.colorScaleInterval(self.offTime, offColor, onColor),
                 ),
-                )
+            )
         else:
             self.arrowTrack = Sequence(
                 Parallel(
-                self.arrow1.colorScaleInterval(self.onTime, onColor, offColor),
-                self.arrow2.colorScaleInterval(self.onTime, onColor, offColor),
+                    self.arrow1.colorScaleInterval(self.onTime, onColor, offColor),
+                    self.arrow2.colorScaleInterval(self.onTime, onColor, offColor),
                 ),
                 Parallel(
-                self.arrow1.colorScaleInterval(self.offTime, offColor, onColor),
-                self.arrow2.colorScaleInterval(self.offTime, offColor, onColor),
+                    self.arrow1.colorScaleInterval(self.offTime, offColor, onColor),
+                    self.arrow2.colorScaleInterval(self.offTime, offColor, onColor),
                 ),
-                )
+            )
         self.arrowTrack.loop()
 
     def stopArrowsFlashing(self):
@@ -80,4 +80,3 @@ class BlinkingArrows:
         self.arrow2.hide()
         if self.otherNode:
             self.otherNode.hide()
-        

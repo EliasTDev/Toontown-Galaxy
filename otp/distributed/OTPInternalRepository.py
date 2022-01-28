@@ -5,17 +5,33 @@ from otp.ai import AIMsgTypes
 from direct.distributed import MsgTypes
 from toontown.distributed.ToontownNetMessengerAI import ToontownNetMessengerAI
 import traceback
-import sys 
 import sentry_sdk
 import os
-from panda3d.core import * 
+from panda3d.core import *
+
+
 class OTPInternalRepository(AstronInternalRepository):
-    notify = DirectNotifyGlobal.directNotify.newCategory('OTPInternalRepository')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'OTPInternalRepository')
     dbId = 4003
 
-    def __init__(self, baseChannel, serverId, dcFileNames, dcSuffix, connectMethod, threadedNet):
-        AstronInternalRepository.__init__(self, baseChannel, serverId=serverId, dcFileNames=dcFileNames,
-                                          dcSuffix=dcSuffix, connectMethod=connectMethod, threadedNet=threadedNet)
+    def __init__(
+            self,
+            baseChannel,
+            serverId,
+            dcFileNames,
+            dcSuffix,
+            connectMethod,
+            threadedNet):
+        AstronInternalRepository.__init__(
+            self,
+            baseChannel,
+            serverId=serverId,
+            dcFileNames=dcFileNames,
+            dcSuffix=dcSuffix,
+            connectMethod=connectMethod,
+            threadedNet=threadedNet)
+
     def handleConnected(self):
         AstronInternalRepository.handleConnected(self)
         self.___messenger = ToontownNetMessengerAI(self)
@@ -23,40 +39,52 @@ class OTPInternalRepository(AstronInternalRepository):
     def readerPollOnce(self):
         try:
             return AstronInternalRepository.readerPollOnce(self)
-            
+
         except (SystemExit, KeyboardInterrupt):
             raise
-            
+
         except Exception as e:
             wantSentry = ConfigVariableBool('want-Sentry', False)
             if wantSentry:
-                sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
+                sentry_sdk.init(
+                    'https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
             if self.getAvatarIdFromSender() > 100000000:
                 dg = PyDatagram()
-                dg.addServerHeader(self.getMsgSender(), self.ourChannel, CLIENTAGENT_EJECT)
+                dg.addServerHeader(
+                    self.getMsgSender(),
+                    self.ourChannel,
+                    CLIENTAGENT_EJECT)
                 dg.addUint16(166)
                 dg.addString('You were kicked to prevent a district crash.')
                 self.send(dg)
-                
-            self.writeServerEvent('INTERNAL-EXCEPTION', self.getAvatarIdFromSender(), self.getAccountIdFromSender(), repr(e), traceback.format_exc())
-            self.notify.warning('INTERNAL-EXCEPTION: {0} ({1})'.format(repr(e), self.getAvatarIdFromSender()))
+
+            self.writeServerEvent(
+                'INTERNAL-EXCEPTION',
+                self.getAvatarIdFromSender(),
+                self.getAccountIdFromSender(),
+                repr(e),
+                traceback.format_exc())
+            self.notify.warning(
+                f'INTERNAL-EXCEPTION: {repr(e)} ({self.getAvatarIdFromSender()})')
             print(traceback.format_exc())
             if wantSentry:
                 from os.path import expanduser
-                sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
-                sentry_sdk.set_context( 'uberdog',
-                {
-                    
-                'district_name': os.getenv('DISTRICT_NAME', "NULL"),
-                'SENDER_AVID': simbase.air.getAvatarIdFromSender(), 
-                'SENDER_ACCOUNT_ID': simbase.air.getAccountIdFromSender(), 
-                'homedir': expanduser('~'),
-                'CRITICAL': 'False'
-                }
-                )
+                sentry_sdk.init(
+                    'https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
+                sentry_sdk.set_context(
+                    'uberdog',
+                    {
+                        'district_name': os.getenv(
+                            'DISTRICT_NAME',
+                            "NULL"),
+                        'SENDER_AVID': simbase.air.getAvatarIdFromSender(),
+                        'SENDER_ACCOUNT_ID': simbase.air.getAccountIdFromSender(),
+                        'homedir': expanduser('~'),
+                        'CRITICAL': 'False'})
                 sentry_sdk.capture_exception(e)
-            
+
         return 1
+
     def getAccountIdFromSender(self):
         return (self.getMsgSender() >> 32) & 0xFFFFFFFF
 
@@ -69,7 +97,10 @@ class OTPInternalRepository(AstronInternalRepository):
 
     def setAllowClientSend(self, avId, distObj, fieldNameList=[]):
         dg = PyDatagram()
-        dg.addServerHeader(distObj.GetPuppetConnectionChannel(avId), self.ourChannel, CLIENTAGENT_SET_FIELDS_SENDABLE)
+        dg.addServerHeader(
+            distObj.GetPuppetConnectionChannel(avId),
+            self.ourChannel,
+            CLIENTAGENT_SET_FIELDS_SENDABLE)
         fieldIds = []
         for fieldName in fieldNameList:
             field = distObj.dclass.getFieldByName(fieldName)
@@ -84,7 +115,7 @@ class OTPInternalRepository(AstronInternalRepository):
         self.send(dg)
 
     def createDgUpdateToDoId(self, dclassName, fieldName, doId, args,
-                         channelId=None):
+                             channelId=None):
         """
         channelId can be used as a recipient if you want to bypass the normal
         airecv, ownrecv, broadcast, etc.  If you don't include a channelId
@@ -95,13 +126,13 @@ class OTPInternalRepository(AstronInternalRepository):
         the datagram instead of immediately sending it.
         """
         result = None
-        dclass=self.dclassesByName.get(dclassName+self.dcSuffix)
+        dclass = self.dclassesByName.get(dclassName + self.dcSuffix)
         assert dclass is not None
         if channelId is None:
-            channelId=doId
+            channelId = doId
         if dclass is not None:
             dg = dclass.aiFormatUpdate(
-                    fieldName, doId, channelId, self.ourChannel, args)
+                fieldName, doId, channelId, self.ourChannel, args)
             result = dg
         return result
 
@@ -119,7 +150,7 @@ class OTPInternalRepository(AstronInternalRepository):
     def getSenderReturnChannel(self):
         return self.getMsgSender()
 
-#from otp.ai.airepository 
+# from otp.ai.airepository
 
     def sendUpdateToDoId(self, dclassName, fieldName, doId, args,
                          channelId=None):
@@ -128,28 +159,27 @@ class OTPInternalRepository(AstronInternalRepository):
         airecv, ownrecv, broadcast, etc.  If you don't include a channelId
         or if channelId == doId, then the normal broadcast options will
         be used.
-        
+
         See Also: def queryObjectField
         """
-        dclass=self.dclassesByName.get(dclassName+self.dcSuffix)
+        dclass = self.dclassesByName.get(dclassName + self.dcSuffix)
         assert dclass is not None
         if channelId is None:
-            channelId=doId
+            channelId = doId
         if dclass is not None:
             dg = dclass.aiFormatUpdate(
-                    fieldName, doId, channelId, self.ourChannel, args)
+                fieldName, doId, channelId, self.ourChannel, args)
             self.send(dg)
 
     def allocateContext(self):
-        self.context+=1
-        if self.context >= (1<<32):
-            self.context=self.InitialContext
+        self.context += 1
+        if self.context >= (1 << 32):
+            self.context = self.InitialContext
         return self.context
 
     def sendNetEvent(self, message, sentArguments=[]):
         self.___messenger.send(message, sentArguments)
-        
+
     def addExitEvent(self, message):
         dg = self.___messenger.prepare(message)
         self.addPostRemove(dg)
-        

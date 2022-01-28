@@ -3,23 +3,24 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.showbase import AppRunnerGlobal
 import os
 
-## BattleSounds exists as a separate audiomanager from the default one in Showbase.py
-## so we can completely flush battle sounds when we go to areas that battles
-## cannot occur. (see globalBattleSoundCache.clear() in TownLoader.py)
+# BattleSounds exists as a separate audiomanager from the default one in Showbase.py
+# so we can completely flush battle sounds when we go to areas that battles
+# cannot occur. (see globalBattleSoundCache.clear() in TownLoader.py)
 ##
-## might be simpler to use 1 audio manager so you have only 1 set if audio settings, but
-## you could add tagged sounds so all the 'battle'-tagged sounds could be flushed from the 
-## cache at once.  cache size might need to be increased in  battle areas though
+# might be simpler to use 1 audio manager so you have only 1 set if audio settings, but
+# you could add tagged sounds so all the 'battle'-tagged sounds could be flushed from the
+# cache at once.  cache size might need to be increased in  battle areas though
+
 
 class BattleSounds:
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleSounds')
-  
+
     def __init__(self):
         assert(self.notify.debug("__init__()"))
         self.mgr = AudioManager.createAudioManager()
-        self.isValid=0
-        if self.mgr != None and self.mgr.isValid():
-            self.isValid=1
+        self.isValid = 0
+        if self.mgr is not None and self.mgr.isValid():
+            self.isValid = 1
             limit = base.config.GetInt('battle-sound-cache-size', 15)
             self.mgr.setCacheLimit(limit)
 
@@ -31,28 +32,33 @@ class BattleSounds:
     def setupSearchPath(self):
         """ Sets self.sfxSearchPath with the appropriate search path
         to find battle sound effects. """
-        
+
         self.sfxSearchPath = DSearchPath()
 
         if __dev__:
             # In other environments, including the dev environment, look here:
 
-            self.sfxSearchPath.appendDirectory(Filename('resources/phase_3/audio/sfx'))
-            self.sfxSearchPath.appendDirectory(Filename('resources/phase_3.5/audio/sfx'))
-            self.sfxSearchPath.appendDirectory(Filename('resources/phase_4/audio/sfx'))
-            self.sfxSearchPath.appendDirectory(Filename('resources/phase_5/audio/sfx'))
+            self.sfxSearchPath.appendDirectory(
+                Filename('resources/phase_3/audio/sfx'))
+            self.sfxSearchPath.appendDirectory(
+                Filename('resources/phase_3.5/audio/sfx'))
+            self.sfxSearchPath.appendDirectory(
+                Filename('resources/phase_4/audio/sfx'))
+            self.sfxSearchPath.appendDirectory(
+                Filename('resources/phase_5/audio/sfx'))
         else:
             self.sfxSearchPath.appendDirectory(Filename('phase_3/audio/sfx'))
             self.sfxSearchPath.appendDirectory(Filename('phase_3.5/audio/sfx'))
             self.sfxSearchPath.appendDirectory(Filename('phase_4/audio/sfx'))
             self.sfxSearchPath.appendDirectory(Filename('phase_5/audio/sfx'))
+
     def clear(self):
         assert(self.notify.debug("clear()"))
         if self.isValid:
             self.mgr.clearCache()
 
     def getSound(self, name):
-        assert(self.notify.debug("getSound(name=%s)"%(name)))
+        assert(self.notify.debug(f"getSound(name={name})"))
         if self.isValid:
             filename = Filename(name)
             found = vfs.resolveFilename(filename, self.sfxSearchPath)
@@ -66,13 +72,13 @@ class BattleSounds:
 
             if not found:
                 # If it's still not found, something's wrong.
-                self.notify.warning('%s not found on:' % name)
+                self.notify.warning(f'{name} not found on:')
                 print(self.sfxSearchPath)
-                
+
             else:
                 return self.mgr.getSound(filename.getFullpath())
 
         return self.mgr.getNullSound()
 
+
 globalBattleSoundCache = BattleSounds()
-    

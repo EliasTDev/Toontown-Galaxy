@@ -131,7 +131,7 @@ class MediaWikiGenerator(object):
         self.content += '__TOC__\n'
 
     def writeCategory(self, category):
-        self.content += '= %s =\n' % category
+        self.content += f'= {category} =\n'
 
     def writeMethod(self, name, accessLevel, doc):
         # First, add the method name and access level:

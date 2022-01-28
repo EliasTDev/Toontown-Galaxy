@@ -7,6 +7,7 @@ from . import DistributedGoon
 from toontown.toonbase import ToontownGlobals
 from toontown.coghq import MovingPlatform
 
+
 class DistributedGridGoon(DistributedGoon.DistributedGoon):
 
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGoon')
@@ -14,7 +15,7 @@ class DistributedGridGoon(DistributedGoon.DistributedGoon):
     def __init__(self, cr, type='sg'):
         try:
             self.DistributedGridGoon_initialized
-        except:
+        except BaseException:
             self.DistributedGridGoon_initialized = 1
             DistributedGoon.DistributedGoon.__init__(self, cr, type)
 
@@ -35,7 +36,7 @@ class DistributedGridGoon(DistributedGoon.DistributedGoon):
 
     def setH(self, h):
         self.h = h
-        
+
     def setPathPts(self, xi, yi, zi, xf, yf, zf):
         self.notify.debug('setPathPts')
 
@@ -44,8 +45,8 @@ class DistributedGridGoon(DistributedGoon.DistributedGoon):
             del self.mazeWalkTrack
             self.mazeWalkTrack = None
 
-        curPos = Point3(xi,yi,zi)
-        nextPos = Point3(xf,yf,zf)
+        curPos = Point3(xi, yi, zi)
+        nextPos = Point3(xf, yf, zf)
 
         # Calculate the amount of time we should spend walking
         distance = Vec3(curPos - nextPos).length()
@@ -55,16 +56,16 @@ class DistributedGridGoon(DistributedGoon.DistributedGoon):
         # call in DistributedGoon.enterWalk to blow up down in the
         # IntervalManager.
         self.mazeWalkTrack = Sequence(Func(self.headsUp,
-                                           nextPos[0],nextPos[1],nextPos[2]), # face next point
+                                           nextPos[0], nextPos[1], nextPos[2]),  # face next point
                                       LerpPosInterval(self,
                                                       duration=duration,
                                                       pos=nextPos,
                                                       startPos=curPos),       # go to next point
-                                      name = self.uniqueName("mazeWalkTrack"))
+                                      name=self.uniqueName("mazeWalkTrack"))
         self.mazeWalkTrack.start()
 
     def enterWalk(self, avId=None, ts=0):
         pass
-    
+
     def exitWalk(self):
         pass

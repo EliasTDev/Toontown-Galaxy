@@ -3,6 +3,7 @@ from . import DistributedFactoryAI
 from toontown.toonbase import ToontownGlobals
 from direct.showbase import DirectObject
 
+
 class FactoryManagerAI(DirectObject.DirectObject):
 
     notify = DirectNotifyGlobal.directNotify.newCategory('FactoryManagerAI')

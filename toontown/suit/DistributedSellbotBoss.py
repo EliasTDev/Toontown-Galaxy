@@ -34,9 +34,11 @@ from panda3d.otp import *
 # any given time, something is wrong.
 OneBossCog = None
 
+
 class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedSellbotBoss')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedSellbotBoss')
 
     # The cage slowly drops from the ceiling to the floor as the
     # battle progresses.
@@ -77,20 +79,26 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # at this point all our attribs have been filled in.
         self.setName(TTLocalizer.SellbotBossName)
         nameInfo = TTLocalizer.BossCogNameWithDept % {
-            "name":  self.name,
-            "dept":  (SuitDNA.getDeptFullname(self.style.dept)),
-            }
+            "name": self.name,
+            "dept": (SuitDNA.getDeptFullname(self.style.dept)),
+        }
         self.setDisplayName(nameInfo)
 
-        self.cageDoorSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_SOS_cage_door.ogg')
-        self.cageLandSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_SOS_cage_land.ogg')
-        self.cageLowerSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_SOS_cage_lower.ogg')
-        self.piesRestockSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_SOS_pies_restock.ogg')
-        self.rampSlideSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_VP_ramp_slide.ogg')
+        self.cageDoorSfx = loader.loadSfx(
+            'phase_9/audio/sfx/CHQ_SOS_cage_door.ogg')
+        self.cageLandSfx = loader.loadSfx(
+            'phase_9/audio/sfx/CHQ_SOS_cage_land.ogg')
+        self.cageLowerSfx = loader.loadSfx(
+            'phase_9/audio/sfx/CHQ_SOS_cage_lower.ogg')
+        self.piesRestockSfx = loader.loadSfx(
+            'phase_9/audio/sfx/CHQ_SOS_pies_restock.ogg')
+        self.rampSlideSfx = loader.loadSfx(
+            'phase_9/audio/sfx/CHQ_VP_ramp_slide.ogg')
         # We need a different copy of the sfx for each strafe disk.
         self.strafeSfx = []
         for i in range(10):
-            self.strafeSfx.append(loader.loadSfx('phase_3.5/audio/sfx/SA_shred.ogg'))
+            self.strafeSfx.append(
+                loader.loadSfx('phase_3.5/audio/sfx/SA_shred.ogg'))
 
         # Anything in the world we hit that's *not* the BossCog
         # inherits this global pieCode, so the splat will be colored
@@ -105,9 +113,11 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             Point3(-4.0, -2.0, 0.5), Point3(4.0, -2.0, 0.5))
         insidesANode = CollisionNode('BossZap')
         insidesANode.addSolid(insidesA)
-        insidesANode.setCollideMask(ToontownGlobals.PieBitmask | ToontownGlobals.WallBitmask)
+        insidesANode.setCollideMask(
+            ToontownGlobals.PieBitmask | ToontownGlobals.WallBitmask)
         self.insidesANodePath = self.axle.attachNewNode(insidesANode)
-        self.insidesANodePath.setTag('pieCode', str(ToontownGlobals.PieCodeBossInsides))
+        self.insidesANodePath.setTag('pieCode',
+                                     str(ToontownGlobals.PieCodeBossInsides))
         self.insidesANodePath.stash()
 
         insidesB = CollisionPolygon(
@@ -115,9 +125,11 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             Point3(4.0, 2.0, 0.5), Point3(-4.0, 2.0, 0.5))
         insidesBNode = CollisionNode('BossZap')
         insidesBNode.addSolid(insidesB)
-        insidesBNode.setCollideMask(ToontownGlobals.PieBitmask | ToontownGlobals.WallBitmask)
+        insidesBNode.setCollideMask(
+            ToontownGlobals.PieBitmask | ToontownGlobals.WallBitmask)
         self.insidesBNodePath = self.axle.attachNewNode(insidesBNode)
-        self.insidesBNodePath.setTag('pieCode', str(ToontownGlobals.PieCodeBossInsides))
+        self.insidesBNodePath.setTag('pieCode',
+                                     str(ToontownGlobals.PieCodeBossInsides))
         self.insidesBNodePath.stash()
 
         # Make another bubble--a tube--to serve as a target in battle
@@ -127,14 +139,17 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         targetNode.addSolid(target)
         targetNode.setCollideMask(ToontownGlobals.PieBitmask)
         self.targetNodePath = self.pelvis.attachNewNode(targetNode)
-        self.targetNodePath.setTag('pieCode', str(ToontownGlobals.PieCodeBossCog))
+        self.targetNodePath.setTag(
+            'pieCode', str(
+                ToontownGlobals.PieCodeBossCog))
 
         # A similar tube, offset slightly backward, forms a shield
         # from behind.  We only want to count hits from the front.
         shield = CollisionTube(0, 1, 4, 0, 1, 7, 3.5)
         shieldNode = CollisionNode('BossZap')
         shieldNode.addSolid(shield)
-        shieldNode.setCollideMask(ToontownGlobals.PieBitmask | ToontownGlobals.CameraBitmask)
+        shieldNode.setCollideMask(
+            ToontownGlobals.PieBitmask | ToontownGlobals.CameraBitmask)
         shieldNodePath = self.pelvis.attachNewNode(shieldNode)
 
         # He also gets a disk-shaped shield around his little cog hula
@@ -143,7 +158,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         disk.find('**/+CollisionNode').setName('BossZap')
         disk.reparentTo(self.pelvis)
         disk.setZ(0.8)
-        
+
         # The BossCog actually owns the environment geometry.  This is
         # mainly so we can move the ramps in and out under control of
         # the FSM here.
@@ -155,10 +170,10 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.__loadMopaths()
 
         global OneBossCog
-        if OneBossCog != None:
+        if OneBossCog is not None:
             self.notify.warning("Multiple BossCogs visible.")
         OneBossCog = self
-        
+
     def disable(self):
         """
         This method is called when the DistributedObject
@@ -210,8 +225,9 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # came in early (but someone might arrive to the battle very
         # late and see everything already advanced to the next state).
         stateName = self.state
-        assert self.notify.debug("gotToon(%s) in state %s" % (toon.doId, stateName))
-        
+        assert self.notify.debug(
+            f"gotToon({toon.doId}) in state {stateName}")
+
         if stateName == "Elevator":
             # If the toon arrives late while we're playing the
             # elevator movie, try to pop him into place.
@@ -226,7 +242,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.doobers = []
         self.cr.relatedObjectMgr.abortRequest(self.dooberRequest)
         self.dooberRequest = self.cr.relatedObjectMgr.requestObjects(
-            dooberIds, allCallback = self.__gotDoobers)
+            dooberIds, allCallback=self.__gotDoobers)
 
     def __gotDoobers(self, doobers):
         self.dooberRequest = None
@@ -245,14 +261,15 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             if self.bossDamage >= self.bossMaxDamage:
                 # We did it!  Finish the movie, then transition to
                 # NearVictory state.
-                self.bossDamageMovie.resumeUntil(self.bossDamageMovie.getDuration())
+                self.bossDamageMovie.resumeUntil(
+                    self.bossDamageMovie.getDuration())
             else:
                 # Push him up to the indicated point and he stops.
-                self.bossDamageMovie.resumeUntil(self.bossDamage * self.bossDamageToMovie)
+                self.bossDamageMovie.resumeUntil(
+                    self.bossDamage * self.bossDamageToMovie)
 
                 if self.recoverRate:
                     taskMgr.add(self.__recoverBossDamage, taskName)
-                    
 
     def getBossDamage(self):
         now = globalClock.getFrameTime()
@@ -265,7 +282,9 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         return max(self.bossDamage - self.recoverRate * elapsed / 60.0, 0)
 
     def __recoverBossDamage(self, task):
-        self.bossDamageMovie.setT(self.getBossDamage() * self.bossDamageToMovie)
+        self.bossDamageMovie.setT(
+            self.getBossDamage() *
+            self.bossDamageToMovie)
         return Task.cont
 
     def __makeCagedToon(self):
@@ -283,7 +302,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         # Also make a polygon to register when we jump up (in battle
         # three) and touch the bottom of the cage.
-        
+
         touch = CollisionPolygon(Point3(-3.0382, 3.0382, -1),
                                  Point3(3.0382, 3.0382, -1),
                                  Point3(3.0382, -3.0382, -1),
@@ -293,14 +312,19 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         touchNode.addSolid(touch)
         self.cage.attachNewNode(touchNode)
 
-
     def __cleanupCagedToon(self):
         if self.cagedToon:
             self.cagedToon.removeActive()
             self.cagedToon.delete()
             self.cagedToon = None
 
-    def __walkToonToPromotion(self, toonId, delay, mopath, track, delayDeletes):
+    def __walkToonToPromotion(
+            self,
+            toonId,
+            delay,
+            mopath,
+            track,
+            delayDeletes):
         # Generates an interval to walk the toon along the mopath
         # towards its destination (which is the toon's current pos).
         toon = base.cr.doId2do.get(toonId)
@@ -316,7 +340,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             # to his final destination, in the last few seconds of the
             # interval.  Note that the LerpPos completely replaces the
             # position computed by the Mopath once it kicks in.
-            
+
             ival = Sequence(
                 Wait(delay),
                 Func(toon.suit.setPlayRate, 1, 'walk'),
@@ -324,10 +348,12 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                 toon.posInterval(1, Point3(0, 90, 20)),
                 ParallelEndTogether(MopathInterval(mopath, toon),
                                     toon.posInterval(2, destPos,
-                                                     blendType = 'noBlend')),
+                                                     blendType='noBlend')),
                 Func(toon.suit.loop, 'neutral'))
             track.append(ival)
-            delayDeletes.append(DelayDelete.DelayDelete(toon, 'SellbotBoss.__walkToonToPromotion'))
+            delayDeletes.append(
+                DelayDelete.DelayDelete(
+                    toon, 'SellbotBoss.__walkToonToPromotion'))
 
     def __walkDoober(self, suit, delay, turnPos, track, delayDeletes):
         # Generates an interval to walk the doober around the Boss Cog
@@ -341,14 +367,15 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             Wait(delay),
             Func(suit.loop, 'walk', 0),
             self.__walkSuitToPoint(suit, suit.getPos(), turnPos),
-            self.__walkSuitToPoint(suit, turnPos, turnPosDown),            
+            self.__walkSuitToPoint(suit, turnPos, turnPosDown),
             self.__walkSuitToPoint(suit, turnPosDown, flyPos),
             suit.beginSupaFlyMove(flyPos, 0, 'flyAway'),
             Func(suit.fsm.request, 'Off'),
-            )
+        )
         track.append(seq)
-        delayDeletes.append(DelayDelete.DelayDelete(suit, 'SellbotBoss.__walkDoober'))
-        
+        delayDeletes.append(
+            DelayDelete.DelayDelete(
+                suit, 'SellbotBoss.__walkDoober'))
 
     def __walkSuitToPoint(self, node, fromPos, toPos):
         vector = Vec3(toPos - fromPos)
@@ -357,7 +384,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # These suits walk a little faster than most.  (They're
         # still young.)
         time = distance / (ToontownGlobals.SuitWalkSpeed * 1.8)
-        
+
         return Sequence(Func(node.setPos, fromPos),
                         Func(node.headsUp, toPos),
                         node.posInterval(time, toPos))
@@ -370,12 +397,12 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # them on their way.  The Boss Cog then begins to promote the
         # Toons, but then discovers the dupe and engages them in
         # battle instead.
-        
+
         track = Parallel()
 
         # camTrack animates the camera for the first part of the
         # sequence.
-        
+
         # First, the camera will start off aiming at the elevators, so
         # we'll see the toons emerge and start to split off.  Then
         # we'll pull back to look at the room and watch the Boss Cog
@@ -393,12 +420,14 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # and flying away.  Rather than adding it directly into the
         # movie, we call it with an IndirectInterval, so we can jump
         # around in time.
-        
+
         dooberTrack = Parallel()
         if self.doobers:
             # Start the doobers out around the boss.
-            self.__doobersToPromotionPosition(self.doobers[:4], self.battleANode)
-            self.__doobersToPromotionPosition(self.doobers[4:], self.battleBNode)
+            self.__doobersToPromotionPosition(
+                self.doobers[:4], self.battleANode)
+            self.__doobersToPromotionPosition(
+                self.doobers[4:], self.battleBNode)
 
             turnPosA = ToontownGlobals.SellbotBossDooberTurnPosA
             turnPosB = ToontownGlobals.SellbotBossDooberTurnPosB
@@ -452,7 +481,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         # bossTrack shows the Boss's dialog and animations, and the
         # later camera cuts.
-        
+
         promoteDoobers = TTLocalizer.BossCogPromoteDoobers % (
             SuitDNA.getDeptFullnameP(self.style.dept))
         doobersAway = TTLocalizer.BossCogDoobersAway[self.style.dept]
@@ -465,26 +494,26 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         rescueQuery = TTLocalizer.CagedToonRescueQuery
 
         bossAnimTrack = Sequence(
-            ActorInterval(self, 'Ff_speech', startTime = 2, duration = 10, loop = 1),
+            ActorInterval(self, 'Ff_speech', startTime=2, duration=10, loop=1),
             # 10
-            ActorInterval(self, 'ltTurn2Wave', duration = 2),
+            ActorInterval(self, 'ltTurn2Wave', duration=2),
             # 12
-            ActorInterval(self, 'wave', duration = 4, loop = 1),
+            ActorInterval(self, 'wave', duration=4, loop=1),
             # 16
-            ActorInterval(self, 'ltTurn2Wave', startTime = 2, endTime = 0),
+            ActorInterval(self, 'ltTurn2Wave', startTime=2, endTime=0),
             # 18
-            ActorInterval(self, 'Ff_speech', duration = 7, loop = 1),
+            ActorInterval(self, 'Ff_speech', duration=7, loop=1),
             # 25
 
             # remaining animations mixed in with camera cuts in
             # dialogTrack.
-            )
+        )
         track.append(bossAnimTrack)
-        
+
         dialogTrack = Track(
             (0, Parallel(camera.posHprInterval(8, Point3(-22, -100, 35),
                                                Point3(-10, -13, 0),
-                                               blendType = 'easeInOut'),
+                                               blendType='easeInOut'),
                          IndirectInterval(toonTrack, 0, 18))),
             (5.6, Func(self.setChatAbsolute, promoteDoobers, CFSpeech)),
             (9, IndirectInterval(dooberTrack, 0, 9)),
@@ -502,12 +531,15 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                           IndirectInterval(dooberTrack, 14),
                           IndirectInterval(toonTrack, 30))),
             (18, Func(self.setChatAbsolute, welcomeToons, CFSpeech)),
-                          
+
             (22, Func(self.setChatAbsolute, promoteToons, CFSpeech)),
             (22.2, Sequence(Func(self.cagedToon.nametag3d.setScale, 2),
-                            Func(self.cagedToon.setChatAbsolute, interruptBoss, CFSpeech),
-                            ActorInterval(self.cagedToon, 'wave'),
-                            Func(self.cagedToon.loop, 'neutral'))),
+                            Func(
+                self.cagedToon.setChatAbsolute,
+                interruptBoss,
+                CFSpeech),
+                ActorInterval(self.cagedToon, 'wave'),
+                Func(self.cagedToon.loop, 'neutral'))),
 
             # Cut to head-and-shoulders shot of Boss Cog looking up at
             # source of interruption.
@@ -534,28 +566,31 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
             # Cut to toons losing their cog suits.
             (34, Sequence(Func(self.clearChat),
-                          self.loseCogSuits(self.toonsA, self.battleANode, (0,18,5,-180,0,0)),
-                          self.loseCogSuits(self.toonsB, self.battleBNode, (0,18,5,-180,0,0)))),
+                          self.loseCogSuits(
+                self.toonsA, self.battleANode, (0, 18, 5, -180, 0, 0)),
+                self.loseCogSuits(self.toonsB, self.battleBNode, (0, 18, 5, -180, 0, 0)))),
 
             # Cut to wide shot of battle arena.  Toons back up and
             # ramps retract.
             (37, Sequence(self.toonNormalEyes(self.involvedToons),
-                          Func(camera.setPosHpr, -23.4, -145.6, 44.0, -10.0, -12.5, 0),
+                          Func(camera.setPosHpr, -23.4, - \
+                               145.6, 44.0, -10.0, -12.5, 0),
                           Func(self.loop, 'Fb_neutral'),
                           Func(self.rampA.request, 'retract'),
                           Func(self.rampB.request, 'retract'),
                           Parallel(self.backupToonsToBattlePosition(self.toonsA, self.battleANode),
-                                   self.backupToonsToBattlePosition(self.toonsB, self.battleBNode),
+                                   self.backupToonsToBattlePosition(
+                                       self.toonsB, self.battleBNode),
                                    Sequence(Wait(2),
                                             Func(self.setChatAbsolute, attackToons, CFSpeech))),
                           )),
-            )
+        )
         track.append(dialogTrack)
 
         return Sequence(Func(self.stickToonsToFloor),
                         track,
                         Func(self.unstickToons),
-                        name = self.uniqueName('Introduction'))
+                        name=self.uniqueName('Introduction'))
 
     def __makeRollToBattleTwoMovie(self):
         # Generate an interval which shows the Boss Cog rolling to the
@@ -566,13 +601,15 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                           ToontownGlobals.SellbotBossBattleOnePosHpr[2])
         if self.arenaSide:
             topRampPos = Point3(*ToontownGlobals.SellbotBossTopRampPosB)
-            topRampTurnPos = Point3(*ToontownGlobals.SellbotBossTopRampTurnPosB)
+            topRampTurnPos = Point3(
+                *ToontownGlobals.SellbotBossTopRampTurnPosB)
             p3Pos = Point3(*ToontownGlobals.SellbotBossP3PosB)
         else:
             topRampPos = Point3(*ToontownGlobals.SellbotBossTopRampPosA)
-            topRampTurnPos = Point3(*ToontownGlobals.SellbotBossTopRampTurnPosA)
+            topRampTurnPos = Point3(
+                *ToontownGlobals.SellbotBossTopRampTurnPosA)
             p3Pos = Point3(*ToontownGlobals.SellbotBossP3PosA)
-            
+
         battlePos = Point3(ToontownGlobals.SellbotBossBattleTwoPosHpr[0],
                            ToontownGlobals.SellbotBossBattleTwoPosHpr[1],
                            ToontownGlobals.SellbotBossBattleTwoPosHpr[2])
@@ -587,7 +624,8 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         track, hpr = self.rollBossToPoint(startPos, None, topRampPos, None, 0)
         bossTrack.append(track)
-        track, hpr = self.rollBossToPoint(topRampPos, hpr, topRampTurnPos, None, 0)
+        track, hpr = self.rollBossToPoint(
+            topRampPos, hpr, topRampTurnPos, None, 0)
         bossTrack.append(track)
         track, hpr = self.rollBossToPoint(topRampTurnPos, hpr, p3Pos, None, 0)
         bossTrack.append(track)
@@ -597,14 +635,14 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         return Sequence(
             bossTrack,
             Func(self.getGeomNode().setH, 0),
-            name = self.uniqueName('BattleTwo'))
+            name=self.uniqueName('BattleTwo'))
 
     def makeEndOfBattleMovie(self, hasLocalToon):
-        assert self.notify.debug("makeEndOfBattleMovie(%s)" % (hasLocalToon))
+        assert self.notify.debug(f"makeEndOfBattleMovie({hasLocalToon})")
         # Generate an interval which shows the cage dropping a bit
         # further.  This one is called from DistributedBattleFinal.
         name = self.uniqueName('CageDrop')
-        seq = Sequence(name = name)
+        seq = Sequence(name=name)
 
         seq.append(Func(self.cage.setPos, self.cagePos[self.cageIndex]))
 
@@ -615,8 +653,8 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                     Func(self.hide)]
         seq += [Wait(0.5),
                 Parallel(self.cage.posInterval(1, self.cagePos[self.cageIndex + 1],
-                                               blendType = 'easeInOut'),
-                         SoundInterval(self.cageLowerSfx, duration = 1)),
+                                               blendType='easeInOut'),
+                         SoundInterval(self.cageLowerSfx, duration=1)),
                 Func(self.cagedToon.nametag3d.setScale, 2),
                 Func(self.cagedToon.setChatAbsolute,
                      TTLocalizer.CagedToonDrop[self.cageIndex], CFSpeech),
@@ -631,7 +669,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         self.cageIndex += 1
         return seq
-    
+
     def __makeBossDamageMovie(self):
         # Generate an interval which shows the Boss Cog rolling down
         # in retreat as the Toons attack.
@@ -647,9 +685,11 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         bossTrack = Sequence()
         bossTrack.append(Func(self.loop, 'Fb_neutral'))
-        track, hpr = self.rollBossToPoint(startPos, startHpr, bottomPos, None, 1)
+        track, hpr = self.rollBossToPoint(
+            startPos, startHpr, bottomPos, None, 1)
         bossTrack.append(track)
-        track, hpr = self.rollBossToPoint(bottomPos, startHpr, deathPos, None, 1)
+        track, hpr = self.rollBossToPoint(
+            bottomPos, startHpr, deathPos, None, 1)
         bossTrack.append(track)
 
         duration = bossTrack.getDuration()
@@ -658,7 +698,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     def __talkAboutPromotion(self, speech):
         # Extends the congratulations speech to talk about the earned
         # promotion, if any.  Returns the newly-extended speech.
-        
+
         # don't say anything about a promotion if they've maxed their cog suit
         if self.prevCogSuitLevel < ToontownGlobals.MaxCogSuitLevel:
             speech += TTLocalizer.CagedToonPromotion
@@ -666,13 +706,15 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                 CogDisguiseGlobals.dept2deptIndex(self.style.dept)]
             # if this is their last promotion, tell them
             if newCogSuitLevel == ToontownGlobals.MaxCogSuitLevel:
-                speech += TTLocalizer.CagedToonLastPromotion % (ToontownGlobals.MaxCogSuitLevel+1)
+                speech += TTLocalizer.CagedToonLastPromotion % (
+                    ToontownGlobals.MaxCogSuitLevel + 1)
             # if they're getting another LP, tell them
             if newCogSuitLevel in ToontownGlobals.CogSuitHPLevels:
                 speech += TTLocalizer.CagedToonHPBoost
         else:
             # level XX, wow! Thanks for coming back!
-            speech += TTLocalizer.CagedToonMaxed % (ToontownGlobals.MaxCogSuitLevel+1)
+            speech += TTLocalizer.CagedToonMaxed % (
+                ToontownGlobals.MaxCogSuitLevel + 1)
 
         return speech
 
@@ -692,11 +734,11 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             Func(self.cageDoor.setHpr, VBase3(0, 0, 0)),
             Func(self.cagedToon.setPos, Point3(0, -2, 0)),
             Parallel(self.cage.posInterval(0.5, self.cagePos[5],
-                                           blendType = 'easeOut'),
-                     SoundInterval(self.cageLowerSfx, duration = 0.5)),
+                                           blendType='easeOut'),
+                     SoundInterval(self.cageLowerSfx, duration=0.5)),
             Parallel(self.cageDoor.hprInterval(0.5, VBase3(0, 90, 0),
-                                               blendType = 'easeOut'),
-                     Sequence(SoundInterval(self.cageDoorSfx), duration = 0)),
+                                               blendType='easeOut'),
+                     Sequence(SoundInterval(self.cageDoorSfx), duration=0)),
             Wait(0.2),
             Func(self.cagedToon.loop, 'walk'),
             self.cagedToon.posInterval(0.8, Point3(0, -6, 0)),
@@ -709,7 +751,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             Func(camera.reparentTo, localAvatar),
             Func(camera.setPos, 0, -9, 9),
             Func(camera.lookAt, self.cagedToon, Point3(0, 0, 2)),
-            name = name)
+            name=name)
 
         return seq
 
@@ -717,14 +759,14 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         if self.onscreenMessage:
             self.onscreenMessage.destroy()
             self.onscreenMessage = None
-            
+
         self.onscreenMessage = DirectLabel(
-            text = text,
-            text_fg = VBase4(1,1,1,1),
-            text_align = TextNode.ACenter,
-            relief = None,
-            pos = (0, 0, 0.35),
-            scale = 0.1)
+            text=text,
+            text_fg=VBase4(1, 1, 1, 1),
+            text_align=TextNode.ACenter,
+            relief=None,
+            pos=(0, 0, 0.35),
+            scale=0.1)
 
     def __clearOnscreenMessage(self):
         if self.onscreenMessage:
@@ -735,14 +777,15 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.__showOnscreenMessage(TTLocalizer.BuildingWaitingForVictors)
 
     def __placeCageShadow(self):
-        if self.cageShadow == None:
-            self.cageShadow = loader.loadModel('phase_3/models/props/drop_shadow')
+        if self.cageShadow is None:
+            self.cageShadow = loader.loadModel(
+                'phase_3/models/props/drop_shadow')
             self.cageShadow.setPos(0, 77.9, 18)
             self.cageShadow.setColorScale(1, 1, 1, 0.6)
         self.cageShadow.reparentTo(render)
 
     def __removeCageShadow(self):
-        if self.cageShadow != None:
+        if self.cageShadow is not None:
             self.cageShadow.detachNode()
 
     def setCageIndex(self, cageIndex):
@@ -753,13 +796,12 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             self.__placeCageShadow()
         else:
             self.__removeCageShadow()
-            
 
     ##### Environment #####
 
     def loadEnvironment(self):
         DistributedBossCog.DistributedBossCog.loadEnvironment(self)
-        
+
         self.geom = loader.loadModel('phase_9/models/cogHQ/BossRoomHQ')
         self.rampA = self.__findRamp('rampA', '**/west_ramp2')
         self.rampB = self.__findRamp('rampB', '**/west_ramp')
@@ -788,7 +830,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         # Draw a chain from the top of the cage support to the bottom
         # of the I-beam.
-        self.rope = Rope.Rope(name = 'supportChain')
+        self.rope = Rope.Rope(name='supportChain')
         self.rope.reparentTo(self.cage)
         self.rope.setup(2, ((self.cage, (0.15, 0.13, 16)),
                             (self.geom, (0.23, 78, 120))))
@@ -803,16 +845,15 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # before battles: play the boss theme music
         self.promotionMusic = base.loader.loadMusic(
             'phase_7/audio/bgm/encntr_suit_winning_indoor.ogg')
-            # 'phase_9/audio/bgm/encntr_head_suit_theme.ogg')
+        # 'phase_9/audio/bgm/encntr_head_suit_theme.ogg')
         # Between battle one and two: play the upbeat street battle music
         self.betweenBattleMusic = base.loader.loadMusic(
             'phase_9/audio/bgm/encntr_toon_winning.ogg')
         # Battle two: play the top-of-the-building battle music
         self.battleTwoMusic = base.loader.loadMusic(
             'phase_7/audio/bgm/encntr_suit_winning_indoor.ogg')
-        
+
         self.geom.reparentTo(render)
-        
 
     def unloadEnvironment(self):
         DistributedBossCog.DistributedBossCog.unloadEnvironment(self)
@@ -858,31 +899,40 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         # Now we create a tiny ClassicFSM to manage the ramp's state.
         fsm = ClassicFSM.ClassicFSM(name,
-                      [State.State('extend',
-                                   Functor(self.enterRampExtend, animate),
-                                   Functor(self.exitRampExtend, animate),
-                                   ['extended', 'retract', 'retracted']),
-                       State.State('extended',
-                                   Functor(self.enterRampExtended, animate),
-                                   Functor(self.exitRampExtended, animate),
-                                   ['retract', 'retracted']),
-                       State.State('retract',
-                                   Functor(self.enterRampRetract, animate),
-                                   Functor(self.exitRampRetract, animate),
-                                   ['extend', 'extended', 'retracted']),
-                       State.State('retracted',
-                                   Functor(self.enterRampRetracted, animate),
-                                   Functor(self.exitRampRetracted, animate),
-                                   ['extend', 'extended']),
-                       State.State('off',
-                                   Functor(self.enterRampOff, animate),
-                                   Functor(self.exitRampOff, animate)),
-                       ],
-                      # Initial state
-                      'off',
-                      # Final state
-                      'off',
-                      onUndefTransition = ClassicFSM.ClassicFSM.DISALLOW)
+                                    [State.State('extend',
+                                                 Functor(
+                                                     self.enterRampExtend, animate),
+                                                 Functor(
+                                                     self.exitRampExtend, animate),
+                                                 ['extended', 'retract', 'retracted']),
+                                        State.State('extended',
+                                                    Functor(
+                                                        self.enterRampExtended, animate),
+                                                    Functor(
+                                                        self.exitRampExtended, animate),
+                                                    ['retract', 'retracted']),
+                                        State.State('retract',
+                                                    Functor(
+                                                        self.enterRampRetract, animate),
+                                                    Functor(
+                                                        self.exitRampRetract, animate),
+                                                    ['extend', 'extended', 'retracted']),
+                                        State.State('retracted',
+                                                    Functor(
+                                                        self.enterRampRetracted, animate),
+                                                    Functor(
+                                                        self.exitRampRetracted, animate),
+                                                    ['extend', 'extended']),
+                                        State.State('off',
+                                                    Functor(
+                                                        self.enterRampOff, animate),
+                                                    Functor(self.exitRampOff, animate)),
+                                     ],
+                                    # Initial state
+                                    'off',
+                                    # Final state
+                                    'off',
+                                    onUndefTransition=ClassicFSM.ClassicFSM.DISALLOW)
         fsm.enterInitialState()
 
         return fsm
@@ -890,19 +940,19 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     ##### Ramp states #####
 
     def enterRampExtend(self, animate):
-        intervalName = self.uniqueName('extend-%s' % (animate.getName()))
+        intervalName = self.uniqueName(f'extend-{animate.getName()}')
         adjustTime = 2.0 * (animate.getX()) / 18.0
         ival = Parallel(
-            SoundInterval(self.rampSlideSfx, node = animate),
+            SoundInterval(self.rampSlideSfx, node=animate),
             animate.posInterval(adjustTime, Point3(0, 0, 0),
-                                blendType = 'easeInOut',
-                                name = intervalName),
-            )
+                                blendType='easeInOut',
+                                name=intervalName),
+        )
         ival.start()
         self.storeInterval(ival, intervalName)
 
     def exitRampExtend(self, animate):
-        intervalName = self.uniqueName('extend-%s' % (animate.getName()))
+        intervalName = self.uniqueName(f'extend-{animate.getName()}')
         self.clearInterval(intervalName)
 
     def enterRampExtended(self, animate):
@@ -912,19 +962,19 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         pass
 
     def enterRampRetract(self, animate):
-        intervalName = self.uniqueName('retract-%s' % (animate.getName()))
+        intervalName = self.uniqueName(f'retract-{animate.getName()}')
         adjustTime = 2.0 * (18 - animate.getX()) / 18.0
         ival = Parallel(
-            SoundInterval(self.rampSlideSfx, node = animate),
+            SoundInterval(self.rampSlideSfx, node=animate),
             animate.posInterval(adjustTime, Point3(18, 0, 0),
-                                blendType = 'easeInOut',
-                                name = intervalName),
-            )
+                                blendType='easeInOut',
+                                name=intervalName),
+        )
         ival.start()
         self.storeInterval(ival, intervalName)
 
     def exitRampRetract(self, animate):
-        intervalName = self.uniqueName('retract-%s' % (animate.getName()))
+        intervalName = self.uniqueName(f'retract-{animate.getName()}')
         self.clearInterval(intervalName)
 
     def enterRampRetracted(self, animate):
@@ -938,7 +988,6 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
     def exitRampOff(self, animate):
         pass
-
 
     ##### Off state #####
 
@@ -972,7 +1021,6 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.geom.show()
         self.cagedToon.addActive()
 
-
     ##### Elevator state #####
 
     def enterElevator(self):
@@ -987,7 +1035,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         # And the cage is up in the original position.
         self.setCageIndex(0)
-        
+
         # Set the boss up in the middle of the floor, so we can see
         # him when the doors open.
         self.reparentTo(render)
@@ -1001,7 +1049,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # Disable the caged toon's nametag while we're in the
         # elevator.
         self.cagedToon.removeActive()
-        
+
     def exitElevator(self):
         DistributedBossCog.DistributedBossCog.exitElevator(self)
 
@@ -1028,7 +1076,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.setCageIndex(0)
 
         base.playMusic(self.promotionMusic, looping=1, volume=0.9)
-        
+
     def exitIntroduction(self):
         DistributedBossCog.DistributedBossCog.exitIntroduction(self)
 
@@ -1050,7 +1098,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.rampB.request('retract')
         self.rampC.request('retract')
 
-        if self.battleA == None or self.battleB == None:
+        if self.battleA is None or self.battleB is None:
             cageIndex = 1
         else:
             cageIndex = 0
@@ -1063,7 +1111,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
     def enterRollToBattleTwo(self):
         assert self.notify.debug('enterRollToBattleTwo()')
-        # Disable collision on the toon, there is a collision issue where the boss was 
+        # Disable collision on the toon, there is a collision issue where the boss was
         # hitting the toons right after the first battle, so we turn off their collision briefly
         # until this issue can be addressed in Panda.
         self.disableToonCollision()
@@ -1082,7 +1130,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         # By now, the cage has dropped somewhat.
         self.setCageIndex(2)
-        
+
         # The Boss Cog rolls up the ramp into position for battle two,
         # while the Toons are free to run around for a few seconds.
         self.stickBossToFloor()
@@ -1091,13 +1139,17 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         intervalName = "RollToBattleTwo"
         seq = Sequence(self.__makeRollToBattleTwoMovie(),
                        Func(self.__onToPrepareBattleTwo),
-                       name = intervalName)
+                       name=intervalName)
         seq.start()
         self.storeInterval(seq, intervalName)
 
         base.playMusic(self.betweenBattleMusic, looping=1, volume=0.9)
-        #re-enable the collision a little bit later, after the boss has started moving
-        taskMgr.doMethodLater(0.5, self.enableToonCollision, 'enableToonCollision')
+        # re-enable the collision a little bit later, after the boss has
+        # started moving
+        taskMgr.doMethodLater(
+            0.5,
+            self.enableToonCollision,
+            'enableToonCollision')
 
     def __onToPrepareBattleTwo(self):
         # Make sure the boss ends up in his battle position.
@@ -1111,13 +1163,13 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.clearInterval(intervalName)
 
         self.betweenBattleMusic.stop()
-        
+
     def disableToonCollision(self):
         base.localAvatar.collisionsOff()
-            
+
     def enableToonCollision(self, task):
         base.localAvatar.collisionsOn()
-            
+
     ##### PrepareBattleTwo state #####
 
     def enterPrepareBattleTwo(self):
@@ -1152,12 +1204,13 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # And the boss cog is actually hidden, because the camera is
         # positioned inside him.
         self.hide()
-        
+
         # We see the caged toon give us some congratulations and
         # advice for defeating the boss cog; we have to click through
         # this advice to move on.
         self.acceptOnce("doneChatPage", self.__onToBattleTwo)
-        self.cagedToon.setLocalPageChat(TTLocalizer.CagedToonPrepareBattleTwo, 1)
+        self.cagedToon.setLocalPageChat(
+            TTLocalizer.CagedToonPrepareBattleTwo, 1)
 
         # Let's play the elevator music again; it's dramatic enough to
         # use twice.
@@ -1177,7 +1230,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.ignore("doneChatPage")
         self.__clearOnscreenMessage()
         self.stingMusic.stop()
-        
+
     ##### BattleTwo state #####
 
     def enterBattleTwo(self):
@@ -1203,18 +1256,17 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         # Now the battle holds the toons.
         self.releaseToons()
-        
+
         # Position the toons to the battle.
         self.toonsToBattlePosition(self.toonsA, self.battleANode)
         self.toonsToBattlePosition(self.toonsB, self.battleBNode)
 
-        if self.battleA == None or self.battleB == None:
+        if self.battleA is None or self.battleB is None:
             cageIndex = 3
         else:
             cageIndex = 2
         self.setCageIndex(cageIndex)
         base.playMusic(self.battleTwoMusic, looping=1, volume=0.9)
-
 
     def exitBattleTwo(self):
         intervalName = self.uniqueName('cageDrop')
@@ -1252,12 +1304,13 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # And the boss cog is actually hidden, because the camera is
         # positioned inside him.
         self.hide()
-        
+
         # We see the caged toon give us some congratulations and
         # advice for defeating the boss cog; we have to click through
         # this advice to move on.
         self.acceptOnce("doneChatPage", self.__onToBattleThree)
-        self.cagedToon.setLocalPageChat(TTLocalizer.CagedToonPrepareBattleThree, 1)
+        self.cagedToon.setLocalPageChat(
+            TTLocalizer.CagedToonPrepareBattleThree, 1)
         base.playMusic(self.betweenBattleMusic, looping=1, volume=0.9)
 
     def __onToBattleThree(self, elapsed):
@@ -1324,9 +1377,9 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         bossDoneEventName = self.uniqueName('DestroyedBoss')
         self.bossDamageMovie.setDoneEvent(bossDoneEventName)
         self.acceptOnce(bossDoneEventName, self.__doneBattleThree)
-        
+
         self.bossMaxDamage = ToontownGlobals.SellbotBossMaxDamage
-        
+
         # This factor scales the "max damage" point to the point in
         # the movie where the Boss falls over the edge.
         self.bossDamageToMovie = self.bossDamageMovie.getDuration() / self.bossMaxDamage
@@ -1348,7 +1401,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.ignore(bossDoneEventName)
         # Actually, we'll keep the animation going, so we can continue
         # it in the NearVictory state.
-        #self.stopAnimate()
+        # self.stopAnimate()
 
         taskMgr.remove(self.uniqueName('StandUp'))
 
@@ -1375,7 +1428,6 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.battleThreeMusicTime = self.battleThreeMusic.getTime()
         self.battleThreeMusic.stop()
 
-
     ##### NearVictory state #####
 
     def enterNearVictory(self):
@@ -1394,7 +1446,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.setCageIndex(4)
 
         # No one owns the toons.
-        self.releaseToons(finalBattle = 1)
+        self.releaseToons(finalBattle=1)
 
         # Retract all of the ramps but the back one.
         self.rampA.request('retract')
@@ -1409,7 +1461,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.accept('outOfPies', self.__outOfPies)
 
         localAvatar.setCameraFov(ToontownGlobals.BossBattleCameraFov)
-        
+
         self.happy = 0
         self.raised = 0
         self.forward = 1
@@ -1417,7 +1469,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.setDizzy(1)
 
         base.playMusic(self.battleThreeMusic, looping=1, volume=0.9,
-                       time = self.battleThreeMusicTime)
+                       time=self.battleThreeMusicTime)
 
     def exitNearVictory(self):
         # No more pies.
@@ -1438,7 +1490,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         # Actually, we'll keep the animation going, so we can continue
         # it in the Victory state.
-        #self.stopAnimate()
+        # self.stopAnimate()
 
     ##### Victory state #####
 
@@ -1460,7 +1512,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.setCageIndex(4)
 
         # No one owns the toons.
-        self.releaseToons(finalBattle = 1)
+        self.releaseToons(finalBattle=1)
 
         # Retract all of the ramps but the back one.
         self.rampA.request('retract')
@@ -1472,17 +1524,17 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.forward = 1
 
         # Play the boss's death animation.
-        self.doAnimate('Fb_fall', now = 1)
+        self.doAnimate('Fb_fall', now=1)
 
         # We want to know when the above animation finishes playing.
         self.acceptOnce(self.animDoneEvent, self.__continueVictory)
 
         base.playMusic(self.battleThreeMusic, looping=1, volume=0.9,
-                       time = self.battleThreeMusicTime)
+                       time=self.battleThreeMusicTime)
 
     def __continueVictory(self):
         # Ok, he's gone!  We all move to the reward movie.
-        
+
         self.stopAnimate()
         self.stash()
         self.doneBarrier('Victory')
@@ -1514,7 +1566,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         # The toons are technically free to run around, but localToon
         # starts out locked down for the reward movie.
-        self.releaseToons(finalBattle = 1)
+        self.releaseToons(finalBattle=1)
         self.toMovieMode()
 
         # Retract all of the ramps but the back one.
@@ -1527,14 +1579,14 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         panelName = self.uniqueName('reward')
         self.rewardPanel = RewardPanel.RewardPanel(panelName)
         victory, camVictory, skipper = MovieToonVictory.doToonVictory(
-                                1, self.involvedToons,
-                                self.toonRewardIds,
-                                self.toonRewardDicts,
-                                self.deathList,
-                                self.rewardPanel,
-                                allowGroupShot = 0,
-                                uberList = self.uberList,
-                                noSkip=True)
+            1, self.involvedToons,
+            self.toonRewardIds,
+            self.toonRewardDicts,
+            self.deathList,
+            self.rewardPanel,
+            allowGroupShot=0,
+            uberList=self.uberList,
+            noSkip=True)
 
         ival = Sequence(
             Parallel(victory, camVictory),
@@ -1545,14 +1597,16 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         for toonId in self.involvedToons:
             toon = self.cr.doId2do.get(toonId)
             if toon:
-                delayDeletes.append(DelayDelete.DelayDelete(toon, 'SellbotBoss.enterReward'))
-                                    
+                delayDeletes.append(
+                    DelayDelete.DelayDelete(
+                        toon, 'SellbotBoss.enterReward'))
+
         ival.delayDeletes = delayDeletes
         ival.start()
         self.storeInterval(ival, intervalName)
 
         base.playMusic(self.battleThreeMusic, looping=1, volume=0.9,
-                       time = self.battleThreeMusicTime)
+                       time=self.battleThreeMusicTime)
 
     def __doneReward(self):
         self.doneBarrier('Reward')
@@ -1600,7 +1654,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         intervalName = "EpilogueMovie"
 
         seq = Sequence(self.__makeCageOpenMovie(),
-                       name = intervalName)
+                       name=intervalName)
         seq.start()
         self.storeInterval(seq, intervalName)
 
@@ -1638,7 +1692,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                      Func(self.localToonToSafeZone)))
         self.storeInterval(track, intervalName)
         track.start()
-        
+
     def exitEpilogue(self):
         self.clearInterval("EpilogueMovieToonAnim")
         self.unstash()
@@ -1661,8 +1715,6 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                 toon.setPos(self.cage, x, y, 0)
                 toon.setZ(18.0)
                 toon.headsUp(self.cage)
-            
-        
 
     ##### Frolic state #####
 
@@ -1672,7 +1724,6 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     def enterFrolic(self):
         DistributedBossCog.DistributedBossCog.enterFrolic(self)
         self.setPosHpr(*ToontownGlobals.SellbotBossBattleOnePosHpr)
-
 
     ##### Misc. utility functions #####
 
@@ -1699,27 +1750,34 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # battle position until a little bit later.
 
         points = BattleBase.BattleBase.toonPoints[len(toonIds) - 1]
-        
+
         for i in range(len(toonIds)):
             toon = base.cr.doId2do.get(toonIds[i])
             if toon:
                 toon.reparentTo(render)
                 pos, h = points[i]
-                toon.setPosHpr(battleNode, pos[0], pos[1] + 10, pos[2], h, 0, 0)
-        
+                toon.setPosHpr(
+                    battleNode,
+                    pos[0],
+                    pos[1] + 10,
+                    pos[2],
+                    h,
+                    0,
+                    0)
+
     def __doobersToPromotionPosition(self, doobers, battleNode):
 
         # The doobers start out facing the Boss Cog.
-        
+
         points = BattleBase.BattleBase.toonPoints[len(doobers) - 1]
-        
+
         for i in range(len(doobers)):
             suit = doobers[i]
             suit.fsm.request('neutral')
             suit.loop('neutral')
             pos, h = points[i]
             suit.setPosHpr(battleNode, pos[0], pos[1] + 10, pos[2], h, 0, 0)
-        
+
     def __touchedCage(self, entry):
         assert self.notify.debug("__touchedCage()")
         # The avatar has jumped up to touch the cage; he should be
@@ -1748,8 +1806,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.everThrownPie = 1
         self.__clearOnscreenMessage()
         taskMgr.remove(self.uniqueName("PieAdvice"))
-        
-        
+
     def __pieSplat(self, toon, pieCode):
         assert self.notify.debug("__pieSplat()")
         # A pie thrown by localToon or some other toon hit something;
@@ -1762,7 +1819,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                 self.d_hitBossInsides()
 
             self.flashRed()
-        
+
         elif pieCode == ToontownGlobals.PieCodeBossCog:
             if toon == localAvatar:
                 self.d_hitBoss(1)
@@ -1770,7 +1827,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             if self.dizzy:
                 self.flashRed()
                 self.doAnimate('hit', now=1)
-        
+
     def __localPieSplat(self, pieCode, entry):
         assert self.notify.debug("__localPieSplat()")
         # A pie thrown by localToon toon hit something; tell the AI if
@@ -1780,14 +1837,14 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         avatarDoId = entry.getIntoNodePath().getNetTag('avatarDoId')
         if avatarDoId == '':
-            self.notify.warning("Toon %s has no avatarDoId tag." % (repr(entry.getIntoNodePath())))
+            self.notify.warning(
+                f"Toon {repr(entry.getIntoNodePath())} has no avatarDoId tag.")
             return
 
         doId = int(avatarDoId)
         if doId != localAvatar.doId:
             self.d_hitToon(doId)
 
-        
     def __finalPieSplat(self, toon, pieCode):
         assert self.notify.debug("__finalPieSplat()")
         # This is the final pie toss that starts the boss's fall.
@@ -1802,9 +1859,10 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         # We don't care to hear any more about pies hitting the boss.
         self.ignore('pieSplat')
-        
+
     def cagedToonBattleThree(self, index, avId):
-        assert self.notify.debug('cagedToonBattleThree(%s, %s)' % (index, avId))
+        assert self.notify.debug(
+            f'cagedToonBattleThree({index}, {avId})')
 
         # The caged toon says something during battle three.
         str = TTLocalizer.CagedToonBattleThree.get(index)
@@ -1816,7 +1874,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                     self.cagedToon.clearChat()
                     return
                 toonName = toon.getName()
-            text = str % { 'toon' : toonName }
+            text = str % {'toon': toonName}
             self.cagedToon.setChatAbsolute(text, CFSpeech | CFTimeout)
 
         else:
@@ -1832,7 +1890,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             self.strafeInterval = None
 
     def doStrafe(self, side, direction):
-        assert self.notify.debug('doStrafe(%s, %s)' % (side, direction))
+        assert self.notify.debug(f'doStrafe({side}, {direction})')
 
         # Spit a stream of gears out either the front or the back
         # door, from left to right (or from right to left).
@@ -1845,7 +1903,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         else:
             gearRoot.setPos(0, 7, 3)
             door = self.doorB
-        
+
         gearRoot.setTag('attackCode', str(ToontownGlobals.BossCogStrafeAttack))
         gearModel = self.getGearFrisbee()
         gearModel.setScale(0.1)
@@ -1862,7 +1920,7 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         spread = 60 * math.pi / 180.0
         if direction == 1:
             spread = -spread
-            
+
         dist = 50
         rate = time / numGears
         for i in range(numGears):
@@ -1874,21 +1932,43 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             x = dist * math.sin(angle)
             y = dist * math.cos(angle)
             h = random.uniform(-720, 720)
-            gearTrack.append(Sequence(
-                Wait(i * rate),
-                Func(node.show),
-                Parallel(node.posInterval(1, Point3(x, y, 0), fluid = 1),
-                         node.hprInterval(1, VBase3(h, 0, 0), fluid = 1),
-                         Sequence(SoundInterval(self.strafeSfx[i], volume = 0.2 , node = self), duration = 0),
-                         ),
-                Func(node.detachNode)))
+            gearTrack.append(
+                Sequence(
+                    Wait(
+                        i * rate),
+                    Func(
+                        node.show),
+                    Parallel(
+                        node.posInterval(
+                            1,
+                            Point3(
+                                x,
+                                y,
+                                0),
+                            fluid=1),
+                        node.hprInterval(
+                            1,
+                            VBase3(
+                                h,
+                                0,
+                                0),
+                            fluid=1),
+                        Sequence(
+                            SoundInterval(
+                                self.strafeSfx[i],
+                                volume=0.2,
+                                node=self),
+                            duration=0),
+                    ),
+                    Func(
+                        node.detachNode)))
 
         seq = Sequence(
             Func(door.request, 'open'),
             Wait(0.7),
             gearTrack,
             Func(door.request, 'close'),
-            )
+        )
 
         self.__cleanupStrafe()
         self.strafeInterval = seq

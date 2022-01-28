@@ -4,7 +4,8 @@ from direct.directnotify import DirectNotifyGlobal
 from otp.otpbase import OTPLocalizer
 from toontown.toonbase import TTLocalizer
 
-# This file overrides key methods in FriendSecret to add Toontown specific text to the OTP buttons
+# This file overrides key methods in FriendSecret to add Toontown specific
+# text to the OTP buttons
 
 from otp.friends.FriendSecret import AccountSecret
 from otp.friends.FriendSecret import AvatarSecret
@@ -16,22 +17,27 @@ from otp.friends.FriendSecret import showFriendSecret
 from otp.friends.FriendSecret import hideFriendSecret
 from otp.friends.FriendSecret import unloadFriendSecret
 
+
 def openFriendSecret(secretType):
     global globalFriendSecret
-    if globalFriendSecret != None:
+    if globalFriendSecret is not None:
         globalFriendSecret.unload()
     globalFriendSecret = ToontownFriendSecret(secretType)
     globalFriendSecret.enter()
 
+
 # there is no way to overload module level methods, so hammer it in
 FriendSecret.openFriendSecret = openFriendSecret
 
+
 class ToontownFriendSecret(FriendSecret.FriendSecret):
 
-    notify = DirectNotifyGlobal.directNotify.newCategory("ToontownFriendSecret")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "ToontownFriendSecret")
 
     def __init__(self, secretType):
-        #secretType is specefied in toon/ToonAvatarPanel.py-> __handleSecrets(self):
+        # secretType is specefied in toon/ToonAvatarPanel.py->
+        # __handleSecrets(self):
         FriendSecret.FriendSecret.__init__(self, secretType)
         self.initialiseoptions(ToontownFriendSecret)
 
@@ -42,55 +48,55 @@ class ToontownFriendSecret(FriendSecret.FriendSecret):
 
         # make an avatar friend
         self.avatarButton = DirectButton(
-            parent = self,
-            image = (buttons.find('**/ChtBx_OKBtn_UP'),
-                     buttons.find('**/ChtBx_OKBtn_DN'),
-                     buttons.find('**/ChtBx_OKBtn_Rllvr')),
-            relief = None,
-            text = TTLocalizer.FriendInviterToon,
-            text_scale = 0.07,
-            text_pos = (0.0, -0.1),
-            pos = (-0.35, 0.0, -0.05),
-            command = self._FriendSecret__handleAvatar
-            )
+            parent=self,
+            image=(buttons.find('**/ChtBx_OKBtn_UP'),
+                   buttons.find('**/ChtBx_OKBtn_DN'),
+                   buttons.find('**/ChtBx_OKBtn_Rllvr')),
+            relief=None,
+            text=TTLocalizer.FriendInviterToon,
+            text_scale=0.07,
+            text_pos=(0.0, -0.1),
+            pos=(-0.35, 0.0, -0.05),
+            command=self._FriendSecret__handleAvatar
+        )
         # make a label to show avatar friend desc on rollover
         avatarText = DirectLabel(
-            parent = self,
-            relief = None,
-            pos = Vec3(0.35, 0, -0.3),
-            text = TTLocalizer.FriendInviterToonFriendInfo,
-            text_fg = (0, 0, 0, 1),
-            text_pos = (0, 0),
-            text_scale = 0.055,
-            text_align = TextNode.ACenter,
-            )
+            parent=self,
+            relief=None,
+            pos=Vec3(0.35, 0, -0.3),
+            text=TTLocalizer.FriendInviterToonFriendInfo,
+            text_fg=(0, 0, 0, 1),
+            text_pos=(0, 0),
+            text_scale=0.055,
+            text_align=TextNode.ACenter,
+        )
         avatarText.reparentTo(self.avatarButton.stateNodePath[2])
         self.avatarButton.hide()
 
         # make an account friend
         self.accountButton = DirectButton(
-            parent = self,
-            image = (buttons.find('**/ChtBx_OKBtn_UP'),
-                     buttons.find('**/ChtBx_OKBtn_DN'),
-                     buttons.find('**/ChtBx_OKBtn_Rllvr')),
-            relief = None,
-            text = TTLocalizer.FriendInviterPlayer,
-            text_scale = 0.07,
-            text_pos = (0.0, -0.1),
-            pos = (0.35, 0.0, -0.05),
-            command = self._FriendSecret__handleAccount
-            )
+            parent=self,
+            image=(buttons.find('**/ChtBx_OKBtn_UP'),
+                   buttons.find('**/ChtBx_OKBtn_DN'),
+                   buttons.find('**/ChtBx_OKBtn_Rllvr')),
+            relief=None,
+            text=TTLocalizer.FriendInviterPlayer,
+            text_scale=0.07,
+            text_pos=(0.0, -0.1),
+            pos=(0.35, 0.0, -0.05),
+            command=self._FriendSecret__handleAccount
+        )
         # make a label to show feature desc on rollover
         accountText = DirectLabel(
-            parent = self,
-            relief = None,
-            pos = Vec3(-0.35, 0, -0.3),
-            text = TTLocalizer.FriendInviterPlayerFriendInfo,
-            text_fg = (0, 0, 0, 1),
-            text_pos = (0, 0),
-            text_scale = 0.055,
-            text_align = TextNode.ACenter,
-            )
+            parent=self,
+            relief=None,
+            pos=Vec3(-0.35, 0, -0.3),
+            text=TTLocalizer.FriendInviterPlayerFriendInfo,
+            text_fg=(0, 0, 0, 1),
+            text_pos=(0, 0),
+            text_scale=0.055,
+            text_align=TextNode.ACenter,
+        )
         accountText.reparentTo(self.accountButton.stateNodePath[2])
         self.accountButton.hide()
 
@@ -113,4 +119,3 @@ class ToontownFriendSecret(FriendSecret.FriendSecret):
         else:
             # or just get the secret
             self._FriendSecret__getSecret()
-

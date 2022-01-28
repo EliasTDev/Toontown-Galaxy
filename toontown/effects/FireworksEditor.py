@@ -19,20 +19,24 @@ ttmodelsDirectory = Filename.expandFrom("$TTMODELS")
 
 UppercaseColorNames = list(map(ColorNames.upper()))
 
-dnaDirectory = Filename.expandFrom(base.config.GetString("dna-directory", "$TTMODELS/src/dna"))
-        
+dnaDirectory = Filename.expandFrom(
+    base.config.GetString(
+        "dna-directory",
+        "$TTMODELS/src/dna"))
+
+
 def fwTuple2Str(tuple):
     styleStr = styleNames[tuple[FW_STYLE]]
     color1Str = TextEncoder.upper(ColorNames[tuple[FW_COLOR1]])
     color2Str = TextEncoder.upper(ColorNames[tuple[FW_COLOR2]])
-    return '( %0.2f, %s, %s, %s, %0.2f, %0.2f, %0.2f, %0.2f )' %(
+    return '( %0.2f, %s, %s, %s, %0.2f, %0.2f, %0.2f, %0.2f )' % (
         tuple[FW_T], styleStr, color1Str, color2Str, tuple[FW_AMP],
         tuple[FW_POS_X], tuple[FW_POS_Y], tuple[FW_POS_Z])
 
 
 class FireworkParams:
-    def __init__(self, ID, style = CIRCLE, startTime = 0, pos = Point3(0),
-                 color1 = 0, color2 = 0, amp = 10.0):
+    def __init__(self, ID, style=CIRCLE, startTime=0, pos=Point3(0),
+                 color1=0, color2=0, amp=10.0):
         self.ID = ID
         self.style = style
         self.startTime = startTime
@@ -91,9 +95,10 @@ class FireworkParams:
         styleStr = styleNames[self.style]
         color1Str = TextEncoder.upper(ColorNames[self.color1])
         color2Str = TextEncoder.upper(ColorNames[self.color2])
-        return '( %0.2f, %s, %s, %s, %0.2f, %0.2f, %0.2f, %0.2f )' %(
+        return '( %0.2f, %s, %s, %s, %0.2f, %0.2f, %0.2f, %0.2f )' % (
             self.startTime, styleStr, color1Str, color2Str, self.amp,
             self.pos[0], self.pos[1], self.pos[2])
+
 
 class FireworksShow:
 
@@ -112,11 +117,11 @@ class FireworksShow:
         ID = FireworksShow.fireworkID
         FireworksShow.fireworkID += 1
         fw = FireworkParams(ID, startTime=startTime,
-                            style = style,
-                            pos = pos,
-                            color1 = color1,
-                            color2 = color2,
-                            amp = amp)
+                            style=style,
+                            pos=pos,
+                            color1=color1,
+                            color2=color2,
+                            amp=amp)
         self.fwDict[ID] = fw
         return fw
 
@@ -128,7 +133,7 @@ class FireworksShow:
             del(self.fwDict[ID])
 
     def getSortedList(self):
-        def sortFW(a,b):
+        def sortFW(a, b):
             startA = a.asTuple()[0]
             startB = b.asTuple()[0]
             if startA < startB:
@@ -200,16 +205,16 @@ class FireworksShow:
     def printShow(self):
         print('(')
         for fw in self.getShow():
-            print('    %s,' % (fwTuple2Str(fw)))
-        print(')')        
+            print(f'    {fwTuple2Str(fw)},')
+        print(')')
 
     def saveShow(self, fireworksFilename):
         fname = Filename(fireworksFilename)
         f = open(fname.toOsSpecific(), 'wb')
         if self.musicFilename:
-            f.write('MUSICFILE: %s\n' % self.musicFilename.toOsSpecific())
+            f.write(f'MUSICFILE: {self.musicFilename.toOsSpecific()}\n')
         for fw in self.getShow():
-            f.write('FIREWORKS: %s\n' % fwTuple2Str(fw))
+            f.write(f'FIREWORKS: {fwTuple2Str(fw)}\n')
         f.close()
 
     def loadShow(self, fireworksFilename):
@@ -235,7 +240,7 @@ class FireworksShow:
                         self.clearShow()
                         break
 
-    def fireworkFromString(self, fwStr, currentT = 0):
+    def fireworkFromString(self, fwStr, currentT=0):
         # Remove parentheses
         lParen = fwStr.find('(')
         rParen = fwStr.find(')')
@@ -259,16 +264,16 @@ class FireworksShow:
             z = eval(data[FW_POS_Z])
         except ValueError as IndexError:
             return None
-        return self.createFirework(startT, style, Point3(x,y,z),
+        return self.createFirework(startT, style, Point3(x, y, z),
                                    color1, color2, amp)
-        
+
     def loadShowFromList(self, fireworksList):
         self.clearShow()
         currentT = 0.0
         for effect in fireworksList:
             waitTime, style, color1, color2, amp, x, y, z = effect
             currentT += waitTime
-            self.createFirework(currentT, style, Point3(x,y,z),
+            self.createFirework(currentT, style, Point3(x, y, z),
                                 color1, color2, amp)
 
     def clearShow(self):
@@ -286,10 +291,10 @@ class FireworksShow:
         if self.showMusic:
             self.showMusic.setVolume(volume)
 
-    def getShowIval(self, startT = 0, volume = 1):
+    def getShowIval(self, startT=0, volume=1):
         showIval = Parallel()
         duration = 0.0
-        
+
         # Start our music
         if self.showMusic:
             duration = self.showMusic.length()
@@ -300,7 +305,7 @@ class FireworksShow:
                     Func(base.playMusic, self.showMusic, 0, 1, volume, startT),
                     Wait(duration),
                     Func(base.musicManager.stopAllSounds)
-                    )
+                )
                 showIval.append(musicTrack)
 
         # Add in fireworks track
@@ -311,13 +316,13 @@ class FireworksShow:
         duration = max(duration, startT + fwTrack.getDuration())
 
         indicatorIval = LerpFunctionInterval(self.broadcastPlaybackT,
-                                             fromData = startT,
-                                             toData = startT + duration,
-                                             duration = duration)
+                                             fromData=startT,
+                                             toData=startT + duration,
+                                             duration=duration)
         showIval.append(indicatorIval)
         return showIval
 
-    def getFireworksTrack(self, startT = 0.0):
+    def getFireworksTrack(self, startT=0.0):
         fwTrack = Sequence()
 
         currentT = 0.0
@@ -339,7 +344,7 @@ class FireworksShow:
     def broadcastPlaybackT(self, t):
         messenger.send('fireworksPlaybackT', [t])
 
-    def playPauseShow(self, startT = 0.0):
+    def playPauseShow(self, startT=0.0):
         # Pause current ival
         if self.fwIval:
             self.fwIval.pause()
@@ -350,12 +355,12 @@ class FireworksShow:
             self.fPlayingIval = 0
         else:
             # Regenerate ival incase any changes were made
-            self.fwIval = self.getShowIval(startT = startT)
+            self.fwIval = self.getShowIval(startT=startT)
             if self.fwIval:
                 self.fwIval.start()
             self.fPlayingIval = 1
 
-    def stopShow(self, event = None):
+    def stopShow(self, event=None):
         self.fPlayingIval = 0
         if self.fwIval:
             self.fwIval.pause()
@@ -363,8 +368,8 @@ class FireworksShow:
                 base.musicManager.stopAllSounds()
         messenger.send('fireworksPlaybackT', [0])
 
-    def offsetPos(self, dx=0, dy=0, dz=0, startT = 0.0, endT = 'END',
-                  excludeList = []):
+    def offsetPos(self, dx=0, dy=0, dz=0, startT=0.0, endT='END',
+                  excludeList=[]):
         fwList = self.getSortedList()
         for fw in fwList:
             if fw.getStyle() in excludeList:
@@ -378,7 +383,7 @@ class FireworksShow:
             pos = fw.getPos()
             pos.set(pos[0] + dx, pos[1] + dy, pos[2] + dz)
 
-    def offsetT(self, dt=0, startT = 0.0, endT = 'END'):
+    def offsetT(self, dt=0, startT=0.0, endT='END'):
         fwList = self.getSortedList()
         for fw in fwList:
             currT = fw.getStartTime()
@@ -388,13 +393,14 @@ class FireworksShow:
                 break
             fw.setStartTime(currT + dt)
 
+
 class FireworksEditor(AppShell):
     # Override class variables
     appname = 'Fireworks Editor'
-    frameWidth  = 800
+    frameWidth = 800
     frameHeight = 450
     usecommandarea = 0
-    usestatusarea  = 0
+    usestatusarea = 0
     contactname = 'Mark Mine'
     contactphone = '(818) 623-3915'
     contactemail = "mark.mine@disney.com"
@@ -403,7 +409,7 @@ class FireworksEditor(AppShell):
 
         INITOPT = Pmw_INITOPT
         optiondefs = (
-            )
+        )
         self.defineoptions(kw, optiondefs)
 
         AppShell.__init__(self)
@@ -423,22 +429,22 @@ class FireworksEditor(AppShell):
         self.axis.setTag('Fireworks', 'axis')
         s = loader.loadModel('models/misc/smiley')
         s.reparentTo(self.axis)
-        s.setPos(3,3,3)
+        s.setPos(3, 3, 3)
         s.setScale(6)
         s.setTransparency(1)
-        s.setColor(1,1,1,0)
+        s.setColor(1, 1, 1, 0)
 
         self.target = loader.loadModel('models/misc/xyzAxis')
         self.target.reparentTo(render)
         self.target.setTextureOff(1)
-        self.target.setColor(1,0,0)
+        self.target.setColor(1, 0, 0)
         self.target.setTag('Fireworks', 'target')
         s = loader.loadModel('models/misc/smiley')
         s.reparentTo(self.target)
-        s.setPos(3,3,3)
+        s.setPos(3, 3, 3)
         s.setScale(6)
         s.setTransparency(1)
-        s.setColor(1,1,1,0)
+        s.setColor(1, 1, 1, 0)
 
         # Current firework style parameters
         self.fwStyle = IntVar()
@@ -468,8 +474,8 @@ class FireworksEditor(AppShell):
         self.accept('f12', self.shootFirework)
         self.accept('arrow_left', self.selectPrevFirework)
         self.accept('arrow_right', self.selectNextFirework)
-        self.accept('arrow_up', lambda : self.setDeltaAmp(1.0))
-        self.accept('arrow_down', lambda : self.setDeltaAmp(-1.0))
+        self.accept('arrow_up', lambda: self.setDeltaAmp(1.0))
+        self.accept('arrow_down', lambda: self.setDeltaAmp(-1.0))
         self.accept('fireworksPlaybackT', self.moveToTime)
 
     def createMenuBar(self):
@@ -478,36 +484,36 @@ class FireworksEditor(AppShell):
         # add file entries before calling down, since we can't control order
         menuBar.addmenuitem('File', 'command',
                             'Load a fireworks show',
-                            label = 'Load show',
-                            command = self.loadFireworksShow)
+                            label='Load show',
+                            command=self.loadFireworksShow)
         menuBar.addmenuitem('File', 'command',
                             'Save the fireworks show',
-                            label = 'Save show',
-                            command = self.saveFireworksShow)
+                            label='Save show',
+                            command=self.saveFireworksShow)
         menuBar.addmenuitem('File', 'command',
                             'Clear fireworks show',
-                            label = 'Clear show',
-                            command = self.clearShow)
+                            label='Clear show',
+                            command=self.clearShow)
         menuBar.addmenuitem('File', 'separator')
         menuBar.addmenuitem('File', 'command',
                             'Load a fireworks show music',
-                            label = 'Load music',
-                            command = self.loadMusicFile)
+                            label='Load music',
+                            command=self.loadMusicFile)
         menuBar.addmenuitem('File', 'command',
                             'Clear fireworks show music',
-                            label = 'Clear music',
-                            command = lambda: self.setMusicFile(None))
+                            label='Clear music',
+                            command=lambda: self.setMusicFile(None))
 
         menuBar.addmenu('DNA', 'DNA Operations')
         for hood in ['TT', 'DD', 'MM', 'BR', 'DG', 'DL']:
             menuBar.addmenuitem(
-                'DNA', 'command', 'Load %s DNA' % hood,
-                label = 'Load %s DNA' % hood,
-                command = lambda h = hood: self.loadSafeZone(h))
+                'DNA', 'command', f'Load {hood} DNA',
+                label=f'Load {hood} DNA',
+                command=lambda h=hood: self.loadSafeZone(h))
 
         menuBar.addmenuitem(
-            'DNA', 'command', 'Clear SZ DNA', label = 'Clear DNA',
-            command = self.clearSafeZone)
+            'DNA', 'command', 'Clear SZ DNA', label='Clear DNA',
+            command=self.clearSafeZone)
 
         # menuBar.addmenuitem('File', 'separator')
         # Create App Shell common menu bar items
@@ -518,8 +524,8 @@ class FireworksEditor(AppShell):
         interior = self.interior()
 
         # Paned widget for dividing two halves
-        self.framePane = Pmw.PanedWidget(interior, orient = DGG.VERTICAL)
-        self.controlFrame = self.framePane.add('control', min = 200)
+        self.framePane = Pmw.PanedWidget(interior, orient=DGG.VERTICAL)
+        self.controlFrame = self.framePane.add('control', min=200)
 
         # Radio buttons to select FW Style
         self.createStyleSelector(self.controlFrame)
@@ -533,86 +539,86 @@ class FireworksEditor(AppShell):
         self.createPosSliders(sliderFrame)
         self.createAmpSlider(sliderFrame)
         self.createTimeSlider(sliderFrame)
-        sliderFrame.pack(side = TOP, expand = 1, fill = X)
+        sliderFrame.pack(side=TOP, expand=1, fill=X)
 
         # Create edit buttons
-        self.createEditButtons(self.controlFrame)                             
+        self.createEditButtons(self.controlFrame)
 
-        self.controlFrame.pack(fill = BOTH, expand = 1)
+        self.controlFrame.pack(fill=BOTH, expand=1)
 
         # Frame for editing time of events
-        self.timelineFrame = self.framePane.add('timeline', min = 100)
+        self.timelineFrame = self.framePane.add('timeline', min=100)
         self.createTimelineEditor(self.timelineFrame)
-        self.timelineFrame.pack(fill = BOTH, expand = 1)
-        self.framePane.pack(fill = BOTH, expand = 1)
+        self.timelineFrame.pack(fill=BOTH, expand=1)
+        self.framePane.pack(fill=BOTH, expand=1)
 
     def createStyleSelector(self, parent):
         # Tkinter value to hold current choice
-        mainFrame = Frame(parent, relief = DGG.GROOVE, borderwidth = 2)
+        mainFrame = Frame(parent, relief=DGG.GROOVE, borderwidth=2)
         # Create label
-        label = Label(mainFrame, text = 'Style:', width = 10,
-                      anchor = W, justify = LEFT)
-        label.pack(side = LEFT, expand = 0)
+        label = Label(mainFrame, text='Style:', width=10,
+                      anchor=W, justify=LEFT)
+        label.pack(side=LEFT, expand=0)
         buttonFrame = Frame(mainFrame)
-        buttonFrame.pack(side = LEFT, expand = 1, fill = X)
+        buttonFrame.pack(side=LEFT, expand=1, fill=X)
         rowFrame = Frame(buttonFrame)
-        rowFrame.pack(side = TOP, expand = 1, fill = X)
+        rowFrame.pack(side=TOP, expand=1, fill=X)
         # Add radio buttons
         count = 0
         for styleIndex in range(len(Names)):
             choiceStr = Names[styleIndex]
             choiceButton = Radiobutton(
                 rowFrame,
-                text = choiceStr,
-                width = 6,
-                justify = LEFT,
-                anchor = W,
-                takefocus = 0,
-                value = styleIndex,
-                variable = self.fwStyle,
-                command = self.updateSelectedStyle)
-            choiceButton.pack(side = LEFT, expand = 0)
+                text=choiceStr,
+                width=6,
+                justify=LEFT,
+                anchor=W,
+                takefocus=0,
+                value=styleIndex,
+                variable=self.fwStyle,
+                command=self.updateSelectedStyle)
+            choiceButton.pack(side=LEFT, expand=0)
             if count == NUM_RB_COLS:
                 rowFrame = Frame(buttonFrame)
-                rowFrame.pack(side = TOP, expand = 1, fill = X)
+                rowFrame.pack(side=TOP, expand=1, fill=X)
                 count = 0
             count += 1
-        mainFrame.pack(side = TOP, fill = X, expand = 1)
+        mainFrame.pack(side=TOP, fill=X, expand=1)
 
     def createColorSelector(self, parent, variable, colorNum):
         # Tkinter value to hold current choice
-        mainFrame = Frame(parent, relief = DGG.GROOVE, borderwidth = 2)
+        mainFrame = Frame(parent, relief=DGG.GROOVE, borderwidth=2)
         # Create label
         labelText = 'Color %d' % colorNum
-        label = Label(mainFrame, text = labelText, width = 10,
-                      anchor = W, justify = LEFT)
-        label.pack(side = LEFT, expand = 0)
+        label = Label(mainFrame, text=labelText, width=10,
+                      anchor=W, justify=LEFT)
+        label.pack(side=LEFT, expand=0)
         buttonFrame = Frame(mainFrame)
-        buttonFrame.pack(side = LEFT, expand = 1, fill = X)
+        buttonFrame.pack(side=LEFT, expand=1, fill=X)
         rowFrame = Frame(buttonFrame)
-        rowFrame.pack(side = TOP, expand = 1, fill = X)
+        rowFrame.pack(side=TOP, expand=1, fill=X)
         # Add radio buttons
         count = 0
         for colorIndex in range(len(ColorNames)):
             choiceStr = ColorNames[colorIndex]
             choiceButton = Radiobutton(
                 rowFrame,
-                text = choiceStr,
-                width = 6,
-                justify = LEFT,
-                anchor = W,
-                takefocus = 0,
-                value = colorIndex,
-                variable = variable,
-                command = lambda i = colorNum: self.updateSelectedColor(i)
-                )
-            choiceButton.pack(side = LEFT, expand = 0)
+                text=choiceStr,
+                width=6,
+                justify=LEFT,
+                anchor=W,
+                takefocus=0,
+                value=colorIndex,
+                variable=variable,
+                command=lambda i=colorNum: self.updateSelectedColor(i)
+            )
+            choiceButton.pack(side=LEFT, expand=0)
             if count == NUM_RB_COLS:
                 rowFrame = Frame(buttonFrame)
-                rowFrame.pack(side = TOP, expand = 1, fill = X)
+                rowFrame.pack(side=TOP, expand=1, fill=X)
                 count = 0
             count += 1
-        mainFrame.pack(side = TOP, fill = X, expand = 1)
+        mainFrame.pack(side=TOP, fill=X, expand=1)
 
     def createPosSliders(self, parent):
         def fwPosCommand(poslist):
@@ -623,19 +629,19 @@ class FireworksEditor(AppShell):
 
         # Compute some defaults for the widgets
         value = (self.fwPos[0], self.fwPos[1], self.fwPos[2])
-        floaterLabels = ['x','y','z']
+        floaterLabels = ['x', 'y', 'z']
         floaterType = 'floater'
 
         # Create the vector entry widgets with appropriate popups
         self.posWidget = VectorWidgets.VectorEntry(
             parent,
-            text = "Pos:", value = value,
-            type = floaterType, bd = 0, relief = None,
-            label_justify = LEFT, label_anchor = W, label_width = 14,
-            label_bd = 0, labelIpadx = 0, floaterGroup_labels = floaterLabels)
-        
+            text="Pos:", value=value,
+            type=floaterType, bd=0, relief=None,
+            label_justify=LEFT, label_anchor=W, label_width=14,
+            label_bd=0, labelIpadx=0, floaterGroup_labels=floaterLabels)
+
         self.posWidget['command'] = fwPosCommand
-        self.posWidget.pack(side = LEFT, fill = X, expand = 1)
+        self.posWidget.pack(side=LEFT, fill=X, expand=1)
 
     def createAmpSlider(self, parent):
         def fwAmpCommand(amp):
@@ -643,47 +649,47 @@ class FireworksEditor(AppShell):
             if self.getSelectedFirework():
                 self.getSelectedFirework().setAmp(amp)
 
-        self.ampSlider = Slider.Slider(parent, text = 'Amp:',
-                                       value = self.fwAmp,
-                                       max = MAX_AMP,
-                                       command = fwAmpCommand)
-        self.ampSlider.pack(side = LEFT, fill = X, expand = 1)
+        self.ampSlider = Slider.Slider(parent, text='Amp:',
+                                       value=self.fwAmp,
+                                       max=MAX_AMP,
+                                       command=fwAmpCommand)
+        self.ampSlider.pack(side=LEFT, fill=X, expand=1)
 
     def createTimeSlider(self, parent):
         def timeCommand(startTime):
             self.updateSelectedStartTime(startTime)
             if self.getSelectedFirework():
                 self.timeline.moveFireworkTabToTime(
-                    self.getSelectedFirework(), startTime, fReselect = 1)
+                    self.getSelectedFirework(), startTime, fReselect=1)
         self.timeSlider = Slider.Slider(
-            parent, text = 'Time:',
-            value = self.fwStartTime,
-            command = timeCommand)
-        self.timeSlider.pack(side = LEFT, fill = X, expand = 1)
+            parent, text='Time:',
+            value=self.fwStartTime,
+            command=timeCommand)
+        self.timeSlider.pack(side=LEFT, fill=X, expand=1)
 
     def createEditButtons(self, parent):
         buttonFrame = Frame(parent)
-        self.testButton = Button(buttonFrame, text = 'Fire', takefocus=0,
-                                 command = self.shootFirework)
-        self.testButton.pack(side = LEFT, expand = 1, fill = X)
+        self.testButton = Button(buttonFrame, text='Fire', takefocus=0,
+                                 command=self.shootFirework)
+        self.testButton.pack(side=LEFT, expand=1, fill=X)
 
-        self.insertButton = Button(buttonFrame, text = 'Insert', takefocus=0,
-                                   command = self.insertFirework)
-        self.insertButton.pack(side = LEFT, expand = 1, fill = X)
-        
+        self.insertButton = Button(buttonFrame, text='Insert', takefocus=0,
+                                   command=self.insertFirework)
+        self.insertButton.pack(side=LEFT, expand=1, fill=X)
+
         self.printButton = Button(buttonFrame, takefocus=0, text='Print Show',
-                                  command = self.fwShow.printShow)
-        self.printButton.pack(side = LEFT, expand = 1, fill = X)
+                                  command=self.fwShow.printShow)
+        self.printButton.pack(side=LEFT, expand=1, fill=X)
 
-        self.playButton = Button(buttonFrame, text = 'Play/Pause',takefocus=0, 
-                                 command = self.playPauseShow)
-        self.playButton.pack(side = LEFT, expand = 1, fill = X)
+        self.playButton = Button(buttonFrame, text='Play/Pause', takefocus=0,
+                                 command=self.playPauseShow)
+        self.playButton.pack(side=LEFT, expand=1, fill=X)
 
-        self.stopButton = Button(buttonFrame, text = 'Stop', takefocus=0,
-                                 command = self.fwShow.stopShow)
-        self.stopButton.pack(side = LEFT, expand = 1, fill = X)
+        self.stopButton = Button(buttonFrame, text='Stop', takefocus=0,
+                                 command=self.fwShow.stopShow)
+        self.stopButton.pack(side=LEFT, expand=1, fill=X)
 
-        buttonFrame.pack(side = TOP, expand = 1, fill = X)
+        buttonFrame.pack(side=TOP, expand=1, fill=X)
 
     def createTimelineEditor(self, parent):
         # The Scrolled Canvas
@@ -691,15 +697,15 @@ class FireworksEditor(AppShell):
             'scrolledCanvas',
             (), None,
             Pmw.ScrolledCanvas, (parent,),
-            hull_width = 600, hull_height = 200,
-            vscrollmode = 'none', canvas_background = 'White',
-            usehullsize = 1)
+            hull_width=600, hull_height=200,
+            vscrollmode='none', canvas_background='White',
+            usehullsize=1)
         self._canvas = sc.component('canvas')
         self._canvas['scrollregion'] = (0, '-1c', '4c', '1c')
         # Augment the scoll command to update the gui position
         sc.component('horizscrollbar')['command'] = self.horizScroll
         sc.component('vertscrollbar')['command'] = self.vertScroll
-        sc.pack(padx = 5, pady = 5, expand=1, fill = BOTH)
+        sc.pack(padx=5, pady=5, expand=1, fill=BOTH)
         # Update lines
         self._canvas.bind('<Configure>', self.resizeScrollregion)
         self.timeline = Timeline(self._canvas, self)
@@ -710,31 +716,31 @@ class FireworksEditor(AppShell):
     def resizeScrollregion(self, event):
         self.timeline.repositionGui()
 
-    def horizScroll(self, x, y, w = None):
+    def horizScroll(self, x, y, w=None):
         self._canvas.xview(x, y, w)
         self.timeline.repositionGui()
-        
-    def vertScroll(self, x, y, w = None):
+
+    def vertScroll(self, x, y, w=None):
         self._canvas.yview(x, y, w)
         self.timeline.repositionGui()
-        
+
     def saveFireworksShow(self):
         fireworksFilename = asksaveasfilename(
-            defaultextension = '.fws',
-            filetypes = (('Fireworks Files', '*.fws'),('All files', '*')),
-            initialdir = ttmodelsDirectory,
-            title = 'Save Fireworks Show as',
-            parent = self.parent)
+            defaultextension='.fws',
+            filetypes=(('Fireworks Files', '*.fws'), ('All files', '*')),
+            initialdir=ttmodelsDirectory,
+            title='Save Fireworks Show as',
+            parent=self.parent)
         if fireworksFilename:
             self.fwShow.saveShow(fireworksFilename)
 
     def loadFireworksShow(self):
         fireworksFilename = askopenfilename(
-            defaultextension = '.fws',
-            filetypes = (('Fireworks Files', '*.fws'),('All files', '*')),
-            initialdir = ttmodelsDirectory,
-            title = 'Save Fireworks Show as',
-            parent = self.parent)
+            defaultextension='.fws',
+            filetypes=(('Fireworks Files', '*.fws'), ('All files', '*')),
+            initialdir=ttmodelsDirectory,
+            title='Save Fireworks Show as',
+            parent=self.parent)
         if fireworksFilename:
             self.fwShow.loadShow(fireworksFilename)
             self.timeline.updateCanvas()
@@ -742,17 +748,17 @@ class FireworksEditor(AppShell):
     def loadFireworkShowFromList(self, fwList):
         self.fwShow.loadShowFromList(fwList)
         self.timeline.updateCanvas()
-        
+
     def loadMusicFile(self):
         # Load music
         # Set duration of show based on fireworks
         musicFilename = askopenfilename(
-            defaultextension = '.ogg',
-            filetypes = (('Ogg Files', '*.ogg'),('All files', '*')),
-            initialdir = ttmodelsDirectory,
-            title = 'Load Music File',
-            parent = self.parent)
-        if musicFilename:            
+            defaultextension='.ogg',
+            filetypes=(('Ogg Files', '*.ogg'), ('All files', '*')),
+            initialdir=ttmodelsDirectory,
+            title='Load Music File',
+            parent=self.parent)
+        if musicFilename:
             self.setMusicFile(musicFilename)
 
     def setMusicFile(self, filename):
@@ -760,24 +766,24 @@ class FireworksEditor(AppShell):
         self.timeline.updateCanvas()
         if self.fwShow.musicFilename:
             basename = self.fwShow.musicFilename.getBasename()
-            self.parent.title('Fireworks Editor - %s' % basename)
+            self.parent.title(f'Fireworks Editor - {basename}')
         else:
             self.parent.title('Fireworks Editor')
 
     def clearShow(self):
         resp = askyesno('Fireworks Editor',
                         'Delete current fireworks show?',
-                        parent = self.parent)
+                        parent=self.parent)
         if resp == 1:
             self.fwShow.clearShow()
             self.timeline.updateCanvas()
 
-    def playPauseShow(self, event = None):
+    def playPauseShow(self, event=None):
         self.fwShow.playPauseShow(self.timeline.currentTime)
 
     def moveToTime(self, time):
         self.timeline.moveTimeTabToTime(time)
-        
+
     def selectedNodePathHook(self, nodePath):
         np = nodePath.findNetTag('Fireworks')
         if not np.isEmpty():
@@ -806,22 +812,22 @@ class FireworksEditor(AppShell):
                 pos = np.getPos()
                 self.posWidget.set([pos[0], pos[1], pos[2]])
 
-    def moveSelectedToTarget(self, event = None):
+    def moveSelectedToTarget(self, event=None):
         self.axis.setPos(self.target, 0, 0, 0)
         self.manipulateObjectCleanup()
-        
-    def moveTargetToSelected(self, event = None):
+
+    def moveTargetToSelected(self, event=None):
         self.target.setPos(self.axis, 0, 0, 0)
 
-    def loadDNAFile(self, filename, fStorage = 0):
+    def loadDNAFile(self, filename, fStorage=0):
         node = loadDNAFile(self.DNASTORE, filename, CSDefault, 1)
         if fStorage:
             return
         self.npToplevel = render.attachNewNode(node)
 
     def loadStorageDNAFile(self, filename):
-        self.loadDNAFile(filename, fStorage = 1)
-        
+        self.loadDNAFile(filename, fStorage=1)
+
     def loadSafeZone(self, SZ):
         self.clearSafeZone()
         if not self.DNASTORE:
@@ -831,7 +837,7 @@ class FireworksEditor(AppShell):
             self.loadStorageDNAFile('phase_5/dna/storage_town.dna')
             self.loadStorageDNAFile('phase_5.5/dna/storage_estate.dna')
             self.loadStorageDNAFile('phase_5.5/dna/storage_house_interior.dna')
-        dnaPhases = { 'TT':4, 'DD':6, 'MM':6, 'BR':8, 'DG':8, 'DL':8}
+        dnaPhases = {'TT': 4, 'DD': 6, 'MM': 6, 'BR': 8, 'DG': 8, 'DL': 8}
         if SZ not in self.hoods:
             prefix = 'phase_%d/dna/storage_%s' % (dnaPhases[SZ], SZ)
             self.loadStorageDNAFile(prefix + '.dna')
@@ -857,20 +863,20 @@ class FireworksEditor(AppShell):
             self.npToplevel.removeNode()
             self.npToplevel = None
 
-    def createFirework(self, startTime = None, style = None, pos = None,
-                       color1 = None, color2 = None, amp = None):
+    def createFirework(self, startTime=None, style=None, pos=None,
+                       color1=None, color2=None, amp=None):
         # If values not set, use current panel values
-        if startTime == None:
+        if startTime is None:
             startTime = self.fwStartTime
-        if style == None:
+        if style is None:
             style = self.fwStyle.get()
-        if pos == None:
+        if pos is None:
             pos = self.axis.getPos()
-        if color1 == None:
+        if color1 is None:
             color1 = self.fwColor1.get()
-        if color2 == None:
+        if color2 is None:
             color2 = self.fwColor2.get()
-        if amp == None:
+        if amp is None:
             amp = self.fwAmp
         return self.fwShow.createFirework(startTime, style, pos,
                                           color1, color2, amp)
@@ -894,8 +900,8 @@ class FireworksEditor(AppShell):
             self.axis.setPos(fw.getPos())
             self.axis.select()
             self.ampSlider.set(fw.getAmp())
-            self.updateSelectedStartTime(fw.getStartTime(), updateSlider = 1)
-            
+            self.updateSelectedStartTime(fw.getStartTime(), updateSlider=1)
+
     def getSelectedFirework(self):
         return self.selectedFirework
 
@@ -903,7 +909,7 @@ class FireworksEditor(AppShell):
         prev = self.fwShow.getPrevFirework(self.getSelectedFirework())
         if prev:
             self.timeline.selectFireworkWithID(prev.getID())
-            
+
     def selectNextFirework(self):
         next = self.fwShow.getNextFirework(self.getSelectedFirework())
         if next:
@@ -912,13 +918,13 @@ class FireworksEditor(AppShell):
     def setDeltaAmp(self, deltaAmp):
         self.ampSlider.set(max(0, min(self.fwAmp + deltaAmp, MAX_AMP)))
 
-    def updateSelectedStartTime(self, startTime, updateSlider = 0):
+    def updateSelectedStartTime(self, startTime, updateSlider=0):
         self.fwStart = startTime
         if self.getSelectedFirework():
             self.getSelectedFirework().setStartTime(startTime)
         if updateSlider:
-            self.timeSlider.set(self.fwStart, fCommand = 0)
-            
+            self.timeSlider.set(self.fwStart, fCommand=0)
+
     def updateSelectedStyle(self):
         if self.getSelectedFirework():
             self.getSelectedFirework().setStyle(self.fwStyle.get())
@@ -937,10 +943,10 @@ class FireworksEditor(AppShell):
         # 'both' shows in both places
         # 'none' shows nothing
         if self.toggleBalloonVar.get():
-            self.balloon().configure(state = 'both')
+            self.balloon().configure(state='both')
         else:
-            self.balloon().configure(state = 'none')
-            
+            self.balloon().configure(state='none')
+
     def onDestroy(self, event):
         """ Called on Factory Panel shutdown """
         taskMgr.remove('manipObjectTask')
@@ -963,6 +969,7 @@ class FireworksEditor(AppShell):
         self.ignore('arrow_down')
         self.ignore('fireworksPlaybackT')
 
+
 class Timeline:
     def __init__(self, canvas, editor):
 
@@ -970,34 +977,34 @@ class Timeline:
         e = self.editor = editor
 
         # Style parameters
-        self.normalStyle   = 'black'
-        self.activeStyle   = 'green'
+        self.normalStyle = 'black'
+        self.activeStyle = 'green'
         self.activeStipple = ''
-        self.deleteStyle   = 'red'
+        self.deleteStyle = 'red'
         self.deleteStipple = 'gray25'
 
-        self.pad           = 2.0
-        self.grid          = '0.25c'
+        self.pad = 2.0
+        self.grid = '0.25c'
         # These bounds don't change
-        self.left          = 0.0
-        self.top           = c.winfo_fpixels('1c')
-        self.bottom        = c.winfo_fpixels('1.5c')
-        self.size          = c.winfo_fpixels('.2c')
+        self.left = 0.0
+        self.top = c.winfo_fpixels('1c')
+        self.bottom = c.winfo_fpixels('1.5c')
+        self.size = c.winfo_fpixels('.2c')
         # The right side of the timeline depends on the duration
         self.mag = 1.0
         self.x = 0
         self.y = 0
         self.currentTime = 0.0
-        
+
         self.createGui()
         self.updateCanvas()
-        
+
         # Some general bindings
         # To select any firework tab
-        c.tag_bind('tab',  '<ButtonPress-1>',
+        c.tag_bind('tab', '<ButtonPress-1>',
                    lambda e: self.selectTab(e.x, e.y))
         # For the time tag
-        c.tag_bind('timeTab',  '<ButtonPress-1>',
+        c.tag_bind('timeTab', '<ButtonPress-1>',
                    lambda e: self.selectTimeTab(e.x, e.y))
         # To select/deselect current tag
         c.bind('<ButtonPress-3>', self.deselectFirework)
@@ -1026,23 +1033,23 @@ class Timeline:
 
     def makeTab(self, x, y, tags):
         self.canvas.create_polygon(
-            x, y, x+self.size, y+self.size, x-self.size, y+self.size,
-            tags = tags)
+            x, y, x + self.size, y + self.size, x - self.size, y + self.size,
+            tags=tags)
 
-    def makeWell(self, index, x = 0, y = 2):
+    def makeWell(self, index, x=0, y=2):
         fwName = Names[index]
         tags = ('gui', fwName + '_well')
         self.canvas.create_rectangle(
-            '%fc' % x, '%fc' % y,
-            '%fc' % (x + 0.6), '%fc' % (y + 0.5),
+            f'{x:f}c', f'{y:f}c',
+            f'{x + 0.6:f}c', f'{y + 0.5:f}c',
             outline='black', fill=self.canvas['background'],
-            tags = tags)
+            tags=tags)
         self.makeTab(
-            self.canvas.winfo_pixels('%fc' % (x + 0.3)),
-            self.canvas.winfo_pixels('%fc' % (y + 0.15)),
+            self.canvas.winfo_pixels(f'{x + 0.3:f}c'),
+            self.canvas.winfo_pixels(f'{y + 0.15:f}c'),
             tags)
         self.canvas.create_text(
-            '%fc' % (x + 0.3), '%fc' % (y + 0.6),
+            f'{x + 0.3:f}c', f'{y + 0.6:f}c',
             text=fwName, anchor=N, tags=tags)
         if fwName:
             self.canvas.tag_bind(fwName + '_well', '<ButtonPress-1>',
@@ -1051,50 +1058,50 @@ class Timeline:
     def makeZoomButtons(self):
         self.makeZoomButton('zoomIn', self.zoomIn, 0.0)
         self.makeZoomButton('zoomOut', self.zoomOut, 1.25)
-        
-    def makeZoomButton(self, tag, cmd, x = 2.0, y = 3.5):
+
+    def makeZoomButton(self, tag, cmd, x=2.0, y=3.5):
         tags = ('gui', tag)
         self.canvas.create_rectangle(
-            '%fc' % x, '%fc' % y,
-            '%fc' % (x + 0.6), '%fc' % (y + 0.5),
+            f'{x:f}c', f'{y:f}c',
+            f'{x + 0.6:f}c', f'{y + 0.5:f}c',
             outline='black', fill=self.canvas['background'],
-            tags = tags)
+            tags=tags)
         self.canvas.create_oval(
-            self.canvas.winfo_pixels('%fc' % (x + 0.1)),
-            self.canvas.winfo_pixels('%fc' % (y + 0.05)),
-            self.canvas.winfo_pixels('%fc' % (x + 0.5)),
-            self.canvas.winfo_pixels('%fc' % (y + 0.45)),
-            tags = tags)
+            self.canvas.winfo_pixels(f'{x + 0.1:f}c'),
+            self.canvas.winfo_pixels(f'{y + 0.05:f}c'),
+            self.canvas.winfo_pixels(f'{x + 0.5:f}c'),
+            self.canvas.winfo_pixels(f'{y + 0.45:f}c'),
+            tags=tags)
         self.canvas.create_line(
-            self.canvas.winfo_pixels('%fc' % (x + 0.15)),
-            self.canvas.winfo_pixels('%fc' % (y + 0.25)),
-            self.canvas.winfo_pixels('%fc' % (x + 0.45)),
-            self.canvas.winfo_pixels('%fc' % (y + 0.25)),
-            tags = tags)
+            self.canvas.winfo_pixels(f'{x + 0.15:f}c'),
+            self.canvas.winfo_pixels(f'{y + 0.25:f}c'),
+            self.canvas.winfo_pixels(f'{x + 0.45:f}c'),
+            self.canvas.winfo_pixels(f'{y + 0.25:f}c'),
+            tags=tags)
         if tag == 'zoomIn':
             self.canvas.create_line(
-                self.canvas.winfo_pixels('%fc' % (x + 0.3)),
-                self.canvas.winfo_pixels('%fc' % (y + 0.1)),
-                self.canvas.winfo_pixels('%fc' % (x + 0.3)),
-                self.canvas.winfo_pixels('%fc' % (y + 0.4)),
-                tags = tags)
+                self.canvas.winfo_pixels(f'{x + 0.3:f}c'),
+                self.canvas.winfo_pixels(f'{y + 0.1:f}c'),
+                self.canvas.winfo_pixels(f'{x + 0.3:f}c'),
+                self.canvas.winfo_pixels(f'{y + 0.4:f}c'),
+                tags=tags)
         self.canvas.create_text(
-            '%fc' % (x + 0.3), '%fc' % (y + 0.6),
+            f'{x + 0.3:f}c', f'{y + 0.6:f}c',
             text=tag, anchor=N, tags=tags)
         self.canvas.tag_bind(tag, '<ButtonPress-1>', lambda e: cmd())
 
-    def makeTimeTab(self, x = 0):
+    def makeTimeTab(self, x=0):
         y = self.top
         self.canvas.create_polygon(
             x, y,
-            x+self.size, y-self.size,
-            x-self.size, y-self.size,
-            tags = ('timeTab',))
+            x + self.size, y - self.size,
+            x - self.size, y - self.size,
+            tags=('timeTab',))
 
     def repositionGui(self):
         deltaX = self.canvas.canvasx(50) - self.canvas.coords('Pow_well')[0]
         self.canvas.move('gui', deltaX, 0)
-        
+
     def zoomIn(self):
         # Deselect currently selected tab as a precaution
         self.deselectFirework()
@@ -1126,22 +1133,22 @@ class Timeline:
                       self.right, '1c', self.right, '0.5c',
                       width=1, tags=('timeline',))
         for i in range(self.numTicks):
-            x = '%fc' % (i * self.mag)
+            x = f'{i * self.mag:f}c'
             c.create_line(x, '1c', x, '0.6c', width=1, tags=('timeline',))
             c.create_text(x, '.5c', text=i, anchor=S,
-                          justify = CENTER, tags=('timeline',))
-            x = '%fc' % ((i+0.25) * self.mag)
+                          justify=CENTER, tags=('timeline',))
+            x = f'{(i + 0.25) * self.mag:f}c'
             c.create_line(x, '1c', x, '0.8c', width=1, tags=('timeline',))
-            x = '%fc' % ((i+0.5) * self.mag)
+            x = f'{(i + 0.5) * self.mag:f}c'
             c.create_line(x, '1c', x, '0.7c', width=1, tags=('timeline',))
-            x = '%fc' % ((i+0.75) * self.mag)
+            x = f'{(i + 0.75) * self.mag:f}c'
             c.create_line(x, '1c', x, '0.8c', width=1, tags=('timeline',))
         # Create last text label
-        x = '%fc' % ((i+1) * self.mag)
-        c.create_text(x, '.5c', text=i+1, anchor=S,
-                      justify = CENTER, tags=('timeline',))
+        x = f'{(i + 1) * self.mag:f}c'
+        c.create_text(x, '.5c', text=i + 1, anchor=S,
+                      justify=CENTER, tags=('timeline',))
 
-    def makeFireworkTab(self, x, y, fw, fActive = 0):
+    def makeFireworkTab(self, x, y, fw, fActive=0):
         style = fw.getStyle()
         fwName = Names[style]
         tags = ('tab', fwName, 'fwID_%d' % fw.getID())
@@ -1151,8 +1158,8 @@ class Timeline:
             tags = tags + ('active', 'selected')
         self.makeTab(x, y, tags)
         self.canvas.create_text(x, y + self.canvas.winfo_fpixels('0.3c'),
-                                text = styleNamesShort[style], anchor = N,
-                                tags = tags + ('styleText',))
+                                text=styleNamesShort[style], anchor=N,
+                                tags=tags + ('styleText',))
 
     def redrawTabs(self):
         c = self.canvas
@@ -1160,11 +1167,11 @@ class Timeline:
         fwList = self.editor.fwShow.getSortedList()
         for fw in fwList:
             startT = fw.getStartTime()
-            x = self.canvas.winfo_fpixels('%fc' % (startT * self.mag))
-            self.makeFireworkTab(x, self.top + 2, fw, fActive = 0)
+            x = self.canvas.winfo_fpixels(f'{startT * self.mag:f}c')
+            self.makeFireworkTab(x, self.top + 2, fw, fActive=0)
         # Redraw time marker
         c.delete('timeTab')
-        x = self.canvas.winfo_fpixels('%fc' % (self.currentTime * self.mag))
+        x = self.canvas.winfo_fpixels(f'{self.currentTime * self.mag:f}c')
         self.makeTimeTab(x)
 
     def selectTab(self, x, y):
@@ -1201,18 +1208,18 @@ class Timeline:
         self.canvas.addtag_withtag('selected', 'fwID_%d' % ID)
         self.selectFirework(ID)
         self.canvas.dtag('active')
-        
+
     def updateSelectedStyle(self, fw):
         c = self.canvas
         fwTags = c.find_withtag('fwID_%d' % fw.getID())
         for tag in fwTags:
             tagList = c.gettags(tag)
             if 'styleText' in tagList:
-                x,y = c.coords(tag)
+                x, y = c.coords(tag)
                 c.delete(tag)
                 newText = self.canvas.create_text(
-                    x, y, text = styleNamesShort[fw.getStyle()],
-                    anchor = N, tags = tagList)
+                    x, y, text=styleNamesShort[fw.getStyle()],
+                    anchor=N, tags=tagList)
                 # Color active things green
                 self.canvas.itemconfig(newText, fill=self.activeStyle,
                                        stipple=self.activeStipple)
@@ -1220,14 +1227,15 @@ class Timeline:
 
     def releaseTab(self, event):
         tags = self.canvas.find_withtag('active')
-        if not tags: return
+        if not tags:
+            return
         fwTags = self.canvas.gettags('active')
 
         if 'timeTab' in fwTags:
             self.canvas.itemconfig('active', fill=self.normalStyle,
                                    stipple=self.activeStipple)
             pixelsPerCM = self.canvas.winfo_fpixels('1c')
-            self.currentTime = (self.x/pixelsPerCM)/self.mag
+            self.currentTime = (self.x / pixelsPerCM) / self.mag
             self.canvas.dtag('active')
         else:
             ID = None
@@ -1235,14 +1243,14 @@ class Timeline:
                 if tag.find('fwID') == 0:
                     ID = int(tag[5:])
             if ID is not None:
-                if self.y != self.top+2:
+                if self.y != self.top + 2:
                     self.editor.fwShow.removeFirework(ID)
                     self.canvas.delete('active')
                 else:
                     pixelsPerCM = self.canvas.winfo_fpixels('1c')
-                    startTime = (self.x/pixelsPerCM)/self.mag
+                    startTime = (self.x / pixelsPerCM) / self.mag
                     self.editor.updateSelectedStartTime(
-                        startTime, updateSlider = 1)
+                        startTime, updateSlider=1)
             # Clear the active flag but leave item selected and highlighted
             self.canvas.dtag('active')
         # Force a redraw of the canvas to avoid text trails
@@ -1264,44 +1272,43 @@ class Timeline:
             cx = self.left
         if cx > self.right:
             cx = self.right
-            
+
         if 'timeTab' in self.canvas.gettags('active'):
-            self.canvas.move('active', cx-self.x, 0)
+            self.canvas.move('active', cx - self.x, 0)
         else:
             # See if tag is within the "sweet spot"
             if cy >= self.top and cy <= self.bottom:
-                cy = self.top+2
+                cy = self.top + 2
                 self.canvas.itemconfig('active', fill=self.activeStyle,
                                        stipple=self.activeStipple)
             else:
-                cy = cy-self.size-2
+                cy = cy - self.size - 2
                 self.canvas.itemconfig('active', fill=self.deleteStyle,
                                        stipple=self.deleteStipple)
-            self.canvas.move('active', cx-self.x, cy-self.y)
+            self.canvas.move('active', cx - self.x, cy - self.y)
         self.x = cx
         self.y = cy
-        
+
     def moveTimeTabToTime(self, time):
         c = self.canvas
         c.delete('timeTab')
         self.currentTime = time
-        x = self.canvas.winfo_fpixels('%fc' % (self.currentTime * self.mag))
+        x = self.canvas.winfo_fpixels(f'{self.currentTime * self.mag:f}c')
         self.makeTimeTab(x)
 
     def moveTimeTabToCursor(self, event):
         if self.editor.fwShow.fPlayingIval:
             self.editor.playPauseShow()
         pixelsPerCM = self.canvas.winfo_fpixels('1c')
-        currentTime = (self.canvas.canvasx(event.x)/pixelsPerCM)/self.mag
+        currentTime = (self.canvas.canvasx(event.x) / pixelsPerCM) / self.mag
         self.moveTimeTabToTime(currentTime)
-            
 
-    def moveFireworkTabToTime(self, fw, time, fReselect = 0):
+    def moveFireworkTabToTime(self, fw, time, fReselect=0):
         c = self.canvas
         c.delete('fwID_%d' % fw.getID())
         startT = fw.getStartTime()
-        x = self.canvas.winfo_fpixels('%fc' % (startT * self.mag))
-        self.makeFireworkTab(x, self.top + 2, fw, fActive = fReselect)
+        x = self.canvas.winfo_fpixels(f'{startT * self.mag:f}c')
+        self.makeFireworkTab(x, self.top + 2, fw, fActive=fReselect)
         if fReselect:
             self.selectFirework(fw.getID())
             self.canvas.dtag('active')
@@ -1311,32 +1318,32 @@ class Timeline:
         self.deselectFirework()
         # Create new one
         fw = self.editor.createFirework(style=style)
-        self.makeFireworkTab(x, y, fw, fActive = 1)
+        self.makeFireworkTab(x, y, fw, fActive=1)
         self.selectFirework(fw.getID())
         self.x = x
         self.y = y
         self.moveTab(x, y)
 
-    def insertFirework(self,style):
+    def insertFirework(self, style):
         # Deselect currently selected tab
         self.deselectFirework()
         # Create new one
-        fw = self.editor.createFirework(style=style,startTime=self.currentTime)
-        x = self.canvas.winfo_fpixels('%fc' % (self.currentTime * self.mag))
-        self.makeFireworkTab(x, self.top + 2, fw, fActive = 1)
+        fw = self.editor.createFirework(
+            style=style, startTime=self.currentTime)
+        x = self.canvas.winfo_fpixels(f'{self.currentTime * self.mag:f}c')
+        self.makeFireworkTab(x, self.top + 2, fw, fActive=1)
         self.selectFirework(fw.getID())
         self.canvas.dtag('active')
 
-    def selectFirework(self,ID):
+    def selectFirework(self, ID):
         self.editor.selectFirework(ID)
         # Color active things green
         self.canvas.itemconfig('active', fill=self.activeStyle,
                                stipple=self.activeStipple)
         self.canvas.lift('active')
 
-    def deselectFirework(self, event = None):
+    def deselectFirework(self, event=None):
         self.canvas.itemconfig('selected', fill=self.normalStyle,
                                stipple=self.activeStipple)
         self.canvas.dtag('selected')
         self.editor.selectFirework(None)
-

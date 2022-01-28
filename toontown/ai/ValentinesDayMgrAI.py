@@ -2,6 +2,7 @@ from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import ToontownGlobals, TTLocalizer
 from toontown.ai import HolidayBaseAI
 
+
 class ValentinesDayMgrAI(HolidayBaseAI.HolidayBaseAI):
 
     notify = DirectNotifyGlobal.directNotify.newCategory(
@@ -20,4 +21,3 @@ class ValentinesDayMgrAI(HolidayBaseAI.HolidayBaseAI):
     def stop(self):
         # Let the holiday system know we stopped
         bboard.remove(ValentinesDayMgrAI.PostName)
-        

@@ -3,19 +3,20 @@
 import string
 from . import LevelConstants
 
-def getZoneNum2Node(levelModel, logFunc=lambda str:str):
+
+def getZoneNum2Node(levelModel, logFunc=lambda str: str):
     """ given model, returns dict of ZoneNumber -> ZoneNode """
     def findNumberedNodes(baseString, model, caseInsens=1):
         # finds nodes whose name follows the pattern 'baseString#blah'
         # returns dictionary that maps # to node
-        srch = '**/%s*' % baseString
+        srch = f'**/{baseString}*'
         if caseInsens:
             srch += ';+i'
         potentialNodes = model.findAllMatches(srch)
         num2node = {}
         for potentialNode in potentialNodes:
             name = potentialNode.getName()
-            logFunc('potential match for %s: %s' % (baseString, name))
+            logFunc(f'potential match for {baseString}: {name}')
             name = name[len(baseString):]
             numDigits = 0
             while numDigits < len(name):
@@ -32,14 +33,15 @@ def getZoneNum2Node(levelModel, logFunc=lambda str:str):
                                          potentialNode))
                 continue
             if (num < LevelConstants.MinZoneNum) or (
-                num > LevelConstants.MaxZoneNum):
+                    num > LevelConstants.MaxZoneNum):
                 logFunc('warning: zone %s is out of range. ignoring %s' %
                         (num, potentialNode))
                 continue
             # do we already have a ZoneNode for this zone num?
             if num in num2node:
-                logFunc('warning: zone %s already assigned to %s. ignoring %s' %
-                        (num, num2node[num], potentialNode))
+                logFunc(
+                    'warning: zone %s already assigned to %s. ignoring %s' %
+                    (num, num2node[num], potentialNode))
                 continue
             num2node[num] = potentialNode
 

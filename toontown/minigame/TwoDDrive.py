@@ -6,6 +6,7 @@ from direct.interval.IntervalGlobal import *
 from . import ArrowKeys
 from direct.task.Task import Task
 
+
 class TwoDDrive:
     """
     monitors the arrow keys and moves the localtoon in a 2D space.
@@ -40,7 +41,7 @@ class TwoDDrive:
         # Use  2D controls for the 2D game
         base.localAvatar.useTwoDControls()
         base.localAvatar.controlManager.currentControls.avatarControlJumpForce = 30.0
-        
+
         self.ONE_JUMP_PER_UP_PRESSED = True
         self.lastAction = None
         self.isMovingX = False
@@ -53,7 +54,7 @@ class TwoDDrive:
         self.arrowKeys.destroy()
         del self.arrowKeys
         del self.customCollisionCallback
-        
+
         self.lastAction = None
 
     def start(self):
@@ -62,11 +63,11 @@ class TwoDDrive:
         # Enable avatar controls so that Jump works for TwoDWalker
         base.localAvatar.enableAvatarControls()
         taskMgr.remove(TwoDDrive.TASK_NAME)
-        taskMgr.add(self.__update, TwoDDrive.TASK_NAME, priority = self.priority)
+        taskMgr.add(self.__update, TwoDDrive.TASK_NAME, priority=self.priority)
 
     def __placeToonHOG(self, pos, h=None):
         # place the toon unconditionally in a new position
-        if h == None:
+        if h is None:
             h = self.lt.getH()
 
         self.lt.setPos(pos)
@@ -76,7 +77,8 @@ class TwoDDrive:
 
         self.atRestHeading = h
         self.oldAtRestHeading = h
-        self.lastXVel=0; self.lastYVel=0
+        self.lastXVel = 0
+        self.lastYVel = 0
 
     def stop(self):
         self.notify.debug("stop")
@@ -89,12 +91,12 @@ class TwoDDrive:
                 self.turnLocalToonIval.pause()
             del self.turnLocalToonIval
         # make localToon stop running
-        base.localAvatar.setSpeed(0,0)
+        base.localAvatar.setSpeed(0, 0)
         base.localAvatar.stopSound()
 
     def __update(self, task):
         # move the local toon
-        vel = Vec3(0,0,0)
+        vel = Vec3(0, 0, 0)
 
         # first figure out which direction to move
         xVel = 0
@@ -108,15 +110,17 @@ class TwoDDrive:
                 # Don't jump if the toon head is still in floor1.
                 if not self.game.isHeadInFloor:
                     # Calls method from TwoDWalker in direct/src/controls/
-                    if (localAvatar.controlManager.currentControls == localAvatar.controlManager.get('twoD')):
+                    if (localAvatar.controlManager.currentControls ==
+                            localAvatar.controlManager.get('twoD')):
                         base.localAvatar.controlManager.currentControls.jumpPressed()
         else:
             if self.arrowKeys.upPressed():
                 # Don't jump if the toon head is still in floor1.
                 if not self.game.isHeadInFloor:
                     # Calls method from TwoDWalker in direct/src/controls/
-                    if (localAvatar.controlManager.currentControls == localAvatar.controlManager.get('twoD')):
-                        base.localAvatar.controlManager.currentControls.jumpPressed()            
+                    if (localAvatar.controlManager.currentControls ==
+                            localAvatar.controlManager.get('twoD')):
+                        base.localAvatar.controlManager.currentControls.jumpPressed()
         if self.arrowKeys.leftPressed():
             xVel -= 1
         if self.arrowKeys.rightPressed():
@@ -128,7 +132,7 @@ class TwoDDrive:
         # calculate velocity
         vel.normalize()
         vel *= self.speed
-        
+
         if (abs(xVel) > 0):
             # Avatar is moving horizontally
             if not self.isMovingX:
@@ -141,7 +145,7 @@ class TwoDDrive:
 
         speed = vel.length()
         action = self.lt.setSpeed(speed, 0, 0)
-        
+
         if (action != self.lastAction):
             self.lastAction = action
             if (action == OTPGlobals.RUN_INDEX):
@@ -175,7 +179,8 @@ class TwoDDrive:
         '''
         # do custom collisions
         if self.customCollisionCallback:
-            toonPos = self.customCollisionCallback(toonPos, toonPos + posOffset)
+            toonPos = self.customCollisionCallback(
+                toonPos, toonPos + posOffset)
         else:
             toonPos += posOffset
 
@@ -191,25 +196,27 @@ class TwoDDrive:
             # -1 wraps to end of lists
             angTab = [
                 #y = 0, 1, -1
-                [None,   0,  180], # x = 0
-                [ -90, -45, -135], # x = 1
-                [  90,  45,  135], # x = -1
-                ]
+                [None, 0, 180],  # x = 0
+                [-90, -45, -135],  # x = 1
+                [90, 45, 135],  # x = -1
+            ]
             return angTab[xVel][yVel] + self.upHeading
 
         def orientToon(angle, self=self):
             startAngle = self.lt.getH()
-            startAngle = fitSrcAngle2Dest(startAngle,angle)
-            dur = .1 * abs(startAngle-angle)/90
+            startAngle = fitSrcAngle2Dest(startAngle, angle)
+            dur = .1 * abs(startAngle - angle) / 90
             self.turnLocalToonIval = LerpHprInterval(
-                self.lt, dur, Point3(angle,0,0),
-                startHpr = Point3(startAngle,0,0),
+                self.lt, dur, Point3(angle, 0, 0),
+                startHpr=Point3(startAngle, 0, 0),
                 name='TwoDDriveLerpHpr')
             self.turnLocalToonIval.start()
             if (self.atRestHeading != self.oldAtRestHeading):
                 self.oldAtRestHeading = self.atRestHeading
 ##                self.notify.debug('orientation changed call callBack function here')
-                messenger.send('avatarOrientationChanged', [self.atRestHeading])
+                messenger.send(
+                    'avatarOrientationChanged', [
+                        self.atRestHeading])
 
         # if this frame's pressed keys are different from last frame's:
         #   clear the doLater
@@ -237,7 +244,7 @@ class TwoDDrive:
                 curHeading = getHeading(xVel, yVel)
                 # test: were they pressing a diagonal, and now are not?
                 if ((self.lastXVel and self.lastYVel) and
-                    not (xVel and yVel)):
+                        not (xVel and yVel)):
                     # delay a little bit before accepting this new
                     # heading as the at-rest heading
                     def setAtRestHeading(task, self=self,
@@ -250,4 +257,5 @@ class TwoDDrive:
                     self.atRestHeading = curHeading
                 orientToon(curHeading)
 
-        self.lastXVel = xVel; self.lastYVel = yVel
+        self.lastXVel = xVel
+        self.lastYVel = yVel

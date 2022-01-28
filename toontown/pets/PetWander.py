@@ -5,6 +5,8 @@ from toontown.pets import PetChase
 from toontown.pets import PetConstants
 #from panda3d.toontown import *
 from libtoontown import CPetChase
+
+
 class PetWander(CPetChase, DirectObject.DirectObject):
     def __init__(self, minDist=5., moveAngle=20.):
         # create a target node that we'll be moving around
@@ -54,8 +56,8 @@ class PetWander(CPetChase, DirectObject.DirectObject):
     def _process(self, dt):
         self.targetMoveCountdown -= dt
         if self.targetMoveCountdown <= 0.:
-            distance = normalDistrib(3.,30.)
-            heading = normalDistrib(-(90+45),(90+45))
+            distance = normalDistrib(3., 30.)
+            heading = normalDistrib(-(90 + 45), (90 + 45))
 
             # if we bumped into something, go in the opposite direction
             # from where we were about to go

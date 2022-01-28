@@ -4,16 +4,19 @@ from direct.directnotify import DirectNotifyGlobal
 from otp.level import DistributedEntityAI
 from . import SinkingPlatformGlobals
 
+
 class DistributedSinkingPlatformAI(DistributedEntityAI.DistributedEntityAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory("DistributedSinkingPlatformAI")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedSinkingPlatformAI")
+
     def __init__(self, levelDoId, entId):
         DistributedEntityAI.DistributedEntityAI.__init__(self,
                                                          levelDoId, entId)
         self.numStanding = 0
-        
+
     def setOnOff(self, on, timestamp):
         avId = self.air.getAvatarIdFromSender()
-        self.notify.debug("setOnOff %s" % on)
+        self.notify.debug(f"setOnOff {on}")
         # This function is called when a client steps on or
         # off the platform.
         if on:
@@ -21,8 +24,8 @@ class DistributedSinkingPlatformAI(DistributedEntityAI.DistributedEntityAI):
         else:
             self.numStanding -= 1
 
-        self.notify.debug("numStanding = %s" % self.numStanding)
-        
+        self.notify.debug(f"numStanding = {self.numStanding}")
+
         if self.numStanding > 0:
             self.sendUpdate("setSinkMode", [avId,
                                             SinkingPlatformGlobals.SINKING,
@@ -31,4 +34,3 @@ class DistributedSinkingPlatformAI(DistributedEntityAI.DistributedEntityAI):
             self.sendUpdate("setSinkMode", [avId,
                                             SinkingPlatformGlobals.RISING,
                                             timestamp])
-            

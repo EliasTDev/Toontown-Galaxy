@@ -11,11 +11,12 @@ from direct.fsm import State
 from toontown.hood import ZoneUtil
 from toontown.toonbase import TTLocalizer
 
-class DistributedLawOfficeElevatorInt(DistributedElevatorFloor.DistributedElevatorFloor):
+
+class DistributedLawOfficeElevatorInt(
+        DistributedElevatorFloor.DistributedElevatorFloor):
 
     def __init__(self, cr):
         DistributedElevatorFloor.DistributedElevatorFloor.__init__(self, cr)
-        
 
     def generate(self):
         DistributedElevator.DistributedElevator.generate(self)
@@ -36,9 +37,10 @@ class DistributedLawOfficeElevatorInt(DistributedElevatorFloor.DistributedElevat
             self.elevatorModel.setPosHpr(62.74, -85.31, 0.00, 2.00, 0.00, 0.00)
         elif self.entranceId == 1:
             # Side of the factory (west entrance)
-            self.elevatorModel.setPosHpr(-162.25, 26.43, 0.00, 269.00, 0.00, 0.00)
+            self.elevatorModel.setPosHpr(-162.25,
+                                         26.43, 0.00, 269.00, 0.00, 0.00)
         else:
-            self.notify.error("Invalid entranceId: %s" % entranceId)
+            self.notify.error(f"Invalid entranceId: {entranceId}")
 
     def setupElevator(self):
         """setupElevator(self)
@@ -46,7 +48,8 @@ class DistributedLawOfficeElevatorInt(DistributedElevatorFloor.DistributedElevat
         this method sets up the elevator for business.
         """
         # TODO: place this on a node indexed by the entraceId
-        self.elevatorModel = loader.loadModel("phase_4/models/modules/elevator")
+        self.elevatorModel = loader.loadModel(
+            "phase_4/models/modules/elevator")
         self.elevatorModel.reparentTo(render)
         self.elevatorModel.setScale(1.05)
         self.leftDoor = self.elevatorModel.find("**/left-door")
@@ -55,34 +58,26 @@ class DistributedLawOfficeElevatorInt(DistributedElevatorFloor.DistributedElevat
         self.elevatorModel.find("**/light_panel").removeNode()
         self.elevatorModel.find("**/light_panel_frame").removeNode()
         DistributedElevatorFloor.DistributedElevatorFloor.setupElevator(self)
-        #DistributedElevatorFloor.DistributedElevatorFloor.setupElevator(self)
-        
+        # DistributedElevatorFloor.DistributedElevatorFloor.setupElevator(self)
 
-
-            
     def __placeElevator(self):
         self.notify.debug("PLACING ELEVATOR FOOL!!")
         if self.isEntering:
             elevatorNode = render.find("**/elevator_origin")
             if not elevatorNode.isEmpty():
-                self.elevatorModel.setPos(0,0, 0)
+                self.elevatorModel.setPos(0, 0, 0)
                 self.elevatorModel.reparentTo(elevatorNode)
             else:
-                #explode
+                # explode
                 self.notify.debug("NO NODE elevator_origin!!")
         else:
             elevatorNode = render.find("**/SlidingDoor")
             if not elevatorNode.isEmpty():
-                self.elevatorModel.setPos(0,0,-15)
+                self.elevatorModel.setPos(0, 0, -15)
                 self.elevatorModel.reparentTo(elevatorNode)
             else:
-                #explode
+                # explode
                 self.notify.debug("NO NODE SlidingDoor!!")
-        
-        
-        
-    
-            
 
     def getElevatorModel(self):
         return self.elevatorModel
@@ -104,10 +99,10 @@ class DistributedLawOfficeElevatorInt(DistributedElevatorFloor.DistributedElevat
         if (self.localToonOnBoard):
             hoodId = self.cr.playGame.hood.hoodId
             doneStatus = {
-                'loader' : "cogHQLoader",
-                'where'  : 'factoryInterior', #should be lawOffice
-                'how'    : "teleportIn",
-                'zoneId' : zoneId,
-                'hoodId' : hoodId,
-                }
+                'loader': "cogHQLoader",
+                'where': 'factoryInterior',  # should be lawOffice
+                'how': "teleportIn",
+                'zoneId': zoneId,
+                'hoodId': hoodId,
+            }
             self.cr.playGame.getPlace().elevator.signalDone(doneStatus)

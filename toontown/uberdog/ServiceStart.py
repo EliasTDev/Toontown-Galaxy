@@ -1,24 +1,32 @@
 """
 Start the Toontown UberDog (Uber Distributed Object Globals server).
 """
+from direct.showbase.PythonUtil import *
+from toontown.uberdog.ToontownUberDog import ToontownUberDog
+from pandac.PandaModules import *
+from otp.uberdog.UberDogGlobal import *
+from direct.directnotify import RotatingLog
+import getopt
+import sys
+import os
+import time
 import builtins
 from direct.task.Task import Task
+
 
 class game:
     name = "uberDog"
     process = "server"
+
+
 builtins.game = game()
 
-import time
-import os
-import sys
-import getopt
 
 # Initialize ihooks importer On the production servers, we run genPyCode -n
 # meaning no squeeze, so nobody else does this. When we squeeze, the
 # unpacker does this for us and it does not hurt to do in either case.
 #import ihooks
-#ihooks.install()
+# ihooks.install()
 
 if os.getenv('TTMODELS'):
     from pandac.PandaModules import getModelPath, Filename
@@ -28,8 +36,6 @@ if os.getenv('TTMODELS'):
     # doesn't hurt to add it again.
     getModelPath().appendDirectory(Filename.expandFrom("$TTMODELS"))
 
-from direct.directnotify import RotatingLog
-from otp.uberdog.UberDogGlobal import *
 
 # Get the options
 try:
@@ -78,10 +84,10 @@ sbCLPort = 6060
 
 homedir = os.getenv("HOME", "")
 language = os.getenv("LANGUAGE", "")
-if language in ['castillian', 'japanese', 'german', 'portuguese', 'french'] :
-   bwDictPath = homedir + "/support/"
-else :
-   bwDictPath = "/home/toonpub/support/"
+if language in ['castillian', 'japanese', 'german', 'portuguese', 'french']:
+    bwDictPath = homedir + "/support/"
+else:
+    bwDictPath = "/home/toonpub/support/"
 uber.RATManagerHTTPListenPort = 8080
 uber.awardManagerHTTPListenPort = 8888
 uber.inGameNewsMgrHTTPListenPort = 8889
@@ -125,9 +131,9 @@ for opt in opts:
     elif (flag == '--bwDictPath'):
         bwDictPath = value
     elif (flag == '--mysqlhost'):
-        mysqlhost = value    
+        mysqlhost = value
     elif (flag == '--crDbName'):
-        crDbName = value    
+        crDbName = value
     else:
         print("Error: Illegal option: " + flag)
         print(helpString)
@@ -137,18 +143,23 @@ for opt in opts:
 logfile = logpath + 'aidistrict_uberdog'
 
 # Redirect Python output and err to the same file
+
+
 class LogAndOutput:
     def __init__(self, orig, log):
         self.orig = orig
         self.log = log
+
     def write(self, str):
         self.log.write(str)
         self.log.flush()
         self.orig.write(str)
         self.orig.flush()
+
     def flush(self):
         self.log.flush()
         self.orig.flush()
+
 
 log = RotatingLog.RotatingLog(logfile, hourInterval=24, megabyteLimit=1024)
 logOut = LogAndOutput(sys.__stdout__, log)
@@ -156,7 +167,6 @@ logErr = LogAndOutput(sys.__stderr__, log)
 sys.stdout = logOut
 sys.stderr = logErr
 
-from pandac.PandaModules import *
 
 # Give Panda the same log we use
 nout = MultiplexStream()
@@ -168,13 +178,17 @@ nout.addSystemDebug()
 # We prefer writing the date on the same line as the starting message,
 # so we can more easily grep for a restart on a particular date in the
 # log files.
-print("\n\nStarting Uberdog on %s port %s. %s %s" % \
-      (uber.mdip, uber.mdport, time.asctime(time.localtime(time.time())), time.tzname[0]))
+print(
+    "\n\nStarting Uberdog on %s port %s. %s %s" %
+    (uber.mdip,
+     uber.mdport,
+     time.asctime(
+         time.localtime(
+             time.time())),
+     time.tzname[0]))
 
 print("Initializing the Toontown UberDog (Uber Distributed Object Globals server)...")
 
-from toontown.uberdog.ToontownUberDog import ToontownUberDog
-from direct.showbase.PythonUtil import *
 
 uber.objectNames = set(os.getenv("uberdog_objects", "").split())
 
@@ -186,23 +200,24 @@ uber.clPort = sbCLPort
 uber.allowUnfilteredChat = 0
 uber.bwDictPath = bwDictPath
 
-uber.RATManagerHTTPListenPort = int(os.getenv("RAT_PORT","8080"))
-uber.awardManagerHTTPListenPort = int(os.getenv("AWARD_MANAGER_PORT","8888"))
-uber.inGameNewsMgrHTTPListenPort = int(os.getenv("IN_GAME_NEWS_PORT","8889"))
+uber.RATManagerHTTPListenPort = int(os.getenv("RAT_PORT", "8080"))
+uber.awardManagerHTTPListenPort = int(os.getenv("AWARD_MANAGER_PORT", "8888"))
+uber.inGameNewsMgrHTTPListenPort = int(os.getenv("IN_GAME_NEWS_PORT", "8889"))
 uber.mysqlhost = mysqlhost
 
-uber.codeRedemptionMgrHTTPListenPort = int(os.getenv("CODE_REDEMPTION_PORT","8998"))
+uber.codeRedemptionMgrHTTPListenPort = int(
+    os.getenv("CODE_REDEMPTION_PORT", "8998"))
 uber.crDbName = crDbName
 
-uber.cpuInfoMgrHTTPListenPort = int(os.getenv("SECURITY_BAN_MGR_PORT",8892))
+uber.cpuInfoMgrHTTPListenPort = int(os.getenv("SECURITY_BAN_MGR_PORT", 8892))
 
 uber.air = ToontownUberDog(
-        uber.mdip, uber.mdport,
-        uber.esip, uber.esport,
-        dcFileNames,
-        stateServerId,
-        minChannel,
-        maxChannel)
+    uber.mdip, uber.mdport,
+    uber.esip, uber.esport,
+    dcFileNames,
+    stateServerId,
+    minChannel,
+    maxChannel)
 
 # We let the world know that we are running as a service
 uber.aiService = 1
@@ -211,8 +226,7 @@ uber.wantEmbeddedOtpServer = 0
 
 try:
     run()
-except:
+except BaseException:
     info = describeException()
     #uber.air.writeServerEvent('uberdog-exception', districtNumber, info)
     raise
-

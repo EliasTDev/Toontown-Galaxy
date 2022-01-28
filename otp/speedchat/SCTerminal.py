@@ -17,9 +17,11 @@ SCTerminalLinkedEmoteEvent = 'SCTerminalLinkedEmoteEvent'
 # in or out of whisper mode
 SCWhisperModeChangeEvent = 'SCWhisperModeChange'
 
+
 class SCTerminal(SCElement):
     """ SCTerminal is the base class for all 'terminal' speedchat
     entities """
+
     def __init__(self, linkedEmote=None):
         SCElement.__init__(self)
         self.setLinkedEmote(linkedEmote)
@@ -44,10 +46,11 @@ class SCTerminal(SCElement):
     def privSetSettingsRef(self, settingsRef):
         SCElement.privSetSettingsRef(self, settingsRef)
         if self._handleWhisperModeFC is None:
-            self._handleWhisperModeFC = FunctionCall(self._handleWhisperModeSVChanged,
-                                                     self._handleWhisperModeSV)
+            self._handleWhisperModeFC = FunctionCall(
+                self._handleWhisperModeSVChanged, self._handleWhisperModeSV)
             self._handleWhisperModeFC.pushCurrentState()
-        # if this terminal is not whisperable, we need to listen for whisper mode changes
+        # if this terminal is not whisperable, we need to listen for whisper
+        # mode changes
         self._handleWhisperModeSV.set((self.settingsRef is not None) and
                                       (not self.isWhisperable()))
 
@@ -59,8 +62,9 @@ class SCTerminal(SCElement):
             # create a DirectObject to avoid conflicts with other parts of this
             # object that are listening for this event
             self._wmcListener = DirectObject()
-            self._wmcListener.accept(self.getEventName(SCWhisperModeChangeEvent),
-                                     self._handleWhisperModeChange)
+            self._wmcListener.accept(
+                self.getEventName(SCWhisperModeChangeEvent),
+                self._handleWhisperModeChange)
         else:
             if hasattr(self, '_wmcListener'):
                 # we no longer need to listen for whisper mode changes
@@ -82,8 +86,8 @@ class SCTerminal(SCElement):
 
         # if we have a linked emote, and it isn't disabled, generate a msg
         if self.hasLinkedEmote() and self.linkedEmoteEnabled():
-                messenger.send(self.getEventName(SCTerminalLinkedEmoteEvent),
-                               [self.linkedEmote])
+            messenger.send(self.getEventName(SCTerminalLinkedEmoteEvent),
+                           [self.linkedEmote])
 
     def isWhisperable(self):
         # can this terminal be sent as a whisper message?
@@ -93,13 +97,16 @@ class SCTerminal(SCElement):
     # should be invoked when the node is selected.
     def getLinkedEmote(self):
         return self.linkedEmote
+
     def setLinkedEmote(self, linkedEmote):
         self.linkedEmote = linkedEmote
         # TODO: we should make sure we're listening for emote
         # enable state changes if this is set while we're visible
         self.invalidate()
+
     def hasLinkedEmote(self):
         return (self.linkedEmote is not None)
+
     def linkedEmoteEnabled(self):
         if Emote.globalEmote:
             return Emote.globalEmote.isEnabled(self.linkedEmote)
@@ -114,7 +121,8 @@ class SCTerminal(SCElement):
 
     # support for disabled terminals
     def isDisabled(self):
-        return self.__disabled or (self.isWhispering() and not self.isWhisperable())
+        return self.__disabled or (
+            self.isWhispering() and not self.isWhisperable())
 
     def setDisabled(self, bDisabled):
         # make the button 'unclickable'
@@ -144,34 +152,34 @@ class SCTerminal(SCElement):
             self.lastEmoteIconColor = self.getEmoteIconColor()
             self.emotionIcon.setColorScale(*self.lastEmoteIconColor)
             args.update({
-                'image':         self.emotionIcon,
-                'image_pos':     (self.width-.6,0,-self.height*.5),
-                })
+                'image': self.emotionIcon,
+                'image_pos': (self.width - .6, 0, -self.height * .5),
+            })
 
         if self.isDisabled():
             args.update({
-                'rolloverColor': (0,0,0,0),
-                'pressedColor': (0,0,0,0),
+                'rolloverColor': (0, 0, 0, 0),
+                'pressedColor': (0, 0, 0, 0),
                 'rolloverSound': None,
                 'clickSound': None,
-                'text_fg': self.getColorScheme().getTextDisabledColor()+(1,),
-                })
+                'text_fg': self.getColorScheme().getTextDisabledColor() + (1,),
+            })
 
         args.update(dbArgs)
         SCElement.finalize(self, dbArgs=args)
 
     def getEmoteIconColor(self):
         if self.linkedEmoteEnabled() and (not self.isWhispering()):
-            r,g,b = self.getColorScheme().getEmoteIconColor()
+            r, g, b = self.getColorScheme().getEmoteIconColor()
         else:
-            r,g,b = self.getColorScheme().getEmoteIconDisabledColor()
-        return (r,g,b,1)
+            r, g, b = self.getColorScheme().getEmoteIconDisabledColor()
+        return (r, g, b, 1)
 
     def updateEmoteIcon(self):
         if hasattr(self, 'button'):
             self.lastEmoteIconColor = self.getEmoteIconColor()
             for i in range(self.button['numStates']):
-                self.button['image%s_image' % i].setColorScale(
+                self.button[f'image{i}_image'].setColorScale(
                     *self.lastEmoteIconColor)
         else:
             self.invalidate()
@@ -218,7 +226,6 @@ class SCTerminal(SCElement):
 
     def getDisplayText(self):
         if self.getCharges() != -1:
-            return self.text + " (%s)" % self.getCharges()
+            return self.text + f" ({self.getCharges()})"
         else:
             return self.text
-

@@ -13,10 +13,12 @@ from .BankGlobals import *
 from toontown.toontowngui import TTDialog
 from toontown.catalog.CatalogFurnitureItem import FurnitureTypes
 from toontown.catalog.CatalogFurnitureItem import FTScale
+
+
 class DistributedBank(DistributedFurnitureItem.DistributedFurnitureItem):
 
     notify = directNotify.newCategory("DistributedBank")
-    
+
     def __init__(self, cr):
         DistributedFurnitureItem.DistributedFurnitureItem.__init__(self, cr)
         self.bankGui = None
@@ -40,9 +42,10 @@ class DistributedBank(DistributedFurnitureItem.DistributedFurnitureItem):
 
     def announceGenerate(self):
         self.notify.debug("announceGenerate")
-        DistributedFurnitureItem.DistributedFurnitureItem.announceGenerate(self)
-        self.accept(self.bankSphereEnterEvent,  self.__handleEnterSphere)
-        
+        DistributedFurnitureItem.DistributedFurnitureItem.announceGenerate(
+            self)
+        self.accept(self.bankSphereEnterEvent, self.__handleEnterSphere)
+
     def disable(self):
         self.notify.debug("disable")
         self.ignore(self.bankSphereEnterEvent)
@@ -66,7 +69,7 @@ class DistributedBank(DistributedFurnitureItem.DistributedFurnitureItem):
     def delete(self):
         self.notify.debug("delete")
         DistributedFurnitureItem.DistributedFurnitureItem.delete(self)
-        
+
     def __handleEnterSphere(self, collEntry):
         if self.smoothStarted:
             # Ignore any sphere enter events while the object is
@@ -78,13 +81,13 @@ class DistributedBank(DistributedFurnitureItem.DistributedFurnitureItem):
             self.freeAvatar()
 
         self.notify.debug("Entering Bank Sphere....")
-        self.acceptOnce(self.bankSphereExitEvent,  self.__handleExitSphere)
+        self.acceptOnce(self.bankSphereExitEvent, self.__handleExitSphere)
         # don't let other toons open the bank now
         self.ignore(self.bankSphereEnterEvent)
         self.cr.playGame.getPlace().fsm.request('banking')
         self.hasLocalAvatar = 1
         self.sendUpdate("avatarEnter", [])
-        
+
     def __handleExitSphere(self, collEntry):
         self.notify.debug("Exiting Bank Sphere....")
         if self.bankTrack is not None:
@@ -94,10 +97,11 @@ class DistributedBank(DistributedFurnitureItem.DistributedFurnitureItem):
             self.bankDialog.cleanup()
             self.bankDialog = None
         self.__handleBankDone(0)
-            
+
     def __handleBankDone(self, transactionAmount):
         # Ask the AI to move the money between accounts
-        self.notify.debug("__handleBankDone(transactionAmount=%s"%(transactionAmount,))
+        self.notify.debug(
+            f"__handleBankDone(transactionAmount={transactionAmount}")
         self.sendUpdate("transferMoney", [transactionAmount])
         self.ignore(self.bankGuiDoneEvent)
         self.ignore(self.bankSphereExitEvent)
@@ -112,13 +116,14 @@ class DistributedBank(DistributedFurnitureItem.DistributedFurnitureItem):
         """
         self.notify.debug("freeAvatar()")
         if self.hasLocalAvatar:
-            base.localAvatar.posCamera(0,0)
-            # If we are exiting and have localAvatar our place might already be gone
-            if base.cr.playGame.place != None:
+            base.localAvatar.posCamera(0, 0)
+            # If we are exiting and have localAvatar our place might already be
+            # gone
+            if base.cr.playGame.place is not None:
                 base.cr.playGame.getPlace().setState("walk")
-				
-            self.hasLocalAvatar = 0 
-            
+
+            self.hasLocalAvatar = 0
+
         # Start accepting the bank collision sphere event again
         self.accept(self.bankSphereEnterEvent, self.__handleEnterSphere)
 
@@ -131,16 +136,18 @@ class DistributedBank(DistributedFurnitureItem.DistributedFurnitureItem):
     def setMovie(self, mode, avId, timestamp):
         """
         This is a message from the AI describing a movie between this bank
-        and a Toon that has approached us. 
+        and a Toon that has approached us.
         """
-        self.notify.debug("setMovie(mode=%s, avId=%s, timestamp=%s)"%(mode, avId, timestamp))
+        self.notify.debug(
+            f"setMovie(mode={mode}, avId={avId}, timestamp={timestamp})")
         timeStamp = globalClockDelta.localElapsedTime(timestamp)
 
         # See if this is the local toon
         isLocalToon = (avId == base.localAvatar.doId)
-            
-        self.notify.info("setMovie: mode=%s, avId=%s, timeStamp=%s, isLocalToon=%s" %
-                          (mode, avId, timeStamp, isLocalToon))
+
+        self.notify.info(
+            "setMovie: mode=%s, avId=%s, timeStamp=%s, isLocalToon=%s" %
+            (mode, avId, timeStamp, isLocalToon))
 
         if (mode == BANK_MOVIE_CLEAR):
             # This is an old movie in the server ram that has been cleared.
@@ -162,7 +169,7 @@ class DistributedBank(DistributedFurnitureItem.DistributedFurnitureItem):
         elif (mode == BANK_MOVIE_WITHDRAW):
             self.notify.debug("setMovie: withdraw")
             # TODO: play animation on bank
-            self.__putAwayToonJar(avId)            
+            self.__putAwayToonJar(avId)
         elif (mode == BANK_MOVIE_NO_OP):
             self.notify.debug("setMovie: no op")
             self.__putAwayToonJar(avId)
@@ -170,79 +177,76 @@ class DistributedBank(DistributedFurnitureItem.DistributedFurnitureItem):
             self.notify.debug("setMovie: not owner")
             if isLocalToon:
                 self.bankDialog = TTDialog.TTDialog(
-                    dialogName = 'BankNotOwner',
-                    style = TTDialog.Acknowledge,
-                    text = TTLocalizer.DistributedBankNotOwner,
-                    text_wordwrap = 15,
-                    fadeScreen = 1,
-                    command = self.__clearDialog,
-                    )
+                    dialogName='BankNotOwner',
+                    style=TTDialog.Acknowledge,
+                    text=TTLocalizer.DistributedBankNotOwner,
+                    text_wordwrap=15,
+                    fadeScreen=1,
+                    command=self.__clearDialog,
+                )
         elif (mode == BANK_MOVIE_NO_OWNER):
             self.notify.debug("setMovie: no owner")
             if isLocalToon:
                 self.bankDialog = TTDialog.TTDialog(
-                    dialogName = 'BankNoOwner',
-                    style = TTDialog.Acknowledge,
-                    text = TTLocalizer.DistributedBankNoOwner,
-                    text_wordwrap = 15,
-                    fadeScreen = 1,
-                    command = self.__clearDialog,
-                    )
+                    dialogName='BankNoOwner',
+                    style=TTDialog.Acknowledge,
+                    text=TTLocalizer.DistributedBankNoOwner,
+                    text_wordwrap=15,
+                    fadeScreen=1,
+                    command=self.__clearDialog,
+                )
         else:
-            self.notify.warning("unknown mode in setMovie: %s" % (mode))
-
+            self.notify.warning(f"unknown mode in setMovie: {mode}")
 
     def __clearDialog(self, event):
-        self.notify.debug("__clearDialog(event=%s)"%(event,))
+        self.notify.debug(f"__clearDialog(event={event})")
         if self.bankDialog is not None:
             self.bankDialog.cleanup()
             self.bankDialog = None
         self.freeAvatar()
 
-
     def __takeOutToonJar(self, avId):
-        self.notify.debug("__takeOutToonJar(avId=%s)"%(avId,))
+        self.notify.debug(f"__takeOutToonJar(avId={avId})")
         # take out the jar
-        
+
         toon = base.cr.doId2do.get(avId)
-        if toon == None:
+        if toon is None:
             return
-        
+
         track = Sequence()
 
         # determine bank scale and use to calculate
         # distance walked forward during interaction
         index = self.item.furnitureType
         scale = FurnitureTypes[index][FTScale]
-        
+
         # walk to the bank
         walkToBank = Sequence(
             Func(toon.stopSmooth),
             Func(toon.loop, 'walk'),
             toon.posHprInterval(0.5, Point3(0, -3.125 * (scale + 0.2), 0), Point3(0, 0, 0), other=self,
-                                blendType = 'easeInOut'),
+                                blendType='easeInOut'),
             Func(toon.loop, 'neutral'),
             Func(toon.startSmooth))
         track.append(walkToBank)
-        
+
         if not toon.jar:
             toon.getJar()
-            
+
         # TODO: reparentTo jar to lod's too
         track.append(Func(toon.jar.reparentTo, toon.getRightHands()[0]))
         jarAndBank = Parallel(
-            LerpScaleInterval(toon.jar, 1.5, 1.0, blendType = "easeOut"),
+            LerpScaleInterval(toon.jar, 1.5, 1.0, blendType="easeOut"),
             ActorInterval(base.cr.doId2do[avId], "bank", endTime=3.8),
-            )
+        )
         track.append(jarAndBank)
         track.append(Func(base.cr.doId2do[avId].pingpong, "bank",
-                          fromFrame = 48, toFrame = 92))
+                          fromFrame=48, toFrame=92))
         track.start()
         self.hasJarOut = 1
 
-
     def __putAwayToonJar(self, avId):
-        self.notify.debug("__putAwayToonJar(avId=%s)"%(avId,))
+        self.notify.debug(f"__putAwayToonJar(avId={avId})")
         # put away the jar
 
         toon = base.cr.doId2do.get(avId)
@@ -258,9 +262,17 @@ class DistributedBank(DistributedFurnitureItem.DistributedFurnitureItem):
 
         track = Sequence()
         jarAndBank = Parallel(
-            ActorInterval(base.cr.doId2do[avId], "bank", startTime=2.0, endTime=0.0),
-            LerpScaleInterval(toon.jar, 2.0, 0.0, blendType = "easeIn"),
-            )
+            ActorInterval(
+                base.cr.doId2do[avId],
+                "bank",
+                startTime=2.0,
+                endTime=0.0),
+            LerpScaleInterval(
+                toon.jar,
+                2.0,
+                0.0,
+                blendType="easeIn"),
+        )
         track.append(jarAndBank)
         track.append(Func(toon.removeJar))
         track.append(Func(toon.loop, "neutral"))

@@ -1,8 +1,8 @@
-GiveAwardErrors = Enum('Success, WrongGender, NotGiftable, FullMailbox, FullAwardMailbox, AlreadyInMailbox, AlreadyInGiftQueue, '
-                       'AlreadyInOrderedQueue, AlreadyInCloset, AlreadyBeingWorn, AlreadyInAwardMailbox, '
-                       'AlreadyInThirtyMinuteQueue, AlreadyInMyPhrases, AlreadyKnowDoodleTraining, '
-                       'GenericAlreadyHaveError, UnknownError, UnknownToon, '
-                       )
+GiveAwardErrors = Enum(
+    'Success, WrongGender, NotGiftable, FullMailbox, FullAwardMailbox, AlreadyInMailbox, AlreadyInGiftQueue, '
+    'AlreadyInOrderedQueue, AlreadyInCloset, AlreadyBeingWorn, AlreadyInAwardMailbox, '
+    'AlreadyInThirtyMinuteQueue, AlreadyInMyPhrases, AlreadyKnowDoodleTraining, '
+    'GenericAlreadyHaveError, UnknownError, UnknownToon, ')
 
 GiveAwardErrorStrings = {
     GiveAwardErrors.Success: "success",
@@ -22,6 +22,6 @@ GiveAwardErrorStrings = {
     GiveAwardErrors.GenericAlreadyHaveError: "generic-already-have error",
     GiveAwardErrors.UnknownError: "unknown error",
     GiveAwardErrors.UnknownToon: "toon not in database",
-    }
+}
 
 assert len(GiveAwardErrorStrings) == len(GiveAwardErrors)

@@ -12,8 +12,23 @@ from otp.avatar import AvatarDNA
 notify = directNotify.newCategory("CharDNA")
 
 # char defines
-charTypes = [ "mk", "vmk", "mn", "wmn", "g", "sg", "d", "dw", "p", "wp", "cl", "dd", "ch", "da" ]
+charTypes = [
+    "mk",
+    "vmk",
+    "mn",
+    "wmn",
+    "g",
+    "sg",
+    "d",
+    "dw",
+    "p",
+    "wp",
+    "cl",
+    "dd",
+    "ch",
+    "da"]
 # ...mickey, vampire mickey, minnie, Witch minnie, goofy, donald, donald-wheel, pluto, Clarabelle, Daisy, Chip, Dale
+
 
 class CharDNA(AvatarDNA.AvatarDNA):
     """CharDNA class: contains methods for describing avatars with a
@@ -34,17 +49,17 @@ class CharDNA(AvatarDNA.AvatarDNA):
 
     """
     # special methods
-    
+
     def __init__(self, str=None, type=None, dna=None, r=None, b=None, g=None):
         """__init__(self, string=None, string=None, string()=None, float=None,
         float=None, float=None)
         CharDNA contructor - see class comment for usage
         """
         # have they passed in a stringified DNA object?
-        if (str != None):
+        if (str is not None):
             self.makeFromNetString(str)
         # have they specified what type of DNA?
-        elif (type != None):
+        elif (type is not None):
             if (type == 'c'):  # Char
                 self.newChar(dna)
             else:
@@ -59,12 +74,12 @@ class CharDNA(AvatarDNA.AvatarDNA):
         Avatar DNA print method
         """
         if (self.type == 'c'):
-            return "type = char, name = %s" % self.name
+            return f"type = char, name = {self.name}"
         else:
             return "type undefined"
 
-
     # stringification methods
+
     def makeNetString(self):
         dg = PyDatagram()
         dg.addFixedString(self.type, 1)
@@ -74,20 +89,20 @@ class CharDNA(AvatarDNA.AvatarDNA):
             notify.error("undefined avatar")
         else:
             notify.error("unknown avatar type: ", self.type)
-            
+
         return dg.getMessage()
 
     def makeFromNetString(self, string):
-        dg=PyDatagram(string)
-        dgi=PyDatagramIterator(dg)
+        dg = PyDatagram(string)
+        dgi = PyDatagramIterator(dg)
         self.type = dgi.getFixedString(1)
         if (self.type == 'c'):  # Char
             self.name = sgi.getFixedString(2)
         else:
             notify.error("unknown avatar type: ", self.type)
-            
+
         return None
-    
+
     def __defaultChar(self):
         """__defaultChar(self)
         Make a default character dna
@@ -95,26 +110,26 @@ class CharDNA(AvatarDNA.AvatarDNA):
         self.type = 'c'
         self.name = charTypes[0]
 
-    def newChar(self, name = None):
+    def newChar(self, name=None):
         """newChar(self, string = None)
         Make the dna for the given character name,
         or Mickey if not specified
         """
-        if (name == None):
+        if (name is None):
             self.__defaultChar()
         else:
             self.type = 'c'
-            if (name in  charTypes):
+            if (name in charTypes):
                 self.name = name
             else:
-                notify.error("unknown avatar type: %s" % (name))
+                notify.error(f"unknown avatar type: {name}")
 
     def getType(self):
         """getType(self)
         Return which type of actor this dna represents.
         """
         if (self.type == 'c'):
-            #char type
+            # char type
             type = self.getCharName()
         else:
             notify.error("Invalid DNA type: ", self.type)
@@ -128,7 +143,7 @@ class CharDNA(AvatarDNA.AvatarDNA):
         """
         if (self.name == "mk"):
             return("mickey")
-        elif(self.name=="vmk"):
+        elif(self.name == "vmk"):
             return("vampire_mickey")
         elif (self.name == "mn"):
             return("minnie")
@@ -146,7 +161,7 @@ class CharDNA(AvatarDNA.AvatarDNA):
             return("daisy")
         elif (self.name == "p"):
             return("pluto")
-        elif( self.name == "wp"):
+        elif(self.name == "wp"):
             return("western_pluto")
         elif (self.name == "cl"):
             return("clarabelle")

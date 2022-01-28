@@ -5,6 +5,7 @@ from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 from pandac.PandaModules import *
 
+
 class GardenTutorial(DirectFrame, FSM.FSM):
     notify = DirectNotifyGlobal.directNotify.newCategory("GardenTutorial")
 
@@ -15,126 +16,126 @@ class GardenTutorial(DirectFrame, FSM.FSM):
         self.doneEvent = doneEvent
         self.callback = callback
         self.setStateArray(["Page1", "Page2", "Page3", "Page4", "Page5"])
-        
+
         # initialize our base class.
         DirectFrame.__init__(self,
-                             pos = (0.0, 0.0, 0.0),
-                             image_color = ToontownGlobals.GlobalDialogColor,
-                             image_scale = (1.5, 1.5, 0.9),
-                             text = "",
-                             text_scale = 0.06,
+                             pos=(0.0, 0.0, 0.0),
+                             image_color=ToontownGlobals.GlobalDialogColor,
+                             image_scale=(1.5, 1.5, 0.9),
+                             text="",
+                             text_scale=0.06,
                              )
 
         # For some reason, we need to set this after construction to
         # get it to work properly.
         self['image'] = DGG.getDefaultDialogGeom()
 
-        #title this sucker
+        # title this sucker
         self.title = DirectLabel(self,
-                                 relief = None,
-                                 text = "",
-                                 text_pos = (0.0, 0.32),
-                                 text_fg = (1, 0, 0, 1),
-                                 text_scale = 0.13,
-                                 text_font = ToontownGlobals.getSignFont(),
+                                 relief=None,
+                                 text="",
+                                 text_pos=(0.0, 0.32),
+                                 text_fg=(1, 0, 0, 1),
+                                 text_scale=0.13,
+                                 text_font=ToontownGlobals.getSignFont(),
                                  #text_shadow = (1, 1, 1, 1),
                                  )
 
-        #create some image frames
-        images = loader.loadModel('phase_5.5/models/estate/gardenTutorialPages')
+        # create some image frames
+        images = loader.loadModel(
+            'phase_5.5/models/estate/gardenTutorialPages')
         self.iPage1 = DirectFrame(self,
-                                  image = images.find('**/GardenTutorialPage1'),
-                                  scale = 0.35,
-                                  pos = (-0.51, -0.1, 0.05),
+                                  image=images.find('**/GardenTutorialPage1'),
+                                  scale=0.35,
+                                  pos=(-0.51, -0.1, 0.05),
                                   )
         self.iPage1.hide()
         self.iPage2 = DirectFrame(self,
-                                  image = images.find('**/GardenTutorialPage2'),
-                                  scale = 1.25,
-                                  pos = (0.43, -0.1, 0.05),
+                                  image=images.find('**/GardenTutorialPage2'),
+                                  scale=1.25,
+                                  pos=(0.43, -0.1, 0.05),
                                   )
         self.iPage2.hide()
         self.iPage3 = DirectFrame(self,
-                                  image = images.find('**/GardenTutorialPage3'),
-                                  scale = 0.5,
-                                  pos = (-0.52, -0.1, 0.02),
+                                  image=images.find('**/GardenTutorialPage3'),
+                                  scale=0.5,
+                                  pos=(-0.52, -0.1, 0.02),
                                   )
         self.iPage3.hide()
 
         self.iPage4 = DirectFrame(self,
-                                  image = images.find('**/GardenTutorialPage4'),
-                                  scale = 0.75,
-                                  pos = (0, -0.1, -0.05),
+                                  image=images.find('**/GardenTutorialPage4'),
+                                  scale=0.75,
+                                  pos=(0, -0.1, -0.05),
                                   )
         self.iPage4.hide()
 
         self.iPage5 = DirectFrame(self,
-                                  image = images.find('**/GardenTutorialPage5'),
-                                  scale = 0.7,
-                                  pos = (-0.51, -0.1, 0.05),
+                                  image=images.find('**/GardenTutorialPage5'),
+                                  scale=0.7,
+                                  pos=(-0.51, -0.1, 0.05),
                                   )
-        self.iPage5.hide()        
+        self.iPage5.hide()
 
-        
-        
         # Create some buttons.
         buttons = loader.loadModel('phase_3/models/gui/dialog_box_buttons_gui')
         gui = loader.loadModel('phase_3.5/models/gui/friendslist_gui')
 
         self.bNext = DirectButton(self,
-                                  image = (gui.find("**/Horiz_Arrow_UP"),
-                                           gui.find("**/Horiz_Arrow_DN"),
-                                           gui.find("**/Horiz_Arrow_Rllvr"),
-                                           gui.find("**/Horiz_Arrow_UP")),
-                                  image3_color = Vec4(1, 1, 1, 0.5),
-                                  relief = None,
-                                  text = TTLocalizer.GardenTutorialNext,
-                                  text3_fg = Vec4(0, 0, 0, 0.5),
-                                  text_scale = 0.05,
-                                  text_pos = (0.0, -0.1),
-                                  pos = (0.20, -0.3, -0.25),
-                                  command = self.requestNext,
+                                  image=(gui.find("**/Horiz_Arrow_UP"),
+                                         gui.find("**/Horiz_Arrow_DN"),
+                                         gui.find("**/Horiz_Arrow_Rllvr"),
+                                         gui.find("**/Horiz_Arrow_UP")),
+                                  image3_color=Vec4(1, 1, 1, 0.5),
+                                  relief=None,
+                                  text=TTLocalizer.GardenTutorialNext,
+                                  text3_fg=Vec4(0, 0, 0, 0.5),
+                                  text_scale=0.05,
+                                  text_pos=(0.0, -0.1),
+                                  pos=(0.20, -0.3, -0.25),
+                                  command=self.requestNext,
                                   )
 
         self.bPrev = DirectButton(self,
-                                  image = (gui.find("**/Horiz_Arrow_UP"),
-                                           gui.find("**/Horiz_Arrow_DN"),
-                                           gui.find("**/Horiz_Arrow_Rllvr"),
-                                           gui.find("**/Horiz_Arrow_UP")),
-                                  image3_color = Vec4(1, 1, 1, 0.5),
-                                  image_scale = (-1.0, 1.0, 1.0),  # make the arrow point left
-                                  relief = None,
-                                  text = TTLocalizer.GardenTutorialPrev,
-                                  text3_fg = Vec4(0, 0, 0, 0.5),
-                                  text_scale = 0.05,
-                                  text_pos = (0.0, -0.1),
-                                  pos = (-0.20, -0.3, -0.25),
-                                  command = self.requestPrev,
-                                 )
+                                  image=(gui.find("**/Horiz_Arrow_UP"),
+                                         gui.find("**/Horiz_Arrow_DN"),
+                                         gui.find("**/Horiz_Arrow_Rllvr"),
+                                         gui.find("**/Horiz_Arrow_UP")),
+                                  image3_color=Vec4(1, 1, 1, 0.5),
+                                  # make the arrow point left
+                                  image_scale=(-1.0, 1.0, 1.0),
+                                  relief=None,
+                                  text=TTLocalizer.GardenTutorialPrev,
+                                  text3_fg=Vec4(0, 0, 0, 0.5),
+                                  text_scale=0.05,
+                                  text_pos=(0.0, -0.1),
+                                  pos=(-0.20, -0.3, -0.25),
+                                  command=self.requestPrev,
+                                  )
 
         self.bQuit = DirectButton(self,
-                                  image = (buttons.find('**/ChtBx_OKBtn_UP'),
-                                           buttons.find('**/ChtBx_OKBtn_DN'),
-                                           buttons.find('**/ChtBx_OKBtn_Rllvr')),
-                                  relief = None,
-                                  text = TTLocalizer.GardenTutorialDone,
-                                  text_scale = 0.05,
-                                  text_pos = (0.0, -0.1),
-                                  pos = (0.55, -0.3, -0.25),
-                                  command = self.__handleQuit,
+                                  image=(buttons.find('**/ChtBx_OKBtn_UP'),
+                                         buttons.find('**/ChtBx_OKBtn_DN'),
+                                         buttons.find('**/ChtBx_OKBtn_Rllvr')),
+                                  relief=None,
+                                  text=TTLocalizer.GardenTutorialDone,
+                                  text_scale=0.05,
+                                  text_pos=(0.0, -0.1),
+                                  pos=(0.55, -0.3, -0.25),
+                                  command=self.__handleQuit,
                                   )
         self.bQuit.hide()
 
         buttons.removeNode()
         gui.removeNode()
 
-        #hide shtiker book
+        # hide shtiker book
         self.notify.debug('garden tutorial detectedGardenPlotUse')
         base.cr.playGame.getPlace().detectedGardenPlotUse()
 
         curState = base.cr.playGame.getPlace().getState()
-        self.notify.debug('Estate.getState() == %s' % curState)
-        
+        self.notify.debug(f'Estate.getState() == {curState}')
+
         self.request("Page1")
 
     def enterPage1(self, *args):
@@ -191,17 +192,13 @@ class GardenTutorial(DirectFrame, FSM.FSM):
     def exitPage5(self, *args):
         self.bNext['state'] = DGG.NORMAL
         self.iPage5.hide()
-        self.bQuit.hide()        
-
+        self.bQuit.hide()
 
     def __handleQuit(self):
-        #show the shtiker book
-        self.notify.debug('garden tutorial detectedGardenPlotDone')        
-        base.cr.playGame.getPlace().detectedGardenPlotDone()        
+        # show the shtiker book
+        self.notify.debug('garden tutorial detectedGardenPlotDone')
+        base.cr.playGame.getPlace().detectedGardenPlotDone()
         if self.callback:
             self.callback()
         else:
             messenger.send(self.doneEvent)
-
-
-        

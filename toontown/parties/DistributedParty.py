@@ -1,10 +1,10 @@
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Contact: Shawn Patton
 # Created: Sep 2008
 #
 # Purpose: DistributedParty controls message passing to the AI for parties.
 #
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 import random
 import time
 import datetime
@@ -31,24 +31,24 @@ from direct.interval.IntervalGlobal import *
 class DistributedParty(DistributedObject.DistributedObject):
     notify = directNotify.newCategory("DistributedParty")
 
-    def __init__(self,cr):
+    def __init__(self, cr):
         assert(self.notify.debug("__init__"))
-        DistributedObject.DistributedObject.__init__(self,cr)
+        DistributedObject.DistributedObject.__init__(self, cr)
         self.partyDoneEvent = "partyDone"
         self.load()
-        self.avIdsAtParty = [] #list of toon ids in this party
+        self.avIdsAtParty = []  # list of toon ids in this party
         # Needed by Party.py
         base.distributedParty = self
-        self.titleText = "" 
+        self.titleText = ""
         self.titleTextSequence = None
 
-        self.isPartyEnding = False       
+        self.isPartyEnding = False
 
     def setPartyState(self, partyState):
-        self.isPartyEnding = partyState 
-        messenger.send("partyStateChanged", [partyState])       
-                
-    def getPartyState(self):    
+        self.isPartyEnding = partyState
+        messenger.send("partyStateChanged", [partyState])
+
+    def getPartyState(self):
         return self.isPartyEnding
 
     def setPartyClockInfo(self, x, y, h):
@@ -65,12 +65,14 @@ class DistributedParty(DistributedObject.DistributedObject):
         self.partyInfo = PartyInfo(*partyInfoTuple)
         self.loadDecorations()
         allActIds = [x.activityId for x in self.partyInfo.activityList]
-        base.partyHasJukebox = (PartyGlobals.ActivityIds.PartyJukebox) in allActIds  \
-                               or (PartyGlobals.ActivityIds.PartyJukebox40) in allActIds 
-        
+        base.partyHasJukebox = (
+            PartyGlobals.ActivityIds.PartyJukebox) in allActIds or (
+            PartyGlobals.ActivityIds.PartyJukebox40) in allActIds
+
         # Fill in a grid showing if a square has an activity or decoration on it
         # Note : This grid is the reverse y of the PartyEditorGrid
-        # The difference might be down to where the origin makes the most sense in screen-space vs. world-space.
+        # The difference might be down to where the origin makes the most sense
+        # in screen-space vs. world-space.
         self.grid = [[False, False, False, False, False, True, True, True, True, True, True, True, True, True, True, False, False, False],
                      [False, False, False, False, True, True, True, True, True, True, True, True, True, True, True, False, False, False],
                      [False, False, False, True, True, True, True, True, True, True, True, True, True, True, True, True, False, False],
@@ -86,20 +88,23 @@ class DistributedParty(DistributedObject.DistributedObject):
                      [False, False, False, False, True, True, True, True, True, True, True, True, True, False, False, False, False, False],
                      [False, False, False, False, False, True, True, True, True, True, True, True, False, False, False, False, False, False],
                      [False, False, False, False, False, False, True, True, True, True, True, False, False, False, False, False, False, False],
-                    ]
+                     ]
 
-        # This uses essentially the same functionality as computeGridYRange and computeGridXRange.
+        # This uses essentially the same functionality as computeGridYRange and
+        # computeGridXRange.
         def fillGrid(x, y, size):
-            for i in range(-size[1]//2+1, size[1]//2+1):
-                for j in range(-size[0]//2+1, size[0]//2+1):
-                    self.grid[i+y][j+x] = False
-        
+            for i in range(-size[1] // 2 + 1, size[1] // 2 + 1):
+                for j in range(-size[0] // 2 + 1, size[0] // 2 + 1):
+                    self.grid[i + y][j + x] = False
+
         for activityBase in self.partyInfo.activityList:
-            fillGrid(activityBase.x, activityBase.y, PartyGlobals.ActivityInformationDict[activityBase.activityId]["gridsize"])
-            
+            fillGrid(activityBase.x, activityBase.y,
+                     PartyGlobals.ActivityInformationDict[activityBase.activityId]["gridsize"])
+
         for decorBase in self.partyInfo.decors:
-            fillGrid(decorBase.x, decorBase.y, PartyGlobals.DecorationInformationDict[decorBase.decorId]["gridsize"])
-            
+            fillGrid(decorBase.x, decorBase.y,
+                     PartyGlobals.DecorationInformationDict[decorBase.decorId]["gridsize"])
+
         self.loadGrass()
 
     def setPartyStartedTime(self, startedTime):
@@ -131,10 +136,12 @@ class DistributedParty(DistributedObject.DistributedObject):
         Toon.loadMinigameAnims()
 
         # Load a sign for the activities to copy and use
-        self.defaultSignModel = loader.loadModel("phase_13/models/parties/eventSign")
-        
+        self.defaultSignModel = loader.loadModel(
+            "phase_13/models/parties/eventSign")
+
         # Load activity icons
-        self.activityIconsModel = loader.loadModel("phase_4/models/parties/eventSignIcons")
+        self.activityIconsModel = loader.loadModel(
+            "phase_4/models/parties/eventSignIcons")
 
         # Load party hat for host
         model = loader.loadModel("phase_4/models/parties/partyStickerbook")
@@ -147,23 +154,27 @@ class DistributedParty(DistributedObject.DistributedObject):
         model.removeNode()
 
         # Load a lever for the activities to copy and use
-        self.defaultLeverModel = loader.loadModel('phase_13/models/parties/partyLeverBase')
-        self.defaultStickModel = loader.loadModel('phase_13/models/parties/partyLeverStick')
+        self.defaultLeverModel = loader.loadModel(
+            'phase_13/models/parties/partyLeverBase')
+        self.defaultStickModel = loader.loadModel(
+            'phase_13/models/parties/partyLeverStick')
 
     def loadGrass(self):
         self.grassRoot = NodePath("GrassRoot")
         self.grassRoot.reparentTo(base.cr.playGame.hood.loader.geom)
         grass = loader.loadModel("phase_13/models/parties/grass")
-        
+
         clearPositions = self.getClearSquarePositions()
-        
-        # Create up to 3 tufts of grass per clear square (avg) or up to PartyGlobals.TuftsOfGrass.
+
+        # Create up to 3 tufts of grass per clear square (avg) or up to
+        # PartyGlobals.TuftsOfGrass.
         numTufts = min(len(clearPositions) * 3, PartyGlobals.TuftsOfGrass)
-        
+
         for i in range(numTufts):
             g = grass.copyTo(self.grassRoot)
             pos = random.choice(clearPositions)
-            g.setPos(pos[0]+random.randint(-8,8), pos[1]+random.randint(-8,8), 0.0)
+            g.setPos(pos[0] + random.randint(-8, 8),
+                     pos[1] + random.randint(-8, 8), 0.0)
 
     def loadDecorations(self):
         self.decorationsList = []
@@ -174,7 +185,7 @@ class DistributedParty(DistributedObject.DistributedObject):
                 PartyUtils.convertDistanceFromPartyGrid(decorBase.y, 1),
                 PartyUtils.convertDegreesFromPartyGrid(decorBase.h),
             ))
-                
+
     def unload(self):
         assert(self.notify.debug("unload"))
         if hasattr(self, "decorationsList") and self.decorationsList:
@@ -182,7 +193,7 @@ class DistributedParty(DistributedObject.DistributedObject):
                 decor.unload()
 
             del self.decorationsList
-        
+
         self.stopPartyClock()
         self.grassRoot.removeNode()
         del self.grassRoot
@@ -191,10 +202,10 @@ class DistributedParty(DistributedObject.DistributedObject):
         if hasattr(self, 'testGrid'):
             self.testGrid.removeNode()
             del self.testGrid
-        
+
         # Ignore all events we might have accepted
         self.ignoreAll()
-        
+
         Toon.unloadMinigameAnims()
         self.partyHat.removeNode()
         del self.partyHat
@@ -221,7 +232,14 @@ class DistributedParty(DistributedObject.DistributedObject):
                     np = NodePath(cm.generate())
                     np.setScale(12)
                     np.setP(-90.0)
-                    np.setPos(PartyUtils.convertDistanceFromPartyGrid(j,0)-6.0, PartyUtils.convertDistanceFromPartyGrid(i,1)-6.0, 0.1)
+                    np.setPos(
+                        PartyUtils.convertDistanceFromPartyGrid(
+                            j,
+                            0) - 6.0,
+                        PartyUtils.convertDistanceFromPartyGrid(
+                            i,
+                            1) - 6.0,
+                        0.1)
                     np.reparentTo(self.testGrid)
                     if self.grid[i][j]:
                         np.setColorScale(0.0, 1.0, 0.0, 1.0)
@@ -234,42 +252,50 @@ class DistributedParty(DistributedObject.DistributedObject):
         if there are no clear squares.
         """
         clearPositions = self.getClearSquarePositions()
-        
+
         # A party with no clear squares shouldn't be able to make it through validation. If you get
-        # this exception, take a look at DistributedPartyManagerAI.validatePartyAndReturnCost().
+        # this exception, take a look at
+        # DistributedPartyManagerAI.validatePartyAndReturnCost().
         if len(clearPositions) == 0:
-            raise Exception("Party %s has no empty grid squares." % self.doId)
-        
+            raise Exception(f"Party {self.doId} has no empty grid squares.")
+
         return random.choice(clearPositions)
-        
+
     def getClearSquarePositions(self):
         """
         Return a list of (x,y,z) positions at the center of a clear square in the party.
         """
         clearPositions = []
-        
+
         for y in range(len(self.grid)):
             for x in range(len(self.grid[0])):
                 if self.grid[y][x]:
-                    pos = (PartyUtils.convertDistanceFromPartyGrid(x,0), PartyUtils.convertDistanceFromPartyGrid(y,1), 0.1)
+                    pos = (
+                        PartyUtils.convertDistanceFromPartyGrid(
+                            x, 0), PartyUtils.convertDistanceFromPartyGrid(
+                            y, 1), 0.1)
                     clearPositions.append(pos)
-        
+
         return clearPositions
-    
+
     def startPartyClock(self):
         self.partyClockModel.reparentTo(base.cr.playGame.hood.loader.geom)
         curServerTime = base.cr.toontownTimeManager.getCurServerDateTime()
         # if we are of by even a tiny bit on server time, we could return a negative number
-        # and a timedelta(seconds = -1) when normalized gives us a day of -1 and ridiculously large seconds
-        timePartyWillEnd = self.partyStartedTime + datetime.timedelta(hours = PartyGlobals.DefaultPartyDuration)
+        # and a timedelta(seconds = -1) when normalized gives us a day of -1
+        # and ridiculously large seconds
+        timePartyWillEnd = self.partyStartedTime + \
+            datetime.timedelta(hours=PartyGlobals.DefaultPartyDuration)
         timeLeftInParty = timePartyWillEnd - curServerTime
         if curServerTime < timePartyWillEnd:
             self.secondsLeftInParty = timeLeftInParty.seconds
         else:
             self.secondsLeftInParty = 0
         taskMgr.doMethodLater(0.5, self.partyClockTask, "UpdatePartyClock")
-        self.partyClockSignFront = self.partyClockModel.find("**/signFrontText_locator")
-        self.partyClockSignBack = self.partyClockModel.find("**/signBackText_locator")
+        self.partyClockSignFront = self.partyClockModel.find(
+            "**/signFrontText_locator")
+        self.partyClockSignBack = self.partyClockModel.find(
+            "**/signBackText_locator")
         self.attachHostNameToSign(self.partyClockSignFront)
         self.attachHostNameToSign(self.partyClockSignBack)
 
@@ -282,10 +308,10 @@ class DistributedParty(DistributedObject.DistributedObject):
         nameText.setCardDecal(True)
         nameText.setCardColor(1.0, 1.0, 1.0, 0.0)
 
-        r = 232.0 /255.0 #self.randomGenerator.random()
-        g = 169.0 / 255.0  #self.randomGenerator.random()
-        b = 23.0 / 255.0 #self.randomGenerator.random()
-        nameText.setTextColor(r,g,b,1)
+        r = 232.0 / 255.0  # self.randomGenerator.random()
+        g = 169.0 / 255.0  # self.randomGenerator.random()
+        b = 23.0 / 255.0  # self.randomGenerator.random()
+        nameText.setTextColor(r, g, b, 1)
         nameText.setAlign(nameText.ACenter)
         nameText.setFont(ToontownGlobals.getBuildingNametagFont())
         nameText.setShadowColor(0, 0, 0, 1)
@@ -297,7 +323,7 @@ class DistributedParty(DistributedObject.DistributedObject):
         scaleMult = 0.48
         #xScale = 1.0 * scaleMult
         #numLines = 0
-        
+
         houseName = self.hostName
 
         nameText.setText(houseName)
@@ -312,25 +338,25 @@ class DistributedParty(DistributedObject.DistributedObject):
         if textWidth > nameWordWrap:
             xScale = nameWordWrap / textWidth * scaleMult
 
-        sign_origin = locator # self.house.find("**/sign_origin")
+        sign_origin = locator  # self.house.find("**/sign_origin")
         #pos = sign_origin.getPos()
-        #sign_origin.setPosHpr(pos[0],pos[1],pos[2]+.15*textHeight,90,0,0)
+        # sign_origin.setPosHpr(pos[0],pos[1],pos[2]+.15*textHeight,90,0,0)
         namePlate = sign_origin.attachNewNode(nameText)
         namePlate.setDepthWrite(0)
-        namePlate.setPos(0,0,0)
+        namePlate.setPos(0, 0, 0)
         namePlate.setScale(xScale)
 
     def stopPartyClock(self):
         self.partyClockModel.removeNode()
         taskMgr.remove("UpdatePartyClock")
-        
+
     def partyClockTask(self, task):
         self.secondsLeftInParty -= 0.5
         if self.secondsLeftInParty < 0:
             self.frontTimer["minute"]["text"] = "--"
             self.backTimer["minute"]["text"] = "--"
             self.frontTimer["second"]["text"] = "--"
-            self.backTimer["second"]["text"] = "--"            
+            self.backTimer["second"]["text"] = "--"
             return
         if self.frontTimer["colon"].isStashed():
             self.frontTimer["colon"].unstash()
@@ -339,98 +365,106 @@ class DistributedParty(DistributedObject.DistributedObject):
             self.frontTimer["colon"].stash()
             self.backTimer["colon"].stash()
 
-        minutesLeft = int(int(self.secondsLeftInParty/60)%60)
+        minutesLeft = int(int(self.secondsLeftInParty / 60) % 60)
         if minutesLeft < 10:
-            minutesLeft = "0%d"%minutesLeft
+            minutesLeft = "0%d" % minutesLeft
         else:
-            minutesLeft = "%d"%minutesLeft
-        secondsLeft = int(self.secondsLeftInParty%60)
+            minutesLeft = "%d" % minutesLeft
+        secondsLeft = int(self.secondsLeftInParty % 60)
         if secondsLeft < 10:
-            secondsLeft = "0%d"%secondsLeft
+            secondsLeft = "0%d" % secondsLeft
         else:
-            secondsLeft = "%d"%secondsLeft
+            secondsLeft = "%d" % secondsLeft
         self.frontTimer["minute"]["text"] = minutesLeft
         self.backTimer["minute"]["text"] = minutesLeft
         self.frontTimer["second"]["text"] = secondsLeft
         self.backTimer["second"]["text"] = secondsLeft
         taskMgr.doMethodLater(0.5, self.partyClockTask, "UpdatePartyClock")
         if self.secondsLeftInParty != int(self.secondsLeftInParty):
-            self.partyClockModel.find("**/middleRotateFront_grp").setR(-6.0*(self.secondsLeftInParty%60))
-            self.partyClockModel.find("**/middleRotateBack_grp").setR(6.0*(self.secondsLeftInParty%60))
+            self.partyClockModel.find(
+                "**/middleRotateFront_grp").setR(-6.0 * (self.secondsLeftInParty % 60))
+            self.partyClockModel.find(
+                "**/middleRotateBack_grp").setR(6.0 * (self.secondsLeftInParty % 60))
 
     def getAvIdsAtParty(self):
         return self.avIdsAtParty
-        
+
     def setAvIdsAtParty(self, avIdsAtParty):
-        assert(self.notify.debug("setAvIdsAtParty : avIdsAtParty = %s" % avIdsAtParty))
+        assert(
+            self.notify.debug(
+                f"setAvIdsAtParty : avIdsAtParty = {avIdsAtParty}"))
         self.avIdsAtParty = avIdsAtParty
 
     def loadPartyCountdownTimer(self):
-        self.partyClockModel = loader.loadModel('phase_13/models/parties/partyClock')
-        self.partyClockModel.setPos(self.partyClockInfo[0], self.partyClockInfo[1], 0.0)
+        self.partyClockModel = loader.loadModel(
+            'phase_13/models/parties/partyClock')
+        self.partyClockModel.setPos(
+            self.partyClockInfo[0], self.partyClockInfo[1], 0.0)
         self.partyClockModel.setH(self.partyClockInfo[2])
         self.partyClockModel.reparentTo(base.cr.playGame.hood.loader.geom)
         #self.partyClockModel.find("**/frontText_locator").setPos(0.0, -1.1, 13.7)
         #self.partyClockModel.find("**/backText_locator").setPos(0.0, 0.633, 13.7)
         self.partyClockModel.find("**/frontText_locator").setY(-1.1)
         self.partyClockModel.find("**/backText_locator").setY(0.633)
-        self.frontTimer = self.getTimer(self.partyClockModel.find("**/frontText_locator"))
+        self.frontTimer = self.getTimer(
+            self.partyClockModel.find("**/frontText_locator"))
         base.frontTimerLoc = self.partyClockModel.find("**/frontText_locator")
         base.backTimerLoc = self.partyClockModel.find("**/backText_locator")
-        self.backTimer = self.getTimer(self.partyClockModel.find("**/backText_locator"))
+        self.backTimer = self.getTimer(
+            self.partyClockModel.find("**/backText_locator"))
         self.partyClockModel.stash()
 
     def getTimer(self, parent):
         timeFont = ToontownGlobals.getMinnieFont()
         timer = {}
         timer["minute"] = DirectLabel(
-            parent = parent,
-            pos = (-1.2, TTLocalizer.DPpartyCountdownClockMinutesPosY, 0.0),
-            relief = None,
-            text = '59',
-            text_align = TextNode.ACenter,
-            text_font = timeFont,
-            text_fg = (0.7, 0.3, 0.3, 1.0),
-            scale = TTLocalizer.DPpartyCountdownClockMinutesScale,
+            parent=parent,
+            pos=(-1.2, TTLocalizer.DPpartyCountdownClockMinutesPosY, 0.0),
+            relief=None,
+            text='59',
+            text_align=TextNode.ACenter,
+            text_font=timeFont,
+            text_fg=(0.7, 0.3, 0.3, 1.0),
+            scale=TTLocalizer.DPpartyCountdownClockMinutesScale,
         )
         timer["colon"] = DirectLabel(
-            parent = parent,
-            pos = (0, TTLocalizer.DPpartyCountdownClockColonPosY, 0.0),
-            relief = None,
-            text = ':',
-            text_align = TextNode.ACenter,
-            text_font = timeFont,
-            text_fg = (0.7, 0.3, 0.3, 1.0),
-            scale = TTLocalizer.DPpartyCountdownClockColonScale,
+            parent=parent,
+            pos=(0, TTLocalizer.DPpartyCountdownClockColonPosY, 0.0),
+            relief=None,
+            text=':',
+            text_align=TextNode.ACenter,
+            text_font=timeFont,
+            text_fg=(0.7, 0.3, 0.3, 1.0),
+            scale=TTLocalizer.DPpartyCountdownClockColonScale,
         )
         timer["second"] = DirectLabel(
-            parent = parent,
-            relief = None,
-            pos = (1.2, TTLocalizer.DPpartyCountdownClockSecondPosY, 0.0),
-            text = '14',
-            text_align = TextNode.ACenter,
-            text_font = timeFont,
-            text_fg = (0.7, 0.3, 0.3, 1.0),
-            scale = TTLocalizer.DPpartyCountdownClockSecondScale,
+            parent=parent,
+            relief=None,
+            pos=(1.2, TTLocalizer.DPpartyCountdownClockSecondPosY, 0.0),
+            text='14',
+            text_align=TextNode.ACenter,
+            text_font=timeFont,
+            text_fg=(0.7, 0.3, 0.3, 1.0),
+            scale=TTLocalizer.DPpartyCountdownClockSecondScale,
         )
         timer["textLabel"] = DirectLabel(
-            parent = parent,
-            relief = None,
-            pos = (0.0, 0.0, 1.15),
-            text = TTLocalizer.PartyCountdownClockText,
-            text_font = timeFont,
-            text_fg = (0.7, 0.3, 0.3, 1.0),
-            scale = TTLocalizer.DPpartyCountdownClockTextScale,
+            parent=parent,
+            relief=None,
+            pos=(0.0, 0.0, 1.15),
+            text=TTLocalizer.PartyCountdownClockText,
+            text_font=timeFont,
+            text_fg=(0.7, 0.3, 0.3, 1.0),
+            scale=TTLocalizer.DPpartyCountdownClockTextScale,
         )
         return timer
 
     def setHostName(self, hostName):
         """Handle AI telling us the hostname."""
         self.hostName = hostName
-        
+
         if GMUtils.testGMIdentity(self.hostName):
             self.hostName = GMUtils.handleGMName(self.hostName)
-            
+
         # it is possible to get here initially without the model being loaded yet,
         # hence the hasattr self
         if hasattr(self, "partyClockSignFront"):
@@ -452,23 +486,24 @@ class DistributedParty(DistributedObject.DistributedObject):
         if not self.hostName:
             # potentially we don't have the host name yet
             return
-        
-        partyText = TTLocalizer.PartyTitleText % TTLocalizer.GetPossesive(self.hostName)
+
+        partyText = TTLocalizer.PartyTitleText % TTLocalizer.GetPossesive(
+            self.hostName)
         self.doSpawnTitleText(partyText)
 
     def doSpawnTitleText(self, text):
         self.titleColor = (1.0, 0.5, 0.4, 1.0)
         self.titleText = OnscreenText.OnscreenText(
             text,
-            fg = self.titleColor,
-            font = ToontownGlobals.getSignFont(),
-            pos = (0,-0.5),
-            scale = 0.16,
-            drawOrder = 0,
-            mayChange = 1,
-            wordwrap = 16
-            )        
-        
+            fg=self.titleColor,
+            font=ToontownGlobals.getSignFont(),
+            pos=(0, -0.5),
+            scale=0.16,
+            drawOrder=0,
+            mayChange=1,
+            wordwrap=16
+        )
+
         self.titleText.setText(text)
         self.titleText.show()
         self.titleText.setColor(Vec4(*self.titleColor))
@@ -479,12 +514,11 @@ class DistributedParty(DistributedObject.DistributedObject):
             # This tricks the taskMgr
             Wait(0.1),
             Wait(6.0),
-            self.titleText.colorScaleInterval( 0.5,
-            Vec4(1.0, 1.0, 1.0, 0.0),
-            Vec4(1.0, 1.0, 1.0, 1.0)),
+            self.titleText.colorScaleInterval(0.5,
+                                              Vec4(1.0, 1.0, 1.0, 0.0),
+                                              Vec4(1.0, 1.0, 1.0, 1.0)),
             Func(self.hideTitleText))
         self.titleTextSequence.start()
-        
 
     def hideTitleTextTask(self, task):
         assert(self.notify.debug("hideTitleTextTask()"))

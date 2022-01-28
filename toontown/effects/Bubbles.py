@@ -5,6 +5,7 @@ from direct.particles import Particles
 from direct.particles import ForceGroup
 import random
 
+
 class Bubbles(NodePath):
     def __init__(self, parent, renderParent):
         # Initialize the superclass
@@ -33,7 +34,7 @@ class Bubbles(NodePath):
         p0.renderer.setAlphaMode(BaseParticleRenderer.PRALPHAUSER)
         p0.renderer.setUserAlpha(1.00)
         # Sparkle parameters
-        p0.renderer.setTextureFromNode('phase_4/models/char/bubble','**/*')
+        p0.renderer.setTextureFromNode('phase_4/models/char/bubble', '**/*')
         p0.renderer.setXScaleFlag(1)
         p0.renderer.setYScaleFlag(1)
         p0.renderer.setInitialXScale(0.07)
@@ -57,8 +58,8 @@ class Bubbles(NodePath):
         gravityForceGroup.addForce(force1)
         self.effect.addForceGroup(gravityForceGroup)
         self.effect.addParticles(p0)
-        self.effect.setPos(0,0,0)
-            
+        self.effect.setPos(0, 0, 0)
+
     def start(self):
         self.effect.start(self, self.renderParent)
 

@@ -1,6 +1,7 @@
 from . import ActiveCellAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class CrusherCellAI(ActiveCellAI.ActiveCellAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("CrusherCellAI")
 
@@ -14,13 +15,12 @@ class CrusherCellAI(ActiveCellAI.ActiveCellAI):
         self.crushables = []
 
     def destroy(self):
-        self.notify.info('destroy entity %s' % self.entId)
+        self.notify.info(f'destroy entity {self.entId}')
         # we may be destroyed before entities that are registered with us
         # clean up so that this will not be a problem
         for entId in self.crushers:
             self.unregisterCrusher(entId)
         ActiveCellAI.ActiveCellAI.destroy(self)
-
 
     def registerCrusher(self, entId):
         if entId not in self.crushers:
@@ -38,12 +38,12 @@ class CrusherCellAI(ActiveCellAI.ActiveCellAI):
                 # error. During level destruction, this is preceded in the
                 # log by the entIds of crusher entities and CrusherCells as
                 # they're destroyed.
-                self.notify.error('unregisterCrusher(%s): CrusherCellAI %s has no attrib \'level\'' %
-                                  (entId, self.entId))
+                self.notify.error(
+                    'unregisterCrusher(%s): CrusherCellAI %s has no attrib \'level\'' %
+                    (entId, self.entId))
             ent = self.level.entities.get(entId, None)
             if ent:
                 self.ignore(ent.crushMsg)
-            
 
     def registerCrushable(self, entId):
         if entId not in self.crushables:
@@ -52,10 +52,10 @@ class CrusherCellAI(ActiveCellAI.ActiveCellAI):
     def unregisterCrushable(self, entId):
         if entId in self.crushables:
             self.crushables.remove(entId)
-        
+
     def doCrush(self, crusherId, axis):
-        self.notify.debug("doCrush %s" % crusherId)
-        # extraArgs should have  axis information so we know 
+        self.notify.debug(f"doCrush {crusherId}")
+        # extraArgs should have  axis information so we know
         # in which direction the crushed objects are smushed.
 
         for occupantId in self.occupantIds:
@@ -65,9 +65,10 @@ class CrusherCellAI(ActiveCellAI.ActiveCellAI):
                 if crushObj:
                     crushObj.doCrush(crusherId, axis)
                 else:
-                    self.notify.warning("couldn't find crushable object %d" % self.occupantId)
-            
-            
+                    self.notify.warning(
+                        "couldn't find crushable object %d" %
+                        self.occupantId)
+
     def updateCrushables(self):
         for id in self.crushables:
             crushable = self.level.entities.get(id, None)

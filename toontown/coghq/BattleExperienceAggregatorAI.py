@@ -1,5 +1,6 @@
 class BattleExperienceAggregatorAI:
     """This class holds battle experience data across multiple battles"""
+
     def __init__(self):
         self.suitsKilled = []
         self.suitsKilledPerFloor = []

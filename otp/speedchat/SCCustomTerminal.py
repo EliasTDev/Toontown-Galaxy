@@ -6,12 +6,15 @@ from otp.otpbase.OTPLocalizer import CustomSCStrings
 # args: textId
 SCCustomMsgEvent = 'SCCustomMsg'
 
+
 def decodeSCCustomMsg(textId):
     return CustomSCStrings.get(textId, None)
+
 
 class SCCustomTerminal(SCTerminal):
     """ SCCustomTerminal represents a terminal SpeedChat entry that
     contains a phrase that was purchased from the catalog. """
+
     def __init__(self, textId):
         SCTerminal.__init__(self)
         self.textId = textId

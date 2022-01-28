@@ -35,7 +35,7 @@ dayCloud2.setBin("background", 101)
 dawnSky = loader.loadModel("phase_6/models/props/MM_sky")
 dawnSky.setScale(0.8)
 dawnSky.setTransparency(1)
-dawnSky.setBin("background", 102) #come on disney bruh
+dawnSky.setBin("background", 102)  # come on disney bruh
 
 pe = PolylightEffect.make()
 brightness = 1.25
@@ -54,12 +54,12 @@ for sky in (nightSky, daySky, dawnSky):
     sky.setDepthWrite(0)
 
 # Color scale defines
-dawnColor = Vec4(1,0.8,0.4,1)
-dayColor = Vec4(1,1,1,1)
-duskColor = Vec4(0.8,0.4,0.7,1)
-nightColor = Vec4(0.3,0.3,0.5,1)
-onAlpha = Vec4(1,1,1,1)
-offAlpha = Vec4(1,1,1,0)
+dawnColor = Vec4(1, 0.8, 0.4, 1)
+dayColor = Vec4(1, 1, 1, 1)
+duskColor = Vec4(0.8, 0.4, 0.7, 1)
+nightColor = Vec4(0.3, 0.3, 0.5, 1)
+onAlpha = Vec4(1, 1, 1, 1)
+offAlpha = Vec4(1, 1, 1, 0)
 
 # Geom of the hood
 geom = base.cr.playGame.hood.loader.geom
@@ -79,38 +79,39 @@ lightIndex = 0
 
 
 for lamp in oneLights:
-    lamp.setColorScale(1,1,1,1,1)
+    lamp.setColorScale(1, 1, 1, 1, 1)
     disc = loader.loadModel("phase_3.5/models/props/glow")
     # Add PolylightNodes
     lightIndex += 1
     plNode = PolylightNode("pl" + str(lightIndex))
     plNode.setRadius(20)
-    #plNode.setPos(0,0,2)
-    plNode.setColor(1.0,0.8,0.4)
+    # plNode.setPos(0,0,2)
+    plNode.setColor(1.0, 0.8, 0.4)
     plNode.setFlickerType(PolylightNode.FSIN)
     plNode.setFreq(6.0)
     plNode.setOffset(-0.5)
     plNodePath = NodePath(plNode)
     polylights.append(plNodePath)
-    base.localAvatar.node().setEffect(base.localAvatar.node().getEffect(PolylightEffect.getClassType()).addLight(plNodePath))
-
+    base.localAvatar.node().setEffect(
+        base.localAvatar.node().getEffect(
+            PolylightEffect.getClassType()).addLight(plNodePath))
 
     # A glow around the lamp light bulb
 
     disc.setBillboardPointEye()
-    disc.setPos(0.2,-1,10)
+    disc.setPos(0.2, -1, 10)
     disc.setScale(8)
-    disc.setColorScale(1,1,0.8,0.25,1)
+    disc.setColorScale(1, 1, 0.8, 0.25, 1)
     disc.setTransparency(1)
     disc.reparentTo(lamp.find("**/p13"))
-    #disc.node().setEffect(pe)
+    # disc.node().setEffect(pe)
     discs.append(disc)
     # A glow on the floor
     disc = loader.loadModel("phase_3.5/models/props/glow")
-    disc.setPos(0,0,0.025)
-    disc.setHpr(0,90,0)
+    disc.setPos(0, 0, 0.025)
+    disc.setHpr(0, 90, 0)
     disc.setScale(14)
-    disc.setColorScale(1,1,0.8,0.25,1)
+    disc.setColorScale(1, 1, 0.8, 0.25, 1)
     disc.setTransparency(1)
     disc.reparentTo(lamp.find("**/p13"))
     plNodePath.reparentTo(disc)
@@ -119,46 +120,48 @@ for lamp in oneLights:
 
 
 for lamp in threeLights:
-    lamp.setColorScale(1,1,1,1,1)
+    lamp.setColorScale(1, 1, 1, 1, 1)
     disc = loader.loadModel("phase_3.5/models/props/glow")
     # Add PolylightNodes
     lightIndex += 1
     plNode = PolylightNode("pl" + str(lightIndex))
     plNode.setRadius(20)
-    plNode.setColor(1.0,1.0,1.0)
+    plNode.setColor(1.0, 1.0, 1.0)
     plNode.setFlickerType(PolylightNode.FRANDOM)
-    #plNode.setFreq(6.0)
+    # plNode.setFreq(6.0)
     plNode.setOffset(-0.5)
     plNode.setScale(0.2)
     plNode.setAttenuation(PolylightNode.AQUADRATIC)
     plNodePath = NodePath(plNode)
     polylights.append(plNodePath)
-    base.localAvatar.node().setEffect(base.localAvatar.node().getEffect(PolylightEffect.getClassType()).addLight(plNodePath))
-
+    base.localAvatar.node().setEffect(
+        base.localAvatar.node().getEffect(
+            PolylightEffect.getClassType()).addLight(plNodePath))
 
     disc.setBillboardPointEye()
-    disc.setPos(0,-1,10)
+    disc.setPos(0, -1, 10)
     disc.setScale(10)
-    disc.setColorScale(1,1,0.8,0.25,1)
+    disc.setColorScale(1, 1, 0.8, 0.25, 1)
     disc.setTransparency(1)
     disc.reparentTo(lamp.find("**/p23"))
     plNodePath.reparentTo(disc)
-    #disc.node().setEffect(pe)
+    # disc.node().setEffect(pe)
     discs.append(disc)
     # A glow on the floor
     disc = loader.loadModel("phase_3.5/models/props/glow")
-    disc.setPos(0,0,0.025)
-    disc.setHpr(0,90,0)
+    disc.setPos(0, 0, 0.025)
+    disc.setHpr(0, 90, 0)
     disc.setScale(14)
-    disc.setColorScale(1,1,0.8,0.2,1)
+    disc.setColorScale(1, 1, 0.8, 0.2, 1)
     disc.setTransparency(1)
     disc.reparentTo(lamp.find("**/p23"))
-    #disc.node().setEffect(pe)
+    # disc.node().setEffect(pe)
     discs.append(disc)
+
 
 def makeNight():
     for lamp in lamps:
-        lamp.setColorScale(1,1,1,1,1)
+        lamp.setColorScale(1, 1, 1, 1, 1)
     for disc in discs:
         disc.show()
     base.playSfx(cricket1, volume=0.3)
@@ -166,7 +169,7 @@ def makeNight():
     base.playMusic(nightMusic, volume=0.5)
     for b in butterflies:
         b.butterflyNode.hide()
-    
+
 
 def makeDay():
     for lamp in lamps:
@@ -179,17 +182,24 @@ def makeDay():
     for b in butterflies:
         b.butterflyNode.show()
 
+
 def lerpDaySkyFunc(color):
     daySky.setColorScale(color, 1)
+
 
 def lerpDawnSkyFunc(color):
     dawnSky.setColorScale(color, 1)
 
+
 def lerpNightSkyFunc(color):
     nightSky.setColorScale(color, 1)
 
+
 def lerpLightWeightFunc(weight):
-    base.localAvatar.node().setEffect(base.localAvatar.node().getEffect(PolylightEffect.getClassType()).setWeight(weight))
+    base.localAvatar.node().setEffect(
+        base.localAvatar.node().getEffect(
+            PolylightEffect.getClassType()).setWeight(weight))
+
 
 # Change this to change the day/night cycle length
 t = 120.0
@@ -230,7 +240,6 @@ i = Parallel(Sequence(Parallel(LerpColorScaleInterval(render, tSeg, dawnColor),
                       ),
              )
 i.loop()
-
 
 
 """

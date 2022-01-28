@@ -10,6 +10,7 @@ from toontown.quest import Quests
 # This is not a distributed class... It just owns and manages some distributed
 # classes.
 
+
 class HQBuildingAI:
     def __init__(self, air, exteriorZone, interiorZone, blockNumber):
         # While this is not a distributed object, it needs to know about
@@ -17,7 +18,7 @@ class HQBuildingAI:
         self.air = air
         self.exteriorZone = exteriorZone
         self.interiorZone = interiorZone
-        
+
         self.setup(blockNumber)
 
     def cleanup(self):
@@ -38,7 +39,7 @@ class HQBuildingAI:
 
     def setup(self, blockNumber):
         # The interior
-        self.interior=DistributedHQInteriorAI.DistributedHQInteriorAI(
+        self.interior = DistributedHQInteriorAI.DistributedHQInteriorAI(
             blockNumber, self.air, self.interiorZone)
 
         #desc = (self.interiorZone, "HQ Officer", ('dls', 'ms', 'm', 'm', 6,0,6,6,40,8), "m", 1, 0)
@@ -47,22 +48,22 @@ class HQBuildingAI:
         self.npcs = NPCToons.createNpcsInZone(self.air, self.interiorZone)
 
         self.interior.generateWithRequired(self.interiorZone)
-        # Outside door 0. 
-        door0=DistributedDoorAI.DistributedDoorAI(
+        # Outside door 0.
+        door0 = DistributedDoorAI.DistributedDoorAI(
             self.air, blockNumber, DoorTypes.EXT_HQ,
             doorIndex=0)
-        # Outside door 1. 
-        door1=DistributedDoorAI.DistributedDoorAI(
+        # Outside door 1.
+        door1 = DistributedDoorAI.DistributedDoorAI(
             self.air, blockNumber, DoorTypes.EXT_HQ,
             doorIndex=1)
-        # Inside door 0. 
-        insideDoor0=DistributedDoorAI.DistributedDoorAI(
+        # Inside door 0.
+        insideDoor0 = DistributedDoorAI.DistributedDoorAI(
             self.air,
             blockNumber,
             DoorTypes.INT_HQ,
             doorIndex=0)
         # Inside door 1.
-        insideDoor1=DistributedDoorAI.DistributedDoorAI(
+        insideDoor1 = DistributedDoorAI.DistributedDoorAI(
             self.air,
             blockNumber,
             DoorTypes.INT_HQ,
@@ -73,10 +74,10 @@ class HQBuildingAI:
         door1.setOtherDoor(insideDoor1)
         insideDoor1.setOtherDoor(door1)
         # Put them in the right zones
-        door0.zoneId=self.exteriorZone
-        door1.zoneId=self.exteriorZone
-        insideDoor0.zoneId=self.interiorZone
-        insideDoor1.zoneId=self.interiorZone
+        door0.zoneId = self.exteriorZone
+        door1.zoneId = self.exteriorZone
+        insideDoor0.zoneId = self.interiorZone
+        insideDoor1.zoneId = self.interiorZone
         # Now that they both now about each other, generate them:
         door0.generateWithRequired(self.exteriorZone)
         door1.generateWithRequired(self.exteriorZone)
@@ -87,12 +88,12 @@ class HQBuildingAI:
         insideDoor0.sendUpdate("setDoorIndex", [insideDoor0.getDoorIndex()])
         insideDoor1.sendUpdate("setDoorIndex", [insideDoor1.getDoorIndex()])
         # keep track of them:
-        self.door0=door0
-        self.door1=door1
-        self.insideDoor0=insideDoor0
-        self.insideDoor1=insideDoor1        
+        self.door0 = door0
+        self.door1 = door1
+        self.insideDoor0 = insideDoor0
+        self.insideDoor1 = insideDoor1
         return
-       
+
     def isSuitBlock(self):
         # For compatibility with DistributedBuildingAI
         return 0

@@ -5,6 +5,7 @@ from toontown.toonbase.ToontownGlobals import *
 from toontown.safezone import RegenTreasurePlannerAI
 from . import DistributedTagTreasureAI
 
+
 class TagTreasurePlannerAI(RegenTreasurePlannerAI.RegenTreasurePlannerAI):
     notify = DirectNotifyGlobal.directNotify.newCategory(
         "TagTreasurePlannerAI")
@@ -13,13 +14,13 @@ class TagTreasurePlannerAI(RegenTreasurePlannerAI.RegenTreasurePlannerAI):
         self.numPlayers = 0
         RegenTreasurePlannerAI.RegenTreasurePlannerAI.__init__(
             self,
-            zoneId, # Zone id
-            DistributedTagTreasureAI.DistributedTagTreasureAI, # Constructor
+            zoneId,  # Zone id
+            DistributedTagTreasureAI.DistributedTagTreasureAI,  # Constructor
             ("TagTreasurePlanner-" + str(zoneId)),
-            3, # Every n seconds.  this really needs to be a fn of the number of players
-            4, # Max number of treasures
-            callback # When an avId grabs a treasure, this gets called
-            )
+            3,  # Every n seconds.  this really needs to be a fn of the number of players
+            4,  # Max number of treasures
+            callback  # When an avId grabs a treasure, this gets called
+        )
         return None
 
     def initSpawnPoints(self):
@@ -41,8 +42,5 @@ class TagTreasurePlannerAI(RegenTreasurePlannerAI.RegenTreasurePlannerAI):
             (20, -44, 0.1),
             (-24, 40, 0.1),
             (-20, -40, 0.1),
-            ]
+        ]
         return self.spawnPoints
-            
-            
-                                                     

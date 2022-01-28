@@ -3,12 +3,14 @@ from toontown.battle import SuitBattleGlobals
 import random
 from direct.task import Task
 
+
 class SuitInvasionManagerAI:
     """
     Manages invasions of Suits
     """
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('SuitInvasionManagerAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'SuitInvasionManagerAI')
 
     def __init__(self, air):
         self.air = air
@@ -25,20 +27,20 @@ class SuitInvasionManagerAI:
         # for fun.
         self.invadingCogTypes = (
             # Corporate
-            'f', # Flunky
-            'hh', # Head Hunter
-            'cr', # Corporate Raider
+            'f',  # Flunky
+            'hh',  # Head Hunter
+            'cr',  # Corporate Raider
             # Sales
-            'tf', # Two-faced
-            'm', # Mingler
+            'tf',  # Two-faced
+            'm',  # Mingler
             # Money
-            'mb', # Money Bags
-            'ls', # Loan shark
+            'mb',  # Money Bags
+            'ls',  # Loan shark
             # Legal
-            'sd', # Spin Doctor
-            'le', # Legal Eagle
-            )
-        
+            'sd',  # Spin Doctor
+            'le',  # Legal Eagle
+        )
+
         # Picked from randomly how many cogs will invade
         # This might need to be adjusted based on population(?)
         self.invadingNumList = (1000, 2000, 3000, 4000)
@@ -58,13 +60,14 @@ class SuitInvasionManagerAI:
 
     def computeInvasionDelay(self):
         # Compute the delay until the next invasion
-        return ((self.invasionMaxDelay - self.invasionMinDelay) * random.random()
-                + self.invasionMinDelay)
+        return ((self.invasionMaxDelay - self.invasionMinDelay)
+                * random.random() + self.invasionMinDelay)
 
     def tryInvasionAndWaitForNext(self, task):
         # Start the invasion if there is not one already
         if self.getInvading():
-            self.notify.warning("invasionTask: tried to start random invasion, but one is in progress")
+            self.notify.warning(
+                "invasionTask: tried to start random invasion, but one is in progress")
         else:
             self.notify.info("invasionTask: starting random invasion")
             cogType = random.choice(self.invadingCogTypes)
@@ -77,7 +80,8 @@ class SuitInvasionManagerAI:
     def waitForNextInvasion(self):
         taskMgr.remove(self.taskName("cogInvasionMgr"))
         delay = self.computeInvasionDelay()
-        self.notify.info("invasionTask: waiting %s seconds until next invasion" % delay)
+        self.notify.info(
+            f"invasionTask: waiting {delay} seconds until next invasion")
         taskMgr.doMethodLater(delay, self.tryInvasionAndWaitForNext,
                               self.taskName("cogInvasionMgr"))
 
@@ -95,15 +99,17 @@ class SuitInvasionManagerAI:
 
     def startInvasion(self, cogType, totalNumCogs, skeleton=0):
         if self.invading:
-            self.notify.warning("startInvasion: already invading cogType: %s numCogsRemaining: %s" %
-                                (cogType, self.numCogsRemaining))
+            self.notify.warning(
+                "startInvasion: already invading cogType: %s numCogsRemaining: %s" %
+                (cogType, self.numCogsRemaining))
             return 0
         if not SuitBattleGlobals.SuitAttributes.get(cogType):
-            self.notify.warning("startInvasion: unknown cogType: %s" % cogType)
+            self.notify.warning(f"startInvasion: unknown cogType: {cogType}")
             return 0
-        
-        self.notify.info("startInvasion: cogType: %s totalNumCogs: %s skeleton: %s" %
-                          (cogType, totalNumCogs, skeleton))
+
+        self.notify.info(
+            "startInvasion: cogType: %s totalNumCogs: %s skeleton: %s" %
+            (cogType, totalNumCogs, skeleton))
         self.invading = 1
         self.cogType = cogType
         self.isSkeleton = skeleton
@@ -111,7 +117,8 @@ class SuitInvasionManagerAI:
         self.numCogsRemaining = self.totalNumCogs
 
         # Tell the news manager that an invasion is beginning
-        self.air.newsManager.invasionBegin(self.cogType, self.totalNumCogs, self.isSkeleton)
+        self.air.newsManager.invasionBegin(
+            self.cogType, self.totalNumCogs, self.isSkeleton)
 
         # Get rid of all the current cogs on the streets
         # (except those already in battle, they can stay)
@@ -125,8 +132,9 @@ class SuitInvasionManagerAI:
             self.numCogsRemaining -= 1
             if self.numCogsRemaining <= 0:
                 self.stopInvasion()
-            self.notify.debug("getInvadingCog: returned cog: %s, num remaining: %s" %
-                              (self.cogType, self.numCogsRemaining))
+            self.notify.debug(
+                "getInvadingCog: returned cog: %s, num remaining: %s" %
+                (self.cogType, self.numCogsRemaining))
             return self.cogType, self.isSkeleton
         else:
             self.notify.debug("getInvadingCog: not currently invading")

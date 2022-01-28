@@ -14,10 +14,11 @@ from . import MazeData
 # +Y is up the screen
 # +X is to the right
 
+
 class Maze:
     def __init__(self, mapName):
         self.maze = loader.loadModel(mapName)
-        self.maze.setPos(0,0,0)
+        self.maze.setPos(0, 0, 0)
         self.maze.reparentTo(hidden)
 
         # get maze dimensions, boolean collision array
@@ -49,22 +50,22 @@ class Maze:
 
     def isWalkable(self, tX, tY, rejectList=()):
         """ returns true if tile X,Y corresponds to a valid standing space """
-        if (tX <= 0 or tY <= 0 or \
-            tX >= self.width or tY >= self.height):
+        if (tX <= 0 or tY <= 0 or
+                tX >= self.width or tY >= self.height):
             return 0
 
-        return (not self.collisionTable[tY  ][tX  ]) and \
-               (not self.collisionTable[tY-1][tX  ]) and \
-               (not self.collisionTable[tY  ][tX-1]) and \
-               (not self.collisionTable[tY-1][tX-1]) and \
+        return (not self.collisionTable[tY][tX]) and \
+               (not self.collisionTable[tY - 1][tX]) and \
+               (not self.collisionTable[tY][tX - 1]) and \
+               (not self.collisionTable[tY - 1][tX - 1]) and \
                (not (tX, tY) in rejectList)
 
     def tile2world(self, TX, TY):
         """ returns 2d point at the corner of tile TX, TY """
-        return [(TX-self.originTX)*self.cellWidth,
-                (TY-self.originTY)*self.cellWidth]
+        return [(TX - self.originTX) * self.cellWidth,
+                (TY - self.originTY) * self.cellWidth]
 
     def world2tile(self, x, y):
         """ convert from world coords to tile coords """
-        return [int((x/self.cellWidth) + self.originTX),
-                int((y/self.cellWidth) + self.originTY)]
+        return [int((x / self.cellWidth) + self.originTX),
+                int((y / self.cellWidth) + self.originTY)]

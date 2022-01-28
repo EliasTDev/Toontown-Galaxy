@@ -7,6 +7,7 @@ from . import RingTrack
 see RingTrack.py
 """
 
+
 class RingAction:
     """RingAction abstract base class; should not be used directly"""
     notify = DirectNotifyGlobal.directNotify.newCategory("RingAction")
@@ -19,10 +20,12 @@ class RingAction:
         Evaluates a ringAction at a normalized (0..1) time t
         returns a normalized (x,y) pair
         """
-        return (0,0)
+        return (0, 0)
+
 
 class RingActionStaticPos(RingAction):
     """RingActionStaticPos: use for a ring that doesn't move"""
+
     def __init__(self, pos):
         RingAction.__init__(self)
         self.__pos = pos
@@ -30,8 +33,10 @@ class RingActionStaticPos(RingAction):
     def eval(self, t):
         return self.__pos
 
+
 class RingActionFunction(RingAction):
     """RingActionFunction: specify ring's motion with a function"""
+
     def __init__(self, func, args):
         assert(callable(func))
 
@@ -42,9 +47,11 @@ class RingActionFunction(RingAction):
     def eval(self, t):
         return self.__func(t, *self.__args)
 
+
 class RingActionRingTrack(RingAction):
     """RingActionRingTrack: use a ring track to specify ring's motion;
     embed a ring track within another ring track"""
+
     def __init__(self, ringTrack):
         RingAction.__init__(self)
         self.__track = ringTrack

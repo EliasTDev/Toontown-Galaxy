@@ -5,6 +5,7 @@ from toontown.toonbase import ToontownGlobals
 from direct.distributed import DistributedObject
 from toontown.toonbase import TTLocalizer
 
+
 class DistributedHouseItem(DistributedObject.DistributedObject):
 
     notify = directNotify.newCategory("DistributedHouseItem")
@@ -25,7 +26,7 @@ class DistributedHouseItem(DistributedObject.DistributedObject):
 
     def load(self):
         pass
-        
+
     def disable(self):
         DistributedObject.DistributedObject.disable(self)
 

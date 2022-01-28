@@ -2,14 +2,15 @@ from pandac.PandaModules import *
 from otp.level import BasicEntities
 from direct.directnotify import DirectNotifyGlobal
 
+
 class ActiveCell(BasicEntities.DistributedNodePathEntity):
     notify = DirectNotifyGlobal.directNotify.newCategory("ActiveCell")
 
     def __init__(self, cr):
-        BasicEntities.DistributedNodePathEntity.__init__(self,cr)
+        BasicEntities.DistributedNodePathEntity.__init__(self, cr)
         self.occupantId = -1
         self.state = 0
-        
+
     def announceGenerate(self):
         BasicEntities.DistributedNodePathEntity.announceGenerate(self)
         self.loadModel()
@@ -23,19 +24,23 @@ class ActiveCell(BasicEntities.DistributedNodePathEntity):
                 pos = grid.getPos() + Vec3(self.col * grid.cellSize,
                                            self.row * grid.cellSize,
                                            0)
-                model = loader.loadModel("phase_5/models/modules/suit_walls.bam")
+                model = loader.loadModel(
+                    "phase_5/models/modules/suit_walls.bam")
                 model.setScale(grid.cellSize, 1, grid.cellSize)
                 model.setP(-90)
                 model.flattenMedium()
                 model.setZ(.05)
-                model.setColorScale(1,0,0,.5)
+                model.setColorScale(1, 0, 0, .5)
                 model.copyTo(self)
 
                 self.setPos(pos)
         return
 
     def setState(self, state, objId):
-        assert(self.notify.debug("entId(%d): setState(%d,%d)" % (self.entId, state, objId)))
+        assert(
+            self.notify.debug(
+                "entId(%d): setState(%d,%d)" %
+                (self.entId, state, objId)))
         self.state = state
         self.occupantId = objId
 
@@ -45,4 +50,3 @@ class ActiveCell(BasicEntities.DistributedNodePathEntity):
             if not model.isEmpty():
                 model.removeNode()
             self.loadModel()
-            

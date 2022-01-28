@@ -6,20 +6,20 @@ class DBKeepAlive:
 
     instanceCount = 0
 
-    def __init__(self, db, interval = 60.0):
+    def __init__(self, db, interval=60.0):
         """
         db should be an active DB connection (returned by MySQLdb.connect).
         interval is the time between keepalives in seconds.
         """
         assert __dev__
-        
+
         self.db = db
 
         DBKeepAlive.instanceCount += 1
 
         taskMgr.doMethodLater(interval,
                               self.keepAlive,
-                              'DBKeepAlive%s' % DBKeepAlive.instanceCount)
+                              f'DBKeepAlive{DBKeepAlive.instanceCount}')
 
     def keepAlive(self, task):
         cursor = self.db.cursor()

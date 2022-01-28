@@ -1,6 +1,7 @@
 import wx
 from wx.lib.scrolledpanel import ScrolledPanel
 
+
 class VisGroupsUI(wx.Dialog):
     def __init__(self, parent, id, title, editor, visGroups):
         wx.Dialog.__init__(self, parent, id, title, size=(200, 240))
@@ -9,14 +10,14 @@ class VisGroupsUI(wx.Dialog):
         self.editor = editor
         self.visGroups = visGroups
 
-        self.visGroupNames = [pair[1].getName() for pair in self.visGroups]        
+        self.visGroupNames = [pair[1].getName() for pair in self.visGroups]
 
         # Initialize dictionary of visibility relationships
         self.visDict = {}
         # Group we are currently setting visGroups for
         self.target = None
         # Flag to enable/disable toggleVisGroup command
-        self.fCommand = 1        
+        self.fCommand = 1
         self.createInterface()
         self.Bind(wx.EVT_CLOSE, self.onQuit)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.onDestroy)
@@ -40,7 +41,12 @@ class VisGroupsUI(wx.Dialog):
             group = groupInfo[1]
             name = group.getName()
             checkBox = wx.CheckBox(scrolledPanel, -1, name)
-            checkBox.Bind(wx.EVT_CHECKBOX, lambda p0=None, p1=name: self.toggleVisGroup(p0, p1))
+            checkBox.Bind(
+                wx.EVT_CHECKBOX,
+                lambda p0=None,
+                p1=name: self.toggleVisGroup(
+                    p0,
+                    p1))
             self.checkBoxes.append(checkBox)
             vbox2.Add(checkBox)
             # Assemble list of groups visible from this group
@@ -51,10 +57,18 @@ class VisGroupsUI(wx.Dialog):
             self.visDict[name] = [nodePath, group, visible]
 
         scrolledPanel.SetSizer(vbox2)
-        scrolledPanel.SetupScrolling(scroll_y = True, rate_y = 20)
+        scrolledPanel.SetupScrolling(scroll_y=True, rate_y=20)
 
         buttonPanel = wx.Panel(self, -1)
-        self.showOptionBox = wx.RadioBox(buttonPanel, -1, "", choices=['Show All', 'Show Target'], majorDimension=1, style=wx.RA_SPECIFY_ROWS)
+        self.showOptionBox = wx.RadioBox(
+            buttonPanel,
+            -1,
+            "",
+            choices=[
+                'Show All',
+                'Show Target'],
+            majorDimension=1,
+            style=wx.RA_SPECIFY_ROWS)
         self.showOptionBox.Bind(wx.EVT_RADIOBOX, self.refreshVisibility)
         vbox.Add(panel)
         vbox.Add(scrolledPanel, 1, wx.EXPAND, 0)
@@ -73,7 +87,8 @@ class VisGroupsUI(wx.Dialog):
         if oldTarget:
             visList = self.visDict[oldTarget][2]
             for group in visList:
-                self.checkBoxes[self.visGroupNames.index(group)].SetValue(False)
+                self.checkBoxes[self.visGroupNames.index(
+                    group)].SetValue(False)
         # Now set buttons to reflect state of new target
         visList = self.visDict[target][2]
         for group in visList:
@@ -139,15 +154,15 @@ class VisGroupsUI(wx.Dialog):
 
     def onQuit(self, evt):
         self.Destroy()
-        
+
     def onDestroy(self, evt):
         # Get current visibility list for target
         targetInfo = self.visDict[self.target]
         visList = targetInfo[2]
         for key in list(self.visDict.keys()):
-            groupNP = self.visDict[key][0]        
+            groupNP = self.visDict[key][0]
             groupNP.show()
             groupNP.clearColor()
 
         self.editor.ui.visGroupsUI = None
-        #self.Destroy()
+        # self.Destroy()

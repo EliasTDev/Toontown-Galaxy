@@ -11,29 +11,31 @@ from toontown.battle import SuitBattleGlobals
 from toontown.toon import NPCToons
 from direct.gui.DirectGuiGlobals import NO_FADE_SORT_INDEX
 TTL = TTLocalizer
+
+
 class SummonCogDialog(DirectFrame, StateData.StateData):
     """SummonCogDialog:
     """
 
     notify = DirectNotifyGlobal.directNotify.newCategory("SummonCogDialog")
     notify.setInfo(True)
-    
+
     def __init__(self, suitIndex):
         """__init__(self)
         """
         DirectFrame.__init__(self,
-                             parent = aspect2dp,
-                             pos = (0, 0, 0.30),
-                             relief = None,
-                             image = DGG.getDefaultDialogGeom(),
-                             image_scale = (1.6, 1, 0.7),
-                             image_pos = (0,0,0.18),
-                             image_color = ToontownGlobals.GlobalDialogColor,
-                             text = TTL.SummonDlgTitle,
-                             text_scale = 0.12,
-                             text_pos = (0, 0.4),
-                             borderWidth = (0.01, 0.01),
-                             sortOrder = NO_FADE_SORT_INDEX,
+                             parent=aspect2dp,
+                             pos=(0, 0, 0.30),
+                             relief=None,
+                             image=DGG.getDefaultDialogGeom(),
+                             image_scale=(1.6, 1, 0.7),
+                             image_pos=(0, 0, 0.18),
+                             image_color=ToontownGlobals.GlobalDialogColor,
+                             text=TTL.SummonDlgTitle,
+                             text_scale=0.12,
+                             text_pos=(0, 0.4),
+                             borderWidth=(0.01, 0.01),
+                             sortOrder=NO_FADE_SORT_INDEX,
                              )
         StateData.StateData.__init__(self, "summon-cog-done")
         self.initialiseoptions(SummonCogDialog)
@@ -43,7 +45,6 @@ class SummonCogDialog(DirectFrame, StateData.StateData):
 
         self.suitName = SuitDNA.suitHeadTypes[self.suitIndex]
         self.suitFullName = SuitBattleGlobals.SuitAttributes[self.suitName]['name']
-        
 
     def unload(self):
         if self.isLoaded == 0:
@@ -64,16 +65,16 @@ class SummonCogDialog(DirectFrame, StateData.StateData):
         self.head = Suit.attachSuitHead(self, self.suitName)
         # need to shift the head up a tad and to the left
         z = self.head.getZ()
-        self.head.setPos(-0.4, -0.1, z+0.2)
+        self.head.setPos(-0.4, -0.1, z + 0.2)
 
         self.suitLabel = DirectLabel(
-            parent = self,
-            relief = None,
-            text = self.suitFullName,
-            text_font = ToontownGlobals.getSuitFont(),
-            pos = (-0.4, 0, 0),
-            scale = 0.07,
-            )
+            parent=self,
+            relief=None,
+            text=self.suitFullName,
+            text_font=ToontownGlobals.getSuitFont(),
+            pos=(-0.4, 0, 0),
+            scale=0.07,
+        )
 
         closeButtonImage = (gui.find('**/CloseBtn_UP'),
                             gui.find('**/CloseBtn_DN'),
@@ -83,65 +84,65 @@ class SummonCogDialog(DirectFrame, StateData.StateData):
                        guiButton.find("**/QuitBtn_RLVR"),
                        )
         disabledColor = Vec4(0.5, 0.5, 0.5, 1)
-        
+
         self.summonSingleButton = DirectButton(
-            parent = self,
-            relief = None,
-            text = TTL.SummonDlgButton1,
-            image = buttonImage,
-            image_scale = (1.7,1,1),
-            image3_color = disabledColor,
-            text_scale = 0.06,
-            text_pos = (0,-0.01),
-            pos = (0.3, 0, 0.25),
-            command = self.issueSummons,
-            extraArgs = ["single"],
-            )
+            parent=self,
+            relief=None,
+            text=TTL.SummonDlgButton1,
+            image=buttonImage,
+            image_scale=(1.7, 1, 1),
+            image3_color=disabledColor,
+            text_scale=0.06,
+            text_pos=(0, -0.01),
+            pos=(0.3, 0, 0.25),
+            command=self.issueSummons,
+            extraArgs=["single"],
+        )
 
         self.summonBuildingButton = DirectButton(
-            parent = self,
-            relief = None,
-            text = TTL.SummonDlgButton2,
-            image = buttonImage,
-            image_scale = (1.7,1,1),
-            image3_color = disabledColor,
-            text_scale = 0.06,
-            text_pos = (0,-0.01),
-            pos = (0.3, 0, 0.125),
-            command = self.issueSummons,
-            extraArgs = ["building"],
-            )
+            parent=self,
+            relief=None,
+            text=TTL.SummonDlgButton2,
+            image=buttonImage,
+            image_scale=(1.7, 1, 1),
+            image3_color=disabledColor,
+            text_scale=0.06,
+            text_pos=(0, -0.01),
+            pos=(0.3, 0, 0.125),
+            command=self.issueSummons,
+            extraArgs=["building"],
+        )
 
         self.summonInvasionButton = DirectButton(
-            parent = self,
-            relief = None,
-            text = TTL.SummonDlgButton3,
-            image = buttonImage,
-            image_scale = (1.7,1,1),
-            image3_color = disabledColor,
-            text_scale = 0.06,
-            text_pos = (0,-0.01),
-            pos = (0.3, 0, 0.0),
-            command = self.issueSummons,
-            extraArgs = ["invasion"],
-            )
+            parent=self,
+            relief=None,
+            text=TTL.SummonDlgButton3,
+            image=buttonImage,
+            image_scale=(1.7, 1, 1),
+            image3_color=disabledColor,
+            text_scale=0.06,
+            text_pos=(0, -0.01),
+            pos=(0.3, 0, 0.0),
+            command=self.issueSummons,
+            extraArgs=["invasion"],
+        )
 
         self.statusLabel = DirectLabel(
-            parent = self,
-            relief = None,
-            text = "",
-            text_wordwrap = 12,
-            pos = (0.3, 0, 0.25),
-            scale = 0.07,
-            )
-            
+            parent=self,
+            relief=None,
+            text="",
+            text_wordwrap=12,
+            pos=(0.3, 0, 0.25),
+            scale=0.07,
+        )
+
         self.cancel = DirectButton(
-            parent = self,
-            relief = None,
-            image = closeButtonImage,
-            pos = (0.7, 0,-0.1),
-            command = self.__cancel,
-            )
+            parent=self,
+            relief=None,
+            image=closeButtonImage,
+            pos=(0.7, 0, -0.1),
+            command=self.__cancel,
+        )
 
         gui.removeNode()
         guiButton.removeNode()
@@ -163,7 +164,7 @@ class SummonCogDialog(DirectFrame, StateData.StateData):
         # disable all, then enable the ones we have
         self.disableButtons()
         self.enableButtons()
-        
+
         self.popup = None
         base.transitions.fadeScreen(.5)
 
@@ -187,8 +188,8 @@ class SummonCogDialog(DirectFrame, StateData.StateData):
 
     def cleanupDialogs(self):
         self.head = None
-        
-        if self.popup != None:
+
+        if self.popup is not None:
             self.popup.cleanup()
             self.popup = None
 
@@ -205,7 +206,8 @@ class SummonCogDialog(DirectFrame, StateData.StateData):
             if returnCode == 'success':
                 building = base.cr.doId2do.get(buildingId)
                 dnaStore = base.cr.playGame.dnaStore
-                buildingTitle = dnaStore.getTitleFromBlockNumber(building.block)
+                buildingTitle = dnaStore.getTitleFromBlockNumber(
+                    building.block)
                 buildingInteriorZone = building.zoneId + 500 + building.block
                 npcName = TTLocalizer.SummonDlgShopkeeper
                 npcId = NPCToons.zone2NpcDict.get(buildingInteriorZone)
@@ -213,11 +215,11 @@ class SummonCogDialog(DirectFrame, StateData.StateData):
                     npcName = NPCToons.getNPCName(npcId[0])
                 if buildingTitle:
                     self.statusLabel['text'] = \
-                         TTL.SummonDlgBldgSuccess % (npcName, buildingTitle)
+                        TTL.SummonDlgBldgSuccess % (npcName, buildingTitle)
                 else:
                     self.statusLabel['text'] = TTL.SummonDlgBldgSuccess2
             elif returnCode == 'badlocation':
-                self.statusLabel['text'] =  TTL.SummonDlgBldgBadLoc
+                self.statusLabel['text'] = TTL.SummonDlgBldgBadLoc
             elif returnCode == 'fail':
                 self.statusLabel['text'] = TTL.SummonDlgInvasionFail
         elif self.summonsType == "invasion":
@@ -232,7 +234,7 @@ class SummonCogDialog(DirectFrame, StateData.StateData):
         self.summonSingleButton.hide()
         self.summonBuildingButton.hide()
         self.summonInvasionButton.hide()
-        
+
     def issueSummons(self, summonsType):
         if summonsType == "single":
             text = TTL.SummonDlgSingleConf
@@ -241,9 +243,9 @@ class SummonCogDialog(DirectFrame, StateData.StateData):
         elif summonsType == "invasion":
             text = TTL.SummonDlgInvasionConf
 
-        text = text % self.suitFullName #+ \
-               #"  " + \
-               #TTL.SummonDlgNumLeft % "1"
+        text = text % self.suitFullName  # + \
+        # "  " + \
+        #TTL.SummonDlgNumLeft % "1"
 
         def handleResponse(resp):
             self.popup.cleanup()
@@ -254,29 +256,31 @@ class SummonCogDialog(DirectFrame, StateData.StateData):
             base.transitions.fadeScreen(.5)
 
             if resp == DGG.DIALOG_OK:
-                self.notify.info("issuing %s summons for %s" % (summonsType,self.suitIndex) )
+                self.notify.info(
+                    f"issuing {summonsType} summons for {self.suitIndex}")
                 self.accept("cog-summons-response", self.cogSummonsDone)
                 self.summonsType = summonsType
                 self.doIssueSummonsText()
-                base.localAvatar.d_reqCogSummons(self.summonsType, self.suitIndex)
+                base.localAvatar.d_reqCogSummons(
+                    self.summonsType, self.suitIndex)
                 self.hideSummonButtons()
                 self.cancel['state'] = DGG.DISABLED
 
         # Move our dialog under the fade screen.
         self.reparentTo(self.getParent(), 0)
-            
+
         self.popup = TTDialog.TTDialog(
-            parent = aspect2dp,
-            style = TTDialog.YesNo,
-            text = text,
-            fadeScreen = 1,
-            command = handleResponse,
-            )            
+            parent=aspect2dp,
+            style=TTDialog.YesNo,
+            text=text,
+            fadeScreen=1,
+            command=handleResponse,
+        )
 
     def doIssueSummonsText(self):
         self.disableButtons()
         self.statusLabel['text'] = TTL.SummonDlgDelivering
-        
+
     def disableButtons(self):
         self.summonSingleButton['state'] = DGG.DISABLED
         self.summonBuildingButton['state'] = DGG.DISABLED
@@ -292,4 +296,3 @@ class SummonCogDialog(DirectFrame, StateData.StateData):
 
     def __cancel(self):
         self.exit()
-    

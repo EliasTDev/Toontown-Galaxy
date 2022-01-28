@@ -1,10 +1,11 @@
 from direct.distributed import DistributedObject
 
+
 class DistributedTest(DistributedObject.DistributedObject):
     def __init__(self, air):
         try:
             self.DistributedTest_initialized
-        except:
+        except BaseException:
             self.DistributedTest_initialized = 1
             DistributedObject.DistributedObject.__init__(self, air)
         return None
@@ -21,10 +22,10 @@ class DistributedTest(DistributedObject.DistributedObject):
         self.setA(a)
         self.d_setA(a)
         return None
-        
+
     def getA(self):
         return(self.a)
-    
+
     def setB(self, b):
         self.b = b
 
@@ -46,4 +47,3 @@ class DistributedTest(DistributedObject.DistributedObject):
 
     def setC(self, c):
         self.c = c
-        

@@ -13,7 +13,13 @@ from direct.showbase import PythonUtil
 
 
 class PicnicBasket(StateData.StateData):
-    def __init__(self, safeZone, parentFSM, doneEvent, tableNumber, seatNumber):
+    def __init__(
+            self,
+            safeZone,
+            parentFSM,
+            doneEvent,
+            tableNumber,
+            seatNumber):
 
         StateData.StateData.__init__(self, doneEvent)
 
@@ -21,58 +27,58 @@ class PicnicBasket(StateData.StateData):
         self.seatNumber = seatNumber
 
         self.fsm = ClassicFSM.ClassicFSM('PicnicBasket',
-                           [State.State('start',
-                                        self.enterStart,
-                                        self.exitStart,
-                                        ['requestBoard',
-                                         'trolleyHFA',
-                                         'trolleyTFA']),
-                            State.State('trolleyHFA',
-                                        self.enterTrolleyHFA,
-                                        self.exitTrolleyHFA,
-                                        ['final',
-                                         ]),
-                            State.State('trolleyTFA',
-                                        self.enterTrolleyTFA,
-                                        self.exitTrolleyTFA,
-                                        ['final',
-                                         ]),
-                            State.State('requestBoard',
-                                        self.enterRequestBoard,
-                                        self.exitRequestBoard,
-                                        ['boarding']),
-                            State.State('boarding',
-                                        self.enterBoarding,
-                                        self.exitBoarding,
-                                        ['boarded']),
-                            State.State('boarded',
-                                        self.enterBoarded,
-                                        self.exitBoarded,
-                                        ['requestExit',
-                                         'trolleyLeaving',
+                                         [State.State('start',
+                                                      self.enterStart,
+                                                      self.exitStart,
+                                                      ['requestBoard',
+                                                       'trolleyHFA',
+                                                       'trolleyTFA']),
+                                             State.State('trolleyHFA',
+                                                         self.enterTrolleyHFA,
+                                                         self.exitTrolleyHFA,
+                                                         ['final',
+                                                          ]),
+                                             State.State('trolleyTFA',
+                                                         self.enterTrolleyTFA,
+                                                         self.exitTrolleyTFA,
+                                                         ['final',
+                                                          ]),
+                                             State.State('requestBoard',
+                                                         self.enterRequestBoard,
+                                                         self.exitRequestBoard,
+                                                         ['boarding']),
+                                             State.State('boarding',
+                                                         self.enterBoarding,
+                                                         self.exitBoarding,
+                                                         ['boarded']),
+                                             State.State('boarded',
+                                                         self.enterBoarded,
+                                                         self.exitBoarded,
+                                                         ['requestExit',
+                                                          'trolleyLeaving',
+                                                          'final',
+                                                          'exiting']),
+                                             State.State('requestExit',
+                                                         self.enterRequestExit,
+                                                         self.exitRequestExit,
+                                                         ['exiting', 'trolleyLeaving']),
+                                             State.State('trolleyLeaving',
+                                                         self.enterTrolleyLeaving,
+                                                         self.exitTrolleyLeaving,
+                                                         ['final']),
+                                             State.State('exiting',
+                                                         self.enterExiting,
+                                                         self.exitExiting,
+                                                         ['final']),
+                                             State.State('final',
+                                                         self.enterFinal,
+                                                         self.exitFinal,
+                                                         ['start'])],
+                                         # Initial State
+                                         'start',
+                                         # Final State
                                          'final',
-                                         'exiting']),
-                            State.State('requestExit',
-                                        self.enterRequestExit,
-                                        self.exitRequestExit,
-                                        ['exiting', 'trolleyLeaving']),
-                            State.State('trolleyLeaving',
-                                        self.enterTrolleyLeaving,
-                                        self.exitTrolleyLeaving,
-                                        ['final']),
-                            State.State('exiting',
-                                        self.enterExiting,
-                                        self.exitExiting,
-                                        ['final']),
-                            State.State('final',
-                                        self.enterFinal,
-                                        self.exitFinal,
-                                        ['start'])],
-                           # Initial State
-                           'start',
-                           # Final State
-                           'final',
-                           )
+                                         )
 
         self.parentFSM = parentFSM
 
@@ -80,13 +86,14 @@ class PicnicBasket(StateData.StateData):
 
     def load(self):
         self.parentFSM.getStateNamed("picnicBasketBlock").addChild(self.fsm)
-        self.buttonModels = loader.loadModel("phase_3.5/models/gui/inventory_gui")
+        self.buttonModels = loader.loadModel(
+            "phase_3.5/models/gui/inventory_gui")
         self.upButton = self.buttonModels.find("**//InventoryButtonUp")
         self.downButton = self.buttonModels.find("**/InventoryButtonDown")
         self.rolloverButton = self.buttonModels.find(
             "**/InventoryButtonRollover")
         return
-    
+
     def unload(self):
         self.parentFSM.getStateNamed("trolley").removeChild(self.fsm)
         del self.fsm
@@ -97,7 +104,7 @@ class PicnicBasket(StateData.StateData):
         del self.downButton
         del self.rolloverButton
         return
-        
+
     def enter(self):
         """enter(self)
         """
@@ -105,7 +112,9 @@ class PicnicBasket(StateData.StateData):
         if base.localAvatar.hp > 0:
             # let the distributed picnic basket know it is
             # ok for us to enter the basket
-            messenger.send('enterPicnicTableOK_%d_%d' % (self.tableNumber, self.seatNumber))
+            messenger.send(
+                'enterPicnicTableOK_%d_%d' %
+                (self.tableNumber, self.seatNumber))
             self.fsm.request("requestBoard")
         else:
             # can't board if we are 'sad'
@@ -124,9 +133,9 @@ class PicnicBasket(StateData.StateData):
 
     def enterTrolleyHFA(self):
         self.noTrolleyBox = TTDialog.TTGlobalDialog(
-            message = TTLocalizer.TrolleyHFAMessage,
-            doneEvent = "noTrolleyAck",
-            style = TTDialog.Acknowledge)
+            message=TTLocalizer.TrolleyHFAMessage,
+            doneEvent="noTrolleyAck",
+            style=TTDialog.Acknowledge)
         self.noTrolleyBox.show()
         base.localAvatar.b_setAnimState("neutral", 1)
         self.accept("noTrolleyAck", self.__handleNoTrolleyAck)
@@ -140,9 +149,9 @@ class PicnicBasket(StateData.StateData):
 
     def enterTrolleyTFA(self):
         self.noTrolleyBox = TTDialog.TTGlobalDialog(
-            message = TTLocalizer.TrolleyTFAMessage,
-            doneEvent = "noTrolleyAck",
-            style = TTDialog.Acknowledge)
+            message=TTLocalizer.TrolleyTFAMessage,
+            doneEvent="noTrolleyAck",
+            style=TTDialog.Acknowledge)
         self.noTrolleyBox.show()
         base.localAvatar.b_setAnimState("neutral", 1)
         self.accept("noTrolleyAck", self.__handleNoTrolleyAck)
@@ -177,12 +186,11 @@ class PicnicBasket(StateData.StateData):
 
     def enterBoarding(self, nodePath, side):
         camera.wrtReparentTo(nodePath)
-        heading = PythonUtil.fitDestAngle2Src( camera.getH( nodePath), 90 * side)        
-        self.cameraBoardTrack = LerpPosHprInterval(camera, 1.5,
-                                                   Point3(14.4072 * side, 0, 3.8667),
-                                                   Point3(heading,-15,0))
-                                                   #Point3(heading, -10, 0))
-        
+        heading = PythonUtil.fitDestAngle2Src(camera.getH(nodePath), 90 * side)
+        self.cameraBoardTrack = LerpPosHprInterval(camera, 1.5, Point3(
+            14.4072 * side, 0, 3.8667), Point3(heading, -15, 0))
+        # Point3(heading, -10, 0))
+
         self.cameraBoardTrack.start()
         return None
 
@@ -206,18 +214,18 @@ class PicnicBasket(StateData.StateData):
 
     def enableExitButton(self):
         self.exitButton = DirectButton(
-            relief = None,
-            text = TTLocalizer.TrolleyHopOff,
-            text_fg = (1, 1, 0.65, 1),
-            text_pos = (0, -0.23),
-            text_scale = 0.8,
-            image = (self.upButton, self.downButton, self.rolloverButton),
-            image_color = (1, 0, 0, 1),
-            image_scale = (20, 1, 11),
-            pos = (0, 0, 0.8),
-            scale = 0.15,
-            command = lambda self=self: self.fsm.request("requestExit"),
-            )
+            relief=None,
+            text=TTLocalizer.TrolleyHopOff,
+            text_fg=(1, 1, 0.65, 1),
+            text_pos=(0, -0.23),
+            text_scale=0.8,
+            image=(self.upButton, self.downButton, self.rolloverButton),
+            image_color=(1, 0, 0, 1),
+            image_scale=(20, 1, 11),
+            pos=(0, 0, 0.8),
+            scale=0.15,
+            command=lambda self=self: self.fsm.request("requestExit"),
+        )
         return
 
     def disableExitButton(self):
@@ -233,7 +241,7 @@ class PicnicBasket(StateData.StateData):
 
     def enterTrolleyLeaving(self):
         # A camera move
-        #camera.lerpPosHprXYZHPR(0, 18.55, 3.75, -180, 0, 0, 3,
+        # camera.lerpPosHprXYZHPR(0, 18.55, 3.75, -180, 0, 0, 3,
         #                        blendType = "easeInOut", task="leavingCamera")
         self.acceptOnce("playMinigame", self.handlePlayMinigame)
         self.acceptOnce("picnicDone", self.handlePicnicDone)
@@ -248,11 +256,11 @@ class PicnicBasket(StateData.StateData):
         messenger.send(self.doneEvent, [doneStatus])
 
     def handlePicnicDone(self):
-        #base.localAvatar.b_setParent(ToontownGlobals.SPHidden)
+        # base.localAvatar.b_setParent(ToontownGlobals.SPHidden)
         doneStatus = {}
         doneStatus["mode"] = "exit"
         messenger.send(self.doneEvent, [doneStatus])
-        
+
     def exitTrolleyLeaving(self):
         self.ignore("playMinigame")
         taskMgr.remove("leavingCamera")
@@ -275,4 +283,3 @@ class PicnicBasket(StateData.StateData):
 
     def exitFinal(self):
         return None
-

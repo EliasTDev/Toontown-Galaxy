@@ -1,5 +1,5 @@
 from toontown.parties import PartyGlobals
-#sbMaildb
+# sbMaildb
 
 getMailSELECT = "SELECT * FROM ttrecipientmail WHERE recipientId=%s"
 
@@ -27,19 +27,25 @@ partyStatusUPDATE = "UPDATE ttParty SET statusId=%s where partyId=%s"
 
 partyMultipleStatusUPDATE = "UPDATE ttParty SET statusId=%s where partyId IN %s"
 
-partyForceFinishForStartedUPDATE = "UPDATE ttParty SET statusId=" + str(PartyGlobals.PartyStatus.Finished) + " where statusId=" + str(PartyGlobals.PartyStatus.Started)+ " and endTime< %s"
+partyForceFinishForStartedUPDATE = "UPDATE ttParty SET statusId=" + str(
+    PartyGlobals.PartyStatus.Finished) + " where statusId=" + str(
+        PartyGlobals.PartyStatus.Started) + " and endTime< %s"
 
-partyGetPartiesGoingToFinishedSELECT = "SELECT partyId, hostId FROM ttParty where statusId=" + str(PartyGlobals.PartyStatus.Started)+ " and endTime< %s"
+partyGetPartiesGoingToFinishedSELECT = "SELECT partyId, hostId FROM ttParty where statusId=" + \
+    str(PartyGlobals.PartyStatus.Started) + " and endTime< %s"
 
-partyForceNeverStartedForCanStartUPDATE = "UPDATE ttParty SET statusId=" + str(PartyGlobals.PartyStatus.NeverStarted) + " where statusId=" + str(PartyGlobals.PartyStatus.CanStart)+ " and endTime< %s"
+partyForceNeverStartedForCanStartUPDATE = "UPDATE ttParty SET statusId=" + str(
+    PartyGlobals.PartyStatus.NeverStarted) + " where statusId=" + str(
+        PartyGlobals.PartyStatus.CanStart) + " and endTime< %s"
 
-partyGetPartiesGoingToNeverStartedSELECT = "SELECT partyId, hostId FROM ttParty where statusId=" + str(PartyGlobals.PartyStatus.CanStart)+ " and endTime< %s"
+partyGetPartiesGoingToNeverStartedSELECT = "SELECT partyId, hostId FROM ttParty where statusId=" + \
+    str(PartyGlobals.PartyStatus.CanStart) + " and endTime< %s"
 
 deletePartyDELETE = "DELETE FROM ttParty WHERE hostId=%s"
 
 getInvitesSELECT = "SELECT * FROM ttInvite WHERE guestId=%s"
 
-putInviteINSERT =  "INSERT INTO ttInvite (partyId, guestId) VALUES (%s,%s)"
+putInviteINSERT = "INSERT INTO ttInvite (partyId, guestId) VALUES (%s,%s)"
 
 deleteInviteByPartyDELETE = "DELETE FROM ttInvite WHERE partyId=%s"
 
@@ -53,22 +59,30 @@ getInviteesOfPartySELECT = "SELECT guestId FROM ttInvite where partyId=%s"
 
 getPartiesAvailableToStart = "SELECT partyId,hostId FROM ttParty WHERE startTime <= %s AND statusId = %s"
 
-getLastHostParty = "SELECT MAX(partyId) FROM ttParty where hostId = %s" 
+getLastHostParty = "SELECT MAX(partyId) FROM ttParty where hostId = %s"
 
 getMultiplePartiesSortedFutureNotCancelledSELECT = "SELECT * FROM ttParty WHERE partyId IN %s ORDER BY startTime"
 
-getNonCancelledFuturePartiesSELECT = "SELECT * FROM ttParty WHERE (partyId IN %s) and (startTime >= '%s') and statusId!=" + str(PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime LIMIT %s"
+getNonCancelledFuturePartiesSELECT = "SELECT * FROM ttParty WHERE (partyId IN %s) and (startTime >= '%s') and statusId!=" + str(
+    PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime LIMIT %s"
 
-getCancelledFuturePartiesSELECT = "SELECT * FROM ttParty WHERE (partyId IN %s) and (startTime >= '%s') and statusId=" + str(PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime LIMIT %s"
+getCancelledFuturePartiesSELECT = "SELECT * FROM ttParty WHERE (partyId IN %s) and (startTime >= '%s') and statusId=" + str(
+    PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime LIMIT %s"
 
-getNonCancelledPastPartiesSELECT = "SELECT * FROM ttParty WHERE (partyId IN %s) and (startTime < '%s') and statusId!=" + str(PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime DESC LIMIT %s"
+getNonCancelledPastPartiesSELECT = "SELECT * FROM ttParty WHERE (partyId IN %s) and (startTime < '%s') and statusId!=" + str(
+    PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime DESC LIMIT %s"
 
-getCancelledPastPartiesSELECT = "SELECT * FROM ttParty WHERE (partyId IN %s) and (startTime < '%s') and statusId=" + str(PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime DESC LIMIT %s"
+getCancelledPastPartiesSELECT = "SELECT * FROM ttParty WHERE (partyId IN %s) and (startTime < '%s') and statusId=" + str(
+    PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime DESC LIMIT %s"
 
-getHostNonCancelledFuturePartiesSELECT = "SELECT * FROM ttParty WHERE (hostId = %s) and (startTime >= '%s') and statusId!=" + str(PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime LIMIT %s"
+getHostNonCancelledFuturePartiesSELECT = "SELECT * FROM ttParty WHERE (hostId = %s) and (startTime >= '%s') and statusId!=" + str(
+    PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime LIMIT %s"
 
-getHostCancelledFuturePartiesSELECT = "SELECT * FROM ttParty WHERE (hostId = %s) and (startTime >= '%s') and statusId=" + str(PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime LIMIT %s"
+getHostCancelledFuturePartiesSELECT = "SELECT * FROM ttParty WHERE (hostId = %s) and (startTime >= '%s') and statusId=" + str(
+    PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime LIMIT %s"
 
-getHostNonCancelledPastPartiesSELECT = "SELECT * FROM ttParty WHERE (hostId = %s) and (startTime < '%s') and statusId!=" + str(PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime DESC LIMIT %s"
+getHostNonCancelledPastPartiesSELECT = "SELECT * FROM ttParty WHERE (hostId = %s) and (startTime < '%s') and statusId!=" + str(
+    PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime DESC LIMIT %s"
 
-getHostCancelledPastPartiesSELECT = "SELECT * FROM ttParty WHERE (hostId = %s) and (startTime < '%s') and statusId=" + str(PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime DESC LIMIT %s"
+getHostCancelledPastPartiesSELECT = "SELECT * FROM ttParty WHERE (hostId = %s) and (startTime < '%s') and statusId=" + str(
+    PartyGlobals.PartyStatus.Cancelled) + " ORDER BY startTime DESC LIMIT %s"

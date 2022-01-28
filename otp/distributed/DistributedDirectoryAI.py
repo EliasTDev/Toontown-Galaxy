@@ -1,6 +1,7 @@
 
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 
+
 class DistributedDirectoryAI(DistributedObjectAI):
     """
     This object has no attributes and none of them get created, but it

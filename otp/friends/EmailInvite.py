@@ -1,10 +1,12 @@
 from otp.distributed import OtpDoGlobals
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-import smtplib, socket
+import smtplib
+import socket
 from email import MIMEImage
 from email import MIMEMultipart
 from email import MIMEText
+
 
 class EmailInvite:
     # System for sending an email invite
@@ -38,7 +40,9 @@ class EmailInvite:
         try:
             self.mailServer.connect()
         except socket.error:
-            self.notify.warning('Failed to connect to SMTP server at %s. E-Mailing invites disabled.' % (self.smtpHost))
+            self.notify.warning(
+                'Failed to connect to SMTP server at %s. E-Mailing invites disabled.' %
+                (self.smtpHost))
             self.smtpAvailable = 0
 
     def disconnect(self):
@@ -46,11 +50,18 @@ class EmailInvite:
             return
         self.mailServer.close()
 
-    def sendEmailInvite(self, fromAddr, toAddr, subject, fromAvName, inviteCode):
+    def sendEmailInvite(
+            self,
+            fromAddr,
+            toAddr,
+            subject,
+            fromAvName,
+            inviteCode):
         if not self.smtpAvailable:
-            self.notify.warning('sendEmailInvite called, but SMTP is not available')
+            self.notify.warning(
+                'sendEmailInvite called, but SMTP is not available')
             return
-        
+
         msg = MIMEText.MIMEText(self.messageBody % (fromAvName, inviteCode))
 
         # Set the Subject field
@@ -62,27 +73,38 @@ class EmailInvite:
 
         # Now send the message
         outbound = msg.as_string()
-        print('The ougoing message is: %s' % (outbound))
+        print(f'The ougoing message is: {outbound}')
 
         try:
-             self.mailServer.sendmail(fromAddr, [toAddr], outbound)
+            self.mailServer.sendmail(fromAddr, [toAddr], outbound)
         except SMTPServerDisconnected:
             # Server is disconnected. Reconnect to server and try request again
-            self.notify.warning('SMTP Server Disconnected, Trying to send again')
+            self.notify.warning(
+                'SMTP Server Disconnected, Trying to send again')
             self.connect()
-            self.sendEmailInvite(fromAddr, toAddr, subject, fromUserName, inviteCode)
+            self.sendEmailInvite(
+                fromAddr,
+                toAddr,
+                subject,
+                fromUserName,
+                inviteCode)
         except SMTPRecipientsRefused:
             # Recipient Address Refused.
-            self.notify.warning('SMTP Recipent(s) Refused: %s' % toAddr)
+            self.notify.warning(f'SMTP Recipent(s) Refused: {toAddr}')
 
         except SMTPSenderRefused:
             # Sender or data is considered bad
-            self.notify.warning('SMTP Sender or Data Refused: %s' % fromAddr)
+            self.notify.warning(f'SMTP Sender or Data Refused: {fromAddr}')
 
         except SMTPHeloError:
             # The server refused our "HELO" message
             self.notify.warning('The server refused our "HELO" message')
 
         except SMTPException:
-             self.notify.warning('SMTP Failed, Trying to send again')
-             self.sendEmailInvite(fromAddr, toAddr, subject, fromUserName, inviteCode)
+            self.notify.warning('SMTP Failed, Trying to send again')
+            self.sendEmailInvite(
+                fromAddr,
+                toAddr,
+                subject,
+                fromUserName,
+                inviteCode)

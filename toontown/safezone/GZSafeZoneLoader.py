@@ -31,19 +31,20 @@ from toontown.toonbase import ToontownGlobals
 # Python Import Modules
 ##########################################################################
 import random
-if( __debug__ ):
+if(__debug__):
     import pdb
 
-class GZSafeZoneLoader( SafeZoneLoader ):
+
+class GZSafeZoneLoader(SafeZoneLoader):
     """
     Purpose: The GZSafeZoneLoader Class provides.. yadda yadda
     """
 
-    def __init__( self, hood, parentFSM, doneEvent ):
+    def __init__(self, hood, parentFSM, doneEvent):
         """
         """
         # Initialize Super Class
-        SafeZoneLoader.__init__( self, hood, parentFSM, doneEvent )     
+        SafeZoneLoader.__init__(self, hood, parentFSM, doneEvent)
 
         # Initialize Instance Variables
         self.musicFile = "phase_6/audio/bgm/GZ_SZ.ogg"
@@ -54,58 +55,58 @@ class GZSafeZoneLoader( SafeZoneLoader ):
         # Override Super Class FSM
         del self.fsm
         self.fsm = ClassicFSM.ClassicFSM('SafeZoneLoader',
-                              [State.State('start',
-                                           self.enterStart,
-                                           self.exitStart,
-                                           ['quietZone',
-                                            'playground',
-                                            'toonInterior',]),
-                               State.State('playground',
-                                           self.enterPlayground,
-                                           self.exitPlayground,
-                                           ['quietZone', 'golfcourse' ]),
-                               State.State('toonInterior',
-                                           self.enterToonInterior,
-                                           self.exitToonInterior,
-                                           ['quietZone']),
-                               State.State('quietZone',
-                                           self.enterQuietZone,
-                                           self.exitQuietZone,
-                                           ['playground', 'toonInterior', 'golfcourse' ]),
-                               State.State('golfcourse',
-                                           self.enterGolfCourse,
-                                           self.exitGolfCourse,
-                                           ['quietZone', 'playground']),
-                               State.State('final',
-                                           self.enterFinal,
-                                           self.exitFinal,
-                                           ['start'])],
-                              # Initial State
-                              'start',
-                              # Final State
-                              'final', )
+                                         [State.State('start',
+                                                      self.enterStart,
+                                                      self.exitStart,
+                                                      ['quietZone',
+                                                       'playground',
+                                                       'toonInterior', ]),
+                                          State.State('playground',
+                                                      self.enterPlayground,
+                                                      self.exitPlayground,
+                                                      ['quietZone', 'golfcourse']),
+                                          State.State('toonInterior',
+                                                      self.enterToonInterior,
+                                                      self.exitToonInterior,
+                                                      ['quietZone']),
+                                          State.State('quietZone',
+                                                      self.enterQuietZone,
+                                                      self.exitQuietZone,
+                                                      ['playground', 'toonInterior', 'golfcourse']),
+                                          State.State('golfcourse',
+                                                      self.enterGolfCourse,
+                                                      self.exitGolfCourse,
+                                                      ['quietZone', 'playground']),
+                                          State.State('final',
+                                                      self.enterFinal,
+                                                      self.exitFinal,
+                                                      ['start'])],
+                                         # Initial State
+                                         'start',
+                                         # Final State
+                                         'final', )
 
-    def load( self ):
+    def load(self):
         """
         """
 
+        SafeZoneLoader.load(self)
+        self.birdSound = list(map(base.loader.loadSfx,
+                                  ['phase_4/audio/sfx/SZ_TC_bird1.ogg',
+                                   'phase_4/audio/sfx/SZ_TC_bird2.ogg',
+                                   'phase_4/audio/sfx/SZ_TC_bird3.ogg']))
 
-        SafeZoneLoader.load( self )
-        self.birdSound = list(map( base.loader.loadSfx, [ 'phase_4/audio/sfx/SZ_TC_bird1.ogg',
-                                              'phase_4/audio/sfx/SZ_TC_bird2.ogg',
-                                              'phase_4/audio/sfx/SZ_TC_bird3.ogg' ] ))
-
-    def unload( self ):
+    def unload(self):
         """
         """
         del self.birdSound
-        SafeZoneLoader.unload( self )
+        SafeZoneLoader.unload(self)
 
-    def enterPlayground( self, requestStatus ):
+    def enterPlayground(self, requestStatus):
         """
         """
         self.playgroundClass = GZPlayground
-        SafeZoneLoader.enterPlayground( self, requestStatus )
+        SafeZoneLoader.enterPlayground(self, requestStatus)
 
         # add the bbhq sign
         top = self.geom.find("**/linktunnel_bosshq_10000_DNARoot")
@@ -113,74 +114,74 @@ class GZSafeZoneLoader( SafeZoneLoader ):
         sign.node().setEffect(DecalEffect.make())
         locator = top.find("**/sign_origin")
         signText = DirectGui.OnscreenText(
-            text = TextEncoder.upper(TTLocalizer.BossbotHQ[-1]),
-            font = ToontownGlobals.getSuitFont(),
-            scale = TTLocalizer.GSZLbossbotSignScale,
-            fg = (0, 0, 0, 1), 
+            text=TextEncoder.upper(TTLocalizer.BossbotHQ[-1]),
+            font=ToontownGlobals.getSuitFont(),
+            scale=TTLocalizer.GSZLbossbotSignScale,
+            fg=(0, 0, 0, 1),
             # required for DecalEffect (must be a GeomNode, not a TextNode)
             mayChange=False,
-            parent = sign)
+            parent=sign)
         signText.setPosHpr(locator, 0, 0, -0.3, 0, 0, 0)
         signText.setDepthWrite(0)
-        
+
         # self.hood.spawnTitleText( requestStatus[ 'zoneId' ] )
 
-    def exitPlayground( self ):
+    def exitPlayground(self):
         """
         """
 
-        taskMgr.remove( 'titleText' )
+        taskMgr.remove('titleText')
         self.hood.hideTitleText()
-        SafeZoneLoader.exitPlayground( self )
+        SafeZoneLoader.exitPlayground(self)
         self.playgroundClass = None
 
-    def handlePlaygroundDone( self ):
-        assert( self.notify.debug( "handlePlaygroundDone()" ) )
+    def handlePlaygroundDone(self):
+        assert(self.notify.debug("handlePlaygroundDone()"))
         status = self.place.doneStatus
-        if( self.enteringAGolfCourse( status ) and status.get( 'shardId' ) == None ):
+        if(self.enteringAGolfCourse(status) and status.get('shardId') is None):
             # GIVE THIS A WHIRL
-            zoneId = status[ 'zoneId' ]
-            self.fsm.request( 'quietZone', [ status ] )
+            zoneId = status['zoneId']
+            self.fsm.request('quietZone', [status])
         elif (ZoneUtil.getBranchZone(status["zoneId"]) == self.hood.hoodId and
-            # Going to Kart Shop
-            status["shardId"] == None):
-            self.fsm.request("quietZone", [status])            
+              # Going to Kart Shop
+              status["shardId"] is None):
+            self.fsm.request("quietZone", [status])
         else:
             self.doneStatus = status
-            messenger.send( self.doneEvent )
+            messenger.send(self.doneEvent)
 
-    def enteringARace( self, status ):
-        if( not status[ 'where' ] == 'golfcourse' ):
+    def enteringARace(self, status):
+        if(not status['where'] == 'golfcourse'):
             return 0
-        if( ZoneUtil.isDynamicZone( status[ 'zoneId' ] ) ):
-            return status[ 'hoodId' ] == self.hood.hoodId
+        if(ZoneUtil.isDynamicZone(status['zoneId'])):
+            return status['hoodId'] == self.hood.hoodId
         else:
-            return ZoneUtil.getHoodId( status[ 'zoneId' ] ) == self.hood.hoodId
+            return ZoneUtil.getHoodId(status['zoneId']) == self.hood.hoodId
 
-    def enteringAGolfCourse( self, status ):
-        if( not status[ 'where' ] == 'golfcourse' ):
+    def enteringAGolfCourse(self, status):
+        if(not status['where'] == 'golfcourse'):
             return 0
-        if( ZoneUtil.isDynamicZone( status[ 'zoneId' ] ) ):
-            return status[ 'hoodId' ] == self.hood.hoodId
+        if(ZoneUtil.isDynamicZone(status['zoneId'])):
+            return status['hoodId'] == self.hood.hoodId
         else:
-            return ZoneUtil.getHoodId( status[ 'zoneId' ] ) == self.hood.hoodId        
+            return ZoneUtil.getHoodId(status['zoneId']) == self.hood.hoodId
 
-    def enterGolfCourse( self, requestStatus ):
+    def enterGolfCourse(self, requestStatus):
         """
         """
 
         # GolfCourse will grab this off of us
         if 'curseId' in requestStatus:
-            self.golfCourseId = requestStatus[ 'courseId' ]
+            self.golfCourseId = requestStatus['courseId']
         else:
             self.golfCourseId = 0
 
-        self.accept("raceOver",self.handleRaceOver)
+        self.accept("raceOver", self.handleRaceOver)
         self.accept("leavingGolf", self.handleLeftGolf)
 
         base.transitions.irisOut(t=0.2)
 
-    def exitGolfCourse( self ):
+    def exitGolfCourse(self):
         """
         """
         del self.golfCourseId
@@ -189,6 +190,11 @@ class GZSafeZoneLoader( SafeZoneLoader ):
         print("you done!!")
 
     def handleLeftGolf(self):
-        req={"loader":"safeZoneLoader","where":"playground","how":"teleportIn"
-             ,"zoneId":17000,"hoodId":17000,"shardId":None}
-        self.fsm.request("quietZone",[req])
+        req = {
+            "loader": "safeZoneLoader",
+            "where": "playground",
+            "how": "teleportIn",
+            "zoneId": 17000,
+            "hoodId": 17000,
+            "shardId": None}
+        self.fsm.request("quietZone", [req])

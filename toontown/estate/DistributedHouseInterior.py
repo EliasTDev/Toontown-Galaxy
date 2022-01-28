@@ -25,13 +25,13 @@ WindowPlugNames = (
     "**/windowcut_d*",
     "**/windowcut_e*",
     "**/windowcut_f*",
-    )
+)
 
 RoomNames = (
     "**/group2",
     "**/group1",
-    )
-        
+)
+
 WallNames = ("ceiling*", "wall_side_middle*", "wall_front_middle*",
              "windowcut_*")
 MouldingNames = ("wall_side_top*", "wall_front_top*")
@@ -39,9 +39,10 @@ FloorNames = ("floor*",)
 WainscotingNames = ("wall_side_bottom*", "wall_front_bottom*")
 BorderNames = ("wall_side_middle*_border", "wall_front_middle*_border",
                "windowcut_*_border")
-        
+
 WallpaperPieceNames = (WallNames, MouldingNames, FloorNames, WainscotingNames,
                        BorderNames)
+
 
 class DistributedHouseInterior(DistributedObject.DistributedObject):
     """
@@ -55,60 +56,61 @@ class DistributedHouseInterior(DistributedObject.DistributedObject):
         self.interior = None
 
         self.exteriorWindowsHidden = 0
-        
+
     def generate(self):
         """generate(self)
         This method is called when the DistributedObject is reintroduced
         to the world, either for the first time or from the cache.
         """
-        #("generate()"))
+        # ("generate()"))
         DistributedObject.DistributedObject.generate(self)
-    
+
     def announceGenerate(self):
-        #("announceGenerate()"))
+        # ("announceGenerate()"))
         DistributedObject.DistributedObject.announceGenerate(self)
         self.setup()
 
     def disable(self):
-        #("disable()"))
+        # ("disable()"))
         self.interior.removeNode()
         del self.interior
         DistributedObject.DistributedObject.disable(self)
 
     def delete(self):
-        #("delete()"))
+        # ("delete()"))
         self.ignore(self.uniqueName('enterclosetSphere'))
         DistributedObject.DistributedObject.delete(self)
-    
-    def setup(self):
-        #("setup()"))
 
-        dnaStore=base.cr.playGame.dnaStore
+    def setup(self):
+        # ("setup()"))
+
+        dnaStore = base.cr.playGame.dnaStore
 
         # Load the interior for this house
-        self.interior = loader.loadModel("phase_5.5/models/estate/tt_m_ara_int_estateHouseA")
+        self.interior = loader.loadModel(
+            "phase_5.5/models/estate/tt_m_ara_int_estateHouseA")
 
-        assert(self.interior != None)
+        assert(self.interior is not None)
         self.interior.reparentTo(render)
-        
+
         # Door:
-        doorModelName="door_double_round_ur" # hack  zzzzzzz
-        door=dnaStore.findNode(doorModelName)
+        doorModelName = "door_double_round_ur"  # hack  zzzzzzz
+        door = dnaStore.findNode(doorModelName)
         # Determine where should we put the door:
-        door_origin=self.interior.find("**/door_origin")
-        door_origin.setHpr(180,0,0)
+        door_origin = self.interior.find("**/door_origin")
+        door_origin.setHpr(180, 0, 0)
         # The rooms are too small for doors:
         door_origin.setScale(0.8, 0.8, 0.8)
         # Move the origin away from the wall so it does not shimmer
         door_origin.setPos(door_origin, 0, -0.025, 0)
-        doorNP=door.copyTo(door_origin)
+        doorNP = door.copyTo(door_origin)
         assert(not doorNP.isEmpty())
         assert(not door_origin.isEmpty())
         # We do this instead of decals
         houseColor = HouseGlobals.atticWood
         color = Vec4(houseColor[0], houseColor[1], houseColor[2], 1)
-        DNADoor.setupDoor(doorNP, 
-                          door_origin, door_origin, 
+        DNADoor.setupDoor(doorNP,
+                          door_origin, door_origin,
                           dnaStore,
                           str(self.houseId), color)
 
@@ -117,7 +119,7 @@ class DistributedHouseInterior(DistributedObject.DistributedObject):
         # move it out from the decal, and float it in front of
         # the wall:
         doorFrame = doorNP.find("door_*_flat")
-        #doorFrame.wrtReparentTo(self.interior)
+        # doorFrame.wrtReparentTo(self.interior)
         doorFrame.setColor(color)
         assert(not doorFrame.isEmpty())
 
@@ -152,9 +154,8 @@ class DistributedHouseInterior(DistributedObject.DistributedObject):
 
         # Apply the windows
         self.__setupWindows()
-        
+
         messenger.send("houseInteriorLoaded-%d" % self.zoneId)
-      
 
     def __colorWalls(self):
         # The order here matches the order of ST* parameters in
@@ -162,7 +163,7 @@ class DistributedHouseInterior(DistributedObject.DistributedObject):
         if not self.wallpaper:
             self.notify.info("No wallpaper in interior; clearing.")
             for str in WallNames + WainscotingNames:
-                nodes = self.interior.findAllMatches('**/%s' % (str))
+                nodes = self.interior.findAllMatches(f'**/{str}')
                 for node in nodes:
                     node.setTextureOff(1)
             return
@@ -181,27 +182,27 @@ class DistributedHouseInterior(DistributedObject.DistributedObject):
                     color = wallpaper.getColor()
                     texture = wallpaper.loadTexture()
                     for str in WallpaperPieceNames[surface]:
-                        nodes = roomNode.findAllMatches('**/%s' % (str))
+                        nodes = roomNode.findAllMatches(f'**/{str}')
                         for node in nodes:
                             if str == "ceiling*":
                                 # The ceiling doesn't get a texture applied.
                                 # And it gets a slightly darker color
-                                r,g,b,a = color
+                                r, g, b, a = color
                                 scale = 0.66
                                 r *= scale
                                 g *= scale
                                 b *= scale
-                                node.setColorScale(r,g,b,a)
+                                node.setColorScale(r, g, b, a)
                             else:
                                 node.setColorScale(*color)
                                 node.setTexture(texture, 1)
 
                         if (wallpaper.getSurfaceType() ==
-                            CatalogSurfaceItem.STWallpaper):
+                                CatalogSurfaceItem.STWallpaper):
                             color2 = wallpaper.getBorderColor()
                             texture2 = wallpaper.loadBorderTexture()
                             nodes = roomNode.findAllMatches(
-                                '**/%s_border' % (str))
+                                f'**/{str}_border')
                             for node in nodes:
                                 node.setColorScale(*color2)
                                 node.setTexture(texture2, 1)
@@ -210,7 +211,7 @@ class DistributedHouseInterior(DistributedObject.DistributedObject):
         nodes = self.interior.findAllMatches('**/arch*')
         for node in nodes:
             node.setColorScale(*(HouseGlobals.archWood + (1,)))
-            
+
     def __setupWindows(self):
         # Remove the old window views, if any.
         for plug, viewBase in self.windowSlots:
@@ -252,23 +253,23 @@ class DistributedHouseInterior(DistributedObject.DistributedObject):
             plug, viewBase = self.windowSlots[item.placement]
             if viewBase:
                 viewBase.findAllMatches('**/outside;+s').unstash()
-        
 
     def setHouseId(self, index):
-        #("exitToon()"))
+        # ("exitToon()"))
         self.houseId = index
-        
+
     def setHouseIndex(self, index):
         self.houseIndex = index
 
-    
     def setWallpaper(self, items):
-        self.wallpaper = CatalogItemList.CatalogItemList(items, store = CatalogItem.Customization)
+        self.wallpaper = CatalogItemList.CatalogItemList(
+            items, store=CatalogItem.Customization)
         if self.interior:
             self.__colorWalls()
-    
+
     def setWindows(self, items):
-        self.windows = CatalogItemList.CatalogItemList(items, store = CatalogItem.Customization | CatalogItem.WindowPlacement)
+        self.windows = CatalogItemList.CatalogItemList(
+            items, store=CatalogItem.Customization | CatalogItem.WindowPlacement)
         if self.interior:
             self.__setupWindows()
 
@@ -278,18 +279,17 @@ class DistributedHouseInterior(DistributedObject.DistributedObject):
                            mouldingType, mouldingColorIndex,
                            flooringType, flooringColorIndex,
                            wainscotingType, wainscotingColorIndex):
-        wallpaperItem = CatalogWallpaperItem.CatalogWallpaperItem(wallpaperType, wallpaperColorIndex, borderIndex, borderColorIndex )
-        mouldingItem = CatalogMouldingItem.CatalogMouldingItem(mouldingType, mouldingColorIndex)
-        flooringItem = CatalogFlooringItem.CatalogFlooringItem(flooringType, flooringColorIndex)
-        wainscotingItem = CatalogWainscotingItem.CatalogWainscotingItem(wainscotingType, wainscotingColorIndex)
+        wallpaperItem = CatalogWallpaperItem.CatalogWallpaperItem(
+            wallpaperType, wallpaperColorIndex, borderIndex, borderColorIndex)
+        mouldingItem = CatalogMouldingItem.CatalogMouldingItem(
+            mouldingType, mouldingColorIndex)
+        flooringItem = CatalogFlooringItem.CatalogFlooringItem(
+            flooringType, flooringColorIndex)
+        wainscotingItem = CatalogWainscotingItem.CatalogWainscotingItem(
+            wainscotingType, wainscotingColorIndex)
         self.wallpaper = CatalogItemList.CatalogItemList(
             [wallpaperItem, mouldingItem, flooringItem, wainscotingItem,
              wallpaperItem, mouldingItem, flooringItem, wainscotingItem],
-            store = CatalogItem.Customization)
+            store=CatalogItem.Customization)
         if self.interior:
             self.__colorWalls()
-        
-
-
-
-

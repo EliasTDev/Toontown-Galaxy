@@ -7,6 +7,7 @@ from toontown.toonbase import TTLocalizer
 from direct.distributed import DistributedObject
 from toontown.quest import QuestParser
 
+
 class DistributedNPCBlocker(DistributedNPCToonBase):
 
     def __init__(self, cr):
@@ -17,9 +18,9 @@ class DistributedNPCBlocker(DistributedNPCToonBase):
         self.movie = None
 
     def announceGenerate(self):
-        #self.nametag.unmanage(base.marginManager)
+        # self.nametag.unmanage(base.marginManager)
         DistributedNPCToonBase.announceGenerate(self)
-        
+
     def initToonState(self):
         # We'll make all NPC toons loop their neutral cycle by
         # default.  Normally this is sent from the AI, but because the
@@ -54,7 +55,7 @@ class DistributedNPCBlocker(DistributedNPCToonBase):
 
     def resetBlocker(self):
         if not isLocalToon:
-            return 
+            return
         assert self.notify.debug('resetBlocker')
         # Make blocker non-collideable
         self.cSphereNode.setCollideMask(BitMask32())
@@ -76,7 +77,7 @@ class DistributedNPCBlocker(DistributedNPCToonBase):
     def setMovie(self, mode, npcId, avId, timestamp):
         """
         This is a message from the AI describing a movie between this NPC
-        and a Toon that has approached us. 
+        and a Toon that has approached us.
         """
         timeStamp = ClockDelta.globalClockDelta.localElapsedTime(timestamp)
 
@@ -91,8 +92,8 @@ class DistributedNPCBlocker(DistributedNPCToonBase):
 
         elif (mode == NPCToons.BLOCKER_MOVIE_START):
             assert self.notify.debug('BLOCKER_MOVIE_PLAY')
-            self.movie = QuestParser.NPCMoviePlayer("tutorial_blocker", 
-                                                base.localAvatar, self)
+            self.movie = QuestParser.NPCMoviePlayer("tutorial_blocker",
+                                                    base.localAvatar, self)
             self.movie.play()
 
         elif (mode == NPCToons.BLOCKER_MOVIE_TIMEOUT):

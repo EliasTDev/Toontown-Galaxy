@@ -6,10 +6,10 @@ from .SpecImports import *
 # unique IDs for battle cells
 
 BattleCells = {
-    }
+}
 
 CogData = [
-    ]
+]
 
 ReserveCogData = [
-    ]
+]

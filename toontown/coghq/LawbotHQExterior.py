@@ -8,6 +8,8 @@ from toontown.building import Elevator
 from pandac.PandaModules import *
 from toontown.coghq import CogHQExterior
 from panda3d.otp import *
+
+
 class LawbotHQExterior(CogHQExterior.CogHQExterior):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("LawbotHQExterior")
@@ -98,7 +100,7 @@ class LawbotHQExterior(CogHQExterior.CogHQExterior):
 
     def unload(self):
         #self.parentFSM.getStateNamed("LawbotHQExterior").removeChild(self.fsm)
-        CogHQExterior.CogHQExterior.unload(self)        
+        CogHQExterior.CogHQExterior.unload(self)
 
     def enter(self, requestStatus):
         self.zoneId = requestStatus["zoneId"]
@@ -130,7 +132,7 @@ class LawbotHQExterior(CogHQExterior.CogHQExterior):
         del self.nodeList
         # self.loader.geom.reparentTo(hidden)
         self.ignoreAll()
-        
+
 
     def enterTunnelOut(self, requestStatus):
         # Drop off the last two digits of the zoneId to make the
@@ -139,7 +141,7 @@ class LawbotHQExterior(CogHQExterior.CogHQExterior):
         tunnelName = base.cr.hoodMgr.makeLinkTunnelName(
             self.loader.hood.id, fromZoneId)
         requestStatus["tunnelName"] = tunnelName
-        
+
         CogHQExterior.CogHQExterior.enterTunnelOut(self, requestStatus)
 
     def enterTeleportIn(self, requestStatus):
@@ -151,7 +153,7 @@ class LawbotHQExterior(CogHQExterior.CogHQExterior):
         base.localAvatar.setPosHpr(-0, -60, 10, -95, 0, 0)
 
         CogHQExterior.CogHQExterior.enterTeleportIn(self, requestStatus)
-        
+
     def enterTeleportOut(self, requestStatus):
         assert(self.notify.debug("enterTeleportOut()"))
         CogHQExterior.CogHQExterior.enterTeleportOut(self, requestStatus, self.__teleportOutDone)
@@ -181,7 +183,7 @@ class LawbotHQExterior(CogHQExterior.CogHQExterior):
     # (For boarding a building elevator)
     def enterElevator(self, distElevator, skipDFABoard = 0):
         assert(self.notify.debug("enterElevator()"))
-        
+
         self.accept(self.elevatorDoneEvent, self.handleElevatorDone)
         self.elevator = Elevator.Elevator(self.fsm.getStateNamed("elevator"),
                                           self.elevatorDoneEvent,

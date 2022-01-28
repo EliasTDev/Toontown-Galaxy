@@ -4,17 +4,17 @@ from direct.directnotify import DirectNotifyGlobal
 from toontown.suit import GoonPathData
 from otp.level import PathEntity
 
+
 class PathMasterEntity(PathEntity.PathEntity):
     notify = DirectNotifyGlobal.directNotify.newCategory('PathMasterEntity')
+
     def __init__(self, level, entId):
         self.pathScale = 1.
         PathEntity.PathEntity.__init__(self, level, entId)
         self.setPathIndex(self.pathIndex)
-        
+
         self.initPath()
-        
-        
-        
+
     def initPath(self):
         self.pathTargetList = [None, None, None, None, None, None, None, None]
 
@@ -26,11 +26,11 @@ class PathMasterEntity(PathEntity.PathEntity):
             self.pathTarget1 = None
         else:
             self.pathTargetList[1] = self.pathTarget1
-        if not hasattr(self, "pathTarget2"):    
+        if not hasattr(self, "pathTarget2"):
             self.pathTarget2 = None
         else:
             self.pathTargetList[2] = self.pathTarget2
-        if not hasattr(self, "pathTarget3"): 
+        if not hasattr(self, "pathTarget3"):
             self.pathTarget3 = None
         else:
             self.pathTargetList[3] = self.pathTarget3
@@ -42,101 +42,101 @@ class PathMasterEntity(PathEntity.PathEntity):
             self.pathTarget5 = None
         else:
             self.pathTargetList[5] = self.pathTarget5
-        if not hasattr(self, "pathTarget6"):    
+        if not hasattr(self, "pathTarget6"):
             self.pathTarget6 = None
         else:
             self.pathTargetList[6] = self.pathTarget6
-        if not hasattr(self, "pathTarget7"): 
+        if not hasattr(self, "pathTarget7"):
             self.pathTarget7 = None
         else:
             self.pathTargetList[7] = self.pathTarget7
-            
+
     def destroy(self):
         PathEntity.PathEntity.destroy(self)
-        
+
     def setPathTarget0(self, targetId):
-        #print("setTrackTarget0")
+        # print("setTrackTarget0")
         self.pathTarget0 = targetId
         self.pathTargetList[0] = targetId
         if __dev__:
             messenger.send(self.getChangeEvent())
-        
+
     def setPathTarget1(self, targetId):
-        #print("setTrackTarget1")
+        # print("setTrackTarget1")
         self.pathTarget1 = targetId
         self.pathTargetList[1] = targetId
         if __dev__:
             messenger.send(self.getChangeEvent())
-        
+
     def setPathTarget2(self, targetId):
-        #print("setTrackTarget2")
+        # print("setTrackTarget2")
         self.pathTarget2 = targetId
         self.pathTargetList[2] = targetId
         if __dev__:
             messenger.send(self.getChangeEvent())
-        
+
     def setPathTarget3(self, targetId):
-        #print("setTrackTarget3")
+        # print("setTrackTarget3")
         self.pathTarget3 = targetId
         self.pathTargetList[3] = targetId
         if __dev__:
             messenger.send(self.getChangeEvent())
-        
+
     def setPathTarget4(self, targetId):
-        #print("setTrackTarget4")
+        # print("setTrackTarget4")
         self.pathTarget4 = targetId
         self.pathTargetList[4] = targetId
         if __dev__:
             messenger.send(self.getChangeEvent())
-        
+
     def setPathTarget5(self, targetId):
-        #print("setTrackTarget5")
+        # print("setTrackTarget5")
         self.pathTarget5 = targetId
         self.pathTargetList[5] = targetId
         if __dev__:
             messenger.send(self.getChangeEvent())
-        
+
     def setPathTarget6(self, targetId):
-        #print("setTrackTarget6")
+        # print("setTrackTarget6")
         self.pathTarget6 = targetId
         self.pathTargetList[6] = targetId
         if __dev__:
             messenger.send(self.getChangeEvent())
-        
+
     def setPathTarget7(self, targetId):
-        #print("setTrackTarget7")
+        # print("setTrackTarget7")
         self.pathTarget7 = targetId
         self.pathTargetList[7] = targetId
         if __dev__:
             messenger.send(self.getChangeEvent())
-        
+
     def getReducedPath(self):
         returnPath = []
         for entityId in self.pathTargetList:
             if self.level and entityId != 0:
                 thing = self.level.entities.get(entityId, None)
                 returnPath.append(thing.getPos(self))
-        
+
         return returnPath
-                        
 
     def setPathIndex(self, pathIndex):
         self.pathIndex = pathIndex
-        pathTableId = GoonPathData.taskZoneId2pathId[self.level.getTaskZoneId()]
+        pathTableId = GoonPathData.taskZoneId2pathId[self.level.getTaskZoneId(
+        )]
         if self.pathIndex in GoonPathData.Paths[pathTableId]:
             self.path = GoonPathData.Paths[pathTableId][self.pathIndex]
             if __dev__:
                 messenger.send(self.getChangeEvent())
         else:
-            PathEntity.notify.warning('invalid pathIndex: %s' % pathIndex)
+            PathEntity.notify.warning(f'invalid pathIndex: {pathIndex}')
             self.path = None
-            
+
     def makePathTrack(self, node, velocity, name, turnTime=1,
                       lookAroundNode=None):
-        track = Sequence(name = name)
-        
+        track = Sequence(name=name)
+
         self.path = self.getReducedPath()
-        
+
         if self.path is None or len(self.path) < 1:
             track.append(WaitInterval(1.))
             return track
@@ -154,28 +154,28 @@ class PathMasterEntity(PathEntity.PathEntity):
             # Note: this will only look right for paths that are defined in a
             # counterclockwise order.  Otherwise the goon will always turn the
             # "long" way to look at the next point
-            node.setPos(startPoint[0], startPoint[1],startPoint[2])
+            node.setPos(startPoint[0], startPoint[1], startPoint[2])
             node.headsUp(endPoint[0], endPoint[1], endPoint[2])
             theta = node.getH() % 360
-                              
+
             track.append(
-                LerpHprInterval(node, # stop and look around
+                LerpHprInterval(node,  # stop and look around
                                 turnTime,
-                                Vec3(theta,0,0)))
-            
+                                Vec3(theta, 0, 0)))
+
             # Calculate the amount of time we should spend walking
             distance = Vec3(v).length()
             duration = distance / velocity
-            
+
             # Walk to the end point
             track.append(
                 LerpPosInterval(node, duration=duration,
                                 pos=endPoint, startPos=startPoint))
         return track
-    
+
     def makePathTrackBak(self, node, velocity, name, turnTime=1,
-                      lookAroundNode=None):
-        track = Sequence(name = name)
+                         lookAroundNode=None):
+        track = Sequence(name=name)
         if self.path is None:
             track.append(WaitInterval(1.))
             return track
@@ -193,19 +193,19 @@ class PathMasterEntity(PathEntity.PathEntity):
             # Note: this will only look right for paths that are defined in a
             # counterclockwise order.  Otherwise the goon will always turn the
             # "long" way to look at the next point
-            node.setPos(startPoint[0], startPoint[1],startPoint[2])
+            node.setPos(startPoint[0], startPoint[1], startPoint[2])
             node.headsUp(endPoint[0], endPoint[1], endPoint[2])
             theta = node.getH() % 360
-                              
+
             track.append(
-                LerpHprInterval(node, # stop and look around
+                LerpHprInterval(node,  # stop and look around
                                 turnTime,
-                                Vec3(theta,0,0)))
-            
+                                Vec3(theta, 0, 0)))
+
             # Calculate the amount of time we should spend walking
             distance = Vec3(v).length()
             duration = distance / velocity
-            
+
             # Walk to the end point
             track.append(
                 LerpPosInterval(node, duration=duration,

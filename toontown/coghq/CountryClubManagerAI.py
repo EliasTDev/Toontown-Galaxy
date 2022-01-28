@@ -6,14 +6,16 @@ from direct.showbase import DirectObject
 import random
 
 CountryClubId2Layouts = {
-    ToontownGlobals.BossbotCountryClubIntA : (0, 1, 2, ),
-    ToontownGlobals.BossbotCountryClubIntB : (3, 4, 5, ),
-    ToontownGlobals.BossbotCountryClubIntC : (6, 7, 8, ),
-    }
+    ToontownGlobals.BossbotCountryClubIntA: (0, 1, 2, ),
+    ToontownGlobals.BossbotCountryClubIntB: (3, 4, 5, ),
+    ToontownGlobals.BossbotCountryClubIntC: (6, 7, 8, ),
+}
+
 
 class CountryClubManagerAI(DirectObject.DirectObject):
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('CountryClubManagerAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'CountryClubManagerAI')
 
     # magic-word override
     countryClubId = None
@@ -29,29 +31,30 @@ class CountryClubManagerAI(DirectObject.DirectObject):
     def createCountryClub(self, countryClubId, players):
         # check for ~countryClubId
         for avId in players:
-            if bboard.has('countryClubId-%s' % avId):
-                countryClubId = bboard.get('countryClubId-%s' % avId)
+            if bboard.has(f'countryClubId-{avId}'):
+                countryClubId = bboard.get(f'countryClubId-{avId}')
                 break
 
-        numFloors = 1 # ToontownGlobals.CountryClubNumFloors[countryClubId]
+        numFloors = 1  # ToontownGlobals.CountryClubNumFloors[countryClubId]
         layoutIndex = None
 
-        floor = 0 #random.randrange(numFloors)
+        floor = 0  # random.randrange(numFloors)
         # check for ~countryClubFloor
         for avId in players:
-            if bboard.has('countryClubFloor-%s' % avId):
-                floor = bboard.get('countryClubFloor-%s' % avId)
+            if bboard.has(f'countryClubFloor-{avId}'):
+                floor = bboard.get(f'countryClubFloor-{avId}')
                 # bounds check
                 floor = max(0, floor)
-                floor = min(floor, numFloors-1)
+                floor = min(floor, numFloors - 1)
                 break
 
         # check for ~countryClubRoom
         for avId in players:
-            if bboard.has('countryClubRoom-%s' % avId):
-                roomId = bboard.get('countryClubRoom-%s' % avId)
+            if bboard.has(f'countryClubRoom-{avId}'):
+                roomId = bboard.get(f'countryClubRoom-{avId}')
                 for i in range(numFloors):
-                    layout = CountryClubLayout.CountryClubLayout(countryClubId, i)
+                    layout = CountryClubLayout.CountryClubLayout(
+                        countryClubId, i)
                     if roomId in layout.getRoomIds():
                         floor = i
                 else:
@@ -63,7 +66,7 @@ class CountryClubManagerAI(DirectObject.DirectObject):
 
         countryClubZone = self.air.allocateZone()
         if layoutIndex is None:
-            layoutIndex = random.choice(CountryClubId2Layouts[countryClubId])        
+            layoutIndex = random.choice(CountryClubId2Layouts[countryClubId])
         countryClub = DistributedCountryClubAI.DistributedCountryClubAI(
             self.air, countryClubId, countryClubZone, floor, players, layoutIndex)
         countryClub.generateWithRequired(countryClubZone)

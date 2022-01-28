@@ -21,6 +21,7 @@ from toontown.building import ToonInteriorColors
 from direct.showbase.MessengerGlobal import messenger
 from panda3d.toontown import DNADoor
 
+
 class DistributedHouse(DistributedObject.DistributedObject):
     """
     This is the house object on the client
@@ -68,24 +69,28 @@ class DistributedHouse(DistributedObject.DistributedObject):
         DistributedObject.DistributedObject.delete(self)
 
     def clearNametag(self):
-        if self.nametag != None:
-           self.nametag.unmanage(base.marginManager)
-           self.nametag.setAvatar(NodePath())
-           self.nametag = None
+        if self.nametag is not None:
+            self.nametag.unmanage(base.marginManager)
+            self.nametag.setAvatar(NodePath())
+            self.nametag = None
 
-    def load(self):        
+    def load(self):
         self.notify.debug("load")
 
         # Load the house once.  When we walk in a door, the house model will automatically
-        # get hidden by the EstateLoader.  Only remove the house node on deletion
+        # get hidden by the EstateLoader.  Only remove the house node on
+        # deletion
         if not self.house_loaded:
             if self.housePosInd == 1:
-                houseModelIndex = base.config.GetInt('want-custom-house',HouseGlobals.HOUSE_DEFAULT)
+                houseModelIndex = base.config.GetInt(
+                    'want-custom-house', HouseGlobals.HOUSE_DEFAULT)
             else:
                 houseModelIndex = HouseGlobals.HOUSE_DEFAULT
-            houseModelIndex = base.config.GetInt('want-custom-house-all',houseModelIndex)
+            houseModelIndex = base.config.GetInt(
+                'want-custom-house-all', houseModelIndex)
             houseModel = self.cr.playGame.hood.loader.houseModels[houseModelIndex]
-            self.house = houseModel.copyTo(self.cr.playGame.hood.loader.houseNode[self.housePosInd])
+            self.house = houseModel.copyTo(
+                self.cr.playGame.hood.loader.houseNode[self.housePosInd])
             self.house_loaded = 1
 
             # fill out the houseId2house dict in estateLoader
@@ -107,34 +112,34 @@ class DistributedHouse(DistributedObject.DistributedObject):
     def announceGenerate(self):
         assert(self.notify.debug("announceGenerate()"))
         DistributedObject.DistributedObject.announceGenerate(self)
-        messenger.send("setBuilding-"+str(self.doId))
+        messenger.send("setBuilding-" + str(self.doId))
 
     def __setupDoor(self):
         self.notify.debug("setupDoor")
-        self.dnaStore=self.cr.playGame.dnaStore
-        doorModelName="door_double_round_ul" # hack  zzzzzzz
+        self.dnaStore = self.cr.playGame.dnaStore
+        doorModelName = "door_double_round_ul"  # hack  zzzzzzz
         # Switch leaning of the door:
         if doorModelName[-1:] == "r":
-            doorModelName=doorModelName[:-1]+"l"
+            doorModelName = doorModelName[:-1] + "l"
         else:
-            doorModelName=doorModelName[:-1]+"r"
-        door=self.dnaStore.findNode(doorModelName)
+            doorModelName = doorModelName[:-1] + "r"
+        door = self.dnaStore.findNode(doorModelName)
         # Determine where should we put the door:
-        door_origin=self.house.find("**/door_origin")
-        door_origin.setHpr(90,0,0)
-        door_origin.setScale(.6,.6,.8)
+        door_origin = self.house.find("**/door_origin")
+        door_origin.setHpr(90, 0, 0)
+        door_origin.setScale(.6, .6, .8)
         door_origin.setPos(door_origin, 0.5, 0, 0.0)
-        doorNP=door.copyTo(door_origin)
+        doorNP = door.copyTo(door_origin)
         assert(not doorNP.isEmpty())
         assert(not door_origin.isEmpty())
         self.door_origin = door_origin
-        self.randomGenerator=random.Random()
+        self.randomGenerator = random.Random()
         self.randomGenerator.seed(self.doId)
         #houseColor = HouseGlobals.houseColors[self.housePosInd]
         houseColor = HouseGlobals.stairWood
         color = Vec4(houseColor[0], houseColor[1], houseColor[2], 1)
-        #self.colors=ToonInteriorColors.colors[ToontownGlobals.MyEstate]
-        #color=self.randomGenerator.choice(self.colors["TI_door"])
+        # self.colors=ToonInteriorColors.colors[ToontownGlobals.MyEstate]
+        # color=self.randomGenerator.choice(self.colors["TI_door"])
         DNADoor.setupDoor(doorNP,
                           door_origin, door_origin,
                           self.dnaStore,
@@ -146,38 +151,37 @@ class DistributedHouse(DistributedObject.DistributedObject):
         self.__setupFloorMat()
         self.__setupNametag()
 
-
     def __setupDoorCustom(self):
         """Setup the door for the new house types, e.g. tiki house."""
-        self.randomGenerator=random.Random()
+        self.randomGenerator = random.Random()
         self.randomGenerator.seed(self.doId)
         self.notify.debug("setupDoorCustom")
-        self.dnaStore=self.cr.playGame.dnaStore
-        door=self.house.find('**/door_0')
-        door_origin=self.house.find("**/door_origin")
+        self.dnaStore = self.cr.playGame.dnaStore
+        door = self.house.find('**/door_0')
+        door_origin = self.house.find("**/door_origin")
 
-        door_origin.setHpr(90,0,0)
-        door_origin.setScale(.6,.6,.8)
+        door_origin.setHpr(90, 0, 0)
+        door_origin.setScale(.6, .6, .8)
 
         doorNP = door
 
         assert(not doorNP.isEmpty())
         assert(not door_origin.isEmpty())
         self.door_origin = door_origin
-        color = Vec4(1,1,1,1)
+        color = Vec4(1, 1, 1, 1)
 
         #import pdb; pdb.set_trace()
         parent = door_origin
         rightDoor = door.find('**/rightDoor')
-        rightDoor.setHpr(door_origin, Vec3(0,0,0))
+        rightDoor.setHpr(door_origin, Vec3(0, 0, 0))
         leftDoor = door.find('**/leftDoor')
-        leftDoor.setHpr(door_origin, Vec3(0,0,0))
+        leftDoor.setHpr(door_origin, Vec3(0, 0, 0))
 
         doorTrigger = doorNP.find('**/door_*_trigger')
         doorTrigger.wrtReparentTo(door_origin)
         doorTrigger.node().setName("door_trigger_" + str(self.doId))
 
-        self.__setupFloorMat(changeColor = False)
+        self.__setupFloorMat(changeColor=False)
         self.__setupNametag()
         self.__setupNamePlateCustom()
 
@@ -194,7 +198,7 @@ class DistributedHouse(DistributedObject.DistributedObject):
         r = self.randomGenerator.random()
         g = self.randomGenerator.random()
         b = self.randomGenerator.random()
-        nameText.setTextColor(r,g,b,1)
+        nameText.setTextColor(r, g, b, 1)
         nameText.setAlign(nameText.ACenter)
         nameText.setFont(ToontownGlobals.getBuildingNametagFont())
         nameText.setShadowColor(0, 0, 0, 1)
@@ -209,7 +213,8 @@ class DistributedHouse(DistributedObject.DistributedObject):
             return
         else:
             # make the name fit nicely on the floor mat
-            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(self._name)
+            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(
+                self._name)
 
         nameText.setText(houseName)
         self._nameText = nameText
@@ -225,15 +230,21 @@ class DistributedHouse(DistributedObject.DistributedObject):
 
         sign_origin = self.house.find("**/sign_origin")
         pos = sign_origin.getPos()
-        sign_origin.setPosHpr(pos[0],pos[1],pos[2]+.15*textHeight,90,0,0)
+        sign_origin.setPosHpr(
+            pos[0],
+            pos[1],
+            pos[2] + .15 * textHeight,
+            90,
+            0,
+            0)
         self._namePlate = sign_origin.attachNewNode(self._nameText)
         self._namePlate.setDepthWrite(0)
-        self._namePlate.setPos(0,-0.05,0)
+        self._namePlate.setPos(0, -0.05, 0)
         self._namePlate.setScale(xScale)
 
         return nameText
 
-    def __setupFloorMat(self, changeColor = True):
+    def __setupFloorMat(self, changeColor=True):
 
         if self.floorMat:
             self.floorMat.removeNode()
@@ -262,7 +273,8 @@ class DistributedHouse(DistributedObject.DistributedObject):
             return
         else:
             # make the name fit nicely on the floor mat
-            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(self._name)
+            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(
+                self._name)
 
         matText.setText(houseName)
         self.matText = matText
@@ -277,11 +289,12 @@ class DistributedHouse(DistributedObject.DistributedObject):
             xScale = 8.0 / textWidth
         mat_origin = self.house.find("**/mat_origin")
         pos = mat_origin.getPos()
-        mat_origin.setPosHpr(pos[0]-.15*textHeight,pos[1],pos[2],90,-90,0)
+        mat_origin.setPosHpr(pos[0] - .15 * textHeight,
+                             pos[1], pos[2], 90, -90, 0)
         self.floorMat = mat_origin.attachNewNode(self.matText)
         self.floorMat.setDepthWrite(0)
-        self.floorMat.setPos(0,-.025,0)
-        self.floorMat.setScale(.45*xScale)
+        self.floorMat.setPos(0, -.025, 0)
+        self.floorMat.setScale(.45 * xScale)
 
     def __setupNametag(self):
         # set up the nametag
@@ -291,11 +304,12 @@ class DistributedHouse(DistributedObject.DistributedObject):
         if (self._name == ""):
             houseName = ""
         else:
-            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(self._name)
+            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(
+                self._name)
         self.nametag = NametagGroup()
         self.nametag.setFont(ToontownGlobals.getBuildingNametagFont())
         if TTLocalizer.BuildingNametagShadow:
-           self.nametag.setShadow(*TTLocalizer.BuildingNametagShadow)
+            self.nametag.setShadow(*TTLocalizer.BuildingNametagShadow)
         self.nametag.setContents(Nametag.CName)
         self.nametag.setColorCode(NametagGroup.CCHouseBuilding)
         self.nametag.setActive(0)
@@ -314,7 +328,7 @@ class DistributedHouse(DistributedObject.DistributedObject):
         self.notify.debug("setHouseReady")
         try:
             self.House_initialized
-        except:
+        except BaseException:
             self.House_initialized = 1
             self.load()
 
@@ -341,7 +355,7 @@ class DistributedHouse(DistributedObject.DistributedObject):
 
             kd = .8
             color = HouseGlobals.houseColors[self.colorIndex]
-            dark = (kd*color[0], kd*color[1], kd*color[2])
+            dark = (kd * color[0], kd * color[1], kd * color[2])
             if not bwall.isEmpty():
                 bwall.setColor(color[0], color[1], color[2], 1)
             if not fwall.isEmpty():
@@ -362,13 +376,13 @@ class DistributedHouse(DistributedObject.DistributedObject):
             color = HouseGlobals.houseColors2[self.colorIndex]
             chimneyList = self.house.findAllMatches("**/chim*")
             for chimney in chimneyList:
-                chimney.setColor(color[0],color[1],color[2], 1)
+                chimney.setColor(color[0], color[1], color[2], 1)
 
     def setAvId(self, id):
         self.avId = id
 
     def setAvatarId(self, avId):
-        self.notify.debug("setAvatarId = %s" % avId)
+        self.notify.debug(f"setAvatarId = {avId}")
         self.ownerId = avId
 
     def getAvatarId(self):
@@ -379,11 +393,11 @@ class DistributedHouse(DistributedObject.DistributedObject):
         self._name = name
         # name plate has changed, so change the name
         if (self._nameText and
-            self._nameText.getText() != self._name):
+                self._nameText.getText() != self._name):
             if self._name == "":
                 self._nameText.setText("")
             else:
-                self._nameText.setText(self._name+"'s\n House")
+                self._nameText.setText(self._name + "'s\n House")
 
     def getName(self):
         return self._name
@@ -420,7 +434,7 @@ class DistributedHouse(DistributedObject.DistributedObject):
         r = self.randomGenerator.random()
         g = self.randomGenerator.random()
         b = self.randomGenerator.random()
-        nameText.setTextColor(r,g,b,1)
+        nameText.setTextColor(r, g, b, 1)
         nameText.setAlign(nameText.ACenter)
         nameText.setFont(ToontownGlobals.getBuildingNametagFont())
         nameText.setShadowColor(0, 0, 0, 1)
@@ -435,7 +449,8 @@ class DistributedHouse(DistributedObject.DistributedObject):
             return
         else:
             # make the name fit nicely on the floor mat
-            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(self._name)
+            houseName = TTLocalizer.AvatarsHouse % TTLocalizer.GetPossesive(
+                self._name)
 
         nameText.setText(houseName)
         self._nameText = nameText
@@ -451,13 +466,19 @@ class DistributedHouse(DistributedObject.DistributedObject):
 
         sign_origin = self.house.find("**/sign_origin")
         #debugAxis = loader.loadModel("models/misc/xyzAxis")
-        #debugAxis.reparentTo(sign_origin)
-        #debugAxis.wrtReparentTo(render)
+        # debugAxis.reparentTo(sign_origin)
+        # debugAxis.wrtReparentTo(render)
         pos = sign_origin.getPos()
-        sign_origin.setPosHpr(pos[0],pos[1],pos[2]+.15*textHeight,90,0,0)
+        sign_origin.setPosHpr(
+            pos[0],
+            pos[1],
+            pos[2] + .15 * textHeight,
+            90,
+            0,
+            0)
         self._namePlate = sign_origin.attachNewNode(self._nameText)
         self._namePlate.setDepthWrite(0)
-        self._namePlate.setPos(0,-0.05,0)
+        self._namePlate.setPos(0, -0.05, 0)
         self._namePlate.setScale(xScale)
 
         return nameText

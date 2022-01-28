@@ -1,4 +1,5 @@
-import array, sys
+import array
+import sys
 
 # import direct.directbase.DirectStart
 from direct.showbase.DirectObject import DirectObject
@@ -7,7 +8,7 @@ from direct.directnotify import DirectNotifyGlobal
 from pandac.PandaModules import Texture
 from pandac.PandaModules import CardMaker
 from pandac.PandaModules import NodePath
-from pandac.PandaModules import Point3,Vec3,Vec4,VBase4D, Point2
+from pandac.PandaModules import Point3, Vec3, Vec4, VBase4D, Point2
 from pandac.PandaModules import PNMImage
 from pandac.PandaModules import TextureStage
 from pandac.PandaModules import Texture
@@ -31,39 +32,41 @@ WIN_HEIGHT = 600
 GlobalWebcore = None
 
 
-#class HtmlView( DirectObject, AwWebViewListener):
-class HtmlView( DirectObject):
+# class HtmlView( DirectObject, AwWebViewListener):
+class HtmlView(DirectObject):
 
     notify = DirectNotifyGlobal.directNotify.newCategory("HtmlView")
     useHalfTexture = base.config.GetBool("news-half-texture", 0)
-            
-    def __init__(self, parent = aspect2d):        
+
+    def __init__(self, parent=aspect2d):
         """Properly initialize ourself."""
-        #AwWebViewListener.AwWebViewListener.__init__(self)
+        # AwWebViewListener.AwWebViewListener.__init__(self)
         self._parent = parent
-        self.mx =0
+        self.mx = 0
         self.my = 0
         self.htmlFile = "index.html"
-        self.transparency = False # this is important looks weird if it's true
+        self.transparency = False  # this is important looks weird if it's true
         global GlobalWebcore
         if GlobalWebcore:
             # we get a C++ crash if we construct webcore a second time
             pass
         else:
-            GlobalWebcore = AwWebCore(AwWebCore.LOGVERBOSE, True, AwWebCore.PFBGRA)
+            GlobalWebcore = AwWebCore(
+                AwWebCore.LOGVERBOSE, True, AwWebCore.PFBGRA)
             GlobalWebcore.setBaseDirectory('.')
-            for errResponse in range(400,600):
-                GlobalWebcore.setCustomResponsePage(errResponse, "error.html");			
-		
-        self.webView = GlobalWebcore.createWebView(WEB_WIDTH, WEB_HEIGHT, self.transparency, False, 70)		
-	#self.webView.setListener(self)
-        #self.webView.setCallback("requestFPS");
+            for errResponse in range(400, 600):
+                GlobalWebcore.setCustomResponsePage(errResponse, "error.html")
+
+        self.webView = GlobalWebcore.createWebView(
+            WEB_WIDTH, WEB_HEIGHT, self.transparency, False, 70)
+        # self.webView.setListener(self)
+        # self.webView.setCallback("requestFPS");
         frameName = ''
-        inGameNewsUrl = self.getInGameNewsUrl() 
-        #self.webView.loadURL2(inGameNewsUrl)
+        inGameNewsUrl = self.getInGameNewsUrl()
+        # self.webView.loadURL2(inGameNewsUrl)
 
         self.imgBuffer = array.array('B')
-        for i in range(WEB_WIDTH*WEB_HEIGHT):
+        for i in range(WEB_WIDTH * WEB_HEIGHT):
             self.imgBuffer.append(0)
             self.imgBuffer.append(0)
             self.imgBuffer.append(0)
@@ -71,13 +74,13 @@ class HtmlView( DirectObject):
 
         if self.useHalfTexture:
             self.leftBuffer = array.array('B')
-            for i in range(WEB_HALF_WIDTH*WEB_HEIGHT):
+            for i in range(WEB_HALF_WIDTH * WEB_HEIGHT):
                 self.leftBuffer.append(0)
                 self.leftBuffer.append(0)
                 self.leftBuffer.append(0)
                 self.leftBuffer.append(255)
             self.rightBuffer = array.array('B')
-            for i in range(WEB_HALF_WIDTH*WEB_HEIGHT):
+            for i in range(WEB_HALF_WIDTH * WEB_HEIGHT):
                 self.rightBuffer.append(0)
                 self.rightBuffer.append(0)
                 self.rightBuffer.append(0)
@@ -85,79 +88,95 @@ class HtmlView( DirectObject):
 
         self.setupTexture()
         if self.useHalfTexture:
-            self.setupHalfTextures()        
-			
+            self.setupHalfTextures()
+
         #self.interval = LerpHprInterval(self.quad, 2, Vec3(360, 0, 0), Vec3(0, 0, 0))
-			
+
         #self.accept("escape", sys.exit, [0])
         #self.accept("w", self.writeTex)
-		
+
         self.accept("mouse1", self.mouseDown, [AwWebView.LEFTMOUSEBTN])
-        self.accept("mouse3", self.mouseDown, [ AwWebView.RIGHTMOUSEBTN])
+        self.accept("mouse3", self.mouseDown, [AwWebView.RIGHTMOUSEBTN])
         self.accept("mouse1-up", self.mouseUp, [AwWebView.LEFTMOUSEBTN])
-        self.accept("mouse3-up", self.mouseUp, [ AwWebView.RIGHTMOUSEBTN])
-		
+        self.accept("mouse3-up", self.mouseUp, [AwWebView.RIGHTMOUSEBTN])
+
         #self.accept("f1", self.toggleRotation)
         #self.accept("f2", self.toggleTransparency)
         #self.accept("f3", self.reload)
         #self.accept("f4", self.zoomIn)
-        #self.accept("f5", self.zoomOut)		
+        #self.accept("f5", self.zoomOut)
 
         #taskMgr.doMethodLater(1.0, self.update, 'HtmlViewUpdateTask')
         # we get a problem if a mid-frame hearbeat fires of this task in conjunction with igLoop
         #taskMgr.add(self.update, 'HtmlViewUpdateTask',  priority = 51)
         #taskMgr.add(self.update, 'HtmlViewUpdateTask')
         #base.newsFrame = self
-                
+
     def getInGameNewsUrl(self):
         """Get the appropriate URL to use if we are in test, qa, or live."""
         # First if all else fails, we hard code the live news url
-        result = base.config.GetString("fallback-news-url", "http://cdn.toontown.disney.go.com/toontown/en/gamenews/")
-        # next check if we have an override, say they want to url to point to a file in their harddisk
+        result = base.config.GetString(
+            "fallback-news-url",
+            "http://cdn.toontown.disney.go.com/toontown/en/gamenews/")
+        # next check if we have an override, say they want to url to point to a
+        # file in their harddisk
         override = base.config.GetString("in-game-news-url", "")
         if override:
-            self.notify.info("got an override url,  using %s for in a game news" % override)
+            self.notify.info(
+                f"got an override url,  using {override} for in a game news")
             result = override
         else:
             try:
-                launcherUrl = base.launcher.getValue("GAME_IN_GAME_NEWS_URL", "")
-                if launcherUrl:                    
+                launcherUrl = base.launcher.getValue(
+                    "GAME_IN_GAME_NEWS_URL", "")
+                if launcherUrl:
                     result = launcherUrl
-                    self.notify.info("got GAME_IN_GAME_NEWS_URL from launcher using %s" % result)
+                    self.notify.info(
+                        f"got GAME_IN_GAME_NEWS_URL from launcher using {result}")
                 else:
-                    self.notify.info("blank GAME_IN_GAME_NEWS_URL from launcher, using %s" % result)
-                    
-            except:
-                self.notify.warning("got exception getting GAME_IN_GAME_NEWS_URL from launcher, using %s" % result)
+                    self.notify.info(
+                        f"blank GAME_IN_GAME_NEWS_URL from launcher, using {result}")
+
+            except BaseException:
+                self.notify.warning(
+                    "got exception getting GAME_IN_GAME_NEWS_URL from launcher, using %s" %
+                    result)
         return result
-                        
+
     def setupTexture(self):
         cm = CardMaker('quadMaker')
         cm.setColor(1.0, 1.0, 1.0, 1.0)
-					
+
         aspect = base.camLens.getAspectRatio()
-        htmlWidth = 2.0*aspect * WEB_WIDTH_PIXELS / float(WIN_WIDTH)		
-        htmlHeight = 2.0*float(WEB_HEIGHT_PIXELS) / float(WIN_HEIGHT) 
+        htmlWidth = 2.0 * aspect * WEB_WIDTH_PIXELS / float(WIN_WIDTH)
+        htmlHeight = 2.0 * float(WEB_HEIGHT_PIXELS) / float(WIN_HEIGHT)
 
         # the html area will be center aligned and vertically top aligned
         #cm.setFrame(-htmlWidth/2.0, htmlWidth/2.0, 1.0 - htmlHeight, 1.0)
-        cm.setFrame(-htmlWidth/2.0, htmlWidth/2.0, - htmlHeight / 2.0, htmlHeight / 2.0)
+        cm.setFrame(-htmlWidth / 2.0, htmlWidth / 2.0, -
+                    htmlHeight / 2.0, htmlHeight / 2.0)
 
-        bottomRightX = (WEB_WIDTH_PIXELS) / float( WEB_WIDTH +1)
-        bottomRightY = WEB_HEIGHT_PIXELS / float (WEB_HEIGHT+1)
+        bottomRightX = (WEB_WIDTH_PIXELS) / float(WEB_WIDTH + 1)
+        bottomRightY = WEB_HEIGHT_PIXELS / float(WEB_HEIGHT + 1)
 
         #cm.setUvRange(Point2(0,0), Point2(bottomRightX, bottomRightY))
-        cm.setUvRange(Point2(0,1-bottomRightY), Point2(bottomRightX,1))
-        
+        cm.setUvRange(Point2(0, 1 - bottomRightY), Point2(bottomRightX, 1))
+
         card = cm.generate()
         self.quad = NodePath(card)
-        self.quad.reparentTo(self._parent)	
+        self.quad.reparentTo(self._parent)
 
         self.guiTex = Texture("guiTex")
-        self.guiTex.setupTexture(Texture.TT2dTexture, WEB_WIDTH, WEB_HEIGHT, 1, Texture.TUnsignedByte, Texture.FRgba)
+        self.guiTex.setupTexture(
+            Texture.TT2dTexture,
+            WEB_WIDTH,
+            WEB_HEIGHT,
+            1,
+            Texture.TUnsignedByte,
+            Texture.FRgba)
         self.guiTex.setMinfilter(Texture.FTLinear)
-        self.guiTex.setKeepRamImage(True)		
-        self.guiTex.makeRamImage()				
+        self.guiTex.setKeepRamImage(True)
+        self.guiTex.makeRamImage()
         self.guiTex.setWrapU(Texture.WMRepeat)
         self.guiTex.setWrapV(Texture.WMRepeat)
 
@@ -168,7 +187,7 @@ class HtmlView( DirectObject):
         self.quad.setTransparency(0)
         self.quad.setTwoSided(True)
         self.quad.setColor(1.0, 1.0, 1.0, 1.0)
-        #self.quad.setZ(0.1) # shtickerbook is moved up by 0.1
+        # self.quad.setZ(0.1) # shtickerbook is moved up by 0.1
 
         self.calcMouseLimits()
 
@@ -182,22 +201,28 @@ class HtmlView( DirectObject):
     def setupLeftTexture(self):
         cm = CardMaker('quadMaker')
         cm.setColor(1.0, 1.0, 1.0, 1.0)
-					
+
         aspect = base.camLens.getAspectRatio()
-        htmlWidth = 2.0*aspect * WEB_WIDTH / float(WIN_WIDTH)		
-        htmlHeight = 2.0*float(WEB_HEIGHT) / float(WIN_HEIGHT) 
+        htmlWidth = 2.0 * aspect * WEB_WIDTH / float(WIN_WIDTH)
+        htmlHeight = 2.0 * float(WEB_HEIGHT) / float(WIN_HEIGHT)
 
         # the html area will be center aligned and vertically top aligned
         #cm.setFrame(-htmlWidth/2.0, htmlWidth/2.0, 1.0 - htmlHeight, 1.0)
-        cm.setFrame(-htmlWidth/2.0, 0, - htmlHeight / 2.0, htmlHeight / 2.0)
+        cm.setFrame(-htmlWidth / 2.0, 0, - htmlHeight / 2.0, htmlHeight / 2.0)
         card = cm.generate()
         self.leftQuad = NodePath(card)
-        self.leftQuad.reparentTo(self._parent)	
+        self.leftQuad.reparentTo(self._parent)
 
         self.leftGuiTex = Texture("guiTex")
-        self.leftGuiTex.setupTexture(Texture.TT2dTexture, WEB_HALF_WIDTH, WEB_HEIGHT, 1, Texture.TUnsignedByte, Texture.FRgba)
-        self.leftGuiTex.setKeepRamImage(True)		
-        self.leftGuiTex.makeRamImage()				
+        self.leftGuiTex.setupTexture(
+            Texture.TT2dTexture,
+            WEB_HALF_WIDTH,
+            WEB_HEIGHT,
+            1,
+            Texture.TUnsignedByte,
+            Texture.FRgba)
+        self.leftGuiTex.setKeepRamImage(True)
+        self.leftGuiTex.makeRamImage()
         self.leftGuiTex.setWrapU(Texture.WMClamp)
         self.leftGuiTex.setWrapV(Texture.WMClamp)
 
@@ -208,27 +233,33 @@ class HtmlView( DirectObject):
         self.leftQuad.setTransparency(0)
         self.leftQuad.setTwoSided(True)
         self.leftQuad.setColor(1.0, 1.0, 1.0, 1.0)
-        #self.quad.setZ(0.1) # shtickerbook is moved up by 0.1
+        # self.quad.setZ(0.1) # shtickerbook is moved up by 0.1
 
     def setupRightTexture(self):
         cm = CardMaker('quadMaker')
         cm.setColor(1.0, 1.0, 1.0, 1.0)
-					
+
         aspect = base.camLens.getAspectRatio()
-        htmlWidth = 2.0*aspect * WEB_WIDTH / float(WIN_WIDTH)		
-        htmlHeight = 2.0*float(WEB_HEIGHT) / float(WIN_HEIGHT) 
+        htmlWidth = 2.0 * aspect * WEB_WIDTH / float(WIN_WIDTH)
+        htmlHeight = 2.0 * float(WEB_HEIGHT) / float(WIN_HEIGHT)
 
         # the html area will be center aligned and vertically top aligned
         #cm.setFrame(-htmlWidth/2.0, htmlWidth/2.0, 1.0 - htmlHeight, 1.0)
-        cm.setFrame(0, htmlWidth/2.0, - htmlHeight / 2.0, htmlHeight / 2.0)
+        cm.setFrame(0, htmlWidth / 2.0, - htmlHeight / 2.0, htmlHeight / 2.0)
         card = cm.generate()
         self.rightQuad = NodePath(card)
-        self.rightQuad.reparentTo(self._parent)	
+        self.rightQuad.reparentTo(self._parent)
 
         self.rightGuiTex = Texture("guiTex")
-        self.rightGuiTex.setupTexture(Texture.TT2dTexture, WEB_HALF_WIDTH, WEB_HEIGHT, 1, Texture.TUnsignedByte, Texture.FRgba)
-        self.rightGuiTex.setKeepRamImage(True)		
-        self.rightGuiTex.makeRamImage()				
+        self.rightGuiTex.setupTexture(
+            Texture.TT2dTexture,
+            WEB_HALF_WIDTH,
+            WEB_HEIGHT,
+            1,
+            Texture.TUnsignedByte,
+            Texture.FRgba)
+        self.rightGuiTex.setKeepRamImage(True)
+        self.rightGuiTex.makeRamImage()
         self.rightGuiTex.setWrapU(Texture.WMClamp)
         self.rightGuiTex.setWrapV(Texture.WMClamp)
 
@@ -239,77 +270,84 @@ class HtmlView( DirectObject):
         self.rightQuad.setTransparency(0)
         self.rightQuad.setTwoSided(True)
         self.rightQuad.setColor(1.0, 1.0, 1.0, 1.0)
-        #self.quad.setZ(0.1) # shtickerbook is moved up by 0.1
-        
+        # self.quad.setZ(0.1) # shtickerbook is moved up by 0.1
 
-    def calcMouseLimits(self):                
+    def calcMouseLimits(self):
         ll = Point3()
         ur = Point3()
-        self.quad.calcTightBounds(ll,ur)
-        self.notify.debug("ll=%s ur=%s" % (ll,ur))
+        self.quad.calcTightBounds(ll, ur)
+        self.notify.debug(f"ll={ll} ur={ur}")
 
-        # we need to get our relative position to aspect2d, since shtiker books is shifted
+        # we need to get our relative position to aspect2d, since shtiker books
+        # is shifted
         offset = self.quad.getPos(aspect2d)
-        self.notify.debug("offset = %s " % offset)
-        ll.setZ(ll.getZ() +  offset.getZ())
+        self.notify.debug(f"offset = {offset} ")
+        ll.setZ(ll.getZ() + offset.getZ())
         ur.setZ(ur.getZ() + offset.getZ())
-                
-        self.notify.debug("new LL=%s, UR=%s" % (ll,ur))
+
+        self.notify.debug(f"new LL={ll}, UR={ur}")
 
         relPointll = self.quad.getRelativePoint(aspect2d, ll)
-        self.notify.debug("relPoint = %s" % relPointll)
-        self.mouseLL = (aspect2d.getScale()[0] * ll[0], aspect2d.getScale()[2] * ll[2])
-        self.mouseUR = (aspect2d.getScale()[0] * ur[0], aspect2d.getScale()[2] * ur[2])
-        self.notify.debug("original mouseLL=%s, mouseUR=%s" % (self.mouseLL, self.mouseUR))
-		
-    def writeTex(self, filename = "guiText.png"):
+        self.notify.debug(f"relPoint = {relPointll}")
+        self.mouseLL = (
+            aspect2d.getScale()[0] * ll[0],
+            aspect2d.getScale()[2] * ll[2])
+        self.mouseUR = (
+            aspect2d.getScale()[0] * ur[0],
+            aspect2d.getScale()[2] * ur[2])
+        self.notify.debug(
+            f"original mouseLL={self.mouseLL}, mouseUR={self.mouseUR}")
+
+    def writeTex(self, filename="guiText.png"):
         self.notify.debug("writing texture")
         self.guiTex.generateRamMipmapImages()
         self.guiTex.write(filename)
-		
+
     def toggleRotation(self):
         if self.interval.isPlaying():
             self.interval.finish()
         else:
             self.interval.loop()
-		
+
     def mouseDown(self, button):
         messenger.send('wakeup')
         self.webView.injectMouseDown(button)
-		
+
     def mouseUp(self, button):
         self.webView.injectMouseUp(button)
-	
+
     def reload(self):
         pass
-        #self.webView.loadFile(self.htmlFile, '')		
-		
+        #self.webView.loadFile(self.htmlFile, '')
+
     def zoomIn(self):
         self.webView.zoomIn()
-		
+
     def zoomOut(self):
         self.webView.zoomOut()
-		
+
     def toggleTransparency(self):
         self.transparency = not self.transparency
         self.webView.setTransparent(self.transparency)
-		
+
     def update(self, task):
         global GlobalWebcore
         if base.mouseWatcherNode.hasMouse():
-            x, y = self._translateRelativeCoordinates(base.mouseWatcherNode.getMouseX(), base.mouseWatcherNode.getMouseY())
+            x, y = self._translateRelativeCoordinates(
+                base.mouseWatcherNode.getMouseX(), base.mouseWatcherNode.getMouseY())
             #self.notify.debug('got mouse move %d %d' % (x,y))
-            #self.webView.injectMouseMove(x, y)			
-            
+            #self.webView.injectMouseMove(x, y)
+
             if (self.mx - x) != 0 or (self.my - y) != 0:
                 self.webView.injectMouseMove(x, y)
                 #self.notify.debug('injecting mouse move %d %d' % (x,y))
-                self.mx, self.my = x, y				
-                
+                self.mx, self.my = x, y
+
             if self.webView.isDirty():
                 #self.notify.debug("webview is dirty")
-                self.webView.render(self.imgBuffer.buffer_info()[0], WEB_WIDTH*4, 4)
-                #Texture.setTexturesPower2(AutoTextureScale.ATSUp)
+                self.webView.render(
+                    self.imgBuffer.buffer_info()[0], WEB_WIDTH * 4, 4)
+                # Texture.setTexturesPower2(AutoTextureScale.ATSUp)
                 Texture.setTexturesPower2(2)
                 #self.notify.debug("about to modify ram image")
                 textureBuffer = self.guiTex.modifyRamImage()
@@ -320,22 +358,27 @@ class HtmlView( DirectObject):
                 if self.useHalfTexture:
                     # TODO check with DRose, this feels inefficient
                     self.guiTex.store(self.fullPnmImage)
-                    self.leftPnmImage.copySubImage(self.fullPnmImage, 0, 0, 0, 0, WEB_HALF_WIDTH, WEB_HEIGHT)
-                    self.rightPnmImage.copySubImage(self.fullPnmImage, 0, 0, WEB_HALF_WIDTH, 0, WEB_HALF_WIDTH, WEB_HEIGHT)
+                    self.leftPnmImage.copySubImage(
+                        self.fullPnmImage, 0, 0, 0, 0, WEB_HALF_WIDTH, WEB_HEIGHT)
+                    self.rightPnmImage.copySubImage(
+                        self.fullPnmImage, 0, 0, WEB_HALF_WIDTH, 0, WEB_HALF_WIDTH, WEB_HEIGHT)
                     self.leftGuiTex.load(self.leftPnmImage)
-                    self.rightGuiTex.load(self.rightPnmImage)                    
+                    self.rightGuiTex.load(self.rightPnmImage)
                     self.quad.hide()
-                #Texture.setTexturesPower2(AutoTextureScale.ATSDown)
+                # Texture.setTexturesPower2(AutoTextureScale.ATSDown)
                 Texture.setTexturesPower2(1)
-                
-			
+
             GlobalWebcore.update()
-        return Task.cont				
-	
-		
+        return Task.cont
+
     def _translateRelativeCoordinates(self, x, y):
-        sx = int((x - self.mouseLL[0]) / (self.mouseUR[0] - self.mouseLL[0]) * WEB_WIDTH_PIXELS)
-        sy = WEB_HEIGHT_PIXELS - int((y - self.mouseLL[1]) / (self.mouseUR[1] - self.mouseLL[1]) * WEB_HEIGHT_PIXELS)
+        sx = int((x -
+                  self.mouseLL[0]) /
+                 (self.mouseUR[0] -
+                  self.mouseLL[0]) *
+                 WEB_WIDTH_PIXELS)
+        sy = WEB_HEIGHT_PIXELS - \
+            int((y - self.mouseLL[1]) / (self.mouseUR[1] - self.mouseLL[1]) * WEB_HEIGHT_PIXELS)
         return sx, sy
 
     def unload(self):
@@ -347,45 +390,44 @@ class HtmlView( DirectObject):
         #GlobalWebcore = None
         pass
 
-		
-    # --------------------[ WebViewListener implementation ]--------------------------
+    # --------------------[ WebViewListener implementation ]------------------
+
     def onCallback(self, name, args):
         assert self.notify.debugStateCall(self)
-        if name == "requestFPS":					
+        if name == "requestFPS":
             #self.webView.setProperty( "fps", JSValue("%.1f" % (1.0 / globalClock.getDt())) )
             #self.webView.executeJavascript("updateFPS()", "")
             pass
-			
-    def onBeginNavigation(self, url,  frameName):
+
+    def onBeginNavigation(self, url, frameName):
         assert self.notify.debugStateCall(self)
         pass
-		
+
     def onBeginLoading(self, url, frameName, statusCode, mimeType):
         assert self.notify.debugStateCall(self)
         pass
-		
+
     def onFinishLoading(self):
         assert self.notify.debugStateCall(self)
-        self.notify.debug( "finished loading")
+        self.notify.debug("finished loading")
         pass
-		
+
     def onReceiveTitle(self, title, frameName):
         assert self.notify.debugStateCall(self)
         pass
-		
+
     def onChangeTooltip(self, tooltip):
         assert self.notify.debugStateCall(self)
         pass
-		
+
     def onChangeCursor(self, cursor):
         assert self.notify.debugStateCall(self)
         pass
-		
+
     def onChangeKeyboardFocus(self, isFocused):
         assert self.notify.debugStateCall(self)
         pass
-		
+
     def onChangeTargetURL(self, url):
         assert self.notify.debugStateCall(self)
         pass
-		

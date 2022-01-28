@@ -18,6 +18,7 @@ from toontown.toonbase import TTLocalizer
 from toontown.classicchars import *
 from toontown.hood import MMHoodDataAI, BRHoodDataAI
 
+
 class CostumeManagerAI(HolidayBaseAI.HolidayBaseAI, DirectObject.DirectObject):
     notify = DirectNotifyGlobal.directNotify.newCategory('CostumeManagerAI')
 
@@ -46,8 +47,11 @@ class CostumeManagerAI(HolidayBaseAI.HolidayBaseAI, DirectObject.DirectObject):
             self.accept("GSHoodSpawned", self.__welcomeValleySpawned)
             self.accept("GSHoodDestroyed", self.__welcomeValleyDestroyed)
 
-            if hasattr(simbase.air, "holidayManager") and simbase.air.holidayManager is not None:
-                if self.holidayId in simbase.air.holidayManager.currentHolidays and simbase.air.holidayManager.currentHolidays[self.holidayId] != None:
+            if hasattr(
+                    simbase.air,
+                    "holidayManager") and simbase.air.holidayManager is not None:
+                if self.holidayId in simbase.air.holidayManager.currentHolidays and simbase.air.holidayManager.currentHolidays[
+                        self.holidayId] is not None:
                     return
 
             for hood in simbase.air.hoods:
@@ -75,34 +79,38 @@ class CostumeManagerAI(HolidayBaseAI.HolidayBaseAI, DirectObject.DirectObject):
             self.accept("GSHoodDestroyed", self.__welcomeValleyDestroyed)
 
             if hasattr(simbase.air, "holidayManager"):
-                if self.holidayId in simbase.air.holidayManager.currentHolidays and simbase.air.holidayManager.currentHolidays[self.holidayId] != None:
+                if self.holidayId in simbase.air.holidayManager.currentHolidays and simbase.air.holidayManager.currentHolidays[
+                        self.holidayId] is not None:
                     return
 
             for hood in simbase.air.hoods:
-                # The character is neither transitioning or has transitioned into a different costume
-                if hasattr(hood, "classicChar") and hood.classicChar.transitionToCostume == 0 and hood.classicChar.diffPath == None:
+                # The character is neither transitioning or has transitioned
+                # into a different costume
+                if hasattr(
+                        hood,
+                        "classicChar") and hood.classicChar.transitionToCostume == 0 and hood.classicChar.diffPath is None:
                     if isinstance(hood, TTHoodDataAI.TTHoodDataAI):
                         # import pdb; pdb.set_trace()
                         self.hoods.append(hood)
                         self.__classicChars[str(hood)] = 1
                         hood.classicChar.transitionCostume()
-                    elif isinstance(hood, BRHoodDataAI.BRHoodDataAI ):
+                    elif isinstance(hood, BRHoodDataAI.BRHoodDataAI):
                         self.hoods.append(hood)
                         self.__classicChars[str(hood)] = 1
                         hood.classicChar.transitionCostume()
-                    elif isinstance(hood, MMHoodDataAI.MMHoodDataAI ):
+                    elif isinstance(hood, MMHoodDataAI.MMHoodDataAI):
                         self.hoods.append(hood)
                         self.__classicChars[str(hood)] = 1
                         hood.classicChar.transitionCostume()
-                    elif isinstance(hood, DGHoodDataAI.DGHoodDataAI ):
+                    elif isinstance(hood, DGHoodDataAI.DGHoodDataAI):
                         self.hoods.append(hood)
                         self.__classicChars[str(hood)] = 1
                         hood.classicChar.transitionCostume()
-                    elif isinstance(hood, DLHoodDataAI.DLHoodDataAI ):
+                    elif isinstance(hood, DLHoodDataAI.DLHoodDataAI):
                         self.hoods.append(hood)
                         self.__classicChars[str(hood)] = 1
                         hood.classicChar.transitionCostume()
-                    elif isinstance(hood, GSHoodDataAI.GSHoodDataAI ):
+                    elif isinstance(hood, GSHoodDataAI.GSHoodDataAI):
                         self.hoods.append(hood)
                         self.__classicChars[str(hood)] = 1
                         hood.classicChar.transitionCostume()
@@ -137,45 +145,144 @@ class CostumeManagerAI(HolidayBaseAI.HolidayBaseAI, DirectObject.DirectObject):
                 if hood.classicChar == curChar:
                     hood.classicChar.fadeAway()
                     if(curChar.getName() == TTLocalizer.VampireMickey):
-                        taskMgr.doMethodLater(0.5, self.__switchChars, "SwitchChars"+str(hood), extraArgs = [DistributedMickeyAI.DistributedMickeyAI, curWalkNode, hood])
+                        taskMgr.doMethodLater(
+                            0.5,
+                            self.__switchChars,
+                            "SwitchChars" + str(hood),
+                            extraArgs=[
+                                DistributedMickeyAI.DistributedMickeyAI,
+                                curWalkNode,
+                                hood])
                     elif(curChar.getName() == TTLocalizer.Mickey):
-                        taskMgr.doMethodLater(0.5, self.__switchChars, "SwitchChars"+str(hood), extraArgs = [DistributedVampireMickeyAI.DistributedVampireMickeyAI, curWalkNode, hood])
+                        taskMgr.doMethodLater(
+                            0.5,
+                            self.__switchChars,
+                            "SwitchChars" + str(hood),
+                            extraArgs=[
+                                DistributedVampireMickeyAI.DistributedVampireMickeyAI,
+                                curWalkNode,
+                                hood])
                     elif(curChar.getName() == TTLocalizer.WitchMinnie):
-                        taskMgr.doMethodLater(0.5, self.__switchChars, "SwitchChars"+str(hood), extraArgs = [DistributedMinnieAI.DistributedMinnieAI, curWalkNode, hood])
+                        taskMgr.doMethodLater(
+                            0.5,
+                            self.__switchChars,
+                            "SwitchChars" + str(hood),
+                            extraArgs=[
+                                DistributedMinnieAI.DistributedMinnieAI,
+                                curWalkNode,
+                                hood])
                     elif(curChar.getName() == TTLocalizer.Minnie):
-                        taskMgr.doMethodLater(0.5, self.__switchChars, "SwitchChars"+str(hood), extraArgs = [DistributedWitchMinnieAI.DistributedWitchMinnieAI, curWalkNode, hood])
+                        taskMgr.doMethodLater(
+                            0.5,
+                            self.__switchChars,
+                            "SwitchChars" + str(hood),
+                            extraArgs=[
+                                DistributedWitchMinnieAI.DistributedWitchMinnieAI,
+                                curWalkNode,
+                                hood])
                     elif(curChar.getName() == TTLocalizer.Goofy):
-                        taskMgr.doMethodLater(0.5, self.__switchChars, "SwitchChars"+str(hood), extraArgs = [DistributedSuperGoofyAI.DistributedSuperGoofyAI, curWalkNode, hood])
+                        taskMgr.doMethodLater(
+                            0.5,
+                            self.__switchChars,
+                            "SwitchChars" + str(hood),
+                            extraArgs=[
+                                DistributedSuperGoofyAI.DistributedSuperGoofyAI,
+                                curWalkNode,
+                                hood])
                     elif(curChar.getName() == TTLocalizer.SuperGoofy):
-                        taskMgr.doMethodLater(0.5, self.__switchChars, "SwitchChars"+str(hood), extraArgs = [DistributedGoofySpeedwayAI.DistributedGoofySpeedwayAI, curWalkNode, hood])
+                        taskMgr.doMethodLater(
+                            0.5,
+                            self.__switchChars,
+                            "SwitchChars" + str(hood),
+                            extraArgs=[
+                                DistributedGoofySpeedwayAI.DistributedGoofySpeedwayAI,
+                                curWalkNode,
+                                hood])
                     elif(curChar.getName() == TTLocalizer.Pluto):
-                        taskMgr.doMethodLater(0.5, self.__switchChars, "SwitchChars"+str(hood), extraArgs = [DistributedWesternPlutoAI.DistributedWesternPlutoAI, curWalkNode, hood])
+                        taskMgr.doMethodLater(
+                            0.5,
+                            self.__switchChars,
+                            "SwitchChars" + str(hood),
+                            extraArgs=[
+                                DistributedWesternPlutoAI.DistributedWesternPlutoAI,
+                                curWalkNode,
+                                hood])
                     elif(curChar.getName() == TTLocalizer.WesternPluto):
-                        taskMgr.doMethodLater(0.5, self.__switchChars, "SwitchChars"+str(hood), extraArgs = [DistributedPlutoAI.DistributedPlutoAI, curWalkNode, hood])
+                        taskMgr.doMethodLater(
+                            0.5,
+                            self.__switchChars,
+                            "SwitchChars" + str(hood),
+                            extraArgs=[
+                                DistributedPlutoAI.DistributedPlutoAI,
+                                curWalkNode,
+                                hood])
         elif(self.holidayId == ToontownGlobals.APRIL_FOOLS_COSTUMES):
             for hood in self.hoods:
                 if hood.classicChar == curChar:
                     hood.classicChar.fadeAway()
                     if(curChar.getName() == TTLocalizer.Daisy):
-                        taskMgr.doMethodLater(0.5, self.__switchChars, "SwitchChars"+str(hood), extraArgs = [DistributedMickeyAI.DistributedMickeyAI, curWalkNode, hood])
+                        taskMgr.doMethodLater(
+                            0.5,
+                            self.__switchChars,
+                            "SwitchChars" + str(hood),
+                            extraArgs=[
+                                DistributedMickeyAI.DistributedMickeyAI,
+                                curWalkNode,
+                                hood])
                     elif(curChar.getName() == TTLocalizer.Mickey):
-                        taskMgr.doMethodLater(0.5, self.__switchChars, "SwitchChars"+str(hood), extraArgs = [DistributedDaisyAI.DistributedDaisyAI, curWalkNode, hood])
+                        taskMgr.doMethodLater(
+                            0.5,
+                            self.__switchChars,
+                            "SwitchChars" + str(hood),
+                            extraArgs=[
+                                DistributedDaisyAI.DistributedDaisyAI,
+                                curWalkNode,
+                                hood])
                     elif(curChar.getName() == TTLocalizer.Goofy):
-                        taskMgr.doMethodLater(0.5, self.__switchChars, "SwitchChars"+str(hood), extraArgs = [DistributedDonaldAI.DistributedDonaldAI, curWalkNode, hood])
+                        taskMgr.doMethodLater(
+                            0.5,
+                            self.__switchChars,
+                            "SwitchChars" + str(hood),
+                            extraArgs=[
+                                DistributedDonaldAI.DistributedDonaldAI,
+                                curWalkNode,
+                                hood])
                     elif(curChar.getName() == TTLocalizer.Donald):
-                        taskMgr.doMethodLater(0.5, self.__switchChars, "SwitchChars"+str(hood), extraArgs = [DistributedGoofySpeedwayAI.DistributedGoofySpeedwayAI, curWalkNode, hood])
+                        taskMgr.doMethodLater(
+                            0.5,
+                            self.__switchChars,
+                            "SwitchChars" + str(hood),
+                            extraArgs=[
+                                DistributedGoofySpeedwayAI.DistributedGoofySpeedwayAI,
+                                curWalkNode,
+                                hood])
                     elif(curChar.getName() == TTLocalizer.Pluto):
-                        taskMgr.doMethodLater(0.5, self.__switchChars, "SwitchChars"+str(hood), extraArgs = [DistributedMinnieAI.DistributedMinnieAI, curWalkNode, hood])
+                        taskMgr.doMethodLater(
+                            0.5,
+                            self.__switchChars,
+                            "SwitchChars" + str(hood),
+                            extraArgs=[
+                                DistributedMinnieAI.DistributedMinnieAI,
+                                curWalkNode,
+                                hood])
                     elif(curChar.getName() == TTLocalizer.Minnie):
-                        taskMgr.doMethodLater(0.5, self.__switchChars, "SwitchChars"+str(hood), extraArgs = [DistributedPlutoAI.DistributedPlutoAI, curWalkNode, hood])
-
+                        taskMgr.doMethodLater(
+                            0.5,
+                            self.__switchChars,
+                            "SwitchChars" + str(hood),
+                            extraArgs=[
+                                DistributedPlutoAI.DistributedPlutoAI,
+                                curWalkNode,
+                                hood])
 
     ########################################################
     # Switched the classic character with a new one
     # represented by class 'newChar' in 'hood'.
     ########################################################
+
     def __switchChars(self, newChar, walkNode, hood):
-        self.notify.debug("SwitchingChars %s to %s" %(hood.classicChar, newChar))
+        self.notify.debug(
+            f"SwitchingChars {hood.classicChar} to {newChar}")
         self.notify.debugStateCall(self)
         hood.classicChar.requestDelete()
         if hasattr(hood, "air") and hood.air:
@@ -193,7 +300,8 @@ class CostumeManagerAI(HolidayBaseAI.HolidayBaseAI, DirectObject.DirectObject):
         if holidayDone:
             self.cCharsSwitched += 1
         if self.cCharsSwitched == len(self.__classicChars):
-            simbase.air.holidayManager.delayedEnd(self.holidayId, self.stopForever)
+            simbase.air.holidayManager.delayedEnd(
+                self.holidayId, self.stopForever)
 
     ########################################################
     # Function to handle the spawning of a new welcome

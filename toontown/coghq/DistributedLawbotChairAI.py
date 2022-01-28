@@ -6,13 +6,16 @@ from otp.otpbase import OTPGlobals
 from direct.fsm import FSM
 import random
 
-class DistributedLawbotChairAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM):
+
+class DistributedLawbotChairAI(
+        DistributedObjectAI.DistributedObjectAI,
+        FSM.FSM):
 
     """ This is one of the  chairs in the lawbot
     boss battle room.  """
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLawbotChairAI')
-
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedLawbotChairAI')
 
     def __init__(self, air, boss, index):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
@@ -27,7 +30,8 @@ class DistributedLawbotChairAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM)
         cs = CollisionSphere(0, -6, 0, 6)
         cn.addSolid(cs)
         self.goonShield = NodePath(cn)
-        self.goonShield.setPosHpr(*ToontownGlobals.LawbotBossChairPosHprs[self.index])
+        self.goonShield.setPosHpr(
+            *ToontownGlobals.LawbotBossChairPosHprs[self.index])
 
         self.avId = 0
         self.objectId = 0
@@ -35,13 +39,13 @@ class DistributedLawbotChairAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM)
         self.changeToCogTask = None
         self.startCogFlyTask = None
 
-        #zero or higher if there is a toon Juror on this chair
+        # zero or higher if there is a toon Juror on this chair
         self.toonJurorIndex = -1
 
     def delete(self):
         assert self.notify.debug('delete')
         self.ignoreAll()
-        #self.__stopTimeout()
+        # self.__stopTimeout()
         DistributedObjectAI.DistributedObjectAI.delete(self)
 
         taskName = self.uniqueName('startCogFlyTask')
@@ -52,14 +56,13 @@ class DistributedLawbotChairAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM)
 
     def stopCogs(self):
         assert self.notify.debug('stopCogs')
- 
-        #self.ignoreAll()
+
+        # self.ignoreAll()
         taskName = self.uniqueName('startCogFlyTask')
         taskMgr.remove(taskName)
 
         changeTaskName = self.uniqueName('changeToCogJuror')
         taskMgr.remove(changeTaskName)
-        
 
     def getBossCogId(self):
         return self.boss.doId
@@ -82,7 +85,7 @@ class DistributedLawbotChairAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM)
 
     def setState(self, state):
         self.request(state)
-     
+
     def d_setState(self, state):
         newState = state
         if state == 'On':
@@ -94,31 +97,29 @@ class DistributedLawbotChairAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM)
         elif state == 'SuitJuror':
             newState = 'S'
         elif state == 'EmptyJuror':
-            newState ='E'
+            newState = 'E'
         elif state == 'StopCogs':
-            newState ='C'
+            newState = 'C'
         else:
             assert(self.notify.error("Unknown state %s", state))
-        
+
         self.sendUpdate('setState', [newState])
 
     def b_setState(self, state):
         self.request(state)
-        self.d_setState( state) 
-    
+        self.d_setState(state)
 
     def turnOn(self):
-        #we've entered battle three so start stomping
+        # we've entered battle three so start stomping
         self.b_setState('On')
 
     def requestStopCogs(self):
-        self.b_setState('StopCogs')  
-
+        self.b_setState('StopCogs')
 
     def requestControl(self):
         # A client wants to start controlling the crane.
         avId = self.air.getAvatarIdFromSender()
-        
+
         if avId in self.boss.involvedToons and self.avId == 0:
             # Also make sure the client isn't controlling some other
             # crane.
@@ -129,10 +130,10 @@ class DistributedLawbotChairAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM)
     def requestFree(self):
         # The client is done controlling the crane.
         avId = self.air.getAvatarIdFromSender()
-        
+
         if avId == self.avId:
             self.request('Free')
-    
+
     def removeToon(self, avId):
         if avId == self.avId:
             self.request('Free')
@@ -141,7 +142,7 @@ class DistributedLawbotChairAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM)
         # Returns the craneId for the crane that the indicated avatar
         # is controlling, or 0 if none.
 
-        if self.boss and self.boss.cranes != None:
+        if self.boss and self.boss.cranes is not None:
             for crane in self.boss.cranes:
                 if crane.avId == avId:
                     return crane.doId
@@ -150,41 +151,38 @@ class DistributedLawbotChairAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM)
 
     def requestToonJuror(self):
         self.b_setState('ToonJuror')
-        if self.changeToCogTask == None:
-            #this means no cog flying down to sit
-            if (self.startCogFlyTask ==None):
-                #avoid the case players are so good they
-                #hit the chair before the first cog gets there
+        if self.changeToCogTask is None:
+            # this means no cog flying down to sit
+            if (self.startCogFlyTask is None):
+                # avoid the case players are so good they
+                # hit the chair before the first cog gets there
 
-                #give a little delay before the cog appears
-                delayTime = random.randrange(9,19)
-                self.startCogFlyTask = taskMgr.doMethodLater(\
+                # give a little delay before the cog appears
+                delayTime = random.randrange(9, 19)
+                self.startCogFlyTask = taskMgr.doMethodLater(
                     delayTime,
                     self.cogFlyAndSit,
-                    self.uniqueName('startCogFlyTask'))                
-
-        
+                    self.uniqueName('startCogFlyTask'))
 
     def requestSuitJuror(self):
-        self.b_setState('SuitJuror')        
+        self.b_setState('SuitJuror')
 
     def requestEmptyJuror(self):
         self.b_setState('EmptyJuror')
-        #since this is the first thing that happens start the cogs flying
-        delayTime = random.randrange(1,20)
-        self.startCogFlyTask = taskMgr.doMethodLater(delayTime,
-                                                     self.cogFlyAndSit,
-                                                     self.uniqueName('startCogFlyTask'))
-        #self.cogFlyAndSit()
+        # since this is the first thing that happens start the cogs flying
+        delayTime = random.randrange(1, 20)
+        self.startCogFlyTask = taskMgr.doMethodLater(
+            delayTime, self.cogFlyAndSit, self.uniqueName('startCogFlyTask'))
+        # self.cogFlyAndSit()
 
-    def cogFlyAndSit(self, taskName = None):
+    def cogFlyAndSit(self, taskName=None):
         self.notify.debug('cogFlyAndSit')
-        self.sendUpdate('showCogJurorFlying',[])
+        self.sendUpdate('showCogJurorFlying', [])
         self.changeToCogTask = taskMgr.doMethodLater(
             ToontownGlobals.LawbotBossCogJurorFlightTime,
             self.changeToCogJuror,
             self.uniqueName('changeToCogJuror')
-            )
+        )
         if self.startCogFlyTask:
             self.startCogFlyTask = None
 
@@ -193,8 +191,8 @@ class DistributedLawbotChairAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM)
         self.requestSuitJuror()
         self.changeToCogTask = None
 
-
     ### FSM States ###
+
     def enterOn(self):
         pass
 
@@ -206,8 +204,8 @@ class DistributedLawbotChairAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM)
 
     def exitOff(self):
         pass
-        #no Scene    
-        #self.goonShield.reparentTo(self.boss.scene)
+        # no Scene
+        # self.goonShield.reparentTo(self.boss.scene)
 
     def enterControlled(self, avId):
         self.avId = avId
@@ -237,5 +235,5 @@ class DistributedLawbotChairAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM)
         self.__stopCogs()
 
     def exitStopCogs(self):
-        assert self.notify.debug('exitStopCogs, oldState=%s' % self.oldState)
+        assert self.notify.debug(f'exitStopCogs, oldState={self.oldState}')
         pass

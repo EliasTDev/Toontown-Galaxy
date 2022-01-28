@@ -8,7 +8,7 @@ import sys
 import getopt
 
 try:
-    opts,args = getopt.getopt(sys.argv[1:], "h:n:p:u:exw:m:sci")
+    opts, args = getopt.getopt(sys.argv[1:], "h:n:p:u:exw:m:sci")
 except getopt.GetoptError:
     print("Switchboard Debugger Options:")
     print("-h hostname - Specify NS hostname")
@@ -34,7 +34,7 @@ action = ""
 recipient = ""
 message = ""
 
-for o,a in opts:
+for o, a in opts:
     if o == "-n":
         wedgename = a
     elif o == "-h":
@@ -58,7 +58,6 @@ for o,a in opts:
         action = "checkSocket"
     elif o == "-i":
         action = "interactive"
-        
 
 
 if wedgename == "":
@@ -69,41 +68,54 @@ if action == "":
     sys.exit(0)
 
 
-
 Pyro.core.initClient(banner=0)
-ns = Pyro.naming.NameServerLocator().getNS(host=NShost,port=NSport)
+ns = Pyro.naming.NameServerLocator().getNS(host=NShost, port=NSport)
 
 try:
     if action == "shutdown":
         try:
-            node = Pyro.core.getProxyForURI(ns.resolve(":sb.node.%s"%wedgename))
+            node = Pyro.core.getProxyForURI(
+                ns.resolve(
+                    f":sb.node.{wedgename}"))
             node.shutdown()
-        except:
+        except BaseException:
             pass
         try:
-            wedge = Pyro.core.getProxyForURI(ns.resolve(":sb.wedge.%s"%wedgename))
+            wedge = Pyro.core.getProxyForURI(
+                ns.resolve(
+                    f":sb.wedge.{wedgename}"))
             wedge.shutdown()
-        except:
+        except BaseException:
             pass
 
     elif action == "interactive":
-        wedge = Pyro.core.getProxyForURI(ns.resolve(":sb.wedge.%s"%wedgename))
+        wedge = Pyro.core.getProxyForURI(
+            ns.resolve(
+                f":sb.wedge.{wedgename}"))
         print(wedge)
         import pdb
         pdb.set_trace()
 
     elif action == "enterPlayer":
         info = 0
-        wedge = Pyro.core.getProxyForURI(ns.resolve(":sb.wedge.%s"%wedgename))
-        wedge.enterPlayer(playernumber,info)
+        wedge = Pyro.core.getProxyForURI(
+            ns.resolve(
+                f":sb.wedge.{wedgename}"))
+        wedge.enterPlayer(playernumber, info)
     elif action == "exitPlayer":
-        wedge = Pyro.core.getProxyForURI(ns.resolve(":sb.wedge.%s"%wedgename))
+        wedge = Pyro.core.getProxyForURI(
+            ns.resolve(
+                f":sb.wedge.{wedgename}"))
         wedge.exitPlayer(playernumber)
     elif action == "whisper":
-        wedge = Pyro.core.getProxyForURI(ns.resolve(":sb.wedge.%s"%wedgename))
-        wedge.sendWhisper(recipient,playernumber,message)
+        wedge = Pyro.core.getProxyForURI(
+            ns.resolve(
+                f":sb.wedge.{wedgename}"))
+        wedge.sendWhisper(recipient, playernumber, message)
     elif action == "checkSocket":
-        wedge = Pyro.core.getProxyForURI(ns.resolve(":sb.wedge.%s"%wedgename))
+        wedge = Pyro.core.getProxyForURI(
+            ns.resolve(
+                f":sb.wedge.{wedgename}"))
         wedge.checkSocket()
 except Exception as x:
     print(''.join(Pyro.util.getPyroTraceback(x)))

@@ -20,21 +20,22 @@ from toontown.battle import MovieUtil
 # it is not distributed so results may very from client to client
 # the piejectiles home and hit around 80% of the time
 
+
 class Piejectile(DirectObject, FlyingGag):
-                                
+
     physicsCalculationsPerSecond = 60
     maxPhysicsDt = 1.0
     physicsDt = 1.0 / float(physicsCalculationsPerSecond)
     maxPhysicsFrames = maxPhysicsDt * physicsCalculationsPerSecond
-    
+
     def __init__(self, sourceId, targetId, type, name):
-        
+
         FlyingGag.__init__(self, "flyingGag", base.race.pie)
- 
-        self.billboard=False
+
+        self.billboard = False
         self.race = base.race
-        self.scale=1
-        self.imHitMult=1
+        self.scale = 1
+        self.imHitMult = 1
         self.wallCollideTrack = None
         self.curSpeed = 0
         self.acceleration = 0
@@ -52,42 +53,46 @@ class Piejectile(DirectObject, FlyingGag):
         self.startTime = globalClock.getFrameTime()
         self.timeRatio = 0
         self.maxTime = 8
-        self.rotH = randFloat(-360,360)
-        self.rotP = randFloat(-90,90)
-        self.rotR = randFloat(-90,90)
-        
-        print(("generating Pie %s" % (self.name)))
+        self.rotH = randFloat(-360, 360)
+        self.rotP = randFloat(-90, 90)
+        self.rotR = randFloat(-90, 90)
 
-        self.ownerKart = base.cr.doId2do.get(base.race.kartMap.get(sourceId,None),None)
+        print(f"generating Pie {self.name}")
+
+        self.ownerKart = base.cr.doId2do.get(
+            base.race.kartMap.get(sourceId, None), None)
         if(targetId != 0):
-            self.targetKart = base.cr.doId2do.get(base.race.kartMap.get(targetId,None),None)
+            self.targetKart = base.cr.doId2do.get(
+                base.race.kartMap.get(targetId, None), None)
             self.hasTarget = 1
-            
-        if(self.ownerId==localAvatar.doId):
-            startPos=self.ownerKart.getPos(render)
+
+        if(self.ownerId == localAvatar.doId):
+            startPos = self.ownerKart.getPos(render)
         else:
-            startPos=self.ownerKart.getPos(render)
-            
+            startPos = self.ownerKart.getPos(render)
+
         self.setPos(startPos[0], startPos[1], startPos[2])
-        
+
         self.__setupCollisions()
         self.setupPhysics()
         self.__enableCollisions()
 
-        self.forward=NodePath("forward")
-        self.forward.setPos(0,1,0)
-        
-        self.splatTaskName = ("splatTask %s" % (self.name))
-        
+        self.forward = NodePath("forward")
+        self.forward.setPos(0, 1, 0)
+
+        self.splatTaskName = f"splatTask {self.name}"
+
         if self.hasTarget:
-            self.splatTask = taskMgr.doMethodLater(self.maxTime, self.splat, self.splatTaskName)
+            self.splatTask = taskMgr.doMethodLater(
+                self.maxTime, self.splat, self.splatTaskName)
         else:
-            self.splatTask = taskMgr.doMethodLater(self.maxTime / 2.5, self.splat, self.splatTaskName)
+            self.splatTask = taskMgr.doMethodLater(
+                self.maxTime / 2.5, self.splat, self.splatTaskName)
 
         ###########################################################
         # Add the piejectile to the scene
         self.reparentTo(render)
-    
+
     def delete(self):
         print("removing piejectile")
 
@@ -97,30 +102,30 @@ class Piejectile(DirectObject, FlyingGag):
         FlyingGag.delete(self)
         self.deleting = 1
         self.ignoreAll()
-        
+
     def remove(self):
         self.delete()
 
-    def setAvId(self,avId):
-        self.avId=avId
-        
-    def setRace(self,doId):
+    def setAvId(self, avId):
+        self.avId = avId
+
+    def setRace(self, doId):
         self.race = base.cr.doId2do.get(doId)
 
-    def setOwnerId(self,ownerId):
-        self.ownerId=ownerId
-        
+    def setOwnerId(self, ownerId):
+        self.ownerId = ownerId
+
     def setType(self, type):
-        self.type = type;
-        
-    def setPos(self, x,y,z):
-        DistributedSmoothNode.DistributedSmoothNode.setPos(self,x,y,z)
-        
+        self.type = type
+
+    def setPos(self, x, y, z):
+        DistributedSmoothNode.DistributedSmoothNode.setPos(self, x, y, z)
+
     def getVelocity(self):
         return self.actorNode.getPhysicsObject().getVelocity()
 
     def setupPhysics(self):
-        
+
         ###########################################################
         # Set up all the physics forces
         self.physicsMgr = PhysicsManager()
@@ -128,7 +133,7 @@ class Piejectile(DirectObject, FlyingGag):
         self.lastPhysicsFrame = 0
         integrator = LinearEulerIntegrator()
         self.physicsMgr.attachLinearIntegrator(integrator)
-        
+
         # add wind Resistance Force
         fn = ForceNode('windResistance')
         fnp = NodePath(fn)
@@ -137,8 +142,8 @@ class Piejectile(DirectObject, FlyingGag):
         fn.addForce(windResistance)
         self.physicsMgr.addLinearForce(windResistance)
         self.windResistance = windResistance
-        
-        #create an engine force
+
+        # create an engine force
         fn = ForceNode("engine")
         fnp = NodePath(fn)
         fnp.reparentTo(self)
@@ -146,31 +151,32 @@ class Piejectile(DirectObject, FlyingGag):
         fn.addForce(engine)
         self.physicsMgr.addLinearForce(engine)
         self.engine = engine
-        
+
         self.physicsMgr.attachPhysicalNode(self.node())
         self.physicsObj = self.actorNode.getPhysicsObject()
         ownerAv = base.cr.doId2do[self.ownerId]
         ownerVel = self.ownerKart.getVelocity()
         ownerSpeed = ownerVel.length()
-        rotMat=Mat3.rotateMatNormaxis(self.ownerKart.getH(), Vec3.up())
-        ownerHeading=rotMat.xform(Vec3.forward())
+        rotMat = Mat3.rotateMatNormaxis(self.ownerKart.getH(), Vec3.up())
+        ownerHeading = rotMat.xform(Vec3.forward())
         throwSpeed = 50
         throwVel = ownerHeading * throwSpeed
         throwVelCast = Vec3(throwVel[0], throwVel[1], throwVel[2] + 50)
-        
-        self.actorNode.getPhysicsObject().setVelocity(self.ownerKart.getVelocity() + throwVelCast)
-        #print "Kart Velocity"
-        #print self.ownerKart.getVelocity()
-        #print "Pie Velocity"
-        #print self.actorNode.getPhysicsObject().getVelocity()
+
+        self.actorNode.getPhysicsObject().setVelocity(
+            self.ownerKart.getVelocity() + throwVelCast)
+        # print "Kart Velocity"
+        # print self.ownerKart.getVelocity()
+        # print "Pie Velocity"
+        # print self.actorNode.getPhysicsObject().getVelocity()
         #self.physicsObj.setMass(self.physicsObj.getMass() / 10)
-        
+
         lookPoint = render.getRelativePoint(self.ownerKart, Point3(0, 10, 0))
-        
+
         self.lookAt(lookPoint)
-        self.taskName = ("updatePhysics%s" % (self.name))
+        self.taskName = f"updatePhysics{self.name}"
         taskMgr.add(self.__updatePhysics, self.taskName, priority=25)
-        
+
     def checkTargetDistance(self):
         if self.hasTarget:
             #posTarget = self.targetKart.getPos()
@@ -182,42 +188,43 @@ class Piejectile(DirectObject, FlyingGag):
             return self.getDistance(self.targetKart)
         else:
             return 0
-    
+
     def splatTarget(self):
         if self.targetId == base.localAvatar.getDoId() and base.race.localKart:
             base.race.localKart.splatPie()
         else:
             pass
-        self.race.effectManager.addSplatEffect(spawner = self.targetKart, parent = self.targetKart)
+        self.race.effectManager.addSplatEffect(
+            spawner=self.targetKart, parent=self.targetKart)
         taskMgr.remove(self.splatTaskName)
         self.remove()
-                
-    def splat(self, optional = None):
-        #print "SPLAT!!!!!!"
-        self.race.effectManager.addSplatEffect(spawner = self)
+
+    def splat(self, optional=None):
+        # print "SPLAT!!!!!!"
+        self.race.effectManager.addSplatEffect(spawner=self)
         taskMgr.remove(self.splatTaskName)
         self.remove()
-        
+
     def __updatePhysics(self, task):
-        
+
         if self.deleting:
             return Task.done
-        
-        #here I alter the characteristics of the piejectile to make them track better the longer
-        #they are around        
-        self.timeRatio = (globalClock.getFrameTime() - self.startTime) / self.maxTime
-        #increase windResistance to counteract orbiting
+
+        # here I alter the characteristics of the piejectile to make them track better the longer
+        # they are around
+        self.timeRatio = (globalClock.getFrameTime() -
+                          self.startTime) / self.maxTime
+        # increase windResistance to counteract orbiting
         self.windResistance.setCoef(0.2 + 0.8 * self.timeRatio)
         #import pdb; pdb.set_trace()
-        #print self.timeRatio
-            
-        if base.cr.doId2do.get(self.targetId) == None:
-            self.hasTarget = 0
-            
-        self.lastD2t = self.d2t;
-        self.d2t = self.checkTargetDistance() 
+        # print self.timeRatio
 
-        
+        if base.cr.doId2do.get(self.targetId) is None:
+            self.hasTarget = 0
+
+        self.lastD2t = self.d2t
+        self.d2t = self.checkTargetDistance()
+
         if self.hasTarget:
             targetDistance = self.d2t
             distMax = 100
@@ -225,31 +232,64 @@ class Piejectile(DirectObject, FlyingGag):
                 targetDistance = distMax
             targetVel = self.targetKart.getVelocity()
             targetPos = self.targetKart.getPos()
-            targetAim = Point3(targetPos[0] + (targetVel[0] * (targetDistance / distMax)), 
-                            targetPos[1] + (targetVel[1] * (targetDistance / distMax)), 
-                            targetPos[2] + (targetVel[2] * (targetDistance / distMax)))
+            targetAim = Point3(targetPos[0] +
+                               (targetVel[0] *
+                                (targetDistance /
+                                 distMax)), targetPos[1] +
+                               (targetVel[1] *
+                                (targetDistance /
+                                   distMax)), targetPos[2] +
+                               (targetVel[2] *
+                                (targetDistance /
+                                   distMax)))
             self.lookAt(targetPos)
-        
+
         if (self.d2t < 7) and self.hasTarget:
-            #print "hitting target"
+            # print "hitting target"
             self.splatTarget()
             return Task.done
 
         self.count += 1
 
         dt = globalClock.getDt()
-        
-        physicsFrame = int((globalClock.getFrameTime() - self.physicsEpoch) * self.physicsCalculationsPerSecond)
-        numFrames = min(physicsFrame - self.lastPhysicsFrame, self.maxPhysicsFrames)
+
+        physicsFrame = int(
+            (globalClock.getFrameTime() -
+             self.physicsEpoch) *
+            self.physicsCalculationsPerSecond)
+        numFrames = min(
+            physicsFrame -
+            self.lastPhysicsFrame,
+            self.maxPhysicsFrames)
         self.lastPhysicsFrame = physicsFrame
-        
+
         if self.hasTarget:
             targetVel = self.targetKart.getVelocity()
             targetSpeed = targetVel.length()
             if((self.d2t - (10 * self.physicsDt)) > self.lastD2t):
-                self.engine.setVector(Vec3(0, 150 + 150 * self.timeRatio + targetSpeed * (1.0 + 1.0 * self.timeRatio)+ self.d2t * (1.0 + 1.0 * self.timeRatio) , 12))
+                self.engine.setVector(Vec3(0, 150 +
+                                           150 *
+                                           self.timeRatio +
+                                           targetSpeed *
+                                           (1.0 +
+                                            1.0 *
+                                            self.timeRatio) +
+                                           self.d2t *
+                                           (1.0 +
+                                            1.0 *
+                                            self.timeRatio), 12))
             else:
-                self.engine.setVector(Vec3(0, 10 + 10 * self.timeRatio + targetSpeed * (0.5 + 0.5 * self.timeRatio) + self.d2t * (0.5 + 0.5 * self.timeRatio), 12))
+                self.engine.setVector(Vec3(0, 10 +
+                                           10 *
+                                           self.timeRatio +
+                                           targetSpeed *
+                                           (0.5 +
+                                            0.5 *
+                                            self.timeRatio) +
+                                           self.d2t *
+                                           (0.5 +
+                                            0.5 *
+                                            self.timeRatio), 12))
         else:
             self.engine.setVector(Vec3(0, 100, 3))
 
@@ -263,23 +303,20 @@ class Piejectile(DirectObject, FlyingGag):
             self.physicsMgr.doPhysics(self.physicsDt)
 
         if self.count % 60 == 0:
-            #print "Pielocity info"
-            #print self.actorNode.getPhysicsObject().getVelocity()
-            #print self.actorNode.getPhysicsObject().getPosition()
+            # print "Pielocity info"
+            # print self.actorNode.getPhysicsObject().getVelocity()
+            # print self.actorNode.getPhysicsObject().getPosition()
             pass
-        
+
         return Task.cont
 
-
-       
-    
     def __setupCollisions(self):
-        # We will use a separate collision traverser for walls to 
+        # We will use a separate collision traverser for walls to
         # get around the ordering issue (we must check walls before
         # floors)
         self.cWallTrav = CollisionTraverser("ProjectileWall")
         self.cWallTrav.setRespectPrevTransform(True)
-        
+
         ###########################################################
         # A CollisionNode to keep me out of walls, and to
         # keep others from bumping into me.  We use PieBitmask instead
@@ -295,8 +332,8 @@ class Piejectile(DirectObject, FlyingGag):
         self.collisionNodePath = NodePath(self.collisionNode)
 
         self.wallHandler = CollisionHandlerPusher()
-        base.cTrav.addCollider(sC,self.wallHandler)
-        
+        base.cTrav.addCollider(sC, self.wallHandler)
+
         self.wallHandler.addCollider(self.collisionNodePath, self)
 
         ###########################################################
@@ -304,13 +341,13 @@ class Piejectile(DirectObject, FlyingGag):
 
         # This is a ray cast down to detect floor polygons
         cRay = CollisionRay(0.0, 0.0, 40000.0, 0.0, 0.0, -1.0)
-        pieFloorRayName = ("pieFloorRay%s" % (self.name))
+        pieFloorRayName = f"pieFloorRay{self.name}"
         cRayNode = CollisionNode(pieFloorRayName)
         cRayNode.addSolid(cRay)
         cRayNode.setFromCollideMask(OTPGlobals.FloorBitmask)
         cRayNode.setIntoCollideMask(BitMask32.allOff())
         self.cRayNodePath = self.attachNewNode(cRayNode)
-        
+
         # set up floor collision mechanism
         self.lifter = CollisionHandlerGravity()
         self.lifter.setGravity(32.174 * 3.0)
@@ -323,11 +360,9 @@ class Piejectile(DirectObject, FlyingGag):
 
         # hook into the base collision traverser
         base.cTrav.addCollider(self.cRayNodePath, self.lifter)
-        
 
     def __undoCollisions(self):
         base.cTrav.removeCollider(self.cRayNodePath)
-
 
     def __enableCollisions(self):
         self.cQueue = []
@@ -335,7 +370,7 @@ class Piejectile(DirectObject, FlyingGag):
         self.cRays.reparentTo(self.gag)
         x = self.gag.getX()
         y = self.gag.getY()
-            
+
         rayNode = CollisionNode("floorcast")
         ray = CollisionRay(x, y, 40000.0, 0.0, 0.0, -1.0)
         rayNode.addSolid(ray)
@@ -346,5 +381,5 @@ class Piejectile(DirectObject, FlyingGag):
         cQueue = CollisionHandlerQueue()
         self.cWallTrav.addCollider(rayNodePath, cQueue)
         self.cQueue.append(cQueue)
-        
+
         self.collisionNodePath.reparentTo(self)

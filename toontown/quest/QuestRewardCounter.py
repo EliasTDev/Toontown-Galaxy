@@ -8,6 +8,7 @@ from toontown.racing import RaceGlobals
 from toontown.estate import GardenGlobals
 from toontown.golf import GolfGlobals
 
+
 class QuestRewardCounter:
     """QuestRewardCounter
 
@@ -18,7 +19,7 @@ class QuestRewardCounter:
     """
 
     notify = directNotify.newCategory("QuestRewardCounter")
-    
+
     # TODO: track progress
 
     def __init__(self):
@@ -43,7 +44,8 @@ class QuestRewardCounter:
 
     def addTrackProgress(self, trackId, progressIndex):
         if self.trackProgressId != trackId:
-            self.notify.warning("tried to update progress on a track toon is not training")
+            self.notify.warning(
+                "tried to update progress on a track toon is not training")
         self.trackProgress = self.trackProgress | (1 << progressIndex)
 
     def getTrackProgress(self):
@@ -64,31 +66,32 @@ class QuestRewardCounter:
         for q in av.quests:
             questId, fromNpcId, toNpcId, rewardId, toonProgress = q
             if rewardId == Quests.NA:
-                rewardId = Quests.getFinalRewardId(questId, fAll = 1)
+                rewardId = Quests.getFinalRewardId(questId, fAll=1)
             rewardIds.append(rewardId)
 
-        self.notify.debug("Ignoring rewards: %s" % (rewardIds))
-        
+        self.notify.debug(f"Ignoring rewards: {rewardIds}")
+
         self.setRewardIndex(av.rewardTier, rewardIds, av.rewardHistory)
 
         # add maxHp for fishCollection
         fishHp = int(len(av.fishCollection) / FishGlobals.FISH_PER_BONUS)
-        self.notify.debug("Adding %s hp for fish collection" % (fishHp))
+        self.notify.debug(f"Adding {fishHp} hp for fish collection")
         self.maxHp += fishHp
 
         # add maxHp for flowerCollection
-        flowerHp = int(len(av.flowerCollection) / GardenGlobals.FLOWERS_PER_BONUS)
-        self.notify.debug("Adding %s hp for fish collection" % (flowerHp))
-        self.maxHp += flowerHp        
+        flowerHp = int(len(av.flowerCollection) /
+                       GardenGlobals.FLOWERS_PER_BONUS)
+        self.notify.debug(f"Adding {flowerHp} hp for fish collection")
+        self.maxHp += flowerHp
 
         # add maxHp for HQ cog suit
         HQdepts = (
             # add depts as the HQs are released
             ToontownGlobals.cogHQZoneId2deptIndex(ToontownGlobals.SellbotHQ),
-            #ToontownGlobals.cogHQZoneId2deptIndex(ToontownGlobals.BossbotHQ),
+            # ToontownGlobals.cogHQZoneId2deptIndex(ToontownGlobals.BossbotHQ),
             ToontownGlobals.cogHQZoneId2deptIndex(ToontownGlobals.LawbotHQ),
             ToontownGlobals.cogHQZoneId2deptIndex(ToontownGlobals.CashbotHQ),
-            )
+        )
         levels = av.getCogLevels()
         cogTypes = av.getCogTypes()
         suitHp = 0
@@ -102,17 +105,19 @@ class QuestRewardCounter:
                         suitHp += 1
                     else:
                         break
-        self.notify.debug("Adding %s hp for cog suits" % (suitHp))
+        self.notify.debug(f"Adding {suitHp} hp for cog suits")
         self.maxHp += suitHp
 
         # add maxHp for karting trophies
-        kartingHp = int(av.kartingTrophies.count(1) / RaceGlobals.TrophiesPerCup)
-        self.notify.debug("Adding %s hp for karting trophies" % (kartingHp))
+        kartingHp = int(
+            av.kartingTrophies.count(1) /
+            RaceGlobals.TrophiesPerCup)
+        self.notify.debug(f"Adding {kartingHp} hp for karting trophies")
         self.maxHp += kartingHp
 
         # add maxHp for golf trophies
-        golfHp = int (av.golfTrophies.count(True) / GolfGlobals.TrophiesPerCup)
-        self.notify.debug("Adding %s hp for golf trophies" % (golfHp))
+        golfHp = int(av.golfTrophies.count(True) / GolfGlobals.TrophiesPerCup)
+        self.notify.debug(f"Adding {golfHp} hp for golf trophies")
         self.maxHp += golfHp
 
     def setRewardIndex(self, tier, rewardIds, rewardHistory):
@@ -123,7 +128,7 @@ class QuestRewardCounter:
             for rewardId in Quests.getRewardsInTier(tierNum):
 
                 # TODO: what about rewards on the previous tier?
-                #if ((rewardIds.count(rewardId) != 0) and
+                # if ((rewardIds.count(rewardId) != 0) and
                 #    (rewardId is not in [100, 101, 102, 103, 104, 105, 106, 107, 108, 109])):
                 #    # This is a reward we're still working on.
                 #    rewardIds.remove(rewardId)
@@ -134,22 +139,22 @@ class QuestRewardCounter:
                 self.notify.debug("Assigning reward %d" % (rewardId))
 
         # For the current tier, only give credit for rewards we have completed
-        #print 'rewardHistory: ', rewardHistory
+        # print 'rewardHistory: ', rewardHistory
         for rewardId in rewardHistory:
             # Only count required rewards
             if rewardId in Quests.getRewardsInTier(tier):
                 if rewardIds.count(rewardId) != 0:
                     # This is a reward we're still working on.
-                    #print 'before: ', rewardIds
+                    # print 'before: ', rewardIds
                     rewardIds.remove(rewardId)
                     self.notify.debug("Ignoring reward %d" % (rewardId))
-                    #print 'after: ', rewardIds
+                    # print 'after: ', rewardIds
                 else:
                     reward = Quests.getReward(rewardId)
                     reward.countReward(self)
                     self.notify.debug("Assigning reward %d" % (rewardId))
 
-        self.notify.debug("Remaining rewardIds %s" % (rewardIds))
+        self.notify.debug(f"Remaining rewardIds {rewardIds}")
 
         # Make sure maxHp does not exceed its maximum.
         self.maxHp = min(ToontownGlobals.MaxHpLimit, self.maxHp)
@@ -163,7 +168,7 @@ class QuestRewardCounter:
             reward = Quests.getReward(rewardId)
             reward.countReward(self)
             self.notify.debug("Assigning reward %d" % (rewardId))
-        
+
     def fixAvatar(self, av):
         """fixAvatar(self, DistributedAvatarAI av)
 
@@ -177,32 +182,44 @@ class QuestRewardCounter:
         anyChanged = 0
 
         if (self.maxHp != av.maxHp):
-            self.notify.info("Changed avatar %d to have maxHp %d instead of %d" % (av.doId, self.maxHp, av.maxHp))
+            self.notify.info(
+                "Changed avatar %d to have maxHp %d instead of %d" %
+                (av.doId, self.maxHp, av.maxHp))
             av.b_setMaxHp(self.maxHp)
             anyChanged = 1
 
         if (self.maxCarry != av.maxCarry):
-            self.notify.info("Changed avatar %d to have maxCarry %d instead of %d" % (av.doId, self.maxCarry, av.maxCarry))
+            self.notify.info(
+                "Changed avatar %d to have maxCarry %d instead of %d" %
+                (av.doId, self.maxCarry, av.maxCarry))
             av.b_setMaxCarry(self.maxCarry)
             anyChanged = 1
-            
+
         if (self.maxMoney != av.maxMoney):
-            self.notify.info("Changed avatar %d to have maxMoney %d instead of %d" % (av.doId, self.maxMoney, av.maxMoney))
+            self.notify.info(
+                "Changed avatar %d to have maxMoney %d instead of %d" %
+                (av.doId, self.maxMoney, av.maxMoney))
             av.b_setMaxMoney(self.maxMoney)
             anyChanged = 1
-            
+
         if (self.questCarryLimit != av.questCarryLimit):
-            self.notify.info("Changed avatar %d to have questCarryLimit %d instead of %d" % (av.doId, self.questCarryLimit, av.questCarryLimit))
+            self.notify.info(
+                "Changed avatar %d to have questCarryLimit %d instead of %d" %
+                (av.doId, self.questCarryLimit, av.questCarryLimit))
             av.b_setQuestCarryLimit(self.questCarryLimit)
             anyChanged = 1
-            
+
         if (self.teleportAccess != av.teleportZoneArray):
-            self.notify.info("Changed avatar %d to have teleportAccess %s instead of %s" % (av.doId, self.teleportAccess, av.teleportZoneArray))
+            self.notify.info(
+                "Changed avatar %d to have teleportAccess %s instead of %s" %
+                (av.doId, self.teleportAccess, av.teleportZoneArray))
             av.b_setTeleportAccess(self.teleportAccess)
             anyChanged = 1
-            
+
         if (self.trackAccess != av.trackArray):
-            self.notify.info("Changed avatar %d to have trackAccess %s instead of %s" % (av.doId, self.trackAccess, av.trackArray))
+            self.notify.info(
+                "Changed avatar %d to have trackAccess %s instead of %s" %
+                (av.doId, self.trackAccess, av.trackArray))
             av.b_setTrackAccess(self.trackAccess)
             anyChanged = 1
 

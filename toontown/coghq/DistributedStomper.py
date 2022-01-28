@@ -12,6 +12,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
 from toontown.toonbase import ToontownGlobals
 
+
 class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedStomper')
 
@@ -19,12 +20,11 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
                      'phase_9/audio/sfx/CHQ_FACT_stomper_med.ogg',
                      'phase_9/audio/sfx/CHQ_FACT_stomper_large.ogg']
 
-    stomperModels = ['phase_9/models/cogHQ/square_stomper',]
-    
-    
+    stomperModels = ['phase_9/models/cogHQ/square_stomper', ]
+
     def __init__(self, cr):
-        self.stomperModels = ['phase_9/models/cogHQ/square_stomper',]
-        self.lastPos = Point3(0,0,0)
+        self.stomperModels = ['phase_9/models/cogHQ/square_stomper', ]
+        self.lastPos = Point3(0, 0, 0)
         self.model = None
         self.smokeTrack = None
         self.ival = None
@@ -47,7 +47,7 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
         for s in self.stomperSounds:
             self.sounds.append(loader.loadSfx(s))
         DistributedCrusherEntity.DistributedCrusherEntity.__init__(self, cr)
-        
+
     def generateInit(self):
         self.notify.debug('generateInit')
         DistributedCrusherEntity.DistributedCrusherEntity.generateInit(self)
@@ -55,10 +55,11 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
     def generate(self):
         self.notify.debug('generate')
         DistributedCrusherEntity.DistributedCrusherEntity.generate(self)
-        
+
     def announceGenerate(self):
         self.notify.debug('announceGenerate')
-        DistributedCrusherEntity.DistributedCrusherEntity.announceGenerate(self)
+        DistributedCrusherEntity.DistributedCrusherEntity.announceGenerate(
+            self)
         # at this point all the entity attributes have been initialized
         # we can load the model now.
 
@@ -76,12 +77,12 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
             self.ival.pause()
             del self.ival
             self.ival = None
-  
+
         if self.smokeTrack:
             self.smokeTrack.pause()
             del self.smokeTrack
             self.smokeTrack = None
-            
+
         DistributedCrusherEntity.DistributedCrusherEntity.disable(self)
 
     def delete(self):
@@ -93,9 +94,10 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
 
     def loadModel(self):
         self.loaded = 1
-        self.stomperModels = ['phase_9/models/cogHQ/square_stomper',]
+        self.stomperModels = ['phase_9/models/cogHQ/square_stomper', ]
         if self.cogStyle == 1:
-            self.stomperModels = ['phase_11/models/lawbotHQ/LB_square_stomper',]
+            self.stomperModels = [
+                'phase_11/models/lawbotHQ/LB_square_stomper', ]
         self.notify.debug("loadModel")
         shadow = None
         self.sound = self.sounds[self.soundPath]
@@ -105,13 +107,13 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
         stomperModel = loader.loadModel(self.stomperModels[self.modelPath])
 
         if self.style == 'vertical':
-            #self.setHpr(self.hpr[0],-90,self.hpr[2])
+            # self.setHpr(self.hpr[0],-90,self.hpr[2])
             # don't make a moving platform out of the vertical stomper, it seems
             # to work fine as a regular model
             model = stomperModel
 
             self.rotateNode.setP(-90)
-            
+
             # stash the up/side collisions
             sideList = model.findAllMatches("**/collSide")
             for side in sideList:
@@ -120,7 +122,8 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
             for up in upList:
                 up.stash()
 
-            # store the crushSurface so we can stash it when the toon is stunned
+            # store the crushSurface so we can stash it when the toon is
+            # stunned
             head = model.find("**/head")
             shaft = model.find("**/shaft")
             self.crushSurface = head.find("**/collDownWalls")
@@ -129,18 +132,22 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
             # surface doesn't push the toon sideways before he is squished.  We should
             # probably only do this right before the toon is crushed, since now we have
             # a problem of the toon jumping through the bottom of the stomper
-            #self.stashCrushSurface(1)
+            # self.stashCrushSurface(1)
 
             # add shadow
             self.shadow = None
             if self.wantShadow:
-                shadow = loader.loadModel("phase_3/models/props/square_drop_shadow").getChild(0)
-                shadow.setScale(0.3 * self.headScale[0], 0.3 * self.headScale[2], 1)
+                shadow = loader.loadModel(
+                    "phase_3/models/props/square_drop_shadow").getChild(0)
+                shadow.setScale(
+                    0.3 * self.headScale[0],
+                    0.3 * self.headScale[2],
+                    1)
                 shadow.setAlphaScale(.8)
                 shadow.flattenMedium()
                 shadow.reparentTo(self)
-                shadow.setPos(0,0,.025)
-                #shadow.setP(90)
+                shadow.setPos(0, 0, .025)
+                # shadow.setP(90)
                 shadow.setTransparency(1)
                 self.shadow = shadow
 
@@ -152,12 +159,15 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
                 floorHeadNp.stash()
             else:
                 for i in range(floorHead.getNumSolids()):
-                    floorHead.modifySolid(i).setEffectiveNormal(Vec3(0.0,-1.0,0.0))
+                    floorHead.modifySolid(i).setEffectiveNormal(
+                        Vec3(0.0, -1.0, 0.0))
 
-            floorShaft = model.find("**/shaft_collisions/**/collDownFloor").node()
+            floorShaft = model.find(
+                "**/shaft_collisions/**/collDownFloor").node()
             for i in range(floorShaft.getNumSolids()):
-                floorShaft.modifySolid(i).setEffectiveNormal(Vec3(0.0,-1.0,0.0))
-                
+                floorShaft.modifySolid(i).setEffectiveNormal(
+                    Vec3(0.0, -1.0, 0.0))
+
             # listen for our own stomperClosed event.  we only need to
             # do this for vertical stompers, since the floor is the other
             # "stomping" surface.  horizontal stompers actually need a stomperPair
@@ -165,13 +175,13 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
             self.accept(self.crushMsg, self.checkSquashedToon)
 
         elif self.style == 'horizontal':
-            #self.setHpr(self.hpr[0],0,self.hpr[2])
+            # self.setHpr(self.hpr[0],0,self.hpr[2])
             # create a moving platform out of the floor surfaces
             model = MovingPlatform.MovingPlatform()
             model.setupCopyModel(self.getParentToken(), stomperModel,
                                  'collSideFloor')
 
-            #model.setR(90)
+            # model.setR(90)
             # move the model up and make the new origin be at the bottom of
             # the stomper head
             head = model.find('**/head')
@@ -182,7 +192,7 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
             for child in head.findAllMatches('+ModelNode'):
                 child.node().setPreserveTransform(ModelNode.PTNet)
             model.flattenLight()
-            
+
             # stash the up/down collisions
             upList = model.findAllMatches("**/collUp")
             for up in upList:
@@ -190,10 +200,11 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
             downList = model.findAllMatches("**/collDown")
             for down in downList:
                 down.stash()
-            
+
             # store the crushSurface so we can stash it when the toon is stunned
             # SDN: maybe we don't want to do this for horizontal stompers
-            self.crushSurface = model.find("**/head_collisions/**/collSideWalls")
+            self.crushSurface = model.find(
+                "**/head_collisions/**/collSideWalls")
 
         # should we get rid of the camera bit on the barrier collisions?
         if self.removeCamBarrierCollisions:
@@ -220,18 +231,18 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
         # If the stomper is a switch controlled stomper, put it in it's
         # up state by default
         if self.motion == MotionSwitched:
-            self.model.setPos(0,-self.range, 0)
-            
+            self.model.setPos(0, -self.range, 0)
+
         self.model.reparentTo(self.rotateNode)
 
         if self.wantSmoke:
             self.smoke = loader.loadModel(
                 "phase_4/models/props/test_clouds")
-            self.smoke.setColor(.8,.7,.5,1)
+            self.smoke.setColor(.8, .7, .5, 1)
             self.smoke.setBillboardPointEye()
 
     def stashCrushSurface(self, isStunned):
-        self.notify.debug("stashCrushSurface(%s)" % isStunned)
+        self.notify.debug(f"stashCrushSurface({isStunned})")
         # stash the crush surface when the toon is stunned, so he
         # doesn't get pushed around by the stomper
         if self.crushSurface and not self.crushSurface.isEmpty():
@@ -239,13 +250,13 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
                 self.crushSurface.stash()
             else:
                 self.crushSurface.unstash()
-            
+
     def unloadModel(self):
         if self.ival:
             self.ival.pause()
             del self.ival
             self.ival = None
-            
+
         if self.smoke:
             self.smoke.removeNode()
             del self.smoke
@@ -270,7 +281,7 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
     def doCrush(self):
         # This function should be called when the stomper is registerd as a crusher
         # with a crushCell.
-        self.notify.debug("doCrush, crushedList = %s" % self.crushedList)
+        self.notify.debug(f"doCrush, crushedList = {self.crushedList}")
         # check crushCell's contents
         for crushableId in self.crushedList:
             crushable = self.level.entities.get(crushableId)
@@ -283,40 +294,40 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
                 # along the given axis
                 crushable.playCrushMovie(self.entId, axis)
         self.crushedList = []
-        
-    def getMotionIval(self, mode = STOMPER_START):
+
+    def getMotionIval(self, mode=STOMPER_START):
         if self.range == 0.:
             return (None, 0)
         # we have to return wantSound, because of the one case
         # of a switched stomper, where the motion ival might be a rising motion
         wantSound = self.soundOn
-        
+
         # stomper should hit at t=0
         if self.motion is MotionLinear:
             motionIval = Sequence(
-                LerpPosInterval(self.model, self.period/2.,
-                                Point3(0,-self.range,0),
-                                startPos=Point3(0,0,0),
-                                fluid = 1),
-                WaitInterval(self.period/4.),
-                LerpPosInterval(self.model, self.period/4.,
-                                Point3(0,0,0),
-                                startPos=Point3(0,-self.range,0),
-                                fluid = 1),
-                )
+                LerpPosInterval(self.model, self.period / 2.,
+                                Point3(0, -self.range, 0),
+                                startPos=Point3(0, 0, 0),
+                                fluid=1),
+                WaitInterval(self.period / 4.),
+                LerpPosInterval(self.model, self.period / 4.,
+                                Point3(0, 0, 0),
+                                startPos=Point3(0, -self.range, 0),
+                                fluid=1),
+            )
         elif self.motion is MotionSinus:
             def sinusFunc(t, self=self):
                 # t: 0..1
                 # cos(pi) == -1 (hit/down)
                 # theta: pi..3*pi
-                theta = math.pi + (t * 2.*math.pi)
+                theta = math.pi + (t * 2. * math.pi)
                 # c: -1..1
                 c = math.cos(theta)
                 # y: 0..-self.range
-                self.model.setFluidY((.5 + (c*.5)) * -self.range)
+                self.model.setFluidY((.5 + (c * .5)) * -self.range)
             motionIval = Sequence(
                 LerpFunctionInterval(sinusFunc, duration=self.period),
-                )
+            )
         elif self.motion is MotionSlowFast:
             def motionFunc(t, self=self):
                 # t: 0..1
@@ -327,13 +338,15 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
                     self.model.setFluidY(0)
                 elif t < turnaround:
                     # t: 0..turnaround
-                    self.model.setFluidY((t-stickTime) * -self.range/(turnaround-stickTime))
+                    self.model.setFluidY(
+                        (t - stickTime) * -self.range / (turnaround - stickTime))
                 elif t > turnaround:
                     # t: turnaround..1
-                    self.model.setFluidY(-self.range + (t-turnaround) * self.range/(1-turnaround))
+                    self.model.setFluidY(-self.range + (t - turnaround)
+                                         * self.range / (1 - turnaround))
             motionIval = Sequence(
                 LerpFunctionInterval(motionFunc, duration=self.period),
-                )
+            )
         elif self.motion is MotionCrush:
             def motionFunc(t, self=self):
                 # t: 0..1
@@ -345,13 +358,15 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
                     self.model.setFluidY(0)
                 elif t <= turnaround - pauseAtTopTime:
                     # t: 0 ..(turnaround-pauseAtTop)
-                    self.model.setFluidY((t-stickTime) * -self.range/(turnaround- pauseAtTopTime - stickTime))
+                    self.model.setFluidY(
+                        (t - stickTime) * -self.range / (turnaround - pauseAtTopTime - stickTime))
                 elif t > (turnaround - pauseAtTopTime) and t <= turnaround:
                     # t: (turnaround-pauseAtTop).. turnaround
                     self.model.setFluidY(-self.range)
                 elif t > turnaround:
                     # t: turnaround..1
-                    self.model.setFluidY(-self.range + (t-turnaround) * self.range/(1-turnaround))
+                    self.model.setFluidY(-self.range + (t - turnaround)
+                                         * self.range / (1 - turnaround))
 
             tStick = .2 * self.period
             tUp = .45 * self.period
@@ -361,15 +376,15 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
                 Wait(tStick),
                 LerpPosInterval(self.model, tUp,
                                 Vec3(0, -self.range, 0),
-                                blendType = 'easeInOut',
+                                blendType='easeInOut',
                                 fluid=1),
                 Wait(tPause),
                 Func(self.doCrush),
                 LerpPosInterval(self.model, tDown,
                                 Vec3(0, 0, 0),
-                                blendType = 'easeInOut',
+                                blendType='easeInOut',
                                 fluid=1),
-                )
+            )
         elif self.motion is MotionSwitched:
             if mode == STOMPER_STOMP:
                 # create a track that forces the stomper to stomp
@@ -378,23 +393,24 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
                     Func(self.doCrush),
                     LerpPosInterval(self.model, .35,
                                     Vec3(0, 0, 0),
-                                    blendType = 'easeInOut',
+                                    blendType='easeInOut',
                                     fluid=1),
-                    )
+                )
             elif mode == STOMPER_RISE:
                 # create a track that forces the stomper to rise
                 # from the current position
                 motionIval = Sequence(
                     LerpPosInterval(self.model, .5,
                                     Vec3(0, -self.range, 0),
-                                    blendType = 'easeInOut',
+                                    blendType='easeInOut',
                                     fluid=1),
-                    )
+                )
                 wantSound = 0
             else:
                 # This should only happen when we are editing the stomper
                 # in the factory editor.  Otherwise there should not be a
-                # time when self.motion == MotionSwitched and mode != (STOMPER_RISE|STOMP)
+                # time when self.motion == MotionSwitched and mode !=
+                # (STOMPER_RISE|STOMP)
                 motionIval = None
         else:
             def halfSinusFunc(t, self=self):
@@ -402,22 +418,22 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
                 self.model.setFluidY(math.sin(t * math.pi) * -self.range)
             motionIval = Sequence(
                 LerpFunctionInterval(halfSinusFunc, duration=self.period),
-                )
-        return (motionIval,wantSound)
-    
-    def startStomper(self, startTime, mode = STOMPER_START):
+            )
+        return (motionIval, wantSound)
+
+    def startStomper(self, startTime, mode=STOMPER_START):
         if self.ival:
             self.ival.pause()
             del self.ival
             self.ival = None
-            
-        # Get the motion track for this stomper
-        motionIval,wantSound = self.getMotionIval(mode)
 
-        if motionIval == None:
+        # Get the motion track for this stomper
+        motionIval, wantSound = self.getMotionIval(mode)
+
+        if motionIval is None:
             # this should only happen in editor mode or if range is zero
             return
-        
+
         # put the motion interval into a Parallel so that we can easily add
         # concurrent ivals on (like sound, etc)
         self.ival = Parallel(
@@ -425,23 +441,28 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
                      Func(self.__startSmokeTask),
                      Func(self.sendStompToon)),
             name=self.uniqueName('Stomper'),
-            )
+        )
 
         # 'stomp' sound
         if wantSound:
             # make sure we don't play a sound that's too long; cap the
             # sound length to the motion period
-            #if self.soundLen == 0.:
+            # if self.soundLen == 0.:
             #    sndDur = motionIval.getDuration()
-            #else:
+            # else:
             #    sndDur = min(self.soundLen, motionIval.getDuration())
-            #self.ival.append(
+            # self.ival.append(
             #    SoundInterval(self.sound, duration=sndDur, node=self.model))
             sndDur = motionIval.getDuration()
             self.ival.append(
-                Sequence(Wait(sndDur),
-                         Func(base.playSfx, self.sound, node=self.model, volume=.45)))
-            
+                Sequence(
+                    Wait(sndDur),
+                    Func(
+                        base.playSfx,
+                        self.sound,
+                        node=self.model,
+                        volume=.45)))
+
         # shadow
         if self.shadow is not None and self.animateShadow:
             def adjustShadowScale(t, self=self):
@@ -452,21 +473,20 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
                 # cap the height, so the shadow disappears for all stompers
                 # at the same height
                 maxHeight = 10
-                a = min(-modelY/maxHeight,1.0)
+                a = min(-modelY / maxHeight, 1.0)
                 self.shadow.setScale(lerp(1, .2, a))
-                self.shadow.setAlphaScale(lerp(1,.2, a))
+                self.shadow.setAlphaScale(lerp(1, .2, a))
             self.ival.append(
                 LerpFunctionInterval(adjustShadowScale, duration=self.period))
 
         if mode == STOMPER_START:
             self.ival.loop()
-            self.ival.setT((globalClock.getFrameTime() - self.level.startTime) +
-                           (self.period * self.phaseShift))
+            self.ival.setT((globalClock.getFrameTime(
+            ) - self.level.startTime) + (self.period * self.phaseShift))
         else:
             # we got this message from the AI, so the startTime is
             # the elapsed time since the AI generated the stomp message
             self.ival.start(startTime)
-            
 
     def stopStomper(self):
         if self.ival:
@@ -475,15 +495,15 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
             self.smokeTrack.finish()
             del self.smokeTrack
             self.smokeTrack = None
-            
+
     def setMovie(self, mode, timestamp, crushedList):
         self.notify.debug("setMovie %d" % mode)
         timestamp = ClockDelta.globalClockDelta.networkToLocalTime(timestamp)
         now = globalClock.getFrameTime()
-        
+
         if (mode == STOMPER_START or
             mode == STOMPER_RISE or
-            mode == STOMPER_STOMP):
+                mode == STOMPER_STOMP):
             # the AI is telling the stomper how to move.
             # STOMPER_START will start a repeating motion
             # STOMPER_RISE/STOMP will force the stomper to rise/stomp
@@ -495,22 +515,26 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
         taskMgr.remove(self.taskName("smokeTask"))
         if self.wantSmoke:
             taskMgr.add(self.__smokeTask, self.taskName("smokeTask"))
-        
+
     def __smokeTask(self, task):
         # smoke cloud after the cannon fires
         self.smoke.reparentTo(self)
         self.smoke.setScale(1)
         # reparent to render, so the smoke doesn't get darker in the nighttime
-        #self.smoke.wrtReparentTo(render)
+        # self.smoke.wrtReparentTo(render)
         if self.smokeTrack:
             self.smokeTrack.finish()
             del self.smokeTrack
 
-        self.smokeTrack = Sequence(Parallel(LerpScaleInterval(self.smoke, .2, Point3(4,1,4)),
-                                            LerpColorScaleInterval(self.smoke, 1, Vec4(1,1,1,0))),
-                                   Func(self.smoke.reparentTo, hidden),
-                                   Func(self.smoke.clearColorScale),
-                                   )
+        self.smokeTrack = Sequence(
+            Parallel(
+                LerpScaleInterval(
+                    self.smoke, .2, Point3(
+                        4, 1, 4)), LerpColorScaleInterval(
+                    self.smoke, 1, Vec4(
+                        1, 1, 1, 0))), Func(
+                            self.smoke.reparentTo, hidden), Func(
+                                self.smoke.clearColorScale), )
         self.smokeTrack.start()
         return Task.done
 
@@ -525,17 +549,17 @@ class DistributedStomper(DistributedCrusherEntity.DistributedCrusherEntity):
             yRange = 5
             if (tPos[2] < zRange and tPos[2] > -zRange and
                 tPos[0] < xRange and tPos[0] > -xRange and
-                tPos[1] < yRange/10. and tPos[1] > -yRange):
-                #print "(%s) Squashed!! %s" % (self.entId, tPos)
+                    tPos[1] < yRange / 10. and tPos[1] > -yRange):
+                # print "(%s) Squashed!! %s" % (self.entId, tPos)
                 self.level.b_setOuch(self.damage, 'Squish')
-                base.localAvatar.setZ(self.getZ(render)+.025)
+                base.localAvatar.setZ(self.getZ(render) + .025)
             else:
-                #print "(%s) toon is far enough away: %s" % (self.entId, tPos)
+                # print "(%s) toon is far enough away: %s" % (self.entId, tPos)
                 pass
 
-    ## Setters
-    ## This could be optimized so the whole model doesn't unload and reload
-    ## for every changed attribute
+    # Setters
+    # This could be optimized so the whole model doesn't unload and reload
+    # for every changed attribute
     if __dev__:
         def attribChanged(self, *args):
             self.stopStomper()

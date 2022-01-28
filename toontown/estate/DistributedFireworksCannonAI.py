@@ -6,7 +6,9 @@ from toontown.effects import DistributedFireworkShowAI
 from direct.fsm import ClassicFSM
 from direct.distributed import ClockDelta
 
-class DistributedFireworksCannonAI(DistributedFireworkShowAI.DistributedFireworkShowAI):
+
+class DistributedFireworksCannonAI(
+        DistributedFireworkShowAI.DistributedFireworkShowAI):
 
     """
     DistributedFireworksCannon is derived from DistributedFireworkShow so
@@ -19,7 +21,7 @@ class DistributedFireworksCannonAI(DistributedFireworkShowAI.DistributedFirework
 
     def __init__(self, air, x, y, z):
         DistributedFireworkShowAI.DistributedFireworkShowAI.__init__(self, air)
-        self.pos = [x,y,z]
+        self.pos = [x, y, z]
         self.busy = 0
 
     def delete(self):
@@ -39,18 +41,19 @@ class DistributedFireworksCannonAI(DistributedFireworkShowAI.DistributedFirework
         self.notify.debug("avatarEnter")
         avId = self.air.getAvatarIdFromSender()
         # this avatar has come within range
-        self.notify.debug("avatarEnter: %s" % (avId))
+        self.notify.debug(f"avatarEnter: {avId}")
 
         # If we are busy, free this new avatar
         if self.busy:
-            self.notify.debug("already busy with: %s" % (self.busy))
+            self.notify.debug(f"already busy with: {self.busy}")
             self.freeAvatar(avId)
             return
 
         # Fetch the actual avatar object
-        av = self.air.doId2do.get(avId)        
+        av = self.air.doId2do.get(avId)
         if not av:
-            self.notify.warning("av %s not in doId2do tried to transfer money" % (avId))
+            self.notify.warning(
+                f"av {avId} not in doId2do tried to transfer money")
             return
 
         # Flag us as busy with this avatar Id
@@ -59,13 +62,14 @@ class DistributedFireworksCannonAI(DistributedFireworkShowAI.DistributedFirework
         # Handle unexpected exit
         self.acceptOnce(self.air.getAvatarExitEvent(avId),
                         self.__handleUnexpectedExit, extraArgs=[avId])
-        self.acceptOnce("bootAvFromEstate-"+str(avId),
+        self.acceptOnce("bootAvFromEstate-" + str(avId),
                         self.__handleBootMessage, extraArgs=[avId])
 
         # Tell the client how to react
         # We need to eventually restrict this to the estate owners
-        self.sendUpdate("setMovie", [FIREWORKS_MOVIE_GUI, avId,
-                                     ClockDelta.globalClockDelta.getRealNetworkTime()])
+        self.sendUpdate(
+            "setMovie", [
+                FIREWORKS_MOVIE_GUI, avId, ClockDelta.globalClockDelta.getRealNetworkTime()])
 
     def avatarExit(self):
         self.notify.debug("avatarExit")
@@ -75,7 +79,6 @@ class DistributedFireworksCannonAI(DistributedFireworkShowAI.DistributedFirework
             self.sendClearMovie(None)
         self.freeAvatar(avId)
 
-        
     def __handleUnexpectedExit(self, avId):
         self.notify.warning('avatar:' + str(avId) + ' has exited unexpectedly')
         self.sendClearMovie(None)
@@ -89,24 +92,23 @@ class DistributedFireworksCannonAI(DistributedFireworkShowAI.DistributedFirework
         # Ignore unexpected exits on whoever I was busy with
         self.ignoreAll()
         self.busy = 0
-        self.sendUpdate("setMovie", [FIREWORKS_MOVIE_CLEAR, 0,
-                                     ClockDelta.globalClockDelta.getRealNetworkTime()])
+        self.sendUpdate(
+            "setMovie", [
+                FIREWORKS_MOVIE_CLEAR, 0, ClockDelta.globalClockDelta.getRealNetworkTime()])
         return Task.done
 
     def doneShooting(self):
         avId = self.air.getAvatarIdFromSender()
         av = self.air.doId2do.get(avId)
-        
+
         if not av:
-            self.notify.warning("av %s not in doId2do tried to transfer money" % (avId))
+            self.notify.warning(
+                f"av {avId} not in doId2do tried to transfer money")
             return
-        
+
         self.sendClearMovie(None)
         self.freeAvatar(avId)
 
     def getPosition(self):
         # This is needed because setPosition is a required field.
         return self.pos
-
-    
-    

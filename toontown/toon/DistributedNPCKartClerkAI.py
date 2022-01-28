@@ -9,9 +9,10 @@ from otp.ai.AIBaseGlobal import *
 from pandac.PandaModules import *
 from .DistributedNPCToonBaseAI import *
 from toontown.toonbase import TTLocalizer
-from direct.task import Task     
+from direct.task import Task
 from toontown.racing.KartShopGlobals import *
 from toontown.racing.KartDNA import *
+
 
 class DistributedNPCKartClerkAI(DistributedNPCToonBaseAI):
     def __init__(self, air, npcId):
@@ -19,7 +20,7 @@ class DistributedNPCKartClerkAI(DistributedNPCToonBaseAI):
         # should kart clerks give out quests? not for now...
         self.givesQuests = 0
         self.busy = []
-        
+
     def delete(self):
         taskMgr.remove(self.uniqueName('clearMovie'))
         self.ignoreAll()
@@ -29,9 +30,9 @@ class DistributedNPCKartClerkAI(DistributedNPCToonBaseAI):
         avId = self.air.getAvatarIdFromSender()
         # this avatar has come within range
         assert self.notify.debug("avatar enter " + str(avId))
-        
+
         if (avId not in self.air.doId2do):
-            self.notify.warning("Avatar: %s not found" % (avId))
+            self.notify.warning(f"Avatar: {avId} not found")
             return
 
         if (self.isBusy(avId)):
@@ -39,7 +40,7 @@ class DistributedNPCKartClerkAI(DistributedNPCToonBaseAI):
             return
 
         self.transactionType = ""
-        
+
         av = self.air.doId2do[avId]
         self.busy.append(avId)
 
@@ -47,15 +48,19 @@ class DistributedNPCKartClerkAI(DistributedNPCToonBaseAI):
         self.acceptOnce(self.air.getAvatarExitEvent(avId),
                         self.__handleUnexpectedExit, extraArgs=[avId])
 
-        #TODO: does this need to change?
+        # TODO: does this need to change?
         flag = NPCToons.SELL_MOVIE_START
         self.d_setMovie(avId, flag)
-        taskMgr.doMethodLater(KartShopGlobals.KARTCLERK_TIMER, self.sendTimeoutMovie, self.uniqueName("clearMovie"))
+        taskMgr.doMethodLater(
+            KartShopGlobals.KARTCLERK_TIMER,
+            self.sendTimeoutMovie,
+            self.uniqueName("clearMovie"))
 
         DistributedNPCToonBaseAI.avatarEnter(self)
 
     def rejectAvatar(self, avId):
-        self.notify.warning("rejectAvatar: should not be called by a kart clerk!")
+        self.notify.warning(
+            "rejectAvatar: should not be called by a kart clerk!")
         return
 
     def d_setMovie(self, avId, flag, extraArgs=[]):
@@ -64,7 +69,7 @@ class DistributedNPCKartClerkAI(DistributedNPCToonBaseAI):
                         [flag,
                          self.npcId, avId, extraArgs,
                          ClockDelta.globalClockDelta.getRealNetworkTime()])
-        
+
     def sendTimeoutMovie(self, task):
         avId = self.air.getAvatarIdFromSender()
 
@@ -89,128 +94,166 @@ class DistributedNPCKartClerkAI(DistributedNPCToonBaseAI):
         avId = self.air.getAvatarIdFromSender()
 
         if avId not in self.busy:
-            self.air.writeServerEvent('suspicious', avId, 'DistributedNPCKartClerkAI.buyKart busy with %s' % (self.busy))
-            self.notify.warning("somebody called buyKart that I was not busy with! avId: %s" % avId)
-            return    
+            self.air.writeServerEvent(
+                'suspicious',
+                avId,
+                f'DistributedNPCKartClerkAI.buyKart busy with {self.busy}')
+            self.notify.warning(
+                f"somebody called buyKart that I was not busy with! avId: {avId}")
+            return
         av = simbase.air.doId2do.get(avId)
-                
+
         if av:
             movieType = NPCToons.SELL_MOVIE_COMPLETE
             extraArgs = []
-            #deduct the tickets from the toon's account
+            # deduct the tickets from the toon's account
             cost = getKartCost(whichKart)
             if cost == "key error":
-                self.air.writeServerEvent('suspicious', avId, 'Player trying to buy non-existant kart %s' % (whichKart))
-                self.notify.warning("somebody is trying to buy non-existant kart%s! avId: %s" % (whichKart, avId))
+                self.air.writeServerEvent(
+                    'suspicious',
+                    avId,
+                    f'Player trying to buy non-existant kart {whichKart}')
+                self.notify.warning(
+                    "somebody is trying to buy non-existant kart%s! avId: %s" %
+                    (whichKart, avId))
                 return
             elif cost > av.getTickets():
-                #how is THIS possible?
-                self.air.writeServerEvent('suspicious', avId, "DistributedNPCKartClerkAI.buyKart and toon doesn't have enough tickets!")
-                self.notify.warning("somebody called buyKart and didn't have enough tickets to purchase! avId: %s" % avId)
+                # how is THIS possible?
+                self.air.writeServerEvent(
+                    'suspicious',
+                    avId,
+                    "DistributedNPCKartClerkAI.buyKart and toon doesn't have enough tickets!")
+                self.notify.warning(
+                    "somebody called buyKart and didn't have enough tickets to purchase! avId: %s" %
+                    avId)
                 return
             av.b_setTickets(av.getTickets() - cost)
             # Write to the server log
-            self.air.writeServerEvent("kartingTicketsSpent", avId, "%s" % (cost))
+            self.air.writeServerEvent(
+                "kartingTicketsSpent",
+                avId,
+                f"{cost}")
 
             av.b_setKartBodyType(whichKart)
             # Write to the server log
-            self.air.writeServerEvent("kartingKartPurchased", avId, "%s" % (whichKart))
+            self.air.writeServerEvent(
+                "kartingKartPurchased", avId, f"{whichKart}")
 
             # Send a movie to reward the avatar
             #self.d_setMovie(avId, movieType, extraArgs)
 
-        #TODO: do we want this?
+        # TODO: do we want this?
         #self.transactionType = "fish"
 
         else:
             # perhaps the avatar got disconnected
             pass
-        #self.sendClearMovie(None)
-        
+        # self.sendClearMovie(None)
+
     def buyAccessory(self, whichAcc):
         assert self.notify.debug('buyAccessory()')
-            
+
         avId = self.air.getAvatarIdFromSender()
         av = simbase.air.doId2do.get(avId)
         if avId not in self.busy:
-            self.air.writeServerEvent('suspicious', avId, 'DistributedNPCKartClerkAI.buyAccessory busy with %s' % (self.busy))
-            self.notify.warning("somebody called buyAccessory that I was not busy with! avId: %s" % avId)
+            self.air.writeServerEvent(
+                'suspicious',
+                avId,
+                f'DistributedNPCKartClerkAI.buyAccessory busy with {self.busy}')
+            self.notify.warning(
+                f"somebody called buyAccessory that I was not busy with! avId: {avId}")
             return
-        #check if this toon already has maximum number of accessories
+        # check if this toon already has maximum number of accessories
         if len(av.getKartAccessoriesOwned()) >= KartShopGlobals.MAX_KART_ACC:
-            #how is THIS possible?
-            self.air.writeServerEvent('suspicious', avId, "DistributedNPCKartClerkAI.buyAcc and toon already has max number of accessories!")
-            self.notify.warning("somebody called buyAcc and already has maximum allowed accessories! avId: %s" % avId)
+            # how is THIS possible?
+            self.air.writeServerEvent(
+                'suspicious',
+                avId,
+                "DistributedNPCKartClerkAI.buyAcc and toon already has max number of accessories!")
+            self.notify.warning(
+                "somebody called buyAcc and already has maximum allowed accessories! avId: %s" %
+                avId)
             return
 
-            
         av = simbase.air.doId2do.get(avId)
         if av:
             movieType = NPCToons.SELL_MOVIE_COMPLETE
             extraArgs = []
-            #deduct the tickets from the toon's account
+            # deduct the tickets from the toon's account
             cost = getAccCost(whichAcc)
             if cost > av.getTickets():
-                #how is THIS possible?
-                self.air.writeServerEvent('suspicious', avId, "DistributedNPCKartClerkAI.buyAcc and toon doesn't have enough tickets!")
-                self.notify.warning("somebody called buyAcc and didn't have enough tickets to purchase! avId: %s" % avId)
+                # how is THIS possible?
+                self.air.writeServerEvent(
+                    'suspicious',
+                    avId,
+                    "DistributedNPCKartClerkAI.buyAcc and toon doesn't have enough tickets!")
+                self.notify.warning(
+                    "somebody called buyAcc and didn't have enough tickets to purchase! avId: %s" %
+                    avId)
                 return
             av.b_setTickets(av.getTickets() - cost)
             # Write to the server log
-            self.air.writeServerEvent("kartingTicketsSpent", avId, "%s" % (cost))
+            self.air.writeServerEvent(
+                "kartingTicketsSpent",
+                avId,
+                f"{cost}")
 
-            #add this accessory to list of owned accessories
-            av.addOwnedAccessory( whichAcc ) 
+            # add this accessory to list of owned accessories
+            av.addOwnedAccessory(whichAcc)
 
             # Write to the server log
-            self.air.writeServerEvent("kartingAccessoryPurchased", avId, "%s" % (whichAcc))
+            self.air.writeServerEvent(
+                "kartingAccessoryPurchased", avId, f"{whichAcc}")
 
-            #automagically put on this accessory
-            av.updateKartDNAField( getAccessoryType(whichAcc), whichAcc)               
- 
+            # automagically put on this accessory
+            av.updateKartDNAField(getAccessoryType(whichAcc), whichAcc)
+
             # Send a movie to reward the avatar
             #self.d_setMovie(avId, movieType, extraArgs)
 
-        #TODO: do we want this?
+        # TODO: do we want this?
         #self.transactionType = "fish"
 
         else:
             # perhaps the avatar got disconnected
             pass
-        #self.sendClearMovie(None)
+        # self.sendClearMovie(None)
 
+    # TODO: do we need this?
 
-    #TODO: do we need this?
     def transactionDone(self):
         avId = self.air.getAvatarIdFromSender()
 
         if avId not in self.busy:
-            self.air.writeServerEvent('suspicious', avId, 'DistributedNPCKartClerkAI.transactionDone busy with %s' % (self.busy))
-            self.notify.warning("somebody called transactionDone that I was not busy with! avId: %s" % avId)
+            self.air.writeServerEvent(
+                'suspicious',
+                avId,
+                f'DistributedNPCKartClerkAI.transactionDone busy with {self.busy}')
+            self.notify.warning(
+                "somebody called transactionDone that I was not busy with! avId: %s" %
+                avId)
             return
 
         av = simbase.air.doId2do.get(avId)
         if av:
-        
+
             # Send a movie to say goodbye
             movieType = NPCToons.SELL_MOVIE_COMPLETE
             extraArgs = []
             self.d_setMovie(avId, movieType, extraArgs)
-            #elif self.transactionType == "return":
+            # elif self.transactionType == "return":
             #    self.d_setMovie(avId, NPCToons.SELL_MOVIE_PETRETURNED)
 
-            #TODO: movie for kart clerk? we're not exiting with every transaction
-            #so do we need more than one?
+            # TODO: movie for kart clerk? we're not exiting with every transaction
+            # so do we need more than one?
             #self.d_setMovie(avId, NPCToons.SELL_MOVIE_PETCANCELED)
-            
 
         self.sendClearMovie(None)
         return
 
-
     def __handleUnexpectedExit(self, avId):
         self.notify.warning('avatar:' + str(avId) + ' has exited unexpectedly')
-        self.notify.warning('not busy with avId: %s, busy: %s ' % (avId, self.busy))
+        self.notify.warning(
+            f'not busy with avId: {avId}, busy: {self.busy} ')
         taskMgr.remove(self.uniqueName("clearMovie"))
         self.sendClearMovie(None)
-

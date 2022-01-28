@@ -5,6 +5,7 @@ from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
 from toontown.hood import ZoneUtil
 
+
 class TutorialManager(DistributedObject.DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory("TutorialManager")
     neverDisable = 1
@@ -57,7 +58,7 @@ class TutorialManager(DistributedObject.DistributedObject):
         # reset the toon properties in preparation for the tutorial
         # (in case they bailed halfway through before)
         self.acceptOnce("toonArrivedTutorial", self.d_toonArrived)
-        
+
     def __handleStopTutorial(self):
         base.localAvatar.cantLeaveGame = 0
         self.d_allDone()

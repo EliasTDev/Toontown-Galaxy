@@ -1,15 +1,15 @@
 from direct.directnotify import DirectNotifyGlobal
 from otp.ai import AIDistrict
 
+
 class UtilityAIRepository(AIDistrict.AIDistrict):
     """
     This class serves as the AI repository for a maintenance utility
     (e.g. RepairAvatars) that wants to get an AI-level connection to
     the message director without actually creating an AI district.
-    """    
+    """
     notify = DirectNotifyGlobal.directNotify.newCategory(
-            "UtilityAIRepository")
-
+        "UtilityAIRepository")
 
     def __init__(self, *args, **kw):
         AIDistrict.AIDistrict.__init__(self, *args, **kw)

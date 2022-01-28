@@ -11,8 +11,9 @@ StageId2Layouts = {
     ToontownGlobals.LawbotStageIntA: (0, 1, 2, ),
     ToontownGlobals.LawbotStageIntB: (3, 4, 5, ),
     ToontownGlobals.LawbotStageIntC: (6, 7, 8, ),
-    ToontownGlobals.LawbotStageIntD: (9, 10,11,),
-    }
+    ToontownGlobals.LawbotStageIntD: (9, 10, 11,),
+}
+
 
 class LawOfficeManagerAI(DirectObject.DirectObject):
 
@@ -29,24 +30,24 @@ class LawOfficeManagerAI(DirectObject.DirectObject):
         # DistributedElevatorAI needs this
         return 0
 
-        
     def createLawOffice(self, StageId, entranceId, players):
         # check for ~StageId
         for avId in players:
-            if bboard.has('StageId-%s' % avId):
-                StageId = bboard.get('StageId-%s' % avId)
+            if bboard.has(f'StageId-{avId}'):
+                StageId = bboard.get(f'StageId-{avId}')
                 break
-                
+
         floor = 0
         layoutIndex = None
 
         # check for ~StageRoom
         for avId in players:
-            if bboard.has('stageRoom-%s' % avId):
-                roomId = bboard.get('stageRoom-%s' % avId)
+            if bboard.has(f'stageRoom-{avId}'):
+                roomId = bboard.get(f'stageRoom-{avId}')
                 for lt in StageId2Layouts[StageId]:
                     for i in range(StageLayout.getNumFloors(lt)):
-                        layout = StageLayout.StageLayout(StageId, i, stageLayout=lt)
+                        layout = StageLayout.StageLayout(
+                            StageId, i, stageLayout=lt)
                         if roomId in layout.getRoomIds():
                             layoutIndex = lt
                             floor = i

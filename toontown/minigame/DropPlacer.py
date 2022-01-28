@@ -8,6 +8,7 @@ from toontown.parties.PartyGlobals import CatchActivityDuration as PartyCatchDur
 # in order to cleanly support different drop 'behaviors', we
 # define some classes that choose where to drop things
 
+
 class DropPlacer:
     """
     this is a base class for objects that will 'place'
@@ -15,6 +16,7 @@ class DropPlacer:
     'game' should be the catch game object
     'dropTypes' should be a list of drop type names
     """
+
     def __init__(self, game, dropTypes, startTime=None):
         self.game = game
         self.dropTypes = dropTypes
@@ -82,7 +84,7 @@ class DropPlacer:
         """
         This function declaration serves only to informally
         define the getNextDrop() interface.
-        
+
         returns list:
         [t, dropTypeName, [gridColumn, gridRow]]
         t is the starting time of the drop, relative to game time
@@ -91,11 +93,13 @@ class DropPlacer:
         """
         raise RuntimeError('DropPlacer.getNextDrop should never be called')
 
+
 class RandomDropPlacer(DropPlacer):
     """
     this is the simplest DropPlacer. It just drops items
     in random locations.
     """
+
     def __init__(self, game, dropTypes, startTime=None):
         DropPlacer.__init__(self, game, dropTypes, startTime=startTime)
 
@@ -104,10 +108,11 @@ class RandomDropPlacer(DropPlacer):
         tries to return a drop located in an empty drop region
         see declaration of DropPlacer.getNextDrop, above, for details
         """
-        col,row = self.getRandomColRow()
-        drop = [self.getT(), self.getNextDropTypeName(), [col,row]]
+        col, row = self.getRandomColRow()
+        drop = [self.getT(), self.getNextDropTypeName(), [col, row]]
         self.stepT()
         return drop
+
 
 class RegionDropPlacer(DropPlacer):
     """
@@ -126,97 +131,97 @@ class RegionDropPlacer(DropPlacer):
     # into several numbered regions, and stipulate that there
     # should be no more than one falling item per region.
     DropRegionTables = [
-        [[1,1,2,3,3],
-         [1,1,2,3,3],
-         [0,1,2,3,4],
-         [0,1,2,3,4],
-         [0,1,2,3,4],
+        [[1, 1, 2, 3, 3],
+         [1, 1, 2, 3, 3],
+         [0, 1, 2, 3, 4],
+         [0, 1, 2, 3, 4],
+         [0, 1, 2, 3, 4],
          ],
-        [[1,2,2,3,3,4],
-         [1,1,2,3,4,4],
-         [1,1,2,3,4,4],
-         [0,1,2,3,4,5],
-         [0,1,2,3,4,5],
-         [0,1,2,3,4,5],
+        [[1, 2, 2, 3, 3, 4],
+         [1, 1, 2, 3, 4, 4],
+         [1, 1, 2, 3, 4, 4],
+         [0, 1, 2, 3, 4, 5],
+         [0, 1, 2, 3, 4, 5],
+         [0, 1, 2, 3, 4, 5],
          ],
-        [[1,1,2,2,2,3,3],
-         [1,1,2,2,2,3,3],
-         [0,1,2,2,2,3,4],
-         [0,1,2,2,2,3,4],
-         [0,1,2,2,2,3,4],
-         [0,1,2,2,2,3,4],
-         [0,1,2,2,2,3,4],
+        [[1, 1, 2, 2, 2, 3, 3],
+         [1, 1, 2, 2, 2, 3, 3],
+         [0, 1, 2, 2, 2, 3, 4],
+         [0, 1, 2, 2, 2, 3, 4],
+         [0, 1, 2, 2, 2, 3, 4],
+         [0, 1, 2, 2, 2, 3, 4],
+         [0, 1, 2, 2, 2, 3, 4],
          ],
-        [[1,2,2,5,6,7,7,3],
-         [1,1,2,5,6,7,3,3],
-         [0,1,2,5,6,7,3,4],
-         [0,1,2,5,6,7,3,4],
-         [0,1,2,5,6,7,3,4],
-         [0,1,2,5,6,7,3,4],
-         [0,1,2,5,6,7,3,4],
-         [0,0,1,5,6,3,4,4],
+        [[1, 2, 2, 5, 6, 7, 7, 3],
+         [1, 1, 2, 5, 6, 7, 3, 3],
+         [0, 1, 2, 5, 6, 7, 3, 4],
+         [0, 1, 2, 5, 6, 7, 3, 4],
+         [0, 1, 2, 5, 6, 7, 3, 4],
+         [0, 1, 2, 5, 6, 7, 3, 4],
+         [0, 1, 2, 5, 6, 7, 3, 4],
+         [0, 0, 1, 5, 6, 3, 4, 4],
          ],
-        [[1,2,2,5,8,6,7,7,3],
-         [1,1,2,5,8,6,7,3,3],
-         [0,1,2,5,8,6,7,3,4],
-         [0,1,2,5,8,6,7,3,4],
-         [0,1,2,5,8,6,7,3,4],
-         [0,1,2,5,8,6,7,3,4],
-         [0,1,2,5,8,6,7,3,4],
-         [0,1,2,5,8,6,7,3,4],
-         [0,0,1,5,8,6,3,4,4],
+        [[1, 2, 2, 5, 8, 6, 7, 7, 3],
+         [1, 1, 2, 5, 8, 6, 7, 3, 3],
+         [0, 1, 2, 5, 8, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 6, 7, 3, 4],
+         [0, 0, 1, 5, 8, 6, 3, 4, 4],
          ],
-        [[1,2,2,5,8,8,6,7,7,3],
-         [1,1,2,5,8,8,6,7,3,3],
-         [0,1,2,5,8,8,6,7,3,4],
-         [0,1,2,5,8,8,6,7,3,4],
-         [0,1,2,5,8,8,6,7,3,4],
-         [0,1,2,5,8,8,6,7,3,4],
-         [0,1,2,5,8,8,6,7,3,4],
-         [0,1,2,5,8,8,6,7,3,4],
-         [0,1,2,5,8,8,6,7,3,4],
-         [0,0,1,5,8,8,6,3,4,4],
+        [[1, 2, 2, 5, 8, 8, 6, 7, 7, 3],
+         [1, 1, 2, 5, 8, 8, 6, 7, 3, 3],
+         [0, 1, 2, 5, 8, 8, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 8, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 8, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 8, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 8, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 8, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 8, 6, 7, 3, 4],
+         [0, 0, 1, 5, 8, 8, 6, 3, 4, 4],
          ],
-        [[1,2,2,5,8,10,9,6,7,7,3],
-         [1,1,2,5,8,10,9,6,7,3,3],
-         [0,1,2,5,8,10,9,6,7,3,4],
-         [0,1,2,5,8,10,9,6,7,3,4],
-         [0,1,2,5,8,10,9,6,7,3,4],
-         [0,1,2,5,8,10,9,6,7,3,4],
-         [0,1,2,5,8,10,9,6,7,3,4],
-         [0,1,2,5,8,10,9,6,7,3,4],
-         [0,1,2,5,8,10,9,6,7,3,4],
-         [0,1,2,5,8,10,9,6,7,3,4],
-         [0,0,1,5,8,10,9,6,3,4,4],
+        [[1, 2, 2, 5, 8, 10, 9, 6, 7, 7, 3],
+         [1, 1, 2, 5, 8, 10, 9, 6, 7, 3, 3],
+         [0, 1, 2, 5, 8, 10, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 9, 6, 7, 3, 4],
+         [0, 0, 1, 5, 8, 10, 9, 6, 3, 4, 4],
          ],
-        [[1,2,2,5,8,10,10,9,6,7,7,3],
-         [1,1,2,5,8,10,10,9,6,7,3,3],
-         [0,1,2,5,8,10,10,9,6,7,3,4],
-         [0,1,2,5,8,10,10,9,6,7,3,4],
-         [0,1,2,5,8,10,10,9,6,7,3,4],
-         [0,1,2,5,8,10,10,9,6,7,3,4],
-         [0,1,2,5,8,10,10,9,6,7,3,4],
-         [0,1,2,5,8,10,10,9,6,7,3,4],
-         [0,1,2,5,8,10,10,9,6,7,3,4],
-         [0,1,2,5,8,10,10,9,6,7,3,4],
-         [0,1,2,5,8,10,10,9,6,7,3,4],
-         [0,0,1,5,8,10,10,9,6,3,4,4],
+        [[1, 2, 2, 5, 8, 10, 10, 9, 6, 7, 7, 3],
+         [1, 1, 2, 5, 8, 10, 10, 9, 6, 7, 3, 3],
+         [0, 1, 2, 5, 8, 10, 10, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 10, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 10, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 10, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 10, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 10, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 10, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 10, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 10, 9, 6, 7, 3, 4],
+         [0, 0, 1, 5, 8, 10, 10, 9, 6, 3, 4, 4],
          ],
-        [[1,2,2,5,8,10,11,12,9,6,7,7,3],
-         [1,1,2,5,8,10,11,12,9,6,7,3,3],
-         [0,1,2,5,8,10,11,12,9,6,7,3,4],
-         [0,1,2,5,8,10,11,12,9,6,7,3,4],
-         [0,1,2,5,8,10,11,12,9,6,7,3,4],
-         [0,1,2,5,8,10,11,12,9,6,7,3,4],
-         [0,1,2,5,8,10,11,12,9,6,7,3,4],
-         [0,1,2,5,8,10,11,12,9,6,7,3,4],
-         [0,1,2,5,8,10,11,12,9,6,7,3,4],
-         [0,1,2,5,8,10,11,12,9,6,7,3,4],
-         [0,1,2,5,8,10,11,12,9,6,7,3,4],
-         [0,1,2,5,8,10,11,12,9,6,7,3,4],
-         [0,0,1,5,8,10,11,12,9,6,3,4,4],
+        [[1, 2, 2, 5, 8, 10, 11, 12, 9, 6, 7, 7, 3],
+         [1, 1, 2, 5, 8, 10, 11, 12, 9, 6, 7, 3, 3],
+         [0, 1, 2, 5, 8, 10, 11, 12, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 11, 12, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 11, 12, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 11, 12, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 11, 12, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 11, 12, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 11, 12, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 11, 12, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 11, 12, 9, 6, 7, 3, 4],
+         [0, 1, 2, 5, 8, 10, 11, 12, 9, 6, 7, 3, 4],
+         [0, 0, 1, 5, 8, 10, 11, 12, 9, 6, 3, 4, 4],
          ],
-        ]
+    ]
     Players2dropTable = [
         DropRegionTables[0],
         DropRegionTables[0],
@@ -238,16 +243,18 @@ class RegionDropPlacer(DropPlacer):
         DropRegionTables[7],
         DropRegionTables[8],
         DropRegionTables[8],
-        ]
+    ]
 
     @classmethod
     def getDropRegionTable(cls, numPlayers):
-        return cls.Players2dropTable[min(len(cls.Players2dropTable)-1, numPlayers)]
+        return cls.Players2dropTable[min(
+            len(cls.Players2dropTable) - 1, numPlayers)]
 
     def __init__(self, game, dropTypes, startTime=None):
         DropPlacer.__init__(self, game, dropTypes, startTime=startTime)
-                
-        self.DropRegionTable = self.getDropRegionTable(self.game.getNumPlayers())
+
+        self.DropRegionTable = self.getDropRegionTable(
+            self.game.getNumPlayers())
 
         assert (len(self.DropRegionTable) == self.game.DropRows)
         assert (len(self.DropRegionTable[0]) == self.game.DropColumns)
@@ -260,7 +267,7 @@ class RegionDropPlacer(DropPlacer):
                 if region not in self.DropRegion2GridCoordList:
                     self.DropRegion2GridCoordList[region] = []
                 self.DropRegion2GridCoordList[region].append(
-                    [row,column])
+                    [row, column])
         # and create a sorted list of drop regions
         self.DropRegions = list(self.DropRegion2GridCoordList.keys())
         self.DropRegions.sort()
@@ -275,7 +282,7 @@ class RegionDropPlacer(DropPlacer):
         see declaration of DropPlacer.getNextDrop, above, for details
         """
         t = self.getT()
-                
+
         # will any of the falling objects have landed at this point?
         while len(self.fallingObjs):
             landTime, dropRegion = self.fallingObjs[0]
@@ -296,10 +303,10 @@ class RegionDropPlacer(DropPlacer):
             candidates = self.DropRegions
         dropRegion = self.rng.choice(candidates)
         # choose a drop row/col in the drop region
-        row,col = self.rng.choice(
+        row, col = self.rng.choice(
             self.DropRegion2GridCoordList[dropRegion])
         dropTypeName = self.getNextDropTypeName()
-        drop = [t, dropTypeName, [row,col]]
+        drop = [t, dropTypeName, [row, col]]
 
         # add this drop to the priority queue of drops/regions
         duration = self.game.BaselineDropDuration
@@ -309,6 +316,7 @@ class RegionDropPlacer(DropPlacer):
 
         self.stepT()
         return drop
+
 
 class PartyRegionDropPlacer(RegionDropPlacer):
     def __init__(self, game, generationId, dropTypes, startTime=None):
@@ -330,27 +338,29 @@ class PartyRegionDropPlacer(RegionDropPlacer):
             self.game.FasterDropPeriodMult,
             startTime=startTime)
 
+
 class PathDropPlacer(DropPlacer):
     """
     this placer drops objects along random 'paths', one
     for each player. The idea is to keep players from frequently
     having to run back and forth across the entire stage.
     """
+
     def __init__(self, game, dropTypes, startTime=None):
         DropPlacer.__init__(self, game, dropTypes, startTime=startTime)
 
         # these represent the possible drop location moves that a
         # path can take, in clockwise order
         self.moves = [
-            [ 0,-1], # 0, N
-            [ 1,-1], # 1, NE
-            [ 1, 0], # 2, E
-            [ 1, 1], # 3, SE
-            [ 0, 1], # 4, S
-            [-1, 1], # 5, SW
-            [-1, 0], # 6, W
-            [-1,-1], # 7, NW
-            ]
+            [0, -1],  # 0, N
+            [1, -1],  # 1, NE
+            [1, 0],  # 2, E
+            [1, 1],  # 3, SE
+            [0, 1],  # 4, S
+            [-1, 1],  # 5, SW
+            [-1, 0],  # 6, W
+            [-1, -1],  # 7, NW
+        ]
 
         # create a list of 'path' descriptors, one for each player
         # be careful to create N *unique* descriptors, not N
@@ -358,12 +368,12 @@ class PathDropPlacer(DropPlacer):
         self.paths = []
         for i in range(self.game.getNumPlayers()):
             # create a new path descriptor and add it to the list
-            dir = self.rng.randrange(0,len(self.moves))
-            col,row = self.getRandomColRow()
+            dir = self.rng.randrange(0, len(self.moves))
+            col, row = self.getRandomColRow()
             path = {
-                'direction' : dir,
-                'location'  : [col,row],
-                }
+                'direction': dir,
+                'location': [col, row],
+            }
             self.paths.append(path)
 
         # as we drop items, we'll determine the path locations
@@ -373,14 +383,14 @@ class PathDropPlacer(DropPlacer):
     def getValidDirection(self, col, row, dir):
         # these lists map invalid directions to the closest valid direction(s)
         # for paths that are at the playfield boundaries
-        redirectTop    = [(6,2),2,2,3,4,5,6,6]
-        redirectRight  = [0,0,(0,4),4,4,5,6,7]
-        redirectBottom = [0,1,2,2,(2,6),6,6,7]
-        redirectLeft   = [0,1,2,3,4,4,(4,0),0]
-        redirectTopRight    = [6,(6,4),4,4,4,5,6,6]
-        redirectBottomRight = [0,0,0,(0,6),6,6,6,7]
-        redirectBottomLeft  = [0,1,2,2,2,(2,0),0,0]
-        redirectTopLeft     = [2,2,2,3,4,4,4,(4,2)]
+        redirectTop = [(6, 2), 2, 2, 3, 4, 5, 6, 6]
+        redirectRight = [0, 0, (0, 4), 4, 4, 5, 6, 7]
+        redirectBottom = [0, 1, 2, 2, (2, 6), 6, 6, 7]
+        redirectLeft = [0, 1, 2, 3, 4, 4, (4, 0), 0]
+        redirectTopRight = [6, (6, 4), 4, 4, 4, 5, 6, 6]
+        redirectBottomRight = [0, 0, 0, (0, 6), 6, 6, 6, 7]
+        redirectBottomLeft = [0, 1, 2, 2, 2, (2, 0), 0, 0]
+        redirectTopLeft = [2, 2, 2, 3, 4, 4, 4, (4, 2)]
 
         # this is a lookup table to efficiently find the appropriate
         # redirect table
@@ -397,20 +407,20 @@ class PathDropPlacer(DropPlacer):
             None,                # 0111, unused
             redirectRight,       # 1000, max/mid
             redirectTopRight,    # 1001, max/min
-            redirectBottomRight, # 1010, max/max
-            ]
+            redirectBottomRight,  # 1010, max/max
+        ]
 
         # calculate the index, based on col and row being on
         # max or min boundaries
         if col == 0:
             colIndex = 1
-        elif col == (self.game.DropColumns-1):
+        elif col == (self.game.DropColumns - 1):
             colIndex = 2
         else:
             colIndex = 0
         if row == 0:
             rowIndex = 1
-        elif row == (self.game.DropRows-1):
+        elif row == (self.game.DropRows - 1):
             rowIndex = 2
         else:
             rowIndex = 0
@@ -423,10 +433,10 @@ class PathDropPlacer(DropPlacer):
 
         # get a valid direction; might be a list of valid directions
         newDir = redirectTable[dir]
-        if type(newDir) != type(1):
+        if not isinstance(newDir, type(1)):
             newDir = self.rng.choice(newDir)
         return newDir
-        
+
     def getNextDrop(self):
         """
         schedules the next drop, continuing one of the 'drop paths'
@@ -434,7 +444,7 @@ class PathDropPlacer(DropPlacer):
         # get a handle on the current path
         path = self.paths[self.curPathIndex]
 
-        col,row = path['location']
+        col, row = path['location']
         dir = path['direction']
 
         # should the path turn or keep going in the same direction?
@@ -453,16 +463,16 @@ class PathDropPlacer(DropPlacer):
         dCol, dRow = self.moves[dir]
         col += dCol
         row += dRow
-        col = min(max(col, 0), self.game.DropColumns-1)
-        row = min(max(row, 0), self.game.DropRows-1)
+        col = min(max(col, 0), self.game.DropColumns - 1)
+        row = min(max(row, 0), self.game.DropRows - 1)
 
-        path['location'] = [col,row]
+        path['location'] = [col, row]
         path['direction'] = dir
 
         # round-robin to the next drop path
-        self.curPathIndex = ((self.curPathIndex+1) %
+        self.curPathIndex = ((self.curPathIndex + 1) %
                              len(self.paths))
-                
-        drop = [self.getT(), self.getNextDropTypeName(), [col,row]]
+
+        drop = [self.getT(), self.getNextDropTypeName(), [col, row]]
         self.stepT()
         return drop

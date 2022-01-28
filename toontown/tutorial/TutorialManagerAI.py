@@ -12,6 +12,7 @@ from toontown.ai import BlackCatHolidayMgrAI
 from toontown.ai import DistributedBlackCatMgrAI
 from panda3d.toontown import DNAStorage
 
+
 class TutorialManagerAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("TutorialManagerAI")
 
@@ -38,7 +39,7 @@ class TutorialManagerAI(DistributedObjectAI.DistributedObjectAI):
         # Assumption: the only block that isn't an HQ is the gag shop block.
         self.hqBlock = None
         self.gagBlock = None
-        for blockIndex in range (0, numBlocks):
+        for blockIndex in range(0, numBlocks):
             blockNumber = self.dnaStore.getBlockNumberAt(blockIndex)
             buildingType = self.dnaStore.getBlockBuildingType(blockNumber)
             if (buildingType == 'hq'):
@@ -50,7 +51,7 @@ class TutorialManagerAI(DistributedObjectAI.DistributedObjectAI):
 
         # key is avId, value is real time when the request was made
         self.avIdsRequestingSkip = {}
-        self.accept("avatarEntered", self.waitingToonEntered )
+        self.accept("avatarEntered", self.waitingToonEntered)
 
         return None
 
@@ -119,7 +120,7 @@ class TutorialManagerAI(DistributedObjectAI.DistributedObjectAI):
                 str(avId) +
                 " isn't here, but just finished a tutorial. " +
                 "I will ignore this."
-                )
+            )
         return
 
     def __createTutorial(self, avId):
@@ -152,8 +153,12 @@ class TutorialManagerAI(DistributedObjectAI.DistributedObjectAI):
             battleOverCallback)
 
         # Create the NPC blocking the tunnel to the playground
-        blockerNPC = NPCToons.createNPC(self.air, 20001, NPCToons.NPCToonDict[20001], streetZone,
-                                        questCallback=self.__handleBlockDone)
+        blockerNPC = NPCToons.createNPC(
+            self.air,
+            20001,
+            NPCToons.NPCToonDict[20001],
+            streetZone,
+            questCallback=self.__handleBlockDone)
         blockerNPC.setTutorial(1)
 
         # is the black cat holiday enabled?
@@ -163,16 +168,16 @@ class TutorialManagerAI(DistributedObjectAI.DistributedObjectAI):
                 self.air, avId)
             blackCatMgr.generateWithRequired(streetZone)
 
-        zoneDict={"branchZone" : branchZone,
-                  "streetZone" : streetZone,
-                  "shopZone" : shopZone,
-                  "hqZone" : hqZone,
-                  "building" : building,
-                  "hqBuilding" : hqBuilding,
-                  "suitPlanner" : suitPlanner,
-                  "blockerNPC" : blockerNPC,
-                  "blackCatMgr" : blackCatMgr,
-                  }
+        zoneDict = {"branchZone": branchZone,
+                    "streetZone": streetZone,
+                    "shopZone": shopZone,
+                    "hqZone": hqZone,
+                    "building": building,
+                    "hqBuilding": hqBuilding,
+                    "suitPlanner": suitPlanner,
+                    "blockerNPC": blockerNPC,
+                    "blackCatMgr": blackCatMgr,
+                    }
         self.playerDict[avId] = zoneDict
         return zoneDict
 
@@ -214,7 +219,7 @@ class TutorialManagerAI(DistributedObjectAI.DistributedObjectAI):
                 str(avId) +
                 " isn't here, but just rejected a tutorial. " +
                 "I will ignore this."
-                )
+            )
         return
 
     def respondToSkipTutorial(self, avId, av):
@@ -225,7 +230,8 @@ class TutorialManagerAI(DistributedObjectAI.DistributedObjectAI):
         response = 1
         if av:
             if av.tutorialAck:
-                self.air.writeServerEvent('suspicious', avId, 'requesting skip tutorial, but tutorialAck is 1')
+                self.air.writeServerEvent(
+                    'suspicious', avId, 'requesting skip tutorial, but tutorialAck is 1')
                 response = 0
 
         if av and response:
@@ -262,7 +268,7 @@ class TutorialManagerAI(DistributedObjectAI.DistributedObjectAI):
                 str(avId) +
                 " isn't here, but requested to skip tutorial. " +
                 "I will ignore this."
-                )
+            )
         self.sendUpdateToAvatarId(avId, "skipTutorialResponse", [response])
         return
 
@@ -276,17 +282,23 @@ class TutorialManagerAI(DistributedObjectAI.DistributedObjectAI):
             if (curTime - requestTime) <= self.WaitTimeForSkipTutorial:
                 self.respondToSkipTutorial(avId, av)
             else:
-                self.notify.warning("waited too long for toon %d responding no to skip tutorial request" % avId)
+                self.notify.warning(
+                    "waited too long for toon %d responding no to skip tutorial request" %
+                    avId)
                 self.sendUpdateToAvatarId(avId, "skipTutorialResponse", [0])
             del self.avIdsRequestingSkip[avId]
             self.removeTask("skipTutorialToon-%d" % avId)
 
-
-    def waitForToonToEnter(self,avId):
+    def waitForToonToEnter(self, avId):
         """Mark our toon as requesting to skip, and start a task to timeout for it."""
         self.notify.debugStateCall(self)
         self.avIdsRequestingSkip[avId] = globalClock.getFrameTime()
-        self.doMethodLater(self.WaitTimeForSkipTutorial, self.didNotGetToon, "skipTutorialToon-%d" % avId, [avId])
+        self.doMethodLater(
+            self.WaitTimeForSkipTutorial,
+            self.didNotGetToon,
+            "skipTutorialToon-%d" %
+            avId,
+            [avId])
 
     def didNotGetToon(self, avId):
         """Just say no since the AI didn't get it."""
@@ -303,7 +315,7 @@ class TutorialManagerAI(DistributedObjectAI.DistributedObjectAI):
         # Make sure the avatar exists
         av = self.air.doId2do.get(avId)
         if av:
-            self.respondToSkipTutorial(avId,av)
+            self.respondToSkipTutorial(avId, av)
         else:
             self.waitForToonToEnter(avId)
 
@@ -319,5 +331,3 @@ class TutorialManagerAI(DistributedObjectAI.DistributedObjectAI):
                             " has exited unexpectedly")
         self.__destroyTutorial(avId)
         return
-
-

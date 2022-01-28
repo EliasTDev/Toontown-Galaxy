@@ -7,6 +7,7 @@ from direct.showbase.PythonUtil import Functor
 SHOULD_SUCCEED = 0
 SHOULD_FAIL = 1
 
+
 class TTTester:
     def __init__(self):
         self.tests = 0
@@ -15,14 +16,14 @@ class TTTester:
     def __logResult(self, success, errMsg=None):
         self.tests += 1
         if not success:
-            assert type(errMsg) == type('')
+            assert isinstance(errMsg, type(''))
             self.errStrings.append(errMsg)
 
     def printResults(self):
         print("================================================")
-        print("%s tests, %s failures" % (self.tests, len(self.errStrings)))
+        print(f"{self.tests} tests, {len(self.errStrings)} failures")
         for i in range(len(self.errStrings)):
-            print("- %s" % (self.errStrings[i]))
+            print(f"- {self.errStrings[i]}")
 
     def runTest(self, test, shouldFail, errMsg):
         """ test is the test condition; it should be a functor that
@@ -36,29 +37,31 @@ class TTTester:
         result = test()
         if result:
             print('result:' + result)
-        
+
         # the test may have failed, but that might be what we wanted
         passed = 0
         if shouldFail and (result is not None):
             passed = 1
         elif (not shouldFail) and (result is None):
             passed = 1
-            
+
         # if the metatest failed, construct an error message
         err = None
         if not passed:
             err = errMsg
             if result is not None:
-                err = '%s: "%s"' % (err, result)
-                
+                err = f'{err}: "{result}"'
+
         self.__logResult(passed, err)
         return passed
+
 
 def getRandomString(prefix='test'):
     name = prefix
     for i in range(10):
         name += str(random.randrange(10))
     return name
+
 
 def run():
     tt = base.cr.loginInterface
@@ -72,8 +75,7 @@ def run():
     # try logging in with an invalid account name
     tester.runTest(Functor(tt.authorize, name, pwd),
                    SHOULD_FAIL,
-                   "login attempt with probably-invalid "
-                   "username %s succeeded" % name)
+                   f"login attempt with probably-invalid username {name} succeeded")
 
     # try getting account data for an invalid account name
     tester.runTest(Functor(tt.getAccountData, name, pwd),
@@ -83,10 +85,10 @@ def run():
 
     # create the account
     data = {
-        'dobYear' : 1978,
-        'dobMonth' : 3,
-        'dobDay' : 14,
-        }
+        'dobYear': 1978,
+        'dobMonth': 3,
+        'dobDay': 14,
+    }
     accountCreated = tester.runTest(
         Functor(tt.createAccount, name, pwd, data),
         SHOULD_SUCCEED,

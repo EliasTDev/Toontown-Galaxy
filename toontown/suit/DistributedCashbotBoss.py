@@ -30,9 +30,12 @@ from panda3d.otp import *
 OneBossCog = None
 
 TTL = TTLocalizer
+
+
 class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCashbotBoss')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedCashbotBoss')
 
     numFakeGoons = 3
 
@@ -50,7 +53,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         self.elevatorType = ElevatorConstants.ELEVATOR_CFO
 
-        #hack for quick access while debugging
+        # hack for quick access while debugging
         base.boss = self
 
     def announceGenerate(self):
@@ -59,9 +62,9 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # at this point all our attribs have been filled in.
         self.setName(TTLocalizer.CashbotBossName)
         nameInfo = TTLocalizer.BossCogNameWithDept % {
-            "name":  self.name,
-            "dept":  (SuitDNA.getDeptFullname(self.style.dept)),
-            }
+            "name": self.name,
+            "dept": (SuitDNA.getDeptFullname(self.style.dept)),
+        }
         self.setDisplayName(nameInfo)
 
         # Our goal in this battle is to drop stuff on the CFO's head.
@@ -80,7 +83,6 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         shieldNode.addSolid(shield)
         shieldNode.setCollideMask(ToontownGlobals.PieBitmask)
         shieldNodePath = self.pelvis.attachNewNode(shieldNode)
-                               
 
         # By "heldObject", we mean the safe he's currently wearing as
         # a helmet, if any.  It's called a heldObject because this is
@@ -116,10 +118,10 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         localAvatar.chatMgr.chatInputSpeedChat.addCFOMenu()
 
         global OneBossCog
-        if OneBossCog != None:
+        if OneBossCog is not None:
             self.notify.warning("Multiple BossCogs visible.")
         OneBossCog = self
-        
+
     def disable(self):
         """
         This method is called when the DistributedObject
@@ -150,19 +152,20 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             return
 
         npc = Toon.Toon()
-        #npc.setName(TTLocalizer.ResistanceToonName)
+        # npc.setName(TTLocalizer.ResistanceToonName)
         npc.setName("Mata Hairy")
         npc.setPickable(0)
         npc.setPlayerType(NametagGroup.CCNonPlayer)
         dna = ToonDNA.ToonDNA()
         dna.newToonRandom(146392, 1, 1)
         dna.head = "pls"
-        dna.headColor = 3 # Red
+        dna.headColor = 3  # Red
         npc.setDNAString(dna.makeNetString())
         npc.animFSM.request("neutral")
 
         self.resistanceToon = npc
-        self.resistanceToon.setPosHpr(*ToontownGlobals.CashbotRTBattleOneStartPosHpr)
+        self.resistanceToon.setPosHpr(
+            *ToontownGlobals.CashbotRTBattleOneStartPosHpr)
 
         # determine a random suit to put her in
         state = random.getstate()
@@ -173,7 +176,8 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # Make some goons for the resistance toon to play with
         self.fakeGoons = []
         for i in range(self.numFakeGoons):
-            goon = DistributedCashbotBossGoon.DistributedCashbotBossGoon(base.cr)
+            goon = DistributedCashbotBossGoon.DistributedCashbotBossGoon(
+                base.cr)
             goon.doId = -1 - i
             goon.setBossCogId(self.doId)
             goon.generate()
@@ -222,8 +226,6 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             for goon in self.fakeGoons:
                 goon.request(state)
 
-            
-
     ##### Environment #####
 
     def loadEnvironment(self):
@@ -231,13 +233,17 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         self.oggVault = loader.loadModel('phase_10/models/cogHQ/MidVault.bam')
         self.endVault = loader.loadModel('phase_10/models/cogHQ/EndVault.bam')
-        self.lightning = loader.loadModel('phase_10/models/cogHQ/CBLightning.bam')
+        self.lightning = loader.loadModel(
+            'phase_10/models/cogHQ/CBLightning.bam')
         self.magnet = loader.loadModel('phase_10/models/cogHQ/CBMagnet.bam')
-        self.craneArm = loader.loadModel('phase_10/models/cogHQ/CBCraneArm.bam')
-        self.controls = loader.loadModel('phase_10/models/cogHQ/CBCraneControls.bam')
+        self.craneArm = loader.loadModel(
+            'phase_10/models/cogHQ/CBCraneArm.bam')
+        self.controls = loader.loadModel(
+            'phase_10/models/cogHQ/CBCraneControls.bam')
         self.stick = loader.loadModel('phase_10/models/cogHQ/CBCraneStick.bam')
         self.safe = loader.loadModel('phase_10/models/cogHQ/CBSafe.bam')
-        self.eyes = loader.loadModel('phase_10/models/cogHQ/CashBotBossEyes.bam')
+        self.eyes = loader.loadModel(
+            'phase_10/models/cogHQ/CashBotBossEyes.bam')
         self.cableTex = self.craneArm.findTexture('MagnetControl')
 
         # Get the eyes ready for putting outside the helmet.
@@ -265,7 +271,9 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # Flag the collisions in the end vault so safes and magnets
         # don't try to go through the wall.
         cn = self.endVault.find('**/wallsCollision').node()
-        cn.setIntoCollideMask(OTPGlobals.WallBitmask | ToontownGlobals.PieBitmask | (BitMask32.lowerOn(3) << 21))        
+        cn.setIntoCollideMask(
+            OTPGlobals.WallBitmask | ToontownGlobals.PieBitmask | (
+                BitMask32.lowerOn(3) << 21))
 
         # Get the rolling doors.
 
@@ -296,7 +304,8 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         rightDoor = elevatorModel.find('**/right_door')
         rightDoor.setName("right-door")
         self.setupElevator(elevatorOrigin)
-        ElevatorUtils.closeDoors(leftDoor, rightDoor, ElevatorConstants.ELEVATOR_CFO)
+        ElevatorUtils.closeDoors(
+            leftDoor, rightDoor, ElevatorConstants.ELEVATOR_CFO)
 
         # Find all the wall polygons and replace them with planes,
         # which are solid, so there will be zero chance of safes or
@@ -310,7 +319,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # cause us trouble in the intro movie or in battle one.  We
         # will unstash them when we move to battle three.
         self.evWalls.stash()
-        
+
         # Also replace the floor polygon with a plane, and rename it
         # so we can detect a collision with it.
         floor = self.endVault.find('**/EndVaultFloorCollision')
@@ -331,7 +340,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
     def unloadEnvironment(self):
         DistributedBossCog.DistributedBossCog.unloadEnvironment(self)
-        
+
         self.geom.removeNode()
 
     def replaceCollisionPolysWithPlanes(self, model):
@@ -342,13 +351,13 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         collList = model.findAllMatches('**/+CollisionNode')
         if not collList:
             collList = [model]
-            
+
         for cnp in collList:
             cn = cnp.node()
             if not isinstance(cn, CollisionNode):
-                self.notify.warning("Not a collision node: %s" % (repr(cnp)))
+                self.notify.warning(f"Not a collision node: {repr(cnp)}")
                 break
-            
+
             newCollideMask = newCollideMask | cn.getIntoCollideMask()
             for i in range(cn.getNumSolids()):
                 solid = cn.getSolid(i)
@@ -357,42 +366,48 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                     plane = Plane(solid.getPlane())
                     planes.append(plane)
                 else:
-                    self.notify.warning("Unexpected collision solid: %s" % (repr(solid)))
+                    self.notify.warning(
+                        f"Unexpected collision solid: {repr(solid)}")
                     newCollisionNode.addSolid(plane)
 
         newCollisionNode.setIntoCollideMask(newCollideMask)
-        
+
         # Now sort all of the planes and remove the nonunique ones.
         # We can't use traditional dictionary-based tricks, because we
         # want to use Plane.compareTo(), not Plane.__hash__(), to make
         # the comparison.
         threshold = 0.1
-        planes.sort(key=functools.cmp_to_key(lambda p1, p2: p1.compareTo(p2, threshold)))
+        planes.sort(
+            key=functools.cmp_to_key(
+                lambda p1, p2: p1.compareTo(
+                    p2, threshold)))
         lastPlane = None
         for plane in planes:
-            if lastPlane == None or plane.compareTo(lastPlane, threshold) != 0:
+            if lastPlane is None or plane.compareTo(lastPlane, threshold) != 0:
                 cp = CollisionPlane(plane)
                 newCollisionNode.addSolid(cp)
                 lastPlane = plane
 
         return NodePath(newCollisionNode)
-                    
 
     def __makeGoonMovieForIntro(self):
         goonTrack = Parallel()
         goon = self.fakeGoons[0]
         goonTrack.append(
             Sequence(goon.posHprInterval(0, Point3(111, -287, 0), VBase3(165, 0, 0)),
-                     goon.posHprInterval(9, Point3(101, -323, 0), VBase3(165, 0, 0)),
+                     goon.posHprInterval(
+                         9, Point3(101, -323, 0), VBase3(165, 0, 0)),
                      goon.hprInterval(1, VBase3(345, 0, 0)),
-                     goon.posHprInterval(9, Point3(111, -287, 0), VBase3(345, 0, 0)),
+                     goon.posHprInterval(
+                         9, Point3(111, -287, 0), VBase3(345, 0, 0)),
                      goon.hprInterval(1, VBase3(165, 0, 0)),
-                     goon.posHprInterval(9.5, Point3(104, -316, 0), VBase3(165, 0, 0)),
-                     #Wait(3.5),
+                     goon.posHprInterval(9.5, Point3(
+                         104, -316, 0), VBase3(165, 0, 0)),
+                     # Wait(3.5),
                      Func(goon.request, 'Stunned'),
                      Wait(1),
                      )
-            )
+        )
         goon = self.fakeGoons[1]
         goonTrack.append(
             Sequence(goon.posHprInterval(0, Point3(119, -315, 0), VBase3(357, 0, 0)),
@@ -402,7 +417,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                      goon.hprInterval(1, VBase3(357, 0, 0)),
                      goon.posHprInterval(9, Point3(121, -280, 0), VBase3(357, 0, 0)),
                      )
-            )
+        )
         goon = self.fakeGoons[2]
         goonTrack.append(
             Sequence(goon.posHprInterval(0, Point3(102, -320, 0), VBase3(231, 0, 0)),
@@ -412,11 +427,11 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                      goon.hprInterval(1, VBase3(231, 0, 0)),
                      goon.posHprInterval(9, Point3(127, -337, 0), VBase3(231, 0, 0)),
                      )
-            )
+        )
         return Sequence(Func(self.__showFakeGoons, 'Walk'),
                         goonTrack,
                         Func(self.__hideFakeGoons))
-        
+
     def makeIntroductionMovie(self, delayDeletes):
 
         # Generate an interval which shows the toons meeting the
@@ -453,7 +468,8 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         track, hpr = self.rollBossToPoint(startPos, None, battlePos, None, 0)
         bossTrack.append(track)
-        track, hpr = self.rollBossToPoint(battlePos, hpr, battlePos, battleHpr, 0)
+        track, hpr = self.rollBossToPoint(
+            battlePos, hpr, battlePos, battleHpr, 0)
         bossTrack.append(track)
 
         bossTrack.append(Func(self.getGeomNode().setH, 0))
@@ -461,29 +477,30 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         # Create a track for the fake goons
         goonTrack = self.__makeGoonMovieForIntro()
-        
+
         attackToons = TTL.CashbotBossCogAttack
 
         rToon = self.resistanceToon
         rToon.setPosHpr(*ToontownGlobals.CashbotRTBattleOneStartPosHpr)
         rToon.setDisplayName("Mata Hairy")
         track = Sequence(
-            #Cut to resistance toon
+            # Cut to resistance toon
             Func(camera.setPosHpr, 82, -219, 5, 267, 0, 0),
             Func(rToon.setChatAbsolute, TTL.ResistanceToonWelcome, CFSpeech),
             Wait(3),
 
-            #start the goons on their paths
+            # start the goons on their paths
             Sequence(goonTrack, duration=0),
-            #Func(goonTrack.start),
-            
-            #RT runs to the endvault door and opens it
+            # Func(goonTrack.start),
+
+            # RT runs to the endvault door and opens it
             Parallel(camera.posHprInterval(4, Point3(108, -244, 4), VBase3(211.5, 0, 0)),
                      Sequence(Func(rToon.suit.setPlayRate, 1.4, 'walk'),
                               Func(rToon.suit.loop, 'walk'),
                               Parallel(rToon.hprInterval(1, VBase3(180, 0, 0)),
-                                       rToon.posInterval(3, VBase3(120, -255, 0)),
-                                       Sequence(Wait(2),     #clear the chat 2 seconds in
+                                       rToon.posInterval(
+                                           3, VBase3(120, -255, 0)),
+                                       Sequence(Wait(2),  # clear the chat 2 seconds in
                                                 Func(rToon.clearChat),
                                                 ),
                                        ),
@@ -491,107 +508,130 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                               self.door2.posInterval(3, VBase3(0, 0, 30)),
                               ),
                      ),
-                     
 
-            
-            #Cut to the CFO rolling in
+
+
+            # Cut to the CFO rolling in
             Func(rToon.setHpr, 0, 0, 0),
             Func(rToon.setChatAbsolute, TTL.ResistanceToonTooLate, CFSpeech),
             Func(camera.reparentTo, render),
             Func(camera.setPosHpr, 61.1, -228.8, 10.2, -90, 0, 0),
-            #Open the CFO door
+            # Open the CFO door
             self.door1.posInterval(2, VBase3(0, 0, 30)),
-            #Roll the CFO in and close the door
+            # Roll the CFO in and close the door
             Parallel(bossTrack,
                      Sequence(Wait(3),
                               Func(rToon.clearChat),
                               self.door1.posInterval(3, VBase3(0, 0, 0))),
                      ),
-                              
 
-            #Close-up of the CFO...
-            Func(self.setChatAbsolute, TTL.CashbotBossDiscoverToons1, CFSpeech),
-            camera.posHprInterval(1.5, Point3(93.3, -230, 0.7), VBase3(-92.9, 39.7, 8.3)),
-            Func(self.setChatAbsolute, TTL.CashbotBossDiscoverToons2, CFSpeech),
+
+            # Close-up of the CFO...
+            Func(
+                self.setChatAbsolute,
+                TTL.CashbotBossDiscoverToons1,
+                CFSpeech),
+            camera.posHprInterval(1.5, Point3(
+                93.3, -230, 0.7), VBase3(-92.9, 39.7, 8.3)),
+            Func(
+                self.setChatAbsolute,
+                TTL.CashbotBossDiscoverToons2,
+                CFSpeech),
             Wait(4),
-            
+
             # Cut to toons losing their cog suits.
             Func(self.clearChat),
-            self.loseCogSuits(self.toonsA + self.toonsB, render, (113,-228,10,90,0,0)),
+            self.loseCogSuits(self.toonsA + self.toonsB,
+                              render, (113, -228, 10, 90, 0, 0)),
             Wait(1),
             Func(rToon.setHpr, 0, 0, 0),
-            self.loseCogSuits([rToon], render, (133,-243,5,143,0,0), True),
+            self.loseCogSuits(
+                [rToon], render, (133, -243, 5, 143, 0, 0), True),
 
-            #RT tells the toons to fight and runs off to open the door
-            Func(rToon.setChatAbsolute, TTL.ResistanceToonKeepHimBusy, CFSpeech),
+            # RT tells the toons to fight and runs off to open the door
+            Func(
+                rToon.setChatAbsolute,
+                TTL.ResistanceToonKeepHimBusy,
+                CFSpeech),
             Wait(1),
-            Func(self.__showResistanceToon, False),  #this turns off his cog suit...
+            # this turns off his cog suit...
+            Func(self.__showResistanceToon, False),
             Sequence(Func(rToon.animFSM.request, 'run'),
-                     rToon.hprInterval(1, VBase3(180, 0, 0)),  #turn him around
+                     rToon.hprInterval(1, VBase3(180, 0, 0)
+                                       ),  # turn him around
                      Parallel(Sequence(rToon.posInterval(1.5, VBase3(109, -294, 0)),
-                                       Parallel(Func(rToon.animFSM.request, 'jump')),
-                                       rToon.posInterval(1.5, VBase3(93.935, -341.065, 2)),
-                                       ),
-                              self.door2.posInterval(3, VBase3(0, 0, 0))),
-                     Func(rToon.animFSM.request, 'neutral'),
+                                       Parallel(
+                         Func(
+                             rToon.animFSM.request,
+                             'jump')),
+                         rToon.posInterval(1.5, VBase3(93.935, -341.065, 2)),
                      ),
+                self.door2.posInterval(3, VBase3(0, 0, 0))),
+                Func(rToon.animFSM.request, 'neutral'),
+            ),
 
-            #clean up the toons' eyes
+            # clean up the toons' eyes
             self.toonNormalEyes(self.involvedToons),
             self.toonNormalEyes([self.resistanceToon], True),
 
-            #cut back to the CFO and move the toons in to place
+            # cut back to the CFO and move the toons in to place
             Func(rToon.clearChat),
             Func(camera.setPosHpr, 93.3, -230, 0.7, -92.9, 39.7, 8.3),
 
             Func(self.setChatAbsolute, attackToons, CFSpeech),
             Wait(2),
             Func(self.clearChat),
-            )
+        )
 
         return Sequence(Func(camera.reparentTo, render),
                         track)
 
     def __makeGoonMovieForBattleThree(self):
-        #start them each walking back and forth between 2 points
+        # start them each walking back and forth between 2 points
         goonPosHprs = [
             [Point3(111, -287, 0), VBase3(165, 0, 0),
-             Point3(101, -323, 0), VBase3(165, 0, 0) ],
+             Point3(101, -323, 0), VBase3(165, 0, 0)],
             [Point3(119, -315, 0), VBase3(357, 0, 0),
-             Point3(121, -280, 0), VBase3(357, 0, 0) ],
+             Point3(121, -280, 0), VBase3(357, 0, 0)],
             [Point3(102, -320, 0), VBase3(231, 0, 0),
-             Point3(127, -337, 0), VBase3(231, 0, 0) ]
-            ]
+             Point3(127, -337, 0), VBase3(231, 0, 0)]
+        ]
 
-        #we're gonna leave this guy on the side... stunned
+        # we're gonna leave this guy on the side... stunned
         mainGoon = self.fakeGoons[0]
-        
+
         goonLoop = Parallel()
         print(self.fakeGoons)
         for i in range(1, self.numFakeGoons):
-            #print i
+            # print i
             goon = self.fakeGoons[i]
             goonLoop.append(
-                Sequence(goon.posHprInterval(8, goonPosHprs[i][0], goonPosHprs[i][1]),
-                         goon.posHprInterval(8, goonPosHprs[i][2], goonPosHprs[i][3]),
-                         )
-                )
+                Sequence(
+                    goon.posHprInterval(
+                        8,
+                        goonPosHprs[i][0],
+                        goonPosHprs[i][1]),
+                    goon.posHprInterval(
+                        8,
+                        goonPosHprs[i][2],
+                        goonPosHprs[i][3]),
+                ))
 
         goonTrack = Sequence(
             Func(self.__showFakeGoons, 'Walk'),
             Func(mainGoon.request, 'Stunned'),
             Func(goonLoop.loop),
             Wait(20),
-            #Func(self.__hideFakeGoons),
-            )
+            # Func(self.__hideFakeGoons),
+        )
         return goonTrack
-        
+
     def makePrepareBattleThreeMovie(self, delayDeletes, crane, safe):
 
         # Generate an interval which shows the toons meeting the
         # Resistance Toon, and the introduction of the CFO, etc.,
         # leading to the events of battle one.
-            
+
         # We need to protect our movie against any of the toons
         # disconnecting while the movie plays.
         for toonId in self.involvedToons:
@@ -621,24 +661,26 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         bossTrack.append(Func(self.pelvis.setHpr, self.pelvisForwardHpr))
         bossTrack.append(Func(self.loop, 'Ff_neutral'))
 
-        track, hpr = self.rollBossToPoint(startPos, startHpr, startPos, battleHpr, 0)
+        track, hpr = self.rollBossToPoint(
+            startPos, startHpr, startPos, battleHpr, 0)
         bossTrack.append(track)
         track, hpr = self.rollBossToPoint(startPos, None, battlePos, None, 0)
         bossTrack.append(track)
-        track, hpr = self.rollBossToPoint(battlePos, battleHpr, battlePos, finalHpr, 0)
+        track, hpr = self.rollBossToPoint(
+            battlePos, battleHpr, battlePos, finalHpr, 0)
         bossTrack.append(track)
 
         #bossTrack.append(Func(self.getGeomNode().setH, 0))
 
-        #grab the resistance toon and put him in his starting spot
+        # grab the resistance toon and put him in his starting spot
         rToon = self.resistanceToon
         rToon.setPosHpr(93.935, -341.065, 0, -45, 0, 0)
 
-        #get a crane/goon to play with
+        # get a crane/goon to play with
         goon = self.fakeGoons[0]
         crane = self.cranes[0]
 
-        #craneTrack = Sequence(crane.crane.posInterval(1, Point3(0, 30, 0)),
+        # craneTrack = Sequence(crane.crane.posInterval(1, Point3(0, 30, 0)),
         #                      Wait(0.5),
         #                      crane.crane.posInterval(1, Point3(0, 20, 0)),
         #                      Wait(0.5),
@@ -647,24 +689,25 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # create a track for the goons in the scene  (this only goes to the
         # point of interaction with the resistance toon
         #goonTrack = self.__makeGoonMovieForBattleThree()
-        
-        #build the sequence
+
+        # build the sequence
         track = Sequence(
             Func(self.__hideToons),
-            #set up the crane and goon
+            # set up the crane and goon
             Func(crane.request, 'Movie'),
             #Func(goon.request, 'LocalGrabbed', -1, crane.doId),
             Func(crane.accomodateToon, rToon),
             Func(goon.request, 'Stunned'),
             Func(goon.setPosHpr, 104, -316, 0, 165, 0, 0),
 
-            #open the door and roll the boss through
+            # open the door and roll the boss through
             Parallel(self.door2.posInterval(4.5, VBase3(0, 0, 30)),
                      self.door3.posInterval(4.5, VBase3(0, 0, 30)),
                      bossTrack,
                      ),
 
-            #Cut to the resistance toon... he's gonna show the players something
+            # Cut to the resistance toon... he's gonna show the players
+            # something
             Func(rToon.loop, 'leverNeutral'),
             Func(camera.reparentTo, self.geom),
             Func(camera.setPosHpr, 105, -326, 5, 136.3, 0, 0),
@@ -672,28 +715,43 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             Wait(2),
             Func(rToon.clearChat),
 
-            #Cut to the CFO telling the RT to knock it off
+            # Cut to the CFO telling the RT to knock it off
             Func(camera.setPosHpr, 105, -326, 20, -45.3, 11, 0),
-            Func(self.setChatAbsolute, TTL.CashbotBossGetAwayFromThat, CFSpeech),
+            Func(
+                self.setChatAbsolute,
+                TTL.CashbotBossGetAwayFromThat,
+                CFSpeech),
             Wait(2),
             Func(self.clearChat),
 
-            #The RT is having fun... cut to him doing the safe thing
+            # The RT is having fun... cut to him doing the safe thing
             camera.posHprInterval(1.5, Point3(105, -326, 5),
                                   Point3(136.3, 0, 0),
                                   blendType='easeInOut'),
 
-            #tell em what to do
-            Func(rToon.setChatAbsolute, TTL.ResistanceToonCraneInstructions1, CFSpeech),
+            # tell em what to do
+            Func(
+                rToon.setChatAbsolute,
+                TTL.ResistanceToonCraneInstructions1,
+                CFSpeech),
             Wait(4),
 
-            Func(rToon.setChatAbsolute, TTL.ResistanceToonCraneInstructions2, CFSpeech),
+            Func(
+                rToon.setChatAbsolute,
+                TTL.ResistanceToonCraneInstructions2,
+                CFSpeech),
             Wait(4),
 
-            Func(rToon.setChatAbsolute, TTL.ResistanceToonCraneInstructions3, CFSpeech),
+            Func(
+                rToon.setChatAbsolute,
+                TTL.ResistanceToonCraneInstructions3,
+                CFSpeech),
             Wait(4),
 
-            Func(rToon.setChatAbsolute, TTL.ResistanceToonCraneInstructions4, CFSpeech),
+            Func(
+                rToon.setChatAbsolute,
+                TTL.ResistanceToonCraneInstructions4,
+                CFSpeech),
             Wait(4),
 
             Func(rToon.clearChat),
@@ -703,37 +761,37 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             Func(goon.request, 'Recovery'),
             Wait(2),
 
-            # Cut to the surprised resistance toon 
+            # Cut to the surprised resistance toon
             Func(camera.setPosHpr, 95.4, -332.6, 4.2, 167.1, -13.2, 0),
             Func(rToon.setChatAbsolute, TTL.ResistanceToonGetaway, CFSpeech),
             Func(rToon.animFSM.request, 'jump'),
             Wait(1.8),
             Func(rToon.clearChat),
 
-            #Cut to the goon chasing rtoon... close the door
+            # Cut to the goon chasing rtoon... close the door
             Func(camera.setPosHpr, 109.1, -300.7, 13.9, -15.6, -13.6, 0),
             Func(rToon.animFSM.request, 'run'),
             Func(goon.request, 'Walk'),
             Parallel(self.door3.posInterval(3, VBase3(0, 0, 0)),
-                     rToon.posHprInterval(3, Point3(136, -212.9, 0), VBase3(-14,0,0),
-                                          startPos = Point3(110.8, -292.7, 0),
-                                          startHpr = VBase3(-14, 0, 0)),
-                     goon.posHprInterval(3, Point3(125.2, -243.5, 0), VBase3(-14,0,0),
-                                         startPos = Point3(104.8, -309.5, 0),
-                                         startHpr = VBase3(-14, 0, 0)),
+                     rToon.posHprInterval(3, Point3(136, -212.9, 0), VBase3(-14, 0, 0),
+                                          startPos=Point3(110.8, -292.7, 0),
+                                          startHpr=VBase3(-14, 0, 0)),
+                     goon.posHprInterval(3, Point3(125.2, -243.5, 0), VBase3(-14, 0, 0),
+                                         startPos=Point3(104.8, -309.5, 0),
+                                         startHpr=VBase3(-14, 0, 0)),
                      ),
 
             Func(self.__hideFakeGoons),
             Func(crane.request, 'Free'),
 
-            #fix the CFO's orientation
+            # fix the CFO's orientation
             Func(self.getGeomNode().setH, 0),
-        
-            #move the toons to their positions
+
+            # move the toons to their positions
             self.moveToonsToBattleThreePos(self.involvedToons),
 
             Func(self.__showToons),
-            )
+        )
 
         return Sequence(Func(camera.reparentTo, self),
                         Func(camera.setPosHpr, 0, -27, 25, 0, -18, 0),
@@ -749,10 +807,10 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                 hpr = VBase3(*posHpr[3:6])
                 track.append(
                     toon.posHprInterval(0.2, pos, hpr)
-                    )
+                )
 
         return track
-                
+
     def makeBossFleeMovie(self):
         # Generate an interval which shows the boss giving up and
         # running out the door, only to be nailed by a passing train.
@@ -763,13 +821,14 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         loco = loader.loadModel('phase_10/models/cogHQ/CashBotLocomotive')
         car1 = loader.loadModel('phase_10/models/cogHQ/CashBotBoxCar')
         car2 = loader.loadModel('phase_10/models/cogHQ/CashBotTankCar')
-        trainPassingSfx = base.loader.loadSfx('phase_10/audio/sfx/CBHQ_TRAIN_pass.ogg')
+        trainPassingSfx = base.loader.loadSfx(
+            'phase_10/audio/sfx/CBHQ_TRAIN_pass.ogg')
         boomSfx = loader.loadSfx('phase_3.5/audio/sfx/ENC_cogfall_apart.ogg')
 
         rollThroughDoor = self.rollBossToPoint(
-            fromPos = Point3(120, -280, 0), fromHpr = None,
-            toPos = Point3(120, -250, 0), toHpr = None,
-            reverse = 0)
+            fromPos=Point3(120, -280, 0), fromHpr=None,
+            toPos=Point3(120, -250, 0), toHpr=None,
+            reverse=0)
         rollTrack = Sequence(
             Func(self.getGeomNode().setH, 180),
             rollThroughDoor[0],
@@ -781,24 +840,24 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         # The trains move at 300 ft/s, so a gap of this much time puts
         # car2 80 ft behind car1.
-        g = 80.0/300.0
+        g = 80.0 / 300.0
         trainTrack = Track(
-            (0*g, loco.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
-            (1*g, car2.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
-            (2*g, car1.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
-            (3*g, car2.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
-            (4*g, car1.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
-            (5*g, car2.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
-            (6*g, car1.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
-            (7*g, car2.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
-            (8*g, car1.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
-            (9*g, car2.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
-            (10*g, car1.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
-            (11*g, car2.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
-            (12*g, car1.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
-            (13*g, car2.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
-            (14*g, car1.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
-            )
+            (0 * g, loco.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
+            (1 * g, car2.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
+            (2 * g, car1.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
+            (3 * g, car2.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
+            (4 * g, car1.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
+            (5 * g, car2.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
+            (6 * g, car1.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
+            (7 * g, car2.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
+            (8 * g, car1.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
+            (9 * g, car2.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
+            (10 * g, car1.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
+            (11 * g, car2.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
+            (12 * g, car1.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
+            (13 * g, car2.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
+            (14 * g, car1.posInterval(0.5, Point3(0, -242, 0), startPos=Point3(150, -242, 0))),
+        )
 
         bossTrack = Track(
             (0.0, Sequence(Func(camera.reparentTo, render),
@@ -817,7 +876,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                            Func(self.loop, 'Ff_neutral'),
                            rollTrack,
                            self.door3.posInterval(2.5, Point3(0, 0, 25),
-                                                  startPos = Point3(0, 0, 18)),
+                                                  startPos=Point3(0, 0, 18)),
                            )),
             (5.5, Func(self.setChatAbsolute, outtaHere, CFSpeech)),
             (5.5, SoundInterval(trainPassingSfx)),
@@ -833,8 +892,8 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             (9.5, SoundInterval(boomSfx)),
             (9.5, Sequence(self.posInterval(0.4, Point3(0, -250, 0)),
                            Func(self.stash))),
-            )
-            
+        )
+
         return bossTrack
 
     def grabObject(self, obj):
@@ -843,8 +902,8 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # through the same API as a crane picking up a safe.
 
         # This is only called by DistributedCashbotBossObject.enterGrabbed().
-        assert self.heldObject == None
-        
+        assert self.heldObject is None
+
         obj.wrtReparentTo(self.neck)
         obj.hideShadows()
         obj.stashCollisions()
@@ -863,14 +922,14 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
     def dropObject(self, obj):
         # Drop a helmet on the ground.
-        
+
         # This is only called by DistributedCashbotBossObject.exitGrabbed().
         assert self.heldObject == obj
 
         if obj.lerpInterval:
             obj.lerpInterval.finish()
             obj.lerpInterval = None
-        
+
         obj = self.heldObject
         obj.wrtReparentTo(render)
         obj.setHpr(obj.getH(), 0, 0)
@@ -888,8 +947,8 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             delta = bossDamage - self.bossDamage
             self.flashRed()
             self.doAnimate('hit', now=1)
-            self.showHpText(-delta, scale = 5)
-            
+            self.showHpText(-delta, scale=5)
+
         self.bossDamage = bossDamage
         self.updateHealthBar()
 
@@ -972,20 +1031,22 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
     def __talkAboutPromotion(self, speech):
         # Extends the congratulations speech to talk about the earned
         # promotion, if any.  Returns the newly-extended speech.
-        
+
         # don't say anything about a promotion if they've maxed their cog suit
         if self.prevCogSuitLevel < ToontownGlobals.MaxCogSuitLevel:
             newCogSuitLevel = localAvatar.getCogLevels()[
                 CogDisguiseGlobals.dept2deptIndex(self.style.dept)]
             # if this is their last promotion, tell them
             if newCogSuitLevel == ToontownGlobals.MaxCogSuitLevel:
-                speech += TTLocalizer.ResistanceToonLastPromotion % (ToontownGlobals.MaxCogSuitLevel+1)
+                speech += TTLocalizer.ResistanceToonLastPromotion % (
+                    ToontownGlobals.MaxCogSuitLevel + 1)
             # if they're getting another LP, tell them
             if newCogSuitLevel in ToontownGlobals.CogSuitHPLevels:
                 speech += TTLocalizer.ResistanceToonHPBoost
         else:
             # level XX, wow! Thanks for coming back!
-            speech += TTLocalizer.ResistanceToonMaxed % (ToontownGlobals.MaxCogSuitLevel+1)
+            speech += TTLocalizer.ResistanceToonMaxed % (
+                ToontownGlobals.MaxCogSuitLevel + 1)
 
         return speech
 
@@ -1015,7 +1076,6 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.geom.show()
         self.resistanceToon.addActive()
 
-
     ##### Elevator state #####
 
     def enterElevator(self):
@@ -1032,7 +1092,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.endVault.stash()
         self.oggVault.unstash()
         self.__showResistanceToon(True)
-        
+
     def exitElevator(self):
         DistributedBossCog.DistributedBossCog.exitElevator(self)
 
@@ -1058,7 +1118,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         DistributedBossCog.DistributedBossCog.exitIntroduction(self)
 
         self.stingMusic.stop()
-        
+
     ##### BattleOne state #####
 
     def enterBattleOne(self):
@@ -1089,7 +1149,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         intervalName = "PrepareBattleThreeMovie"
         delayDeletes = []
 
-        #grab a crane and put it in to Movie mode
+        # grab a crane and put it in to Movie mode
         self.movieCrane = self.cranes[0]
         self.movieSafe = self.safes[1]
         self.movieCrane.request('Movie')
@@ -1098,7 +1158,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                                                         self.movieCrane,
                                                         self.movieSafe),
                        Func(self.__beginBattleThree),
-                       name = intervalName)
+                       name=intervalName)
         seq.delayDeletes = delayDeletes
         seq.start()
         self.storeInterval(seq, intervalName)
@@ -1109,14 +1169,14 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.__showResistanceToon(False)
 
         taskMgr.add(self.__doPhysics, self.uniqueName('physics'),
-                    priority = 25)
+                    priority=25)
 
     def __beginBattleThree(self):
         intervalName = "PrepareBattleThreeMovie"
         self.clearInterval(intervalName)
-        
+
         self.doneBarrier('PrepareBattleThree')
-        
+
     def exitPrepareBattleThree(self):
         intervalName = "PrepareBattleThreeMovie"
         self.clearInterval(intervalName)
@@ -1130,10 +1190,12 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         NametagGlobals.setMasterArrowsOn(1)
 
         # Make sure the elevator doors are closed.
-        ElevatorUtils.closeDoors(self.leftDoor, self.rightDoor, ElevatorConstants.ELEVATOR_CFO)
+        ElevatorUtils.closeDoors(
+            self.leftDoor,
+            self.rightDoor,
+            ElevatorConstants.ELEVATOR_CFO)
 
         taskMgr.remove(self.uniqueName('physics'))
-
 
     ##### BattleThree state #####
 
@@ -1169,7 +1231,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # z value of the safes, etc., before their position is
         # distributed.
         taskMgr.add(self.__doPhysics, self.uniqueName('physics'),
-                    priority = 25)
+                    priority=25)
 
     def exitBattleThree(self):
         DistributedBossCog.DistributedBossCog.exitBattleThree(self)
@@ -1188,7 +1250,6 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             self.battleThreeMusic.stop()
 
         taskMgr.remove(self.uniqueName('physics'))
-        
 
     ##### Victory state #####
 
@@ -1220,7 +1281,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             self.cranes[1].demand('Off')
 
         # No one owns the toons.
-        self.releaseToons(finalBattle = 1)
+        self.releaseToons(finalBattle=1)
 
         # But, we do need to be in movie mode.
         if self.hasLocalToon():
@@ -1230,7 +1291,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
         seq = Sequence(self.makeBossFleeMovie(),
                        Func(self.__continueVictory),
-                       name = intervalName)
+                       name=intervalName)
         seq.start()
         self.storeInterval(seq, intervalName)
 
@@ -1239,7 +1300,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
 
     def __continueVictory(self):
         # Ok, he's gone!  We all move to the reward movie.
-        
+
         self.doneBarrier('Victory')
 
     def exitVictory(self):
@@ -1278,14 +1339,14 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         panelName = self.uniqueName('reward')
         self.rewardPanel = RewardPanel.RewardPanel(panelName)
         victory, camVictory, skipper = MovieToonVictory.doToonVictory(
-                                1, self.involvedToons,
-                                self.toonRewardIds,
-                                self.toonRewardDicts,
-                                self.deathList,
-                                self.rewardPanel,
-                                allowGroupShot = 0,
-                                uberList = self.uberList,
-                                noSkip=True)
+            1, self.involvedToons,
+            self.toonRewardIds,
+            self.toonRewardDicts,
+            self.deathList,
+            self.rewardPanel,
+            allowGroupShot=0,
+            uberList=self.uberList,
+            noSkip=True)
 
         ival = Sequence(
             Parallel(victory, camVictory),
@@ -1298,7 +1359,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             if toon:
                 delayDeletes.append(DelayDelete.DelayDelete(
                     toon, 'CashbotBoss.enterReward'))
-                                    
+
         ival.delayDeletes = delayDeletes
         ival.start()
         self.storeInterval(ival, intervalName)
@@ -1340,7 +1401,8 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.controlToons()
 
         self.__showResistanceToon(False)
-        self.resistanceToon.setPosHpr(*ToontownGlobals.CashbotBossBattleThreePosHpr)
+        self.resistanceToon.setPosHpr(
+            *ToontownGlobals.CashbotBossBattleThreePosHpr)
         self.resistanceToon.loop('neutral')
 
         self.__arrangeToonsAroundResistanceToon()
@@ -1374,7 +1436,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                 trackName = TTLocalizer.BattleGlobalTracks[value]
                 instructions = TTLocalizer.ResistanceToonRestockInstructions % (
                     trackName)
-                
+
         speech = TTLocalizer.ResistanceToonCongratulations % (
             text, instructions)
         speech = self.__talkAboutPromotion(speech)
@@ -1395,9 +1457,11 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             # ActorIntervals that apply the animation.
             toon = self.resistanceToon
             playRate = 0.75
-            track = Sequence(ActorInterval(toon, 'victory', playRate = playRate, startFrame = 0, endFrame = 9),
-                             ActorInterval(toon, 'victory', playRate = playRate, startFrame = 9, endFrame = 0),
-                             Func(self.resistanceToon.loop, 'neutral'))
+            track = Sequence(
+                ActorInterval(
+                    toon, 'victory', playRate=playRate, startFrame=0, endFrame=9), ActorInterval(
+                    toon, 'victory', playRate=playRate, startFrame=9, endFrame=0), Func(
+                    self.resistanceToon.loop, 'neutral'))
             intervalName = "EpilogueMovieToonAnim"
             self.storeInterval(track, intervalName)
             track.start()
@@ -1405,11 +1469,15 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         elif pageNumber == 3:
             # Page 3 is the special resistance chat.  Apply it.
             self.d_applyReward()
-            ResistanceChat.doEffect(self.rewardId, self.resistanceToon, self.involvedToons)
+            ResistanceChat.doEffect(
+                self.rewardId,
+                self.resistanceToon,
+                self.involvedToons)
 
     def __epilogueChatDone(self, elapsed):
         assert self.notify.debug('epilogueChatDone()')
-        self.resistanceToon.setChatAbsolute(TTLocalizer.CagedToonGoodbye, CFSpeech)
+        self.resistanceToon.setChatAbsolute(
+            TTLocalizer.CagedToonGoodbye, CFSpeech)
 
         self.ignore("nextChatPage")
         self.ignore("doneChatPage")
@@ -1423,7 +1491,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
                      Func(self.localToonToSafeZone)))
         self.storeInterval(track, intervalName)
         track.start()
-        
+
     def exitEpilogue(self):
         self.clearInterval("EpilogueMovieToonAnim")
         self.unstash()
@@ -1442,7 +1510,7 @@ class DistributedCashbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         self.releaseToons()
         if self.hasLocalToon():
             self.toWalkMode()
-        
+
         self.door3.setZ(25)
         self.door2.setZ(25)
 

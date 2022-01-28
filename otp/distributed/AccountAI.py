@@ -6,11 +6,12 @@ appropriately in the db web interface.
 
 from direct.distributed import DistributedObjectAI
 
+
 class AccountAI(DistributedObjectAI.DistributedObjectAI):
-    pirateAvatars = [0,0,0,0,0,0]
+    pirateAvatars = [0, 0, 0, 0, 0, 0]
 
     def setPirate(self, slot, avatarId):
-        assert 0 # Ask AccountUD to setPirate
+        assert 0  # Ask AccountUD to setPirate
 
     def getPirate(self, slot):
         return self.pirateAvatars[slot]

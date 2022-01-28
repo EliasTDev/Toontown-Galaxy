@@ -16,6 +16,7 @@ from direct.distributed.DistributedObject import DistributedObject
 if(__debug__):
     import pdb
 
+
 class DistributedKartPad(DistributedObject):
     """
     Purpose: Add Comments Here...
@@ -80,6 +81,5 @@ class DistributedKartPad(DistributedObject):
         """
 
         self.startingBlocks.append(block)
-        self.notify.debug("KartPad %s has added starting block %s" % (self.doId, block.doId))
-
-
+        self.notify.debug(
+            f"KartPad {self.doId} has added starting block {block.doId}")

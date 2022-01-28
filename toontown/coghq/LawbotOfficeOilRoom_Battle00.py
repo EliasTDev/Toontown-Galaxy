@@ -12,7 +12,7 @@ GlobalEntities = {
         'farPlaneDistance': 1500,
         'modelFilename': 'phase_11/models/lawbotHQ/LB_Zone22a',
         'wantDoors': 1,
-        }, # end entity 1000
+    },  # end entity 1000
     # EDITMGR
     1001: {
         'type': 'editMgr',
@@ -22,7 +22,7 @@ GlobalEntities = {
         'removeEntity': None,
         'requestNewEntity': None,
         'requestSave': None,
-        }, # end entity 1001
+    },  # end entity 1001
     # ZONE
     0: {
         'type': 'zone',
@@ -32,7 +32,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 0
+    },  # end entity 0
     # BATTLEBLOCKER
     100030: {
         'type': 'battleBlocker',
@@ -44,7 +44,7 @@ GlobalEntities = {
         'scale': Vec3(1, 1, 1),
         'cellId': 0,
         'radius': 25.0,
-        }, # end entity 100030
+    },  # end entity 100030
     # ELEVATORMARKER
     100000: {
         'type': 'elevatorMarker',
@@ -55,7 +55,7 @@ GlobalEntities = {
         'hpr': Vec3(180, 0, 0),
         'scale': Point3(1, 1, 1),
         'modelPath': 0,
-        }, # end entity 100000
+    },  # end entity 100000
     # MODEL
     100001: {
         'type': 'model',
@@ -69,7 +69,7 @@ GlobalEntities = {
         'flattenType': 'light',
         'loadType': 'loadModelCopy',
         'modelPath': 'phase_11/models/lawbotHQ/LB_bookshelfB',
-        }, # end entity 100001
+    },  # end entity 100001
     # NODEPATH
     10000: {
         'type': 'nodepath',
@@ -79,14 +79,13 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(180, 0, 0),
         'scale': 1,
-        }, # end entity 10000
-    }
+    },  # end entity 10000
+}
 
 Scenario0 = {
-    }
+}
 
 levelSpec = {
-    'globalEntities': GlobalEntities,
-    'scenarios': [Scenario0,],
-    'titleString' : ("MemTag: LawbotOfficeOilRoom_Battle00 %s" % (random.random()))    
-    }
+    'globalEntities': GlobalEntities, 'scenarios': [
+        Scenario0, ], 'titleString': (
+            f"MemTag: LawbotOfficeOilRoom_Battle00 {random.random()}")}

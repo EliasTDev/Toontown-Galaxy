@@ -1,5 +1,6 @@
 """DropScheduler.py: contains the DropScheduler class"""
 
+
 class DropScheduler:
     """
     this class handles the timing aspect of the drops.
@@ -13,15 +14,16 @@ class DropScheduler:
     fasterDropDelay is # of seconds before game starts dropping faster
     fasterDropPeriodMult is multiplier of dropPeriod after fasterDropDelay
     """
+
     def __init__(self, gameDuration,
                  firstDropDelay, dropPeriod, maxDropDuration,
                  fasterDropDelay, fasterDropPeriodMult, startTime=None):
-        self.gameDuration         = gameDuration
-        self.firstDropDelay       = firstDropDelay
+        self.gameDuration = gameDuration
+        self.firstDropDelay = firstDropDelay
         # private to emphasize use of getDropPeriod(), below
-        self._dropPeriod         = dropPeriod
-        self.maxDropDuration      = maxDropDuration
-        self.fasterDropDelay      = fasterDropDelay
+        self._dropPeriod = dropPeriod
+        self.maxDropDuration = maxDropDuration
+        self.fasterDropDelay = fasterDropDelay
         self.fasterDropPeriodMult = fasterDropPeriodMult
         if startTime is None:
             startTime = 0
@@ -76,17 +78,25 @@ class DropScheduler:
     def stepT(self):
         self.curT += self.getDropPeriod()
 
+
 class ThreePhaseDropScheduler(DropScheduler):
     """ scheduler that supports slow, normal, and fast periods """
+
     def __init__(self, gameDuration,
                  firstDropDelay, dropPeriod, maxDropDuration,
                  slowerDropPeriodMult, normalDropDelay,
                  fasterDropDelay, fasterDropPeriodMult, startTime=None):
         self._slowerDropPeriodMult = slowerDropPeriodMult
         self._normalDropDelay = normalDropDelay
-        DropScheduler.__init__(self, gameDuration,
-                               firstDropDelay, dropPeriod, maxDropDuration,
-                               fasterDropDelay, fasterDropPeriodMult, startTime)
+        DropScheduler.__init__(
+            self,
+            gameDuration,
+            firstDropDelay,
+            dropPeriod,
+            maxDropDuration,
+            fasterDropDelay,
+            fasterDropPeriodMult,
+            startTime)
 
     def getDropPeriod(self):
         delay = self._dropPeriod

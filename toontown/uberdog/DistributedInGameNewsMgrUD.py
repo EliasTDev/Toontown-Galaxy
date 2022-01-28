@@ -9,6 +9,7 @@ from toontown.toonbase import ToontownGlobals
 from toontown.uberdog import InGameNewsResponses
 from toontown.ai.ToontownAIMsgTypes import IN_GAME_NEWS_MANAGER_UD_TO_ALL_AI
 
+
 class DistributedInGameNewsMgrUD(DistributedObjectGlobalUD):
 
     """
@@ -21,22 +22,21 @@ class DistributedInGameNewsMgrUD(DistributedObjectGlobalUD):
     # InGameNewsMgrAI is NOT!
     # Hence the use of sendUpdateToDoId when sending back to AI
 
-
     def __init__(self, air):
         """Construct ourselves, set up web dispatcher."""
         assert self.notify.debugCall()
         DistributedObjectGlobalUD.__init__(self, air)
         self.HTTPListenPort = uber.inGameNewsMgrHTTPListenPort
-#TODO find alternative to depercated http module
+# TODO find alternative to depercated http module
        # self.webDispatcher = WebRequestDispatcher()
        # self.webDispatcher.landingPage.setTitle("InGameNewsMgr")
         #self.webDispatcher.landingPage.setDescription("InGameNews is update when a new issue of in-game-news is out.")
         #self.webDispatcher.registerGETHandler('inGameNewsMgr', self.inGameNewsMgr)
         #self.webDispatcher.registerGETHandler('inGameNewsNewIssue', self.inGameNewsNewIssue)
-        #self.webDispatcher.listenOnPort(self.HTTPListenPort)
-        #self.webDispatcher.landingPage.addTab("InGameNewsMgr","/inGameNewsMgr")
+        # self.webDispatcher.listenOnPort(self.HTTPListenPort)
+        # self.webDispatcher.landingPage.addTab("InGameNewsMgr","/inGameNewsMgr")
 
-        #self.air.setConnectionName("InGameNewsMgr")
+        # self.air.setConnectionName("InGameNewsMgr")
        # self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
 
         self.filename = self.getFilename()
@@ -45,7 +45,8 @@ class DistributedInGameNewsMgrUD(DistributedObjectGlobalUD):
 
     def getLatestIssueStr(self):
         self.notify.debugStateCall(self)
-        return self.latestIssue.strftime(self.air.toontownTimeManager.formatStr)
+        return self.latestIssue.strftime(
+            self.air.toontownTimeManager.formatStr)
 
     def getLatestIssueUtcStr(self):
         self.notify.debugStateCall(self)
@@ -58,7 +59,7 @@ class DistributedInGameNewsMgrUD(DistributedObjectGlobalUD):
         assert self.notify.debugCall()
         DistributedObjectGlobalUD.announceGenerate(self)
         self.b_setLatestIssue(self.latestIssue)
-        #TODO find alternative to depercated http module
+        # TODO find alternative to depercated http module
        # self.webDispatcher.startCheckingIncomingHTTP()
 
     def inGameNewsMgr(self, replyTo, **kw):
@@ -76,10 +77,10 @@ class DistributedInGameNewsMgrUD(DistributedObjectGlobalUD):
 
         header = body = help = footer = ""
         if not function:
-            header,body,footer,help= self.getMainMenu()
+            header, body, footer, help = self.getMainMenu()
         else:
-            self.notify.debug("%s" % str(kw))
-            header,body,footer,help= self.getMainMenu()
+            self.notify.debug(f"{str(kw)}")
+            header, body, footer, help = self.getMainMenu()
             body = """<BODY><div id="contents"><center><P>got these arguments """
             body += str(kw)
 
@@ -91,13 +92,16 @@ class DistributedInGameNewsMgrUD(DistributedObjectGlobalUD):
             newIssue = self.air.toontownTimeManager.getCurServerDateTime()
             self.b_setLatestIssue(newIssue)
             self.updateRecordFile()
-            replyTo.respondXML(InGameNewsResponses.setLatestIssueSuccessXML % (self.getLatestIssueStr()))
+            replyTo.respondXML(
+                InGameNewsResponses.setLatestIssueSuccessXML %
+                (self.getLatestIssueStr()))
 
             pass
         except Exception as e:
-            replyTo.respondXML(InGameNewsResponses.setLatestIssueFailureXML  % ("Catastrophic failure setting latest issue %s" % str(e)))
+            replyTo.respondXML(
+                InGameNewsResponses.setLatestIssueFailureXML %
+                f"Catastrophic failure setting latest issue {str(e)}")
             pass
-
 
     def getMainMenu(self):
         """Create the main menu with forms for input."""
@@ -117,8 +121,7 @@ class DistributedInGameNewsMgrUD(DistributedObjectGlobalUD):
 
         footer = """</tbody></table></P></center></div><div id="footer">Toontown In Game News</div></BODY></HTML>"""
         help = """<table height = "15%"></table><P><table width = "60%"><caption>Note</caption><tr><th scope=col>- Click on the button when a new issue of in game news has been released.</th></tr></table></P>"""
-        return (header,body,footer,help)
-
+        return (header, body, footer, help)
 
     def updateRecordFile(self):
         """Update current track record in this shard's record file"""
@@ -138,7 +141,7 @@ class DistributedInGameNewsMgrUD(DistributedObjectGlobalUD):
 
     def getFilename(self):
         """Compose the track record filename"""
-        return "%s.latestissue" % (self.serverDataFolder)
+        return f"{self.serverDataFolder}.latestissue"
 
     def getDefaultLatestIssueTime(self):
         """Hmmm what the heck do we give. Lets use the current time."""
@@ -172,14 +175,14 @@ class DistributedInGameNewsMgrUD(DistributedObjectGlobalUD):
         result = self.air.toontownTimeManager.getCurServerDateTime()
         try:
             latestIssueStr = file.readline()
-            result = self.air.toontownTimeManager.convertStrToToontownTime(latestIssueStr)
+            result = self.air.toontownTimeManager.convertStrToToontownTime(
+                latestIssueStr)
         except EOFError:
             pass
         return result
 
     def setLatestIssueStr(self, issueStr):
         self.notify.debugStateCall(self)
-
 
     def setLatestIssue(self, latestIssue):
         self.latestIssue = latestIssue
@@ -189,19 +192,25 @@ class DistributedInGameNewsMgrUD(DistributedObjectGlobalUD):
         self.d_setLatestIssue(latestIssue)
 
     def d_setLatestIssue(self, latestIssue):
-        self.sendUpdateToAllAis('newIssueUDtoAI', [ self.getLatestIssueUtcStr()])
+        self.sendUpdateToAllAis(
+            'newIssueUDtoAI', [
+                self.getLatestIssueUtcStr()])
 
     def sendUpdateToAllAis(self, message, args):
         dg = self.dclass.aiFormatUpdateMsgType(
-                message, self.doId, self.doId, self.air.ourChannel, IN_GAME_NEWS_MANAGER_UD_TO_ALL_AI, args)
+            message,
+            self.doId,
+            self.doId,
+            self.air.ourChannel,
+            IN_GAME_NEWS_MANAGER_UD_TO_ALL_AI,
+            args)
         self.air.send(dg)
 
-    def inGameNewsMgrAIStartingUp(self,  doId,  shardId):
+    def inGameNewsMgrAIStartingUp(self, doId, shardId):
         """Tell the new AI that just started up what the latest issue is."""
         self.air.sendUpdateToDoId(
-                "DistributedInGameNewsMgr",
-                'newIssueUDtoAI',
-                doId ,
-                [self.getLatestIssueStr()]
-            )
-
+            "DistributedInGameNewsMgr",
+            'newIssueUDtoAI',
+            doId,
+            [self.getLatestIssueStr()]
+        )

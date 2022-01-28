@@ -10,7 +10,9 @@ from pandac.PandaModules import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 
-class DistributedPhoneAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
+
+class DistributedPhoneAI(
+        DistributedFurnitureItemAI.DistributedFurnitureItemAI):
 
     notify = directNotify.newCategory('DistributedPhoneAI')
 
@@ -33,7 +35,6 @@ class DistributedPhoneAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
             scale = ToontownGlobals.toonBodyScales[animalStyle]
 
         self.initialScale = (scale, scale, scale)
-        
 
     def getInitialScale(self):
         return self.initialScale
@@ -55,19 +56,21 @@ class DistributedPhoneAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
         self.notify.debug("avatarEnter")
         avId = self.air.getAvatarIdFromSender()
         # this avatar has come within range
-        self.notify.debug("avatarEnter: %s" % (avId))
+        self.notify.debug(f"avatarEnter: {avId}")
 
         # If we are busy, free this new avatar
         if self.busy:
-            self.notify.debug("already busy with: %s" % (self.busy))
+            self.notify.debug(f"already busy with: {self.busy}")
             self.freeAvatar(avId)
             return
 
         # Fetch the actual avatar object
-        av = self.air.doId2do.get(avId)        
+        av = self.air.doId2do.get(avId)
         if not av:
-            self.air.writeServerEvent('suspicious', avId, 'DistributedPhoneAI.avatarEnter unknown')
-            self.notify.warning("av %s not in doId2do tried to pick up phone" % (avId))
+            self.air.writeServerEvent(
+                'suspicious', avId, 'DistributedPhoneAI.avatarEnter unknown')
+            self.notify.warning(
+                f"av {avId} not in doId2do tried to pick up phone")
             return
 
         # Flag us as busy with this avatar Id
@@ -77,7 +80,7 @@ class DistributedPhoneAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
         # Handle unexpected exit
         self.acceptOnce(self.air.getAvatarExitEvent(avId),
                         self.__handleUnexpectedExit, extraArgs=[avId])
-        self.acceptOnce("bootAvFromEstate-"+str(avId),
+        self.acceptOnce("bootAvFromEstate-" + str(avId),
                         self.__handleBootMessage, extraArgs=[avId])
 
         # Update the quest manager. Yes, there are phone quests.
@@ -85,9 +88,10 @@ class DistributedPhoneAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
 
         # We don't care who the owner of the phone is--anyone can use
         # any phone.
-        if len(av.weeklyCatalog) + len(av.monthlyCatalog) + len(av.backCatalog) != 0:
+        if len(av.weeklyCatalog) + len(av.monthlyCatalog) + \
+                len(av.backCatalog) != 0:
             self.lookupHouse()
-            
+
         else:
             # No catalog yet.
             self.d_setMovie(PhoneGlobals.PHONE_MOVIE_EMPTY, avId)
@@ -113,7 +117,7 @@ class DistributedPhoneAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
         # danger of overfilling it.
 
         if not self.av.houseId:
-            self.notify.warning("Avatar %s has no houseId." % (self.av.doId))
+            self.notify.warning(f"Avatar {self.av.doId} has no houseId.")
             self.sendCatalog(0)
             return
 
@@ -121,15 +125,20 @@ class DistributedPhoneAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
         # when the avatar is calling from his own house, for instance.
         house = self.air.doId2do.get(self.av.houseId)
         if house:
-            assert(self.notify.debug("House %s is already instantiated." % (self.av.houseId)))
-            numAtticItems = len(house.atticItems) + len(house.atticWallpaper) + len(house.atticWindows)
+            assert(
+                self.notify.debug(
+                    f"House {self.av.houseId} is already instantiated."))
+            numAtticItems = len(house.atticItems) + \
+                len(house.atticWallpaper) + len(house.atticWindows)
             numHouseItems = numAtticItems + len(house.interiorItems)
             self.sendCatalog(numHouseItems)
             return
 
         # All right, we have to query the database to get the attic
         # information.  What a nuisance.
-        assert(self.notify.debug("Querying database for house %s." % (self.av.houseId)))
+        assert(
+            self.notify.debug(
+                f"Querying database for house {self.av.houseId}."))
 
         gotHouseEvent = self.uniqueName("gotHouse")
         self.acceptOnce(gotHouseEvent, self.__gotHouse)
@@ -139,11 +148,14 @@ class DistributedPhoneAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
 
         db.getFields(['setAtticItems', 'setAtticWallpaper',
                       'setAtticWindows', 'setInteriorItems'])
-                                 
+
     def __gotHouse(self, db, retcode):
-        assert(self.notify.debug("__gotHouse(%s, %s): %s" % (list(db.values.keys()), retcode, self.doId)))
+        assert(
+            self.notify.debug(
+                f"__gotHouse({list(db.values.keys())}, {retcode}): {self.doId}"))
         if retcode != 0:
-            self.notify.warning("House %s for avatar %s does not exist!" % (self.av.houseId, self.av.doId))
+            self.notify.warning(
+                f"House {self.av.houseId} for avatar {self.av.doId} does not exist!")
             self.sendCatalog(0)
             return
 
@@ -156,28 +168,32 @@ class DistributedPhoneAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
         if dg:
             di = PyDatagramIterator(dg)
             blob = di.getString()
-            atticItems = CatalogItemList.CatalogItemList(blob, store = CatalogItem.Customization)
+            atticItems = CatalogItemList.CatalogItemList(
+                blob, store=CatalogItem.Customization)
         dg = db.values.get('setAtticWallpaper')
         if dg:
             di = PyDatagramIterator(dg)
             blob = di.getString()
-            atticWallpaper = CatalogItemList.CatalogItemList(blob, store = CatalogItem.Customization)
+            atticWallpaper = CatalogItemList.CatalogItemList(
+                blob, store=CatalogItem.Customization)
         dg = db.values.get('setAtticWindows')
         if dg:
             di = PyDatagramIterator(dg)
             blob = di.getString()
-            atticWindows = CatalogItemList.CatalogItemList(blob, store = CatalogItem.Customization)
+            atticWindows = CatalogItemList.CatalogItemList(
+                blob, store=CatalogItem.Customization)
         dg = db.values.get('setInteriorItems')
         if dg:
             di = PyDatagramIterator(dg)
             blob = di.getString()
-            interiorItems = CatalogItemList.CatalogItemList(blob, store = CatalogItem.Location | CatalogItem.Customization)
+            interiorItems = CatalogItemList.CatalogItemList(
+                blob, store=CatalogItem.Location | CatalogItem.Customization)
 
         # Finally we're ready to tell the user what he needs to know.
-        numAtticItems = len(atticItems) + len(atticWallpaper) + len(atticWindows)
+        numAtticItems = len(atticItems) + \
+            len(atticWallpaper) + len(atticWindows)
         numHouseItems = numAtticItems + len(interiorItems)
         self.sendCatalog(numHouseItems)
-            
 
     def sendCatalog(self, numHouseItems):
         # Send the setMovie command to the user to tell him to open up
@@ -187,11 +203,12 @@ class DistributedPhoneAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
 
         # Now open the catalog up on the client.
         self.d_setMovie(PhoneGlobals.PHONE_MOVIE_PICKUP, self.av.doId)
-        
+
         # The avatar has seen his catalog now.
         if self.av.catalogNotify == ToontownGlobals.NewItems:
-            self.av.b_setCatalogNotify(ToontownGlobals.OldItems, self.av.mailboxNotify)
-
+            self.av.b_setCatalogNotify(
+                ToontownGlobals.OldItems,
+                self.av.mailboxNotify)
 
     def avatarExit(self):
         self.notify.debug("avatarExit")
@@ -210,7 +227,7 @@ class DistributedPhoneAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
     def __handleBootMessage(self, avId):
         self.notify.warning('avatar:' + str(avId) + ' got booted ')
         self.sendClearMovie()
-        
+
     def sendClearMovie(self):
         assert(self.notify.debug('sendClearMovie()'))
         # Ignore unexpected exits on whoever I was busy with
@@ -222,67 +239,89 @@ class DistributedPhoneAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
     def requestPurchaseMessage(self, context, blob, optional):
         # Sent from the client code to request a particular purchase item.
         avId = self.air.getAvatarIdFromSender()
-        item = CatalogItem.getItem(blob, store = CatalogItem.Customization)
+        item = CatalogItem.getItem(blob, store=CatalogItem.Customization)
         if self.busy != avId:
-            self.air.writeServerEvent('suspicious', avId, 'DistributedPhoneAI.requestPurchaseMessage busy with %s' % (self.busy))
-            self.notify.warning("Got unexpected purchase request from %s while busy with %s." % (avId, self.busy))
+            self.air.writeServerEvent(
+                'suspicious',
+                avId,
+                f'DistributedPhoneAI.requestPurchaseMessage busy with {self.busy}')
+            self.notify.warning(
+                "Got unexpected purchase request from %s while busy with %s." %
+                (avId, self.busy))
             retcode = ToontownGlobals.P_NotShopping
         else:
             # The user is requesting purchase of one particular item.
-            retcode = self.air.catalogManager.purchaseItem(self.av, item, optional)
-            
-        self.sendUpdateToAvatarId(avId, "requestPurchaseResponse", [context, retcode])
-        
+            retcode = self.air.catalogManager.purchaseItem(
+                self.av, item, optional)
+
+        self.sendUpdateToAvatarId(
+            avId, "requestPurchaseResponse", [
+                context, retcode])
+
     def requestGiftPurchaseMessage(self, context, targetDoID, blob, optional):
         # print "in the AI phone"
-        # Sent from the client code to request a particular purchase item. to be sent to a target doid
+        # Sent from the client code to request a particular purchase item. to
+        # be sent to a target doid
         sAvId = self.air.getAvatarIdFromSender()
-        item = CatalogItem.getItem(blob, store = CatalogItem.Customization)
+        item = CatalogItem.getItem(blob, store=CatalogItem.Customization)
         retcode = None
         if self.busy != sAvId:
-            self.air.writeServerEvent('suspicious', sAvId, 'DistributedPhoneAI.requestPurchaseMessage busy with %s' % (self.busy))
-            self.notify.warning("Got unexpected purchase request from %s while busy with %s." % (sAvId, self.busy))
+            self.air.writeServerEvent(
+                'suspicious',
+                sAvId,
+                f'DistributedPhoneAI.requestPurchaseMessage busy with {self.busy}')
+            self.notify.warning(
+                "Got unexpected purchase request from %s while busy with %s." %
+                (sAvId, self.busy))
             retcode = ToontownGlobals.P_NotShopping
-            #in this case we can send the response immediately
-            self.sendUpdateToAvatarId(sAvId, "requestGiftPurchaseResponse", [context, retcode])
-            
+            # in this case we can send the response immediately
+            self.sendUpdateToAvatarId(
+                sAvId, "requestGiftPurchaseResponse", [
+                    context, retcode])
+
         elif self.air.catalogManager.payForGiftItem(self.av, item, retcode):
             # The user is requesting purchase of one particular item.in this case we have to wait for the purchase to go through
-            # which involves waiting for a query from the database: intancing the gift receiver on the local machine
-            
+            # which involves waiting for a query from the database: intancing
+            # the gift receiver on the local machine
+
             self.checkAvatarThenGift(targetDoID, sAvId, item, context)
             #simbase.air.deliveryManager.sendRequestPurchaseGift(item, targetDoID, sAvId, context, self)
-            
-            #can't return immediately must what for the query to go through
+
+            # can't return immediately must what for the query to go through
         else:
             retcode = ToontownGlobals.P_NotEnoughMoney
-            self.sendUpdateToAvatarId(sAvId, "requestGiftPurchaseResponse", [context, retcode])
-            
+            self.sendUpdateToAvatarId(
+                sAvId, "requestGiftPurchaseResponse", [
+                    context, retcode])
+
     def checkAvatarThenGift(self, targetDoID, sAvId, item, context):
         # Requests a particular avatar.  The avatar will be requested
         # from the database and stored in self.rav when the response is
         # heard back from the database, at some time in the future.
         #self.rAv = None
-        checkMessage = "gift check %s" % (targetDoID)
+        checkMessage = f"gift check {targetDoID}"
 
-        self.acceptOnce(("gift check %s" % (targetDoID)), self.__gotAvGiftCheck, [targetDoID, sAvId, item, context])
-       
+        self.acceptOnce(
+            f"gift check {targetDoID}", self.__gotAvGiftCheck, [
+                targetDoID, sAvId, item, context])
 
         db = DatabaseObject.DatabaseObject(self.air, targetDoID)
         db.doneEvent = checkMessage
         fields = ['setDNAString']
-        
+
         db.getFields(fields)
-        
+
     def __gotAvGiftCheck(self, targetDoID, sAvId, item, context, db, data2):
         valid = 'setDNAString' in db.values
         if valid:
-            simbase.air.deliveryManager.sendRequestPurchaseGift(item, targetDoID, sAvId, context, self)
+            simbase.air.deliveryManager.sendRequestPurchaseGift(
+                item, targetDoID, sAvId, context, self)
         else:
-            self.air.writeServerEvent('suspicious', sAvId, 'Attempted to buy a gift for %s which is not a toon' % (targetDoID))
-            
-        
+            self.air.writeServerEvent(
+                'suspicious',
+                sAvId,
+                f'Attempted to buy a gift for {targetDoID} which is not a toon')
 
     def d_setMovie(self, mode, avId):
-        timestamp = ClockDelta.globalClockDelta.getRealNetworkTime(bits = 32)
+        timestamp = ClockDelta.globalClockDelta.getRealNetworkTime(bits=32)
         self.sendUpdate("setMovie", [mode, avId, timestamp])

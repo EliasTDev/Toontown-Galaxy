@@ -2,8 +2,10 @@
 
 from toontown.toonbase import ToontownGlobals
 
+
 class StageRoomBase:
     """ common functionality shared by DistributedStageRoom/AI """
+
     def __init__(self):
         pass
 

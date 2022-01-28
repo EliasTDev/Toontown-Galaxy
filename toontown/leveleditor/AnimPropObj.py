@@ -2,9 +2,11 @@
 AnimProp object
 """
 
-import glob, os
+import glob
+import os
 from .ToonTownObj import *
 from .LevelEditorGlobals import importModule
+
 
 class AnimPropObj(ToonTownObj):
     def __init__(self, editor, animPropType, dna=None, nodePath=None):
@@ -25,7 +27,7 @@ class AnimPropObj(ToonTownObj):
            'anims' not in objDef.properties:
             return
         animNameList = objDef.properties['anims'][4]
-        
+
         dnaNode = self.dna
         code = dnaNode.getCode()
 
@@ -47,15 +49,15 @@ class AnimPropObj(ToonTownObj):
         self.animPropObj = classObj(self)
         self.animPropObj.enter()
 
-##         # [gjeon] connect interactive prop and battle cell
-##         if DNAClassEqual(dnaNode, DNA_INTERACTIVE_PROP):
+# [gjeon] connect interactive prop and battle cell
+# if DNAClassEqual(dnaNode, DNA_INTERACTIVE_PROP):
 ##             cellId = dnaNode.getCellId()
-##             if cellId != -1:
+# if cellId != -1:
 ##                 visGroup = self.getVisGroup(newNodePath)
-##                 if visGroup is None:
-##                     return
-##                 for battleCellMarkerNP in visGroup.findAllMatches("**/battleCellMarker"):
-##                     if battleCellMarkerNP.getTag('cellId') == '%d'%cellId:
+# if visGroup is None:
+# return
+# for battleCellMarkerNP in visGroup.findAllMatches("**/battleCellMarker"):
+# if battleCellMarkerNP.getTag('cellId') == '%d'%cellId:
 ##                         battleCellNP = battleCellMarkerNP.find('Sphere')
 ##                         self.drawLinkLine(battleCellNP, newNodePath)
-##                         return
+# return

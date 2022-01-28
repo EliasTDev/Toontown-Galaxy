@@ -10,13 +10,15 @@ from direct.directnotify import DirectNotifyGlobal
 import random
 
 # attack properties table
+
+
 class DistributedBattleAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
 
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleAI')
 
     def __init__(self, air, battleMgr, pos, suit, toonId, zoneId,
-                 finishCallback=None, maxSuits=4, tutorialFlag=0, 
-                                                  levelFlag=0, interactivePropTrackBonus = -1):
+                 finishCallback=None, maxSuits=4, tutorialFlag=0,
+                 levelFlag=0, interactivePropTrackBonus=-1):
         """__init__(air, battleMgr, pos, suit, toonId, zoneId,
                  finishCallback, maxSuits)
         """
@@ -24,7 +26,7 @@ class DistributedBattleAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
             self, air,
             zoneId, finishCallback, maxSuits=maxSuits,
             tutorialFlag=tutorialFlag,
-            interactivePropTrackBonus = interactivePropTrackBonus)
+            interactivePropTrackBonus=interactivePropTrackBonus)
 
         self.battleMgr = battleMgr
         self.pos = pos
@@ -38,13 +40,13 @@ class DistributedBattleAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
         # For levels, we need to initialize exp lists before we add the
         # toon
         self.avId = toonId
-        
+
         if (levelFlag == 0):
             self.addToon(toonId)
-        
+
         self.faceOffToon = toonId
         self.fsm.request('FaceOff')
-        
+
     def generate(self):
         DistributedBattleBaseAI.DistributedBattleBaseAI.generate(self)
         toon = simbase.air.doId2do.get(self.avId)
@@ -64,12 +66,12 @@ class DistributedBattleAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
             self.notify.debug('faceOffDone() - ignoring toon: %d' % toonId)
             return
         elif (self.fsm.getCurrentState().getName() != 'FaceOff'):
-            self.notify.warning('faceOffDone() - in state: %s' % \
-                        self.fsm.getCurrentState().getName())
+            self.notify.warning('faceOffDone() - in state: %s' %
+                                self.fsm.getCurrentState().getName())
             return
         elif (self.toons.count(toonId) == 0):
-            self.notify.warning('faceOffDone() - toon: %d not in toon list' % \
-                toonId)
+            self.notify.warning('faceOffDone() - toon: %d not in toon list' %
+                                toonId)
             return
         self.notify.debug('toon: %d done facing off' % toonId)
         self.handleFaceOffDone()
@@ -93,13 +95,12 @@ class DistributedBattleAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
         # From here on out DistributedBattleAI only controls DistributedSuitAI
         # DistributedBattle controls DistributedSuit
         self.suits[0].releaseControl()
-        timeForFaceoff = self.calcFaceoffTime(self.pos, 
-                         self.initialSuitPos) + FACEOFF_TAUNT_T + \
-                                 SERVER_BUFFER_TIME
-        #if self.interactivePropTrackBonus >= 0:
-            #timeForFaceoff += FACEOFF_LOOK_AT_PROP_T
+        timeForFaceoff = self.calcFaceoffTime(
+            self.pos, self.initialSuitPos) + FACEOFF_TAUNT_T + SERVER_BUFFER_TIME
+        # if self.interactivePropTrackBonus >= 0:
+        #timeForFaceoff += FACEOFF_LOOK_AT_PROP_T
         self.timer.startCallback(timeForFaceoff,
-                         self.__serverFaceOffDone)
+                                 self.__serverFaceOffDone)
         return None
 
     def __serverFaceOffDone(self):
@@ -118,7 +119,7 @@ class DistributedBattleAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
         self.activeSuits.append(self.suits[0])
         assert(len(self.activeToons) == 0)
         # The face off toon might have disconnected, so we need to check
-        # that self.toons[0] is the face off toon. 
+        # that self.toons[0] is the face off toon.
         if (len(self.toons) == 0):
             assert(self.notify.debug('handleFaceOffDone() - no toons!'))
             self.b_setState('Resume')
@@ -135,7 +136,12 @@ class DistributedBattleAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
 
     ##### PlayMovie state #####
 
-    def localMovieDone(self, needUpdate, deadToons, deadSuits, lastActiveSuitDied):
+    def localMovieDone(
+            self,
+            needUpdate,
+            deadToons,
+            deadSuits,
+            lastActiveSuitDied):
         if (len(self.toons) == 0):
             # Toons lost - tell all the suits to start walking again
             self.d_setMembers()
@@ -146,12 +152,15 @@ class DistributedBattleAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
             for toonId in self.activeToons:
                 toon = self.getToon(toonId)
                 if toon:
-                    self.toonItems[toonId] = self.air.questManager.recoverItems(toon, self.suitsKilled, self.zoneId)
+                    self.toonItems[toonId] = self.air.questManager.recoverItems(
+                        toon, self.suitsKilled, self.zoneId)
                     if toonId in self.helpfulToons:
-                        self.toonMerits[toonId] = self.air.promotionMgr.recoverMerits(toon, self.suitsKilled, self.zoneId)
+                        self.toonMerits[toonId] = self.air.promotionMgr.recoverMerits(
+                            toon, self.suitsKilled, self.zoneId)
                     else:
-                        self.notify.debug("toon %d not helpful, skipping merits" % toonId)
-                    
+                        self.notify.debug(
+                            "toon %d not helpful, skipping merits" % toonId)
+
             self.d_setMembers()
             self.d_setBattleExperience()
             self.b_setState('Reward')
@@ -160,7 +169,7 @@ class DistributedBattleAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
             if (needUpdate == 1):
                 self.d_setMembers()
                 if ((len(deadSuits) > 0 and lastActiveSuitDied == 0) or
-                    (len(deadToons) > 0)):
+                        (len(deadToons) > 0)):
                     self.needAdjust = 1
                 # Wait for input will call __requestAdjust()
             self.setState('WaitForJoin')
@@ -184,7 +193,6 @@ class DistributedBattleAI(DistributedBattleBaseAI.DistributedBattleBaseAI):
 
     def exitReward(self):
         return None
-
 
     ##### Resume state #####
 

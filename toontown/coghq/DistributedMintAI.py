@@ -5,6 +5,7 @@ from toontown.toonbase import ToontownGlobals
 from toontown.coghq import MintLayout, DistributedMintRoomAI
 from toontown.coghq import BattleExperienceAggregatorAI
 
+
 class DistributedMintAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedMintAI')
 
@@ -25,14 +26,14 @@ class DistributedMintAI(DistributedObjectAI.DistributedObjectAI):
 
         # create a battle experience aggregator for the mint rooms to share
         self.battleExpAggreg = BattleExperienceAggregatorAI.\
-                               BattleExperienceAggregatorAI()
+            BattleExperienceAggregatorAI()
 
         # create a MintRoom level obj for each room in the layout
         for i in range(self.layout.getNumRooms()):
             # i*2 for roomNum leaves numbers for hallways
             room = DistributedMintRoomAI.DistributedMintRoomAI(
                 self.air, self.mintId, self.doId, self.zoneId,
-                self.layout.getRoomId(i), i*2, self.avIds,
+                self.layout.getRoomId(i), i * 2, self.avIds,
                 self.battleExpAggreg)
             room.generateWithRequired(self.zoneId)
             self.rooms.append(room)
@@ -46,19 +47,18 @@ class DistributedMintAI(DistributedObjectAI.DistributedObjectAI):
             simbase.mint = self
 
         # log that toons entered the mint
-        description = '%s|%s|%s' % (
-            self.mintId, self.floorNum, self.avIds)
+        description = f'{self.mintId}|{self.floorNum}|{self.avIds}'
         for avId in self.avIds:
             self.air.writeServerEvent('mintEntered', avId, description)
 
     def requestDelete(self):
-        self.notify.info('requestDelete: %s' % self.doId)
+        self.notify.info(f'requestDelete: {self.doId}')
         for room in self.rooms:
             room.requestDelete()
         DistributedObjectAI.DistributedObjectAI.requestDelete(self)
 
     def delete(self):
-        self.notify.info('delete: %s' % self.doId)
+        self.notify.info(f'delete: {self.doId}')
         if __dev__:
             if hasattr(simbase, 'mint') and simbase.mint is self:
                 del simbase.mint
@@ -80,7 +80,7 @@ class DistributedMintAI(DistributedObjectAI.DistributedObjectAI):
     # required-field getters
     def getZoneId(self):
         return self.zoneId
-    
+
     def getMintId(self):
         return self.mintId
 

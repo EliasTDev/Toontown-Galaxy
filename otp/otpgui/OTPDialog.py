@@ -17,10 +17,11 @@ YesNo = 4
 # custom 2 buttons
 TwoChoiceCustom = 5
 
-class OTPDialog(DirectDialog):
-    def __init__(self, parent = None, style = NoButtons,**kw):
 
-        if (parent == None):
+class OTPDialog(DirectDialog):
+    def __init__(self, parent=None, style=NoButtons, **kw):
+
+        if (parent is None):
             parent = aspect2d
 
         self.style = style
@@ -39,15 +40,14 @@ class OTPDialog(DirectDialog):
             cancelImageList = (buttons.find('**/CloseBtn_UP'),
                                buttons.find('**/CloseBtn_DN'),
                                buttons.find('**/CloseBtn_Rllvr'))
-            buttonImage = [okImageList, cancelImageList]         
+            buttonImage = [okImageList, cancelImageList]
             buttonValue = [DGG.DIALOG_OK, DGG.DIALOG_CANCEL]
             if 'buttonText' in kw:
-                buttonText =  kw['buttonText']
+                buttonText = kw['buttonText']
                 del kw['buttonText']
             else:
                 buttonText = [OTPLocalizer.DialogOK, OTPLocalizer.DialogCancel]
-                
-            
+
         elif (self.style == TwoChoice):
             okImageList = (buttons.find('**/ChtBx_OKBtn_UP'),
                            buttons.find('**/ChtBx_OKBtn_DN'),
@@ -91,36 +91,38 @@ class OTPDialog(DirectDialog):
         else:
             "Sanity check"
             self.notify.error("No such style as: " + str(self.style))
-        
+
         optiondefs = (
             # Define type of DirectGuiWidget
-            ('buttonImageList', buttonImage,          DGG.INITOPT),
-            ('buttonTextList',  buttonText,           DGG.INITOPT),
-            ('buttonValueList', buttonValue,          DGG.INITOPT),
-            ('buttonPadSF',     2.2,                  DGG.INITOPT),
-            ('text_font',       DGG.getDefaultFont(), None),
-            ('text_wordwrap',   12,                   None),
-            ('text_scale',      0.07,                 None),
-            ('buttonSize',      (-.05,.05,-.05,.05),  None),
-            ('button_pad',      (0,0),                None),
-            ('button_relief',   None,                 None),
-            ('button_text_pos', (0,-0.1),             None),
-            ('fadeScreen',      0.5,                  None),
-            ('image_color',     OTPGlobals.GlobalDialogColor,     None),
-            )
+            ('buttonImageList', buttonImage, DGG.INITOPT),
+            ('buttonTextList', buttonText, DGG.INITOPT),
+            ('buttonValueList', buttonValue, DGG.INITOPT),
+            ('buttonPadSF', 2.2, DGG.INITOPT),
+            ('text_font', DGG.getDefaultFont(), None),
+            ('text_wordwrap', 12, None),
+            ('text_scale', 0.07, None),
+            ('buttonSize', (-.05, .05, -.05, .05), None),
+            ('button_pad', (0, 0), None),
+            ('button_relief', None, None),
+            ('button_text_pos', (0, -0.1), None),
+            ('fadeScreen', 0.5, None),
+            ('image_color', OTPGlobals.GlobalDialogColor, None),
+        )
         # Merge keyword options with default options
         self.defineoptions(kw, optiondefs)
         DirectDialog.__init__(self, parent)
         self.initialiseoptions(OTPDialog)
 
-        if buttons != None:
+        if buttons is not None:
             buttons.removeNode()
+
 
 class GlobalDialog(OTPDialog):
     notify = DirectNotifyGlobal.directNotify.newCategory("GlobalDialog")
-    def __init__(self, message = '', doneEvent = None, style = NoButtons,
-                 okButtonText = OTPLocalizer.DialogOK,
-                 cancelButtonText = OTPLocalizer.DialogCancel,
+
+    def __init__(self, message='', doneEvent=None, style=NoButtons,
+                 okButtonText=OTPLocalizer.DialogOK,
+                 cancelButtonText=OTPLocalizer.DialogCancel,
                  **kw):
         """
         ___init___(self, doneEvent, style, okButtonText, cancelButtonText, kw)
@@ -131,13 +133,13 @@ class GlobalDialog(OTPDialog):
         if not hasattr(self, 'path'):
             # load out of TTMODELS
             self.path = 'phase_3/models/gui/dialog_box_buttons_gui'
-          
+
         # Sanity check
-        if (doneEvent == None) and (style != NoButtons):
+        if (doneEvent is None) and (style != NoButtons):
             self.notify.error("Boxes with buttons must specify a doneEvent.")
-            
+
         self.__doneEvent = doneEvent
-        
+
         if style == NoButtons:
             buttonText = []
         elif style == Acknowledge:
@@ -149,14 +151,14 @@ class GlobalDialog(OTPDialog):
 
         optiondefs = (
             # Define type of DirectGuiWidget
-            ('dialogName',      'globalDialog',     DGG.INITOPT),
-            ('buttonTextList',  buttonText,         DGG.INITOPT),
-            ('text',            message,            None),
-            ('command',         self.handleButton,  None),
-            )
+            ('dialogName', 'globalDialog', DGG.INITOPT),
+            ('buttonTextList', buttonText, DGG.INITOPT),
+            ('text', message, None),
+            ('command', self.handleButton, None),
+        )
         # Merge keyword options with default options
         self.defineoptions(kw, optiondefs)
-        OTPDialog.__init__(self, style = style)
+        OTPDialog.__init__(self, style=style)
         self.initialiseoptions(GlobalDialog)
 
     def handleButton(self, value):
@@ -167,4 +169,3 @@ class GlobalDialog(OTPDialog):
         elif value == DGG.DIALOG_CANCEL:
             self.doneStatus = "cancel"
             messenger.send(self.__doneEvent)
-

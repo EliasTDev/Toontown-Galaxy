@@ -1,5 +1,6 @@
 class PickANamePattern:
     """Given a name string, converts it to a pick-a-name if possible"""
+
     def __init__(self, nameStr):
         self._nameStr = nameStr
         self._namePattern = self._compute(self._nameStr)
@@ -43,7 +44,8 @@ class PickANamePattern:
         for permutation in self._genWordListSplitPermutations(words[1:]):
             # yield a version with the current word as a separate word
             yield [words[0]] + permutation
-            # yield a version with the current word joined with the following word
+            # yield a version with the current word joined with the following
+            # word
             yield [words[0] + ' ' + permutation[0]] + permutation[1:]
 
     def _genNameSplitPermutations(self, name):
@@ -84,24 +86,28 @@ class PickANamePattern:
             # matches have not been found for every word in the name, and we've run out
             # of name parts
             return None
-        
+
         if words[wi] in nameParts[nwli]:
-            # we got a match between the current word and the current list of name parts
+            # we got a match between the current word and the current list of
+            # name parts
             if pattern is None:
                 pattern = [-1] * len(nameParts)
             word2index = nameParts[nwli]
             newPattern = pattern[:]
             newPattern[nwli] = word2index[words[wi]]
-            # try to find a complete match for the name using this partial match
-            result = self._recursiveCompute(words, nameParts, wi+1, nwli+1, newPattern)
+            # try to find a complete match for the name using this partial
+            # match
+            result = self._recursiveCompute(
+                words, nameParts, wi + 1, nwli + 1, newPattern)
             if result:
                 return result
 
         # can't use a match with this name part, try the next one
-        return self._recursiveCompute(words, nameParts, wi,   nwli+1, pattern)
-        
+        return self._recursiveCompute(words, nameParts, wi, nwli + 1, pattern)
+
+
 class PickANamePatternTwoPartLastName(PickANamePattern):
-    def getNameString(self, pattern ):
+    def getNameString(self, pattern):
         name = PickANamePattern.getNameString(self, pattern)
         if pattern[-2] != -1:
             # remove the space between the two parts of the last name
@@ -124,12 +130,13 @@ class PickANamePatternTwoPartLastName(PickANamePattern):
     def _getLastNameCapPrefixes(self):
         # returns list of last name prefixes that capitalize their suffix
         return []
-    
+
     def _compute(self, nameStr):
         nameParts = self._getNameParts()
         combinedNameParts = nameParts[:-2]
-        
-        # temporarily combine the two name parts of the last names into one unified name part
+
+        # temporarily combine the two name parts of the last names into one
+        # unified name part
         combinedNameParts.append({})
         combinedIndex2indices = {}
         lastNamePrefixesCapped = set(self._getLastNameCapPrefixes())
@@ -138,7 +145,8 @@ class PickANamePatternTwoPartLastName(PickANamePattern):
             capitalize = first in lastNamePrefixesCapped
             for second, j in nameParts[-1].items():
                 combinedLastName = first
-                # capitalize the last name suffix if appropriate (Mc, Mac, etc.)
+                # capitalize the last name suffix if appropriate (Mc, Mac,
+                # etc.)
                 if capitalize:
                     combinedLastName += second.capitalize()
                 else:
@@ -148,9 +156,9 @@ class PickANamePatternTwoPartLastName(PickANamePattern):
                 # combination is chosen
                 combinedIndex2indices[k] = (i, j)
                 k += 1
-                
+
         pattern = self._computeWithNameParts(nameStr, combinedNameParts)
-        
+
         if pattern:
             combinedIndex = pattern[-1]
             pattern = pattern[:-1]
@@ -162,4 +170,3 @@ class PickANamePatternTwoPartLastName(PickANamePattern):
                 pattern[-1] = combinedIndex2indices[combinedIndex][1]
 
         return pattern
-

@@ -3,6 +3,7 @@ from direct.showbase.PythonUtil import Functor
 from toontown.toonbase import ToontownGlobals
 from direct.directnotify import DirectNotifyGlobal
 
+
 class FactoryCameraViews:
     notify = DirectNotifyGlobal.directNotify.newCategory('FactoryCameraViews')
 
@@ -14,34 +15,37 @@ class FactoryCameraViews:
         self.currentCamPos = None
 
         self.views = [["signatureRoomView",
-                       # Look down at the signature room from the button balcony
-                       (Point3(0.,-14.8419799805,13.212685585), # pos
-                        Point3(0.,-13.9563484192,12.749215126), # fwd
-                        Point3(0.0,1.5,15.75),                  # up
-                        Point3(0.0,1.5,-3.9375),                # down
+                       # Look down at the signature room from the button
+                       # balcony
+                       (Point3(0., -14.8419799805, 13.212685585),  # pos
+                        Point3(0., -13.9563484192, 12.749215126),  # fwd
+                        Point3(0.0, 1.5, 15.75),                  # up
+                        Point3(0.0, 1.5, -3.9375),                # down
                         1),
-                       ["localToonLeftBattle"],  # regenerate view on battle done
+                       # regenerate view on battle done
+                       ["localToonLeftBattle"],
                        ],
                       ["lookoutTrigger",
-                       # Look at the whole signature room from the lookout balcony
-                       (Point3(0,-17.7,28.8), # pos
-                        Point3(0,10,0), # fwd
-                        Point3(0.0,1.5,15.75),                  # up
-                        Point3(0.0,1.5,-3.9375),                # down
+                       # Look at the whole signature room from the lookout
+                       # balcony
+                       (Point3(0, -17.7, 28.8),  # pos
+                        Point3(0, 10, 0),  # fwd
+                        Point3(0.0, 1.5, 15.75),                  # up
+                        Point3(0.0, 1.5, -3.9375),                # down
                         1),
                        [],
                        ],
                       ["moleFieldView",
-                       # Look at a bigger portion of mole field 
-                       (Point3(0,-17.7,28.8), # pos
-                        Point3(0,10,0), # fwd
-                        Point3(0.0,1.5,15.75),                  # up
-                        Point3(0.0,1.5,-3.9375),                # down
+                       # Look at a bigger portion of mole field
+                       (Point3(0, -17.7, 28.8),  # pos
+                        Point3(0, 10, 0),  # fwd
+                        Point3(0.0, 1.5, 15.75),                  # up
+                        Point3(0.0, 1.5, -3.9375),                # down
                         1),
                        [],
                        ],
                       ]
-        
+
         camHeight = av.getClampedAvatarHeight()
 
         for i in range(len(self.views)):
@@ -52,8 +56,7 @@ class FactoryCameraViews:
             # camera can also switch specified events
             for msg in self.views[i][2]:
                 factory.accept(msg, self.checkCamPos)
-            
-        
+
     def delete(self):
         # stop listening for enter/exit events
         for i in range(len(self.views)):
@@ -73,14 +76,14 @@ class FactoryCameraViews:
         prevView = av.cameraIndex
 
         self.currentCamPos = viewIndex
-        
+
         # listen for exit event
         av.accept("exit" + self.views[viewIndex][0],
                   Functor(self.prevCamPos, prevView))
 
-        self.notify.info('auto-switching to camera position %s' % viewIndex)
+        self.notify.info(f'auto-switching to camera position {viewIndex}')
         av.setCameraSettings(self.views[viewIndex][1])
-        
+
     def prevCamPos(self, index, colEntry=None):
         av = base.localAvatar
         if len(av.cameraPositions) > index:
@@ -90,9 +93,8 @@ class FactoryCameraViews:
 
     def checkCamPos(self):
         # Sets the camera position if it should be set.
-        if self.currentCamPos != None:
+        if self.currentCamPos is not None:
             av = base.localAvatar
             viewIndex = self.currentCamPos
-            self.notify.info('returning to camera position %s' % viewIndex)
+            self.notify.info(f'returning to camera position {viewIndex}')
             av.setCameraSettings(self.views[viewIndex][1])
-            

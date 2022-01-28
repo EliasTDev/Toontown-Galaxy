@@ -1,3 +1,4 @@
+import builtins
 from .AIBaseGlobal import *
 from pandac.PandaModules import *
 from direct.distributed import DistributedObjectAI
@@ -25,6 +26,7 @@ from otp.otpbase.PythonUtil import *
 from toontown.racing.KartDNA import KartDict
 from toontown.cogdominium import CogdoFlyingGameGlobals
 
+
 class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("MagicWordManagerAI")
 
@@ -36,7 +38,7 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
 
     # This will hold the local namespace we evaluate '~ai' messages
     # within.
-    ExecNamespace = { }
+    ExecNamespace = {}
 
     def __init__(self, air):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
@@ -47,35 +49,38 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
         sender = self.air.doId2do.get(senderId, None)
         if sender:
             if senderId == avId:
-                sender = "%s/%s(%s)" % (sender.accountName, sender.name, senderId)
+                sender = f"{sender.accountName}/{sender.name}({senderId})"
             else:
-                sender = "%s/%s(%s) (for %d)" % (sender.accountName, sender.name, senderId, avId)
+                sender = f"{sender.accountName}/{sender.name}({senderId}) (for {avId})"
         else:
             sender = "Unknown avatar %d" % (senderId)
 
-        self.notify.info("%s (%s) just said the magic word: %s" % (sender, signature, word))
-        self.air.writeServerEvent('magic-word', senderId, "%s|%s|%s" % (sender, signature, word))
+        self.notify.info(
+            f"{sender} ({signature}) just said the magic word: {word}")
+        self.air.writeServerEvent(
+            'magic-word', senderId, f"{sender}|{signature}|{word}")
         if avId in self.air.doId2do:
             av = self.air.doId2do[avId]
 
             try:
                 self.doMagicWord(word, av, zoneId, senderId)
-            except:
-                response = describeException(backTrace = 1)
-                self.notify.warning("Ignoring error in magic word:\n%s" % response)
+            except BaseException:
+                response = describeException(backTrace=1)
+                self.notify.warning(
+                    f"Ignoring error in magic word:\n{response}")
                 self.down_setMagicWordResponse(senderId, response)
         else:
             self.notify.info("Don't know avatar %d." % (avId))
 
     def wordIs(self, word, w):
-        return word == w or word[:(len(w)+1)] == ('%s ' % w)
+        return word == w or word[:(len(w) + 1)] == f'{w} '
 
     def getWordIs(self, word):
         # bind a word to self.wordIs and return a callable obj
         return Functor(self.wordIs, word)
 
     def doMagicWord(self, word, av, zoneId, senderId):
-        return 
+        return
         """
         wordIs = self.getWordIs(word)
 
@@ -86,7 +91,7 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
 
 
 
- 
+
 
 
         elif wordIs('~ai'):
@@ -350,8 +355,6 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
             return 0
         return 1"""
 
-
-
     # MPG define in child class
     """
     def doDna(self, word, av, zoneId, senderId):
@@ -374,16 +377,19 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
     """
 
     def _handleGPTCfinished(self, senderId, ct, gptcJob):
-        self.down_setMagicWordResponse(senderId, 'aigptc(%s) finished' % ct)
+        self.down_setMagicWordResponse(senderId, f'aigptc({ct}) finished')
 
     def _handleGPTCNfinished(self, senderId, cn, gptcnJob):
-        self.down_setMagicWordResponse(senderId, 'aigptcn(%s) finished' % cn)
+        self.down_setMagicWordResponse(senderId, f'aigptcn({cn}) finished')
 
     def __execMessage(self, message):
         if not self.ExecNamespace:
             # Import some useful variables into the ExecNamespace initially.
-            exec('from pandac.PandaModules import *', globals(), self.ExecNamespace)
-            #self.importExecNamespace()
+            exec(
+                'from pandac.PandaModules import *',
+                globals(),
+                self.ExecNamespace)
+            # self.importExecNamespace()
 
         # Now try to evaluate the expression using ChatInputNormal.ExecNamespace as
         # the local namespace.
@@ -397,14 +403,14 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
             try:
                 exec(message, globals(), self.ExecNamespace)
                 return 'ok'
-            except:
+            except BaseException:
                 exception = sys.exc_info()[0]
                 extraInfo = sys.exc_info()[1]
                 if extraInfo:
                     return str(extraInfo)
                 else:
                     return str(exception)
-        except:
+        except BaseException:
             exception = sys.exc_info()[0]
             extraInfo = sys.exc_info()[1]
             if extraInfo:
@@ -425,33 +431,42 @@ class MagicWordManagerAI(DistributedObjectAI.DistributedObjectAI):
         for avId in avIds:
             obj = self.air.doId2do.get(avId, None)
             if not obj:
-                self.air.writeServerEvent('suspicious', avId, 'MagicWordManager.setWho not a valid avId: %s' % avId)
+                self.air.writeServerEvent(
+                    'suspicious',
+                    avId,
+                    f'MagicWordManager.setWho not a valid avId: {avId}')
                 return
             elif obj.__class__ == self.GameAvatarClass:
-                str += '%s %s\n' % (obj.accountName, obj.name)
+                str += f'{obj.accountName} {obj.name}\n'
         if not str:
             str = "No avatars."
 
         senderId = self.air.getAvatarIdFromSender()
         self.down_setMagicWordResponse(senderId, str)
 
+
 class FakeAv:
-    # fake avatar object that we can pass in to prevent magic words from crashing
+    # fake avatar object that we can pass in to prevent magic words from
+    # crashing
     def __init__(self, senderId):
         self.hp = 100
         self.doId = senderId
         self.name = 'FakeAv'
+
     def b_setHp(*args):
         pass
+
     def b_setMojo(*args):
         pass
+
     def toonUp(*args):
         pass
+
 
 def magicWord(mw, av=None, zoneId=0, senderId=0):
     if av is None:
         av = FakeAv(senderId)
     simbase.air.magicWordManager.doMagicWord(mw, av, zoneId, senderId)
 
-import builtins
+
 builtins.magicWord = magicWord

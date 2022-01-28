@@ -18,7 +18,7 @@ class OtpAvatarManager(DistributedObject.DistributedObject):
     def __init__(self, cr):
         assert self.notify.debugCall()
         DistributedObject.DistributedObject.__init__(self, cr)
-        self.avatars={}
+        self.avatars = {}
         assert not hasattr(cr, "avatarManager") or cr.avatarManager is None
 
     def delete(self):
@@ -26,16 +26,16 @@ class OtpAvatarManager(DistributedObject.DistributedObject):
         self.ignoreAll()
         self.cr.avatarManager = None
         DistributedObject.DistributedObject.delete(self)
-    
+
     def online(self):
         assert self.notify.debugCall()
         messenger.send(OtpAvatarManager.OnlineEvent)
 
-    #------------------------------------------------------------------------
+    # ------------------------------------------------------------------------
 
     def sendRequestAvatarList(self):
         assert self.notify.debugCall()
-        self.sendUpdate("requestAvatarList", [0,])
+        self.sendUpdate("requestAvatarList", [0, ])
 
     def rejectAvatarList(self, result):
         assert self.notify.debugCall()
@@ -43,10 +43,10 @@ class OtpAvatarManager(DistributedObject.DistributedObject):
 
     def avatarListResponse(self, pickleData):
         assert self.notify.debugCall()
-        avatars=loads(pickleData)
+        avatars = loads(pickleData)
         messenger.send("avatarList", [avatars])
 
-    #------------------------------------------------------------------------
+    # ------------------------------------------------------------------------
 
     def rejectCreateAvatar(self, result):
         assert self.notify.debugCall()
@@ -54,14 +54,18 @@ class OtpAvatarManager(DistributedObject.DistributedObject):
 
     def createAvatarResponse(self, avatarId, subId, access, founder):
         assert self.notify.debugCall()
-        self.notify.info("new avatarId: %s subId: %s access: %s founder: %s" % (avatarId, subId, access, founder))
+        self.notify.info(
+            "new avatarId: %s subId: %s access: %s founder: %s" %
+            (avatarId, subId, access, founder))
         messenger.send("createdNewAvatar", [avatarId, subId])
 
-    #------------------------------------------------------------------------
+    # ------------------------------------------------------------------------
 
     def sendRequestRemoveAvatar(self, avatarId, subId, confirmPassword):
         assert self.notify.debugCall()
-        self.sendUpdate("requestRemoveAvatar", [0, avatarId, subId, confirmPassword])
+        self.sendUpdate(
+            "requestRemoveAvatar", [
+                0, avatarId, subId, confirmPassword])
 
     def rejectRemoveAvatar(self, reasonId):
         assert self.notify.debugCall()
@@ -71,7 +75,7 @@ class OtpAvatarManager(DistributedObject.DistributedObject):
         assert self.notify.debugCall()
         messenger.send("removeAvatarResponse", [avatarId, subId])
 
-    #------------------------------------------------------------------------
+    # ------------------------------------------------------------------------
 
     def sendRequestShareAvatar(self, avatarId, subId, shared):
         assert self.notify.debugCall()
@@ -85,7 +89,7 @@ class OtpAvatarManager(DistributedObject.DistributedObject):
         assert self.notify.debugCall()
         messenger.send("shareAvatarResponse", [avatarId, subId, shared])
 
-    #------------------------------------------------------------------------
+    # ------------------------------------------------------------------------
 
     def sendRequestAvatarSlot(self, subId, slot):
         assert self.notify.debugCall()
@@ -99,7 +103,7 @@ class OtpAvatarManager(DistributedObject.DistributedObject):
         assert self.notify.debugCall()
         messenger.send("avatarSlotResponse", [subId, slot])
 
-    #------------------------------------------------------------------------
+    # ------------------------------------------------------------------------
 
     def sendRequestPlayAvatar(self, avatarId, subId):
         assert self.notify.debugCall()
@@ -111,6 +115,6 @@ class OtpAvatarManager(DistributedObject.DistributedObject):
 
     def playAvatarResponse(self, avatarId, subId, access, founder):
         assert self.notify.debugCall()
-        messenger.send("playAvatarResponse", [avatarId, subId, access, founder])
-
-
+        messenger.send(
+            "playAvatarResponse", [
+                avatarId, subId, access, founder])

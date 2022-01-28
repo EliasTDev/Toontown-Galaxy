@@ -1,11 +1,13 @@
 from direct.distributed.DistributedObject import DistributedObject
 
+
 class DistributedInterestOpener(DistributedObject):
     """
     Delays opening of an interest set underneath this object until a
     specific set of doIds is present on the client.
     See also DistributedInterestOpenerAI.py
     """
+
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)
 
@@ -30,9 +32,9 @@ class DistributedInterestOpener(DistributedObject):
         else:
             # we've already got an interest open; change it
             self.getObject(self.requiredDoIds, self._alterInterest)
-            
+
     def _openInterest(self):
-        print('DistributedInterestOpener._openInterest: %s' % self.getDoId())
+        print(f'DistributedInterestOpener._openInterest: {self.getDoId()}')
         self.childInterest = self.cr.addInterest(
             self.getDoId(), self.childZones,
             self.uniqueName('interestOpener'))

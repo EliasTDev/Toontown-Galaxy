@@ -3,6 +3,7 @@
 import sys
 from . import RepairAvatars
 
+
 class CatalogAdjuster(RepairAvatars.AvatarIterator):
     def __init__(self, air, adjustmentMinutes):
         RepairAvatars.AvatarIterator.__init__(self, air)
@@ -10,11 +11,11 @@ class CatalogAdjuster(RepairAvatars.AvatarIterator):
 
         self.numVisited = 0
         self.numChanged = 0
-        
+
     def fieldsToGet(self, db):
         return ["setName", "setDNAString",
                 "setCatalogSchedule", "setDeliverySchedule"]
-    
+
     def processAvatar(self, av, db):
         self.numVisited += 1
         self.printSometimes(av)
@@ -23,7 +24,7 @@ class CatalogAdjuster(RepairAvatars.AvatarIterator):
         if av.catalogScheduleNextTime:
             av.catalogScheduleNextTime += self.adjustmentMinutes
             anyChanged = 1
-            
+
         if av.onOrder:
             for item in av.onOrder:
                 item.deliveryDate += self.adjustmentMinutes
@@ -35,8 +36,9 @@ class CatalogAdjuster(RepairAvatars.AvatarIterator):
             self.numChanged += 1
 
     def done(self):
-        print("done, %s avatars visited, %s changed." % (self.numVisited, self.numChanged))
+        print(f"done, {self.numVisited} avatars visited, {self.numChanged} changed.")
         sys.exit(0)
+
 
 def usage():
     print("")
@@ -48,6 +50,7 @@ def usage():
     print("being offline for a length of time.")
     print("")
 
+
 def main(argv):
     if len(argv) != 2:
         usage()
@@ -55,7 +58,7 @@ def main(argv):
 
     try:
         numDays = float(argv[1])
-    except:
+    except BaseException:
         usage()
         sys.exit(1)
 
@@ -68,5 +71,6 @@ def main(argv):
     adj = CatalogAdjuster(simbase.air, adjustmentMinutes)
     adj.start()
     run()
+
 
 main(sys.argv)

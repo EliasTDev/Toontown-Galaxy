@@ -26,6 +26,7 @@ from toontown.uberdog import DistributedCpuInfoMgrUD
 
 from otp.uberdog.RejectCode import RejectCode
 
+
 class ToontownUberDog(UberDog):
     notify = directNotify.newCategory("UberDog")
 
@@ -36,22 +37,23 @@ class ToontownUberDog(UberDog):
         # TODO: The UD needs to know server time, but perhaps this isn't
         # the place to do this? -SG-SLWP
         self.toontownTimeManager = ToontownTimeManager.ToontownTimeManager()
-        self.toontownTimeManager.updateLoginTimes(time.time(), time.time(), globalClock.getRealTime())
+        self.toontownTimeManager.updateLoginTimes(
+            time.time(), time.time(), globalClock.getRealTime())
 
         def isManagerFor(name):
             return len(uber.objectNames) == 0 or name in uber.objectNames
-        self.isFriendsManager = False # latest from Ian this should not run anymore
+        self.isFriendsManager = False  # latest from Ian this should not run anymore
         #self.isFriendsManager = isManagerFor('friends')
         self.isSpeedchatRelay = isManagerFor('speedchatRelay')
         self.isGiftingManager = isManagerFor('gifting')
-        self.isMailManager = False # isManagerFor('mail')
+        self.isMailManager = False  # isManagerFor('mail')
         self.isPartyManager = isManagerFor('party')
-        self.isRATManager = False # isManagerFor('RAT')
+        self.isRATManager = False  # isManagerFor('RAT')
         self.isAwardManager = isManagerFor('award')
         self.isCodeRedemptionManager = isManagerFor('coderedemption')
         self.isInGameNewsMgr = isManagerFor('ingamenews')
         self.isCpuInfoMgr = isManagerFor('cpuinfo')
-        self.isRandomSourceManager = False # isManagerFor('randomsource')
+        self.isRandomSourceManager = False  # isManagerFor('randomsource')
 
         UberDog.__init__(
             self, mdip, mdport, esip, esport, dcFilenames,
@@ -124,7 +126,8 @@ class ToontownUberDog(UberDog):
                 "NonRepeatableRandomSource")
 
         # Create our Astron login manager...
-        self.astronLoginManager = self.generateGlobalObject(OTP_DO_ID_ASTRON_LOGIN_MANAGER, 'AstronLoginManager')
+        self.astronLoginManager = self.generateGlobalObject(
+            OTP_DO_ID_ASTRON_LOGIN_MANAGER, 'AstronLoginManager')
 
     def getDatabaseIdForClassName(self, className):
         return DatabaseIdFromClassName.get(
@@ -135,5 +138,4 @@ class ToontownUberDog(UberDog):
             if self.isGiftingManager:
                 print("deliveryManager is", self.deliveryManager)
             if self.isFriendsManager:
-                print("playerFriendsManager is ",self.playerFriendsManager)
-
+                print("playerFriendsManager is ", self.playerFriendsManager)

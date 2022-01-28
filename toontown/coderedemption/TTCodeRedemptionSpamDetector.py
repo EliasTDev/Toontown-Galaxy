@@ -3,13 +3,18 @@ from direct.showbase.DirectObject import DirectObject
 from direct.showbase.PythonUtil import formatTimeExact
 
 Settings = ScratchPad(
-    DetectWindow = config.GetFloat('code-redemption-spam-detect-window', 30.), # minutes
-    DetectThreshold = config.GetInt('code-redemption-spam-detect-threshold', 10),
-    FirstPenalty = config.GetFloat('code-redemption-spam-first-penalty', .5), # minutes
-    PenaltyMultiplier = config.GetFloat('code-redemption-spam-penalty-multiplier', 2.),
-    MaxPenaltyDays = config.GetFloat('code-redemption-spam-max-penalty-days', 2.),
-    PenaltyResetDays = config.GetFloat('code-redemption-penalty-reset-days', 7.),
-    )
+    DetectWindow=config.GetFloat(
+        'code-redemption-spam-detect-window', 30.),  # minutes
+    DetectThreshold=config.GetInt('code-redemption-spam-detect-threshold', 10),
+    FirstPenalty=config.GetFloat(
+        'code-redemption-spam-first-penalty', .5),  # minutes
+    PenaltyMultiplier=config.GetFloat(
+        'code-redemption-spam-penalty-multiplier', 2.),
+    MaxPenaltyDays=config.GetFloat(
+        'code-redemption-spam-max-penalty-days', 2.),
+    PenaltyResetDays=config.GetFloat('code-redemption-penalty-reset-days', 7.),
+)
+
 
 class TTCodeRedemptionSpamDetector:
     notify = directNotify.newCategory('TTCodeRedemptionSpamDetector')
@@ -19,11 +24,12 @@ class TTCodeRedemptionSpamDetector:
         if __dev__:
             #self._tester = TTCRSDTester(self)
             pass
-        self._cullTask = taskMgr.doMethodLater(10 * 60, self._cullTrackers, uniqueName('cullCodeSpamTrackers'))
+        self._cullTask = taskMgr.doMethodLater(
+            10 * 60, self._cullTrackers, uniqueName('cullCodeSpamTrackers'))
 
     def destroy(self):
         if __dev__:
-            #self._tester.destroy()
+            # self._tester.destroy()
             self._tester = None
 
     def codeSubmitted(self, avId):
@@ -43,9 +49,11 @@ class TTCodeRedemptionSpamDetector:
         for avId in avIds:
             tracker = self._avId2tracker.get(avId)
             if tracker.isExpired():
-                self.notify.debug('culling code redemption spam tracker for %s' % avId)
+                self.notify.debug(
+                    f'culling code redemption spam tracker for {avId}')
                 self._avId2tracker.pop(avId)
         return task.again
+
 
 class TTCRSDTracker:
     notify = directNotify.newCategory('TTCodeRedemptionSpamDetector')
@@ -59,7 +67,7 @@ class TTCRSDTracker:
 
     def codeSubmitted(self):
         now = globalClock.getRealTime()
-        self.notify.debug('codeSubmitted by %s @ %s' % (self._avId, now))
+        self.notify.debug(f'codeSubmitted by {self._avId} @ {now}')
         if self._penaltyActive():
             return
         self._timestamps.append(now)
@@ -70,7 +78,8 @@ class TTCRSDTracker:
         if self._lastTimestamp is None:
             return True
         now = globalClock.getRealTime()
-        # if they've gone for X days without spamming, we can wipe that toon's record
+        # if they've gone for X days without spamming, we can wipe that toon's
+        # record
         amnestyDelay = Settings.PenaltyResetDays * 24 * 60 * 60
         return now > (self._lastTimestamp + amnestyDelay)
 
@@ -78,7 +87,7 @@ class TTCRSDTracker:
         self._trimTimestamps()
         if (not self._penaltyActive()) and self._overThreshold():
             if self._penaltyDuration == 0:
-                self._penaltyDuration = Settings.FirstPenalty * 60 # seconds/min
+                self._penaltyDuration = Settings.FirstPenalty * 60  # seconds/min
             else:
                 self._penaltyDuration = self._penaltyDuration * Settings.PenaltyMultiplier
             MaxPenaltySecs = Settings.MaxPenaltyDays * 24 * 60 * 60
@@ -87,7 +96,8 @@ class TTCRSDTracker:
             self._penaltyUntil = globalClock.getRealTime() + self._penaltyDuration
             self._timestamps = self._timestamps[Settings.DetectThreshold:]
             durationStr = formatTimeExact(self._penaltyDuration)
-            self.notify.info('time penalty for %s: %s' % (self._avId, durationStr))
+            self.notify.info(
+                f'time penalty for {self._avId}: {durationStr}')
 
     def avIsBlocked(self):
         self.update()
@@ -95,7 +105,7 @@ class TTCRSDTracker:
 
     def _trimTimestamps(self):
         now = globalClock.getRealTime()
-        cutoff = now - (Settings.DetectWindow * 60) # seconds/min
+        cutoff = now - (Settings.DetectWindow * 60)  # seconds/min
         while len(self._timestamps):
             if self._timestamps[0] < cutoff:
                 self._timestamps = self._timestamps[1:]
@@ -108,6 +118,7 @@ class TTCRSDTracker:
     def _overThreshold(self):
         return len(self._timestamps) > Settings.DetectThreshold
 
+
 if __dev__:
     class TTCRSDTester(DirectObject):
         notify = directNotify.newCategory('TTCodeRedemptionSpamDetector')
@@ -118,56 +129,74 @@ if __dev__:
             self.notify.info('starting tests...')
             self._thresholdTest()
             self._timeoutTest()
-            
+
         def destroy(self):
             self._detector = None
-            
+
         def _thresholdTest(self):
             avId = next(self._idGen)
-            for i in range(Settings.DetectThreshold+1):
+            for i in range(Settings.DetectThreshold + 1):
                 self._detector.codeSubmitted(avId)
                 if i < Settings.DetectThreshold:
                     assert not self._detector.avIsBlocked(avId)
                 else:
                     assert self._detector.avIsBlocked(avId)
             self.notify.info('threshold test passed.')
-                    
+
         def _timeoutTest(self):
             avId = next(self._idGen)
-            for i in range(Settings.DetectThreshold+1):
+            for i in range(Settings.DetectThreshold + 1):
                 self._detector.codeSubmitted(avId)
             assert self._detector.avIsBlocked(avId)
             self._timeoutTestStartT = globalClock.getRealTime()
             penaltyDuration = Settings.FirstPenalty * 60
             self._timeoutTestEventT = penaltyDuration
-            self.doMethodLater(Settings.FirstPenalty * 60 * .5, Functor(self._timeoutEarlyTest, avId),
-                               uniqueName('timeoutEarlyTest'))
-            self.doMethodLater(Settings.FirstPenalty * 60 * 10, Functor(self._timeoutLateTest, avId),
-                               uniqueName('timeoutLateTest'))
-            
+            self.doMethodLater(
+                Settings.FirstPenalty * 60 * .5,
+                Functor(
+                    self._timeoutEarlyTest,
+                    avId),
+                uniqueName('timeoutEarlyTest'))
+            self.doMethodLater(
+                Settings.FirstPenalty * 60 * 10,
+                Functor(
+                    self._timeoutLateTest,
+                    avId),
+                uniqueName('timeoutLateTest'))
+
         def _timeoutEarlyTest(self, avId, task=None):
             # only do this test if we didn't chug
-            if (globalClock.getRealTime() - self._timeoutTestStartT) < (self._timeoutTestEventT * .9):
+            if (globalClock.getRealTime() -
+                    self._timeoutTestStartT) < (self._timeoutTestEventT * .9):
                 assert self._detector.avIsBlocked(avId)
             return task.done
-        
+
         def _timeoutLateTest(self, avId, task=None):
             assert not self._detector.avIsBlocked(avId)
-            for i in range(Settings.DetectThreshold+1):
+            for i in range(Settings.DetectThreshold + 1):
                 self._detector.codeSubmitted(avId)
             assert self._detector.avIsBlocked(avId)
             self._timeoutLateTestStartT = globalClock.getRealTime()
             penaltyDuration = Settings.PenaltyMultiplier * Settings.FirstPenalty * 60
             self._timeoutLateTestEventT = penaltyDuration
-            self.doMethodLater(penaltyDuration * .5, Functor(self._timeoutSecondEarlyTest, avId),
-                               uniqueName('timeoutSecondEarlyTest'))
-            self.doMethodLater(penaltyDuration * 1.5, Functor(self._timeoutSecondLateTest, avId),
-                               uniqueName('timeoutSecondLateTest'))
+            self.doMethodLater(
+                penaltyDuration * .5,
+                Functor(
+                    self._timeoutSecondEarlyTest,
+                    avId),
+                uniqueName('timeoutSecondEarlyTest'))
+            self.doMethodLater(
+                penaltyDuration * 1.5,
+                Functor(
+                    self._timeoutSecondLateTest,
+                    avId),
+                uniqueName('timeoutSecondLateTest'))
             return task.done
 
         def _timeoutSecondEarlyTest(self, avId, task=None):
             # only do this test if we didn't chug
-            if (globalClock.getRealTime() - self._timeoutLateTestStartT) < (self._timeoutLateTestEventT * .9):
+            if (globalClock.getRealTime() - \
+                self._timeoutLateTestStartT) < (self._timeoutLateTestEventT * .9):
                 assert self._detector.avIsBlocked(avId)
             return task.done
 

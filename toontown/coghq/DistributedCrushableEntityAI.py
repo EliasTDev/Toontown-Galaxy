@@ -6,13 +6,15 @@ class DistributedCrushableEntityAI(DistributedEntityAI.DistributedEntityAI):
     """ This is a crushable version of NodePathEntity.  To make
     it functionally crushable, a crushMgrEntId attribute must
     be specified."""
-    notify = DirectNotifyGlobal.directNotify.newCategory("DistributedCrushableEntityAI")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedCrushableEntityAI")
+
     def __init__(self, level, entId):
         self.isCrushable = 0
         self.crushCellId = None
         self.crushCell = None
         self.grid = None
-        self.width=1
+        self.width = 1
         DistributedEntityAI.DistributedEntityAI.__init__(self, level, entId)
 
     def generate(self):
@@ -26,11 +28,11 @@ class DistributedCrushableEntityAI(DistributedEntityAI.DistributedEntityAI):
         DistributedEntityAI.DistributedEntityAI.delete(self)
 
     def destroy(self):
-        if self.crushCell != None:
+        if self.crushCell is not None:
             self.crushCell.unregisterCrushable(self.entId)
             self.crushCell = None
         DistributedEntityAI.DistributedEntityAI.destroy(self)
-                
+
     def attachToGrid(self):
         if self.gridId is not None:
             # get grid, or listen for grid
@@ -52,13 +54,13 @@ class DistributedCrushableEntityAI(DistributedEntityAI.DistributedEntityAI):
         # anything that needs the grid to be set up before running should
         # be initialized/run here
         return
-    
+
     def setActiveCrushCell(self):
-        if self.crushCellId != None:
+        if self.crushCellId is not None:
             self.notify.debug("setActiveCrushCell, entId: %d" % self.entId)
             self.crushCell = self.level.entities.get(self.crushCellId, None)
 
-            if self.crushCell == None:
+            if self.crushCell is None:
                 self.accept(self.level.getEntityCreateEvent(self.crushCellId),
                             self.setActiveCrushCell)
             else:
@@ -68,18 +70,17 @@ class DistributedCrushableEntityAI(DistributedEntityAI.DistributedEntityAI):
 
                 # register with crusherCell as a crushable entity
                 self.crushCell.registerCrushable(self.entId)
-                
-                
+
     def b_setPosition(self, pos):
         self.d_setPosition(pos)
         self.setPosition(pos)
-        
+
     def d_setPosition(self, pos):
-        self.sendUpdate('setPosition', [pos[0],pos[1],pos[2]])
+        self.sendUpdate('setPosition', [pos[0], pos[1], pos[2]])
 
     def setPosition(self, pos):
         self.pos = pos
-        
+
     def getPosition(self):
         return self.grid.getObjPos(self.entId)
 
@@ -97,20 +98,18 @@ class DistributedCrushableEntityAI(DistributedEntityAI.DistributedEntityAI):
         return
 
     def doCrush(self, crusherId, axis):
-        assert(self.notify.debug("doCrush, axis = %s" % axis))
+        assert(self.notify.debug(f"doCrush, axis = {axis}"))
         # derived classes can define this method if they
         # want something else to happen when they are crushed
         # (i.e. animation, removal from grid, etc)
 
         # tell client about being crushed
         # self.sendUpdate("setCrushed", [crusherId, axis])
-        
+
     def setGridId(self, gridId):
         self.gridId = gridId
-        self.attachToGrid() 
+        self.attachToGrid()
 
     def setCrushCellId(self, crushCellId):
         self.crushCellId = crushCellId
         self.setActiveCrushCell()
-        
- 

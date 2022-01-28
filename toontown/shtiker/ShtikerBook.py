@@ -12,28 +12,29 @@ from toontown.parties import DistributedPartyFireworksActivity
 from direct.directnotify import DirectNotifyGlobal
 from panda3d.otp import NametagGlobals
 
+
 class ShtikerBook(DirectFrame, StateData.StateData):
     """ShtikerBook class"""
 
     notify = DirectNotifyGlobal.directNotify.newCategory("ShtikerBook")
-    
+
     # special methods
     def __init__(self, doneEvent):
         DirectFrame.__init__(self,
-                             relief = None,
-                             sortOrder = DGG.BACKGROUND_SORT_INDEX)
+                             relief=None,
+                             sortOrder=DGG.BACKGROUND_SORT_INDEX)
         self.initialiseoptions(ShtikerBook)
         StateData.StateData.__init__(self, doneEvent)
         self.pages = []
         self.pageTabs = []
         self.currPageTabIndex = None
-        self.pageTabFrame = DirectFrame(parent = self, relief = None,
-                                        pos = (0.93, 1, 0.575),
-                                        scale = 1.25)
+        self.pageTabFrame = DirectFrame(parent=self, relief=None,
+                                        pos=(0.93, 1, 0.575),
+                                        scale=1.25)
         self.pageTabFrame.hide()
         self.currPageIndex = 0
         # what was the last shtiker page he was on before he went to news
-        self.pageBeforeNews = None 
+        self.pageBeforeNews = None
         self.entered = 0
         self.safeMode = 0
         self.__obscured = 0
@@ -43,7 +44,7 @@ class ShtikerBook(DirectFrame, StateData.StateData):
         # Slide the whole book up a tad to keep it out of the space
         # reserved for the onscreen chat balloons.
         self.setPos(0, 0, 0.1)
-        
+
         self.pageOrder = [
             TTLocalizer.OptionsPageTitle,
             TTLocalizer.ShardPageTitle,
@@ -62,7 +63,7 @@ class ShtikerBook(DirectFrame, StateData.StateData):
             TTLocalizer.NewsPageName,
             'Magic Words Help Page'
         ]
-        
+
         if __debug__:
             base.sb = self
 
@@ -78,16 +79,17 @@ class ShtikerBook(DirectFrame, StateData.StateData):
         if self.entered:
             return
         self.entered = 1
-        
+
         # If we're currently in move-furniture mode, stop it.
         messenger.send("releaseDirector")
-        
-        # Send a message saying that we have entered. We can use this to hide boarding gui, etc.
+
+        # Send a message saying that we have entered. We can use this to hide
+        # boarding gui, etc.
         messenger.send("stickerBookEntered")
 
         # play the book open sound
         base.playSfx(self.openSound)
-        
+
         # turn off any user control
         base.disableMouse()
 
@@ -112,7 +114,7 @@ class ShtikerBook(DirectFrame, StateData.StateData):
         # manage the book
         self.show()
         self.showPageArrows()
-        
+
         if not self.safeMode:
             # register events
             self.accept("shtiker-page-done", self.__pageDone)
@@ -133,27 +135,28 @@ class ShtikerBook(DirectFrame, StateData.StateData):
         if not self.entered:
             return
         self.entered = 0
-        
-        # Send a message saying that we have exited. We can use this to show boarding gui, etc.
+
+        # Send a message saying that we have exited. We can use this to show
+        # boarding gui, etc.
         messenger.send("stickerBookExited")
 
         # play the book open sound
         base.playSfx(self.closeSound)
-        
+
         # Exit the current pagex
         self.pages[self.currPageIndex].exit()
-        
+
         # put the world back
         base.render.show()
-        
+
         setBlackBackground = 0
         for obj in list(base.cr.doId2do.values()):
-            if isinstance(obj, DistributedFireworkShow.DistributedFireworkShow) or \
-                isinstance(obj, DistributedPartyFireworksActivity.DistributedPartyFireworksActivity):
+            if isinstance(obj, DistributedFireworkShow.DistributedFireworkShow) or isinstance(
+                    obj, DistributedPartyFireworksActivity.DistributedPartyFireworksActivity):
                 setBlackBackground = 1
-        
+
         if setBlackBackground:
-            base.setBackgroundColor(Vec4(0,0,0,1))
+            base.setBackgroundColor(Vec4(0, 0, 0, 1))
         else:
             base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
 
@@ -193,61 +196,61 @@ class ShtikerBook(DirectFrame, StateData.StateData):
         # models
         bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
         self['image'] = bookModel.find("**/big_book")
-        self['image_scale'] = (2,1,1.5)
+        self['image_scale'] = (2, 1, 1.5)
         self.resetFrameSize()
-        
+
         self.bookOpenButton = DirectButton(
-            image = (bookModel.find("**/BookIcon_CLSD"),
-                     bookModel.find("**/BookIcon_OPEN"),
-                     bookModel.find("**/BookIcon_RLVR"),
-                     ),
-            relief = None,
-            pos = (-0.16, 0, 0.17),
-            parent = base.a2dBottomRight,
-            scale = 0.305,
-            command = self.__open,
-            )
-        
+            image=(bookModel.find("**/BookIcon_CLSD"),
+                   bookModel.find("**/BookIcon_OPEN"),
+                   bookModel.find("**/BookIcon_RLVR"),
+                   ),
+            relief=None,
+            pos=(-0.16, 0, 0.17),
+            parent=base.a2dBottomRight,
+            scale=0.305,
+            command=self.__open,
+        )
+
         self.bookCloseButton = DirectButton(
-            image = (bookModel.find("**/BookIcon_OPEN"),
-                     bookModel.find("**/BookIcon_CLSD"),
-                     bookModel.find("**/BookIcon_RLVR2"),
-                     ),
-            relief = None,
-            pos = (-0.16, 0, 0.17),
-            parent = base.a2dBottomRight,
-            scale = 0.305,
-            command = self.__close,
-            )
-                      
+            image=(bookModel.find("**/BookIcon_OPEN"),
+                   bookModel.find("**/BookIcon_CLSD"),
+                   bookModel.find("**/BookIcon_RLVR2"),
+                   ),
+            relief=None,
+            pos=(-0.16, 0, 0.17),
+            parent=base.a2dBottomRight,
+            scale=0.305,
+            command=self.__close,
+        )
+
         self.bookOpenButton.hide()
         self.bookCloseButton.hide()
 
         self.nextArrow = DirectButton(
-            parent = self,
-            relief = None,
-            image = (bookModel.find("**/arrow_button"),
-                     bookModel.find("**/arrow_down"),
-                     bookModel.find("**/arrow_rollover"),
-                     ),
-            scale = (0.1, 0.1, 0.1),
-            pos = (0.838, 0, -0.661),
-            command = self.__pageChange,
-            extraArgs = [1],
-            )
+            parent=self,
+            relief=None,
+            image=(bookModel.find("**/arrow_button"),
+                   bookModel.find("**/arrow_down"),
+                   bookModel.find("**/arrow_rollover"),
+                   ),
+            scale=(0.1, 0.1, 0.1),
+            pos=(0.838, 0, -0.661),
+            command=self.__pageChange,
+            extraArgs=[1],
+        )
 
         self.prevArrow = DirectButton(
-            parent = self,
-            relief = None,
-            image = (bookModel.find("**/arrow_button"),
-                     bookModel.find("**/arrow_down"),
-                     bookModel.find("**/arrow_rollover"),
-                     ),
-            scale = (-0.1, 0.1, 0.1), # negative to flip the image
-            pos = (-0.838, 0, -0.661),
-            command = self.__pageChange,
-            extraArgs = [-1],
-            )                     
+            parent=self,
+            relief=None,
+            image=(bookModel.find("**/arrow_button"),
+                   bookModel.find("**/arrow_down"),
+                   bookModel.find("**/arrow_rollover"),
+                   ),
+            scale=(-0.1, 0.1, 0.1),  # negative to flip the image
+            pos=(-0.838, 0, -0.661),
+            command=self.__pageChange,
+            extraArgs=[-1],
+        )
 
         bookModel.removeNode()
 
@@ -288,23 +291,25 @@ class ShtikerBook(DirectFrame, StateData.StateData):
         del self.closeSound
         del self.pageSound
 
-    def addPage(self, page, pageName = 'Page'):
+    def addPage(self, page, pageName='Page'):
         """addPage(self, ShtikerPage)
         add a page to the ShtikerBook ClassicFSM"""
         if not (pageName in self.pageOrder):
-            self.notify.error('Trying to add page %s in the ShtickerBook. Page not listed in the order.' %pageName)
+            self.notify.error(
+                'Trying to add page %s in the ShtickerBook. Page not listed in the order.' %
+                pageName)
             return
-        
+
         pageIndex = 0
         if len(self.pages):
             newIndex = len(self.pages)
             prevIndex = newIndex - 1
-            
+
             # A page probably came in late. This page has to be inserted before the
             # News Page, which happens to be the last page.
             # This is done so that there is no gap in the tabs on the right side.
             # Take care of all the indices now while inserting the new page.
-                        
+
             if (self.pages[prevIndex].pageName == TTLocalizer.NewsPageName):
                 self.pages.insert(prevIndex, page)
                 pageIndex = prevIndex
@@ -316,7 +321,7 @@ class ShtikerBook(DirectFrame, StateData.StateData):
         else:
             self.pages.append(page)
             pageIndex = len(self.pages) - 1
-        
+
         page.setBook(self)
         page.setPageName(pageName)
         page.reparentTo(self)
@@ -325,8 +330,9 @@ class ShtikerBook(DirectFrame, StateData.StateData):
         if isinstance(page, MapPage.MapPage):
             self.pageBeforeNews = page
 
-    def addPageTab(self, page, pageIndex, pageName = 'Page'):
+    def addPageTab(self, page, pageIndex, pageName='Page'):
         tabIndex = len(self.pageTabs)
+
         def goToPage():
             messenger.send('wakeup')
             base.playSfx(self.pageSound)
@@ -340,7 +346,7 @@ class ShtikerBook(DirectFrame, StateData.StateData):
             localAvatar.newsButtonMgr.setGoingToNewsPageFromStickerBook(True)
             localAvatar.newsButtonMgr.showAppropriateButton()
             self.setPage(page)
-            
+
 ##        yOffset = 0.07 * (len(self.pages) - 1)
         yOffset = 0.07 * pageIndex
         iconGeom = None
@@ -383,9 +389,9 @@ class ShtikerBook(DirectFrame, StateData.StateData):
             iconModels.detachNode()
         elif pageName == TTLocalizer.TrackPageShortTitle:
             iconGeom = iconModels = loader.loadModel(
-                "phase_3.5/models/gui/filmstrip")            
+                "phase_3.5/models/gui/filmstrip")
             iconScale = 1.1
-            iconColor = Vec4(.7,.7,.7,1)
+            iconColor = Vec4(.7, .7, .7, 1)
             iconModels.detachNode()
         elif pageName == TTLocalizer.SuitPageTitle:
             iconModels = loader.loadModel(
@@ -401,12 +407,12 @@ class ShtikerBook(DirectFrame, StateData.StateData):
             iconModels = loader.loadModel(
                 "phase_3.5/models/gui/sos_textures")
             iconGeom = iconModels.find('**/gardenIcon')
-            iconModels.detachNode()            
+            iconModels.detachNode()
         elif pageName == TTLocalizer.DisguisePageTitle:
             iconModels = loader.loadModel(
                 "phase_3.5/models/gui/sos_textures")
             iconGeom = iconModels.find('**/disguise2')
-            iconColor = Vec4(.7,.7,.7,1)
+            iconColor = Vec4(.7, .7, .7, 1)
             iconModels.detachNode()
         elif pageName == TTLocalizer.NPCFriendPageTitle:
             iconModels = loader.loadModel(
@@ -415,19 +421,20 @@ class ShtikerBook(DirectFrame, StateData.StateData):
             iconGeom = iconModels.find('**/logo')
             iconScale = 0.22
             iconModels.detachNode()
-        elif( pageName == TTLocalizer.KartPageTitle ):
-            iconModels = loader.loadModel( "phase_3.5/models/gui/sos_textures" )
-            iconGeom = iconModels.find( "**/kartIcon" )
+        elif(pageName == TTLocalizer.KartPageTitle):
+            iconModels = loader.loadModel("phase_3.5/models/gui/sos_textures")
+            iconGeom = iconModels.find("**/kartIcon")
             iconModels.detachNode()
-        elif( pageName == TTLocalizer.GolfPageTitle ):
-            iconModels = loader.loadModel( "phase_6/models/golf/golf_gui" )
-            iconGeom = iconModels.find( "**/score_card_icon" )
+        elif(pageName == TTLocalizer.GolfPageTitle):
+            iconModels = loader.loadModel("phase_6/models/golf/golf_gui")
+            iconGeom = iconModels.find("**/score_card_icon")
             iconModels.detachNode()
-        elif( pageName == TTLocalizer.EventsPageName ):
-            iconModels = loader.loadModel("phase_4/models/parties/partyStickerbook")
+        elif(pageName == TTLocalizer.EventsPageName):
+            iconModels = loader.loadModel(
+                "phase_4/models/parties/partyStickerbook")
             iconGeom = iconModels.find('**/Stickerbook_PartyIcon')
             iconModels.detachNode()
-        elif( pageName == TTLocalizer.NewsPageName ):
+        elif(pageName == TTLocalizer.NewsPageName):
             iconModels = loader.loadModel(
                 "phase_3.5/models/gui/sos_textures")
             iconGeom = iconModels.find('**/switch')
@@ -435,43 +442,43 @@ class ShtikerBook(DirectFrame, StateData.StateData):
             buttonPressedCommand = goToNewsPage
         # elif( pageName == TTLocalizer.TIPPageTitle ):
             # iconModels = loader.loadModel(
-                # 'phase_3.5/models/gui/playingCard')
+            # 'phase_3.5/models/gui/playingCard')
             # iconImage = iconModels.find('**/card_back')
             # iconGeom = iconModels.find('**/logo')
             # iconScale = 0.22
             # iconModels.detachNode()
-        
+
         # Changing the page name for the tab for the Options Page
         if (pageName == TTLocalizer.OptionsPageTitle):
             pageName = TTLocalizer.OptionsTabTitle
-        
+
         pageTab = DirectButton(
-            parent = self.pageTabFrame,
-            relief = DGG.RAISED,
-            frameSize = (-0.575, 0.575, -0.575, 0.575),
-            borderWidth = (0.05,0.05),
-            text = ("","",pageName,""),
-            text_align = TextNode.ALeft,
-            text_pos = (1,-0.2),
-            text_scale = TTLocalizer.SBpageTab,
-            text_fg = (1,1,1,1),
-            text_shadow = (0,0,0,1),
-            image = iconImage,
-            image_scale = iconScale,
-            geom = iconGeom,
-            geom_scale = iconScale,
-            geom_color = iconColor,
-            pos = (0, 0, -yOffset),
-            scale = 0.06,
-            command = buttonPressedCommand)
-##        self.pageTabs.append(pageTab)
+            parent=self.pageTabFrame,
+            relief=DGG.RAISED,
+            frameSize=(-0.575, 0.575, -0.575, 0.575),
+            borderWidth=(0.05, 0.05),
+            text=("", "", pageName, ""),
+            text_align=TextNode.ALeft,
+            text_pos=(1, -0.2),
+            text_scale=TTLocalizer.SBpageTab,
+            text_fg=(1, 1, 1, 1),
+            text_shadow=(0, 0, 0, 1),
+            image=iconImage,
+            image_scale=iconScale,
+            geom=iconGeom,
+            geom_scale=iconScale,
+            geom_color=iconColor,
+            pos=(0, 0, -yOffset),
+            scale=0.06,
+            command=buttonPressedCommand)
+# self.pageTabs.append(pageTab)
         self.pageTabs.insert(pageIndex, pageTab)
 
         # hide the news page button, so only 1 way to go in and out of news
         if pageName == TTLocalizer.NewsPageName:
             pageTab.hide()
 
-    def setPage(self, page, enterPage = True):
+    def setPage(self, page, enterPage=True):
         """setPage(self, ShtikerPage)
         go to a specific page"""
         # Exit the previous page if there was one
@@ -484,16 +491,16 @@ class ShtikerBook(DirectFrame, StateData.StateData):
             self.showPageArrows()
             page.enter()
         from toontown.shtiker import NewsPage
-        
+
         if not isinstance(page, NewsPage.NewsPage):
             self.pageBeforeNews = page
 
-    def setPageBeforeNews(self, enterPage = True):
+    def setPageBeforeNews(self, enterPage=True):
         self.setPage(self.pageBeforeNews, enterPage)
-        
+
     def setPageTabIndex(self, pageTabIndex):
         if ((self.currPageTabIndex is not None) and
-            (pageTabIndex != self.currPageTabIndex)):
+                (pageTabIndex != self.currPageTabIndex)):
             self.pageTabs[self.currPageTabIndex]['relief'] = DGG.RAISED
         self.currPageTabIndex = pageTabIndex
         self.pageTabs[self.currPageTabIndex]['relief'] = DGG.SUNKEN
@@ -506,7 +513,6 @@ class ShtikerBook(DirectFrame, StateData.StateData):
             if curPage == page:
                 result = True
         return result
-        
 
     def obscureButton(self, obscured):
         """obscureButton(self, int obscured)
@@ -518,7 +524,7 @@ class ShtikerBook(DirectFrame, StateData.StateData):
 
     def isObscured(self):
         return self.__obscured
-        
+
     def showButton(self):
         """
         show the ShtikerBook button, but only if it is not obscured
@@ -546,7 +552,7 @@ class ShtikerBook(DirectFrame, StateData.StateData):
             # The open button should be visible.
             self.bookOpenButton.show()
             self.bookCloseButton.hide()
-            
+
         else:
             # The open button is either hidden or obscured.
             self.bookOpenButton.hide()
@@ -561,7 +567,7 @@ class ShtikerBook(DirectFrame, StateData.StateData):
             pass
         else:
             result = True
-        return result            
+        return result
 
     def __open(self):
         messenger.send("enterStickerBook")
@@ -572,7 +578,7 @@ class ShtikerBook(DirectFrame, StateData.StateData):
 
     def __close(self):
         base.playSfx(self.closeSound)
-        self.doneStatus = {"mode" : "close"}
+        self.doneStatus = {"mode": "close"}
         messenger.send("exitStickerBook")
         messenger.send(self.doneEvent)
 
@@ -600,13 +606,13 @@ class ShtikerBook(DirectFrame, StateData.StateData):
         self.currPageIndex = max(self.currPageIndex, 0)
         self.currPageIndex = min(self.currPageIndex, (len(self.pages) - 1))
         self.setPageTabIndex(self.currPageIndex)
-                
+
         self.showPageArrows()
-        
+
         # Enter the new current page
         page = self.pages[self.currPageIndex]
         page.enter()
-        
+
         from toontown.shtiker import NewsPage
         if not isinstance(page, NewsPage.NewsPage):
             self.pageBeforeNews = page
@@ -619,9 +625,9 @@ class ShtikerBook(DirectFrame, StateData.StateData):
         else:
             self.prevArrow.show()
             self.nextArrow.show()
-        
+
         self.checkForNewsPage()
-        
+
         # If we are at the beginning of the list, disable the prev button
         if (self.currPageIndex == 0):
             self.prevArrow.hide()
@@ -629,12 +635,12 @@ class ShtikerBook(DirectFrame, StateData.StateData):
 
     def checkForNewsPage(self):
         """
-        Check if the next and previous page is the News Page. 
+        Check if the next and previous page is the News Page.
         """
-        from toontown.shtiker import NewsPage        
+        from toontown.shtiker import NewsPage
         self.ignore("arrow_left")
         self.ignore("arrow_right")
-        
+
         if ((self.currPageIndex + 1) <= (len(self.pages) - 1)) and \
            (isinstance(self.pages[self.currPageIndex + 1], NewsPage.NewsPage)):
             self.prevArrow.show()
@@ -643,11 +649,12 @@ class ShtikerBook(DirectFrame, StateData.StateData):
         else:
             self.prevArrow.show()
             self.nextArrow.show()
-            if not (isinstance(self.pages[self.currPageIndex], NewsPage.NewsPage)):
+            if not (isinstance(
+                    self.pages[self.currPageIndex], NewsPage.NewsPage)):
                 # Add hooks so the keyboard arrow keys work too
                 self.accept("arrow_right", self.__pageChange, [1])
                 self.accept("arrow_left", self.__pageChange, [-1])
-        
+
     # these two functions are for the tutorial
     def disableBookCloseButton(self):
         if self.bookCloseButton:

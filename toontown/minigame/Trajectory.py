@@ -4,6 +4,7 @@ from direct.directnotify import DirectNotifyGlobal
 from pandac.PandaModules import *
 from math import *
 
+
 class Trajectory:
     # represents the flight (or a portion of the flight) of a projectile
 
@@ -24,7 +25,7 @@ class Trajectory:
     # due to the constant force of gravity, which acts in the -Z direction
     # with constant force
 
-    def __init__(self, startTime, startPos, startVel, gravMult = 1.0):
+    def __init__(self, startTime, startPos, startVel, gravMult=1.0):
         self.setStartTime(startTime)
         self.setStartPos(startPos)
         self.setStartVel(startVel)
@@ -74,7 +75,7 @@ class Trajectory:
 
         return t + self.__startTime
 
-    def calcTimeOfImpactOnPlane(self, height = 0):
+    def calcTimeOfImpactOnPlane(self, height=0):
         """calcTimeOfImpactOnPlane(self, float)
         uses the quadratic formula to calculate the projectile's
         time of impact on a horizontal surface at a given height
@@ -110,28 +111,29 @@ class Trajectory:
             # Z velocity
             t = (-b - sqrt(D)) / (2.0 * a)
 
-            ## # otherwise we could do something like this
+            # otherwise we could do something like this
             ## sqrtD = sqrt(D)
             ## t1 = (-b - sqrtD) / (2.0 * a)
             ## t2 = (-b + sqrtD) / (2.0 * a)
-            ## if t2 < 0:
+            # if t2 < 0:
             ##     t = t1
-            ## else:
+            # else:
             ##     t = min(t1, t2)
 
-        # if t is negative, the projectile starts below the plane and descends (??)
+        # if t is negative, the projectile starts below the plane and descends
+        # (??)
         if t < 0:
             return -1.0
 
         return t + self.__startTime
-
 
     def calcZ(self, t):
         """calcZ(self, float)
         returns z-coordinate of projectile at a given point in time
         """
         tt = t - self.__startTime
-        return self.__startPos[2] + (self.__startVel[2] * tt) + (0.5 * self.__zAcc * tt * tt)
+        return self.__startPos[2] + (self.__startVel[2]
+                                     * tt) + (0.5 * self.__zAcc * tt * tt)
 
     def __reachesHeight(self, height):
         """__reachesHeight(self, float)
@@ -162,7 +164,7 @@ class Trajectory:
     def getStartTime(self):
         return self.__startTime
 
-    def checkCollisionWithGround(self, height = 0):
+    def checkCollisionWithGround(self, height=0):
         return self.calcTimeOfImpactOnPlane(height)
 
     def checkCollisionWithDisc(self, discCenter, discRadius):
@@ -191,7 +193,8 @@ class Trajectory:
         offset_y = p_atDiscHeight[1] - discCenter[1]
         # leave it squared, we're only comparing distances, we can compare
         # squared distances just as well
-        offset_from_center_SQUARED = (offset_x * offset_x) + (offset_y * offset_y)
+        offset_from_center_SQUARED = (
+            offset_x * offset_x) + (offset_y * offset_y)
 
         # what is the maximum offset at which the projectile can be from the
         # center of the disc, and still be considered to collide with the disc?
@@ -241,20 +244,22 @@ class Trajectory:
 
         # otherwise, find two values of t where ray intersects circle
         sqrt_bsmc = sqrt(bsmc)
-        t1 = -b - sqrt_bsmc # entering the cylinder's (X,Y) region
-        t2 = -b + sqrt_bsmc # leaving the cylinder's (X,Y) region
+        t1 = -b - sqrt_bsmc  # entering the cylinder's (X,Y) region
+        t2 = -b + sqrt_bsmc  # leaving the cylinder's (X,Y) region
 
         if t1 > t2:
             self.notify.debug("calcEnterAndLeaveCylinderXY: t1 > t2??")
 
-        # adjust the time values for our velocity; they are based on unit velocity
+        # adjust the time values for our velocity; they are based on unit
+        # velocity
         mag = Vec2(self.__startVel[0], self.__startVel[1]).length()
         t1 = t1 / mag
         t2 = t2 / mag
 
         return t1 + self.__startTime, t2 + self.__startTime
 
-    def checkCollisionWithCylinderSides(self, cylBottomCenter, cylRadius, cylHeight):
+    def checkCollisionWithCylinderSides(
+            self, cylBottomCenter, cylRadius, cylHeight):
         """checkCollisionWithCylinderSides(self, Point3, float, float)
         check for collision with the sides of a cylinder
         returns time of impact
@@ -264,7 +269,8 @@ class Trajectory:
         if self.__reachesHeight(cylBottomCenter[2]) == 0:
             return -1.0
 
-        # calc times of entering and leaving the cylinder's space in the X,Y plane
+        # calc times of entering and leaving the cylinder's space in the X,Y
+        # plane
         t1, t2 = self.calcEnterAndLeaveCylinderXY(cylBottomCenter, cylRadius)
 
         # calculate points
@@ -285,17 +291,17 @@ class Trajectory:
                 return t1
 
         # this code works for checking against cylinder top; we don't want it, though
-##         # otherwise, projectile hits top of cylinder
+# otherwise, projectile hits top of cylinder
 ##         t_cylTop = self.calcTimeOfImpactOnPlane(cylTopHeight)
 
-##         if t_cylTop < t1:
+# if t_cylTop < t1:
 ##             self.notify.debug("checkCollisionWithCylinder: projectile hits cylinder top plane before it reaches cylinder?")
-##             return -1.0
-##         elif t_cylTop > t2:
+# return -1.0
+# elif t_cylTop > t2:
 ##             self.notify.debug("checkCollisionWithCylinder: projectile hits cylinder top plane after it passes cylinder?")
-##             return -1.0
+# return -1.0
 
-##         return t_cylTop
+# return t_cylTop
 
         return -1.0
 
@@ -310,4 +316,3 @@ class Trajectory:
         # calculate intersection of trajectories in X,Y plane
         # if there's an intersection, compare heights at that point
         return -1.0
-

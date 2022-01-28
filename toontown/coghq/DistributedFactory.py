@@ -15,6 +15,7 @@ from toontown.coghq import FactoryCameraViews
 if __dev__:
     from otp.level import EditorGlobals
 
+
 class DistributedFactory(DistributedLevel.DistributedLevel,
                          FactoryBase.FactoryBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedFactory')
@@ -29,7 +30,7 @@ class DistributedFactory(DistributedLevel.DistributedLevel,
         self.joiningReserves = []
         self.suitsInitialized = 0
         self.goonClipPlanes = {}
-        
+
     def createEntityCreator(self):
         return FactoryEntityCreator.FactoryEntityCreator(level=self)
 
@@ -63,7 +64,7 @@ class DistributedFactory(DistributedLevel.DistributedLevel,
             del base.factory
         if __dev__:
             bboard.removeIfEqual(EditorGlobals.EditTargetPostName, self)
-        
+
     # required fields
     def setFactoryId(self, id):
         FactoryBase.FactoryBase.setFactoryId(self, id)
@@ -95,7 +96,7 @@ class DistributedFactory(DistributedLevel.DistributedLevel,
             # give the spec a factory EntityTypeRegistry.
             typeReg = self.getEntityTypeReg()
             factorySpec.setEntityTypeReg(typeReg)
-        
+
         DistributedLevel.DistributedLevel.initializeLevel(self, factorySpec)
 
         # if the AI is sending us a spec, we won't have it yet and the
@@ -120,6 +121,7 @@ class DistributedFactory(DistributedLevel.DistributedLevel,
         firstSetZoneDoneEvent = self.cr.getNextSetZoneDoneEvent()
         # wait until the first viz setZone completes before announcing
         # that we're ready to go
+
         def handleFirstSetZoneDone():
             # NOW we're ready.
             base.factoryReady = 1
@@ -141,13 +143,12 @@ class DistributedFactory(DistributedLevel.DistributedLevel,
             # print position of localToon relative to the zone that he's in
             pos = base.localAvatar.getPos(self.getZoneNode(self.lastToonZone))
             h = base.localAvatar.getH(self.getZoneNode(self.lastToonZone))
-            print('factory pos: %s, h: %s, zone %s' % (
-                repr(pos), h, self.lastToonZone))
-            posStr = "X: %.3f" % pos[0] + "\nY: %.3f" % pos[1] + \
-                  "\nZ: %.3f" % pos[2] + "\nH: %.3f" % h + \
-                  "\nZone: %s" % str(self.lastToonZone)
-            base.localAvatar.setChatAbsolute(posStr,CFThought|CFTimeout)
-        self.accept('f2',printPos)
+            print(f'factory pos: {repr(pos)}, h: {h}, zone {self.lastToonZone}')
+            posStr = f"X: {pos[0]:.3f}" + f"\nY: {pos[1]:.3f}" + \
+                f"\nZ: {pos[2]:.3f}" + f"\nH: {h:.3f}" + \
+                f"\nZone: {str(self.lastToonZone)}"
+            base.localAvatar.setChatAbsolute(posStr, CFThought | CFTimeout)
+        self.accept('f2', printPos)
 
         base.localAvatar.setCameraCollisionsCanMove(1)
 
@@ -182,7 +183,9 @@ class DistributedFactory(DistributedLevel.DistributedLevel,
         DistributedLevel.DistributedLevel.disable(self)
 
     def setSuits(self, suitIds, reserveSuitIds):
-        assert(self.notify.debug("setSuits suits: %s, reserves: %s" % (suitIds, reserveSuitIds)))
+        assert(
+            self.notify.debug(
+                f"setSuits suits: {suitIds}, reserves: {reserveSuitIds}"))
         oldSuitIds = list(self.suitIds)
         self.suitIds = suitIds
         self.reserveSuitIds = reserveSuitIds
@@ -194,14 +197,14 @@ class DistributedFactory(DistributedLevel.DistributedLevel,
                 newSuitIds.append(suitId)
         if len(newSuitIds):
             def bringOutOfReserve(suits):
-                assert(self.notify.debug('bringOutOfReserve suits=%s' % suits))
+                assert(self.notify.debug(f'bringOutOfReserve suits={suits}'))
                 for suit in suits:
                     if suit:
                         suit.comeOutOfReserve()
             assert not hasattr(self, 'relatedObjectMgrRequest')
-            assert(self.notify.debug('requesting Objects %s' % newSuitIds))
+            assert(self.notify.debug(f'requesting Objects {newSuitIds}'))
             self.relatedObjectMgrRequest = self.cr.relatedObjectMgr.requestObjects(
-                    newSuitIds, bringOutOfReserve)
+                newSuitIds, bringOutOfReserve)
 
     def reservesJoining(self):
         assert(self.notify.debug("reservesJoining"))
@@ -231,6 +234,6 @@ class DistributedFactory(DistributedLevel.DistributedLevel,
 
     def getBossTaunt(self):
         return TTLocalizer.FactoryBossTaunt
+
     def getBossBattleTaunt(self):
         return TTLocalizer.FactoryBossBattleTaunt
-    

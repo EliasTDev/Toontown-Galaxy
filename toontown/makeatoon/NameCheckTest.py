@@ -1,5 +1,6 @@
 import NameCheck
 
+
 def checkNames(names, goodFlags=None):
     if goodFlags:
         # make sure they're the same length
@@ -13,10 +14,11 @@ def checkNames(names, goodFlags=None):
         if goodFlags:
             # make sure our results are consistent
             if problem:
-                assert not goodFlags[i], "good name was rejected: '%s'" % name
+                assert not goodFlags[i], f"good name was rejected: '{name}'"
             else:
-                assert goodFlags[i], "bad name was accepted: '%s'" % name
-                
+                assert goodFlags[i], f"bad name was accepted: '{name}'"
+
+
 goodNames = [
     "foo",
     "foo-bar",
@@ -33,7 +35,7 @@ goodNames = [
     "Schrodinger's Cat",
     "Schrodinger's Cat's Dog",
     "Schrodinger's Cat's Dog's Mouse",
-    ]
+]
 badNames = [
     "MiXeD CaSe",
     "MiCkeY MoUsE",
@@ -70,10 +72,11 @@ badNames = [
     "foo .",
     "w'o'r'd",
     "bob's dog's cat's mouse's",
-    ]
+]
 # these are names that currently are not handled correctly
 testNames = [
-    ]
+]
+
 
 def runTest():
     print('CHECKING GOOD NAMES')

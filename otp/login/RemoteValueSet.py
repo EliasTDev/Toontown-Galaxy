@@ -4,6 +4,7 @@ from direct.directnotify import DirectNotifyGlobal
 from . import TTAccount
 from . import HTTPUtil
 
+
 class RemoteValueSet:
     """
     This class retrieves key/value pairs that are returned
@@ -13,7 +14,7 @@ class RemoteValueSet:
     'RemoteValueSet.dict'.
     """
     notify = DirectNotifyGlobal.directNotify.newCategory("RemoteValueSet")
-    
+
     def __init__(self, url, http, body='',
                  expectedHeader=None, expectedFields=[],
                  onUnexpectedResponse=None):
@@ -37,7 +38,7 @@ class RemoteValueSet:
 
         if expectedHeader is not None:
             if response[0] != expectedHeader:
-                errMsg = 'unexpected response: %s' % response
+                errMsg = f'unexpected response: {response}'
                 self.notify.warning(errMsg)
                 onUnexpectedResponse(errMsg)
                 return
@@ -56,30 +57,28 @@ class RemoteValueSet:
             try:
                 name, value = line.split('=', 1)
             except ValueError as e:
-                errMsg = 'unexpected response: %s' % response
+                errMsg = f'unexpected response: {response}'
                 self.notify.warning(errMsg)
                 onUnexpectedResponse(errMsg)
                 return
 
             if len(expectedFields):
-                if not name in expectedFields:
+                if name not in expectedFields:
                     self.notify.warning(
-                        "received field '%s' that is not "
-                        "in expected field list" %
-                        name)
+                        f"received field '{name}' that is not in expected field list")
 
             self.dict[name] = value
 
         # make sure we got all of the expected fields
         for name in expectedFields:
             if name not in self.dict:
-                errMsg = "missing expected field '%s'" % name
+                errMsg = f"missing expected field '{name}'"
                 self.notify.warning(errMsg)
                 onUnexpectedResponse(errMsg)
                 return
 
     def __repr__(self):
-        return "RemoteValueSet:%s" % str(self.dict)
+        return f"RemoteValueSet:{str(self.dict)}"
 
     def hasKey(self, key):
         return key in self.dict
@@ -90,10 +89,13 @@ class RemoteValueSet:
     # than None.
     def getBool(self, name, default=None):
         return self.__getValue(name, lambda x: int(x) != 0, default)
+
     def getInt(self, name, default=None):
         return self.__getValue(name, int, default)
+
     def getFloat(self, name, default=None):
         return self.__getValue(name, float, default)
+
     def getString(self, name, default=None):
         return self.__getValue(name, str, default)
 

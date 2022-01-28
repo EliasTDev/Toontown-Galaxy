@@ -3,7 +3,8 @@ from toontown.ai import HolidayBaseAI
 from toontown.toonbase import ToontownGlobals
 from toontown.ai import DistributedResistanceEmoteMgrAI
 
-EVENT_ZONE = 9720 # 'Talking in Your Sleep Voiceover Training' interior
+EVENT_ZONE = 9720  # 'Talking in Your Sleep Voiceover Training' interior
+
 
 class ResistanceEventMgrAI(HolidayBaseAI.HolidayBaseAI):
 
@@ -15,7 +16,7 @@ class ResistanceEventMgrAI(HolidayBaseAI.HolidayBaseAI):
     def __init__(self, air, holidayId):
         HolidayBaseAI.HolidayBaseAI.__init__(self, air, holidayId)
         self.resistanceEmoteMgr = None
-        
+
     def start(self):
         # instantiate the object
         self.resistanceEmoteMgr = DistributedResistanceEmoteMgrAI.DistributedResistanceEmoteMgrAI(

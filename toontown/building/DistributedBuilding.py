@@ -25,9 +25,11 @@ from otp.avatar import Emote
 from toontown.hood import ZoneUtil
 
 FO_DICT = {'s': 'tt_m_ara_cbe_fieldOfficeMoverShaker',
- 'l': 'tt_m_ara_cbe_fieldOfficeLegalEagle',
- 'm': 'tt_m_ara_cbe_fieldOfficeMoverShaker',
- 'c': 'tt_m_ara_cbe_fieldOfficeMoverShaker'}
+           'l': 'tt_m_ara_cbe_fieldOfficeLegalEagle',
+           'm': 'tt_m_ara_cbe_fieldOfficeMoverShaker',
+           'c': 'tt_m_ara_cbe_fieldOfficeMoverShaker'}
+
+
 class DistributedBuilding(DistributedObject.DistributedObject):
     """
     DistributedBuilding class:  The client side representation of a
@@ -39,7 +41,6 @@ class DistributedBuilding(DistributedObject.DistributedObject):
     client's machine.  The display of the building is either 'toon
     owned' or 'bad guy owned'.
     """
-
 
     # the initial height of suit buildings when a toon building is taken over
     #
@@ -57,80 +58,80 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         self.elevatorModel = None
 
         self.fsm = ClassicFSM.ClassicFSM('DistributedBuilding',
-                           [State.State('off',
-                                        self.enterOff,
-                                        self.exitOff,
-                                        ['waitForVictors',
-                                         'waitForVictorsFromCogdo',
-                                         'becomingToon',
-                                         'becomingToonFromCogdo',
-                                         'toon',
-                                         'clearOutToonInterior',
-                                         'becomingSuit',
-                                         'suit',
-                                         'clearOutToonInteriorForCogdo',
-                                         'becomingCogdo',
-                                         'cogdo']),
-                            State.State('waitForVictors',
-                                        self.enterWaitForVictors,
-                                        self.exitWaitForVictors,
-                                        ['becomingToon',
-                                         ]),
-                            State.State('waitForVictorsFromCogdo',
-                                        self.enterWaitForVictorsFromCogdo,
-                                        self.exitWaitForVictorsFromCogdo,
-                                        ['becomingToonFromCogdo',
-                                         ]),
-                            State.State('becomingToon',
-                                        self.enterBecomingToon,
-                                        self.exitBecomingToon,
-                                        ['toon']),
-                            State.State('becomingToonFromCogdo',
-                                        self.enterBecomingToonFromCogdo,
-                                        self.exitBecomingToonFromCogdo,
-                                        ['toon']),
-                            State.State('toon',
-                                        self.enterToon,
-                                        self.exitToon,
-                                        ['clearOutToonInterior', 'clearOutToonInteriorForCogdo']),
-                            State.State('clearOutToonInterior',
-                                        self.enterClearOutToonInterior,
-                                        self.exitClearOutToonInterior,
-                                        ['becomingSuit']),
-                            State.State('becomingSuit',
-                                        self.enterBecomingSuit,
-                                        self.exitBecomingSuit,
-                                        ['suit']),
-                            State.State('suit',
-                                        self.enterSuit,
-                                        self.exitSuit,
-                                        ['waitForVictors',
-                                         'becomingToon',        # debug only
-                                         ]),
-                            State.State('clearOutToonInteriorForCogdo',
-                                        self.enterClearOutToonInteriorForCogdo,
-                                        self.exitClearOutToonInteriorForCogdo,
-                                        ['becomingCogdo']),
-                            State.State('becomingCogdo',
-                                        self.enterBecomingCogdo,
-                                        self.exitBecomingCogdo,
-                                        ['cogdo']),
-                            State.State('cogdo',
-                                        self.enterCogdo,
-                                        self.exitCogdo,
-                                        ['waitForVictorsFromCogdo',
-                                         'becomingToonFromCogdo',        # debug only
-                                         ])],
-                           # Initial State
-                           'off',
-                           # Final State
-                           'off',
-                          )
+                                         [State.State('off',
+                                                      self.enterOff,
+                                                      self.exitOff,
+                                                      ['waitForVictors',
+                                                       'waitForVictorsFromCogdo',
+                                                       'becomingToon',
+                                                       'becomingToonFromCogdo',
+                                                       'toon',
+                                                       'clearOutToonInterior',
+                                                       'becomingSuit',
+                                                       'suit',
+                                                       'clearOutToonInteriorForCogdo',
+                                                       'becomingCogdo',
+                                                       'cogdo']),
+                                             State.State('waitForVictors',
+                                                         self.enterWaitForVictors,
+                                                         self.exitWaitForVictors,
+                                                         ['becomingToon',
+                                                          ]),
+                                             State.State('waitForVictorsFromCogdo',
+                                                         self.enterWaitForVictorsFromCogdo,
+                                                         self.exitWaitForVictorsFromCogdo,
+                                                         ['becomingToonFromCogdo',
+                                                          ]),
+                                             State.State('becomingToon',
+                                                         self.enterBecomingToon,
+                                                         self.exitBecomingToon,
+                                                         ['toon']),
+                                             State.State('becomingToonFromCogdo',
+                                                         self.enterBecomingToonFromCogdo,
+                                                         self.exitBecomingToonFromCogdo,
+                                                         ['toon']),
+                                             State.State('toon',
+                                                         self.enterToon,
+                                                         self.exitToon,
+                                                         ['clearOutToonInterior', 'clearOutToonInteriorForCogdo']),
+                                             State.State('clearOutToonInterior',
+                                                         self.enterClearOutToonInterior,
+                                                         self.exitClearOutToonInterior,
+                                                         ['becomingSuit']),
+                                             State.State('becomingSuit',
+                                                         self.enterBecomingSuit,
+                                                         self.exitBecomingSuit,
+                                                         ['suit']),
+                                             State.State('suit',
+                                                         self.enterSuit,
+                                                         self.exitSuit,
+                                                         ['waitForVictors',
+                                                          'becomingToon',        # debug only
+                                                          ]),
+                                             State.State('clearOutToonInteriorForCogdo',
+                                                         self.enterClearOutToonInteriorForCogdo,
+                                                         self.exitClearOutToonInteriorForCogdo,
+                                                         ['becomingCogdo']),
+                                             State.State('becomingCogdo',
+                                                         self.enterBecomingCogdo,
+                                                         self.exitBecomingCogdo,
+                                                         ['cogdo']),
+                                             State.State('cogdo',
+                                                         self.enterCogdo,
+                                                         self.exitCogdo,
+                                                         ['waitForVictorsFromCogdo',
+                                                          'becomingToonFromCogdo',        # debug only
+                                                          ])],
+                                         # Initial State
+                                         'off',
+                                         # Final State
+                                         'off',
+                                         )
         self.fsm.enterInitialState()
         # self.generate will be called automatically.
 
         # TODO: Eventually, bossLevel will be one of the
-        # required fields. 
+        # required fields.
         self.bossLevel = 0
 
         # multitrack used to animate the transitions between suit and toon
@@ -156,7 +157,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         self.cogWeakenSound = None
         self.toonGrowSound = None
         self.toonSettleSound = None
-        
+
     def generate(self):
         """generate(self)
         This method is called when the DistributedObject is reintroduced
@@ -166,9 +167,9 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         self.mode = 'toon'
         # (the default is to be a toon building, so toonTakeOver()
         # can ignore the first call for toon take over).
-        self.townTopLevel=self.cr.playGame.hood.loader.geom
+        self.townTopLevel = self.cr.playGame.hood.loader.geom
         assert(not self.townTopLevel.isEmpty())
-    
+
     def disable(self):
         # Go to the off state when the object is put in the cache
         self.fsm.request("off")
@@ -176,7 +177,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         self.stopTransition()
         DistributedObject.DistributedObject.disable(self)
         # self.delete() will automatically be called.
-    
+
     def delete(self):
         if self.elevatorNodePath:
             self.elevatorNodePath.removeNode()
@@ -191,16 +192,16 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         self.unloadSfx()
         del self.fsm
         DistributedObject.DistributedObject.delete(self)
-    
+
     def setBlock(self, block, interiorZoneId):
         self.block = block
         self.interiorZoneId = interiorZoneId
-    
+
     def setSuitData(self, suitTrack, difficulty, numFloors):
-        self.track=suitTrack
-        self.difficulty=difficulty
-        self.numFloors=numFloors
-    
+        self.track = suitTrack
+        self.difficulty = difficulty
+        self.numFloors = numFloors
+
     def setState(self, state, timestamp):
         self.fsm.request(state, [globalClockDelta.localElapsedTime(timestamp)])
 
@@ -216,14 +217,14 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         if self.mode != 'suit':
             self.setToSuit()
 
-        assert(self.elevatorNodePath != None)
+        assert(self.elevatorNodePath is not None)
         return self.elevatorNodePath
 
     def getCogdoElevatorNodePath(self):
         if self.mode != 'cogdo':
             self.setToCogdo()
 
-        assert(self.elevatorNodePath != None)
+        assert(self.elevatorNodePath is not None)
         return self.elevatorNodePath
 
     def getSuitDoorOrigin(self):
@@ -246,16 +247,16 @@ class DistributedBuilding(DistributedObject.DistributedObject):
 
     def setVictorList(self, victorList):
         self.victorList = victorList
-    
+
     ##### off state #####
-    
+
     def enterOff(self):
         return
-        #("enterOff()"))
-    
+        # ("enterOff()"))
+
     def exitOff(self):
         return
-        #("exitOff()"))
+        # ("exitOff()"))
 
     ##### waitForVictors state #####
 
@@ -265,7 +266,9 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         victorCount = self.victorList.count(base.localAvatar.doId)
 
         if victorCount == 1:
-            self.acceptOnce("insideVictorElevator", self.handleInsideVictorElevator)
+            self.acceptOnce(
+                "insideVictorElevator",
+                self.handleInsideVictorElevator)
 
             # Since the localToon is on the elevator, we should
             # position the camera in front of the building so we have
@@ -275,25 +278,25 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             camera.reparentTo(render)
             camera.setPosHpr(self.elevatorNodePath,
                              0, -32.5, 9.4, 0, 348, 0)
-            base.camLens.setMinFov(52.0/(4.0/3.0))
+            base.camLens.setMinFov(52.0 / (4.0 / 3.0))
 
             # Are we waiting for any other players to come out?
             anyOthers = 0
-            
+
             for v in self.victorList:
                 if v != 0 and v != base.localAvatar.doId:
                     anyOthers = 1
 
             if anyOthers:
                 self.waitingMessage = DirectLabel(
-                    text = TTLocalizer.BuildingWaitingForVictors,
-                    text_fg = VBase4(1,1,1,1),
-                    text_align = TextNode.ACenter,
-                    relief = None,
-                    pos = (0, 0, 0.35),
-                    scale = 0.1)
+                    text=TTLocalizer.BuildingWaitingForVictors,
+                    text_fg=VBase4(1, 1, 1, 1),
+                    text_align=TextNode.ACenter,
+                    relief=None,
+                    pos=(0, 0, 0.35),
+                    scale=0.1)
         elif victorCount == 0:
-            pass 
+            pass
         else:
             self.error("localToon is on the victorList %d times" % victorCount)
   # Make sure the elevator doors are still closed in this state.
@@ -302,13 +305,10 @@ class DistributedBuilding(DistributedObject.DistributedObject):
 
         # And turn off the elevator light.
         for light in self.floorIndicator:
-            if light != None:
+            if light is not None:
                 light.setColor(LIGHT_OFF_COLOR)
-            
-        return 
-  
 
-      
+        return
 
     def handleInsideVictorElevator(self):
         self.sendUpdate("setVictorReady", [])
@@ -316,18 +316,20 @@ class DistributedBuilding(DistributedObject.DistributedObject):
 
     def exitWaitForVictors(self):
         self.ignore("insideVictorElevator")
-        if self.waitingMessage != None:
+        if self.waitingMessage is not None:
             self.waitingMessage.destroy()
             self.waitingMessage = None
         return
-    
+
     ##### waitForVictorsFromCogdo state #####
     def enterWaitForVictorsFromCogdo(self, ts):
         if self.mode != 'cogdo':
             self.setToCogdo()
         victorCount = self.victorList.count(base.localAvatar.doId)
         if victorCount == 1:
-            self.acceptOnce("insideVictorElevator", self.handleInsideVictorElevatorFromCogdo)
+            self.acceptOnce(
+                "insideVictorElevator",
+                self.handleInsideVictorElevatorFromCogdo)
 
             # Since the localToon is on the elevator, we should
             # position the camera in front of the building so we have
@@ -337,7 +339,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             camera.reparentTo(render)
             camera.setPosHpr(self.elevatorNodePath,
                              0, -32.5, 9.4, 0, 348, 0)
-            base.camLens.setMinFov(52.0/(4.0/3.0))
+            base.camLens.setMinFov(52.0 / (4.0 / 3.0))
 
             # Are we waiting for any other players to come out?
             anyOthers = 0
@@ -347,12 +349,12 @@ class DistributedBuilding(DistributedObject.DistributedObject):
 
             if anyOthers:
                 self.waitingMessage = DirectLabel(
-                    text = TTLocalizer.BuildingWaitingForVictors,
-                    text_fg = VBase4(1,1,1,1),
-                    text_align = TextNode.ACenter,
-                    relief = None,
-                    pos = (0, 0, 0.35),
-                    scale = 0.1)
+                    text=TTLocalizer.BuildingWaitingForVictors,
+                    text_fg=VBase4(1, 1, 1, 1),
+                    text_align=TextNode.ACenter,
+                    relief=None,
+                    pos=(0, 0, 0.35),
+                    scale=0.1)
 
         elif victorCount == 0:
             pass
@@ -364,9 +366,9 @@ class DistributedBuilding(DistributedObject.DistributedObject):
 
         # And turn off the elevator light.
         for light in self.floorIndicator:
-            if light != None:
+            if light is not None:
                 light.setColor(LIGHT_OFF_COLOR)
-            
+
         return
 
     def handleInsideVictorElevatorFromCogdo(self):
@@ -375,155 +377,156 @@ class DistributedBuilding(DistributedObject.DistributedObject):
 
     def exitWaitForVictorsFromCogdo(self):
         self.ignore("insideVictorElevator")
-        if self.waitingMessage != None:
+        if self.waitingMessage is not None:
             self.waitingMessage.destroy()
             self.waitingMessage = None
         return
-    
+
     ##### becomingToon state #####
-    
+
     def enterBecomingToon(self, ts):
-        #("enterBecomingToon() %s" %(str(self.getDoId()))))
+        # ("enterBecomingToon() %s" %(str(self.getDoId()))))
         # Start animation:
 
         self.animToToon(ts)
-    
+
     def exitBecomingToon(self):
         return
-        #("exitBecomingToon()"))
+        # ("exitBecomingToon()"))
         # Stop animation:
-    
+
     ##### becomingToonFromCogdo state #####
-    
+
     def enterBecomingToonFromCogdo(self, ts):
-        #("enterBecomingToonFromCogdo() %s" %(str(self.getDoId()))))
+        # ("enterBecomingToonFromCogdo() %s" %(str(self.getDoId()))))
         # Start animation:
         self.animToToonFromCogdo(ts)
-    
+
     def exitBecomingToonFromCogdo(self):
         return
-        #("exitBecomingToonFromCogdo()"))
+        # ("exitBecomingToonFromCogdo()"))
         # Stop animation:
-    
+
     ##### toon state #####
-    
+
     def enterToon(self, ts):
-        #("enterToon()"))
+        # ("enterToon()"))
         if self.getInteractiveProp():
             self.getInteractiveProp().buildingLiberated(self.doId)
         self.setToToon()
-    
+
     def exitToon(self):
         return
-        #("exitToon()"))
-    
+        # ("exitToon()"))
+
     ##### ClearOutToonInterior state #####
-    
+
     def enterClearOutToonInterior(self, ts):
         return
-        #("enterClearOutToonInterior()"))
+        # ("enterClearOutToonInterior()"))
 
     def exitClearOutToonInterior(self):
         return
-        #("exitClearOutToonInterior()"))
-    
+        # ("exitClearOutToonInterior()"))
+
     ##### becomingSuit state #####
-    
+
     def enterBecomingSuit(self, ts):
-        #("enterBecomingSuit()"))
+        # ("enterBecomingSuit()"))
         # Start animation:
-        #print "enterBecomingSuit %s" %(str(self.getDoId()))
+        # print "enterBecomingSuit %s" %(str(self.getDoId()))
         self.animToSuit(ts)
 
     def exitBecomingSuit(self):
-        #("exitBecomingSuit()"))
+        # ("exitBecomingSuit()"))
         # Stop animation:
         pass
-    
+
     ##### suit state #####
-    
+
     def enterSuit(self, ts):
-        #("enterSuit()"))
-        #print "enterSuit %s" %(str(self.getDoId()))
+        # ("enterSuit()"))
+        # print "enterSuit %s" %(str(self.getDoId()))
         self.makePropSad()
         self.setToSuit()
-    
+
     def exitSuit(self):
         return
-        #("exitSuit()"))
-    
+        # ("exitSuit()"))
+
     ##### ClearOutToonInterior state #####
-    
+
     def enterClearOutToonInteriorForCogdo(self, ts):
         return
-        #("enterClearOutToonInteriorForCogdo()"))
+        # ("enterClearOutToonInteriorForCogdo()"))
 
     def exitClearOutToonInteriorForCogdo(self):
         return
-        #("exitClearOutToonInteriorForCogdo()"))
-    
+        # ("exitClearOutToonInteriorForCogdo()"))
+
     ##### becomingCogdo state #####
-    
+
     def enterBecomingCogdo(self, ts):
-        #("enterBecomingCogdo()"))
+        # ("enterBecomingCogdo()"))
         # Start animation:
-        #print "enterBecomingCogdo %s" %(str(self.getDoId()))
+        # print "enterBecomingCogdo %s" %(str(self.getDoId()))
         self.animToCogdo(ts)
 
     def exitBecomingCogdo(self):
-        #("exitBecomingCogdo()"))
+        # ("exitBecomingCogdo()"))
         # Stop animation:
         pass
-    
+
     ##### cogdo state #####
-    
+
     def enterCogdo(self, ts):
-        #("enterCogdo()"))
-        #print "enterCogdo %s" %(str(self.getDoId()))
+        # ("enterCogdo()"))
+        # print "enterCogdo %s" %(str(self.getDoId()))
         self.setToCogdo()
-    
+
     def exitCogdo(self):
         return
-        #("exitCogdo()"))
-    
+        # ("exitCogdo()"))
+
     #####
-    
+
     def getNodePaths(self):
-        #("getNodePaths()"))
+        # ("getNodePaths()"))
         # Toon flat buildings:
-        nodePath=[]
+        nodePath = []
         # Find all tb or sb of this block, even stashed (";+s") ones:
         npc = self.townTopLevel.findAllMatches(
-                "**/?b" + str(self.block) + ":*_DNARoot;+s")
-        assert(npc.getNumPaths()>0)
+            "**/?b" + str(self.block) + ":*_DNARoot;+s")
+        assert(npc.getNumPaths() > 0)
         for i in range(npc.getNumPaths()):
             nodePath.append(npc.getPath(i))
         return nodePath
 
     def loadElevator(self, newNP, cogDo=False):
 
-        #("loadElevator(newNP=%s)"%(newNP,)))
-        self.floorIndicator=[None, None, None, None, None]
+        # ("loadElevator(newNP=%s)"%(newNP,)))
+        self.floorIndicator = [None, None, None, None, None]
         # Load up an elevator
         self.elevatorNodePath = hidden.attachNewNode("elevatorNodePath")
         if cogDo:
-            self.elevatorModel = loader.loadModel('phase_5/models/cogdominium/tt_m_ara_csa_elevatorB')
+            self.elevatorModel = loader.loadModel(
+                'phase_5/models/cogdominium/tt_m_ara_csa_elevatorB')
         else:
             self.elevatorModel = loader.loadModel(
                 "phase_4/models/modules/elevator")
 
         # Put up a display to show the current floor of the elevator
-            npc=self.elevatorModel.findAllMatches("**/floor_light_?;+s")
+            npc = self.elevatorModel.findAllMatches("**/floor_light_?;+s")
             for i in range(npc.getNumPaths()):
-                np=npc.getPath(i)
+                np = npc.getPath(i)
                 # Get the last character, and make it zero based:
-                floor=int(np.getName()[-1:])-1
-                self.floorIndicator[floor]=np
+                floor = int(np.getName()[-1:]) - 1
+                self.floorIndicator[floor] = np
                 if floor < self.numFloors:
                     np.setColor(LIGHT_OFF_COLOR)
                 else:
                     np.hide()
-            
+
         self.elevatorModel.reparentTo(self.elevatorNodePath)
 
         if self.mode == 'suit':
@@ -539,12 +542,12 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                 corpIcon = cogIcons.find('**/LegalIcon').copyTo(self.cab)
             elif dept == 'm':
                 corpIcon = cogIcons.find('**/MoneyIcon').copyTo(self.cab)
-            corpIcon.setPos(0,6.79,6.8)
+            corpIcon.setPos(0, 6.79, 6.8)
             corpIcon.setScale(3)
             from toontown.suit import Suit
             corpIcon.setColor(Suit.Suit.medallionColors[dept])
             cogIcons.removeNode()
-        
+
         self.leftDoor = self.elevatorModel.find("**/left-door")
         if self.leftDoor.isEmpty():
             self.leftDoor = self.elevatorModel.find('**/left_door')
@@ -554,7 +557,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         # Find the door origin
         self.suitDoorOrigin = newNP.find("**/*_door_origin")
         assert(not self.suitDoorOrigin.isEmpty())
-        
+
         # Put the elevator under the door origin
         self.elevatorNodePath.reparentTo(self.suitDoorOrigin)
         self.normalizeElevator()
@@ -564,38 +567,46 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         """loadAnimToSuitSfx(self)
         Loads up the sound effects necessary for the animToSuit effect.
         """
-        if self.cogDropSound == None:
-            self.cogDropSound = base.loader.loadSfx(self.TAKEOVER_SFX_PREFIX + "cogbldg_drop.ogg")
-            self.cogLandSound = base.loader.loadSfx(self.TAKEOVER_SFX_PREFIX + "cogbldg_land.ogg")
-            self.cogSettleSound = base.loader.loadSfx(self.TAKEOVER_SFX_PREFIX + "cogbldg_settle.ogg")
-            self.openSfx = base.loader.loadSfx("phase_5/audio/sfx/elevator_door_open.ogg")
+        if self.cogDropSound is None:
+            self.cogDropSound = base.loader.loadSfx(
+                self.TAKEOVER_SFX_PREFIX + "cogbldg_drop.ogg")
+            self.cogLandSound = base.loader.loadSfx(
+                self.TAKEOVER_SFX_PREFIX + "cogbldg_land.ogg")
+            self.cogSettleSound = base.loader.loadSfx(
+                self.TAKEOVER_SFX_PREFIX + "cogbldg_settle.ogg")
+            self.openSfx = base.loader.loadSfx(
+                "phase_5/audio/sfx/elevator_door_open.ogg")
 
     def loadAnimToToonSfx(self):
         """loadAnimToToonSfx(self)
         Loads up the sound effects necessary for the animToToon effect.
         """
-        if self.cogWeakenSound == None:
-            self.cogWeakenSound = base.loader.loadSfx(self.TAKEOVER_SFX_PREFIX + "cogbldg_weaken.ogg")
-            self.toonGrowSound = base.loader.loadSfx(self.TAKEOVER_SFX_PREFIX + "toonbldg_grow.ogg")
-            self.toonSettleSound = base.loader.loadSfx(self.TAKEOVER_SFX_PREFIX + "toonbldg_settle.ogg")
-            self.openSfx = base.loader.loadSfx("phase_5/audio/sfx/elevator_door_open.ogg")
+        if self.cogWeakenSound is None:
+            self.cogWeakenSound = base.loader.loadSfx(
+                self.TAKEOVER_SFX_PREFIX + "cogbldg_weaken.ogg")
+            self.toonGrowSound = base.loader.loadSfx(
+                self.TAKEOVER_SFX_PREFIX + "toonbldg_grow.ogg")
+            self.toonSettleSound = base.loader.loadSfx(
+                self.TAKEOVER_SFX_PREFIX + "toonbldg_settle.ogg")
+            self.openSfx = base.loader.loadSfx(
+                "phase_5/audio/sfx/elevator_door_open.ogg")
 
     def unloadSfx(self):
         """unloadSfx(self)
         Unloads any sound effects that may have been loaded.
         """
-        if self.cogDropSound != None:
+        if self.cogDropSound is not None:
             self.cogDropSound = None
             self.cogLandSound = None
             self.cogSettleSound = None
             self.openSfx = None
-            
-        if self.cogWeakenSound != None:
+
+        if self.cogWeakenSound is not None:
             self.cogWeakenSound = None
             self.toonGrowSound = None
             self.toonSettleSound = None
             self.openSfx = None
-        
+
     def _deleteTransitionTrack(self):
         if self.transitionTrack:
             DelayDelete.cleanupDelayDeletes(self.transitionTrack)
@@ -611,12 +622,12 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         // Changes:
         ////////////////////////////////////////////////////////////////////
         """
-        #("animToSuit(timeStamp=%s)"%(timeStamp,)))
+        # ("animToSuit(timeStamp=%s)"%(timeStamp,)))
         self.stopTransition()
         if self.mode != 'toon':
             self.setToToon()
         self.loadAnimToSuitSfx()
-        
+
         # first find the side building portions
         #
         sideBldgNodes = self.getNodePaths()
@@ -624,7 +635,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         # now find and position the landmark portion of the suit building
         # Copy the suit landmark building, based on suit track & difficulty:
         #
-        nodePath=hidden.find(self.getSbSearchString())
+        nodePath = hidden.find(self.getSbSearchString())
         assert(not nodePath.isEmpty())
         newNP = self.setupSuitBuilding(nodePath)
         # Make sure the doors are closed for now.
@@ -635,19 +646,19 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         # create intervals to position and/or hide/stash the building parts
         # depending if it is part of the toon or suit version
         #
-        soundPlayed = 0  # don't want to play sound for every part 
-        tracks = Parallel(name = self.taskName('toSuitTrack'))
+        soundPlayed = 0  # don't want to play sound for every part
+        tracks = Parallel(name=self.taskName('toSuitTrack'))
         for i in sideBldgNodes:
-            name=i.getName()
-            timeForDrop = TO_SUIT_BLDG_TIME*0.85
-            if (name[0]=='s'):
-                #print 'anim2suit: suit flat scale: %s' % repr(i.getScale())
+            name = i.getName()
+            timeForDrop = TO_SUIT_BLDG_TIME * 0.85
+            if (name[0] == 's'):
+                # print 'anim2suit: suit flat scale: %s' % repr(i.getScale())
                 # set the position of the node, then unstash it to show it
                 showTrack = Sequence(
-                    name = self.taskName('ToSuitFlatsTrack') +
+                    name=self.taskName('ToSuitFlatsTrack') +
                     '-' + str(sideBldgNodes.index(i)))
                 initPos = Point3(0, 0, self.SUIT_INIT_HEIGHT) + \
-                          i.getPos()
+                    i.getPos()
                 showTrack.append(Func(i.setPos, initPos))
                 showTrack.append(Func(i.unstash))
 
@@ -655,30 +666,30 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                 # the landmark bldg itself.
                 if i == sideBldgNodes[len(sideBldgNodes) - 1]:
                     showTrack.append(Func(self.normalizeElevator))
-                #print "moving suit bldg part from %s to %s"%(str(initPos),
+                # print "moving suit bldg part from %s to %s"%(str(initPos),
                 #                                             str(i.getPos()))
                 if not soundPlayed:
                     showTrack.append(Func(
                         base.playSfx, self.cogDropSound, 0, 1, None, 0.))
                 showTrack.append(LerpPosInterval(
                     i, timeForDrop,
-                    i.getPos(), name = self.taskName('ToSuitAnim') + '-' +
+                    i.getPos(), name=self.taskName('ToSuitAnim') + '-' +
                     str(sideBldgNodes.index(i))))
                 if not soundPlayed:
                     showTrack.append(Func(
                         base.playSfx, self.cogLandSound, 0, 1, None, 0.))
                 showTrack.append(self.createBounceTrack(
                     i, 2, 0.65,
-                    TO_SUIT_BLDG_TIME-timeForDrop,
+                    TO_SUIT_BLDG_TIME - timeForDrop,
                     slowInitBounce=1.0))
                 if not soundPlayed:
                     showTrack.append(Func(
                         base.playSfx, self.cogSettleSound, 0, 1, None, 0.))
                 tracks.append(showTrack)
-                
+
                 if not soundPlayed:
                     soundPlayed = 1
-                #print "moving suit flat from %s to %s"%(str(initPos),
+                # print "moving suit flat from %s to %s"%(str(initPos),
                 #                                        str(i.getPos()))
                 # lerp the alpha in for the building part, making sure to
                 # remove the transparency transition when the fade is done
@@ -689,29 +700,29 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                 #
                 #showTrack = Sequence()
                 #showTrack.append(Func(i.setTransparency, 1))
-                #showTrack.append(LerpFunctionInterval(
+                # showTrack.append(LerpFunctionInterval(
                 #    i.setAlphaScale, fromData=0, toData=1,
                 #    duration=TO_SUIT_BLDG_TIME*0.20))
-                #showTrack.append(FunctionInterval(i.clearTransparency))
-                #tracks.append(showTrack)
+                # showTrack.append(FunctionInterval(i.clearTransparency))
+                # tracks.append(showTrack)
 
-            elif (name[0]=='t'):
+            elif (name[0] == 't'):
                 hideTrack = Sequence(
-                    name = self.taskName('ToSuitToonFlatsTrack'))
+                    name=self.taskName('ToSuitToonFlatsTrack'))
                 # figure how long till the toon building will start to be
                 # compressed by the suit building coming down on it
                 #
                 timeTillSquish = (self.SUIT_INIT_HEIGHT - 20.0) // \
-                                 self.SUIT_INIT_HEIGHT
+                    self.SUIT_INIT_HEIGHT
                 timeTillSquish *= timeForDrop
-                #hideTrack.append(Wait(timeTillSquish))
+                # hideTrack.append(Wait(timeTillSquish))
                 hideTrack.append(LerpFunctionInterval(
                     self.adjustColorScale, fromData=1,
                     toData=0.25,
                     duration=timeTillSquish,
                     extraArgs=[i]))
                 hideTrack.append(LerpScaleInterval(
-                    i, timeForDrop-timeTillSquish,
+                    i, timeForDrop - timeTillSquish,
                     Vec3(1, 1, 0.01)))
                 hideTrack.append(Func(i.stash))
                 hideTrack.append(Func(i.setScale, Vec3(1)))
@@ -724,22 +735,22 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         self.stopTransition()
         self._deleteTransitionTrack()
         self.transitionTrack = tracks
-        
-        #print "transitionTrack: %s" % self.transitionTrack
-        #print "starting track at %s" % globalClock.getFrameTime()
+
+        # print "transitionTrack: %s" % self.transitionTrack
+        # print "starting track at %s" % globalClock.getFrameTime()
         self.transitionTrack.start(timeStamp)
-    
+
     def setupSuitBuilding(self, nodePath):
-        #("setupSuitBuilding(nodePath=%s)"%(nodePath,)))
-        dnaStore=self.cr.playGame.dnaStore
+        # ("setupSuitBuilding(nodePath=%s)"%(nodePath,)))
+        dnaStore = self.cr.playGame.dnaStore
         level = int(self.difficulty / 2) + 1
-        suitNP=dnaStore.findNode("suit_landmark_"
-                +chr(self.track)+str(level))
+        suitNP = dnaStore.findNode("suit_landmark_"
+                                   + chr(self.track) + str(level))
 
         # If you want to make the suit buildings visible from a
         # distance, uncomment the following line, and comment out
         # the three lines under it.
-        #suitBuildingNP=suitNP.copyTo(self.townTopLevel)
+        # suitBuildingNP=suitNP.copyTo(self.townTopLevel)
         zoneId = dnaStore.getZoneFromBlockNumber(self.block)
         zoneId = ZoneUtil.getTrueZoneId(zoneId, self.interiorZoneId)
         newParentNP = base.cr.playGame.hood.loader.zoneDict[zoneId]
@@ -751,8 +762,8 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             buildingTitle = TTLocalizer.CogsInc
         else:
             buildingTitle += TTLocalizer.CogsIncExt
-        buildingTitle += ("\n%s" % SuitDNA.getDeptFullname(chr(self.track)))
-        
+        buildingTitle += f"\n{SuitDNA.getDeptFullname(chr(self.track))}"
+
         # Try to find this signText in the node map
         textNode = TextNode("sign")
         textNode.setTextColor(1.0, 1.0, 1.0, 1.0)
@@ -766,18 +777,18 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         # the sign accordingly.
         textHeight = textNode.getHeight()
         zScale = (textHeight + 2) / 3.0
-        
+
         # Determine where the sign should go:
-        signOrigin=suitBuildingNP.find("**/sign_origin;+s")
+        signOrigin = suitBuildingNP.find("**/sign_origin;+s")
         assert(not signOrigin.isEmpty())
         # Get the background:
-        backgroundNP=loader.loadModel("phase_5/models/modules/suit_sign")
+        backgroundNP = loader.loadModel("phase_5/models/modules/suit_sign")
         assert(not backgroundNP.isEmpty())
         backgroundNP.reparentTo(signOrigin)
         backgroundNP.setPosHprScale(0.0, 0.0, textHeight * 0.8 / zScale,
                                     0.0, 0.0, 0.0,
                                     8.0, 8.0, 8.0 * zScale)
-        #backgroundNP.node().setEffect(DecalEffect.make())
+        # backgroundNP.node().setEffect(DecalEffect.make())
         # Get the text node path:
         signTextNodePath = backgroundNP.attachNewNode(textNode.generate())
         signTextNodePath.setAttrib(DepthOffsetAttrib.make(1))
@@ -795,7 +806,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         frontNP.node().setEffect(DecalEffect.make())
 
         # Rename the building:
-        suitBuildingNP.setName("sb"+str(self.block)+":_landmark__DNARoot")
+        suitBuildingNP.setName("sb" + str(self.block) + ":_landmark__DNARoot")
         suitBuildingNP.setPosHprScale(nodePath,
                                       0.0, 0.0, 0.0,
                                       0.0, 0.0, 0.0,
@@ -804,7 +815,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         suitBuildingNP.flattenMedium()
         self.loadElevator(suitBuildingNP)
         return suitBuildingNP
-    
+
     def cleanupSuitBuilding(self):
         if hasattr(self, "floorIndicator"):
             del self.floorIndicator
@@ -813,12 +824,12 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         node.setColorScale(scale, scale, scale, 1)
 
     def animToCogdo(self, timeStamp):
-        #("animToCogdo(timeStamp=%s)"%(timeStamp,)))
+        # ("animToCogdo(timeStamp=%s)"%(timeStamp,)))
         self.stopTransition()
         if self.mode != 'toon':
             self.setToToon()
         self.loadAnimToSuitSfx()
-        
+
         # first find the side building portions
         #
         sideBldgNodes = self.getNodePaths()
@@ -826,7 +837,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         # now find and position the landmark portion of the cogdo building
         # Copy the cogdo landmark building, based on difficulty:
         #
-        nodePath=hidden.find(self.getSbSearchString())
+        nodePath = hidden.find(self.getSbSearchString())
         assert(not nodePath.isEmpty())
         newNP = self.setupCogdo(nodePath)
         # Make sure the doors are closed for now.
@@ -836,24 +847,24 @@ class DistributedBuilding(DistributedObject.DistributedObject):
 
         for np in sideBldgNodes:
             if not np.isEmpty():
-                np.setColorScale(.6,.6,.6,1.)
+                np.setColorScale(.6, .6, .6, 1.)
 
         # create intervals to position and/or hide/stash the building parts
         # depending if it is part of the toon or cogdo version
         #
-        soundPlayed = 0  # don't want to play sound for every part 
-        tracks = Parallel(name = self.taskName('toCogdoTrack'))
+        soundPlayed = 0  # don't want to play sound for every part
+        tracks = Parallel(name=self.taskName('toCogdoTrack'))
         for i in sideBldgNodes:
-            name=i.getName()
-            timeForDrop = TO_SUIT_BLDG_TIME*0.85
-            if (name[0]=='c'):
-                #print 'anim2suit: suit flat scale: %s' % repr(i.getScale())
+            name = i.getName()
+            timeForDrop = TO_SUIT_BLDG_TIME * 0.85
+            if (name[0] == 'c'):
+                # print 'anim2suit: suit flat scale: %s' % repr(i.getScale())
                 # set the position of the node, then unstash it to show it
                 showTrack = Sequence(
-                    name = self.taskName('ToCogdoFlatsTrack') +
+                    name=self.taskName('ToCogdoFlatsTrack') +
                     '-' + str(sideBldgNodes.index(i)))
                 initPos = Point3(0, 0, self.SUIT_INIT_HEIGHT) + \
-                          i.getPos()
+                    i.getPos()
                 showTrack.append(Func(i.setPos, initPos))
                 showTrack.append(Func(i.unstash))
 
@@ -861,30 +872,30 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                 # the landmark bldg itself.
                 if i == sideBldgNodes[len(sideBldgNodes) - 1]:
                     showTrack.append(Func(self.normalizeElevator))
-                #print "moving suit bldg part from %s to %s"%(str(initPos),
+                # print "moving suit bldg part from %s to %s"%(str(initPos),
                 #                                             str(i.getPos()))
                 if not soundPlayed:
                     showTrack.append(Func(
                         base.playSfx, self.cogDropSound, 0, 1, None, 0.))
                 showTrack.append(LerpPosInterval(
                     i, timeForDrop,
-                    i.getPos(), name = self.taskName('ToCogdoAnim') + '-' +
+                    i.getPos(), name=self.taskName('ToCogdoAnim') + '-' +
                     str(sideBldgNodes.index(i))))
                 if not soundPlayed:
                     showTrack.append(Func(
                         base.playSfx, self.cogLandSound, 0, 1, None, 0.))
                 showTrack.append(self.createBounceTrack(
                     i, 2, 0.65,
-                    TO_SUIT_BLDG_TIME-timeForDrop,
+                    TO_SUIT_BLDG_TIME - timeForDrop,
                     slowInitBounce=1.0))
                 if not soundPlayed:
                     showTrack.append(Func(
                         base.playSfx, self.cogSettleSound, 0, 1, None, 0.))
                 tracks.append(showTrack)
-                
+
                 if not soundPlayed:
                     soundPlayed = 1
-                #print "moving suit flat from %s to %s"%(str(initPos),
+                # print "moving suit flat from %s to %s"%(str(initPos),
                 #                                        str(i.getPos()))
                 # lerp the alpha in for the building part, making sure to
                 # remove the transparency transition when the fade is done
@@ -895,29 +906,29 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                 #
                 #showTrack = Sequence()
                 #showTrack.append(Func(i.setTransparency, 1))
-                #showTrack.append(LerpFunctionInterval(
+                # showTrack.append(LerpFunctionInterval(
                 #    i.setAlphaScale, fromData=0, toData=1,
                 #    duration=TO_SUIT_BLDG_TIME*0.20))
-                #showTrack.append(FunctionInterval(i.clearTransparency))
-                #tracks.append(showTrack)
+                # showTrack.append(FunctionInterval(i.clearTransparency))
+                # tracks.append(showTrack)
 
-            elif (name[0]=='t'):
+            elif (name[0] == 't'):
                 hideTrack = Sequence(
-                    name = self.taskName('ToCogdoToonFlatsTrack'))
+                    name=self.taskName('ToCogdoToonFlatsTrack'))
                 # figure how long till the toon building will start to be
                 # compressed by the cogdo coming down on it
                 #
                 timeTillSquish = (self.SUIT_INIT_HEIGHT - 20.0) // \
-                                 self.SUIT_INIT_HEIGHT
+                    self.SUIT_INIT_HEIGHT
                 timeTillSquish *= timeForDrop
-                #hideTrack.append(Wait(timeTillSquish))
+                # hideTrack.append(Wait(timeTillSquish))
                 hideTrack.append(LerpFunctionInterval(
                     self.adjustColorScale, fromData=1,
                     toData=0.25,
                     duration=timeTillSquish,
                     extraArgs=[i]))
                 hideTrack.append(LerpScaleInterval(
-                    i, timeForDrop-timeTillSquish,
+                    i, timeForDrop - timeTillSquish,
                     Vec3(1, 1, 0.01)))
                 hideTrack.append(Func(i.stash))
                 hideTrack.append(Func(i.setScale, Vec3(1)))
@@ -930,23 +941,24 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         self.stopTransition()
         self._deleteTransitionTrack()
         self.transitionTrack = tracks
-        
-        #print "transitionTrack: %s" % self.transitionTrack
-        #print "starting track at %s" % globalClock.getFrameTime()
+
+        # print "transitionTrack: %s" % self.transitionTrack
+        # print "starting track at %s" % globalClock.getFrameTime()
         self.transitionTrack.start(timeStamp)
 
     def setupCogdo(self, nodePath):
-        #("setupCogdo(nodePath=%s)"%(nodePath,)))
-        dnaStore=self.cr.playGame.dnaStore
+        # ("setupCogdo(nodePath=%s)"%(nodePath,)))
+        dnaStore = self.cr.playGame.dnaStore
         level = int(self.difficulty / 2) + 1
         suitNP = dnaStore.findNode(FO_DICT[chr(self.track)])
         if not suitNP:
-             suitNP = loader.loadModel('phase_5/models/cogdominium/%s' % FO_DICT[chr(self.track)])
-        
+            suitNP = loader.loadModel(
+                f'phase_5/models/cogdominium/{FO_DICT[chr(self.track)]}')
+
         # If you want to make the suit buildings visible from a
         # distance, uncomment the following line, and comment out
         # the three lines under it.
-        #suitBuildingNP=suitNP.copyTo(self.townTopLevel)
+        # suitBuildingNP=suitNP.copyTo(self.townTopLevel)
         zoneId = dnaStore.getZoneFromBlockNumber(self.block)
         zoneId = ZoneUtil.getTrueZoneId(zoneId, self.interiorZoneId)
         newParentNP = base.cr.playGame.hood.loader.zoneDict[zoneId]
@@ -958,7 +970,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             buildingTitle = TTLocalizer.Cogdominiums
         else:
             buildingTitle += TTLocalizer.CogdominiumsExt
-        
+
         # Try to find this signText in the node map
         textNode = TextNode("sign")
         textNode.setTextColor(1.0, 1.0, 1.0, 1.0)
@@ -972,36 +984,50 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         # the sign accordingly.
         textHeight = textNode.getHeight()
         zScale = (textHeight + 2) / 3.0
-        
+
         # Determine where the sign should go:
-        signOrigin=suitBuildingNP.find("**/sign_origin;+s")
+        signOrigin = suitBuildingNP.find("**/sign_origin;+s")
         assert(not signOrigin.isEmpty())
         # Get the background:
-        backgroundNP = loader.loadModel('phase_5/models/cogdominium/field_office_sign')
+        backgroundNP = loader.loadModel(
+            'phase_5/models/cogdominium/field_office_sign')
         assert(not backgroundNP.isEmpty())
         backgroundNP.reparentTo(signOrigin)
-        backgroundNP.setPosHprScale(0.0, 0.0, -1.2 + textHeight * 0.8 / zScale, 0.0, 0.0, 0.0, 20.0, 8.0, 8.0 * zScale)
-        #backgroundNP.node().setEffect(DecalEffect.make())
+        backgroundNP.setPosHprScale(0.0, 0.0, -
+                                    1.2 +
+                                    textHeight *
+                                    0.8 /
+                                    zScale, 0.0, 0.0, 0.0, 20.0, 8.0, 8.0 *
+                                    zScale)
+        # backgroundNP.node().setEffect(DecalEffect.make())
         # Get the text node path:
         signTextNodePath = backgroundNP.attachNewNode(textNode.generate())
         signTextNodePath.setAttrib(DepthOffsetAttrib.make(1))
         #assert(not signTextNodePath.isEmpty())
         # Scale the text:
-        signTextNodePath.setPosHprScale(0.0, 0.0, -0.13 + textHeight * 0.1 / zScale, 0.0, 0.0, 0.0, 0.1 * 8.0 / 20.0, 0.1, 0.1 / zScale)
+        signTextNodePath.setPosHprScale(0.0, 0.0, -
+                                        0.13 +
+                                        textHeight *
+                                        0.1 /
+                                        zScale, 0.0, 0.0, 0.0, 0.1 *
+                                        8.0 /
+                                        20.0, 0.1, 0.1 /
+                                        zScale)
         # Clear parent color higher in the hierarchy
         signTextNodePath.setColor(1.0, 1.0, 1.0, 1.0)
         # Decal sign onto the front of the building:
         frontNP = suitBuildingNP.find("**/*_front")
-        #assert(not frontNP.isEmpty()) #not in 2013 tto source
+        # assert(not frontNP.isEmpty()) #not in 2013 tto source
         backgroundNP.wrtReparentTo(frontNP)
-        #frontNP.node().setEffect(DecalEffect.make())
+        # frontNP.node().setEffect(DecalEffect.make())
 
         # Rename the building:
-        suitBuildingNP.setName("cb"+str(self.block)+":_landmark__DNARoot")
-        suitBuildingNP.setPosHprScale(nodePath, 15.463, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0)
+        suitBuildingNP.setName("cb" + str(self.block) + ":_landmark__DNARoot")
+        suitBuildingNP.setPosHprScale(
+            nodePath, 15.463, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0)
         # Get rid of any transitions and extra nodes
         suitBuildingNP.flattenMedium()
-        suitBuildingNP.setColorScale(.6,.6,.6,1.)
+        suitBuildingNP.setColorScale(.6, .6, .6, 1.)
         self.loadElevator(suitBuildingNP, cogDo=True)
         return suitBuildingNP
 
@@ -1027,51 +1053,51 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         # create intervals to position and/or hide/stash the building parts
         # depending if it is part of the toon or suit version
         #
-        suitSoundPlayed = 0 # don't want to play sound for every part
-        toonSoundPlayed = 0 # don't want to play sound for every part        
+        suitSoundPlayed = 0  # don't want to play sound for every part
+        toonSoundPlayed = 0  # don't want to play sound for every part
         bldgNodes = self.getNodePaths()
         tracks = Parallel()
         for i in bldgNodes:
-            name=i.getName()
-            if (name[0]=='s'):
+            name = i.getName()
+            if (name[0] == 's'):
                 hideTrack = Sequence(
-                    name = self.taskName('ToToonSuitFlatsTrack'))
+                    name=self.taskName('ToToonSuitFlatsTrack'))
                 # have the suit building scale away
                 #
                 #origPos = i.getPos()
-                #print "sidebldgpos: %s" % str(origPos)
-                #tgtPos = Point3(
+                # print "sidebldgpos: %s" % str(origPos)
+                # tgtPos = Point3(
                 #    Point3(0,0,-self.SUIT_INIT_HEIGHT) + \
                 #    origPos)
                 # shake the suit building on the x and y axis as it goes down
                 #
                 landmark = name.find("_landmark_") != -1
-                #hideTrack.append(LerpPosInterval(
+                # hideTrack.append(LerpPosInterval(
                 #    i, TO_TOON_BLDG_TIME,
                 #    tgtPos, name = self.taskName('ToToonAnim')))
-                #hideTrack.append(LerpFunctionInterval(
+                # hideTrack.append(LerpFunctionInterval(
                 #    self.shakePart,
                 #    extraArgs=[i,landmark,
                 #               origPos.getX(),origPos.getY()]))
-                #print 'anim2toon: suit flat scale: %s' % repr(i.getScale())
+                # print 'anim2toon: suit flat scale: %s' % repr(i.getScale())
                 if not suitSoundPlayed:
                     hideTrack.append(Func(
                         base.playSfx, self.cogWeakenSound, 0, 1, None, 0.))
                 hideTrack.append(self.createBounceTrack(
-                    i, 3, 1.2, TO_TOON_BLDG_TIME*0.05,
+                    i, 3, 1.2, TO_TOON_BLDG_TIME * 0.05,
                     slowInitBounce=0.0))
                 hideTrack.append(self.createBounceTrack(
-                    i, 5, 0.8, TO_TOON_BLDG_TIME*0.10,
+                    i, 5, 0.8, TO_TOON_BLDG_TIME * 0.10,
                     slowInitBounce=0.0))
                 hideTrack.append(self.createBounceTrack(
-                    i, 7, 1.2, TO_TOON_BLDG_TIME*0.17,
+                    i, 7, 1.2, TO_TOON_BLDG_TIME * 0.17,
                     slowInitBounce=0.0))
                 hideTrack.append(self.createBounceTrack(
-                    i, 9, 1.2, TO_TOON_BLDG_TIME*0.18,
+                    i, 9, 1.2, TO_TOON_BLDG_TIME * 0.18,
                     slowInitBounce=0.0))
                 realScale = i.getScale()
                 hideTrack.append(LerpScaleInterval(
-                    i, TO_TOON_BLDG_TIME*0.10,
+                    i, TO_TOON_BLDG_TIME * 0.10,
                     Vec3(realScale[0], realScale[1], 0.01)))
                 if landmark:
                     # the landmark portion is recreated each time a suit
@@ -1087,37 +1113,37 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                     # is implemented)
                     #
                     hideTrack.append(Func(i.stash))
-                    #hideTrack.append(FunctionInterval(
+                    # hideTrack.append(FunctionInterval(
                     #    i.setPos, extraArgs = [origPos]))
                     hideTrack.append(Func(i.setScale, Vec3(1)))
                 if not suitSoundPlayed:
                     suitSoundPlayed = 1
                 tracks.append(hideTrack)
-            elif (name[0]=='t'):
+            elif (name[0] == 't'):
                 hideTrack = Sequence(
-                    name = self.taskName('ToToonFlatsTrack'))
+                    name=self.taskName('ToToonFlatsTrack'))
                 # show the toon portion of the building and set up the
                 # transparency transition so we can slowly fade it in
                 #
-                hideTrack.append(Wait(TO_TOON_BLDG_TIME*0.5))
+                hideTrack.append(Wait(TO_TOON_BLDG_TIME * 0.5))
                 if not toonSoundPlayed:
                     hideTrack.append(Func(
                         base.playSfx, self.toonGrowSound, 0, 1, None, 0.))
                 hideTrack.append(Func(i.unstash))
-                hideTrack.append(Func(i.setScale, Vec3(1,1,0.01)))
+                hideTrack.append(Func(i.setScale, Vec3(1, 1, 0.01)))
                 #hideTrack.append(Func(i.setTransparency, 1))
                 # lerp the alpha in for the building part, making sure to
                 # remove the transparency transition when the fade is done
                 #
-                #hideTrack.append(LerpFunctionInterval(
+                # hideTrack.append(LerpFunctionInterval(
                 #    i.setAlphaScale, fromData=0.15, toData=1,
                 #    duration=TO_TOON_BLDG_TIME*0.25))
-                #hideTrack.append(Func(i.clearTransparency))
+                # hideTrack.append(Func(i.clearTransparency))
                 if not toonSoundPlayed:
                     hideTrack.append(Func(
                         base.playSfx, self.toonSettleSound, 0, 1, None, 0.))
                 hideTrack.append(self.createBounceTrack(
-                    i, 11, 1.2, TO_TOON_BLDG_TIME*0.5,
+                    i, 11, 1.2, TO_TOON_BLDG_TIME * 0.5,
                     slowInitBounce=4.0))
                 tracks.append(hideTrack)
                 if not toonSoundPlayed:
@@ -1127,12 +1153,12 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         # playing
         #
         self.stopTransition()
-        #self.transitionTrack = Parallel(tracks, self.taskName(
+        # self.transitionTrack = Parallel(tracks, self.taskName(
         #    'ToToonMTrack'))
         bldgMTrack = tracks
 
-        #print "transitionTrack: %s" % self.transitionTrack
-        #print "starting track at %s" % globalClock.getFrameTime()
+        # print "transitionTrack: %s" % self.transitionTrack
+        # print "starting track at %s" % globalClock.getFrameTime()
 
         # TODO: integrate the toons running out of the building into
         # the multitrack. For now, Just plant them outside the elevator.
@@ -1152,18 +1178,18 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             freedomTrack2 = Func(
                 base.localAvatar.d_setParent,
                 ToontownGlobals.SPRender)
-            
+
             self.transitionTrack = Parallel(camTrack,
                                             Sequence(victoryRunTrack,
                                                      bldgMTrack,
                                                      freedomTrack1,
                                                      freedomTrack2,
                                                      ),
-                                            name = trackName)
+                                            name=trackName)
         else:
             self.transitionTrack = Sequence(victoryRunTrack,
                                             bldgMTrack,
-                                            name = trackName
+                                            name=trackName
                                             )
 
         self.transitionTrack.delayDeletes = delayDeletes
@@ -1197,52 +1223,52 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         # create intervals to position and/or hide/stash the building parts
         # depending if it is part of the toon or suit version
         #
-        suitSoundPlayed = 0 # don't want to play sound for every part
-        toonSoundPlayed = 0 # don't want to play sound for every part        
+        suitSoundPlayed = 0  # don't want to play sound for every part
+        toonSoundPlayed = 0  # don't want to play sound for every part
         bldgNodes = self.getNodePaths()
         tracks = Parallel()
         for i in bldgNodes:
             i.clearColorScale()
-            name=i.getName()
-            if (name[0]=='c'):
+            name = i.getName()
+            if (name[0] == 'c'):
                 hideTrack = Sequence(
-                    name = self.taskName('ToToonCogdoFlatsTrack'))
+                    name=self.taskName('ToToonCogdoFlatsTrack'))
                 # have the suit building scale away
                 #
                 #origPos = i.getPos()
-                #print "sidebldgpos: %s" % str(origPos)
-                #tgtPos = Point3(
+                # print "sidebldgpos: %s" % str(origPos)
+                # tgtPos = Point3(
                 #    Point3(0,0,-self.SUIT_INIT_HEIGHT) + \
                 #    origPos)
                 # shake the suit building on the x and y axis as it goes down
                 #
                 landmark = name.find("_landmark_") != -1
-                #hideTrack.append(LerpPosInterval(
+                # hideTrack.append(LerpPosInterval(
                 #    i, TO_TOON_BLDG_TIME,
                 #    tgtPos, name = self.taskName('ToToonAnim')))
-                #hideTrack.append(LerpFunctionInterval(
+                # hideTrack.append(LerpFunctionInterval(
                 #    self.shakePart,
                 #    extraArgs=[i,landmark,
                 #               origPos.getX(),origPos.getY()]))
-                #print 'anim2toon: suit flat scale: %s' % repr(i.getScale())
+                # print 'anim2toon: suit flat scale: %s' % repr(i.getScale())
                 if not suitSoundPlayed:
                     hideTrack.append(Func(
                         base.playSfx, self.cogWeakenSound, 0, 1, None, 0.))
                 hideTrack.append(self.createBounceTrack(
-                    i, 3, 1.2, TO_TOON_BLDG_TIME*0.05,
+                    i, 3, 1.2, TO_TOON_BLDG_TIME * 0.05,
                     slowInitBounce=0.0))
                 hideTrack.append(self.createBounceTrack(
-                    i, 5, 0.8, TO_TOON_BLDG_TIME*0.10,
+                    i, 5, 0.8, TO_TOON_BLDG_TIME * 0.10,
                     slowInitBounce=0.0))
                 hideTrack.append(self.createBounceTrack(
-                    i, 7, 1.2, TO_TOON_BLDG_TIME*0.17,
+                    i, 7, 1.2, TO_TOON_BLDG_TIME * 0.17,
                     slowInitBounce=0.0))
                 hideTrack.append(self.createBounceTrack(
-                    i, 9, 1.2, TO_TOON_BLDG_TIME*0.18,
+                    i, 9, 1.2, TO_TOON_BLDG_TIME * 0.18,
                     slowInitBounce=0.0))
                 realScale = i.getScale()
                 hideTrack.append(LerpScaleInterval(
-                    i, TO_TOON_BLDG_TIME*0.10,
+                    i, TO_TOON_BLDG_TIME * 0.10,
                     Vec3(realScale[0], realScale[1], 0.01)))
                 if landmark:
                     # the landmark portion is recreated each time a suit
@@ -1258,37 +1284,37 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                     # is implemented)
                     #
                     hideTrack.append(Func(i.stash))
-                    #hideTrack.append(FunctionInterval(
+                    # hideTrack.append(FunctionInterval(
                     #    i.setPos, extraArgs = [origPos]))
                     hideTrack.append(Func(i.setScale, Vec3(1)))
                 if not suitSoundPlayed:
                     suitSoundPlayed = 1
                 tracks.append(hideTrack)
-            elif (name[0]=='t'):
+            elif (name[0] == 't'):
                 hideTrack = Sequence(
-                    name = self.taskName('ToToonFromCogdoFlatsTrack'))
+                    name=self.taskName('ToToonFromCogdoFlatsTrack'))
                 # show the toon portion of the building and set up the
                 # transparency transition so we can slowly fade it in
                 #
-                hideTrack.append(Wait(TO_TOON_BLDG_TIME*0.5))
+                hideTrack.append(Wait(TO_TOON_BLDG_TIME * 0.5))
                 if not toonSoundPlayed:
                     hideTrack.append(Func(
                         base.playSfx, self.toonGrowSound, 0, 1, None, 0.))
                 hideTrack.append(Func(i.unstash))
-                hideTrack.append(Func(i.setScale, Vec3(1,1,0.01)))
+                hideTrack.append(Func(i.setScale, Vec3(1, 1, 0.01)))
                 #hideTrack.append(Func(i.setTransparency, 1))
                 # lerp the alpha in for the building part, making sure to
                 # remove the transparency transition when the fade is done
                 #
-                #hideTrack.append(LerpFunctionInterval(
+                # hideTrack.append(LerpFunctionInterval(
                 #    i.setAlphaScale, fromData=0.15, toData=1,
                 #    duration=TO_TOON_BLDG_TIME*0.25))
-                #hideTrack.append(Func(i.clearTransparency))
+                # hideTrack.append(Func(i.clearTransparency))
                 if not toonSoundPlayed:
                     hideTrack.append(Func(
                         base.playSfx, self.toonSettleSound, 0, 1, None, 0.))
                 hideTrack.append(self.createBounceTrack(
-                    i, 11, 1.2, TO_TOON_BLDG_TIME*0.5,
+                    i, 11, 1.2, TO_TOON_BLDG_TIME * 0.5,
                     slowInitBounce=4.0))
                 tracks.append(hideTrack)
                 if not toonSoundPlayed:
@@ -1298,12 +1324,12 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         # playing
         #
         self.stopTransition()
-        #self.transitionTrack = Parallel(tracks, self.taskName(
+        # self.transitionTrack = Parallel(tracks, self.taskName(
         #    'ToToonMTrack'))
         bldgMTrack = tracks
 
-        #print "transitionTrack: %s" % self.transitionTrack
-        #print "starting track at %s" % globalClock.getFrameTime()
+        # print "transitionTrack: %s" % self.transitionTrack
+        # print "starting track at %s" % globalClock.getFrameTime()
 
         # TODO: integrate the toons running out of the building into
         # the multitrack. For now, Just plant them outside the elevator.
@@ -1323,18 +1349,18 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             freedomTrack2 = Func(
                 base.localAvatar.d_setParent,
                 ToontownGlobals.SPRender)
-            
+
             self.transitionTrack = Parallel(camTrack,
                                             Sequence(victoryRunTrack,
                                                      bldgMTrack,
                                                      freedomTrack1,
                                                      freedomTrack2,
                                                      ),
-                                            name = trackName)
+                                            name=trackName)
         else:
             self.transitionTrack = Sequence(victoryRunTrack,
                                             bldgMTrack,
-                                            name = trackName
+                                            name=trackName
                                             )
 
         self.transitionTrack.delayDeletes = delayDeletes
@@ -1354,21 +1380,23 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             Func(camera.setPosHpr,
                  self.elevatorNodePath,
                  0, -32.5, 9.4, 0, 348, 0),
-            Func(base.camLens.setMinFov, ToontownGlobals.DefaultCameraFov/(4./3.)),
+            Func(base.camLens.setMinFov,
+                 ToontownGlobals.DefaultCameraFov / (4. / 3.)),
             Wait(VICTORY_RUN_TIME),
             # Watch the building transform
             Func(camera.setPosHpr,
                  self.elevatorNodePath,
                  0, -32.5, 17, 0, 347, 0),
-            Func(base.camLens.setMinFov,75.0/(4.0/3.0)),
+            Func(base.camLens.setMinFov, 75.0 / (4.0 / 3.0)),
             Wait(TO_TOON_BLDG_TIME),
             # Put the camera fov back to normal
-            Func(base.camLens.setMinFov, ToontownGlobals.DefaultCameraFov /(4.0/3.0)),
-            )
+            Func(base.camLens.setMinFov,
+                 ToontownGlobals.DefaultCameraFov / (4.0 / 3.0)),
+        )
         return track
 
     def plantVictorsOutsideBldg(self):
-        #print "planting Victors %s !" % self.victorList
+        # print "planting Victors %s !" % self.victorList
         retVal = 0
         for victor in self.victorList:
             if victor != 0 and victor in self.cr.doId2do:
@@ -1388,7 +1416,9 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         for victor in self.victorList:
             if victor != 0 and victor in self.cr.doId2do:
                 toon = self.cr.doId2do[victor]
-                delayDeletes.append(DelayDelete.DelayDelete(toon, 'getVictoryRunTrack'))
+                delayDeletes.append(
+                    DelayDelete.DelayDelete(
+                        toon, 'getVictoryRunTrack'))
                 toon.stopSmooth()
                 toon.setParent(ToontownGlobals.SPHidden)
                 origPosTrack.append(Func(toon.setPosHpr,
@@ -1416,7 +1446,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                 p2 = Point3(ElevatorOutPoints[i][0],
                             ElevatorOutPoints[i][1],
                             ElevatorOutPoints[i][2])
-                
+
                 runOutSingle = Sequence(
                     # Disallow body emotes so we don't slide
                     Func(Emote.globalEmote.disableBody, toon, "getVictory"),
@@ -1438,17 +1468,17 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                     # Free the toon up to walk around on his own again
                     Func(toon.startSmooth),
                     Func(Emote.globalEmote.releaseBody, toon, "getVictory"),
-                    )
+                )
                 runOutAll.append(runOutSingle)
             i += 1
-                
+
         victoryRunTrack = Sequence(origPosTrack,
                                    openDoors,
                                    runOutAll,
                                    )
-        
+
         return (victoryRunTrack, delayDeletes)
-                    
+
     def localToonIsVictor(self):
         retVal = 0
         for victor in self.victorList:
@@ -1470,21 +1500,21 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             self.notify.warning(
                 "createBounceTrack called with invalid parameter")
             return
-        
+
         # add an extra bounce to make sure the object
         # is properly scaled to 1 on the last lerpScaleInterval
         #
         result = Sequence()
-        numBounces+=1
-        
+        numBounces += 1
+
         # calculate how long, in seconds, each bounce should last, make
         # the time of each bounce smaller if we want to extend the length
         # the initial bounce
         #
         if slowInitBounce:
-            bounceTime = totalTime/(numBounces + slowInitBounce - 1.0)
+            bounceTime = totalTime / (numBounces + slowInitBounce - 1.0)
         else:
-            bounceTime = totalTime/float(numBounces)
+            bounceTime = totalTime / float(numBounces)
 
         # if specified, the first bounce lasts the length of 3 bounces,
         # useful for when initially appearing, the first bounce of the
@@ -1510,10 +1540,10 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             # determine the direction that this scale should go,
             # alternating for each lerpScaleInterval to simulate
             # a spring effect
-            # 
-            if currBounceScale == numBounces-1:
+            #
+            if currBounceScale == numBounces - 1:
                 currScale = realScale[2]
-            elif currBounceScale%2:
+            elif currBounceScale % 2:
                 currScale = realScale[2] - currScaleDiff
             else:
                 currScale = realScale[2] + currScaleDiff
@@ -1536,18 +1566,18 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         if self.transitionTrack:
             self.transitionTrack.finish()
             self._deleteTransitionTrack()
-        
+
     def setToSuit(self):
-        #("setToSuit()"))
+        # ("setToSuit()"))
         self.stopTransition()
         if self.mode == 'suit':
             return
         self.mode = 'suit'
-        
-        nodes=self.getNodePaths()
+
+        nodes = self.getNodePaths()
         for i in nodes:
-            name=i.getName()
-            if (name[0]=='s'):
+            name = i.getName()
+            if (name[0] == 's'):
                 if (name.find("_landmark_") != -1):
                     # an old suit landmark instance.
                     i.removeNode()
@@ -1555,7 +1585,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                     # Suit flat buildings:
                     # i.show()
                     i.unstash()
-            elif (name[0]=='t'):
+            elif (name[0] == 't'):
                 if (name.find("_landmark_") != -1):
                     # Toon landmark buildings:
                     i.stash()
@@ -1571,26 +1601,27 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                     i.stash()
         # Copy the suit landmark building, based on the suit track and
         # difficulty:
-        npc=hidden.findAllMatches(self.getSbSearchString())
-        
-        assert(npc.getNumPaths()>0)
+        npc = hidden.findAllMatches(self.getSbSearchString())
+
+        assert(npc.getNumPaths() > 0)
         for i in range(npc.getNumPaths()):
-            nodePath=npc.getPath(i)
+            nodePath = npc.getPath(i)
             self.adjustSbNodepathScale(nodePath)
-            self.notify.debug("net transform = %s" % str(nodePath.getNetTransform()))
+            self.notify.debug(
+                f"net transform = {str(nodePath.getNetTransform())}")
             self.setupSuitBuilding(nodePath)
-    
+
     def setToCogdo(self):
-        #("setToCogdo()"))
+        # ("setToCogdo()"))
         self.stopTransition()
         if self.mode == 'cogdo':
             return
         self.mode = 'cogdo'
-        
-        nodes=self.getNodePaths()
+
+        nodes = self.getNodePaths()
         for i in nodes:
-            name=i.getName()
-            if (name[0]=='c'):
+            name = i.getName()
+            if (name[0] == 'c'):
                 if (name.find("_landmark_") != -1):
                     # an old suit landmark instance.
                     i.removeNode()
@@ -1598,13 +1629,12 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                     # Suit flat buildings:
                     # i.show()
                     i.unstash()
-            elif (name[0]=='t'):
+            elif (name[0] == 't'):
                 if (name.find("_landmark_") != -1):
                     # Toon landmark buildings:
                     i.stash()
                 else:
                     i.stash()
-                    
 
             elif name[0] == 's':
                 if name.find('_landmark_') != -1:
@@ -1617,41 +1647,42 @@ class DistributedBuilding(DistributedObject.DistributedObject):
 
         for np in nodes:
             if not np.isEmpty():
-                np.setColorScale(.6,.6,.6,1.)
+                np.setColorScale(.6, .6, .6, 1.)
 
         # Copy the suit landmark building, based on the suit track and
         # difficulty:
-        npc=hidden.findAllMatches(self.getSbSearchString())
-        
-        assert(npc.getNumPaths()>0)
+        npc = hidden.findAllMatches(self.getSbSearchString())
+
+        assert(npc.getNumPaths() > 0)
         for i in range(npc.getNumPaths()):
-            nodePath=npc.getPath(i)
+            nodePath = npc.getPath(i)
             self.adjustSbNodepathScale(nodePath)
-            self.notify.debug("net transform = %s" % str(nodePath.getNetTransform()))
+            self.notify.debug(
+                f"net transform = {str(nodePath.getNetTransform())}")
             self.setupCogdo(nodePath)
-    
+
     def setToToon(self):
-        #("setToToon() mode=%s" % (self.mode)))
+        # ("setToToon() mode=%s" % (self.mode)))
         self.stopTransition()
         if self.mode == 'toon':
             return
         self.mode = 'toon'
-        
+
         # Clear reference to the suit door.
         self.suitDoorOrigin = None
         # Go through nodes, and do the right thing.
-        nodes=self.getNodePaths()
+        nodes = self.getNodePaths()
         for i in nodes:
             i.clearColorScale()
-            name=i.getName()
-            if (name[0]=='s'):
+            name = i.getName()
+            if (name[0] == 's'):
                 if (name.find("_landmark_") != -1):
                     i.removeNode()
                 else:
                     # Suit flat buildings:
                     # i.hide()
                     i.stash()
-            elif (name[0]=='t'):
+            elif (name[0] == 't'):
                 if (name.find("_landmark_") != -1):
                     # Toon landmark buildings:
                     i.unstash()
@@ -1660,12 +1691,12 @@ class DistributedBuilding(DistributedObject.DistributedObject):
                     # i.show()
                     i.unstash()
 
-            elif (name[0]=='c'):
+            elif (name[0] == 'c'):
                 if name.find('_landmark_') != -1:
                     i.removeNode()
                 else:
                     i.stash()
-                        
+
     def normalizeElevator(self):
         # Normalize the size of the elevator
         # The suit building probably has a funny scale on it,
@@ -1673,7 +1704,6 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         self.elevatorNodePath.setScale(render, Vec3(1, 1, 1))
         self.elevatorNodePath.setPosHpr(0, 0, 0, 0, 0, 0)
         return
-    
 
     def getSbSearchString(self):
         """Return a string to use when looking for the suit building nodepath."""
@@ -1688,7 +1718,8 @@ class DistributedBuilding(DistributedObject.DistributedObject):
     def getVisZoneId(self):
         """Retur our visibible Zone Id."""
         # this computation is taken from DistributedBuildingMgrAI
-        exteriorZoneId = base.cr.playGame.hood.dnaStore.getZoneFromBlockNumber(self.block)
+        exteriorZoneId = base.cr.playGame.hood.dnaStore.getZoneFromBlockNumber(
+            self.block)
         visZoneId = ZoneUtil.getTrueZoneId(exteriorZoneId, self.zoneId)
         return visZoneId
 
@@ -1701,16 +1732,17 @@ class DistributedBuilding(DistributedObject.DistributedObject):
             visZoneId = self.getVisZoneId()
             if base.cr.playGame.hood:
                 loader = base.cr.playGame.hood.loader
-                if hasattr(loader,"getInteractiveProp"):
+                if hasattr(loader, "getInteractiveProp"):
                     self.interactiveProp = loader.getInteractiveProp(visZoneId)
                     result = self.interactiveProp
-                    self.notify.debug("self.interactiveProp = %s" % self.interactiveProp)
+                    self.notify.debug(
+                        f"self.interactiveProp = {self.interactiveProp}")
                 else:
-                   self.notify.warning("no loader.getInteractiveProp self.interactiveProp is None")
+                    self.notify.warning(
+                        "no loader.getInteractiveProp self.interactiveProp is None")
             else:
-               self.notify.warning("no hood self.interactiveProp is None")        
+                self.notify.warning("no hood self.interactiveProp is None")
         return result
-
 
     def makePropSad(self):
         """Make an interactive prop near us be sad when we're a cog building."""

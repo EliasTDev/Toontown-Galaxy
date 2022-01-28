@@ -7,6 +7,7 @@ from direct.fsm import State
 import random
 from . import HouseGlobals
 
+
 class DistributedHouseItemAI(DistributedObjectAI.DistributedObjectAI):
 
     """
@@ -14,7 +15,8 @@ class DistributedHouseItemAI(DistributedObjectAI.DistributedObjectAI):
     items that you can store and manipulate in your house.
     """
 
-    notify = DirectNotifyGlobal.directNotify.newCategory("DistributedHouseItemAI")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedHouseItemAI")
 
     def __init__(self, air):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)

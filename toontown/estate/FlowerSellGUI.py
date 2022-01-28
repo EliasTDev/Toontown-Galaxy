@@ -7,27 +7,28 @@ from direct.task import Task
 from . import FlowerBase
 from . import FlowerPicker
 
+
 class FlowerSellGUI(DirectFrame):
     notify = DirectNotifyGlobal.directNotify.newCategory("FlowerGui")
+
     def __init__(self, doneEvent):
         DirectFrame.__init__(self,
-                             relief = None,
-                             state = 'normal',
-                             geom = DGG.getDefaultDialogGeom(),
-                             geom_color = ToontownGlobals.GlobalDialogColor,
-                             geom_scale = (2.0,1,1.5),
-                             frameSize = (-1,1,-1,1),
-                             pos = (0,0,0),
-                             text = '',
-                             text_wordwrap = 26,
-                             text_scale = TTLocalizer.FSGDFTextScale,
-                             text_pos = (0, 0.65),
+                             relief=None,
+                             state='normal',
+                             geom=DGG.getDefaultDialogGeom(),
+                             geom_color=ToontownGlobals.GlobalDialogColor,
+                             geom_scale=(2.0, 1, 1.5),
+                             frameSize=(-1, 1, -1, 1),
+                             pos=(0, 0, 0),
+                             text='',
+                             text_wordwrap=26,
+                             text_scale=TTLocalizer.FSGDFTextScale,
+                             text_pos=(0, 0.65),
                              )
         self.initialiseoptions(FlowerSellGUI)
 
         # Send this when we are done so whoever made us can get a callback
         self.doneEvent = doneEvent
-
 
         # Create the flower picker
         self.picker = FlowerPicker.FlowerPicker(self)
@@ -37,7 +38,7 @@ class FlowerSellGUI(DirectFrame):
         newBasketFlower = base.localAvatar.flowerBasket.getFlower()
         self.picker.update(newBasketFlower)
         self.picker.show()
-        
+
         # Init buttons
         buttons = loader.loadModel('phase_3/models/gui/dialog_box_buttons_gui')
         okImageList = (buttons.find('**/ChtBx_OKBtn_UP'),
@@ -47,25 +48,25 @@ class FlowerSellGUI(DirectFrame):
                            buttons.find('**/CloseBtn_DN'),
                            buttons.find('**/CloseBtn_Rllvr'))
         self.cancelButton = DirectButton(
-            parent = self,
-            relief = None,
-            image = cancelImageList,
-            pos = (0.3, 0, -0.58),
-            text = TTLocalizer.FlowerGuiCancel,
-            text_scale = TTLocalizer.FSGCancelBtnTextScale,
-            text_pos = (0,-0.1),
-            command = self.__cancel,
-            )
+            parent=self,
+            relief=None,
+            image=cancelImageList,
+            pos=(0.3, 0, -0.58),
+            text=TTLocalizer.FlowerGuiCancel,
+            text_scale=TTLocalizer.FSGCancelBtnTextScale,
+            text_pos=(0, -0.1),
+            command=self.__cancel,
+        )
         self.okButton = DirectButton(
-            parent = self,
-            relief = None,
-            image = okImageList,
-            pos = (0.6, 0, -0.58),
-            text = TTLocalizer.FlowerGuiOk,
-            text_scale = TTLocalizer.FSGOkBtnTextScale,
-            text_pos = (0,-0.1),
-            command = self.__sellFlower,
-            )
+            parent=self,
+            relief=None,
+            image=okImageList,
+            pos=(0.6, 0, -0.58),
+            text=TTLocalizer.FlowerGuiOk,
+            text_scale=TTLocalizer.FSGOkBtnTextScale,
+            text_pos=(0, -0.1),
+            command=self.__sellFlower,
+        )
 
         buttons.removeNode()
 
@@ -83,13 +84,11 @@ class FlowerSellGUI(DirectFrame):
 
     def __sellFlower(self):
         messenger.send(self.doneEvent, [1])
-    
+
     def __updateFlowerValue(self):
         flowerBasket = base.localAvatar.getFlowerBasket()
         num = len(flowerBasket)
         value = flowerBasket.getTotalValue()
-        self['text'] = TTLocalizer.FlowerBasketValue % { "name": base.localAvatar.getName(),
-                                                   "num": num, "value":value }
+        self['text'] = TTLocalizer.FlowerBasketValue % {
+            "name": base.localAvatar.getName(), "num": num, "value": value}
         self.setText()
-        
-        

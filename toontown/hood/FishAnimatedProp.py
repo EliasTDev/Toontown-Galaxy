@@ -12,7 +12,7 @@ class FishAnimatedProp(AnimatedProp.AnimatedProp):
         # fish = base.cr.playGame.hood.loader.animPropDict.values()[0]
         AnimatedProp.AnimatedProp.__init__(self, node)
         parent = node.getParent()
-        self.fish = Actor.Actor(node, copy = 0)
+        self.fish = Actor.Actor(node, copy=0)
         self.fish.reparentTo(parent)
 
         # Move the transform from the original character node,
@@ -20,13 +20,14 @@ class FishAnimatedProp(AnimatedProp.AnimatedProp):
         self.fish.setTransform(node.getTransform())
         node.clearMat()
 
-        self.fish.loadAnims({'jump' : "phase_4/models/props/SZ_fish-jump",
-                             'swim' : "phase_4/models/props/SZ_fish-swim"})
+        self.fish.loadAnims({'jump': "phase_4/models/props/SZ_fish-jump",
+                             'swim': "phase_4/models/props/SZ_fish-swim"})
         self.fish.setBlend(base.wantSmoothAnimations)
 
-        self.splashSfxList = (loader.loadSfx("phase_4/audio/sfx/TT_splash1.ogg"),
-                              loader.loadSfx("phase_4/audio/sfx/TT_splash2.ogg"),
-                              )
+        self.splashSfxList = (
+            loader.loadSfx("phase_4/audio/sfx/TT_splash1.ogg"),
+            loader.loadSfx("phase_4/audio/sfx/TT_splash2.ogg"),
+        )
 
         # Now forget about the old self.node; we're now the Actor.
         self.node = self.fish
@@ -37,7 +38,7 @@ class FishAnimatedProp(AnimatedProp.AnimatedProp):
 
         # Ripples to display when fish exits the water
         self.exitRipples = Ripples(self.geom)
-        self.exitRipples.setBin('fixed', 25,1)
+        self.exitRipples.setBin('fixed', 25, 1)
         # Put it a little higher to help transparency sort order
         self.exitRipples.setPosHprScale(-0.3, 0.0, 1.24,
                                         0.00, 0.00, 0.00,
@@ -63,14 +64,15 @@ class FishAnimatedProp(AnimatedProp.AnimatedProp):
                      # Splash when re-entering water
                      Sequence(Wait(1.14),
                               Func(self.splash.play),
-                              SoundInterval(randomSplash, volume=0.8, node=self.node),
-                              )
-                     ),
+                              SoundInterval(
+                         randomSplash, volume=0.8, node=self.node),
+            )
+            ),
             Wait(1),
             Func(self.node.stash),
             # Wait inbetween
             Wait(4 + 10 * random.random()),
-            name = self.uniqueName("Fish"))
+            name=self.uniqueName("Fish"))
 
     def delete(self):
         self.exitRipples.destroy()
@@ -89,7 +91,7 @@ class FishAnimatedProp(AnimatedProp.AnimatedProp):
         h = 360 * random.random()
         self.geom.setPos(x, y, 0)
         self.geom.setHpr(h, 0, 0)
-    
+
     def enter(self):
         AnimatedProp.AnimatedProp.enter(self)
         self.track.loop()

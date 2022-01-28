@@ -9,6 +9,7 @@ from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 from toontown.toonbase import TTLocalizer
 
+
 class TownBattleToonPanel(DirectFrame):
     """
     This panel shows the laff meter, and attack choice of a toon.
@@ -18,55 +19,55 @@ class TownBattleToonPanel(DirectFrame):
     def __init__(self, id):
 
         gui = loader.loadModel("phase_3.5/models/gui/battle_gui")
-        
+
         DirectFrame.__init__(self,
-                             relief = None,
-                             image = gui.find("**/ToonBtl_Status_BG"),
+                             relief=None,
+                             image=gui.find("**/ToonBtl_Status_BG"),
                              # What color should these be?
-                             image_color = Vec4(0.5,0.9,0.5,0.7),
+                             image_color=Vec4(0.5, 0.9, 0.5, 0.7),
                              )
         self.setScale(0.8)
         self.initialiseoptions(TownBattleToonPanel)
-        
+
         # One day, this panel will be associated with an avatar
         self.avatar = None
         # The card
         # In case someone calls SOS
-        self.sosText = DirectLabel(parent = self,
-                                   relief = None,
-                                   pos = (0.1, 0, 0.015),
-                                   text = TTLocalizer.TownBattleToonSOS,
-                                   text_scale = 0.06,
+        self.sosText = DirectLabel(parent=self,
+                                   relief=None,
+                                   pos=(0.1, 0, 0.015),
+                                   text=TTLocalizer.TownBattleToonSOS,
+                                   text_scale=0.06,
                                    )
         self.sosText.hide()
-        
-        self.fireText = DirectLabel(parent = self,
-                                   relief = None,
-                                   pos = (0.1, 0, 0.015),
-                                   text = TTLocalizer.TownBattleToonFire,
-                                   text_scale = 0.06,
-                                   )
+
+        self.fireText = DirectLabel(parent=self,
+                                    relief=None,
+                                    pos=(0.1, 0, 0.015),
+                                    text=TTLocalizer.TownBattleToonFire,
+                                    text_scale=0.06,
+                                    )
         self.fireText.hide()
 
         # Before you have decided
-        self.undecidedText = DirectLabel(parent = self,
-                                         relief = None,
-                                         pos = (0.1, 0, 0.015),
-                                         text = TTLocalizer.TownBattleUndecided,
-                                         text_scale = 0.1,
+        self.undecidedText = DirectLabel(parent=self,
+                                         relief=None,
+                                         pos=(0.1, 0, 0.015),
+                                         text=TTLocalizer.TownBattleUndecided,
+                                         text_scale=0.1,
                                          )
-        
+
         # The text below the laff meter
-        self.healthText = DirectLabel(parent = self,
-                                      text = '',
-                                      pos = (-0.06, 0, -0.075),
-                                      text_scale = 0.055,
+        self.healthText = DirectLabel(parent=self,
+                                      text='',
+                                      pos=(-0.06, 0, -0.075),
+                                      text_scale=0.055,
                                       )
-        
+
         # The event for the health text
         self.hpChangeEvent = None
 
-        # Create a gag node. 
+        # Create a gag node.
         self.gagNode = self.attachNewNode('gag')
         # Set the position just so
         self.gagNode.setPos(0.1, 0, 0.03)
@@ -86,10 +87,10 @@ class TownBattleToonPanel(DirectFrame):
 
         # The display below the gag, that tells which suit or toon
         # has been selected.
-        self.whichText = DirectLabel(parent = self,
-                                     text = '',
-                                     pos = (0.1, 0, -0.08),
-                                     text_scale = 0.05,
+        self.whichText = DirectLabel(parent=self,
+                                     text='',
+                                     pos=(0.1, 0, -0.08),
+                                     text_scale=0.05,
                                      )
 
         self.hide()
@@ -97,7 +98,7 @@ class TownBattleToonPanel(DirectFrame):
         return
 
     def setLaffMeter(self, avatar):
-        self.notify.debug("setLaffMeter: new avatar %s" % avatar.doId)
+        self.notify.debug(f"setLaffMeter: new avatar {avatar.doId}")
 
         # Don't set the laff meter if it is already set for this toon.
         if self.avatar == avatar:
@@ -109,7 +110,7 @@ class TownBattleToonPanel(DirectFrame):
             # Cleanup the previous laffMeter, if there was one
             if self.avatar:
                 self.cleanupLaffMeter()
-                
+
             self.avatar = avatar
             self.laffMeter = LaffMeter.LaffMeter(avatar.style, avatar.hp,
                                                  avatar.maxHp)
@@ -126,8 +127,11 @@ class TownBattleToonPanel(DirectFrame):
             self.accept(self.hpChangeEvent, self.setHealthText)
         return None
 
-    def setHealthText(self, hp, maxHp, quietly = 0):
-        self.healthText['text'] = (TTLocalizer.TownBattleHealthText % {"hitPoints": hp, "maxHit": maxHp})
+    def setHealthText(self, hp, maxHp, quietly=0):
+        self.healthText['text'] = (
+            TTLocalizer.TownBattleHealthText % {
+                "hitPoints": hp,
+                "maxHit": maxHp})
         return
 
     def show(self):
@@ -149,8 +153,8 @@ class TownBattleToonPanel(DirectFrame):
         self.setHealthText(hp, maxHp)
         return
 
-    def setValues(self, index, track, level=None, numTargets=None, 
-                targetIndex=None, localNum=None):
+    def setValues(self, index, track, level=None, numTargets=None,
+                  targetIndex=None, localNum=None):
         self.notify.debug(
             "Toon Panel setValues: index=%s track=%s level=%s numTargets=%s targetIndex=%s localNum=%s" %
             (index, track, level, numTargets, targetIndex, localNum))
@@ -164,10 +168,10 @@ class TownBattleToonPanel(DirectFrame):
         if self.hasGag:
             self.gag.removeNode()
             self.hasGag = 0
-        
+
         # Turn on the proper display items
         if (track == BattleBase.NO_ATTACK or
-            track == BattleBase.UN_ATTACK):
+                track == BattleBase.UN_ATTACK):
             # Indicates pass or timeout
             self.undecidedText.show()
         elif track == BattleBase.PASS_ATTACK:
@@ -182,8 +186,8 @@ class TownBattleToonPanel(DirectFrame):
                                                              index)
             pass
         elif (track == BattleBase.SOS or
-            track == BattleBase.NPCSOS or
-            track == BattleBase.PETSOS):
+              track == BattleBase.NPCSOS or
+              track == BattleBase.PETSOS):
             # Indicates a call for help
             self.sosText.show()
         elif (track >= MIN_TRACK_INDEX and track <= MAX_TRACK_INDEX):
@@ -199,7 +203,7 @@ class TownBattleToonPanel(DirectFrame):
             self.hasGag = 1
             if ((numTargets is not None)
                 and (targetIndex is not None)
-                and (localNum is not None)):
+                    and (localNum is not None)):
                 # Show who is being attacked
                 self.whichText.show()
                 self.whichText['text'] = self.determineWhichText(numTargets,
@@ -207,7 +211,7 @@ class TownBattleToonPanel(DirectFrame):
                                                                  localNum,
                                                                  index)
         else:
-            self.notify.error("Bad track value: %s" % track)
+            self.notify.error(f"Bad track value: {track}")
         return None
 
     def determineWhichText(self, numTargets, targetIndex, localNum, index):
@@ -240,7 +244,7 @@ class TownBattleToonPanel(DirectFrame):
                     # Not a target
                     returnStr += "-"
             else:
-                self.notify.error("Bad target index: %s" % targetIndex)
+                self.notify.error(f"Bad target index: {targetIndex}")
         return returnStr
 
     def cleanup(self):

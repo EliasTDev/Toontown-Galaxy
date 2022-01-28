@@ -1,4 +1,4 @@
-#Need pandac.pandamodules for getConfigShowbase
+# Need pandac.pandamodules for getConfigShowbase
 from pandac.PandaModules import *
 from direct.directnotify.DirectNotifyGlobal import *
 from direct.showbase.MessengerGlobal import *
@@ -21,6 +21,7 @@ import gc
 
 ## assert game.process == 'ai', "Are you intentionally running ai code on %s"%(game.process,)
 
+
 class AIBase:
     notify = directNotify.newCategory("AIBase")
 
@@ -30,7 +31,7 @@ class AIBase:
         __builtins__["__dev__"] = ConfigVariableBool('want-dev', 0).value
         if ConfigVariableBool('want-variable-dump', 0).value:
             ExceptionVarDump.install()
-    
+
         if ConfigVariableBool('use-vfs', 1).value:
             vfs = VirtualFileSystem.getGlobalPtr()
         else:
@@ -41,15 +42,18 @@ class AIBase:
 
         # How long should the AI sleep between frames to keep CPU usage down
         self.AISleep = ConfigVariableDouble('ai-sleep', 0.04).value
-        self.AIRunningNetYield = ConfigVariableBool('ai-running-net-yield', 0).value
+        self.AIRunningNetYield = ConfigVariableBool(
+            'ai-running-net-yield', 0).value
         self.AIForceSleep = ConfigVariableBool('ai-force-sleep', 0).value
         self.eventMgr = eventMgr
         self.messenger = messenger
         self.bboard = bulletinBoard
 
         self.taskMgr = taskMgr
-        Task.TaskManager.taskTimerVerbose = ConfigVariableBool('task-timer-verbose', 0).value
-        Task.TaskManager.extendedExceptions = ConfigVariableBool('extended-exceptions', 0).value
+        Task.TaskManager.taskTimerVerbose = ConfigVariableBool(
+            'task-timer-verbose', 0).value
+        Task.TaskManager.extendedExceptions = ConfigVariableBool(
+            'extended-exceptions', 0).value
 
         self.sfxManagerList = None
         self.musicManager = None
@@ -86,18 +90,19 @@ class AIBase:
         __builtins__["vfs"] = vfs
         __builtins__["hidden"] = self.hidden
         #__builtins__["render"] = self.render
-        
-        AIBase.notify.info('__dev__ == %s' % __dev__)
+
+        AIBase.notify.info(f'__dev__ == {__dev__}')
 
         # set up recording of Functor creation stacks in __dev__
         PythonUtil.recordFunctorCreationStacks()
 
         # This is temporary:
-        __builtins__["wantTestObject"] = ConfigVariableBool('want-test-object', 0).value       
-        
+        __builtins__["wantTestObject"] = ConfigVariableBool(
+            'want-test-object', 0).value
 
         self.wantStats = ConfigVariableBool('want-pstats', 0).value
-        Task.TaskManager.pStatsTasks = ConfigVariableBool('pstats-tasks', 0).value
+        Task.TaskManager.pStatsTasks = ConfigVariableBool(
+            'pstats-tasks', 0).value
         # Set up the TaskManager to reset the PStats clock back
         # whenever we resume from a pause.  This callback function is
         # a little hacky, but we can't call it directly from within
@@ -110,8 +115,8 @@ class AIBase:
         if __dev__:
             defaultValue = 0
         wantFakeTextures = ConfigVariableBool('want-fake-textures-ai',
-                                               defaultValue).value
-                                               
+                                              defaultValue).value
+
         if wantFakeTextures:
             # Setting textures-header-only is a little better than
             # using fake-texture-image.  The textures' headers are
@@ -140,7 +145,7 @@ class AIBase:
                 self.petPosBroadcastPeriod = ConfigVariableDouble(
                     'pet-pos-broadcast-period',
                     PetConstants.PosBroadcastPeriod).value
-                
+
         self.wantBingo = ConfigVariableBool('want-fish-bingo', 1).value
         self.wantKarts = ConfigVariableBool('wantKarts', 1).value
 
@@ -149,25 +154,28 @@ class AIBase:
 
         self.waitShardDelete = ConfigVariableBool('wait-shard-delete', 1).value
         self.blinkTrolley = ConfigVariableBool('blink-trolley', 0).value
-        self.fakeDistrictPopulations = ConfigVariableBool('fake-district-populations', 0).value
+        self.fakeDistrictPopulations = ConfigVariableBool(
+            'fake-district-populations', 0).value
 
         self.wantSwitchboard = ConfigVariableBool('want-switchboard', 0).value
-        self.wantSwitchboardHacks = ConfigVariableBool('want-switchboard-hacks', 0).value
-        self.GEMdemoWhisperRecipientDoid = ConfigVariableBool('gem-demo-whisper-recipient-doid', 0).value
+        self.wantSwitchboardHacks = ConfigVariableBool(
+            'want-switchboard-hacks', 0).value
+        self.GEMdemoWhisperRecipientDoid = ConfigVariableBool(
+            'gem-demo-whisper-recipient-doid', 0).value
         self.sqlAvailable = ConfigVariableBool('sql-available', 1).value
-            
+
         self.createStats()
 
         self.restart()
 
-        ## ok lets over ride the time yieldFunction
-        #self.MaxEpockSpeed = 1.0/60.0;        
+        # ok lets over ride the time yieldFunction
+        #self.MaxEpockSpeed = 1.0/60.0;
         #taskMgr.doYield = self.taskManagerDoYield;
-                
-        
+
     def setupCpuAffinities(self, minChannel):
         if game.name == 'uberDog':
-            affinityMask = ConfigVariableInt('uberdog-cpu-affinity-mask', -1).value
+            affinityMask = ConfigVariableInt(
+                'uberdog-cpu-affinity-mask', -1).value
         else:
             affinityMask = ConfigVariableInt('ai-cpu-affinity-mask', -1).value
         if affinityMask != -1:
@@ -175,7 +183,8 @@ class AIBase:
         else:
             # this is useful on machines that perform better with each process
             # assigned to a single CPU
-            autoAffinity = ConfigVariableInt('auto-single-cpu-affinity', 0).value
+            autoAffinity = ConfigVariableInt(
+                'auto-single-cpu-affinity', 0).value
             if game.name == 'uberDog':
                 affinity = ConfigVariableInt('uberdog-cpu-affinity', -1).value
                 if autoAffinity and (affinity == -1):
@@ -199,17 +208,16 @@ class AIBase:
 
     #########################################################################
     # This is the yield function for simple timing based .. no consideration for Network and such..
-    ###########################################################################        
-    def  taskManagerDoYield(self , frameStartTime, nextScheuledTaksTime):
+    ###########################################################################
+    def taskManagerDoYield(self, frameStartTime, nextScheuledTaksTime):
         minFinTime = frameStartTime + self.MaxEpockSpeed
         if nextScheuledTaksTime > 0 and nextScheuledTaksTime < minFinTime:
-            minFinTime = nextScheuledTaksTime;
-            
-        delta = minFinTime - globalClock.getRealTime();
+            minFinTime = nextScheuledTaksTime
+
+        delta = minFinTime - globalClock.getRealTime()
         while(delta > 0.002):
-            time.sleep(delta)           
-            delta = minFinTime - globalClock.getRealTime();
-        
+            time.sleep(delta)
+            delta = minFinTime - globalClock.getRealTime()
 
     def createStats(self, hostname=None, port=None):
         # You can specify pstats-host in your Config.prc or use ~pstats/~aipstats
@@ -254,7 +262,7 @@ class AIBase:
         return Task.cont
 
     def shutdown(self):
-        self.taskMgr.remove('ivalLoop')        
+        self.taskMgr.remove('ivalLoop')
         self.taskMgr.remove('igLoop')
         self.taskMgr.remove('aiSleep')
         self.eventMgr.shutdown()
@@ -263,14 +271,15 @@ class AIBase:
         self.shutdown()
         # __resetPrevTransform goes at the very beginning of the frame.
         self.taskMgr.add(
-            self.__resetPrevTransform, 'resetPrevTransform', priority = -51)
+            self.__resetPrevTransform, 'resetPrevTransform', priority=-51)
         # spawn the ivalLoop with a later priority, so that it will
         # run after most tasks, but before igLoop.
-        self.taskMgr.add(self.__ivalLoop, 'ivalLoop', priority = 20)
-        self.taskMgr.add(self.__igLoop, 'igLoop', priority = 50)
-        if self.AISleep >= 0 and  (not self.AIRunningNetYield or self.AIForceSleep):
-            self.taskMgr.add(self.__sleepCycleTask, 'aiSleep', priority = 55)
-                    
+        self.taskMgr.add(self.__ivalLoop, 'ivalLoop', priority=20)
+        self.taskMgr.add(self.__igLoop, 'igLoop', priority=50)
+        if self.AISleep >= 0 and (
+                not self.AIRunningNetYield or self.AIForceSleep):
+            self.taskMgr.add(self.__sleepCycleTask, 'aiSleep', priority=55)
+
         self.eventMgr.restart()
 
     def getRepository(self):

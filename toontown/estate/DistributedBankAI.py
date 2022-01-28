@@ -8,6 +8,7 @@ from direct.task.Task import Task
 from direct.fsm import State
 from .BankGlobals import *
 
+
 class DistributedBankAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
 
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBankAI')
@@ -34,19 +35,22 @@ class DistributedBankAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
         self.notify.debug("avatarEnter()")
         avId = self.air.getAvatarIdFromSender()
         # this avatar has come within range
-        self.notify.debug("avatarEnter() ...avatarId=%s" % (avId))
+        self.notify.debug(f"avatarEnter() ...avatarId={avId}")
 
         # If we are busy, free this new avatar
         if self.busy:
-            self.notify.debug("avatarEnter() ...already busy with: %s" % (self.busy))
+            self.notify.debug(
+                f"avatarEnter() ...already busy with: {self.busy}")
             self.freeAvatar(avId)
             return
 
         # Fetch the actual avatar object
-        av = self.air.doId2do.get(avId)        
+        av = self.air.doId2do.get(avId)
         if not av:
-            self.air.writeServerEvent('suspicious', avId, 'DistributedBank.avatarEnter')
-            self.notify.warning("av %s not in doId2do tried to transfer money" % (avId))
+            self.air.writeServerEvent(
+                'suspicious', avId, 'DistributedBank.avatarEnter')
+            self.notify.warning(
+                f"av {avId} not in doId2do tried to transfer money")
             return
 
         # Flag us as busy with this avatar Id
@@ -55,30 +59,40 @@ class DistributedBankAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
         # Handle unexpected exit
         self.acceptOnce(self.air.getAvatarExitEvent(avId),
                         self.__handleUnexpectedExit, extraArgs=[avId])
-        self.acceptOnce("bootAvFromEstate-"+str(avId),
+        self.acceptOnce("bootAvFromEstate-" + str(avId),
                         self.__handleBootMessage, extraArgs=[avId])
 
         # Find the owner of the bank
         if self.ownerId:
             if self.ownerId == avId:
-                # We own the bank, popup the gui and let this avatar do his banking
-                assert(self.notify.debug(
-                    "avatarEnter() ...setMovie: BANK_MOVIE_GUI (%s)" % (BANK_MOVIE_GUI,)))
-                self.sendUpdate("setMovie", [BANK_MOVIE_GUI, avId,
-                                             ClockDelta.globalClockDelta.getRealNetworkTime()])
+                # We own the bank, popup the gui and let this avatar do his
+                # banking
+                assert(
+                    self.notify.debug(
+                        "avatarEnter() ...setMovie: BANK_MOVIE_GUI (%s)" %
+                        (BANK_MOVIE_GUI,)))
+                self.sendUpdate(
+                    "setMovie", [
+                        BANK_MOVIE_GUI, avId, ClockDelta.globalClockDelta.getRealNetworkTime()])
             else:
                 # You are not the owner of this bank, sorry
-                assert(self.notify.debug(
-                    "avatarEnter() ...setMovie: BANK_MOVIE_NOT_OWNER (%s)" % (BANK_MOVIE_NOT_OWNER,)))
-                self.sendUpdate("setMovie", [BANK_MOVIE_NOT_OWNER, avId,
-                                             ClockDelta.globalClockDelta.getRealNetworkTime()])
+                assert(
+                    self.notify.debug(
+                        "avatarEnter() ...setMovie: BANK_MOVIE_NOT_OWNER (%s)" %
+                        (BANK_MOVIE_NOT_OWNER,)))
+                self.sendUpdate(
+                    "setMovie", [
+                        BANK_MOVIE_NOT_OWNER, avId, ClockDelta.globalClockDelta.getRealNetworkTime()])
                 self.sendClearMovie(None)
         else:
             # Nobody lives here, sorry
-            assert(self.notify.debug(
-                "avatarEnter() ...setMovie: BANK_MOVIE_NO_OWNER (%s)" % (BANK_MOVIE_NO_OWNER,)))
-            self.sendUpdate("setMovie", [BANK_MOVIE_NO_OWNER, avId,
-                                         ClockDelta.globalClockDelta.getRealNetworkTime()])
+            assert(
+                self.notify.debug(
+                    "avatarEnter() ...setMovie: BANK_MOVIE_NO_OWNER (%s)" %
+                    (BANK_MOVIE_NO_OWNER,)))
+            self.sendUpdate(
+                "setMovie", [
+                    BANK_MOVIE_NO_OWNER, avId, ClockDelta.globalClockDelta.getRealNetworkTime()])
             self.sendClearMovie(None)
 
     def __handleUnexpectedExit(self, avId):
@@ -88,30 +102,35 @@ class DistributedBankAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
     def __handleBootMessage(self, avId):
         self.notify.warning('avatar:' + str(avId) + ' got booted ')
         self.sendClearMovie(None)
-        
+
     def sendClearMovie(self, task):
         assert(self.notify.debug('sendClearMovie()'))
         # Ignore unexpected exits on whoever I was busy with
         self.ignoreAll()
         self.busy = 0
-        self.sendUpdate("setMovie", [BANK_MOVIE_CLEAR, 0,
-                                     ClockDelta.globalClockDelta.getRealNetworkTime()])
+        self.sendUpdate(
+            "setMovie", [
+                BANK_MOVIE_CLEAR, 0, ClockDelta.globalClockDelta.getRealNetworkTime()])
         return Task.done
 
     def transferMoney(self, amount):
         avId = self.air.getAvatarIdFromSender()
-        assert(self.notify.debug('transferMoney(amount=%s) avatarId=%s'%(amount, avId)))
+        assert(
+            self.notify.debug(
+                f'transferMoney(amount={amount}) avatarId={avId}'))
         av = self.air.doId2do.get(avId)
-        
-        if avId!=self.busy:
+
+        if avId != self.busy:
             self.notify.warning(
-                "avatarId %s tried to transfer money, but we were talking with avatarId %s"
-                %(avId, self.busy))
+                "avatarId %s tried to transfer money, but we were talking with avatarId %s" %
+                (avId, self.busy))
             return
-        
+
         if not av:
-            self.air.writeServerEvent('suspicious', avId, 'DistributedBank.transferMoney')
-            self.notify.warning("av %s not in doId2do tried to transfer money" % (avId))
+            self.air.writeServerEvent(
+                'suspicious', avId, 'DistributedBank.transferMoney')
+            self.notify.warning(
+                f"av {avId} not in doId2do tried to transfer money")
             return
 
         # Do the money transfer
@@ -119,25 +138,34 @@ class DistributedBankAI(DistributedFurnitureItemAI.DistributedFurnitureItemAI):
 
         if amount > 0:
             # Deposit
-            assert(self.notify.debug(
-                "transferMoney() ...setMovie: BANK_MOVIE_DEPOSIT (%s)" % (BANK_MOVIE_DEPOSIT,)))
-            self.sendUpdate("setMovie", [BANK_MOVIE_DEPOSIT, avId,
-                                         ClockDelta.globalClockDelta.getRealNetworkTime()])
+            assert(
+                self.notify.debug(
+                    "transferMoney() ...setMovie: BANK_MOVIE_DEPOSIT (%s)" %
+                    (BANK_MOVIE_DEPOSIT,)))
+            self.sendUpdate(
+                "setMovie", [
+                    BANK_MOVIE_DEPOSIT, avId, ClockDelta.globalClockDelta.getRealNetworkTime()])
             # This should be a dolater when we have animation lengths
             self.sendClearMovie(None)
         elif amount < 0:
             # Withdraw
-            assert(self.notify.debug(
-                "transferMoney() ...setMovie: BANK_MOVIE_WITHDRAW (%s)" % (BANK_MOVIE_WITHDRAW,)))
-            self.sendUpdate("setMovie", [BANK_MOVIE_WITHDRAW, avId,
-                                         ClockDelta.globalClockDelta.getRealNetworkTime()])
+            assert(
+                self.notify.debug(
+                    "transferMoney() ...setMovie: BANK_MOVIE_WITHDRAW (%s)" %
+                    (BANK_MOVIE_WITHDRAW,)))
+            self.sendUpdate(
+                "setMovie", [
+                    BANK_MOVIE_WITHDRAW, avId, ClockDelta.globalClockDelta.getRealNetworkTime()])
             # This should be a dolater when we have animation lengths
             self.sendClearMovie(None)
         else:
             # No transaction
-            assert(self.notify.debug(
-                "avatarEnter() ...setMovie: BANK_MOVIE_NO_OP (%s)" % (BANK_MOVIE_NO_OP,)))
-            self.sendUpdate("setMovie", [BANK_MOVIE_NO_OP, avId,
-                                         ClockDelta.globalClockDelta.getRealNetworkTime()])
+            assert(
+                self.notify.debug(
+                    "avatarEnter() ...setMovie: BANK_MOVIE_NO_OP (%s)" %
+                    (BANK_MOVIE_NO_OP,)))
+            self.sendUpdate(
+                "setMovie", [
+                    BANK_MOVIE_NO_OP, avId, ClockDelta.globalClockDelta.getRealNetworkTime()])
             # This should be a dolater when we have animation lengths
             self.sendClearMovie(None)

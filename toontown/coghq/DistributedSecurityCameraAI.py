@@ -12,25 +12,25 @@ from toontown.coghq import LaserGameMineSweeper
 from toontown.coghq import LaserGameRoll
 import random
 
-class DistributedSecurityCameraAI(DistributedEntityAI.DistributedEntityAI, 
-                                NodePath,
-                                BasicEntities.NodePathAttribs):
-                                
+
+class DistributedSecurityCameraAI(DistributedEntityAI.DistributedEntityAI,
+                                  NodePath,
+                                  BasicEntities.NodePathAttribs):
+
     def __init__(self, level, entId):
         DistributedEntityAI.DistributedEntityAI.__init__(self, level, entId)
-        
+
         node = hidden.attachNewNode('DistributedSecurityCameraAI')
         NodePath.__init__(self, node)
         if not hasattr(self, 'switchId'):
             self.switchId = 0
-        
-        if not hasattr(self, 'damPow'):        
+
+        if not hasattr(self, 'damPow'):
             self.damPow = 1
 
         self.enabled = 1
         self.detectName = None
-        
-        
+
     def generate(self):
         DistributedEntityAI.DistributedEntityAI.generate(self)
         # if we are attached to a switch, listen for on/off events
@@ -41,13 +41,12 @@ class DistributedSecurityCameraAI(DistributedEntityAI.DistributedEntityAI,
         else:
             #print("no switch")
             pass
-                        
+
         self.detectName = (("laserField %s") % (self.doId))
         taskMgr.doMethodLater(3.0, self.__detect, self.detectName)
         self.setPos(self.pos)
         self.setHpr(self.hpr)
-        
-        
+
     def delete(self):
         #del self.pos
         if self.detectName:
@@ -56,13 +55,11 @@ class DistributedSecurityCameraAI(DistributedEntityAI.DistributedEntityAI,
         DistributedEntityAI.DistributedEntityAI.delete(self)
 
     def destroy(self):
-        self.notify.info('destroy entity(laserField) %s' % self.entId)
+        self.notify.info(f'destroy entity(laserField) {self.entId}')
         DistributedEntityAI.DistributedEntityAI.destroy(self)
-        
 
-        
     def __detect(self, task):
-        #print "detect beat"
+        # print "detect beat"
         isThereAnyToons = False
         if hasattr(self, 'level'):
             toonInRange = 0
@@ -72,18 +69,18 @@ class DistributedSecurityCameraAI(DistributedEntityAI.DistributedEntityAI,
                     isThereAnyToons = True
                     distance = self.getDistance(av)
             if isThereAnyToons:
-                randTime = float(random.randint(1,6)) * 0.5
+                randTime = float(random.randint(1, 6)) * 0.5
                 taskMgr.doMethodLater(randTime, self.__detect, self.detectName)
-                randTarget = random.randint(0,100)
+                randTarget = random.randint(0, 100)
                 #print("sending target")
                 self.sendUpdate('setTarget', [randTarget])
-                #self.__run()
+                # self.__run()
         return Task.done
-        
+
     def hit(self, hitX, hitY):
         if self.enabled:
             self.game.hit(hitX, hitY)
-        
+
     def reactToSwitch(self, on):
         #print("react to switch %s" % (on))
         if on:
@@ -92,21 +89,17 @@ class DistributedSecurityCameraAI(DistributedEntityAI.DistributedEntityAI,
             pass
         else:
             pass
-    
+
     def trapFire(self):
         avId = self.air.getAvatarIdFromSender()
         toon = self.air.doId2do[avId]
         if toon:
             toon.takeDamage(self.damPow)
-        
-        #self.game.lose()
-        
+
+        # self.game.lose()
+
         #print("trap acitvated")
-        
+
     def trapDisable(self):
         #print("trap disabled")
         self.enabled = 0
-        
-            
-        
-        

@@ -8,6 +8,7 @@ from panda3d.core import *
 from toontown.toon import NPCToons
 from panda3d.toontown import DNAData
 
+
 class HoodDataAI:
     """
 
@@ -79,7 +80,7 @@ class HoodDataAI:
             zoneId = ZoneUtil.getTrueZoneId(zone[0], self.zoneId)
             dnaData = self.air.dnaDataMap.get(zone[0], None)
             if isinstance(dnaData, DNAData):
-                foundPartyHats = self.air.findPartyHats(dnaData, zoneId )
+                foundPartyHats = self.air.findPartyHats(dnaData, zoneId)
                 partyHats += foundPartyHats
 
         for distObj in partyHats:
@@ -98,7 +99,8 @@ class HoodDataAI:
             dnaData = self.air.dnaDataMap.get(zone[0], None)
             if isinstance(dnaData, DNAData):
                 area = ZoneUtil.getCanonicalZoneId(zoneId)
-                foundFishingPonds, foundFishingPondGroups = self.air.findFishingPonds(dnaData, zoneId, area)
+                foundFishingPonds, foundFishingPondGroups = self.air.findFishingPonds(
+                    dnaData, zoneId, area)
                 self.fishingPonds += foundFishingPonds
                 fishingPondGroups += foundFishingPondGroups
         for distObj in self.fishingPonds:
@@ -174,13 +176,13 @@ class HoodDataAI:
 
     def hasRedirect(self):
         # Returns true if a redirect has been set, false otherwise.
-        return self.replacementHood != None
+        return self.replacementHood is not None
 
     def getRedirect(self):
         # Returns the hood to which an avatar is to be redirected, or
         # self if redirect has not been enabled.
 
-        if self.replacementHood == None:
+        if self.replacementHood is None:
             return self
         else:
             return self.replacementHood[0].getRedirect()

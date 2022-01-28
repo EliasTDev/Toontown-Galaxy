@@ -8,6 +8,7 @@ from otp.otpbase import OTPLocalizer
 
 # for speedchat tech details, see the bottom of this file.
 
+
 class SpeedChat(SCMenu):
     """
     SpeedChat object. Create one of these to make a complete SpeedChat menu.
@@ -23,17 +24,17 @@ class SpeedChat(SCMenu):
     See SCMenu.appendFromStructure for the format of 'structure'.
     """
 
-    def __init__(self, name='', structure=None, backgroundModelName = None,
-                 guiModelName = None):
+    def __init__(self, name='', structure=None, backgroundModelName=None,
+                 guiModelName=None):
         SCMenu.BackgroundModelName = backgroundModelName
         SCMenu.GuiModelName = guiModelName
-        
+
         SCMenu.__init__(self)
         self.name = name
 
         self.settings = SCSettings(
-            eventPrefix = self.name,
-            )
+            eventPrefix=self.name,
+        )
         self.privSetSettingsRef(self.settings)
 
         if structure is not None:
@@ -50,7 +51,7 @@ class SpeedChat(SCMenu):
         SCMenu.destroy(self)
 
     def __str__(self):
-        return "%s: '%s'" % (self.__class__.__name__, self.name)
+        return f"{self.__class__.__name__}: '{self.name}'"
 
     def enter(self):
         self._detectTransformChange()
@@ -91,6 +92,7 @@ class SpeedChat(SCMenu):
         self.notify.debug('finalizing entire SpeedChat tree')
         self._detectTransformChange()
         SCMenu.finalizeAll(self)
+
 
 """
 SpeedChat tech

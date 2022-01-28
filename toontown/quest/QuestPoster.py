@@ -9,7 +9,8 @@ from toontown.suit import Suit
 from toontown.hood import ZoneUtil
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
-import string, types
+import string
+import types
 from toontown.toon import LaffMeter
 from toontown.toonbase.ToontownBattleGlobals import AvPropsNew
 from toontown.toontowngui.TeaserPanel import TeaserPanel
@@ -20,182 +21,183 @@ POSTER_WIDTH = 0.7
 TEXT_SCALE = TTLocalizer.QPtextScale
 TEXT_WORDWRAP = TTLocalizer.QPtextWordwrap
 
+
 class QuestPoster(DirectFrame):
     colors = {
-        'white' : (1,1,1,1),
-        'blue' : (.45,.45,.8,1),
-        'lightBlue' : (0.420, 0.671, 1.000, 1.000),
-        'green' : (.45,.8,.45,1),
-        'lightGreen' : (0.784, 1, 0.863, 1),
-        'red' : (.8,.45,.45,1),
-        'rewardRed' : (.8, .3, .3, 1),
-        'brightRed' : (1.0, 0.16, 0.16, 1.0),
-        'brown' : (.52,.42,.22,1),
-        }
-    normalTextColor = (0.3,0.25,0.2,1)
+        'white': (1, 1, 1, 1),
+        'blue': (.45, .45, .8, 1),
+        'lightBlue': (0.420, 0.671, 1.000, 1.000),
+        'green': (.45, .8, .45, 1),
+        'lightGreen': (0.784, 1, 0.863, 1),
+        'red': (.8, .45, .45, 1),
+        'rewardRed': (.8, .3, .3, 1),
+        'brightRed': (1.0, 0.16, 0.16, 1.0),
+        'brown': (.52, .42, .22, 1),
+    }
+    normalTextColor = (0.3, 0.25, 0.2, 1)
 
-    def __init__(self, parent = aspect2d, **kw):
-        
+    def __init__(self, parent=aspect2d, **kw):
+
         # NOTE: Quest card has about +/- 0.35 units of usable space (0.7 units total)
         # Need to calc width of quest info string width = font.calcWidth(string)
         # text scale is equal to 0.7/width
         # wordwrap should be set to width + pad (0.05)
         # For text at scale 0.045, max width = 15.55, set wordwrap to 15.5
         # Load gui images
-        self._deleteCallback = None 
+        self._deleteCallback = None
         bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
         questCard = bookModel.find("**/questCard")
         # Define options
         optiondefs = (
-            ('relief',        None,             None),
-            ('reverse',       0,                None),
-            ('image',         questCard,        None),
-            ('image_scale',   (0.8,1.0,0.58),   None),
+            ('relief', None, None),
+            ('reverse', 0, None),
+            ('image', questCard, None),
+            ('image_scale', (0.8, 1.0, 0.58), None),
             # So we get enter and exit events
-            ('state',         DGG.NORMAL,           None),
-            )
+            ('state', DGG.NORMAL, None),
+        )
         # Merge keyword options with default options
         self.defineoptions(kw, optiondefs)
         # Initialize superclass
-        DirectFrame.__init__(self, relief = None)
+        DirectFrame.__init__(self, relief=None)
         # Initialize instance
         self.initialiseoptions(QuestPoster)
 
         # Single frame to hold everything on the quest poster
-        self.questFrame = DirectFrame(parent = self, relief = None)
+        self.questFrame = DirectFrame(parent=self, relief=None)
 
         # Main headline
         self.headline = DirectLabel(
-            parent = self.questFrame,
-            relief = None,
-            text = '',
-            text_font = ToontownGlobals.getMinnieFont(),
-            text_fg = self.normalTextColor,
-            text_scale = 0.05,
-            text_align = TextNode.ACenter,
-            text_wordwrap = 12.0,
-            textMayChange = 1,
+            parent=self.questFrame,
+            relief=None,
+            text='',
+            text_font=ToontownGlobals.getMinnieFont(),
+            text_fg=self.normalTextColor,
+            text_scale=0.05,
+            text_align=TextNode.ACenter,
+            text_wordwrap=12.0,
+            textMayChange=1,
             # 0.165
-            pos = (0,0,0.23),
-            )
+            pos=(0, 0, 0.23),
+        )
 
         # Detail information about the quest
         self.questInfo = DirectLabel(
-            parent = self.questFrame,
-            relief = None,
-            text = '', 
-            text_fg = self.normalTextColor,
-            text_scale = TEXT_SCALE,
-            text_align = TextNode.ACenter,
-            text_wordwrap = TEXT_WORDWRAP,
-            textMayChange = 1,
-            pos = (0, 0, -0.0625)
-            )
+            parent=self.questFrame,
+            relief=None,
+            text='',
+            text_fg=self.normalTextColor,
+            text_scale=TEXT_SCALE,
+            text_align=TextNode.ACenter,
+            text_wordwrap=TEXT_WORDWRAP,
+            textMayChange=1,
+            pos=(0, 0, -0.0625)
+        )
 
         # Detail information about the quest
         self.rewardText = DirectLabel(
-            parent = self.questFrame,
-            relief = None,
-            text = '', 
-            text_fg = self.colors['rewardRed'],
-            text_scale = 0.0425,
-            text_align = TextNode.ALeft,
-            text_wordwrap = 17.0,
-            textMayChange = 1,
-            pos = (-0.36,0,-0.26),
-            )
+            parent=self.questFrame,
+            relief=None,
+            text='',
+            text_fg=self.colors['rewardRed'],
+            text_scale=0.0425,
+            text_align=TextNode.ALeft,
+            text_wordwrap=17.0,
+            textMayChange=1,
+            pos=(-0.36, 0, -0.26),
+        )
         self.rewardText.hide()
 
         # there are at most two pictureFrames on a quest poster
         # create them both up-front
         self.lPictureFrame = DirectFrame(
-            parent = self.questFrame,
-            relief = None,
-            image = bookModel.find("**/questPictureFrame"),
-            image_scale = IMAGE_SCALE_SMALL,
-            text = '', 
-            text_pos = (0,-0.11),
-            text_fg = self.normalTextColor,
-            text_scale = TEXT_SCALE,
-            text_align = TextNode.ACenter,
-            text_wordwrap = 11.0, # was 8
-            textMayChange = 1,
-            )
+            parent=self.questFrame,
+            relief=None,
+            image=bookModel.find("**/questPictureFrame"),
+            image_scale=IMAGE_SCALE_SMALL,
+            text='',
+            text_pos=(0, -0.11),
+            text_fg=self.normalTextColor,
+            text_scale=TEXT_SCALE,
+            text_align=TextNode.ACenter,
+            text_wordwrap=11.0,  # was 8
+            textMayChange=1,
+        )
         self.lPictureFrame.hide()
         self.rPictureFrame = DirectFrame(
-            parent = self.questFrame,
-            relief = None,
-            image = bookModel.find("**/questPictureFrame"),
-            image_scale = IMAGE_SCALE_SMALL,
-            text = '',             
-            text_pos = (0,-0.11),
-            text_fg = self.normalTextColor,
-            text_scale = TEXT_SCALE,
-            text_align = TextNode.ACenter,
-            text_wordwrap = 11.0, # was 8
-            textMayChange = 1,
-            pos = (0.18,0, 0.13),
-            )
+            parent=self.questFrame,
+            relief=None,
+            image=bookModel.find("**/questPictureFrame"),
+            image_scale=IMAGE_SCALE_SMALL,
+            text='',
+            text_pos=(0, -0.11),
+            text_fg=self.normalTextColor,
+            text_scale=TEXT_SCALE,
+            text_align=TextNode.ACenter,
+            text_wordwrap=11.0,  # was 8
+            textMayChange=1,
+            pos=(0.18, 0, 0.13),
+        )
         self.rPictureFrame.hide()
 
         # DirectFrames to hold pictures/models of quest items
         self.lQuestIcon = DirectFrame(
-            parent = self.lPictureFrame,
-            relief = None,
-            text = ' ', 
-            text_font = ToontownGlobals.getSuitFont(),
-            text_pos = (0,-0.03),
-            text_fg = self.normalTextColor,
-            text_scale = 0.13,
-            text_align = TextNode.ACenter,
-            text_wordwrap = 13.0,
-            textMayChange = 1,
-            )
+            parent=self.lPictureFrame,
+            relief=None,
+            text=' ',
+            text_font=ToontownGlobals.getSuitFont(),
+            text_pos=(0, -0.03),
+            text_fg=self.normalTextColor,
+            text_scale=0.13,
+            text_align=TextNode.ACenter,
+            text_wordwrap=13.0,
+            textMayChange=1,
+        )
         # Make sure icon doesn't inherit parent's color
         self.lQuestIcon.setColorOff(-1)
         self.rQuestIcon = DirectFrame(
-            parent = self.rPictureFrame,
-            relief = None,
-            text = ' ', 
-            text_font = ToontownGlobals.getSuitFont(),
-            text_pos = (0,-0.03),
-            text_fg = self.normalTextColor,
-            text_scale = 0.13,
-            text_align = TextNode.ACenter,
-            text_wordwrap = 13.0,
-            textMayChange = 1,
-            )
+            parent=self.rPictureFrame,
+            relief=None,
+            text=' ',
+            text_font=ToontownGlobals.getSuitFont(),
+            text_pos=(0, -0.03),
+            text_fg=self.normalTextColor,
+            text_scale=0.13,
+            text_align=TextNode.ACenter,
+            text_wordwrap=13.0,
+            textMayChange=1,
+        )
         # Make sure icon doesn't inherit parent's color
         self.rQuestIcon.setColorOff(-1)
 
         # Helper word
         self.auxText = DirectLabel(
-            parent = self.questFrame,
-            relief = None,
-            text = '',
-            text_scale = TTLocalizer.QPauxText,
-            text_fg = self.normalTextColor,
-            text_align = TextNode.ACenter,
-            textMayChange = 1,
-            )
+            parent=self.questFrame,
+            relief=None,
+            text='',
+            text_scale=TTLocalizer.QPauxText,
+            text_fg=self.normalTextColor,
+            text_align=TextNode.ACenter,
+            textMayChange=1,
+        )
         self.auxText.hide()
 
         # Progress bar for multi-item quests
         self.questProgress = DirectWaitBar(
-            parent = self.questFrame,
-            relief = DGG.SUNKEN,
-            frameSize = (-0.95,0.95,-0.1,0.12),
-            borderWidth = (0.025,0.025),
-            scale = 0.2,
-            frameColor = (0.945, 0.875, 0.706, 1.000),
-            barColor = (0.5,0.7,0.5,1),
-            text = "0/0",
-            text_scale = 0.19,
-            text_fg = (0.05, 0.14, 0.4, 1),
-            text_align = TextNode.ACenter,
-            text_pos = (0,-0.04),
-            pos = (0,0,-0.195),
-            )
+            parent=self.questFrame,
+            relief=DGG.SUNKEN,
+            frameSize=(-0.95, 0.95, -0.1, 0.12),
+            borderWidth=(0.025, 0.025),
+            scale=0.2,
+            frameColor=(0.945, 0.875, 0.706, 1.000),
+            barColor=(0.5, 0.7, 0.5, 1),
+            text="0/0",
+            text_scale=0.19,
+            text_fg=(0.05, 0.14, 0.4, 1),
+            text_align=TextNode.ACenter,
+            text_pos=(0, -0.04),
+            pos=(0, 0, -0.195),
+        )
         self.questProgress.hide()
         if hasattr(self, 'deleteButton'):
             self.deleteButton.destroy()
@@ -206,15 +208,15 @@ class QuestPoster(DirectFrame):
             del self.areYouSureDeleteButton
         # Optional quest indicator
         self.funQuest = DirectLabel(
-            parent = self.questFrame,
-            relief = None,
-            text = TTLocalizer.QuestPosterFun,
-            text_fg = (0.000, 0.439, 1.000, 1.000),
-            text_shadow = (0,0,0,1),
+            parent=self.questFrame,
+            relief=None,
+            text=TTLocalizer.QuestPosterFun,
+            text_fg=(0.000, 0.439, 1.000, 1.000),
+            text_shadow=(0, 0, 0, 1),
             #pos = (-0.28, 0, 0.19),
-            pos = (-0.2825, 0, 0.20),            
-            scale = 0.03
-            )
+            pos=(-0.2825, 0, 0.20),
+            scale=0.03
+        )
         self.funQuest.setR(-30)
         self.funQuest.hide()
 
@@ -278,15 +280,15 @@ class QuestPoster(DirectFrame):
         dna = ToonDNA.ToonDNA()
         dna.newToonFromProperties(*dnaList)
         head = ToonHead.ToonHead()
-        head.setupHead(dna, forGui = 1)
+        head.setupHead(dna, forGui=1)
         # Insert xform with gets head to uniform size
-        self.fitGeometry(head, fFlip = 1)
+        self.fitGeometry(head, fFlip=1)
         return head
 
     def createLaffMeter(self, hp):
         lm = LaffMeter.LaffMeter(base.localAvatar.style, hp, hp)
         lm.adjustText()
-        return lm 
+        return lm
 
     def createSuitHead(self, suitName):
         # Given an suit name create a toon head suitable for framing
@@ -302,7 +304,7 @@ class QuestPoster(DirectFrame):
             copyPart.setDepthTest(1)
             copyPart.setDepthWrite(1)
         # Insert xform with gets head to uniform size
-        self.fitGeometry(head, fFlip = 1)
+        self.fitGeometry(head, fFlip=1)
         suit.delete()
         suit = None
         return head
@@ -312,13 +314,13 @@ class QuestPoster(DirectFrame):
         elevatorNodePath = hidden.attachNewNode("elevatorNodePath")
         elevatorModel = loader.loadModel("phase_4/models/modules/elevator")
         # Put up a display to show the current floor of the elevator
-        floorIndicator=[None, None, None, None, None]
-        npc=elevatorModel.findAllMatches("**/floor_light_?;+s")
+        floorIndicator = [None, None, None, None, None]
+        npc = elevatorModel.findAllMatches("**/floor_light_?;+s")
         for i in range(npc.getNumPaths()):
-            np=npc.getPath(i)
+            np = npc.getPath(i)
             # Get the last character, and make it zero based:
-            floor=int(np.getName()[-1:])-1
-            floorIndicator[floor]=np
+            floor = int(np.getName()[-1:]) - 1
+            floorIndicator[floor] = np
             if floor < numFloors:
                 np.setColor(Vec4(0.5, 0.5, 0.5, 1.0))
             else:
@@ -331,7 +333,7 @@ class QuestPoster(DirectFrame):
         elevatorNodePath.reparentTo(suitDoorOrigin)
         elevatorNodePath.setPosHpr(0, 0, 0, 0, 0, 0)
 
-    def fitGeometry(self, geom, fFlip = 0, dimension = 0.8):
+    def fitGeometry(self, geom, fFlip=0, dimension=0.8):
         # Insert an xform which centers geometry on origin and scales it
         # to +/-0.8 in size
         p1 = Point3()
@@ -343,9 +345,9 @@ class QuestPoster(DirectFrame):
             p2.setX(-t)
         d = p2 - p1
         biggest = max(d[0], d[2])
-        s = dimension/biggest
+        s = dimension / biggest
         # find midpoint
-        mid = (p1 + d/2.0) * s
+        mid = (p1 + d / 2.0) * s
         geomXform = hidden.attachNewNode('geomXform')
         for child in geom.getChildren():
             child.reparentTo(geomXform)
@@ -353,7 +355,7 @@ class QuestPoster(DirectFrame):
                                  180, 0, 0,
                                  s, s, s)
         geomXform.reparentTo(geom)
-    
+
     def clear(self):
         self['image_color'] = Vec4(*self.colors['white'])
         # clear out the poster text
@@ -374,7 +376,7 @@ class QuestPoster(DirectFrame):
         if hasattr(self, 'chooseButton'):
             self.chooseButton.destroy()
             del self.chooseButton
-        if (self.laffMeter != None):
+        if (self.laffMeter is not None):
             self.laffMeter.reparentTo(hidden)
             self.laffMeter.destroy()
             self.laffMeter = None
@@ -394,26 +396,30 @@ class QuestPoster(DirectFrame):
             # Add a choose button to select this quest
             guiButton = loader.loadModel("phase_3/models/gui/quit_button")
             self.chooseButton = DirectButton(
-                parent = self.questFrame,
-                relief = None,
-                image = (guiButton.find("**/QuitBtn_UP"),
-                         guiButton.find("**/QuitBtn_DN"),
-                         guiButton.find("**/QuitBtn_RLVR"),
-                         ),
-                image_scale = (0.7,1,1),
-                text = TTLocalizer.QuestPageChoose,
-                text_scale = 0.06,
-                text_pos = (0,-0.02),
-                pos = (0.285,0,0.245),
-                scale = 0.65,
-                )
+                parent=self.questFrame,
+                relief=None,
+                image=(guiButton.find("**/QuitBtn_UP"),
+                       guiButton.find("**/QuitBtn_DN"),
+                       guiButton.find("**/QuitBtn_RLVR"),
+                       ),
+                image_scale=(0.7, 1, 1),
+                text=TTLocalizer.QuestPageChoose,
+                text_scale=0.06,
+                text_pos=(0, -0.02),
+                pos=(0.285, 0, 0.245),
+                scale=0.65,
+            )
             guiButton.removeNode()
 
         npcZone = NPCToons.getNPCZone(toNpcId)
         hoodId = ZoneUtil.getCanonicalHoodId(npcZone)
 
         # Don't allow trialers to get DD quests
-        if not base.cr.isPaid() and (((hasattr(quest, 'getLocation')) and (quest.getLocation() == 1000)) or (hoodId == 1000)):
+        if not base.cr.isPaid() and (
+            ((hasattr(
+                quest, 'getLocation')) and (
+                quest.getLocation() == 1000)) or (
+                hoodId == 1000)):
             def showTeaserPanel():
                 TeaserPanel(pageName='quests')
             self.chooseButton['command'] = showTeaserPanel
@@ -426,32 +432,32 @@ class QuestPoster(DirectFrame):
             self.chooseButton['command'] = callback
             self.chooseButton['extraArgs'] = [questId]
 
-
         # For choice posters we con't want popup behavior
         self.unbind(DGG.WITHIN)
         self.unbind(DGG.WITHOUT)
 
         # if we have moved the reward up, we should move the quest info up too
         # (unless this is track choice)
-        if not (quest.getType() == Quests.TrackChoiceQuest):        
+        if not (quest.getType() == Quests.TrackChoiceQuest):
             self.questInfo.setZ(-0.0625)
-        
+
     def update(self, questDesc):
         # Update quest poster to reflect details about given quest
         # Extract details about the quest
         questId, fromNpcId, toNpcId, rewardId, toonProgress = questDesc
         quest = Quests.getQuest(questId)
-        if quest == None:
-            print("Tried to display poster for unknown quest %s" % (questId))
+        if quest is None:
+            print(f"Tried to display poster for unknown quest {questId}")
             return
         # Update reward info
         if rewardId == Quests.NA:
-            finalReward = Quests.getFinalRewardId(questId, fAll = 1)
-            transformedReward = Quests.transformReward(finalReward, base.localAvatar)
+            finalReward = Quests.getFinalRewardId(questId, fAll=1)
+            transformedReward = Quests.transformReward(
+                finalReward, base.localAvatar)
             reward = Quests.getReward(transformedReward)
         else:
             reward = Quests.getReward(rewardId)
-        #if reward:
+        # if reward:
         # HACK: don't show the tutorial quest reward...
         if reward and not (questId in Quests.NoRewardTierZeroQuests):
             rewardString = reward.getPosterString()
@@ -471,13 +477,16 @@ class QuestPoster(DirectFrame):
         else:
             self.funQuest.hide()
         if self._deleteCallback:
-            #show the trash can
+            # show the trash can
             self.showDeleteBtn(questDesc)
         else:
-            #hide the trash can
+            # hide the trash can
             self.hideDeleteBtn()
         # Is quest complete?
-        fComplete = (quest.getCompletionStatus(base.localAvatar, questDesc) == Quests.COMPLETE)
+        fComplete = (
+            quest.getCompletionStatus(
+                base.localAvatar,
+                questDesc) == Quests.COMPLETE)
         # Names and IDs
         fromNpcName = NPCToons.getNPCName(fromNpcId)
         npcZone = NPCToons.getNPCZone(fromNpcId)
@@ -517,7 +526,7 @@ class QuestPoster(DirectFrame):
             toNpcBranchId = ZoneUtil.getBranchZone(toNpcZone)
             toNpcStreetName = ZoneUtil.getStreetName(toNpcBranchId)
         # Set initial state
-        lPos = Vec3(0,0,0.13)
+        lPos = Vec3(0, 0, 0.13)
         lIconGeom = None
         lIconGeomScale = 1
         rIconGeom = None
@@ -525,26 +534,27 @@ class QuestPoster(DirectFrame):
         infoText = ""
         infoZ = TTLocalizer.QPinfoZ
         auxText = None
-        auxTextPos = Vec3(0,0,0.12)
+        auxTextPos = Vec3(0, 0, 0.12)
         headlineString = quest.getHeadlineString()
         objectiveStrings = quest.getObjectiveStrings()
         assert type(objectiveStrings) in (list, tuple)
-        captions = list(map(string.capwords,quest.getObjectiveStrings()))
-        imageColor = Vec4(*self.colors['white'])        
+        captions = list(map(string.capwords, quest.getObjectiveStrings()))
+        imageColor = Vec4(*self.colors['white'])
         # Adjust poster for the particular quest type
         if ((quest.getType() == Quests.DeliverGagQuest) or
-            (quest.getType() == Quests.DeliverItemQuest)):
+                (quest.getType() == Quests.DeliverItemQuest)):
             frameBgColor = 'red'
             # Create item icon
             if quest.getType() == Quests.DeliverGagQuest:
                 # Load inventory models
                 invModel = loader.loadModel(
                     "phase_3.5/models/gui/inventory_icons")
-                track,item = quest.getGagType()
+                track, item = quest.getGagType()
                 lIconGeom = invModel.find("**/" + AvPropsNew[track][item])
                 invModel.removeNode()
             else:
-                bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+                bookModel = loader.loadModel(
+                    "phase_3.5/models/gui/stickerbook_gui")
                 lIconGeom = bookModel.find("**/package")
                 lIconGeomScale = 0.12
                 bookModel.removeNode()
@@ -564,7 +574,8 @@ class QuestPoster(DirectFrame):
                 rIconGeomScale = IMAGE_SCALE_SMALL
         elif (quest.getType() == Quests.RecoverItemQuest):
             frameBgColor = 'green'
-            bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+            bookModel = loader.loadModel(
+                "phase_3.5/models/gui/stickerbook_gui")
             lIconGeom = bookModel.find("**/package")
             lIconGeomScale = 0.12
             bookModel.removeNode()
@@ -590,7 +601,8 @@ class QuestPoster(DirectFrame):
                 else:
                     if (holderType == 'track'):
                         # Load up appropriate cog icon
-                        cogIcons = loader.loadModel('phase_3/models/gui/cog_icons')
+                        cogIcons = loader.loadModel(
+                            'phase_3/models/gui/cog_icons')
                         if (holder == 'c'):
                             icon = cogIcons.find('**/CorpIcon')
                         elif (holder == 's'):
@@ -606,14 +618,15 @@ class QuestPoster(DirectFrame):
                         cogIcons.removeNode()
                     elif (holderType == 'level'):
                         # Use a generic cog icon
-                        cogIcons = loader.loadModel('phase_3/models/gui/cog_icons')
+                        cogIcons = loader.loadModel(
+                            'phase_3/models/gui/cog_icons')
                         rIconGeom = cogIcons.find('**/cog')
                         rIconGeomScale = IMAGE_SCALE_SMALL
                         cogIcons.removeNode()
                     else:
                         rIconGeom = self.createSuitHead(holder)
                     lPos.setX(-0.18)
-                    auxText = TTLocalizer.QuestPosterAuxFrom                    
+                    auxText = TTLocalizer.QuestPosterAuxFrom
                 # Display location conditions for quest
                 infoText = string.capwords(quest.getLocationName())
                 if infoText == '':
@@ -621,7 +634,7 @@ class QuestPoster(DirectFrame):
         elif (quest.getType() == Quests.VisitQuest):
             frameBgColor = 'brown'
             # Who do you visit?
-            captions[0] = "%s" % toNpcName
+            captions[0] = f"{toNpcName}"
             # Create an appropriate toon head
             lIconGeom = self.createNpcToonHead(toNpcId)
             lIconGeomScale = IMAGE_SCALE_SMALL
@@ -636,7 +649,7 @@ class QuestPoster(DirectFrame):
             frameBgColor = 'green'
             # Get a representative icon for each track
             invModel = loader.loadModel("phase_3.5/models/gui/inventory_icons")
-            track1,track2 = quest.getChoices()
+            track1, track2 = quest.getChoices()
             lIconGeom = invModel.find("**/" + AvPropsNew[track1][1])
             if not fComplete:
                 # Adjust poster items
@@ -658,16 +671,21 @@ class QuestPoster(DirectFrame):
             # Get the appropriate icon
             # Use loadModelCopy since fitGeometry munges hierarchy
             if track == 'c':
-                lIconGeom = loader.loadModel('phase_4/models/modules/suit_landmark_corp')
+                lIconGeom = loader.loadModel(
+                    'phase_4/models/modules/suit_landmark_corp')
             elif track == 'l':
-                lIconGeom = loader.loadModel('phase_4/models/modules/suit_landmark_legal')
+                lIconGeom = loader.loadModel(
+                    'phase_4/models/modules/suit_landmark_legal')
             elif track == 'm':
-                lIconGeom = loader.loadModel('phase_4/models/modules/suit_landmark_money')
+                lIconGeom = loader.loadModel(
+                    'phase_4/models/modules/suit_landmark_money')
             elif track == 's':
-                lIconGeom = loader.loadModel('phase_4/models/modules/suit_landmark_sales')
+                lIconGeom = loader.loadModel(
+                    'phase_4/models/modules/suit_landmark_sales')
             else:
                 # Use a generic building icon
-                bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+                bookModel = loader.loadModel(
+                    "phase_3.5/models/gui/stickerbook_gui")
                 lIconGeom = bookModel.find("**/COG_building")
                 bookModel.removeNode()
             # Add in an elevator to fill up the hole
@@ -675,7 +693,7 @@ class QuestPoster(DirectFrame):
                 self.loadElevator(lIconGeom, numFloors)
                 lIconGeom.setH(180)
                 # Make sure it all fits
-                self.fitGeometry(lIconGeom, fFlip = 0)
+                self.fitGeometry(lIconGeom, fFlip=0)
                 lIconGeomScale = IMAGE_SCALE_SMALL
             else:
                 lIconGeomScale = 0.13
@@ -692,16 +710,21 @@ class QuestPoster(DirectFrame):
             # Get the appropriate icon
             # Use loadModelCopy since fitGeometry munges hierarchy
             if track == 'c':
-                rIconGeom = loader.loadModel('phase_4/models/modules/suit_landmark_corp')
+                rIconGeom = loader.loadModel(
+                    'phase_4/models/modules/suit_landmark_corp')
             elif track == 'l':
-                rIconGeom = loader.loadModel('phase_4/models/modules/suit_landmark_legal')
+                rIconGeom = loader.loadModel(
+                    'phase_4/models/modules/suit_landmark_legal')
             elif track == 'm':
-                rIconGeom = loader.loadModel('phase_4/models/modules/suit_landmark_money')
+                rIconGeom = loader.loadModel(
+                    'phase_4/models/modules/suit_landmark_money')
             elif track == 's':
-                rIconGeom = loader.loadModel('phase_4/models/modules/suit_landmark_sales')
+                rIconGeom = loader.loadModel(
+                    'phase_4/models/modules/suit_landmark_sales')
             else:
                 # Use a generic building icon
-                bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+                bookModel = loader.loadModel(
+                    "phase_3.5/models/gui/stickerbook_gui")
                 rIconGeom = bookModel.find("**/COG_building")
                 bookModel.removeNode()
             # Add in an elevator to fill up the hole
@@ -709,14 +732,15 @@ class QuestPoster(DirectFrame):
                 self.loadElevator(rIconGeom, numFloors)
                 rIconGeom.setH(180)
                 # Make sure it all fits
-                self.fitGeometry(rIconGeom, fFlip = 0)
+                self.fitGeometry(rIconGeom, fFlip=0)
                 rIconGeomScale = IMAGE_SCALE_SMALL
             else:
                 rIconGeomScale = 0.13
             if not fComplete:
                 headlineString = TTLocalizer.QuestsNewbieQuestHeadline
                 captions = [quest.getCaption()]
-                captions.append(list(map(string.capwords, quest.getObjectiveStrings())))
+                captions.append(
+                    list(map(string.capwords, quest.getObjectiveStrings())))
                 auxText = TTLocalizer.QuestsCogNewbieQuestAux
                 lPos.setX(-0.18)
                 self.laffMeter = self.createLaffMeter(quest.getNewbieLevel())
@@ -734,7 +758,8 @@ class QuestPoster(DirectFrame):
         elif (quest.getType() == Quests.FactoryQuest):
             frameBgColor = 'blue'
             # Get the appropriate icon
-            bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+            bookModel = loader.loadModel(
+                "phase_3.5/models/gui/stickerbook_gui")
             lIconGeom = bookModel.find("**/factoryIcon2")
             bookModel.removeNode()
             lIconGeomScale = 0.13
@@ -746,14 +771,16 @@ class QuestPoster(DirectFrame):
         elif (quest.getType() == Quests.FactoryNewbieQuest):
             frameBgColor = 'blue'
             # Get the appropriate icon
-            bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+            bookModel = loader.loadModel(
+                "phase_3.5/models/gui/stickerbook_gui")
             rIconGeom = bookModel.find("**/factoryIcon2")
             bookModel.removeNode()
             rIconGeomScale = 0.13
             if not fComplete:
                 headlineString = TTLocalizer.QuestsNewbieQuestHeadline
                 captions = [quest.getCaption()]
-                captions.append(list(map(string.capwords, quest.getObjectiveStrings())))
+                captions.append(
+                    list(map(string.capwords, quest.getObjectiveStrings())))
                 auxText = TTLocalizer.QuestsCogNewbieQuestAux
                 lPos.setX(-0.18)
                 self.laffMeter = self.createLaffMeter(quest.getNewbieLevel())
@@ -771,7 +798,8 @@ class QuestPoster(DirectFrame):
         elif (quest.getType() == Quests.MintQuest):
             frameBgColor = 'blue'
             # Get the appropriate icon
-            bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+            bookModel = loader.loadModel(
+                "phase_3.5/models/gui/stickerbook_gui")
             lIconGeom = bookModel.find("**/CashBotMint")
             bookModel.removeNode()
             lIconGeomScale = 0.13
@@ -783,14 +811,16 @@ class QuestPoster(DirectFrame):
         elif (quest.getType() == Quests.MintNewbieQuest):
             frameBgColor = 'blue'
             # Get the appropriate icon
-            bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+            bookModel = loader.loadModel(
+                "phase_3.5/models/gui/stickerbook_gui")
             rIconGeom = bookModel.find("**/CashBotMint")
             bookModel.removeNode()
             rIconGeomScale = 0.13
             if not fComplete:
                 headlineString = TTLocalizer.QuestsNewbieQuestHeadline
                 captions = [quest.getCaption()]
-                captions.append(list(map(string.capwords, quest.getObjectiveStrings())))
+                captions.append(
+                    list(map(string.capwords, quest.getObjectiveStrings())))
                 auxText = TTLocalizer.QuestsCogNewbieQuestAux
                 lPos.setX(-0.18)
                 self.laffMeter = self.createLaffMeter(quest.getNewbieLevel())
@@ -808,7 +838,8 @@ class QuestPoster(DirectFrame):
         elif (quest.getType() == Quests.CogPartQuest):
             frameBgColor = 'green'
             # Get the appropriate icon
-            bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+            bookModel = loader.loadModel(
+                "phase_3.5/models/gui/stickerbook_gui")
             lIconGeom = bookModel.find("**/CogArmIcon2")
             bookModel.removeNode()
             lIconGeomScale = 0.13
@@ -820,14 +851,16 @@ class QuestPoster(DirectFrame):
         elif (quest.getType() == Quests.CogPartNewbieQuest):
             frameBgColor = 'green'
             # Get the appropriate icon
-            bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+            bookModel = loader.loadModel(
+                "phase_3.5/models/gui/stickerbook_gui")
             rIconGeom = bookModel.find("**/CogArmIcon2")
             bookModel.removeNode()
             rIconGeomScale = 0.13
             if not fComplete:
                 headlineString = TTLocalizer.QuestsNewbieQuestHeadline
                 captions = [quest.getCaption()]
-                captions.append(list(map(string.capwords, quest.getObjectiveStrings())))
+                captions.append(
+                    list(map(string.capwords, quest.getObjectiveStrings())))
                 auxText = TTLocalizer.QuestsCogPartQuestAux
                 lPos.setX(-0.18)
                 self.laffMeter = self.createLaffMeter(quest.getNewbieLevel())
@@ -846,7 +879,8 @@ class QuestPoster(DirectFrame):
               (quest.getType() == Quests.SupervisorQuest)):
             frameBgColor = 'blue'
             # Get the appropriate icon
-            bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+            bookModel = loader.loadModel(
+                "phase_3.5/models/gui/stickerbook_gui")
             lIconGeom = bookModel.find("**/skelecog5")
             bookModel.removeNode()
             lIconGeomScale = 0.13
@@ -859,14 +893,16 @@ class QuestPoster(DirectFrame):
               (quest.getType() == Quests.SupervisorNewbieQuest)):
             frameBgColor = 'blue'
             # Get the appropriate icon
-            bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+            bookModel = loader.loadModel(
+                "phase_3.5/models/gui/stickerbook_gui")
             rIconGeom = bookModel.find("**/skelecog5")
             bookModel.removeNode()
             rIconGeomScale = 0.13
             if not fComplete:
                 headlineString = TTLocalizer.QuestsNewbieQuestHeadline
                 captions = [quest.getCaption()]
-                captions.append(list(map(string.capwords, quest.getObjectiveStrings())))
+                captions.append(
+                    list(map(string.capwords, quest.getObjectiveStrings())))
                 auxText = TTLocalizer.QuestsCogNewbieQuestAux
                 lPos.setX(-0.18)
                 self.laffMeter = self.createLaffMeter(quest.getNewbieLevel())
@@ -884,7 +920,8 @@ class QuestPoster(DirectFrame):
         elif (quest.getType() == Quests.VPQuest):
             frameBgColor = 'blue'
             # Get the appropriate icon
-            bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+            bookModel = loader.loadModel(
+                "phase_3.5/models/gui/stickerbook_gui")
             lIconGeom = bookModel.find("**/BossHead3Icon")
             bookModel.removeNode()
             lIconGeomScale = 0.13
@@ -896,14 +933,16 @@ class QuestPoster(DirectFrame):
         elif (quest.getType() == Quests.VPNewbieQuest):
             frameBgColor = 'blue'
             # Get the appropriate icon
-            bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+            bookModel = loader.loadModel(
+                "phase_3.5/models/gui/stickerbook_gui")
             rIconGeom = bookModel.find("**/BossHead3Icon")
             bookModel.removeNode()
             rIconGeomScale = 0.13
             if not fComplete:
                 headlineString = TTLocalizer.QuestsNewbieQuestHeadline
                 captions = [quest.getCaption()]
-                captions.append(list(map(string.capwords, quest.getObjectiveStrings())))
+                captions.append(
+                    list(map(string.capwords, quest.getObjectiveStrings())))
                 auxText = TTLocalizer.QuestsCogNewbieQuestAux
                 lPos.setX(-0.18)
                 self.laffMeter = self.createLaffMeter(quest.getNewbieLevel())
@@ -921,7 +960,8 @@ class QuestPoster(DirectFrame):
         elif (quest.getType() == Quests.CFOQuest):
             frameBgColor = 'blue'
             # Get the appropriate icon
-            bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+            bookModel = loader.loadModel(
+                "phase_3.5/models/gui/stickerbook_gui")
             lIconGeom = bookModel.find("**/CashBotBossHeadIcon")
             bookModel.removeNode()
             lIconGeomScale = 0.13
@@ -933,14 +973,16 @@ class QuestPoster(DirectFrame):
         elif (quest.getType() == Quests.CFONewbieQuest):
             frameBgColor = 'blue'
             # Get the appropriate icon
-            bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+            bookModel = loader.loadModel(
+                "phase_3.5/models/gui/stickerbook_gui")
             rIconGeom = bookModel.find("**/CashBotBossHeadIcon")
             bookModel.removeNode()
             rIconGeomScale = 0.13
             if not fComplete:
                 headlineString = TTLocalizer.QuestsNewbieQuestHeadline
                 captions = [quest.getCaption()]
-                captions.append(list(map(string.capwords, quest.getObjectiveStrings())))
+                captions.append(
+                    list(map(string.capwords, quest.getObjectiveStrings())))
                 auxText = TTLocalizer.QuestsCogNewbieQuestAux
                 lPos.setX(-0.18)
                 self.laffMeter = self.createLaffMeter(quest.getNewbieLevel())
@@ -973,7 +1015,8 @@ class QuestPoster(DirectFrame):
             if not fComplete:
                 headlineString = TTLocalizer.QuestsNewbieQuestHeadline
                 captions = [quest.getCaption()]
-                captions.append(list(map(string.capwords, quest.getObjectiveStrings())))
+                captions.append(
+                    list(map(string.capwords, quest.getObjectiveStrings())))
                 auxText = TTLocalizer.QuestsRescueQuestAux
                 lPos.setX(-0.18)
                 self.laffMeter = self.createLaffMeter(quest.getNewbieLevel())
@@ -1014,14 +1057,16 @@ class QuestPoster(DirectFrame):
             infoText = TTLocalizer.QuestPosterPlayground
         elif (quest.getType() == Quests.MailboxQuest):
             frameBgColor = 'lightBlue'
-            bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+            bookModel = loader.loadModel(
+                "phase_3.5/models/gui/stickerbook_gui")
             lIconGeom = bookModel.find("**/package")
             lIconGeomScale = 0.12
             bookModel.removeNode()
             infoText = TTLocalizer.QuestPosterAtHome
         elif (quest.getType() == Quests.PhoneQuest):
             frameBgColor = 'lightBlue'
-            bookModel = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+            bookModel = loader.loadModel(
+                "phase_3.5/models/gui/stickerbook_gui")
             lIconGeom = bookModel.find("**/clarabelleCow")
             lIconGeomScale = 0.12
             bookModel.removeNode()
@@ -1035,8 +1080,11 @@ class QuestPoster(DirectFrame):
             gui.removeNode()
             infoText = TTLocalizer.QuestPosterPlayground
             if not fComplete:
-                captions = [TTLocalizer.QuestsMinigameNewbieQuestCaption % quest.getNewbieLevel()]
-                captions.append(list(map(string.capwords, quest.getObjectiveStrings())))
+                captions = [
+                    TTLocalizer.QuestsMinigameNewbieQuestCaption %
+                    quest.getNewbieLevel()]
+                captions.append(
+                    list(map(string.capwords, quest.getObjectiveStrings())))
                 auxText = TTLocalizer.QuestsMinigameNewbieQuestAux
                 lPos.setX(-0.18)
                 self.laffMeter = self.createLaffMeter(quest.getNewbieLevel())
@@ -1100,10 +1148,12 @@ class QuestPoster(DirectFrame):
                 if not fComplete:
                     headlineString = TTLocalizer.QuestsNewbieQuestHeadline
                     captions = [quest.getCaption()]
-                    captions.append(list(map(string.capwords, quest.getObjectiveStrings())))
+                    captions.append(
+                        list(map(string.capwords, quest.getObjectiveStrings())))
                     auxText = TTLocalizer.QuestsCogNewbieQuestAux
                     lPos.setX(-0.18)
-                    self.laffMeter = self.createLaffMeter(quest.getNewbieLevel())
+                    self.laffMeter = self.createLaffMeter(
+                        quest.getNewbieLevel())
                     self.laffMeter.setScale(0.04)
                     lIconGeom = None
                 else:
@@ -1130,29 +1180,34 @@ class QuestPoster(DirectFrame):
                 cogIcons.removeNode()
             elif (quest.getType() == Quests.SkelecogQuest):
                 # Show a skelecog head
-                cogIcons = loader.loadModel('phase_3.5/models/gui/stickerbook_gui')
+                cogIcons = loader.loadModel(
+                    'phase_3.5/models/gui/stickerbook_gui')
                 lIconGeom = cogIcons.find('**/skelecog5')
                 lIconGeomScale = IMAGE_SCALE_SMALL
                 cogIcons.removeNode()
             elif (quest.getType() == Quests.SkelecogLevelQuest):
                 # Show a skelecog head
-                cogIcons = loader.loadModel('phase_3.5/models/gui/stickerbook_gui')
+                cogIcons = loader.loadModel(
+                    'phase_3.5/models/gui/stickerbook_gui')
                 lIconGeom = cogIcons.find('**/skelecog5')
                 lIconGeomScale = IMAGE_SCALE_SMALL
                 cogIcons.removeNode()
             elif (quest.getType() == Quests.SkelecogNewbieQuest):
                 # Show a skelecog head
-                cogIcons = loader.loadModel("phase_3.5/models/gui/stickerbook_gui")
+                cogIcons = loader.loadModel(
+                    "phase_3.5/models/gui/stickerbook_gui")
                 rIconGeom = cogIcons.find("**/skelecog5")
                 rIconGeomScale = IMAGE_SCALE_SMALL
                 cogIcons.removeNode()
                 if not fComplete:
                     headlineString = TTLocalizer.QuestsNewbieQuestHeadline
                     captions = [quest.getCaption()]
-                    captions.append(list(map(string.capwords, quest.getObjectiveStrings())))
+                    captions.append(
+                        list(map(string.capwords, quest.getObjectiveStrings())))
                     auxText = TTLocalizer.QuestsCogNewbieQuestAux
                     lPos.setX(-0.18)
-                    self.laffMeter = self.createLaffMeter(quest.getNewbieLevel())
+                    self.laffMeter = self.createLaffMeter(
+                        quest.getNewbieLevel())
                     self.laffMeter.setScale(0.04)
                     lIconGeom = None
                 else:
@@ -1162,20 +1217,21 @@ class QuestPoster(DirectFrame):
                     rIconGeomScale = 1
             elif (quest.getType() == Quests.SkeleReviveQuest):
                 # Show a skelecog head
-                cogIcons = loader.loadModel('phase_3.5/models/gui/stickerbook_gui')
+                cogIcons = loader.loadModel(
+                    'phase_3.5/models/gui/stickerbook_gui')
                 lIconGeom = cogIcons.find('**/skelecog5')
                 lIconGeomScale = IMAGE_SCALE_SMALL
                 cogIcons.removeNode()
-                    
+
             if not fComplete:
                 # Show the location of the cog/item
                 infoText = string.capwords(quest.getLocationName())
                 if infoText == '':
                     infoText = TTLocalizer.QuestPosterAnywhere
-                
+
         if fComplete:
             # Make text and background green to show it is complete
-            textColor = (0,0.3,0,1)
+            textColor = (0, 0.3, 0, 1)
             imageColor = Vec4(*self.colors['lightGreen'])
             lPos.setX(-0.18)
             # Create a toon head
@@ -1189,12 +1245,12 @@ class QuestPoster(DirectFrame):
             infoText = (TTLocalizer.QuestPageDestination %
                         (toNpcBuildingName, toNpcStreetName,
                          toNpcLocationName))
-            if (self.laffMeter != None):
+            if (self.laffMeter is not None):
                 self.laffMeter.reparentTo(hidden)
                 self.laffMeter.destroy()
                 self.laffMeter = None
         else:
-            textColor = self.normalTextColor            
+            textColor = self.normalTextColor
         # Show thyself
         self.show()
         # Update color
@@ -1205,33 +1261,34 @@ class QuestPoster(DirectFrame):
         # Update picture frame captions and locations
         self.lPictureFrame.show()
         self.lPictureFrame.setPos(lPos)
-        self.lPictureFrame['text_scale'] = TEXT_SCALE        
+        self.lPictureFrame['text_scale'] = TEXT_SCALE
         # scale down the text if left picture is not centered
         if (lPos[0] != 0):
             self.lPictureFrame['text_scale'] = 0.0325
         self.lPictureFrame['text'] = captions[0]
-        #self.lPictureFrame.setColor(*self.colors[frameBgColor])
+        # self.lPictureFrame.setColor(*self.colors[frameBgColor])
         self.lPictureFrame['image_color'] = Vec4(*self.colors[frameBgColor])
         if len(captions) > 1:
             self.rPictureFrame.show()
             self.rPictureFrame['text'] = captions[1]
-            self.rPictureFrame['text_scale'] = 0.0325             
-            #self.rPictureFrame.setColor(*self.colors[frameBgColor])
-            self.rPictureFrame['image_color'] =Vec4(*self.colors[frameBgColor])
+            self.rPictureFrame['text_scale'] = 0.0325
+            # self.rPictureFrame.setColor(*self.colors[frameBgColor])
+            self.rPictureFrame['image_color'] = Vec4(
+                *self.colors[frameBgColor])
         else:
             self.rPictureFrame.hide()
         # Update quest icons
         self.lQuestIcon['geom'] = lIconGeom
-        self.lQuestIcon['geom_pos'] = (0,10,0)
+        self.lQuestIcon['geom_pos'] = (0, 10, 0)
         if lIconGeom:
             self.lQuestIcon['geom_scale'] = lIconGeomScale
-        if (self.laffMeter != None):
+        if (self.laffMeter is not None):
             self.laffMeter.reparentTo(self.lQuestIcon)
         self.rQuestIcon['geom'] = rIconGeom
-        self.rQuestIcon['geom_pos'] = (0,10,0)
+        self.rQuestIcon['geom_pos'] = (0, 10, 0)
         if rIconGeom:
             self.rQuestIcon['geom_scale'] = rIconGeomScale
-            
+
         # Display auxiliary text if necessary
         if auxText:
             self.auxText.show()
@@ -1245,21 +1302,23 @@ class QuestPoster(DirectFrame):
         numQuestItems = quest.getNumQuestItems()
         if fComplete or (numQuestItems <= 1):
             self.questProgress.hide()
-            # if bar is not shown (and not complete track choice) make more room for other text
+            # if bar is not shown (and not complete track choice) make more
+            # room for other text
             if not (quest.getType() == Quests.TrackChoiceQuest):
                 infoZ = -0.075
         else:
             self.questProgress.show()
-            self.questProgress['value'] = toonProgress  & (pow(2,16) - 1)
+            self.questProgress['value'] = toonProgress & (pow(2, 16) - 1)
             self.questProgress['range'] = numQuestItems
-            self.questProgress['text'] = quest.getProgressString(base.localAvatar, questDesc)
+            self.questProgress['text'] = quest.getProgressString(
+                base.localAvatar, questDesc)
 
         # Display quest Info (if any), adjust wordwrap if necessary
         self.questInfo['text'] = infoText
         self.questInfo.setZ(infoZ)
         self.fitLabel(self.questInfo)
 
-    def fitLabel(self, label, lineNo = 0):
+    def fitLabel(self, label, lineNo=0):
         text = label['text']
         label['text_scale'] = TEXT_SCALE
         label['text_wordwrap'] = TEXT_WORDWRAP
@@ -1269,10 +1328,11 @@ class QuestPoster(DirectFrame):
             # We pass in the string to textNode.calcWidth, instead of
             # using textNode.getWidth(), because we don't want to
             # consider the wordwrapping in this calculation.
-            lineWidth = label.component('text0').textNode.calcWidth(lines[lineNo])
+            lineWidth = label.component(
+                'text0').textNode.calcWidth(lines[lineNo])
             # Do not divide by zero on an empty line
             if lineWidth > 0:
-                textScale = POSTER_WIDTH/lineWidth
+                textScale = POSTER_WIDTH / lineWidth
                 label['text_scale'] = min(TEXT_SCALE, textScale)
                 label['text_wordwrap'] = max(TEXT_WORDWRAP, lineWidth + 0.05)
 
@@ -1283,22 +1343,60 @@ class QuestPoster(DirectFrame):
         if hasattr(self, 'deleteButton'):
             self.deleteButton.destroy()
             del self.deleteButton
-        #show the delete gui
+        # show the delete gui
         deleteGui = loader.loadModel('phase_3/models/gui/trashcan_gui')
-        self.deleteButton = DirectButton(parent=self.questFrame, image=(deleteGui.find('**/TrashCan_CLSD'), deleteGui.find('**/TrashCan_OPEN'), deleteGui.find('**/TrashCan_RLVR')), text=('', TTLocalizer.AvatarChoiceDelete, TTLocalizer.AvatarChoiceDelete), text_fg=(1, 1, 1, 1), text_shadow=(0, 0, 0, 1), text_scale=0.18, text_pos=(0, -0.12), relief=None, pos=(0.3, 0, 0.015), scale=0.2, command=self.commandDelete, extraArgs=[questDesc])
+        self.deleteButton = DirectButton(
+            parent=self.questFrame,
+            image=(
+                deleteGui.find('**/TrashCan_CLSD'),
+                deleteGui.find('**/TrashCan_OPEN'),
+                deleteGui.find('**/TrashCan_RLVR')),
+            text=(
+                '',
+                TTLocalizer.AvatarChoiceDelete,
+                TTLocalizer.AvatarChoiceDelete),
+            text_fg=(
+                1,
+                1,
+                1,
+                1),
+            text_shadow=(
+                0,
+                0,
+                0,
+                1),
+            text_scale=0.18,
+            text_pos=(
+                0,
+                -0.12),
+            relief=None,
+            pos=(
+                0.3,
+                0,
+                0.015),
+            scale=0.2,
+            command=self.commandDelete,
+            extraArgs=[questDesc])
         deleteGui.removeNode()
         return
 
     def hideDeleteBtn(self):
-        #destroy the delete button
+        # destroy the delete button
         if hasattr(self, 'deleteButton'):
             self.deleteButton.destroy()
             del self.deleteButton
-        
+
     def commandDelete(self, questDesc):
         self.deleteButton['state'] = DGG.DISABLED
-        self.accept('areYouSureDeleteButtonEvent', self.commandAreYouSureDeleteButton)
-        self.areYouSureDeleteButton = TTDialog.TTGlobalDialog(doneEvent='areYouSureDeleteButtonEvent', message='Are you sure you want to delete this task?', style=TTDialog.YesNo, okButtonText='Yes', cancelButtonText='No')
+        self.accept(
+            'areYouSureDeleteButtonEvent',
+            self.commandAreYouSureDeleteButton)
+        self.areYouSureDeleteButton = TTDialog.TTGlobalDialog(
+            doneEvent='areYouSureDeleteButtonEvent',
+            message='Are you sure you want to delete this task?',
+            style=TTDialog.YesNo,
+            okButtonText='Yes',
+            cancelButtonText='No')
         self.areYouSureDeleteButton.quest = questDesc
         self.areYouSureDeleteButton.doneStatus = ''
         return
@@ -1315,8 +1413,6 @@ class QuestPoster(DirectFrame):
         self.areYouSureDeleteButton.cleanup()
         del self.areYouSureDeleteButton
 
-
-
     def unbindMouseEnter(self):
-        #credit to toontown rewritten
+        # credit to toontown rewritten
         self.unbind(DGG.WITHIN)

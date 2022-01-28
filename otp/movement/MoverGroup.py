@@ -2,10 +2,11 @@ from pandac.PandaModules import *
 from panda3d.otp import CMoverGroup
 from otp.movement.Mover import Mover
 
+
 class MoverGroup(CMoverGroup):
     """group of movers that move simultaneously to optimize for speed"""
 
-    PSCPy     = 'App:Show code:moveObjects:MoverGroupPy'
+    PSCPy = 'App:Show code:moveObjects:MoverGroupPy'
     PSCCppInt = 'App:Show code:moveObjects:MoverGroupC++AndIntegrate'
 
     def __init__(self, movers=None):
@@ -17,12 +18,13 @@ class MoverGroup(CMoverGroup):
             for mover in movers:
                 self.addMover(mover)
         if Mover.Pstats:
-            self.pscPy     = PStatCollector(MoverGroup.PSCPy)
+            self.pscPy = PStatCollector(MoverGroup.PSCPy)
             self.pscCppInt = PStatCollector(MoverGroup.PSCCppInt)
 
     def add(self, name, mover):
         self.addCMover(name, mover)
         self._name2pyMovers[name] = mover
+
     def remove(self, name):
         self.removeCMover(name)
         if (name in self._name2pyMovers):
@@ -52,4 +54,3 @@ class MoverGroup(CMoverGroup):
     def broadcastPositionUpdates(self):
         for mover in self._name2pyMovers.values():
             mover._posHprBroadcast()
-            

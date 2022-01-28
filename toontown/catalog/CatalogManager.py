@@ -1,6 +1,7 @@
 from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
 
+
 class CatalogManager(DistributedObject.DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory("CatalogManager")
 
@@ -19,7 +20,7 @@ class CatalogManager(DistributedObject.DistributedObject):
         This method is called when the DistributedObject is reintroduced
         to the world, either for the first time or from the cache.
         """
-        if base.cr.catalogManager != None:
+        if base.cr.catalogManager is not None:
             base.cr.catalogManager.delete()
         base.cr.catalogManager = self
         DistributedObject.DistributedObject.generate(self)
@@ -29,7 +30,7 @@ class CatalogManager(DistributedObject.DistributedObject):
         # We only want Toons to start the catalog manager running, however,
         # not gateway avatars, etc.
         if (hasattr(base.localAvatar, "catalogScheduleNextTime") and
-            base.localAvatar.catalogScheduleNextTime == 0):
+                base.localAvatar.catalogScheduleNextTime == 0):
             self.d_startCatalog()
 
     def disable(self):
@@ -52,6 +53,3 @@ class CatalogManager(DistributedObject.DistributedObject):
 
     def d_startCatalog(self):
         self.sendUpdate("startCatalog", [])
-        
-
-        

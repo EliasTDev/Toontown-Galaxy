@@ -5,12 +5,13 @@ from direct.task import Task
 from direct.showbase import DirectObject
 import random
 
+
 class Barrier(DirectObject.DirectObject):
     notify = directNotify.newCategory('Barrier')
-    
+
     def __init__(self, name, uniqueName, avIdList, timeout,
-                 clearedFunc = None, timeoutFunc = None,
-                 doneFunc = None):
+                 clearedFunc=None, timeoutFunc=None,
+                 doneFunc=None):
         """
         name: a context name that should be used in common with the
               client code.
@@ -46,7 +47,7 @@ class Barrier(DirectObject.DirectObject):
             # If we are initialized with an empty list of avatars to
             # wait for, we consider ourselves cleared immediately.
             self.notify.debug(
-                '%s: barrier with empty list' % (self.uniqueName))
+                f'{self.uniqueName}: barrier with empty list')
             self.active = 0
             if self.clearedFunc:
                 self.clearedFunc()
@@ -71,7 +72,10 @@ class Barrier(DirectObject.DirectObject):
         # Hang hooks for each avatar to disappear.
         for avId in self.avIdList:
             event = simbase.air.getAvatarExitEvent(avId)
-            self.acceptOnce(event, self.__handleUnexpectedExit, extraArgs=[avId])
+            self.acceptOnce(
+                event,
+                self.__handleUnexpectedExit,
+                extraArgs=[avId])
 
         self.notify.debug(
             '%s: expecting responses from %s within %s seconds' %
@@ -92,15 +96,14 @@ class Barrier(DirectObject.DirectObject):
     def clear(self, avId):
         if not (avId in self.pendingAvatars):
             self.notify.warning(
-                "%s: tried to clear %s, who was not listed." %
-                (self.uniqueName, avId))
+                f"{self.uniqueName}: tried to clear {avId}, who was not listed.")
             return
 
-        self.notify.debug('%s: clearing avatar %s' % (self.uniqueName, avId))
+        self.notify.debug(f'{self.uniqueName}: clearing avatar {avId}')
         self.pendingAvatars.remove(avId)
         if len(self.pendingAvatars) == 0:
             self.notify.debug(
-                '%s: barrier cleared by %s' % (self.uniqueName, self.avIdList))
+                f'{self.uniqueName}: barrier cleared by {self.avIdList}')
             self.cleanup()
             if self.clearedFunc:
                 self.clearedFunc()

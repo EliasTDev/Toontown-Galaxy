@@ -4,6 +4,7 @@ from direct.distributed import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import ToontownGlobals
 
+
 class NewsManagerAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("NewsManagerAI")
 
@@ -15,7 +16,7 @@ class NewsManagerAI(DistributedObjectAI.DistributedObjectAI):
         self.oncelyCalendarHolidays = []
         self.relativelyCalendarHolidays = []
         self.multipleStartHolidays = []
-        
+
     def generate(self):
         DistributedObjectAI.DistributedObjectAI.generate(self)
         self.accept("avatarEntered", self.__handleAvatarEntered)
@@ -27,35 +28,38 @@ class NewsManagerAI(DistributedObjectAI.DistributedObjectAI):
             # is a Cog Invasion taking place
             cogType, skeleton = self.air.suitInvasionManager.getCogType()
             numRemaining = self.air.suitInvasionManager.getNumCogsRemaining()
-            self.sendAvatarInvasionStatus(avatar.getDoId(), cogType, numRemaining, skeleton)
+            self.sendAvatarInvasionStatus(
+                avatar.getDoId(), cogType, numRemaining, skeleton)
 
-        
         # let them know about all holidays actually...
         self.sendUpdateToAvatarId(avatar.getDoId(), "holidayNotify", [])
-        
 
-    def __handleAvatarExited(self, avatar = None):
+    def __handleAvatarExited(self, avatar=None):
         pass
 
     def invasionBegin(self, cogType, numRemaining, skeleton):
-        self.sendUpdate("setInvasionStatus",
-                        [ToontownGlobals.SuitInvasionBegin, cogType, numRemaining, skeleton])
+        self.sendUpdate(
+            "setInvasionStatus", [
+                ToontownGlobals.SuitInvasionBegin, cogType, numRemaining, skeleton])
 
     def invasionEnd(self, cogType, numRemaining, skeleton):
-        self.sendUpdate("setInvasionStatus",
-                        [ToontownGlobals.SuitInvasionEnd, cogType, numRemaining, skeleton])
+        self.sendUpdate(
+            "setInvasionStatus", [
+                ToontownGlobals.SuitInvasionEnd, cogType, numRemaining, skeleton])
 
     def invasionUpdate(self, cogType, numRemaining, skeleton):
         # Broadcast an invasion update to all players
-        self.sendUpdate("setInvasionStatus",
-                        [ToontownGlobals.SuitInvasionUpdate, cogType, numRemaining, skeleton])
+        self.sendUpdate(
+            "setInvasionStatus", [
+                ToontownGlobals.SuitInvasionUpdate, cogType, numRemaining, skeleton])
 
     def sendAvatarInvasionStatus(self, avId, cogType, numRemaining, skeleton):
         # Send an invasion update to only one avatar
-        self.sendUpdateToAvatarId(avId, "setInvasionStatus",
-                                  [ToontownGlobals.SuitInvasionBulletin, cogType, numRemaining, skeleton])
-    
-    def sendSystemMessage(self, message, style = 0):
+        self.sendUpdateToAvatarId(
+            avId, "setInvasionStatus", [
+                ToontownGlobals.SuitInvasionBulletin, cogType, numRemaining, skeleton])
+
+    def sendSystemMessage(self, message, style=0):
         # Use news manager to broadcast a system message to all the clients
         self.sendUpdate("sendSystemMessage", [message, style])
 
@@ -82,7 +86,7 @@ class NewsManagerAI(DistributedObjectAI.DistributedObjectAI):
 
     def trolleyHolidayEnd(self):
         self.sendUpdate("setTrolleyHolidayEnd", [])
-        
+
     def trolleyWeekendStart(self):
         self.sendUpdate("setTrolleyWeekendStart", [])
 
@@ -105,14 +109,18 @@ class NewsManagerAI(DistributedObjectAI.DistributedObjectAI):
 
     def sendWeeklyCalendarHolidays(self):
         """Force a send of the weekly calendar holidays."""
-        self.sendUpdate("setWeeklyCalendarHolidays", [self.weeklyCalendarHolidays])
+        self.sendUpdate(
+            "setWeeklyCalendarHolidays", [
+                self.weeklyCalendarHolidays])
 
     def addYearlyCalendarHoliday(self, holidayId, firstStartTime, lastEndTime):
         """Add a new yearly holiday."""
         # Note the holiday can have breaks in it.  e.g. no bloodsucker invasion
         # happens between 3 and 6 pm on halloween, however for simplicity
-        # we just note the first time it will happen, and the last end time for it
-        self.yearlyCalendarHolidays.append((holidayId, firstStartTime, lastEndTime))
+        # we just note the first time it will happen, and the last end time for
+        # it
+        self.yearlyCalendarHolidays.append(
+            (holidayId, firstStartTime, lastEndTime))
 
     def getYearlyCalendarHolidays(self):
         """Return our list of yearly calendar holidays."""
@@ -120,14 +128,18 @@ class NewsManagerAI(DistributedObjectAI.DistributedObjectAI):
 
     def sendYearlyCalendarHolidays(self):
         """Force a send of the yearly calendar holidays."""
-        self.sendUpdate("setYearlyCalendarHolidays", [self.yearlyCalendarHolidays])
+        self.sendUpdate(
+            "setYearlyCalendarHolidays", [
+                self.yearlyCalendarHolidays])
 
     def addOncelyCalendarHoliday(self, holidayId, firstStartTime, lastEndTime):
         """Add a new oncely holiday."""
         # Note the holiday can have breaks in it.  e.g. no bloodsucker invasion
         # happens between 3 and 6 pm on halloween, however for simplicity
-        # we just note the first time it will happen, and the last end time for it
-        self.oncelyCalendarHolidays.append((holidayId, firstStartTime, lastEndTime))
+        # we just note the first time it will happen, and the last end time for
+        # it
+        self.oncelyCalendarHolidays.append(
+            (holidayId, firstStartTime, lastEndTime))
 
     def getOncelyCalendarHolidays(self):
         """Return our list of oncely calendar holidays."""
@@ -145,18 +157,28 @@ class NewsManagerAI(DistributedObjectAI.DistributedObjectAI):
 
     def sendMultipleStartHolidays(self):
         """Force a send of the oncely calendar holidays."""
-        self.sendUpdate("setMultipleStartHolidays", [self.multipleStartHolidays])
+        self.sendUpdate(
+            "setMultipleStartHolidays", [
+                self.multipleStartHolidays])
 
     def sendOncelyCalendarHolidays(self):
         """Force a send of the oncely calendar holidays."""
-        self.sendUpdate("setOncelyCalendarHolidays", [self.oncelyCalendarHolidays])
-        
-    def addRelativelyCalendarHoliday(self, holidayId, firstStartTime, lastEndTime):
+        self.sendUpdate(
+            "setOncelyCalendarHolidays", [
+                self.oncelyCalendarHolidays])
+
+    def addRelativelyCalendarHoliday(
+            self,
+            holidayId,
+            firstStartTime,
+            lastEndTime):
         """Add a new oncely holiday."""
         # Note the holiday can have breaks in it.  e.g. no bloodsucker invasion
         # happens between 3 and 6 pm on halloween, however for simplicity
-        # we just note the first time it will happen, and the last end time for it
-        self.relativelyCalendarHolidays.append((holidayId, firstStartTime, lastEndTime))
+        # we just note the first time it will happen, and the last end time for
+        # it
+        self.relativelyCalendarHolidays.append(
+            (holidayId, firstStartTime, lastEndTime))
 
     def getRelativelyCalendarHolidays(self):
         """Return our list of Relatively calendar holidays."""
@@ -164,5 +186,6 @@ class NewsManagerAI(DistributedObjectAI.DistributedObjectAI):
 
     def sendRelativelyCalendarHolidays(self):
         """Force a send of the Relatively calendar holidays."""
-        self.sendUpdate("setRelativelyCalendarHolidays", [self.relativelyCalendarHolidays])
-
+        self.sendUpdate(
+            "setRelativelyCalendarHolidays", [
+                self.relativelyCalendarHolidays])

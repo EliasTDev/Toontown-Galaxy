@@ -2,6 +2,7 @@ from direct.distributed import DistributedObjectAI
 from . import Entity
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedEntityAI(DistributedObjectAI.DistributedObjectAI,
                           Entity.Entity):
     notify = DirectNotifyGlobal.directNotify.newCategory(
@@ -9,7 +10,7 @@ class DistributedEntityAI(DistributedObjectAI.DistributedObjectAI,
 
     def __init__(self, level, entId):
         ###
-        ### THIS IS WHERE AI-SIDE DISTRIBUTED ENTITIES GET THEIR ATTRIBUTES SET
+        # THIS IS WHERE AI-SIDE DISTRIBUTED ENTITIES GET THEIR ATTRIBUTES SET
         ###
         if hasattr(level, "air"):
             air = level.air
@@ -23,7 +24,7 @@ class DistributedEntityAI(DistributedObjectAI.DistributedObjectAI,
             air = level
             level = None
             self.levelDoId = 0
-            
+
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
         Entity.Entity.__init__(self, level, entId)
 

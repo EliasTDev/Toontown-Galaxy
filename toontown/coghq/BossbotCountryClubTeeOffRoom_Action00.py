@@ -11,7 +11,7 @@ GlobalEntities = {
         'farPlaneDistance': 1500,
         'modelFilename': 'phase_12/models/bossbotHQ/BossbotTeeOffRoom',
         'wantDoors': 1,
-        }, # end entity 1000
+    },  # end entity 1000
     # EDITMGR
     1001: {
         'type': 'editMgr',
@@ -21,7 +21,7 @@ GlobalEntities = {
         'removeEntity': None,
         'requestNewEntity': None,
         'requestSave': None,
-        }, # end entity 1001
+    },  # end entity 1001
     # ZONE
     0: {
         'type': 'zone',
@@ -31,7 +31,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 0
+    },  # end entity 0
     # DOOR
     110100: {
         'type': 'door',
@@ -54,7 +54,7 @@ GlobalEntities = {
         'unlock1Event': 110102,
         'unlock2Event': 0,
         'unlock3Event': 0,
-        }, # end entity 110100
+    },  # end entity 110100
     # MOLEFIELD
     110102: {
         'type': 'moleField',
@@ -68,10 +68,10 @@ GlobalEntities = {
         'numSquaresY': 6,
         'spacingX': 10.0,
         'spacingY': 10.0,
-        'timeToPlay' : 60,
-        'molesBase' : 4,
-        'molesPerPlayer' : 1,
-        }, # end entity 110102
+        'timeToPlay': 60,
+        'molesBase': 4,
+        'molesPerPlayer': 1,
+    },  # end entity 110102
     # NODEPATH
     10002: {
         'type': 'nodepath',
@@ -81,7 +81,7 @@ GlobalEntities = {
         'pos': Point3(0, 0, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': 1,
-        }, # end entity 10002
+    },  # end entity 10002
     110001: {
         'type': 'nodepath',
         'name': 'doorParent',
@@ -90,15 +90,15 @@ GlobalEntities = {
         'pos': Point3(60.2682, 0.55914, 0),
         'hpr': Vec3(270, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 110001
-    }
+    },  # end entity 110001
+}
 
 Scenario0 = {
-    }
+}
 
 levelSpec = {
     'globalEntities': GlobalEntities,
     'scenarios': [
         Scenario0,
-        ],
-    }
+    ],
+}

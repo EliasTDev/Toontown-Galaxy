@@ -24,6 +24,7 @@
 # - store a copy of the data, independent of the DistributedObject,
 #   that is unaffected by its deletion
 
+
 class DelayDelete:
     """
     The DelayDelete class is a special class whose sole purpose is
@@ -75,13 +76,15 @@ class DelayDelete:
 # requires .destroy() to be called.
 # To reduce code duplication, this method may be called to clean up
 # delayDeletes that have been placed on an interval.
+
+
 def cleanupDelayDeletes(interval):
     if hasattr(interval, 'delayDelete'):
         delayDelete = interval.delayDelete
         # get rid of all references before calling destroy in case destroy causes
         # this function to be called again
         del interval.delayDelete
-        if type(delayDelete) == type([]):
+        if isinstance(delayDelete, type([])):
             for i in delayDelete:
                 i.destroy()
         else:
@@ -91,7 +94,7 @@ def cleanupDelayDeletes(interval):
         # get rid of the reference before calling destroy in case destroy causes
         # this function to be called again
         del interval.delayDeletes
-        if type(delayDeletes) == type([]):
+        if isinstance(delayDeletes, type([])):
             for i in delayDeletes:
                 i.destroy()
         else:

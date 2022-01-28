@@ -1,4 +1,7 @@
-import sys, string, math, types
+import sys
+import string
+import math
+import types
 import direct.gui.DirectGuiGlobals as DGG
 from direct.gui.DirectGui import *
 
@@ -8,9 +11,11 @@ from .ScrollMenu import *
 from .LevelEditorGlobals import *
 from functools import reduce
 
+
 class LevelStyleManager:
     """Class which reads in style files and manages class variables"""
-    def __init__(self, NEIGHBORHOODS = [], NEIGHBORHOOD_CODES = {} ):
+
+    def __init__(self, NEIGHBORHOODS=[], NEIGHBORHOOD_CODES={}):
         self.NEIGHBORHOODS = NEIGHBORHOODS
         self.NEIGHBORHOOD_CODES = NEIGHBORHOOD_CODES
         # The main dictionary holding all attribute objects
@@ -39,7 +44,9 @@ class LevelStyleManager:
                 self.createBaselineStyleDictionary(neighborhood))
             # Using this dictionary, create style pie menus
             attribute.setMenu(
-                self.createBaselineStyleMenu(neighborhood, attribute.getDict()))
+                self.createBaselineStyleMenu(
+                    neighborhood,
+                    attribute.getDict()))
             dict[neighborhood] = attribute
 
     def createBaselineStyleDictionary(self, neighborhood):
@@ -102,7 +109,7 @@ class LevelStyleManager:
                         or pair_0 == 'z'
                         or pair_0 == 'scaleX'
                         or pair_0 == 'scaleZ'
-                        or pair_0 == 'roll'):
+                            or pair_0 == 'roll'):
                         style[pair_0] = eval(pair[1])
                     else:
                         style[pair_0] = pair[1]
@@ -120,12 +127,14 @@ class LevelStyleManager:
         numItems = len(dictionary)
         newStyleMenu = hidden.attachNewNode(neighborhood + '_style_menu')
         radius = 0.7
-        angle = deg2Rad(360.0/numItems)
-        keys = list(dictionary.keys())
-        keys.sort()
-        styles = list(map(lambda x, d = dictionary: d[x], keys))
+        angle = deg2Rad(360.0 / numItems)
+        keys = sorted(dictionary.keys())
+        styles = list(map(lambda x, d=dictionary: d[x], keys))
         sf = 0.1
-        aspectRatio = (base.direct.dr.getWidth()/float(base.direct.dr.getHeight()))
+        aspectRatio = (
+            base.direct.dr.getWidth() /
+            float(
+                base.direct.dr.getHeight()))
         for i in range(numItems):
             # Get the node
             node = self.createBaselineStyleSample(styles[i])
@@ -224,8 +233,8 @@ class LevelStyleManager:
                 pair = list(map(string.strip, l.split(':')))
                 if pair[0] in style.__dict__:
                     # Convert colors and count strings to numerical values
-                    if ((str.find(pair[0],'_color') >= 0) or
-                        (str.find(pair[0],'_count') >= 0)):
+                    if ((str.find(pair[0], '_color') >= 0) or
+                            (str.find(pair[0], '_count') >= 0)):
                         style[pair[0]] = eval(pair[1])
                     else:
                         style[pair[0]] = pair[1]
@@ -243,12 +252,14 @@ class LevelStyleManager:
         numItems = len(dictionary)
         newStyleMenu = hidden.attachNewNode(neighborhood + '_style_menu')
         radius = 0.7
-        angle = deg2Rad(360.0/numItems)
-        keys = list(dictionary.keys())
-        keys.sort()
-        styles = list(map(lambda x, d = dictionary: d[x], keys))
+        angle = deg2Rad(360.0 / numItems)
+        keys = sorted(dictionary.keys())
+        styles = list(map(lambda x, d=dictionary: d[x], keys))
         sf = 0.03
-        aspectRatio = (base.direct.dr.getWidth()/float(base.direct.dr.getHeight()))
+        aspectRatio = (
+            base.direct.dr.getWidth() /
+            float(
+                base.direct.dr.getHeight()))
         for i in range(numItems):
             # Get the node
             node = self.createWallStyleSample(styles[i])
@@ -274,9 +285,9 @@ class LevelStyleManager:
         Create a style sample using the DNA info in the style
         """
         bldg = DNAFlatBuilding()
-        bldgStyle = DNAFlatBuildingStyle(styleList = [(wallStyle, 10.0)])
-        self.setDNAFlatBuildingStyle(bldg, bldgStyle, width = 12.0,
-                                     name = 'wall_style_sample')
+        bldgStyle = DNAFlatBuildingStyle(styleList=[(wallStyle, 10.0)])
+        self.setDNAFlatBuildingStyle(bldg, bldgStyle, width=12.0,
+                                     name='wall_style_sample')
         return bldg.traverse(hidden, DNASTORE, 1)
 
     # BUILDING STYLE FUNCTIONS
@@ -346,13 +357,15 @@ class LevelStyleManager:
                 numWallsAttributes[i] = LevelAttribute(styleAttrName)
             # Building height
             for i in BUILDING_HEIGHTS:
-                heightAttrName = neighborhood + '_' + repr(i) + '_ft_wall_heights'
+                heightAttrName = neighborhood + \
+                    '_' + repr(i) + '_ft_wall_heights'
                 heightAttributes[i] = LevelAttribute(heightAttrName)
             # Sort through the styles and store in separate lists
             for style in styleDict[neighborhood].getList():
                 # Put in code for number of walls into building styles
                 heightType = string.strip(string.split(style.name, ':')[1])
-                heightList = list(map(string.atof, string.split(heightType, '_')))
+                heightList = list(
+                    map(string.atof, string.split(heightType, '_')))
                 numWalls = len(heightList)
                 # This one stores styles sorted by type
                 typeAttributes[heightType].add(style)
@@ -404,10 +417,11 @@ class LevelStyleManager:
             l = styleData[0]
             if l[:13] == 'buildingStyle':
                 # Start with empty style list
-                bldgStyle = DNAFlatBuildingStyle(styleList = [])
+                bldgStyle = DNAFlatBuildingStyle(styleList=[])
                 # Extract height information found at end of line
                 heightCode = string.strip(string.split(l, ':')[1])
-                heightList = list(map(string.atof, string.split(heightCode, '_')))
+                heightList = list(
+                    map(string.atof, string.split(heightCode, '_')))
                 # Construct name for building style.  Tack on height code
                 # to be used later to split styles by heightCode
                 bldgStyle.name = (
@@ -445,12 +459,14 @@ class LevelStyleManager:
         numItems = len(dictionary)
         newStyleMenu = hidden.attachNewNode(neighborhood + '_style_menu')
         radius = 0.7
-        angle = deg2Rad(360.0/numItems)
-        keys = list(dictionary.keys())
-        keys.sort()
-        styles = list(map(lambda x, d = dictionary: d[x], keys))
+        angle = deg2Rad(360.0 / numItems)
+        keys = sorted(dictionary.keys())
+        styles = list(map(lambda x, d=dictionary: d[x], keys))
         sf = 0.02
-        aspectRatio = (base.direct.dr.getWidth()/float(base.direct.dr.getHeight()))
+        aspectRatio = (
+            base.direct.dr.getWidth() /
+            float(
+                base.direct.dr.getHeight()))
         for i in range(numItems):
             # Get the node
             node = self.createBuildingStyleSample(styles[i])
@@ -476,12 +492,12 @@ class LevelStyleManager:
         Create a style sample using the DNA info in the style
         """
         bldg = DNAFlatBuilding()
-        self.setDNAFlatBuildingStyle(bldg, bldgStyle, width = 10.0,
-                                     name = 'building_style_sample')
+        self.setDNAFlatBuildingStyle(bldg, bldgStyle, width=10.0,
+                                     name='building_style_sample')
         return bldg.traverse(hidden, DNASTORE, 1)
 
-    def setDNAFlatBuildingStyle(self, fb, bldgStyle, width = 10.0,
-                                heightList = None, name = 'building'):
+    def setDNAFlatBuildingStyle(self, fb, bldgStyle, width=10.0,
+                                heightList=None, name='building'):
         """ Set DNAFlatBuilding style. """
         # Remove flat building's children
         DNARemoveChildren(fb)
@@ -506,13 +522,13 @@ class LevelStyleManager:
             # Create wall accordingly
             wall = DNAWall()
             self.setDNAWallStyle(wall, wallStyle, wallHeight,
-                                 width = width)
+                                 width=width)
             # Add it to building DNA
             fb.add(wall)
         # Set the buildings width
         fb.setWidth(width)
 
-    def setDNAWallStyle(self, wall, style, height = 10.0, width = None):
+    def setDNAWallStyle(self, wall, style, height=10.0, width=None):
         """ Set DNAWall to input style. """
         # Remove wall's children
         DNARemoveChildren(wall)
@@ -611,7 +627,7 @@ class LevelStyleManager:
             # Using this dictionary, create color pie menus
             colorMenuDictionary[neighborhood] = (
                 self.createColorMenus(
-                neighborhood, colorDictionary[neighborhood]))
+                    neighborhood, colorDictionary[neighborhood]))
         # Now store this info in the appropriate place in the attribute dict
         for colorType in COLOR_TYPES:
             neighborhoodDict = self.attributeDictionary[colorType] = {}
@@ -656,16 +672,19 @@ class LevelStyleManager:
                 self.createColorMenu(neighborhood + key, dictionary[key]))
         return menuDict
 
-    def createColorMenu(self, menuName, colorList, radius = 0.7, sf = 2.0):
+    def createColorMenu(self, menuName, colorList, radius=0.7, sf=2.0):
         # Create color chips for each color
         numItems = len(colorList)
         # Attach it to hidden for now
         newColorMenu = hidden.attachNewNode(menuName + 'Menu')
         # Compute the angle per item
-        angle = deg2Rad(360.0/float(numItems))
-        aspectRatio = (base.direct.dr.getWidth() / float(base.direct.dr.getHeight()))
+        angle = deg2Rad(360.0 / float(numItems))
+        aspectRatio = (
+            base.direct.dr.getWidth() /
+            float(
+                base.direct.dr.getHeight()))
         # Attach the color chips to the new menu and adjust sizes
-        for i in range (numItems):
+        for i in range(numItems):
             # Create a text node--just a card, really--of the right color.
             tn = TextNode('colorChip')
             tn.setFont(DGG.getDefaultFont())
@@ -700,7 +719,7 @@ class LevelStyleManager:
                 (dnaType == 'anim_prop') or
                 (dnaType == 'interactive_prop') or
                 (dnaType == 'anim_building') or
-                (dnaType == 'toon_landmark')):
+                    (dnaType == 'toon_landmark')):
                 dnaList = self.getCatalogCodes(dnaType)
                 if dnaType == 'prop':
                     dnaList = dnaList + self.getCatalogCodes('holiday_prop')
@@ -722,41 +741,41 @@ class LevelStyleManager:
             # Prepend None to allow option of no item
             if ((dnaType == 'street') or (dnaType == 'prop') or (dnaType == 'anim_prop') or
                 (dnaType == 'interactive_prop') or (dnaType == 'anim_building') or
-                (dnaType == 'toon_landmark')):
+                    (dnaType == 'toon_landmark')):
                 # attribute.setMenu(self.createTextPieMenu(dnaType, dnaList))
                 attribute.setMenu(self.createScrollMenu(dnaType, dnaList))
                 attribute.getMenu().createScrolledList()
             elif (dnaType == 'wall'):
                 attribute.setMenu(self.createDNAPieMenu(dnaType, dnaList,
-                                                         sf = 0.25))
+                                                        sf=0.25))
             elif (dnaType == 'sign'):
                 attribute.setMenu(self.createDNAPieMenu(dnaType, dnaList,
-                                                         sf = 0.05))
+                                                        sf=0.05))
             elif (dnaType == 'door_double'):
                 attribute.setMenu(self.createDNAPieMenu(dnaType, dnaList,
-                                                         sf = 0.035))
+                                                        sf=0.035))
             elif (dnaType == 'door_single'):
                 attribute.setMenu(self.createDNAPieMenu(dnaType, dnaList,
-                                                         sf = 0.035))
+                                                        sf=0.035))
             elif (dnaType == 'cornice'):
                 attribute.setMenu(self.createDNAPieMenu(dnaType, dnaList,
-                                                         sf = 0.5))
+                                                        sf=0.5))
             elif (dnaType == 'window'):
                 attribute.setMenu(self.createDNAPieMenu(dnaType, dnaList,
-                                                         sf = 0.125))
+                                                        sf=0.125))
             else:
                 print('unknown attribute')
             # Add it to the attributeDictionary
             self.attributeDictionary[dnaType + '_texture'] = attribute
 
-    def createDNAPieMenu(self, dnaType, dnaList, radius = 0.7, sf = 1.0):
+    def createDNAPieMenu(self, dnaType, dnaList, radius=0.7, sf=1.0):
         # Get the currently available window options
         numItems = len(dnaList)
         # Create a top level node to hold the menu
         newMenu = hidden.attachNewNode(dnaType + 'Menu')
         # Compute angle increment per item
-        angle = deg2Rad(360.0/numItems)
-        aspectRatio = base.direct.dr.getWidth() /float(base.direct.dr.getHeight())
+        angle = deg2Rad(360.0 / numItems)
+        aspectRatio = base.direct.dr.getWidth() / float(base.direct.dr.getHeight())
         # Add items
         for i in range(0, numItems):
             if dnaList[i]:
@@ -785,7 +804,7 @@ class LevelStyleManager:
         # Create and return a pie menu
         return PieMenu(newMenu, dnaList)
 
-    def createTextPieMenu(self, dnaType, textList, radius = 0.7, sf = 1.0):
+    def createTextPieMenu(self, dnaType, textList, radius=0.7, sf=1.0):
         numItems = len(textList)
         # Create top level node for new menu
         newMenu = hidden.attachNewNode(dnaType + 'Menu')
@@ -793,12 +812,12 @@ class LevelStyleManager:
         if numItems == 0:
             angle = 0.0
         else:
-            angle = deg2Rad(360.0/numItems)
-        aspectRatio = base.direct.dr.getWidth()/float(base.direct.dr.getHeight())
+            angle = deg2Rad(360.0 / numItems)
+        aspectRatio = base.direct.dr.getWidth() / float(base.direct.dr.getHeight())
         # Add items
-        for i in range (numItems):
+        for i in range(numItems):
             # Create text node for each item
-            if (textList[i] != None):
+            if (textList[i] is not None):
                 tn = TextNode('TextItem')
                 tn.setFont(DGG.getDefaultFont())
                 tn.setTransform(Mat4.scaleMat(0.07, 0.07, 0.07 * aspectRatio))
@@ -821,10 +840,10 @@ class LevelStyleManager:
         newMenu.setScale(0.5)
         # Create and return a pie menu
         return PieMenu(newMenu, textList)
-    
+
     def createScrollMenu(self, dnaType, textList):
-        newMenu = hidden.attachNewNode(dnaType+'ScrollMenu')
-        
+        newMenu = hidden.attachNewNode(dnaType + 'ScrollMenu')
+
         return ScrollMenu(newMenu, textList)
 
     # MISCELLANEOUS MENUS
@@ -832,26 +851,37 @@ class LevelStyleManager:
         # Num windows menu
         self.createMiscAttribute('window_count', [0, 1, 2, 3, 4])
         # Building width menu
-        self.createMiscAttribute('building_width', [5, 10, 15, 15.6, 20, 20.7, 25])
+        self.createMiscAttribute(
+            'building_width', [
+                5, 10, 15, 15.6, 20, 20.7, 25])
         # Building types
         self.createMiscAttribute('building_type', BUILDING_TYPES)
         # Building heights
         self.createMiscAttribute('building_height', [10, 14, 20, 24, 25, 30])
         # MRM: Need offset on these menus
         # Wall orientation menu
-        self.createMiscAttribute('wall_orientation', ['ur','ul','dl','dr'])
+        self.createMiscAttribute('wall_orientation', ['ur', 'ul', 'dl', 'dr'])
         # Wall height menu
         self.createMiscAttribute('wall_height', [10, 20])
         # Window orientation menu
-        self.createMiscAttribute('window_orientation', ['ur','ul', None, None])
+        self.createMiscAttribute(
+            'window_orientation', [
+                'ur', 'ul', None, None])
         # Sign orientation menu
-        self.createMiscAttribute('sign_orientation', ['ur','ul', None, None])
+        self.createMiscAttribute('sign_orientation', ['ur', 'ul', None, None])
         # Door orientation menu
-        self.createMiscAttribute('door_orientation', ['ur','ul', None, None])
+        self.createMiscAttribute('door_orientation', ['ur', 'ul', None, None])
         # Cornice orientation menu
-        self.createMiscAttribute('cornice_orientation', ['ur','ul', None, None])
+        self.createMiscAttribute(
+            'cornice_orientation', [
+                'ur', 'ul', None, None])
 
-    def createMiscAttribute(self, miscType, miscList, sf = 3.0, makePieMenu=True):
+    def createMiscAttribute(
+            self,
+            miscType,
+            miscList,
+            sf=3.0,
+            makePieMenu=True):
         # Create a dictionary from miscList
         dict = {}
         # Add items to attribute dictionary
@@ -864,7 +894,7 @@ class LevelStyleManager:
         if makePieMenu:
             # Now create a pie menu
             attribute.setMenu(self.createTextPieMenu(miscType, miscList,
-                                                  sf = sf))
+                                                     sf=sf))
         else:
             attribute.setMenu(self.createScrollMenu(miscType, miscList))
             attribute.getMenu().createScrolledList()
@@ -896,7 +926,7 @@ class LevelStyleManager:
         """ Return specified attribute for current neighborhood """
         levelAttribute = self.attributeDictionary[attribute]
         # Get attribute for current neighborhood
-        if (type(levelAttribute) == dict):
+        if (isinstance(levelAttribute, dict)):
             levelAttribute = levelAttribute[self.getEditMode()]
         return levelAttribute
 
@@ -908,7 +938,7 @@ class LevelStyleManager:
         else:
             levelAttribute = self.attributeDictionary[attribute]
             # Get attribute for current neighborhood
-            if (type(levelAttribute) == dict):
+            if (isinstance(levelAttribute, dict)):
                 editMode = self.getEditMode()
                 return editMode in levelAttribute
             else:
@@ -940,8 +970,10 @@ class LevelStyleManager:
         """Get current neighborhood editing mode"""
         return self._editMode
 
+
 class LevelAttribute:
     """Class which encapsulates a pie menu and a set of items"""
+
     def __init__(self, name):
         # Record name
         self.name = name
@@ -953,14 +985,17 @@ class LevelAttribute:
         self.count = 0
         # Currently selected option
         self._current = None
-    def setCurrent(self, newValue, fEvent = 1):
+
+    def setCurrent(self, newValue, fEvent=1):
         self._current = newValue
         # Send event if specified
         if fEvent:
             messenger.send('select_' + self.name, [self._current])
+
     def setMenu(self, menu):
         self._menu = menu
         self._menu.action = self.setCurrent
+
     def setDict(self, dict):
         self._dict = dict
         # Create a list from the dictionary
@@ -970,6 +1005,7 @@ class LevelAttribute:
         # Initialize current to first item
         if (len(self._list) > 0):
             self._current = self._list[0]
+
     def setList(self, list):
         self._list = list
         # Create a dictionary from the list
@@ -981,29 +1017,37 @@ class LevelAttribute:
         # Initialize current to first item
         if (self.count > 0):
             self._current = self._list[0]
+
     def add(self, item):
         self._dict[self.count] = item
         self._list.append(item)
         self.count += 1
+
     def getCurrent(self):
         return self._current
+
     def getMenu(self):
         return self._menu
+
     def getDict(self):
         return self._dict
+
     def getList(self):
         return self._list
+
     def getCount(self):
         return self.count
 
+
 class DNAFlatBuildingStyle:
     """Class to hold attributes of a building style"""
-    def __init__(self, building = None, styleList = None, name = 'bldg_style'):
+
+    def __init__(self, building=None, styleList=None, name='bldg_style'):
         self.name = name
         if building:
             # Passed in a building
             self.copy(building)
-        elif styleList != None:
+        elif styleList is not None:
             # Passed in a list of style-height pairs
             self.styleList = []
             self.heightList = []
@@ -1028,23 +1072,25 @@ class DNAFlatBuildingStyle:
         for i in range(building.getNumChildren()):
             child = building.at(i)
             if DNAClassEqual(child, DNA_WALL):
-                wallStyle = DNAWallStyle(wall = child)
+                wallStyle = DNAWallStyle(wall=child)
                 self.styleList.append(wallStyle)
                 self.numWalls += 1
 
-    def output(self, file = sys.stdout):
-        file.write('buildingStyle: %s\n' % createHeightCode(self.heightList))
+    def output(self, file=sys.stdout):
+        file.write(f'buildingStyle: {createHeightCode(self.heightList)}\n')
         for style in self.styleList:
             style.output(file)
         file.write('endBuildingStyle\n')
 
+
 def createHeightCode(heightList):
     def joinHeights(h1, h2):
-        return '%s_%s' % (h1, h2)
+        return f'{h1}_{h2}'
     hl = list(map(ROUND_INT, heightList))
     if len(hl) == 1:
         return repr(hl[0])
     return reduce(joinHeights, hl)
+
 
 def calcHeight(heightList):
     height = 0
@@ -1052,12 +1098,14 @@ def calcHeight(heightList):
         height = height + h
     return int(height)
 
+
 class DNABaselineStyle:
     """Class to hold attributes of a baseline style (wiggle, colors, etc)"""
-    def __init__(self, baseline = None, name = 'baseline_style'):
+
+    def __init__(self, baseline=None, name='baseline_style'):
         # First initialize everything
         self.name = name
-        self.code = None # i.e. font
+        self.code = None  # i.e. font
         self.kern = None
         self.wiggle = None
         self.stumble = None
@@ -1080,9 +1128,9 @@ class DNABaselineStyle:
         self.wiggle = baseline.getWiggle()
         self.stumble = baseline.getStumble()
         self.stomp = baseline.getStomp()
-        width=baseline.getWidth()
+        width = baseline.getWidth()
         if width:
-            self.curve = 1.0/width
+            self.curve = 1.0 / width
         else:
             self.curve = 0.0
         pos = baseline.getPos()
@@ -1097,75 +1145,75 @@ class DNABaselineStyle:
         self.color = baseline.getColor()
 
     def copyTo(self, baseline):
-        if self.code != None:
+        if self.code is not None:
             baseline.setCode(self.code)
-        if self.kern != None:
+        if self.kern is not None:
             baseline.setKern(self.kern)
-        if self.wiggle != None:
+        if self.wiggle is not None:
             baseline.setWiggle(self.wiggle)
-        if self.stumble != None:
+        if self.stumble is not None:
             baseline.setStumble(self.stumble)
-        if self.stomp != None:
+        if self.stomp is not None:
             baseline.setStomp(self.stomp)
-        if self.curve != None:
-            diameter=0.0
+        if self.curve is not None:
+            diameter = 0.0
             if self.curve:
-                diameter=1.0/self.curve
+                diameter = 1.0 / self.curve
             baseline.setWidth(diameter)
             baseline.setHeight(diameter)
-        if (self.x != None) or (self.z != None):
-            pos=baseline.getPos()
-            if self.x != None:
-                pos=Vec3(self.x, pos[1], pos[2])
-            if self.z != None:
-                pos=Vec3(pos[0], pos[1], self.z)
+        if (self.x is not None) or (self.z is not None):
+            pos = baseline.getPos()
+            if self.x is not None:
+                pos = Vec3(self.x, pos[1], pos[2])
+            if self.z is not None:
+                pos = Vec3(pos[0], pos[1], self.z)
             baseline.setPos(pos)
-        if self.roll != None:
+        if self.roll is not None:
             baseline.setHpr(Vec3(0.0, 0.0, self.roll))
-        if (self.scaleX != None) or (self.scaleZ != None):
-            scale=baseline.getScale()
-            if self.scaleX != None:
-                scale=Vec3(self.scaleX, scale[1], scale[2])
-            if self.scaleZ != None:
-                scale=Vec3(scale[0], scale[1], self.scaleZ)
+        if (self.scaleX is not None) or (self.scaleZ is not None):
+            scale = baseline.getScale()
+            if self.scaleX is not None:
+                scale = Vec3(self.scaleX, scale[1], scale[2])
+            if self.scaleZ is not None:
+                scale = Vec3(scale[0], scale[1], self.scaleZ)
             baseline.setScale(scale)
-        if self.flags != None:
+        if self.flags is not None:
             baseline.setFlags(self.flags)
-        if self.color != None:
+        if self.color is not None:
             baseline.setColor(self.color)
 
-    def output(self, file = sys.stdout):
+    def output(self, file=sys.stdout):
         """ Output style description to a file """
         file.write('baselineStyle\n')
-        if self.name != None:
-            file.write('name: %s\n' % self.name)
-        if self.code != None:
-            file.write('code: %s\n' % self.code)
-        if self.kern != None:
-            file.write('kern: %s\n' % self.kern)
-        if self.wiggle != None:
-            file.write('wiggle: %s\n' % self.wiggle)
-        if self.stumble != None:
-            file.write('stumble: %s\n' % self.stumble)
-        if self.stomp != None:
-            file.write('stomp: %s\n' % self.stomp)
-        if self.curve != None:
-            file.write('curve: %s\n' % self.curve)
-        if self.x != None:
-            file.write('x: %s\n' % self.x)
-        if self.z != None:
-            file.write('z: %s\n' % self.z)
-        if self.scaleX != None:
-            file.write('scaleX: %s\n' % self.scaleX)
-        if self.scaleZ != None:
-            file.write('scaleZ: %s\n' % self.scaleZ)
-        if self.roll != None:
-            file.write('roll: %s\n' % self.roll)
-        if self.flags != None:
-            file.write('flags: %s\n' % self.flags)
-        if self.color != None:
+        if self.name is not None:
+            file.write(f'name: {self.name}\n')
+        if self.code is not None:
+            file.write(f'code: {self.code}\n')
+        if self.kern is not None:
+            file.write(f'kern: {self.kern}\n')
+        if self.wiggle is not None:
+            file.write(f'wiggle: {self.wiggle}\n')
+        if self.stumble is not None:
+            file.write(f'stumble: {self.stumble}\n')
+        if self.stomp is not None:
+            file.write(f'stomp: {self.stomp}\n')
+        if self.curve is not None:
+            file.write(f'curve: {self.curve}\n')
+        if self.x is not None:
+            file.write(f'x: {self.x}\n')
+        if self.z is not None:
+            file.write(f'z: {self.z}\n')
+        if self.scaleX is not None:
+            file.write(f'scaleX: {self.scaleX}\n')
+        if self.scaleZ is not None:
+            file.write(f'scaleZ: {self.scaleZ}\n')
+        if self.roll is not None:
+            file.write(f'roll: {self.roll}\n')
+        if self.flags is not None:
+            file.write(f'flags: {self.flags}\n')
+        if self.color is not None:
             file.write('color: Vec4(%.2f, %.2f, %.2f, 1.0)\n'
-                % (self.color[0], self.color[1], self.color[2]))
+                       % (self.color[0], self.color[1], self.color[2]))
         file.write('endBaselineStyle\n')
 
     # Convience functions to facilitate class use
@@ -1177,25 +1225,27 @@ class DNABaselineStyle:
 
     def __repr__(self):
         return(
-            'name: %s\n' % self.name +
-            'code: %s\n' % self.code +
-            'kern: %s\n' % self.kern +
-            'wiggle: %s\n' % self.wiggle +
-            'stumble: %s\n' % self.stumble +
-            'stomp: %s\n' % self.stomp +
-            'curve: %s\n' % self.curve +
-            'x: %s\n' % self.x +
-            'z: %s\n' % self.z +
-            'scaleX: %s\n' % self.scaleX +
-            'scaleZ: %s\n' % self.scaleZ +
-            'roll: %s\n' % self.roll +
-            'flags: %s\n' % self.flags +
-            'color: %s\n' % self.color
-            )
+            f'name: {self.name}\n' +
+            f'code: {self.code}\n' +
+            f'kern: {self.kern}\n' +
+            f'wiggle: {self.wiggle}\n' +
+            f'stumble: {self.stumble}\n' +
+            f'stomp: {self.stomp}\n' +
+            f'curve: {self.curve}\n' +
+            f'x: {self.x}\n' +
+            f'z: {self.z}\n' +
+            f'scaleX: {self.scaleX}\n' +
+            f'scaleZ: {self.scaleZ}\n' +
+            f'roll: {self.roll}\n' +
+            f'flags: {self.flags}\n' +
+            f'color: {self.color}\n'
+        )
+
 
 class DNAWallStyle:
     """Class to hold attributes of a wall style (textures, colors, etc)"""
-    def __init__(self, wall = None, name = 'wall_style'):
+
+    def __init__(self, wall=None, name='wall_style'):
         # First initialize everything
         self.name = name
         self.wall_texture = 'wall_md_blank_ur'
@@ -1236,18 +1286,18 @@ class DNAWallStyle:
                 self.cornice_texture = child.getCode()
                 self.cornice_color = child.getColor()
 
-    def output(self, file = sys.stdout):
+    def output(self, file=sys.stdout):
         """ Output style description to a file """
-        def writeAttributes(f, type, s = self):
+        def writeAttributes(f, type, s=self):
             color = s[type + '_color']
-            f.write('%s_texture: %s\n' % (type, s[type + '_texture']))
+            f.write(f"{type}_texture: {s[type + '_texture']}\n")
             f.write('%s_color: Vec4(%.2f, %.2f, %.2f, 1.0)\n' %
                     (type, color[0], color[1], color[2]))
         file.write('wallStyle\n')
         writeAttributes(file, 'wall')
         if self['window_texture']:
             writeAttributes(file, 'window')
-            file.write('window_count: %s\n' % self['window_count'])
+            file.write(f"window_count: {self['window_count']}\n")
         if self['window_awning_texture']:
             writeAttributes(file, 'window_awning')
         if self['door_texture']:
@@ -1267,17 +1317,17 @@ class DNAWallStyle:
 
     def __repr__(self):
         return(
-            'Name: %s\n' % self.name +
-            'Wall Texture: %s\n' % self.wall_texture +
-            'Wall Color: %s\n' % self.wall_color +
-            'Window Texture: %s\n' % self.window_texture +
-            'Window Color: %s\n' % self.window_color +
-            'Window Awning Texture: %s\n' % self.window_awning_texture +
-            'Window Awning Color: %s\n' % self.window_awning_color +
-            'Door Texture: %s\n' % self.door_texture +
-            'Door Color: %s\n' % self.door_color +
-            'Door Awning Texture: %s\n' % self.door_awning_texture +
-            'Door Awning Color: %s\n' % self.door_awning_color +
-            'Cornice Texture: %s\n' % self.cornice_texture +
-            'Cornice Color: %s\n' % self.cornice_color
-            )
+            f'Name: {self.name}\n' +
+            f'Wall Texture: {self.wall_texture}\n' +
+            f'Wall Color: {self.wall_color}\n' +
+            f'Window Texture: {self.window_texture}\n' +
+            f'Window Color: {self.window_color}\n' +
+            f'Window Awning Texture: {self.window_awning_texture}\n' +
+            f'Window Awning Color: {self.window_awning_color}\n' +
+            f'Door Texture: {self.door_texture}\n' +
+            f'Door Color: {self.door_color}\n' +
+            f'Door Awning Texture: {self.door_awning_texture}\n' +
+            f'Door Awning Color: {self.door_awning_color}\n' +
+            f'Cornice Texture: {self.cornice_texture}\n' +
+            f'Cornice Color: {self.cornice_color}\n'
+        )

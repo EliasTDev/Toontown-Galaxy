@@ -5,15 +5,17 @@ from toontown.toonbase import ToontownGlobals
 from direct.showbase.PythonUtil import normalDistrib, lerp
 import random
 
+
 def printAllCashbotInfo():
     # print out roomId->room name
     print('roomId: roomName')
-    for roomId, roomName in list(MintRoomSpecs.CashbotMintRoomId2RoomName.items()):
-        print('%s: %s' % (roomId, roomName))
+    for roomId, roomName in list(
+            MintRoomSpecs.CashbotMintRoomId2RoomName.items()):
+        print(f'{roomId}: {roomName}')
     # print out # of battles in each room
     print('\nroomId: numBattles')
     for roomId, numBattles in list(MintRoomSpecs.roomId2numBattles.items()):
-        print('%s: %s' % (roomId, numBattles))
+        print(f'{roomId}: {numBattles}')
     # print out all of the rooms in all mint floors
     print('\nmintId floor roomIds')
     printMintRoomIds()
@@ -23,32 +25,44 @@ def printAllCashbotInfo():
     # print out # of non-skippable battles in each mint floor
     print('\nmintId floor numForcedBattles')
     printNumBattles()
-    
+
 # print out info on all mint levels for Cashbot
+
+
 def iterateCashbotMints(func):
     # func takes MintLayout
     from toontown.toonbase import ToontownGlobals
     for mintId in [ToontownGlobals.CashbotMintIntA,
                    ToontownGlobals.CashbotMintIntB,
-                   ToontownGlobals.CashbotMintIntC,]:
+                   ToontownGlobals.CashbotMintIntC, ]:
         for floorNum in range(ToontownGlobals.MintNumFloors[mintId]):
             func(MintLayout(mintId, floorNum))
+
 
 def printMintInfo():
     def func(ml): print(ml)
     iterateCashbotMints(func)
+
+
 def printMintRoomIds():
     def func(ml): print(ml.getMintId(), ml.getFloorNum(), ml.getRoomIds())
     iterateCashbotMints(func)
+
+
 def printMintRoomNames():
     def func(ml): print(ml.getMintId(), ml.getFloorNum(), ml.getRoomNames())
     iterateCashbotMints(func)
+
+
 def printNumRooms():
     def func(ml): print(ml.getMintId(), ml.getFloorNum(), ml.getNumRooms())
     iterateCashbotMints(func)
+
+
 def printNumBattles():
     def func(ml): print(ml.getMintId(), ml.getFloorNum(), ml.getNumBattles())
     iterateCashbotMints(func)
+
 
 BakedFloorLayouts = {
     12500: {0: (0, 4, 9, 6, 5, 8, 17,),
@@ -114,7 +128,7 @@ BakedFloorLayouts = {
             18: (0, 15, 8, 12, 10, 1, 7, 11, 9, 16, 4, 5, 21,),
             19: (0, 10, 2, 16, 5, 6, 11, 13, 7, 12, 1, 3, 19,),
             },
-    }
+}
 
 """
 http://www.chem.qmul.ac.uk/software/download/qmc/ch5.pdf
@@ -187,6 +201,7 @@ We need at least 9 rooms to create 60 unique 5-room combinations.
 **This isn't totally correct; we've got three types of rooms: entrances, middle rooms, and final rooms.
 """
 
+
 class MintLayout:
     """Given a mintId and a floor number, generates a series of rooms and
     connecting hallways. This is used by the AI and the client, so the data
@@ -207,7 +222,7 @@ class MintLayout:
         # if we have a baked floor layout, use it; otherwise generate a random
         # layout
         if ((self.mintId in BakedFloorLayouts) and
-            (self.floorNum in BakedFloorLayouts[self.mintId])):
+                (self.floorNum in BakedFloorLayouts[self.mintId])):
             self.roomIds = list(BakedFloorLayouts[self.mintId][self.floorNum])
         else:
             self.roomIds = self._genFloorLayout()
@@ -235,7 +250,7 @@ class MintLayout:
         numBattlesLeft -= MintRoomSpecs.getNumBattles(finalRoomId)
 
         middleRoomIds = []
-        middleRoomsLeft = self.numRooms-2
+        middleRoomsLeft = self.numRooms - 2
 
         # we want to hit our target number of battles exactly.
         # pick the battle rooms we will use first, then fill in pure-action
@@ -252,7 +267,7 @@ class MintLayout:
                 allBattleRooms.extend(roomIds)
 
         # Pick out a list of battle rooms that meets our quota exactly.
-        while 1:
+        while True:
             # make a copy of the list of battle rooms, and shuffle it
             allBattleRoomIds = list(allBattleRooms)
             rng.shuffle(allBattleRoomIds)
@@ -265,7 +280,7 @@ class MintLayout:
 
         middleRoomIds.extend(battleRoomIds)
         middleRoomsLeft -= len(battleRoomIds)
-        
+
         if middleRoomsLeft > 0:
             # choose action rooms for the rest of the middle rooms
             actionRoomIds = numBattles2middleRoomIds[0]
@@ -286,10 +301,13 @@ class MintLayout:
 
     def getNumRooms(self):
         return len(self.roomIds)
+
     def getRoomId(self, n):
         return self.roomIds[n]
+
     def getRoomIds(self):
         return self.roomIds[:]
+
     def getRoomNames(self):
         names = []
         for roomId in self.roomIds:
@@ -298,6 +316,7 @@ class MintLayout:
 
     def getNumHallways(self):
         return len(self.hallways)
+
     def getHallwayModel(self, n):
         return self.hallways[n]
 
@@ -309,13 +328,14 @@ class MintLayout:
 
     def getMintId(self):
         return self.mintId
+
     def getFloorNum(self):
         return self.floorNum
-    
+
     def getRng(self):
         # returns seeded rng corresponding to this mint floor
         return random.Random(self.mintId * self.floorNum)
-    
+
     def _chooseBattleRooms(self,
                            numBattlesLeft,
                            allBattleRoomIds,
@@ -369,6 +389,6 @@ class MintLayout:
         return ('MintLayout: id=%s, floor=%s, numRooms=%s, numBattles=%s' % (
             self.mintId, self.floorNum, self.getNumRooms(),
             self.getNumBattles()))
+
     def __repr__(self):
         return str(self)
-    

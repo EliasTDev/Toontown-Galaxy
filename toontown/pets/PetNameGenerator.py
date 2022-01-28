@@ -6,6 +6,7 @@ from direct.showbase import AppRunnerGlobal
 from direct.directnotify import DirectNotifyGlobal
 from pandac.PandaModules import *
 
+
 class PetNameGenerator:
 
     notify = DirectNotifyGlobal.directNotify.newCategory("PetNameGenerator")
@@ -37,9 +38,11 @@ class PetNameGenerator:
             # In other environments, including the dev environment, look here:
             searchPath.appendDirectory(Filename('resources/phase_3/etc'))
             if os.path.expandvars('$TOONTOWN') != '':
-                searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$TOONTOWN/src/configfiles')))
+                searchPath.appendDirectory(Filename.fromOsSpecific(
+                    os.path.expandvars('$TOONTOWN/src/configfiles')))
             else:
-                searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('toontown/src/configfiles')))
+                searchPath.appendDirectory(Filename.fromOsSpecific(
+                    os.path.expandvars('toontown/src/configfiles')))
             # RobotToonManager needs to look for file in current directory
             searchPath.appendDirectory(Filename('.'))
 
@@ -47,7 +50,8 @@ class PetNameGenerator:
         found = vfs.resolveFilename(filename, searchPath)
 
         if not found:
-            self.notify.error("PetNameGenerator: Error opening name list text file.")
+            self.notify.error(
+                "PetNameGenerator: Error opening name list text file.")
 
         input = StreamReader(vfs.openReadFile(filename, 1), 1)
 
@@ -56,9 +60,9 @@ class PetNameGenerator:
             currentLine = currentLine.decode()
             if currentLine.lstrip()[0:1] != '#':
                 a1 = currentLine.find('*')
-                a2 = currentLine.find('*', a1+1)
-                self.nameDictionary[int(currentLine[0:a1])]=(int(currentLine[a1+1:a2]),
-                                                             currentLine[a2+1:len(currentLine)-1].strip())
+                a2 = currentLine.find('*', a1 + 1)
+                self.nameDictionary[int(currentLine[0:a1])] = (
+                    int(currentLine[a1 + 1:a2]), currentLine[a2 + 1:len(currentLine) - 1].strip())
             currentLine = input.readline().strip()
 
         masterList = [self.boyFirsts, self.girlFirsts, self.neutralFirsts]
@@ -68,12 +72,12 @@ class PetNameGenerator:
 
     def getName(self, uniqueID):
         return self.nameDictionary[uniqueID][1]
-    
+
     def returnUniqueID(self, name):
         """
         If successful it returns the uniqueID, if not then -1
         """
-        newtu = [(),(),()]
+        newtu = [(), (), ()]
         newtu[0] = (0, name)
         newtu[1] = (1, name)
         newtu[2] = (2, name)
@@ -84,7 +88,7 @@ class PetNameGenerator:
                     return tu[0]
         return -1
 
-    def randomName(self, gender = None, seed = None):
+    def randomName(self, gender=None, seed=None):
         S = random.getstate()
 
         if seed is not None:

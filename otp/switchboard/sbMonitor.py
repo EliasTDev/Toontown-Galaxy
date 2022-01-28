@@ -11,21 +11,22 @@ from .sbLog import sbLog
 from .LastSeenDB import LastSeenDB
 from .sbMaildb import sbMaildb
 
+
 class sbMonitor(object):
     def __init__(self):
         loc = Pyro.naming.NameServerLocator()
         if sbConfig.nsHost is None:
-            self.ns  = loc.getNS()
+            self.ns = loc.getNS()
         else:
-            self.ns = loc.getNS(host=sbConfig.nsHost,port=sbConfig.nsPort)
+            self.ns = loc.getNS(host=sbConfig.nsHost, port=sbConfig.nsPort)
 
-        self.printlog = sbLog("SBMonitor","localhost",12345)
+        self.printlog = sbLog("SBMonitor", "localhost", 12345)
 
-        self.menu = {"Index":"/",
-                     "Log":"/log",
-                     "Stats":"/stats",
-                     "Database":"/db",
-                     "Console":"/console"}
+        self.menu = {"Index": "/",
+                     "Log": "/log",
+                     "Stats": "/stats",
+                     "Database": "/db",
+                     "Console": "/console"}
 
         self.nodeNames = set()
 
@@ -45,8 +46,6 @@ class sbMonitor(object):
                                password=sbConfig.mailDBpasswd,
                                db=sbConfig.mailDBdb)
 
-        
-
     def getRowClassString(self):
         res = ""
         if self.rowCount % 2 == 0:
@@ -56,7 +55,7 @@ class sbMonitor(object):
         self.rowCount += 1
         return res
 
-    def header(self,current):
+    def header(self, current):
         pageText = '''
 <html><head>
 <title>Switchboard Monitor</title>
@@ -101,13 +100,13 @@ class sbMonitor(object):
   margin-bottom: 0px;
   padding-bottom: 10px;
   }
-  
+
   a
   {
   text-decoration: none;
   color: #333;
   }
-  
+
   a:hover
   {
   text-decoration: underline;
@@ -204,7 +203,7 @@ class sbMonitor(object):
   background:#E7E7E7;
   color:#333;
   }
-  
+
   caption
   {
   border: #666666;
@@ -216,13 +215,13 @@ class sbMonitor(object):
   font: 15px 'Verdana', Arial, Helvetica, sans-serif;
   font-weight: bold;
   }
-  
+
   td, th
   {
   font:13px 'Courier New',monospace;
   padding: 4px;
   }
-  
+
   thead th
   {
   text-align: center;
@@ -231,7 +230,7 @@ class sbMonitor(object):
   border: 1px solid #ffffff;
   text-transform: uppercase;
   }
-  
+
   tbody th
   {
   font-weight: bold;
@@ -242,18 +241,18 @@ class sbMonitor(object):
   background: #efeffc;
   text-align: left;
   }
-  
+
   tbody tr.odd
   {
   background: #ffffff;
   border-top: 1px solid #ffffff;
   }
-  
+
   tbody th a:hover
   {
   color: #009900;
   }
-  
+
   tbody tr td
   {
   text-align: left
@@ -262,13 +261,13 @@ class sbMonitor(object):
   border: 1px solid #ffffff;
   color: #333;
   }
-  
+
   tbody tr.odd td
   {
   background: #efeffc;
   border-top: 1px solid #ffffff;
   }
-  
+
   tbody tr.dead td
   {
   background:#ff0000;
@@ -284,15 +283,15 @@ class sbMonitor(object):
   text-decoration: none;
   color: #333;
   }
-  
+
   html>body #navcontainer li a { width: auto; }
-  
+
   table td a:hover
   {
   color: #000000;
   background: #aae;
   }
-  
+
   tfoot th, tfoot td
   {
   background: #dfdfdf;
@@ -302,7 +301,7 @@ class sbMonitor(object):
   font-weight: bold;
   border-bottom: 1px solid #cccccc;
   border-top: 1px solid #DFDFDF;
-  }  
+  }
 </style>
 </head>
 
@@ -318,19 +317,17 @@ class sbMonitor(object):
             if linkNum == 0:
                 if link == current:
                     pageText += "<li id=\"active\" class=\"first\"><a href=\"%s\" id=\"current\">%s</a></li>\n" % \
-                                (self.menu[link],link)
+                                (self.menu[link], link)
                 else:
                     pageText += "<li class=\"first\"><a href=\"%s\">%s</a></li>\n" % \
-                                (self.menu[link],link)
+                                (self.menu[link], link)
             else:
                 if link == current:
                     pageText += "<li id=\"active\"><a href=\"%s\" id=\"current\">%s</a></li>\n" % \
-                                (self.menu[link],link)
+                                (self.menu[link], link)
                 else:
-                    pageText += "<li><a href=\"%s\">%s</a></li>\n" % \
-                                (self.menu[link],link)
+                    pageText += f"<li><a href=\"{self.menu[link]}\">{link}</a></li>\n"
             linkNum += 1
-        
 
         pageText += '''</ul>
 </div>
@@ -357,28 +354,29 @@ Contact: M. Ian Graham - ian.graham@dig.com - 818-623-3219
             if sbConfig.nsHost is None:
                 ns = loc.getNS()
             else:
-                ns = loc.getNS(host=sbConfig.nsHost,port=sbConfig.nsPort)
+                ns = loc.getNS(host=sbConfig.nsHost, port=sbConfig.nsPort)
             ns.ping()
             return True
-        except:
+        except BaseException:
             return False
-    
-    def serverStatusString(self,name,prefix):
+
+    def serverStatusString(self, name, prefix):
         uri = self.ns.resolve(prefix + name)
         healthy = False
         try:
             proxy = Pyro.core.getProxyForURI(uri)
             proxy._setTimeout(0.5)
             healthy = proxy.healthCheck()
-        except:
+        except BaseException:
             healthy = False
 
         if healthy:
-            pageText = "<tr%s><td>:)</td>" % self.getRowClassString()
+            pageText = f"<tr{self.getRowClassString()}><td>:)</td>"
         else:
             pageText = "<tr class=\"dead\"><td bgcolor=ff0000>:(</td>"
 
-        pageText += "<td><a href=\"log?target=%s%s\">%s%s</a></td><td>%s</td><td>%d</td>" % (prefix,name,prefix,name,uri.address,uri.port)
+        pageText += "<td><a href=\"log?target=%s%s\">%s%s</a></td><td>%s</td><td>%d</td>" % (
+            prefix, name, prefix, name, uri.address, uri.port)
 
         if healthy:
             pageText += "<td></td></tr>\n"
@@ -387,10 +385,10 @@ Contact: M. Ian Graham - ian.graham@dig.com - 818-623-3219
 
         return pageText
 
-    def orphanWedgeString(self,name,prefix):
+    def orphanWedgeString(self, name, prefix):
         uri = self.ns.resolve(prefix + name)
         return "<tr%s><td>?</td><td>%s%s</td><td>%s</td><td>%d</td><td>Orphaned</td></tr>\n" % \
-               (self.getRowClassString(),prefix,name,uri.address,uri.port)
+               (self.getRowClassString(), prefix, name, uri.address, uri.port)
 
     def nodeTable(self):
         self.rowCount = 0
@@ -401,9 +399,9 @@ Contact: M. Ian Graham - ian.graham@dig.com - 818-623-3219
         pageText += "<tbody>\n"
         nodeList = self.ns.list(":sb.node")
         for node in nodeList:
-            assert node[1] == 1,"whoa, someone put a subgroup in :sb.node!"
+            assert node[1] == 1, "whoa, someone put a subgroup in :sb.node!"
             self.nodeNames.add(node[0])
-            pageText += self.serverStatusString(node[0],":sb.node.")
+            pageText += self.serverStatusString(node[0], ":sb.node.")
 
         pageText += "</tbody></table></P>\n"
 
@@ -418,30 +416,31 @@ Contact: M. Ian Graham - ian.graham@dig.com - 818-623-3219
         pageText += "</thead>\n<tbody>\n"
         wedgeList = self.ns.list(":sb.wedge")
         for wedge in wedgeList:
-            assert wedge[1] == 1,"whoa, someone put a subgroup in :sb.wedge!"
+            assert wedge[1] == 1, "whoa, someone put a subgroup in :sb.wedge!"
             if wedge[0] in self.nodeNames:
-                pageText += self.serverStatusString(wedge[0],":sb.wedge.")
+                pageText += self.serverStatusString(wedge[0], ":sb.wedge.")
             else:
-                pageText+= self.orphanWedgeString(wedge[0],":sb.wedge.")
+                pageText += self.orphanWedgeString(wedge[0], ":sb.wedge.")
 
         pageText += "</tbody></table></font></P>\n"
 
         return pageText
 
-    def dbTable(self,dbName,tables):
+    def dbTable(self, dbName, tables):
         self.rowCount = 0
-        pageText = "<P>" 
+        pageText = "<P>"
         pageText += "<font size=-1 face=monospace>\n"
-        pageText += "<table>\n<caption>%s</caption>\n<thead>\n" % dbName
+        pageText += f"<table>\n<caption>{dbName}</caption>\n<thead>\n"
         pageText += "<tr><th scope=col>Table Name</th><th scope=col>Engine</th><th scope=col>Rows</th><th scope=col>Data Length</th><th scope=col>Avg Row Length</th></tr>\n"
         pageText += "</thead>\n<tbody>\n"
         for table in tables:
-            pageText += "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n" % (table['Name'],table['Engine'],table['Rows'],table['Data_length'],table['Avg_row_length'])
+            pageText += "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n" % (
+                table['Name'], table['Engine'], table['Rows'], table['Data_length'], table['Avg_row_length'])
 
         pageText += "</tbody></table></font></P>\n"
 
-        return pageText          
-        
+        return pageText
+
     def index(self):
         pageText = self.header("Index")
 
@@ -454,29 +453,29 @@ Contact: M. Ian Graham - ian.graham@dig.com - 818-623-3219
         pageText += self.footer()
 
         return pageText
-        
+
     def db(self):
         pageText = self.header("Database")
 
         tableStatus = self.lastSeenDB.getTableStatus()
 
-        pageText += self.dbTable("switchboard",tableStatus)
+        pageText += self.dbTable("switchboard", tableStatus)
 
         pageText += self.footer()
 
         return pageText
 
-    def log(self,target=None):
+    def log(self, target=None):
         pageText = self.header("Log")
-        
-        pageText += "<div align=left><h3>%s</h3>\n<pre width=130>\n" % target
-        
+
+        pageText += f"<div align=left><h3>{target}</h3>\n<pre width=130>\n"
+
         if 1:
             uri = self.ns.resolve(target)
             proxy = Pyro.core.getProxyForURI(uri)
             proxy._setTimeout(0.5)
             pageText += proxy.getLogTail()
-        #except:
+        # except:
         #    pageText += "Error retrieving log!\n"
 
         pageText += "\n</pre></div>\n"
@@ -485,53 +484,53 @@ Contact: M. Ian Graham - ian.graham@dig.com - 818-623-3219
 
         return pageText
 
-    def stats(self,target=None):
+    def stats(self, target=None):
         pageText = self.header("Stats")
 
         if target is None:
             nodeList = self.ns.list(":sb.node")
             wedgeList = self.ns.list(":sb.wedge")
             for node in nodeList:
-                self.printlog.debug("Getting stats for sb.node.%s" % node[0])
+                self.printlog.debug(f"Getting stats for sb.node.{node[0]}")
                 uri = self.ns.resolve(":sb.node." + node[0])
                 proxy = Pyro.core.getProxyForURI(uri)
                 proxy._setTimeout(1)
-                pageText += "<div align=left><h3>sb.node.%s</h3>\n<pre>\n" % node[0]
+                pageText += f"<div align=left><h3>sb.node.{node[0]}</h3>\n<pre>\n"
                 try:
                     stats = proxy.statCheck()
                     pageText += str(stats)
-                except:
+                except BaseException:
                     pageText += "<font color=ff0000>Unreachable!</font>"
                 pageText += "\n</pre></div>\n"
             for wedge in wedgeList:
                 if wedge[0] in self.nodeNames:
-                    self.printlog.debug("Getting stats for sb.wedge.%s" % wedge[0])
+                    self.printlog.debug(
+                        f"Getting stats for sb.wedge.{wedge[0]}")
                     uri = self.ns.resolve(":sb.wedge." + wedge[0])
                     proxy = Pyro.core.getProxyForURI(uri)
                     proxy._setTimeout(1)
-                    pageText += "<div align=left><h3>sb.wedge.%s</h3>\n<pre>\n" % wedge[0]
+                    pageText += f"<div align=left><h3>sb.wedge.{wedge[0]}</h3>\n<pre>\n"
                     try:
                         self.printlog.debug("Enter statCheck")
                         stats = proxy.statCheck()
                         pageText += str(stats)
-                    except:
+                    except BaseException:
                         pageText += "<font color=ff0000>Unreachable!</font>"
                     pageText += "\n</pre></div>\n"
                     self.printlog.debug("done statCheck")
         else:
-            pageText += "<div align=left><h3>%s</h3>\n<pre>\n" % target
+            pageText += f"<div align=left><h3>{target}</h3>\n<pre>\n"
 
-            uri = self.ns.resolve(target)            
+            uri = self.ns.resolve(target)
             proxy = Pyro.core.getProxyForURI(uri)
             proxy._setTimeout(1)
             pageText += str(proxy.statCheck())
 
-            pageText += "\n</pre></div>\n"             
+            pageText += "\n</pre></div>\n"
 
         pageText += self.footer()
 
-        return pageText 
-
+        return pageText
 
     index.exposed = True
     stats.exposed = True
@@ -539,10 +538,11 @@ Contact: M. Ian Graham - ian.graham@dig.com - 818-623-3219
     db.exposed = True
     #console.exposed = True
 
+
 mon = sbMonitor()
 
-conf = {'server.socket_port' : sbConfig.webMonitorPort,
-        'engine.autoreload_on' : False}  
+conf = {'server.socket_port': sbConfig.webMonitorPort,
+        'engine.autoreload_on': False}
 
 
 cherrypy.config.update(conf)

@@ -13,6 +13,7 @@ from toontown.toonbase import TTLocalizer
 from toontown.toontowngui import TeaserPanel
 from panda3d.otp import NametagGroup, Nametag
 
+
 class DistributedElevatorExt(DistributedElevator.DistributedElevator):
     def __init__(self, cr):
         DistributedElevator.DistributedElevator.__init__(self, cr)
@@ -42,7 +43,7 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
         DistributedElevator.DistributedElevator.disable(self)
 
     def setupNametag(self):
-        if self.nametag == None:
+        if self.nametag is None:
             self.nametag = NametagGroup()
             self.nametag.setFont(ToontownGlobals.getBuildingNametagFont())
             if TTLocalizer.BuildingNametagShadow:
@@ -52,7 +53,8 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
             self.nametag.setActive(0)
             self.nametag.setAvatar(self.getElevatorModel())
 
-            name = self.cr.playGame.dnaStore.getTitleFromBlockNumber(self.bldg.block)
+            name = self.cr.playGame.dnaStore.getTitleFromBlockNumber(
+                self.bldg.block)
             if not name:
                 name = TTLocalizer.CogsInc
             else:
@@ -62,7 +64,7 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
             self.nametag.manage(base.marginManager)
 
     def clearNametag(self):
-        if self.nametag != None:
+        if self.nametag is not None:
             self.nametag.unmanage(base.marginManager)
             self.nametag.setAvatar(NodePath())
             self.nametag = None
@@ -71,7 +73,8 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
         return self.bldg.getSuitDoorOrigin()
 
     def gotBldg(self, buildingList):
-        # Do not call the super class here because we have some extra checks we need to do
+        # Do not call the super class here because we have some extra checks we
+        # need to do
         self.bldgRequest = None
         self.bldg = buildingList[0]
         if not self.bldg:
@@ -82,8 +85,9 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
             self.bossLevel = self.bldg.getBossLevel()
             self.setupElevator()
         else:
-            self.notify.warning("setBldgDoId: elevator %d cannot find suitDoorOrigin for bldg %d!"
-                                % (self.doId, bldgDoId))
+            self.notify.warning(
+                "setBldgDoId: elevator %d cannot find suitDoorOrigin for bldg %d!" %
+                (self.doId, bldgDoId))
             # This is an elevator stuck to a toon building.  This can
             # happen from time to time if the AI crashes before it can
             # write out its .building state file, or if someone
@@ -97,7 +101,8 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
         if self.currentFloor >= 0:
             if self.bldg.floorIndicator[floorNumber]:
 
-                self.bldg.floorIndicator[self.currentFloor].setColor(LIGHT_OFF_COLOR)
+                self.bldg.floorIndicator[self.currentFloor].setColor(
+                    LIGHT_OFF_COLOR)
 
         # Brighten the new light:
         if floorNumber >= 0:
@@ -116,7 +121,8 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
            localAvatar.boardingParty and \
            localAvatar.boardingParty.getGroupLeader(localAvatar.doId) and \
            localAvatar.boardingParty.getGroupLeader(localAvatar.doId) != localAvatar.doId:
-            base.localAvatar.elevatorNotifier.showMe(TTLocalizer.ElevatorGroupMember)
+            base.localAvatar.elevatorNotifier.showMe(
+                TTLocalizer.ElevatorGroupMember)
         elif self.allowedToEnter():
             # Tell localToon we are considering entering the elevator
             self.cr.playGame.getPlace().detectedElevatorCollision(self)
@@ -130,12 +136,15 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
     def handleEnterElevator(self):
         #print("EXT handleEnterSphere elevator%s avatar%s" % (self.elevatorTripId, localAvatar.lastElevatorLeft))
 
-        # If the leader of the boarding group wants to enter an elevator do it the Boarding Group style.
+        # If the leader of the boarding group wants to enter an elevator do it
+        # the Boarding Group style.
         if hasattr(localAvatar, "boardingParty") and \
            localAvatar.boardingParty and \
            localAvatar.boardingParty.getGroupLeader(localAvatar.doId):
-            # If you are the leader of the boarding group, do it the boarding group way.
-            if localAvatar.boardingParty.getGroupLeader(localAvatar.doId) == localAvatar.doId:
+            # If you are the leader of the boarding group, do it the boarding
+            # group way.
+            if localAvatar.boardingParty.getGroupLeader(
+                    localAvatar.doId) == localAvatar.doId:
                 localAvatar.boardingParty.handleEnterElevator(self)
 
         elif self.elevatorTripId and (localAvatar.lastElevatorLeft == self.elevatorTripId):
@@ -187,4 +196,3 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
 
     def getElevatorModel(self):
         return self.bldg.getSuitElevatorNodePath()
-

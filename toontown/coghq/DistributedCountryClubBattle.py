@@ -12,20 +12,24 @@ from direct.fsm import State
 from direct.fsm import ClassicFSM, State
 from toontown.toonbase import ToontownGlobals
 from panda3d.otp import *
-class DistributedCountryClubBattle(DistributedLevelBattle.DistributedLevelBattle):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCountryClubBattle')
+
+
+class DistributedCountryClubBattle(
+        DistributedLevelBattle.DistributedLevelBattle):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedCountryClubBattle')
 
     def __init__(self, cr):
         """
         cr is a ClientRepository.
         """
-        DistributedLevelBattle.DistributedLevelBattle.__init__(self,cr)
+        DistributedLevelBattle.DistributedLevelBattle.__init__(self, cr)
 
         # Add a new reward state to the battle ClassicFSM
         self.fsm.addState(State.State('CountryClubReward',
-                                        self.enterCountryClubReward,
-                                        self.exitCountryClubReward,
-                                        ['Resume']))
+                                      self.enterCountryClubReward,
+                                      self.exitCountryClubReward,
+                                      ['Resume']))
         offState = self.fsm.getStateNamed('Off')
         offState.addTransition('CountryClubReward')
         playMovieState = self.fsm.getStateNamed('PlayMovie')

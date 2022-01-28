@@ -4,12 +4,14 @@ from toontown.toonbase import ToontownGlobals
 from toontown.parties.PartyGlobals import InviteStatus
 from toontown.toonbase import TTLocalizer
 
+
 class InviteInfoBase:
     """
     Python friendly representation of a single invite a toon got.
     For now just straight up conversions of values we get from the database
     Make sure this class can be used on the AI side
     """
+
     def __init__(self, inviteKey, partyId, status):
         """Construct the party info."""
         self.inviteKey = inviteKey
@@ -20,12 +22,13 @@ class InviteInfoBase:
         """Return a useful string representation of this object."""
         string = "inviteKey=%d " % self.inviteKey
         string += "partyId=%d " % self.partyId
-        string += "status=%s" % InviteStatus.getString(self.status)
+        string += f"status={InviteStatus.getString(self.status)}"
         return string
 
     def __repr__(self):
         """Return a string used in debugging."""
-        return self.__str__()    
+        return self.__str__()
+
 
 class InviteInfo(InviteInfoBase):
     """Client side representation of an invite.  It accesses objects such
@@ -62,12 +65,12 @@ class InviteInfo(InviteInfoBase):
         # we're accepting the expected item).
 
         # This method is only called on the client.
-        mailbox.acceptInvite(self,  acceptingIndex, callback)        
-        
+        mailbox.acceptInvite(self, acceptingIndex, callback)
+
     def discardItem(self, mailbox, acceptingIndex, callback):
         """Reject an invite from the mailbox."""
         InviteInfo.notify.debug("discardItem")
-        mailbox.rejectInvite(self,  acceptingIndex, callback)
+        mailbox.rejectInvite(self, acceptingIndex, callback)
 
     def getAcceptItemErrorText(self, retcode):
         # Returns a string describing the error that occurred on
@@ -78,7 +81,7 @@ class InviteInfo(InviteInfoBase):
         if retcode == ToontownGlobals.P_InvalidIndex:
             return TTLocalizer.InviteAcceptInvalidError
         elif retcode == ToontownGlobals.P_ItemAvailable:
-            return TTLocalizer.InviteAcceptAllOk        
+            return TTLocalizer.InviteAcceptAllOk
         else:
             return TTLocalizer.CatalogAcceptGeneralError % (retcode)
 
@@ -91,10 +94,9 @@ class InviteInfo(InviteInfoBase):
         if retcode == ToontownGlobals.P_InvalidIndex:
             return TTLocalizer.InviteAcceptInvalidError
         elif retcode == ToontownGlobals.P_ItemAvailable:
-            return TTLocalizer.InviteRejectAllOk        
+            return TTLocalizer.InviteRejectAllOk
         else:
             return TTLocalizer.CatalogAcceptGeneralError % (retcode)
 
-    def output(self, store = ~0):
-        return "InviteInfo %s" % ( str(self))    
-
+    def output(self, store=~0):
+        return f"InviteInfo {str(self)}"

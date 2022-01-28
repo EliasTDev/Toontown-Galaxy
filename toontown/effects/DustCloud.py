@@ -4,20 +4,21 @@ from direct.showbase import PythonUtil
 from toontown.battle.BattleProps import globalPropPool
 from direct.directnotify import DirectNotifyGlobal
 
-SFX = PythonUtil.Enum( 'poof, magic' )
+SFX = PythonUtil.Enum('poof, magic')
 
 SFXPATHS = {
-    SFX.poof:'phase_4/audio/sfx/firework_distance_02.ogg',
-    SFX.magic:'phase_4/audio/sfx/SZ_DD_treasure.ogg',
-    }
+    SFX.poof: 'phase_4/audio/sfx/firework_distance_02.ogg',
+    SFX.magic: 'phase_4/audio/sfx/SZ_DD_treasure.ogg',
+}
+
 
 class DustCloud(NodePath):
     dustCloudCount = 0
     sounds = {}
-        
+
     notify = DirectNotifyGlobal.directNotify.newCategory("DustCloud")
-    
-    def __init__(self, parent = hidden, fBillboard = 1, wantSound = 0):
+
+    def __init__(self, parent=hidden, fBillboard=1, wantSound=0):
         """__init()"""
         # Initialize the superclass
         NodePath.__init__(self)
@@ -43,7 +44,7 @@ class DustCloud(NodePath):
         self.setBin('fixed', 100, 1)
         self.hide()
 
-    def createTrack(self, rate = 24):
+    def createTrack(self, rate=24):
         def getSoundFuncIfAble(soundId):
             sound = DustCloud.sounds.get(soundId)
             if self.wantSound and sound:
@@ -53,47 +54,46 @@ class DustCloud(NodePath):
                     pass
                 return dummy
         # Compute tflip duration
-        tflipDuration = (self.seqNode.getNumChildren()/(float(rate)))
+        tflipDuration = (self.seqNode.getNumChildren() / (float(rate)))
         # Create new track of proper duration
         self.track = Sequence(
             Func(self.show),
             Func(self.messaging),
             Func(self.seqNode.play, 0, self.seqNode.getNumFrames() - 1),
-            Func(self.seqNode.setFrameRate,rate),
+            Func(self.seqNode.setFrameRate, rate),
             Func(getSoundFuncIfAble(SFX.poof)),
             Wait(tflipDuration),
-            #Func(getSoundFuncIfAble(SFX.magic)),
+            # Func(getSoundFuncIfAble(SFX.magic)),
             Func(self.seqNode.setFrameRate, 0),
             Func(self.hide),
-            name = 'dustCloud-track-%d' % self.trackId,
-            )
-            
-            
+            name='dustCloud-track-%d' % self.trackId,
+        )
+
     def messaging(self):
-        self.notify.debug("CREATING TRACK ID: %s" %self.trackId)
-    
-    def play(self, rate = 24):
+        self.notify.debug(f"CREATING TRACK ID: {self.trackId}")
+
+    def play(self, rate=24):
         # Stop existing track, if one exists
         self.stop()
         # Create new track
         self.createTrack(rate)
         # Start track
         self.track.start()
-    
-    def loop(self, rate = 24):
+
+    def loop(self, rate=24):
         # Stop existing track, if one exists
         self.stop()
         # Create new track
         self.createTrack(rate)
         # Start track
         self.track.loop()
-    
+
     def stop(self):
         if self.track:
             self.track.finish()
-    
+
     def destroy(self):
-        self.notify.debug("DESTROYING TRACK ID: %s" %self.trackId)
+        self.notify.debug(f"DESTROYING TRACK ID: {self.trackId}")
         self.stop()
         del self.track
         del self.seqNode

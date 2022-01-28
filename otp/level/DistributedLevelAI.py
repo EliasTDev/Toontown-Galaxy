@@ -8,6 +8,7 @@ from direct.directnotify import DirectNotifyGlobal
 from . import EntityCreatorAI
 from direct.showbase.PythonUtil import Functor, weightedChoice
 
+
 class DistributedLevelAI(DistributedObjectAI.DistributedObjectAI,
                          Level.Level):
     """DistributedLevelAI"""
@@ -19,9 +20,10 @@ class DistributedLevelAI(DistributedObjectAI.DistributedObjectAI,
         # these are required fields
         self.zoneId = zoneId
         self.entranceId = entranceId
-                      
+
         if len(avIds) <= 0 or len(avIds) > 4:
-            self.notify.warning('How do we have this many avIds? avIds: %s' %avIds)
+            self.notify.warning(
+                f'How do we have this many avIds? avIds: {avIds}')
         assert len(avIds) > 0 and len(avIds) <= 4
         assert 0 not in avIds
         assert None not in avIds
@@ -29,21 +31,21 @@ class DistributedLevelAI(DistributedObjectAI.DistributedObjectAI,
         self.numPlayers = len(self.avIdList)
         # this is the list of avatars that are actually present
         self.presentAvIds = list(self.avIdList)
-        self.notify.debug("expecting avatars: %s" % str(self.avIdList))
+        self.notify.debug(f"expecting avatars: {str(self.avIdList)}")
 
         if __dev__:
             self.modified = 0
-            
+
     def setLevelSpec(self, levelSpec):
         self.levelSpec = levelSpec
 
-    def generate(self, levelSpec = None):
+    def generate(self, levelSpec=None):
         self.notify.debug('generate')
         DistributedObjectAI.DistributedObjectAI.generate(self)
-        
-        if levelSpec == None:
+
+        if levelSpec is None:
             levelSpec = self.levelSpec
-    
+
         self.initializeLevel(levelSpec)
 
         # self.zoneIds comes from LevelMgrAI
@@ -88,7 +90,7 @@ class DistributedLevelAI(DistributedObjectAI.DistributedObjectAI,
         # choose a scenario
         # make list of lists: [(weight, scenarioIndex), ...]
         lol = list(zip([1] * levelSpec.getNumScenarios(),
-                  list(range(levelSpec.getNumScenarios()))))
+                       list(range(levelSpec.getNumScenarios()))))
         scenarioIndex = weightedChoice(lol)
 
         Level.Level.initializeLevel(self, self.doId, levelSpec, scenarioIndex)
@@ -105,15 +107,15 @@ class DistributedLevelAI(DistributedObjectAI.DistributedObjectAI,
         # set up a barrier that will clear when all avs have left or
         # disconnected
         self.allToonsGoneBarrier = self.beginBarrier(
-            'allToonsGone', self.avIdList, 3*24*60*60, self.allToonsGone)
+            'allToonsGone', self.avIdList, 3 * 24 * 60 * 60, self.allToonsGone)
 
     def handleAvatarDisconnect(self, avId):
         try:
             self.presentAvIds.remove(avId)
-            DistributedLevelAI.notify.warning('av %s has disconnected' % avId)
-        except:
+            DistributedLevelAI.notify.warning(f'av {avId} has disconnected')
+        except BaseException:
             DistributedLevelAI.notify.warning(
-                'got disconnect for av %s, not in list' % avId)
+                f'got disconnect for av {avId}, not in list')
         if not self.presentAvIds:
             self.allToonsGone([])
 
@@ -134,7 +136,7 @@ class DistributedLevelAI(DistributedObjectAI.DistributedObjectAI,
     def setOuch(self, penalty):
         avId = self.air.getAvatarIdFromSender()
         av = self.air.doId2do.get(avId)
-        self.notify.debug("setOuch %s" % penalty)
+        self.notify.debug(f"setOuch {penalty}")
         # make sure penalty is > 0
         if av and (penalty > 0):
             av.takeDamage(penalty)
@@ -143,7 +145,7 @@ class DistributedLevelAI(DistributedObjectAI.DistributedObjectAI,
             if av.getHp() <= 0:
                 av.inventory.zeroInv()
                 av.d_setInventory(av.inventory.makeNetString())
-        
+
     def requestCurrentLevelSpec(self, specHash, entTypeRegHash):
         senderId = self.air.getAvatarIdFromSender()
 
@@ -163,7 +165,7 @@ class DistributedLevelAI(DistributedObjectAI.DistributedObjectAI,
         # client should not be connecting. Their entityTypeRegistry
         # is different from ours.
         srvHash = self.levelSpec.entTypeReg.getHashStr()
-        self.notify.info('srv entTypeRegHash %s' % srvHash)
+        self.notify.info(f'srv entTypeRegHash {srvHash}')
         if srvHash != entTypeRegHash:
             self.sendUpdateToAvatarId(
                 senderId, 'setSpecDeny',
@@ -175,7 +177,7 @@ class DistributedLevelAI(DistributedObjectAI.DistributedObjectAI,
         if hash(self.levelSpec) != specHash:
             self.notify.info('spec hashes do not match, sending our spec')
             spec = self.levelSpec
-            useDisk=simbase.config.GetBool('spec-by-disk', 1)
+            useDisk = simbase.config.GetBool('spec-by-disk', 1)
         else:
             self.notify.info('spec hashes match, sending null spec')
             spec = None
@@ -185,9 +187,9 @@ class DistributedLevelAI(DistributedObjectAI.DistributedObjectAI,
 
         from direct.directutil import DistributedLargeBlobSenderAI
         largeBlob = DistributedLargeBlobSenderAI.\
-                    DistributedLargeBlobSenderAI(
-            self.air, self.zoneId, senderId, specStr,
-            useDisk=useDisk)
+            DistributedLargeBlobSenderAI(
+                self.air, self.zoneId, senderId, specStr,
+                useDisk=useDisk)
         self.sendUpdateToAvatarId(senderId,
                                   'setSpecSenderDoId', [largeBlob.doId])
 
@@ -196,8 +198,7 @@ class DistributedLevelAI(DistributedObjectAI.DistributedObjectAI,
         # entities
         def setAttribChange(self, entId, attribName, value, username='SYSTEM'):
             DistributedLevelAI.notify.info(
-                "setAttribChange(%s): %s, %s = %s" %
-                (username, entId, attribName, repr(value)))
+                f"setAttribChange({username}): {entId}, {attribName} = {repr(value)}")
             # send a copy to the client-side level obj FIRST
             # (it may be a message that creates an entity)
             self.sendUpdate('setAttribChange',
@@ -231,7 +232,7 @@ class DistributedLevelAI(DistributedObjectAI.DistributedObjectAI,
             if self.modified:
                 DistributedLevelAI.notify.info('autosaving spec')
                 filename = self.levelSpec.getFilename()
-                filename = '%s.autosave' % filename
+                filename = f'{filename}.autosave'
                 self.levelSpec.saveToDisk(filename, makeBackup=0)
 
         def saveSpec(self, task=None):

@@ -1,6 +1,6 @@
 ##########################################################################
 # Module: DistributedViewPad.py
-# Purpose: This class provides the necessary functionality for 
+# Purpose: This class provides the necessary functionality for
 # Date: 7/21/05
 # Author: jjtaylor
 ##########################################################################
@@ -19,11 +19,11 @@ from pandac.PandaModules import *
 from toontown.racing.DistributedKartPad import DistributedKartPad
 from toontown.racing.KartShopGlobals import KartGlobals
 
-if( __debug__ ):
+if(__debug__):
     import pdb
 
 
-class DistributedViewPad( DistributedKartPad ):
+class DistributedViewPad(DistributedKartPad):
     """
     Purpose: Must fill out... DO NOT FORGET TO COMMENT CODE.
     """
@@ -31,18 +31,18 @@ class DistributedViewPad( DistributedKartPad ):
     ######################################################################
     # Class Variables
     ######################################################################
-    notify = DirectNotifyGlobal.directNotify.newCategory( "DistributedViewPad" )
-    #notify.setInfo(True)
-    #notify.setDebug(True)
+    notify = DirectNotifyGlobal.directNotify.newCategory("DistributedViewPad")
+    # notify.setInfo(True)
+    # notify.setDebug(True)
     id = 0
 
-    def __init__( self, cr ):
+    def __init__(self, cr):
         """
         COMMENT
         """
 
         # Initialize the KartPadAI and FSM Super Classes
-        DistributedKartPad.__init__( self, cr )
+        DistributedKartPad.__init__(self, cr)
 
         # Initialize Instance Variables
         self.id = DistributedViewPad.id
@@ -50,7 +50,8 @@ class DistributedViewPad( DistributedKartPad ):
 
         #self.av2TimestampDict = {}
 
-    # this needs to be one message so there's no chance of out-of-order delivery
+    # this needs to be one message so there's no chance of out-of-order
+    # delivery
     def setLastEntered(self, timeStamp):
         self.timeStamp = timeStamp
 
@@ -65,16 +66,16 @@ class DistributedViewPad( DistributedKartPad ):
         assert self.av2TimestampDict.has_key( avId ), error
         del self.av2TimestampDict[ avId ]
     """
-        
-    def getTimestamp( self, avId ):
+
+    def getTimestamp(self, avId):
         """
         """
         #error = "DistributedViewPad::getTimestamp - Avatar %s not present in View Pad." % ( avId )
         #assert self.av2TimestampDict.has_key( avId ), error
-        #return self.av2TimestampDict.get( avId )
+        # return self.av2TimestampDict.get( avId )
         return self.timeStamp
-    
-    def addStartingBlock( self, block ):
+
+    def addStartingBlock(self, block):
         block.cameraPos = Point3(0, 23, 7)
         block.cameraHpr = Point3(180, -10, 0)
         DistributedKartPad.addStartingBlock(self, block)

@@ -8,6 +8,7 @@ from direct.fsm import State
 from . import LiftConstants
 from . import MovingPlatform
 
+
 class DistributedLift(BasicEntities.DistributedNodePathEntity):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLift')
 
@@ -19,28 +20,29 @@ class DistributedLift(BasicEntities.DistributedNodePathEntity):
         BasicEntities.DistributedNodePathEntity.generateInit(self)
         # load stuff
 
-        self.moveSnd = base.loader.loadSfx('phase_9/audio/sfx/CHQ_FACT_elevator_up_down.ogg')
+        self.moveSnd = base.loader.loadSfx(
+            'phase_9/audio/sfx/CHQ_FACT_elevator_up_down.ogg')
 
         self.fsm = ClassicFSM.ClassicFSM('DistributedLift',
-                           [
-                            State.State('off',
-                                        self.enterOff,
-                                        self.exitOff,
-                                        ['moving']),
-                            State.State('moving',
-                                        self.enterMoving,
-                                        self.exitMoving,
-                                        ['waiting']),
-                            State.State('waiting',
-                                        self.enterWaiting,
-                                        self.exitWaiting,
-                                        ['moving']),
-                            ],
-                           # Initial State
-                           'off',
-                           # Final State
-                           'off',
-                           )
+                                         [
+                                             State.State('off',
+                                                         self.enterOff,
+                                                         self.exitOff,
+                                                         ['moving']),
+                                             State.State('moving',
+                                                         self.enterMoving,
+                                                         self.exitMoving,
+                                                         ['waiting']),
+                                             State.State('waiting',
+                                                         self.enterWaiting,
+                                                         self.exitWaiting,
+                                                         ['moving']),
+                                         ],
+                                         # Initial State
+                                         'off',
+                                         # Final State
+                                         'off',
+                                         )
         self.fsm.enterInitialState()
 
     def generate(self):
@@ -51,7 +53,7 @@ class DistributedLift(BasicEntities.DistributedNodePathEntity):
         self.platform = self.attachNewNode('platParent')
 
     def setStateTransition(self, toState, fromState, arrivalTimestamp):
-        self.notify.debug('setStateTransition: %s->%s' % (fromState, toState))
+        self.notify.debug(f'setStateTransition: {fromState}->{toState}')
         # the lift should reach state 'toState' precisely
         # at time 'arrivalTimestamp'
         if not self.isGenerated():
@@ -104,7 +106,7 @@ class DistributedLift(BasicEntities.DistributedNodePathEntity):
             return
         self.platformModel = MovingPlatform.MovingPlatform()
         self.platformModel.setupCopyModel(
-                self.getParentToken(), model, self.floorName)
+            self.getParentToken(), model, self.floorName)
 
         # listen for the platform's enter and exit event
         self.accept(self.platformModel.getEnterEvent(), self.localToonEntered)
@@ -115,9 +117,9 @@ class DistributedLift(BasicEntities.DistributedNodePathEntity):
         self.endGuard = None
         zoneNp = self.getZoneNode()
         if len(self.startGuardName):
-            self.startGuard = zoneNp.find('**/%s' % self.startGuardName)
+            self.startGuard = zoneNp.find(f'**/{self.startGuardName}')
         if len(self.endGuardName):
-            self.endGuard = zoneNp.find('**/%s' % self.endGuardName)
+            self.endGuard = zoneNp.find(f'**/{self.endGuardName}')
 
         # get handles on the start and end boarding collision planes
         # (actually, they're the planes we need to stash so that toons
@@ -127,7 +129,7 @@ class DistributedLift(BasicEntities.DistributedNodePathEntity):
             'back': '**/wall_back',
             'left': '**/wall_left',
             'right': '**/wall_right',
-            }
+        }
         if 0:
             # Hack to stop getting out of lift:
             floor = self.platformModel.model.find("**/MovingPlatform-*")
@@ -138,7 +140,7 @@ class DistributedLift(BasicEntities.DistributedNodePathEntity):
             safetyNet.setScale(2.0)
             safetyNet.setCollideMask(ToontownGlobals.safetyNetBitmask)
             safetyNet.flattenLight()
-            safetyNet.show() #*#
+            safetyNet.show()  # *#
 
         # Hack for falling off of the lift:
         for side in list(side2srch.values()):
@@ -147,21 +149,21 @@ class DistributedLift(BasicEntities.DistributedNodePathEntity):
                 np.setScale(1.0, 1.0, 2.0)
                 np.setZ(-10)
                 np.flattenLight()
-        
+
         self.startBoardColl = NodePathCollection()
         self.endBoardColl = NodePathCollection()
         for side in self.startBoardSides:
             np = self.platformModel.find(side2srch[side])
             if np.isEmpty():
                 DistributedLift.warning(
-                    "couldn't find %s board collision" % side)
+                    f"couldn't find {side} board collision")
             else:
                 self.startBoardColl.addPath(np)
         for side in self.endBoardSides:
             np = self.platformModel.find(side2srch[side])
             if np.isEmpty():
                 DistributedLift.warning(
-                    "couldn't find %s board collision" % side)
+                    f"couldn't find {side} board collision")
             else:
                 self.endBoardColl.addPath(np)
 
@@ -193,6 +195,7 @@ class DistributedLift(BasicEntities.DistributedNodePathEntity):
     # ClassicFSM state enter/exit funcs
     def enterOff(self):
         self.notify.debug('enterOff')
+
     def exitOff(self):
         pass
 
@@ -218,9 +221,9 @@ class DistributedLift(BasicEntities.DistributedNodePathEntity):
             return self.endBoardColl
 
     def enterMoving(self, toState, fromState, arrivalTimestamp):
-        self.notify.debug('enterMoving, %s->%s' % (fromState, toState))
+        self.notify.debug(f'enterMoving, {fromState}->{toState}')
         if self.state == toState:
-            self.notify.warning('already in state %s' % toState)
+            self.notify.warning(f'already in state {toState}')
 
         # TODO: optimization:
         # if timestamp < now:
@@ -260,18 +263,18 @@ class DistributedLift(BasicEntities.DistributedNodePathEntity):
         self.moveIval = Sequence(
             Func(startMoving),
             LerpPosInterval(self.platform, self.duration,
-                            endPos, startPos = startPos,
+                            endPos, startPos=startPos,
                             blendType='easeInOut',
-                            name='lift-%s-move' % self.entId,
-                            fluid = 1),
+                            name=f'lift-{self.entId}-move',
+                            fluid=1),
             Func(doneMoving),
-            )
+        )
         # move should finish at 'arrivalTimestamp'
         ivalStartT = (
             globalClockDelta.networkToLocalTime(arrivalTimestamp, bits=32)
             - self.moveIval.getDuration())
         self.moveIval.start(globalClock.getFrameTime() - ivalStartT)
-        
+
     def exitMoving(self):
         if hasattr(self, 'soundIval'):
             self.soundIval.pause()
@@ -282,6 +285,7 @@ class DistributedLift(BasicEntities.DistributedNodePathEntity):
 
     def enterWaiting(self):
         self.notify.debug('enterWaiting')
+
     def exitWaiting(self):
         pass
 

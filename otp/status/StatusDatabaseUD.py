@@ -6,12 +6,13 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from otp.uberdog.DBKeepAlive import DBKeepAlive
 from otp.uberdog.DBInterface import DBInterface
 
-class StatusDatabaseUD(DistributedObjectGlobalUD,DBInterface):
+
+class StatusDatabaseUD(DistributedObjectGlobalUD, DBInterface):
     """
     StatusDatabase is a lightweight DB wrapper for status information about avatars.
     This initial version only stores last online times by recording timestamps each
     time an avatar comes online or goes offline.
-    
+
     Currently, he client must pull all desired information using requestOfflineAvatarStatus.
     This can easily change to a push interface later on, if desired.
     """
@@ -35,18 +36,21 @@ class StatusDatabaseUD(DistributedObjectGlobalUD,DBInterface):
                                   user=self.DBuser,
                                   password=self.DBpasswd)
 
-        self.notify.info("Connected to MySQL server at %s:%d."%(self.DBhost,self.DBport))
+        self.notify.info(
+            "Connected to MySQL server at %s:%d." %
+            (self.DBhost, self.DBport))
 
         cursor = self.db.cursor()
 
         try:
-            cursor.execute("CREATE DATABASE `%s`"%self.DBname)
-            self.notify.info("Database '%s' did not exist, created a new one!"%self.DBname)
+            cursor.execute(f"CREATE DATABASE `{self.DBname}`")
+            self.notify.info(
+                f"Database '{self.DBname}' did not exist, created a new one!")
         except MySQLdb.ProgrammingError as e:
             pass
 
-        cursor.execute("USE `%s`"%self.DBname)
-        self.notify.debug("Using database '%s'"%self.DBname)
+        cursor.execute(f"USE `{self.DBname}`")
+        self.notify.debug(f"Using database '{self.DBname}'")
 
         try:
             cursor.execute("""
@@ -56,16 +60,16 @@ class StatusDatabaseUD(DistributedObjectGlobalUD,DBInterface):
             PRIMARY KEY (`avatarId`)
             ) ENGINE=InnoDB
             """)
-            self.notify.info("Table offlineAvatarStatus did not exist, created a new one!")
+            self.notify.info(
+                "Table offlineAvatarStatus did not exist, created a new one!")
         except MySQLdb.OperationalError as e:
             pass
 
         if __dev__:
             self.dbkeep = DBKeepAlive(self.db)
 
-        taskMgr.doMethodLater(1.0,self._lazyCommit,'lazyCommit')
+        taskMgr.doMethodLater(1.0, self._lazyCommit, 'lazyCommit')
 
-    
     def announceGenerate(self):
         self.accept("avatarOnline", self.avatarOnline, [])
         self.accept("avatarOffline", self.avatarOffline, [])
@@ -75,52 +79,49 @@ class StatusDatabaseUD(DistributedObjectGlobalUD,DBInterface):
         self.ignoreAll()
         DistributedObjectGlobalUD.delete(self)
 
-
     def avatarOnline(self, avatarId, avatarType):
         self._updateLastOnlineTime(avatarId)
 
     def avatarOffline(self, avatarId):
         self._updateLastOnlineTime(avatarId)
 
-
     # CL -> UD
+
     def requestOfflineAvatarStatus(self, avatarIds):
         """
         CL->UD message to request details for a list of offline avatars.
         Results in a set of UD->CL recvOfflineAvatarStatus messages, one for each avatar.
         """
-        if not avatarIds: #return if empty
+        if not avatarIds:  # return if empty
             return
-        
+
         senderId = self.air.getAvatarIdFromSender()
 
         if len(avatarIds) > 1000:
-            self.notify.warning("Ignoring huge avatarIds list sent to requestOfflineAvatarStatus from sender %s: %s" % (senderId,avatarIds))
+            self.notify.warning(
+                "Ignoring huge avatarIds list sent to requestOfflineAvatarStatus from sender %s: %s" %
+                (senderId, avatarIds))
             return
-        
+
         onlineTimes = self._getLastOnlineTimes(avatarIds)
 
-        for (avId,onlineTime) in onlineTimes:
+        for (avId, onlineTime) in onlineTimes:
             self.sendUpdateToAvatarId(senderId,
                                       "recvOfflineAvatarStatus",
                                       [avId, onlineTime])
 
-        
     # ----- Handy internal functions -----
 
-
-    def _lazyCommit(self,task):
+    def _lazyCommit(self, task):
         self.db.commit()
         return task.again
-    
 
     def _valueList(self, numVals):
         assert numVals > -1
         if numVals == 0:
             return "()"
         else:
-            return "(" + ("%s," * (numVals-1)) + "%s)"
-
+            return "(" + ("%s," * (numVals - 1)) + "%s)"
 
     def _getLastOnlineTimes(self, avatarIds):
         """
@@ -134,29 +135,32 @@ class StatusDatabaseUD(DistributedObjectGlobalUD,DBInterface):
 
         # Determine who we don't have cached in RAM
         for id in avatarIds:
-            if (not id in self.avatarId2LastOnline) and (id > 0):
+            if (id not in self.avatarId2LastOnline) and (id > 0):
                 missing.append(id)
 
         # Get the missing people from the DB into RAM
         if len(missing) > 0:
             cursor = self.db.cursor()
-            cursor.execute("SELECT avatarId,UNIX_TIMESTAMP(lastOnlineTime) from offlineAvatarStatus WHERE avatarId in " + self._valueList(len(missing)), missing)
+            cursor.execute(
+                "SELECT avatarId,UNIX_TIMESTAMP(lastOnlineTime) from offlineAvatarStatus WHERE avatarId in " +
+                self._valueList(
+                    len(missing)),
+                missing)
             while cursor.rownumber < cursor.rowcount:
-                id,lastOnline = cursor.fetchone()
+                id, lastOnline = cursor.fetchone()
                 self.avatarId2LastOnline[id] = lastOnline
 
         result = []
 
         # Return results from RAM
         for id in avatarIds:
-            lastOnline = self.avatarId2LastOnline.get(id,0)
+            lastOnline = self.avatarId2LastOnline.get(id, 0)
 
-            result.append((id,lastOnline))
+            result.append((id, lastOnline))
 
         return result
 
-
-    def _updateLastOnlineTime(self,avatarId):
+    def _updateLastOnlineTime(self, avatarId):
         """
         Sets the last online time for the specified avatar to NOW (UTC).
         Value is updated in MySQL and in our in-memory cache.
@@ -165,7 +169,8 @@ class StatusDatabaseUD(DistributedObjectGlobalUD,DBInterface):
 
         cursor = self.db.cursor()
 
-        # Update in DB, also read back the timestamp that SQL just recorded so we can cache it
+        # Update in DB, also read back the timestamp that SQL just recorded so
+        # we can cache it
         cursor.execute("""
             INSERT INTO offlineAvatarStatus (avatarId,lastOnlineTime) VALUES (%s,UTC_TIMESTAMP)
             ON DUPLICATE KEY UPDATE lastOnlineTime=UTC_TIMESTAMP;
@@ -182,4 +187,5 @@ class StatusDatabaseUD(DistributedObjectGlobalUD,DBInterface):
         self.avatarId2LastOnline[avatarId] = lastOnline
 
         # For 10x performance improvement: Do not commit here!
-        # lazyCommit will be called in 1 second or less and flush our changes to disk then.
+        # lazyCommit will be called in 1 second or less and flush our changes
+        # to disk then.

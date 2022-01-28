@@ -2,10 +2,14 @@ from direct.directnotify import DirectNotifyGlobal
 from toontown.battle import DistributedBattleFinalAI
 
 # attack properties table
-class DistributedBattleDinersAI(DistributedBattleFinalAI.DistributedBattleFinalAI):
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleDinersAI')
-                    
+
+class DistributedBattleDinersAI(
+        DistributedBattleFinalAI.DistributedBattleFinalAI):
+
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedBattleDinersAI')
+
     def __init__(self, air, bossCog, roundCallback,
                  finishCallback, battleSide):
         DistributedBattleFinalAI.DistributedBattleFinalAI.__init__(
@@ -24,8 +28,8 @@ class DistributedBattleDinersAI(DistributedBattleFinalAI.DistributedBattleFinalA
         for suit in suits:
             self.pendingSuits.append(suit)
             #joined =self.suitRequestJoin(suit)
-            #assert(joined)
+            # assert(joined)
 
         self.d_setMembers()
-        self.needAdjust =1
+        self.needAdjust = 1
         self.b_setState('ReservesJoining')

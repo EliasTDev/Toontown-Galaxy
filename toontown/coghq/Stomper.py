@@ -7,6 +7,7 @@ from direct.showbase.PythonUtil import lerp
 from direct.fsm import StateData
 import math
 
+
 class Stomper(StateData.StateData, NodePath):
     SerialNum = 0
 
@@ -19,9 +20,9 @@ class Stomper(StateData.StateData, NodePath):
     def __init__(self,
                  model,
                  range=5.,  # range of motion in feet along Z-axis
-                 period=1., # duration of full cycle
+                 period=1.,  # duration of full cycle
                  phaseShift=0.,  # 0..1 phase shift
-                 zOffset=0., # how close the stomper should get to Z=0
+                 zOffset=0.,  # how close the stomper should get to Z=0
                  motionType=None,
                  shadow=None,
                  sound=None,
@@ -42,7 +43,7 @@ class Stomper(StateData.StateData, NodePath):
         if self.motionType is None:
             self.motionType = Stomper.MotionSinus
 
-        node = hidden.attachNewNode('Stomper%s' % self.SerialNum)
+        node = hidden.attachNewNode(f'Stomper{self.SerialNum}')
         NodePath.__init__(self, node)
 
         self.model = model.copyTo(self)
@@ -50,9 +51,9 @@ class Stomper(StateData.StateData, NodePath):
         self.shadow = shadow
         if shadow is not None:
             self.shadow = shadow.copyTo(self)
-            self.shadow.setPos(0,0,.2)
+            self.shadow.setPos(0, 0, .2)
 
-        self.TaskName = 'Stomper%sTask' % self.SerialNum
+        self.TaskName = f'Stomper{self.SerialNum}Task'
 
         self.range = range
         self.zOffset = zOffset
@@ -66,28 +67,45 @@ class Stomper(StateData.StateData, NodePath):
         # stomper should hit at t=0
         if self.motionType is Stomper.MotionLinear:
             motionIval = Sequence(
-                LerpPosInterval(self.model, self.period/2.,
-                                Point3(0,0,self.zOffset+self.range),
-                                startPos=Point3(0,0,self.zOffset)),
-                WaitInterval(self.period/4.),
-                LerpPosInterval(self.model, self.period/4.,
-                                Point3(0,0,self.zOffset),
-                                startPos=Point3(0,0,self.zOffset+self.range)),
-                )
+                LerpPosInterval(
+                    self.model,
+                    self.period / 2.,
+                    Point3(
+                        0,
+                        0,
+                        self.zOffset + self.range),
+                    startPos=Point3(
+                        0,
+                        0,
+                        self.zOffset)),
+                WaitInterval(
+                    self.period / 4.),
+                LerpPosInterval(
+                    self.model,
+                    self.period / 4.,
+                    Point3(
+                        0,
+                        0,
+                        self.zOffset),
+                    startPos=Point3(
+                        0,
+                        0,
+                        self.zOffset + self.range)),
+            )
         elif self.motionType is Stomper.MotionSinus:
             def sinusFunc(t, self=self):
                 # t: 0..1
                 # cos(pi) == -1 (hit/down)
                 # theta: pi..3*pi
-                theta = math.pi + (t * 2.*math.pi)
+                theta = math.pi + (t * 2. * math.pi)
                 # c: -1..1
                 c = math.cos(theta)
                 # z: 0..self.range
                 self.model.setZ(self.zOffset +
-                                ((.5 + (c*.5)) * self.range))
+                                ((.5 + (c * .5)) * self.range))
             motionIval = Sequence(
                 LerpFunctionInterval(sinusFunc, duration=self.period),
-                )
+            )
         elif self.motionType is Stomper.MotionHalfSinus:
             def halfSinusFunc(t, self=self):
                 # t: 0..1
@@ -95,13 +113,13 @@ class Stomper(StateData.StateData, NodePath):
                                 (math.sin(t * math.pi) * self.range))
             motionIval = Sequence(
                 LerpFunctionInterval(halfSinusFunc, duration=self.period),
-                )
+            )
         # put the motion interval into a Parallel so that we can easily add
         # concurrent ivals on (like sound, etc)
         self.ival = Parallel(
             motionIval,
-            name='Stomper%s' % self.SerialNum,
-            )
+            name=f'Stomper{self.SerialNum}',
+        )
 
         # 'stomp' sound
         if self.sound is not None:
@@ -121,15 +139,15 @@ class Stomper(StateData.StateData, NodePath):
                 # stomper
                 modelZ = self.model.getZ()
                 # a=0..1, 0=down, 1=up
-                a = modelZ/self.range
-                self.shadow.setScale(lerp(.7, 1., (1.-a)))
+                a = modelZ / self.range
+                self.shadow.setScale(lerp(.7, 1., (1. - a)))
             self.ival.append(
                 LerpFunctionInterval(adjustShadowScale, duration=self.period))
 
         self.ival.loop()
         self.ival.setT((globalClock.getFrameTime() - startTime) +
                        (self.period * self.phaseShift))
-        
+
     def exit(self):
         self.ival.finish()
         del self.ival

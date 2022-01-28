@@ -3,17 +3,23 @@ from pandac.PandaModules import *
 from . import ToonHead
 from toontown.distributed import DelayDelete
 from toontown.toonbase import ToontownGlobals
-from panda3d.otp import NametagFloat2d, Nametag 
+from panda3d.otp import NametagFloat2d, Nametag
+
+
 class ToonHeadFrame(DirectFrame):
-    def __init__(self, av, color = ToontownGlobals.GlobalDialogColor, g = DGG.getDefaultDialogGeom()):
+    def __init__(
+            self,
+            av,
+            color=ToontownGlobals.GlobalDialogColor,
+            g=DGG.getDefaultDialogGeom()):
         DirectFrame.__init__(
             self,
-            relief = None,
-            geom = g,
-            geom_color = color,
-            geom_scale = (1,1,0.5),
-            pos = (0,0,0),
-            )
+            relief=None,
+            geom=g,
+            geom_color=color,
+            geom_scale=(1, 1, 0.5),
+            pos=(0, 0, 0),
+        )
         self.initialiseoptions(ToonHeadFrame)
 
         self.av = av
@@ -21,15 +27,15 @@ class ToonHeadFrame(DirectFrame):
         # because we made a chat bubble and nametag on him
         # and try to delete them when we exit
         self.avKeep = DelayDelete.DelayDelete(av, 'ToonHeadFrame.avKeep')
-        
+
         self.head = self.stateNodePath[0].attachNewNode('head', 20)
         self.head.setPosHprScale(-0.27, 10.0, -0.09,
                                  180., 0., 0.,
                                  0.2, 0.2, 0.2)
-        
+
         self.headModel = ToonHead.ToonHead()
         self.headModel.startBlink()
-        self.headModel.setupHead(self.av.style, forGui = 1)
+        self.headModel.setupHead(self.av.style, forGui=1)
         self.headModel.reparentTo(self.head)
 
         # now enable a chat balloon
@@ -38,9 +44,9 @@ class ToonHeadFrame(DirectFrame):
         self.av.nametag.addNametag(self.tag1Node)
 
         self.tag1 = self.attachNewNode(self.tag1Node.upcastToPandaNode())
-        self.tag1.setPosHprScale(-0.16,0,-0.09,
-                                 0,0,0,
-                                 0.055,0.055,0.055)
+        self.tag1.setPosHprScale(-0.16, 0, -0.09,
+                                 0, 0, 0,
+                                 0.055, 0.055, 0.055)
 
         # As well as a nametag just to display the name.
         self.tag2Node = NametagFloat2d()
@@ -49,22 +55,22 @@ class ToonHeadFrame(DirectFrame):
 
         self.tag2 = self.attachNewNode(self.tag2Node.upcastToPandaNode())
         self.tag2.setPosHprScale(-0.27, 10.0, 0.16,
-                                 0,0,0,
-                                 0.05,0.05,0.05)
-                                 
+                                 0, 0, 0,
+                                 0.05, 0.05, 0.05)
+
         self.extraData = DirectLabel(
-            parent = self,
-            relief = None,
-            pos = (0.0, 0.0, 0.06),
-            scale = 1.0,
-            text = "",
+            parent=self,
+            relief=None,
+            pos=(0.0, 0.0, 0.06),
+            scale=1.0,
+            text="",
             #text_font = ToontownGlobals.getSignFont(),
-            text0_fg = (0.3, 0.2, 1, 1),
-            text_scale = (0.14,0.06),
-            text_pos = (0, -0.01),         
-            )
+            text0_fg=(0.3, 0.2, 1, 1),
+            text_scale=(0.14, 0.06),
+            text_pos=(0, -0.01),
+        )
         self.extraData.hide()
-        
+
     def destroy(self):
         DirectFrame.destroy(self)
         self.headModel.delete()
@@ -86,7 +92,6 @@ class ToonHeadFrame(DirectFrame):
             del self.avKeep
         self.extraData.removeNode()
         del self.extraData
-        
 
     def removeAvKeep(self):
         """Remove the delayDelete so the toon can disappear from the golf course."""

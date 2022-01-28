@@ -5,6 +5,7 @@ from toontown.toonbase import TTLocalizer
 from otp.otpbase import OTPLocalizer
 from direct.interval.IntervalGlobal import *
 
+
 class CatalogPetTrickItem(CatalogItem.CatalogItem):
     """
     This represents a phrase you can say to teach your pet to do a
@@ -13,9 +14,10 @@ class CatalogPetTrickItem(CatalogItem.CatalogItem):
 
     sequenceNumber = 0
     petPicture = None
+
     def makeNewItem(self, trickId):
         self.trickId = trickId
-        
+
         CatalogItem.CatalogItem.makeNewItem(self)
 
     def getPurchaseLimit(self):
@@ -31,7 +33,7 @@ class CatalogPetTrickItem(CatalogItem.CatalogItem):
            or self in avatar.awardMailboxContents or self in avatar.onAwardOrder:
             return 1
         return self.trickId in avatar.petTrickPhrases
-        
+
     def getAcceptItemErrorText(self, retcode):
         # Returns a string describing the error that occurred on
         # attempting to accept the item from the mailbox.  The input
@@ -68,15 +70,15 @@ class CatalogPetTrickItem(CatalogItem.CatalogItem):
         # must run on the AI.
         from toontown.pets import PetDNA, Pet
 
-        pet = Pet.Pet(forGui = 1)
+        pet = Pet.Pet(forGui=1)
 
         # We use the avatar's own pet if he/she has a pet (and we know
         # its DNA), otherwise use a random pet.
         dna = avatar.petDNA
-        if dna == None:
+        if dna is None:
             dna = PetDNA.getRandomPetDNA()
         pet.setDNA(dna)
-        
+
         pet.setH(180)
         model, ival = self.makeFrameModel(pet, 0)
         pet.setScale(2.0)
@@ -86,21 +88,21 @@ class CatalogPetTrickItem(CatalogItem.CatalogItem):
         # spin.
 
         track = PetTricks.getTrickIval(pet, self.trickId)
-        name = "petTrick-item-%s" % (self.sequenceNumber)
+        name = f"petTrick-item-{self.sequenceNumber}"
         CatalogPetTrickItem.sequenceNumber += 1
-        if track != None:
+        if track is not None:
             track = Sequence(Sequence(track),
-                             ActorInterval(pet, 'neutral', duration = 2),
-                             name = name)
+                             ActorInterval(pet, 'neutral', duration=2),
+                             name=name)
         else:
             pet.animFSM.request('neutral')
             track = Sequence(Wait(4),
-                             name = name)
+                             name=name)
         self.petPicture = pet
 
         assert (not self.hasPicture)
-        self.hasPicture=True
-        
+        self.hasPicture = True
+
         return (model, track)
 
     def cleanupPicture(self):
@@ -108,11 +110,9 @@ class CatalogPetTrickItem(CatalogItem.CatalogItem):
         assert self.petPicture
         self.petPicture.delete()
         self.petPicture = None
-        
-    def output(self, store = ~0):
-        return "CatalogPetTrickItem(%s%s)" % (
-            self.trickId,
-            self.formatOptionalData(store))
+
+    def output(self, store=~0):
+        return f"CatalogPetTrickItem({self.trickId}{self.formatOptionalData(store)})"
 
     def compareTo(self, other):
         return self.trickId - other.trickId
@@ -130,11 +130,11 @@ class CatalogPetTrickItem(CatalogItem.CatalogItem):
         self.dna = None
         if self.trickId not in PetTricks.TrickId2scIds:
             raise ValueError
-        
+
     def encodeDatagram(self, dg, store):
         CatalogItem.CatalogItem.encodeDatagram(self, dg, store)
         dg.addUint8(self.trickId)
-        
+
 
 def getAllPetTricks():
     # Returns a list of all valid CatalogPetTrickItems.
@@ -143,4 +143,3 @@ def getAllPetTricks():
         _list.append(CatalogPetTrickItem(trickId))
 
     return _list
-

@@ -6,7 +6,7 @@ from . import MinigameGlobals
 # pattern constants
 INITIAL_ROUND_LENGTH = 2
 ROUND_LENGTH_INCREMENT = 2
-NUM_ROUNDS  = 4
+NUM_ROUNDS = 4
 TOONTOWN_WORK = 1
 
 # how long the players have to input the pattern

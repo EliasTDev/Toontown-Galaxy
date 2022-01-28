@@ -20,6 +20,7 @@ from direct.showbase import PythonUtil
 from toontown.toon import TTEmote
 from otp.avatar import Emote
 
+
 class DistributedMinigame(DistributedObject.DistributedObject):
     """
     This is the base class for Distributed Minigame objects on the
@@ -33,11 +34,11 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         DistributedObject.DistributedObject.__init__(self, cr)
 
         self.waitingStartLabel = DirectLabel(
-            text = TTLocalizer.MinigameWaitingForOtherPlayers,
-            text_fg = VBase4(1,1,1,1),
-            relief = None,
-            pos = (-0.6, 0, -0.75),
-            scale = 0.075)   
+            text=TTLocalizer.MinigameWaitingForOtherPlayers,
+            text_fg=VBase4(1, 1, 1, 1),
+            relief=None,
+            pos=(-0.6, 0, -0.75),
+            scale=0.075)
         self.waitingStartLabel.hide()
 
         # Initialize the avIdList to an empty list in case
@@ -106,7 +107,7 @@ class DistributedMinigame(DistributedObject.DistributedObject):
             # on disconnect, the ClassicFSM will be forced into the
             # final state
             'frameworkCleanup',
-            )
+        )
 
         # This fsm is actually a child of the hood fsm
         # Add us to the playGame hood state machine
@@ -116,7 +117,7 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         # Play Game's minigame state data throws this when the local toon
         # is done reading the rules
         self.rulesDoneEvent = "rulesDone"
-        #when messenger sends minigameSkip request to skip
+        # when messenger sends minigameSkip request to skip
         self.acceptOnce('minigameSkip', self.requestSkip)
         # A hook for debugging, so we can exit minigames quickly
         self.acceptOnce("minigameAbort", self.d_requestExit)
@@ -137,7 +138,7 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         self.usesLookAround = 0
 
         # difficulty debug overrides
-        self.difficultyOverride  = None
+        self.difficultyOverride = None
         self.trolleyZoneOverride = None
 
         self.hasLocalToon = 0
@@ -145,10 +146,9 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         # Go to initial state
         self.frameworkFSM.enterInitialState()
 
-        #info needed for trolley metagame
+        # info needed for trolley metagame
         self.startingVotes = {}
         self.metagameRound = -1
-        
 
     def addChildGameFSM(self, gameFSM):
         """ inheritors should call this with their game ClassicFSM """
@@ -160,13 +160,14 @@ class DistributedMinigame(DistributedObject.DistributedObject):
 
     def setUsesSmoothing(self):
         self.usesSmoothing = 1
+
     def setUsesLookAround(self):
         self.usesLookAround = 1
 
     def getTitle(self):
         """
         Return the title of the minigame.
-        Subclasses should redefine. 
+        Subclasses should redefine.
         """
         return TTLocalizer.DefaultMinigameTitle
 
@@ -187,9 +188,10 @@ class DistributedMinigame(DistributedObject.DistributedObject):
                         'you must override getMaxDuration()')
 
     def __createRandomNumGen(self):
-        self.notify.debug("BASE: self.doId=0x%08X" % self.doId)
+        self.notify.debug(f"BASE: self.doId=0x{self.doId:08X}")
         # seed the random number generator with the minigame doId
         self.randomNumGen = RandomNumGen.RandomNumGen(self.doId)
+
         def destroy(self=self):
             self.notify.debug("BASE: destroying random num gen")
             del self.randomNumGen
@@ -198,7 +200,7 @@ class DistributedMinigame(DistributedObject.DistributedObject):
     def generate(self):
         # When this DistributedMinigame is created on the client,
         # the localtoon sends an update to join the minigame
-        self.notify.debug("BASE: generate, %s" % self.getTitle())
+        self.notify.debug(f"BASE: generate, {self.getTitle()}")
         DistributedObject.DistributedObject.generate(self)
 
         self.__createRandomNumGen()
@@ -209,17 +211,18 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         filled in
         """
         DistributedObject.DistributedObject.announceGenerate(self)
-        
-        if not self.hasLocalToon: return
+
+        if not self.hasLocalToon:
+            return
         self.notify.debug("BASE: handleAnnounceGenerate: send setAvatarJoined")
 
         # every once in a while, do an explicit test of the connection
         # breaking just before we send the join msg
         # (at this point, we haven't gotten around to starting the
         # random-abort/disconnect/etc. doLaters)
-        if base.randomMinigameNetworkPlugPull and random.random() < (1./25):
-            print ('*** DOING RANDOM MINIGAME NETWORK-PLUG-PULL '
-                   'BEFORE SENDING setAvatarJoined ***')
+        if base.randomMinigameNetworkPlugPull and random.random() < (1. / 25):
+            print('*** DOING RANDOM MINIGAME NETWORK-PLUG-PULL '
+                  'BEFORE SENDING setAvatarJoined ***')
             base.cr.pullNetworkPlug()
 
         # Update the minigame AI to join our local toon doId
@@ -230,9 +233,9 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         self.normalExit = 1
 
         count = self.modelCount
-        loader.beginBulkLoad("minigame",
-                             (TTLocalizer.HeadingToMinigameTitle % self.getTitle()), count,
-                             1, TTLocalizer.TIP_MINIGAME)
+        loader.beginBulkLoad(
+            "minigame", (TTLocalizer.HeadingToMinigameTitle %
+                         self.getTitle()), count, 1, TTLocalizer.TIP_MINIGAME)
         self.load()
         loader.endBulkLoad("minigame")
 
@@ -247,12 +250,12 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         self.onstage()
 
         def cleanup(self=self):
-            self.notify.debug("BASE: cleanup: normalExit=%s" % self.normalExit)
+            self.notify.debug(f"BASE: cleanup: normalExit={self.normalExit}")
 
             self.offstage()
             # make sure we clear the screen
             base.cr.renderFrame()
-            
+
             # If we didn't abort, tell the AI we are exiting
             if self.normalExit:
                 self.sendUpdate("setAvatarExited", [])
@@ -288,7 +291,8 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         if self.cr.playGame.hood:
             # hood can become None when a trialer clicks subscribe now while playing
             # in a minigame
-            hoodMinigameState = self.cr.playGame.hood.fsm.getStateNamed("minigame")
+            hoodMinigameState = self.cr.playGame.hood.fsm.getStateNamed(
+                "minigame")
             hoodMinigameState.removeChild(self.frameworkFSM)
         self.waitingStartLabel.destroy()
         del self.waitingStartLabel
@@ -310,7 +314,8 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         def calcMaxDuration(self=self):
             # try to make sure we cover the entire time range,
             # even if we overestimate
-            return (self.getMaxDuration() + MinigameGlobals.rulesDuration) * 1.1
+            return (self.getMaxDuration() +
+                    MinigameGlobals.rulesDuration) * 1.1
 
         # if we've simulated a network-plug-pull, don't bother setting
         # up any of these tests
@@ -318,8 +323,10 @@ class DistributedMinigame(DistributedObject.DistributedObject):
             if base.randomMinigameAbort:
                 maxDuration = calcMaxDuration()
                 self.randomAbortDelay = random.random() * maxDuration
-                taskMgr.doMethodLater(self.randomAbortDelay, self.doRandomAbort,
-                                      self.uniqueName('random-abort'))
+                taskMgr.doMethodLater(
+                    self.randomAbortDelay,
+                    self.doRandomAbort,
+                    self.uniqueName('random-abort'))
 
             if base.randomMinigameDisconnect:
                 maxDuration = calcMaxDuration()
@@ -327,7 +334,7 @@ class DistributedMinigame(DistributedObject.DistributedObject):
                 taskMgr.doMethodLater(self.randomDisconnectDelay,
                                       self.doRandomDisconnect,
                                       self.uniqueName('random-disconnect'))
-                
+
             if base.randomMinigameNetworkPlugPull:
                 maxDuration = calcMaxDuration()
                 self.randomNetPlugPullDelay = random.random() * maxDuration
@@ -406,7 +413,7 @@ class DistributedMinigame(DistributedObject.DistributedObject):
                 (self.localAvId, self.avIdList))
                 """
 
-        self.notify.info("BASE: setParticipants: %s" % self.avIdList)
+        self.notify.info(f"BASE: setParticipants: {self.avIdList}")
 
         # build the list of remote avatars
         self.remoteAvIdList = []
@@ -419,8 +426,9 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         """
         called by the AI; trolleyZone is used to determine game difficulty
         """
-        if not self.hasLocalToon: return
-        self.notify.debug("BASE: setTrolleyZone: %s" % trolleyZone)
+        if not self.hasLocalToon:
+            return
+        self.notify.debug(f"BASE: setTrolleyZone: {trolleyZone}")
         self.trolleyZone = trolleyZone
 
     def setDifficultyOverrides(self, difficultyOverride, trolleyZoneOverride):
@@ -428,7 +436,8 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         called by the AI; these values (if they're set) override
         the difficulty setting and the safezone ID
         """
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         if difficultyOverride != MinigameGlobals.NoDifficultyOverride:
             # to ensure that the AI and the clients have the same
             # difficulty override, it is sent as an integer
@@ -445,12 +454,13 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         If this func returns non-zero, it is not safe to access the toons;
           in this case, do nothing and wait for server to abort the game
         """
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         self.notify.debug("BASE: setGameReady: "
                           "Ready for game with avatars: %s" % self.avIdList)
 
-        self.notify.debug("  safezone: %s" % self.getSafezoneId())
-        self.notify.debug("difficulty: %s" % self.getDifficulty())
+        self.notify.debug(f"  safezone: {self.getSafezoneId()}")
+        self.notify.debug(f"difficulty: {self.getDifficulty()}")
 
         self.__serverFinished = 0
 
@@ -474,6 +484,7 @@ class DistributedMinigame(DistributedObject.DistributedObject):
             # Add an extra arg so we know which one
             event = avatar.uniqueName("disable")
             self.acceptOnce(event, self.handleDisabledAvatar, [avId])
+
             def ignoreToonDisable(self=self, event=event):
                 self.ignore(event)
             self.cleanupActions.append(ignoreToonDisable)
@@ -513,11 +524,12 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         Ready usually means they have read the rules
         Inheritors should call this plus the code to start the game
         """
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         self.notify.debug("BASE: setGameStart: Starting game")
 
         self.gameStartTime = \
-                    globalClockDelta.networkToLocalTime(timestamp)
+            globalClockDelta.networkToLocalTime(timestamp)
 
         # Enter the game state machine
         self.frameworkFSM.request("frameworkGame")
@@ -530,7 +542,8 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         that they are ready to exit, since the minigame object is probably
         already deleted on the AI.
         """
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         self.notify.warning("BASE: setGameAbort: Aborting game")
         self.normalExit = 0
         self.frameworkFSM.request("frameworkCleanup")
@@ -540,7 +553,8 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         Called by the subclass to indicate to the framework ClassicFSM
         that the game is over.
         """
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         self.notify.debug("BASE: gameOver")
         self.frameworkFSM.request("frameworkWaitServerFinish")
 
@@ -607,7 +621,7 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         # tune emote access
         self.setEmotes()
         self.cleanupActions.append(self.unsetEmotes)
-        
+
     def exitFrameworkInit(self):
         pass
 
@@ -635,7 +649,7 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         # DEBUG: instantly press the play button on the rules panel
         if 0:
             messenger.send(self.rulesDoneEvent)
-        
+
     def exitFrameworkRules(self):
         # Hide the rules
         self.ignore(self.rulesDoneEvent)
@@ -689,10 +703,11 @@ class DistributedMinigame(DistributedObject.DistributedObject):
         to exit upon receiving this message.
         """
         print("setGameExit")
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         self.notify.debug("BASE: setGameExit: now safe to exit game")
         if (self.frameworkFSM.getCurrentState().getName() !=
-            'frameworkWaitServerFinish'):
+                'frameworkWaitServerFinish'):
             print("not waiting")
             self.__serverFinished = 1
         else:
@@ -793,24 +808,28 @@ class DistributedMinigame(DistributedObject.DistributedObject):
 
     def setStartingVotes(self, startingVotesArray):
         if not len(startingVotesArray) == len(self.avIdList):
-            self.notify.error('length does not match, startingVotes=%s, avIdList=%s' %
-                              (startingVotesArray, self.avIdList))
+            self.notify.error(
+                'length does not match, startingVotes=%s, avIdList=%s' %
+                (startingVotesArray, self.avIdList))
             return
-        
-        for index  in range(len( self.avIdList)):
+
+        for index in range(len(self.avIdList)):
             avId = self.avIdList[index]
             self.startingVotes[avId] = startingVotesArray[index]
 
-        self.notify.debug('starting votes = %s' % self.startingVotes)
+        self.notify.debug(f'starting votes = {self.startingVotes}')
 
     def setMetagameRound(self, metagameRound):
         self.metagameRound = metagameRound
 
     def setAvatarReady(self):
         messenger.send('disableSkipMinigame')
-    
+
     def setSkipAmount(self, amount):
-        messenger.send('minigameSkipAmountChange', [amount, len(self.avIdList)])
-    
+        messenger.send(
+            'minigameSkipAmountChange', [
+                amount, len(
+                    self.avIdList)])
+
     def requestSkip(self):
         self.sendUpdate('requestSkip')

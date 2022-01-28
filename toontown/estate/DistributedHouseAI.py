@@ -83,15 +83,13 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         self.interiorManager = None
         self.mailbox = None
 
-
-
     def delete(self):
         self.notify.debug("delete")
         self.ignoreAll()
         try:
             self.House_deleted
             self.notify.debug("house already deleted")
-        except:
+        except BaseException:
             self.notify.debug("completing delete")
             self.House_deleted = 1
             if hasattr(self, 'houseNode'):
@@ -108,7 +106,7 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
                 del self.door
                 self.insideDoor.requestDelete()
                 del self.insideDoor
-                #if self.garden:
+                # if self.garden:
                 #    self.garden.requestDelete()
                 #    del self.garden
                 if self.cannon:
@@ -134,10 +132,13 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         # for the house.
         self.notify.debug("setupEnvirons")
 
-        if self.ownerId and len(self.interiorWallpaper) == 0 and len(self.interiorWindows) == 0:
+        if self.ownerId and len(
+                self.interiorWallpaper) == 0 and len(
+                self.interiorWindows) == 0:
             # This is a newly-occupied house.  We should set up initial
             # furniture for it.
-            self.notify.debug("Resetting furniture for now-occupied house %s." % (self.doId))
+            self.notify.debug(
+                f"Resetting furniture for now-occupied house {self.doId}.")
             self.setInitialFurniture()
 
         # Toon interior:
@@ -145,14 +146,16 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
 
         # Outside mailbox (if we have one)
         if self.ownerId:
-            self.mailbox = DistributedMailboxAI.DistributedMailboxAI(self.air, self)
+            self.mailbox = DistributedMailboxAI.DistributedMailboxAI(
+                self.air, self)
             self.mailbox.generateWithRequired(self.zoneId)
 
         # Outside door:
         self.door = DistributedHouseDoorAI.DistributedHouseDoorAI(
             self.air, self.doId, DoorTypes.EXT_STANDARD)
 
-        # Inside door of the same door (different zone, and different distributed object):
+        # Inside door of the same door (different zone, and different
+        # distributed object):
         self.insideDoor = DistributedHouseDoorAI.DistributedHouseDoorAI(
             self.air, self.doId, DoorTypes.INT_STANDARD)
 
@@ -174,7 +177,7 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
 
         # create a cannon
 
-        if self.interior != None:
+        if self.interior is not None:
             self.interior.requestDelete()
             self.interior = None
 
@@ -189,27 +192,26 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         # It's only necessary because some players on the test server
         # started playing before we had a phone as one of the
         # furniture items.
-        #if self.ownerId != 0 and not self.__hasPhone():
-         #   self.notify.info("Creating default phone for %s." % (self.ownerId))
-          #  item = CatalogFurnitureItem.CatalogFurnitureItem(1399, posHpr = (-12, 3, 0.025, 180, 0, 0))
-           # self.interiorItems.append(item)
-            #self.d_setInteriorItems(self.interiorItems)
+        # if self.ownerId != 0 and not self.__hasPhone():
+        #   self.notify.info("Creating default phone for %s." % (self.ownerId))
+        #  item = CatalogFurnitureItem.CatalogFurnitureItem(1399, posHpr = (-12, 3, 0.025, 180, 0, 0))
+        # self.interiorItems.append(item)
+        # self.d_setInteriorItems(self.interiorItems)
 
         self.resetFurniture()
 
-        #if simbase.wantPets:
-            #if 0:#__dev__:
-                #pt = ProfileTimer()
-                #pt.init('house model load')
-                #pt.on()
+        # if simbase.wantPets:
+        # if 0:#__dev__:
+        #pt = ProfileTimer()
+        #pt.init('house model load')
+        # pt.on()
 
-            # add ourselves to the estate model
+        # add ourselves to the estate model
 
-
-            #if 0:#__dev__:
-               # pt.mark('loaded house model')
-                #pt.off()
-                #pt.printTo()
+        # if 0:#__dev__:
+        # pt.mark('loaded house model')
+        # pt.off()
+        # pt.printTo()
         self.d_setHouseReady()
 
     def __hasPhone(self):
@@ -227,12 +229,13 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         # Deletes all of the furniture, wallpaper, and window items, and
         # recreates it all.
 
-        if self.interiorManager != None:
+        if self.interiorManager is not None:
             self.interiorManager.requestDelete()
             self.interiorManager = None
 
         # Create a furniture manager for the interior furniture.
-        self.interiorManager = DistributedFurnitureManagerAI.DistributedFurnitureManagerAI(self.air, self, 1)
+        self.interiorManager = DistributedFurnitureManagerAI.DistributedFurnitureManagerAI(
+            self.air, self, 1)
         self.interiorManager.generateWithRequired(self.interiorZoneId)
 
         # Create all of the furniture items inside the house.
@@ -256,49 +259,48 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
 
         trunkItem = 4000
         wardrobeItem = 500
-        
 
         InitialFurnitureA = CatalogItemList.CatalogItemList([
-            CatalogFurnitureItem.CatalogFurnitureItem(200, posHpr = (-23.618, 16.1823, 0.025, 90, 0, 0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(wardrobeItem, posHpr = (-22.5835, 21.8784, 0.025, 90, 0, 0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(trunkItem, posHpr = (-18.5835, 21.8784, 0.025, 90, 0, 0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(1300, posHpr = (-21.4932, 5.76027, 0.025, 120, 0, 0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(400, posHpr = (-18.6, -12.0, 0.025, 90.0, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr = (-18.9, -20.5, 0.025, 90.0, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr = (-18.9, -3.5, 0.025, 90.0, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(700, posHpr = (-3.34375, 22.3644, 0.025, -90, 0, 0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(710, posHpr = (0, -23, 0.025, 180, 0, 0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(700, posHpr = (4.44649, -0.463924, 0.025, 0, 0, 0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(1399, posHpr = (-10.1, 2.0, 0.1, 0, 0, 0)),
-            ])
+            CatalogFurnitureItem.CatalogFurnitureItem(200, posHpr=(-23.618, 16.1823, 0.025, 90, 0, 0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(wardrobeItem, posHpr=(-22.5835, 21.8784, 0.025, 90, 0, 0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(trunkItem, posHpr=(-18.5835, 21.8784, 0.025, 90, 0, 0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(1300, posHpr=(-21.4932, 5.76027, 0.025, 120, 0, 0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(400, posHpr=(-18.6, -12.0, 0.025, 90.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr=(-18.9, -20.5, 0.025, 90.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr=(-18.9, -3.5, 0.025, 90.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(700, posHpr=(-3.34375, 22.3644, 0.025, -90, 0, 0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(710, posHpr=(0, -23, 0.025, 180, 0, 0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(700, posHpr=(4.44649, -0.463924, 0.025, 0, 0, 0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(1399, posHpr=(-10.1, 2.0, 0.1, 0, 0, 0)),
+        ])
 
         InitialFurnitureB = CatalogItemList.CatalogItemList([
-            CatalogFurnitureItem.CatalogFurnitureItem(200, posHpr = (-3.2, 17.0, 0.025, -0.2, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(400, posHpr = (-18.6, -7.1, 0.025, 90.0, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(700, posHpr = (3.6, -23.7, 0.025, 179.9, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(710, posHpr = (-16.6, -19.1, 0.025, 90.0, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(700, posHpr = (-1.8, -23.6, 0.025, 179.9, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(wardrobeItem, posHpr = (-20.1, 4.4, 0.025, -180.0, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(trunkItem, posHpr = (-15, 4.4, 0.025, -180.0, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr = (-1.1, 22.4, 0.025, -90.2, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(1300, posHpr = (-21.7, 19.5, 0.025, 90.0, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr = (4.0, 1.9, 0.025, -0.1, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(1399, posHpr = (-10.1, 2.0, 0.1, 0, 0, 0)),
-            ])
+            CatalogFurnitureItem.CatalogFurnitureItem(200, posHpr=(-3.2, 17.0, 0.025, -0.2, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(400, posHpr=(-18.6, -7.1, 0.025, 90.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(700, posHpr=(3.6, -23.7, 0.025, 179.9, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(710, posHpr=(-16.6, -19.1, 0.025, 90.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(700, posHpr=(-1.8, -23.6, 0.025, 179.9, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(wardrobeItem, posHpr=(-20.1, 4.4, 0.025, -180.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(trunkItem, posHpr=(-15, 4.4, 0.025, -180.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr=(-1.1, 22.4, 0.025, -90.2, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(1300, posHpr=(-21.7, 19.5, 0.025, 90.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr=(4.0, 1.9, 0.025, -0.1, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(1399, posHpr=(-10.1, 2.0, 0.1, 0, 0, 0)),
+        ])
 
         InitialFurnitureC = CatalogItemList.CatalogItemList([
-            CatalogFurnitureItem.CatalogFurnitureItem(200, posHpr = (-22.1, 6.5, 0.025, 90.0, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(400, posHpr = (-0.2, -25.7, 0.025, 179.9, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(710, posHpr = (-16.6, -12.2, 0.025, 90.0, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(wardrobeItem, posHpr = (-4.7, 24.5, 0.025, 0.0, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(trunkItem, posHpr = (-10.7, 24.5, 0.025, 0.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(200, posHpr=(-22.1, 6.5, 0.025, 90.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(400, posHpr=(-0.2, -25.7, 0.025, 179.9, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(710, posHpr=(-16.6, -12.2, 0.025, 90.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(wardrobeItem, posHpr=(-4.7, 24.5, 0.025, 0.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(trunkItem, posHpr=(-10.7, 24.5, 0.025, 0.0, 0.0, 0.0)),
 
-            CatalogFurnitureItem.CatalogFurnitureItem(1300, posHpr = (-20.5, 22.3, 0.025, 45.0, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr = (-12.0, 25.9, 0.025, 0.0, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(700, posHpr = (9.4, -8.6, 0.025, 67.5, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(700, posHpr = (9.7, -15.1, 0.025, 112.5, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr = (-14.7, 1.88, 0.025, 0.0, 0.0, 0.0)),
-            CatalogFurnitureItem.CatalogFurnitureItem(1399, posHpr = (-10.1, 2.0, 0.1, 0, 0, 0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(1300, posHpr=(-20.5, 22.3, 0.025, 45.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr=(-12.0, 25.9, 0.025, 0.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(700, posHpr=(9.4, -8.6, 0.025, 67.5, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(700, posHpr=(9.7, -15.1, 0.025, 112.5, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(100, posHpr=(-14.7, 1.88, 0.025, 0.0, 0.0, 0.0)),
+            CatalogFurnitureItem.CatalogFurnitureItem(1399, posHpr=(-10.1, 2.0, 0.1, 0, 0, 0)),
         ])
 
         self.b_setDeletedItems(CatalogItemList.CatalogItemList())
@@ -313,24 +315,27 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         # both rooms.
         wallpaper = [
             # Wallpaper
-            random.choice(CatalogWallpaperItem.getWallpaperRange(1000,1299)),
+            random.choice(CatalogWallpaperItem.getWallpaperRange(1000, 1299)),
             # Moulding
             random.choice(CatalogMouldingItem.getAllMouldings(1000, 1010)),
             # Flooring
             random.choice(CatalogFlooringItem.getAllFloorings(1000, 1010)),
             # Wainscoting
-            random.choice(CatalogWainscotingItem.getAllWainscotings(1000, 1010)),
-            ]
+            random.choice(
+                CatalogWainscotingItem.getAllWainscotings(
+                    1000, 1010)),
+        ]
 
-        self.b_setInteriorWallpaper(CatalogItemList.CatalogItemList(wallpaper + wallpaper))
+        self.b_setInteriorWallpaper(
+            CatalogItemList.CatalogItemList(
+                wallpaper + wallpaper))
         self.b_setAtticWindows(CatalogItemList.CatalogItemList())
 
         # Everyone starts out with a simple garden view, twice.
         self.b_setInteriorWindows(CatalogItemList.CatalogItemList([
-            CatalogWindowItem.CatalogWindowItem(20, placement = 2),
-            CatalogWindowItem.CatalogWindowItem(20, placement = 4),
-            ]))
-
+            CatalogWindowItem.CatalogWindowItem(20, placement=2),
+            CatalogWindowItem.CatalogWindowItem(20, placement=4),
+        ]))
 
     def b_setHouseType(self, houseType):
         self.setHouseType(houseType)
@@ -340,7 +345,7 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         self.sendUpdate("setHouseType", [houseType])
 
     def setHouseType(self, houseType):
-        self.notify.debug("setHouseType(%s): %s" % (houseType, self.doId))
+        self.notify.debug(f"setHouseType({houseType}): {self.doId}")
         self.houseType = houseType
 
     def getHouseType(self):
@@ -348,18 +353,18 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         return self.houseType
 
     def setGardenPos(self, gardenPosInd):
-        self.notify.debug("setGardenPos(%s): %s" % (gardenPosInd, self.doId))
+        self.notify.debug(f"setGardenPos({gardenPosInd}): {self.doId}")
         self.gardenPosInd = gardenPosInd
 
         gardenPos = HouseGlobals.gardenDrops[self.gardenPosInd]
-        self.notify.debug("(%s) self.gardenPos = %s" % (self.doId, gardenPos))
+        self.notify.debug(f"({self.doId}) self.gardenPos = {gardenPos}")
 
     def getGardenPos(self):
         self.notify.debug('getGardenPos')
         return self.gardenPosInd
 
     def setHousePos(self, housePosInd):
-        self.notify.debug("setHousePos(%s): %s" % (housePosInd, self.doId))
+        self.notify.debug(f"setHousePos({housePosInd}): {self.doId}")
         self.housePosInd = housePosInd
 
     def getHousePos(self):
@@ -367,7 +372,7 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         return self.housePosInd
 
     def b_setAvatarId(self, avId):
-        self.notify.debug("b_setAvatarId(%s) = %s" % (self.doId, avId))
+        self.notify.debug(f"b_setAvatarId({self.doId}) = {avId}")
         self.setAvatarId(avId)
         self.d_setAvatarId(avId)
 
@@ -375,17 +380,17 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         self.sendUpdate("setAvatarId", [avId])
 
     def setAvatarId(self, avId):
-        self.notify.debug("setAvatarId(%s) = %s" % (self.doId, avId))
+        self.notify.debug(f"setAvatarId({self.doId}) = {avId}")
         self.ownerId = avId
         # set the avatars houseId also
         try:
             av = self.air.doId2do[avId]
             av.b_setHouseId(self.doId)
-        except:
-            self.notify.debug("unable to set av(%s)'s houseId" % avId)
+        except BaseException:
+            self.notify.debug(f"unable to set av({avId})'s houseId")
 
     def getAvatarId(self):
-        self.notify.debug("getAvatarId(%s)" % (self.doId))
+        self.notify.debug(f"getAvatarId({self.doId})")
         return self.ownerId
 
     def b_setName(self, name):
@@ -419,13 +424,17 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         self.d_setAtticItems(items)
 
     def d_setAtticItems(self, items):
-        self.sendUpdate("setAtticItems", [items.getBlob(store = CatalogItem.Customization)])
+        self.sendUpdate(
+            "setAtticItems", [
+                items.getBlob(
+                    store=CatalogItem.Customization)])
 
     def setAtticItems(self, items):
-        self.atticItems = CatalogItemList.CatalogItemList(items, store = CatalogItem.Customization)
+        self.atticItems = CatalogItemList.CatalogItemList(
+            items, store=CatalogItem.Customization)
 
     def getAtticItems(self):
-        return self.atticItems.getBlob(store = CatalogItem.Customization)
+        return self.atticItems.getBlob(store=CatalogItem.Customization)
 
     def addAtticItem(self, item):
         # Called when a new attic item has been purchased, this
@@ -450,23 +459,26 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         # attic, this searches for and removes the previous bank or
         # closet.  It actually removes any items found whose
         # item.getFlags() member matches the bits in flag.
-        self.notify.info("Removing old item matching %x from house %s" % (flag, self.doId))
+        self.notify.info(
+            f"Removing old item matching {flag:x} from house {self.doId}")
 
-        newAtticItems = CatalogItemList.CatalogItemList([], store = CatalogItem.Customization)
+        newAtticItems = CatalogItemList.CatalogItemList(
+            [], store=CatalogItem.Customization)
         for item in self.atticItems:
             if (item.getFlags() & flag) == 0:
                 # This item doesn't match; preserve it.
                 newAtticItems.append(item)
             else:
-                self.notify.info("removing %s from attic" % (item))
+                self.notify.info(f"removing {item} from attic")
 
-        newInteriorItems = CatalogItemList.CatalogItemList([], store = CatalogItem.Location | CatalogItem.Customization)
+        newInteriorItems = CatalogItemList.CatalogItemList(
+            [], store=CatalogItem.Location | CatalogItem.Customization)
         for item in self.interiorItems:
             if (item.getFlags() & flag) == 0:
                 # This item doesn't match; preserve it.
                 newInteriorItems.append(item)
             else:
-                self.notify.info("removing %s from interior" % (item))
+                self.notify.info(f"removing {item} from interior")
 
         self.b_setAtticItems(newAtticItems)
         self.b_setInteriorItems(newInteriorItems)
@@ -490,17 +502,22 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         self.d_setInteriorItems(items)
 
     def d_setInteriorItems(self, items):
-        self.sendUpdate("setInteriorItems", [items.getBlob(store = CatalogItem.Location | CatalogItem.Customization)])
+        self.sendUpdate(
+            "setInteriorItems", [
+                items.getBlob(
+                    store=CatalogItem.Location | CatalogItem.Customization)])
 
     def setInteriorItems(self, items):
         # This should only be called once, to fill the data from the
         # database.  Subsequently, we should modify the list directly,
         # so we don't break the connection between items on the list
         # and manifested DistributedFurnitureItems.
-        self.interiorItems = CatalogItemList.CatalogItemList(items, store = CatalogItem.Location | CatalogItem.Customization)
+        self.interiorItems = CatalogItemList.CatalogItemList(
+            items, store=CatalogItem.Location | CatalogItem.Customization)
 
     def getInteriorItems(self):
-        return self.interiorItems.getBlob(store = CatalogItem.Location | CatalogItem.Customization)
+        return self.interiorItems.getBlob(
+            store=CatalogItem.Location | CatalogItem.Customization)
 
     def addWallpaper(self, item):
         # Called when a new wallpaper item has been purchased.
@@ -518,40 +535,52 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         self.d_setAtticWallpaper(items)
 
     def d_setAtticWallpaper(self, items):
-        self.sendUpdate("setAtticWallpaper", [items.getBlob(store = CatalogItem.Customization)])
+        self.sendUpdate(
+            "setAtticWallpaper", [
+                items.getBlob(
+                    store=CatalogItem.Customization)])
         if self.interiorManager:
             self.interiorManager.d_setAtticWallpaper(items)
 
     def setAtticWallpaper(self, items):
-        self.atticWallpaper = CatalogItemList.CatalogItemList(items, store = CatalogItem.Customization)
+        self.atticWallpaper = CatalogItemList.CatalogItemList(
+            items, store=CatalogItem.Customization)
 
     def getAtticWallpaper(self):
-        return self.atticWallpaper.getBlob(store = CatalogItem.Customization)
+        return self.atticWallpaper.getBlob(store=CatalogItem.Customization)
 
     def b_setInteriorWallpaper(self, items):
         self.setInteriorWallpaper(items)
         self.d_setInteriorWallpaper(items)
 
     def d_setInteriorWallpaper(self, items):
-        self.sendUpdate("setInteriorWallpaper", [items.getBlob(store = CatalogItem.Customization)])
+        self.sendUpdate(
+            "setInteriorWallpaper", [
+                items.getBlob(
+                    store=CatalogItem.Customization)])
         if self.interior:
             self.interior.b_setWallpaper(items)
 
     def setInteriorWallpaper(self, items):
-        self.interiorWallpaper = CatalogItemList.CatalogItemList(items, store = CatalogItem.Customization)
+        self.interiorWallpaper = CatalogItemList.CatalogItemList(
+            items, store=CatalogItem.Customization)
 
     def getInteriorWallpaper(self):
-        return self.interiorWallpaper.getBlob(store = CatalogItem.Customization)
+        return self.interiorWallpaper.getBlob(store=CatalogItem.Customization)
 
     def b_setDeletedItems(self, items):
         self.setDeletedItems(items)
         self.d_setDeletedItems(items)
 
     def d_setDeletedItems(self, items):
-        self.sendUpdate("setDeletedItems", [items.getBlob(store = CatalogItem.Customization | CatalogItem.DeliveryDate)])
+        self.sendUpdate(
+            "setDeletedItems", [
+                items.getBlob(
+                    store=CatalogItem.Customization | CatalogItem.DeliveryDate)])
 
     def setDeletedItems(self, items):
-        self.deletedItems = CatalogItemList.CatalogItemList(items, store = CatalogItem.Customization | CatalogItem.DeliveryDate)
+        self.deletedItems = CatalogItemList.CatalogItemList(
+            items, store=CatalogItem.Customization | CatalogItem.DeliveryDate)
 
         if self.air.doLiveUpdates:
             deleted = self.reconsiderDeletedItems()
@@ -565,7 +594,8 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
                     self.interiorManager.d_setDeletedItems(self.deletedItems)
 
     def getDeletedItems(self):
-        return self.deletedItems.getBlob(store = CatalogItem.Customization | CatalogItem.DeliveryDate)
+        return self.deletedItems.getBlob(
+            store=CatalogItem.Customization | CatalogItem.DeliveryDate)
 
     def reconsiderDeletedItems(self):
         # Removes items from the deletedItems list whose expiration
@@ -576,7 +606,8 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
 
         deleted, remaining = self.deletedItems.extractDeliveryItems(now)
         if deleted:
-            self.notify.info("Aging out deleted items for %s, eliminated %s" % (self.doId, deleted))
+            self.notify.info(
+                f"Aging out deleted items for {self.doId}, eliminated {deleted}")
 
         self.deletedItems = remaining
 
@@ -599,16 +630,20 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         # items list is automatically updated to the database if
         # necessary.
 
-        numAtticItems = len(self.atticItems) + len(self.atticWallpaper) + len(self.atticWindows)
+        numAtticItems = len(self.atticItems) + \
+            len(self.atticWallpaper) + len(self.atticWindows)
         numHouseItems = numAtticItems + len(self.interiorItems)
 
         needHouseItems = numHouseItems + len(self.deletedItems) + count
         maxHouseItems = ToontownGlobals.MaxHouseItems + ToontownGlobals.ExtraDeletedItems
         eliminateCount = max(needHouseItems - maxHouseItems, 0)
 
-        extracted, remaining = self.deletedItems.extractOldestItems(eliminateCount)
+        extracted, remaining = self.deletedItems.extractOldestItems(
+            eliminateCount)
         if extracted:
-            self.notify.info("Making room for %s items for %s, eliminated %s" % (eliminateCount, self.ownerId, extracted))
+            self.notify.info(
+                "Making room for %s items for %s, eliminated %s" %
+                (eliminateCount, self.ownerId, extracted))
             self.deletedItems = remaining
             self.d_setDeletedItems(self.deletedItems)
 
@@ -629,7 +664,8 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
             return
 
         if av.getGardenStarted():
-            self.notify.warning('Avatar %s tried to start their garden twice!' % self.getAvatarId())
+            self.notify.warning(
+                f'Avatar {self.getAvatarId()} tried to start their garden twice!')
             return
 
         # Set the avatar's garden to started:
@@ -666,7 +702,8 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
                 self.gardenManager = GardenManagerAI(self.air, self.estate)
                 self.gardenManager.loadGarden(self.getAvatarId())
 
-        self.air.dbInterface.queryObject(self.air.dbId, self.getAvatarId(), __gotOwner)
+        self.air.dbInterface.queryObject(
+            self.air.dbId, self.getAvatarId(), __gotOwner)
 
     def addWindow(self, item):
         # Called when a new window item has been purchased, this
@@ -683,36 +720,45 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         self.d_setAtticWindows(items)
 
     def d_setAtticWindows(self, items):
-        self.sendUpdate("setAtticWindows", [items.getBlob(store = CatalogItem.Customization)])
+        self.sendUpdate(
+            "setAtticWindows", [
+                items.getBlob(
+                    store=CatalogItem.Customization)])
         if self.interiorManager:
             self.interiorManager.d_setAtticWindows(items)
 
     def setAtticWindows(self, items):
-        self.atticWindows = CatalogItemList.CatalogItemList(items, store = CatalogItem.Customization)
+        self.atticWindows = CatalogItemList.CatalogItemList(
+            items, store=CatalogItem.Customization)
 
     def getAtticWindows(self):
-        return self.atticWindows.getBlob(store = CatalogItem.Customization)
+        return self.atticWindows.getBlob(store=CatalogItem.Customization)
 
     def b_setInteriorWindows(self, items):
         self.setInteriorWindows(items)
         self.d_setInteriorWindows(items)
 
     def d_setInteriorWindows(self, items):
-        self.sendUpdate("setInteriorWindows", [items.getBlob(store = CatalogItem.Customization | CatalogItem.WindowPlacement)])
+        self.sendUpdate(
+            "setInteriorWindows", [
+                items.getBlob(
+                    store=CatalogItem.Customization | CatalogItem.WindowPlacement)])
         if self.interior:
             self.interior.b_setWindows(items)
 
     def setInteriorWindows(self, items):
-        self.interiorWindows = CatalogItemList.CatalogItemList(items, store = CatalogItem.Customization | CatalogItem.WindowPlacement)
+        self.interiorWindows = CatalogItemList.CatalogItemList(
+            items, store=CatalogItem.Customization | CatalogItem.WindowPlacement)
 
     def getInteriorWindows(self):
-        return self.interiorWindows.getBlob(store = CatalogItem.Customization | CatalogItem.WindowPlacement)
+        return self.interiorWindows.getBlob(
+            store=CatalogItem.Customization | CatalogItem.WindowPlacement)
 
     def checkOwner(self):
         # Checks whether the owner still exists, and checks whether
         # he's got stuff waiting in his mailbox.
 
-        self.notify.debug("__checkOwner: %s" % (self.doId))
+        self.notify.debug(f"__checkOwner: {self.doId}")
 
         if self.ownerId == 0:
             # No owner.  Duh.
@@ -723,8 +769,14 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         if owner and hasattr(owner, "onOrder"):
             # The avatar is in the live database.
             hp = owner.getMaxHp()
-            #self.b_setCannonEnabled(1)
-            self.__checkMailbox(owner.onOrder, owner.mailboxContents, 1, owner.awardMailboxContents, owner.numMailItems, owner.getNumInvitesToShowInMailbox())
+            # self.b_setCannonEnabled(1)
+            self.__checkMailbox(
+                owner.onOrder,
+                owner.mailboxContents,
+                1,
+                owner.awardMailboxContents,
+                owner.numMailItems,
+                owner.getNumInvitesToShowInMailbox())
 
         else:
             # We have to go query the database for the avatar's info.
@@ -734,12 +786,16 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
             db = DatabaseObject.DatabaseObject(self.air, self.ownerId)
             db.doneEvent = gotAvEvent
 
-            db.getFields(['setDeliverySchedule', 'setMailboxContents', 'setMaxHp', 'setAwardMailboxContents'])
+            db.getFields(['setDeliverySchedule', 'setMailboxContents',
+                         'setMaxHp', 'setAwardMailboxContents'])
 
     def __gotOwnerAv(self, db, retcode):
-        assert(self.notify.debug("__gotOwnerAv(%s, %s): %s" % (list(db.values.keys()), retcode, self.doId)))
+        assert(
+            self.notify.debug(
+                f"__gotOwnerAv({list(db.values.keys())}, {retcode}): {self.doId}"))
         if retcode != 0:
-            self.notify.warning("Avatar %s for house %s does not exist!" % (self.ownerId, self.doId))
+            self.notify.warning(
+                f"Avatar {self.ownerId} for house {self.doId} does not exist!")
             return
 
         # The avatar still exists, so check its properties.
@@ -751,13 +807,15 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         if dg:
             di = PyDatagramIterator(dg)
             blob = di.getString()
-            onOrder = CatalogItemList.CatalogItemList(blob, store = CatalogItem.Customization | CatalogItem.DeliveryDate)
+            onOrder = CatalogItemList.CatalogItemList(
+                blob, store=CatalogItem.Customization | CatalogItem.DeliveryDate)
 
         dg = db.values.get('setMailboxContents')
         if dg:
             di = PyDatagramIterator(dg)
             blob = di.getString()
-            mailboxContents = CatalogItemList.CatalogItemList(blob, store = CatalogItem.Customization)
+            mailboxContents = CatalogItemList.CatalogItemList(
+                blob, store=CatalogItem.Customization)
 
         dg = db.values.get('setMaxHp')
         if dg:
@@ -768,12 +826,20 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         if dg:
             di = PyDatagramIterator(dg)
             blob = di.getString()
-            awardMailboxContents = CatalogItemList.CatalogItemList(blob, store = CatalogItem.Customization)
+            awardMailboxContents = CatalogItemList.CatalogItemList(
+                blob, store=CatalogItem.Customization)
 
-        #self.b_setCannonEnabled(1)
+        # self.b_setCannonEnabled(1)
         self.__checkMailbox(onOrder, mailboxContents, 0, awardMailboxContents)
 
-    def __checkMailbox(self, onOrder, mailboxContents, liveDatabase, awardMailboxContents, numMailItems=0, numPartyInvites=0):
+    def __checkMailbox(
+            self,
+            onOrder,
+            mailboxContents,
+            liveDatabase,
+            awardMailboxContents,
+            numMailItems=0,
+            numPartyInvites=0):
         # We have gotten the above data for the owner of this house.
         # Check whether we should raise the flag because he has
         # something in his mailbox.
@@ -783,14 +849,16 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
                                   self.doId)))
 
         # Is the mailbox full?
-        if mailboxContents or (numMailItems > 0) or (numPartyInvites > 0) or awardMailboxContents:
-            self.notify.debug("mailbox is full; raising flag: %s" % (self.doId))
+        if mailboxContents or (numMailItems > 0) or (
+                numPartyInvites > 0) or awardMailboxContents:
+            self.notify.debug(
+                f"mailbox is full; raising flag: {self.doId}")
             self.mailbox.b_setFullIndicator(1)
 
         elif onOrder:
             # Maybe we have something coming soon.
             nextTime = onOrder.getNextDeliveryDate()
-            if nextTime != None:
+            if nextTime is not None:
                 duration = nextTime * 60 - time.time()
                 if (duration > 0):
                     if not liveDatabase:
@@ -799,10 +867,13 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
                         # time--but don't bother if the toon was found
                         # in the live database (because in that case,
                         # the DistributedToonAI will raise the flag).
-                        self.notify.debug("expecting delivery in %s, will raise flag later: %s" % (PythonUtil.formatElapsedSeconds(duration), self.doId))
+                        self.notify.debug(
+                            "expecting delivery in %s, will raise flag later: %s" %
+                            (PythonUtil.formatElapsedSeconds(duration), self.doId))
                         self.mailbox.raiseFlagLater(duration)
                 else:
-                    self.notify.debug("delivery has been completed, raising flag: %s" % (self.doId))
+                    self.notify.debug(
+                        f"delivery has been completed, raising flag: {self.doId}")
                     self.mailbox.b_setFullIndicator(1)
 
         # Now tell the client that the house is ready.
@@ -817,13 +888,13 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
 
     def setCannonEnabled(self, index):
         self.cannonEnabled = index
-        if  self.cannonEnabled and not self.cannon:
+        if self.cannonEnabled and not self.cannon:
             # create the cannon now
             posHpr = CannonGlobals.cannonDrops[self.housePosInd]
             estate = simbase.air.doId2do[self.doId]
             targetId = estate.target.doId
-            self.cannon = DistributedCannonAI.DistributedCannonAI(self.air, self.estateId,
-                                                                  targetId, *posHpr)
+            self.cannon = DistributedCannonAI.DistributedCannonAI(
+                self.air, self.estateId, targetId, *posHpr)
             self.cannon.generateWithRequired(self.zoneId)
         elif self.cannon and not self.cannonEnabled:
             # delete the cannon
@@ -835,6 +906,5 @@ class DistributedHouseAI(DistributedObjectAI.DistributedObjectAI):
         return self.cannonEnabled
 
     def d_setHouseReady(self):
-        self.notify.debug("setHouseReady: %s" % (self.doId))
+        self.notify.debug(f"setHouseReady: {self.doId}")
         self.sendUpdate("setHouseReady", [])
-

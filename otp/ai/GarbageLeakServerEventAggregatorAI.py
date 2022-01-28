@@ -1,11 +1,14 @@
 from direct.showbase.DirectObject import DirectObject
 from direct.showbase import GarbageReport
 
+
 class GarbageLeakServerEventAggregatorAI(DirectObject):
     ClientLeakEvent = 'LeakAggregator-ClientGarbageLeakReceived'
+
     def __init__(self, air):
         self.air = air
-        self._eventFreq = ConfigVariableDouble('garbage-leak-server-event-frequency', 60 * 60.).value
+        self._eventFreq = ConfigVariableDouble(
+            'garbage-leak-server-event-frequency', 60 * 60.).value
         self._doLaterName = None
         self._sentLeakDesc2num = {}
         self._curLeakDesc2num = {}
@@ -32,21 +35,26 @@ class GarbageLeakServerEventAggregatorAI(DirectObject):
         self._curClientDesc2num.setdefault(description, 0)
         self._curClientDesc2num[description] += num
         if not self._clientStartFDC:
-            # do an FDC to allow other concurrent client events to make it in, for dev/testing
+            # do an FDC to allow other concurrent client events to make it in,
+            # for dev/testing
             self._clientStartFDC = FrameDelayedCall(
-                uniqueName('%s-startClientSend' % self.__class__.__name__),
+                uniqueName(f'{self.__class__.__name__}-startClientSend'),
                 self._startSendingClientLeaks)
 
     def _startSending(self):
         if not self._doLaterName:
             self._sendLeaks()
-            self._doLaterName = uniqueName('%s-sendGarbageServerEvents' % self.__class__.__name__)
-            self.doMethodLater(self._eventFreq, self._sendLeaks, self._doLaterName)
+            self._doLaterName = uniqueName(
+                f'{self.__class__.__name__}-sendGarbageServerEvents')
+            self.doMethodLater(
+                self._eventFreq,
+                self._sendLeaks,
+                self._doLaterName)
 
     def _stopSending(self):
         self.removeTask(self._doLaterName)
         self._doLaterName = None
-        
+
     def _sendLeaks(self, task=None):
         # only send the number of occurences of each leak that
         # we haven't already sent
@@ -60,7 +68,8 @@ class GarbageLeakServerEventAggregatorAI(DirectObject):
                 else:
                     who = self.air.ourChannel
                     eventName = 'ud-garbage'
-                self.air.writeServerEvent(eventName, who, '%s|%s' % (num, desc))
+                self.air.writeServerEvent(
+                    eventName, who, f'{num}|{desc}')
                 self._sentLeakDesc2num[desc] = curNum
         if task:
             return task.again
@@ -69,13 +78,16 @@ class GarbageLeakServerEventAggregatorAI(DirectObject):
         if not self._doLaterNameClient:
             self._sendClientLeaks()
             self._doLaterNameClient = uniqueName(
-                '%s-sendClientGarbageServerEvents' % self.__class__.__name__)
-            self.doMethodLater(self._eventFreq, self._sendClientLeaks, self._doLaterNameClient)
+                f'{self.__class__.__name__}-sendClientGarbageServerEvents')
+            self.doMethodLater(
+                self._eventFreq,
+                self._sendClientLeaks,
+                self._doLaterNameClient)
 
     def _stopSendingClientLeaks(self):
         self.removeTask(self._doLaterNameClient)
         self._doLaterNameClient = None
-        
+
     def _sendClientLeaks(self, task=None):
         # only send the number of occurences of each leak that
         # we haven't already sent
@@ -83,7 +95,8 @@ class GarbageLeakServerEventAggregatorAI(DirectObject):
             self._sentClientDesc2num.setdefault(desc, 0)
             num = curNum - self._sentClientDesc2num[desc]
             if num > 0:
-                self.air.writeServerEvent('client-garbage', self.air.districtId, '%s|%s' % (num, desc))
+                self.air.writeServerEvent(
+                    'client-garbage', self.air.districtId, f'{num}|{desc}')
                 self._sentClientDesc2num[desc] = curNum
         if task:
             return task.again

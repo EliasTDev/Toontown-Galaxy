@@ -10,6 +10,7 @@ import os
 import subprocess
 import builtins
 
+
 class WebLauncherBase(DirectObject):
 
     """ This class serves as a "launcher" for the games when launched
@@ -18,9 +19,8 @@ class WebLauncherBase(DirectObject):
     presented by the old LauncherBase class, to the extent possible.
     In the new world of the Panda3D runtime, it is no longer necessary
     to explicitly manage downloading and patching; the runtime system
-    in AppRunner will do this now. """    
+    in AppRunner will do this now. """
 
-    
     notify = directNotify.newCategory("WebLauncherBase")
 
     # Used to tell browser panda exit status (0 means everything normal)
@@ -65,7 +65,7 @@ class WebLauncherBase(DirectObject):
             function should invoke any postProcessCallbacks recorded, on
             the appropriate task chain(s), and then mark the phase
             complete and send the phaseComplete event. """
-            
+
             self.__nextCallback(None, 'default')
 
         def __nextCallback(self, currentCallback, currentTaskChain):
@@ -79,15 +79,20 @@ class WebLauncherBase(DirectObject):
                 del self.postProcessCallbacks[0]
                 if taskChain != currentTaskChain:
                     # Switch to the next task chain.
-                    print("switching to %s" % (taskChain))
-                    taskMgr.add(self.__nextCallback, 'phaseCallback-%s' % (self.phase),
-                                taskChain = taskChain, extraArgs = [callback, taskChain])
+                    print(f"switching to {taskChain}")
+                    taskMgr.add(
+                        self.__nextCallback,
+                        f'phaseCallback-{self.phase}',
+                        taskChain=taskChain,
+                        extraArgs=[
+                            callback,
+                            taskChain])
                     return
 
             # No more callbacks.  Send the phaseComplete event.
             self.complete = True
-            messenger.send('phaseComplete-%s' % (self.phase), taskChain = 'default')
-
+            messenger.send(
+                f'phaseComplete-{self.phase}', taskChain='default')
 
     def __init__(self, appRunner):
         self.appRunner = appRunner
@@ -98,7 +103,8 @@ class WebLauncherBase(DirectObject):
         # Get the game info from the web page.
         gameInfoStr = appRunner.getToken('gameInfo')
         if gameInfoStr:
-            self.gameInfo = appRunner.evalScript(gameInfoStr, needsResponse = True)
+            self.gameInfo = appRunner.evalScript(
+                gameInfoStr, needsResponse=True)
         else:
             # No game info available; create a dummy object instead.
             class DummyGameInfo:
@@ -111,7 +117,8 @@ class WebLauncherBase(DirectObject):
         for phase, packageName in self.LauncherPhases:
             self.phasesByPackageName[packageName] = phase
             self.phaseData[phase] = self.PhaseData(phase)
-            self.acceptOnce('phaseComplete-%s' % (phase), self.__gotPhaseComplete)
+            self.acceptOnce(
+                f'phaseComplete-{phase}', self.__gotPhaseComplete)
 
         self.packageInstaller = None
         self.started = False
@@ -123,7 +130,8 @@ class WebLauncherBase(DirectObject):
 
         if self.WIN32:
             # Vista = windows 2.6
-            self.VISTA = (sys.getwindowsversion()[3] == 2 and sys.getwindowsversion()[0] == 6)
+            self.VISTA = (sys.getwindowsversion()[
+                          3] == 2 and sys.getwindowsversion()[0] == 6)
         else:
             # it can't be Vista
             self.VISTA = 0
@@ -134,10 +142,10 @@ class WebLauncherBase(DirectObject):
 
         # Is this the test server?
         self.testServerFlag = self.getTestServerFlag()
-        self.notify.info("isTestServer: %s" % (self.testServerFlag))
-            
+        self.notify.info(f"isTestServer: {self.testServerFlag}")
+
         # Write to the log
-        print("\n\nStarting %s..." % self.GameName)
+        print(f"\n\nStarting {self.GameName}...")
         print(("Current time: " + time.asctime(time.localtime(time.time()))
                + " " + time.tzname[0]))
         print("sys.argv = ", sys.argv)
@@ -149,18 +157,18 @@ class WebLauncherBase(DirectObject):
         # current directory (dxdiag, in particular, insists on this).
         cwd = os.getcwd()
         os.chdir(appRunner.logDirectory.toOsSpecific())
-        self.notify.info('chdir: %s' % (appRunner.logDirectory.toOsSpecific()))
+        self.notify.info(f'chdir: {appRunner.logDirectory.toOsSpecific()}')
 
         hwprofile = 'hwprofile.log'
         command = None
         if sys.platform == "darwin":
-            command = '/usr/sbin/system_profiler >%s' % (hwprofile)
+            command = f'/usr/sbin/system_profiler >{hwprofile}'
             shell = True
         elif sys.platform == "linux":
-            command = '(cat /proc/cpuinfo; cat /proc/meminfo; /sbin/ifconfig -a) >%s' % (hwprofile)
+            command = f'(cat /proc/cpuinfo; cat /proc/meminfo; /sbin/ifconfig -a) >{hwprofile}'
             shell = True
         else:
-            command = 'dxdiag /t %s' % (hwprofile)
+            command = f'dxdiag /t {hwprofile}'
             shell = False
 
         self.notify.info(command)
@@ -174,7 +182,7 @@ class WebLauncherBase(DirectObject):
         os.chdir(cwd)
 
         if self.hwpipe:
-            self.notify.info('hwpipe pid: %s' % (self.hwpipe.pid))
+            self.notify.info(f'hwpipe pid: {self.hwpipe.pid}')
             taskMgr.add(self.__checkHwpipe, 'checkHwpipe')
 
     def __gotPhaseComplete(self):
@@ -194,8 +202,7 @@ class WebLauncherBase(DirectObject):
         # All phases are now complete.  Tell the world.
         self.allPhasesComplete = True
         print("launcherAllPhasesComplete")
-        messenger.send("launcherAllPhasesComplete", taskChain = 'default')
-            
+        messenger.send("launcherAllPhasesComplete", taskChain='default')
 
     def __checkHwpipe(self, task):
         """ Checks to see if the hwpipe process has finished, so we
@@ -207,7 +214,7 @@ class WebLauncherBase(DirectObject):
         #hwpipeout = self.hwpipe.communicate()
         #self.notify.info('hwpipe output: %s' % (hwpipeout[0]))
         #self.notify.info('hwpipe error: %s' % (hwpipeout[1]))
-        self.notify.info('hwpipe finished: %s' % (self.hwpipe.returncode))
+        self.notify.info(f'hwpipe finished: {self.hwpipe.returncode}')
         return task.done
 
     def isDummy(self):
@@ -215,11 +222,11 @@ class WebLauncherBase(DirectObject):
         return False
 
     def setRegistry(self, key, value):
-        self.notify.info('DEPRECATED setRegistry: %s = %s' % (key, value))
+        self.notify.info(f'DEPRECATED setRegistry: {key} = {value}')
         return
 
     def getRegistry(self, key):
-        self.notify.info('DEPRECATED getRegistry: %s' % (key))
+        self.notify.info(f'DEPRECATED getRegistry: {key}')
         return None
 
     def getValue(self, key, default=None):
@@ -237,14 +244,14 @@ class WebLauncherBase(DirectObject):
 
     def getGameServer(self):
         return self.getValue('GAME_SERVER', '')
-        
+
     def getPhaseComplete(self, phase):
         return (self.phaseData[phase].complete)
-        
+
     def getPercentPhaseComplete(self, phase):
         return self.phaseData[phase].percent
 
-    def addPhasePostProcess(self, phase, func, taskChain = 'default'):
+    def addPhasePostProcess(self, phase, func, taskChain='default'):
         """ Adds a post-process callback function to the phase
         download.  When the indicated phase is successfully
         downloaded, the given function will be called, on the
@@ -291,11 +298,10 @@ class WebLauncherBase(DirectObject):
             self.packageInstaller.addPackage(packageName)
 
         self.packageInstaller.donePackages()
-    
 
-    #============================================================
+    # ============================================================
     # Interface of launcher to the rest of the game
-    #============================================================
+    # ============================================================
 
     def isTestServer(self):
         return self.testServerFlag
@@ -336,7 +342,7 @@ class WebLauncherBase(DirectObject):
         self.disconnectMsg = 'normal'
         self.gameInfo.disconnectCode = self.disconnectCode
         self.gameInfo.disconnectMsg = self.disconnectMsg
-        
+
     def setDisconnectDetails(self, newCode, newMsg):
         if newCode is None:
             newCode = 0
@@ -344,15 +350,18 @@ class WebLauncherBase(DirectObject):
         self.disconnectMsg = newMsg
         self.gameInfo.disconnectCode = self.disconnectCode
         self.gameInfo.disconnectMsg = self.disconnectMsg
-        self.notify.warning("disconnected with code: %s - %s" % (self.gameInfo.disconnectCode,self.gameInfo.disconnectMsg))
-        
+        self.notify.warning(
+            "disconnected with code: %s - %s" %
+            (self.gameInfo.disconnectCode,
+             self.gameInfo.disconnectMsg))
+
     def setServerVersion(self, version):
         """
         Set the server version. Exposed to gameInfo.
         """
         self.ServerVersion = version
         self.gameInfo.ServerVersion = version
-        
+
     def getServerVersion(self):
         return self.ServerVersion
 
@@ -387,13 +396,17 @@ class WebLauncherBase(DirectObject):
         """
         Set that a user has logged in.
         """
-        self.setValue(self.UserLoggedInKey, '1')  # since these are flags they should really be 1, not '1'
+        self.setValue(
+            self.UserLoggedInKey,
+            '1')  # since these are flags they should really be 1, not '1'
 
     def setPaidUserLoggedIn(self):
         """
         Set that a paid user has logged in
         """
-        self.setValue(self.PaidUserLoggedInKey, '1') # since these are flags they should really be 1, not '1'
+        self.setValue(
+            self.PaidUserLoggedInKey,
+            '1')  # since these are flags they should really be 1, not '1'
 
     def getReferrerCode(self):
         """
@@ -405,7 +418,7 @@ class WebLauncherBase(DirectObject):
         """ This callback is assigned to the
         appRunner.exceptionHandler pointer, so we get notified on an
         unexpected Python exception. """
-        
+
         # A Python exception is error code 12 for the installer.
         self.setPandaErrorCode(12)
         self.notify.warning("Handling Python exception.")
@@ -415,7 +428,8 @@ class WebLauncherBase(DirectObject):
             # Tell the AI (if we have one) why we're going down.
             if base.cr.timeManager:
                 from otp.otpbase import OTPGlobals
-                base.cr.timeManager.setDisconnectReason(OTPGlobals.DisconnectPythonError)
+                base.cr.timeManager.setDisconnectReason(
+                    OTPGlobals.DisconnectPythonError)
                 base.cr.timeManager.setExceptionInfo()
 
             # Tell the server we're gone too.
@@ -471,13 +485,13 @@ class WebLauncherInstaller(PackageInstaller):
 
         PackageInstaller.packageFinished(self, package, success)
         if not success:
-            print("Failed to download %s" % (package.packageName))
+            print(f"Failed to download {package.packageName}")
             self.launcher.setPandaErrorCode(6)
             sys.exit()
-        
+
         phase = self.launcher.phasesByPackageName[package.packageName]
         self.launcher.phaseData[phase].markComplete()
-        
+
     def downloadFinished(self, success):
         """ This callback is made when all of the packages have been
         downloaded and installed (or there has been some failure).  If

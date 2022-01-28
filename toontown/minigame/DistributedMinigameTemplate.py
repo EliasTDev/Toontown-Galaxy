@@ -7,6 +7,7 @@ from direct.fsm import ClassicFSM, State
 from direct.fsm import State
 from toontown.toonbase import TTLocalizer
 
+
 class DistributedMinigameTemplate(DistributedMinigame):
 
     # define constants that you won't want to tweak here
@@ -15,25 +16,25 @@ class DistributedMinigameTemplate(DistributedMinigame):
         DistributedMinigame.__init__(self, cr)
 
         self.gameFSM = ClassicFSM.ClassicFSM('DistributedMinigameTemplate',
-                               [
-                                State.State('off',
-                                            self.enterOff,
-                                            self.exitOff,
-                                            ['play']),
-                                State.State('play',
-                                            self.enterPlay,
-                                            self.exitPlay,
-                                            ['cleanup']),
-                                State.State('cleanup',
-                                            self.enterCleanup,
-                                            self.exitCleanup,
-                                            []),
-                                ],
-                               # Initial State
-                               'off',
-                               # Final State
-                               'cleanup',
-                               )
+                                             [
+                                                 State.State('off',
+                                                             self.enterOff,
+                                                             self.exitOff,
+                                                             ['play']),
+                                                 State.State('play',
+                                                             self.enterPlay,
+                                                             self.exitPlay,
+                                                             ['cleanup']),
+                                                 State.State('cleanup',
+                                                             self.enterCleanup,
+                                                             self.exitCleanup,
+                                                             []),
+                                             ],
+                                             # Initial State
+                                             'off',
+                                             # Final State
+                                             'cleanup',
+                                             )
 
         # it's important for the final state to do cleanup;
         # on disconnect, the ClassicFSM will be forced into the
@@ -93,7 +94,8 @@ class DistributedMinigameTemplate(DistributedMinigame):
         DistributedMinigame.handleDisabledAvatar(self, avId)
 
     def setGameReady(self):
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         self.notify.debug("setGameReady")
         if DistributedMinigame.setGameReady(self):
             return
@@ -101,7 +103,8 @@ class DistributedMinigameTemplate(DistributedMinigame):
         # it's safe to show them now.
 
     def setGameStart(self, timestamp):
-        if not self.hasLocalToon: return
+        if not self.hasLocalToon:
+            return
         self.notify.debug("setGameStart")
         # base class will cause gameFSM to enter initial state
         DistributedMinigame.setGameStart(self, timestamp)

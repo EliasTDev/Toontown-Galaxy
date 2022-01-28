@@ -1,6 +1,7 @@
 
 from direct.distributed.DistributedObject import DistributedObject
 
+
 class DistributedDirectory(DistributedObject):
     """
     This object has no attributes and none of them get created, but it

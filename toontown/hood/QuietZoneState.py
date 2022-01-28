@@ -12,6 +12,7 @@ from direct.fsm import ClassicFSM, State
 from direct.fsm import State
 from . import ZoneUtil
 
+
 class QuietZoneState(StateData.StateData):
     """QuietZoneState state class"""
 
@@ -26,36 +27,36 @@ class QuietZoneState(StateData.StateData):
         """
         StateData.StateData.__init__(self, doneEvent)
         self.fsm = ClassicFSM.ClassicFSM('QuietZoneState',
-                           [State.State('off',
-                                        self.enterOff,
-                                        self.exitOff,
-                                        ['waitForQuietZoneResponse']),
-                            State.State('waitForQuietZoneResponse',
-                                        self.enterWaitForQuietZoneResponse,
-                                        self.exitWaitForQuietZoneResponse,
-                                        ['waitForZoneRedirect']),
-                            State.State('waitForZoneRedirect',
-                                        self.enterWaitForZoneRedirect,
-                                        self.exitWaitForZoneRedirect,
-                                        ['waitForSetZoneResponse']),
-                            State.State('waitForSetZoneResponse',
-                                        self.enterWaitForSetZoneResponse,
-                                        self.exitWaitForSetZoneResponse,
-                                        ['waitForSetZoneComplete']),
-                            State.State('waitForSetZoneComplete',
-                                        self.enterWaitForSetZoneComplete,
-                                        self.exitWaitForSetZoneComplete,
-                                        ['waitForLocalAvatarOnShard']),
-                            State.State('waitForLocalAvatarOnShard',
-                                        self.enterWaitForLocalAvatarOnShard,
-                                        self.exitWaitForLocalAvatarOnShard,
-                                        ['off']),
-                            ],
-                           # Initial State
-                           'off',
-                           # Final State
-                           'off',
-                           )
+                                         [State.State('off',
+                                                      self.enterOff,
+                                                      self.exitOff,
+                                                      ['waitForQuietZoneResponse']),
+                                             State.State('waitForQuietZoneResponse',
+                                                         self.enterWaitForQuietZoneResponse,
+                                                         self.exitWaitForQuietZoneResponse,
+                                                         ['waitForZoneRedirect']),
+                                             State.State('waitForZoneRedirect',
+                                                         self.enterWaitForZoneRedirect,
+                                                         self.exitWaitForZoneRedirect,
+                                                         ['waitForSetZoneResponse']),
+                                             State.State('waitForSetZoneResponse',
+                                                         self.enterWaitForSetZoneResponse,
+                                                         self.exitWaitForSetZoneResponse,
+                                                         ['waitForSetZoneComplete']),
+                                             State.State('waitForSetZoneComplete',
+                                                         self.enterWaitForSetZoneComplete,
+                                                         self.exitWaitForSetZoneComplete,
+                                                         ['waitForLocalAvatarOnShard']),
+                                             State.State('waitForLocalAvatarOnShard',
+                                                         self.enterWaitForLocalAvatarOnShard,
+                                                         self.exitWaitForLocalAvatarOnShard,
+                                                         ['off']),
+                                          ],
+                                         # Initial State
+                                         'off',
+                                         # Final State
+                                         'off',
+                                         )
         self.fsm.enterInitialState()
 
     def load(self):
@@ -66,7 +67,7 @@ class QuietZoneState(StateData.StateData):
         del self.fsm
 
     def enter(self, requestStatus):
-        self.notify.debug("enter(requestStatus="+str(requestStatus)+")")
+        self.notify.debug("enter(requestStatus=" + str(requestStatus) + ")")
         base.transitions.fadeScreen(1.0)
         self._requestStatus = requestStatus
         self.fsm.request("waitForQuietZoneResponse")
@@ -81,7 +82,9 @@ class QuietZoneState(StateData.StateData):
         self.fsm.request("off")
 
     def waitForDatabase(self, description):
-        base.cr.waitForDatabaseTimeout(requestName='quietZoneState-%s' % description)
+        base.cr.waitForDatabaseTimeout(
+            requestName=f'quietZoneState-{description}')
+
     def clearWaitForDatabase(self):
         base.cr.cleanupWaitingForDatabase()
 
@@ -136,7 +139,7 @@ class QuietZoneState(StateData.StateData):
 
     def enterWaitForQuietZoneResponse(self):
         self.notify.debug("enterWaitForQuietZoneResponse(doneStatus="
-                +str(self._requestStatus)+")")
+                          + str(self._requestStatus) + ")")
         # Setup our handlers:
         if not self.Disable:
             base.cr.handler = self.handleWaitForQuietZoneResponse
@@ -178,7 +181,7 @@ class QuietZoneState(StateData.StateData):
 
     def enterWaitForZoneRedirect(self):
         self.notify.debug("enterWaitForZoneRedirect(requestStatus="
-                +str(self._requestStatus)+")")
+                          + str(self._requestStatus) + ")")
         # Setup our handlers:
         if not self.Disable:
             base.cr.handler = self.handleWaitForZoneRedirect
@@ -208,7 +211,7 @@ class QuietZoneState(StateData.StateData):
             # not forbidden, so give the AI a chance to pick a zoneId
             # for us.
 
-            self.notify.info("Requesting AI redirect from zone %s." % (zoneId))
+            self.notify.info(f"Requesting AI redirect from zone {zoneId}.")
             if base.slowQuietZone:
                 def rZI(task, zoneId=zoneId, self=self):
                     base.cr.welcomeValleyManager.requestZoneId(
@@ -228,7 +231,7 @@ class QuietZoneState(StateData.StateData):
             self.fsm.request("waitForSetZoneResponse")
 
     def gotZoneRedirect(self, zoneId):
-        self.notify.info("Redirecting to zone %s." % (zoneId))
+        self.notify.info(f"Redirecting to zone {zoneId}.")
         base.cr.handlerArgs["zoneId"] = zoneId
         base.cr.handlerArgs["hoodId"] = ZoneUtil.getHoodId(zoneId)
 
@@ -249,15 +252,17 @@ class QuietZoneState(StateData.StateData):
 
     def enterWaitForSetZoneResponse(self):
         self.notify.debug("enterWaitForSetZoneResponse(requestStatus="
-                +str(self._requestStatus)+")")
+                          + str(self._requestStatus) + ")")
         if not self.Disable:
             # Tell anyone who wants to know, that we're in this funciton:
-            messenger.send("enterWaitForSetZoneResponse", [self._requestStatus])
+            messenger.send(
+                "enterWaitForSetZoneResponse", [
+                    self._requestStatus])
             base.cr.handlerArgs = self._requestStatus
             # Put us in the destination zone:
             zoneId = self._requestStatus["zoneId"]
-            ##self.acceptOnce(base.cr.getNextSetZoneDoneEvent(),
-            ##                self.WaitForSetZoneResponse)
+            # self.acceptOnce(base.cr.getNextSetZoneDoneEvent(),
+            # self.WaitForSetZoneResponse)
             # dump all of the shard objects
             base.cr.dumpAllSubShardObjects()
             # we're starting fresh now in terms of sub-shard objects
@@ -267,9 +272,8 @@ class QuietZoneState(StateData.StateData):
             self.fsm.request("waitForSetZoneComplete")
 
 # now done locally on the AI
-##         if base.cr.welcomeValleyManager:
-##             base.cr.welcomeValleyManager.d_clientSetZone(zoneId)
-
+# if base.cr.welcomeValleyManager:
+# base.cr.welcomeValleyManager.d_clientSetZone(zoneId)
 
     def exitWaitForSetZoneResponse(self):
         self.notify.debug("exitWaitForSetZoneResponse()")
@@ -286,7 +290,7 @@ class QuietZoneState(StateData.StateData):
 
     def enterWaitForSetZoneComplete(self):
         self.notify.debug("enterWaitForSetZoneComplete(requestStatus="
-                +str(self._requestStatus)+")")
+                          + str(self._requestStatus) + ")")
         if not self.Disable:
             # Setup our handlers:
             base.cr.handlerArgs = self._requestStatus

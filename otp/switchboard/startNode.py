@@ -4,22 +4,22 @@ import sys
 import getopt
 
 try:
-    opts,args = getopt.getopt(sys.argv[1:], "",
-                              ['name=',
+    opts, args = getopt.getopt(sys.argv[1:], "",
+                               ['name=',
                                'nodeport=',
-                               'nshost=',
-                               'nsport=',
-                               'clhost=',
-                               'clport=',
-                               'dshost=',
-                               'dsport=',
-                               'dislurl='
-                               ])
+                                'nshost=',
+                                'nsport=',
+                                'clhost=',
+                                'clport=',
+                                'dshost=',
+                                'dsport=',
+                                'dislurl='
+                                ])
 except getopt.GetoptError:
     print("Please pass a node name with --name=.")
     sys.exit(1)
 
-#defaults
+# defaults
 nodename = ""
 nodeport = None
 nshost = None
@@ -30,7 +30,7 @@ dshost = None
 dsport = None
 dislurl = None
 
-for o,a in opts:
+for o, a in opts:
     if o == "--name":
         nodename = a
     elif o == "--nodeport":
@@ -51,21 +51,29 @@ for o,a in opts:
         dislurl = a
     else:
         print("Error: Illegal option: " + o)
-        sys.exit(1)        
+        sys.exit(1)
 
 if nodename == "":
     print("Please pass a node name with --name=.")
     sys.exit(2)
-    
-cm = ChannelManager()
-ncm = NetChannelMessenger(nodename,cm,dshost,dsport,1,1000000)
 
-myNode = sbNode(nodeName=nodename,nsHost=nshost,nsPort=nsport,listenPort=nodeport,clHost=clhost,clPort=clport,chanMgr=cm,dislURL=dislurl)
+cm = ChannelManager()
+ncm = NetChannelMessenger(nodename, cm, dshost, dsport, 1, 1000000)
+
+myNode = sbNode(
+    nodeName=nodename,
+    nsHost=nshost,
+    nsPort=nsport,
+    listenPort=nodeport,
+    clHost=clhost,
+    clPort=clport,
+    chanMgr=cm,
+    dislURL=dislurl)
 
 sys.stdout.flush()
 
 try:
-    while 1:
+    while True:
         myNode.pyroDaemon.handleRequests(0)
         ncm.pump()
         if ncm.checkReconnect():
@@ -73,7 +81,7 @@ try:
             myNode.joinChannels()
         time.sleep(0.01)
 finally:
-    #try:
+    # try:
     #    myNode.pyroDaemon.shutdown(True)
-    #except: pass
+    # except: pass
     sys.stdout.flush()

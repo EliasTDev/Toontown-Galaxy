@@ -5,9 +5,11 @@ from toontown.town import BRTownLoader
 from toontown.safezone import BRSafeZoneLoader
 from toontown.toonbase.ToontownGlobals import *
 
+
 class BRHood(ToonHood.ToonHood):
     def __init__(self, parentFSM, doneEvent, dnaStore, hoodId):
-        ToonHood.ToonHood.__init__(self, parentFSM, doneEvent, dnaStore, hoodId)
+        ToonHood.ToonHood.__init__(
+            self, parentFSM, doneEvent, dnaStore, hoodId)
         self.id = TheBrrrgh
         # Create the town state data
         self.townLoaderClass = BRTownLoader.BRTownLoader
@@ -16,8 +18,9 @@ class BRHood(ToonHood.ToonHood):
         self.storageDNAFile = "phase_8/dna/storage_BR.dna"
         # Dictionary which holds holiday specific lists of Storage DNA Files
         # Keyed off of the News Manager holiday IDs stored in ToontownGlobals
-        self.holidayStorageDNADict = {WINTER_DECORATIONS : ['phase_8/dna/winter_storage_BR.dna'],
-                                      HALLOWEEN_PROPS : ['phase_8/dna/halloween_props_storage_BR.dna']}
+        self.holidayStorageDNADict = {
+            WINTER_DECORATIONS: ['phase_8/dna/winter_storage_BR.dna'],
+            HALLOWEEN_PROPS: ['phase_8/dna/halloween_props_storage_BR.dna']}
         # The sky is actually in phase 6 because DD uses it too
         self.skyFile = "phase_3.5/models/props/BR_sky"
         self.spookySkyFile = "phase_3.5/models/props/BR_sky"
@@ -30,10 +33,9 @@ class BRHood(ToonHood.ToonHood):
     def unload(self):
         self.parentFSM.getStateNamed("BRHood").removeChild(self.fsm)
         ToonHood.ToonHood.unload(self)
-        
+
     def enter(self, *args):
         ToonHood.ToonHood.enter(self, *args)
-            
+
     def exit(self):
         ToonHood.ToonHood.exit(self)
-    

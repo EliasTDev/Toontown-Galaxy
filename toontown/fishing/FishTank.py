@@ -2,6 +2,7 @@
 from . import FishBase
 from . import FishGlobals
 
+
 class FishTank:
 
     def __init__(self):
@@ -18,7 +19,7 @@ class FishTank:
         Return the current fish list
         """
         return self.fishList
-    
+
     def makeFromNetLists(self, genusList, speciesList, weightList):
         """
         Fill in the fish collection based on lists passed in like they are
@@ -27,7 +28,7 @@ class FishTank:
         self.fishList = []
         # Fill in the lists by running through the parallel lists of properties
         for genus, species, weight in zip(genusList, speciesList, weightList):
-            self.fishList.append(FishBase.FishBase(genus, species, weight))        
+            self.fishList.append(FishBase.FishBase(genus, species, weight))
 
     def getNetLists(self):
         """
@@ -62,10 +63,10 @@ class FishTank:
         for fish in self.fishList:
             if ((fish.getGenus() == genus) and
                 (fish.getSpecies() == species) and
-                (fish.getWeight() >= weight)):
+                    (fish.getWeight() >= weight)):
                 return 1
         return 0
-    
+
     def addFish(self, fish):
         """
         Add this fish to our collection
@@ -85,12 +86,12 @@ class FishTank:
 
     def generateRandomTank(self):
         import random
-        numFish = random.randint(1,20)
+        numFish = random.randint(1, 20)
         self.fishList = []
         for i in range(numFish):
             genus, species = FishGlobals.getRandomFish()
             weight = FishGlobals.getRandomWeight(genus, species)
-            fish = FishBase.FishBase(genus,species,weight)
+            fish = FishBase.FishBase(genus, species, weight)
             self.addFish(fish)
 
     def getTotalValue(self):
@@ -98,14 +99,13 @@ class FishTank:
         for fish in self.fishList:
             value += fish.getValue()
         return value
-            
+
     def __str__(self):
         numFish = len(self.fishList)
         value = 0
-        txt = ("Fish Tank (%s fish):" % (numFish))
+        txt = f"Fish Tank ({numFish} fish):"
         for fish in self.fishList:
             txt += ("\n" + str(fish))
             value += fish.getValue()
-        txt += ("\nTotal value: %s" % (value))
+        txt += f"\nTotal value: {value}"
         return txt
-    

@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Contact: Edmundo Ruiz (Schell Games)
 # Created: Oct 2008
 #
@@ -14,18 +14,15 @@
 #    Solution:
 #        make sure that self.gui.isLoaded() is in check first before doing
 #        server response operations.
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 from toontown.parties.DistributedPartyJukeboxActivityBase import DistributedPartyJukeboxActivityBase
 from toontown.parties import PartyGlobals
 
+
 class DistributedPartyJukeboxActivity(DistributedPartyJukeboxActivityBase):
     notify = directNotify.newCategory("DistributedPartyJukeboxActivity")
-    
-    def __init__(self, cr):
-        DistributedPartyJukeboxActivityBase.__init__(self,
-                                          cr,
-                                          PartyGlobals.ActivityIds.PartyJukebox,
-                                          PartyGlobals.PhaseToMusicData
-                                          )
 
+    def __init__(self, cr):
+        DistributedPartyJukeboxActivityBase.__init__(
+            self, cr, PartyGlobals.ActivityIds.PartyJukebox, PartyGlobals.PhaseToMusicData)

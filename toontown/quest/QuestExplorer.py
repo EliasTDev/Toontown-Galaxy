@@ -10,46 +10,48 @@ from direct.gui.DirectGui import DGG
 
 DEFAULT_MENU_ITEMS = []
 
+
 class QuestExplorer(Pmw.MegaWidget, DirectObject):
     "Graphical display of a scene graph"
-    def __init__(self, parent = None, quest = 0, **kw):
+
+    def __init__(self, parent=None, quest=0, **kw):
         # Define the megawidget options.
         optiondefs = (
-            ('menuItems',   [],   Pmw.INITOPT),
-            )
+            ('menuItems', [], Pmw.INITOPT),
+        )
         self.defineoptions(kw, optiondefs)
- 
+
         # Initialise superclass
         Pmw.MegaWidget.__init__(self, parent)
-        
+
         # Initialize some class variables
         self.quest = quest
 
         # Create the components.
-        
+
         # Setup up container
         interior = self.interior()
-        interior.configure(relief = "groove", borderwidth = 2)
-        
+        interior.configure(relief="groove", borderwidth=2)
+
         # Create a label and an entry
         self._scrolledCanvas = self.createcomponent(
             'scrolledCanvas',
             (), None,
             Pmw.ScrolledCanvas, (interior,),
-            hull_width = 200, hull_height = 300,
-            usehullsize = 1)
+            hull_width=200, hull_height=300,
+            usehullsize=1)
         self._canvas = self._scrolledCanvas.component('canvas')
         self._canvas['scrollregion'] = ('0i', '0i', '2i', '4i')
         self._scrolledCanvas.resizescrollregion()
-        self._scrolledCanvas.pack(padx = 3, pady = 3, expand=1)
-        
+        self._scrolledCanvas.pack(padx=3, pady=3, expand=1)
+
         self._canvas.bind('<ButtonPress-2>', self.mouse2Down)
         self._canvas.bind('<B2-Motion>', self.mouse2Motion)
         self._canvas.bind('<Configure>',
-                          lambda e, sc = self._scrolledCanvas:
+                          lambda e, sc=self._scrolledCanvas:
                           sc.resizescrollregion())
         self.interior().bind('<Destroy>', self.onDestroy)
-        
+
         # Create the contents
         self._treeItem = QuestExplorerItem(self.quest)
 
@@ -68,7 +70,7 @@ class QuestExplorer(Pmw.MegaWidget, DirectObject):
         self._width = 1.0 * self._canvas.winfo_width()
         self._height = 1.0 * self._canvas.winfo_height()
         xview = self._canvas.xview()
-        yview = self._canvas.yview()        
+        yview = self._canvas.yview()
         self._left = xview[0]
         self._top = yview[0]
         self._dxview = xview[1] - xview[0]
@@ -76,10 +78,12 @@ class QuestExplorer(Pmw.MegaWidget, DirectObject):
         self._2lx = event.x
         self._2ly = event.y
 
-    def mouse2Motion(self,event):
-        newx = self._left - ((event.x - self._2lx)/self._width) * self._dxview
+    def mouse2Motion(self, event):
+        newx = self._left - ((event.x - self._2lx) /
+                             self._width) * self._dxview
         self._canvas.xview_moveto(newx)
-        newy = self._top - ((event.y - self._2ly)/self._height) * self._dyview
+        newy = self._top - ((event.y - self._2ly) /
+                            self._height) * self._dyview
         self._canvas.yview_moveto(newy)
         self._2lx = event.x
         self._2ly = event.y
@@ -89,10 +93,12 @@ class QuestExplorer(Pmw.MegaWidget, DirectObject):
     def onDestroy(self, event):
         pass
 
+
 class QuestExplorerItem(TreeItem):
 
     """Example TreeItem subclass -- browse the file system."""
     maxTier = max(Tier2QuestsDict.keys())
+
     def __init__(self, quest):
         self.quest = quest
 
@@ -103,11 +109,11 @@ class QuestExplorerItem(TreeItem):
             if self.quest < DD_TIER:
                 tierName = 'TT_TIER'
             elif self.quest < DG_TIER:
-                tierName = 'DD_TIER'                
+                tierName = 'DD_TIER'
             elif self.quest < MM_TIER:
-                tierName = 'DG_TIER'                
+                tierName = 'DG_TIER'
             elif self.quest < BR_TIER:
-                tierName = 'MM_TIER'                
+                tierName = 'MM_TIER'
             elif self.quest < DL_TIER:
                 tierName = 'BR_TIER'
             else:
@@ -126,25 +132,25 @@ class QuestExplorerItem(TreeItem):
                     toNpcId = questEntry[QuestDictToNpcIndex]
                     if ((toNpcId == Any) or
                         (toNpcId == NA) or
-                        (toNpcId == Same)):
+                            (toNpcId == Same)):
                         toNpcId = None
                     # Generate dialog
                     dialog = fillInQuestNames(quest.getDefaultQuestDialog(),
-                                              avName = 'Questy Lazar',
-                                              fromNpcId = 1000,
-                                              toNpcId = toNpcId)
+                                              avName='Questy Lazar',
+                                              fromNpcId=1000,
+                                              toNpcId=toNpcId)
                     # Strip out end of page symbols
                     dialog = dialog.replace("\a", "")
                 else:
                     dialog = 'Quest Entry not found'
-            except:
+            except BaseException:
                 dialog = getQuest(self.quest).getPosterString()
             # Tack on reward string
             nextQuest = QuestDict[id][QuestDictNextQuestIndex]
             if nextQuest == NA:
-                reward = getReward(getFinalRewardId(id, fAll = 1))
+                reward = getReward(getFinalRewardId(id, fAll=1))
                 if reward:
-                    rewardString = " %s" % reward.getPosterString()
+                    rewardString = f" {reward.getPosterString()}"
                 else:
                     rewardString = ' - Just for fun!'
             else:
@@ -157,7 +163,7 @@ class QuestExplorerItem(TreeItem):
         else:
             # See if this is a required task
             id = self.quest
-            reward = getReward(getFinalRewardId(id, fAll = 1))
+            reward = getReward(getFinalRewardId(id, fAll=1))
             if reward:
                 return "red"
             else:
@@ -174,7 +180,7 @@ class QuestExplorerItem(TreeItem):
         pass
 
     def GetIconName(self):
-        return "sphere2" # XXX wish there was a "file" icon
+        return "sphere2"  # XXX wish there was a "file" icon
 
     def IsExpandable(self):
         if self.quest <= self.maxTier:
@@ -191,17 +197,19 @@ class QuestExplorerItem(TreeItem):
         elif self.quest <= self.maxTier:
             nextQuests = getStartingQuests(self.quest)
         else:
-            nextQuests = list(nextQuestList(QuestDict[self.quest][QuestDictNextQuestIndex]))
-        if nextQuests == None:
+            nextQuests = list(nextQuestList(
+                QuestDict[self.quest][QuestDictNextQuestIndex]))
+        if nextQuests is None:
             return []
         else:
             return list(map(QuestExplorerItem, nextQuests))
 
-def exploreQuests(quest = -1):
+
+def exploreQuests(quest=-1):
     # Pop open a hierarchical viewer to explore quest system
     from . import QuestExplorer
     tl = TkGlobal.Toplevel()
     tl.title('Explore Quests')
-    qe = QuestExplorer.QuestExplorer(parent = tl, quest = quest)
-    qe.pack(expand = 1, fill = 'both')
+    qe = QuestExplorer.QuestExplorer(parent=tl, quest=quest)
+    qe.pack(expand=1, fill='both')
     return qe

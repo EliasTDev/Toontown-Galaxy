@@ -4,6 +4,7 @@ from direct.showbase import PythonUtil
 from direct.gui.DirectGui import *
 from toontown.toonbase import ToontownGlobals
 
+
 class CatalogAtticItem(CatalogItem.CatalogItem):
     """CatalogAtticItem
 
@@ -35,14 +36,17 @@ class CatalogAtticItem(CatalogItem.CatalogItem):
 
         houseId = avatar.houseId
         if not houseId:
-            self.notify.warning("Avatar %s has no houseId associated." % (avatar.doId))
+            self.notify.warning(
+                f"Avatar {avatar.doId} has no houseId associated.")
             return (None, ToontownGlobals.P_InvalidIndex)
         house = simbase.air.doId2do.get(houseId)
         if not house:
-            self.notify.warning("House %s (for avatar %s) not instantiated." % (houseId, avatar.doId))
+            self.notify.warning(
+                f"House {houseId} (for avatar {avatar.doId}) not instantiated.")
             return (None, ToontownGlobals.P_InvalidIndex)
 
-        numAtticItems = len(house.atticItems) + len(house.atticWallpaper) + len(house.atticWindows)
+        numAtticItems = len(house.atticItems) + \
+            len(house.atticWallpaper) + len(house.atticWindows)
         numHouseItems = numAtticItems + len(house.interiorItems)
         if numHouseItems >= ToontownGlobals.MaxHouseItems and \
            not self.replacesExisting():
@@ -81,11 +85,11 @@ class CatalogAtticItem(CatalogItem.CatalogItem):
             buttonCallback = PythonUtil.Functor(
                 self.__handleFullPurchaseDialog, phone, callback)
             self.dialog = TTDialog.TTDialog(
-                style = TTDialog.YesNo,
-                text = TTLocalizer.CatalogPurchaseHouseFull,
-                text_wordwrap = 15,
-                command = buttonCallback,
-                )
+                style=TTDialog.YesNo,
+                text=TTLocalizer.CatalogPurchaseHouseFull,
+                text_wordwrap=15,
+                command=buttonCallback,
+            )
             self.dialog.show()
 
         else:
@@ -106,7 +110,6 @@ class CatalogAtticItem(CatalogItem.CatalogItem):
         else:
             # Don't purchase it.
             callback(ToontownGlobals.P_UserCancelled, self)
-        
 
     def getAcceptItemErrorText(self, retcode):
         # Returns a string describing the error that occurred on
@@ -118,4 +121,3 @@ class CatalogAtticItem(CatalogItem.CatalogItem):
         elif retcode == ToontownGlobals.P_NoRoomForItem:
             return TTLocalizer.CatalogAcceptHouseFull
         return CatalogItem.CatalogItem.getAcceptItemErrorText(self, retcode)
-    

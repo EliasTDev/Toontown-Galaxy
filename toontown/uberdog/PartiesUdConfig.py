@@ -19,16 +19,15 @@ ttDbHost = "localhost"
 ttDbPort = 3306
 
 if language == 'castillian':
-	ttDbName = "es_toontownTopDb"
+    ttDbName = "es_toontownTopDb"
 elif language == "japanese":
-	ttDbName = "jp_toontownTopDb"
+    ttDbName = "jp_toontownTopDb"
 elif language == "portuguese":
-	ttDbName = "br_toontownTopDb"
+    ttDbName = "br_toontownTopDb"
 elif language == "french":
-	ttDbName = "french_toontownTopDb"
+    ttDbName = "french_toontownTopDb"
 else:
-	ttDbName = "toontownTopDb"
+    ttDbName = "toontownTopDb"
 
 ttDbUser = "ttDb_user"
 ttDbPasswd = "toontastic2008"
-

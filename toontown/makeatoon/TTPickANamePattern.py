@@ -3,6 +3,7 @@ from otp.namepanel.PickANamePattern import PickANamePatternTwoPartLastName
 from toontown.makeatoon.NameGenerator import NameGenerator
 import types
 
+
 class TTPickANamePattern(PickANamePatternTwoPartLastName):
     NameParts = None
     LastNamePrefixesCapped = None
@@ -21,9 +22,11 @@ class TTPickANamePattern(PickANamePatternTwoPartLastName):
     def _getLastNameCapPrefixes(self):
         if TTPickANamePattern.LastNamePrefixesCapped is None:
             ng = NameGenerator()
-            TTPickANamePattern.LastNamePrefixesCapped = ng.getLastNamePrefixesCapped()[:]
+            TTPickANamePattern.LastNamePrefixesCapped = ng.getLastNamePrefixesCapped()[
+                :]
 
         return TTPickANamePattern.LastNamePrefixesCapped
+
 
 if not __debug__:
     assert TTPickANamePattern('Alvin').hasNamePattern()
@@ -31,6 +34,8 @@ if not __debug__:
     assert TTPickANamePattern('King Alvin Sourflap').hasNamePattern()
     assert not TTPickANamePattern('King Alvin ASDFflap').hasNamePattern()
     assert not TTPickANamePattern('test name').hasNamePattern()
-    
-    assert TTPickANamePattern('').getNameString(TTPickANamePattern('King Alvin Sourflap').getNamePattern()) == 'King Alvin Sourflap'
-    assert TTPickANamePattern('').getNameString(TTPickANamePattern('Knuckles McFlipper').getNamePattern()) == 'Knuckles McFlipper'
+
+    assert TTPickANamePattern('').getNameString(TTPickANamePattern(
+        'King Alvin Sourflap').getNamePattern()) == 'King Alvin Sourflap'
+    assert TTPickANamePattern('').getNameString(TTPickANamePattern(
+        'Knuckles McFlipper').getNamePattern()) == 'Knuckles McFlipper'

@@ -18,15 +18,23 @@ import random
 from toontown.login.DistrictSelector import DistrictSelector
 
 
-MAX_AVATARS = 6              
-POSITIONS = ( Vec3(-0.840167, 0, 0.359333), Vec3(0.00933349, 0, 0.306533), Vec3(0.862, 0, 0.3293),
-              Vec3(-0.863554, 0, -0.445659), Vec3(0.00999999, 0, -0.5181), Vec3(0.864907, 0, -0.445659))
-              
-COLORS = ( Vec4(0.917, 0.164, 0.164, 1), Vec4(0.152, 0.750, 0.258, 1), Vec4(0.598, 0.402, 0.875, 1),
-           Vec4(0.133, 0.590, 0.977, 1), Vec4(0.895, 0.348, 0.602, 1), Vec4(0.977, 0.816, 0.133, 1)  )
+MAX_AVATARS = 6
+POSITIONS = (Vec3(-0.840167, 0, 0.359333), Vec3(0.00933349, 0, 0.306533), Vec3(0.862, 0, 0.3293),
+             Vec3(-0.863554, 0, -0.445659), Vec3(0.00999999, 0, -0.5181), Vec3(0.864907, 0, -0.445659))
 
-# initialize once here to avoid recreating category every time object is created
+COLORS = (
+    Vec4(
+        0.917, 0.164, 0.164, 1), Vec4(
+            0.152, 0.750, 0.258, 1), Vec4(
+                0.598, 0.402, 0.875, 1), Vec4(
+                    0.133, 0.590, 0.977, 1), Vec4(
+                        0.895, 0.348, 0.602, 1), Vec4(
+                            0.977, 0.816, 0.133, 1))
+
+# initialize once here to avoid recreating category every time object is
+# created
 chooser_notify = DirectNotifyGlobal.directNotify.newCategory("AvatarChooser")
+
 
 class AvatarChooser(StateData.StateData):
     """
@@ -34,7 +42,7 @@ class AvatarChooser(StateData.StateData):
     choice or let the user make a new avatar
     """
 
-    # special methods    
+    # special methods
     def __init__(self, avatarList, parentFSM, doneEvent):
         """
         Set-up the login screen interface and prompt for a user name
@@ -47,23 +55,23 @@ class AvatarChooser(StateData.StateData):
         self.districtSelector = DistrictSelector()
 
         self.fsm = ClassicFSM.ClassicFSM('AvatarChooser',
-                        [State.State('Choose',
-                                self.enterChoose,
-                                self.exitChoose,
-                                ['CheckDownload']),
-                        State.State('CheckDownload',
-                                self.enterCheckDownload,
-                                self.exitCheckDownload,
-                                ['Choose'])],
-                        # Initial state
-                        'Choose',
-                        # Final state
-                        'Choose',
-                        )
+                                         [State.State('Choose',
+                                                      self.enterChoose,
+                                                      self.exitChoose,
+                                                      ['CheckDownload']),
+                                             State.State('CheckDownload',
+                                                         self.enterCheckDownload,
+                                                         self.exitCheckDownload,
+                                                         ['Choose'])],
+                                         # Initial state
+                                         'Choose',
+                                         # Final state
+                                         'Choose',
+                                         )
         self.fsm.enterInitialState()
         self.parentFSM = parentFSM
         self.parentFSM.getCurrentState().addChild(self.fsm)
-        
+
         if __debug__:
             base.avChooser = self
 
@@ -72,7 +80,8 @@ class AvatarChooser(StateData.StateData):
         self.notify.info("AvatarChooser.enter")
         if not self.displayOptions:
             self.displayOptions = DisplayOptions.DisplayOptions()
-        self.notify.info("calling self.displayOptions.restrictToEmbedded(False)")
+        self.notify.info(
+            "calling self.displayOptions.restrictToEmbedded(False)")
         if base.appRunner:
             self.displayOptions.loadFromSettings()
             self.displayOptions.restrictToEmbedded(False)
@@ -86,15 +95,15 @@ class AvatarChooser(StateData.StateData):
         # set-up screen title
         self.title.reparentTo(aspect2d)
         self.quitButton.show()
-        #if base.cr.loginInterface.supportsRelogin():
-         #   self.logoutButton.show()
+        # if base.cr.loginInterface.supportsRelogin():
+        #   self.logoutButton.show()
 
-    #reparent to aspect2d for widescreen support
+    # reparent to aspect2d for widescreen support
        # self.pickAToonBG.reparentTo(aspect2d)
         self.pickAToonBG.setBin('background', 1)
         base.setBackgroundColor(Vec4(0.145, 0.368, 0.78, 1))
         choice = base.config.GetInt("auto-avatar-choice", -1)
-        
+
         # hang the choice panel hooks
         for panel in self.panelList:
             panel.show()
@@ -119,7 +128,7 @@ class AvatarChooser(StateData.StateData):
         # reset display
         self.title.reparentTo(hidden)
         self.quitButton.hide()
-        #self.logoutButton.hide()
+        # self.logoutButton.hide()
         base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
 
         self.pickAToonBG.reparentTo(hidden)
@@ -135,42 +144,43 @@ class AvatarChooser(StateData.StateData):
         gui2 = loader.loadModel("phase_3/models/gui/quit_button")
         newGui = loader.loadModel("phase_3/models/gui/tt_m_gui_pat_mainGui")
         #self.pickAToonBG = newGui.find("**/tt_t_gui_pat_background")
-        self.pickAToonBG = OnscreenImage('phase_3/maps/tt_t_gui_pat_background.png')
+        self.pickAToonBG = OnscreenImage(
+            'phase_3/maps/tt_t_gui_pat_background.png')
         self.pickAToonBG.reparentTo(hidden)
         #self.pickAToonBG.setPos(0.0, 2.73, 0.0)
         self.pickAToonBG.setScale(1, 1, 1)
        # self.pickAToonBG.setScale(2,1,1)
-        
+
         # set-up screen title
         self.title = OnscreenText(TTLocalizer.AvatarChooserPickAToon,
-                                  scale = TTLocalizer.ACtitle,
-                                  parent = hidden,
-                                  font = ToontownGlobals.getSignFont(),
-                                  fg = (1,0.9,0.1,1),
-                                  pos = (0.0, 0.82))
+                                  scale=TTLocalizer.ACtitle,
+                                  parent=hidden,
+                                  font=ToontownGlobals.getSignFont(),
+                                  fg=(1, 0.9, 0.1, 1),
+                                  pos=(0.0, 0.82))
 
         quitHover = gui.find("**/QuitBtn_RLVR")
-        
+
         self.quitButton = DirectButton(
-##            image = (gui.find("**/QuitBtn_UP"), gui.find("**/QuitBtn_DN"), gui.find("**/QuitBtn_RLVR")),
-            image = (quitHover, quitHover, quitHover),
-            relief = None,
-            text = TTLocalizer.AvatarChooserQuit,
-            text_font = ToontownGlobals.getSignFont(),
-##            text0_fg = (0.152, 0.750, 0.258, 1),
-##            text1_fg = (0.152, 0.750, 0.258, 1),
-##            text2_fg = (0.977, 0.816, 0.133, 1),
-            text_fg = (0.977, 0.816, 0.133, 1),
-            text_pos = (0, TTLocalizer.ACquitButton_pos),
-            text_scale = TTLocalizer.ACquitButton,
-            image_scale = 1,
-            image1_scale = 1.05,
-            image2_scale = 1.05,
-            scale = 1.05,
-##            pos = (0, 0, -0.924),
-            pos = (1.08, 0, -0.907),
-            command = self.__handleQuit,
-            )
+            ##            image = (gui.find("**/QuitBtn_UP"), gui.find("**/QuitBtn_DN"), gui.find("**/QuitBtn_RLVR")),
+            image=(quitHover, quitHover, quitHover),
+            relief=None,
+            text=TTLocalizer.AvatarChooserQuit,
+            text_font=ToontownGlobals.getSignFont(),
+            ##            text0_fg = (0.152, 0.750, 0.258, 1),
+            ##            text1_fg = (0.152, 0.750, 0.258, 1),
+            ##            text2_fg = (0.977, 0.816, 0.133, 1),
+            text_fg=(0.977, 0.816, 0.133, 1),
+            text_pos=(0, TTLocalizer.ACquitButton_pos),
+            text_scale=TTLocalizer.ACquitButton,
+            image_scale=1,
+            image1_scale=1.05,
+            image2_scale=1.05,
+            scale=1.05,
+            ##            pos = (0, 0, -0.924),
+            pos=(1.08, 0, -0.907),
+            command=self.__handleQuit,
+        )
 
         """self.logoutButton = DirectButton(
             relief = None,
@@ -192,30 +202,30 @@ class AvatarChooser(StateData.StateData):
             scale = 0.5,
             command = self.__handleLogoutWithoutConfirm,
             )"""
-        self.districtsButton =  DirectButton(
-            relief = None,
-            image = (quitHover, quitHover, quitHover),
-##            image_scale = 1.15,
-            text = 'Districts',
-            text_font = ToontownGlobals.getSignFont(),
-            text_fg = (0.977, 0.816, 0.133, 1),
-##            text0_fg = (0.152, 0.750, 0.258, 1),
-##            text1_fg = (0.152, 0.750, 0.258, 1),
-##            text2_fg = (0.977, 0.816, 0.133, 1),
-            text_scale = TTLocalizer.AClogoutButton,
-            text_pos = (0,-0.035),
-##            pos = (1.105,0,-0.924),
-            pos = (-1.17,0,-0.914),
-            image_scale = 1.15,
-            image1_scale = 1.15,
-            image2_scale = 1.18,
-            scale = 0.5,
-            command = self.openDistrictSelectorCommand)
+        self.districtsButton = DirectButton(
+            relief=None,
+            image=(quitHover, quitHover, quitHover),
+            ##            image_scale = 1.15,
+            text='Districts',
+            text_font=ToontownGlobals.getSignFont(),
+            text_fg=(0.977, 0.816, 0.133, 1),
+            ##            text0_fg = (0.152, 0.750, 0.258, 1),
+            ##            text1_fg = (0.152, 0.750, 0.258, 1),
+            ##            text2_fg = (0.977, 0.816, 0.133, 1),
+            text_scale=TTLocalizer.AClogoutButton,
+            text_pos=(0, -0.035),
+            ##            pos = (1.105,0,-0.924),
+            pos=(-1.17, 0, -0.914),
+            image_scale=1.15,
+            image1_scale=1.15,
+            image2_scale=1.18,
+            scale=0.5,
+            command=self.openDistrictSelectorCommand)
         # initially this is hidden since it might be invisible if we
         # are logging in with a "blue" (and therefore can't log out to
         # a different user).
-        #self.logoutButton.hide()
-        
+        # self.logoutButton.hide()
+
         gui.removeNode()
         gui2.removeNode()
         newGui.removeNode()
@@ -223,7 +233,7 @@ class AvatarChooser(StateData.StateData):
         # create the av panels w/ avatars
         self.panelList = []
         used_position_indexs = []
-        
+
         for av in self.avatarList:
             # decide whether or not to lock out all but one of the toon positions
             # is this a paid account?
@@ -236,8 +246,8 @@ class AvatarChooser(StateData.StateData):
                     okToLockout = 0
 
             panel = AvatarChoice.AvatarChoice(
-                av, position = av.position, paid = isPaid,
-                okToLockout = okToLockout)
+                av, position=av.position, paid=isPaid,
+                okToLockout=okToLockout)
             panel.setPos(POSITIONS[av.position])
             used_position_indexs.append(av.position)
             self.panelList.append(panel)
@@ -245,42 +255,44 @@ class AvatarChooser(StateData.StateData):
         # create the av panels w/o avatars
         for panelNum in range(0, MAX_AVATARS):
             if panelNum not in used_position_indexs:
-                panel = AvatarChoice.AvatarChoice(position = panelNum, paid = isPaid)
+                panel = AvatarChoice.AvatarChoice(
+                    position=panelNum, paid=isPaid)
                 panel.setPos(POSITIONS[panelNum])
 ##                panel['image_color'] = COLORS[panelNum]
                 self.panelList.append(panel)
 
-        if(len(self.avatarList)>0):
-            self.initLookAtInfo()        
+        if(len(self.avatarList) > 0):
+            self.initLookAtInfo()
         self.isLoaded = 1
 
-        # self.avatarList not updated on av deletion, but it doesnt have to be, since on 
-        # deletion or creation of a single AvatarChoice, the whole AvatarChooser obj is unloaded 
+        # self.avatarList not updated on av deletion, but it doesnt have to be, since on
+        # deletion or creation of a single AvatarChoice, the whole AvatarChooser obj is unloaded
         # and re-created in ToontownClientRepository.py
 
     def getLookAtPosition(self, toonHead, toonidx):
         lookAtChoice = random.random()
 
-        if(len(self.used_panel_indexs)==1):
+        if(len(self.used_panel_indexs) == 1):
             lookFwdPercent = 0.33
             lookAtOthersPercent = 0
         else:
             lookFwdPercent = 0.20
 
-            if(len(self.used_panel_indexs)==2):
+            if(len(self.used_panel_indexs) == 2):
                 lookAtOthersPercent = 0.4
             else:
                 lookAtOthersPercent = 0.65
 
-        #for i in range(MAX_AVATARS):
-        #    print "[",i,"] present: ",(self.panelList[i].dna!=None),", posn: ",self.panelList[i].position
+        # for i in range(MAX_AVATARS):
+        # print "[",i,"] present: ",(self.panelList[i].dna!=None),", posn:
+        # ",self.panelList[i].position
 
         lookRandomPercent = 1.0 - lookFwdPercent - lookAtOthersPercent
 
         if(lookAtChoice < lookFwdPercent):
             self.IsLookingAt[toonidx] = "f"
             return Vec3(0, 1.5, 0)
-        elif(lookAtChoice < (lookRandomPercent + lookFwdPercent) or (len(self.used_panel_indexs)==1)):
+        elif(lookAtChoice < (lookRandomPercent + lookFwdPercent) or (len(self.used_panel_indexs) == 1)):
             self.IsLookingAt[toonidx] = "r"
             return toonHead.getRandomForwardLookAtPoint()
         else:
@@ -292,7 +304,7 @@ class AvatarChooser(StateData.StateData):
                 if(self.IsLookingAt[i] == toonidx):
                     other_toon_idxs.append(i)
 
-            if(len(other_toon_idxs)==1):
+            if(len(other_toon_idxs) == 1):
                 IgnoreStarersPercent = 0.4
             else:
                 IgnoreStarersPercent = 0.2
@@ -300,20 +312,20 @@ class AvatarChooser(StateData.StateData):
             NoticeStarersPercent = 0.5
             bStareTargetTurnsToMe = 0
 
-            # if no one looking at me or rand<IgnoreStarers, look at anyone else instead of someone looking at me
-            if((len(other_toon_idxs)==0) or (random.random()<IgnoreStarersPercent)):
+            # if no one looking at me or rand<IgnoreStarers, look at anyone
+            # else instead of someone looking at me
+            if((len(other_toon_idxs) == 0) or (random.random() < IgnoreStarersPercent)):
                 # delete me from the list of possible tgts
                 other_toon_idxs = []
                 for i in self.used_panel_indexs:
                     if(i != toonidx):
                         other_toon_idxs.append(i)
 
-                if(random.random()<NoticeStarersPercent):
+                if(random.random() < NoticeStarersPercent):
                     bStareTargetTurnsToMe = 1
 
-
             # if list of other toons empty, look foward
-            if (len(other_toon_idxs)==0):
+            if (len(other_toon_idxs) == 0):
                 return toonHead.getRandomForwardLookAtPoint()
             # otherwise, pick one at random toon to look at
             else:
@@ -323,32 +335,36 @@ class AvatarChooser(StateData.StateData):
                 self.IsLookingAt[lookingAtIdx] = toonidx
                 otherToonHead = None
                 # panelList idx is not the same idx as panel.position & toonidx !!
-                # could I precompute the panel.position->panelList idx map at loadtime, 
+                # could I precompute the panel.position->panelList idx map at loadtime,
                 # or does the panelList panel order change?
                 for panel in self.panelList:
                     if(panel.position == lookingAtIdx):
                         otherToonHead = panel.headModel
-                otherToonHead.doLookAroundToStareAt(otherToonHead, self.getLookAtToPosVec(lookingAtIdx, toonidx))
+                otherToonHead.doLookAroundToStareAt(
+                    otherToonHead, self.getLookAtToPosVec(
+                        lookingAtIdx, toonidx))
 
-            self.IsLookingAt[toonidx] = lookingAtIdx  
-            return self.getLookAtToPosVec(toonidx,lookingAtIdx)
+            self.IsLookingAt[toonidx] = lookingAtIdx
+            return self.getLookAtToPosVec(toonidx, lookingAtIdx)
 
     def getLookAtToPosVec(self, fromIdx, toIdx):
-        # for some reason 'x' component subtraction needs to be inverted, so do vec subtract manually
-        x = -(POSITIONS[toIdx][0]-POSITIONS[fromIdx][0])
-        y = POSITIONS[toIdx][1]-POSITIONS[fromIdx][1]
-        z = POSITIONS[toIdx][2]-POSITIONS[fromIdx][2]
-        return Vec3(x,y,z)
+        # for some reason 'x' component subtraction needs to be inverted, so do
+        # vec subtract manually
+        x = -(POSITIONS[toIdx][0] - POSITIONS[fromIdx][0])
+        y = POSITIONS[toIdx][1] - POSITIONS[fromIdx][1]
+        z = POSITIONS[toIdx][2] - POSITIONS[fromIdx][2]
+        return Vec3(x, y, z)
 
     def initLookAtInfo(self):
         self.used_panel_indexs = []
 
         for panel in self.panelList:
-            # Note:  panel.position is NOT the same as its index in self.panelList!
-            if(panel.dna != None):
+            # Note:  panel.position is NOT the same as its index in
+            # self.panelList!
+            if(panel.dna is not None):
                 self.used_panel_indexs.append(panel.position)
 
-        if(len(self.used_panel_indexs)==0):
+        if(len(self.used_panel_indexs) == 0):
             return
 
         # start out looking at nothing (-1)
@@ -359,8 +375,9 @@ class AvatarChooser(StateData.StateData):
             self.IsLookingAt.append("f")
 
         for panel in self.panelList:
-            if(panel.dna != None):
-                panel.headModel.setLookAtPositionCallbackArgs((self,panel.headModel,panel.position))
+            if(panel.dna is not None):
+                panel.headModel.setLookAtPositionCallbackArgs(
+                    (self, panel.headModel, panel.position))
 
     def unload(self):
         assert(chooser_notify.debug("unload()"))
@@ -379,19 +396,19 @@ class AvatarChooser(StateData.StateData):
         self.quitButton.destroy()
         del self.quitButton
 
-        #self.logoutButton.destroy()
+        # self.logoutButton.destroy()
         #del self.logoutButton
 
         self.pickAToonBG.removeNode()
         del self.pickAToonBG
-        
+
         del self.avatarList
 
         self.parentFSM.getCurrentState().removeChild(self.fsm)
         del self.parentFSM
         del self.fsm
         self.districtsButton.destroy()
-        del self.districtsButton 
+        del self.districtsButton
         self.districtSelector.unload()
         self.ignoreAll()
         self.isLoaded = 0
@@ -405,8 +422,10 @@ class AvatarChooser(StateData.StateData):
         Take appropriate action based on panel action (choose, delete,
         or create)
         """
-        assert(chooser_notify.debug("__handlePanelDone(panelDoneStatus=%s, panelChoice=%s)"%(
-                panelDoneStatus, panelChoice)))
+        assert(
+            chooser_notify.debug(
+                "__handlePanelDone(panelDoneStatus=%s, panelChoice=%s)" %
+                (panelDoneStatus, panelChoice)))
         self.doneStatus = {}
         self.doneStatus['mode'] = panelDoneStatus
         self.choice = panelChoice
@@ -430,8 +449,8 @@ class AvatarChooser(StateData.StateData):
         self.fsm.request("CheckDownload")
 
     def __handleCreate(self):
-        base.transitions.fadeOut(finishIval = EventInterval(self.doneEvent,
-                                                            [self.doneStatus]))
+        base.transitions.fadeOut(finishIval=EventInterval(self.doneEvent,
+                                                          [self.doneStatus]))
 
     def __handleDelete(self):
         """
@@ -443,7 +462,7 @@ class AvatarChooser(StateData.StateData):
         cleanupDialog("globalDialog")
         self.doneStatus = {'mode': "exit"}
         messenger.send(self.doneEvent, [self.doneStatus])
-        
+
     # Specific State functions
 
     #### Choose state ####
@@ -462,7 +481,8 @@ class AvatarChooser(StateData.StateData):
             'downloadAck-response')
         # We are going to check phase 4 here, even though strictly speaking
         # a new toon only has to wait for 3.5 to get into the tutorial. Most
-        # new toons should go directly to the tutorial though, not come back here
+        # new toons should go directly to the tutorial though, not come back
+        # here
         self.downloadAck.enter(4)
 
     def exitCheckDownload(self):
@@ -472,8 +492,10 @@ class AvatarChooser(StateData.StateData):
 
     def __handleDownloadAck(self, doneStatus):
         if (doneStatus['mode'] == 'complete'):
-            base.transitions.fadeOut(finishIval = EventInterval(self.doneEvent,
-                                                                [self.doneStatus]))
+            base.transitions.fadeOut(
+                finishIval=EventInterval(
+                    self.doneEvent, [
+                        self.doneStatus]))
         else:
             # Download is not done, go back to choosing your avatar
             self.fsm.request("Choose")
@@ -488,13 +510,10 @@ class AvatarChooser(StateData.StateData):
         self.districtsButton['text'] = 'Back'
         for panel in self.panelList:
             panel.hide()
-    
+
     def closeDistrictSelectorCommand(self):
         self.districtSelector.hideSelector()
         self.districtsButton['command'] = self.openDistrictSelectorCommand
         self.districtsButton['text'] = 'Districts'
         for panel in self.panelList:
             panel.show()
-
-
-

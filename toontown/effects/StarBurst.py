@@ -4,13 +4,15 @@ from direct.particles import ParticleEffect, Particles, ForceGroup
 from .EffectController import EffectController
 from .PooledEffect import PooledEffect
 
+
 class StarBurst(PooledEffect, EffectController):
-    
+
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
-        
-        model = loader.loadModel("phase_4/models/props/tt_m_efx_ext_fireworkCards")
+
+        model = loader.loadModel(
+            "phase_4/models/props/tt_m_efx_ext_fireworkCards")
         self.card = model.find("**/tt_t_efx_ext_particleStars")
         self.cardScale = 64.0
 
@@ -19,11 +21,11 @@ class StarBurst(PooledEffect, EffectController):
         self.setLightOff()
 
         self.effectScale = 1.0
-        self.effectColor = Vec4(1,1,1,1)
-        
+        self.effectColor = Vec4(1, 1, 1, 1)
+
         self.f = ParticleEffect.ParticleEffect("StarBurst")
         self.f.reparentTo(self)
-        
+
         self.p0 = Particles.Particles('particles-0')
         self.p0.setFactory("ZSpinParticleFactory")
         self.p0.setRenderer("SpriteParticleRenderer")
@@ -63,7 +65,10 @@ class StarBurst(PooledEffect, EffectController):
         # Renderer parameters
         self.p0.renderer.setAlphaMode(BaseParticleRenderer.PRALPHAOUT)
         self.p0.renderer.setUserAlpha(1.0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
+        self.p0.renderer.setColorBlendMode(
+            ColorBlendAttrib.MAdd,
+            ColorBlendAttrib.OIncomingAlpha,
+            ColorBlendAttrib.OOne)
         # Sprite parameters
         self.p0.renderer.setFromNode(self.card)
         self.p0.renderer.setColor(Vec4(1.0, 1.0, 1.0, 1.0))
@@ -71,9 +76,11 @@ class StarBurst(PooledEffect, EffectController):
         self.p0.renderer.setYScaleFlag(1)
         self.p0.renderer.setAnimAngleFlag(1)
         self.p0.renderer.setNonanimatedTheta(0.0)
-        self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
+        self.p0.renderer.setAlphaBlendMethod(
+            BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0,.1,Vec4(0,0,0,0),self.effectColor,1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, .1, Vec4(0, 0, 0, 0), self.effectColor, 1)
         # Emitter parameters
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 0.0))
@@ -91,17 +98,17 @@ class StarBurst(PooledEffect, EffectController):
             Func(self.p0.setBirthRate, 100.0),
             Wait(2.0),
             Func(self.cleanUpEffect)
-            )
+        )
 
     def setEffectScale(self, scale):
         self.effectScale = scale
-        self.p0.renderer.setInitialXScale(.5*self.cardScale*scale)
-        self.p0.renderer.setFinalXScale(.8*self.cardScale*scale)
-        self.p0.renderer.setInitialYScale(.5*self.cardScale*scale)
-        self.p0.renderer.setFinalYScale(1.0*self.cardScale*scale)
-        self.p0.emitter.setAmplitude(100.0*scale)
-        self.p0.emitter.setAmplitudeSpread(50.0*scale)
-        self.p0.emitter.setRadius(220.0*scale)
+        self.p0.renderer.setInitialXScale(.5 * self.cardScale * scale)
+        self.p0.renderer.setFinalXScale(.8 * self.cardScale * scale)
+        self.p0.renderer.setInitialYScale(.5 * self.cardScale * scale)
+        self.p0.renderer.setFinalYScale(1.0 * self.cardScale * scale)
+        self.p0.emitter.setAmplitude(100.0 * scale)
+        self.p0.emitter.setAmplitudeSpread(50.0 * scale)
+        self.p0.emitter.setRadius(220.0 * scale)
 
     def setEffectColor(self, color):
         self.effectColor = color

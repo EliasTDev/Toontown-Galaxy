@@ -1202,7 +1202,7 @@ WHITELIST = [
     'amine',
     'amiss',
     'amnesia',
-     'amog',
+    'amog',
 
     'among',
     'amongst',

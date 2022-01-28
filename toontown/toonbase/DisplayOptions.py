@@ -4,21 +4,22 @@ import os
 import sys
 import datetime
 from panda3d.core import loadPrcFileData, WindowProperties
-from settings import Settings 
+from settings import Settings
 from otp.otpgui import OTPDialog
 from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPRender
 from direct.directnotify import DirectNotifyGlobal
 from panda3d.otp import *
-try:        
+try:
     import embedded
-except:
+except BaseException:
     pass
+
 
 class DisplayOptions:
     """A class stolen from Pirates so we can respect saved window settings when we get to Pick A Toon."""
     notify = DirectNotifyGlobal.directNotify.newCategory("DisplayOptions")
-    
+
     def __init__(self):
         self.restore_failed = False
         #self.restrictToEmbedded(1, False)
@@ -33,68 +34,93 @@ class DisplayOptions:
         musicVolume = base.settings.getFloat('game', 'musicVolume', 1.0)
         sfxVolume = base.settings.getFloat('game', 'sfxVolume', 1.0)
 
-        #copied from Resolution in settingsFile.h
+        # copied from Resolution in settingsFile.h
         res = base.settings.getList('game', 'resolution', [800, 600])
         embed = base.settings.getBool('game', 'embeddedMode', False)
         antialiasing = base.settings.getInt('game', 'antialiasing', 0)
-        if antialiasing == True:
-            loadPrcFileData('toonBase Settings Framebuffer MSAA', 'framebuffer-multisample 1')
-            loadPrcFileData('toonBase Settings MSAA Level', 'multisamples %i' % antialiasing)
+        if antialiasing:
+            loadPrcFileData(
+                'toonBase Settings Framebuffer MSAA',
+                'framebuffer-multisample 1')
+            loadPrcFileData(
+                'toonBase Settings MSAA Level',
+                'multisamples %i' %
+                antialiasing)
         else:
             base.settings.updateSetting('game', 'antialiasing', antialiasing)
-            loadPrcFileData('toonBase Settings Framebuffer MSAA', 'framebuffer-multisample 0')
-        self.notify.debug("before prc settings embedded mode=%s" % str(embed))
-        self.notify.debug("before prc settings full screen mode=%s" % str(mode)) 
-        if mode == None:
+            loadPrcFileData(
+                'toonBase Settings Framebuffer MSAA',
+                'framebuffer-multisample 0')
+        self.notify.debug(f"before prc settings embedded mode={str(embed)}")
+        self.notify.debug(
+            f"before prc settings full screen mode={str(mode)}")
+        if mode is None:
             mode = 1
-        if res == None:
-            res = (800,600)
-        loadPrcFileData("toonBase Settings Window Res", ("win-size %s %s" % (res[0], res[1])))
-        self.notify.debug("settings resolution = %s" % str(res))
-        loadPrcFileData("toonBase Settings Window FullScreen", ("fullscreen %s" % (mode)))
-        self.notify.debug("settings full screen mode=%s" % str(mode))        
-        loadPrcFileData("toonBase Settings Music Active", ("audio-music-active %s" % (music)))
-        loadPrcFileData("toonBase Settings Sound Active", ("audio-sfx-active %s" % (sfx)))
-        loadPrcFileData("toonBase Settings Music Volume", ("audio-master-music-volume %s" % (musicVolume)))
-        loadPrcFileData("toonBase Settings Sfx Volume", ("audio-master-sfx-volume %s" % (sfxVolume)))
-        loadPrcFileData("toonBase Settings Toon Chat Sounds", ("toon-chat-sounds %s" % (toonChatSounds)))
+        if res is None:
+            res = (800, 600)
+        loadPrcFileData("toonBase Settings Window Res",
+                        f"win-size {res[0]} {res[1]}")
+        self.notify.debug(f"settings resolution = {str(res)}")
+        loadPrcFileData(
+            "toonBase Settings Window FullScreen",
+            f"fullscreen {mode}")
+        self.notify.debug(f"settings full screen mode={str(mode)}")
+        loadPrcFileData(
+            "toonBase Settings Music Active",
+            f"audio-music-active {music}")
+        loadPrcFileData(
+            "toonBase Settings Sound Active",
+            f"audio-sfx-active {sfx}")
+        loadPrcFileData(
+            "toonBase Settings Music Volume",
+            f"audio-master-music-volume {musicVolume}")
+        loadPrcFileData(
+            "toonBase Settings Sfx Volume",
+            f"audio-master-sfx-volume {sfxVolume}")
+        loadPrcFileData(
+            "toonBase Settings Toon Chat Sounds",
+            f"toon-chat-sounds {toonChatSounds}")
         self.settingsFullScreen = mode
         self.settingsWidth = res[0]
         self.settingsHeight = res[1]
         self.settingsEmbedded = embed
         self.settingsAntialiasing = antialiasing
 
-        self.notify.debug("settings embedded mode=%s" % str(self.settingsEmbedded))   
+        self.notify.debug(f"settings embedded mode={str(self.settingsEmbedded)}")
 
-        self.notify.info("settingsFullScreen = %s, embedded = %s width=%d height=%d" %
-                         (self.settingsFullScreen, self.settingsEmbedded,
-                          self.settingsWidth, self.settingsHeight))
+        self.notify.info(
+            "settingsFullScreen = %s, embedded = %s width=%d height=%d" %
+            (self.settingsFullScreen,
+             self.settingsEmbedded,
+             self.settingsWidth,
+             self.settingsHeight))
         # these settings test error recovery, as no one has a 16000 x 12000 monitor (yet)
         #self.settingsFullScreen = True
         #self.settingsWidth = 16000
         #self.settingsHeight = 12000
-        
-    def restrictToEmbedded(self, restrict, change_display = True):
+
+    def restrictToEmbedded(self, restrict, change_display=True):
         # to completely disable restrict to embedded, uncomment:
         #restrict = 0
- 
+
         # if we are not running embedded, restricting to
         # embedded is not an option
         if base.appRunner is None or base.appRunner.windowProperties is None:
             restrict = 0
 
         self.restrict_to_embedded = choice(restrict, 1, 0)
-        self.notify.debug("restrict_to_embedded: %s" % self.restrict_to_embedded)
-            
-        # window mode may have changed 
+        self.notify.debug(
+            f"restrict_to_embedded: {self.restrict_to_embedded}")
+
+        # window mode may have changed
         if change_display:
-            self.set( base.pipe, self.settingsWidth, self.settingsHeight,
-                      self.settingsFullScreen, self.settingsEmbedded)
+            self.set(base.pipe, self.settingsWidth, self.settingsHeight,
+                     self.settingsFullScreen, self.settingsEmbedded)
 
     def set(self, pipe, width, height, fullscreen, embedded):
         self.notify.debugStateCall(self)
         state = False
-        
+
         self.notify.info("SET")
 
         #fullscreen = options.fullscreen_runtime
@@ -102,32 +128,34 @@ class DisplayOptions:
         if self.restrict_to_embedded:
             fullscreen = 0
             embedded = 1
-            
+
         if embedded:
             if base.appRunner.windowProperties:
-                width = base.appRunner.windowProperties.getXSize ()
-                height = base.appRunner.windowProperties.getYSize ()
+                width = base.appRunner.windowProperties.getXSize()
+                height = base.appRunner.windowProperties.getYSize()
 
         self.current_pipe = base.pipe
         self.current_properties = WindowProperties(base.win.getProperties())
 
         properties = self.current_properties
         self.notify.debug("DISPLAY PREVIOUS:")
-        self.notify.debug("  EMBEDDED:   %s" % bool(properties.getParentWindow ( )))
-        self.notify.debug("  FULLSCREEN: %s" % bool(properties.getFullscreen ( )))
-        self.notify.debug("  X SIZE:     %s" % properties.getXSize ( ))
-        self.notify.debug("  Y SIZE:     %s" % properties.getYSize ( ))
+        self.notify.debug(
+            f"  EMBEDDED:   {bool(properties.getParentWindow())}")
+        self.notify.debug(
+            f"  FULLSCREEN: {bool(properties.getFullscreen())}")
+        self.notify.debug(f"  X SIZE:     {properties.getXSize()}")
+        self.notify.debug(f"  Y SIZE:     {properties.getYSize()}")
         self.notify.debug("DISPLAY REQUESTED:")
-        self.notify.debug("  EMBEDDED:   %s" % bool(embedded))
-        self.notify.debug("  FULLSCREEN: %s" % bool(fullscreen))
-        self.notify.debug("  X SIZE:     %s" % width)
-        self.notify.debug("  Y SIZE:     %s" % height)
+        self.notify.debug(f"  EMBEDDED:   {bool(embedded)}")
+        self.notify.debug(f"  FULLSCREEN: {bool(fullscreen)}")
+        self.notify.debug(f"  X SIZE:     {width}")
+        self.notify.debug(f"  Y SIZE:     {height}")
 
-        if ((self.current_pipe == pipe) and \
-            (bool(self.current_properties.getParentWindow( )) == bool(embedded)) and \
-            (self.current_properties.getFullscreen ( ) == fullscreen) and \
-            (self.current_properties.getXSize ( ) == width) and \
-            (self.current_properties.getYSize ( ) == height)):
+        if ((self.current_pipe == pipe) and
+            (bool(self.current_properties.getParentWindow()) == bool(embedded)) and
+            (self.current_properties.getFullscreen() == fullscreen) and
+            (self.current_properties.getXSize() == width) and
+                (self.current_properties.getYSize() == height)):
             # no display change required
             self.notify.info("DISPLAY NO CHANGE REQUIRED")
             state = True
@@ -140,10 +168,10 @@ class DisplayOptions:
             if embedded:
                 if base.appRunner.windowProperties:
                     properties = base.appRunner.windowProperties
-            
+
             # get current sort order
-            original_sort = base.win.getSort ( )
-            
+            original_sort = base.win.getSort()
+
             if self.resetWindowProperties(pipe, properties):
                 self.notify.debug("DISPLAY CHANGE SET")
 
@@ -151,32 +179,35 @@ class DisplayOptions:
                 properties = base.win.getProperties()
 
                 self.notify.debug("DISPLAY ACHIEVED:")
-                self.notify.debug("  EMBEDDED:   %s" % bool(properties.getParentWindow ( )))
-                self.notify.debug("  FULLSCREEN: %s" % bool(properties.getFullscreen ( )))
-                self.notify.debug("  X SIZE:     %s" % properties.getXSize ( ))
-                self.notify.debug("  Y SIZE:     %s" % properties.getYSize ( ))
+                self.notify.debug(
+                    f"  EMBEDDED:   {bool(properties.getParentWindow())}")
+                self.notify.debug(
+                    f"  FULLSCREEN: {bool(properties.getFullscreen())}")
+                self.notify.debug(f"  X SIZE:     {properties.getXSize()}")
+                self.notify.debug(f"  Y SIZE:     {properties.getYSize()}")
 
-                if ((bool(properties.getParentWindow( )) == bool(embedded)) and \
-                    (properties.getFullscreen ( ) == fullscreen) and \
-                    (properties.getXSize ( ) == width) and \
-                    (properties.getYSize ( ) == height)):
+                if ((bool(properties.getParentWindow()) == bool(embedded)) and
+                    (properties.getFullscreen() == fullscreen) and
+                    (properties.getXSize() == width) and
+                        (properties.getYSize() == height)):
                     self.notify.info("DISPLAY CHANGE VERIFIED")
                     state = True
                 else:
-                    self.notify.warning("DISPLAY CHANGE FAILED, RESTORING PREVIOUS DISPLAY")
-                    self.restoreWindowProperties () 
+                    self.notify.warning(
+                        "DISPLAY CHANGE FAILED, RESTORING PREVIOUS DISPLAY")
+                    self.restoreWindowProperties()
             else:
                 self.notify.warning("DISPLAY CHANGE FAILED")
                 self.notify.warning("DISPLAY SET - BEFORE RESTORE")
-                self.restoreWindowProperties ()
+                self.restoreWindowProperties()
                 self.notify.warning("DISPLAY SET - AFTER RESTORE")
 
             # set current sort order
-            base.win.setSort (original_sort)
+            base.win.setSort(original_sort)
 
             base.graphicsEngine.renderFrame()
             base.graphicsEngine.renderFrame()
-                
+
         return state
 
     def resetWindowProperties(self, pipe, properties):
@@ -195,18 +226,18 @@ class DisplayOptions:
         if base.pipe != pipe:
             gsg = None
 
-        if (gsg == None) or \
+        if (gsg is None) or \
             (currentProperties.getFullscreen() != newProperties.getFullscreen()) or \
-            (currentProperties.getParentWindow() != newProperties.getParentWindow()):
+                (currentProperties.getParentWindow() != newProperties.getParentWindow()):
             # For now, assume that if we change fullscreen state, we
             # need to destroy the window and create a new one.
 
-            self.notify.debug("window properties: %s" % properties)
-            self.notify.debug("gsg: %s" % gsg)
+            self.notify.debug(f"window properties: {properties}")
+            self.notify.debug(f"gsg: {gsg}")
 
             base.pipe = pipe
-            if not base.openMainWindow(props = properties, gsg = gsg,
-                                       keepCamera = True):
+            if not base.openMainWindow(props=properties, gsg=gsg,
+                                       keepCamera=True):
                 self.notify.warning("OPEN MAIN WINDOW FAILED")
                 return 0
 
@@ -239,13 +270,13 @@ class DisplayOptions:
 
         return 1
 
-    def restoreWindowProperties (self):
+    def restoreWindowProperties(self):
         if (self.resetWindowProperties(self.current_pipe, self.current_properties)):
             self.restore_failed = False
         else:
             # Oops, we couldn't get the original settings back!
             self.notify.warning("Couldn't restore original display settings!")
-            
+
             if base.appRunner and base.appRunner.windowProperties:
                 # Try to go back into embedded.  That might help.
                 fullscreen = 0
@@ -272,5 +303,5 @@ class DisplayOptions:
             # like a low-level panic situation.
             self.notify.error("Failed opening regular window!")
             base.panda3dRenderError()
-            self.restore_failed = True            
+            self.restore_failed = True
         return

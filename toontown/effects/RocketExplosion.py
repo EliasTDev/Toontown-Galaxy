@@ -5,32 +5,37 @@ from direct.interval.IntervalGlobal import *
 from direct.showbase import AppRunnerGlobal
 import os
 
+
 class RocketExplosion(NodePath):
     def __init__(self, parent, smokeParent):
         # Initialize the superclass
         NodePath.__init__(self)
 
-        notify = DirectNotifyGlobal.directNotify.newCategory('RocketExplosionParticles')
+        notify = DirectNotifyGlobal.directNotify.newCategory(
+            'RocketExplosionParticles')
 
         self.effectNode = parent.attachNewNode('RocketExplosion')
         self.effectNode.setBin("fixed", 1)
-        self.effectNode.setDepthWrite(1)     
-        
+        self.effectNode.setDepthWrite(1)
+
         self.smokeEffectNode = smokeParent.attachNewNode('RocketSmoke')
         self.smokeEffectNode.setBin("fixed", 1)
         self.smokeEffectNode.setDepthWrite(0)
-        
+
         self.effect = ParticleEffect.ParticleEffect('RocketFire')
         self.smokeEffect = ParticleEffect.ParticleEffect('RocketSmoke')
 
         particleSearchPath = DSearchPath()
         if AppRunnerGlobal.appRunner:
             # In the web-publish runtime, it will always be here:
-            particleSearchPath.appendDirectory(Filename.expandFrom('$TT_3_5_ROOT/phase_3.5/etc'))
+            particleSearchPath.appendDirectory(
+                Filename.expandFrom('$TT_3_5_ROOT/phase_3.5/etc'))
         else:
             # In other environments, including the dev environment, look here:
             basePath = os.path.expandvars('$TOONTOWN') or './toontown'
-            particleSearchPath.appendDirectory(Filename.fromOsSpecific(basePath+'/src/effects'))
+            particleSearchPath.appendDirectory(
+                Filename.fromOsSpecific(
+                    basePath + '/src/effects'))
             particleSearchPath.appendDirectory(Filename('phase_3.5/etc'))
             particleSearchPath.appendDirectory(Filename('phase_4/etc'))
             particleSearchPath.appendDirectory(Filename('phase_5/etc'))
@@ -43,34 +48,35 @@ class RocketExplosion(NodePath):
         found = vfs.resolveFilename(pfile, particleSearchPath)
 
         if not found:
-            notify.warning('loadParticleFile() - no path: %s' % pfile)
+            notify.warning(f'loadParticleFile() - no path: {pfile}')
             return
-        notify.debug('Loading particle file: %s' % pfile)
+        notify.debug(f'Loading particle file: {pfile}')
 
         self.effect.loadConfig(pfile)
         ren = self.effect.getParticlesNamed('particles-1').getRenderer()
-        ren.setTextureFromNode('phase_4/models/props/tt_m_efx_fireball','**/*')        
-        
+        ren.setTextureFromNode(
+            'phase_4/models/props/tt_m_efx_fireball', '**/*')
+
         # Smoke effect
         pfile = Filename('tt_p_efx_rocketLaunchSmoke.ptf')
         found = vfs.resolveFilename(pfile, particleSearchPath)
 
         if not found:
-            notify.warning('loadParticleFile() - no path: %s' % pfile)
+            notify.warning(f'loadParticleFile() - no path: {pfile}')
             return
-        notify.debug('Loading particle file: %s' % pfile)
+        notify.debug(f'Loading particle file: {pfile}')
 
         self.smokeEffect.loadConfig(pfile)
         ren = self.smokeEffect.getParticlesNamed('particles-1').getRenderer()
-        ren.setTextureFromNode('phase_4/models/props/tt_m_efx_smoke','**/*')
-        
+        ren.setTextureFromNode('phase_4/models/props/tt_m_efx_smoke', '**/*')
+
         self.endSeq = None
-        
+
         self.cleanupCompleted = 0
 
     def start(self):
-        self.effect.start(parent = self.effectNode)
-        self.smokeEffect.start(parent = self.smokeEffectNode)
+        self.effect.start(parent=self.effectNode)
+        self.smokeEffect.start(parent=self.smokeEffectNode)
 
     def stop(self):
         try:
@@ -78,13 +84,13 @@ class RocketExplosion(NodePath):
             self.smokeEffect.disable()
         except AttributeError:
             pass
-            
+
     def end(self):
         self.endSeq = Sequence(
-                             LerpColorScaleInterval(
-                                self.smokeEffectNode,
-                                2.0, Vec4(1, 1, 1, 0)),
-                            Func(self.destroy))
+            LerpColorScaleInterval(
+                self.smokeEffectNode,
+                2.0, Vec4(1, 1, 1, 0)),
+            Func(self.destroy))
         self.endSeq.start()
 
     def destroy(self):

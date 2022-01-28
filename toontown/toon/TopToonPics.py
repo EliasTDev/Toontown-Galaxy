@@ -1,3 +1,6 @@
+from . import ToonDNA
+from .Toon import *
+from direct.directbase.DirectStart import *
 import sys
 import string
 import builtins
@@ -12,16 +15,18 @@ try:
 except AttributeError:
     builtins.launcher = None
 
-def hexToColor(hexString, alpha = None):
-    if alpha == None:
+
+def hexToColor(hexString, alpha=None):
+    if alpha is None:
         alpha = 1
         if len(hexString) >= 8:
-            alpha = eval ('0x' + hexString[6:8])/255.
-        
-    return Vec4(eval ('0x' + hexString[0:2])/255.,
-                eval ('0x' + hexString[2:4])/255.,
-                eval ('0x' + hexString[4:6])/255.,
+            alpha = eval('0x' + hexString[6:8]) / 255.
+
+    return Vec4(eval('0x' + hexString[0:2]) / 255.,
+                eval('0x' + hexString[2:4]) / 255.,
+                eval('0x' + hexString[4:6]) / 255.,
                 alpha)
+
 
 # Parse command line arguments
 headAngle = 0
@@ -41,6 +46,7 @@ fHideRing = 0
 argFlag = None
 outputExtension = 'jpg'
 size = 50
+
 
 def printHelp():
     print()
@@ -63,6 +69,7 @@ def printHelp():
     print('  -S size              Specify the width/height of the images in pixes. Default is 50')
     print('  -h                   Print this help message')
     sys.exit()
+
 
 for arg in sys.argv:
     if arg == '-a':
@@ -118,7 +125,7 @@ for arg in sys.argv:
         fov = string.atof(arg)
         argFlag = None
     elif argFlag == 'F':
-        fillFactor = string.atof(arg)/100.0
+        fillFactor = string.atof(arg) / 100.0
         argFlag = None
     elif argFlag == 'i':
         inputFile = arg
@@ -144,31 +151,28 @@ for arg in sys.argv:
     else:
         argFlag = None
 
-print("Input File: %s" % inputFile)
-print("Output Directory: %s" % outputDirectory)
-print("Look Target: %s" % lookAtTarget)
-print("Head Angle: %f" % headAngle)
-print("Pitch Angle: %f" % pitchAngle)
-print("Roll Angle: %f" % rollAngle)
-print("FOV: %f" % fov)
-print("FOV Fill Percent: %f" % (fillFactor * 100.0))
-print("Background Color: %s" % bgColor)
-print("Background Image: %s" % backgroundImage)
+print(f"Input File: {inputFile}")
+print(f"Output Directory: {outputDirectory}")
+print(f"Look Target: {lookAtTarget}")
+print(f"Head Angle: {headAngle:f}")
+print(f"Pitch Angle: {pitchAngle:f}")
+print(f"Roll Angle: {rollAngle:f}")
+print(f"FOV: {fov:f}")
+print(f"FOV Fill Percent: {fillFactor * 100.0:f}")
+print(f"Background Color: {bgColor}")
+print(f"Background Image: {backgroundImage}")
 if fHideRing:
     print("No Ring")
 else:
     print("Show Ring")
-    print("Ring Color: %s" % ringColor)
-    print("Ring Thickness: %f" % ringScale)
+    print(f"Ring Color: {ringColor}")
+    print(f"Ring Thickness: {ringScale:f}")
 
-ConfigVariableInt('win-size').setStringValue('%d %d' % (size,size))
+ConfigVariableInt('win-size').setStringValue('%d %d' % (size, size))
 
-from direct.directbase.DirectStart import *
-from .Toon import *
-from . import ToonDNA
 
 frame = render2d.attachNewNode('frame')
-base.win.setClearColor(VBase4(0,0,0,0))
+base.win.setClearColor(VBase4(0, 0, 0, 0))
 
 topModels = loader.loadModel('models/gui/topToonPictures')
 
@@ -177,9 +181,9 @@ outerFrame.setScale(2 + ringScale)
 # output this outer frame so we have a hole in the middle
 # to test for
 base.graphicsEngine.renderFrame()
-outerFrameImg = PNMImage.PNMImage(size,size)
+outerFrameImg = PNMImage.PNMImage(size, size)
 base.win.getScreenshot(outerFrameImg)
-outerFrame.setColor(hexToColor(bgColor, alpha = 1))
+outerFrame.setColor(hexToColor(bgColor, alpha=1))
 outerFrame.setBin('fixed', 1)
 
 pictureFrame = topModels.find('**/topToonPictureFrame').copyTo(frame)
@@ -204,7 +208,7 @@ alphaFrame.setTextureOff(1)
 alphaFrame.setTexture(ts, tex, 1)
 
 alphaFrame.setColor(hexToColor(bgColor))
-alphaFrame.setScale(2 + ringScale)    
+alphaFrame.setScale(2 + ringScale)
 alphaFrame.setAttrib(ColorWriteAttrib.make(ColorWriteAttrib.CAlpha))
 alphaFrame.setTransparency(TransparencyAttrib.MNone, 1)
 alphaFrame.setBin('fixed', 2)
@@ -214,7 +218,7 @@ if fHideRing:
 
 background = topModels.find('**/topToonBackground')
 background.reparentTo(camera)
-background.setPos(0,40,-1)
+background.setPos(0, 40, -1)
 background.setScale(40)
 if overrideTexture:
     overrideTexture = Texture()
@@ -226,11 +230,13 @@ if overrideTexture:
 # effectiveFOV is the approximate FOV of the ring
 effectiveFOV = fov * 0.75
 
+
 def calcBodyBounds():
-    p1,p2 = tt.getTightBounds()
-    c = Vec3((p2 + p1)/2.0)
+    p1, p2 = tt.getTightBounds()
+    c = Vec3((p2 + p1) / 2.0)
     delta = p2 - p1
     return c, delta[2]
+
 
 def calcHeadBounds():
     head = tt.getPart('head', '1000')
@@ -252,31 +258,33 @@ def calcHeadBounds():
                 stashed.append(child)
                 child.stash()
     # Where is center of head in render space?
-    p1,p2 = head.getTightBounds()
+    p1, p2 = head.getTightBounds()
     # Put all stashed things back
     for ear in ears.asList():
         ear.unstash()
     for child in stashed:
         child.unstash()
-    c = Vec3((p2 + p1)/2.0)
+    c = Vec3((p2 + p1) / 2.0)
     delta = p2 - p1
     # Restore orientation
     head.wrtReparentTo(headParent)
     return c, delta[2]
 
+
 def lookAtToon():
     if lookAtTarget == 'head':
-        c,height = calcHeadBounds()
+        c, height = calcHeadBounds()
     else:
-        c,height = calcBodyBounds()
+        c, height = calcBodyBounds()
     # Move camera there
     camera.setHpr(render, -180, 0, 0)
     camera.setPos(render, c)
     # Move it back to fit around the target
-    offset = ((height/2.0)/
-              tan(deg2Rad((fillFactor * effectiveFOV)/2.0)))
+    offset = ((height / 2.0) /
+              tan(deg2Rad((fillFactor * effectiveFOV) / 2.0)))
     camera.setY(camera, -offset)
-    
+
+
 tt = Toon()
 dna = ToonDNA.ToonDNA()
 dna.newToonRandom()
@@ -284,7 +292,8 @@ tt.setDNA(dna)
 tt.reparentTo(render)
 
 base.disableMouse()
-base.camLens.setFov(fov,fov)
+base.camLens.setFov(fov, fov)
+
 
 def convertServerDNAString(serverString):
     # Strip out blank space and take last 30 characters
@@ -293,9 +302,10 @@ def convertServerDNAString(serverString):
     serverString = serverString[-stringLen:]
     # Create a datagram from server string
     dg = PyDatagram()
-    for i in range(0,len(serverString),2):
-        eval('dg.addUint8(0x%s)' % serverString[i:i+2])
+    for i in range(0, len(serverString), 2):
+        eval(f'dg.addUint8(0x{serverString[i:i + 2]})')
     return dg.getMessage()
+
 
 def updateToon(DNAString):
     dna = ToonDNA.ToonDNA()
@@ -306,6 +316,7 @@ def updateToon(DNAString):
     tt.stopBlink()
     head = tt.getPart('head', '1000')
     head.setHpr(headAngle, pitchAngle, rollAngle)
+
 
 def snapPics():
     data = getFileData(Filename(inputFile))
@@ -322,18 +333,18 @@ def snapPics():
         if myBgColorAlpha == 1.0:
             base.win.saveScreenshot(Filename(imageName))
         else:
-            myImage = PNMImage.PNMImage(size,size)        
+            myImage = PNMImage.PNMImage(size, size)
             base.win.getScreenshot(myImage)
             myImage.addAlpha()
             for y in range(size):
                 for x in range(size):
-                    isOuterFramePixel = outerFrameImg.getRed(x,y)
+                    isOuterFramePixel = outerFrameImg.getRed(x, y)
                     if isOuterFramePixel:
-                        myImage.setAlpha(x,y,myBgColorAlpha)
+                        myImage.setAlpha(x, y, myBgColorAlpha)
                     else:
-                        myImage.setAlpha(x,y,1)
+                        myImage.setAlpha(x, y, 1)
             print(myImage)
             myImage.write(Filename(imageName))
 
-snapPics()
 
+snapPics()

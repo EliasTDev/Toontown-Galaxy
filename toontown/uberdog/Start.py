@@ -2,38 +2,41 @@
 Start the Toontown UberDog (Uber Distributed Object Globals server).
 """
 
+from toontown.uberdog import PartiesUdConfig
+from toontown.uberdog.ToontownUberDog import ToontownUberDog
+from toontown.coderedemption import TTCodeRedemptionConsts
+from otp.uberdog.UberDogGlobal import *
+from otp.otpbase.PythonUtil import *
+from direct.showbase.PythonUtil import *
+from pandac.PandaModules import getModelPath, Filename
+import sys
+import os
+import time
 import builtins
 from direct.task.Task import Task
+
 
 class game:
     name = "uberDog"
     process = "server"
+
+
 builtins.game = game()
 
-import time
-import os
-import sys
 
 # Initialize ihooks importer On the production servers, we run genPyCode -n
 # meaning no squeeze, so nobody else does this. When we squeeze, the
 # unpacker does this for us and it does not hurt to do in either case.
 #import ihooks
-#ihooks.install()
+# ihooks.install()
 
-#if os.getenv('TTMODELS'):
-from pandac.PandaModules import getModelPath, Filename
-    # In the publish environment, TTMODELS won't be on the model
-    # path by default, so we always add it there.  In the dev
-    # environment, it'll be on the model path already, but it
-    # doesn't hurt to add it again.
+# if os.getenv('TTMODELS'):
+# In the publish environment, TTMODELS won't be on the model
+# path by default, so we always add it there.  In the dev
+# environment, it'll be on the model path already, but it
+# doesn't hurt to add it again.
 getModelPath().appendDirectory(Filename.expandFrom("resources/"))
 
-from direct.showbase.PythonUtil import *
-from otp.otpbase.PythonUtil import *
-from otp.uberdog.UberDogGlobal import *
-from toontown.coderedemption import TTCodeRedemptionConsts
-from toontown.uberdog.ToontownUberDog import ToontownUberDog
-from toontown.uberdog import PartiesUdConfig
 
 print("Initializing the Toontown UberDog (Uber Distributed Object Globals server)...")
 
@@ -50,31 +53,36 @@ uber.objectNames = set(os.getenv("uberdog_objects", "").split())
 minChannel = uber.config.GetInt("uberdog-min-channel", 200400000)
 maxChannel = uber.config.GetInt("uberdog-max-channel", 200449999)
 
-uber.sbNSHost = uber.config.GetString("sb-host","")
-uber.sbNSPort = uber.config.GetInt("sb-port",6053)
+uber.sbNSHost = uber.config.GetString("sb-host", "")
+uber.sbNSPort = uber.config.GetInt("sb-port", 6053)
 uber.sbListenPort = 6060
 uber.clHost = "localhost"
 uber.clPort = 9090
-uber.allowUnfilteredChat = uber.config.GetInt("allow-unfiltered-chat",0)
+uber.allowUnfilteredChat = uber.config.GetInt("allow-unfiltered-chat", 0)
 uber.bwDictPath = ""
 
-uber.RATManagerHTTPListenPort = uber.config.GetInt("rat-port",8080)
-uber.awardManagerHTTPListenPort = uber.config.GetInt("award-port",8888)
-uber.inGameNewsMgrHTTPListenPort = uber.config.GetInt("in-game-news-port",8889)
+uber.RATManagerHTTPListenPort = uber.config.GetInt("rat-port", 8080)
+uber.awardManagerHTTPListenPort = uber.config.GetInt("award-port", 8888)
+uber.inGameNewsMgrHTTPListenPort = uber.config.GetInt(
+    "in-game-news-port", 8889)
 uber.mysqlhost = uber.config.GetString("mysql-host", PartiesUdConfig.ttDbHost)
 
-uber.codeRedemptionMgrHTTPListenPort = uber.config.GetInt('code-redemption-port', 8998)
-uber.crDbName = uber.config.GetString("tt-code-db-name", TTCodeRedemptionConsts.DefaultDbName)
+uber.codeRedemptionMgrHTTPListenPort = uber.config.GetInt(
+    'code-redemption-port', 8998)
+uber.crDbName = uber.config.GetString(
+    "tt-code-db-name",
+    TTCodeRedemptionConsts.DefaultDbName)
 
-uber.cpuInfoMgrHTTPListenPort = uber.config.GetInt("security_ban_mgr_port",8892)
+uber.cpuInfoMgrHTTPListenPort = uber.config.GetInt(
+    "security_ban_mgr_port", 8892)
 
 uber.air = ToontownUberDog(
-        uber.mdip, uber.mdport,
-        uber.esip, uber.esport,
-        None,
-        stateServerId,
-        minChannel,
-        maxChannel)
+    uber.mdip, uber.mdport,
+    uber.esip, uber.esport,
+    None,
+    stateServerId,
+    minChannel,
+    maxChannel)
 
 # How we let the world know we are not running a service
 uber.aiService = 0
@@ -88,7 +96,7 @@ if uber.wantEmbeddedOtpServer:
 
     import otp_server_py
     if not otp_server_py.serverInit(otpServerPath):
-       sys.exit(1)
+        sys.exit(1)
 
     def ServerYield(task):
         otp_server_py.serverLoop()
@@ -100,8 +108,7 @@ if uber.wantEmbeddedOtpServer:
 
 try:
     run()
-except:
+except BaseException:
     info = describeException()
     #uber.air.writeServerEvent('uberdog-exception', districtNumber, info)
     raise
-

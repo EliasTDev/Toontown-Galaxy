@@ -21,8 +21,9 @@ from toontown.toonbase import TTLocalizer
 from toontown.toontowngui import TeaserPanel
 from toontown.distributed.DelayDeletable import DelayDeletable
 
-if( __debug__ ):
+if(__debug__):
     import pdb
+
 
 class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
     """
@@ -40,8 +41,10 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         """constructor for the DistributedDoor"""
         DistributedObject.DistributedObject.__init__(self, cr)
 
-        self.openSfx = base.loader.loadSfx("phase_3.5/audio/sfx/Door_Open_1.ogg")
-        self.closeSfx = base.loader.loadSfx("phase_3.5/audio/sfx/Door_Close_1.ogg")
+        self.openSfx = base.loader.loadSfx(
+            "phase_3.5/audio/sfx/Door_Open_1.ogg")
+        self.closeSfx = base.loader.loadSfx(
+            "phase_3.5/audio/sfx/Door_Close_1.ogg")
 
         # When we get enough information about the door, we can set up
         # its nametag.  The nametag points out nearby buildings to the
@@ -50,68 +53,73 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
 
         assert(self.notify.debug("__init__()"))
         self.fsm = ClassicFSM.ClassicFSM('DistributedDoor_right',
-                           [State.State('off',
-                                        self.enterOff,
-                                        self.exitOff,
-                                        ['closing',
-                                        'closed',
-                                        'opening',
-                                        'open']),
-                            State.State('closing',
-                                        self.enterClosing,
-                                        self.exitClosing,
-                                        ['closed', 'opening']),
-                            State.State('closed',
-                                        self.enterClosed,
-                                        self.exitClosed,
-                                        ['opening']),
-                            State.State('opening',
-                                        self.enterOpening,
-                                        self.exitOpening,
-                                        ['open']),
-                            State.State('open',
-                                        self.enterOpen,
-                                        self.exitOpen,
-                                        ['closing', 'open'])],
-                           # Initial State
-                           'off',
-                           # Final State
-                           'off',
-                          )
+                                         [State.State('off',
+                                                      self.enterOff,
+                                                      self.exitOff,
+                                                      ['closing',
+                                                       'closed',
+                                                       'opening',
+                                                       'open']),
+                                             State.State('closing',
+                                                         self.enterClosing,
+                                                         self.exitClosing,
+                                                         ['closed', 'opening']),
+                                             State.State('closed',
+                                                         self.enterClosed,
+                                                         self.exitClosed,
+                                                         ['opening']),
+                                             State.State('opening',
+                                                         self.enterOpening,
+                                                         self.exitOpening,
+                                                         ['open']),
+                                             State.State('open',
+                                                         self.enterOpen,
+                                                         self.exitOpen,
+                                                         ['closing', 'open'])],
+                                         # Initial State
+                                         'off',
+                                         # Final State
+                                         'off',
+                                         )
         self.fsm.enterInitialState()
         self.exitDoorFSM = ClassicFSM.ClassicFSM('DistributedDoor_left',
-                           [State.State('off',
-                                        self.exitDoorEnterOff,
-                                        self.exitDoorExitOff,
-                                        ['closing',
-                                        'closed',
-                                        'opening',
-                                        'open']),
-                            State.State('closing',
-                                        self.exitDoorEnterClosing,
-                                        self.exitDoorExitClosing,
-                                        ['closed', 'opening']),
-                            State.State('closed',
-                                        self.exitDoorEnterClosed,
-                                        self.exitDoorExitClosed,
-                                        ['opening']),
-                            State.State('opening',
-                                        self.exitDoorEnterOpening,
-                                        self.exitDoorExitOpening,
-                                        ['open']),
-                            State.State('open',
-                                        self.exitDoorEnterOpen,
-                                        self.exitDoorExitOpen,
-                                        ['closing', 'open'])],
-                           # Initial State
-                           'off',
-                           # Final State
-                           'off',
-                          )
+                                                 [State.State('off',
+                                                              self.exitDoorEnterOff,
+                                                              self.exitDoorExitOff,
+                                                              ['closing',
+                                                               'closed',
+                                                               'opening',
+                                                               'open']),
+                                                     State.State('closing',
+                                                                 self.exitDoorEnterClosing,
+                                                                 self.exitDoorExitClosing,
+                                                                 ['closed', 'opening']),
+                                                     State.State('closed',
+                                                                 self.exitDoorEnterClosed,
+                                                                 self.exitDoorExitClosed,
+                                                                 ['opening']),
+                                                     State.State('opening',
+                                                                 self.exitDoorEnterOpening,
+                                                                 self.exitDoorExitOpening,
+                                                                 ['open']),
+                                                     State.State('open',
+                                                                 self.exitDoorEnterOpen,
+                                                                 self.exitDoorExitOpen,
+                                                                 ['closing', 'open'])],
+                                                 # Initial State
+                                                 'off',
+                                                 # Final State
+                                                 'off',
+                                                 )
         self.exitDoorFSM.enterInitialState()
         # self.generate will be called automatically.
 
-        self.specialDoorTypes = { DoorTypes.EXT_HQ:0, DoorTypes.EXT_COGHQ:0, DoorTypes.INT_COGHQ:0, DoorTypes.EXT_KS:0, DoorTypes.INT_KS:0  }
+        self.specialDoorTypes = {
+            DoorTypes.EXT_HQ: 0,
+            DoorTypes.EXT_COGHQ: 0,
+            DoorTypes.INT_COGHQ: 0,
+            DoorTypes.EXT_KS: 0,
+            DoorTypes.INT_KS: 0}
 
         # bossbot door is narrower and will override this
         self.doorX = 1.5
@@ -121,20 +129,20 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         This method is called when the DistributedObject is reintroduced
         to the world, either for the first time or from the cache.
         """
-        #("generate()"))
+        # ("generate()"))
         DistributedObject.DistributedObject.generate(self)
-        self.avatarTracks=[]
-        self.avatarExitTracks=[]
-        self.avatarIDList=[]
-        self.avatarExitIDList=[]
-        self.doorTrack=None
-        self.doorExitTrack=None
+        self.avatarTracks = []
+        self.avatarExitTracks = []
+        self.avatarIDList = []
+        self.avatarExitIDList = []
+        self.doorTrack = None
+        self.doorExitTrack = None
 
     def disable(self):
-        #("disable()"))
+        # ("disable()"))
 
         self.clearNametag()
-        
+
         # Go to the off state when the object is put in the cache
         taskMgr.remove(self.checkIsDoorHitTaskName())
         self.ignore(self.getEnterTriggerEvent())
@@ -156,9 +164,9 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
             del self.tempDoorNodePath
         DistributedObject.DistributedObject.disable(self)
         # self.delete() will automatically be called.
-    
+
     def delete(self):
-        #("delete()"))
+        # ("delete()"))
         del self.fsm
         del self.exitDoorFSM
         del self.openSfx
@@ -171,10 +179,10 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         return not ZoneUtil.isInterior(self.zoneId)
 
     def setupNametag(self):
-        #("setupNametag()"))
+        # ("setupNametag()"))
         if not self.wantsNametag():
             return
-        if self.nametag == None:
+        if self.nametag is None:
             self.nametag = NametagGroup()
             self.nametag.setFont(ToontownGlobals.getBuildingNametagFont())
             if TTLocalizer.BuildingNametagShadow:
@@ -188,13 +196,14 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
             # building doesn't appear to have multiple nametags.
             # Only the nearest door will be tagged.
             self.nametag.setObjectCode(self.block)
-            name = self.cr.playGame.dnaStore.getTitleFromBlockNumber(self.block)
+            name = self.cr.playGame.dnaStore.getTitleFromBlockNumber(
+                self.block)
             self.nametag.setName(name)
             self.nametag.manage(base.marginManager)
 
     def clearNametag(self):
-        #("clearNametag()"))
-        if self.nametag != None:
+        # ("clearNametag()"))
+        if self.nametag is not None:
             self.nametag.unmanage(base.marginManager)
             self.nametag.setAvatar(NodePath())
             self.nametag = None
@@ -203,7 +212,7 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         # HQ doors (toon, cog, and kartshop) need to have an index appended, since they are
         # the only type of door that supports multiple doors on a building.
         if (self.doorType == DoorTypes.INT_HQ or
-            self.doorType in self.specialDoorTypes ):
+                self.doorType in self.specialDoorTypes):
             return ("door_trigger_" + str(self.block) + "_" +
                     str(self.doorIndex))
         else:
@@ -212,11 +221,11 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
             return ("door_trigger_" + str(self.block))
 
     def getTriggerName_wip(self):
-        ####if ZoneUtil.tutorialDict:
-        ####    return "door_trigger_%d" % (self.block, )
+        # if ZoneUtil.tutorialDict:
+        # return "door_trigger_%d" % (self.block, )
         #name="door_trigger_%d_%d" % (self.block, self.doorIndex)
-        name="door_trigger_%d" % (self.doId, )
-        #("getTriggerName()  returning \"%s\""%(name, )))
+        name = "door_trigger_%d" % (self.doId, )
+        # ("getTriggerName()  returning \"%s\""%(name, )))
         return name
 
     def getEnterTriggerEvent(self):
@@ -245,7 +254,7 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         # (door_trigger_<doorIndex>), so we have to find it, and change it
         # to (door_trigger_<blockNumber>_<doorIndex>).
         if (self.doorType in self.specialDoorTypes):
-            building = self.getBuilding()            
+            building = self.getBuilding()
             doorTrigger = building.find("**/door_" + str(self.doorIndex) +
                                         "/**/door_trigger*")
             doorTrigger.node().setName(self.getTriggerName())
@@ -254,21 +263,25 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
 
     def setTriggerName_wip(self):
         building = self.getBuilding()
-        doorTrigger = building.find("**/door_%d/**/door_trigger_%d"%(self.doorIndex, self.block))
+        doorTrigger = building.find(
+            "**/door_%d/**/door_trigger_%d" %
+            (self.doorIndex, self.block))
         if doorTrigger.isEmpty():
-            doorTrigger = building.find("**/door_trigger_%d"%(self.block, ))
+            doorTrigger = building.find("**/door_trigger_%d" % (self.block, ))
         if doorTrigger.isEmpty():
-            doorTrigger = building.find("**/door_%d/**/door_trigger_*"%(self.doorIndex,))
+            doorTrigger = building.find(
+                "**/door_%d/**/door_trigger_*" %
+                (self.doorIndex,))
         if doorTrigger.isEmpty():
             doorTrigger = building.find("**/door_trigger_*")
         assert(not doorTrigger.isEmpty())
         doorTrigger.node().setName(self.getTriggerName())
-            
+
     def setZoneIdAndBlock(self, zoneId, block):
-        assert(self.notify.debug("setZoneIdAndBlock(zoneId="+str(zoneId)
-                                 +", block="+str(block)+") for doId=" + str(self.doId)))
-        self.zoneId=zoneId
-        self.block=block
+        assert(self.notify.debug("setZoneIdAndBlock(zoneId=" + str(zoneId) +
+               ", block=" + str(block) + ") for doId=" + str(self.doId)))
+        self.zoneId = zoneId
+        self.block = block
 
     def setDoorType(self, doorType):
         self.notify.debug("Door type = " + str(doorType) +
@@ -279,29 +292,29 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         assert(self.notify.debug("Door index = " + str(doorIndex) +
                                  " on door #" + str(self.doId)))
         self.doorIndex = doorIndex
-    
+
     def setSwing(self, flags):
         """
         false: swings inward, true: the door swings outward.
         bit 1 is the left door, bit 2 is the right door:
         """
-        self.leftSwing=(flags&1)!=0
-        self.rightSwing=(flags&2)!=0
-    
+        self.leftSwing = (flags & 1) != 0
+        self.rightSwing = (flags & 2) != 0
+
     def setOtherZoneIdAndDoId(self, zoneId, distributedObjectID):
-        #("setOtherZoneIdAndDoId(zoneId=" 
-               #+str(zoneId)+", distributedObjectID="+str(distributedObjectID)+")"))
-        self.otherZoneId=zoneId
-        self.otherDoId=distributedObjectID
-    
+        # ("setOtherZoneIdAndDoId(zoneId="
+        # +str(zoneId)+", distributedObjectID="+str(distributedObjectID)+")"))
+        self.otherZoneId = zoneId
+        self.otherDoId = distributedObjectID
+
     def setState(self, state, timestamp):
-        #("setState(%s, %d)" % (state, timestamp)))
+        # ("setState(%s, %d)" % (state, timestamp)))
         self.fsm.request(state, [globalClockDelta.localElapsedTime(timestamp)])
-    
+
     def setExitDoorState(self, state, timestamp):
-        #("setExitDoorState(%s, %d)" % (state, timestamp)))
-        self.exitDoorFSM.request(state,
-                             [globalClockDelta.localElapsedTime(timestamp)])
+        # ("setExitDoorState(%s, %d)" % (state, timestamp)))
+        self.exitDoorFSM.request(
+            state, [globalClockDelta.localElapsedTime(timestamp)])
 
     def announceGenerate(self):
         # This is called when the door is completely created, so we know
@@ -332,96 +345,96 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         self.setupNametag()
 
     def getBuilding(self):
-        # Once we find it, we store it, so we don't have to find it again.        
+        # Once we find it, we store it, so we don't have to find it again.
         if ('building' not in self.__dict__):
             if self.doorType == DoorTypes.INT_STANDARD:
-                #if ZoneUtil.isInterior(self.zoneId):
+                # if ZoneUtil.isInterior(self.zoneId):
                 # building interior.
                 # Hack: assume that the node above the door is the building:
-                door=render.find("**/leftDoor;+s")
+                door = render.find("**/leftDoor;+s")
                 assert(not door.isEmpty())
                 # Cut the door off of the nodePath to get the building:
                 self.building = door.getParent()
             elif (self.doorType == DoorTypes.INT_HQ):
                 # I know this is a hackful way to find the building node,
                 # but it works.
-                door=render.find("**/door_0")
+                door = render.find("**/door_0")
                 self.building = door.getParent()
             elif (self.doorType == DoorTypes.INT_KS):
                 # I know this is a hackful way to find the building node,
                 # but it works.
                 # NOTE - separate to keep exterior kartshop index to match
                 #        with interior index. (jjtaylor - 06/24/05)
-                self.building=render.find("**/KartShop_Interior*")
+                self.building = render.find("**/KartShop_Interior*")
             elif ((self.doorType == DoorTypes.EXT_STANDARD) or
                   (self.doorType == DoorTypes.EXT_HQ) or
                   (self.doorType == DoorTypes.EXT_KS)):
                 # street or playground.
-                self.building=self.cr.playGame.hood.loader.geom.find(
-                        "**/??"+str(self.block)+":*_landmark_*_DNARoot;+s")
-                if self.building.isEmpty(): # [gjeon] for animated buildlngs
+                self.building = self.cr.playGame.hood.loader.geom.find(
+                    "**/??" + str(self.block) + ":*_landmark_*_DNARoot;+s")
+                if self.building.isEmpty():  # [gjeon] for animated buildlngs
                     self.building = self.cr.playGame.hood.loader.geom.find(
-                        "**/??"+str(self.block)+":animated_building_*_DNARoot;+s")
+                        "**/??" + str(self.block) + ":animated_building_*_DNARoot;+s")
             elif ((self.doorType == DoorTypes.EXT_COGHQ) or
                   (self.doorType == DoorTypes.INT_COGHQ)):
-                self.building=self.cr.playGame.hood.loader.geom
+                self.building = self.cr.playGame.hood.loader.geom
             else:
                 self.notify.error("No such door type as " + str(self.doorType))
 
         assert(not self.building.isEmpty())
         return self.building
-        
+
     def getBuilding_wip(self):
         # Once we find it, we store it, so we don't have to find it again.
         if ('building' not in self.__dict__):
             if 'block' in self.__dict__:
-                self.building=self.cr.playGame.hood.loader.geom.find(
-                    "**/??"+str(self.block)+":*_landmark_*_DNARoot;+s")
+                self.building = self.cr.playGame.hood.loader.geom.find(
+                    "**/??" + str(self.block) + ":*_landmark_*_DNARoot;+s")
             else:
-                self.building=self.cr.playGame.hood.loader.geom
+                self.building = self.cr.playGame.hood.loader.geom
                 print("---------------- door is interior -------")
 
-            #if ZoneUtil.isInterior(self.zoneId):
+            # if ZoneUtil.isInterior(self.zoneId):
             #    self.building=self.cr.playGame.hood.loader.geom
             #    #self.building=render
             #    print "---------------- door is interior -------"
-            #else:
+            # else:
             #    self.building=self.cr.playGame.hood.loader.geom.find(
             #        "**/??"+str(self.block)+":*_landmark_*_DNARoot;+s")
 
             # building interior.
             # Hack: assume that the node above the door is the building:
-            #door=render.find("**/leftDoor;+s")
+            # door=render.find("**/leftDoor;+s")
             #assert(not door.isEmpty())
             # Cut the door off of the nodePath to get the building:
             #self.building = door.getParent()
-            #if (self.doorType == DoorTypes.INT_STANDARD or
+            # if (self.doorType == DoorTypes.INT_STANDARD or
             #    self.doorType == DoorTypes.INT_HQ):
             #    # I know this is a hackful way to find the building node,
             #    # but it works.
             #    door=render.find("**/door_0")
             #    self.building = door.getParent()
-            #elif ((self.doorType == DoorTypes.EXT_STANDARD) or
+            # elif ((self.doorType == DoorTypes.EXT_STANDARD) or
             #      (self.doorType == DoorTypes.EXT_HQ)):
             #    # street or playground.
             #    self.building=self.cr.playGame.hood.loader.geom.find(
             #            "**/??"+str(self.block)+":*_landmark_*_DNARoot;+s")
-            #else:
+            # else:
             #    self.notify.error("No such door type as " + str(self.doorType))
         assert(not self.building.isEmpty())
         return self.building
 
     def readyToExit(self):
         print('Sending request to exit')
-        #("readyToExit()"))
+        # ("readyToExit()"))
         base.transitions.fadeScreen(1.0)
         # Ask permission to exit:
         self.sendUpdate("requestExit")
 
     def avatarEnterDoorTrack(self, avatar, duration):
         trackName = "avatarEnterDoor-%d-%d" % (self.doId, avatar.doId)
-        track = Parallel(name = trackName)
-        otherNP=self.getDoorNodePath()
+        track = Parallel(name=trackName)
+        otherNP = self.getDoorNodePath()
 
         if hasattr(avatar, "stopSmooth"):
             avatar.stopSmooth()
@@ -436,10 +449,10 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
                                    pos=Point3(0, -8, avatar.getHeight()),
                                    hpr=VBase3(0, 0, 0),
                                    blendType="easeInOut")
-                )
+            )
 
         finalPos = avatar.getParent().getRelativePoint(
-            otherNP, Point3(self.doorX,2,ToontownGlobals.FloorOffset))
+            otherNP, Point3(self.doorX, 2, ToontownGlobals.FloorOffset))
 
         # Move the avatar:
         moveHere = Sequence(
@@ -448,50 +461,52 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
                             duration=duration,
                             pos=finalPos,
                             blendType="easeIn")
-            )
+        )
         track.append(moveHere)
-        
+
         # iris:
         if (avatar.doId == base.localAvatar.doId):
             track.append(Sequence(
-                Wait(duration*0.5),
-                Func(base.transitions.irisOut, duration*0.5),
-                Wait(duration*0.5),
+                Wait(duration * 0.5),
+                Func(base.transitions.irisOut, duration * 0.5),
+                Wait(duration * 0.5),
                 Func(avatar.b_setParent, ToontownGlobals.SPHidden),
-                ))
+            ))
 
         # Prevent the avatar from being deleted:
-        track.delayDelete = DelayDelete.DelayDelete(avatar, 'avatarEnterDoorTrack')
+        track.delayDelete = DelayDelete.DelayDelete(
+            avatar, 'avatarEnterDoorTrack')
         return track
 
     def avatarEnqueueTrack(self, avatar, duration):
         if hasattr(avatar, "stopSmooth"):
             avatar.stopSmooth()
         # Move the avatar:
-        back=-5.-(2.*len(self.avatarIDList))
-        if back<-9.:
-            back=-9.
-        offset=Point3(self.doorX, back, ToontownGlobals.FloorOffset)
-        otherNP=self.getDoorNodePath()
-        walkLike= ActorInterval(
-            avatar, 'walk', 
-            startTime=1, duration=duration, 
+        back = -5. - (2. * len(self.avatarIDList))
+        if back < -9.:
+            back = -9.
+        offset = Point3(self.doorX, back, ToontownGlobals.FloorOffset)
+        otherNP = self.getDoorNodePath()
+        walkLike = ActorInterval(
+            avatar, 'walk',
+            startTime=1, duration=duration,
             endTime=0.0001
-            )
+        )
         standHere = Sequence(
             LerpPosHprInterval(
                 nodePath=avatar,
                 other=otherNP,
                 duration=duration,
                 pos=offset,
-                hpr=VBase3(0,0,0), # hpr will come from otherNP.
+                hpr=VBase3(0, 0, 0),  # hpr will come from otherNP.
                 blendType="easeInOut"),
             self.getAnimStateInterval(avatar, 'neutral'),
-            )
+        )
         # Create the track:
         trackName = "avatarEnqueueDoor-%d-%d" % (self.doId, avatar.doId)
-        track = Parallel(walkLike, standHere, name = trackName)
-        track.delayDelete = DelayDelete.DelayDelete(avatar, 'avatarEnqueueTrack')
+        track = Parallel(walkLike, standHere, name=trackName)
+        track.delayDelete = DelayDelete.DelayDelete(
+            avatar, 'avatarEnqueueTrack')
         return track
 
     def getAnimStateInterval(self, avatar, animName):
@@ -505,30 +520,30 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
             return Func(avatar.loop, animName, 0)
         else:
             return Func(avatar.setAnimState, animName)
-    
+
     def isDoorHit(self):
         """
         We're checking the angle of attack from the avatar to the
-        door.  This is to reduce that, "I got sucked into a door" 
+        door.  This is to reduce that, "I got sucked into a door"
         effect.
         """
-        #assert(self.spamPrint("isDoorHit()"))
-        vec=base.localAvatar.getRelativeVector(
-                self.currentDoorNp,
-                self.currentDoorVec)
+        # assert(self.spamPrint("isDoorHit()"))
+        vec = base.localAvatar.getRelativeVector(
+            self.currentDoorNp,
+            self.currentDoorVec)
         netScale = self.currentDoorNp.getNetTransform().getScale()
         # the door in bossbot has been scaled down, account for that
         yToTest = vec.getY() / netScale[1]
-        #("  door dot: % .04f" % (vec.getY())))
+        # ("  door dot: % .04f" % (vec.getY())))
         # return true if the avatar is +-60 degrees of looking at the door:
         return yToTest < -0.5
 
     def enterDoor(self):
-        #("enterDoor()"))
+        # ("enterDoor()"))
         if self.allowedToEnter():
             messenger.send("DistributedDoor_doorTrigger")
             print('request')
-            self.sendUpdate("requestEnter") # calls back with a avatarEnter.
+            self.sendUpdate("requestEnter")  # calls back with a avatarEnter.
         else:
             print('not allowed to enter')
             place = base.cr.playGame.getPlace()
@@ -536,7 +551,7 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
                 place.fsm.request('stopped')
             self.dialog = TeaserPanel.TeaserPanel(pageName='otherHoods',
                                                   doneFunc=self.handleOkTeaser)
-        
+
     def handleOkTeaser(self):
         """Handle the user clicking ok on the teaser panel."""
         self.accept(self.getEnterTriggerEvent(), self.doorTrigger)
@@ -545,7 +560,6 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         place = base.cr.playGame.getPlace()
         if place:
             place.fsm.request('walk')
-        
 
     def allowedToEnter(self):
         """Check if the local toon is allowed to enter."""
@@ -556,33 +570,32 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         # if we're in the estate we should use place.id
         if hasattr(place, 'id'):
             myHoodId = place.id
-        if  myHoodId in \
+        if myHoodId in \
            (ToontownGlobals.ToontownCentral,
-            ToontownGlobals.MyEstate,
-            ToontownGlobals.GoofySpeedway,
-            ToontownGlobals.Tutorial,
-            ):
+                ToontownGlobals.MyEstate,
+                ToontownGlobals.GoofySpeedway,
+                ToontownGlobals.Tutorial,
+                ):
             # trialer going to TTC/Estate/Goofy Speedway, let them through
             return True
         return False
-        
 
     def checkIsDoorHitTaskName(self):
-        return 'checkIsDoorHit'+self.getTriggerName()
-    
+        return 'checkIsDoorHit' + self.getTriggerName()
+
     def checkIsDoorHitTask(self, task):
         """
         Check to see if the avatar has turned to face the door that
         they are already colliding with.
         """
-        #assert(self.spamPrint("checkIsDoorHitTask()"))
+        # assert(self.spamPrint("checkIsDoorHitTask()"))
         if (self.isDoorHit()):
             self.ignore(self.checkIsDoorHitTaskName())
             self.ignore(self.getExitTriggerEvent())
             self.enterDoor()
             return Task.done
         return Task.cont
-    
+
     def cancelCheckIsDoorHitTask(self, args):
         """
         Stop waiting to see if the avatar is going to turn to face the
@@ -597,46 +610,52 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
 
     def doorTrigger(self, args=None):
         """Call doorTrigger when the avatar first collides with the door."""
-        #("doorTrigger(args="+str(args)+")"))
+        # ("doorTrigger(args="+str(args)+")"))
         self.ignore(self.getEnterTriggerEvent())
-        if (args==None):
+        if (args is None):
             # ...we want the trigger to work when the
             # clearOutToonInterior is sent.
             self.enterDoor()
         else:
-            self.currentDoorNp=NodePath(args.getIntoNodePath())
-            self.currentDoorVec=Vec3(args.getSurfaceNormal(self.currentDoorNp))
+            self.currentDoorNp = NodePath(args.getIntoNodePath())
+            self.currentDoorVec = Vec3(
+                args.getSurfaceNormal(
+                    self.currentDoorNp))
             if (self.isDoorHit()):
                 self.enterDoor()
             else:
                 # ...the door was hit by the side or back of the toon.
                 # Start a task to see if the avatar turns to face the door:
-                self.accept(self.getExitTriggerEvent(), self.cancelCheckIsDoorHitTask)
-                taskMgr.add(self.checkIsDoorHitTask, self.checkIsDoorHitTaskName())
-    
+                self.accept(
+                    self.getExitTriggerEvent(),
+                    self.cancelCheckIsDoorHitTask)
+                taskMgr.add(
+                    self.checkIsDoorHitTask,
+                    self.checkIsDoorHitTaskName())
+
     def avatarEnter(self, avatarID):
         """Server approves Toon or cog to enter door queue"""
-        #("avatarEnter(avatarID="+str(avatarID)+")"))
+        # ("avatarEnter(avatarID="+str(avatarID)+")"))
         avatar = self.cr.doId2do.get(avatarID, None)
         if avatar:
             avatar.setAnimState('neutral')
-            track=self.avatarEnqueueTrack(avatar, 0.5)
+            track = self.avatarEnqueueTrack(avatar, 0.5)
             track.start()
             self.avatarTracks.append(track)
             self.avatarIDList.append(avatarID)
 
     def rejectEnter(self, reason):
-        #("rejectEnter()"))
+        # ("rejectEnter()"))
         message = FADoorCodes.reasonDict[reason]
         if message:
             self.__faRejectEnter(message)
         else:
             self.__basicRejectEnter()
-    
+
     def __basicRejectEnter(self):
         """Server doesn't let the avatar in the door queue, but
         there's no reason we can tell the user."""
-        #("basicRejectEnter()"))
+        # ("basicRejectEnter()"))
         # Hang the hook again
         self.accept(self.getEnterTriggerEvent(), self.doorTrigger)
         # Go back into walk mode.
@@ -644,17 +663,18 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
             self.cr.playGame.getPlace().setState('walk')
 
     def __faRejectEnter(self, message):
-        #("faRejectEnter()"))
+        # ("faRejectEnter()"))
         self.rejectDialog = TTDialog.TTGlobalDialog(
-            message = message,
-            doneEvent = "doorRejectAck",
-            style = TTDialog.Acknowledge)
+            message=message,
+            doneEvent="doorRejectAck",
+            style=TTDialog.Acknowledge)
         self.rejectDialog.show()
-        self.rejectDialog.delayDelete = DelayDelete.DelayDelete(self, '__faRejectEnter')
+        self.rejectDialog.delayDelete = DelayDelete.DelayDelete(
+            self, '__faRejectEnter')
 
         event = 'clientCleanup'
         self.acceptOnce(event, self.__handleClientCleanup)
-        
+
         # Make the toon stand still.
         base.cr.playGame.getPlace().setState('stopped')
         # Hang a hook for hitting OK
@@ -663,15 +683,15 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
 
     def __handleClientCleanup(self):
         """Handle the user closing the toontown window when the reject dialog is up."""
-        if hasattr(self,'rejectDialog') and self.rejectDialog:
+        if hasattr(self, 'rejectDialog') and self.rejectDialog:
             self.rejectDialog.doneStatus = 'ok'
-        self.__handleRejectAck()        
+        self.__handleRejectAck()
 
     def __handleFallAsleepDoor(self):
         # it's 'ok' to fall asleep  =]
         self.rejectDialog.doneStatus = 'ok'
         self.__handleRejectAck()
-        
+
     def __handleRejectAck(self):
         self.ignore("doorRejectAck")
         self.ignore("stoppedAsleep")
@@ -686,48 +706,49 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         del self.rejectDialog
 
     def getDoorNodePath(self):
-        #("getDoorNodePath()"))
+        # ("getDoorNodePath()"))
         if self.doorType == DoorTypes.INT_STANDARD:
             # ...interior door.
-            #("getDoorNodePath() -- isInterior"))
-            otherNP=render.find("**/door_origin")
+            # ("getDoorNodePath() -- isInterior"))
+            otherNP = render.find("**/door_origin")
             assert(not otherNP.isEmpty())
         elif self.doorType == DoorTypes.EXT_STANDARD:
             if hasattr(self, "tempDoorNodePath"):
                 return self.tempDoorNodePath
             else:
                 # ...exterior door.
-                #("getDoorNodePath() -- exterior"))
-                posHpr=self.cr.playGame.dnaStore.getDoorPosHprFromBlockNumber(self.block)
+                # ("getDoorNodePath() -- exterior"))
+                posHpr = self.cr.playGame.dnaStore.getDoorPosHprFromBlockNumber(
+                    self.block)
                 # This will be used as a relative node, even though
                 # it is not attached to render.
-                otherNP=NodePath("doorOrigin")
+                otherNP = NodePath("doorOrigin")
                 otherNP.setPos(posHpr.getPos())
                 otherNP.setHpr(posHpr.getHpr())
                 # Store this for clean up later
-                self.tempDoorNodePath=otherNP
+                self.tempDoorNodePath = otherNP
         elif (self.doorType in self.specialDoorTypes):
             building = self.getBuilding()
             otherNP = building.find("**/door_origin_" + str(self.doorIndex))
             assert(not otherNP.isEmpty())
         elif (self.doorType == DoorTypes.INT_HQ):
-            otherNP=render.find("**/door_origin_" + str(self.doorIndex))
+            otherNP = render.find("**/door_origin_" + str(self.doorIndex))
             assert(not otherNP.isEmpty())
         else:
             self.notify.error("No such door type as " + str(self.doorType))
-                
+
         return otherNP
-    
+
     def avatarExitTrack(self, avatar, duration):
-        #("avatarExitTrack(avatar="+str(avatar)
-            #    +", duration="+str(duration)+")"))
+        # ("avatarExitTrack(avatar="+str(avatar)
+        #    +", duration="+str(duration)+")"))
         if hasattr(avatar, "stopSmooth"):
             avatar.stopSmooth()
         # Get the pos and hpr of the door origin:
-        otherNP=self.getDoorNodePath()
+        otherNP = self.getDoorNodePath()
 
         trackName = "avatarExitDoor-%d-%d" % (self.doId, avatar.doId)
-        track = Sequence(name = trackName)
+        track = Sequence(name=trackName)
 
         # Put the avatar in the doorway:
         track.append(self.getAnimStateInterval(avatar, 'walk'))
@@ -737,15 +758,15 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
             VBase3(179, 0, 0),
             other=otherNP))
         track.append(Func(avatar.setParent, ToontownGlobals.SPRender))
-                     
-        if avatar.doId==base.localAvatar.doId:
+
+        if avatar.doId == base.localAvatar.doId:
             # Position the camera:
             track.append(PosHprInterval(
                 camera,
                 VBase3(-self.doorX, 5, avatar.getHeight()),
                 VBase3(180, 0, 0),
                 other=otherNP
-                ))
+            ))
 
         # Move the avatar through:
         if (avatar.doId == base.localAvatar.doId):
@@ -754,7 +775,7 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         else:
             finalPos = render.getRelativePoint(
                 otherNP, Point3(-self.doorX, -3, ToontownGlobals.FloorOffset))
-            
+
         track.append(LerpPosInterval(
             nodePath=avatar,
             duration=duration,
@@ -769,10 +790,11 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
 
         if hasattr(avatar, "startSmooth"):
             track.append(Func(avatar.startSmooth))
-        
-        track.delayDelete = DelayDelete.DelayDelete(avatar, 'DistributedDoor.avatarExitTrack')
+
+        track.delayDelete = DelayDelete.DelayDelete(
+            avatar, 'DistributedDoor.avatarExitTrack')
         return track
-    
+
     def exitCompleted(self):
         assert(self.notify.debug('exitCompleted()'))
         base.localAvatar.setAnimState('neutral')
@@ -784,7 +806,7 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         base.localAvatar.d_setParent(ToontownGlobals.SPRender)
 
     def avatarExit(self, avatarID):
-        #("avatarExit(avatarID="+str(avatarID)+")"))
+        # ("avatarExit(avatarID="+str(avatarID)+")"))
         # Animate the avatar
         if (avatarID in self.avatarIDList):
             # ...this avatar was waiting to go in, and bailed out.
@@ -796,16 +818,16 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
             # ...this avatar just went through the out door.
             assert(self.notify.debug("  regular exit"))
             self.avatarExitIDList.append(avatarID)
-        
+
     def finishDoorTrack(self):
         if self.doorTrack:
             self.doorTrack.finish()
-        self.doorTrack=None
-        
+        self.doorTrack = None
+
     def finishDoorExitTrack(self):
         if self.doorExitTrack:
             self.doorExitTrack.finish()
-        self.doorExitTrack=None
+        self.doorExitTrack = None
 
     def finishAllTracks(self):
         self.finishDoorTrack()
@@ -822,57 +844,58 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
         self.avatarExitTracks = []
 
     ##### off state #####
-    
+
     def enterOff(self):
         return
-        #("enterOff()"))
-    
+        # ("enterOff()"))
+
     def exitOff(self):
         return
-        #("exitOff()"))
-    
+        # ("exitOff()"))
+
     ##### closing state #####
 
     def getRequestStatus(self):
-        zoneId=self.otherZoneId
+        zoneId = self.otherZoneId
         # We must set allowRedirect to 0 because we expect to meet
         # our other door on the other side.
-        request={
-                "loader": ZoneUtil.getBranchLoaderName(zoneId),
-                "where": ZoneUtil.getToonWhereName(zoneId),
-                "how": "doorIn",
-                "hoodId": ZoneUtil.getHoodId(zoneId),
-                "zoneId": zoneId,
-                "shardId": None,
-                "avId": -1,
-                "allowRedirect" : 0,
-                "doorDoId":self.otherDoId
-                }
-        return request        
-    
+        request = {
+            "loader": ZoneUtil.getBranchLoaderName(zoneId),
+            "where": ZoneUtil.getToonWhereName(zoneId),
+            "how": "doorIn",
+            "hoodId": ZoneUtil.getHoodId(zoneId),
+            "zoneId": zoneId,
+            "shardId": None,
+            "avId": -1,
+            "allowRedirect": 0,
+            "doorDoId": self.otherDoId
+        }
+        return request
+
     def enterClosing(self, ts):
-        #("enterClosing()"))
+        # ("enterClosing()"))
         # Start animation:
         # The right hole doorway:
-        doorFrameHoleRight=self.findDoorNode("doorFrameHoleRight")
+        doorFrameHoleRight = self.findDoorNode("doorFrameHoleRight")
         if (doorFrameHoleRight.isEmpty()):
-            self.notify.warning("enterClosing(): did not find doorFrameHoleRight")
+            self.notify.warning(
+                "enterClosing(): did not find doorFrameHoleRight")
             return
 
         # Hmmm, you can try setting the door color to something else
         # other than black.  I tried white, but that doesn't look to
         # good either.
-        #if ZoneUtil.isInterior(self.zoneId):
+        # if ZoneUtil.isInterior(self.zoneId):
         #    doorFrameHoleRight.setColor(1., 1., 1., 1.)
-        
+
         # Right door:
-        rightDoor=self.findDoorNode("rightDoor")
+        rightDoor = self.findDoorNode("rightDoor")
         if (rightDoor.isEmpty()):
             self.notify.warning("enterClosing(): did not find rightDoor")
             return
-        
+
         # Close the door:
-        otherNP=self.getDoorNodePath()
+        otherNP = self.getDoorNodePath()
         trackName = "doorClose-%d" % (self.doId)
         if self.rightSwing:
             h = 100
@@ -880,64 +903,65 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
             h = -100
         # Stop animation:
         self.finishDoorTrack()
-        self.doorTrack=Sequence(
-                LerpHprInterval(
-                    nodePath=rightDoor,
-                    duration=1.0,
-                    hpr=VBase3(0, 0, 0),
-                    startHpr=VBase3(h, 0, 0),
-                    other=otherNP,
-                    blendType="easeInOut"),
-                Func(doorFrameHoleRight.hide),
-                Func(self.hideIfHasFlat, rightDoor),
-                SoundInterval(self.closeSfx, node=rightDoor),
-                name = trackName)
+        self.doorTrack = Sequence(
+            LerpHprInterval(
+                nodePath=rightDoor,
+                duration=1.0,
+                hpr=VBase3(0, 0, 0),
+                startHpr=VBase3(h, 0, 0),
+                other=otherNP,
+                blendType="easeInOut"),
+            Func(doorFrameHoleRight.hide),
+            Func(self.hideIfHasFlat, rightDoor),
+            SoundInterval(self.closeSfx, node=rightDoor),
+            name=trackName)
         self.doorTrack.start(ts)
         if hasattr(self, "done"):
             request = self.getRequestStatus()
             messenger.send("doorDoneEvent", [request])
-    
+
     def exitClosing(self):
         return
-        #("exitClosing()"))
-    
+        # ("exitClosing()"))
+
     ##### closed state #####
-    
+
     def enterClosed(self, ts):
         return
-        #("enterClosed()"))
-    
+        # ("enterClosed()"))
+
     def exitClosed(self):
         return
-        #("exitClosed()"))
-    
+        # ("exitClosed()"))
+
     ##### opening state #####
-    
+
     def enterOpening(self, ts):
-        #if( __debug__ ):
+        # if( __debug__ ):
         #    import pdb
         #    pdb.set_trace()
-        #("enterOpening()"))
+        # ("enterOpening()"))
         # Start animation:
         # The right doorway:
-        doorFrameHoleRight=self.findDoorNode("doorFrameHoleRight")
+        doorFrameHoleRight = self.findDoorNode("doorFrameHoleRight")
         if (doorFrameHoleRight.isEmpty()):
-            self.notify.warning("enterOpening(): did not find doorFrameHoleRight")
+            self.notify.warning(
+                "enterOpening(): did not find doorFrameHoleRight")
             return
 
         # Hmmm, you can try setting the door color to something else
         # other than black.  I tried white, but that doesn't look to
         # good either.
-        #if ZoneUtil.isInterior(self.zoneId):
+        # if ZoneUtil.isInterior(self.zoneId):
         #    doorFrameHoleRight.setColor(1., 1., 1., 1.)
 
         # Right door:
-        rightDoor=self.findDoorNode("rightDoor")
+        rightDoor = self.findDoorNode("rightDoor")
         if (rightDoor.isEmpty()):
             self.notify.warning("enterOpening(): did not find rightDoor")
             return
         # Open the door:
-        otherNP=self.getDoorNodePath()
+        otherNP = self.getDoorNodePath()
         trackName = "doorOpen-%d" % (self.doId)
         if self.rightSwing:
             h = 100
@@ -945,14 +969,14 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
             h = -100
         # Stop animation:
         self.finishDoorTrack()
-        self.doorTrack=Parallel(
+        self.doorTrack = Parallel(
             SoundInterval(self.openSfx, node=rightDoor),
             Sequence(
                 HprInterval(
                     rightDoor,
                     VBase3(0, 0, 0),
                     other=otherNP,
-                    ),
+                ),
                 Wait(0.4),
                 Func(rightDoor.show),
                 Func(doorFrameHoleRight.show),
@@ -963,123 +987,123 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
                     startHpr=VBase3(0, 0, 0),
                     other=otherNP,
                     blendType="easeInOut")),
-            name = trackName)
+            name=trackName)
         # Start the tracks:
         self.doorTrack.start(ts)
-    
+
     def exitOpening(self):
         return
-        #("exitOpening()"))
-    
+        # ("exitOpening()"))
+
     ##### open state #####
-    
+
     def enterOpen(self, ts):
-        #("enterOpen()"))
+        # ("enterOpen()"))
         # Run everybody in:
         for avatarID in self.avatarIDList:
-            assert(self.notify.debug("  avatarID: "+str(avatarID)))
+            assert(self.notify.debug("  avatarID: " + str(avatarID)))
             avatar = self.cr.doId2do.get(avatarID)
             if avatar:
-                track=self.avatarEnterDoorTrack(avatar, 1.0)
+                track = self.avatarEnterDoorTrack(avatar, 1.0)
                 track.start(ts)
                 self.avatarTracks.append(track)
             if (avatarID == base.localAvatar.doId):
-                self.done=1
-        self.avatarIDList=[]
-    
+                self.done = 1
+        self.avatarIDList = []
+
     def exitOpen(self):
-        #("exitOpen()"))
+        # ("exitOpen()"))
         for track in self.avatarTracks:
             track.finish()
             DelayDelete.cleanupDelayDeletes(track)
-        self.avatarTracks=[]
-    
+        self.avatarTracks = []
+
     ##### Exit Door off state #####
-    
+
     def exitDoorEnterOff(self):
         return
-        #("exitDoorEnterOff()"))
-    
+        # ("exitDoorEnterOff()"))
+
     def exitDoorExitOff(self):
         return
-        #("exitDoorExitOff()"))
-    
+        # ("exitDoorExitOff()"))
+
     ##### Exit Door closing state #####
-    
+
     def exitDoorEnterClosing(self, ts):
-        #("exitDoorEnterClosing()"))
+        # ("exitDoorEnterClosing()"))
         # Start animation:
         # The left hole doorway:
-        doorFrameHoleLeft=self.findDoorNode("doorFrameHoleLeft")
+        doorFrameHoleLeft = self.findDoorNode("doorFrameHoleLeft")
         if (doorFrameHoleLeft.isEmpty()):
             self.notify.warning("enterOpening(): did not find flatDoors")
             return
 
-        #if ZoneUtil.isInterior(self.zoneId):
+        # if ZoneUtil.isInterior(self.zoneId):
         #    doorFrameHoleLeft.setColor(1., 1., 1., 1.)
         # Left door:
         if self.leftSwing:
             h = -100
         else:
             h = 100
-        leftDoor=self.findDoorNode("leftDoor")
+        leftDoor = self.findDoorNode("leftDoor")
         if (not leftDoor.isEmpty()):
             # Close the door:
-            otherNP=self.getDoorNodePath()
+            otherNP = self.getDoorNodePath()
             trackName = "doorExitTrack-%d" % (self.doId)
             self.finishDoorExitTrack()
             self.doorExitTrack = Sequence(
-                    LerpHprInterval(
-                        nodePath=leftDoor,
-                        duration=1.0,
-                        hpr=VBase3(0, 0, 0),
-                        startHpr=VBase3(h, 0, 0),
-                        other=otherNP,
-                        blendType="easeInOut"),
-                    Func(doorFrameHoleLeft.hide),
-                    Func(self.hideIfHasFlat, leftDoor),
-                    SoundInterval(self.closeSfx, node=leftDoor),
-                    name = trackName)
+                LerpHprInterval(
+                    nodePath=leftDoor,
+                    duration=1.0,
+                    hpr=VBase3(0, 0, 0),
+                    startHpr=VBase3(h, 0, 0),
+                    other=otherNP,
+                    blendType="easeInOut"),
+                Func(doorFrameHoleLeft.hide),
+                Func(self.hideIfHasFlat, leftDoor),
+                SoundInterval(self.closeSfx, node=leftDoor),
+                name=trackName)
             self.doorExitTrack.start(ts)
-        #else:
+        # else:
         #    self.notify.error("enterOpening(): did not find leftDoor")
-    
+
     def exitDoorExitClosing(self):
         return
-        #("exitDoorExitClosing()"))
-    
+        # ("exitDoorExitClosing()"))
+
     ##### Exit Door closed state #####
-    
+
     def exitDoorEnterClosed(self, ts):
         return
-        #("exitDoorEnterClosed()"))
-    
+        # ("exitDoorEnterClosed()"))
+
     def exitDoorExitClosed(self):
         return
-        #("exitDoorExitClosed()"))
-    
+        # ("exitDoorExitClosed()"))
+
     ##### Exit Door opening state #####
-    
+
     def exitDoorEnterOpening(self, ts):
-        #("exitDoorEnterOpening()"))
+        # ("exitDoorEnterOpening()"))
         # Start animation:
         # The left hole doorway:
-        doorFrameHoleLeft=self.findDoorNode("doorFrameHoleLeft")
+        doorFrameHoleLeft = self.findDoorNode("doorFrameHoleLeft")
         if (doorFrameHoleLeft.isEmpty()):
             self.notify.warning("enterOpening(): did not find flatDoors")
             return
 
-        #if ZoneUtil.isInterior(self.zoneId):
+        # if ZoneUtil.isInterior(self.zoneId):
         #    doorFrameHoleLeft.setColor(1., 1., 1., 1.)
         # Left door:
-        leftDoor=self.findDoorNode("leftDoor")
+        leftDoor = self.findDoorNode("leftDoor")
         if self.leftSwing:
             h = -100
         else:
-            h = 100        
+            h = 100
         if (not leftDoor.isEmpty()):
             # Open the door:
-            otherNP=self.getDoorNodePath()
+            otherNP = self.getDoorNodePath()
             trackName = "doorDoorExitTrack-%d" % (self.doId)
             self.finishDoorExitTrack()
             self.doorExitTrack = Parallel(
@@ -1093,41 +1117,43 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
                                     startHpr=VBase3(0, 0, 0),
                                     other=otherNP,
                                     blendType="easeInOut")),
-                name = trackName)
+                name=trackName)
             # Start the tracks:
             self.doorExitTrack.start(ts)
         else:
-            self.notify.warning("exitDoorEnterOpening(): did not find leftDoor")
-    
+            self.notify.warning(
+                "exitDoorEnterOpening(): did not find leftDoor")
+
     def exitDoorExitOpening(self):
         return
-        #("exitDoorExitOpening()"))
-    
+        # ("exitDoorExitOpening()"))
+
     ##### Exit Door open state #####
-    
+
     def exitDoorEnterOpen(self, ts):
-        #("exitDoorEnterOpen()"))
+        # ("exitDoorEnterOpen()"))
         # Run everybody out:
         for avatarID in self.avatarExitIDList:
-            assert(self.notify.debug("  avatarID: "+str(avatarID)))
-            avatar=self.cr.doId2do.get(avatarID)
+            assert(self.notify.debug("  avatarID: " + str(avatarID)))
+            avatar = self.cr.doId2do.get(avatarID)
             if avatar:
-                track=self.avatarExitTrack(avatar, 0.2)
+                track = self.avatarExitTrack(avatar, 0.2)
                 track.start()
                 self.avatarExitTracks.append(track)
-        self.avatarExitIDList=[]
-    
+        self.avatarExitIDList = []
+
     def exitDoorExitOpen(self):
-        #("exitDoorExitOpen()"))
+        # ("exitDoorExitOpen()"))
         for track in self.avatarExitTracks:
             track.finish()
             DelayDelete.cleanupDelayDeletes(track)
-        self.avatarExitTracks=[]
-    
-    def findDoorNode(self, string, allowEmpty = False):
+        self.avatarExitTracks = []
+
+    def findDoorNode(self, string, allowEmpty=False):
         building = self.getBuilding()
         if not building:
-            self.notify.warning("getBuilding() returned None, avoiding crash, remark 896029")
+            self.notify.warning(
+                "getBuilding() returned None, avoiding crash, remark 896029")
             foundNode = None
         else:
             foundNode = building.find("**/door_" + str(self.doorIndex) +
@@ -1135,8 +1161,8 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
             if foundNode.isEmpty():
                 # hack, We should make the trigger finding more general.
                 foundNode = building.find("**/" + string + "*;+s+i")
-                #("    fyi: find door hack"))
-        #("findDoorNode(%s) found %s, %d"%(string, foundNode, self.doorIndex)))
+                # ("    fyi: find door hack"))
+        # ("findDoorNode(%s) found %s, %d"%(string, foundNode, self.doorIndex)))
         if allowEmpty:
             return foundNode
         assert(not foundNode.isEmpty())
@@ -1145,4 +1171,3 @@ class DistributedDoor(DistributedObject.DistributedObject, DelayDeletable):
     def hideIfHasFlat(self, node):
         if self.bHasFlat:
             node.hide()
-            

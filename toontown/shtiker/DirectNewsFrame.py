@@ -5,12 +5,13 @@ import functools
 from pandac.PandaModules import Filename, DSearchPath, TextNode
 from pandac.PandaModules import HTTPClient, Ramfile, DocumentSpec
 from direct.showbase import DirectObject
-from direct.gui.DirectGui import DirectFrame, DGG #, DirectButton, DirectLabel
+from direct.gui.DirectGui import DirectFrame, DGG  # , DirectButton, DirectLabel
 from direct.directnotify import DirectNotifyGlobal
 from direct.task.Task import Task
 from direct.showbase import AppRunnerGlobal
 from toontown.shtiker import IssueFrame
 from toontown.toonbase import TTLocalizer
+
 
 class DirectNewsFrame(DirectObject.DirectObject):
 
@@ -20,9 +21,11 @@ class DirectNewsFrame(DirectObject.DirectObject):
     NewsBaseDir = config.GetString("news-base-dir", "phase_3.5/models/news")
     NewsStageDir = config.GetString("news-stage-dir", "news")
     # taken from In Game NewsFrame
-    FrameDimensions = (-1.30666637421, 1.30666637421, -0.751666665077, 0.751666665077)
+    FrameDimensions = (-1.30666637421, 1.30666637421, -
+                       0.751666665077, 0.751666665077)
     notify = DirectNotifyGlobal.directNotify.newCategory("DirectNewsFrame")
-    NewsIndexFilename = config.GetString("news-index-filename", "http_news_index.txt")
+    NewsIndexFilename = config.GetString(
+        "news-index-filename", "http_news_index.txt")
     NewsOverHttp = config.GetBool("news-over-http", True)
     CacheIndexFilename = 'cache_index.txt'
 
@@ -30,7 +33,7 @@ class DirectNewsFrame(DirectObject.DirectObject):
     # home, news, events, talk of the town, ask toontown, toon resistance
     SectionIdents = ['hom', 'new', 'evt', 'tot', 'att', 'tnr']
 
-    def __init__(self, parent = aspect2d):
+    def __init__(self, parent=aspect2d):
         DirectObject.DirectObject.__init__(self)
         self.accept("newsSnapshot", self.doSnapshot)
         self.active = False
@@ -40,8 +43,8 @@ class DirectNewsFrame(DirectObject.DirectObject):
         self.curIssueIndex = 0
         self.strFilenames = None
         self.redownloadingNews = False
-        self.startRedownload = datetime.datetime.now() # just used for timing
-        self.endRedownload = datetime.datetime.now() # just used for timing
+        self.startRedownload = datetime.datetime.now()  # just used for timing
+        self.endRedownload = datetime.datetime.now()  # just used for timing
         self.load()
         self.percentDownloaded = 0.0
         self.numIssuesExpected = 0
@@ -63,7 +66,7 @@ class DirectNewsFrame(DirectObject.DirectObject):
         newsDir = self.findNewsDir()
         if newsDir:
             allHomeFiles = self.getAllHomeFilenames(newsDir)
-            self.notify.debug("len allHomeFiles = %s" % len(allHomeFiles))
+            self.notify.debug(f"len allHomeFiles = {len(allHomeFiles)}")
             self.numIssuesExpected = len(allHomeFiles)
             if allHomeFiles:
                 for myIssueIndex, oneHomeFile in enumerate(allHomeFiles):
@@ -71,10 +74,16 @@ class DirectNewsFrame(DirectObject.DirectObject):
                         justFilename = oneHomeFile
                     else:
                         justFilename = oneHomeFile.getFilename().getBasename()
-                    self.notify.debug("parseNewContent %s" % justFilename)
+                    self.notify.debug(f"parseNewContent {justFilename}")
                     parts = justFilename.split('_')
                     dateStr = parts[3]
-                    oneIssue = IssueFrame.IssueFrame(self.backFrame, newsDir, dateStr, myIssueIndex, len(allHomeFiles), self.strFilenames)
+                    oneIssue = IssueFrame.IssueFrame(
+                        self.backFrame,
+                        newsDir,
+                        dateStr,
+                        myIssueIndex,
+                        len(allHomeFiles),
+                        self.strFilenames)
                     oneIssue.hide()
                     self.issues.append(oneIssue)
                 if self.issues:
@@ -85,11 +94,14 @@ class DirectNewsFrame(DirectObject.DirectObject):
         if hasattr(base.cr, 'inGameNewsMgr') and base.cr.inGameNewsMgr:
             # we should get here only when a new issue comes out mid game
             self.createdTime = base.cr.inGameNewsMgr.getLatestIssue()
-            self.notify.debug("setting created time to latest issue %s" % self.createdTime)
+            self.notify.debug(
+                f"setting created time to latest issue {self.createdTime}")
         else:
-            # this is sucky that at this point (initial load) we don't have in game news mgr
+            # this is sucky that at this point (initial load) we don't have in
+            # game news mgr
             self.createdTime = base.cr.toontownTimeManager.getCurServerDateTime()
-            self.notify.debug("setting created time cur server time %s" % self.createdTime)
+            self.notify.debug(
+                f"setting created time cur server time {self.createdTime}")
         return result
 
     def getAllHomeFilenames(self, newsDir):
@@ -99,13 +111,13 @@ class DirectNewsFrame(DirectObject.DirectObject):
         newsDirAsFile = vfs.getFile(Filename(newsDir))
         fileList = newsDirAsFile.scanDirectory()
         fileNames = fileList.getFiles()
-        self.notify.debug("filenames=%s" % str(fileNames))
+        self.notify.debug(f"filenames={str(fileNames)}")
         # scan through and find hom1. thats got to be a home page
         homeFileNames = set([])
         for name in fileNames:
-            self.notify.debug("processing %s" % name)
+            self.notify.debug(f"processing {name}")
             baseName = name.getFilename().getBasename()
-            self.notify.debug("baseName=%s" % baseName)
+            self.notify.debug(f"baseName={baseName}")
             if "hom1." in baseName:
                 homeFileNames.add(name)
             else:
@@ -113,15 +125,15 @@ class DirectNewsFrame(DirectObject.DirectObject):
 
         if not homeFileNames:
             #self.notify.error("couldnt find hom1. in %s" % fileNames)
-            self.notify.warning("couldnt find hom1. in %s" % fileNames)
+            self.notify.warning(f"couldnt find hom1. in {fileNames}")
             self.setErrorMessage(TTLocalizer.NewsPageNoIssues)
             return []
 
-        def fileCmp( fileA, fileB):
+        def fileCmp(fileA, fileB):
             return fileA.getFilename().compareTo(fileB.getFilename())
         homeFileNames = list(homeFileNames)
-        homeFileNames.sort(key = functools.cmp_to_key(fileCmp))
-        self.notify.debug("returned homeFileNames=%s" % homeFileNames)
+        homeFileNames.sort(key=functools.cmp_to_key(fileCmp))
+        self.notify.debug(f"returned homeFileNames={homeFileNames}")
 
         return homeFileNames
 
@@ -139,52 +151,62 @@ class DirectNewsFrame(DirectObject.DirectObject):
         searchPath = DSearchPath()
         if AppRunnerGlobal.appRunner:
             # In the web-publish runtime, it will always be here:
-            searchPath.appendDirectory(Filename.expandFrom('$TT_3_5_ROOT/phase_3.5/models/news'))
+            searchPath.appendDirectory(
+                Filename.expandFrom('$TT_3_5_ROOT/phase_3.5/models/news'))
         else:
             # In the launcher or dev environment, look here:
             basePath = os.path.expandvars('$TTMODELS') or './ttmodels'
             searchPath.appendDirectory(
-                Filename.fromOsSpecific(basePath+'/built/' + self.NewsBaseDir))
+                Filename.fromOsSpecific(
+                    basePath +
+                    '/built/' +
+                    self.NewsBaseDir))
             searchPath.appendDirectory(Filename(self.NewsBaseDir))
 
         pfile = Filename(self.NewsIndexFilename)
         found = vfs.resolveFilename(pfile, searchPath)
         if not found:
-            self.notify.warning('findNewsDir - no path: %s' % self.NewsIndexFilename)
-            self.setErrorMessage(TTLocalizer.NewsPageErrorDownloadingFile % self.NewsIndexFilename)
+            self.notify.warning(
+                f'findNewsDir - no path: {self.NewsIndexFilename}')
+            self.setErrorMessage(
+                TTLocalizer.NewsPageErrorDownloadingFile %
+                self.NewsIndexFilename)
             return None
-        self.notify.debug("found index file %s" % pfile)
+        self.notify.debug(f"found index file {pfile}")
         realDir = pfile.getDirname()
         return realDir
 
     def load(self):
         """Create the gui objects we need."""
         self.loadBackground()
-        #self.loadMainPage()
+        # self.loadMainPage()
 
     def loadBackground(self):
         """Create a plain white background image, that covers over the shtickerbook"""
-        # HtmlView: webFrame  = -1.30666637421 1.30666637421 -0.751666665077 0.751666665077
-        upsellBackground = loader.loadModel("phase_3.5/models/gui/tt_m_gui_ign_newsStatusBackground")
+        # HtmlView: webFrame  = -1.30666637421 1.30666637421 -0.751666665077
+        # 0.751666665077
+        upsellBackground = loader.loadModel(
+            "phase_3.5/models/gui/tt_m_gui_ign_newsStatusBackground")
         imageScaleX = self.FrameDimensions[1] - self.FrameDimensions[0]
         imageScaleY = self.FrameDimensions[3] - self.FrameDimensions[2]
         self.backFrame = DirectFrame(
-            parent = self._parent,
-            image = upsellBackground,
-            image_scale = (imageScaleX, 1, imageScaleY),
-            frameColor = (1,1,1,0),
-            frameSize = self.FrameDimensions,
-            pos = (0,0,0),
-            relief = DGG.FLAT,
-            text = TTLocalizer.NewsPageDownloadingNews1,
-            text_scale = 0.06,
-            text_pos = (0,-0.4),
-            )
+            parent=self._parent,
+            image=upsellBackground,
+            image_scale=(imageScaleX, 1, imageScaleY),
+            frameColor=(1, 1, 1, 0),
+            frameSize=self.FrameDimensions,
+            pos=(0, 0, 0),
+            relief=DGG.FLAT,
+            text=TTLocalizer.NewsPageDownloadingNews1,
+            text_scale=0.06,
+            text_pos=(0, -0.4),
+        )
 
     def addDownloadingTextTask(self):
         """Add a simple little task to show in game news is downloading stuff."""
         self.removeDownloadingTextTask()
-        task = taskMgr.doMethodLater(1,self.loadingTextTask, "DirectNewsFrameDownloadingTextTask")
+        task = taskMgr.doMethodLater(
+            1, self.loadingTextTask, "DirectNewsFrameDownloadingTextTask")
         task.startTime = globalClock.getFrameTime()
         self.loadingTextTask(task)
 
@@ -195,16 +217,16 @@ class DirectNewsFrame(DirectObject.DirectObject):
     def loadMainPage(self):
         """Create the other gui for this."""
         self.mainFrame = DirectFrame(
-            parent = self.backFrame,
-            frameSize = self.FrameDimensions,
-            frameColor = (1,0,0,1),
-            )
+            parent=self.backFrame,
+            frameSize=self.FrameDimensions,
+            frameColor=(1, 0, 0, 1),
+        )
 
     def activate(self):
         """
         Check if we have a new issue, and prompt the user if we have one.
         """
-        if hasattr(self,"createdTime") and \
+        if hasattr(self, "createdTime") and \
            self.createdTime < base.cr.inGameNewsMgr.getLatestIssue() and \
            self.NewsOverHttp and \
            not self.redownloadingNews:
@@ -264,7 +286,8 @@ class DirectNewsFrame(DirectObject.DirectObject):
         timeStrs = (TTLocalizer.NewsPageDownloadingNews0,
                     TTLocalizer.NewsPageDownloadingNews1,
                     TTLocalizer.NewsPageDownloadingNews2)
-        textToDisplay = timeStrs[timeIndex] % (int(self.percentDownloaded*100))
+        textToDisplay = timeStrs[timeIndex] % (
+            int(self.percentDownloaded * 100))
 
         if self.backFrame["text"] != textToDisplay:
             if TTLocalizer.NewsPageDownloadingNewsSubstr in self.backFrame["text"]:
@@ -280,14 +303,15 @@ class DirectNewsFrame(DirectObject.DirectObject):
     def redownloadNews(self):
         """Get the new issue that came out while he was playing."""
         if self.redownloadingNews:
-            self.notify.warning("averting potential crash redownloadNews called twice, just returning")
+            self.notify.warning(
+                "averting potential crash redownloadNews called twice, just returning")
             return
         # I know it's info, it's important enough I feel to appear in the logs
         self.percentDownloaded = 0.0
         self.notify.info("starting redownloadNews")
         self.startRedownload = datetime.datetime.now()
 
-        self.redownloadingNews =True
+        self.redownloadingNews = True
         self.addDownloadingTextTask()
 
         # Clean up the old issues and start new stuff downloading.
@@ -321,7 +345,7 @@ class DirectNewsFrame(DirectObject.DirectObject):
             return task.cont
 
         if not self.ch.isValid():
-            self.notify.warning("Unable to download %s" % (self.url))
+            self.notify.warning(f"Unable to download {self.url}")
             self.redownloadingNews = False
             return task.done
 
@@ -337,7 +361,7 @@ class DirectNewsFrame(DirectObject.DirectObject):
         del self.rf
 
         self.newsFiles.sort()
-        self.notify.info("Server lists %s news files" % (len(self.newsFiles)))
+        self.notify.info(f"Server lists {len(self.newsFiles)} news files")
 
         # Now see if we already have copies of these files we
         # downloaded previously.
@@ -348,7 +372,7 @@ class DirectNewsFrame(DirectObject.DirectObject):
         for basename in os.listdir(self.newsDir.toOsSpecific()):
             if basename != self.CacheIndexFilename and basename not in self.newsCache:
                 junk = Filename(self.newsDir, basename)
-                self.notify.info("Removing %s" % (junk))
+                self.notify.info(f"Removing {junk}")
                 junk.unlink()
 
         # And start downloading the files.
@@ -370,7 +394,7 @@ class DirectNewsFrame(DirectObject.DirectObject):
             del self.newsDir
             del self.ch
             del self.url
-            if hasattr(self,'filename'):
+            if hasattr(self, 'filename'):
                 del self.filename
             self.redownloadingNews = False
 
@@ -380,7 +404,8 @@ class DirectNewsFrame(DirectObject.DirectObject):
 
             return task.done
 
-        self.percentDownloaded = float(self.nextNewsFile) / float(len(self.newsFiles))
+        self.percentDownloaded = float(
+            self.nextNewsFile) / float(len(self.newsFiles))
 
         # Get the next file on the list.
         self.filename = self.newsFiles[self.nextNewsFile]
@@ -394,7 +419,8 @@ class DirectNewsFrame(DirectObject.DirectObject):
             # server to give us another copy only if the server's
             # copy is newer.
             size, date = self.newsCache[self.filename]
-            if date and localFilename.exists() and (size == 0 or localFilename.getFileSize() == size):
+            if date and localFilename.exists() and (
+                    size == 0 or localFilename.getFileSize() == size):
                 doc.setDate(date)
                 doc.setRequestMode(doc.RMNewer)
 
@@ -413,13 +439,13 @@ class DirectNewsFrame(DirectObject.DirectObject):
         if self.ch.getStatusCode() == 304:
             # This file is still cached from before.  We don't need to
             # download it again.  Move on to the next file.
-            self.notify.info("already cached: %s" % (self.filename))
+            self.notify.info(f"already cached: {self.filename}")
             return self.downloadNextFile(task)
 
         localFilename = Filename(self.newsDir, self.filename)
 
         if not self.ch.isValid():
-            self.notify.warning("Unable to download %s" % (self.url))
+            self.notify.warning(f"Unable to download {self.url}")
             localFilename.unlink()
 
             if self.filename in self.newsCache:
@@ -430,7 +456,7 @@ class DirectNewsFrame(DirectObject.DirectObject):
             return self.downloadNextFile(task)
 
         # Successfully downloaded.
-        self.notify.info("downloaded %s" % (self.filename))
+        self.notify.info(f"downloaded {self.filename}")
 
         # The HTTP "Entity Tag" appears to be useless with our CDN:
         # different CDN servers will serve up different etag values
@@ -473,15 +499,16 @@ class DirectNewsFrame(DirectObject.DirectObject):
 
         file = open(cacheIndexFilename.toOsSpecific(), 'w')
         for filename, (size, date) in list(self.newsCache.items()):
-            print('%s\t%s\t%s' % (filename, size, date), file=file)
+            print(f'{filename}\t{size}\t{date}', file=file)
 
     def handleNewIssueOut(self):
         """Handle getting this newIssueOut message."""
         # we will get this immediately after DistributedInGameNewsManager gets created
-        # we will get this again when a new issue comes out while we are playing
-        if hasattr(self,"createdTime") and \
-           base.cr.inGameNewsMgr.getLatestIssue()  < self.createdTime:
-            self.createdTime =  base.cr.inGameNewsMgr.getLatestIssue()
+        # we will get this again when a new issue comes out while we are
+        # playing
+        if hasattr(self, "createdTime") and \
+           base.cr.inGameNewsMgr.getLatestIssue() < self.createdTime:
+            self.createdTime = base.cr.inGameNewsMgr.getLatestIssue()
         else:
             # we got a new issue while playing the game
             if self.NewsOverHttp and not self.redownloadingNews:
@@ -493,21 +520,30 @@ class DirectNewsFrame(DirectObject.DirectObject):
     def getInGameNewsUrl(self):
         """Get the appropriate URL to use if we are in test, qa, or live."""
         # First if all else fails, we hard code the live news url
-        result = base.config.GetString("fallback-news-url", "http://cdn.toontown.disney.go.com/toontown/en/gamenews/")
-        # next check if we have an override, say they want to url to point to a file in their harddisk
+        result = base.config.GetString(
+            "fallback-news-url",
+            "http://cdn.toontown.disney.go.com/toontown/en/gamenews/")
+        # next check if we have an override, say they want to url to point to a
+        # file in their harddisk
         override = base.config.GetString("in-game-news-url", "")
         if override:
-            self.notify.info("got an override url,  using %s for in game news" % override)
+            self.notify.info(
+                f"got an override url,  using {override} for in game news")
             result = override
         else:
             try:
-                launcherUrl = base.launcher.getValue("GAME_IN_GAME_NEWS_URL", "")
+                launcherUrl = base.launcher.getValue(
+                    "GAME_IN_GAME_NEWS_URL", "")
                 if launcherUrl:
                     result = launcherUrl
-                    self.notify.info("got GAME_IN_GAME_NEWS_URL from launcher using %s" % result)
+                    self.notify.info(
+                        f"got GAME_IN_GAME_NEWS_URL from launcher using {result}")
                 else:
-                    self.notify.info("blank GAME_IN_GAME_NEWS_URL from launcher, using %s" % result)
+                    self.notify.info(
+                        f"blank GAME_IN_GAME_NEWS_URL from launcher, using {result}")
 
-            except:
-                self.notify.warning("got exception getting GAME_IN_GAME_NEWS_URL from launcher, using %s" % result)
+            except BaseException:
+                self.notify.warning(
+                    "got exception getting GAME_IN_GAME_NEWS_URL from launcher, using %s" %
+                    result)
         return result

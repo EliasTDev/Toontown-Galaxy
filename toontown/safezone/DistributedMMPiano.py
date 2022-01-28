@@ -25,7 +25,8 @@ ChangeDirectionDebounce = 1.0
 # the new velocity.
 ChangeDirectionTime = 1.0
 
-class DistributedMMPiano(DistributedObject.DistributedObject): 
+
+class DistributedMMPiano(DistributedObject.DistributedObject):
     """
     ////////////////////////////////////////////////////////////////////
     //
@@ -38,6 +39,7 @@ class DistributedMMPiano(DistributedObject.DistributedObject):
     //
     ////////////////////////////////////////////////////////////////////
     """
+
     def __init__(self, cr):
         """__init__(cr)
         """
@@ -47,7 +49,7 @@ class DistributedMMPiano(DistributedObject.DistributedObject):
         #
         self.spinStartTime = 0.0
         self.rpm = 0.0
-        self.degreesPerSecond = (self.rpm/60.0) * 360.0
+        self.degreesPerSecond = (self.rpm / 60.0) * 360.0
         self.offset = 0.0
         self.oldOffset = 0.0
         self.lerpStart = 0.0
@@ -69,9 +71,13 @@ class DistributedMMPiano(DistributedObject.DistributedObject):
         """
         self.piano = base.cr.playGame.hood.loader.piano
         base.cr.parentMgr.registerParent(ToontownGlobals.SPMinniesPiano,
-                                              self.piano)
-        self.accept('enterlarge_round_keyboard_collisions', self.__handleOnFloor)
-        self.accept('exitlarge_round_keyboard_collisions', self.__handleOffFloor)
+                                         self.piano)
+        self.accept(
+            'enterlarge_round_keyboard_collisions',
+            self.__handleOnFloor)
+        self.accept(
+            'exitlarge_round_keyboard_collisions',
+            self.__handleOffFloor)
 
         # We want to have some interaction from the toons in the
         # world.  For now, if a toon bumps into a mailbox or planter
@@ -83,8 +89,10 @@ class DistributedMMPiano(DistributedObject.DistributedObject):
 
         # We need some handy sound effects to play in response to the
         # above.
-        self.speedUpSound = base.loader.loadSfx('phase_6/audio/sfx/SZ_MM_gliss.ogg')
-        self.changeDirectionSound = base.loader.loadSfx('phase_6/audio/sfx/SZ_MM_cymbal.ogg')
+        self.speedUpSound = base.loader.loadSfx(
+            'phase_6/audio/sfx/SZ_MM_gliss.ogg')
+        self.changeDirectionSound = base.loader.loadSfx(
+            'phase_6/audio/sfx/SZ_MM_cymbal.ogg')
 
         self.__setupSpin()
         DistributedObject.DistributedObject.generate(self)
@@ -115,7 +123,7 @@ class DistributedMMPiano(DistributedObject.DistributedObject):
         """
         taskMgr.remove(self.taskName("pianoSpinTask"))
 
-    def __updateSpin(self,task):
+    def __updateSpin(self, task):
         """
         ////////////////////////////////////////////////////////////////////
         // Function:   set the new heading/facing for the piano based
@@ -138,12 +146,12 @@ class DistributedMMPiano(DistributedObject.DistributedObject):
             offset = self.oldOffset + t * (self.offset - self.oldOffset)
         else:
             offset = self.oldOffset
-        
+
         heading = \
-                (self.degreesPerSecond * (now - self.spinStartTime)) + \
-                offset
-        self.piano.setHprScale( heading % 360.0, 0.0, 0.0,
-                                1.0, 1.0, 1.0 )
+            (self.degreesPerSecond * (now - self.spinStartTime)) + \
+            offset
+        self.piano.setHprScale(heading % 360.0, 0.0, 0.0,
+                               1.0, 1.0, 1.0)
         return Task.cont
 
     def disable(self):
@@ -163,7 +171,7 @@ class DistributedMMPiano(DistributedObject.DistributedObject):
 
         self.ignore('entero7')
         self.ignore('entericon_center_collisions')
-        
+
         self.speedUpSound = None
         self.changeDirectionSound = None
         self.__stopSpin()
@@ -182,14 +190,14 @@ class DistributedMMPiano(DistributedObject.DistributedObject):
         ////////////////////////////////////////////////////////////////////
         """
         timestamp = globalClockDelta.networkToLocalTime(timestamp)
-        degreesPerSecond = (rpm/60.0) * 360.0
+        degreesPerSecond = (rpm / 60.0) * 360.0
         now = globalClock.getFrameTime()
 
         # First, compute what the offset should be to keep the same
         # heading given the new rpm and timestamp.
         oldHeading = \
-                   (self.degreesPerSecond * (now - self.spinStartTime)) + \
-                   self.offset
+            (self.degreesPerSecond * (now - self.spinStartTime)) + \
+            self.offset
         oldHeading = oldHeading % 360.0
         oldOffset = oldHeading - (degreesPerSecond * (now - timestamp))
 
@@ -213,7 +221,7 @@ class DistributedMMPiano(DistributedObject.DistributedObject):
         self.oldOffset = oldOffset
         self.lerpStart = now
         self.lerpFinish = timestamp + ChangeDirectionTime
-        
+
     def playSpeedUp(self, avId):
         """playSpeedUp(self, uint32 avId)
 
@@ -260,7 +268,6 @@ class DistributedMMPiano(DistributedObject.DistributedObject):
         """
         self.cr.playGame.getPlace().activityFsm.request('off')
 
-
     def __handleSpeedUpButton(self, collEntry):
         """
         ////////////////////////////////////////////////////////////////////
@@ -301,4 +308,3 @@ class DistributedMMPiano(DistributedObject.DistributedObject):
 # 08Oct01    jlbutler    created.
 # 08Oct22    drose       modified to change speeds from time to time.
 #
-

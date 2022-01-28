@@ -13,15 +13,16 @@ from direct.fsm import ClassicFSM
 from . import DistributedSwitch
 from toontown.toonbase import TTLocalizer
 
+
 class DistributedTrigger(DistributedSwitch.DistributedSwitch):
     """
-    DistributedTrigger class:  The client side 
+    DistributedTrigger class:  The client side
     representation of a Cog HQ trigger.
     """
-    
+
     def setupSwitch(self):
-        #("setupSwitch()"))
-        #DistributedSwitch.DistributedSwitch.setupSwitch(self)
+        # ("setupSwitch()"))
+        # DistributedSwitch.DistributedSwitch.setupSwitch(self)
         radius = 1.0
         cSphere = CollisionSphere(0.0, 0.0, 0.0, radius)
         cSphere.setTangible(0)
@@ -29,23 +30,23 @@ class DistributedTrigger(DistributedSwitch.DistributedSwitch):
         cSphereNode.addSolid(cSphere)
         self.cSphereNodePath = self.attachNewNode(cSphereNode)
         cSphereNode.setCollideMask(ToontownGlobals.WallBitmask)
-        #self.cSphereNodePath.show()
+        # self.cSphereNodePath.show()
 
         self.flattenMedium()
 
     def delete(self):
-        #("delete()"))
+        # ("delete()"))
         self.cSphereNodePath.removeNode()
         del self.cSphereNodePath
         DistributedSwitch.DistributedSwitch.delete(self)
-    
+
     def enterTrigger(self, args=None):
-        #("enterTrigger(args="+str(args)+")"))
+        # ("enterTrigger(args="+str(args)+")"))
         DistributedSwitch.DistributedSwitch.enterTrigger(self, args)
         self.setIsOn(1)
-    
+
     def exitTrigger(self, args=None):
-        #("exitTrigger(args="+str(args)+")"))
+        # ("exitTrigger(args="+str(args)+")"))
         DistributedSwitch.DistributedSwitch.exitTrigger(self, args)
         self.setIsOn(0)
 

@@ -11,6 +11,7 @@ from toontown.toonbase import ToontownGlobals
 from pandac.PandaModules import NodePath
 from pandac.PandaModules import Point3
 
+
 def dnaCodeFromToonDNA(dna):
     """This is the code that is stored in the uint16 optional parameter on the statue"""
     def findItemNumInList(wantItem, wantList):
@@ -23,7 +24,7 @@ def dnaCodeFromToonDNA(dna):
 
    # if dna.gender == 'f':
     genderTypeNum = 0
-    #else:
+    # else:
     #    genderTypeNum = 1
 
     # Left shift the bits to get the correct position
@@ -34,8 +35,10 @@ def dnaCodeFromToonDNA(dna):
     # OR them together so that we can get the optional parameter
     return headTypeNum | torsoTypeNum | legTypeNum | genderTypeNum
 
+
 class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedToonStatuary')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedToonStatuary')
 
     # Note: These are the steps to take while adding a pose to the catalog list of available poses
     # 1) Add 205, 1005, 105 equivalent in GardenGlobals.py
@@ -53,16 +56,52 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
         # @TODO: Remove this before it goes to test.
 
         self.toon = None
-##        if __debug__:
+# if __debug__:
 ##            base.toonStatue = self
 
     def loadModel(self):
         DistributedStatuary.DistributedStatuary.loadModel(self)
-        self.model.setScale(self.worldScale*1.5, self.worldScale*1.5, self.worldScale)
+        self.model.setScale(
+            self.worldScale * 1.5,
+            self.worldScale * 1.5,
+            self.worldScale)
         self.getToonPropertiesFromOptional()
         dna = ToonDNA.ToonDNA()
-        #I hope I counted the amount of arguments right LOL
-        dna.newToonFromProperties(self.headType, self.torsoType, self.legType, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        # I hope I counted the amount of arguments right LOL
+        dna.newToonFromProperties(
+            self.headType,
+            self.torsoType,
+            self.legType,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0)
         self.setupStoneToon(dna)
         self.poseToonFromTypeIndex(self.typeIndex)
         self.toon.reparentTo(self.model)
@@ -70,10 +109,10 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
     def delete(self):
         self.deleteToon()
         DistributedStatuary.DistributedStatuary.delete(self)
-    
+
     def setupStoneToon(self, dna):
         self.toon = Toon.Toon()
-        self.toon.setPos(0,0,0)
+        self.toon.setPos(0, 0, 0)
         self.toon.setDNA(dna)
         self.toon.initializeBodyCollisions('toonStatue')
         self.toon.stopBlink()
@@ -82,11 +121,11 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
         self.speciesType = self.toon.style.getAnimal()
         self.headType = self.toon.style.head
 
-##        self.removeTextures()
+# self.removeTextures()
         self.setStoneTexture()
         self.toon.dropShadow.hide()
         self.toon.setZ(70)
-        self.toon.setScale(20/1.5, 20/1.5, 20)
+        self.toon.setScale(20 / 1.5, 20 / 1.5, 20)
 
     def deleteToon(self):
         self.notify.debug('entering deleteToon')
@@ -94,7 +133,7 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
         assert self.toon
         self.toon.delete()
         self.toon = None
-    
+
     def copyLocalAvatarToon(self):
         self.toon = Toon.Toon()
         self.toon.reparentTo(render)
@@ -106,8 +145,9 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
 
     def setupCollision(self):
         DistributedStatuary.DistributedStatuary.setupCollision(self)
-        # calcTightBounds is giving me a very small radius, probably because the pedestal is a square
-        self.colSphereNode.setScale(self.colSphereNode.getScale()*1.5)
+        # calcTightBounds is giving me a very small radius, probably because
+        # the pedestal is a square
+        self.colSphereNode.setScale(self.colSphereNode.getScale() * 1.5)
 
     def setupShadow(self):
         pass
@@ -121,38 +161,42 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
 ##        gray = VBase4(0.6, 0.6, 0.6, 1)
         gray = VBase4(1.6, 1.6, 1.6, 1)
         self.toon.setColor(gray, 10)
-##        self.toon.setColorScaleOff(10000)
+# self.toon.setColorScaleOff(10000)
 
         for node in self.toon.findAllMatches("**/*"):
             node.setState(RenderState.makeEmpty())
-        
+
         # It looks like the medium and low LODs have some whack texture on them.
         # And only the high LOD has the desaturated textures.
         # Ideally all the LODs should have desaturated textures.
-        # Since they don't we'll load the default textures and manually replace them. 
+        # Since they don't we'll load the default textures and manually replace
+        # them.
         desatShirtTex = loader.loadTexture("phase_3/maps/desat_shirt_1.jpg")
         desatSleeveTex = loader.loadTexture("phase_3/maps/desat_sleeve_1.jpg")
         desatShortsTex = loader.loadTexture("phase_3/maps/desat_shorts_1.jpg")
         desatSkirtTex = loader.loadTexture("phase_3/maps/desat_skirt_1.jpg")
-        
+
         if (self.toon.hasLOD()):
             for lodName in self.toon.getLODNames():
                 torso = self.toon.getPart('torso', lodName)
-                
+
                 torsoTop = torso.find('**/torso-top')
                 if torsoTop:
-                    # Replace whatever texture the toon has with the default desaturated textures.
+                    # Replace whatever texture the toon has with the default
+                    # desaturated textures.
                     torsoTop.setTexture(desatShirtTex, 1)
-                
+
                 sleeves = torso.find('**/sleeves')
                 if sleeves:
-                    # Replace whatever texture the toon has with the default desaturated textures.
+                    # Replace whatever texture the toon has with the default
+                    # desaturated textures.
                     sleeves.setTexture(desatSleeveTex, 1)
-                
+
                 bottoms = torso.findAllMatches('**/torso-bot*')
                 for bottomNum in range(0, bottoms.getNumPaths()):
                     bottom = bottoms.getPath(bottomNum)
-                    # Replace whatever texture the toon has with the default desaturated textures.
+                    # Replace whatever texture the toon has with the default
+                    # desaturated textures.
                     if (self.toon.style.torso[1] == 's'):
                         bottom.setTexture(desatShortsTex, 1)
                     else:
@@ -161,20 +205,21 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
     def setStoneTexture(self):
         gray = VBase4(1.6, 1.6, 1.6, 1)
         self.toon.setColor(gray, 10)
-        
+
         stoneTex = loader.loadTexture('phase_5.5/maps/smoothwall_1.jpg')
         # TextureStage for the entire toon model
         ts = TextureStage('ts')
         ts.setPriority(1)
         self.toon.setTexture(ts, stoneTex)
 
-        # TextureStage for some detailed parts which have colored textures in the geometry
+        # TextureStage for some detailed parts which have colored textures in
+        # the geometry
         tsDetail = TextureStage('tsDetail')
         tsDetail.setPriority(2)
         tsDetail.setSort(10)
-        tsDetail.setCombineRgb(tsDetail.CMInterpolate, tsDetail.CSTexture, 
-                               tsDetail.COSrcColor, tsDetail.CSPrevious, 
-                               tsDetail.COSrcColor, tsDetail.CSConstant, 
+        tsDetail.setCombineRgb(tsDetail.CMInterpolate, tsDetail.CSTexture,
+                               tsDetail.COSrcColor, tsDetail.CSPrevious,
+                               tsDetail.COSrcColor, tsDetail.CSConstant,
                                tsDetail.COSrcColor)
         tsDetail.setColor(VBase4(0.5, 0.5, 0.5, 1))
 
@@ -182,12 +227,13 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
             for lodName in self.toon.getLODNames():
                 head = self.toon.getPart('head', lodName)
 
-                # Make the eyes lighter colored. Its easier to alpha them out, than place another texture
+                # Make the eyes lighter colored. Its easier to alpha them out,
+                # than place another texture
                 eyes = head.find('**/eye*')
                 if not eyes.isEmpty():
                     eyes.setColor(Vec4(1.4, 1.4, 1.4, .3), 10)
                 ears = head.find('**/ears*')
-                
+
                 animal = self.toon.style.getAnimal()
                 if (animal != 'dog'):
                     muzzle = head.find('**/muzzle*neutral')
@@ -217,23 +263,24 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
                     # These animals need a simple 2nd texture stage for the muzzle.
                     # Keeping the 2nd Texture Stage for the muzzle so that the has less color
                     # (if the muzzle already had some color) and so that the nose doesn't
-                    # appear completely black, it appears grey and has more stone texture.
-                    muzzle.setTexture(tsDetail, stoneTex)                    
-                    
+                    # appear completely black, it appears grey and has more
+                    # stone texture.
+                    muzzle.setTexture(tsDetail, stoneTex)
+
                 if (self.speciesType == 'dog'):
                     nose = head.find('**/nose')
                     if nose != nose.notFound():
                         nose.setTexture(tsDetail, stoneTex)
-                            
+
         # Texture the eye-lashes separately
         tsLashes = TextureStage('tsLashes')
         tsLashes.setPriority(2)
         tsLashes.setMode(tsLashes.MDecal)
 
         # Lashes only exist in females
-        #NO STOP BEING SEXIST DISNEY
+        # NO STOP BEING SEXIST DISNEY
         if self.eyelashes:
-        #if self.gender == 'f':
+            # if self.gender == 'f':
             if self.toon.hasLOD():
                 # Lashes are there only in the 1st LOD
                 head = self.toon.getPart('head', '1000')
@@ -250,10 +297,10 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
             lashesOpen = head.find('**/' + openString)
             lashesClosed = head.find('**/' + closedString)
 
-            
-            # Alpha-ing out the lashes to make them look gray-ish. 
+            # Alpha-ing out the lashes to make them look gray-ish.
             # Lashes have a black texture. Need a better way to blend the stoneTex
-            # Virtually has no significance in applying the stone Texture to the lashes.
+            # Virtually has no significance in applying the stone Texture to
+            # the lashes.
             if lashesOpen != lashesOpen.notFound():
                 lashesOpen.setTexture(tsLashes, stoneTex)
                 lashesOpen.setColor(VBase4(1, 1, 1, 0.4), 10)
@@ -274,16 +321,16 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
         bits 7-15 : headType
         '''
 
-        #Bit-mask by the appropriate number and right shift to get the range from 0 to the appropriate number
+        # Bit-mask by the appropriate number and right shift to get the range from 0 to the appropriate number
         #genderTypeNum = self.optional & 1
         legTypeNum = (self.optional & 6) >> 1
         torsoTypeNum = (self.optional & 120) >> 3
         headTypeNum = (self.optional & 65408) >> 7
 
        # if genderTypeNum == 0:
-           # self.gender = 'f'
+        # self.gender = 'f'
        # else:
-           # self.gender = 'm'
+        # self.gender = 'm'
 
         # @TODO: change these hardcoded numbers to length of the respective lists
 

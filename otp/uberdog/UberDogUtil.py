@@ -1,4 +1,4 @@
-""" 
+"""
 """
 
 from direct.distributed.AsyncRequest import ASYNC_REQUEST_DEFAULT_TIMEOUT_IN_SECONDS, ASYNC_REQUEST_INFINITE_RETRIES, AsyncRequest
@@ -17,7 +17,7 @@ class ManagedAsyncRequest(AsyncRequest):
     The distObject passed in to the init is expected to have an asyncRequests
     member that is usable by the ManagedAsyncRequest.
     """
-    @report(types = ['args'], dConfigParam = 'avatarmgr')
+    @report(types=['args'], dConfigParam='avatarmgr')
     def __init__(self, distObj, air, replyToChannelId=None,
                  timeoutTime=ASYNC_REQUEST_DEFAULT_TIMEOUT_IN_SECONDS,
                  key=None):

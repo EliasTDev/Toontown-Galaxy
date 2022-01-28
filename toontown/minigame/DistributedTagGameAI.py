@@ -7,6 +7,7 @@ from direct.task import Task
 import random
 from . import TagGameGlobals
 
+
 class DistributedTagGameAI(DistributedMinigameAI):
 
     DURATION = TagGameGlobals.DURATION
@@ -14,29 +15,29 @@ class DistributedTagGameAI(DistributedMinigameAI):
     def __init__(self, air, minigameId):
         try:
             self.DistributedTagGameAI_initialized
-        except:
+        except BaseException:
             self.DistributedTagGameAI_initialized = 1
             DistributedMinigameAI.__init__(self, air, minigameId)
 
             self.gameFSM = ClassicFSM.ClassicFSM('DistributedTagGameAI',
-                                   [State.State('inactive',
-                                                self.enterInactive,
-                                                self.exitInactive,
-                                                ['play']),
-                                    State.State('play',
-                                                self.enterPlay,
-                                                self.exitPlay,
-                                                ['cleanup']),
-                                    State.State('cleanup',
-                                                self.enterCleanup,
-                                                self.exitCleanup,
-                                                ['inactive']),
-                                    ],
-                                   # Initial State
-                                   'inactive',
-                                   # Final State
-                                   'inactive',
-                                   )
+                                                 [State.State('inactive',
+                                                              self.enterInactive,
+                                                              self.exitInactive,
+                                                              ['play']),
+                                                     State.State('play',
+                                                                 self.enterPlay,
+                                                                 self.exitPlay,
+                                                                 ['cleanup']),
+                                                     State.State('cleanup',
+                                                                 self.enterCleanup,
+                                                                 self.exitCleanup,
+                                                                 ['inactive']),
+                                                  ],
+                                                 # Initial State
+                                                 'inactive',
+                                                 # Final State
+                                                 'inactive',
+                                                 )
 
             # Add our game ClassicFSM to the framework ClassicFSM
             self.addChildGameFSM(self.gameFSM)
@@ -115,8 +116,8 @@ class DistributedTagGameAI(DistributedMinigameAI):
                               self.taskName("gameTimer"))
 
         # Start spawning treasure
-        self.tagTreasurePlanner = TagTreasurePlannerAI(self.zoneId,
-                                                       self.treasureGrabCallback)
+        self.tagTreasurePlanner = TagTreasurePlannerAI(
+            self.zoneId, self.treasureGrabCallback)
         # Prime the treasure pump a little
         self.tagTreasurePlanner.placeRandomTreasure()
         self.tagTreasurePlanner.placeRandomTreasure()
@@ -149,13 +150,14 @@ class DistributedTagGameAI(DistributedMinigameAI):
 
     def treasureGrabCallback(self, avId):
         if avId not in self.avIdList:
-            self.air.writeServerEvent('suspicious', avId, 'TagGameAI.treasureGrabCallback non-player avId')
+            self.air.writeServerEvent(
+                'suspicious', avId, 'TagGameAI.treasureGrabCallback non-player avId')
             return
         # Add one to this avIds treasure score
         self.treasureScores[avId] += 2
         self.notify.debug("treasureGrabCallback: " + str(avId) +
-                            " grabbed a treasure, new score: " +
-                            str(self.treasureScores[avId]))
+                          " grabbed a treasure, new score: " +
+                          str(self.treasureScores[avId]))
 
         # Count the treasure towards the real purchasing score
         self.scoreDict[avId] = self.treasureScores[avId]
@@ -178,22 +180,26 @@ class DistributedTagGameAI(DistributedMinigameAI):
         This is a dist update from the client saying he tagged somebody
         """
         taggedAvatar = simbase.air.doId2do.get(taggedAvId)
-        if taggedAvatar == None:
-            self.air.writeServerEvent('suspicious', taggedAvId, 'TagGameAI.tag invalid taggedAvId')
+        if taggedAvatar is None:
+            self.air.writeServerEvent(
+                'suspicious',
+                taggedAvId,
+                'TagGameAI.tag invalid taggedAvId')
             return
-        
+
         itAvId = self.air.getAvatarIdFromSender()
         if self.tagBack:
             self.notify.debug("tag: " + str(itAvId) +
-                                " tagged: " + str(taggedAvId))
+                              " tagged: " + str(taggedAvId))
             # double check to see if itAvId was it before
             if (self.itAvId == itAvId):
                 self.b_setIt(taggedAvId)
             else:
-                self.notify.warning("Got tag message from avatar that is not IT")
+                self.notify.warning(
+                    "Got tag message from avatar that is not IT")
                 # Hmmm, now what should I do?
                 return None
-            
+
             # No tag backs until the doLater is finished
             self.tagBack = 0
             taskMgr.doMethodLater(2.0, self.clearTagBack,

@@ -9,7 +9,7 @@ from direct.distributed.PyDatagram import PyDatagram
 
 class LoginGSAccount(LoginBase.LoginBase):
     """This is the really old way toontown devs get into their local toontown environment."""
-    
+
     def __init__(self, cr):
         LoginBase.LoginBase.__init__(self, cr)
 
@@ -24,16 +24,16 @@ class LoginGSAccount(LoginBase.LoginBase):
         """
         # Separating authorize() and sendLoginMsg() is used more by
         # other login methods.  For us, we'll just store the parameters:
-        self.loginName=loginName
-        self.password=password
-        self.createFlag=1
+        self.loginName = loginName
+        self.password = password
+        self.createFlag = 1
 
         # Since we are faking a login here without using an account
         # server, we are just in the dev environment, and our account
         # is paid and never expires.
         self.cr.freeTimeExpiresAt = -1
         self.cr.setIsPaid(1)
-        return None # no error.
+        return None  # no error.
 
     def authorize(self, loginName, password):
         """
@@ -46,16 +46,16 @@ class LoginGSAccount(LoginBase.LoginBase):
         """
         # Separating authorize() and sendLoginMsg() is used more by
         # other login methods.  For us, we'll just store the parameters:
-        self.loginName=loginName
-        self.password=password
-        self.createFlag=0
+        self.loginName = loginName
+        self.password = password
+        self.createFlag = 0
 
         # Since we are faking a login here without using an account
         # server, we are just in the dev environment, and our account
         # is paid and never expires.
         self.cr.freeTimeExpiresAt = -1
         self.cr.setIsPaid(1)
-        return None # no error.
+        return None  # no error.
 
     def supportsRelogin(self):
         """
@@ -68,13 +68,13 @@ class LoginGSAccount(LoginBase.LoginBase):
         """
         Send a message to the server with our loginName
         """
-        
-        DISLID = config.GetInt('fake-DISL-PlayerAccountId',0)
+
+        DISLID = config.GetInt('fake-DISL-PlayerAccountId', 0)
         if not DISLID:
-            NameStringId = ("DISLID_%s" % (self.loginName))
+            NameStringId = f"DISLID_{self.loginName}"
             DISLID = config.GetInt(NameStringId, 0)
-        
-        cr=self.cr
+
+        cr = self.cr
         # Time to send a login message
         datagram = PyDatagram()
         # Add message type
@@ -82,7 +82,7 @@ class LoginGSAccount(LoginBase.LoginBase):
         # Add login name
         datagram.addString(self.loginName)
         # Add our IP address
-        
+
         if cr.connectMethod != cr.CM_HTTP:
             datagram.addUint32(cr.tcpConn.getAddress().getIp())
         else:
@@ -106,8 +106,8 @@ class LoginGSAccount(LoginBase.LoginBase):
         # And our dev fake DISL account ID
         datagram.addUint32(DISLID)
         # Whether or not to enable OTP_WHITELIST
-        datagram.addString(config.GetString('otp-whitelist',"YES"))
-        
+        datagram.addString(config.GetString('otp-whitelist', "YES"))
+
         # Send the message
         cr.send(datagram)
 
@@ -120,7 +120,7 @@ class LoginGSAccount(LoginBase.LoginBase):
         # Here in the old login system, we don't bother to implement
         # this.
         return
-    
+
     def requestPwdReminder(self, email=None, acctName=None):
         """
         Request a password-reminder email, given an email address OR
@@ -150,13 +150,13 @@ class LoginGSAccount(LoginBase.LoginBase):
         # This is just a stub that matches the user account password only.
         return ((password == parentPassword), None)
 
-    def authenticateParentUsernameAndPassword(self, loginName,
-                                   password, parentUsername, parentPassword):
+    def authenticateParentUsernameAndPassword(
+            self, loginName, password, parentUsername, parentPassword):
         """
         try to authenticate the parent password
         """
         # This is just a stub that matches the user account password only.
-        return ((password == parentPassword), None)    
+        return ((password == parentPassword), None)
 
     def supportsAuthenticateDelete(self):
         """ Returns true if authenticateDelete is implemented

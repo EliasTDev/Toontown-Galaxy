@@ -1,12 +1,14 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.showbase.PythonUtil import makeTuple
 
+
 class DistributedInterestOpenerAI(DistributedObjectAI):
     """
     Use this class to cause the client to delay opening of an interest
     set (underneath this object) until a specific set of doIds is present
     on the client.
     """
+
     def __init__(self, air, requiredDoIds, zones=None):
         DistributedObjectAI.__init__(self, air)
         if zones is None:
@@ -18,7 +20,7 @@ class DistributedInterestOpenerAI(DistributedObjectAI):
 
     def announceGenerate(self):
         DistributedObjectAI.announceGenerate(self)
-        print('DistributedInterestOpenerAI.announceGenerate: %s' % self.doId)
+        print(f'DistributedInterestOpenerAI.announceGenerate: {self.doId}')
 
     def setRequiredDoIds(self, requiredDoIds):
         # call this to change the list of required doIds

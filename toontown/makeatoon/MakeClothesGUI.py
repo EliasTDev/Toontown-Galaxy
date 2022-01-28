@@ -1,13 +1,14 @@
 from . import ClothesGUI
 from toontown.toon import ToonDNA
 
+
 class MakeClothesGUI(ClothesGUI.ClothesGUI):
     notify = directNotify.newCategory("MakeClothesGUI")
 
     def __init__(self, doneEvent):
         ClothesGUI.ClothesGUI.__init__(self, ClothesGUI.CLOTHES_MAKETOON,
                                        doneEvent)
-        
+
     def setupScrollInterface(self):
         self.dna = self.toon.getStyle()
 
@@ -16,10 +17,11 @@ class MakeClothesGUI(ClothesGUI.ClothesGUI):
         # this thinks we are changing gender because gender is initialized
         # to be = '?'
       #  if (gender != self.gender):
-        self.tops = ToonDNA.getRandomizedTops(tailorId = ToonDNA.MAKE_A_TOON)
-        self.bottoms = ToonDNA.getRandomizedBottoms(tailorId = ToonDNA.MAKE_A_TOON)
-           # self.gender = gender
-            # Don't try and preserve choices made as a different gender
+        self.tops = ToonDNA.getRandomizedTops(tailorId=ToonDNA.MAKE_A_TOON)
+        self.bottoms = ToonDNA.getRandomizedBottoms(
+            tailorId=ToonDNA.MAKE_A_TOON)
+        # self.gender = gender
+        # Don't try and preserve choices made as a different gender
         self.topChoice = 0
         self.bottomChoice = 0
 
@@ -27,15 +29,14 @@ class MakeClothesGUI(ClothesGUI.ClothesGUI):
 
         self.setupButtons()
 
-
     def setupButtons(self):
         ClothesGUI.ClothesGUI.setupButtons(self)
 
         # cover thy nakedness
         # This only happens in MakeAToon
        # if (len(self.dna.torso) == 1):
-           # if (self.gender == 'm'):
-           # torsoStyle = 's'
+        # if (self.gender == 'm'):
+        # torsoStyle = 's'
        # else:
         if (self.toonInShorts == 1):
             torsoStyle = 's'
@@ -43,9 +44,8 @@ class MakeClothesGUI(ClothesGUI.ClothesGUI):
             torsoStyle = 'd'
         self.toon.swapToonTorso(self.dna.torso[0] + torsoStyle)
         self.toon.loop("neutral", 0)
-        self.toon.swapToonColor(self.dna)            
+        self.toon.swapToonColor(self.dna)
         # set texture to start of clothes choices
         self.swapTop(0)
         self.swapBottom(0)
         return None
-         

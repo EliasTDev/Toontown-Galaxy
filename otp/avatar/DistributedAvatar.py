@@ -40,17 +40,16 @@ class DistributedAvatar(DistributedActor, Avatar):
         try:
             self.DistributedAvatar_initialized
             return
-        except:
+        except BaseException:
             self.DistributedAvatar_initialized = 1
 
         Avatar.__init__(self)
         DistributedActor.__init__(self, cr)
-        
+
         # The node that shows the number of hp just gained or lost
         self.hpText = None
         self.hp = None
         self.maxHp = None
-        
 
     ### managing ActiveAvatars ###
 
@@ -61,7 +60,7 @@ class DistributedAvatar(DistributedActor, Avatar):
         """
         try:
             del self.DistributedAvatar_announced
-        except:
+        except BaseException:
             return
         self.reparentTo(hidden)
         self.removeActive()
@@ -75,7 +74,7 @@ class DistributedAvatar(DistributedActor, Avatar):
         self.hp = None
         self.ignore("nameTagShowAvId")
         self.ignore("nameTagShowName")
-        
+
         DistributedActor.disable(self)
 
     def delete(self):
@@ -85,12 +84,11 @@ class DistributedAvatar(DistributedActor, Avatar):
         """
         try:
             self.DistributedAvatar_deleted
-        except:
+        except BaseException:
             self.DistributedAvatar_deleted = 1
             Avatar.delete(self)
             DistributedActor.delete(self)
 
-        
     def generate(self):
         """
         This method is called when the DistributedObject is reintroduced
@@ -109,30 +107,28 @@ class DistributedAvatar(DistributedActor, Avatar):
         # Now that we have a doId, set a tag so others who find us in
         # the collision system can figure out what avatar they hit.
         self.setTag('avatarDoId', str(self.doId))
-        self.accept("nameTagShowAvId",self.__nameTagShowAvId)
-        self.accept("nameTagShowName",self.__nameTagShowName)
+        self.accept("nameTagShowAvId", self.__nameTagShowAvId)
+        self.accept("nameTagShowName", self.__nameTagShowName)
 
     def announceGenerate(self):
         try:
             self.DistributedAvatar_announced
             return
-        except:
+        except BaseException:
             self.DistributedAvatar_announced = 1
-        
+
         if(not self.isLocal()):
-            self.initializeBodyCollisions("distAvatarCollNode-" + str(self.doId))
-        
+            self.initializeBodyCollisions(
+                "distAvatarCollNode-" + str(self.doId))
+
         DistributedActor.announceGenerate(self)
-        
-                
-    def __setTags(self, extra = None):
+
+    def __setTags(self, extra=None):
         if hasattr(base, "idTags"):
             if base.idTags:
                 self.__nameTagShowAvId()
             else:
                 self.__nameTagShowName()
-        
-            
 
     ### setParent ###
 
@@ -162,7 +158,7 @@ class DistributedAvatar(DistributedActor, Avatar):
         # (limited by maxHp) and shows green numbers flying out of the
         # avatar's head.
 
-        if self.hp == None or hpGained < 0:
+        if self.hp is None or hpGained < 0:
             return
 
         oldHp = self.hp
@@ -180,32 +176,32 @@ class DistributedAvatar(DistributedActor, Avatar):
         hpGained = self.hp - max(oldHp, 0)
         if hpGained > 0:
             self.showHpText(hpGained)
-            self.hpChange(quietly = 0)
-        
+            self.hpChange(quietly=0)
+
     def takeDamage(self, hpLost, bonus=0):
         # Adjusts the avatar's hp downward by the indicated value
         # (limited by 0) and shows red numbers flying out of the
         # avatar's head.
-        if self.hp == None or hpLost < 0:
+        if self.hp is None or hpLost < 0:
             return
-        
+
         oldHp = self.hp
         self.hp = max(self.hp - hpLost, 0)
 
         hpLost = oldHp - self.hp
         if hpLost > 0:
             self.showHpText(-hpLost, bonus)
-            self.hpChange(quietly = 0)
+            self.hpChange(quietly=0)
 
             if self.hp <= 0 and oldHp > 0:
-                self.died()       
+                self.died()
 
     def setHp(self, hitPoints):
         # We no longer fly numbers out of the avatar's head just for
         # calling setHp().  Instead, toonUp() and takeDamage() divide
         # that responsibility, and setHp() is just used to quietly
         # reset the hp from the AI.
-        
+
         justRanOutOfHp = (hitPoints is not None and
                           self.hp is not None and
                           self.hp - hitPoints > 0 and
@@ -213,34 +209,35 @@ class DistributedAvatar(DistributedActor, Avatar):
 
         # Store the new value.
         self.hp = hitPoints
-        
+
         # Send events so that the hp meter and others can know about the
         # change to hp.
-        self.hpChange(quietly = 1)
+        self.hpChange(quietly=1)
 
         if justRanOutOfHp:
             self.died()
 
-    def hpChange(self, quietly = 0):
+    def hpChange(self, quietly=0):
         # We may not have a doId yet... in which case we can't send the
         # event, and don't need to anyway.
         if hasattr(self, "doId"):
-            if self.hp != None and self.maxHp != None:
-                messenger.send(self.uniqueName("hpChange"), [self.hp, self.maxHp, quietly])
-            if self.hp != None and self.hp > 0:
+            if self.hp is not None and self.maxHp is not None:
+                messenger.send(
+                    self.uniqueName("hpChange"), [
+                        self.hp, self.maxHp, quietly])
+            if self.hp is not None and self.hp > 0:
                 messenger.send(self.uniqueName("positiveHP"))
         Discord.setLaff(self.hp, self.maxHp)
-        
+
     def died(self):
         """
         This is a hook for derived classes to do something when the
         avatar runs out of HP.  The base function doesn't do anything.
         """
         pass
-    
+
     def getHp(self):
         return self.hp
-
 
     ### setMaxHp ###
 
@@ -262,19 +259,18 @@ class DistributedAvatar(DistributedActor, Avatar):
         try:
             self.node().setName("%s-%d" % (name, self.doId))
             self.gotName = 1
-        except:
+        except BaseException:
             # This might fail if the doId hasn't been set yet.
             # No big deal.
             pass
-        
-        
+
         return(Avatar.setName(self, name))
 
     ### hpText ####
 
     def showHpText(self, number, bonus=0, scale=1):
         # WARNING if this changes please also change DistributedToon.py
-        if self.HpTextEnabled and not self.ghostMode:           
+        if self.HpTextEnabled and not self.ghostMode:
             # We don't show zero change.
             if number != 0:
                 # Get rid of the number if it is already there.
@@ -319,7 +315,7 @@ class DistributedAvatar(DistributedActor, Avatar):
                 self.HpTextGenerator.setTextColor(r, g, b, a)
 
                 self.hpTextNode = self.HpTextGenerator.generate()
-                
+
                 # Put the hpText over the head of the avatar
                 self.hpText = self.attachNewNode(self.hpTextNode)
                 self.hpText.setScale(scale)
@@ -329,12 +325,12 @@ class DistributedAvatar(DistributedActor, Avatar):
                 self.hpText.setBin('fixed', 100)
 
                 # Initial position ... Center of the body... the "tan tien"
-                self.hpText.setPos(0, 0, self.height//2)
+                self.hpText.setPos(0, 0, self.height // 2)
                 seq = Sequence(
                     # Fly the number out of the character
                     self.hpText.posInterval(1.0, Point3(0, 0, self.height + 1.5),
                                             1.0,
-                                            blendType = 'easeOut'),
+                                            blendType='easeOut'),
                     # Wait 2 seconds
                     Wait(0.85),
                     # Fade the number
@@ -368,7 +364,7 @@ class DistributedAvatar(DistributedActor, Avatar):
                 # Set the color and alpha scale (a)
                 r = a = 1.0
                 g = b = 0.0
-                
+
                 self.HpTextGenerator.setTextColor(r, g, b, a)
 
                 self.hpTextNode = self.HpTextGenerator.generate()
@@ -381,12 +377,12 @@ class DistributedAvatar(DistributedActor, Avatar):
                 self.hpText.setBillboardAxis()
 
                 # Initial position ... Center of the body... the "tan tien"
-                self.hpText.setPos(0, 0, self.height//2)
+                self.hpText.setPos(0, 0, self.height // 2)
                 seq = Sequence(
                     # Fly the number out of the character
                     self.hpText.posInterval(1.0, Point3(0, 0, self.height + 1.5),
                                             1.0,
-                                            blendType = 'easeOut'),
+                                            blendType='easeOut'),
                     # Wait 2 seconds
                     Wait(duration),
                     # Fade the number
@@ -410,34 +406,32 @@ class DistributedAvatar(DistributedActor, Avatar):
             self.hpText = None
 
     def getStareAtNodeAndOffset(self):
-        return self, Point3(0,0,self.height)
-        
+        return self, Point3(0, 0, self.height)
+
     def getAvIdName(self):
         # Derived classes can override the base.idTags display.
-        return "%s\n%s" % (self.getName(), self.doId)
-    
-    def __nameTagShowAvId(self, extra = None):
+        return f"{self.getName()}\n{self.doId}"
+
+    def __nameTagShowAvId(self, extra=None):
         self.setDisplayName(self.getAvIdName())
-        
-    def __nameTagShowName(self, extra = None):
+
+    def __nameTagShowName(self, extra=None):
         self.setDisplayName(self.getName())
-        
+
     def askAvOnShard(self, avId):
-        #determines if a given avId in on my shard
+        # determines if a given avId in on my shard
         if base.cr.doId2do.get(avId):
             #print("Found Locally")
-            messenger.send("AvOnShard%s"%(avId), [True])
+            messenger.send(f"AvOnShard{avId}", [True])
         else:
             #print("asking AI")
             self.sendUpdate("checkAvOnShard", [avId])
-        
-    def confirmAvOnShard(self, avId, onShard = True):
-        messenger.send(("AvOnShard%s"%(avId)), [onShard])
-        
+
+    def confirmAvOnShard(self, avId, onShard=True):
+        messenger.send(f"AvOnShard{avId}", [onShard])
+
     ### play dialog sounds ###
 
     def getDialogueArray(self):
         # Inheritors should override
         return None
-
-

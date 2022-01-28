@@ -73,6 +73,8 @@ MaxLoadTime = 40.
 rulesDuration = 20
 
 DifficultyOverrideMult = int(1 << 16)
+
+
 def QuantizeDifficultyOverride(diffOverride):
     """ use this function to get the closest value to the input
     difficulty override that can be converted to an integer and back
@@ -80,7 +82,8 @@ def QuantizeDifficultyOverride(diffOverride):
     return (int(round(diffOverride * DifficultyOverrideMult)) /
             float(DifficultyOverrideMult))
 
-NoDifficultyOverride  = 0x7fffffff
+
+NoDifficultyOverride = 0x7fffffff
 NoTrolleyZoneOverride = -1
 
 # this is a list of the Toontown safezones, ordered by 'difficulty'
@@ -91,12 +94,14 @@ SafeZones = [
     ToontownGlobals.MinniesMelodyland,
     ToontownGlobals.TheBrrrgh,
     ToontownGlobals.DonaldsDreamland,
-    ]
+]
+
 
 def getDifficulty(trolleyZone):
     """ returns 0..1 """
     hoodZone = getSafezoneId(trolleyZone)
-    return float(SafeZones.index(hoodZone)) / (len(SafeZones)-1)
+    return float(SafeZones.index(hoodZone)) / (len(SafeZones) - 1)
+
 
 def getSafezoneId(trolleyZone):
     """
@@ -105,12 +110,10 @@ def getSafezoneId(trolleyZone):
     """
     return ZoneUtil.getCanonicalHoodId(trolleyZone)
 
+
 def getScoreMult(trolleyZone):
     szId = getSafezoneId(trolleyZone)
     # currently, mults increase linearly from TTC to DL, from 1. to 1.5
     multiplier = PythonUtil.lerp(
-        1., 1.5, float(SafeZones.index(szId)) / (len(SafeZones)-1))
+        1., 1.5, float(SafeZones.index(szId)) / (len(SafeZones) - 1))
     return multiplier
-
-
-

@@ -4,7 +4,7 @@ from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase import BulletinBoardWatcher
 from otp.otpbase import OTPGlobals
-from toontown.toonbase  import ToontownGlobals
+from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 from toontown.coghq import CountryClubLayout
 from toontown.coghq import DistributedCountryClubRoom
@@ -14,32 +14,34 @@ from direct.gui import OnscreenText
 from direct.task.Task import Task
 from direct.interval.IntervalGlobal import *
 
+
 class DistributedCountryClub(DistributedObject.DistributedObject):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCountryClub')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedCountryClub')
 
     ReadyPost = 'CountryClubReady'
     WinEvent = 'CountryClubWinEvent'
-    doBlockRooms = base.config.GetBool('block-country-club-rooms',1)
+    doBlockRooms = base.config.GetBool('block-country-club-rooms', 1)
 
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
         self.lastCamEnterRoom = 0
 
-        self.titleColor = (1,1,1,1)
+        self.titleColor = (1, 1, 1, 1)
         self.titleText = OnscreenText.OnscreenText(
             "",
-            fg = self.titleColor,
-            shadow = (0,0,0,1),
-            font = ToontownGlobals.getSignFont(),
-            pos = (0,-0.5),
-            scale = 0.10,
-            drawOrder = 0,
-            mayChange = 1,
-            )
+            fg=self.titleColor,
+            shadow=(0, 0, 0, 1),
+            font=ToontownGlobals.getSignFont(),
+            pos=(0, -0.5),
+            scale=0.10,
+            drawOrder=0,
+            mayChange=1,
+        )
         self.titleSequence = None
 
     def generate(self):
-        self.notify.debug('generate: %s' % self.doId)
+        self.notify.debug(f'generate: {self.doId}')
         DistributedObject.DistributedObject.generate(self)
 
         bboard.post('countryClub', self)
@@ -51,13 +53,13 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
         self.allRooms = []
         self.curToonRoomNum = None
         self.allBlockedRooms = []
-        
+
         base.localAvatar.setCameraCollisionsCanMove(1)
 
         # place local toon here just in case we don't have an entrancePoint
         # entity set up
         base.localAvatar.reparentTo(render)
-        base.localAvatar.setPosHpr(0,0,0,0,0,0)
+        base.localAvatar.setPosHpr(0, 0, 0, 0, 0, 0)
 
         self.accept('SOSPanelEnter', self.handleSOSPanel)
 
@@ -66,9 +68,9 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
 
         # add factory menu to SpeedChat
         base.localAvatar.chatMgr.chatInputSpeedChat.addFactoryMenu()
-        
+
         self.__setupHighSky()
-        
+
     def startSky(self):
         # Parent the sky to our camera, the task will counter rotate it
         self.sky = loader.loadModel('phase_12/models/bossbotHQ/BossTestSkyBox')
@@ -78,7 +80,8 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
         # task to do this just before the scene is rendered.
         self.sky.setZ(0.0)
         self.sky.setHpr(0.0, 0.0, 0.0)
-        ce = CompassEffect.make(NodePath(), CompassEffect.PRot | CompassEffect.PZ)
+        ce = CompassEffect.make(NodePath(),
+                                CompassEffect.PRot | CompassEffect.PZ)
         self.sky.node().setEffect(ce)
         self.sky.setBin('background', 0)
         #base.ccsky = self.sky
@@ -89,8 +92,8 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
     def stopSky(self):
         # Remove the sky task just in case it was spawned.
         taskMgr.remove("skyTrack")
-        self.sky.remove()#reparentTo(hidden)
-        
+        self.sky.remove()  # reparentTo(hidden)
+
     def __setupHighSky(self):
         self.startSky()
         sky = self.sky
@@ -99,10 +102,10 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
         # visible.
         sky.setH(150)
         sky.setZ(-100)
-        
+
     def __cleanupHighSky(self):
         # Turn the sky off
-        
+
         # self.cloudRing.removeNode()
         sky = self.sky
         sky.setH(0)
@@ -112,35 +115,36 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
     # required fields
     def setZoneId(self, zoneId):
         self.zoneId = zoneId
-        
+
     def setCountryClubId(self, id):
-        DistributedCountryClub.notify.debug('setCountryClubId: %s' % id)
+        DistributedCountryClub.notify.debug(f'setCountryClubId: {id}')
         self.countryClubId = id
 
     def setFloorNum(self, num):
-        DistributedCountryClub.notify.debug('floorNum: %s' % num)
+        DistributedCountryClub.notify.debug(f'floorNum: {num}')
         self.floorNum = num
-        self.layout = CountryClubLayout.CountryClubLayout(self.countryClubId, self.floorNum, self.layoutIndex)
-        
+        self.layout = CountryClubLayout.CountryClubLayout(
+            self.countryClubId, self.floorNum, self.layoutIndex)
+
     def setLayoutIndex(self, layoutIndex):
         self.layoutIndex = layoutIndex
-            
+
     def getLayoutIndex(self):
         return self.layoutIndex
 
     def setRoomDoIds(self, roomDoIds):
         self.roomDoIds = roomDoIds
         self.roomWatcher = BulletinBoardWatcher.BulletinBoardWatcher(
-            'roomWatcher-%s' % self.doId,
+            f'roomWatcher-{self.doId}',
             [DistributedCountryClubRoom.getCountryClubRoomReadyPostName(doId)
              for doId in self.roomDoIds], self.gotAllRooms)
 
     def gotAllRooms(self):
-        self.notify.debug('countryClub %s: got all rooms' % self.doId)
+        self.notify.debug(f'countryClub {self.doId}: got all rooms')
         self.roomWatcher.destroy()
         self.roomWatcher = None
 
-        self.geom = render.attachNewNode('countryClub%s' % self.doId)
+        self.geom = render.attachNewNode(f'countryClub{self.doId}')
 
         # fill out our table of rooms
         for doId in self.roomDoIds:
@@ -159,15 +163,16 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
                 room.getGeom().reparentTo(self.geom)
             else:
                 # attach the room to the preceding hallway
-                room.attachTo(self.hallways[i-1], rng)
+                room.attachTo(self.hallways[i - 1], rng)
             self.allRooms.append(room)
             self.listenForFloorEvents(room)
-            
-            if i < (numRooms-1):
+
+            if i < (numRooms - 1):
                 # add a hallway leading out of the room
-                hallway = CountryClubRoom.CountryClubRoom(self.layout.getHallwayModel(i))
+                hallway = CountryClubRoom.CountryClubRoom(
+                    self.layout.getHallwayModel(i))
                 hallway.attachTo(room, rng)
-                hallway.setRoomNum((i*2)+1)
+                hallway.setRoomNum((i * 2) + 1)
                 hallway.initFloorCollisions()
                 hallway.enter()
                 self.hallways.append(hallway)
@@ -177,16 +182,15 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
         # listen for camera-ray/floor collision events
         def handleCameraRayFloorCollision(collEntry, self=self):
             name = collEntry.getIntoNode().getName()
-            self.notify.debug('camera floor ray collided with: %s' % name)
+            self.notify.debug(f'camera floor ray collided with: {name}')
             prefix = CountryClubRoom.CountryClubRoom.FloorCollPrefix
             prefixLen = len(prefix)
             if (name[:prefixLen] == prefix):
                 try:
                     roomNum = int(name[prefixLen:])
-                except:
+                except BaseException:
                     DistributedLevel.notify.warning(
-                        'Invalid zone floor collision node: %s'
-                        % name)
+                        f'Invalid zone floor collision node: {name}')
                 else:
                     self.camEnterRoom(roomNum)
         self.accept('on-floor', handleCameraRayFloorCollision)
@@ -198,11 +202,13 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
         firstSetZoneDoneEvent = self.cr.getNextSetZoneDoneEvent()
         # wait until the first viz setZone completes before announcing
         # that we're ready to go
+
         def handleFirstSetZoneDone():
             self.notify.debug('countryClubHandleFirstSetZoneDone')
             self.accept('takingScreenshot', self.handleScreenshot)
             # do this here; the elevator (which does an iris out) is guaranteed to
-            # be gone by now, so if it's going to do an iris out, it's already done
+            # be gone by now, so if it's going to do an iris out, it's already
+            # done
             base.transitions.irisIn()
             # NOW we're ready.
             bboard.post(DistributedCountryClub.ReadyPost, self)
@@ -227,7 +233,7 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
                 room = self.allRooms[roomNum]
                 ouchLevel = room.getFloorOuchLevel()
                 room.startOuch(ouchLevel)
-        self.accept('enter%s' % floorCollName, handleZoneEnter)
+        self.accept(f'enter{floorCollName}', handleZoneEnter)
 
         # also listen for zone exit events for the sake of the
         # ouch system
@@ -236,7 +242,7 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
             floorNode = collisionEntry.getIntoNode()
             if floorNode.hasTag('ouch'):
                 self.allRooms[roomNum].stopOuch()
-        self.accept('exit%s' % floorCollName, handleZoneExit)
+        self.accept(f'exit{floorCollName}', handleZoneExit)
 
     def getAllRoomsTimeout(self):
         self.notify.warning('countryClub %s: timed out waiting for room objs' %
@@ -244,7 +250,7 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
         # TODO: abandon going to the countryClub, go back
 
     def toonEnterRoom(self, roomNum):
-        self.notify.debug('toonEnterRoom: %s' % roomNum)
+        self.notify.debug(f'toonEnterRoom: {roomNum}')
         if roomNum != self.curToonRoomNum:
             if self.curToonRoomNum is not None:
                 self.allRooms[self.curToonRoomNum].localToonFSM.request(
@@ -253,7 +259,7 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
             self.curToonRoomNum = roomNum
 
     def camEnterRoom(self, roomNum):
-        self.notify.debug('camEnterRoom: %s' % roomNum)
+        self.notify.debug(f'camEnterRoom: {roomNum}')
         blockRoomsAboveThisNumber = len(self.allRooms)
         if self.allBlockedRooms and self.doBlockRooms:
             # assume that blocked rooms is sorted
@@ -261,12 +267,12 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
         if (roomNum % 2) == 1:
             # this is a hallway; we should see the rooms on either side
             # and the hallways leading out of them
-            minVis = roomNum-2
-            maxVis = roomNum+2
+            minVis = roomNum - 2
+            maxVis = roomNum + 2
         else:
             # we're in a room, we only need to see the adjacent hallways
-            minVis = roomNum-1
-            maxVis = roomNum+1
+            minVis = roomNum - 1
+            maxVis = roomNum + 1
         for i, room in enumerate(self.allRooms):
             if i < minVis or i > maxVis:
                 if not room.getGeom().isEmpty():
@@ -299,18 +305,18 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
                 break
         else:
             return False
-        base.localAvatar.setPosHpr(room.getGeom(), 0,0,0, 0,0,0)
+        base.localAvatar.setPosHpr(room.getGeom(), 0, 0, 0, 0, 0, 0)
         # account for the hallways
-        self.camEnterRoom(i*2)
+        self.camEnterRoom(i * 2)
         return True
 
     def disable(self):
         self.notify.debug('disable')
-        
+
         if self.titleSequence:
             self.titleSequence.finish()
         self.titleSequence = None
-        
+
         self.__cleanupHighSky()
 
         self.ignoreAll()
@@ -340,7 +346,6 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
             del self.relatedObjectMgrRequest
 
         DistributedObject.DistributedObject.disable(self)
-        
 
     def delete(self):
         DistributedObject.DistributedObject.delete(self)
@@ -351,7 +356,7 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
         # remove special camera views
         self.factoryViews.delete()
         del self.factoryViews
-        
+
     def handleSOSPanel(self, panel):
         # make a list of toons that are still in the countryClub
         avIds = []
@@ -364,9 +369,9 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
 
     def handleScreenshot(self):
         base.addScreenshotString('countryClubId: %s, floor (from 1): %s' % (
-            self.countryClubId, self.floorNum+1))
+            self.countryClubId, self.floorNum + 1))
         if hasattr(self, 'currentRoomName'):
-            base.addScreenshotString('%s' % self.currentRoomName)
+            base.addScreenshotString(f'{self.currentRoomName}')
 
     def setBlockedRooms(self, blockedRooms):
         """Handle the AI telling us which rooms are blocked."""
@@ -381,9 +386,9 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
         self.allBlockedRooms = []
         for roomIndex in self.blockedRooms:
             # this assumes one hallway in between each room
-            self.allBlockedRooms.append(roomIndex*2)
+            self.allBlockedRooms.append(roomIndex * 2)
         self.allBlockedRooms.sort()
-        self.notify.debug('self.allBlockedRooms =%s' % self.allBlockedRooms)
+        self.notify.debug(f'self.allBlockedRooms ={self.allBlockedRooms}')
 
     def setCountryClubZone(self, zoneId):
         """Handle the AI telling us the new zone id after boarding the elevator."""
@@ -395,40 +400,38 @@ class DistributedCountryClub(DistributedObject.DistributedObject):
     def elevatorAlert(self, avId):
         if base.localAvatar.doId != avId:
             name = base.cr.doId2do[avId].getName()
-            self.showInfoText(TTLocalizer.CountryClubToonEnterElevator % (name))
+            self.showInfoText(
+                TTLocalizer.CountryClubToonEnterElevator %
+                (name))
             #av = base.localAvatar
             #message = TLocalizer.stageToonEnterElevator % (name)
-            #av.setSystemMessage( 0, message)                    
+            #av.setSystemMessage( 0, message)
 
-    def showInfoText(self, text = "hello world"):
+    def showInfoText(self, text="hello world"):
         description = text
         if description and description != '':
             self.titleText.setText(description)
             self.titleText.setColor(Vec4(*self.titleColor))
-            self.titleText.setColorScale(1,1,1,1)
+            self.titleText.setColorScale(1, 1, 1, 1)
             self.titleText.setFg(self.titleColor)
-            
+
             if self.titleSequence:
                 self.titleSequence.finish()
 
-
             self.titleSequence = None
-            self.titleSequence =  Sequence(
-                            Func(self.showTitleText),
-                            Wait(3.1),
-                            LerpColorScaleInterval(self.titleText, duration=0.5, colorScale = Vec4(1,1,1,0.0)),
-                            Func(self.hideTitleText),
-                        )
-                    
+            self.titleSequence = Sequence(
+                Func(
+                    self.showTitleText), Wait(3.1), LerpColorScaleInterval(
+                    self.titleText, duration=0.5, colorScale=Vec4(
+                        1, 1, 1, 0.0)), Func(
+                    self.hideTitleText), )
+
             self.titleSequence.start()
-        
-            
-            
+
     def showTitleText(self):
         if self.titleText:
             self.titleText.show()
-        
+
     def hideTitleText(self):
         if self.titleText or 1:
             self.titleText.hide()
-    

@@ -33,6 +33,7 @@ READY_TIMEOUT = (MinigameGlobals.MaxLoadTime +
 # NOTE: in some minigames this will include celebration time
 EXIT_TIMEOUT = 20. + MinigameGlobals.latencyTolerance
 
+
 class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
 
     """
@@ -45,8 +46,8 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
     def __init__(self, air, minigameId):
         try:
             self.DistributedMinigameAI_initialized
-        except:
-            
+        except BaseException:
+
             self.DistributedMinigameAI_initialized = 1
 
             DistributedObjectAI.DistributedObjectAI.__init__(self, air)
@@ -91,7 +92,7 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
                 'frameworkOff',
                 # Final State
                 'frameworkOff',
-                )
+            )
             self.frameworkFSM.enterInitialState()
 
             # Actual avatars that will play the game
@@ -100,13 +101,13 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
             self.stateDict = {}
             self.scoreDict = {}
 
-            self.difficultyOverride  = None
+            self.difficultyOverride = None
             self.trolleyZoneOverride = None
 
             self.metagameRound = -1
-            self.startingVotes = {} #the votes that carry over 
+            self.startingVotes = {}  # the votes that carry over
             self.canSkip = True
-            self.toonsSkipped = [] #toons that voted to skip
+            self.toonsSkipped = []  # toons that voted to skip
 
     def addChildGameFSM(self, gameFSM):
         """ inheritors should call this with their game ClassicFSM """
@@ -143,7 +144,7 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
 
         self.newbieIdList = newbieIds
         if len(self.newbieIdList) > 0:
-            self.notify.debug('BASE: setNewbieIds: %s' % self.newbieIdList)
+            self.notify.debug(f'BASE: setNewbieIds: {self.newbieIdList}')
 
     def setTrolleyZone(self, trolleyZone):
         """
@@ -361,8 +362,7 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
             self.frameworkFSM.request('frameworkWaitClientsReady')
 
         def handleTimeout(avIds, self=self):
-            self.notify.debug("BASE: timed out waiting for clients %s "
-                              "to join" % avIds)
+            self.notify.debug(f"BASE: timed out waiting for clients {avIds} to join")
             self.setGameAbort()
 
         self.__barrier = ToonBarrier(
@@ -373,7 +373,7 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
 
         # at this point, it's not possible for any avatars to have
         # already joined
-        
+
     def setAvatarJoined(self):
         """
         This is a distributed update that gets called from the clients
@@ -383,14 +383,15 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
         """
         # check to make sure this message is still relevant
         if (self.frameworkFSM.getCurrentState().getName() !=
-            'frameworkWaitClientsJoin'):
+                'frameworkWaitClientsJoin'):
             self.notify.debug("BASE: Ignoring setAvatarJoined message")
             return
 
         avId = self.air.getAvatarIdFromSender()
         self.notify.debug("BASE: setAvatarJoined: avatar id joined: " +
                           str(avId))
-        self.air.writeServerEvent('minigame_joined',avId,'%s|%s' % (self.minigameId, self.trolleyZone))
+        self.air.writeServerEvent(
+            'minigame_joined', avId, f'{self.minigameId}|{self.trolleyZone}')
         self.stateDict[avId] = JOINED
         self.notify.debug("BASE: setAvatarJoined: new states: " +
                           str(self.stateDict))
@@ -429,8 +430,8 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
             if self.stateDict[avId] == READY:
                 self.__barrier.clear(avId)
 
-        self.notify.debug("  safezone: %s" % self.getSafezoneId())
-        self.notify.debug("difficulty: %s" % self.getDifficulty())
+        self.notify.debug(f"  safezone: {self.getSafezoneId()}")
+        self.notify.debug(f"difficulty: {self.getDifficulty()}")
 
     def setAvatarReady(self):
         self.canSkip = False
@@ -446,10 +447,10 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
         # note that it's possible for one client to report 'joined' and
         # 'ready' before another client has even reported 'joined'
         if (self.frameworkFSM.getCurrentState().getName() not in
-            ['frameworkWaitClientsReady', 'frameworkWaitClientsJoin']):
+                ['frameworkWaitClientsReady', 'frameworkWaitClientsJoin']):
             self.notify.debug("BASE: Ignoring setAvatarReady message")
             return
-        
+
         avId = self.air.getAvatarIdFromSender()
         self.notify.debug("BASE: setAvatarReady: avatar id ready: " +
                           str(avId))
@@ -462,7 +463,7 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
         # sufficient (the barrier will be updated accordingly when we
         # enter the waitClientsReady state)
         if (self.frameworkFSM.getCurrentState().getName() ==
-            'frameworkWaitClientsReady'):
+                'frameworkWaitClientsReady'):
             self.__barrier.clear(avId)
 
     def exitFrameworkWaitClientsReady(self):
@@ -476,7 +477,7 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
         """
         self.notify.debug("BASE: enterFrameworkGame")
         self.gameStartTime = globalClock.getRealTime()
-        self.b_setGameStart(globalClockDelta.localToNetworkTime(\
+        self.b_setGameStart(globalClockDelta.localToNetworkTime(
                             self.gameStartTime))
 
     def exitFrameworkGame(self):
@@ -501,8 +502,7 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
             Well, we did not hear from all the clients that they exited, but
             it has been long enough. Go ahead and get out of here
             """
-            self.notify.debug("BASE: timed out waiting for clients %s "
-                              "to exit" % avIds)
+            self.notify.debug(f"BASE: timed out waiting for clients {avIds} to exit")
             self.frameworkFSM.request('frameworkCleanup')
 
         # time out on waiting for clients to exit - then abort
@@ -524,10 +524,10 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
         """
         # check to make sure this message is still relevant
         if (self.frameworkFSM.getCurrentState().getName() !=
-            'frameworkWaitClientsExit'):
+                'frameworkWaitClientsExit'):
             self.notify.debug("BASE: Ignoring setAvatarExit message")
             return
-        
+
         avId = self.air.getAvatarIdFromSender()
         self.notify.debug("BASE: setAvatarExited: avatar id exited: " +
                           str(avId))
@@ -540,20 +540,19 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
     def exitFrameworkWaitClientsExit(self):
         self.__barrier.cleanup()
         del self.__barrier
-        
+
     def hasScoreMult(self):
         return 1
 
     def enterFrameworkCleanup(self):
-        self.notify.debug("BASE: enterFrameworkCleanup: normalExit=%s" %
-                          self.normalExit)
+        self.notify.debug(f"BASE: enterFrameworkCleanup: normalExit={self.normalExit}")
 
         # scale the scores based on the neighborhood
         # use self.getSafezoneId to pick up debug overrides
         scoreMult = MinigameGlobals.getScoreMult(self.getSafezoneId())
         if not self.hasScoreMult():
             scoreMult = 1.0
-        self.notify.debug('score multiplier: %s' % scoreMult)
+        self.notify.debug(f'score multiplier: {scoreMult}')
         for avId in self.avIdList:
             assert avId not in [0, None]
             self.scoreDict[avId] *= scoreMult
@@ -561,28 +560,27 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
         # create a score list that parallels the avIdList
         scoreList = []
        # if not self.normalExit:
-            # if game exited abnormally, pick a uniform number of points
-            # for all toons
-           # randReward = random.randrange(DEFAULT_POINTS, MAX_POINTS+1)
+        # if game exited abnormally, pick a uniform number of points
+        # for all toons
+        # randReward = random.randrange(DEFAULT_POINTS, MAX_POINTS+1)
         for avId in self.avIdList:
             assert avId not in [0, None]
             # put in some bogus points if we have requested abort
             if self.normalExit:
-                score = int(self.scoreDict[avId]+.5)
+                score = int(self.scoreDict[avId] + .5)
                 if score > 255:
-                    self.notify.warning('avatar %s got %s jellybeans playing minigame %s in zone %s' %
-                                        (avId,
-                                         score,
-                                         self.minigameId,
-                                         self.getSafezoneId()))
+                    self.notify.warning(
+                        'avatar %s got %s jellybeans playing minigame %s in zone %s' %
+                        (avId, score, self.minigameId, self.getSafezoneId()))
                     score = 255
                 elif score < 0:
                     # RAU just in case I miss something in ice game
                     score = 0
                 scoreList.append(score)
             else:
-                #set score to 0 if we dont exit normally 
-                #TODO check if state is skipped or exited through magic word if not do random amount
+                # set score to 0 if we dont exit normally
+                # TODO check if state is skipped or exited through magic word
+                # if not do random amount
                 score = 0
                 scoreList.append(score)
 
@@ -596,14 +594,14 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
 
         self.frameworkFSM.request('frameworkOff')
 
-    def handleMetagamePurchaseManager(self,scoreList):
+    def handleMetagamePurchaseManager(self, scoreList):
         """
         metagame being played, handle play again and consider newbies
         """
-        self.notify.debug('self.newbieIdList = %s' % self.newbieIdList)
+        self.notify.debug(f'self.newbieIdList = {self.newbieIdList}')
         votesToUse = self.startingVotes
-        
-        if hasattr(self,'currentVotes'):
+
+        if hasattr(self, 'currentVotes'):
             votesToUse = self.currentVotes
 
         votesArray = []
@@ -611,12 +609,13 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
             if avId in votesToUse:
                 votesArray.append(votesToUse[avId])
             else:
-                self.notify.warning('votesToUse=%s does not have avId=%d' % (votesToUse,avId))
+                self.notify.warning(
+                    'votesToUse=%s does not have avId=%d' %
+                    (votesToUse, avId))
                 votesArray.append(0)
 
-        
         if self.metagameRound < TravelGameGlobals.FinalMetagameRoundIndex:
-            newRound = self.metagameRound # let purchaseManager handle incrementing it
+            newRound = self.metagameRound  # let purchaseManager handle incrementing it
 
             # if this is not the travel game, add the beans we earned to the votes list
             # also make sure it's not the last game
@@ -624,20 +623,20 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
                 for index in range(len(scoreList)):
                     votesArray[index] += scoreList[index]
 
-            self.notify.debug('votesArray = %s' % votesArray)
+            self.notify.debug(f'votesArray = {votesArray}')
 
             desiredNextGame = None
-            if hasattr(self,'desiredNextGame'):
+            if hasattr(self, 'desiredNextGame'):
                 desiredNextGame = self.desiredNextGame
 
-            numToons = 0;
+            numToons = 0
             lastAvId = 0
             for avId in self.avIdList:
                 av = simbase.air.doId2do.get(avId)
-                if av :
-                    numToons +=1
+                if av:
+                    numToons += 1
                     lastAvId = avId
-            doNewbie = False                    
+            doNewbie = False
             if numToons == 1 and lastAvId in self.newbieIdList:
                 doNewbie = True
 
@@ -651,7 +650,8 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
                 # We have no idea if the newbie PM is going to be around longer
                 # than the 'regular' minigame->purchase->minigame... sequence.
                 # We have to reference-count the zone. PMs decrement the zone
-                # reference count when all participants leave to the playground.
+                # reference count when all participants leave to the
+                # playground.
                 MinigameCreatorAI.acquireMinigameZone(self.zoneId)
                 pm.generateWithRequired(self.zoneId)
             else:
@@ -663,9 +663,9 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
         else:
             # this is the last minigame, handle newbies. and playAgain
             # also for now weare doing a regular minigame if only 1 person
-            # presses play again, 
+            # presses play again,
             self.notify.debug('last minigame, handling newbies')
-            
+
             # create separate NewbiePurchaseManagerAIs for the noobs
             for id in self.newbieIdList:
                 # newbie PM gets a single newbie, and we also give it the
@@ -677,7 +677,8 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
                 # We have no idea if the newbie PM is going to be around longer
                 # than the 'regular' minigame->purchase->minigame... sequence.
                 # We have to reference-count the zone. PMs decrement the zone
-                # reference count when all participants leave to the playground.
+                # reference count when all participants leave to the
+                # playground.
                 MinigameCreatorAI.acquireMinigameZone(self.zoneId)
                 pm.generateWithRequired(self.zoneId)
 
@@ -686,12 +687,10 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
                 pm = PurchaseManagerAI.PurchaseManagerAI(
                     self.air, self.avIdList, scoreList, self.minigameId,
                     self.trolleyZone, self.newbieIdList,
-                    votesArray = votesArray,
-                    metagameRound = self.metagameRound)
+                    votesArray=votesArray,
+                    metagameRound=self.metagameRound)
                 pm.generateWithRequired(self.zoneId)
-            
-        
-        
+
     def handleRegularPurchaseManager(self, scoreList):
         """
         regular minigame, handle purchase manager stuff
@@ -717,7 +716,6 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
                 self.air, self.avIdList, scoreList, self.minigameId,
                 self.trolleyZone, self.newbieIdList)
             pm.generateWithRequired(self.zoneId)
-
 
     def exitFrameworkCleanup(self):
         pass
@@ -771,9 +769,9 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
 
     def logPerfectGame(self, avId):
         """ records the fact that this avatar had a perfect game """
-        self.air.writeServerEvent('perfectMinigame',
-                                  avId, '%s|%s|%s' % (
-            self.minigameId, self.trolleyZone, self.avIdList))
+        self.air.writeServerEvent(
+            'perfectMinigame', avId, '%s|%s|%s' %
+            (self.minigameId, self.trolleyZone, self.avIdList))
 
     def logAllPerfect(self):
         """ records a perfect game for all participants """
@@ -787,34 +785,38 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI):
         retval = []
         for avId in self.avIdList:
             if avId in self.startingVotes:
-                retval.append( self.startingVotes[avId])
+                retval.append(self.startingVotes[avId])
             else:
-                self.notify.warning('how did this happen? avId=%d not in startingVotes %s' %
-                                    (avId, self.startingVotes))
+                self.notify.warning(
+                    'how did this happen? avId=%d not in startingVotes %s' %
+                    (avId, self.startingVotes))
                 retval.append(0)
         return retval
 
     def setStartingVote(self, avId, startingVote):
         self.startingVotes[avId] = startingVote
-        self.notify.debug('setting starting vote of avId=%d to %d' % (avId,startingVote))
+        self.notify.debug(
+            'setting starting vote of avId=%d to %d' %
+            (avId, startingVote))
 
     def getMetagameRound(self):
         return self.metagameRound
 
     def checkSkip(self):
-        #check if we can skip
+        # check if we can skip
         if len(self.toonsSkipped) >= len(self.avIdList):
             self.canSkip = False
-            #exit minigame
+            # exit minigame
             self.setGameAbort()
         else:
-            #tell the client the amount of toons skipped
+            # tell the client the amount of toons skipped
             self.sendUpdate('setSkipAmount', [len(self.toonsSkipped)])
 
     def requestSkip(self):
         toon = self.air.getAvatarIdFromSender()
-        #some safety checks
-        if  (toon not in self.avIdList) or (not self.canSkip)  or (toon in self.toonsSkipped):
-            return 
+        # some safety checks
+        if (toon not in self.avIdList) or (
+                not self.canSkip) or (toon in self.toonsSkipped):
+            return
         self.toonsSkipped.append(toon)
         self.checkSkip()

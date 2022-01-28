@@ -15,6 +15,7 @@ from . import ZoneUtil
 from toontown.toonbase import TTLocalizer
 from direct.interval.IntervalGlobal import *
 
+
 class Hood(StateData.StateData):
     """
     The base class for the Hood State Data
@@ -28,9 +29,9 @@ class Hood(StateData.StateData):
     notify = DirectNotifyGlobal.directNotify.newCategory("Hood")
 
     def __init__(self, parentFSM, doneEvent, dnaStore, hoodId):
-        assert(self.notify.debug("__init__(parentFSM="+str(parentFSM)
-                +", doneEvent="+str(doneEvent)
-                +", dnaStore="+str(dnaStore)+")"))
+        assert(self.notify.debug("__init__(parentFSM=" + str(parentFSM)
+                                 + ", doneEvent=" + str(doneEvent)
+                                 + ", dnaStore=" + str(dnaStore) + ")"))
         StateData.StateData.__init__(self, doneEvent)
 
         self.parentFSM = parentFSM
@@ -53,14 +54,14 @@ class Hood(StateData.StateData):
         self.titleText = None
         self.titleTextSeq = None
         # Title color should be overridden in base class
-        self.titleColor = (1,1,1,1)
+        self.titleColor = (1, 1, 1, 1)
 
         # Dictionary which holds holiday specific lists of Storage DNA Files
         # Updated in each of the neighborhood specific Hood files
         # Keyed off of the News Manager holiday IDs stored in ToontownGlobals
         self.holidayStorageDNADict = {}
 
-        #For the holiday sky
+        # For the holiday sky
         self.spookySkyFile = None
         self.halloweenLights = []
 
@@ -68,7 +69,11 @@ class Hood(StateData.StateData):
         """
         enter this hood and start the state machine
         """
-        assert(self.notify.debug("enter(requestStatus="+str(requestStatus)+")"))
+        assert(
+            self.notify.debug(
+                "enter(requestStatus=" +
+                str(requestStatus) +
+                ")"))
         hoodId = requestStatus["hoodId"]
         zoneId = requestStatus["zoneId"]
 
@@ -76,13 +81,13 @@ class Hood(StateData.StateData):
 
         self.titleText = OnscreenText.OnscreenText(
             hoodText,
-            fg = self.titleColor,
-            font = getSignFont(),
-            pos = (0,-0.5),
-            scale = TTLocalizer.HDenterTitleTextScale,
-            drawOrder = 0,
-            mayChange = 1,
-            )
+            fg=self.titleColor,
+            font=getSignFont(),
+            pos=(0, -0.5),
+            scale=TTLocalizer.HDenterTitleTextScale,
+            drawOrder=0,
+            mayChange=1,
+        )
 
         self.fsm.request(requestStatus["loader"], [requestStatus])
 
@@ -92,7 +97,8 @@ class Hood(StateData.StateData):
         # If we are in the safezone, but not the Tutorial, add
         # Playground under the hood name
         if (self.id != Tutorial):
-            streetName = StreetNames.get(ZoneUtil.getCanonicalBranchZone(zoneId))
+            streetName = StreetNames.get(
+                ZoneUtil.getCanonicalBranchZone(zoneId))
             if streetName:
                 hoodText = hoodText + "\n" + streetName[-1]
 
@@ -114,9 +120,9 @@ class Hood(StateData.StateData):
             Wait(0.1),
             Wait(6.0),
             self.titleText.colorScaleInterval(
-            0.5,
-            Vec4(1.0, 1.0, 1.0, 1.0),
-            Vec4(1.0, 1.0, 1.0, 0.0)),
+                0.5,
+                Vec4(1.0, 1.0, 1.0, 1.0),
+                Vec4(1.0, 1.0, 1.0, 0.0)),
             Func(self.hideTitleText))
         self.titleTextSeq.start()
 
@@ -159,21 +165,24 @@ class Hood(StateData.StateData):
             holidayIds = base.cr.newsManager.getDecorationHolidayId()
             for holiday in holidayIds:
                 for storageFile in self.holidayStorageDNADict.get(
-                    holiday,[]):
+                        holiday, []):
                     loader.loadDNAFile(self.dnaStore, storageFile)
-            if (ToontownGlobals.HALLOWEEN_COSTUMES not in holidayIds) or (not self.spookySkyFile):
-                # Load the sky model so we will have it in memory for the entire hood
+            if (ToontownGlobals.HALLOWEEN_COSTUMES not in holidayIds) or (
+                    not self.spookySkyFile):
+                # Load the sky model so we will have it in memory for the
+                # entire hood
                 self.sky = loader.loadModel(self.skyFile)
-                self.sky.setTag("sky","Regular")
+                self.sky.setTag("sky", "Regular")
                 self.sky.setScale(1.0)
                 self.sky.setFogOff()
             else:
                 self.sky = loader.loadModel(self.spookySkyFile)
-                self.sky.setTag("sky","Halloween")
+                self.sky.setTag("sky", "Halloween")
         if not newsManager:
-            # Load the sky model so we will have it in memory for the entire hood
+            # Load the sky model so we will have it in memory for the entire
+            # hood
             self.sky = loader.loadModel(self.skyFile)
-            self.sky.setTag("sky","Regular")
+            self.sky.setTag("sky", "Regular")
             self.sky.setScale(1.0)
             # Normally, fog is turned off for the sky.  This will prevent
             # the sky from being contaminated by the trolley tunnel shadow
@@ -193,7 +202,8 @@ class Hood(StateData.StateData):
         # it's possible we never even got there, so it might still be
         # hanging around.  If so, clean it up now.
         if hasattr(self, "loader"):
-            self.notify.info("Aggressively cleaning up loader: %s" % (self.loader))
+            self.notify.info(
+                f"Aggressively cleaning up loader: {self.loader}")
             self.loader.exit()
             self.loader.unload()
             del self.loader
@@ -207,7 +217,7 @@ class Hood(StateData.StateData):
 
         # I'm leaving the world, disable all items but localtoon in the
         # doId2do and doId2cdc
-        #base.cr.disableAllButLocalToon()
+        # base.cr.disableAllButLocalToon()
         self.sky.removeNode()
         del self.sky
 
@@ -227,7 +237,7 @@ class Hood(StateData.StateData):
     def isSameHood(self, status):
         """return true if the request status is in the same hood"""
         return status["hoodId"] == self.hoodId and \
-               status["shardId"] == None
+            status["shardId"] is None
 
     # final state
 
@@ -244,12 +254,16 @@ class Hood(StateData.StateData):
     # quietZone state
 
     def enterQuietZone(self, requestStatus):
-        assert(self.notify.debug("enterQuietZone(requestStatus = %s)" % (requestStatus)))
+        assert(
+            self.notify.debug(
+                f"enterQuietZone(requestStatus = {requestStatus})"))
         self.quietZoneDoneEvent = "quietZoneDone"
         self.acceptOnce(self.quietZoneDoneEvent, self.handleQuietZoneDone)
-        self.acceptOnce("enterWaitForSetZoneResponse", self.handleWaitForSetZoneResponse)
+        self.acceptOnce(
+            "enterWaitForSetZoneResponse",
+            self.handleWaitForSetZoneResponse)
         self.quietZoneStateData = QuietZoneState.QuietZoneState(
-                self.quietZoneDoneEvent)
+            self.quietZoneDoneEvent)
         self.quietZoneStateData.load()
         self.quietZoneStateData.enter(requestStatus)
 
@@ -260,7 +274,7 @@ class Hood(StateData.StateData):
         del self.quietZoneDoneEvent
         self.quietZoneStateData.exit()
         self.quietZoneStateData.unload()
-        self.quietZoneStateData=None
+        self.quietZoneStateData = None
 
     def loadLoader(self, requestStatus):
         # Pure virtual : overriden by subclass
@@ -268,36 +282,45 @@ class Hood(StateData.StateData):
 
     def handleWaitForSetZoneResponse(self, requestStatus):
         assert(self.notify.debug("handleWaitForSetZoneResponse(requestStatus="
-                +str(requestStatus)+")"))
+                                 + str(requestStatus) + ")"))
         loaderName = requestStatus["loader"]
-        if loaderName=="safeZoneLoader":
+        if loaderName == "safeZoneLoader":
             if not loader.inBulkBlock:
-                loader.beginBulkLoad("hood", TTLocalizer.HeadingToPlayground,
-                                     safeZoneCountMap[self.id], 1, TTLocalizer.TIP_GENERAL)
+                loader.beginBulkLoad("hood",
+                                     TTLocalizer.HeadingToPlayground,
+                                     safeZoneCountMap[self.id],
+                                     1,
+                                     TTLocalizer.TIP_GENERAL)
             self.loadLoader(requestStatus)
             loader.endBulkLoad("hood")
-        #elif loaderName=="suitInterior":
+        # elif loaderName=="suitInterior":
             # TODO: loading bar
         #    self.loadLoader(requestStatus)
-        elif loaderName=="townLoader":
+        elif loaderName == "townLoader":
             if not loader.inBulkBlock:
                 zoneId = requestStatus["zoneId"]
-                toPhrase = StreetNames[ZoneUtil.getCanonicalBranchZone(zoneId)][0]
-                streetName = StreetNames[ZoneUtil.getCanonicalBranchZone(zoneId)][-1]
-                loader.beginBulkLoad("hood", (TTLocalizer.HeadingToStreet % {'to':toPhrase, 'street':streetName}),
-                                     townCountMap[self.id], 1, TTLocalizer.TIP_STREET)
+                toPhrase = StreetNames[ZoneUtil.getCanonicalBranchZone(
+                    zoneId)][0]
+                streetName = StreetNames[ZoneUtil.getCanonicalBranchZone(
+                    zoneId)][-1]
+                loader.beginBulkLoad("hood",
+                                     (TTLocalizer.HeadingToStreet % {'to': toPhrase,
+                                                                     'street': streetName}),
+                                     townCountMap[self.id],
+                                     1,
+                                     TTLocalizer.TIP_STREET)
             self.loadLoader(requestStatus)
             loader.endBulkLoad("hood")
-        elif loaderName=="minigame":
+        elif loaderName == "minigame":
             pass
-        elif loaderName=="cogHQLoader":
+        elif loaderName == "cogHQLoader":
             print("should be loading HQ")
         else:
-            assert(self.notify.debug("  unknown loaderName="+loaderName))
+            assert(self.notify.debug("  unknown loaderName=" + loaderName))
 
     def handleQuietZoneDone(self):
         assert(self.notify.debug("handleQuietZoneDone()"))
-        status=self.quietZoneStateData.getRequestStatus()
+        status = self.quietZoneStateData.getRequestStatus()
         self.fsm.request(status["loader"], [status])
 
     # SafeZoneLoader state
@@ -325,7 +348,8 @@ class Hood(StateData.StateData):
     def handleSafeZoneLoaderDone(self):
         assert(self.notify.debug("handleSafeZoneLoaderDone()"))
         doneStatus = self.loader.getDoneStatus()
-        if (self.isSameHood(doneStatus) and doneStatus["where"] != "party") or doneStatus["loader"]=="minigame":
+        if (self.isSameHood(doneStatus)
+                and doneStatus["where"] != "party") or doneStatus["loader"] == "minigame":
             self.fsm.request("quietZone", [doneStatus])
         else:
             # ...we're leaving the hood.
@@ -340,7 +364,8 @@ class Hood(StateData.StateData):
         # task to do this just before the scene is rendered.
         self.sky.setZ(0.0)
         self.sky.setHpr(0.0, 0.0, 0.0)
-        ce = CompassEffect.make(NodePath(), CompassEffect.PRot | CompassEffect.PZ)
+        ce = CompassEffect.make(NodePath(),
+                                CompassEffect.PRot | CompassEffect.PZ)
         self.sky.node().setEffect(ce)
         # Since we are using a CompassEffect, we don't have to spawn a
         # task.  Some hoods may spawn a task anyway, to do some
@@ -357,15 +382,16 @@ class Hood(StateData.StateData):
         if hasattr(self, "sky") and self.sky:
             self.stopSky()
         self.sky = loader.loadModel(self.spookySkyFile)
-        self.sky.setTag("sky","Halloween")
-        self.sky.setColor(0.5,0.5,0.5,1)
+        self.sky.setTag("sky", "Halloween")
+        self.sky.setColor(0.5, 0.5, 0.5, 1)
         self.sky.reparentTo(camera)
 
-        #fade the sky in
+        # fade the sky in
         self.sky.setTransparency(TransparencyAttrib.MDual, 1)
-        fadeIn = self.sky.colorScaleInterval( 1.5, Vec4(1, 1, 1, 1),
-                                               startColorScale = Vec4(1, 1, 1, 0.25),
-                                               blendType = 'easeInOut')
+        fadeIn = self.sky.colorScaleInterval(
+            1.5, Vec4(
+                1, 1, 1, 1), startColorScale=Vec4(
+                1, 1, 1, 0.25), blendType='easeInOut')
         fadeIn.start()
 
         # Nowadays we use a CompassEffect to counter-rotate the sky
@@ -373,7 +399,8 @@ class Hood(StateData.StateData):
         # task to do this just before the scene is rendered.
         self.sky.setZ(0.0)
         self.sky.setHpr(0.0, 0.0, 0.0)
-        ce = CompassEffect.make(NodePath(), CompassEffect.PRot | CompassEffect.PZ)
+        ce = CompassEffect.make(NodePath(),
+                                CompassEffect.PRot | CompassEffect.PZ)
         self.sky.node().setEffect(ce)
 
     def endSpookySky(self):
@@ -381,6 +408,6 @@ class Hood(StateData.StateData):
             self.sky.reparentTo(hidden)
         if hasattr(self, "sky"):
             self.sky = loader.loadModel(self.skyFile)
-            self.sky.setTag("sky","Regular")
+            self.sky.setTag("sky", "Regular")
             self.sky.setScale(1.0)
             self.startSky()

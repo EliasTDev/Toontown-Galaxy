@@ -9,15 +9,18 @@ from otp.otpbase import OTPGlobals
 from otp.ai.GarbageLeakServerEventAggregatorAI import GarbageLeakServerEventAggregatorAI
 import time
 
+
 class TimeManagerAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("TimeManagerAI")
 
     def __init__(self, air):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
         if not __dev__:
-            # double-check that we're not implementing a client-sendable debug DC method in production
+            # double-check that we're not implementing a client-sendable debug
+            # DC method in production
             if hasattr(self, 'checkForGarbageLeaks'):
-                self.notify.error('checkForGarbageLeaks should not be defined outside of __dev__')
+                self.notify.error(
+                    'checkForGarbageLeaks should not be defined outside of __dev__')
 
     def requestServerTime(self, context):
         """requestServerTime(self, int8 context)
@@ -32,7 +35,7 @@ class TimeManagerAI(DistributedObjectAI.DistributedObjectAI):
         timeOfDay = int(time.time())
         self.sendUpdateToAvatarId(requesterId, "serverTime",
                                   [context, timestamp, timeOfDay])
-        
+
     def setDisconnectReason(self, disconnectCode):
         """setDisconnectReason(self, uint8 disconnectCode)
 
@@ -51,8 +54,10 @@ class TimeManagerAI(DistributedObjectAI.DistributedObjectAI):
             self.air.setAvatarDisconnectReason(requesterId, disconnectCode)
         else:
             self.air.writeServerEvent(
-                'suspicious', requesterId, 'invalid disconnect reason: %s' % disconnectCode)
-        
+                'suspicious',
+                requesterId,
+                f'invalid disconnect reason: {disconnectCode}')
+
     def setExceptionInfo(self, info):
         """setExceptionInfo(self, string info)
 
@@ -61,9 +66,10 @@ class TimeManagerAI(DistributedObjectAI.DistributedObjectAI):
         sends a text string describing the exception for the AI log.
         """
         requesterId = self.air.getAvatarIdFromSender()
-        self.notify.info("Client %s exception: %s" % (requesterId, info))
-        serverVersion = simbase.config.GetString('server-version','')
-        self.air.writeServerEvent('client-exception', requesterId, '%s|%s' % (serverVersion,info))
+        self.notify.info(f"Client {requesterId} exception: {info}")
+        serverVersion = simbase.config.GetString('server-version', '')
+        self.air.writeServerEvent(
+            'client-exception', requesterId, f'{serverVersion}|{info}')
 
     def setSignature(self, signature, hash, pyc):
         """
@@ -75,15 +81,16 @@ class TimeManagerAI(DistributedObjectAI.DistributedObjectAI):
             requesterId = self.air.getAvatarIdFromSender()
             prcHash = HashVal()
             prcHash.setFromBin(hash)
-            info = '%s|%s' % (signature, prcHash.asHex())
-            self.notify.info('Client %s signature: %s' % (requesterId, info))
+            info = f'{signature}|{prcHash.asHex()}'
+            self.notify.info(f'Client {requesterId} signature: {info}')
             self.air.writeServerEvent('client-signature', requesterId, info)
 
         pycHash = HashVal()
         pycHash.setFromBin(pyc)
         if pycHash != HashVal():
             info = pycHash.asHex()
-            self.notify.info('Client %s py signature: %s' % (requesterId, info))
+            self.notify.info(
+                f'Client {requesterId} py signature: {info}')
             self.air.writeServerEvent('client-py-signature', requesterId, info)
 
     def setCpuInfo(self, info, cacheStatus):
@@ -92,8 +99,8 @@ class TimeManagerAI(DistributedObjectAI.DistributedObjectAI):
         the detailed CPU information to the server for logging.
         """
         requesterId = self.air.getAvatarIdFromSender()
-        
-        self.notify.info('client-cpu %s|%s' % (requesterId, info))
+
+        self.notify.info(f'client-cpu {requesterId}|{info}')
         self.air.writeServerEvent('client-cpu', requesterId, info)
         # We call this cacheStatus, but really it's the mac address or
         # other client fingerprint information, in a simple
@@ -108,11 +115,14 @@ class TimeManagerAI(DistributedObjectAI.DistributedObjectAI):
                 p = 0
             fingerprint += chr(ic)
 
-        self.notify.info('client-fingerprint %s|%s' % (requesterId, fingerprint))
-        self.air.writeServerEvent('client-fingerprint', requesterId, fingerprint)
+        self.notify.info(
+            f'client-fingerprint {requesterId}|{fingerprint}')
+        self.air.writeServerEvent(
+            'client-fingerprint',
+            requesterId,
+            fingerprint)
         if hasattr(self.air, 'cpuInfoMgr'):
             self.air.cpuInfoMgr.sendCpuInfoToUd(info, fingerprint)
-
 
     def setFrameRate(self, fps, deviation, numAvs,
                      locationCode, timeInLocation, timeInGame,
@@ -132,20 +142,25 @@ class TimeManagerAI(DistributedObjectAI.DistributedObjectAI):
             pageFaultCount, '%s.%d.%d.%d' % osInfo, '%0.03f,%0.03f' % cpuSpeed,
             '%d,%d' % (numCpuCores, numLogicalCpus),
             apiName)
-        self.notify.info('client-fps %s|%s' % (requesterId, info))
+        self.notify.info(f'client-fps {requesterId}|{info}')
         self.air.writeServerEvent('client-fps', requesterId, info)
 
     if __dev__:
         def checkForGarbageLeaks(self, wantReply):
             senderId = self.air.getAvatarIdFromSender()
-            self.notify.info("checking for garbage leaks requested by %s" % senderId)
+            self.notify.info(
+                f"checking for garbage leaks requested by {senderId}")
             # okay checking for garbage leaks should only be done by devs, it's rare enough i'll flag it
             # as suspicious
-            self.air.writeServerEvent('suspicious', senderId, 'checkForGarbageLeaks')
+            self.air.writeServerEvent(
+                'suspicious', senderId, 'checkForGarbageLeaks')
             numLeaks = GarbageReport.checkForGarbageLeaks()
             if wantReply:
                 requesterId = self.air.getAvatarIdFromSender()
-                self.sendUpdateToAvatarId(requesterId, 'setNumAIGarbageLeaks', [numLeaks])
+                self.sendUpdateToAvatarId(
+                    requesterId, 'setNumAIGarbageLeaks', [numLeaks])
 
         def setClientGarbageLeak(self, num, description):
-            messenger.send(GarbageLeakServerEventAggregatorAI.ClientLeakEvent, [num, description])
+            messenger.send(
+                GarbageLeakServerEventAggregatorAI.ClientLeakEvent, [
+                    num, description])

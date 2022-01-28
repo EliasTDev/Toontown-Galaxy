@@ -26,7 +26,7 @@ class LoginDISLTokenAccount(LoginBase.LoginBase):
         """
         Send a message to the server with our loginName
         """
-        cr=self.cr
+        cr = self.cr
         # Time to send a login message
         datagram = PyDatagram()
         # Add message type

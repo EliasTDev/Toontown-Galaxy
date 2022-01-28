@@ -10,12 +10,13 @@ from toontown.uberdog import InGameNewsResponses
 
 ParentClass = DistributedObjectAI
 #ParentClass = DistributedObjectGlobal
-class DistributedInGameNewsMgrAI(ParentClass ):
+
+
+class DistributedInGameNewsMgrAI(ParentClass):
     """
     Uberdog object that keeps track of the last time in game news has been updated
     """
     notify = directNotify.newCategory('DistributedInGameNewsMgrAI')
-
 
     def __init__(self, cr):
         """Construct ourselves, set up web dispatcher."""
@@ -26,7 +27,8 @@ class DistributedInGameNewsMgrAI(ParentClass ):
     def generate(self):
         """We have zone info but not required fields, register for the special."""
         # IN_GAME_NEWS_MGR_UD_TO_ALL_AI will arrive on this channel
-        self.air.registerForChannel(OtpDoGlobals.OTP_DO_ID_TOONTOWN_IN_GAME_NEWS_MANAGER)
+        self.air.registerForChannel(
+            OtpDoGlobals.OTP_DO_ID_TOONTOWN_IN_GAME_NEWS_MANAGER)
         ParentClass.generate(self)
 
     def announceGenerate(self):
@@ -36,8 +38,9 @@ class DistributedInGameNewsMgrAI(ParentClass ):
         self.air.sendUpdateToDoId("DistributedInGameNewsMgr",
                                   'inGameNewsMgrAIStartingUp',
                                   OtpDoGlobals.OTP_DO_ID_TOONTOWN_IN_GAME_NEWS_MANAGER,
-                                   [self.doId, self.air.districtId]
+                                  [self.doId, self.air.districtId]
                                   )
+
     def setLatestIssueStr(self, issueStr):
         """We normally get this once, we could get this when a new issue is released while logged in."""
         # we receive this as a utc str
@@ -48,19 +51,16 @@ class DistributedInGameNewsMgrAI(ParentClass ):
     def b_setLatestIssueStr(self, latestIssue):
         self.setLatestIssueStr(latestIssue)
         self.d_setLatestIssueStr(latestIssue)
-        
+
     def d_setLatestIssueStr(self, latestIssue):
-        self.sendUpdate("setLatestIssueStr",[self.getLatestIssueStr()])
-        
+        self.sendUpdate("setLatestIssueStr", [self.getLatestIssueStr()])
 
     def getLatestIssueStr(self):
         """We normally get this once, we could get this when a new issue is released while logged in."""
         assert self.notify.debugStateCall(self)
         return self.latestIssueStr
         pass
-    
 
     def newIssueUDtoAI(self, issueStr):
         """Well the UD is telling us we have a new issue, spread it to the clients."""
         self.b_setLatestIssueStr(issueStr)
-        

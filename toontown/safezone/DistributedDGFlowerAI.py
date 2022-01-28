@@ -13,6 +13,7 @@ HEIGHT_DELTA = 0.5
 MAX_HEIGHT = 10.0
 MIN_HEIGHT = 2.0
 
+
 class DistributedDGFlowerAI(DistributedObjectAI.DistributedObjectAI):
     """
     ////////////////////////////////////////////////////////////////////
@@ -23,6 +24,7 @@ class DistributedDGFlowerAI(DistributedObjectAI.DistributedObjectAI):
     //
     ////////////////////////////////////////////////////////////////////
     """
+
     def __init__(self, air):
         """__init__(air)
         """
@@ -36,7 +38,7 @@ class DistributedDGFlowerAI(DistributedObjectAI.DistributedObjectAI):
 
     def start(self):
         return None
-    
+
     def avatarEnter(self):
         avId = self.air.getAvatarIdFromSender()
         if not (avId in self.avList):
@@ -47,7 +49,7 @@ class DistributedDGFlowerAI(DistributedObjectAI.DistributedObjectAI):
                 self.height += HEIGHT_DELTA
                 # send update to clients
                 self.sendUpdate("setHeight", [self.height])
-                
+
     def avatarExit(self):
         avId = self.air.getAvatarIdFromSender()
         if (avId in self.avList):
@@ -57,10 +59,9 @@ class DistributedDGFlowerAI(DistributedObjectAI.DistributedObjectAI):
             if (self.height - HEIGHT_DELTA >= MIN_HEIGHT):
                 self.height -= HEIGHT_DELTA
                 # send update to clients
-                self.sendUpdate("setHeight", [self.height])                
-            
+                self.sendUpdate("setHeight", [self.height])
+
 
 # History
 #
 # 01Nov01    gregw    created.
-

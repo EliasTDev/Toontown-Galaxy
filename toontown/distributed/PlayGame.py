@@ -31,6 +31,7 @@ from toontown.toonbase import TTLocalizer
 from toontown.parties.PartyGlobals import GoToPartyStatus
 from panda3d.toontown import DNAStorage
 
+
 class PlayGame(StateData.StateData):
     """PlayGame class"""
 
@@ -48,13 +49,13 @@ class PlayGame(StateData.StateData):
         ToontownGlobals.OutdoorZone: OZHood.OZHood,
         ToontownGlobals.Tutorial: TutorialHood.TutorialHood,
         ToontownGlobals.MyEstate: EstateHood.EstateHood,
-        ToontownGlobals.BossbotHQ: BossbotHQ.BossbotHQ, # Not implemented yet
+        ToontownGlobals.BossbotHQ: BossbotHQ.BossbotHQ,  # Not implemented yet
         ToontownGlobals.SellbotHQ: SellbotHQ.SellbotHQ,
         ToontownGlobals.CashbotHQ: CashbotHQ.CashbotHQ,
         ToontownGlobals.LawbotHQ: LawbotHQ.LawbotHQ,
         ToontownGlobals.GolfZone: GZHood.GZHood,
         ToontownGlobals.PartyHood: PartyHood.PartyHood,
-        }
+    }
 
     Hood2StateDict = {
         ToontownGlobals.ToontownCentral: "TTHood",
@@ -73,7 +74,7 @@ class PlayGame(StateData.StateData):
         ToontownGlobals.LawbotHQ: "LawbotHQ",
         ToontownGlobals.GolfZone: "GZHood",
         ToontownGlobals.PartyHood: "PartyHood",
-        }
+    }
 
     # special methods
 
@@ -84,92 +85,92 @@ class PlayGame(StateData.StateData):
         StateData.StateData.__init__(self, doneEvent)
         self.place = None
         self.fsm = ClassicFSM.ClassicFSM('PlayGame',
-                           [State.State('start',
-                                        self.enterStart,
-                                        self.exitStart,
-                                        ['quietZone']),
-                            State.State('quietZone',
-                                        self.enterQuietZone,
-                                        self.exitQuietZone,
-                                        ['TTHood', 'DDHood',
-                                         'BRHood', 'MMHood',
-                                         'DGHood', 'DLHood',
-                                         'GSHood', 'OZHood',
-                                         'GZHood',
-                                         'SellbotHQ', 'CashbotHQ', 'LawbotHQ',
-                                         'BossbotHQ', 'TutorialHood',
-                                         'EstateHood',
-                                         'PartyHood']),
-                            State.State('TTHood',
-                                        self.enterTTHood,
-                                        self.exitTTHood,
-                                        ['quietZone']),
-                            State.State('DDHood',
-                                        self.enterDDHood,
-                                        self.exitDDHood,
-                                        ['quietZone']),
-                            State.State('BRHood',
-                                        self.enterBRHood,
-                                        self.exitBRHood,
-                                        ['quietZone']),
-                            State.State('MMHood',
-                                        self.enterMMHood,
-                                        self.exitMMHood,
-                                        ['quietZone']),
-                            State.State('DGHood',
-                                        self.enterDGHood,
-                                        self.exitDGHood,
-                                        ['quietZone']),
-                            State.State('DLHood',
-                                        self.enterDLHood,
-                                        self.exitDLHood,
-                                        ['quietZone']),
-                            State.State('GSHood',
-                                        self.enterGSHood,
-                                        self.exitGSHood,
-                                        ['quietZone']),
-                            State.State('OZHood',
-                                        self.enterOZHood,
-                                        self.exitOZHood,
-                                        ['quietZone']),
-                            State.State('GZHood',
-                                        self.enterGZHood,
-                                        self.exitGZHood,
-                                        ['quietZone']),
-                            State.State('BossbotHQ',
-                                        self.enterBossbotHQ,
-                                        self.exitBossbotHQ,
-                                        ['quietZone']),
-                            State.State('SellbotHQ',
-                                        self.enterSellbotHQ,
-                                        self.exitSellbotHQ,
-                                        ['quietZone']),
-                            State.State('CashbotHQ',
-                                        self.enterCashbotHQ,
-                                        self.exitCashbotHQ,
-                                        ['quietZone']),
-                            State.State('LawbotHQ',
-                                        self.enterLawbotHQ,
-                                        self.exitLawbotHQ,
-                                        ['quietZone']),
-                            State.State('TutorialHood',
-                                        self.enterTutorialHood,
-                                        self.exitTutorialHood,
-                                        ['quietZone']),
-                            State.State('EstateHood',
-                                        self.enterEstateHood,
-                                        self.exitEstateHood,
-                                        ['quietZone']),
-                            State.State('PartyHood',
-                                        self.enterPartyHood,
-                                        self.exitPartyHood,
-                                        ['quietZone']),
-                            ],
-                           # Initial State
-                           'start',
-                           # Final State
-                           'start',
-                           )
+                                         [State.State('start',
+                                                      self.enterStart,
+                                                      self.exitStart,
+                                                      ['quietZone']),
+                                             State.State('quietZone',
+                                                         self.enterQuietZone,
+                                                         self.exitQuietZone,
+                                                         ['TTHood', 'DDHood',
+                                                          'BRHood', 'MMHood',
+                                                          'DGHood', 'DLHood',
+                                                          'GSHood', 'OZHood',
+                                                          'GZHood',
+                                                          'SellbotHQ', 'CashbotHQ', 'LawbotHQ',
+                                                          'BossbotHQ', 'TutorialHood',
+                                                          'EstateHood',
+                                                          'PartyHood']),
+                                             State.State('TTHood',
+                                                         self.enterTTHood,
+                                                         self.exitTTHood,
+                                                         ['quietZone']),
+                                             State.State('DDHood',
+                                                         self.enterDDHood,
+                                                         self.exitDDHood,
+                                                         ['quietZone']),
+                                             State.State('BRHood',
+                                                         self.enterBRHood,
+                                                         self.exitBRHood,
+                                                         ['quietZone']),
+                                             State.State('MMHood',
+                                                         self.enterMMHood,
+                                                         self.exitMMHood,
+                                                         ['quietZone']),
+                                             State.State('DGHood',
+                                                         self.enterDGHood,
+                                                         self.exitDGHood,
+                                                         ['quietZone']),
+                                             State.State('DLHood',
+                                                         self.enterDLHood,
+                                                         self.exitDLHood,
+                                                         ['quietZone']),
+                                             State.State('GSHood',
+                                                         self.enterGSHood,
+                                                         self.exitGSHood,
+                                                         ['quietZone']),
+                                             State.State('OZHood',
+                                                         self.enterOZHood,
+                                                         self.exitOZHood,
+                                                         ['quietZone']),
+                                             State.State('GZHood',
+                                                         self.enterGZHood,
+                                                         self.exitGZHood,
+                                                         ['quietZone']),
+                                             State.State('BossbotHQ',
+                                                         self.enterBossbotHQ,
+                                                         self.exitBossbotHQ,
+                                                         ['quietZone']),
+                                             State.State('SellbotHQ',
+                                                         self.enterSellbotHQ,
+                                                         self.exitSellbotHQ,
+                                                         ['quietZone']),
+                                             State.State('CashbotHQ',
+                                                         self.enterCashbotHQ,
+                                                         self.exitCashbotHQ,
+                                                         ['quietZone']),
+                                             State.State('LawbotHQ',
+                                                         self.enterLawbotHQ,
+                                                         self.exitLawbotHQ,
+                                                         ['quietZone']),
+                                             State.State('TutorialHood',
+                                                         self.enterTutorialHood,
+                                                         self.exitTutorialHood,
+                                                         ['quietZone']),
+                                             State.State('EstateHood',
+                                                         self.enterEstateHood,
+                                                         self.exitEstateHood,
+                                                         ['quietZone']),
+                                             State.State('PartyHood',
+                                                         self.enterPartyHood,
+                                                         self.exitPartyHood,
+                                                         ['quietZone']),
+                                          ],
+                                         # Initial State
+                                         'start',
+                                         # Final State
+                                         'start',
+                                         )
 
         self.fsm.enterInitialState()
 
@@ -199,13 +200,13 @@ class PlayGame(StateData.StateData):
             return
         elif hoodId == ToontownGlobals.PartyHood:
             # We just switched to the Party shard. We need to check if the party
-            # exists and create it if necessary through getPartyZoneAndGoToParty:
+            # exists and create it if necessary through
+            # getPartyZoneAndGoToParty:
             self.getPartyZoneAndGoToParty(avId, zoneId)
             return
         else:
             loaderName = ZoneUtil.getLoaderName(zoneId)
             whereName = ZoneUtil.getToonWhereName(zoneId)
-
 
         self.fsm.request("quietZone",
                          [{"loader": loaderName,
@@ -245,14 +246,17 @@ class PlayGame(StateData.StateData):
             # We'd rather share the font models where possible, so
             # we'll replace some of the fonts the dna store loaded
             # with the corresponding fonts we already have in memory.
-            self.dnaStore.storeFont("humanist", ToontownGlobals.getInterfaceFont())
+            self.dnaStore.storeFont(
+                "humanist", ToontownGlobals.getInterfaceFont())
             self.dnaStore.storeFont("mickey", ToontownGlobals.getSignFont())
             self.dnaStore.storeFont("suit", ToontownGlobals.getSuitFont())
 
             # Also load the interior models
             # Perhaps these should be loaded elsewhere? It is a memory vs load
             # time tradeoff
-            loader.loadDNAFile(self.dnaStore, "phase_3.5/dna/storage_interior.dna")
+            loader.loadDNAFile(
+                self.dnaStore,
+                "phase_3.5/dna/storage_interior.dna")
 
     def unloadDnaStore(self):
         if hasattr(self, "dnaStore"):
@@ -273,11 +277,10 @@ class PlayGame(StateData.StateData):
         # even got there, so it might still be hanging around.  If so,
         # clean it up now.
         if self.hood:
-            self.notify.info("Aggressively cleaning up hood: %s" % (self.hood))
+            self.notify.info(f"Aggressively cleaning up hood: {self.hood}")
             self.hood.exit()
             self.hood.unload()
             self.hood = None
-
 
     def enterStart(self):
         """enterStart(self)
@@ -292,7 +295,7 @@ class PlayGame(StateData.StateData):
     def handleHoodDone(self):
         doneStatus = self.hood.getDoneStatus()
         shardId = doneStatus["shardId"]
-        if shardId != None:
+        if shardId is not None:
             # If we're switching shards, we need to back out one more
             # level.
             self.doneStatus = doneStatus
@@ -303,14 +306,15 @@ class PlayGame(StateData.StateData):
             return
 
         if doneStatus["where"] == "party":
-            self.getPartyZoneAndGoToParty(doneStatus["avId"], doneStatus["zoneId"])
+            self.getPartyZoneAndGoToParty(
+                doneStatus["avId"], doneStatus["zoneId"])
             return
 
         how = doneStatus["how"]
         if how in ["tunnelIn", "teleportIn", "doorIn", "elevatorIn"]:
             self.fsm.request("quietZone", [doneStatus])
         else:
-            self.notify.error("Exited hood with unexpected mode %s" % (how))
+            self.notify.error(f"Exited hood with unexpected mode {how}")
 
     def _destroyHood(self):
         # every hood exit handler should call _destroyHood()
@@ -324,7 +328,9 @@ class PlayGame(StateData.StateData):
         assert(self.notify.debug("enterQuietZone()"))
         self.quietZoneDoneEvent = "quietZoneDone"
         self.acceptOnce(self.quietZoneDoneEvent, self.handleQuietZoneDone)
-        self.acceptOnce("enterWaitForSetZoneResponse", self.handleWaitForSetZoneResponse)
+        self.acceptOnce(
+            "enterWaitForSetZoneResponse",
+            self.handleWaitForSetZoneResponse)
         self.quietZoneStateData = QuietZoneState.QuietZoneState(
             self.quietZoneDoneEvent)
         self.quietZoneStateData.load()
@@ -337,11 +343,11 @@ class PlayGame(StateData.StateData):
         del self.quietZoneDoneEvent
         self.quietZoneStateData.exit()
         self.quietZoneStateData.unload()
-        self.quietZoneStateData=None
+        self.quietZoneStateData = None
 
     def handleWaitForSetZoneResponse(self, requestStatus):
         assert(self.notify.debug("handleWaitForSetZoneResponse(requestStatus="
-                +str(requestStatus)+")"))
+                                 + str(requestStatus) + ")"))
 
         hoodId = requestStatus["hoodId"]
         canonicalHoodId = ZoneUtil.getCanonicalZoneId(hoodId)
@@ -349,50 +355,77 @@ class PlayGame(StateData.StateData):
         hoodName = ToontownGlobals.hoodNameMap[canonicalHoodId][-1]
         zoneId = requestStatus["zoneId"]
         loaderName = requestStatus["loader"]
-        avId = requestStatus.get("avId", -1)          # Better be conservative; some senders don't set this.
+        # Better be conservative; some senders don't set this.
+        avId = requestStatus.get("avId", -1)
         ownerId = requestStatus.get("ownerId", avId)  # ditto
 
         # Get the loading bar count
         count = ToontownGlobals.hoodCountMap[canonicalHoodId]
-        if loaderName=="safeZoneLoader":
+        if loaderName == "safeZoneLoader":
             count += ToontownGlobals.safeZoneCountMap[canonicalHoodId]
-        elif loaderName=="townLoader":
+        elif loaderName == "townLoader":
             count += ToontownGlobals.townCountMap[canonicalHoodId]
         else:
-            assert(self.notify.debug("  unknown loaderName="+loaderName))
+            assert(self.notify.debug("  unknown loaderName=" + loaderName))
 
         if not loader.inBulkBlock:
             if hoodId == ToontownGlobals.MyEstate:
                 if avId == -1:
                     # we are going to our own estate
-                    loader.beginBulkLoad("hood", TTLocalizer.HeadingToYourEstate, count,
-                                         1, TTLocalizer.TIP_ESTATE)
+                    loader.beginBulkLoad(
+                        "hood",
+                        TTLocalizer.HeadingToYourEstate,
+                        count,
+                        1,
+                        TTLocalizer.TIP_ESTATE)
                 else:
                     # we are going to someone elses estate, find owners name
                     owner = base.cr.identifyAvatar(ownerId)
-                    if (owner == None):
-                        # we aren't friends with the owner, get name of avId we are visiting
+                    if (owner is None):
+                        # we aren't friends with the owner, get name of avId we
+                        # are visiting
                         friend = base.cr.identifyAvatar(avId)
-                        if friend != None:
+                        if friend is not None:
                             avName = friend.getName()
-                            loader.beginBulkLoad("hood", (TTLocalizer.HeadingToFriend % avName), count,
-                                                 1, TTLocalizer.TIP_ESTATE)
+                            loader.beginBulkLoad(
+                                "hood", (TTLocalizer.HeadingToFriend %
+                                         avName), count, 1, TTLocalizer.TIP_ESTATE)
                         else:
-                            self.notify.warning("we can't perform this teleport")
+                            self.notify.warning(
+                                "we can't perform this teleport")
                             return
                     else:
                         avName = owner.getName()
-                        loader.beginBulkLoad("hood", (TTLocalizer.HeadingToEstate % avName), count,
-                                             1, TTLocalizer.TIP_ESTATE)
+                        loader.beginBulkLoad(
+                            "hood", (TTLocalizer.HeadingToEstate %
+                                     avName), count, 1, TTLocalizer.TIP_ESTATE)
             elif ZoneUtil.isCogHQZone(zoneId):
-                loader.beginBulkLoad("hood", (TTLocalizer.HeadingToHood % {'to':toHoodPhrase,'hood':hoodName}), count,
-                                     1, TTLocalizer.TIP_COGHQ)
+                loader.beginBulkLoad(
+                    "hood",
+                    (TTLocalizer.HeadingToHood % {
+                        'to': toHoodPhrase,
+                        'hood': hoodName}),
+                    count,
+                    1,
+                    TTLocalizer.TIP_COGHQ)
             elif ZoneUtil.isGoofySpeedwayZone(zoneId):
-                loader.beginBulkLoad("hood", (TTLocalizer.HeadingToHood % {'to':toHoodPhrase,'hood':hoodName}), count,
-                                     1, TTLocalizer.TIP_KARTING)
+                loader.beginBulkLoad(
+                    "hood",
+                    (TTLocalizer.HeadingToHood % {
+                        'to': toHoodPhrase,
+                        'hood': hoodName}),
+                    count,
+                    1,
+                    TTLocalizer.TIP_KARTING)
             else:
-                loader.beginBulkLoad("hood", (TTLocalizer.HeadingToHood % {'to':toHoodPhrase,'hood':hoodName}), count,
-                                     1, TTLocalizer.TIP_GENERAL)
+                loader.beginBulkLoad(
+                    "hood",
+                    (TTLocalizer.HeadingToHood % {
+                        'to': toHoodPhrase,
+                        'hood': hoodName}),
+                    count,
+                    1,
+                    TTLocalizer.TIP_GENERAL)
 
         if hoodId == ToontownGlobals.Tutorial:
             self.loadDnaStoreTutorial()
@@ -544,11 +577,11 @@ class PlayGame(StateData.StateData):
         self._destroyHood()
 
     def getEstateZoneAndGoHome(self, avId, zoneId):
-        self.doneStatus = {"avId":   avId,
+        self.doneStatus = {"avId": avId,
                            "zoneId": zoneId,
                            "hoodId": ToontownGlobals.MyEstate,
                            "loader": "safeZoneLoader",
-                           "how":    "teleportIn",
+                           "how": "teleportIn",
                            "shardId": None,
                            }
 
@@ -561,11 +594,11 @@ class PlayGame(StateData.StateData):
             base.cr.estateMgr.getLocalEstateZone(base.localAvatar.getDoId())
 
     def goHome(self, ownerId, zoneId):
-        self.notify.debug("goHome ownerId = %s" % ownerId)
+        self.notify.debug(f"goHome ownerId = {ownerId}")
         # Disallow transitive visits, i.e. teleporting to a friend who is
         # currently at a non-friends estate
-        if (ownerId > 0 and ownerId != base.localAvatar.doId and \
-            not base.cr.isFriend(ownerId)):
+        if (ownerId > 0 and ownerId != base.localAvatar.doId and
+                not base.cr.isFriend(ownerId)):
             self.doneStatus["failed"] = 1
             taskMgr.remove("goHomeFailed")
             taskMgr.add(self.goHomeFailed, "goHomeFailed")
@@ -586,12 +619,10 @@ class PlayGame(StateData.StateData):
         else:
             self.doneStatus["where"] = "estate"
 
-
         # for certain functions, we need to know who is the owner of the estate
         self.doneStatus["ownerId"] = ownerId
         #self.doneStatus["zoneId"] = zoneId
         self.fsm.request("quietZone", [self.doneStatus])
-
 
     def goHomeFailed(self, task):
         self.notify.debug("goHomeFailed")
@@ -599,10 +630,11 @@ class PlayGame(StateData.StateData):
 
         # disallow transitive friends
         if failedToVisitAvId > 0:
-            message = TTLocalizer.EstateTeleportFailedNotFriends % base.cr.identifyAvatar(failedToVisitAvId).getName()
+            message = TTLocalizer.EstateTeleportFailedNotFriends % base.cr.identifyAvatar(
+                failedToVisitAvId).getName()
         else:
             message = TTLocalizer.EstateTeleportFailed
-        self.notify.debug("goHomeFailed, why =: %s" % message)
+        self.notify.debug(f"goHomeFailed, why =: {message}")
         #  ignore the setLocalEstateZone message
         self.ignore("setLocalEstateZone")
         zoneId = base.localAvatar.lastHood
@@ -619,9 +651,9 @@ class PlayGame(StateData.StateData):
                            "shardId": None}])
         return Task.done
 
-#===============================================================================
+# ===============================================================================
 # PARTIES
-#===============================================================================
+# ===============================================================================
 
     def enterPartyHood(self, requestStatus):
         self.accept(self.hoodDoneEvent, self.handleHoodDone)
@@ -633,22 +665,24 @@ class PlayGame(StateData.StateData):
         self._destroyHood()
 
     def getPartyZoneAndGoToParty(self, avId, zoneId):
-        self.doneStatus = {"avId":   avId,
+        self.doneStatus = {"avId": avId,
                            "zoneId": zoneId,
                            "hoodId": ToontownGlobals.PartyHood,
                            "loader": "safeZoneLoader",
-                           "how":    "teleportIn",
+                           "how": "teleportIn",
                            "shardId": None,
                            }
 
-        # Avatar id could be host, someone at a party, or us starting a new party
+        # Avatar id could be host, someone at a party, or us starting a new
+        # party
         if avId < 0:
             avId = base.localAvatar.getDoId()
 
-        base.cr.partyManager.requestPartyZone(avId, zoneId, callback = self.goToParty)
+        base.cr.partyManager.requestPartyZone(
+            avId, zoneId, callback=self.goToParty)
 
     def goToParty(self, ownerId, partyId, zoneId):
-        assert(self.notify.debug("goToParty ownerId = %s" % ownerId))
+        assert(self.notify.debug(f"goToParty ownerId = {ownerId}"))
         # TODO-parties: Disallow transitive visits, i.e. Teleporting to a friend who is
         # currently at a private party and you're not invited
 
@@ -670,12 +704,13 @@ class PlayGame(StateData.StateData):
 
         message = base.cr.partyManager.getGoToPartyFailedMessage(reason)
 
-        self.notify.debug("goToPartyFailed, why =: %s" % message)
+        self.notify.debug(f"goToPartyFailed, why =: {message}")
         #  ignore the gotLocalPartyZone message
         # Isn't this redudant? it's only doing an acceptOnce
         self.ignore("gotLocalPartyZone")
 
-        # TODO-parties: If we came here from a party, then make sure to send me back to that party.
+        # TODO-parties: If we came here from a party, then make sure to send me
+        # back to that party.
         zoneId = base.localAvatar.lastHood
         loaderName = ZoneUtil.getLoaderName(zoneId)
         whereName = ZoneUtil.getToonWhereName(zoneId)
@@ -690,7 +725,7 @@ class PlayGame(StateData.StateData):
                            "shardId": None}])
         return Task.done
 
-#===============================================================================
+# ===============================================================================
 
     def getCatalogCodes(self, category):
         numCodes = self.dnaStore.getNumCatalogCodes(category)
@@ -700,19 +735,19 @@ class PlayGame(StateData.StateData):
         return codes
 
     def getNodePathList(self, catalogGroup):
-        result=[]
-        codes=self.getCatalogCodes(catalogGroup)
+        result = []
+        codes = self.getCatalogCodes(catalogGroup)
         for code in codes:
             np = self.dnaStore.findNode(code)
             result.append(np)
         return result
 
     def getNodePathDict(self, catalogGroup):
-        result={}
-        codes=self.getCatalogCodes(catalogGroup)
+        result = {}
+        codes = self.getCatalogCodes(catalogGroup)
         for code in codes:
             np = self.dnaStore.findNode(code)
-            result[code]=np
+            result[code] = np
         return result
 
     def getHoodClassByNumber(self, hoodNumber):

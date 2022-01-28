@@ -2,6 +2,7 @@ from . import GardenGlobals
 from direct.directnotify import DirectNotifyGlobal
 from . import FlowerBase
 
+
 class FlowerBasket:
     """
     #RAU adapted from fishing/FishTank.py
@@ -23,7 +24,7 @@ class FlowerBasket:
         Return the current flower list
         """
         return self.flowerList
-    
+
     def makeFromNetLists(self, speciesList, varietyList):
         """
         Fill in the flower collection based on lists passed in like they are
@@ -32,7 +33,7 @@ class FlowerBasket:
         self.flowerList = []
         # Fill in the lists by running through the parallel lists of properties
         for species, variety in zip(speciesList, varietyList):
-            self.flowerList.append(FlowerBase.FlowerBase(species, variety))        
+            self.flowerList.append(FlowerBase.FlowerBase(species, variety))
 
     def getNetLists(self):
         """
@@ -44,7 +45,7 @@ class FlowerBasket:
         for flower in self.flowerList:
             speciesList.append(flower.getSpecies())
             varietyList.append(flower.getVariety())
-        return [ speciesList, varietyList]
+        return [speciesList, varietyList]
 
     def hasFlower(self, species, variety):
         """
@@ -52,7 +53,8 @@ class FlowerBasket:
         Return 0 if we do not
         """
         for flower in self.flowerList:
-            if (flower.getSpecies() == species) and (flower.getVariety() == variety):
+            if (flower.getSpecies() == species) and (
+                    flower.getVariety() == variety):
                 return 1
         return 0
 
@@ -60,7 +62,7 @@ class FlowerBasket:
         """
         Add this fish to our collection
         """
-        self.flowerList.append(FlowerBase.FlowerBase(species,variety))
+        self.flowerList.append(FlowerBase.FlowerBase(species, variety))
         return 1
 
     def removeFishAtIndex(self, index):
@@ -75,25 +77,24 @@ class FlowerBasket:
 
     def generateRandomBasket(self):
         import random
-        numFish = random.randint(1,20)
+        numFish = random.randint(1, 20)
         self.flowerList = []
         for i in range(numFish):
-            species , variety= GardenGlobals.getRandomFlower()
-            self.addFlower(species,variety)
+            species, variety = GardenGlobals.getRandomFlower()
+            self.addFlower(species, variety)
 
     def getTotalValue(self):
         value = 0
         for flower in self.flowerList:
             value += flower.getValue()
-        return value;
-            
+        return value
+
     def __str__(self):
         numFlower = len(self.flowerList)
         value = 0
-        txt = ("Flower Basket (%s flower):" % (numFlower))
+        txt = f"Flower Basket ({numFlower} flower):"
         for flower in self.flowerList:
             txt += ("\n" + str(flower))
         value = self.getTotalValue()
-        txt += ("\nTotal value: %s" % (value))
+        txt += f"\nTotal value: {value}"
         return txt
-    

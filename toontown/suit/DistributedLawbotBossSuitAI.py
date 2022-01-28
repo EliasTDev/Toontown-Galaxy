@@ -9,22 +9,22 @@ import random
 from direct.fsm import ClassicFSM, State
 from direct.fsm import State
 
+
 class DistributedLawbotBossSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
     """
     These are meant to represent the lawyers in battle three of Lawbot Boss
     """
 
     notify = DirectNotifyGlobal.directNotify.newCategory(
-                                        'DistributedLawbotBossSuitAI')
+        'DistributedLawbotBossSuitAI')
 
     def __init__(self, air, suitPlanner):
         """__init__(air, suitPlanner)"""
-        DistributedSuitBaseAI.DistributedSuitBaseAI.__init__(self, air, 
+        DistributedSuitBaseAI.DistributedSuitBaseAI.__init__(self, air,
                                                              suitPlanner)
         self.stunned = False
-        self.timeToRelease = 3.15 #should match DistributedLawbotBossSuit.py
+        self.timeToRelease = 3.15  # should match DistributedLawbotBossSuit.py
         self.timeProsecuteStarted = 0
-        
 
         # Set up the DistributedSuit state machine
         self.fsm = ClassicFSM.ClassicFSM(
@@ -77,26 +77,25 @@ class DistributedLawbotBossSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
             'Off',
             # Final state
             'Off',
-            )
-        
+        )
+
         self.fsm.enterInitialState()
-        
 
     def delete(self):
-        self.notify.debug("delete %s" % self.doId)
-        self.ignoreAll()        
+        self.notify.debug(f"delete {self.doId}")
+        self.ignoreAll()
         DistributedSuitBaseAI.DistributedSuitBaseAI.delete(self)
         self.notify.debug('setting self.boss to None')
         self.boss = None
-        
+
         taskName = self.uniqueName('ProsecutionHealsBoss')
         if taskMgr.hasTaskNamed(taskName):
-            self.notify.debug('still has task %s' % taskName)
+            self.notify.debug(f'still has task {taskName}')
         taskMgr.remove(taskName)
-        
+
         taskName = self.uniqueName('unstun')
         if taskMgr.hasTaskNamed(taskName):
-            self.notify.debug('still has task %s' % taskName)
+            self.notify.debug(f'still has task {taskName}')
         taskMgr.remove(taskName)
 
         self.fsm = None
@@ -107,9 +106,9 @@ class DistributedLawbotBossSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
         toonId = self.air.getAvatarIdFromSender()
 
         if self.notify.getDebug():
-            self.notify.debug( str( self.getDoId() ) + \
-                               str( self.zoneId ) + \
-                               ': request battle with toon: %d' % toonId )
+            self.notify.debug(str(self.getDoId()) +
+                              str(self.zoneId) +
+                              ': request battle with toon: %d' % toonId)
 
         # Store the suit's actual pos and hpr on the client
         self.confrontPos = Point3(x, y, z)
@@ -119,17 +118,27 @@ class DistributedLawbotBossSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
         if (self.sp.requestBattle(self.zoneId, self, toonId)):
             self.acceptOnce(self.getDeathEvent(), self._logDeath, [toonId])
             if self.notify.getDebug():
-                self.notify.debug( "Suit %d requesting battle in zone %d" %
-                                   (self.getDoId(), self.zoneId) )
+                self.notify.debug("Suit %d requesting battle in zone %d" %
+                                  (self.getDoId(), self.zoneId))
         else:
             # Suit tells toon to get lost
             if self.notify.getDebug():
-                self.notify.debug('requestBattle from suit %d - denied by battle manager' % (self.getDoId()))
-            self.b_setBrushOff(SuitDialog.getBrushOffIndex(self.getStyleName()))
-            self.d_denyBattle( toonId )
+                self.notify.debug(
+                    'requestBattle from suit %d - denied by battle manager' %
+                    (self.getDoId()))
+            self.b_setBrushOff(
+                SuitDialog.getBrushOffIndex(
+                    self.getStyleName()))
+            self.d_denyBattle(toonId)
 
     def getPosHpr(self):
-        return (self.getX(), self.getY(), self.getZ(), self.getH(), self.getP(), self.getR())
+        return (
+            self.getX(),
+            self.getY(),
+            self.getZ(),
+            self.getH(),
+            self.getP(),
+            self.getR())
 
     def getConfrontPosHpr(self):
         """ getConfrontPosHpr()
@@ -147,20 +156,19 @@ class DistributedLawbotBossSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
 
         if self.stunned:
             return
-        
+
         chanceToDoAttack = ToontownGlobals.LawbotBossLawyerChanceToAttack
-        action = random.randrange(1,101)
+        action = random.randrange(1, 101)
         if action > chanceToDoAttack:
-            #we throw stuff at the prosecution pan
+            # we throw stuff at the prosecution pan
             self.doProsecute()
             pass
         else:
-            #we hit a toon
+            # we hit a toon
             if not lawbotBoss.involvedToons:
-                #do an immediate return, no more toons around
+                # do an immediate return, no more toons around
                 return
 
-            
             toonToAttackId = random.choice(lawbotBoss.involvedToons)
             toon = self.air.doId2do.get(toonToAttackId)
 
@@ -169,56 +177,66 @@ class DistributedLawbotBossSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
                 return
 
             #import pdb; pdb.set_trace()
-            toonPos = toon.getPos();
-            z2 = toonPos[2] + 1.3 #adjust it slightly higher so we're not aiming for the feet
+            toonPos = toon.getPos()
+            # adjust it slightly higher so we're not aiming for the feet
+            z2 = toonPos[2] + 1.3
 
-            
-            
             toonPos = Point3(toonPos.getX(), toonPos.getY(), 0)
 
-            lawyerPos = self.getPos();
+            lawyerPos = self.getPos()
 
             lawyerPos = Point3(self.getPos().getX(), self.getPos().getY(), 0)
 
-            #force the lawyer z to be the same
+            # force the lawyer z to be the same
             #lawyerPos[2] += 1.3
 
             dirVector = toonPos - lawyerPos
             dirVector.normalize()
-            dirVector *= 200; #TODO change this to the maximum length inside the court room
+            dirVector *= 200  # TODO change this to the maximum length inside the court room
 
-            destPos = Point3(lawyerPos[0] + dirVector[0], lawyerPos[1] + dirVector[1], lawyerPos[2] + dirVector[2] + 1.3)
-            
-            self.d_doAttack(lawyerPos[0], lawyerPos[1], lawyerPos[2], destPos[0], destPos[1], destPos[2] )
+            destPos = Point3(
+                lawyerPos[0] + dirVector[0],
+                lawyerPos[1] + dirVector[1],
+                lawyerPos[2] + dirVector[2] + 1.3)
 
-            #self.d_doAttack(lawyerPos[0], lawyerPos[1], lawyerPos[2], toonPos[0], toonPos[1], toonPos[2] )            
+            self.d_doAttack(
+                lawyerPos[0],
+                lawyerPos[1],
+                lawyerPos[2],
+                destPos[0],
+                destPos[1],
+                destPos[2])
 
-                
+            #self.d_doAttack(lawyerPos[0], lawyerPos[1], lawyerPos[2], toonPos[0], toonPos[1], toonPos[2] )
+
     def doProsecute(self):
         self.notify.debug("doProsecute")
 
         self.timeProsecuteStarted = globalClockDelta.getRealNetworkTime()
-        
+
         self.d_doProsecute()
-        #do the heal boss here
+        # do the heal boss here
         taskName = self.uniqueName('ProsecutionHealsBoss')
 
-        duration = 5.65 #derived from looking at throwing track duration in DistributedLawbotBossSuit
-        taskMgr.doMethodLater(duration , self.__prosecutionHeal, taskName)
+        # derived from looking at throwing track duration in
+        # DistributedLawbotBossSuit
+        duration = 5.65
+        taskMgr.doMethodLater(duration, self.__prosecutionHeal, taskName)
 
     def __prosecutionHeal(self, extraArg):
-        self.notify.debug("__prosecutionHeal extraArg %s" % extraArg)
+        self.notify.debug(f"__prosecutionHeal extraArg {extraArg}")
         if self.boss:
             self.boss.healBoss(ToontownGlobals.LawbotBossLawyerHeal)
-        
 
     def d_doProsecute(self):
         self.notify.debug('d_doProsecute')
-        self.sendUpdate('doProsecute',[])
-        
-    def d_doAttack(self, x1,y1,z1, x2,y2,z2):
-        self.notify.debug("doAttack: x1=%.2f y1=%.2f z2=%.2f x2=%.2f y2=%.2f z2=%.2f" % (x1,y1,z1,x2,y2,z2))
-        self.sendUpdate('doAttack', [x1, y1,z1,x2,y2,z2])
+        self.sendUpdate('doProsecute', [])
+
+    def d_doAttack(self, x1, y1, z1, x2, y2, z2):
+        self.notify.debug(
+            "doAttack: x1=%.2f y1=%.2f z2=%.2f x2=%.2f y2=%.2f z2=%.2f" %
+            (x1, y1, z1, x2, y2, z2))
+        self.sendUpdate('doAttack', [x1, y1, z1, x2, y2, z2])
 
     def setBoss(self, lawbotBoss):
         self.boss = lawbotBoss
@@ -226,20 +244,25 @@ class DistributedLawbotBossSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
     def hitByToon(self):
         self.notify.debug("I got hit by a toon")
         if not self.stunned:
-            #remove the task to heal the boss if we get hit before we throw the evidence
+            # remove the task to heal the boss if we get hit before we throw
+            # the evidence
             curTime = globalClockDelta.getRealNetworkTime()
-            deltaTime =  curTime - self.timeProsecuteStarted
-            deltaTime /= 100.0 #convert milliseconds to seconds
-            self.notify.debug('deltaTime = %f, curTime=%f, prosecuteStarted=%f' %
-                              (deltaTime, curTime, self.timeProsecuteStarted))
+            deltaTime = curTime - self.timeProsecuteStarted
+            deltaTime /= 100.0  # convert milliseconds to seconds
+            self.notify.debug(
+                'deltaTime = %f, curTime=%f, prosecuteStarted=%f' %
+                (deltaTime, curTime, self.timeProsecuteStarted))
             if deltaTime < self.timeToRelease:
-                taskName = self.uniqueName('ProsecutionHealsBoss')            
+                taskName = self.uniqueName('ProsecutionHealsBoss')
                 taskMgr.remove(taskName)
-            
-            self.sendUpdate('doStun',[])
+
+            self.sendUpdate('doStun', [])
             self.setStun(True)
             taskName = self.uniqueName('unstun')
-            taskMgr.doMethodLater(ToontownGlobals.LawbotBossLawyerStunTime , self.unStun,taskName)
+            taskMgr.doMethodLater(
+                ToontownGlobals.LawbotBossLawyerStunTime,
+                self.unStun,
+                taskName)
             if self.boss:
                 self.boss.checkForBonusState()
 
@@ -249,8 +272,6 @@ class DistributedLawbotBossSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
     def unStun(self, taskName):
         self.setStun(False)
 
-
-
     def enterPreThrowProsecute(self):
         assert(self.notify.debug('enterPreThrowProsecute'))
         return
@@ -258,7 +279,7 @@ class DistributedLawbotBossSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
     def exitPreThrowProsecute(self):
         assert(self.notify.debug('exitPreThrowProsecute'))
         return
-             
+
     def enterPostThrowProsecute(self):
         assert(self.notify.debug('enterPostThrowProsecute'))
         return
@@ -266,7 +287,7 @@ class DistributedLawbotBossSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
     def exitPostThrowProsecute(self):
         assert(self.notify.debug('exitPostThrowProsecute'))
         return
-     
+
     def enterPreThrowAttack(self):
         assert(self.notify.debug('enterPreThrowAttack'))
         return
@@ -274,7 +295,7 @@ class DistributedLawbotBossSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
     def exitPreThrowAttack(self):
         assert(self.notify.debug('exitPreThrowAttack'))
         return
-             
+
     def enterPostThrowAttack(self):
         assert(self.notify.debug('enterPostThrowAttack'))
         return
@@ -286,16 +307,15 @@ class DistributedLawbotBossSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
     def enterStunned(self):
         assert(self.notify.debug('enterStunned'))
         return
-        
+
     def exitStunned(self):
         assert(self.notify.debug('exitStunned'))
         return
 
-     
     def enterOff(self):
         assert(self.notify.debug('enterOff'))
         return
-        
+
     def exitOff(self):
         assert(self.notify.debug('exitOff'))
         return
@@ -303,7 +323,7 @@ class DistributedLawbotBossSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
     def enterNeutral(self):
         assert(self.notify.debug('enterNeutral'))
         return
-        
+
     def exitNeutral(self):
         assert(self.notify.debug('exitNeutral'))
         return

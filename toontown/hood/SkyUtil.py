@@ -4,7 +4,8 @@ from direct.task.Task import Task
 from direct.directnotify import DirectNotifyGlobal
 
 notify = DirectNotifyGlobal.directNotify.newCategory("SkyUtil")
-    
+
+
 def cloudSkyTrack(task):
     # Every frame nail the sky to 0, with no rotation
     # Actually we can raise the sky to the lowest point
@@ -18,16 +19,20 @@ def cloudSkyTrack(task):
     # keep it at 0
     # Rotate the sky slowly to simulate clouds passing
     task.h += (globalClock.getDt() * 0.25)
-    
+
     if task.cloud1.isEmpty() or task.cloud2.isEmpty():
         notify.warning("Couln't find clouds!")
         return Task.done
-    
+
     task.cloud1.setH(task.h)
     task.cloud2.setH(-task.h * 0.8)
     return Task.cont
 
-def startCloudSky(hood, parent=camera, effects = CompassEffect.PRot | CompassEffect.PZ):
+
+def startCloudSky(
+        hood,
+        parent=camera,
+        effects=CompassEffect.PRot | CompassEffect.PZ):
     # Parent the sky to our camera, the task will counter rotate it
     hood.sky.reparentTo(parent)
     # Turn off depth tests on the sky because as the cloud layers interpenetrate
@@ -58,7 +63,8 @@ def startCloudSky(hood, parent=camera, effects = CompassEffect.PRot | CompassEff
     skyTrackTask.cloud1 = hood.sky.find("**/cloud1")
     skyTrackTask.cloud2 = hood.sky.find("**/cloud2")
 
-    if (not skyTrackTask.cloud1.isEmpty()) and (not skyTrackTask.cloud2.isEmpty()):
+    if (not skyTrackTask.cloud1.isEmpty()) and (
+            not skyTrackTask.cloud2.isEmpty()):
         taskMgr.add(skyTrackTask, "skyTrack")
     else:
         notify.warning("Couln't find clouds!")

@@ -1,8 +1,12 @@
-import builtins, os
+import builtins
+import os
 import sentry_sdk
+
+
 class game:
     name = 'toontown'
     process = 'server'
+
 
 builtins.game = game
 
@@ -17,7 +21,6 @@ if os.path.exists(localPrc):
 
 from otp.ai.AIBaseGlobal import *
 from toontown.ai.ToontownAIRepository import ToontownAIRepository
-from otp.otpbase import PythonUtil
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -29,14 +32,22 @@ parser.add_argument('--astron-ip', help="The IP address of the Astron Message Di
 parser.add_argument('--eventlogger-ip', help="The IP address of the Astron Event Logger to log to.")
 args = parser.parse_args()
 localconfig = ''
-if args.base_channel: localconfig += 'air-base-channel %s\n' % args.base_channel
-if args.max_channels: localconfig += 'air-channel-allocation %s\n' % args.max_channels
-if args.stateserver: localconfig += 'air-stateserver %s\n' % args.stateserver
-if args.district_name: localconfig += 'district-name %s\n' % args.district_name
-if args.astron_ip: localconfig += 'air-connect %s\n' % args.astron_ip
-if args.eventlogger_ip: localconfig += 'eventlog-host %s\n' % args.eventlogger_ip
+if args.base_channel:
+    localconfig += f'air-base-channel {args.base_channel}\n'
+if args.max_channels:
+    localconfig += f'air-channel-allocation {args.max_channels}\n'
+if args.stateserver:
+    localconfig += f'air-stateserver {args.stateserver}\n'
+if args.district_name:
+    localconfig += f'district-name {args.district_name}\n'
+if args.astron_ip:
+    localconfig += f'air-connect {args.astron_ip}\n'
+if args.eventlogger_ip:
+    localconfig += f'eventlog-host {args.eventlogger_ip}\n'
 loadPrcFileData('Command-line', localconfig)
-simbase.air = ToontownAIRepository(config.GetInt('air-base-channel', 1000000), config.GetInt('air-stateserver', 4002), config.GetString('district-name', 'Toon Valley'))
+simbase.air = ToontownAIRepository(config.GetInt('air-base-channel', 1000000),
+                                   config.GetInt('air-stateserver', 4002),
+                                   config.GetString('district-name', 'Toon Valley'))
 
 host = config.GetString('air-connect', '127.0.0.1:7100')
 port = 7100
@@ -57,17 +68,18 @@ except Exception as e:
     from otp.otpbase import PythonUtil
 
     info = PythonUtil.describeException()
-    simbase.air.writeServerEvent('ai-exception', avId=simbase.air.getAvatarIdFromSender(), accId=simbase.air.getAccountIdFromSender(), exception=info)
+    simbase.air.writeServerEvent('ai-exception', avId=simbase.air.getAvatarIdFromSender(),
+                                 accId=simbase.air.getAccountIdFromSender(), exception=info)
     with open(config.GetString('ai-crash-log-name', 'ai-crash.txt'), 'w+') as file:
         file.write(info + "\n")
     if wantSentry:
         from os.path import expanduser
-        sentry_sdk.set_context( "AI", { 
-        'district_name': os.getenv('DISTRICT_NAME', "NULL"),
-        'SENDER_AVID': simbase.air.getAvatarIdFromSender(), 
-        'SENDER_ACCOUNT_ID': simbase.air.getAccountIdFromSender(), 
-        'homedir': expanduser('~'),
-        'CRITICAL': 'True'
-        })
+        sentry_sdk.set_context("AI", {
+                                'district_name': os.getenv('DISTRICT_NAME', "NULL"),
+                                'SENDER_AVID': simbase.air.getAvatarIdFromSender(),
+                                'SENDER_ACCOUNT_ID': simbase.air.getAccountIdFromSender(),
+                                'homedir': expanduser('~'),
+                                'CRITICAL': 'True'
+                                })
         sentry_sdk.capture_exception(e)
     raise

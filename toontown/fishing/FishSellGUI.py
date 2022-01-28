@@ -7,27 +7,28 @@ from direct.task import Task
 from . import FishBase
 from . import FishPicker
 
+
 class FishSellGUI(DirectFrame):
     notify = DirectNotifyGlobal.directNotify.newCategory("FishGui")
+
     def __init__(self, doneEvent):
         DirectFrame.__init__(self,
-                             relief = None,
-                             state = 'normal',
-                             geom = DGG.getDefaultDialogGeom(),
-                             geom_color = ToontownGlobals.GlobalDialogColor,
-                             geom_scale = (2.0,1,1.5),
-                             frameSize = (-1,1,-1,1),
-                             pos = (0,0,0),
-                             text = '',
-                             text_wordwrap = 26,
-                             text_scale = .06,
-                             text_pos = (0, 0.65),
+                             relief=None,
+                             state='normal',
+                             geom=DGG.getDefaultDialogGeom(),
+                             geom_color=ToontownGlobals.GlobalDialogColor,
+                             geom_scale=(2.0, 1, 1.5),
+                             frameSize=(-1, 1, -1, 1),
+                             pos=(0, 0, 0),
+                             text='',
+                             text_wordwrap=26,
+                             text_scale=.06,
+                             text_pos=(0, 0.65),
                              )
         self.initialiseoptions(FishSellGUI)
 
         # Send this when we are done so whoever made us can get a callback
         self.doneEvent = doneEvent
-
 
         # Create the fish picker
         self.picker = FishPicker.FishPicker(self)
@@ -37,7 +38,7 @@ class FishSellGUI(DirectFrame):
         newTankFish = base.localAvatar.fishTank.getFish()
         self.picker.update(newTankFish)
         self.picker.show()
-        
+
         # Init buttons
         buttons = loader.loadModel('phase_3/models/gui/dialog_box_buttons_gui')
         okImageList = (buttons.find('**/ChtBx_OKBtn_UP'),
@@ -47,25 +48,25 @@ class FishSellGUI(DirectFrame):
                            buttons.find('**/CloseBtn_DN'),
                            buttons.find('**/CloseBtn_Rllvr'))
         self.cancelButton = DirectButton(
-            parent = self,
-            relief = None,
-            image = cancelImageList,
-            pos = (0.3, 0, -0.58),
-            text = TTLocalizer.FishGuiCancel,
-            text_scale = TTLocalizer.FSGcancelButton,
-            text_pos = (0,-0.1),
-            command = self.__cancel,
-            )
+            parent=self,
+            relief=None,
+            image=cancelImageList,
+            pos=(0.3, 0, -0.58),
+            text=TTLocalizer.FishGuiCancel,
+            text_scale=TTLocalizer.FSGcancelButton,
+            text_pos=(0, -0.1),
+            command=self.__cancel,
+        )
         self.okButton = DirectButton(
-            parent = self,
-            relief = None,
-            image = okImageList,
-            pos = (0.6, 0, -0.58),
-            text = TTLocalizer.FishGuiOk,
-            text_scale = TTLocalizer.FSGokButton,
-            text_pos = (0,-0.1),
-            command = self.__sellFish,
-            )
+            parent=self,
+            relief=None,
+            image=okImageList,
+            pos=(0.6, 0, -0.58),
+            text=TTLocalizer.FishGuiOk,
+            text_scale=TTLocalizer.FSGokButton,
+            text_pos=(0, -0.1),
+            command=self.__sellFish,
+        )
 
         buttons.removeNode()
 
@@ -81,13 +82,11 @@ class FishSellGUI(DirectFrame):
 
     def __sellFish(self):
         messenger.send(self.doneEvent, [1])
-    
+
     def __updateFishValue(self):
         fishTank = base.localAvatar.getFishTank()
         num = len(fishTank)
         value = fishTank.getTotalValue()
-        self['text'] = TTLocalizer.FishTankValue % { "name": base.localAvatar.getName(),
-                                                   "num": num, "value":value }
+        self['text'] = TTLocalizer.FishTankValue % {
+            "name": base.localAvatar.getName(), "num": num, "value": value}
         self.setText()
-        
-        

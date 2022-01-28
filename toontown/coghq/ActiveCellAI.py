@@ -1,6 +1,7 @@
 from otp.level import DistributedEntityAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class ActiveCellAI(DistributedEntityAI.DistributedEntityAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("ActiveCellAI")
 
@@ -23,7 +24,7 @@ class ActiveCellAI(DistributedEntityAI.DistributedEntityAI):
 
     def generate(self):
         DistributedEntityAI.DistributedEntityAI.generate(self)
-        
+
     def delete(self):
         self.notify.debug('delete')
         self.ignoreAll()
@@ -32,19 +33,19 @@ class ActiveCellAI(DistributedEntityAI.DistributedEntityAI):
     def getState(self):
         return self.state
 
-    def b_setState(self, state, objId = None):
+    def b_setState(self, state, objId=None):
         self.setState(state, objId)
         self.d_setState(state, objId)
-        
-    def d_setState(self, state, objId = None):
+
+    def d_setState(self, state, objId=None):
         # SDN: note, we should send all occupantIds instead
         # of just the current objId
         if not objId:
             objId = 0
         self.sendUpdate('setState', [state, objId])
-    
+
     def setState(self, state, objId=None):
-        assert(self.notify.debug("setState(%s,%s)" % (state,objId)))
+        assert(self.notify.debug(f"setState({state},{objId})"))
         # derived classes should override this method to do something meaningful
         # when the state of this grid cell changes
         self.state = state
@@ -55,8 +56,9 @@ class ActiveCellAI(DistributedEntityAI.DistributedEntityAI):
         else:
             try:
                 self.occupantIds.remove(objId)
-            except:
-                self.notify.warning("couldn't remove %s from active cell" % objId)
+            except BaseException:
+                self.notify.warning(
+                    f"couldn't remove {objId} from active cell")
 
     def getRowCol(self):
-        return [self.row,self.col]
+        return [self.row, self.col]

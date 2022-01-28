@@ -6,6 +6,7 @@ from otp.friends.PlayerFriendsManager import PlayerFriendsManager
 if __debug__:
     notify = directNotify.newCategory('TTPlayerFriendsManager')
 
+
 class TTPlayerFriendsManager(PlayerFriendsManager):
     """
     The Player Friends Manager is a global object.
@@ -23,8 +24,8 @@ class TTPlayerFriendsManager(PlayerFriendsManager):
 
     def __init__(self, cr):
         assert self.notify.debugCall()
-        PlayerFriendsManager.__init__(self,cr)
+        PlayerFriendsManager.__init__(self, cr)
 
-    def sendRequestInvite(self,playerId):
+    def sendRequestInvite(self, playerId):
         assert self.notify.debugCall()
-        self.sendUpdate("requestInvite", [0,playerId,False])
+        self.sendUpdate("requestInvite", [0, playerId, False])

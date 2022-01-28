@@ -1,5 +1,7 @@
 from otp.otpbase import OTPLocalizer
 import types
+
+
 class Emote:
 
     EmoteClear = -1
@@ -10,7 +12,7 @@ class Emote:
     # count goes above zero, it means that the emote is disabled.  Fo
     # a minigame might increment the reference count if it wants to e
     # disable emotes.
-    
+
     def __init__(self):
         self.emoteFunc = None
 
@@ -19,10 +21,11 @@ class Emote:
         if isinstance(index, str):
             index = OTPLocalizer.EmoteFuncDict[index]
 
-        if self.emoteFunc == None:
+        if self.emoteFunc is None:
             return 0
         elif self.emoteFunc[index][1] == 0:
             return 1
         return 0
+
 
 globalEmote = None

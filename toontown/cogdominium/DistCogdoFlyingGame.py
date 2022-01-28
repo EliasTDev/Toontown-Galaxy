@@ -5,6 +5,7 @@ from .DistCogdoGame import DistCogdoGame
 from . import CogdoFlyingGameGlobals
 from . import CogdoFlyingGameGlobals as Globals
 
+
 class DistCogdoFlyingGame(DistCogdoGame):
     notify = directNotify.newCategory('DistCogdoFlyingGame')
 
@@ -107,7 +108,7 @@ class DistCogdoFlyingGame(DistCogdoGame):
         DistCogdoGame.setToonDisconnect(self, toonId)
 
     def __handleUnexpectedExit(self, toonId):
-        self.notify.warning('%s: unexpected exit for %s' % (self.doId, toonId))
+        self.notify.warning(f'{self.doId}: unexpected exit for {toonId}')
         self.game.removePlayer(toonId)
 
     def enterLoaded(self):

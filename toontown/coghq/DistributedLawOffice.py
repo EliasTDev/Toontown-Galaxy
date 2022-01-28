@@ -17,9 +17,11 @@ from direct.distributed.DistributedObject import DistributedObject
 if __dev__:
     from otp.level import EditorGlobals
 
+
 class DistributedLawOffice(DistributedObject,
-                         LawOfficeBase.LawOfficeBase):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLawOffice')
+                           LawOfficeBase.LawOfficeBase):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedLawOffice')
 
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)
@@ -32,16 +34,13 @@ class DistributedLawOffice(DistributedObject,
         self.suitsInitialized = 0
         self.goonClipPlanes = {}
         self.level = None
-        
-
 
     def generate(self):
         self.notify.debug('generate')
         self.accept('lawOfficeFloorDone', self.handleFloorDone)
-        
 
     def delete(self):
-        #self.level.delete(self)
+        # self.level.delete(self)
         # remove factory menu from SpeedChat
         base.localAvatar.chatMgr.chatInputSpeedChat.removeFactoryMenu()
 
@@ -49,19 +48,15 @@ class DistributedLawOffice(DistributedObject,
         if __debug__:
             del base.factory
 
-        
     # required fields
+
     def setLawOfficeId(self, id):
         LawOfficeBase.LawOfficeBase.setLawOfficeId(self, id)
 
- 
-
     def levelAnnounceGenerate(self):
         self.notify.debug('levelAnnounceGenerate')
-        #where it really belongs, but...
+        # where it really belongs, but...
         # this could be cleaner.
-
-
 
     def handleSOSPanel(self, panel):
         # make a list of toons that are still in the factory
@@ -72,7 +67,7 @@ class DistributedLawOffice(DistributedObject,
             if base.cr.doId2do.get(avId):
                 avIds.append(avId)
         panel.setFactoryToonIdList(avIds)
-        
+
     def handleFloorDone(self):
         self.sendUpdate("readyForNextFloor")
 
@@ -81,15 +76,11 @@ class DistributedLawOffice(DistributedObject,
 
         base.localAvatar.setCameraCollisionsCanMove(0)
 
-
-
     def getTaskZoneId(self):
         return self.lawOfficeId
-        
+
     def startSignal(self):
         base.camera.setScale(base.localAvatar.getScale())
         localAvatar.setCameraFov(DefaultCameraFov)
         base.camera.clearMat()
         pass
-
-

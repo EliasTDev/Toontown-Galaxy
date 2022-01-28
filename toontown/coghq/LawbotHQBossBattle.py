@@ -4,13 +4,15 @@ from toontown.suit import DistributedLawbotBoss
 from direct.directnotify import DirectNotifyGlobal
 from toontown.coghq import CogHQBossBattle
 
+
 class LawbotHQBossBattle(CogHQBossBattle.CogHQBossBattle):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("LawbotHQBossBattle")
-    
+
     # special methods
     def __init__(self, loader, parentFSM, doneEvent):
-        CogHQBossBattle.CogHQBossBattle.__init__(self, loader, parentFSM, doneEvent)
+        CogHQBossBattle.CogHQBossBattle.__init__(
+            self, loader, parentFSM, doneEvent)
         # This is only used for magic words.
         self.teleportInPosHpr = (88, -214, 0, 210, 0, 0)
 
@@ -27,5 +29,3 @@ class LawbotHQBossBattle(CogHQBossBattle.CogHQBossBattle):
 
     def exit(self):
         CogHQBossBattle.CogHQBossBattle.exit(self)
-
-

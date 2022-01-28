@@ -3,14 +3,19 @@ from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import ToontownGlobals
 from pandac.PandaModules import *
 from . import BuildGeometry
-import random, time
+import random
+import time
 from math import *
 import math
 from toontown.golf import PhysicsWorldBase
 
-class DistributedPhysicsWorldAI(DistributedObjectAI.DistributedObjectAI, PhysicsWorldBase.PhysicsWorldBase):
 
-    notify = DirectNotifyGlobal.directNotify.newCategory("DistributedPhysicsWorldAI")
+class DistributedPhysicsWorldAI(
+        DistributedObjectAI.DistributedObjectAI,
+        PhysicsWorldBase.PhysicsWorldBase):
+
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedPhysicsWorldAI")
 
     def __init__(self, air):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
@@ -18,9 +23,9 @@ class DistributedPhysicsWorldAI(DistributedObjectAI.DistributedObjectAI, Physics
 
         self.commonHoldData = None
         self.storeAction = None
-        
+
         self.holdingUpObjectData = 0
-        
+
     def generate(self):
         DistributedObjectAI.DistributedObjectAI.generate(self)
         self.loadLevel()
@@ -29,14 +34,22 @@ class DistributedPhysicsWorldAI(DistributedObjectAI.DistributedObjectAI, Physics
     def delete(self):
         self.notify.debug('Calling DistributedObjectAI.delete')
         DistributedObjectAI.DistributedObjectAI.delete(self)
-        self.notify.debug('Calling PhysicsWorldBase.delete')        
+        self.notify.debug('Calling PhysicsWorldBase.delete')
         PhysicsWorldBase.PhysicsWorldBase.delete(self)
 
     def loadLevel(self):
         pass
-                
-    def createCommonObject(self, type, pos, hpr, sizeX = 0, sizeY = 0, moveDistance = 0):
-        commonObjectDatam = PhysicsWorldBase.PhysicsWorldBase.createCommonObject(self, type, None, pos, hpr, sizeX, sizeY, moveDistance)
+
+    def createCommonObject(
+            self,
+            type,
+            pos,
+            hpr,
+            sizeX=0,
+            sizeY=0,
+            moveDistance=0):
+        commonObjectDatam = PhysicsWorldBase.PhysicsWorldBase.createCommonObject(
+            self, type, None, pos, hpr, sizeX, sizeY, moveDistance)
         self.sendUpdate("clientCommonObject", commonObjectDatam)
 
     def updateCommonObjects(self):
@@ -44,19 +57,19 @@ class DistributedPhysicsWorldAI(DistributedObjectAI.DistributedObjectAI, Physics
 
     def doAction(self):
         print("doing Action")
-        #self.setupCommonObjects()
+        # self.setupCommonObjects()
         print("before performReadyAction")
         self.performReadyAction()
         #self.sendUpdate("setCommonObjects", [self.commonHoldData])
         self.storeAction = None
         self.commonHoldData = None
-        
+
     def upSetCommonObjects(self, objectData):
         self.holdingUpObjectData = 1
         self.commonHoldData = objectData
-        if  self.storeAction:
+        if self.storeAction:
             self.doAction()
-                
+
     def setupCommonObjects(self):
         print("setupCommonObjects")
         print((self.commonHoldData))
@@ -67,12 +80,7 @@ class DistributedPhysicsWorldAI(DistributedObjectAI.DistributedObjectAI, Physics
             pass
         else:
             self.useCommonObjectData(self.commonHoldData, 0)
-                
+
     def performReadyAction(self):
         print("Wrong performReadyAction")
         pass
-        
-
-            
-            
-        

@@ -7,10 +7,11 @@ from direct.directnotify import DirectNotifyGlobal
 from toontown.pets import PetConstants
 from toontown.toon import DistributedToonAI
 
+
 class PetGoal(FSM.FSM):
     notify = DirectNotifyGlobal.directNotify.newCategory("PetGoal")
     SerialNum = 0
-        
+
     def __init__(self):
         FSM.FSM.__init__(self, self.__class__.__name__)
         self.goalMgr = None
@@ -42,7 +43,7 @@ class PetGoal(FSM.FSM):
             'off',
             # final
             'off',
-            )
+        )
         self.fsm.enterInitialState()
 
     def destroy(self):
@@ -57,7 +58,8 @@ class PetGoal(FSM.FSM):
         self.goalMgr.removeGoal(self)
 
     def getDoneEvent(self):
-        return 'PetGoalDone-%s' % self.serialNum
+        return f'PetGoalDone-{self.serialNum}'
+
     def announceDone(self):
         if self.removeOnDone:
             self._removeSelf()
@@ -70,6 +72,7 @@ class PetGoal(FSM.FSM):
         self.pet = goalMgr.pet
         self.brain = self.pet.brain
         self.fsm.request('background')
+
     def clearGoalMgr(self):
         self.goalMgr = None
         self.pet = None
@@ -82,6 +85,7 @@ class PetGoal(FSM.FSM):
     # state handlers
     def enterOff(self):
         pass
+
     def exitOff(self):
         pass
 
@@ -89,12 +93,14 @@ class PetGoal(FSM.FSM):
         # we're active on the pet, but not the primary goal
         # we will always go through this state before entering Foreground state
         pass
+
     def exitBackground(self):
         pass
 
     def enterForeground(self):
         # we are currently the pet's primary goal
         pass
+
     def exitForeground(self):
         pass
 
@@ -102,12 +108,14 @@ class PetGoal(FSM.FSM):
         return self.__str__()
 
     def __str__(self):
-        return '%s: %s' % (self.__class__.__name__, self.getPriority())
+        return f'{self.__class__.__name__}: {self.getPriority()}'
+
 
 class InteractWithAvatar(PetGoal):
     """abstract base class for goals that require that we are next to an
     avatar"""
     SerialNum = 0
+
     def __init__(self, avatar):
         PetGoal.__init__(self)
         self.avatar = avatar
@@ -116,6 +124,7 @@ class InteractWithAvatar(PetGoal):
         self.transitionDoLaterName = '%s-doLater-%s' % (
             InteractWithAvatar.__name__,
             self.serialNum)
+
     def destroy(self):
         PetGoal.destroy(self)
         if hasattr(self, 'avatar'):
@@ -124,6 +133,7 @@ class InteractWithAvatar(PetGoal):
     def enterForeground(self):
         # we kick into action when we are the foreground
         self.request('Chase')
+
     def exitForeground(self):
         self.request('Off')
 
@@ -143,6 +153,7 @@ class InteractWithAvatar(PetGoal):
                 self.brain.getObserveEventAttendingAvStart(self.avatar.doId),
                 Functor(self.request, 'Interact'))
             self.brain._chase(self.avatar)
+
     def exitChase(self):
         self.ignore(
             self.brain.getObserveEventAttendingAvStart(self.avatar.doId))
@@ -155,6 +166,7 @@ class InteractWithAvatar(PetGoal):
                 self.brain.getObserveEventAttendingAvStop(self.avatar.doId),
                 Functor(self.request, 'Chase'))
         self.startInteract()
+
     def exitInteract(self):
         self.stopInteract()
         self.ignore(
@@ -163,6 +175,7 @@ class InteractWithAvatar(PetGoal):
     # override these
     def startInteract(self):
         pass
+
     def stopInteract(self):
         pass
 
@@ -172,12 +185,13 @@ class InteractWithAvatar(PetGoal):
         return True
 
     def __str__(self):
-        return '%s-%s: %s' % (self.__class__.__name__, self.avatar.doId,
-                              self.getPriority())
+        return f'{self.__class__.__name__}-{self.avatar.doId}: {self.getPriority()}'
+
 
 class Wander(PetGoal):
     def enterForeground(self):
         self.brain._wander()
+
 
 class ChaseAvatar(PetGoal):
     def __init__(self, avatar):
@@ -185,6 +199,7 @@ class ChaseAvatar(PetGoal):
         self.avatar = avatar
         self.isToon = isinstance(self.avatar,
                                  DistributedToonAI.DistributedToonAI)
+
     def destroy(self):
         PetGoal.destroy(self)
         if hasattr(self, 'avatar'):
@@ -215,10 +230,11 @@ class ChaseAvatar(PetGoal):
         self.brain._chase(self.avatar)
 
     def __str__(self):
-        return '%s-%s: %s' % (self.__class__.__name__, self.avatar.doId,
-                              self.getPriority())
+        return f'{self.__class__.__name__}-{self.avatar.doId}: {self.getPriority()}'
 
 # for debug
+
+
 class ChaseAvatarLeash(PetGoal):
     def __init__(self, avId):
         PetGoal.__init__(self)
@@ -235,8 +251,8 @@ class ChaseAvatarLeash(PetGoal):
             self._removeSelf()
 
     def __str__(self):
-        return '%s-%s: %s' % (self.__class__.__name__, self.avatar.doId,
-                              self.getPriority())
+        return f'{self.__class__.__name__}-{self.avatar.doId}: {self.getPriority()}'
+
 
 class FleeFromAvatar(PetGoal):
     def __init__(self, avatar):
@@ -259,8 +275,8 @@ class FleeFromAvatar(PetGoal):
         self.brain._chase(self.avatar)
 
     def __str__(self):
-        return '%s-%s: %s' % (self.__class__.__name__, self.avatar.doId,
-                              self.getPriority())
+        return f'{self.__class__.__name__}-{self.avatar.doId}: {self.getPriority()}'
+
 
 class DoTrick(InteractWithAvatar):
     def __init__(self, avatar, trickId):
@@ -277,6 +293,7 @@ class DoTrick(InteractWithAvatar):
         assert not goalMgr.hasTrickGoal()
         goalMgr._setHasTrickGoal(True)
         InteractWithAvatar.setGoalMgr(self, goalMgr)
+
     def clearGoalMgr(self):
         assert self.goalMgr.hasTrickGoal()
         self.goalMgr._setHasTrickGoal(False)
@@ -290,6 +307,7 @@ class DoTrick(InteractWithAvatar):
         self.brain._doTrick(self.trickId, self.avatar)
         self.trickDoneEvent = self.pet.actionFSM.getTrickDoneEvent()
         self.accept(self.trickDoneEvent, self.announceDone)
+
     def stopInteract(self):
         self.ignore(self.trickDoneEvent)
         del self.trickDoneEvent
@@ -297,5 +315,3 @@ class DoTrick(InteractWithAvatar):
     def __str__(self):
         return '%s-%s-%s: %s' % (self.__class__.__name__, self.avatar.doId,
                                  self.trickId, self.getPriority())
-
-    

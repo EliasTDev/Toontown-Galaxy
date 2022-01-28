@@ -16,11 +16,12 @@ from toontown.suit import Suit
 from toontown.quest import QuestParser
 from panda3d.toontown import DNAStorage, DNADoor
 
+
 class DistributedTutorialInterior(DistributedObject.DistributedObject):
 
     if __debug__:
         notify = DirectNotifyGlobal.directNotify.newCategory(
-                'DistributedTutorialInterior')
+            'DistributedTutorialInterior')
 
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
@@ -53,7 +54,7 @@ class DistributedTutorialInterior(DistributedObject.DistributedObject):
 
     def randomDNAItem(self, category, findFunc):
         codeCount = self.dnaStore.getNumCatalogCodes(category)
-        index = self.randomGenerator.randint(0, codeCount-1)
+        index = self.randomGenerator.randint(0, codeCount - 1)
         code = self.dnaStore.getCatalogCode(category, index)
         # findFunc will probably be findNode or findTexture
         return findFunc(code)
@@ -74,16 +75,16 @@ class DistributedTutorialInterior(DistributedObject.DistributedObject):
         let you have multiple nodes with the same name
 
         """
-        baseTag="random_"
-        npc=model.findAllMatches("**/"+baseTag+"???_*")
+        baseTag = "random_"
+        npc = model.findAllMatches("**/" + baseTag + "???_*")
         for i in range(npc.getNumPaths()):
-            np=npc.getPath(i)
-            name=np.getName()
+            np = npc.getPath(i)
+            name = np.getName()
 
-            b=len(baseTag)
-            category=name[b+4:]
-            key1=name[b]
-            key2=name[b+1]
+            b = len(baseTag)
+            category = name[b + 4:]
+            key1 = name[b]
+            key2 = name[b + 1]
 
             assert(key1 in ["m", "t"])
             assert(key2 in ["c", "o", "r"])
@@ -99,12 +100,14 @@ class DistributedTutorialInterior(DistributedObject.DistributedObject):
                     self.replaceRandomInModel(newNP)
             elif key1 == "t":
                 # ...texture.
-                texture=self.randomDNAItem(category, self.dnaStore.findTexture)
+                texture = self.randomDNAItem(
+                    category, self.dnaStore.findTexture)
                 assert(texture)
-                np.setTexture(texture,100)
-                newNP=np
+                np.setTexture(texture, 100)
+                newNP = np
             if key2 == "c":
-                if (category == "TI_wallpaper") or (category == "TI_wallpaper_border"):
+                if (category == "TI_wallpaper") or (
+                        category == "TI_wallpaper_border"):
                     self.randomGenerator.seed(self.zoneId)
                     newNP.setColorScale(
                         self.randomGenerator.choice(self.colors[category]))
@@ -113,8 +116,8 @@ class DistributedTutorialInterior(DistributedObject.DistributedObject):
                         self.randomGenerator.choice(self.colors[category]))
 
     def setup(self):
-        self.dnaStore=base.cr.playGame.dnaStore
-        self.randomGenerator=random.Random()
+        self.dnaStore = base.cr.playGame.dnaStore
+        self.randomGenerator = random.Random()
 
         # The math here is a little arbitrary.  I'm trying to get a
         # substantially different seed for each zondId, even on the
@@ -130,18 +133,23 @@ class DistributedTutorialInterior(DistributedObject.DistributedObject):
 
         self.randomGenerator.seed(self.zoneId)
 
-        self.interior = loader.loadModel("phase_3.5/models/modules/toon_interior_tutorial")
+        self.interior = loader.loadModel(
+            "phase_3.5/models/modules/toon_interior_tutorial")
         self.interior.reparentTo(render)
         dnaStore = DNAStorage()
-        node = loader.loadDNAFile(self.cr.playGame.hood.dnaStore, "phase_3.5/dna/tutorial_street.dna")
+        node = loader.loadDNAFile(
+            self.cr.playGame.hood.dnaStore,
+            "phase_3.5/dna/tutorial_street.dna")
         self.street = render.attachNewNode(node)
         self.street.flattenMedium()
-        self.street.setPosHpr(-17,42,-0.5,180,0,0)
+        self.street.setPosHpr(-17, 42, -0.5, 180, 0, 0)
         # Get rid of the building we are in
         self.street.find("**/tb2:toon_landmark_TT_A1_DNARoot").stash()
         # Get rid of the flashing doors on the HQ building
-        self.street.find("**/tb1:toon_landmark_hqTT_DNARoot/**/door_flat_0").stash()
-        # Get rid of collisions because we do not need them and they get in the way
+        self.street.find(
+            "**/tb1:toon_landmark_hqTT_DNARoot/**/door_flat_0").stash()
+        # Get rid of collisions because we do not need them and they get in the
+        # way
         self.street.findAllMatches("**/+CollisionNode").stash()
         self.skyFile = "phase_3.5/models/props/TT_sky"
         self.sky = loader.loadModel(self.skyFile)
@@ -165,16 +173,16 @@ class DistributedTutorialInterior(DistributedObject.DistributedObject):
         self.replaceRandomInModel(self.interior)
 
         # Door:
-        doorModelName="door_double_round_ul" # hack  zzzzzzz
+        doorModelName = "door_double_round_ul"  # hack  zzzzzzz
         # Switch leaning of the door:
         if doorModelName[-1:] == "r":
-            doorModelName=doorModelName[:-1]+"l"
+            doorModelName = doorModelName[:-1] + "l"
         else:
-            doorModelName=doorModelName[:-1]+"r"
-        door=self.dnaStore.findNode(doorModelName)
+            doorModelName = doorModelName[:-1] + "r"
+        door = self.dnaStore.findNode(doorModelName)
         # Determine where should we put the door:
-        door_origin=render.find("**/door_origin;+s")
-        doorNP=door.copyTo(door_origin)
+        door_origin = render.find("**/door_origin;+s")
+        doorNP = door.copyTo(door_origin)
         assert(not doorNP.isEmpty())
         assert(not door_origin.isEmpty())
         # The rooms are too small for doors:
@@ -182,7 +190,7 @@ class DistributedTutorialInterior(DistributedObject.DistributedObject):
         # Move the origin away from the wall so it does not shimmer
         # We do this instead of decals
         door_origin.setPos(door_origin, 0, -0.025, 0)
-        color=self.randomGenerator.choice(self.colors["TI_door"])
+        color = self.randomGenerator.choice(self.colors["TI_door"])
         DNADoor.setupDoor(doorNP,
                           self.interior, door_origin,
                           self.dnaStore,
@@ -207,7 +215,8 @@ class DistributedTutorialInterior(DistributedObject.DistributedObject):
         # of where to stand, but in this case the npc must be created first so the tutorial
         # can get a handle on him. Instead, I'll let the npc be created first which means
         # he will not find his origin. We'll just do that work here again.
-        npcOrigin = self.interior.find("**/npc_origin_" + repr(self.npc.posIndex))
+        npcOrigin = self.interior.find(
+            "**/npc_origin_" + repr(self.npc.posIndex))
         # Now he's no longer parented to render, but no one minds.
         if not npcOrigin.isEmpty():
             self.npc.reparentTo(npcOrigin)
@@ -216,7 +225,8 @@ class DistributedTutorialInterior(DistributedObject.DistributedObject):
         # TODO: no suit if you have already beat him
         self.createSuit()
 
-        self.mickeyMovie = QuestParser.NPCMoviePlayer("tutorial_mickey", base.localAvatar, self.npc)
+        self.mickeyMovie = QuestParser.NPCMoviePlayer(
+            "tutorial_mickey", base.localAvatar, self.npc)
         self.acceptOnce("enterTutorialInterior", self.mickeyMovie.play)
 
     def createSuit(self):
@@ -226,31 +236,27 @@ class DistributedTutorialInterior(DistributedObject.DistributedObject):
         suitDNA.newSuit('f')
         self.suit.setDNA(suitDNA)
         self.suit.loop('neutral')
-        self.suit.setPosHpr(-20,8,0,0,0,0)
+        self.suit.setPosHpr(-20, 8, 0, 0, 0, 0)
         self.suit.reparentTo(self.interior)
 
         self.suitWalkTrack = Sequence(
-            self.suit.hprInterval(0.1, Vec3(0,0,0)),
+            self.suit.hprInterval(0.1, Vec3(0, 0, 0)),
             Func(self.suit.loop, 'walk'),
-            self.suit.posInterval(2, Point3(-20,20,0)),
+            self.suit.posInterval(2, Point3(-20, 20, 0)),
             Func(self.suit.loop, 'neutral'),
             Wait(1.0),
-            self.suit.hprInterval(0.1, Vec3(180,0,0)),
+            self.suit.hprInterval(0.1, Vec3(180, 0, 0)),
             Func(self.suit.loop, 'walk'),
-            self.suit.posInterval(2, Point3(-20,10,0)),
+            self.suit.posInterval(2, Point3(-20, 10, 0)),
             Func(self.suit.loop, 'neutral'),
             Wait(1.0),
-            )
+        )
         self.suitWalkTrack.loop()
 
     def setZoneIdAndBlock(self, zoneId, block):
-        self.zoneId=zoneId
-        self.block=block
+        self.zoneId = zoneId
+        self.block = block
 
     def setTutorialNpcId(self, npcId):
         self.npcId = npcId
         self.npc = self.cr.doId2do[npcId]
-
-
-
-

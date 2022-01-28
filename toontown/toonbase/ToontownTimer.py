@@ -1,6 +1,7 @@
 from otp.otpbase.OTPTimer import OTPTimer
 from pandac.PandaModules import *
 
+
 class ToontownTimer(OTPTimer):
     """
     Implements the generic onscreen Toontown timer.
@@ -9,7 +10,7 @@ class ToontownTimer(OTPTimer):
     def __init__(self, useImage=True, highlightNearEnd=True):
         # Initialize the parental stuff
         OTPTimer.__init__(self, useImage, highlightNearEnd)
-        self.initialiseoptions(ToontownTimer)   
+        self.initialiseoptions(ToontownTimer)
 
     def getImage(self):
         """
@@ -18,7 +19,7 @@ class ToontownTimer(OTPTimer):
         function is useful to prevent loading this image (and leaking
         it) every time a ToontownTimer is created.
         """
-        if ToontownTimer.ClockImage == None:
+        if ToontownTimer.ClockImage is None:
             model = loader.loadModel("phase_3.5/models/gui/clock_gui")
             ToontownTimer.ClockImage = model.find("**/alarm_clock")
             model.removeNode()

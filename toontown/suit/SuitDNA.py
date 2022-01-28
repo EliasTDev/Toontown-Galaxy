@@ -25,35 +25,36 @@ suitHeadTypes = [
     "sc", "pp", "tw", "bc", "nc", "mb", "ls", "rb",
     # sales
     "cc", "tm", "nd", "gh", "ms", "tf", "m", "mh",
-    ]
+]
 
-suitATypes = [ "ym", "hh", "tbc", "dt", "bs", "le", "bw", "pp", "nc",
-               "rb", "nd", "tf", "m", "mh" ]
+suitATypes = ["ym", "hh", "tbc", "dt", "bs", "le", "bw", "pp", "nc",
+              "rb", "nd", "tf", "m", "mh"]
 
-suitBTypes = [ "p", "ds", "b", "ac", "sd", "bc", "ls", "tm", "ms" ]
+suitBTypes = ["p", "ds", "b", "ac", "sd", "bc", "ls", "tm", "ms"]
 
-suitCTypes = [ "f", "mm", "cr", "bf", "sc", "tw", "mb", "cc", "gh" ]
+suitCTypes = ["f", "mm", "cr", "bf", "sc", "tw", "mb", "cc", "gh"]
 
-suitDepts = [ "c", "l", "m", "s" ]
-suitDeptFullnames = {"c" : TTLocalizer.Bossbot,
-                     "l" : TTLocalizer.Lawbot,
-                     "m" : TTLocalizer.Cashbot,
-                     "s" : TTLocalizer.Sellbot,
+suitDepts = ["c", "l", "m", "s"]
+suitDeptFullnames = {"c": TTLocalizer.Bossbot,
+                     "l": TTLocalizer.Lawbot,
+                     "m": TTLocalizer.Cashbot,
+                     "s": TTLocalizer.Sellbot,
                      }
-suitDeptFullnamesP = {"c" : TTLocalizer.BossbotP,
-                      "l" : TTLocalizer.LawbotP,
-                      "m" : TTLocalizer.CashbotP,
-                      "s" : TTLocalizer.SellbotP,
+suitDeptFullnamesP = {"c": TTLocalizer.BossbotP,
+                      "l": TTLocalizer.LawbotP,
+                      "m": TTLocalizer.CashbotP,
+                      "s": TTLocalizer.SellbotP,
                       }
 corpPolyColor = VBase4(0.95, 0.75, 0.75, 1.0)
 legalPolyColor = VBase4(0.75, 0.75, 0.95, 1.0)
 moneyPolyColor = VBase4(0.65, 0.95, 0.85, 1.0)
 salesPolyColor = VBase4(0.95, 0.75, 0.95, 1.0)
 
-suitsPerLevel = [1,1,1,1,1,1,1,1]
+suitsPerLevel = [1, 1, 1, 1, 1, 1, 1, 1]
 suitsPerDept = 8
 
 goonTypes = ["pg", "sg"]
+
 
 def getSuitBodyType(name):
     """getSuitBodyType(string):
@@ -68,6 +69,7 @@ def getSuitBodyType(name):
     else:
         print("Unknown body type for suit name: ", name)
 
+
 def getSuitDept(name):
     """getSuitDept(string):
     Given a suit name, return its department name as a string
@@ -75,15 +77,16 @@ def getSuitDept(name):
     index = suitHeadTypes.index(name)
     if (index < suitsPerDept):
         return suitDepts[0]
-    elif (index < suitsPerDept*2):
+    elif (index < suitsPerDept * 2):
         return suitDepts[1]
-    elif (index < suitsPerDept*3):
+    elif (index < suitsPerDept * 3):
         return suitDepts[2]
-    elif (index < suitsPerDept*4):
+    elif (index < suitsPerDept * 4):
         return suitDepts[3]
     else:
         print("Unknown dept for suit name: ", name)
         return None
+
 
 def getDeptFullname(dept):
     """getDeptFullname(string):
@@ -91,17 +94,20 @@ def getDeptFullname(dept):
     """
     return suitDeptFullnames[dept]
 
+
 def getDeptFullnameP(dept):
     """getDeptFullnameP(string):
     Given a dept code, return the fullname (plural)
     """
     return suitDeptFullnamesP[dept]
 
+
 def getSuitDeptFullname(name):
     """getSuitDept(string):
     Given a suit code, return the fullname
     """
     return suitDeptFullnames[getSuitDept(name)]
+
 
 def getSuitType(name):
     """getSuitType(string):
@@ -110,14 +116,17 @@ def getSuitType(name):
     index = suitHeadTypes.index(name)
     return (index % suitsPerDept) + 1
 
+
 def getRandomSuitType(level, rng=random):
     """ given a suit level, return a randomly-chosen suit type """
-    return random.randint(max(level-4, 1 ), min(level, 8))
+    return random.randint(max(level - 4, 1), min(level, 8))
+
 
 def getRandomSuitByDept(dept):
     """ given a suit dept, return a randomly-chosen suit """
     deptNumber = suitDepts.index(dept)
-    return suitHeadTypes[(suitsPerDept*deptNumber) + random.randint(0,7)]
+    return suitHeadTypes[(suitsPerDept * deptNumber) + random.randint(0, 7)]
+
 
 class SuitDNA(AvatarDNA.AvatarDNA):
     """SuitDNA class: contains methods for describing avatars with a
@@ -132,20 +141,20 @@ class SuitDNA(AvatarDNA.AvatarDNA):
         dna.newSuit('ym')         # make 'Yes Man' dna
         dna.newSuitRandom(3)      # make a random level 3 suit
         dna.newSuitRandom(3, 'l') # make a random level 3 legal suit
-        
+
     """
     # special methods
-    
+
     def __init__(self, str=None, type=None, dna=None, r=None, b=None, g=None):
         """__init__(self, string=None, string=None, string()=None, float=None,
         float=None, float=None)
         SuitDNA contructor - see class comment for usage
         """
         # have they passed in a stringified DNA object?
-        if (str != None):
+        if (str is not None):
             self.makeFromNetString(str)
         # have they specified what type of DNA?
-        elif (type != None):
+        elif (type is not None):
             if (type == 's'):  # Suit
                 self.newSuit()
             else:
@@ -163,12 +172,12 @@ class SuitDNA(AvatarDNA.AvatarDNA):
             return "type = %s\nbody = %s, dept = %s, name = %s" % \
                    ("suit", self.body, self.dept, self.name)
         elif (self.type == 'b'):
-            return "type = boss cog\ndept = %s" % (self.dept)
+            return f"type = boss cog\ndept = {self.dept}"
         else:
             return "type undefined"
 
-
     # stringification methods
+
     def makeNetString(self):
         dg = PyDatagram()
         dg.addFixedString(self.type, 1)
@@ -185,8 +194,8 @@ class SuitDNA(AvatarDNA.AvatarDNA):
         return dg.getMessage()
 
     def makeFromNetString(self, string):
-        dg=PyDatagram(string)
-        dgi=PyDatagramIterator(dg)
+        dg = PyDatagram(string)
+        dgi = PyDatagramIterator(dg)
         self.type = dgi.getFixedString(1)
         if (self.type == 's'):  # Suit
             self.name = dgi.getFixedString(3)
@@ -198,14 +207,14 @@ class SuitDNA(AvatarDNA.AvatarDNA):
             notify.error("unknown avatar type: ", self.type)
 
         return None
-    
+
     def __defaultGoon(self):
         """__defaultChar(self)
         Make a default character dna
         """
         self.type = 'g'
         self.name = goonTypes[0]
-        
+
     def __defaultSuit(self):
         """__defaultSuit(self)
         Make a default suit dna
@@ -220,7 +229,7 @@ class SuitDNA(AvatarDNA.AvatarDNA):
         If no suit name specified, set the dna for the default suit
         else set the dna for suit specified by the given string.
         """
-        if (name == None):
+        if (name is None):
             self.__defaultSuit()
         else:
             self.type = "s"
@@ -238,22 +247,22 @@ class SuitDNA(AvatarDNA.AvatarDNA):
         is specified) and random dept (again, unless specified)
         """
         self.type = "s"
-        
-        if (level==None):
+
+        if (level is None):
             # pick a random level
             level = random.choice(list(range(1, len(suitsPerLevel))))
         else:
             # make sure supplied one is valid
             if (level < 0 or level > len(suitsPerLevel)):
-                notify.error("Invalid suit level: %d" % level)                
+                notify.error("Invalid suit level: %d" % level)
 
-        if (dept == None):
+        if (dept is None):
             # pick a random dept
             dept = random.choice(suitDepts)
         else:
             # make sure supplied one is valid
             assert dept in suitDepts
-                
+
         # calculate range to choose from based on the level and dept
         self.dept = dept
         index = suitDepts.index(dept)
@@ -264,32 +273,32 @@ class SuitDNA(AvatarDNA.AvatarDNA):
                 offset = offset + suitsPerLevel[i - 1]
         bottom = base + offset
         top = bottom + suitsPerLevel[level - 1]
-        self.name = suitHeadTypes[random.choice(list(range(bottom,top)))] 
-        self.body = getSuitBodyType(self.name)        
+        self.name = suitHeadTypes[random.choice(list(range(bottom, top)))]
+        self.body = getSuitBodyType(self.name)
 
-    def newGoon(self, name = None):
+    def newGoon(self, name=None):
         """newGoon(self, type)
         Return the dna for the goon of this name.  If no name is given
         return the default goon.
         """
-        if type == None:
+        if type is None:
             self.__defaultGoon()
         else:
             self.type = 'g'
-            if (name in  goonTypes):
+            if (name in goonTypes):
                 self.name = name
             else:
                 notify.error("unknown goon type: ", name)
-        
+
     def getType(self):
         """getType(self)
         Return which type of actor this dna represents.
         """
         if (self.type == 's'):
-            #suit type
+            # suit type
             type = "suit"
         elif (self.type == 'b'):
-            #boss type
+            # boss type
             type = "boss"
         else:
             notify.error("Invalid DNA type: ", self.type)

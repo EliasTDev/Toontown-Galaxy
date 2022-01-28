@@ -11,11 +11,12 @@ from . import CashbotHQExterior
 from . import CashbotHQBossBattle
 from pandac.PandaModules import DecalEffect
 
+
 class CashbotCogHQLoader(CogHQLoader.CogHQLoader):
 
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("CashbotCogHQLoader")
-    #notify.setDebug(True)
+    # notify.setDebug(True)
 
     def __init__(self, hood, parentFSMState, doneEvent):
         CogHQLoader.CogHQLoader.__init__(self, hood, parentFSMState, doneEvent)
@@ -24,7 +25,7 @@ class CashbotCogHQLoader(CogHQLoader.CogHQLoader):
                                       self.enterMintInterior,
                                       self.exitMintInterior,
                                       ['quietZone',
-                                       'cogHQExterior', # Tunnel
+                                       'cogHQExterior',  # Tunnel
                                        ]))
         for stateName in ['start', 'cogHQExterior', 'quietZone']:
             state = self.fsm.getStateNamed(stateName)
@@ -50,10 +51,11 @@ class CashbotCogHQLoader(CogHQLoader.CogHQLoader):
 
     def loadPlaceGeom(self, zoneId):
 
-        self.notify.info("loadPlaceGeom: %s" % zoneId)
+        self.notify.info(f"loadPlaceGeom: {zoneId}")
 
-        # We shoud not look at the last 2 digits to match against these constants
-        zoneId = (zoneId - (zoneId %100))
+        # We shoud not look at the last 2 digits to match against these
+        # constants
+        zoneId = (zoneId - (zoneId % 100))
 
         if zoneId == ToontownGlobals.CashbotHQ:
             self.geom = loader.loadModel(self.cogHQExteriorModelPath)
@@ -67,13 +69,13 @@ class CashbotCogHQLoader(CogHQLoader.CogHQLoader):
             backgroundGeom = self.geom.find('**/EntranceFrameFront')
             backgroundGeom.node().setEffect(DecalEffect.make())
             signText = DirectGui.OnscreenText(
-                text = TTLocalizer.DonaldsDreamland[-1],
-                font = ToontownGlobals.getSuitFont(),
-                scale = 3,
-                fg = (0.87, 0.87, 0.87, 1), 
+                text=TTLocalizer.DonaldsDreamland[-1],
+                font=ToontownGlobals.getSuitFont(),
+                scale=3,
+                fg=(0.87, 0.87, 0.87, 1),
                 # required for DecalEffect (must be a GeomNode, not a TextNode)
                 mayChange=False,
-                parent = backgroundGeom)
+                parent=backgroundGeom)
             signText.setPosHpr(locator, 0, 0, 0, 0, 0, 0)
             signText.setDepthWrite(0)
 
@@ -83,12 +85,11 @@ class CashbotCogHQLoader(CogHQLoader.CogHQLoader):
         # Note: the factory interior has a dynamically allocated zone but
         # that is ok because we do not need to load any models - they all
         # get loaded by the distributed object
-            
+
         else:
-            self.notify.warning("loadPlaceGeom: unclassified zone %s" % zoneId)
-            
+            self.notify.warning(f"loadPlaceGeom: unclassified zone {zoneId}")
+
         CogHQLoader.CogHQLoader.loadPlaceGeom(self, zoneId)
-    
 
     def unload(self):
         CogHQLoader.CogHQLoader.unload(self)
@@ -101,7 +102,7 @@ class CashbotCogHQLoader(CogHQLoader.CogHQLoader):
         self.mintId = requestStatus['mintId']
         self.enterPlace(requestStatus)
         # spawnTitleText is done by MintInterior once the mint shows up
-        
+
     def exitMintInterior(self):
         self.exitPlace()
         self.placeClass = None
@@ -109,6 +110,6 @@ class CashbotCogHQLoader(CogHQLoader.CogHQLoader):
 
     def getExteriorPlaceClass(self):
         return CashbotHQExterior.CashbotHQExterior
-    
+
     def getBossPlaceClass(self):
         return CashbotHQBossBattle.CashbotHQBossBattle

@@ -5,12 +5,13 @@ from toontown.toonbase.ToonBaseGlobal import *
 from pandac.PandaModules import NodePath
 from . import RingTrack
 
+
 class Ring(NodePath):
     """ring for ring minigame"""
 
-    def __init__(self, moveTrack, tOffset, posScale = 1.):
+    def __init__(self, moveTrack, tOffset, posScale=1.):
         NodePath.__init__(self)
-        self.assign(hidden.attachNewNode(\
+        self.assign(hidden.attachNewNode(
             base.localAvatar.uniqueName('ring')))
 
         self.setMoveTrack(moveTrack)

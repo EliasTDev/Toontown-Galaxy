@@ -13,14 +13,15 @@ from .GolfGreenGameGlobals import *
 import random
 import time
 
-class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI, 
-                                NodePath,
-                                BasicEntities.NodePathAttribs):
-                                
+
+class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
+                                 NodePath,
+                                 BasicEntities.NodePathAttribs):
+
     def __init__(self, level, entId):
         BattleBlockerAI.BattleBlockerAI.__init__(self, level, entId)
         random.seed(time.time() * entId)
-        
+
         node = hidden.attachNewNode('DistributedLaserFieldAI')
         NodePath.__init__(self, node)
         if not hasattr(self, 'switchId'):
@@ -28,7 +29,7 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
         self.gridScale = 1
         #print("setting Grid Game Initial Roll")
 
-        #self.setGridGame(self.gridGame)
+        # self.setGridGame(self.gridGame)
         self.enabled = 1
         self.hasShownSuits = 0
         self.healReady = 1
@@ -36,8 +37,8 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
         self.canButton = 1
         self.allBoardsClear = 0
         self.challengeDefeated = False
-        self.title = ("MemTag: This is a golfGreenGame %s" % (random.random()))    
-        
+        self.title = f"MemTag: This is a golfGreenGame {random.random()}"
+
         self.translateData = {}
         self.translateData['r'] = 0
         self.translateData['b'] = 1
@@ -51,33 +52,32 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
         self.translateData['s'] = 9
         self.translateData['R'] = 10
         self.translateData['B'] = 11
-        
-        
+
         self.preData = []
         self.boardList = []
-        
+
         self.joinedToons = []
         self.everJoinedToons = []
         #simbase.ggg = self
         self.startTime = None
         self.totalTime = 1180.0
         self.DamageOnFailure = 20.0
-        
+
     def announceGenerate(self):
         """Load fields dependent on required fields."""
-        BattleBlockerAI.BattleBlockerAI.announceGenerate(self)        
-        self.totalTime = self.timeToPlay 
-        
+        BattleBlockerAI.BattleBlockerAI.announceGenerate(self)
+        self.totalTime = self.timeToPlay
+
         numToons = 0
-        
+
         if hasattr(self, 'level'):
-            numToons =  len(self.level.presentAvIds)
-        
+            numToons = len(self.level.presentAvIds)
+
         numBoards = self.puzzleBase + (numToons * self.puzzlePerPlayer)
         boardSelect = list(range(0, len(gameBoards)))
-        
+
         didGetLast = 1
-        
+
         for index in range(numBoards):
             choice = random.choice(boardSelect)
             if not didGetLast:
@@ -85,20 +85,22 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
                 choice = len(gameBoards) - 1
             self.preData.append(gameBoards[choice])
             boardSelect.remove(choice)
-            self.boardList.append([[],index,index, None])
-        
+            self.boardList.append([[], index, index, None])
+
         self.boardData = []
         self.attackPatterns = []
         self.processPreData()
-        
+
     def processPreData(self):
         for board in self.preData:
             x = []
             for rowIndex in range(1, len(board)):
                 for columnIndex in range(len(board[rowIndex])):
-                    color = self.translateData.get(board[rowIndex][columnIndex])
-                    if color != None:
-                        x.append((len(board[rowIndex]) - (columnIndex + 1), rowIndex - 1, color))
+                    color = self.translateData.get(
+                        board[rowIndex][columnIndex])
+                    if color is not None:
+                        x.append(
+                            (len(board[rowIndex]) - (columnIndex + 1), rowIndex - 1, color))
             self.boardData.append(x)
         for board in self.preData:
             attackString = board[0]
@@ -106,47 +108,53 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
             for ball in attackString:
                 color = self.translateData.get(ball)
                 if (color) or (color == 0):
-                    place = random.choice(list(range(0,len(attackPattern) + 1)))
+                    place = random.choice(
+                        list(range(0, len(attackPattern) + 1)))
                     attackPattern.insert(place, color)
-                    place = random.choice(list(range(0,len(attackPattern) + 1)))
+                    place = random.choice(
+                        list(range(0, len(attackPattern) + 1)))
                     attackPattern.insert(place, color)
             self.attackPatterns.append(attackPattern)
-                
-        
+
     def startTimer(self):
         self.startTime = globalClockDelta.getFrameNetworkTime()
-        taskMgr.doMethodLater(self.totalTime, self.__handleTimeOut, self.taskName("GolfGreenGameTimeout"))
+        taskMgr.doMethodLater(
+            self.totalTime,
+            self.__handleTimeOut,
+            self.taskName("GolfGreenGameTimeout"))
         self.sendUpdate('setTimerStart', [self.totalTime, self.startTime])
         #taskMgr.doMethodLater(1.0, self.__printTime, self.taskName("GolfGreenGameTimeout Print"))
         #import pdb; pdb.set_trace()
-        
+
     def __printTime(self, task):
-        print(("Time Left %s" % (self.getTimeLeft())))
-        taskMgr.doMethodLater(1.0, self.__printTime, self.taskName("GolfGreenGameTimeout Print"))
+        print(f"Time Left {self.getTimeLeft()}")
+        taskMgr.doMethodLater(
+            1.0,
+            self.__printTime,
+            self.taskName("GolfGreenGameTimeout Print"))
         return task.done
-        
-        
-    def __handleTimeOut(self, task = None):
-        #print("handleTimeOut")
+
+    def __handleTimeOut(self, task=None):
+        # print("handleTimeOut")
         taskMgr.remove(self.taskName("GolfGreenGameTimeout"))
         self.__handleFinsihed(0)
-        
+
         return task.done
-        
+
     def getTimeLeft(self):
-        #print("getTimeLeft")
-        if self.startTime == None:
+        # print("getTimeLeft")
+        if self.startTime is None:
             #print("self.startTime == None")
             #print (self.totalTime)
             return (self.totalTime)
         else:
-            #print("else")
+            # print("else")
             timePassed = globalClockDelta.localElapsedTime(self.startTime)
             timeLeft = self.totalTime - timePassed
             #print (timeLeft)
             #import pdb; pdb.set_trace()
             return (timeLeft)
-        
+
     def choosePattern(self):
         dataSize = len(self.boardData)
         indexChoice = int(random.random() * dataSize)
@@ -156,19 +164,19 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
             if self.boardList[boardIndex][0] == "closed":
                 pass
             else:
-                if (boardToAssign == None) or (len(self.boardList[boardIndex][0]) < len(self.boardList[boardToAssign][0])):
+                if (boardToAssign is None) or (
+                        len(self.boardList[boardIndex][0]) < len(self.boardList[boardToAssign][0])):
                     boardToAssign = boardIndex
                 elif (len(self.boardList[boardIndex][0]) == len(self.boardList[boardToAssign][0])):
                     choice = random.choice(list(range(2)))
                     if choice:
-                       boardToAssign = boardIndex 
-                    
-        if boardToAssign == None:
+                        boardToAssign = boardIndex
+
+        if boardToAssign is None:
             pass
             #import pdb; pdb.set_trace()
         return boardToAssign
-        
-        
+
     def checkForAssigned(self, avId):
         for index in range(len(self.boardList)):
             board = self.boardList[index]
@@ -177,13 +185,14 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
             elif avId in board[0]:
                 return index
         return None
-        
-        
+
     def leaveGame(self):
         senderId = self.air.getAvatarIdFromSender()
         if senderId in self.joinedToons:
             self.joinedToons.remove(senderId)
-            self.sendUpdate('acceptJoin', [self.totalTime, self.startTime,self.joinedToons])
+            self.sendUpdate(
+                'acceptJoin', [
+                    self.totalTime, self.startTime, self.joinedToons])
             #print("leave attempt success")
         for boardDatum in self.boardList:
             if boardDatum[0] == "closed":
@@ -191,8 +200,7 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
             else:
                 if senderId in boardDatum[0]:
                     boardDatum[0].remove(senderId)
-        
-        
+
     def requestJoin(self):
         if self.allBoardsClear:
             self.sendUpdate('acceptJoin', [0.0, 0.0, [0]])
@@ -200,25 +208,27 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
         #print("processing join request")
         senderId = self.air.getAvatarIdFromSender()
         if senderId not in self.joinedToons:
-            if self.startTime == None:
+            if self.startTime is None:
                 self.startTimer()
             self.joinedToons.append(senderId)
             if not (senderId in self.everJoinedToons):
                 self.everJoinedToons.append(senderId)
-            self.sendUpdate('acceptJoin', [self.totalTime, self.startTime, self.joinedToons])
+            self.sendUpdate(
+                'acceptJoin', [
+                    self.totalTime, self.startTime, self.joinedToons])
             self.sendScoreData()
             #print("Join attempt success")
-                          
+
     def requestBoard(self, boardVerify):
-        #print self.boardList
-        #print "requestBoard"
+        # print self.boardList
+        # print "requestBoard"
         senderId = self.air.getAvatarIdFromSender()
         assigned = self.checkForAssigned(senderId)
-        if assigned != None:
+        if assigned is not None:
             if self.boardList[assigned][0] == "closed":
                 return
             if boardVerify:
-                #print "success"
+                # print "success"
                 toon = simbase.air.doId2do.get(senderId)
                 if toon:
                     self.addGag(senderId)
@@ -227,37 +237,42 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
                 for avId in self.boardList[assigned][0]:
                     if avId != senderId:
                         #print("sending board clear to %s" % (avId))
-                        self.sendUpdateToAvatarId(avId, "boardCleared", [senderId])
+                        self.sendUpdateToAvatarId(
+                            avId, "boardCleared", [senderId])
                 self.boardList[assigned][0] = "closed"
                 self.boardList[assigned][3] = senderId
                 self.sendScoreData()
             else:
-                #print "failure"
+                # print "failure"
                 self.boardList[assigned][0].remove(senderId)
         boardIndex = self.choosePattern()
-        if boardIndex == None:
+        if boardIndex is None:
             self.__handleFinsihed(1)
         else:
             self.boardList[boardIndex][0].append(senderId)
             self.sendUpdateToAvatarId(senderId,
-                              'startBoard', [self.boardData[self.boardList[boardIndex][1]], self.attackPatterns[self.boardList[boardIndex][2]]])
-                              
+                                      'startBoard',
+                                      [self.boardData[self.boardList[boardIndex][1]],
+                                       self.attackPatterns[self.boardList[boardIndex][2]]])
+
     def addGag(self, avId):
         av = simbase.air.doId2do.get(avId)
         if av:
             level = ToontownBattleGlobals.LAST_REGULAR_GAG_LEVEL
-            
+
             track = int(random.random() * ToontownBattleGlobals.NUM_GAG_TRACKS)
-            
+
             while not av.hasTrackAccess(track):
-                track = int(random.random() * ToontownBattleGlobals.NUM_GAG_TRACKS)
-            
+                track = int(
+                    random.random() *
+                    ToontownBattleGlobals.NUM_GAG_TRACKS)
+
             # only add up to max carry
             maxGags = av.getMaxCarry()
             av.inventory.calcTotalProps()
             numGags = av.inventory.totalProps
-            numReward = min(1, maxGags-numGags)
-            
+            numReward = min(1, maxGags - numGags)
+
             # start adding from the indicated level down, so we max out
             # on higher level gags first
             while numReward > 0 and level >= 0:
@@ -266,21 +281,19 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
                     level -= 1
                 else:
                     numReward -= 1
-                    self.sendUpdateToAvatarId(avId, "informGag", [track, level])
+                    self.sendUpdateToAvatarId(
+                        avId, "informGag", [track, level])
 
             # Finally, set the inventory on the client
             av.d_setInventory(av.inventory.makeNetString())
-            
 
-        
-        
     def __handleFinsihed(self, success):
         #print ("ALL BOARDS CLEAR!!! %s" % (success))
         self.allBoardsClear = 1
-        self.sendUpdate("signalDone",[success])
+        self.sendUpdate("signalDone", [success])
         self.switchFire()
         taskMgr.remove(self.taskName("GolfGreenGameTimeout"))
-        
+
         if success:
             for avId in self.joinedToons:
                 self.addGag(avId)
@@ -297,9 +310,8 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
                     av = simbase.air.doId2do.get(avId)
                     if av:
                         av.takeDamage(self.DamageOnFailure, quietly=0)
-                        room.sendUpdate('forceOuch',[self.DamageOnFailure])
-        
-        
+                        room.sendUpdate('forceOuch', [self.DamageOnFailure])
+
         if not self.challengeDefeated:
             self.challengeDefeated = True
             # unlock the door blocking this room
@@ -310,20 +322,15 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
                 room.challengeDefeated()
                 # tell the lock that it should open
                 eventName = self.getOutputEventName()
-                messenger.send(eventName,[1])
-                
+                messenger.send(eventName, [1])
 
-                
-        
     def switchFire(self):
-        #print("switchFire")
+        # print("switchFire")
         if self.switchId != 0:
             switch = self.level.getEntity(self.switchId)
             if switch:
                 switch.setIsOn(1)
 
-
-        
     def generate(self):
         BattleBlockerAI.BattleBlockerAI.generate(self)
         # if we are attached to a switch, listen for on/off events
@@ -334,18 +341,17 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
         else:
             #print("no switch")
             pass
-                        
+
         self.detectName = (("golfGreenGame %s") % (self.doId))
         taskMgr.doMethodLater(1.0, self.__detect, self.detectName)
         self.setPos(self.pos)
         self.setHpr(self.hpr)
 
-        
     def registerBlocker(self):
         BattleBlockerAI.BattleBlockerAI.registerBlocker(self)
         if hasattr(self, 'hideSuits'):
             self.hideSuits()
-        
+
     def delete(self):
         #del self.pos
         taskMgr.remove(self.detectName)
@@ -353,13 +359,11 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
         BattleBlockerAI.BattleBlockerAI.delete(self)
 
     def destroy(self):
-        self.notify.info('destroy entity(laserField) %s' % self.entId)
+        self.notify.info(f'destroy entity(laserField) {self.entId}')
         BattleBlockerAI.BattleBlockerAI.destroy(self)
-        
 
-        
     def __detect(self, task):
-        #print "detect beat"
+        # print "detect beat"
         isThereAnyToons = False
         if hasattr(self, 'level'):
             toonInRange = 0
@@ -373,25 +377,20 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
                 self.__run()
 
         return Task.done
-        
 
     def __run(self):
         pass
-        
 
-        
     def reactToSwitch(self, on):
         pass
-    
-        
+
     def setBattleFinished(self):
         #print("battle Finished")
         BattleBlockerAI.BattleBlockerAI.setBattleFinished(self)
-        messenger.send(self.getOutputEventName(), [1]) #sends a message like a switch
+        # sends a message like a switch
+        messenger.send(self.getOutputEventName(), [1])
         self.switchFire()
-                
 
-                
     def sendScoreData(self):
         #print("sending score data")
         total = len(self.boardList)
@@ -408,18 +407,5 @@ class DistributedGolfGreenGameAI(BattleBlockerAI.BattleBlockerAI,
         for key in scoreDict:
             score = scoreDict[key]
             outList.append([key, score])
-            
+
         self.sendUpdate("scoreData", [total, closed, outList])
-
-                
-                    
-        
-
-
-        
-        
-
-        
-            
-        
-        

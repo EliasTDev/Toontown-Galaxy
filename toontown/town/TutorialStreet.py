@@ -1,6 +1,7 @@
 
 from . import TTStreet
 
+
 class TutorialStreet(TTStreet.TTStreet):
 
     # This is where the meat of the tutorial hookup code is going to go.
@@ -10,22 +11,26 @@ class TutorialStreet(TTStreet.TTStreet):
         # No visibility in the tutorial, please.
         # turn arrows off, the one to flippy on the other side of HQ just confuses the user.
         # the position of the Flunky is fairly obvious
-        TTStreet.TTStreet.enter(self, requestStatus, visibilityFlag=0, arrowsOn=0)
+        TTStreet.TTStreet.enter(
+            self,
+            requestStatus,
+            visibilityFlag=0,
+            arrowsOn=0)
 
     def exit(self):
         # No visibility in the tutorial, please.
         TTStreet.TTStreet.exit(self, visibilityFlag=0)
-    
+
     def enterTeleportIn(self, requestStatus):
         TTStreet.TTStreet.enterTeleportIn(self, requestStatus)
         # This is how the tutorial knows that the toon has arrived.
-        #messenger.send("toonEntersTutorial")
+        # messenger.send("toonEntersTutorial")
         return
 
     def enterTownBattle(self, event):
         # Here, we explicitly do not pay attention to the invasion status
         # Let's just keep it simple and have creditMultiplier be 1.0
-        # so the tutorial panels do not have to change to explain this 
+        # so the tutorial panels do not have to change to explain this
         self.loader.townBattle.enter(event, self.fsm.getStateNamed("battle"),
                                      tutorialFlag=1)
 
@@ -44,7 +49,3 @@ class TutorialStreet(TTStreet.TTStreet):
         we want to leave arrows off
         """
         base.localAvatar.obscureMoveFurnitureButton(-1)
-        
-    
-
-    

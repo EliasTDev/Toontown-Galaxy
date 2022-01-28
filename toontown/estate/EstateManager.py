@@ -8,6 +8,7 @@ from toontown.toonbase import TTLocalizer
 from . import HouseGlobals
 from . import Estate
 
+
 class EstateManager(DistributedObject.DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory("EstateManager")
     neverDisable = 1
@@ -20,8 +21,8 @@ class EstateManager(DistributedObject.DistributedObject):
         self.popupInfo = None
 
     def disable(self):
-        self.notify.debug( "i'm disabling EstateManager rightnow.")
-        #self.ignore("requestEstateZone")
+        self.notify.debug("i'm disabling EstateManager rightnow.")
+        # self.ignore("requestEstateZone")
         self.ignore("getLocalEstateZone")
         self.ignoreAll()
         if self.popupInfo:
@@ -43,7 +44,7 @@ class EstateManager(DistributedObject.DistributedObject):
 
     def setEstateZone(self, ownerId, zoneId):
         # The AI is telling us the zone for this avatars estate
-        self.notify.debug("setEstateZone(%s, %s)" % (ownerId, zoneId))
+        self.notify.debug(f"setEstateZone({ownerId}, {zoneId})")
 
         # Send this to other hooks on the client side
         messenger.send("setLocalEstateZone", [ownerId, zoneId])
@@ -58,7 +59,7 @@ class EstateManager(DistributedObject.DistributedObject):
         # listen for requests
         #self.accept("requestEstateZone", self.allocateMyEstateZone)
         self.accept("getLocalEstateZone", self.getLocalEstateZone)
-        #self.__createRandomNumGen()
+        # self.__createRandomNumGen()
 
         # listen for the generate event, which will be thrown after the
         # required fields are filled in
@@ -81,21 +82,23 @@ class EstateManager(DistributedObject.DistributedObject):
 
     def leaveEstate(self):
         if self.isDisabled():
-            self.notify.warning("EstateManager disabled; unable to leave estate.")
+            self.notify.warning(
+                "EstateManager disabled; unable to leave estate.")
             return
 
         self.sendUpdate("exitEstate")
 
     def removeFriend(self, ownerId, avId):
-        self.notify.debug("removeFriend ownerId = %s, avId = %s" % (ownerId, avId))
+        self.notify.debug(
+            f"removeFriend ownerId = {ownerId}, avId = {avId}")
         # The estate owner is  removing avId from his friends list.
         # Notify the AI, and kick the ex-friend out of the estate
         self.sendUpdate("removeFriend", [ownerId, avId])
 
     def startAprilFools(self):
-        if isinstance(base.cr.playGame.getPlace(),Estate.Estate):
+        if isinstance(base.cr.playGame.getPlace(), Estate.Estate):
             base.cr.playGame.getPlace().startAprilFoolsControls()
 
     def stopAprilFools(self):
-        if isinstance(base.cr.playGame.getPlace(),Estate.Estate):
+        if isinstance(base.cr.playGame.getPlace(), Estate.Estate):
             base.cr.playGame.getPlace().stopAprilFoolsControls()

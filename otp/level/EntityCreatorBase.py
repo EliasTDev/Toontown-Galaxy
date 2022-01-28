@@ -2,6 +2,7 @@
 
 from direct.directnotify import DirectNotifyGlobal
 
+
 class EntityCreatorBase:
     """This class is responsible for creating instances of Entities on the
     AI and on the client. It must be subclassed to specify what entity
@@ -14,14 +15,13 @@ class EntityCreatorBase:
 
     def createEntity(self, entId):
         entType = self.level.getEntityType(entId)
-        
+
         if entType not in self.entType2Ctor:
-            self.notify.error('unknown entity type: %s (ent%s)' %
-                              (entType, entId))
+            self.notify.error(f'unknown entity type: {entType} (ent{entId})')
 
         # inheritor must define doCreateEntity
         ent = self.doCreateEntity(self.entType2Ctor[entType], entId)
-        assert ent is not None # must be Entity or 'nothing'
+        assert ent is not None  # must be Entity or 'nothing'
         return ent
 
     def getEntityTypes(self):

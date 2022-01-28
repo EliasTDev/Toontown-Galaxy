@@ -11,7 +11,7 @@ GlobalEntities = {
         'farPlaneDistance': 1500,
         'modelFilename': 'phase_10/models/cashbotHQ/ZONE13a',
         'wantDoors': 1,
-        }, # end entity 1000
+    },  # end entity 1000
     # EDITMGR
     1001: {
         'type': 'editMgr',
@@ -21,7 +21,7 @@ GlobalEntities = {
         'removeEntity': None,
         'requestNewEntity': None,
         'requestSave': None,
-        }, # end entity 1001
+    },  # end entity 1001
     # ZONE
     0: {
         'type': 'zone',
@@ -31,7 +31,7 @@ GlobalEntities = {
         'scale': 1,
         'description': '',
         'visibility': [],
-        }, # end entity 0
+    },  # end entity 0
     # GOON
     100001: {
         'type': 'goon',
@@ -48,7 +48,7 @@ GlobalEntities = {
         'hFov': 70,
         'strength': 15,
         'velocity': 4,
-        }, # end entity 100001
+    },  # end entity 100001
     # NODEPATH
     100002: {
         'type': 'nodepath',
@@ -58,7 +58,7 @@ GlobalEntities = {
         'pos': Point3(32.0525, 0.204516, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 100002
+    },  # end entity 100002
     100003: {
         'type': 'nodepath',
         'name': 'copy of pathmasta1',
@@ -67,7 +67,7 @@ GlobalEntities = {
         'pos': Point3(-28.2492, 5.56589, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 100003
+    },  # end entity 100003
     100004: {
         'type': 'nodepath',
         'name': 'copy of pathmasta1',
@@ -76,7 +76,7 @@ GlobalEntities = {
         'pos': Point3(-10.8179, 14.6481, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 100004
+    },  # end entity 100004
     100005: {
         'type': 'nodepath',
         'name': 'pathmastachild',
@@ -85,7 +85,7 @@ GlobalEntities = {
         'pos': Point3(-59.4987, 29.1448, 0),
         'hpr': Vec3(0, 0, 0),
         'scale': Vec3(1, 1, 1),
-        }, # end entity 100005
+    },  # end entity 100005
     # PATHMASTER
     100000: {
         'type': 'pathMaster',
@@ -105,15 +105,15 @@ GlobalEntities = {
         'pathTarget5': 0,
         'pathTarget6': 0,
         'pathTarget7': 0,
-        }, # end entity 100000
-    }
+    },  # end entity 100000
+}
 
 Scenario0 = {
-    }
+}
 
 levelSpec = {
     'globalEntities': GlobalEntities,
     'scenarios': [
         Scenario0,
-        ],
-    }
+    ],
+}

@@ -13,7 +13,7 @@ class DistributedButtonAI(DistributedSwitchAI.DistributedSwitchAI):
     button is doing.  The DistributedButton, is the client side
     version.
     """
-        
+
     # These stubbed out functions are not used on the AI (Client Only):
     setColor = DistributedSwitchBase.stubFunction
     setModel = DistributedSwitchBase.stubFunction

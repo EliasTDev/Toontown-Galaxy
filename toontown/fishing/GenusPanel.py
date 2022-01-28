@@ -9,6 +9,7 @@ from . import FishBase
 from . import FishGlobals
 from . import FishPhoto
 
+
 class GenusPanel(DirectFrame):
     notify = DirectNotifyGlobal.directNotify.newCategory("GenusPanel")
 
@@ -18,30 +19,31 @@ class GenusPanel(DirectFrame):
         genus is an integer key into FishGlobals.__fishDict.
         itemIndex is an integer index into the item list (see optiondefs
             in FishBrowser).
-        
+
         Create a DirectFrame for displaying the genus and it's species
         """
         assert self.notify.debugStateCall(self)
         fishingGui = loader.loadModel("phase_3.5/models/gui/fishingBook")
         albumGui = fishingGui.find("**/photo_frame1").copyTo(hidden)
-        # The picture frame is in the wrong order, should be drawn first (at the back)
+        # The picture frame is in the wrong order, should be drawn first (at
+        # the back)
         albumGui.find("**/picture_frame").reparentTo(albumGui, -1)
         albumGui.find("**/arrows").removeNode()
-        
+
         optiondefs = (
-            ('relief',                                    None, None),
-            ('state',                                   DGG.NORMAL, None),
-            ('image',                                 albumGui, None),
-            ('image_scale',                (0.025,0.025,0.025), None),
-            ('image_pos',                            (0, 1, 0), None),
-            ('text',                   TTLocalizer.UnknownFish, None),
-            ('text_scale',                               0.065, None),
-            ('text_fg',                        (0.2,0.1,0.0,1), None),
-            ('text_pos',                         (-0.5, -0.34), None),
-            ('text_font',   ToontownGlobals.getInterfaceFont(), None),
-            ('text_wordwrap',                             13.5, None),
-            ('text_align',                      TextNode.ALeft, None),            
-            )
+            ('relief', None, None),
+            ('state', DGG.NORMAL, None),
+            ('image', albumGui, None),
+            ('image_scale', (0.025, 0.025, 0.025), None),
+            ('image_pos', (0, 1, 0), None),
+            ('text', TTLocalizer.UnknownFish, None),
+            ('text_scale', 0.065, None),
+            ('text_fg', (0.2, 0.1, 0.0, 1), None),
+            ('text_pos', (-0.5, -0.34), None),
+            ('text_font', ToontownGlobals.getInterfaceFont(), None),
+            ('text_wordwrap', 13.5, None),
+            ('text_align', TextNode.ALeft, None),
+        )
         # Merge keyword options with default options
         self.defineoptions({}, optiondefs)
         # Initialize superclasses
@@ -63,13 +65,13 @@ class GenusPanel(DirectFrame):
     def load(self):
         assert self.notify.debugStateCall(self)
         pass
-        
+
     def setGenus(self, genus):
         assert self.notify.debugStateCall(self)
         if self.genus == genus:
             return
         self.genus = genus
-        if self.genus != None:
+        if self.genus is not None:
             # load the genus image
             if self.fishPanel:
                 self.fishPanel.destroy()
@@ -92,14 +94,14 @@ class GenusPanel(DirectFrame):
                 label = DirectLabel(
                     parent=self,
                     relief=None,
-                    state = DGG.NORMAL,
-                    pos = (0.06, 0, startPos - (species * offset)),
-                    text = TTLocalizer.UnknownFish,
-                    text_fg = (0.2,0.1,0.0,1),
-                    text_scale = TTLocalizer.GPgenus,
-                    text_align = TextNode.ALeft,
-                    text_font = ToontownGlobals.getInterfaceFont(),
-                    )
+                    state=DGG.NORMAL,
+                    pos=(0.06, 0, startPos - (species * offset)),
+                    text=TTLocalizer.UnknownFish,
+                    text_fg=(0.2, 0.1, 0.0, 1),
+                    text_scale=TTLocalizer.GPgenus,
+                    text_align=TextNode.ALeft,
+                    text_font=ToontownGlobals.getInterfaceFont(),
+                )
                 self.speciesLabels.append(label)
 
     def show(self):
@@ -115,7 +117,8 @@ class GenusPanel(DirectFrame):
 
     def update(self):
         assert self.notify.debugStateCall(self)
-        if base.localAvatar.fishCollection.hasGenus(self.genus) and self.fishPanel is not None:
+        if base.localAvatar.fishCollection.hasGenus(
+                self.genus) and self.fishPanel is not None:
             self.fishPanel.show(showBackground=1)
             self['text'] = TTLocalizer.FishGenusNames[self.genus]
         for species in range(len(FishGlobals.getSpecies(self.genus))):

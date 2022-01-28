@@ -1,5 +1,6 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 
+
 class DTutorialObjectBase:
     Sandwiches = Enum('Rye, Cheese, Ham, PeanutButter')
     Fruit = Enum('Apple, Pear, Strawberries, Cherries')

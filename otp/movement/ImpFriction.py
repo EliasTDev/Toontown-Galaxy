@@ -1,8 +1,10 @@
 from pandac.PandaModules import *
 from . import Impulse
 
+
 class ImpFriction(Impulse.Impulse):
     """friction impulse"""
+
     def __init__(self, coeff):
         """ coeff: coefficient of friction. 0..1,
         0=no friction, 1=absolute friction"""

@@ -9,40 +9,41 @@ MTBasePrice = 2
 # Also see TTLocalizer.MouldingNames.
 MouldingTypes = {
     # Wood - Series 1
-    1000 : ("phase_3.5/maps/molding_wood1.jpg", CTBasicWoodColorOnWhite, 150),
+    1000: ("phase_3.5/maps/molding_wood1.jpg", CTBasicWoodColorOnWhite, 150),
     # Plain with colors - Series 1
-    1010 : ("phase_5.5/maps/bd_grey_border1.jpg", CTFlatColorDark, 150),
+    1010: ("phase_5.5/maps/bd_grey_border1.jpg", CTFlatColorDark, 150),
     # Dental wood - Series 2
-    1020 : ("phase_5.5/maps/dental_Border_wood_neutral.jpg", CTFlatColorDark, 150),
+    1020: ("phase_5.5/maps/dental_Border_wood_neutral.jpg", CTFlatColorDark, 150),
     # Flowers - Series 2
-    1030 : ("phase_5.5/maps/littleFlowers_border.jpg", CTWhite, 150),
-    1040 : ("phase_5.5/maps/littleFlowers_border_neutral.jpg", CTFlatColorDark, 150),
+    1030: ("phase_5.5/maps/littleFlowers_border.jpg", CTWhite, 150),
+    1040: ("phase_5.5/maps/littleFlowers_border_neutral.jpg", CTFlatColorDark, 150),
     # Ladybug - Unused
-    1050 : ("phase_5.5/maps/ladybugs2_Border.jpg", CTFlatColorDark, 150),
+    1050: ("phase_5.5/maps/ladybugs2_Border.jpg", CTFlatColorDark, 150),
     # Valentines
-    1060 : ("phase_5.5/maps/bd_grey_border1.jpg", CTValentinesColors, 150),
+    1060: ("phase_5.5/maps/bd_grey_border1.jpg", CTValentinesColors, 150),
     # Beach
-    1070 : ("phase_5.5/maps/bd_grey_border1.jpg", CTUnderwaterColors, 150),
+    1070: ("phase_5.5/maps/bd_grey_border1.jpg", CTUnderwaterColors, 150),
     # Winter String Lights 1
-    1080 : ("phase_5.5/maps/tt_t_ara_int_border_winterLights1.jpg", CTWhite, 150),
+    1080: ("phase_5.5/maps/tt_t_ara_int_border_winterLights1.jpg", CTWhite, 150),
     # Winter String Lights 2
-    1085 : ("phase_5.5/maps/tt_t_ara_int_border_winterLights2.jpg", CTWhite, 150),
+    1085: ("phase_5.5/maps/tt_t_ara_int_border_winterLights2.jpg", CTWhite, 150),
     # Winter String Lights 3
-    1090 : ("phase_5.5/maps/tt_t_ara_int_border_winterLights3.jpg", CTWhite, 150),
+    1090: ("phase_5.5/maps/tt_t_ara_int_border_winterLights3.jpg", CTWhite, 150),
     # Valentines Day - Cupid
-    1100 : ("phase_5.5/maps/tt_t_ara_int_border_valentine_cupid.jpg", CTWhite, 150),
+    1100: ("phase_5.5/maps/tt_t_ara_int_border_valentine_cupid.jpg", CTWhite, 150),
     # Valentines Day - Heart 1
-    1110 : ("phase_5.5/maps/tt_t_ara_int_border_valentine_heart1.jpg", CTWhite, 150),
+    1110: ("phase_5.5/maps/tt_t_ara_int_border_valentine_heart1.jpg", CTWhite, 150),
     # Valentines Day - Heart 2
-    1120 : ("phase_5.5/maps/tt_t_ara_int_border_valentine_heart2.jpg", CTWhite, 150),
-    }
+    1120: ("phase_5.5/maps/tt_t_ara_int_border_valentine_heart2.jpg", CTWhite, 150),
+}
+
 
 class CatalogMouldingItem(CatalogSurfaceItem):
     """CatalogMouldingItem
 
     This represents a texture/color combination for moulding.
     """
-    
+
     def makeNewItem(self, patternIndex, colorIndex):
         self.patternIndex = patternIndex
         self.colorIndex = colorIndex
@@ -69,9 +70,9 @@ class CatalogMouldingItem(CatalogSurfaceItem):
         # item has no representation.  This method is only called on
         # the client.
 
-##        assert (not self.hasPicture)
-        self.hasPicture=True
-        
+        ##        assert (not self.hasPicture)
+        self.hasPicture = True
+
         frame = self.makeFrame()
 
         sample = loader.loadModel('phase_5.5/models/estate/wallpaper_sample')
@@ -90,7 +91,7 @@ class CatalogMouldingItem(CatalogSurfaceItem):
 
         return (frame, None)
 
-    def output(self, store = ~0):
+    def output(self, store=~0):
         return "CatalogMouldingItem(%s, %s%s)" % (
             self.patternIndex, self.colorIndex,
             self.formatOptionalData(store))
@@ -118,7 +119,7 @@ class CatalogMouldingItem(CatalogSurfaceItem):
         return texture
 
     def getColor(self):
-        if self.colorIndex == None:
+        if self.colorIndex is None:
             # If no color index is set yet, use first color in color list
             colorIndex = 0
         else:
@@ -134,7 +135,8 @@ class CatalogMouldingItem(CatalogSurfaceItem):
             return CT_WHITE
 
     def decodeDatagram(self, di, versionNumber, store):
-        CatalogAtticItem.CatalogAtticItem.decodeDatagram(self, di, versionNumber, store)
+        CatalogAtticItem.CatalogAtticItem.decodeDatagram(
+            self, di, versionNumber, store)
         if versionNumber < 3:
             self.patternIndex = di.getUint8()
         else:
@@ -145,23 +147,24 @@ class CatalogMouldingItem(CatalogSurfaceItem):
         # self.patternIndex is invalid.  The other fields can take
         # care of themselves.
         wtype = MouldingTypes[self.patternIndex]
-        
+
     def encodeDatagram(self, dg, store):
         CatalogAtticItem.CatalogAtticItem.encodeDatagram(self, dg, store)
         dg.addUint16(self.patternIndex)
         dg.addUint8(self.colorIndex)
 
+
 def getMouldings(*indexList):
     # This function returns a list of CatalogMouldingItems
     # The returned items will all need to be customized (i.e
-    # have a color chosen by the user.  Until customization, 
+    # have a color chosen by the user.  Until customization,
     # use a default color index of 0 (if the pattern has a color
     # list) or CT_WHITE if the pattern has no color list
     _list = []
     for index in indexList:
         _list.append(CatalogMouldingItem(index))
     return _list
-    
+
 
 def getAllMouldings(*indexList):
     # This function returns a list of all possible
@@ -176,7 +179,7 @@ def getAllMouldings(*indexList):
         else:
             _list.append(CatalogMouldingItem(index, 0))
     return _list
-    
+
 
 def getMouldingRange(fromIndex, toIndex, *otherRanges):
     # This function returns a list of all possible
@@ -184,21 +187,21 @@ def getMouldingRange(fromIndex, toIndex, *otherRanges):
     # indicated type index(es).
 
     # Make sure we got an even number of otherRanges
-    assert(len(otherRanges)%2 == 0)
+    assert(len(otherRanges) % 2 == 0)
 
     _list = []
 
-    froms = [fromIndex,]
-    tos = [toIndex,]
+    froms = [fromIndex, ]
+    tos = [toIndex, ]
 
     i = 0
     while i < len(otherRanges):
         froms.append(otherRanges[i])
-        tos.append(otherRanges[i+1])
+        tos.append(otherRanges[i + 1])
         i += 2
-    
+
     for patternIndex in list(MouldingTypes.keys()):
-        for fromIndex, toIndex in zip(froms,tos):
+        for fromIndex, toIndex in zip(froms, tos):
             if patternIndex >= fromIndex and patternIndex <= toIndex:
                 colors = MouldingTypes[patternIndex][MTColor]
                 if colors:

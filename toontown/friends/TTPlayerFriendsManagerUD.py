@@ -9,9 +9,8 @@ from otp.otpbase import OTPLocalizerEnglish as localizer
 if __debug__:
     notify = directNotify.newCategory('PlayerFriendsManagerUD')
 
-       
-#--------------------------------------------------
 
+# --------------------------------------------------
 
 
 class TTPlayerFriendsManagerUD(PlayerFriendsManagerUD):
@@ -31,14 +30,14 @@ class TTPlayerFriendsManagerUD(PlayerFriendsManagerUD):
 
     def __init__(self, air):
         assert self.notify.debugCall()
-        wedgeName = uber.config.GetString("sb-dev-name","toontown")
-        PlayerFriendsManagerUD.__init__(self,air,1452,wedgeName,"Toontown")
+        wedgeName = uber.config.GetString("sb-dev-name", "toontown")
+        PlayerFriendsManagerUD.__init__(self, air, 1452, wedgeName, "Toontown")
 
     def _whisperAllowed(self, fromPlayer, toPlayer):
         fromFriends = self.accountId2Friends.get(fromPlayer)
 
         if fromFriends:
-            if [toPlayer,True] in fromFriends:
+            if [toPlayer, True] in fromFriends:
                 return True
             else:
                 return False

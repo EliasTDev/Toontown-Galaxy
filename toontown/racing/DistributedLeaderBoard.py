@@ -11,13 +11,12 @@ from otp.otpbase import OTPTimer
 from toontown.toonbase import TTLocalizer
 from toontown.racing import KartShopGlobals
 
-#added
+# added
 from toontown.toonbase.ToonBaseGlobal import *
 from pandac.PandaModules import *
 from toontown.toonbase.ToontownGlobals import *
 import random
 import pickle
-
 
 
 class DistributedLeaderBoard(DistributedObject.DistributedObject):
@@ -26,12 +25,12 @@ class DistributedLeaderBoard(DistributedObject.DistributedObject):
     Leader Board class was created to showcase race records in Toontown Kart racing
     '''
 
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DisributedLeaderBoard')
+    # notify.setInfo(True)
+    # notify.setDebug(True)
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DisributedLeaderBoard')
-    #notify.setInfo(True)
-    #notify.setDebug(True)
-
-    def __init__(self,  cr):
+    def __init__(self, cr):
         '''
         Setup the Leader Board.
         '''
@@ -41,31 +40,36 @@ class DistributedLeaderBoard(DistributedObject.DistributedObject):
         self.length = 0
         self.width = 0
         self.updateCount = 0
-        self.board = None #basically the root node that takes on pos/hpr of leader board model
-        self.surface = None #one under the root.. all text elements are parented to it
+        self.board = None  # basically the root node that takes on pos/hpr of leader board model
+        self.surface = None  # one under the root.. all text elements are parented to it
 
     def generateInit(self):
         DistributedObject.DistributedObject.generateInit(self)
-        self.board = NodePath(self.uniqueName('LeaderBoard') )
+        self.board = NodePath(self.uniqueName('LeaderBoard'))
 
     def generate(self):
         DistributedObject.DistributedObject.generate(self)
 
         self.buildListParts()
-        
 
     def announceGenerate(self):
         """
         """
         DistributedObject.DistributedObject.announceGenerate(self)
         self.board.reparentTo(render)
-        
-        self.accept("decorator-holiday-%d-ending" % ToontownGlobals.CRASHED_LEADERBOARD, self.showLists)
-        self.accept("decorator-holiday-%d-starting" % ToontownGlobals.CRASHED_LEADERBOARD, self.hideLists)
+
+        self.accept(
+            "decorator-holiday-%d-ending" %
+            ToontownGlobals.CRASHED_LEADERBOARD,
+            self.showLists)
+        self.accept(
+            "decorator-holiday-%d-starting" %
+            ToontownGlobals.CRASHED_LEADERBOARD,
+            self.hideLists)
 
         newsManager = base.cr.newsManager
         if newsManager:
-            if ToontownGlobals.CRASHED_LEADERBOARD in newsManager.holidayIdList :
+            if ToontownGlobals.CRASHED_LEADERBOARD in newsManager.holidayIdList:
                 self.hideLists()
 
     def showLists(self):
@@ -76,7 +80,6 @@ class DistributedLeaderBoard(DistributedObject.DistributedObject):
         """Hide the top ten lists."""
         self.board.hide()
 
-
     def setPosHpr(self, x, y, z, h, p, r):
         """
         """
@@ -86,7 +89,8 @@ class DistributedLeaderBoard(DistributedObject.DistributedObject):
     def setDisplay(self, pData):
         # This message is sent from the AI when the leaderboard data should change
         # so the assumption is we should update the display afterwards
-        self.notify.debug("setDisplay: changing leaderboard text on local side")
+        self.notify.debug(
+            "setDisplay: changing leaderboard text on local side")
         trackName, recordTitle, scores = pickle.loads(pData)
         self.display(trackName, recordTitle, scores)
 
@@ -96,21 +100,21 @@ class DistributedLeaderBoard(DistributedObject.DistributedObject):
 
         z = 7.7
         dz = .4
-        x = -3.7#-3.8
+        x = -3.7  # -3.8
 
-        #build track title row
+        # build track title row
         row, trackName = self.buildTrackRow()
         self.trackNameNode = trackName
         row.reparentTo(self.surface)
         row.setPos(0, 1.6, z)
-        #row.setH(-90)
+        # row.setH(-90)
         z = 7.3
 
-        #build race title row
+        # build race title row
         row, self.titleTextNode = self.buildTitleRow()
         row.reparentTo(self.surface)
         row.setPos(0, 1.6, z)
-        #row.setH(-90)
+        # row.setH(-90)
 
         zListTop = 6.9
         z = zListTop
@@ -125,30 +129,34 @@ class DistributedLeaderBoard(DistributedObject.DistributedObject):
 
             row, nameText, timeText, placeText = self.buildLeaderRow()
             self.nameTextNodes.append(nameText)
-            placeText.setText(str(len(self.nameTextNodes))+".")
+            placeText.setText(str(len(self.nameTextNodes)) + ".")
             self.timeTextNodes.append(timeText)
             row.reparentTo(self.surface)
 
-            #row.setH(-90)
-            if len(self.nameTextNodes)== 6:
-                        z = zListTop
-                        x =  .35#.1
+            # row.setH(-90)
+            if len(self.nameTextNodes) == 6:
+                z = zListTop
+                x = .35  # .1
 
             row.setX(x)
 
             row.setZ(z)
-            #ow.setY(1.4)
+            # ow.setY(1.4)
             row.setY(1.6)
             z -= dz
 
         # Now flatten out all of those transforms.
         self.surface.flattenLight()
 
+    def display(
+            self,
+            pTrackTitle="Track Title",
+            pPeriodTitle="Period Title",
+            pLeaderList=[]):
+        # Refresh the data and graphics on the leaderboard with our new
+        # information
 
-    def display(self, pTrackTitle="Track Title", pPeriodTitle="Period Title", pLeaderList=[]):
-        # Refresh the data and graphics on the leaderboard with our new information
-
-        #update the race title
+        # update the race title
         self.titleTextNode.setText(pPeriodTitle)
         self.trackNameNode.setText(pTrackTitle)
 
@@ -167,8 +175,9 @@ class DistributedLeaderBoard(DistributedObject.DistributedObject):
                 min, sec = divmod(secs, 60)
                 # trunc the name to 22 chars
                 self.nameTextNodes[i].setText(name[: 22])
-                self.timeTextNodes[i].setText("%02d:%02d:%02d" % (min, sec, hundredths * 100))
-
+                self.timeTextNodes[i].setText(
+                    "%02d:%02d:%02d" %
+                    (min, sec, hundredths * 100))
 
     def buildTitleRow(self):
         # Build the title row on the leaderboard
@@ -178,7 +187,7 @@ class DistributedLeaderBoard(DistributedObject.DistributedObject):
         nameText.setAlign(TextNode.ACenter)
         nameText.setTextColor(0.3, 0.75, 0.6, 1)
         nameText.setText("Score Title")
-        #nameText.setGlyphScale(.4)
+        # nameText.setGlyphScale(.4)
         namePath = row.attachNewNode(nameText)
         namePath.setScale(TTLocalizer.DLBtitleRowScale)
         namePath.setDepthWrite(0)
@@ -193,7 +202,7 @@ class DistributedLeaderBoard(DistributedObject.DistributedObject):
         nameText.setAlign(TextNode.ACenter)
         nameText.setTextColor(0.5, 0.75, 0.7, 1)
         nameText.setText("Track Title")
-        #nameText.setGlyphScale(.75)
+        # nameText.setGlyphScale(.75)
         namePath = row.attachNewNode(nameText)
         namePath.setScale(.55)
         namePath.setDepthWrite(0)
@@ -209,7 +218,7 @@ class DistributedLeaderBoard(DistributedObject.DistributedObject):
         nameText.setFont(ToontownGlobals.getToonFont())
         nameText.setAlign(TextNode.ALeft)
         nameText.setTextColor(0.125, 0, 0.5, 1)
-        #nameText.setGlyphScale(.23)
+        # nameText.setGlyphScale(.23)
         nameText.setText("-")
         namePath = row.attachNewNode(nameText)
         namePath.setPos(1.1, 0, 0)
@@ -222,22 +231,22 @@ class DistributedLeaderBoard(DistributedObject.DistributedObject):
         timeText.setAlign(TextNode.ARight)
         timeText.setTextColor(0, 0, 0, 1)
         timeText.setText("-")
-        #timeText.setGlyphScale(.23)
+        # timeText.setGlyphScale(.23)
         timePath = row.attachNewNode(timeText)
         timePath.setPos(1.0, 0, 0)
         timePath.setScale(.23)
         timePath.setDepthWrite(0)
 
-        #Text node for the place numbers
+        # Text node for the place numbers
         placeText = TextNode("placeText")
         placeText.setFont(ToontownGlobals.getSignFont())
         placeText.setAlign(TextNode.ARight)
         placeText.setTextColor(1, 1, 0.1, 1)
         placeText.setText("-")
-        #placeText.setGlyphScale(.23)
+        # placeText.setGlyphScale(.23)
         placePath = row.attachNewNode(placeText)
         placePath.setPos(-0.1, 0, -0.05)
-        #placePath.setScale(.23)
+        # placePath.setScale(.23)
         placePath.setScale(.3)
         placePath.setDepthWrite(0)
 
@@ -251,5 +260,3 @@ class DistributedLeaderBoard(DistributedObject.DistributedObject):
         self.ignoreAll()
         self.board.removeNode()
         DistributedObject.DistributedObject.delete(self)
-
-

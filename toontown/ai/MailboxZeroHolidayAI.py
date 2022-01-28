@@ -4,6 +4,7 @@ from toontown.ai import PhasedHolidayAI
 from toontown.ai import DistributedMailboxZeroMgrAI
 from toontown.toonbase import ToontownGlobals
 
+
 class MailboxZeroHolidayAI(PhasedHolidayAI.PhasedHolidayAI):
 
     notify = DirectNotifyGlobal.directNotify.newCategory(
@@ -12,12 +13,13 @@ class MailboxZeroHolidayAI(PhasedHolidayAI.PhasedHolidayAI):
     PostName = 'mailboxZeroHoliday'
 
     def __init__(self, air, holidayId, startAndEndTimes, phaseDates):
-        PhasedHolidayAI.PhasedHolidayAI.__init__(self, air, holidayId, startAndEndTimes, phaseDates)
-        
+        PhasedHolidayAI.PhasedHolidayAI.__init__(
+            self, air, holidayId, startAndEndTimes, phaseDates)
+
     def start(self):
         # instantiate the object
         PhasedHolidayAI.PhasedHolidayAI.start(self)
-        self.mailboxZeroMgr = DistributedMailboxZeroMgrAI.DistributedMailboxZeroMgrAI (
+        self.mailboxZeroMgr = DistributedMailboxZeroMgrAI.DistributedMailboxZeroMgrAI(
             self.air, self.startAndEndTimes, self.phaseDates)
         self.mailboxZeroMgr.generateWithRequired(ToontownGlobals.UberZone)
         # let the holiday system know we started
@@ -27,15 +29,15 @@ class MailboxZeroHolidayAI(PhasedHolidayAI.PhasedHolidayAI):
         # let the holiday system know we stopped
         bboard.remove(self.PostName)
         # remove the object
-        #self.resistanceEmoteMgr.requestDelete()
+        # self.resistanceEmoteMgr.requestDelete()
         self.mailboxZeroMgr.requestDelete()
-        
+
     def forcePhase(self, newPhase):
         """Force our holiday to a certain phase. Returns true if succesful"""
         result = False
         try:
             newPhase = int(newPhase)
-        except:
+        except BaseException:
             newPhase = 0
         if newPhase >= self.mailboxZeroMgr.getNumPhases():
             self.notify.warning("newPhase %d invalid in forcePhase" % newPhase)

@@ -6,9 +6,11 @@ from . import FishingTargetGlobals
 from toontown.hood import ZoneUtil
 import random
 
+
 class DistributedFishingPondAI(DistributedObjectAI.DistributedObjectAI):
 
-    notify = DirectNotifyGlobal.directNotify.newCategory("DistributedFishingPondAI")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedFishingPondAI")
 
     def __init__(self, air, area):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
@@ -19,13 +21,15 @@ class DistributedFishingPondAI(DistributedObjectAI.DistributedObjectAI):
 
     def generate(self):
         DistributedObjectAI.DistributedObjectAI.generate(self)
-        self.notify.debug("generate: zoneId: %s, area: %s" % (self.zoneId, self.area))
+        self.notify.debug(
+            f"generate: zoneId: {self.zoneId}, area: {self.area}")
         # Fishing Targets
         self.targets = {}
         for i in range(FishingTargetGlobals.getNumTargets(self.area)):
             hunger = (FishingTargetGlobals.MinimumHunger +
                       (random.random() * (1 - FishingTargetGlobals.MinimumHunger)))
-            target = DistributedFishingTargetAI.DistributedFishingTargetAI(self.air, self, hunger)
+            target = DistributedFishingTargetAI.DistributedFishingTargetAI(
+                self.air, self, hunger)
             target.generateWithRequired(self.zoneId)
             self.targets[target.getDoId()] = target
 
@@ -41,10 +45,11 @@ class DistributedFishingPondAI(DistributedObjectAI.DistributedObjectAI):
         return self.area
 
     def addAvSpot(self, avId, spot):
-        self.notify.debug("addAvSpot: adding avId: %s to spot" % (avId))
+        self.notify.debug(f"addAvSpot: adding avId: {avId} to spot")
         currentSpot = self.avId2SpotDict.get(avId)
         if currentSpot:
-            self.notify.warning("addAvSpot: avId: %s already in a spot" % (avId))
+            self.notify.warning(
+                f"addAvSpot: avId: {avId} already in a spot")
         self.avId2SpotDict[avId] = spot
         if simbase.wantBingo:
             self.__addAvToGame(avId)
@@ -54,19 +59,21 @@ class DistributedFishingPondAI(DistributedObjectAI.DistributedObjectAI):
         currentSpot = self.avId2SpotDict.get(avId)
         if currentSpot:
             if currentSpot == spot:
-                self.notify.debug("removeAvSpot: removing avId: %s from spot" % (avId))
+                self.notify.debug(
+                    f"removeAvSpot: removing avId: {avId} from spot")
                 del self.avId2SpotDict[avId]
                 if simbase.wantBingo:
                     self.__removeAvFromGame(avId)
                 return 1
             else:
-                self.notify.warning("removeAvSpot: spots do not match, removing av anyways")
+                self.notify.warning(
+                    "removeAvSpot: spots do not match, removing av anyways")
                 del self.avId2SpotDict[avId]
                 if simbase.wantBingo:
                     self.__removeAvFromGame(avId)
                 return 1
         else:
-            self.notify.warning("removeAvSpot: avId: %s not found" % (avId))
+            self.notify.warning(f"removeAvSpot: avId: {avId} not found")
             # Really, if the avId is not in the avId2Spot Dict, then it should
             # not be in the pondBingoMgr either. However, for precaution, check
             # for it anyway.
@@ -79,32 +86,39 @@ class DistributedFishingPondAI(DistributedObjectAI.DistributedObjectAI):
         av = self.air.doId2do.get(avId)
         if not av:
             return
-        
-        self.notify.debug("hitTarget: targetId: %s avId: %s" % (targetId, avId))
+
+        self.notify.debug(
+            f"hitTarget: targetId: {targetId} avId: {avId}")
         # You must be fishing at a spot to hit a target
         spot = self.avId2SpotDict.get(avId)
         if not spot:
-            self.notify.warning("hitTarget: spot not found for avId: %s" % (avId))
+            self.notify.warning(
+                f"hitTarget: spot not found for avId: {avId}")
             return
         target = self.targets.get(targetId)
         # See if the target bites
         if (not target):
-            self.air.writeServerEvent('suspicious', targetId, 'FishingPondAI.hitTarget unknown target')
+            self.air.writeServerEvent(
+                'suspicious',
+                targetId,
+                'FishingPondAI.hitTarget unknown target')
         elif target.isHungry():
-            self.notify.debug("hitTarget: targetId: %s is hungry" % (targetId))
-            code, item = self.air.fishManager.recordCatch(avId, self.area, self.zoneId)
+            self.notify.debug(f"hitTarget: targetId: {targetId} is hungry")
+            code, item = self.air.fishManager.recordCatch(
+                avId, self.area, self.zoneId)
             # make sure we didn't trip an error condition and return None
             if code:
                 # Tell the fishing spot so it can send a movie to the client
                 spot.hitTarget(code, item)
         else:
-            self.notify.debug("hitTarget: targetId: %s not hungry" % (targetId))
+            self.notify.debug(
+                f"hitTarget: targetId: {targetId} not hungry")
 
     ############################################################
     # Method:  setPondBingoManager
     # Purpose: This method sets the reference to a
     #          PondBingoManagerAI instance.
-    # Input: pondBingoMgr - The pondBingoManagerAI object that 
+    # Input: pondBingoMgr - The pondBingoManagerAI object that
     #                       is associated with the pond instance.
     # Output: None
     ############################################################
@@ -116,7 +130,7 @@ class DistributedFishingPondAI(DistributedObjectAI.DistributedObjectAI):
     # Purpose: This method sets the reference to a
     #          PondBingoManagerAI instance.
     # Input: None
-    # Output: pondBingoMgr - The pondBingoManagerAI object that 
+    # Output: pondBingoMgr - The pondBingoManagerAI object that
     #                        is associated with the pond
     #                        instance.
     ############################################################
@@ -137,7 +151,7 @@ class DistributedFishingPondAI(DistributedObjectAI.DistributedObjectAI):
     # Method:  __addAvToGame
     # Purpose: This method tells to PondBingoManagerAI to add
     #          an avatar ID to the game because a client has
-    #          entered a FishingSpot. 
+    #          entered a FishingSpot.
     # Input: avId - Avatar ID of the client who entered the
     #               Fishing Spot.
     # Output: None
@@ -145,12 +159,12 @@ class DistributedFishingPondAI(DistributedObjectAI.DistributedObjectAI):
     def __addAvToGame(self, avId):
         if self.pondBingoMgr:
             self.pondBingoMgr.addAvToGame(avId)
-            
+
     ############################################################
     # Method:  __addAvToGame
-    # Purpose: This method tells to PondBingoManagerAI to 
-    #          remove an avatar ID to the game because a client 
-    #          has exited a FishingSpot. 
+    # Purpose: This method tells to PondBingoManagerAI to
+    #          remove an avatar ID to the game because a client
+    #          has exited a FishingSpot.
     # Input: avId - Avatar ID of the client who exited the
     #               Fishing Spot.
     # Output: None

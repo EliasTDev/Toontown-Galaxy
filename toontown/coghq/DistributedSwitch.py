@@ -15,13 +15,14 @@ from direct.fsm import ClassicFSM, State
 from otp.level import DistributedEntity
 #import TTLocalizer
 
+
 class DistributedSwitch(
         DistributedSwitchBase.DistributedSwitchBase,
         BasicEntities.DistributedNodePathEntity):
     """
-    DistributedSwitch class:  The client side 
+    DistributedSwitch class:  The client side
     representation of a Cog HQ switch.
-    
+
     See Also: DistributedSwitchAI
     """
 
@@ -29,29 +30,29 @@ class DistributedSwitch(
         """
         constructor for the DistributedSwitch
         """
-        #("DistributedSwitch()"))
+        # ("DistributedSwitch()"))
         BasicEntities.DistributedNodePathEntity.__init__(self, cr)
         #assert self.this
 
         self.fsm = ClassicFSM.ClassicFSM('DistributedSwitch',
-                           [State.State('off',
-                                        self.enterOff,
-                                        self.exitOff,
-                                        ['playing',
-                                        'attract']),
-                            State.State('attract',
-                                        self.enterAttract,
-                                        self.exitAttract,
-                                        ['playing']),
-                            State.State('playing',
-                                        self.enterPlaying,
-                                        self.exitPlaying,
-                                        ['attract'])],
-                           # Initial State
-                           'off',
-                           # Final State
-                           'off',
-                          )
+                                         [State.State('off',
+                                                      self.enterOff,
+                                                      self.exitOff,
+                                                      ['playing',
+                                                       'attract']),
+                                             State.State('attract',
+                                                         self.enterAttract,
+                                                         self.exitAttract,
+                                                         ['playing']),
+                                             State.State('playing',
+                                                         self.enterPlaying,
+                                                         self.exitPlaying,
+                                                         ['attract'])],
+                                         # Initial State
+                                         'off',
+                                         # Final State
+                                         'off',
+                                         )
         self.fsm.enterInitialState()
 
         self.node = None
@@ -63,9 +64,9 @@ class DistributedSwitch(
         self.setState(self.initialState, self.initialStateTimestamp)
         del self.initialState
         del self.initialStateTimestamp
-        self.accept("exit%s"%(self.getName(),), self.exitTrigger)
+        self.accept(f"exit{self.getName()}", self.exitTrigger)
         self.acceptAvatar()
-        
+
     def takedown(self):
         pass
 
@@ -79,68 +80,68 @@ class DistributedSwitch(
         This method is called when the DistributedSwitch is reintroduced
         to the world, either for the first time or from the cache.
         """
-        #("generate()"))
+        # ("generate()"))
         BasicEntities.DistributedNodePathEntity.generate(self)
         self.track = None
-    
+
     def announceGenerate(self):
-        #("announceGenerate()"))
+        # ("announceGenerate()"))
         BasicEntities.DistributedNodePathEntity.announceGenerate(self)
         assert self.this
         self.setup()
-    
+
     def disable(self):
-        #("disable()"))
-        #self.ignore("exit%s"%(self.getName(),))
-        #self.ignore("enter%s"%(self.getName(),))
+        # ("disable()"))
+        # self.ignore("exit%s"%(self.getName(),))
+        # self.ignore("enter%s"%(self.getName(),))
         self.ignoreAll()
         # Go to the off state when the object is put in the cache
         self.fsm.request("off")
         BasicEntities.DistributedNodePathEntity.disable(self)
         assert(self.track is None)
         self.takedown()
-        #?  BasicEntities.DistributedNodePathEntity.destroy(self)
+        # ?  BasicEntities.DistributedNodePathEntity.destroy(self)
         # self.delete() will automatically be called.
 
     def delete(self):
-        #("delete()"))
+        # ("delete()"))
         del self.fsm
         BasicEntities.DistributedNodePathEntity.delete(self)
-    
+
     def acceptAvatar(self):
-        self.acceptOnce("enter%s"%(self.getName(),), self.enterTrigger)
-    
+        self.acceptOnce(f"enter{self.getName()}", self.enterTrigger)
+
     def rejectInteract(self):
         self.acceptAvatar()
 
     def avatarExit(self, avatarId):
         self.acceptAvatar()
-    
-    #def setIsOn(self, isOn):
+
+    # def setIsOn(self, isOn):
     #    #("setIsOn(isOn=%s)"%(isOn,)))
     #    self.isOn=isOn
     #    messenger.send(self.getName(), [isOn])
     #
-    #def getIsOn(self):
+    # def getIsOn(self):
     #    #("setIsOn() returning %s"%(self.isOn,)))
     #    return self.isOn
-    
+
     def getName(self):
-        return "switch-%s"%(self.entId,)
-    
+        return f"switch-{self.entId}"
+
     def setupSwitch(self):
         """
         Load and position the model.
         """
         pass
-    
+
     def switchOnTrack(self):
         """
         Animate the switch turning on.
         returns a Sequence or None.
         """
         pass
-    
+
     def switchOffTrack(self):
         """
         Animate the switch turning off.
@@ -152,68 +153,70 @@ class DistributedSwitch(
         """
         required dc field.
         """
-        #("setAvatarInteract(%s)"%(avatarId,)))
+        # ("setAvatarInteract(%s)"%(avatarId,)))
         assert(avatarId not in self.__dict__)
-        self.avatarId=avatarId
+        self.avatarId = avatarId
 
     def setState(self, state, timestamp):
         """
         required dc field.
         """
-        #("setState(%s, %d)" % (state, timestamp)))
+        # ("setState(%s, %d)" % (state, timestamp)))
         if self.isGenerated():
-            self.fsm.request(state, [globalClockDelta.localElapsedTime(timestamp)])
+            self.fsm.request(
+                state, [
+                    globalClockDelta.localElapsedTime(timestamp)])
         else:
             self.initialState = state
             self.initialStateTimestamp = timestamp
-    
+
     def enterTrigger(self, args=None):
-        #("enterTrigger(args="+str(args)+")"))
+        # ("enterTrigger(args="+str(args)+")"))
         self.sendUpdate("requestInteract")
         # the AI server will reply with avatarInteract or rejectInteract.
-    
+
     def exitTrigger(self, args=None):
-        #("exitTrigger(args="+str(args)+")"))
+        # ("exitTrigger(args="+str(args)+")"))
         self.sendUpdate("requestExit")
         # the AI server will reply with avatarExit.
 
     ##### off state #####
-    
+
     def enterOff(self):
-        ##("enterOff()"))
+        # ("enterOff()"))
         pass
-    
+
     def exitOff(self):
-        ##("exitOff()"))
+        # ("exitOff()"))
         pass
 
     ##### attract state #####
-    
+
     def enterAttract(self, ts):
-        #("enterAttract()"))
-        track=self.switchOffTrack()
+        # ("enterAttract()"))
+        track = self.switchOffTrack()
         if track is not None:
             track.start(ts)
             self.track = track
-    
+
     def exitAttract(self):
-        #("exitAttract()"))
+        # ("exitAttract()"))
         if self.track:
             self.track.finish()
         self.track = None
-    
+
     ##### playing state #####
-    
+
     def enterPlaying(self, ts):
-        #("enterPlaying()"))
+        # ("enterPlaying()"))
         # Start animation at time stamp:
-        track=self.switchOnTrack()
+        track = self.switchOnTrack()
         if track is not None:
             track.start(ts)
             self.track = track
-    
+
     def exitPlaying(self):
-        #("exitPlaying()"))
+        # ("exitPlaying()"))
         if self.track:
             self.track.finish()
         self.track = None

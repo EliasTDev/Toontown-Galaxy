@@ -1,22 +1,25 @@
 from otp.level import DistributedEntityAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class BattleBlockerAI(DistributedEntityAI.DistributedEntityAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("BattleBlockerAI")
+
     def __init__(self, level, entId):
         DistributedEntityAI.DistributedEntityAI.__init__(self, level, entId)
         self.suitIds = []
         self.active = 1
-        
+
     def destroy(self):
         self.notify.debug("delete")
         self.ignoreAll()
         DistributedEntityAI.DistributedEntityAI.destroy(self)
-        
+
     def generate(self):
         DistributedEntityAI.DistributedEntityAI.generate(self)
         # listen for creation of planner
-        self.accept("plannerCreated-"+str(self.level.doId), self.registerBlocker)
+        self.accept("plannerCreated-" +
+                    str(self.level.doId), self.registerBlocker)
 
     def registerBlocker(self):
         # register this blocker with the factory
@@ -31,19 +34,19 @@ class BattleBlockerAI(DistributedEntityAI.DistributedEntityAI):
 
     def getActive(self):
         return self.active
-    
+
     def addSuit(self, suit):
         self.suitIds.append(suit.doId)
         self.d_setSuits()
-        
+
     def removeSuit(self, suit):
         try:
             self.suitIds.remove(suit.doId)
             self.d_setSuits()
-        except:
+        except BaseException:
             self.notify.debug("didn't have suitId %d" % suit.doId)
             pass
-        
+
     def d_setSuits(self):
         # assume the factory has been generated here
         self.sendUpdate("setSuits", [self.suitIds])
@@ -51,7 +54,7 @@ class BattleBlockerAI(DistributedEntityAI.DistributedEntityAI):
     def b_setBattle(self, battleId):
         self.battle = battleId
         self.d_setBattle(battleId)
-        
+
     def d_setBattle(self, battleId):
         self.sendUpdate("setBattle", [battleId])
 
@@ -62,14 +65,14 @@ class BattleBlockerAI(DistributedEntityAI.DistributedEntityAI):
         self.d_setBattleFinished()
 
     def setBattleFinished(self):
-        self.notify.debug("setBattleFinished: %s" % self.entId)
+        self.notify.debug(f"setBattleFinished: {self.entId}")
         # a door might be listening to this
-        messenger.send("battleBlockerFinished-"+str(self.entId))
-        messenger.send(self.getOutputEventName(),[1])
-        
+        messenger.send("battleBlockerFinished-" + str(self.entId))
+        messenger.send(self.getOutputEventName(), [1])
+
     def d_setBattleFinished(self):
         self.sendUpdate("setBattleFinished", [])
-        
+
     if __dev__:
         def attribChanged(self, *args):
             self.suitIds = []
@@ -80,7 +83,7 @@ class BattleBlockerAI(DistributedEntityAI.DistributedEntityAI):
                     self.suitIds.append(suit.doId)
             else:
                 self.notify.warning(
-                    "Couldn't find battle cell id %d in battleCellId2suits" % self.cellId)
+                    "Couldn't find battle cell id %d in battleCellId2suits" %
+                    self.cellId)
             self.d_setSuits()
             self.registerBlocker()
-        

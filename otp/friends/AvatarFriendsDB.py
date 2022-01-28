@@ -9,17 +9,18 @@ from otp.uberdog.DBInterface import DBInterface
 SERVER_GONE_ERROR = MySQLdb.constants.CR.SERVER_GONE_ERROR
 SERVER_LOST = MySQLdb.constants.CR.SERVER_LOST
 
+
 class AvatarFriendsDB(DBInterface):
     """
     DB wrapper class for avatar friends!  All SQL code for avatar friends should be in here.
     """
     notify = directNotify.newCategory('AvatarFriendsDB')
-        
-    def __init__(self,host,port,user,passwd,dbname):
-        self.sqlAvailable = True 
+
+    def __init__(self, host, port, user, passwd, dbname):
+        self.sqlAvailable = True
         if not self.sqlAvailable:
             return
-        
+
         self.host = host
         self.port = port
         self.user = user
@@ -32,27 +33,33 @@ class AvatarFriendsDB(DBInterface):
                                       password=passwd)
         except MySQLdb.OperationalError as e:
             if __debug__:
-                self.notify.warning("Failed to connect to MySQL at %s:%d.  Avatar friends DB is disabled."%(host,port))
+                self.notify.warning(
+                    "Failed to connect to MySQL at %s:%d.  Avatar friends DB is disabled." %
+                    (host, port))
             self.sqlAvailable = 0
             uber.sqlAvailable = 0
             return
 
         if __debug__:
-            self.notify.info("Connected to avatar friends MySQL db at %s:%d."%(host,port))
+            self.notify.info(
+                "Connected to avatar friends MySQL db at %s:%d." %
+                (host, port))
 
-        #temp hack for initial dev, create DB structure if it doesn't exist already
+        # temp hack for initial dev, create DB structure if it doesn't exist
+        # already
         cursor = self.db.cursor()
         try:
-            cursor.execute("CREATE DATABASE `%s`"%self.dbname)
+            cursor.execute(f"CREATE DATABASE `{self.dbname}`")
             if __debug__:
-                self.notify.info("Database '%s' did not exist, created a new one!"%self.dbname)
+                self.notify.info(
+                    f"Database '{self.dbname}' did not exist, created a new one!")
         except MySQLdb.ProgrammingError as e:
             pass
 
-        cursor.execute("USE `%s`"%self.dbname)
+        cursor.execute(f"USE `{self.dbname}`")
         if __debug__:
-            self.notify.debug("Using database '%s'"%self.dbname)
-        
+            self.notify.debug(f"Using database '{self.dbname}'")
+
         try:
             cursor.execute("""
             CREATE TABLE `avatarfriends` (
@@ -65,23 +72,29 @@ class AvatarFriendsDB(DBInterface):
             ) ENGINE=InnoDB DEFAULT CHARSET=latin1
             """)
             if __debug__:
-                self.notify.info("Table avatarfriends did not exist, created a new one!")
+                self.notify.info(
+                    "Table avatarfriends did not exist, created a new one!")
         except MySQLdb.OperationalError as e:
             pass
 
     def reconnect(self):
         if __debug__:
-            self.notify.debug("MySQL server was missing, attempting to reconnect.")
-        try: self.db.close()
-        except: pass
+            self.notify.debug(
+                "MySQL server was missing, attempting to reconnect.")
+        try:
+            self.db.close()
+        except BaseException:
+            pass
         self.db = MySQLdb.connect(host=self.host,
                                   port=self.port,
                                   user=self.user,
                                   password=self.passwd)
         cursor = self.db.cursor()
-        cursor.execute("USE `%s`"%self.dbname)
+        cursor.execute(f"USE `{self.dbname}`")
         if __debug__:
-            self.notify.debug("Reconnected to MySQL server at %s:%d."%(self.host,self.port))
+            self.notify.debug(
+                "Reconnected to MySQL server at %s:%d." %
+                (self.host, self.port))
 
     def disconnect(self):
         if not self.sqlAvailable:
@@ -89,18 +102,24 @@ class AvatarFriendsDB(DBInterface):
         self.db.close()
         self.db = None
 
-    def getFriends(self,avatarId):
+    def getFriends(self, avatarId):
         if not self.sqlAvailable:
             return []
-        
+
         cursor = MySQLdb.cursors.DictCursor(self.db)
         try:
-            cursor.execute("SELECT * FROM avatarfriends WHERE friendId1=%s OR friendId2=%s",(avatarId,avatarId))
+            cursor.execute(
+                "SELECT * FROM avatarfriends WHERE friendId1=%s OR friendId2=%s",
+                (avatarId,
+                 avatarId))
         except MySQLdb.OperationalError as e:
             if e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
                 cursor = MySQLdb.cursors.DictCursor(self.db)
-                cursor.execute("SELECT * FROM avatarfriends WHERE friendId1=%s OR friendId2=%s",(avatarId,avatarId))
+                cursor.execute(
+                    "SELECT * FROM avatarfriends WHERE friendId1=%s OR friendId2=%s",
+                    (avatarId,
+                     avatarId))
             else:
                 raise e
 
@@ -114,62 +133,89 @@ class AvatarFriendsDB(DBInterface):
                 cleanfriends[f['friendId1']] = f['openChatYesNo']
         return cleanfriends
 
-    def addFriendship(self,avatarId1,avatarId2,openChat=0):
+    def addFriendship(self, avatarId1, avatarId2, openChat=0):
         if not self.sqlAvailable:
             return
         cursor = MySQLdb.cursors.DictCursor(self.db)
         try:
             if avatarId1 < avatarId2:
-                cursor.execute("INSERT INTO avatarfriends (friendId1,friendId2,openChatYesNo) VALUES (%s,%s,%s)",(avatarId1,avatarId2,openChat))
+                cursor.execute(
+                    "INSERT INTO avatarfriends (friendId1,friendId2,openChatYesNo) VALUES (%s,%s,%s)",
+                    (avatarId1,
+                     avatarId2,
+                     openChat))
             else:
-                cursor.execute("INSERT INTO avatarfriends (friendId1,friendId2,openChatYesNo) VALUES (%s,%s,%s)",(avatarId2,avatarId1,openChat))
+                cursor.execute(
+                    "INSERT INTO avatarfriends (friendId1,friendId2,openChatYesNo) VALUES (%s,%s,%s)",
+                    (avatarId2,
+                     avatarId1,
+                     openChat))
         except MySQLdb.OperationalError as e:
             if e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
                 cursor = MySQLdb.cursors.DictCursor(self.db)
                 if avatarId1 < avatarId2:
-                    cursor.execute("INSERT INTO avatarfriends (friendId1,friendId2,openChatYesNo) VALUES (%s,%s,%s)",(avatarId1,avatarId2,openChat))
+                    cursor.execute(
+                        "INSERT INTO avatarfriends (friendId1,friendId2,openChatYesNo) VALUES (%s,%s,%s)",
+                        (avatarId1,
+                         avatarId2,
+                         openChat))
                 else:
-                    cursor.execute("INSERT INTO avatarfriends (friendId1,friendId2,openChatYesNo) VALUES (%s,%s,%s)",(avatarId2,avatarId1,openChat))
+                    cursor.execute(
+                        "INSERT INTO avatarfriends (friendId1,friendId2,openChatYesNo) VALUES (%s,%s,%s)",
+                        (avatarId2,
+                         avatarId1,
+                         openChat))
             else:
                 raise e
 
         self.db.commit()
 
-    def removeFriendship(self,avatarId1,avatarId2):
+    def removeFriendship(self, avatarId1, avatarId2):
         if not self.sqlAvailable:
             return
         cursor = MySQLdb.cursors.DictCursor(self.db)
         try:
             if avatarId1 < avatarId2:
-                cursor.execute("DELETE FROM avatarfriends where friendId1=%s AND friendId2=%s",(avatarId1,avatarId2))
+                cursor.execute(
+                    "DELETE FROM avatarfriends where friendId1=%s AND friendId2=%s",
+                    (avatarId1,
+                     avatarId2))
             else:
-                cursor.execute("DELETE FROM avatarfriends where friendId1=%s AND friendId2=%s",(avatarId2,avatarId1))
+                cursor.execute(
+                    "DELETE FROM avatarfriends where friendId1=%s AND friendId2=%s",
+                    (avatarId2,
+                     avatarId1))
         except MySQLdb.OperationalError as e:
-            if e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST: # 'Lost connection to MySQL server during query'
+            # 'Lost connection to MySQL server during query'
+            if e[0] == SERVER_GONE_ERROR or e[0] == SERVER_LOST:
                 self.reconnect()
                 cursor = MySQLdb.cursors.DictCursor(self.db)
                 if avatarId1 < avatarId2:
-                    cursor.execute("DELETE FROM avatarfriends where friendId1=%s AND friendId2=%s",(avatarId1,avatarId2))
+                    cursor.execute(
+                        "DELETE FROM avatarfriends where friendId1=%s AND friendId2=%s",
+                        (avatarId1,
+                         avatarId2))
                 else:
-                    cursor.execute("DELETE FROM avatarfriends where friendId1=%s AND friendId2=%s",(avatarId2,avatarId1))
+                    cursor.execute(
+                        "DELETE FROM avatarfriends where friendId1=%s AND friendId2=%s",
+                        (avatarId2,
+                         avatarId1))
             else:
                 raise e
-            
+
         self.db.commit()
 
-    #for debugging only
+    # for debugging only
     def dumpFriendsTable(self):
-        assert self.db,"Tried to call dumpFriendsTable when DB was closed."
+        assert self.db, "Tried to call dumpFriendsTable when DB was closed."
         cursor = MySQLdb.cursors.DictCursor(self.db)
         cursor.execute("SELECT * FROM avatarfriends")
         return cursor.fetchallDict()
 
-    #for debugging only
+    # for debugging only
     def clearFriendsTable(self):
-        assert self.db,"Tried to call clearFriendsTable when DB was closed."
+        assert self.db, "Tried to call clearFriendsTable when DB was closed."
         cursor = MySQLdb.cursors.DictCursor(self.db)
         cursor.execute("TRUNCATE TABLE avatarfriends")
         self.db.commit()
-
- 

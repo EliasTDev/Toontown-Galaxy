@@ -14,9 +14,9 @@ from .VisGroupsUI import *
 
 from .LevelEditorGlobals import HOOD_IDS
 
-ID_SAVE_DNA    = 1101
+ID_SAVE_DNA = 1101
 ID_SAVE_DNA_AS = 1102
-ID_OPEN_DNA    = 1103
+ID_OPEN_DNA = 1103
 
 ID_EDIT_VIS = 1201
 
@@ -27,29 +27,30 @@ ID_MAKE_LONG_STREET = 1304
 
 AppName = 'ToonTown Level Editor'
 
+
 class LevelEditorUI(LevelEditorUIBase):
     """ Class for Panda3D LevelEditor """
     frameWidth = 800
     frameHeight = 600
-    appversion      = '2.0'
-    appname         = AppName
+    appversion = '2.0'
+    appname = AppName
 
     def __init__(self, editor, *args, **kw):
         if not kw.get('size'):
             kw['size'] = wx.Size(self.frameWidth, self.frameHeight)
 
         self.MENU_TEXTS.update({
-        ID_OPEN_DNA : ("Open DNA", None),
-        ID_SAVE_DNA : ("&Save DNA", "LE-SaveDNA"),
-        ID_SAVE_DNA_AS : ("Save DNA &As", None),
-        ID_EDIT_VIS : ("Edit Vis Groups", None),
-        ID_SHOW_BATTLE_CELLS : ("Show Battle Cells", None),
-        ID_SHOW_SUIT_PATH : ("Show Suit Path", None),
-        ID_USE_DRIVE_MODE : ("Use Drive Mode", None),
-        ID_MAKE_LONG_STREET : ("Make Long Street", None),
+            ID_OPEN_DNA: ("Open DNA", None),
+            ID_SAVE_DNA: ("&Save DNA", "LE-SaveDNA"),
+            ID_SAVE_DNA_AS: ("Save DNA &As", None),
+            ID_EDIT_VIS: ("Edit Vis Groups", None),
+            ID_SHOW_BATTLE_CELLS: ("Show Battle Cells", None),
+            ID_SHOW_SUIT_PATH: ("Show Suit Path", None),
+            ID_USE_DRIVE_MODE: ("Use Drive Mode", None),
+            ID_MAKE_LONG_STREET: ("Make Long Street", None),
         })
 
-        LevelEditorUIBase.__init__(self, editor, *args, **kw)       
+        LevelEditorUIBase.__init__(self, editor, *args, **kw)
         self.appName = AppName
         self.activeMenu = None
         self.visGroupsUI = None
@@ -80,42 +81,64 @@ class LevelEditorUI(LevelEditorUIBase):
         self.visitedEdges = []
 
         self.zoneLabels = []
-        
+
     def createInterface(self):
         LevelEditorUIBase.createInterface(self)
         self.sceneGraphUI = SceneGraphUI(self.leftBarDownPane0, self.editor)
 
     def createMenu(self):
         LevelEditorUIBase.createMenu(self)
-        menuItem = self.menuFile.Insert(self.menuFile.GetMenuItemCount() - 3, ID_OPEN_DNA, self.MENU_TEXTS[ID_OPEN_DNA][0])
+        menuItem = self.menuFile.Insert(
+            self.menuFile.GetMenuItemCount() - 3,
+            ID_OPEN_DNA,
+            self.MENU_TEXTS[ID_OPEN_DNA][0])
         self.Bind(wx.EVT_MENU, self.onOpenDna, menuItem)
 
-        menuItem = self.menuFile.Insert(self.menuFile.GetMenuItemCount() - 1, ID_SAVE_DNA, self.MENU_TEXTS[ID_SAVE_DNA][0])
+        menuItem = self.menuFile.Insert(
+            self.menuFile.GetMenuItemCount() - 1,
+            ID_SAVE_DNA,
+            self.MENU_TEXTS[ID_SAVE_DNA][0])
         self.Bind(wx.EVT_MENU, self.onSaveDna, menuItem)
 
-        menuItem = self.menuFile.Insert(self.menuFile.GetMenuItemCount() - 1, ID_SAVE_DNA_AS, self.MENU_TEXTS[ID_SAVE_DNA_AS][0])
+        menuItem = self.menuFile.Insert(
+            self.menuFile.GetMenuItemCount() - 1,
+            ID_SAVE_DNA_AS,
+            self.MENU_TEXTS[ID_SAVE_DNA_AS][0])
         self.Bind(wx.EVT_MENU, self.onSaveDnaAs, menuItem)
 
-        menuItem = self.menuEdit.Append(ID_EDIT_VIS, self.MENU_TEXTS[ID_EDIT_VIS][0])
+        menuItem = self.menuEdit.Append(
+            ID_EDIT_VIS, self.MENU_TEXTS[ID_EDIT_VIS][0])
         self.Bind(wx.EVT_MENU, self.onEditVis, menuItem)
-        
-        self.showBattleCellsMenuItem = self.menuOptions.Append(ID_SHOW_BATTLE_CELLS, self.MENU_TEXTS[ID_SHOW_BATTLE_CELLS][0], kind = wx.ITEM_CHECK)
-        self.Bind(wx.EVT_MENU, self.onShowBattleCells, self.showBattleCellsMenuItem)
 
-        self.showSuitPathMenuItem = self.menuOptions.Append(ID_SHOW_SUIT_PATH, self.MENU_TEXTS[ID_SHOW_SUIT_PATH][0], kind = wx.ITEM_CHECK)
+        self.showBattleCellsMenuItem = self.menuOptions.Append(
+            ID_SHOW_BATTLE_CELLS,
+            self.MENU_TEXTS[ID_SHOW_BATTLE_CELLS][0],
+            kind=wx.ITEM_CHECK)
+        self.Bind(
+            wx.EVT_MENU,
+            self.onShowBattleCells,
+            self.showBattleCellsMenuItem)
+
+        self.showSuitPathMenuItem = self.menuOptions.Append(
+            ID_SHOW_SUIT_PATH, self.MENU_TEXTS[ID_SHOW_SUIT_PATH][0], kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.onShowSuitPath, self.showSuitPathMenuItem)
 
-        self.useDriveModeMenuItem = self.menuOptions.Append(ID_USE_DRIVE_MODE, self.MENU_TEXTS[ID_USE_DRIVE_MODE][0], kind = wx.ITEM_CHECK)
+        self.useDriveModeMenuItem = self.menuOptions.Append(
+            ID_USE_DRIVE_MODE, self.MENU_TEXTS[ID_USE_DRIVE_MODE][0], kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.onUseDriveMode, self.useDriveModeMenuItem)
-        
-        self.makeLongStreetMenuItem = self.menuOptions.Append(ID_MAKE_LONG_STREET, self.MENU_TEXTS[ID_MAKE_LONG_STREET][0], kind = wx.ITEM_CHECK)
-        self.Bind(wx.EVT_MENU, self.onMakeLongStreet, self.makeLongStreetMenuItem)
+
+        self.makeLongStreetMenuItem = self.menuOptions.Append(
+            ID_MAKE_LONG_STREET, self.MENU_TEXTS[ID_MAKE_LONG_STREET][0], kind=wx.ITEM_CHECK)
+        self.Bind(
+            wx.EVT_MENU,
+            self.onMakeLongStreet,
+            self.makeLongStreetMenuItem)
 
     def reset(self):
         LevelEditorUIBase.reset(self)
         if self.visGroupsUI:
             self.visGroupsUI.Destroy()
-            
+
     def buildContextMenu(self, nodePath):
         LevelEditorUIBase.buildContextMenu(self, nodePath)
         obj = self.editor.objectMgr.findObjectByNodePath(nodePath)
@@ -125,69 +148,186 @@ class LevelEditorUI(LevelEditorUIBase):
         objNP = obj[OG.OBJ_NP]
         objDef = obj[OG.OBJ_DEF]
 
-        def addSubMenuItem(name, subMenu, menuMode, dnaTarget, dnaParent=None, hood=None):
+        def addSubMenuItem(
+                name,
+                subMenu,
+                menuMode,
+                dnaTarget,
+                dnaParent=None,
+                hood=None):
             if hood is None:
-               hood = objDef.hood
-            self.contextMenu.addItem(name, subMenu,
-                                     lambda \
-                                     p0=None, p1=menuMode, p2=dnaTarget, p3=dnaParent, p4=objNP, p5=hood:\
-                                     self.spawnMenu(p0, p1, p2, p3, p4, p5))
+                hood = objDef.hood
+            self.contextMenu.addItem(
+                name,
+                subMenu,
+                lambda p0=None,
+                p1=menuMode,
+                p2=dnaTarget,
+                p3=dnaParent,
+                p4=objNP,
+                p5=hood: self.spawnMenu(
+                    p0,
+                    p1,
+                    p2,
+                    p3,
+                    p4,
+                    p5))
 
         def addSignMenuItem(objNP):
             dnaTarget = DNAGetChildOfClass(objNP.dna, DNA_SIGN)
-            addSubMenuItem('Sign Texture', None, 'sign_texture', dnaTarget, objNP.dna)
+            addSubMenuItem(
+                'Sign Texture',
+                None,
+                'sign_texture',
+                dnaTarget,
+                objNP.dna)
             if dnaTarget:
-               addSubMenuItem('Sign Color', None, 'sign_color', dnaTarget, objNP.dna)
-               self.buildSignTextSubMenu(dnaTarget, objNP)
-               self.buildSignGraphicsSubMenu(dnaTarget, objNP)
+                addSubMenuItem(
+                    'Sign Color',
+                    None,
+                    'sign_color',
+                    dnaTarget,
+                    objNP.dna)
+                self.buildSignTextSubMenu(dnaTarget, objNP)
+                self.buildSignGraphicsSubMenu(dnaTarget, objNP)
 
         if isinstance(objNP, FlatBuildingObj):
             heightList, offsetList = objNP.computeWallNum()
 
-            for i in range(len(heightList)-1,-1,-1):
-                subMenu = self.contextMenu.addMenu('Menu for floor %d'%i)
+            for i in range(len(heightList) - 1, -1, -1):
+                subMenu = self.contextMenu.addMenu('Menu for floor %d' % i)
                 wall = objNP.getWall(i)
-                addSubMenuItem('Wall Texture', subMenu, 'wall_texture', wall, objNP)
-                addSubMenuItem('Wall Style', subMenu, 'wall_style', wall, objNP)
-                addSubMenuItem('Wall Orientation', subMenu, 'wall_orientation', wall, objNP)
-                addSubMenuItem('Wall Color', subMenu, 'wall_color', wall, objNP)
-                
+                addSubMenuItem(
+                    'Wall Texture',
+                    subMenu,
+                    'wall_texture',
+                    wall,
+                    objNP)
+                addSubMenuItem(
+                    'Wall Style',
+                    subMenu,
+                    'wall_style',
+                    wall,
+                    objNP)
+                addSubMenuItem(
+                    'Wall Orientation',
+                    subMenu,
+                    'wall_orientation',
+                    wall,
+                    objNP)
+                addSubMenuItem(
+                    'Wall Color',
+                    subMenu,
+                    'wall_color',
+                    wall,
+                    objNP)
+
                 subMenu.AppendSeparator()
                 dnaTarget = DNAGetChildOfClass(wall, DNA_CORNICE)
-                addSubMenuItem('Cornice Texture', subMenu, 'cornice_texture', dnaTarget, wall)
-                addSubMenuItem('Cornice Orientation', subMenu, 'cornice_orientation', dnaTarget, wall)
-                addSubMenuItem('Cornice Color', subMenu, 'cornice_color', dnaTarget, wall)
-
+                addSubMenuItem(
+                    'Cornice Texture',
+                    subMenu,
+                    'cornice_texture',
+                    dnaTarget,
+                    wall)
+                addSubMenuItem(
+                    'Cornice Orientation',
+                    subMenu,
+                    'cornice_orientation',
+                    dnaTarget,
+                    wall)
+                addSubMenuItem(
+                    'Cornice Color',
+                    subMenu,
+                    'cornice_color',
+                    dnaTarget,
+                    wall)
 
                 subMenu.AppendSeparator()
                 dnaTarget = DNAGetChildOfClass(wall, DNA_FLAT_DOOR)
-                addSubMenuItem('Door Texture', subMenu, 'door_single_texture', dnaTarget, wall)
-                addSubMenuItem('Door Orientation', subMenu, 'door_orientation', dnaTarget, wall)
-                addSubMenuItem('Door Color', subMenu, 'door_color', dnaTarget, wall)
+                addSubMenuItem(
+                    'Door Texture',
+                    subMenu,
+                    'door_single_texture',
+                    dnaTarget,
+                    wall)
+                addSubMenuItem(
+                    'Door Orientation',
+                    subMenu,
+                    'door_orientation',
+                    dnaTarget,
+                    wall)
+                addSubMenuItem(
+                    'Door Color',
+                    subMenu,
+                    'door_color',
+                    dnaTarget,
+                    wall)
 
                 subMenu.AppendSeparator()
                 dnaTarget = DNAGetChildOfClass(wall, DNA_WINDOWS)
-                addSubMenuItem('Window Texture', subMenu, 'window_texture', dnaTarget, wall)
-                addSubMenuItem('Window Count', subMenu, 'window_count', dnaTarget, wall)
-                addSubMenuItem('Window Orientation', subMenu, 'window_orientation', dnaTarget, wall)
-                addSubMenuItem('Window Color', subMenu, 'window_color', dnaTarget, wall)
-                
+                addSubMenuItem(
+                    'Window Texture',
+                    subMenu,
+                    'window_texture',
+                    dnaTarget,
+                    wall)
+                addSubMenuItem(
+                    'Window Count',
+                    subMenu,
+                    'window_count',
+                    dnaTarget,
+                    wall)
+                addSubMenuItem(
+                    'Window Orientation',
+                    subMenu,
+                    'window_orientation',
+                    dnaTarget,
+                    wall)
+                addSubMenuItem(
+                    'Window Color',
+                    subMenu,
+                    'window_color',
+                    dnaTarget,
+                    wall)
+
         elif isinstance(objNP, LandmarkObj):
             if obj[OG.OBJ_PROP]['Special Type'] not in ['hq', 'kartshop']:
                 # beacuse hq or kartshop can't have doors
                 dnaTarget = DNAGetChildOfClass(objNP.dna, DNA_DOOR)
-                addSubMenuItem('Door Texture', None, 'door_double_texture', dnaTarget, objNP.dna)            
-                addSubMenuItem('Door Orientation', None, 'door_orientation', dnaTarget, objNP.dna)
-                addSubMenuItem('Door Color', None, 'door_color', dnaTarget, objNP.dna)
+                addSubMenuItem(
+                    'Door Texture',
+                    None,
+                    'door_double_texture',
+                    dnaTarget,
+                    objNP.dna)
+                addSubMenuItem(
+                    'Door Orientation',
+                    None,
+                    'door_orientation',
+                    dnaTarget,
+                    objNP.dna)
+                addSubMenuItem(
+                    'Door Color',
+                    None,
+                    'door_color',
+                    dnaTarget,
+                    objNP.dna)
                 self.contextMenu.AppendSeparator()
             addSignMenuItem(objNP)
 
         elif isinstance(objNP, PropObj):
             if objDef.hood == 'Generic':
                 for hoodId in list(HOOD_IDS.keys()):
-                    addSubMenuItem('Prop Color for %s'%hoodId, None, 'prop_color', objNP.dna, None, hoodId) 
+                    addSubMenuItem(
+                        f'Prop Color for {hoodId}',
+                        None,
+                        'prop_color',
+                        objNP.dna,
+                        None,
+                        hoodId)
             else:
-                addSubMenuItem('Prop Color', None, 'prop_color', objNP.dna)         
+                addSubMenuItem('Prop Color', None, 'prop_color', objNP.dna)
             addSignMenuItem(objNP)
         elif isinstance(objNP, AnimBuildingObj):
             addSignMenuItem(objNP)
@@ -203,16 +343,39 @@ class LevelEditorUI(LevelEditorUIBase):
 
     def buildBattleCellSubMenu(self, visGroupDNA, objNP, battleCellTypeList):
         subMenu = self.contextMenu.addMenu('Battle Cells')
-        subMenuBattleCells = self.contextMenu.addMenu('Add Battle Cell', subMenu)
+        subMenuBattleCells = self.contextMenu.addMenu(
+            'Add Battle Cell', subMenu)
         for battleCellType in battleCellTypeList:
-            self.contextMenu.addItem(battleCellType, subMenuBattleCells, lambda p0=None, p1=objNP, p2=visGroupDNA, p3=battleCellType: self.addBattleCell(p0, p1, p2, p3))
+            self.contextMenu.addItem(
+                battleCellType,
+                subMenuBattleCells,
+                lambda p0=None,
+                p1=objNP,
+                p2=visGroupDNA,
+                p3=battleCellType: self.addBattleCell(
+                    p0,
+                    p1,
+                    p2,
+                    p3))
         subMenu.AppendSeparator()
         numCells = visGroupDNA.getNumBattleCells()
         for i in range(numCells):
             cell = visGroupDNA.getBattleCell(i)
             if cell:
-               subMenuBattleCells = self.contextMenu.addMenu("Cell %d (%dx%d)"%(i, cell.getWidth(), cell.getHeight()), subMenu)
-               self.contextMenu.addItem('Remove', subMenuBattleCells, lambda p0=None, p1=objNP, p2=visGroupDNA, p3=cell: self.removeBattleCell(p0, p1, p2, p3))
+                subMenuBattleCells = self.contextMenu.addMenu(
+                    "Cell %d (%dx%d)" %
+                    (i, cell.getWidth(), cell.getHeight()), subMenu)
+                self.contextMenu.addItem(
+                    'Remove',
+                    subMenuBattleCells,
+                    lambda p0=None,
+                    p1=objNP,
+                    p2=visGroupDNA,
+                    p3=cell: self.removeBattleCell(
+                        p0,
+                        p1,
+                        p2,
+                        p3))
 
     def addBattleCell(self, evt, objNP, visGroupDNA, battleCellType):
         absPos = self.editor.lastMousePos
@@ -240,7 +403,7 @@ class LevelEditorUI(LevelEditorUIBase):
     def removeBattleCell(self, evt, objNP, visGroupDNA, cell):
         marker = self.cellDict[cell]
         if not marker:
-           return
+            return
         marker.remove()
 
         objNP.removeBattleCell(cell)
@@ -248,19 +411,19 @@ class LevelEditorUI(LevelEditorUIBase):
         if DNASTORE.removeBattleCell(cell):
             print("Removed from DNASTORE")
         else:
-            print("Not found in DNASTORE")        
+            print("Not found in DNASTORE")
 
         del self.cellDict[cell]
         for i in range(visGroupDNA.getNumBattleCells()):
             cell = visGroupDNA.getBattleCell(i)
             if not cell:
-               continue
+                continue
             marker = self.cellDict[cell]
             if not marker:
-               continue
+                continue
             label = marker.find('**/+PGItem')
             if label:
-               label.remove()
+                label.remove()
             self.drawBattleCellLabel(marker, i)
         self.buildContextMenu(objNP)
 
@@ -276,12 +439,12 @@ class LevelEditorUI(LevelEditorUIBase):
                 self.cellDict[cell] = marker
 
         self.onShowBattleCells()
-                
+
     def drawBattleCellLabel(self, marker, cellId=0):
-        marker.setTag('cellId', '%d'%cellId)
-        label = DirectGui.DirectLabel(text = '%d'%cellId,
-                                      parent = marker,
-                                      relief = None, scale = 3)
+        marker.setTag('cellId', '%d' % cellId)
+        label = DirectGui.DirectLabel(text='%d' % cellId,
+                                      parent=marker,
+                                      relief=None, scale=3)
         label.setBillboardPointEye(0)
         label.setScale(0.4)
 
@@ -293,8 +456,8 @@ class LevelEditorUI(LevelEditorUIBase):
         marker.setTransparency(1)
         marker.setPos(cell.getPos())
         # scale to radius which is width/2
-        marker.setScale(cell.getWidth()/2.0,
-                        cell.getHeight()/2.0,
+        marker.setScale(cell.getWidth() / 2.0,
+                        cell.getHeight() / 2.0,
                         1)
         return marker
 
@@ -306,61 +469,143 @@ class LevelEditorUI(LevelEditorUIBase):
 
     def buildSignTextSubMenu(self, signDNA, objNP):
         subMenu = self.contextMenu.addMenu('Sign Text')
-        self.contextMenu.addItem('Add Baseline', subMenu, lambda p0=None, p1=objNP, p2=signDNA, p3=None: self.openSignTextDialog(p0, p1, p2, p3))
+        self.contextMenu.addItem(
+            'Add Baseline',
+            subMenu,
+            lambda p0=None,
+            p1=objNP,
+            p2=signDNA,
+            p3=None: self.openSignTextDialog(
+                p0,
+                p1,
+                p2,
+                p3))
         subMenu.AppendSeparator()
         baselineDNAList = DNAGetChildren(signDNA, DNA_SIGN_BASELINE)
         for baselineDNA in baselineDNAList:
             signGraphicsList = DNAGetChildren(baselineDNA, DNA_SIGN_GRAPHIC)
             if len(signGraphicsList) <= 0:
-               baselineDNAText = DNAGetBaselineString(baselineDNA)
-               if baselineDNAText == "":
-                  baselineDNAText = 'none'
-               subMenuBaseline = self.contextMenu.addMenu(baselineDNAText, subMenu)
-               self.contextMenu.addItem('Edit', subMenuBaseline, lambda p0=None, p1=objNP, p2=signDNA, p3=baselineDNA: self.openSignTextDialog(p0, p1, p2, p3))
-               self.contextMenu.addItem('Remove', subMenuBaseline, lambda p0=None, p1=objNP, p2=signDNA, p3=baselineDNA: self.removeSignBaseline(p0, p1, p2, p3))
+                baselineDNAText = DNAGetBaselineString(baselineDNA)
+                if baselineDNAText == "":
+                    baselineDNAText = 'none'
+                subMenuBaseline = self.contextMenu.addMenu(
+                    baselineDNAText, subMenu)
+                self.contextMenu.addItem(
+                    'Edit',
+                    subMenuBaseline,
+                    lambda p0=None,
+                    p1=objNP,
+                    p2=signDNA,
+                    p3=baselineDNA: self.openSignTextDialog(
+                        p0,
+                        p1,
+                        p2,
+                        p3))
+                self.contextMenu.addItem(
+                    'Remove',
+                    subMenuBaseline,
+                    lambda p0=None,
+                    p1=objNP,
+                    p2=signDNA,
+                    p3=baselineDNA: self.removeSignBaseline(
+                        p0,
+                        p1,
+                        p2,
+                        p3))
 
     def buildSignGraphicsSubMenu(self, signDNA, objNP):
         subMenu = self.contextMenu.addMenu('Sign Graphics')
         subMenuGraphics = self.contextMenu.addMenu('Add Graphics', subMenu)
         graphicsCodeList = self.editor.styleManager.getCatalogCodes('graphic')
         for graphicsCode in graphicsCodeList:
-            self.contextMenu.addItem(graphicsCode, subMenuGraphics, lambda p0=None, p1=objNP, p2=signDNA, p3=None, p4=None, p5=graphicsCode: self.openSignGraphicsDialog(p0, p1, p2, p3, p4, p5))
+            self.contextMenu.addItem(
+                graphicsCode,
+                subMenuGraphics,
+                lambda p0=None,
+                p1=objNP,
+                p2=signDNA,
+                p3=None,
+                p4=None,
+                p5=graphicsCode: self.openSignGraphicsDialog(
+                    p0,
+                    p1,
+                    p2,
+                    p3,
+                    p4,
+                    p5))
         subMenu.AppendSeparator()
         baselineDNAList = DNAGetChildren(signDNA, DNA_SIGN_BASELINE)
         for baselineDNA in baselineDNAList:
             signGraphicsList = DNAGetChildren(baselineDNA, DNA_SIGN_GRAPHIC)
             if len(signGraphicsList) > 0:
-               baselineDNAText = DNAGetBaselineString(baselineDNA)
-               subMenuBaseline = self.contextMenu.addMenu(baselineDNAText, subMenu)
-               self.contextMenu.addItem('Edit', subMenuBaseline, lambda p0=None, p1=objNP, p2=signDNA, p3=baselineDNA, p4=signGraphicsList[0], p5=None: self.openSignGraphicsDialog(p0, p1, p2, p3, p4, p5))
-               self.contextMenu.addItem('Remove', subMenuBaseline, lambda p0=None, p1=objNP, p2=signDNA, p3=baselineDNA: self.removeSignBaseline(p0, p1, p2, p3))
+                baselineDNAText = DNAGetBaselineString(baselineDNA)
+                subMenuBaseline = self.contextMenu.addMenu(
+                    baselineDNAText, subMenu)
+                self.contextMenu.addItem(
+                    'Edit',
+                    subMenuBaseline,
+                    lambda p0=None,
+                    p1=objNP,
+                    p2=signDNA,
+                    p3=baselineDNA,
+                    p4=signGraphicsList[0],
+                    p5=None: self.openSignGraphicsDialog(
+                        p0,
+                        p1,
+                        p2,
+                        p3,
+                        p4,
+                        p5))
+                self.contextMenu.addItem(
+                    'Remove',
+                    subMenuBaseline,
+                    lambda p0=None,
+                    p1=objNP,
+                    p2=signDNA,
+                    p3=baselineDNA: self.removeSignBaseline(
+                        p0,
+                        p1,
+                        p2,
+                        p3))
 
     def openSignTextDialog(self, evt, objNP, signDNA, baselineDNA):
         if baselineDNA is None:
-           baselineDNA = DNASignBaseline()
-           DNASetBaselineString(baselineDNA, 'none')
-           fontChoices = self.editor.styleManager.getCatalogCodes('font')
-           baselineDNA.setCode(fontChoices[0])
-           baselineDNA.setColor(VBase4(0.0, 0.0, 0.0, 1.0))
-           signDNA.add(baselineDNA)
-           objNP.replace()
+            baselineDNA = DNASignBaseline()
+            DNASetBaselineString(baselineDNA, 'none')
+            fontChoices = self.editor.styleManager.getCatalogCodes('font')
+            baselineDNA.setCode(fontChoices[0])
+            baselineDNA.setColor(VBase4(0.0, 0.0, 0.0, 1.0))
+            signDNA.add(baselineDNA)
+            objNP.replace()
 
         SignEditFrame(self.viewFrame, self.editor, baselineDNA, objNP).Show()
 
-    def openSignGraphicsDialog(self, evt, objNP, signDNA, baselineDNA, graphicsDNA, graphicsCode):
+    def openSignGraphicsDialog(
+            self,
+            evt,
+            objNP,
+            signDNA,
+            baselineDNA,
+            graphicsDNA,
+            graphicsCode):
         if graphicsDNA is None:
-           graphicsDNA = DNASignGraphic()
-           graphicsDNA.setCode(graphicsCode)
+            graphicsDNA = DNASignGraphic()
+            graphicsDNA.setCode(graphicsCode)
 
         if baselineDNA is None:
-           baselineDNA = DNASignBaseline()
-           signDNA.add(baselineDNA)
+            baselineDNA = DNASignBaseline()
+            signDNA.add(baselineDNA)
 
         baselineDNA.add(graphicsDNA)
         objNP.replace()
 
-        SignEditFrame(self.viewFrame, self.editor, baselineDNA, objNP, True).Show()
-        
+        SignEditFrame(
+            self.viewFrame,
+            self.editor,
+            baselineDNA,
+            objNP,
+            True).Show()
+
     def removeSignBaseline(self, evt, objNP, sign, baselineDNA):
         #DNARemoveAllChidrenOfClass(sign, DNA_SIGN_BASELINE)
         sign.remove(baselineDNA)
@@ -369,7 +614,7 @@ class LevelEditorUI(LevelEditorUIBase):
     def spawnMenu(self, evt, menuMode, dnaTarget, dnaParent, objNP, hood):
         # set current hood edit mode
         self.editor.setEditMode(hood)
-        
+
         attribute = self.editor.styleManager.getAttribute(menuMode)
         self.activeMenu = attribute.getMenu()
         LE_showInOneCam(self.activeMenu, base.direct.camera.getName())
@@ -399,33 +644,41 @@ class LevelEditorUI(LevelEditorUIBase):
         elif 'prop' in menuMode:
             dnaType = 'prop'
 
-        if str.find(menuMode,'texture') >= 0:
+        if str.find(menuMode, 'texture') >= 0:
             if dnaTarget:
                 state = dnaTarget.getCode()
-            action = lambda x: objNP.setDNATargetCode(dnaType, dnaTarget, dnaParent, x)
+
+            def action(x): return objNP.setDNATargetCode(
+                dnaType, dnaTarget, dnaParent, x)
         elif str.find(menuMode, 'color') >= 0:
             if dnaTarget:
                 state = dnaTarget.getColor()
-            action = lambda x: objNP.setDNATargetColor(dnaType, dnaTarget, dnaParent, x)
+
+            def action(x): return objNP.setDNATargetColor(
+                dnaType, dnaTarget, dnaParent, x)
         elif str.find(menuMode, 'orientation') >= 0:
             if dnaTarget:
                 state = dnaTarget.getCode()[-2:]
-            action = lambda x: objNP.setDNATargetOrientation(dnaType, dnaTarget, dnaParent, x)
+
+            def action(x): return objNP.setDNATargetOrientation(
+                dnaType, dnaTarget, dnaParent, x)
         elif menuMode == 'window_count':
             if dnaTarget:
                 state = dnaTarget.getWindowCount()
-            action = lambda x: objNP.setWindowCount(dnaTarget, dnaParent, x)
-##             elif menuMode == 'baseline_style':
-##                 # Extract the baseline style
-##                 state = DNABaselineStyle(
-##                     baseline = self.panel.currentBaselineDNA)
+
+            def action(x): return objNP.setWindowCount(dnaTarget, dnaParent, x)
+# elif menuMode == 'baseline_style':
+# Extract the baseline style
+# state = DNABaselineStyle(
+# baseline = self.panel.currentBaselineDNA)
         elif menuMode == 'wall_style':
             if dnaTarget:
                 # Extract the wall style from the current wall
-                state = DNAWallStyle(wall = dnaTarget)
-            action = lambda x: objNP.setWallStyle(dnaTarget, x)                
-##         elif menuMode.startswith('animlist_'):
-##             if dnaTarget:
+                state = DNAWallStyle(wall=dnaTarget)
+
+            def action(x): return objNP.setWallStyle(dnaTarget, x)
+# elif menuMode.startswith('animlist_'):
+# if dnaTarget:
 ##                 state = dNATarget.getAnim()
 
         self.activeMenu.setInitialState(state)
@@ -442,11 +695,17 @@ class LevelEditorUI(LevelEditorUIBase):
     def onSaveDnaAs(self, evt):
         path = self.editor.dnaDirectory.toOsSpecific()
         if not os.path.isdir(path):
-           path = '.'
-        dialog = wx.FileDialog(None, "Save DNA File As", path, "", "*.dna", wx.SAVE)
+            path = '.'
+        dialog = wx.FileDialog(
+            None,
+            "Save DNA File As",
+            path,
+            "",
+            "*.dna",
+            wx.SAVE)
         result = True
         if dialog.ShowModal() == wx.ID_OK:
-            self.editor.currentFile = dialog.GetPath();
+            self.editor.currentFile = dialog.GetPath()
             self.editor.exportDna()
         else:
             result = False
@@ -456,8 +715,14 @@ class LevelEditorUI(LevelEditorUIBase):
     def onOpenDna(self, evt=None):
         path = self.editor.dnaDirectory.toOsSpecific()
         if not os.path.isdir(path):
-           path = '.'
-        dialog = wx.FileDialog(None, "Choose a DNA file", path, "", "*.dna", wx.OPEN)
+            path = '.'
+        dialog = wx.FileDialog(
+            None,
+            "Choose a DNA file",
+            path,
+            "",
+            "*.dna",
+            wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
             self.editor.importDna(dialog.GetPath())
         dialog.Destroy()
@@ -467,14 +732,18 @@ class LevelEditorUI(LevelEditorUIBase):
             self.visGroupsUI.Destroy()
         visGroups = self.editor.getDNAVisGroups(self.editor.NPToplevel)
         if visGroups:
-            self.visGroupsUI = VisGroupsUI(self, -1, 'Edit Vis Groups', self.editor, visGroups)
+            self.visGroupsUI = VisGroupsUI(
+                self, -1, 'Edit Vis Groups', self.editor, visGroups)
             self.visGroupsUI.Show()
         else:
-            wx.MessageBox("No DNA Vis Groups Found!", 'Edit Vis Groups', wx.ICON_EXCLAMATION)
+            wx.MessageBox(
+                "No DNA Vis Groups Found!",
+                'Edit Vis Groups',
+                wx.ICON_EXCLAMATION)
 
     def onRightDown(self, evt=None):
         """Invoked when the viewport is right-clicked."""
-        if evt == None:
+        if evt is None:
             mpos = wx.GetMouseState()
             mpos = self.ScreenToClient((mpos.x, mpos.y))
         else:
@@ -487,9 +756,9 @@ class LevelEditorUI(LevelEditorUIBase):
     def onShowBattleCells(self, evt=None):
         for cell, marker in list(self.cellDict.items()):
             if self.showBattleCellsMenuItem.IsChecked():
-               marker.show()
+                marker.show()
             else:
-               marker.hide()
+                marker.hide()
 
     def onShowSuitPath(self, evt=None):
         for edge, edgeLine in list(self.edgeDict.items()):
@@ -539,13 +808,13 @@ class LevelEditorUI(LevelEditorUIBase):
         # Draw arrow
         edgeLine.drawArrow(relStartPos,
                            relEndPos,
-                           15, # arrow angle
-                           1) # arrow length
+                           15,  # arrow angle
+                           1)  # arrow length
         edgeLine.create()
         # Add a clickable sphere
         marker = self.suitPointMarker.copyTo(edgeLine)
         marker.setName('suitEdgeMarker')
-        midPos = (relStartPos + relEndPos)/2.0
+        midPos = (relStartPos + relEndPos) / 2.0
         marker.setPos(midPos)
         # Adjust color of highlighted lines
         if edge in self.visitedEdges:
@@ -586,14 +855,14 @@ class LevelEditorUI(LevelEditorUIBase):
         self.point2edgeDict = {}
 
     def populateSuitPaths(self):
-##         # Points
-##         numPoints = DNASTORE.getNumSuitPoints()
-##         for i in range(numPoints):
-##             point = DNASTORE.getSuitPointAtIndex(i)
-##             marker = self.drawSuitPoint(point,
-##                 point.getPos(), point.getPointType(),
-##                 self.editor.suitPointToplevel)
-##             self.pointDict[point] = marker
+        # Points
+        ##         numPoints = DNASTORE.getNumSuitPoints()
+        # for i in range(numPoints):
+        ##             point = DNASTORE.getSuitPointAtIndex(i)
+        # marker = self.drawSuitPoint(point,
+        ##                 point.getPos(), point.getPointType(),
+        # self.editor.suitPointToplevel)
+        ##             self.pointDict[point] = marker
 
         # Edges
         visGroups = self.editor.getDNAVisGroups(self.editor.NPToplevel)
@@ -623,11 +892,12 @@ class LevelEditorUI(LevelEditorUIBase):
         elif (side == 'inner'):
             barricadeDict = self.innerBarricadeDict
         else:
-            print(("unhandled side %s" % side))
+            print(f"unhandled side {side}")
             return
 
         if barricadeOrigNum not in barricadeDict:
-            barricadeDict[barricadeOrigNum] = [curBldgGroupIndex, curBldgGroupIndex]
+            barricadeDict[barricadeOrigNum] = [
+                curBldgGroupIndex, curBldgGroupIndex]
 
         if curBldgGroupIndex < barricadeDict[barricadeOrigNum][0]:
             barricadeDict[barricadeOrigNum][0] = curBldgGroupIndex
@@ -635,14 +905,19 @@ class LevelEditorUI(LevelEditorUIBase):
         if barricadeDict[barricadeOrigNum][1] < curBldgGroupIndex:
             barricadeDict[barricadeOrigNum][1] = curBldgGroupIndex
 
-        print("---------- %s barricadeDict origNum=%d  data=(%d, %d)" %(side, barricadeOrigNum, barricadeDict[barricadeOrigNum][0], barricadeDict[barricadeOrigNum][1]))
+        print(
+            "---------- %s barricadeDict origNum=%d  data=(%d, %d)" %
+            (side,
+             barricadeOrigNum,
+             barricadeDict[barricadeOrigNum][0],
+             barricadeDict[barricadeOrigNum][1]))
 
     def reparentStreetBuildings(self, nodePath):
         dnaNode = self.editor.findDNANode(nodePath)
         if dnaNode:
             if (DNAClassEqual(dnaNode, DNA_FLAT_BUILDING) or
-                DNAClassEqual(dnaNode, DNA_LANDMARK_BUILDING)):
-                base.direct.reparent(nodePath, fWrt = 1)
+                    DNAClassEqual(dnaNode, DNA_LANDMARK_BUILDING)):
+                base.direct.reparent(nodePath, fWrt=1)
         children = nodePath.getChildren()
         for child in children:
             self.reparentStreetBuildings(child)
@@ -668,20 +943,22 @@ class LevelEditorUI(LevelEditorUIBase):
         return newGroup
 
     def makeNewBuildingGroup(self, sequenceNum, side, curveName):
-        print("-------------------------- new building group %s  curveName=%s------------------------" % (sequenceNum, curveName))
+        print(
+            "-------------------------- new building group %s  curveName=%s------------------------" %
+            (sequenceNum, curveName))
         # Now create a new group with just the buildings
         self.editor.addGroup(self.editor.NPToplevel)
         newGroup = self.editor.NPParent
         groupName = ''
-        #if curveName == "urban_curveside_inner_1_1":
+        # if curveName == "urban_curveside_inner_1_1":
         #    import pdb; pdb.set_trace()
 
         if 'curveside' in curveName:
-            #we want to preserve which group the side street is closest to
-            print("special casing %s" % curveName)
+            # we want to preserve which group the side street is closest to
+            print(f"special casing {curveName}")
             parts = curveName.split('_')
             groupName = 'Buildings_' + side + "-" + parts[3] + "_" + parts[4]
-            print("groupname = %s" % groupName)
+            print(f"groupname = {groupName}")
         else:
             groupName = 'Buildings_' + side + "-" + str(sequenceNum)
         newGroup.setName(groupName)
@@ -691,7 +968,7 @@ class LevelEditorUI(LevelEditorUIBase):
         if 'barricade_curve' in curveName:
             parts = curveName.split('_')
             origBarricadeNum = parts[3]
-            self.updateBarricadeDict(side, int(origBarricadeNum),  sequenceNum)
+            self.updateBarricadeDict(side, int(origBarricadeNum), sequenceNum)
 
     def getBuildingWidth(self, bldg):
         dnaNode = self.editor.findDNANode(bldg)
@@ -718,26 +995,28 @@ class LevelEditorUI(LevelEditorUIBase):
         base.direct.grid.setPosHpr(0, -40, 0, 0, 0, 0)
         currLength = 0
         while (currLength < streetLength):
-            self.editor.objectMgr.addNewObject(self.editor.currHoodId + '_80x40')
+            self.editor.objectMgr.addNewObject(
+                self.editor.currHoodId + '_80x40')
             currLength += 80
 
     def onMakeLongStreet(self, evt):
         bldgGroup = self.consolidateStreetBuildings()
         bldgs = bldgGroup.getChildren()
         numBldgs = len(bldgs)
-        streetLength = self.calcLongStreetLength(bldgs)/2.0
+        streetLength = self.calcLongStreetLength(bldgs) / 2.0
         ref = None
         base.direct.grid.fXyzSnap = 0
         currLength = 0
         for i in range(numBldgs):
             bldg = bldgs[i]
-            if ref == None:
+            if ref is None:
                 base.direct.grid.iPosHpr(bldgGroup)
             else:
                 ref.select()
                 #self.editor.autoPositionGrid(fLerp = 0)
             if base.direct.grid.getX() >= streetLength:
-                base.direct.grid.setPosHpr(base.direct.grid, 0, -40, 0, 180, 0, 0)
+                base.direct.grid.setPosHpr(
+                    base.direct.grid, 0, -40, 0, 180, 0, 0)
             bldg.iPosHpr(base.direct.grid)
             self.editor.updateSelectedPose([bldg])
             self.editor.adjustPropChildren(bldg)
@@ -774,13 +1053,13 @@ class LevelEditorUI(LevelEditorUIBase):
         # Draw arrow
         edgeLine.drawArrow(relStartPos,
                            relEndPos,
-                           15, # arrow angle
-                           1) # arrow length
+                           15,  # arrow angle
+                           1)  # arrow length
         edgeLine.create()
         # Add a clickable sphere
         marker = self.suitPointMarker.copyTo(edgeLine)
         marker.setName('suitEdgeMarker')
-        midPos = (relStartPos + relEndPos)/2.0
+        midPos = (relStartPos + relEndPos) / 2.0
         marker.setPos(midPos)
         # Adjust color of highlighted lines
         if edge in self.visitedEdges:
@@ -826,8 +1105,8 @@ class LevelEditorUI(LevelEditorUIBase):
         for i in range(numPoints):
             point = DNASTORE.getSuitPointAtIndex(i)
             marker = self.drawSuitPoint(point,
-                point.getPos(), point.getPointType(),
-                self.editor.suitPointToplevel)
+                                        point.getPos(), point.getPointType(),
+                                        self.editor.suitPointToplevel)
             self.pointDict[point] = marker
 
         # Edges

@@ -9,13 +9,15 @@ from toontown.catalog import CatalogItemList
 from toontown.catalog import CatalogItem
 from toontown.estate.DistributedFurnitureManagerAI import DistributedFurnitureManagerAI
 
+
 class DistributedHouseInteriorAI(DistributedObjectAI.DistributedObjectAI):
     """
-    DistributedHouseInteriorAI class:  
+    DistributedHouseInteriorAI class:
     """
 
     if __debug__:
-        notify = DirectNotifyGlobal.directNotify.newCategory('DistributedHouseInteriorAI')
+        notify = DirectNotifyGlobal.directNotify.newCategory(
+            'DistributedHouseInteriorAI')
 
     def __init__(self, houseId, air, zoneId, house):
         """blockNumber: the landmark building number (from the name)"""
@@ -29,11 +31,8 @@ class DistributedHouseInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.houseIndex = house.housePosInd
         self.furnitureManager = None
 
-        
         assert(self.debugPrint(
-                "DistributedHouseInteriorAI(air=%s, zoneId=%s, house=%s)"
-                %(air, zoneId, house)))
-
+            f"DistributedHouseInteriorAI(air={air}, zoneId={zoneId}, house={house})"))
 
     def generate(self):
         # Inheritors should put functions that require self.zoneId or
@@ -57,33 +56,41 @@ class DistributedHouseInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.d_setWallpaper(items)
 
     def d_setWallpaper(self, items):
-        self.sendUpdate("setWallpaper", [items.getBlob(store = CatalogItem.Customization)])
+        self.sendUpdate(
+            "setWallpaper", [
+                items.getBlob(
+                    store=CatalogItem.Customization)])
 
     def setWallpaper(self, items):
-        self.wallpaper = CatalogItemList.CatalogItemList(items, store = CatalogItem.Customization)
+        self.wallpaper = CatalogItemList.CatalogItemList(
+            items, store=CatalogItem.Customization)
 
     def getWallpaper(self):
-        return self.wallpaper.getBlob(store = CatalogItem.Customization)
+        return self.wallpaper.getBlob(store=CatalogItem.Customization)
 
     def b_setWindows(self, items):
         self.setWindows(items)
         self.d_setWindows(items)
 
     def d_setWindows(self, items):
-        self.sendUpdate("setWindows", [items.getBlob(store = CatalogItem.Customization | CatalogItem.WindowPlacement)])
+        self.sendUpdate(
+            "setWindows", [
+                items.getBlob(
+                    store=CatalogItem.Customization | CatalogItem.WindowPlacement)])
 
     def setWindows(self, items):
-        self.windows = CatalogItemList.CatalogItemList(items, store = CatalogItem.Customization | CatalogItem.WindowPlacement)
+        self.windows = CatalogItemList.CatalogItemList(
+            items, store=CatalogItem.Customization | CatalogItem.WindowPlacement)
 
     def getWindows(self):
-        return self.windows.getBlob(store = CatalogItem.Customization | CatalogItem.WindowPlacement)
-    
+        return self.windows.getBlob(
+            store=CatalogItem.Customization | CatalogItem.WindowPlacement)
+
     if __debug__:
         def debugPrint(self, message):
             """for debugging"""
             return self.notify.debug(
-                    str(self.__dict__.get('zoneId', '?'))+' '+message)
-
+                str(self.__dict__.get('zoneId', '?')) + ' ' + message)
 
     def start(self):
         return
@@ -93,13 +100,13 @@ class DistributedHouseInteriorAI(DistributedObjectAI.DistributedObjectAI):
 
         # Generate the furniture manager:
         #self.furnitureManager = DistributedFurnitureManagerAI(self.air, self.house, self)
-        #self.furnitureManager.setOwnerId(self.house.getAvatarId())
-        #self.furnitureManager.setOwnerName(self.house.getName())
+        # self.furnitureManager.setOwnerId(self.house.getAvatarId())
+        # self.furnitureManager.setOwnerName(self.house.getName())
        # self.furnitureManager.setInteriorId(self.doId)
        # self.furnitureManager.generateWithRequired(self.zoneId)
 
         # We either need to load existing furniture, or create new furniture if none exists:
-        #if self.furnitureManager.getNumItems() == 0:
+        # if self.furnitureManager.getNumItems() == 0:
          #   self.createInterior()
        # else:
         #    self.furnitureManager.loadFurniture()

@@ -5,6 +5,7 @@ from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import TTLocalizer
 import random
 
+
 class ToontownLoadingScreen:
 
     def __init__(self):
@@ -13,18 +14,19 @@ class ToontownLoadingScreen:
         self.__count = 0
 
         self.gui = loader.loadModel("phase_3/models/gui/progress-background")
-        self.gui.setScale(1,1,1)
+        self.gui.setScale(1, 1, 1)
         # Hide the Disney logo in the model itself.
         self.gui.find("**/logo").hide()
         self.gui.find('**/bg').hide()
         self.mainBackground = OnscreenImage('phase_3/maps/background.png')
         self.mainBackground.reparentTo(aspect2d)
-        self.mainBackground.setScale(2,1,1)
+        self.mainBackground.setScale(2, 1, 1)
         self.mainBackground.reparentTo(hidden)
-        self.banner = loader.loadModel("phase_3/models/gui/toon_council").find("**/scroll")
+        self.banner = loader.loadModel(
+            "phase_3/models/gui/toon_council").find("**/scroll")
         self.banner.reparentTo(self.gui)
-        self.banner.setScale(0.4,0.4,0.4)
-        #load our logo
+        self.banner.setScale(0.4, 0.4, 0.4)
+        # load our logo
         self.galaxyLogo = OnscreenImage('phase_3/maps/toontown-logo.png')
 
         self.galaxyLogo.reparentTo(base.a2dpTopCenter)
@@ -33,41 +35,40 @@ class ToontownLoadingScreen:
         self.galaxyLogo.setZ(0.61)
         #self.galaxyLogo.setPos(0, 0, -galaxyLogoScale)
         self.galaxyLogo.reparentTo(hidden)
-        
 
         self.tip = DirectLabel(
-            guiId = "ToontownLoadingScreenTip",
-            parent = self.banner,
-            relief = None,
-            text = "",
-            text_scale = TTLocalizer.TLStip,
-            textMayChange = 1,
-            pos = (-1.2,0.0,0.1),
-            text_fg = (0.4,0.3,0.2,1),
-            text_wordwrap = 13,
-            text_align = TextNode.ALeft,
-            )
+            guiId="ToontownLoadingScreenTip",
+            parent=self.banner,
+            relief=None,
+            text="",
+            text_scale=TTLocalizer.TLStip,
+            textMayChange=1,
+            pos=(-1.2, 0.0, 0.1),
+            text_fg=(0.4, 0.3, 0.2, 1),
+            text_wordwrap=13,
+            text_align=TextNode.ALeft,
+        )
 
         self.title = DirectLabel(
-            guiId = "ToontownLoadingScreenTitle",
-            parent = self.gui,
-            relief = None,
-            pos = (-1.06, 0, -0.77),
-            text = "",
-            textMayChange = 1,
-            text_scale = 0.08,
-            text_fg = (0,0,0.5,1),
-            text_align = TextNode.ALeft,
-            )
+            guiId="ToontownLoadingScreenTitle",
+            parent=self.gui,
+            relief=None,
+            pos=(-1.06, 0, -0.77),
+            text="",
+            textMayChange=1,
+            text_scale=0.08,
+            text_fg=(0, 0, 0.5, 1),
+            text_align=TextNode.ALeft,
+        )
 
         # Hide the running man until we animate him
         self.waitBar = DirectWaitBar(
-            guiId = "ToontownLoadingScreenWaitBar",
-            parent = self.gui,
-            frameSize = (-1.06,1.06,-0.03,0.03),
-            pos = (0,0,-0.85),
-            text = '',
-            )
+            guiId="ToontownLoadingScreenWaitBar",
+            parent=self.gui,
+            frameSize=(-1.06, 1.06, -0.03, 0.03),
+            pos=(0, 0, -0.85),
+            text='',
+        )
 
     def destroy(self):
         self.tip.destroy()
@@ -79,7 +80,8 @@ class ToontownLoadingScreen:
         self.gui.removeNode()
 
     def getTip(self, tipCategory):
-        return TTLocalizer.TipTitle + "\n" + random.choice(TTLocalizer.TipDict.get(tipCategory))
+        return TTLocalizer.TipTitle + "\n" + \
+            random.choice(TTLocalizer.TipDict.get(tipCategory))
 
     def begin(self, range, label, gui, tipCategory):
         # make the loader bar and draw it.
@@ -97,7 +99,7 @@ class ToontownLoadingScreen:
             self.title.reparentTo(self.gui)
             self.gui.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)
             self.galaxyLogo.reparentTo(self.gui)
-            base.setBackgroundColor((0, 0, 46/255, 0))
+            base.setBackgroundColor((0, 0, 46 / 255, 0))
 
         else:
             self.waitBar.reparentTo(aspect2dp, DGG.NO_FADE_SORT_INDEX)

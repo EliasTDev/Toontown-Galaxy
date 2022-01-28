@@ -28,7 +28,6 @@ import copy
 from panda3d.otp import CFSpeech, CFTimeout
 
 
-
 class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
                           SuitBase.SuitBase):
     """
@@ -37,7 +36,7 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
      is the object that each individual player interacts with when
      initiating combat.  This guy has all of the attributes of a
      DistributedSuitAI object, plus some more such as collision info
-    
+
     Attributes:
        Derived plus...
        DistributedSuit_initialized (integer), flag indicating if this
@@ -53,25 +52,25 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
         try:
             self.DistributedSuitBase_initialized
             return
-        except:
+        except BaseException:
             self.DistributedSuitBase_initialized = 1
-            
+
         DistributedAvatar.DistributedAvatar.__init__(self, cr)
         Suit.Suit.__init__(self)
         SuitBase.SuitBase.__init__(self)
         self.activeShadow = 0
-        self.virtual = 0 #the red glowing effect
+        self.virtual = 0  # the red glowing effect
 
         # collision junk
         #
         self.battleDetectName = None
-        
-        self.cRay            = None
-        self.cRayNode        = None
-        self.cRayNodePath    = None
-        self.cRayBitMask     = None
-        self.lifter          = None
-        self.cTrav           = None
+
+        self.cRay = None
+        self.cRayNode = None
+        self.cRayNodePath = None
+        self.cRayBitMask = None
+        self.lifter = None
+        self.cTrav = None
 
         # our reference to the local hood's suit planner, the doId of
         # it is sent to us from the server side suit
@@ -91,41 +90,46 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
         # to be on the street, we don't want it visible
         self.reparentTo(hidden)
         self.loop('neutral')
-        
+
         # number of times to reanimate into a skeleCog
         self.skeleRevives = 0
         # keep track of how many times we have reanimated
         self.maxSkeleRevives = 0
-        # if we were in the holiday when we started a silly surge, in case holiday ends in middle of battle
+        # if we were in the holiday when we started a silly surge, in case
+        # holiday ends in middle of battle
         self.sillySurgeText = False
-        
+
         # use this for displaying hp bonus text
         self.interactivePropTrackBonus = -1
-        
+
     def setVirtual(self, virtual):
         pass
-        
+
     def getVirtual(self):
         return 0
-        
+
     def setSkeleRevives(self, num):
-        if num == None:
+        if num is None:
             num = 0
         self.skeleRevives = num
         if num > self.maxSkeleRevives:
             self.maxSkeleRevives = num
         if self.getSkeleRevives() > 0:
-            nameInfo = TTLocalizer.SuitBaseNameWithLevel % {"name": self.name  ,
-                                                            "dept":  self.getStyleDept(),
-                                                            "level": ("%s%s" % (self.getActualLevel(), TTLocalizer.SkeleRevivePostFix)),}
-            self.setDisplayName( nameInfo )
+            nameInfo = TTLocalizer.SuitBaseNameWithLevel % {
+                "name": self.name,
+                "dept": self.getStyleDept(),
+                "level": (
+                    f"{self.getActualLevel()}{TTLocalizer.SkeleRevivePostFix}"),
+            }
+            self.setDisplayName(nameInfo)
         else:
-            nameInfo = TTLocalizer.SuitBaseNameWithLevel % {"name":  self.name,
-                                                            "dept":  self.getStyleDept(),
-                                                            "level": self.getActualLevel(),}
-            self.setDisplayName( nameInfo )
-            
-        
+            nameInfo = TTLocalizer.SuitBaseNameWithLevel % {
+                "name": self.name,
+                "dept": self.getStyleDept(),
+                "level": self.getActualLevel(),
+            }
+            self.setDisplayName(nameInfo)
+
     def getSkeleRevives(self):
         return self.skeleRevives
 
@@ -139,7 +143,7 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
         time or from the cache.
         """
         assert(self.notify.debug("DistributedSuit %d: generating" %
-                               self.getDoId()))
+                                 self.getDoId()))
         DistributedAvatar.DistributedAvatar.generate(self)
 
     def disable(self):
@@ -154,7 +158,7 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
         self.stop()
         taskMgr.remove(self.uniqueName('blink-task'))
         DistributedAvatar.DistributedAvatar.disable(self)
- 
+
     def delete(self):
         """
         This method is called when the DistributedObject is
@@ -163,7 +167,7 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
         """
         try:
             self.DistributedSuitBase_deleted
-        except:
+        except BaseException:
             self.DistributedSuitBase_deleted = 1
             self.notify.debug("DistributedSuit %d: deleting" % self.getDoId())
 
@@ -230,13 +234,13 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
     def setLevelDist(self, level):
         """
         level is the new level (int) of the suit.
-        
+
         The distributed function to be called when the
         server side suit changes level
         """
         if self.notify.getDebug():
-            self.notify.debug("Got level %d from server for suit %d" % \
-                               (level, self.getDoId()))
+            self.notify.debug("Got level %d from server for suit %d" %
+                              (level, self.getDoId()))
         self.setLevel(level)
 
     def attachPropeller(self):
@@ -244,12 +248,14 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
         attach a propeller to this suit, used when the suit
         is going into it's flying animation
         """
-        if self.prop == None:
+        if self.prop is None:
             self.prop = BattleProps.globalPropPool.getProp('propeller')
-        if self.propInSound == None:
-            self.propInSound = base.loader.loadSfx("phase_5/audio/sfx/ENC_propeller_in.ogg")
-        if self.propOutSound == None:
-            self.propOutSound = base.loader.loadSfx("phase_5/audio/sfx/ENC_propeller_out.ogg")
+        if self.propInSound is None:
+            self.propInSound = base.loader.loadSfx(
+                "phase_5/audio/sfx/ENC_propeller_in.ogg")
+        if self.propOutSound is None:
+            self.propOutSound = base.loader.loadSfx(
+                "phase_5/audio/sfx/ENC_propeller_out.ogg")
         head = self.find("**/joint_head")
         self.prop.reparentTo(head)
 
@@ -295,9 +301,9 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
         groundF = 28
         dur = self.getDuration('landing')
         fr = self.getFrameRate('landing')
-        
+
         # length of time in animation spent in the air
-        animTimeInAir = groundF/fr
+        animTimeInAir = groundF / fr
         # length of time in animation spent impacting and reacting to
         # the ground
         impactLength = dur - animTimeInAir
@@ -308,13 +314,13 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
 
         # now create info for the propeller's animation
         #
-        if self.prop == None:
+        if self.prop is None:
             self.prop = BattleProps.globalPropPool.getProp('propeller')
         propDur = self.prop.getDuration('propeller')
         lastSpinFrame = 8
         fr = self.prop.getFrameRate('propeller')
         # time from beginning of anim at which propeller plays its spin
-        spinTime = lastSpinFrame/fr
+        spinTime = lastSpinFrame / fr
         # time from beginning of anim at which propeller starts to close
         openTime = (lastSpinFrame + 1) / fr
 
@@ -339,32 +345,32 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
             lerpPosTrack = Sequence(
                 self.posInterval(timeTillLanding, pos, startPos=skyPos),
                 Wait(impactLength),
-                )
-
+            )
 
             shadowScale = self.dropShadow.getScale()
-            
+
             # create a scale interval for the suit's shadow so it scales
             # up as the suit gets closer to the ground
             #
-            # keep Z scale at 1. so that lifter doesn't go crazy-go-nuts and set Z to infinity
+            # keep Z scale at 1. so that lifter doesn't go crazy-go-nuts and
+            # set Z to infinity
             shadowTrack = Sequence(
                 Func(self.dropShadow.reparentTo, render),
                 Func(self.dropShadow.setPos, pos),
                 self.dropShadow.scaleInterval(timeTillLanding, self.scale,
-                                              startScale = Vec3(0.01, 0.01, 1.)),
+                                              startScale=Vec3(0.01, 0.01, 1.)),
                 Func(self.dropShadow.reparentTo, self.getShadowJoint()),
                 Func(self.dropShadow.setPos, 0, 0, 0),
                 Func(self.dropShadow.setScale, shadowScale),
-                )
+            )
 
             fadeInTrack = Sequence(
                 Func(self.setTransparency, 1),
-                self.colorScaleInterval(1, colorScale = VBase4(1, 1, 1, 1),
-                                        startColorScale = VBase4(1, 1, 1, 0)),
+                self.colorScaleInterval(1, colorScale=VBase4(1, 1, 1, 1),
+                                        startColorScale=VBase4(1, 1, 1, 0)),
                 Func(self.clearColorScale),
                 Func(self.clearTransparency),
-                )
+            )
 
             # now create the suit animation intervals that will go in the
             # second track
@@ -372,35 +378,35 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
             animTrack = Sequence(
                 Func(self.pose, 'landing', 0),
                 Wait(waitTime),
-                ActorInterval(self, 'landing', duration = dur),
+                ActorInterval(self, 'landing', duration=dur),
                 Func(self.loop, 'walk'),
-                )
+            )
 
             # now create the propeller animation intervals that will go in
             # the third and final track
             #
             self.attachPropeller()
             propTrack = Parallel(
-                SoundInterval(self.propInSound, duration = waitTime + dur,
-                              node = self),
+                SoundInterval(self.propInSound, duration=waitTime + dur,
+                              node=self),
                 Sequence(ActorInterval(self.prop, 'propeller',
-                                       constrainedLoop = 1,
-                                       duration = waitTime + spinTime,
-                                       startTime = 0.0,
-                                       endTime = spinTime),
+                                       constrainedLoop=1,
+                                       duration=waitTime + spinTime,
+                                       startTime=0.0,
+                                       endTime=spinTime),
                          ActorInterval(self.prop, 'propeller',
-                                       duration = propDur - openTime,
-                                       startTime = openTime),
+                                       duration=propDur - openTime,
+                                       startTime=openTime),
                          Func(self.detachPropeller),
                          ),
-                )
+            )
 
             return Parallel(lerpPosTrack,
                             shadowTrack,
                             fadeInTrack,
                             animTrack,
                             propTrack,
-                            name = self.taskName('trackName')
+                            name=self.taskName('trackName')
                             )
         else:
             # move to the sky, move vertically from the current
@@ -412,37 +418,37 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
                 Wait(impactLength),
                 LerpPosInterval(self, timeTillLanding, skyPos,
                                 startPos=pos),
-                )
+            )
 
             # create a scale interval for the suit's shadow so it scales
             # down as the suit gets further from the ground
             #
-            # keep Z scale at 1. so that lifter doesn't go crazy-go-nuts and set Z to infinity
+            # keep Z scale at 1. so that lifter doesn't go crazy-go-nuts and
+            # set Z to infinity
             shadowTrack = Sequence(
-                Func(self.dropShadow.reparentTo, render),
-                Func(self.dropShadow.setPos, pos),
-                self.dropShadow.scaleInterval(timeTillLanding, Vec3(0.01, 0.01, 1.),
-                                              startScale = self.scale),
-                Func(self.dropShadow.reparentTo, self.getShadowJoint()),
-                Func(self.dropShadow.setPos, 0, 0, 0),
-                )
+                Func(
+                    self.dropShadow.reparentTo, render), Func(
+                    self.dropShadow.setPos, pos), self.dropShadow.scaleInterval(
+                    timeTillLanding, Vec3(
+                        0.01, 0.01, 1.), startScale=self.scale), Func(
+                        self.dropShadow.reparentTo, self.getShadowJoint()), Func(
+                            self.dropShadow.setPos, 0, 0, 0), )
 
             fadeOutTrack = Sequence(
                 Func(self.setTransparency, 1),
-                self.colorScaleInterval(1, colorScale = VBase4(1, 1, 1, 0),
-                                        startColorScale = VBase4(1, 1, 1, 1)),
+                self.colorScaleInterval(1, colorScale=VBase4(1, 1, 1, 0),
+                                        startColorScale=VBase4(1, 1, 1, 1)),
                 Func(self.clearColorScale),
                 Func(self.clearTransparency),
                 Func(self.reparentTo, hidden),
-                )
-                
+            )
 
             # create the suit animation intervals which will go into
             # a second track
             #
-            actInt = ActorInterval(self, 'landing', loop = 0,
-                                   startTime = dur,
-                                   endTime = 0.0)
+            actInt = ActorInterval(self, 'landing', loop=0,
+                                   startTime=dur,
+                                   endTime=0.0)
 
             # now create the propeller animation intervals that will go in
             # the third and final track
@@ -450,27 +456,27 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
             self.attachPropeller()
             self.prop.hide()
             propTrack = Parallel(
-                SoundInterval(self.propOutSound, duration = waitTime + dur,
-                              node = self),
+                SoundInterval(self.propOutSound, duration=waitTime + dur,
+                              node=self),
                 Sequence(Func(self.prop.show),
                          ActorInterval(self.prop, 'propeller',
-                                       endTime = openTime,
-                                       startTime = propDur),
+                                       endTime=openTime,
+                                       startTime=propDur),
                          ActorInterval(self.prop, 'propeller',
-                                       constrainedLoop = 1,
-                                       duration = propDur - openTime,
-                                       startTime = spinTime,
-                                       endTime = 0.0),
+                                       constrainedLoop=1,
+                                       duration=propDur - openTime,
+                                       startTime=spinTime,
+                                       endTime=0.0),
                          Func(self.detachPropeller),
                          ),
-                )
+            )
 
             return Parallel(ParallelEndTogether(lerpPosTrack,
                                                 shadowTrack,
                                                 fadeOutTrack),
                             actInt,
                             propTrack,
-                            name = self.taskName('trackName')
+                            name=self.taskName('trackName')
                             )
 
     def enableBattleDetect(self, name, handler):
@@ -525,23 +531,29 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
         self.sendUpdate("setBrushOff", [index])
 
     def setBrushOff(self, index):
-        self.setChatAbsolute(SuitDialog.getBrushOffText(self.getStyleName(), index),
-                             CFSpeech | CFTimeout)
+        self.setChatAbsolute(
+            SuitDialog.getBrushOffText(
+                self.getStyleName(),
+                index),
+            CFSpeech | CFTimeout)
 
     def initializeBodyCollisions(self, collIdStr):
         """
         set up collision information for this cog,
         only do once when creating the cog
         """
-        DistributedAvatar.DistributedAvatar.initializeBodyCollisions(self, collIdStr)
+        DistributedAvatar.DistributedAvatar.initializeBodyCollisions(
+            self, collIdStr)
 
         if not self.ghostMode:
-            self.collNode.setCollideMask(self.collNode.getIntoCollideMask() | ToontownGlobals.PieBitmask)        
+            self.collNode.setCollideMask(
+                self.collNode.getIntoCollideMask() | ToontownGlobals.PieBitmask)
 
         # Set up the collison ray
         # This is a ray cast from your head down to detect floor polygons
         # and is only turned on during specific parts of the suit's path
-        self.cRay = CollisionRay(0.0, 0.0, CollisionHandlerRayStart, 0.0, 0.0, -1.0)
+        self.cRay = CollisionRay(
+            0.0, 0.0, CollisionHandlerRayStart, 0.0, 0.0, -1.0)
         self.cRayNode = CollisionNode(self.taskName("cRay"))
         self.cRayNode.addSolid(self.cRay)
         self.cRayNodePath = self.attachNewNode(self.cRayNode)
@@ -578,14 +590,14 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
         # Deny the local toon's request for battle.  This is only sent
         # directly to a toon who requested the battle; other toons in
         # the zone don't see this message.
-        
+
         place = self.cr.playGame.getPlace()
         if place.fsm.getCurrentState().getName() == 'WaitForBattle':
             place.setState('walk')
         self.resumePath(self.pathState)
 
     def makePathTrack(self, nodePath, posPoints, velocity, name):
-        track = Sequence(name = name)
+        track = Sequence(name=name)
         assert len(posPoints) > 1
         restOfPosPoints = posPoints[1:]
         for pointIndex in range(len(posPoints) - 1):
@@ -595,7 +607,7 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
             track.append(
                 Func(nodePath.headsUp,
                      endPoint[0], endPoint[1], endPoint[2])
-                )
+            )
             # Calculate the amount of time we should spend walking
             distance = Vec3(endPoint - startPoint).length()
             duration = distance / velocity
@@ -605,11 +617,11 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
                 LerpPosInterval(nodePath, duration=duration,
                                 pos=Point3(endPoint),
                                 startPos=Point3(startPoint))
-                )
+            )
         return track
 
     def setState(self, state):
-        if (self.fsm == None):
+        if (self.fsm is None):
             return 0
         # check to make sure we aren't going into the state we are already
         # in, this is useful so we don't go into the Off state when already
@@ -618,7 +630,7 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
         #
         if (self.fsm.getCurrentState().getName() == state):
             assert(self.notify.debug("State change ignored, already in " +
-                                   "state" + str(state)))
+                                     "state" + str(state)))
             return 0
         return self.fsm.request(state)
 
@@ -657,7 +669,7 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
         # make sure health bar updates current suit condition
         if self.currHP < self.maxHP:
             self.updateHealthBar(0, 1)
-            
+
     def exitBattle(self):
         self.healthBar.hide()
         self.corpMedallion.show()
@@ -676,8 +688,8 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
         if flag:
             Suit.Suit.makeSkeleton(self)
 
-    def showHpText(self, number, bonus=0, scale=1, attackTrack =-1):
-        if self.HpTextEnabled and not self.ghostMode:           
+    def showHpText(self, number, bonus=0, scale=1, attackTrack=-1):
+        if self.HpTextEnabled and not self.ghostMode:
             # We don't show zero change.
             if number != 0:
                 # Get rid of the number if it is already there.
@@ -689,40 +701,54 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
                 if number < 0:
                     self.HpTextGenerator.setText(str(number))
                     # If we're doing the Silly Holiday word additions
-                    if base.cr.newsManager.isHolidayRunning(ToontownGlobals.SILLY_SURGE_HOLIDAY):
+                    if base.cr.newsManager.isHolidayRunning(
+                            ToontownGlobals.SILLY_SURGE_HOLIDAY):
                         self.sillySurgeText = True
                         absNum = abs(number)
                         if absNum > 0 and absNum <= 10:
-                            self.HpTextGenerator.setText(str(number) + "\n" + TTLocalizer.SillySurgeTerms[1])
+                            self.HpTextGenerator.setText(
+                                str(number) + "\n" + TTLocalizer.SillySurgeTerms[1])
                         elif absNum > 10 and absNum <= 20:
-                            self.HpTextGenerator.setText(str(number) + "\n" + TTLocalizer.SillySurgeTerms[2])                           
+                            self.HpTextGenerator.setText(
+                                str(number) + "\n" + TTLocalizer.SillySurgeTerms[2])
                         elif absNum > 20 and absNum <= 30:
-                            self.HpTextGenerator.setText(str(number) + "\n" + TTLocalizer.SillySurgeTerms[3])  
+                            self.HpTextGenerator.setText(
+                                str(number) + "\n" + TTLocalizer.SillySurgeTerms[3])
                         elif absNum > 30 and absNum <= 40:
-                            self.HpTextGenerator.setText(str(number) + "\n" + TTLocalizer.SillySurgeTerms[4])  
+                            self.HpTextGenerator.setText(
+                                str(number) + "\n" + TTLocalizer.SillySurgeTerms[4])
                         elif absNum > 40 and absNum <= 50:
-                            self.HpTextGenerator.setText(str(number) + "\n" + TTLocalizer.SillySurgeTerms[5])  
+                            self.HpTextGenerator.setText(
+                                str(number) + "\n" + TTLocalizer.SillySurgeTerms[5])
                         elif absNum > 50 and absNum <= 60:
-                            self.HpTextGenerator.setText(str(number) + "\n" + TTLocalizer.SillySurgeTerms[6])  
+                            self.HpTextGenerator.setText(
+                                str(number) + "\n" + TTLocalizer.SillySurgeTerms[6])
                         elif absNum > 60 and absNum <= 70:
-                            self.HpTextGenerator.setText(str(number) + "\n" + TTLocalizer.SillySurgeTerms[7])  
+                            self.HpTextGenerator.setText(
+                                str(number) + "\n" + TTLocalizer.SillySurgeTerms[7])
                         elif absNum > 70 and absNum <= 80:
-                            self.HpTextGenerator.setText(str(number) + "\n" + TTLocalizer.SillySurgeTerms[8])  
+                            self.HpTextGenerator.setText(
+                                str(number) + "\n" + TTLocalizer.SillySurgeTerms[8])
                         elif absNum > 80 and absNum <= 90:
-                            self.HpTextGenerator.setText(str(number) + "\n" + TTLocalizer.SillySurgeTerms[9])  
+                            self.HpTextGenerator.setText(
+                                str(number) + "\n" + TTLocalizer.SillySurgeTerms[9])
                         elif absNum > 90 and absNum <= 100:
-                            self.HpTextGenerator.setText(str(number) + "\n" + TTLocalizer.SillySurgeTerms[10])  
+                            self.HpTextGenerator.setText(
+                                str(number) + "\n" + TTLocalizer.SillySurgeTerms[10])
                         elif absNum > 100 and absNum <= 110:
-                            self.HpTextGenerator.setText(str(number) + "\n" + TTLocalizer.SillySurgeTerms[11])
-                        else: # greater than 110
-                            self.HpTextGenerator.setText(str(number) + "\n" + TTLocalizer.SillySurgeTerms[12])
-                    
+                            self.HpTextGenerator.setText(
+                                str(number) + "\n" + TTLocalizer.SillySurgeTerms[11])
+                        else:  # greater than 110
+                            self.HpTextGenerator.setText(
+                                str(number) + "\n" + TTLocalizer.SillySurgeTerms[12])
+
                     # check for interactive prop gag track bonus
-                    if self.interactivePropTrackBonus > -1 and self.interactivePropTrackBonus == attackTrack:
+                    if self.interactivePropTrackBonus > - \
+                            1 and self.interactivePropTrackBonus == attackTrack:
                         self.sillySurgeText = True
                         if attackTrack in TTLocalizer.InteractivePropTrackBonusTerms:
-                            self.HpTextGenerator.setText(str(number) + "\n" +
-                                                         TTLocalizer.InteractivePropTrackBonusTerms[attackTrack])
+                            self.HpTextGenerator.setText(
+                                str(number) + "\n" + TTLocalizer.InteractivePropTrackBonusTerms[attackTrack])
                 else:
                     self.HpTextGenerator.setText("+" + str(number))
                 # No shadow
@@ -749,7 +775,8 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
                     b = 0
                     a = 1
                     # if we have a track bonus, for now make it blue
-                    if self.interactivePropTrackBonus > -1 and self.interactivePropTrackBonus == attackTrack:
+                    if self.interactivePropTrackBonus > - \
+                            1 and self.interactivePropTrackBonus == attackTrack:
                         r = 0
                         g = 0
                         b = 1
@@ -759,11 +786,11 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
                     g = 0.9
                     b = 0
                     a = 1
-                    
+
                 self.HpTextGenerator.setTextColor(r, g, b, a)
 
                 self.hpTextNode = self.HpTextGenerator.generate()
-                
+
                 # Put the hpText over the head of the avatar
                 self.hpText = self.attachNewNode(self.hpTextNode)
                 self.hpText.setScale(scale)
@@ -771,17 +798,17 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
                 self.hpText.setBillboardPointEye()
                 # Render it after other things in the scene.
                 self.hpText.setBin('fixed', 100)
-                if self.sillySurgeText:               
+                if self.sillySurgeText:
                     self.nametag3d.setDepthTest(0)
                     self.nametag3d.setBin('fixed', 99)
-                
+
                 # Initial position ... Center of the body... the "tan tien"
-                self.hpText.setPos(0, 0, self.height//2)
+                self.hpText.setPos(0, 0, self.height // 2)
                 seq = Sequence(
                     # Fly the number out of the character
                     self.hpText.posInterval(1.0, Point3(0, 0, self.height + 1.5),
                                             1.0,
-                                            blendType = 'easeOut'),
+                                            blendType='easeOut'),
                     # Wait 2 seconds
                     Wait(0.85),
                     # Fade the number
@@ -801,5 +828,4 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit,
             self.nametag3d.clearDepthTest()
             self.nametag3d.clearBin()
             self.sillySurgeText = False
-        return Task.done            
-
+        return Task.done

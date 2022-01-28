@@ -11,7 +11,7 @@ class StatusDatabase(DistributedObjectGlobal):
     """
 
     """
-        
+
     notify = directNotify.newCategory('StatusDatabase')
 
     def __init__(self, cr):
@@ -23,58 +23,61 @@ class StatusDatabase(DistributedObjectGlobal):
         self.avatarRetreiveTaskName = "StatusDataBase_GetAvatarLastOnline"
         self.avatarDoneTaskName = "StatusDataBase GotAvatarData"
 
-
     # CL -> UD
-    def requestOfflineAvatarStatus(self,avIds):
+
+    def requestOfflineAvatarStatus(self, avIds):
         self.notify.debugCall()
-        self.sendUpdate("requestOfflineAvatarStatus",[avIds])
-        
-    def queueOfflineAvatarStatus(self,avIds):
+        self.sendUpdate("requestOfflineAvatarStatus", [avIds])
+
+    def queueOfflineAvatarStatus(self, avIds):
         for avId in avIds:
             if not (avId in self.avatarQueue):
                 self.avatarQueue.append(avId)
-                
+
         while taskMgr.hasTaskNamed(self.avatarRequestTaskName):
             taskMgr.remove(self.avatarRequestTaskName)
-            
-        task = taskMgr.doMethodLater(1.0, self.requestAvatarQueue, self.avatarRequestTaskName)
-        
-        
-    def requestAvatarQueue(self, task):        
-        self.sendUpdate("requestOfflineAvatarStatus",[self.avatarQueue])
+
+        task = taskMgr.doMethodLater(
+            1.0, self.requestAvatarQueue, self.avatarRequestTaskName)
+
+    def requestAvatarQueue(self, task):
+        self.sendUpdate("requestOfflineAvatarStatus", [self.avatarQueue])
         self.avatarQueue = []
 
-
     # UD -> CL
+
     def recvOfflineAvatarStatus(self, avId, lastOnline):
         self.notify.debugCall()
         # This is where we update our data, repaint GUI, etc etc etc.
 
-        self.notify.debug("Got an update for offline avatar %s who was last online %s" % (avId, self.lastOnlineString(lastOnline)))
-        
+        self.notify.debug(
+            "Got an update for offline avatar %s who was last online %s" %
+            (avId, self.lastOnlineString(lastOnline)))
+
         self.avatarData[avId] = lastOnline
-        
+
         while taskMgr.hasTaskNamed(self.avatarRetreiveTaskName):
             taskMgr.remove(self.avatarRetreiveTaskName)
-            
-        task = taskMgr.doMethodLater(1.0, self.announceNewAvatarData, self.avatarRetreiveTaskName)
-        
-        
-        
+
+        task = taskMgr.doMethodLater(
+            1.0,
+            self.announceNewAvatarData,
+            self.avatarRetreiveTaskName)
+
         #base.cr.avatarFriendsManager.avatarId2Info[avId].timestamp = lastOnline
-        
+
     def announceNewAvatarData(self, task):
         messenger.send(self.avatarDoneTaskName)
 
+    # Helper function to translate from a timestamp in seconds to "x hours
+    # ago", etc
 
-
-    # Helper function to translate from a timestamp in seconds to "x hours ago", etc
     def lastOnlineString(self, timestamp):
         if timestamp == 0:
             return ""
-        
+
         now = datetime.datetime.utcnow()
-        
-        td = abs(now - datetime.datetime.fromtimestamp(timestamp))    
+
+        td = abs(now - datetime.datetime.fromtimestamp(timestamp))
 
         return OTPLocalizer.timeElapsedString(td)

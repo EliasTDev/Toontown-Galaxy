@@ -2,8 +2,10 @@
 
 from toontown.toonbase import ToontownGlobals
 
+
 class MintRoomBase:
     """ common functionality shared by DistributedMintRoom/AI """
+
     def __init__(self):
         pass
 

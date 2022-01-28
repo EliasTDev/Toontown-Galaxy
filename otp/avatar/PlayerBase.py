@@ -5,7 +5,7 @@ class PlayerBase:
     def __init__(self):
         self.gmState = False
         pass
-    
+
     def atLocation(self, locationId):
         return True
 
@@ -17,7 +17,6 @@ class PlayerBase:
     def setAsGM(self, state):
         """ Toggle GM privilages """
         self.gmState = state
-        
+
     def isGM(self):
         return self.gmState
-    

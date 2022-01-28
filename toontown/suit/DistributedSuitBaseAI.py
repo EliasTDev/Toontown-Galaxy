@@ -7,10 +7,12 @@ from . import SuitDNA
 from direct.directnotify import DirectNotifyGlobal
 from toontown.battle import SuitBattleGlobals
 
-class DistributedSuitBaseAI(DistributedAvatarAI.DistributedAvatarAI,
-                         SuitBase.SuitBase):
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedSuitBaseAI')
+class DistributedSuitBaseAI(DistributedAvatarAI.DistributedAvatarAI,
+                            SuitBase.SuitBase):
+
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedSuitBaseAI')
 
     def __init__(self, air, suitPlanner):
         DistributedAvatarAI.DistributedAvatarAI.__init__(self, air)
@@ -26,10 +28,10 @@ class DistributedSuitBaseAI(DistributedAvatarAI.DistributedAvatarAI,
         self.currHP = 10
         self.zoneId = 0
         self.dna = None
-        self.virtual = 0 #the red glowing effect
+        self.virtual = 0  # the red glowing effect
 
-        self.skeleRevives = 0 #number of times to reanimate into a skeleCog
-        self.maxSkeleRevives = 0 #keep track of how many times we have reanimated
+        self.skeleRevives = 0  # number of times to reanimate into a skeleCog
+        self.maxSkeleRevives = 0  # keep track of how many times we have reanimated
         self.reviveFlag = 0
 
         # This is filled in only if the suit is trying to take over a
@@ -48,7 +50,7 @@ class DistributedSuitBaseAI(DistributedAvatarAI.DistributedAvatarAI,
         """
         Suggest that this suit is done with its duties and should be removed.
         """
-        if (self.sp != None):
+        if (self.sp is not None):
             # If we have a SuitPlanner, it should do the removing.
             self.sp.removeSuit(self)
         else:
@@ -62,12 +64,12 @@ class DistributedSuitBaseAI(DistributedAvatarAI.DistributedAvatarAI,
                      set the level to be the one specified
         Parameters:  lvl, level the suit should be
         """
-        attributes = SuitBattleGlobals.SuitAttributes[ self.dna.name ]
+        attributes = SuitBattleGlobals.SuitAttributes[self.dna.name]
         if lvl:
-            self.level = lvl - attributes[ 'level' ] - 1
+            self.level = lvl - attributes['level'] - 1
         else:
             self.level = SuitBattleGlobals.pickFromFreqList(
-                attributes[ 'freq' ])
+                attributes['freq'])
         self.notify.debug("Assigning level " + str(lvl))
         if hasattr(self, "doId"):
             self.d_setLevelDist(self.level)
@@ -121,8 +123,8 @@ class DistributedSuitBaseAI(DistributedAvatarAI.DistributedAvatarAI,
         if self.dna:
             return self.dna.makeNetString()
         else:
-            self.notify.debug('No dna has been created for suit %d!' % \
-                self.getDoId())
+            self.notify.debug('No dna has been created for suit %d!' %
+                              self.getDoId())
             return ""
 
     # setBrushOff
@@ -144,19 +146,19 @@ class DistributedSuitBaseAI(DistributedAvatarAI.DistributedAvatarAI,
         self.sendUpdateToAvatarId(toonId, 'denyBattle', [])
 
     def b_setSkeleRevives(self, num):
-        if num == None:
+        if num is None:
             num = 0
         self.setSkeleRevives(num)
         self.d_setSkeleRevives(self.getSkeleRevives())
 
     def d_setSkeleRevives(self, num):
-        self.sendUpdate("setSkeleRevives" , [num])
+        self.sendUpdate("setSkeleRevives", [num])
 
     def getSkeleRevives(self):
         return self.skeleRevives
 
     def setSkeleRevives(self, num):
-        if num == None:
+        if num is None:
             num = 0
         self.skeleRevives = num
         if num > self.maxSkeleRevives:
@@ -166,10 +168,11 @@ class DistributedSuitBaseAI(DistributedAvatarAI.DistributedAvatarAI,
         return self.maxSkeleRevives
 
     def useSkeleRevive(self, leftoverDamage=0):
-        #TODO add carryover damage
-        #maybe add if previouskelerevives == 2 and skelerevives == 1 then make it a virtual cog?
+        # TODO add carryover damage
+        # maybe add if previouskelerevives == 2 and skelerevives == 1 then make
+        # it a virtual cog?
         self.skeleRevives -= 1
-        #BRUH MOMENT FOR DISNEY LOL xD
+        # BRUH MOMENT FOR DISNEY LOL xD
        # self.currHP = self.maxHP
         self.b_setHP(self.maxHP - leftoverDamage)
         self.reviveFlag = 1
@@ -210,10 +213,10 @@ class DistributedSuitBaseAI(DistributedAvatarAI.DistributedAvatarAI,
         return None
 
     def getDeathEvent(self):
-        return 'cogDead-%s' % self.doId
+        return f'cogDead-{self.doId}'
 
     def resume(self):
-        self.notify.debug('resume, hp=%s' % self.currHP)
+        self.notify.debug(f'resume, hp={self.currHP}')
 
         # Do whatever needs to be done to restore control of the suit from
         # another party (e.g. a battle) - should be redefined by child if
@@ -261,5 +264,3 @@ class DistributedSuitBaseAI(DistributedAvatarAI.DistributedAvatarAI,
     def isVirtual(self):
         """is this a virtual laser cog?"""
         return self.getVirtual()
-
-

@@ -22,6 +22,7 @@ from . import QuietZoneState
 from toontown.distributed import ToontownDistrictStats
 from panda3d.otp import *
 
+
 class Place(StateData.StateData,
             FriendsListManager.FriendsListManager):
     """
@@ -31,7 +32,7 @@ class Place(StateData.StateData,
     """
 
     notify = DirectNotifyGlobal.directNotify.newCategory("Place")
-    
+
     def __init__(self, loader, doneEvent):
         StateData.StateData.__init__(self, doneEvent)
         FriendsListManager.FriendsListManager.__init__(self)
@@ -63,7 +64,9 @@ class Place(StateData.StateData,
     def unload(self):
         StateData.StateData.unload(self)
         FriendsListManager.FriendsListManager.unload(self)
-        self.notify.info("Unloading Place (%s). Fsm in %s" % (self.zoneId, self._tempFSM.getCurrentState().getName()))
+        self.notify.info(
+            "Unloading Place (%s). Fsm in %s" %
+            (self.zoneId, self._tempFSM.getCurrentState().getName()))
         del self._tempFSM
         taskMgr.remove("goHomeFailed")
         del self.walkDoneEvent
@@ -75,7 +78,7 @@ class Place(StateData.StateData,
             del self.trialerFA
 
     def setState(self, state):
-        assert(self.notify.debug("setState(state="+str(state)+")"))
+        assert(self.notify.debug("setState(state=" + str(state) + ")"))
         if hasattr(self, 'fsm'):
             curState = self.fsm.getName()
             if state == "pet" or curState == "pet":
@@ -118,8 +121,12 @@ class Place(StateData.StateData,
         Called when another avatar somewhere in the world wants to
         teleport to us, and we're available to be teleported to.
         """
-        fromAvatar.d_teleportResponse(toAvatar.doId, 1, toAvatar.defaultShard,
-                                      base.cr.playGame.getPlaceId(), self.getZoneId())
+        fromAvatar.d_teleportResponse(
+            toAvatar.doId,
+            1,
+            toAvatar.defaultShard,
+            base.cr.playGame.getPlaceId(),
+            self.getZoneId())
 
     def enablePeriodTimer(self):
         """
@@ -137,7 +144,8 @@ class Place(StateData.StateData,
                 # tunnel and immediately pulls out his hole and jumps in
                 # when he gets to the other side).  Instead, we'll trigger
                 # the event in a few seconds, say about 5.
-                taskMgr.doMethodLater(5, self.redoPeriodTimer, "redoPeriodTimer")
+                taskMgr.doMethodLater(
+                    5, self.redoPeriodTimer, "redoPeriodTimer")
             self.accept("periodTimerExpired", self.periodTimerExpired)
 
     def disablePeriodTimer(self):
@@ -159,19 +167,19 @@ class Place(StateData.StateData,
         if base.localAvatar.book.isEntered:
             # if the book is open, close it first.
             base.localAvatar.book.exit()
-            base.localAvatar.b_setAnimState('CloseBook', 1,
-                                              callback = self.__handlePeriodTimerBookClose)
+            base.localAvatar.b_setAnimState(
+                'CloseBook', 1, callback=self.__handlePeriodTimerBookClose)
         else:
             # if the book is not open, just leave.
-            base.localAvatar.b_setAnimState('TeleportOut', 1,
-                                              self.__handlePeriodTimerExitTeleport)
+            base.localAvatar.b_setAnimState(
+                'TeleportOut', 1, self.__handlePeriodTimerExitTeleport)
 
     def exitPeriodTimerExpired(self):
         pass
 
     def __handlePeriodTimerBookClose(self):
         base.localAvatar.b_setAnimState('TeleportOut', 1,
-                                          self.__handlePeriodTimerExitTeleport)
+                                        self.__handlePeriodTimerExitTeleport)
 
     def __handlePeriodTimerExitTeleport(self):
         base.cr.loginFSM.request("periodTimeout")
@@ -196,7 +204,7 @@ class Place(StateData.StateData,
 
     def enterFinal(self):
         assert(self.notify.debug("enterFinal()"))
-    
+
     def exitFinal(self):
         assert(self.notify.debug("exitFinal()"))
 
@@ -218,8 +226,8 @@ class Place(StateData.StateData,
         # if we are US, unpaid, and not in tutorial, show the chat buttons
         if ((base.cr.productName in ["DisneyOnline-US", "ES"]) and
             (not base.cr.isPaid()) and
-            (base.localAvatar.tutorialAck)):
-            base.localAvatar.chatMgr.obscure(0,0, 0 )
+                (base.localAvatar.tutorialAck)):
+            base.localAvatar.chatMgr.obscure(0, 0, 0)
             base.localAvatar.chatMgr.normalButton.show()
         # People can teleport to us in walk mode.
         self.accept("teleportQuery", self.handleTeleportQuery)
@@ -227,7 +235,7 @@ class Place(StateData.StateData,
         base.localAvatar.questPage.acceptOnscreenHooks()
         base.localAvatar.invPage.acceptOnscreenHooks()
         base.localAvatar.questMap.acceptOnscreenHooks()
-        #*#base.localAvatar.setActiveShadow(1)
+        # *#base.localAvatar.setActiveShadow(1)
         self.walkStateData.fsm.request('walking')
         self.enablePeriodTimer()
 
@@ -236,10 +244,9 @@ class Place(StateData.StateData,
         self.exitFLM()
 
         # if we are US, unpaid, not in tutorial, hide the chat button
-        if ((base.cr.productName in ["DisneyOnline-US", "ES"]) and
-            (not base.cr.isPaid()) and
-            (base.localAvatar.tutorialAck) and (not base.cr.whiteListChatEnabled)):
-            base.localAvatar.chatMgr.obscure(1,0, 1)
+        if ((base.cr.productName in ["DisneyOnline-US", "ES"]) and (not base.cr.isPaid(
+        )) and (base.localAvatar.tutorialAck) and (not base.cr.whiteListChatEnabled)):
+            base.localAvatar.chatMgr.obscure(1, 0, 1)
         # If we aren't in walk, we can't be sleeping
         self.disablePeriodTimer()
         messenger.send("wakeup")
@@ -248,10 +255,10 @@ class Place(StateData.StateData,
         # Clean up teleport handling.
         base.localAvatar.setTeleportAvailable(0)
         self.ignore("teleportQuery")
-        #*#base.localAvatar.setActiveShadow(0)
+        # *#base.localAvatar.setActiveShadow(0)
         # Put away the "welcome" sign
-        #self.loader.hood.hideTitleText()
-        if base.cr.playGame.hood != None:
+        # self.loader.hood.hideTitleText()
+        if base.cr.playGame.hood is not None:
             base.cr.playGame.hood.hideTitleText()
         base.localAvatar.questPage.hideQuestsOnscreen()
         base.localAvatar.questPage.ignoreOnscreenHooks()
@@ -261,6 +268,7 @@ class Place(StateData.StateData,
         base.localAvatar.questMap.ignoreOnscreenHooks()
     # this is no longer private as we need to call it from
     # other functions
+
     def handleWalkDone(self, doneStatus):
         mode = doneStatus["mode"]
         if mode == "StickerBook":
@@ -273,10 +281,10 @@ class Place(StateData.StateData,
             self.last = self.fsm.getCurrentState().getName()
             self.fsm.request("sit")
         else:
-            Place.notify.error("Invalid mode: %s" % mode)
+            Place.notify.error(f"Invalid mode: {mode}")
 
     # sit state
-    
+
     def enterSit(self):
         # The friends list is available here.
         self.enterFLM()
@@ -300,7 +308,7 @@ class Place(StateData.StateData,
         self.ignore(base.MOVE_FORWARD)
 
     # drive state
-    
+
     def enterDrive(self):
         # The friends list is available here.
         self.enterFLM()
@@ -321,7 +329,7 @@ class Place(StateData.StateData,
         self.ignore("teleportQuery")
 
     # push state
-    
+
     def enterPush(self):
         # The friends list is available here.
         self.enterFLM()
@@ -353,10 +361,9 @@ class Place(StateData.StateData,
         base.localAvatar.stopPosHprBroadcast()
         self.ignore("teleportQuery")
 
-
     # sticker book state
 
-    def enterStickerBook(self, page = None):
+    def enterStickerBook(self, page=None):
         # The friends list is available here.
         self.enterFLM()
 
@@ -367,15 +374,15 @@ class Place(StateData.StateData,
         target = base.cr.doFind("DistributedTarget")
         if target:
             target.hideGui()
-            
+
         # People can teleport to us in book mode.
         self.accept("teleportQuery", self.handleTeleportQuery)
         base.localAvatar.setTeleportAvailable(1)
         if page:
             base.localAvatar.book.setPage(page)
         # Play the open book animation
-        base.localAvatar.b_setAnimState('OpenBook', 1, 
-                                          self.enterStickerBookGUI)
+        base.localAvatar.b_setAnimState('OpenBook', 1,
+                                        self.enterStickerBookGUI)
         base.localAvatar.obscureMoveFurnitureButton(1)
 
     def enterStickerBookGUI(self):
@@ -396,13 +403,13 @@ class Place(StateData.StateData,
     def __handleFallingAsleep(self, task):
         # Close the book first
         base.localAvatar.book.exit()
-        base.localAvatar.b_setAnimState('CloseBook', 1,
-                           callback = self.__handleFallingAsleepBookClose)
+        base.localAvatar.b_setAnimState(
+            'CloseBook', 1, callback=self.__handleFallingAsleepBookClose)
         return Task.done
 
     def __handleFallingAsleepBookClose(self):
         if hasattr(self, "fsm"):
-            #the place has been unloaded... ignore this request
+            # the place has been unloaded... ignore this request
             self.fsm.request("walk")
         base.localAvatar.forceGotoSleep()
 
@@ -410,13 +417,16 @@ class Place(StateData.StateData,
         """
         User hit esc to get out of book
         """
-        if hasattr(localAvatar, "newsPage") and localAvatar.book.isOnPage(localAvatar.newsPage):
+        if hasattr(
+                localAvatar,
+                "newsPage") and localAvatar.book.isOnPage(
+                localAvatar.newsPage):
             localAvatar.newsButtonMgr.simulateEscapeKeyPress()
         else:
             base.localAvatar.stopSleepWatch()
             base.localAvatar.book.exit()
             base.localAvatar.b_setAnimState(
-                'CloseBook', 1, callback = self.handleBookClose)
+                'CloseBook', 1, callback=self.handleBookClose)
 
     def exitStickerBook(self):
         base.localAvatar.stopSleepWatch()
@@ -450,32 +460,32 @@ class Place(StateData.StateData,
         if (bookStatus["mode"] == "close"):
             # Play the close book animation
             base.localAvatar.b_setAnimState(
-                    'CloseBook', 1,
-                    callback = self.handleBookClose)
+                'CloseBook', 1,
+                callback=self.handleBookClose)
         elif (bookStatus["mode"] == "teleport"):
             # Play the close book animation
             zoneId = bookStatus["hood"]
             # We don't want to start a battle after toon chooses to teleport!
             base.localAvatar.collisionsOff()
             base.localAvatar.b_setAnimState(
-                    'CloseBook', 1,
-                    callback = self.handleBookCloseTeleport,
-                    extraArgs = [zoneId, zoneId])
+                'CloseBook', 1,
+                callback=self.handleBookCloseTeleport,
+                extraArgs=[zoneId, zoneId])
         elif (bookStatus["mode"] == "exit"):
-            self.exitTo = bookStatus.get('exitTo') 
+            self.exitTo = bookStatus.get('exitTo')
             # Play the close book animation
             base.localAvatar.collisionsOff()
             base.localAvatar.b_setAnimState(
-                    'CloseBook', 1,
-                    callback = self.__handleBookCloseExit)
+                'CloseBook', 1,
+                callback=self.__handleBookCloseExit)
         elif (bookStatus["mode"] == "gohome"):
             zoneId = bookStatus["hood"]
             # Play the close book animation
             base.localAvatar.collisionsOff()
             base.localAvatar.b_setAnimState(
                 'CloseBook', 1,
-                callback = self.goHomeNow,
-                extraArgs = [zoneId])
+                callback=self.goHomeNow,
+                extraArgs=[zoneId])
         elif (bookStatus["mode"] == "startparty"):
             firstStart = bookStatus["firstStart"]
             hostId = bookStatus["hostId"]
@@ -483,12 +493,13 @@ class Place(StateData.StateData,
             base.localAvatar.collisionsOff()
             base.localAvatar.b_setAnimState(
                 'CloseBook', 1,
-                callback = self.startPartyNow,
+                callback=self.startPartyNow,
                 extraArgs=[firstStart, hostId],
             )
 
     def handleBookCloseTeleport(self, hoodId, zoneId):
-        # The local avatar cannot leave the zone if he is part of a boarding group.
+        # The local avatar cannot leave the zone if he is part of a boarding
+        # group.
         if localAvatar.hasActiveBoardingGroup():
             rejectText = TTLocalizer.BoardingCannotLeaveZone
             localAvatar.elevatorNotifier.showMe(rejectText)
@@ -497,29 +508,31 @@ class Place(StateData.StateData,
         self.requestLeave({
             "loader": ZoneUtil.getBranchLoaderName(zoneId),
             "where": ZoneUtil.getToonWhereName(zoneId),
-            "how" : "teleportIn",
-            "hoodId" : hoodId,
-            "zoneId" : zoneId,
-            "shardId" : None,
-            "avId" : -1
-            })
-            
+            "how": "teleportIn",
+            "hoodId": hoodId,
+            "zoneId": zoneId,
+            "shardId": None,
+            "avId": -1
+        })
+
     def __handleBookCloseExit(self):
         base.localAvatar.b_setAnimState('TeleportOut', 1,
-                self.__handleBookExitTeleport, [0])
+                                        self.__handleBookExitTeleport, [0])
 
     def __handleBookExitTeleport(self, requestStatus):
         if base.cr.timeManager:
-            base.cr.timeManager.setDisconnectReason(ToontownGlobals.DisconnectBookExit)
+            base.cr.timeManager.setDisconnectReason(
+                ToontownGlobals.DisconnectBookExit)
 
         # usually the quiet zone state fades the screen out, but we're not going
         # through the quiet zone
         base.transitions.fadeScreen(1.0)
-            
+
         base.cr.gameFSM.request(self.exitTo)
 
     def goHomeNow(self, curZoneId):
-        # The local avatar cannot leave the zone if he is part of a boarding group.
+        # The local avatar cannot leave the zone if he is part of a boarding
+        # group.
         if localAvatar.hasActiveBoardingGroup():
             rejectText = TTLocalizer.BoardingCannotLeaveZone
             localAvatar.elevatorNotifier.showMe(rejectText)
@@ -536,32 +549,35 @@ class Place(StateData.StateData,
         # we have already left the Estate, probably because the
         # owner booted us out.
         self.requestLeave({
-            #"loader": "estateLoader",
+            # "loader": "estateLoader",
             "loader": "safeZoneLoader",
             "where": "estate",
-            "how" : "teleportIn",
-            "hoodId" : hoodId,
-            "zoneId" : -1,
-            "shardId" : None,
-            "avId" : -1,
-            })
+            "how": "teleportIn",
+            "hoodId": hoodId,
+            "zoneId": -1,
+            "shardId": None,
+            "avId": -1,
+        })
 
     def startPartyNow(self, firstStart, hostId):
-        # The local avatar cannot leave the zone if he is part of a boarding group.
+        # The local avatar cannot leave the zone if he is part of a boarding
+        # group.
         if localAvatar.hasActiveBoardingGroup():
             rejectText = TTLocalizer.BoardingCannotLeaveZone
-            localAvatar.elevatorNotifier.showMe(rejectText)         
+            localAvatar.elevatorNotifier.showMe(rejectText)
             return
         base.localAvatar.creatingNewPartyWithMagicWord = False
         base.localAvatar.aboutToPlanParty = False
         hoodId = ToontownGlobals.PartyHood
-        # If we're starting the party for the 1st time, find the least populated shard
+        # If we're starting the party for the 1st time, find the least
+        # populated shard
         if firstStart:
             # we crash when zoneId is -1, localAvatar.zoneId gets set to it
             # then we try to send it over the wire we get a range error
             zoneId = 0
             ToontownDistrictStats.refresh('shardInfoUpdated')
-            # We need to find the lowest populated shard and have the party there
+            # We need to find the lowest populated shard and have the party
+            # there
             curShardTuples = base.cr.listActiveShards()
             # Tuple is of form : (shardId, name, pop, WelcomeValleyPopulation)
             lowestPop = 100000000000000000
@@ -576,13 +592,14 @@ class Place(StateData.StateData,
             base.cr.playGame.getPlace().requestLeave({
                 "loader": "safeZoneLoader",
                 "where": "party",
-                "how" : "teleportIn",
-                "hoodId" : hoodId,
-                "zoneId" : zoneId,
-                "shardId" : shardId,
-                "avId" : -1,
+                "how": "teleportIn",
+                "hoodId": hoodId,
+                "zoneId": zoneId,
+                "shardId": shardId,
+                "avId": -1,
             })
-        # If we're going back to a party we've started or are a guest of a party
+        # If we're going back to a party we've started or are a guest of a
+        # party
         else:
             if hostId is None:
                 hostId = base.localAvatar.doId
@@ -596,12 +613,13 @@ class Place(StateData.StateData,
             self.fsm.request("walk")
         # GRW - this was breaking the sad-walk stuff
         # base.localAvatar.b_setAnimState('neutral', 1)
-        
+
         # If we are underwater, we should swim.
         if hasattr(self, 'toonSubmerged') and self.toonSubmerged == 1:
             if hasattr(self, 'walkStateData'):
-                self.walkStateData.fsm.request("swimming", [self.loader.swimSound])
-    
+                self.walkStateData.fsm.request(
+                    "swimming", [self.loader.swimSound])
+
     def requestLeave(self, requestStatus):
         # Request to leave the current location and go somewhere else.
         if hasattr(self, 'fsm'):
@@ -620,22 +638,29 @@ class Place(StateData.StateData,
         NOTE: TTPlayground redefines this because the TT streets are in phase 5,
         not the same phase as the safe zone like the rest of the hoods
         """
-        self.acceptOnce(self.dfaDoneEvent, self.enterDFACallback, [requestStatus])
-        self.dfa = DownloadForceAcknowledge.DownloadForceAcknowledge(self.dfaDoneEvent)
-        self.dfa.enter(base.cr.hoodMgr.getPhaseFromHood(requestStatus["hoodId"]))
-        
+        self.acceptOnce(
+            self.dfaDoneEvent,
+            self.enterDFACallback,
+            [requestStatus])
+        self.dfa = DownloadForceAcknowledge.DownloadForceAcknowledge(
+            self.dfaDoneEvent)
+        self.dfa.enter(
+            base.cr.hoodMgr.getPhaseFromHood(
+                requestStatus["hoodId"]))
+
     def exitDFA(self):
         self.ignore(self.dfaDoneEvent)
-            
+
     def handleEnterTunnel(self, requestStatus, collEntry):
         """
         Note: TutorialSafeZone overrides this function.
         """
-        # The local avatar cannot leave the zone if he is part of a boarding group.
+        # The local avatar cannot leave the zone if he is part of a boarding
+        # group.
         if localAvatar.hasActiveBoardingGroup():
             rejectText = TTLocalizer.BoardingCannotLeaveZone
             localAvatar.elevatorNotifier.showMe(rejectText)
-            
+
             dummyNP = NodePath('dummyNP')
             dummyNP.reparentTo(render)
             tunnelOrigin = requestStatus["tunnelOrigin"]
@@ -646,7 +671,7 @@ class Place(StateData.StateData,
             dummyNP.removeNode()
             del dummyNP
             return
-        
+
         self.requestLeave(requestStatus)
 
     def enterDFACallback(self, requestStatus, doneStatus):
@@ -667,15 +692,15 @@ class Place(StateData.StateData,
                 # This is to handle the peculiar case of leaving the
                 # tutorial tunnel. We walk out via the tunnel, but
                 # teleport into the toontown central playground.
-                out = {"teleportIn":"tunnelOut"}
+                out = {"teleportIn": "tunnelOut"}
                 # make the tutorial put toon in Welcome Valley
                 requestStatus['zoneId'] = 22000
                 requestStatus['hoodId'] = 22000
             else:
-                out = {"teleportIn":"teleportOut",
-                       "tunnelIn":"tunnelOut",
-                       "doorIn":"doorOut"}
- 
+                out = {"teleportIn": "teleportOut",
+                       "tunnelIn": "tunnelOut",
+                       "doorIn": "doorOut"}
+
             assert(self.notify.info("HOW: " + out[requestStatus["how"]]))
             self.fsm.request(out[requestStatus["how"]], [requestStatus])
         # Rejected
@@ -683,13 +708,14 @@ class Place(StateData.StateData,
             self.fsm.request("DFAReject")
         else:
             # Some return code that is not handled
-            Place.notify.error("Unknown done status for DownloadForceAcknowledge: "
-                              + repr(doneStatus))
+            Place.notify.error(
+                "Unknown done status for DownloadForceAcknowledge: " +
+                repr(doneStatus))
 
     def enterDFAReject(self):
         # TODO: reject movie, turn toon around
         self.fsm.request("walk")
-    
+
     def exitDFAReject(self):
         pass
 
@@ -712,8 +738,7 @@ class Place(StateData.StateData,
         else:
             # Some return code that is not handled
             Place.notify.error(
-                "Unknown done status for TrialerForceAcknowledge: %s" %
-                doneStatus)
+                f"Unknown done status for TrialerForceAcknowledge: {doneStatus}")
 
     def enterTrialerFAReject(self):
         self.fsm.request('walk')
@@ -728,11 +753,11 @@ class Place(StateData.StateData,
         # door.
         NametagGlobals.setMasterArrowsOn(0)
 
-        door=base.cr.doId2do.get(requestStatus['doorDoId'])
+        door = base.cr.doId2do.get(requestStatus['doorDoId'])
         door.readyToExit()
-        #door_origin=door.getDoorNodePath()
+        # door_origin=door.getDoorNodePath()
         #assert(not door_origin.isEmpty())
-        #camera.setPosHprScale(
+        # camera.setPosHprScale(
         #    VBase3(-1.5, 5, 5),
         #    VBase3(180, 0, 0),
         #    VBase3(1, 1, 1),
@@ -761,8 +786,8 @@ class Place(StateData.StateData,
 
     def handleDoorDoneEvent(self, requestStatus):
         assert(self.notify.debug("handleDoorDoneEvent(requestStatus="
-                +str(requestStatus)+")"))
-        self.doneStatus=requestStatus
+                                 + str(requestStatus) + ")"))
+        self.doneStatus = requestStatus
         messenger.send(self.doneEvent)
 
     def handleDoorTrigger(self):
@@ -772,12 +797,13 @@ class Place(StateData.StateData,
     # tunnel in state
 
     def enterTunnelIn(self, requestStatus):
-        self.notify.debug("enterTunnelIn(requestStatus="+str(requestStatus)+")")
+        self.notify.debug(
+            "enterTunnelIn(requestStatus=" + str(requestStatus) + ")")
         # By now, you are already in the hood and zone
         # Find the node we are supposed to position the toon relative to
         tunnelOrigin = base.render.find(requestStatus["tunnelName"])
         assert not tunnelOrigin.isEmpty(), \
-                "did not find tunnelOrigin: "+requestStatus["tunnelName"]
+            "did not find tunnelOrigin: " + requestStatus["tunnelName"]
         self.accept("tunnelInMovieDone", self.__tunnelInMovieDone)
         base.localAvatar.reconsiderCheesyEffect()
         base.localAvatar.tunnelIn(tunnelOrigin)
@@ -788,8 +814,8 @@ class Place(StateData.StateData,
         self.fsm.request('walk')
         # the remote clients may still be showing the tunnel in movie;
         # sending these messages might mess them up, and they're unnecessary
-        #base.localAvatar.d_broadcastPositionNow()
-        #base.localAvatar.d_setParent(ToontownGlobals.SPRender)
+        # base.localAvatar.d_broadcastPositionNow()
+        # base.localAvatar.d_setParent(ToontownGlobals.SPRender)
 
     def exitTunnelIn(self):
         assert(self.notify.debug("exitTunnelIn()"))
@@ -797,23 +823,27 @@ class Place(StateData.StateData,
     # tunnel out state
 
     def enterTunnelOut(self, requestStatus):
-        assert(self.notify.debug("enterTunnelOut(requestStatus="+str(requestStatus)+")"))
+        assert(
+            self.notify.debug(
+                "enterTunnelOut(requestStatus=" +
+                str(requestStatus) +
+                ")"))
         hoodId = requestStatus["hoodId"]
         zoneId = requestStatus["zoneId"]
         how = requestStatus["how"]
         tunnelOrigin = requestStatus["tunnelOrigin"]
         fromZoneId = ZoneUtil.getCanonicalZoneId(self.getZoneId())
         tunnelName = requestStatus.get("tunnelName")
-        if tunnelName == None:
+        if tunnelName is None:
             tunnelName = base.cr.hoodMgr.makeLinkTunnelName(
                 self.loader.hood.id, fromZoneId)
         self.doneStatus = {"loader": ZoneUtil.getLoaderName(zoneId),
                            "where": ZoneUtil.getToonWhereName(zoneId),
-                           "how" : how,
-                           "hoodId" : hoodId,
-                           "zoneId" : zoneId,
-                           "shardId" : None,
-                           "tunnelName" : tunnelName,
+                           "how": how,
+                           "hoodId": hoodId,
+                           "zoneId": zoneId,
+                           "shardId": None,
+                           "tunnelName": tunnelName,
                            }
         self.accept("tunnelOutMovieDone", self.__tunnelOutMovieDone)
         base.localAvatar.tunnelOut(tunnelOrigin)
@@ -832,7 +862,7 @@ class Place(StateData.StateData,
         assert(self.notify.debug("enterTeleportOut()"))
         base.localAvatar.laffMeter.start()
         base.localAvatar.b_setAnimState('TeleportOut', 1,
-                callback, [requestStatus])
+                                        callback, [requestStatus])
         base.localAvatar.obscureMoveFurnitureButton(1)
 
     def exitTeleportOut(self):
@@ -847,12 +877,12 @@ class Place(StateData.StateData,
         # to get interrupted from the teleportOut state and not
         # complete the teleport operation, so that we still remain in
         # the same zone.
-        #base.localAvatar.b_setParent(ToontownGlobals.SPHidden)
+        # base.localAvatar.b_setParent(ToontownGlobals.SPHidden)
         #base.localAvatar.b_setAnimState('neutral', 1)
 
-    def enterDied(self, requestStatus, callback = None):
+    def enterDied(self, requestStatus, callback=None):
         assert(self.notify.debug("enterDied()"))
-        if callback == None:
+        if callback is None:
             callback = self.__diedDone
         base.localAvatar.laffMeter.start()
         # Make sure the camera isn't attached to the toon when we
@@ -901,23 +931,23 @@ class Place(StateData.StateData,
             taskMgr.doMethodLater(HouseGlobals.TELEPORT_TIMEOUT,
                                   self.goHomeFailed,
                                   "goHomeFailed")
-            
+
     def goHome(self, ownerId, zoneId):
-        self.notify.debug("goHome ownerId = %s" % ownerId)
+        self.notify.debug(f"goHome ownerId = {ownerId}")
         taskMgr.remove("goHomeFailed")
 
         # Disallow transitive visits, i.e. teleporting to a friend who is
         # currently at a non-friends estate
 
         if (ownerId > 0 and ownerId != base.localAvatar.doId and
-            not base.cr.isFriend(ownerId)):
+                not base.cr.isFriend(ownerId)):
             self.doneStatus["failed"] = 1
             self.goHomeFailed(None)
             return
 
         if (ownerId == 0 and zoneId == 0):
-            if ((self.doneStatus['shardId'] is None) or
-                (self.doneStatus['shardId'] is base.localAvatar.defaultShard)):
+            if ((self.doneStatus['shardId'] is None) or (
+                    self.doneStatus['shardId'] is base.localAvatar.defaultShard)):
                 # we are staying on the same shard... but the toon we are teleporting
                 # to is no longer there!
                 self.doneStatus["failed"] = 1
@@ -929,13 +959,14 @@ class Place(StateData.StateData,
                 # switch shards and let the user click "go to" again
                 # SDN:  actually this is no longer true.  We switch shards before the goHome
                 # function is called, so the new AI will be able to tell us the ownerId and zoneId
-                # This chunk of code is just a failsafe then..and may not be needed.
+                # This chunk of code is just a failsafe then..and may not be
+                # needed.
 
                 # This was changed from 'hood'/'zone' to 'hoodId'/'zoneId' by
                 # Pappy, and it caused a crash when teleporting to an estate
                 # on a different shard.
-                self.doneStatus["hood"] =  ToontownGlobals.MyEstate
-                self.doneStatus["zone"] =  base.localAvatar.lastHood
+                self.doneStatus["hood"] = ToontownGlobals.MyEstate
+                self.doneStatus["zone"] = base.localAvatar.lastHood
                 self.doneStatus["loaderId"] = "safeZoneLoader"
                 #self.doneStatus["loaderId"] = "estateLoader"
                 self.doneStatus["whereId"] = "estate"
@@ -943,7 +974,7 @@ class Place(StateData.StateData,
 
                 messenger.send(self.doneEvent)
                 return
-        
+
         # If doneStatus["zoneId"]==-1 it means we got here from the
         # Go Home button in the shticker book.  We'll go to the zoneId
         # returned to us by the AI.  If doneStatus["zoneId"] != -1, it means
@@ -962,7 +993,7 @@ class Place(StateData.StateData,
 
         # if we are leaving a suit building, the AI will need to know
         messenger.send("localToonLeft")
-        
+
     def goHomeFailed(self, task):
         self.notify.debug("goHomeFailed")
         # it took too long to hear back from the server,
@@ -973,8 +1004,8 @@ class Place(StateData.StateData,
         # This was changed from 'hood'/'zone' to 'hoodId'/'zoneId' by
         # Pappy, and it caused a crash when teleporting to an estate
         # on a different shard.
-        self.doneStatus["hood"] =  base.localAvatar.lastHood
-        self.doneStatus["zone"] =  base.localAvatar.lastHood
+        self.doneStatus["hood"] = base.localAvatar.lastHood
+        self.doneStatus["zone"] = base.localAvatar.lastHood
 
         self.fsm.request('teleportIn', [self.doneStatus])
         return Task.done
@@ -993,13 +1024,14 @@ class Place(StateData.StateData,
         else:
             message = TTLocalizer.EstateTeleportFailed
         base.localAvatar.setSystemMessage(0, message)
-        
 
     def enterTeleportIn(self, requestStatus):
-        self._tiToken = self.addSetZoneCompleteCallback(Functor(self._placeTeleportInPostZoneComplete, requestStatus), 100)
+        self._tiToken = self.addSetZoneCompleteCallback(
+            Functor(self._placeTeleportInPostZoneComplete, requestStatus), 100)
 
     def _placeTeleportInPostZoneComplete(self, requestStatus):
-        teleportDebug(requestStatus, '_placeTeleportInPostZoneComplete(%s)' % (requestStatus,))
+        teleportDebug(
+            requestStatus, f'_placeTeleportInPostZoneComplete({requestStatus})')
  # Turn off the little red arrows while we teleport in.
         NametagGlobals.setMasterArrowsOn(0)
         base.localAvatar.laffMeter.start()
@@ -1009,7 +1041,7 @@ class Place(StateData.StateData,
         avId = requestStatus.get('avId', -1)
         if avId != -1:
             if avId in base.cr.doId2do:
-                 # Teleport to avatar
+                # Teleport to avatar
                 teleportDebug(requestStatus, 'teleport to avatar')
                 avatar = base.cr.doId2do[avId]
                 avatar.forceToTruePosition()
@@ -1018,14 +1050,16 @@ class Place(StateData.StateData,
             else:
                 # The avatar isn't here!
                 friend = base.cr.identifyAvatar(avId)
-                if friend != None:
+                if friend is not None:
                     teleportDebug(requestStatus, 'friend not here, giving up')
-                    base.localAvatar.setSystemMessage(avId, OTPLocalizer.WhisperTargetLeftVisit % (friend.getName(),))
+                    base.localAvatar.setSystemMessage(
+                        avId, OTPLocalizer.WhisperTargetLeftVisit %
+                        (friend.getName(),))
                     friend.d_teleportGiveup(base.localAvatar.doId)
         base.transitions.irisIn()
         # We might be going to "popup" state if it's a newbie
         self.nextState = requestStatus.get('nextState', 'walk')
-         # Start the smart camera, to put it in the right place, but be
+        # Start the smart camera, to put it in the right place, but be
         # prepared to stop it again in exitTeleportIn.
         base.localAvatar.attachCamera()
 
@@ -1039,7 +1073,8 @@ class Place(StateData.StateData,
         # This way, the teleport-in animation will be played in its
         # entirety.
         globalClock.tick()
-        base.localAvatar.b_setAnimState('TeleportIn', 1, callback=self.teleportInDone)
+        base.localAvatar.b_setAnimState(
+            'TeleportIn', 1, callback=self.teleportInDone)
         base.localAvatar.d_broadcastPositionNow()
         base.localAvatar.b_setParent(ToontownGlobals.SPRender)
         #import pdb; pdb.set_trace()
@@ -1054,7 +1089,7 @@ class Place(StateData.StateData,
         # This will either go to "walk" or "popup"
         if hasattr(self, 'fsm'):
             self.fsm.request(self.nextState, [1])
-        
+
     def exitTeleportIn(self):
         assert(self.notify.debug("exitTeleportIn()"))
         # Turn on the little red arrows now that we're done teleporting.
@@ -1067,9 +1102,9 @@ class Place(StateData.StateData,
         base.localAvatar.detachCamera()
         base.localAvatar.stopPosHprBroadcast()
 
-
     def requestTeleport(self, hoodId, zoneId, shardId, avId):
-        # The local avatar cannot leave the zone if he is part of a boarding group.
+        # The local avatar cannot leave the zone if he is part of a boarding
+        # group.
         if localAvatar.hasActiveBoardingGroup():
             rejectText = TTLocalizer.BoardingCannotLeaveZone
             localAvatar.elevatorNotifier.showMe(rejectText)
@@ -1089,20 +1124,20 @@ class Place(StateData.StateData,
         self.requestLeave({
             "loader": loaderId,
             "where": whereId,
-            "how" : "teleportIn",
-            "hoodId" : hoodId, 
-            "zoneId" : zoneId, 
-            "shardId" : shardId,
-            "avId" : avId})
+            "how": "teleportIn",
+            "hoodId": hoodId,
+            "zoneId": zoneId,
+            "shardId": shardId,
+            "avId": avId})
 
     def enterQuest(self, npcToon):
         base.localAvatar.b_setAnimState('neutral', 1)
-        # People can still teleport to us 
+        # People can still teleport to us
         self.accept("teleportQuery", self.handleTeleportQuery)
         base.localAvatar.setTeleportAvailable(1)
         base.localAvatar.laffMeter.start()
         base.localAvatar.obscureMoveFurnitureButton(1)
-        
+
     def exitQuest(self):
         # Turn off what we turned on
         base.localAvatar.setTeleportAvailable(0)
@@ -1112,12 +1147,12 @@ class Place(StateData.StateData,
 
     def enterPurchase(self):
         base.localAvatar.b_setAnimState('neutral', 1)
-        # People can still teleport to us 
+        # People can still teleport to us
         self.accept("teleportQuery", self.handleTeleportQuery)
         base.localAvatar.setTeleportAvailable(1)
         base.localAvatar.laffMeter.start()
         base.localAvatar.obscureMoveFurnitureButton(1)
-        
+
     def exitPurchase(self):
         # Turn off what we turned on
         base.localAvatar.setTeleportAvailable(0)
@@ -1127,7 +1162,7 @@ class Place(StateData.StateData,
 
     def enterFishing(self):
         base.localAvatar.b_setAnimState('neutral', 1)
-        # People can still teleport to us 
+        # People can still teleport to us
         self.accept("teleportQuery", self.handleTeleportQuery)
         base.localAvatar.setTeleportAvailable(1)
         base.localAvatar.laffMeter.start()
@@ -1140,14 +1175,14 @@ class Place(StateData.StateData,
 
     def enterBanking(self):
         base.localAvatar.b_setAnimState('neutral', 1)
-        # People can still teleport to us 
+        # People can still teleport to us
         self.accept("teleportQuery", self.handleTeleportQuery)
         base.localAvatar.setTeleportAvailable(1)
         base.localAvatar.laffMeter.start()
         base.localAvatar.obscureMoveFurnitureButton(1)
         # Spawn the task that checks to see if toon has fallen asleep
         base.localAvatar.startSleepWatch(self.__handleFallingAsleepBanking)
-        self.enablePeriodTimer()        
+        self.enablePeriodTimer()
 
     def __handleFallingAsleepBanking(self, arg):
         if hasattr(self, "fsm"):
@@ -1155,7 +1190,7 @@ class Place(StateData.StateData,
             messenger.send('bankAsleep')
             self.fsm.request("walk")
         base.localAvatar.forceGotoSleep()
-        
+
     def exitBanking(self):
         # Turn off what we turned on
         base.localAvatar.setTeleportAvailable(0)
@@ -1167,22 +1202,22 @@ class Place(StateData.StateData,
 
     def enterPhone(self):
         base.localAvatar.b_setAnimState('neutral', 1)
-        # People can still teleport to us 
+        # People can still teleport to us
         self.accept("teleportQuery", self.handleTeleportQuery)
         base.localAvatar.setTeleportAvailable(1)
         base.localAvatar.laffMeter.start()
         base.localAvatar.obscureMoveFurnitureButton(1)
         # Spawn the task that checks to see if toon has fallen asleep
         base.localAvatar.startSleepWatch(self.__handleFallingAsleepPhone)
-        self.enablePeriodTimer()        
+        self.enablePeriodTimer()
 
     def __handleFallingAsleepPhone(self, arg):
         if hasattr(self, "fsm"):
-            #the place has been unloaded... ignore this request
+            # the place has been unloaded... ignore this request
             self.fsm.request("walk")
         messenger.send('phoneAsleep')
         base.localAvatar.forceGotoSleep()
-        
+
     def exitPhone(self):
         # Turn off what we turned on
         base.localAvatar.setTeleportAvailable(0)
@@ -1196,28 +1231,29 @@ class Place(StateData.StateData,
         base.localAvatar.b_setAnimState('neutral', 1)
         # disable emotes
         Emote.globalEmote.disableBody(base.localAvatar, "enterStopped")
-        # People can still teleport to us 
+        # People can still teleport to us
         self.accept("teleportQuery", self.handleTeleportQuery)
-        
+
         if base.localAvatar.isDisguised:
             base.localAvatar.setTeleportAvailable(0)
         else:
             base.localAvatar.setTeleportAvailable(1)
-        
+
         base.localAvatar.laffMeter.start()
         base.localAvatar.obscureMoveFurnitureButton(1)
         # Spawn the task that checks to see if toon has fallen asleep
         base.localAvatar.startSleepWatch(self.__handleFallingAsleepStopped)
-        self.enablePeriodTimer()        
+        self.enablePeriodTimer()
 
     def __handleFallingAsleepStopped(self, arg):
         if hasattr(self, "fsm"):
-            #the place has been unloaded... ignore this request
+            # the place has been unloaded... ignore this request
             self.fsm.request("walk")
         base.localAvatar.forceGotoSleep()
-        # throw an event to alert any GUIs that may be up that the toon is asleep
+        # throw an event to alert any GUIs that may be up that the toon is
+        # asleep
         messenger.send("stoppedAsleep")
- 
+
     def exitStopped(self):
         # enable emotes
         Emote.globalEmote.releaseBody(base.localAvatar, "exitStopped")
@@ -1234,7 +1270,7 @@ class Place(StateData.StateData,
         base.localAvatar.b_setAnimState('neutral', 1)
         # disable emotes
         Emote.globalEmote.disableBody(base.localAvatar, "enterPet")
-        # People can still teleport to us 
+        # People can still teleport to us
         self.accept("teleportQuery", self.handleTeleportQuery)
         base.localAvatar.setTeleportAvailable(1)
         # but we cannot teleport to other people
@@ -1242,7 +1278,7 @@ class Place(StateData.StateData,
         base.localAvatar.laffMeter.start()
         # The friends list is available here.
         self.enterFLM()
-        
+
     def exitPet(self):
         # Turn off what we turned on
         base.localAvatar.setTeleportAvailable(0)
@@ -1261,7 +1297,7 @@ class Place(StateData.StateData,
         self.quietZoneDoneEvent = "quietZoneDone"
         self.acceptOnce(self.quietZoneDoneEvent, self.handleQuietZoneDone)
         self.quietZoneStateData = QuietZoneState.QuietZoneState(
-                self.quietZoneDoneEvent)
+            self.quietZoneDoneEvent)
         self.quietZoneStateData.load()
         self.quietZoneStateData.enter(requestStatus)
 
@@ -1271,28 +1307,32 @@ class Place(StateData.StateData,
         del self.quietZoneDoneEvent
         self.quietZoneStateData.exit()
         self.quietZoneStateData.unload()
-        self.quietZoneStateData=None
+        self.quietZoneStateData = None
 
     def handleQuietZoneDone(self):
         assert(self.notify.debug("handleQuietZoneDone()"))
         # Change to the destination state:
         how = base.cr.handlerArgs["how"]
-        assert(how=="teleportIn")# Please tell skyler if this assert fails.
+        assert(how == "teleportIn")  # Please tell skyler if this assert fails.
         self.fsm.request(how, [base.cr.handlerArgs])
 
-    def addSetZoneCompleteCallback(self, callback, priority = None):
+    def addSetZoneCompleteCallback(self, callback, priority=None):
         qzsd = self._getQZState()
         if qzsd:
             return qzsd.addSetZoneCompleteCallback(callback, priority)
         else:
-            token = self._setZoneCompleteLocalCallbacks.add(callback, priority=priority)
+            token = self._setZoneCompleteLocalCallbacks.add(
+                callback, priority=priority)
             if not self._setZoneCompleteSubframeCall:
-                self._setZoneCompleteSubframeCall = SubframeCall(self._doSetZoneCompleteLocalCallbacks, taskMgr.getCurrentTask().getPriority() - 1)
+                self._setZoneCompleteSubframeCall = SubframeCall(
+                    self._doSetZoneCompleteLocalCallbacks,
+                    taskMgr.getCurrentTask().getPriority() - 1)
             return token
 
     def removeSetZoneCompleteCallback(self, token):
         if token is not None:
-            if any(token == x[1] for x in self._setZoneCompleteLocalCallbacks._callbacks):
+            if any(token == x[1]
+                   for x in self._setZoneCompleteLocalCallbacks._callbacks):
                 self._setZoneCompleteLocalCallbacks.remove(token)
             qzsd = self._getQZState()
             if qzsd:
@@ -1308,18 +1348,22 @@ class Place(StateData.StateData,
 
     def _getQZState(self):
         if hasattr(base, 'cr') and hasattr(base.cr, 'playGame'):
-            if hasattr(base.cr.playGame, 'quietZoneStateData') and base.cr.playGame.quietZoneStateData:
+            if hasattr(
+                    base.cr.playGame,
+                    'quietZoneStateData') and base.cr.playGame.quietZoneStateData:
                 return base.cr.playGame.quietZoneStateData
         return None
 
-    def addLeftQuietZoneCallback(self, callback, priority = None):
+    def addLeftQuietZoneCallback(self, callback, priority=None):
         qzsd = self._getQZState()
         if qzsd:
             return qzsd.addLeftQuietZoneCallback(callback, priority)
         else:
-            token = self._leftQuietZoneLocalCallbacks.add(callback, priority=priority)
+            token = self._leftQuietZoneLocalCallbacks.add(
+                callback, priority=priority)
             if not self._leftQuietZoneSubframeCall:
-                self._leftQuietZoneSubframeCall = SubframeCall(self._doLeftQuietZoneCallbacks, taskMgr.getCurrentTask().getPriority() - 1)
+                self._leftQuietZoneSubframeCall = SubframeCall(
+                    self._doLeftQuietZoneCallbacks, taskMgr.getCurrentTask().getPriority() - 1)
             return token
 
     def removeLeftQuietZoneCallback(self, token):

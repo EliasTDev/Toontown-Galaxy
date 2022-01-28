@@ -2,6 +2,7 @@ from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from otp.web.SettingsMgrBase import SettingsMgrBase
 
+
 class SettingsMgr(DistributedObjectGlobal, SettingsMgrBase):
     """global object for tweaking settings across all shards and clients in realtime"""
     notify = directNotify.newCategory('SettingsMgr')
@@ -43,8 +44,10 @@ class SettingsMgr(DistributedObjectGlobal, SettingsMgrBase):
 
     def settingChange(self, settingName, valueStr):
         if valueStr == self._getCurrentValueRepr(settingName):
-            # this is a repeat of the current value, probably from the UD starting back up
+            # this is a repeat of the current value, probably from the UD
+            # starting back up
             return
-        
-        self.notify.info("got setting change: %s -> %s" % (settingName, valueStr))
+
+        self.notify.info(
+            f"got setting change: {settingName} -> {valueStr}")
         self._changeSetting(settingName, valueStr)

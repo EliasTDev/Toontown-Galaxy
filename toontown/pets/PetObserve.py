@@ -15,8 +15,11 @@ senses, the eyes, ears, etc. of the pets.
 
 # PetObserves are broadcast to all pets in a zone, or listening to that
 # zone's event
+
+
 def getEventName(zoneId):
-    return 'PetObserve-%s' % zoneId
+    return f'PetObserve-{zoneId}'
+
 
 def send(zoneIds, petObserve):
     if petObserve.isValid():
@@ -25,6 +28,7 @@ def send(zoneIds, petObserve):
             zoneIds = [zoneIds]
         for zoneId in zoneIds:
             messenger.send(getEventName(zoneId), [petObserve])
+
 
 # spoken messages that pets understand; speedchat phrases map to one of these
 Phrases = Enum('HI, BYE, YES, NO, SOOTHE, PRAISE, CRITICISM, HAPPY,'
@@ -40,12 +44,14 @@ Actions = Enum('FEED, SCRATCH,'
                'GARDEN'
                )
 
+
 class PetObserve:
     # base class for all pet observes
     def isValid(self):
         # override this and return zero to prevent observe from being
         # sent to pets
         return 1
+
     def isForgettable(self):
         # override this and return non-zero to enable Pets to forget
         # this observation
@@ -55,68 +61,87 @@ class PetObserve:
         # override this and call the appropriate observe handler on the
         # pet brain. This is here to avoid a fugly type-switch in the brain.
         petBrain._handleGenericObserve(self)
+
     def __repr__(self):
-        return '%s()' % self.__class__.__name__
+        return f'{self.__class__.__name__}()'
+
 
 class PetActionObserve(PetObserve):
     """An avatar or pet has done something that pets should take note of."""
+
     def __init__(self, action, avId, data=None):
         self.action = action
         self.avId = avId
         self.data = data
+
     def getAction(self):
         return self.action
+
     def getAvId(self):
         return self.avId
+
     def getData(self):
         return self.data
-    
+
     def _influence(self, petBrain):
         petBrain._handleActionObserve(self)
+
     def __repr__(self):
         return '%s(%s,%s)' % (
             self.__class__.__name__,
             Actions.getString(self.action), self.avId)
 
+
 class PetPhraseObserve(PetObserve):
     """An avatar is 'communicating' in a way that can be expressed with a
     PetPhrase. This could be pressing a button on a pet panel, or saying
     something in SpeedChat, etc."""
+
     def __init__(self, petPhrase, avId):
         self.petPhrase = petPhrase
         self.avId = avId
+
     def getPetPhrase(self):
         return self.petPhrase
+
     def getAvId(self):
         return self.avId
+
     def isForgettable(self):
         return 1
 
     def _influence(self, petBrain):
         petBrain._handlePhraseObserve(self)
+
     def __repr__(self):
         return '%s(%s,%s)' % (
             self.__class__.__name__,
             Phrases.getString(self.petPhrase), self.avId)
+
 
 class SCObserve(PetPhraseObserve):
     # avatar said something in SpeedChat
     def __init__(self, msgId, petPhrase, avId):
         self.msgId = msgId
         PetPhraseObserve.__init__(self, petPhrase, avId)
+
     def isValid(self):
         return self.petPhrase is not None
+
 
 class TrickRequestObserve(PetPhraseObserve):
     # avatar requested that we do a trick
     def __init__(self, trickId, avId):
         self.trickId = trickId
         PetPhraseObserve.__init__(self, Phrases.DO_TRICK, avId)
+
     def isForgettable(self):
         # this would just be annoying
         return 0
+
     def getTrickId(self):
         return self.trickId
+
 
 OP = Phrases
 _scPhrase2petPhrase = {
@@ -207,11 +232,12 @@ _scPhrase2petPhrase = {
     21003: OP.PRAISE,
     21004: OP.PRAISE,
     21005: OP.PRAISE,
-    }
+}
 # add the trick phrases
 for scId in PetTricks.ScId2trickId:
     _scPhrase2petPhrase[scId] = OP.DO_TRICK
 del OP
+
 
 def getSCObserve(msgId, speakerDoId):
     # given a speedchat msgId, returns the appropriate Observe object

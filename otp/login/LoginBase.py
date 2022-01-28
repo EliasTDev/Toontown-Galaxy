@@ -4,11 +4,11 @@
 class LoginBase:
     # When, in seconds from epoch GMT, will the free play expire.
     # -1 == never, 0 == already expired
-    freeTimeExpires=-1
-    
+    freeTimeExpires = -1
+
     def __init__(self, cr):
-        self.cr=cr
-    
+        self.cr = cr
+
     def sendLoginMsg(self, loginName, password, createFlag):
         pass
 
@@ -18,6 +18,6 @@ class LoginBase:
     # run under account-old-auth == 0
     def getErrorCode(self):
         return 0
+
     def needToSetParentPassword(self):
         return 0
-    

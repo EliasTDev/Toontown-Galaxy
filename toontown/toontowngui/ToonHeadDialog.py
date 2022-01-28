@@ -18,8 +18,8 @@ class ToonHeadDialog(TTDialog.TTDialog):
         # Create an avatar head for the panel
         head = hidden.attachNewNode('head', 20)
         self.headModel = ToonHead.ToonHead()
-        self.headModel.setupHead(self.dna, forGui = 1)
-        self.headModel.fitAndCenterHead(1.0, forGui = 1)
+        self.headModel.setupHead(self.dna, forGui=1)
+        self.headModel.fitAndCenterHead(1.0, forGui=1)
         self.headModel.reparentTo(head)
         self.headModel.setName('headModel')
 
@@ -28,19 +28,19 @@ class ToonHeadDialog(TTDialog.TTDialog):
         self.headModel.startBlink()
 
         optiondefs = (
-            ('dialogName',    'ToonHeadDialog',        None),
-            ('style',         TTDialog.NoButtons,None),
-            ('geom',          head,                    None),
-            ('geom_scale',    0.35,                    None),
-            ('geom_pos',      (-0.25,0,0),             None),
-            ('text_wordwrap', 9,                       None),
-            ('fadeScreen',    0,                       None),
-            )
+            ('dialogName', 'ToonHeadDialog', None),
+            ('style', TTDialog.NoButtons, None),
+            ('geom', head, None),
+            ('geom_scale', 0.35, None),
+            ('geom_pos', (-0.25, 0, 0), None),
+            ('text_wordwrap', 9, None),
+            ('fadeScreen', 0, None),
+        )
         # Merge keyword options with default options
         self.defineoptions(kw, optiondefs)
 
         # initialize our base class.  Need to pass style
-        TTDialog.TTDialog.__init__(self, style = self['style'])
+        TTDialog.TTDialog.__init__(self, style=self['style'])
 
         self.initialiseoptions(ToonHeadDialog)
 
@@ -52,7 +52,7 @@ class ToonHeadDialog(TTDialog.TTDialog):
         headModelCopy = self.stateNodePath[0].find('**/headModel')
         headModelCopy.removeNode()
         self.headModel.reparentTo(head)
-        
+
     def cleanup(self):
         """
         Stop head model tasks
@@ -61,5 +61,3 @@ class ToonHeadDialog(TTDialog.TTDialog):
         self.headModel.stopBlink()
         self.headModel.stopLookAroundNow()
         self.headModel.delete()
-        
-

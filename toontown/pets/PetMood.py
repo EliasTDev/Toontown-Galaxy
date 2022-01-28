@@ -2,7 +2,10 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
 from direct.showbase.PythonUtil import lerp, average, clampScalar
 from toontown.toonbase import TTLocalizer
-import random, time, weakref
+import random
+import time
+import weakref
+
 
 class PetMood:
     """Representation of the mood of a pet. Simulates changes in mood over
@@ -48,11 +51,14 @@ class PetMood:
 
     # there's a dictionary of mood adjectives in Localizer that needs to be
     # kept in sync
-    assert len(TTLocalizer.PetMoodAdjectives) == (len(Components) + 1) # count neutral
+    assert len(
+        TTLocalizer.PetMoodAdjectives) == (
+        len(Components) +
+        1)  # count neutral
 
     # for time values, below
     HOUR = 1.
-    MINUTE = HOUR/60.
+    MINUTE = HOUR / 60.
     DAY = 24. * HOUR
     WEEK = 7 * DAY
     LONGTIME = 5000 * WEEK
@@ -76,7 +82,7 @@ class PetMood:
     TAffection = -10 * MINUTE
 
     TAngerDec = -20 * MINUTE
-    TAngerInc =  2 * WEEK
+    TAngerInc = 2 * WEEK
 
     def __init__(self, pet=None):
         self.setPet(pet)
@@ -111,36 +117,67 @@ class PetMood:
             if fasterDriftIsBetter:
                 # factor in [2.,.1]
                 if value < .5:
-                    factor = lerp(2., 1., value*2.)
+                    factor = lerp(2., 1., value * 2.)
                 else:
                     # Put it on a squared curve
-                    rebased = (value-.5)*2.
-                    factor = lerp(1., .1, rebased*rebased)
+                    rebased = (value - .5) * 2.
+                    factor = lerp(1., .1, rebased * rebased)
             else:
                 # factor in [.75,28]
                 if value < .5:
-                    factor = lerp(.75, 1., value*2.)
+                    factor = lerp(.75, 1., value * 2.)
                 else:
                     # we want hunger to stretch out to 4 weeks for top-of-the-line
                     # pets, thus 28. Also put it on a squared curve
-                    rebased = (value-.5)*2.
-                    factor = lerp(1., 28., rebased*rebased)
+                    rebased = (value - .5) * 2.
+                    factor = lerp(1., 28., rebased * rebased)
             return baseT * factor
 
         pet = self.getPet()
-        self.tBoredom      = calcDrift(PetMood.TBoredom, pet.traits.traits['boredomThreshold'])
-        self.tRestlessness = calcDrift(PetMood.TRestlessness, pet.traits.traits['restlessnessThreshold'])
-        self.tPlayfulness  = calcDrift(PetMood.TPlayfulness, pet.traits.traits['playfulnessThreshold'])
-        self.tLoneliness   = calcDrift(PetMood.TLoneliness, pet.traits.traits['lonelinessThreshold'])
-        self.tSadness      = calcDrift(PetMood.TSadness, pet.traits.traits['sadnessThreshold'], True)
-        self.tFatigue      = calcDrift(PetMood.TFatigue, pet.traits.traits['fatigueThreshold'], True)
-        self.tHunger       = calcDrift(PetMood.THunger, pet.traits.traits['hungerThreshold'])
-        self.tConfusion    = calcDrift(PetMood.TConfusion, pet.traits.traits['confusionThreshold'], True)
-        self.tExcitement   = calcDrift(PetMood.TExcitement, pet.traits.traits['excitementThreshold'])
-        self.tSurprise     = calcDrift(PetMood.TSurprise, pet.traits.traits['surpriseThreshold'], True)
-        self.tAffection    = calcDrift(PetMood.TAffection, pet.traits.traits['affectionThreshold'])
-        self.tAngerDec     = calcDrift(PetMood.TAngerDec, pet.traits.traits['angerThreshold'], True)
-        self.tAngerInc     = calcDrift(PetMood.TAngerInc, pet.traits.traits['angerThreshold'])
+        self.tBoredom = calcDrift(
+            PetMood.TBoredom,
+            pet.traits.traits['boredomThreshold'])
+        self.tRestlessness = calcDrift(
+            PetMood.TRestlessness,
+            pet.traits.traits['restlessnessThreshold'])
+        self.tPlayfulness = calcDrift(
+            PetMood.TPlayfulness,
+            pet.traits.traits['playfulnessThreshold'])
+        self.tLoneliness = calcDrift(
+            PetMood.TLoneliness,
+            pet.traits.traits['lonelinessThreshold'])
+        self.tSadness = calcDrift(
+            PetMood.TSadness,
+            pet.traits.traits['sadnessThreshold'],
+            True)
+        self.tFatigue = calcDrift(
+            PetMood.TFatigue,
+            pet.traits.traits['fatigueThreshold'],
+            True)
+        self.tHunger = calcDrift(
+            PetMood.THunger,
+            pet.traits.traits['hungerThreshold'])
+        self.tConfusion = calcDrift(
+            PetMood.TConfusion,
+            pet.traits.traits['confusionThreshold'],
+            True)
+        self.tExcitement = calcDrift(
+            PetMood.TExcitement,
+            pet.traits.traits['excitementThreshold'])
+        self.tSurprise = calcDrift(
+            PetMood.TSurprise,
+            pet.traits.traits['surpriseThreshold'],
+            True)
+        self.tAffection = calcDrift(
+            PetMood.TAffection,
+            pet.traits.traits['affectionThreshold'])
+        self.tAngerDec = calcDrift(
+            PetMood.TAngerDec,
+            pet.traits.traits['angerThreshold'],
+            True)
+        self.tAngerInc = calcDrift(
+            PetMood.TAngerInc,
+            pet.traits.traits['angerThreshold'])
 
         self.dominantMood = PetMood.Neutral
 
@@ -151,6 +188,7 @@ class PetMood:
     def setPet(self, pet):
         # prevent cyclical reference
         self.petRef = weakref.ref(pet)
+
     def getPet(self):
         pet = self.petRef()
         if pet is None:
@@ -158,13 +196,15 @@ class PetMood:
         return pet
 
     def getMoodDriftTaskName(self):
-        return 'petMoodDrift-%s' % self.serialNum
+        return f'petMoodDrift-{self.serialNum}'
+
     def getMoodChangeEvent(self):
         # passes list of changed mood components (or empty list)
-        return 'petMoodChange-%s' % self.serialNum
+        return f'petMoodChange-{self.serialNum}'
+
     def getDominantMoodChangeEvent(self):
         # passes dominant mood component
-        return 'petDominantMoodChange-%s' % self.serialNum
+        return f'petDominantMoodChange-{self.serialNum}'
 
     def announceChange(self, components=[]):
         # pass in list of names of components that changed
@@ -196,7 +236,7 @@ class PetMood:
         # Currently we rely on there being a threshold trait that matches
         # each mood component. We can easily do a remapping here to
         # match a component name to an arbitrary threshold name.
-        threshName = compName+'Threshold'
+        threshName = compName + 'Threshold'
         pet = self.getPet()
         assert(hasattr(pet.traits, threshName))
         return pet.traits.__dict__[threshName]
@@ -218,7 +258,7 @@ class PetMood:
         if hasattr(self, 'dominantMood'):
             return self.dominantMood
 
-        #print "calculating dominant mood"
+        # print "calculating dominant mood"
         # Calculate the most pressing component.
         # The lower the threshold, the more pressing it is if we've gone
         # over.
@@ -228,7 +268,7 @@ class PetMood:
             if comp in PetMood.DisabledDominants:
                 continue
             value = self.getComponent(comp)
-            #print "comp %s is %s" % (comp, value)
+            # print "comp %s is %s" % (comp, value)
             pri = value / max(self._getComponentThreshold(comp), .01)
             if pri >= priority:
                 dominantMood = comp
@@ -244,10 +284,10 @@ class PetMood:
 
     def makeCopy(self):
         # create a duplicate of this mood as it is right now
-        #print "copying mood"
+        # print "copying mood"
         other = PetMood(self.getPet())
         for comp in PetMood.Components:
-            #print "%s is %s" %(comp, self.__dict__[comp])
+            # print "%s is %s" %(comp, self.__dict__[comp])
             other.__dict__[comp] = self.__dict__[comp]
         return other
 
@@ -257,8 +297,11 @@ class PetMood:
         # make up for lost time
         pet = self.getPet()
         taskMgr.doMethodLater(
-            (simbase.petMoodDriftPeriod / simbase.petMoodTimescale) * random.random(),
-            self._driftMoodTask, self.getMoodDriftTaskName())
+            (simbase.petMoodDriftPeriod /
+             simbase.petMoodTimescale) *
+            random.random(),
+            self._driftMoodTask,
+            self.getMoodDriftTaskName())
         self.started = 1
 
     def stop(self):
@@ -292,21 +335,21 @@ class PetMood:
         # TODO: add variation to this. Over long dt's, add in a sine wave,
         # some random noise, etc.
 
-        #print "dt is %s" % dt
+        # print "dt is %s" % dt
         now = globalClock.getFrameTime()
         if not hasattr(self, 'lastDriftTime'):
             self.lastDriftTime = now
         if dt is None:
             dt = now - self.lastDriftTime
         self.lastDriftTime = now
-        
+
         if dt <= 0.:
             return
 
         if __debug__:
             try:
                 dt *= simbase.petMoodTimescale
-            except:
+            except BaseException:
                 pass
 
         if curMood is None:
@@ -318,20 +361,20 @@ class PetMood:
             """ use this to make sure that the numbers are even moving
             print curValue - (curValue + dt/(timeToMedian*7200))
             """
-            newValue = curValue + dt/(timeToMedian*7200)#3600)#60*60)
+            newValue = curValue + dt / (timeToMedian * 7200)  # 3600)#60*60)
             return clampScalar(newValue, 0., 1.)
-        self.boredom      = doDrift(curMood.boredom, self.tBoredom)
+        self.boredom = doDrift(curMood.boredom, self.tBoredom)
         # these are currently never used
         #self.restlessness = doDrift(curMood.restlessness, self.tRestlessness)
         #self.playfulness  = doDrift(curMood.playfulness, self.tPlayfulness)
-        self.loneliness   = doDrift(curMood.loneliness, self.tLoneliness)
-        self.sadness      = doDrift(curMood.sadness, self.tSadness)
-        self.fatigue      = doDrift(curMood.fatigue, self.tFatigue)
-        self.hunger       = doDrift(curMood.hunger, self.tHunger)
-        self.confusion    = doDrift(curMood.confusion, self.tConfusion)
-        self.excitement   = doDrift(curMood.excitement, self.tExcitement)
-        self.surprise     = doDrift(curMood.surprise, self.tSurprise)
-        self.affection    = doDrift(curMood.affection, self.tAffection)
+        self.loneliness = doDrift(curMood.loneliness, self.tLoneliness)
+        self.sadness = doDrift(curMood.sadness, self.tSadness)
+        self.fatigue = doDrift(curMood.fatigue, self.tFatigue)
+        self.hunger = doDrift(curMood.hunger, self.tHunger)
+        self.confusion = doDrift(curMood.confusion, self.tConfusion)
+        self.excitement = doDrift(curMood.excitement, self.tExcitement)
+        self.surprise = doDrift(curMood.surprise, self.tSurprise)
+        self.affection = doDrift(curMood.affection, self.tAffection)
 
         # for the sake of long-haul calculations, do the feedback calcs
         # after the simple independent calcs
@@ -340,10 +383,10 @@ class PetMood:
         tipPoint = .6
         if abuse < tipPoint:
             tAnger = lerp(self.tAngerDec, -PetMood.LONGTIME,
-                          abuse/tipPoint)
+                          abuse / tipPoint)
         else:
             tAnger = lerp(PetMood.LONGTIME, self.tAngerInc,
-                          (abuse-tipPoint)/(1.-tipPoint))
+                          (abuse - tipPoint) / (1. - tipPoint))
         self.anger = doDrift(curMood.anger, tAnger)
 
         self.announceChange()
@@ -359,9 +402,9 @@ class PetMood:
         return Task.done
 
     def __repr__(self):
-        s = '%s' % self.__class__.__name__
+        s = f'{self.__class__.__name__}'
         for comp in PetMood.Components:
-            s += '\n %s: %s' % (comp, self.__dict__[comp])
+            s += f'\n {comp}: {self.__dict__[comp]}'
         return s
 
     if __debug__:
@@ -369,6 +412,7 @@ class PetMood:
             for comp in PetMood.Components:
                 self.__dict__[comp] = 1.
             self.announceChange()
+
         def min(self):
             for comp in PetMood.Components:
                 self.__dict__[comp] = 0.

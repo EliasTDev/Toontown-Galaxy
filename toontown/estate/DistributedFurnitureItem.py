@@ -10,6 +10,7 @@ from direct.distributed import DistributedSmoothNode
 from direct.task import Task
 from . import HouseGlobals
 
+
 class DistributedFurnitureItem(DistributedHouseItem.DistributedHouseItem,
                                DistributedSmoothNode.DistributedSmoothNode):
 
@@ -23,7 +24,7 @@ class DistributedFurnitureItem(DistributedHouseItem.DistributedHouseItem,
         NodePath.__init__(self)
 
         self.localControl = True
-        
+
         self.__broadcastFrequency = 0.25
         self.__adjustStarted = 0
         self.furnitureMgr = None
@@ -41,7 +42,7 @@ class DistributedFurnitureItem(DistributedHouseItem.DistributedHouseItem,
 
     def load(self):
         pass
-        
+
     def disable(self):
         taskMgr.remove(self.__taskName)
         self.stopSmooth()
@@ -58,11 +59,11 @@ class DistributedFurnitureItem(DistributedHouseItem.DistributedHouseItem,
 
     def setItem(self, furnitureMgrId, blob):
         # We shouldn't get this message twice.
-        assert(self.furnitureMgr == None)
+        assert(self.furnitureMgr is None)
         self.furnitureMgr = self.cr.doId2do[furnitureMgrId]
         self.furnitureMgr.dfitems.append(self)
-        self.item = CatalogItem.getItem(blob, store = CatalogItem.Customization)
-        assert(self.notify.debug("setItem: item: %s" % (self.item)))
+        self.item = CatalogItem.getItem(blob, store=CatalogItem.Customization)
+        assert(self.notify.debug(f"setItem: item: {self.item}"))
         # Assign the actual node path
         self.assign(self.loadModel())
         interior = self.furnitureMgr.getInteriorObject()
@@ -85,22 +86,30 @@ class DistributedFurnitureItem(DistributedHouseItem.DistributedHouseItem,
         # Send initial update
         self.sendRequestPosHpr(0, *posHpr)
         # Spawn doLaters to form an efficient task loop
-        taskMgr.doMethodLater(self.__broadcastFrequency, self.__posHprBroadcast, self.__taskName)
+        taskMgr.doMethodLater(
+            self.__broadcastFrequency,
+            self.__posHprBroadcast,
+            self.__taskName)
 
     def __posHprBroadcast(self, task):
         assert(self.__adjustStarted)
         posHpr = self.__getPosHpr()
         if not self.__comparePosHpr(posHpr, self.__oldPosHpr, 0.1):
-            assert(self.notify.debug("posHprBroadcast: NO movement: %s vs. %s" % (posHpr, self.__oldPosHpr)))
+            assert(
+                self.notify.debug(
+                    f"posHprBroadcast: NO movement: {posHpr} vs. {self.__oldPosHpr}"))
             # Item did not move enough, do not send an update
             pass
         else:
             self.__oldPosHpr = posHpr
             assert(self.notify.debug("posHprBroadcast: movement"))
             self.sendRequestPosHpr(0, *posHpr)
-        taskMgr.doMethodLater(self.__broadcastFrequency, self.__posHprBroadcast, self.__taskName)
+        taskMgr.doMethodLater(
+            self.__broadcastFrequency,
+            self.__posHprBroadcast,
+            self.__taskName)
         return Task.done
-        
+
     def stopAdjustPosHpr(self):
         assert(self.notify.debug("stopAdjustPosHpr"))
         if (not self.__adjustStarted):
@@ -113,7 +122,7 @@ class DistributedFurnitureItem(DistributedHouseItem.DistributedHouseItem,
         # Do not need this anymore
         del self.__oldPosHpr
 
-    def sendRequestPosHpr(self, final, x,y,z, h,p,r):
+    def sendRequestPosHpr(self, final, x, y, z, h, p, r):
         """
         Send a positional update to the AI. If this is a final update for this
         object for a while, pass in final=1. The AI will write the update to the
@@ -121,10 +130,10 @@ class DistributedFurnitureItem(DistributedHouseItem.DistributedHouseItem,
         request, it will send smooth pos hprs back
         """
         t = globalClockDelta.getFrameNetworkTime()
-        self.sendUpdate("requestPosHpr", (final, x,y,z, h,p,r, t))
+        self.sendUpdate("requestPosHpr", (final, x, y, z, h, p, r, t))
 
     def setMode(self, mode, avId):
-        assert(self.notify.debug("setMode: mode: %s avId: %s" % (mode, avId)))
+        assert(self.notify.debug(f"setMode: mode: {mode} avId: {avId}"))
         # When we start moving the furniture, start smoothing the motion
         # If we are the director, we do not want the smoothing because we
         # are controlling the furniture directly with the mouse
@@ -139,10 +148,11 @@ class DistributedFurnitureItem(DistributedHouseItem.DistributedHouseItem,
         elif mode == HouseGlobals.FURNITURE_MODE_OFF:
             pass
         else:
-            self.notify.warning("setMode: unknown mode: %s avId: %s" % (mode, avId))
+            self.notify.warning(
+                f"setMode: unknown mode: {mode} avId: {avId}")
 
     def __getPosHpr(self):
-        if self.transmitRelativeTo == None:
+        if self.transmitRelativeTo is None:
             pos = self.getPos()
             hpr = self.getHpr()
         else:

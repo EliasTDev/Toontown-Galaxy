@@ -2,6 +2,7 @@
 
 from . import Entity
 
+
 class VisibilityBlocker:
     """This is a mixin class for level entities (see Entity.py) that in some
     way 'block' visibility (such as doors) -- entities that can completely
@@ -10,8 +11,9 @@ class VisibilityBlocker:
     visibility and show what's behind them. Without this mechanism, the
     blocker might show what's behind it before all of the distributed objects
     behind it have been generated."""
+
     def __init__(self):
-        self.__nextSetZoneDoneEvent=None
+        self.__nextSetZoneDoneEvent = None
 
     def destroy(self):
         self.cancelUnblockVis()

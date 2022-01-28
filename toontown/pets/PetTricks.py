@@ -9,7 +9,7 @@ import random
 # BALK is not really a trick; it's what the pets do if they don't do the trick
 # correctly. Keep it at the end of the Enum.
 Tricks = Enum('JUMP, BEG, PLAYDEAD, ROLLOVER, BACKFLIP, DANCE, SPEAK, BALK,')
-assert Tricks.BALK == len(Tricks)-1
+assert Tricks.BALK == len(Tricks) - 1
 
 # these are what aptitude 0. and 1. map to in an actual random range of [0,1]
 NonHappyMinActualTrickAptitude = .1
@@ -37,45 +37,45 @@ ScId2trickId = {
     21204: Tricks.BACKFLIP,
     21205: Tricks.DANCE,
     21206: Tricks.SPEAK,
-    }
+}
 # multiple SC entries may map to the same trick ID. This dict contains
 # lists of SC IDs for each trick ID.
 TrickId2scIds = invertDictLossless(ScId2trickId)
 
 TrickAnims = {
     Tricks.JUMP: 'jump',
-    Tricks.BEG:  ('toBeg', 'beg', 'fromBeg'),
+    Tricks.BEG: ('toBeg', 'beg', 'fromBeg'),
     Tricks.PLAYDEAD: ('playDead', 'fromPlayDead'),
     Tricks.ROLLOVER: 'rollover',
     Tricks.BACKFLIP: 'backflip',
     Tricks.DANCE: 'dance',
     Tricks.SPEAK: 'speak',
     Tricks.BALK: 'neutral',
-    }
+}
 assert len(TrickAnims) == len(Tricks)
 
 TrickLengths = {
     Tricks.JUMP: 2.,
-    Tricks.BEG:  5.167,
+    Tricks.BEG: 5.167,
     Tricks.PLAYDEAD: 15.21,
     Tricks.ROLLOVER: 8.,
     Tricks.BACKFLIP: 4.88,
     Tricks.DANCE: 7.42,
     Tricks.SPEAK: 0.75,
     Tricks.BALK: 1.,
-    }
+}
 assert len(TrickLengths) == len(Tricks)
 
 TrickAccuracies = {
     Tricks.JUMP: 1.0,
-    Tricks.BEG:  0.9,
+    Tricks.BEG: 0.9,
     Tricks.PLAYDEAD: 0.8,
     Tricks.ROLLOVER: 0.7,
     Tricks.BACKFLIP: 0.6,
     Tricks.DANCE: 0.5,
     Tricks.SPEAK: 0.4,
     Tricks.BALK: 1.0,
-    }
+}
 assert len(TrickAccuracies) == len(Tricks)
 
 TrickHeals = {
@@ -87,7 +87,7 @@ TrickHeals = {
     Tricks.DANCE: (10, 20),
     Tricks.SPEAK: (11, 22),
     Tricks.BALK: (0, 0),
-    }
+}
 assert len(TrickHeals) == len(Tricks)
 
 """
@@ -112,12 +112,13 @@ TrickSounds = {
     Tricks.DANCE: 'phase_5/audio/sfx/heal_dance.ogg',
     Tricks.JUMP: 'phase_5/audio/sfx/jump.ogg',
     Tricks.SPEAK: 'phase_5/audio/sfx/speak_v1.ogg'
-    }
+}
+
 
 def getSoundIval(trickId):
     sounds = TrickSounds.get(trickId, None)
     if sounds:
-        if type(sounds) == str:
+        if isinstance(sounds, str):
             sound = loader.loadSfx(sounds)
             return SoundInterval(sound)
         else:
@@ -128,6 +129,7 @@ def getSoundIval(trickId):
             return soundIval
     return None
 
+
 def getTrickIval(pet, trickId):
     anims = TrickAnims[trickId]
 
@@ -136,8 +138,8 @@ def getTrickIval(pet, trickId):
     # pets perform a trick.
     animRate = random.uniform(.9, 1.1)
     waitTime = random.uniform(0.0, 1.0)
-    
-    if type(anims) == str:
+
+    if isinstance(anims, str):
         # If-Else statement to construct animation intervals based-on
         # specific tricks that cannot be generated generically, ie the jump
         # because the z-offset was left out of the animation.
@@ -145,19 +147,26 @@ def getTrickIval(pet, trickId):
             animIval = Parallel()
             animIval.append(ActorInterval(pet, anims, playRate=animRate))
             animIval.append(Sequence(Wait(.36),
-                                    ProjectileInterval(pet,
-                                                       startPos = pet.getPos(),
-                                                       endPos = pet.getPos(),
-                                                       duration = 1.,
-                                                       gravityMult = 0.5 )
-                                    )
-                           )
+                                     ProjectileInterval(pet,
+                                                        startPos=pet.getPos(),
+                                                        endPos=pet.getPos(),
+                                                        duration=1.,
+                                                        gravityMult=0.5)
+                                     )
+                            )
         elif trickId == Tricks.ROLLOVER:
             animIval = Sequence()
             animIval.append(ActorInterval(pet, anims, playRate=animRate))
-            animIval.append(ActorInterval(pet, anims, playRate=-1.0*animRate))
+            animIval.append(
+                ActorInterval(
+                    pet,
+                    anims,
+                    playRate=-
+                    1.0 *
+                    animRate))
         elif trickId == Tricks.SPEAK:
-            animIval = ActorInterval(pet, anims, startFrame = 10, playRate=animRate)
+            animIval = ActorInterval(
+                pet, anims, startFrame=10, playRate=animRate)
         else:
             animIval = ActorInterval(pet, anims, playRate=animRate)
     else:
@@ -171,10 +180,10 @@ def getTrickIval(pet, trickId):
     soundIval = getSoundIval(trickId)
     if soundIval:
         trickIval.append(soundIval)
-    
+
     return Sequence(
         Func(pet.lockPet),
         Wait(waitTime),
         trickIval,
         Func(pet.unlockPet)
-        )
+    )

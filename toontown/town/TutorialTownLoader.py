@@ -5,6 +5,7 @@ from toontown.suit import Suit
 from toontown.toon import Toon
 from toontown.hood import ZoneUtil
 
+
 class TutorialTownLoader(TTTownLoader.TTTownLoader):
     def __init__(self, hood, parentFSM, doneEvent):
         TTTownLoader.TTTownLoader.__init__(self, hood, parentFSM, doneEvent)
@@ -34,5 +35,3 @@ class TutorialTownLoader(TTTownLoader.TTTownLoader):
         zoneId = ZoneUtil.tutorialDict["exteriors"][0]
         self.nodeDict[zoneId] = self.nodeDict[20001]
         del self.nodeDict[20001]
-
-        

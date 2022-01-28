@@ -1,6 +1,5 @@
 
 
-
 def stubFunction(*args):
     """
     This function is a stub out function for callbacks.

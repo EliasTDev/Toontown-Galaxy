@@ -3,11 +3,11 @@
 #
 # Purpose: Manages the Bingo Night Holiday for all ponds in all
 #          hoods.
-# Note: The Holiday Manager System(HMS) deletes each Holiday AI 
+# Note: The Holiday Manager System(HMS) deletes each Holiday AI
 #       instance when the particular Holiday Expires. Unfortunately,this
 #       sort of functionality is not ideal for the BingoManagerAI
 #       class because we want to allow players to finish a final
-#       game of bingo before the BingoManagerAI shuts down. 
+#       game of bingo before the BingoManagerAI shuts down.
 #
 #       In order to prevent the BingoManagerAI from shutting down
 #       unexpectantly in the middle of a game, we provide this
@@ -43,6 +43,7 @@ from toontown.fishing import BingoManagerAI
 #################################################################
 import time
 
+
 class BingoNightHolidayAI(HolidayBaseAI.HolidayBaseAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('BingoNightHolidayAI')
     ############################################################
@@ -52,6 +53,7 @@ class BingoNightHolidayAI(HolidayBaseAI.HolidayBaseAI):
     # Input: air - The AI Repository.
     # Output: None
     ############################################################
+
     def __init__(self, air, holidayId):
         HolidayBaseAI.HolidayBaseAI.__init__(self, air, holidayId)
 
@@ -65,12 +67,14 @@ class BingoNightHolidayAI(HolidayBaseAI.HolidayBaseAI):
     def start(self):
 
         if self.air.bingoMgr:
-            raise PythonUtil.SingletonError("Bingo Manager already Exists! DO NOT RUN HOLIDAY!!")
+            raise PythonUtil.SingletonError(
+                "Bingo Manager already Exists! DO NOT RUN HOLIDAY!!")
         else:
-            self.notify.info('Starting BingoNight Holiday: %s' % (time.ctime()))
+            self.notify.info(
+                f'Starting BingoNight Holiday: {time.ctime()}')
             self.bingoMgr = BingoManagerAI.BingoManagerAI(self.air)
             self.bingoMgr.start()
-                                
+
     ############################################################
     # Method:  start
     # Purpose: This method tells the BingoManagerAI to shutdown
@@ -84,6 +88,8 @@ class BingoNightHolidayAI(HolidayBaseAI.HolidayBaseAI):
     ############################################################
     def stop(self):
         if self.bingoMgr:
-            self.notify.info('stop: Tell the BingoManagerAI to stop BingoNight Holiday - %s' %(time.ctime()))
+            self.notify.info(
+                'stop: Tell the BingoManagerAI to stop BingoNight Holiday - %s' %
+                (time.ctime()))
             self.bingoMgr.stop()
             del self.bingoMgr

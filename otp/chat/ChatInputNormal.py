@@ -7,6 +7,7 @@ from direct.gui.DirectGui import *
 from panda3d.core import *
 from otp.otpbase import OTPLocalizer
 
+
 class ChatInputNormal(DirectObject.DirectObject):
     """ChatInputNormal class: controls the chat input bubble, and handles
     chat message construction"""
@@ -21,7 +22,7 @@ class ChatInputNormal(DirectObject.DirectObject):
 
         self.normalPos = Vec3(-1.083, 0, 0.804)
         self.whisperPos = Vec3(0.0, 0, 0.71)
-        
+
         self.whisperAvatarName = None
         self.whisperAvatarId = None
         self.toPlayer = 0
@@ -29,7 +30,8 @@ class ChatInputNormal(DirectObject.DirectObject):
         wantHistory = 0
         if __dev__:
             wantHistory = 1
-        self.wantHistory = base.config.GetBool('want-chat-history', wantHistory)
+        self.wantHistory = base.config.GetBool(
+            'want-chat-history', wantHistory)
         self.history = ['']
         self.historySize = base.config.GetInt('chat-history-size', 10)
         self.historyIndex = 0
@@ -37,7 +39,6 @@ class ChatInputNormal(DirectObject.DirectObject):
         # It is up to a derived class, like TTChatInputNormal, to
         # define self.chatFrame, self.chatButton, self.cancelButton,
         # and self.whisperLabel.
-
 
     def typeCallback(self, extraArgs):
         messenger.send('enterNormalChat')
@@ -53,10 +54,11 @@ class ChatInputNormal(DirectObject.DirectObject):
         del self.whisperLabel
         del self.chatMgr
 
-    def activateByData(self, whisperAvatarId = None, toPlayer = 0):
+    def activateByData(self, whisperAvatarId=None, toPlayer=0):
         self.toPlayer = toPlayer
         self.whisperAvatarId = whisperAvatarId
-        self.whisperAvatarName = base.talkAssistant.findName(self.whisperAvatarId, self.toPlayer)
+        self.whisperAvatarName = base.talkAssistant.findName(
+            self.whisperAvatarId, self.toPlayer)
         if self.whisperAvatarId:
             self.chatFrame.setPos(self.whisperPos)
             self.whisperLabel["text"] = (OTPLocalizer.ChatInputWhisperLabel %
@@ -80,12 +82,13 @@ class ChatInputNormal(DirectObject.DirectObject):
         base.win.closeIme()
         self.ignore('arrow_up-up')
         self.ignore('arrow_down-up')
-        
+
     def checkForOverRide(self):
-        #ChatInputNormal likes to intercept other direct entries
-        #too much was hard wired to the chatManagar so I'm adding a final stage override - JML
+        # ChatInputNormal likes to intercept other direct entries
+        # too much was hard wired to the chatManagar so I'm adding a final
+        # stage override - JML
         return False
-    
+
     def sendChat(self, text):
         """
         Send the text from the entry
@@ -106,7 +109,7 @@ class ChatInputNormal(DirectObject.DirectObject):
                     self.whisperAvatarName = None
                     self.whisperAvatarId = None
                     self.toPlayer = 0
-                    
+
             elif self.whisperAvatarId:
                 self.chatMgr.sendWhisperString(text, self.whisperAvatarId)
                 self.whisperAvatarName = None
@@ -116,7 +119,8 @@ class ChatInputNormal(DirectObject.DirectObject):
                     # Exec a python command
                     if (text[0] == '>'):
                         text = self.__execMessage(text[1:])
-                        base.localAvatar.setChatAbsolute(text, CFSpeech | CFTimeout)
+                        base.localAvatar.setChatAbsolute(
+                            text, CFSpeech | CFTimeout)
                         return
 
                 base.talkAssistant.sendOpenTalk(text)
@@ -135,8 +139,11 @@ class ChatInputNormal(DirectObject.DirectObject):
     def __execMessage(self, message):
         if not ChatInputNormal.ExecNamespace:
             # Import some useful variables into the ExecNamespace initially.
-            ChatInputNormal.ExecNamespace = { }
-            exec('from pandac.PandaModules import *', globals(), self.ExecNamespace)
+            ChatInputNormal.ExecNamespace = {}
+            exec(
+                'from pandac.PandaModules import *',
+                globals(),
+                self.ExecNamespace)
             self.importExecNamespace()
 
         # Now try to evaluate the expression using ChatInputNormal.ExecNamespace as
@@ -151,14 +158,14 @@ class ChatInputNormal(DirectObject.DirectObject):
             try:
                 exec(message, globals(), ChatInputNormal.ExecNamespace)
                 return 'ok'
-            except:
+            except BaseException:
                 exception = sys.exc_info()[0]
                 extraInfo = sys.exc_info()[1]
                 if extraInfo:
                     return str(extraInfo)
                 else:
                     return str(exception)
-        except:
+        except BaseException:
             exception = sys.exc_info()[0]
             extraInfo = sys.exc_info()[1]
             if extraInfo:
@@ -173,7 +180,7 @@ class ChatInputNormal(DirectObject.DirectObject):
 
     def chatButtonPressed(self):
         self.sendChat(self.chatEntry.get())
-    
+
     def importExecNamespace(self):
         # Derived classes should take advantage of this hook to import
         # useful variables into the chat namespace for developer
@@ -181,24 +188,21 @@ class ChatInputNormal(DirectObject.DirectObject):
         pass
 
     def addToHistory(self, text):
-        self.history = [text] + self.history[:self.historySize-1]
+        self.history = [text] + self.history[:self.historySize - 1]
         self.historyIndex = 0
 
     def getPrevHistory(self):
         self.chatEntry.set(self.history[self.historyIndex])
         self.historyIndex += 1
         self.historyIndex %= len(self.history)
-        
+
     def getNextHistory(self):
         self.chatEntry.set(self.history[self.historyIndex])
         self.historyIndex -= 1
         self.historyIndex %= len(self.history)
-        
-    def setPos(self, posX, posY = None, posZ = None):
+
+    def setPos(self, posX, posY=None, posZ=None):
         if posX and posY and posZ:
-            self.chatFrame.setPos(posX,posY,posZ)
+            self.chatFrame.setPos(posX, posY, posZ)
         else:
             self.chatFrame.setPos(posX)
-            
-
-    

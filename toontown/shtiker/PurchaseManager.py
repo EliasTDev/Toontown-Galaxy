@@ -5,6 +5,7 @@ from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
 from toontown.minigame import TravelGameGlobals
 
+
 class PurchaseManager(DistributedObject.DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory("PurchaseManager")
 
@@ -17,23 +18,23 @@ class PurchaseManager(DistributedObject.DistributedObject):
         self.ignoreAll()
 
     def setPlayerIds(self, *playerIds):
-        self.notify.debug("setPlayerIds: %s" % (playerIds,))
+        self.notify.debug(f"setPlayerIds: {playerIds}")
         self.playerIds = playerIds
 
     def setNewbieIds(self, newbieIds):
-        self.notify.debug("setNewbieIds: %s" % (newbieIds,))
+        self.notify.debug(f"setNewbieIds: {newbieIds}")
         self.newbieIds = newbieIds
 
     def setMinigamePoints(self, *mpArray):
-        self.notify.debug("setMinigamePoints: %s" % (mpArray,))
+        self.notify.debug(f"setMinigamePoints: {mpArray}")
         self.mpArray = mpArray
 
     def setPlayerMoney(self, *moneyArray):
-        self.notify.debug("setPlayerMoney: %s" % (moneyArray,))
+        self.notify.debug(f"setPlayerMoney: {moneyArray}")
         self.moneyArray = moneyArray
 
     def setPlayerStates(self, *stateArray):
-        self.notify.debug("setPlayerStates: %s" % (stateArray,))
+        self.notify.debug(f"setPlayerStates: {stateArray}")
         self.playerStates = stateArray
         # Do whatever you do to update the gui states of the players
         # only do this if we are generated and have localToon
@@ -63,27 +64,26 @@ class PurchaseManager(DistributedObject.DistributedObject):
             self.accept("boughtGag", self.__handleBoughtGag)
             # Do whatever you do to display the purchase screen here
             base.cr.playGame.hood.fsm.request("purchase",
-                                                   [self.mpArray,
-                                                    self.moneyArray,
-                                                    self.playerIds,
-                                                    self.playerStates,
-                                                    remain,
-                                                    self.metagameRound,
-                                                    self.votesArray])
+                                              [self.mpArray,
+                                               self.moneyArray,
+                                               self.playerIds,
+                                               self.playerStates,
+                                               remain,
+                                               self.metagameRound,
+                                               self.votesArray])
 
     def calcHasLocalToon(self):
         """ returns true if we 'own' localToon """
         retval = ((base.localAvatar.doId not in self.newbieIds) and
-                (base.localAvatar.doId in self.playerIds))
+                  (base.localAvatar.doId in self.playerIds))
 
         if self.metagameRound > -1 and \
            self.metagameRound < TravelGameGlobals.FinalMetagameRoundIndex:
             # if we are in the middle of a metagame ignore newbieness
             retval = base.localAvatar.doId in self.playerIds
 
-        self.notify.debug('calcHasLocalToon returning %s' % retval)
+        self.notify.debug(f'calcHasLocalToon returning {retval}')
         return retval
-        
 
     def playAgainHandler(self):
         self.d_requestPlayAgain()
@@ -93,7 +93,7 @@ class PurchaseManager(DistributedObject.DistributedObject):
         self.d_requestExit()
         self.playAgain = 0
         self.setPurchaseExit()
-        
+
     def d_requestExit(self):
         self.sendUpdate("requestExit", [])
 
@@ -123,7 +123,7 @@ class PurchaseManager(DistributedObject.DistributedObject):
             messenger.send("purchaseOver", [self.playAgain])
 
     def setMetagameRound(self, round):
-        self.notify.debug("setMetagameRound: %s" % (round,))        
+        self.notify.debug(f"setMetagameRound: {round}")
         self.metagameRound = round
 
     def setVotesArray(self, votesArray):
@@ -131,5 +131,5 @@ class PurchaseManager(DistributedObject.DistributedObject):
         Since we now convert some votes left to beans, we need to pass this
         information to the client, so we can put it in the show
         """
-        self.notify.debug('setVotesArray: %s' % votesArray)
+        self.notify.debug(f'setVotesArray: {votesArray}')
         self.votesArray = votesArray

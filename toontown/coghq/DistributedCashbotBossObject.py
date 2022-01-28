@@ -9,13 +9,17 @@ from direct.task import Task
 
 smileyDoId = 1
 
-class DistributedCashbotBossObject(DistributedSmoothNode.DistributedSmoothNode, FSM.FSM):
+
+class DistributedCashbotBossObject(
+        DistributedSmoothNode.DistributedSmoothNode,
+        FSM.FSM):
 
     """ This is an object that can be picked up an dropped in the
     final battle scene with the Cashbot CFO.  In particular, it's a
     safe or a goon.  """
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCashbotBossObject')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedCashbotBossObject')
 
     # This should be true for objects that will eventually transition
     # from SlidingFloor to Free when they stop moving.
@@ -29,14 +33,16 @@ class DistributedCashbotBossObject(DistributedSmoothNode.DistributedSmoothNode, 
         self.avId = 0
         self.craneId = 0
         self.cleanedUp = 0
-            
+
         # A CollisionNode to keep me out of walls and floors, and to
         # keep others from bumping into me.  We use PieBitmask instead
         # of WallBitmask, to protect against objects (like goons)
         # self-colliding.
         self.collisionNode = CollisionNode('object')
-        self.collisionNode.setIntoCollideMask(ToontownGlobals.PieBitmask | OTPGlobals.WallBitmask | ToontownGlobals.CashbotBossObjectBitmask | OTPGlobals.CameraBitmask)
-        self.collisionNode.setFromCollideMask(ToontownGlobals.PieBitmask | OTPGlobals.FloorBitmask)
+        self.collisionNode.setIntoCollideMask(
+            ToontownGlobals.PieBitmask | OTPGlobals.WallBitmask | ToontownGlobals.CashbotBossObjectBitmask | OTPGlobals.CameraBitmask)
+        self.collisionNode.setFromCollideMask(
+            ToontownGlobals.PieBitmask | OTPGlobals.FloorBitmask)
         self.collisionNodePath = NodePath(self.collisionNode)
 
         self.physicsActivated = 0
@@ -45,13 +51,15 @@ class DistributedCashbotBossObject(DistributedSmoothNode.DistributedSmoothNode, 
         self.hitFloorSoundInterval = Sequence()
 
         # A solid sound for when we get a good hit on the boss.
-        self.hitBossSfx = loader.loadSfx('phase_5/audio/sfx/AA_drop_safe_miss.ogg')
+        self.hitBossSfx = loader.loadSfx(
+            'phase_5/audio/sfx/AA_drop_safe_miss.ogg')
         self.hitBossSoundInterval = SoundInterval(self.hitBossSfx)
 
         # A squishy sound for when we hit the boss, but not hard enough.
-        self.touchedBossSfx = loader.loadSfx('phase_5/audio/sfx/AA_drop_sandbag.ogg')
+        self.touchedBossSfx = loader.loadSfx(
+            'phase_5/audio/sfx/AA_drop_sandbag.ogg')
         self.touchedBossSoundInterval = SoundInterval(
-            self.touchedBossSfx, duration = 0.8)
+            self.touchedBossSfx, duration=0.8)
 
         # Cranes will fill in this with the interval to lerp the
         # object to the crane.
@@ -84,7 +92,7 @@ class DistributedCashbotBossObject(DistributedSmoothNode.DistributedSmoothNode, 
         self.boss = None
 
     def setupPhysics(self, name):
-        an = ActorNode('%s-%s' % (name, self.doId))
+        an = ActorNode(f'{name}-{self.doId}')
         anp = NodePath(an)
         if not self.isEmpty():
             self.reparentTo(anp)
@@ -165,23 +173,22 @@ class DistributedCashbotBossObject(DistributedSmoothNode.DistributedSmoothNode, 
             vel = self.crane.root.getRelativeVector(render, vel)
             vel.normalize()
             impact = vel[1]
-        
+
             if impact >= self.getMinImpact():
-                print("hit! %s" % (impact))
+                print(f"hit! {impact}")
                 self.hitBossSoundInterval.start()
                 self.doHitBoss(impact)
             else:
                 self.touchedBossSoundInterval.start()
-                print("--not hard enough: %s" % (impact))
+                print(f"--not hard enough: {impact}")
 
     def doHitBoss(self, impact):
         # Derived classes can override this to do something specific
         # when we successfully hit the boss.
         self.d_hitBoss(impact)
 
-
     def __hitDropPlane(self, entry):
-        self.notify.info("%s fell out of the world." % (self.doId))
+        self.notify.info(f"{self.doId} fell out of the world.")
         self.fellOut()
 
     def fellOut(self):
@@ -199,7 +206,7 @@ class DistributedCashbotBossObject(DistributedSmoothNode.DistributedSmoothNode, 
         # Checks the object for non-zero velocity.  When the velocity
         # reaches zero in the XY plane, we tell the AI we're done
         # moving it around.
-        
+
         v = self.physicsObject.getVelocity()
         if abs(v[0]) < 0.0001 and abs(v[1]) < 0.0001:
             self.d_requestFree()
@@ -246,7 +253,7 @@ class DistributedCashbotBossObject(DistributedSmoothNode.DistributedSmoothNode, 
         elif state == 'F':
             self.demand('Free')
         else:
-            self.notify.error("Invalid state from AI: %s" % (state))
+            self.notify.error(f"Invalid state from AI: {state}")
 
     def d_requestGrab(self):
         self.sendUpdate('requestGrab')
@@ -263,18 +270,18 @@ class DistributedCashbotBossObject(DistributedSmoothNode.DistributedSmoothNode, 
         self.sendUpdate('hitFloor')
 
     def d_requestFree(self):
-        self.sendUpdate('requestFree', [self.getX(), self.getY(), self.getZ(), self.getH()])
+        self.sendUpdate(
+            'requestFree', [
+                self.getX(), self.getY(), self.getZ(), self.getH()])
 
     def d_hitBoss(self, impact):
         self.sendUpdate('hitBoss', [impact])
-
-
 
     def defaultFilter(self, request, args):
         # We overload the default filter function to disallow *any*
         # state transitions after the object has been disabled or
         # deleted, or before it has been fully generated.
-        if self.boss == None:
+        if self.boss is None:
             raise FSM.RequestDenied(request)
 
         return FSM.FSM.defaultFilter(self, request, args)
@@ -302,12 +309,12 @@ class DistributedCashbotBossObject(DistributedSmoothNode.DistributedSmoothNode, 
 
         # We're not allowed to drop the object directly from this
         # state.
-        
+
         self.avId = avId
         self.craneId = craneId
 
         self.crane = self.cr.doId2do.get(craneId)
-        assert(self.crane != None)
+        assert(self.crane is not None)
 
         self.hideShadows()
         self.prepareGrab()
@@ -336,12 +343,12 @@ class DistributedCashbotBossObject(DistributedSmoothNode.DistributedSmoothNode, 
                 # turns out someone else grabbed it instead.
                 self.crane.dropObject(self)
                 self.prepareRelease()
-        
+
         self.avId = avId
         self.craneId = craneId
 
         self.crane = self.cr.doId2do.get(craneId)
-        assert(self.crane != None)
+        assert(self.crane is not None)
 
         # The "crane" might actually be the boss cog himself!  This
         # happens when the boss takes a safe to wear as a helmet.
@@ -360,12 +367,12 @@ class DistributedCashbotBossObject(DistributedSmoothNode.DistributedSmoothNode, 
         # As in LocalGrabbed, above, this state is entered locally
         # when we drop the safe, but we have not yet received
         # acknowledgement from the AI that we've dropped it.
-        
+
         self.avId = avId
         self.craneId = craneId
 
         self.crane = self.cr.doId2do.get(craneId)
-        assert(self.crane != None)
+        assert(self.crane is not None)
 
         assert(self.avId == base.localAvatar.doId)
         self.activatePhysics()
@@ -388,12 +395,12 @@ class DistributedCashbotBossObject(DistributedSmoothNode.DistributedSmoothNode, 
         # Dropped (or flung) from a player's crane, or from the boss's
         # head.  In this case, craneId is the crane we were dropped
         # from (or the boss doId).
-        
+
         self.avId = avId
         self.craneId = craneId
 
         self.crane = self.cr.doId2do.get(craneId)
-        assert(self.crane != None)
+        assert(self.crane is not None)
 
         if self.avId == base.localAvatar.doId:
             self.activatePhysics()
@@ -431,7 +438,7 @@ class DistributedCashbotBossObject(DistributedSmoothNode.DistributedSmoothNode, 
         if self.avId == base.localAvatar.doId:
             self.activatePhysics()
             self.startPosHprBroadcast()
-            
+
             self.handler.setStaticFrictionCoef(0.9)
             self.handler.setDynamicFrictionCoef(0.5)
 

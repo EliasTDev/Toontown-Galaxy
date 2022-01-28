@@ -12,8 +12,10 @@ from toontown.battle import BattleProps
 from toontown.toonbase import TTLocalizer
 import string
 
+
 class DistributedStageSuit(DistributedFactorySuit.DistributedFactorySuit):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedStageSuit')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedStageSuit')
 
     def setCogSpec(self, spec):
         self.spec = spec
@@ -27,7 +29,7 @@ class DistributedStageSuit(DistributedFactorySuit.DistributedFactorySuit):
         self.boss = spec['boss']
         self.revives = spec.get('revives')
         # the AI now sets this, it's a required field
-        #if self.skeleton:
+        # if self.skeleton:
         #    self.makeSkeleton()
         if self.reserve:
             self.reparentTo(hidden)

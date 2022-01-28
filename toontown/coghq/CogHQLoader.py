@@ -10,66 +10,68 @@ from toontown.town import TownBattle
 from toontown.suit import Suit
 from pandac.PandaModules import *
 
+
 class CogHQLoader(StateData.StateData):
 
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("CogHQLoader")
 
     def __init__(self, hood, parentFSMState, doneEvent):
-        assert(self.notify.debug("__init__(hood="+str(hood)
-                                 +", parentFSMState="+str(parentFSMState)
-                                 +", doneEvent="+str(doneEvent)+")"))
+        assert(self.notify.debug("__init__(hood=" + str(hood)
+                                 + ", parentFSMState=" + str(parentFSMState)
+                                 + ", doneEvent=" + str(doneEvent) + ")"))
         StateData.StateData.__init__(self, doneEvent)
         self.hood = hood
         self.parentFSMState = parentFSMState
         self.placeDoneEvent = "cogHQLoaderPlaceDone"
         self.townBattleDoneEvent = 'town-battle-done'
         self.fsm = ClassicFSM.ClassicFSM('CogHQLoader',
-                           [State.State('start',
-                                        None,
-                                        None,
-                                        ['quietZone',
-                                         'cogHQExterior', # Tunnel from toon hood
-                                         'cogHQBossBattle', # magic word ~bossBattle
-                                         ]),
-                            State.State('cogHQExterior',
-                                        self.enterCogHQExterior,
-                                        self.exitCogHQExterior,
-                                        ['quietZone',
-                                         'cogHQLobby', # Door transition
-                                         ]),
-                            State.State('cogHQLobby',
-                                        self.enterCogHQLobby,
-                                        self.exitCogHQLobby,
-                                        ['quietZone',
-                                         'cogHQExterior', # Front door
-                                         'cogHQBossBattle', # Elevator to top
-                                         ]),
-                            State.State('cogHQBossBattle',
-                                        self.enterCogHQBossBattle,
-                                        self.exitCogHQBossBattle,
-                                        ['quietZone',
-                                         ]),
-                            State.State('quietZone',
-                                        self.enterQuietZone,
-                                        self.exitQuietZone,
-                                        ['cogHQExterior', 'cogHQLobby',
-                                         'cogHQBossBattle', ]),
-                            State.State('final',
-                                        None,
-                                        None,
-                                        ['start'])],
-                           # Initial State
-                           'start',
-                           # Final State
-                           'final',
-                           )
+                                         [State.State('start',
+                                                      None,
+                                                      None,
+                                                      ['quietZone',
+                                                       'cogHQExterior',  # Tunnel from toon hood
+                                                       'cogHQBossBattle',  # magic word ~bossBattle
+                                                       ]),
+                                             State.State('cogHQExterior',
+                                                         self.enterCogHQExterior,
+                                                         self.exitCogHQExterior,
+                                                         ['quietZone',
+                                                          'cogHQLobby',  # Door transition
+                                                          ]),
+                                             State.State('cogHQLobby',
+                                                         self.enterCogHQLobby,
+                                                         self.exitCogHQLobby,
+                                                         ['quietZone',
+                                                          'cogHQExterior',  # Front door
+                                                          'cogHQBossBattle',  # Elevator to top
+                                                          ]),
+                                             State.State('cogHQBossBattle',
+                                                         self.enterCogHQBossBattle,
+                                                         self.exitCogHQBossBattle,
+                                                         ['quietZone',
+                                                          ]),
+                                             State.State('quietZone',
+                                                         self.enterQuietZone,
+                                                         self.exitQuietZone,
+                                                         ['cogHQExterior', 'cogHQLobby',
+                                                          'cogHQBossBattle', ]),
+                                             State.State('final',
+                                                         None,
+                                                         None,
+                                                         ['start'])],
+                                         # Initial State
+                                         'start',
+                                         # Final State
+                                         'final',
+                                         )
 
     def load(self, zoneId):
         # Prepare the state machine
         self.parentFSMState.addChild(self.fsm)
         self.music = base.loader.loadMusic(self.musicFile)
-        self.battleMusic = base.loader.loadMusic('phase_9/audio/bgm/encntr_suit_winning.ogg')
+        self.battleMusic = base.loader.loadMusic(
+            'phase_9/audio/bgm/encntr_suit_winning.ogg')
         # Load the battle UI:
         self.townBattle = TownBattle.TownBattle(self.townBattleDoneEvent)
         self.townBattle.load()
@@ -112,7 +114,7 @@ class CogHQLoader(StateData.StateData):
         self.quietZoneDoneEvent = "quietZoneDone"
         self.acceptOnce(self.quietZoneDoneEvent, self.handleQuietZoneDone)
         self.quietZoneStateData = QuietZoneState.QuietZoneState(
-                self.quietZoneDoneEvent)
+            self.quietZoneDoneEvent)
         self.quietZoneStateData.load()
         self.quietZoneStateData.enter(requestStatus)
 
@@ -121,11 +123,11 @@ class CogHQLoader(StateData.StateData):
         del self.quietZoneDoneEvent
         self.quietZoneStateData.exit()
         self.quietZoneStateData.unload()
-        self.quietZoneStateData=None
+        self.quietZoneStateData = None
 
     def handleQuietZoneDone(self):
         # Change to the destination state:
-        status=self.quietZoneStateData.getRequestStatus()
+        status = self.quietZoneStateData.getRequestStatus()
         self.fsm.request(status["where"], [status])
 
     def enterPlace(self, requestStatus):
@@ -143,17 +145,18 @@ class CogHQLoader(StateData.StateData):
         base.cr.playGame.setPlace(self.place)
 
     def placeDone(self):
-        self.requestStatus=self.place.doneStatus
-        assert(self.notify.debug("placeDone() doneStatus="+str(self.requestStatus)))
+        self.requestStatus = self.place.doneStatus
+        assert(self.notify.debug(
+            "placeDone() doneStatus=" + str(self.requestStatus)))
         status = self.place.doneStatus
-        if ((status.get("shardId") == None) and self.isInThisHq(status)):
+        if ((status.get("shardId") is None) and self.isInThisHq(status)):
             # CogHQs use the same loader for all places in the hood.
             # Get rid of the old place geom
             self.unloadPlaceGeom()
             # And load the new one
             zoneId = status['zoneId']
             self.loadPlaceGeom(zoneId)
-            self.fsm.request("quietZone", [status])            
+            self.fsm.request("quietZone", [status])
         else:
             self.doneStatus = status
             messenger.send(self.doneEvent)
@@ -169,32 +172,28 @@ class CogHQLoader(StateData.StateData):
         self.placeClass = self.getExteriorPlaceClass()
         self.enterPlace(requestStatus)
         self.hood.spawnTitleText(requestStatus['zoneId'])
-        
+
     def exitCogHQExterior(self):
         taskMgr.remove("titleText")
         self.hood.hideTitleText()
         self.exitPlace()
         self.placeClass = None
 
-
     def enterCogHQLobby(self, requestStatus):
         self.placeClass = CogHQLobby.CogHQLobby
         self.enterPlace(requestStatus)
         self.hood.spawnTitleText(requestStatus['zoneId'])
-        
+
     def exitCogHQLobby(self):
         taskMgr.remove("titleText")
         self.hood.hideTitleText()
         self.exitPlace()
         self.placeClass = None
 
-    
     def enterCogHQBossBattle(self, requestStatus):
         self.placeClass = self.getBossPlaceClass()
         self.enterPlace(requestStatus)
-        
+
     def exitCogHQBossBattle(self):
         self.exitPlace()
         self.placeClass = None
-
-

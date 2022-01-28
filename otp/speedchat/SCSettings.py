@@ -3,6 +3,7 @@
 from .SCColorScheme import SCColorScheme
 from otp.otpbase import OTPLocalizer
 
+
 class SCSettings:
     """ SCSettings holds values that are global for an entire SpeedChat
     tree. By convention, these values are accessed through functions
@@ -17,8 +18,14 @@ class SCSettings:
     topLevelOverlap: same as submenuOverlap but for submenus of the top-level
                      menu; None means 'same as submenuOverlap'
     """
-    def __init__(self, eventPrefix, whisperMode=0, colorScheme=None,
-                 submenuOverlap=OTPLocalizer.SCOsubmenuOverlap, topLevelOverlap=None):
+
+    def __init__(
+            self,
+            eventPrefix,
+            whisperMode=0,
+            colorScheme=None,
+            submenuOverlap=OTPLocalizer.SCOsubmenuOverlap,
+            topLevelOverlap=None):
         self.eventPrefix = eventPrefix
         self.whisperMode = whisperMode
         if colorScheme is None:

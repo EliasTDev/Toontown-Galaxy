@@ -1,13 +1,13 @@
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Contact: Shawn Patton
 # Created: Nov 2008
 #
 # Purpose: The public party GUI that pops up when you approach a party gate
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-from pandac.PandaModules import Vec3,Vec4,Point3,TextNode,VBase4
+from pandac.PandaModules import Vec3, Vec4, Point3, TextNode, VBase4
 
-from direct.gui.DirectGui import DGG, DirectFrame,DirectButton,DirectLabel,DirectScrolledList,DirectCheckButton
+from direct.gui.DirectGui import DGG, DirectFrame, DirectButton, DirectLabel, DirectScrolledList, DirectCheckButton
 from direct.gui import DirectGuiGlobals
 from direct.showbase import DirectObject
 from direct.showbase import PythonUtil
@@ -20,6 +20,7 @@ from toontown.parties import PartyGlobals
 from toontown.parties import PartyUtils
 
 import functools
+
 
 class PublicPartyGui(DirectFrame):
     """
@@ -35,72 +36,77 @@ class PublicPartyGui(DirectFrame):
         self.gui = loader.loadModel("phase_4/models/parties/publicPartyGUI")
         self.setPos(0.1, 0.0, 0.1)
         self.doneStatus = None
-        self.activityIconsModel = loader.loadModel("phase_4/models/parties/eventSignIcons")
+        self.activityIconsModel = loader.loadModel(
+            "phase_4/models/parties/eventSignIcons")
 
-        self.normalFrameColor = Vec4(130/255.0, 174/255.0, 249/255.0, 1.0)
-        self.selectedFrameColor =  Vec4(1.0, 1.0, 0.0, 1.0)
+        self.normalFrameColor = Vec4(
+            130 / 255.0, 174 / 255.0, 249 / 255.0, 1.0)
+        self.selectedFrameColor = Vec4(1.0, 1.0, 0.0, 1.0)
         self.load()
         self.gui.removeNode()
         self.accept("stoppedAsleep", self._close)
 
     def load(self):
-        for backgroundName in ["background", "parties_background", "activities_background"]:
+        for backgroundName in [
+            "background",
+            "parties_background",
+                "activities_background"]:
             background = DirectFrame(
-                parent = self,
-                geom = self.gui.find("**/%s"%backgroundName),
-                relief = None,
+                parent=self,
+                geom=self.gui.find(f"**/{backgroundName}"),
+                relief=None,
             )
 
-
         self.titleLabel = DirectLabel(
-            parent = self,
-            relief = None,
-            text = TTLocalizer.PartyGateTitle,
-            pos = self.gui.find("**/title_locator").getPos(),
-            scale = 0.1,
+            parent=self,
+            relief=None,
+            text=TTLocalizer.PartyGateTitle,
+            pos=self.gui.find("**/title_locator").getPos(),
+            scale=0.1,
         )
-        self.partyList, self.partyListLabel = self.createPartyListAndLabel("parties", 14)
-        self.activityList, self.activityListLabel = self.createListAndLabel("activities", 1)
+        self.partyList, self.partyListLabel = self.createPartyListAndLabel(
+            "parties", 14)
+        self.activityList, self.activityListLabel = self.createListAndLabel(
+            "activities", 1)
         pos = self.gui.find("**/startText_locator").getPos()
         self.partyStartButton = DirectButton(
-            parent = self,
-            relief = None,
-            text = TTLocalizer.PartyGateGoToParty,
-            text_align = TextNode.ACenter,
-            text_scale = TTLocalizer.PPGpartyStartButton,
-            text_pos = (pos[0], pos[2]),
-            geom = (
+            parent=self,
+            relief=None,
+            text=TTLocalizer.PartyGateGoToParty,
+            text_align=TextNode.ACenter,
+            text_scale=TTLocalizer.PPGpartyStartButton,
+            text_pos=(pos[0], pos[2]),
+            geom=(
                 self.gui.find("**/startButton_up"),
                 self.gui.find("**/startButton_down"),
                 self.gui.find("**/startButton_rollover"),
                 self.gui.find("**/startButton_inactive"),
             ),
-            command = self._startParty,
+            command=self._startParty,
         )
         self.closeButton = DirectButton(
-            parent = self,
-            relief = None,
-            geom = (
+            parent=self,
+            relief=None,
+            geom=(
                 self.gui.find("**/cancelButton_up"),
                 self.gui.find("**/cancelButton_down"),
                 self.gui.find("**/cancelButton_rollover"),
             ),
-            command = self._close,
+            command=self._close,
         )
 
-        instructionPos = (0,-0.9)
+        instructionPos = (0, -0.9)
         if not self.gui.find("**/helpText_locator").isEmpty():
             tempPos = self.gui.find("**/helpText_locator").getPos()
             instructionPos = (tempPos.getX(), tempPos.getZ())
         self.instructionsLabel = DirectLabel(
-            parent = self,
-            relief = None,
-            text = TTLocalizer.PartyGateInstructions,
-            text_align = TextNode.ACenter,
-            text_scale = TTLocalizer.PPGinstructionsLabel,
-            text_pos = instructionPos,
+            parent=self,
+            relief=None,
+            text=TTLocalizer.PartyGateInstructions,
+            text_align=TextNode.ACenter,
+            text_scale=TTLocalizer.PPGinstructionsLabel,
+            text_pos=instructionPos,
         )
-
 
     def createListAndLabel(self, typeString, numItems):
         """
@@ -108,38 +114,39 @@ class PublicPartyGui(DirectFrame):
         typeString : "guests", "activities", "decorations"
         """
         list = DirectScrolledList(
-            parent = self,
-            relief = None,
-            incButton_image = (
-                self.gui.find("**/%sButtonDown_up"%typeString),
-                self.gui.find("**/%sButtonDown_down"%typeString),
-                self.gui.find("**/%sButtonDown_rollover"%typeString),
-                self.gui.find("**/%sButtonDown_inactive"%typeString),
+            parent=self,
+            relief=None,
+            incButton_image=(
+                self.gui.find(f"**/{typeString}ButtonDown_up"),
+                self.gui.find(f"**/{typeString}ButtonDown_down"),
+                self.gui.find(f"**/{typeString}ButtonDown_rollover"),
+                self.gui.find(f"**/{typeString}ButtonDown_inactive"),
             ),
-            incButton_relief = None,
-            decButton_image = (
-                self.gui.find("**/%sButtonUp_up"%typeString),
-                self.gui.find("**/%sButtonUp_down"%typeString),
-                self.gui.find("**/%sButtonUp_rollover"%typeString),
-                self.gui.find("**/%sButtonUp_inactive"%typeString),
+            incButton_relief=None,
+            decButton_image=(
+                self.gui.find(f"**/{typeString}ButtonUp_up"),
+                self.gui.find(f"**/{typeString}ButtonUp_down"),
+                self.gui.find(f"**/{typeString}ButtonUp_rollover"),
+                self.gui.find(f"**/{typeString}ButtonUp_inactive"),
             ),
-            decButton_relief = None,
-            itemFrame_pos = self.gui.find("**/%s_locator"%typeString).getPos(),
-            itemFrame_relief = None,
-            numItemsVisible = numItems,
-            # need to set height of each entry to avoid list text running off end of listbox
-            forceHeight = 0.055,
+            decButton_relief=None,
+            itemFrame_pos=self.gui.find(f"**/{typeString}_locator").getPos(),
+            itemFrame_relief=None,
+            numItemsVisible=numItems,
+            # need to set height of each entry to avoid list text running off
+            # end of listbox
+            forceHeight=0.055,
         )
         strings = {
-            "activities" : TTLocalizer.EventsPageHostingTabActivityListTitle,
-            "parties" : TTLocalizer.PartyGatePartiesListTitle,
+            "activities": TTLocalizer.EventsPageHostingTabActivityListTitle,
+            "parties": TTLocalizer.PartyGatePartiesListTitle,
         }
         label = DirectLabel(
-            parent = self,
-            relief = None,
-            text = strings[typeString],
-            text_scale = 0.06,
-            pos = self.gui.find("**/%sText_locator"%typeString).getPos(),
+            parent=self,
+            relief=None,
+            text=strings[typeString],
+            text_scale=0.06,
+            pos=self.gui.find(f"**/{typeString}Text_locator").getPos(),
         )
         return (list, label)
 
@@ -149,14 +156,15 @@ class PublicPartyGui(DirectFrame):
         of tuples of the form:
         ( shardId, zoneId, numberOfGuests, hostName, activityIds, lane )
         """
-        PublicPartyGui.notify.debug("refresh : partyInfoTupleList = %s" % partyInfoTupleList)
+        PublicPartyGui.notify.debug(
+            f"refresh : partyInfoTupleList = {partyInfoTupleList}")
         self.selectedItem = None
         self.partyList.removeAndDestroyAllItems()
         self.activityList.removeAndDestroyAllItems()
         self.partyStartButton["state"] = DirectGuiGlobals.DISABLED
         # put parties with most toons at the top
         sortedList = partyInfoTupleList[:]
-        #for i in xrange(20):
+        # for i in xrange(20):
         #    sortedList.append((202000000, 61000, i+2, "Good ol' Knuckles CrunchenGrooven", [0, 1, 2, 4, 5, 7], 30-i))
 
         def cmp(left, right):
@@ -171,11 +179,11 @@ class PublicPartyGui(DirectFrame):
                     return 1
             else:
                 return 1
-        sortedList.sort(key=functools.cmp_to_key(cmp), reverse= True)
+        sortedList.sort(key=functools.cmp_to_key(cmp), reverse=True)
 
         # put parties with 20 or more toons on the bottom
         indexToCut = -1
-        for index,partyTuple in enumerate(sortedList):
+        for index, partyTuple in enumerate(sortedList):
             numberOfGuests = partyTuple[2]
             if numberOfGuests < PartyGlobals.MaxToonsAtAParty:
                 indexToCut = index
@@ -193,29 +201,30 @@ class PublicPartyGui(DirectFrame):
             activityIds = partyTuple[4]
             minLeft = partyTuple[5]
             item = DirectButton(
-                relief = DGG.RIDGE  ,
-                borderWidth = (0.01, 0.01),
-                frameSize = (-0.01, 0.45, -0.015, 0.04),
-                frameColor = self.normalFrameColor ,
-                text = hostName,
-                text_align = TextNode.ALeft,
-                text_bg = Vec4(0.0, 0.0, 0.0, 0.0),
-                text_scale = 0.045,
-                command = self.partyClicked,
+                relief=DGG.RIDGE,
+                borderWidth=(0.01, 0.01),
+                frameSize=(-0.01, 0.45, -0.015, 0.04),
+                frameColor=self.normalFrameColor,
+                text=hostName,
+                text_align=TextNode.ALeft,
+                text_bg=Vec4(0.0, 0.0, 0.0, 0.0),
+                text_scale=0.045,
+                command=self.partyClicked,
             )
             otherInfoWidth = 0.08
             numActivities = len(activityIds)
-            PartyUtils.truncateTextOfLabelBasedOnWidth(item, hostName, PartyGlobals.EventsPageGuestNameMaxWidth)
+            PartyUtils.truncateTextOfLabelBasedOnWidth(
+                item, hostName, PartyGlobals.EventsPageGuestNameMaxWidth)
             num = DirectLabel(
-                relief = DGG.RIDGE ,
-                borderWidth = (0.01, 0.01),
-                frameSize = (0., otherInfoWidth, -0.015, 0.04),
-                frameColor = self.normalFrameColor ,
-                text = "%d" %numberOfGuests,
-                text_align = TextNode.ALeft,
-                text_scale = 0.045,
-                text_pos = (0.01, 0, 0),
-                pos = (0.45, 0.0, 0.0),
+                relief=DGG.RIDGE,
+                borderWidth=(0.01, 0.01),
+                frameSize=(0., otherInfoWidth, -0.015, 0.04),
+                frameColor=self.normalFrameColor,
+                text="%d" % numberOfGuests,
+                text_align=TextNode.ALeft,
+                text_scale=0.045,
+                text_pos=(0.01, 0, 0),
+                pos=(0.45, 0.0, 0.0),
             )
             num.reparentTo(item)
             item.numLabel = num
@@ -223,15 +232,15 @@ class PublicPartyGui(DirectFrame):
             actLabelPos = num.getPos()
             actLabelPos.setX(actLabelPos.getX() + otherInfoWidth)
             actLabel = DirectLabel(
-                relief = DGG.RIDGE ,
-                borderWidth = (0.01, 0.01),
-                frameSize = (0.0, otherInfoWidth, -0.015, 0.04),
-                frameColor = self.normalFrameColor ,
-                text = "%d" % numActivities,
-                text_align = TextNode.ALeft,
-                text_scale = 0.045,
-                text_pos = (0.01, 0, 0),
-                pos = actLabelPos,
+                relief=DGG.RIDGE,
+                borderWidth=(0.01, 0.01),
+                frameSize=(0.0, otherInfoWidth, -0.015, 0.04),
+                frameColor=self.normalFrameColor,
+                text="%d" % numActivities,
+                text_align=TextNode.ALeft,
+                text_scale=0.045,
+                text_pos=(0.01, 0, 0),
+                pos=actLabelPos,
             )
             actLabel.reparentTo(item)
             item.actLabel = actLabel
@@ -239,15 +248,15 @@ class PublicPartyGui(DirectFrame):
             minLabelPos = actLabel.getPos()
             minLabelPos.setX(minLabelPos.getX() + otherInfoWidth)
             minLabel = DirectLabel(
-                relief = DGG.RIDGE ,
-                borderWidth = (0.01, 0.01),
-                frameSize = (0.0, otherInfoWidth, -0.015, 0.04),
-                frameColor = self.normalFrameColor ,
-                text = "%d" % minLeft,
-                text_align = TextNode.ALeft,
-                text_scale = 0.045,
-                text_pos = (0.01, 0, 0),
-                pos = minLabelPos,
+                relief=DGG.RIDGE,
+                borderWidth=(0.01, 0.01),
+                frameSize=(0.0, otherInfoWidth, -0.015, 0.04),
+                frameColor=self.normalFrameColor,
+                text="%d" % minLeft,
+                text_align=TextNode.ALeft,
+                text_scale=0.045,
+                text_pos=(0.01, 0, 0),
+                pos=minLabelPos,
             )
             minLabel.reparentTo(item)
             item.minLabel = minLabel
@@ -281,16 +290,15 @@ class PublicPartyGui(DirectFrame):
             numLabel["frameColor"] = self.selectedFrameColor
         actLabel = self.selectedItem.actLabel
         if not actLabel.isEmpty():
-                actLabel["frameColor"] = self.selectedFrameColor
+            actLabel["frameColor"] = self.selectedFrameColor
         minLabel = self.selectedItem.minLabel
         if not minLabel.isEmpty():
-                minLabel["frameColor"] = self.selectedFrameColor
+            minLabel["frameColor"] = self.selectedFrameColor
         self.fillActivityList(item.getPythonTag("activityIds"))
 
     def fillActivityList(self, activityIds):
         self.activityList.removeAndDestroyAllItems()
-        sortedList = activityIds[:]
-        sortedList.sort()
+        sortedList = sorted(activityIds[:])
         lastActivityId = -1
         for activityId in sortedList:
             if activityId == lastActivityId:
@@ -301,15 +309,10 @@ class PublicPartyGui(DirectFrame):
             if number > 1:
                 text += " X %d" % number
             item = DirectLabel(
-                relief = None,
-                text = text,
-                text_align = TextNode.ACenter,
-                text_scale = 0.05,
-                text_pos = (0.0, -0.15),
-                geom_scale = 0.3,
-                geom_pos = Vec3(0.0, 0.0, 0.07),
-                geom = PartyUtils.getPartyActivityIcon(self.activityIconsModel, PartyGlobals.ActivityIds.getString(activityId))
-            )
+                relief=None, text=text, text_align=TextNode.ACenter, text_scale=0.05, text_pos=(
+                    0.0, -0.15), geom_scale=0.3, geom_pos=Vec3(
+                    0.0, 0.0, 0.07), geom=PartyUtils.getPartyActivityIcon(
+                    self.activityIconsModel, PartyGlobals.ActivityIds.getString(activityId)))
             self.activityList.addItem(item)
 
     def _startParty(self):
@@ -336,7 +339,7 @@ class PublicPartyGui(DirectFrame):
                 item.actLabel = None
                 item.numLabel = None
                 item.minLabel = None
-        except:
+        except BaseException:
             # an empty list will not have items
             pass
         self.activityList.removeAndDestroyAllItems()
@@ -350,80 +353,81 @@ class PublicPartyGui(DirectFrame):
         Create a DirectScrolledList for different specificall for public parties
         """
         list = DirectScrolledList(
-            parent = self,
-            relief = None,
-            incButton_image = (
-                self.gui.find("**/%sButtonDown_up"%typeString),
-                self.gui.find("**/%sButtonDown_down"%typeString),
-                self.gui.find("**/%sButtonDown_rollover"%typeString),
-                self.gui.find("**/%sButtonDown_inactive"%typeString),
+            parent=self,
+            relief=None,
+            incButton_image=(
+                self.gui.find(f"**/{typeString}ButtonDown_up"),
+                self.gui.find(f"**/{typeString}ButtonDown_down"),
+                self.gui.find(f"**/{typeString}ButtonDown_rollover"),
+                self.gui.find(f"**/{typeString}ButtonDown_inactive"),
             ),
-            incButton_relief = None,
-            decButton_image = (
-                self.gui.find("**/%sButtonUp_up"%typeString),
-                self.gui.find("**/%sButtonUp_down"%typeString),
-                self.gui.find("**/%sButtonUp_rollover"%typeString),
-                self.gui.find("**/%sButtonUp_inactive"%typeString),
+            incButton_relief=None,
+            decButton_image=(
+                self.gui.find(f"**/{typeString}ButtonUp_up"),
+                self.gui.find(f"**/{typeString}ButtonUp_down"),
+                self.gui.find(f"**/{typeString}ButtonUp_rollover"),
+                self.gui.find(f"**/{typeString}ButtonUp_inactive"),
             ),
-            decButton_relief = None,
-            itemFrame_pos = self.gui.find("**/%s_locator"%typeString).getPos(),
-            itemFrame_relief = None,
-            numItemsVisible = numItems,
-            # need to set height of each entry to avoid list text running off end of listbox
-            forceHeight = 0.055,
+            decButton_relief=None,
+            itemFrame_pos=self.gui.find(f"**/{typeString}_locator").getPos(),
+            itemFrame_relief=None,
+            numItemsVisible=numItems,
+            # need to set height of each entry to avoid list text running off
+            # end of listbox
+            forceHeight=0.055,
         )
         strings = {
-            "activities" : TTLocalizer.EventsPageHostingTabActivityListTitle,
-            "parties" : TTLocalizer.PartyGatePartiesListTitle,
+            "activities": TTLocalizer.EventsPageHostingTabActivityListTitle,
+            "parties": TTLocalizer.PartyGatePartiesListTitle,
         }
-        hostPos = self.gui.find("**/%sText_locator"%typeString).getPos()
+        hostPos = self.gui.find(f"**/{typeString}Text_locator").getPos()
         label = DirectLabel(
-            parent = self,
-            text_align = TextNode.ALeft,
-            relief = None,
-            text = strings[typeString],
-            text_scale = 0.06,
-            pos = hostPos
+            parent=self,
+            text_align=TextNode.ALeft,
+            relief=None,
+            text=strings[typeString],
+            text_scale=0.06,
+            pos=hostPos
         )
 
         curPos = label.getPos()
         curPos.setX(curPos.getX() + 0.5)
         if not self.gui.find("**/partiesText_locator1").isEmpty():
             curPos = self.gui.find("**/partiesText_locator1").getPos()
-        hpr = Point3(0,0,-40)
+        hpr = Point3(0, 0, -40)
         toonsLabel = DirectLabel(
-            parent = self,
-            text_align = TextNode.ALeft,
-            relief = None,
-            text = TTLocalizer.PartyGatesPartiesListToons,
-            text_scale = TTLocalizer.PPGcreatePartyListAndLabel,
-            pos = curPos,
-            hpr = hpr
+            parent=self,
+            text_align=TextNode.ALeft,
+            relief=None,
+            text=TTLocalizer.PartyGatesPartiesListToons,
+            text_scale=TTLocalizer.PPGcreatePartyListAndLabel,
+            pos=curPos,
+            hpr=hpr
         )
 
         curPos.setX(curPos.getX() + 0.1)
         if not self.gui.find("**/partiesText_locator2").isEmpty():
             curPos = self.gui.find("**/partiesText_locator2").getPos()
         activitiesLabel = DirectLabel(
-            parent = self,
-            text_align = TextNode.ALeft,
-            relief = None,
-            text = TTLocalizer.PartyGatesPartiesListActivities,
-            text_scale = TTLocalizer.PPGcreatePartyListAndLabel,
-            pos = curPos,
-            hpr = hpr
+            parent=self,
+            text_align=TextNode.ALeft,
+            relief=None,
+            text=TTLocalizer.PartyGatesPartiesListActivities,
+            text_scale=TTLocalizer.PPGcreatePartyListAndLabel,
+            pos=curPos,
+            hpr=hpr
         )
         curPos.setX(curPos.getX() + 0.1)
         if not self.gui.find("**/partiesText_locator3").isEmpty():
             curPos = self.gui.find("**/partiesText_locator3").getPos()
-        minLeftLabel =  DirectLabel(
-            parent = self,
-            text_align = TextNode.ALeft,
-            relief = None,
-            text = TTLocalizer.PartyGatesPartiesListMinLeft,
-            text_scale = TTLocalizer.PPGcreatePartyListAndLabel,
-            pos = curPos,
-            hpr = hpr
+        minLeftLabel = DirectLabel(
+            parent=self,
+            text_align=TextNode.ALeft,
+            relief=None,
+            text=TTLocalizer.PartyGatesPartiesListMinLeft,
+            text_scale=TTLocalizer.PPGcreatePartyListAndLabel,
+            pos=curPos,
+            hpr=hpr
         )
 
         return (list, label)

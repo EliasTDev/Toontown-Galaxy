@@ -19,6 +19,7 @@ from . import FriendHandle
 from otp.otpbase import OTPGlobals
 from panda3d.otp import NametagGlobals
 
+
 class FriendsListManager:
     """
     This is intended to be a base class for state data type objects
@@ -37,9 +38,9 @@ class FriendsListManager:
         self._entered = False
         self.friendsRequestQueue = []
 
-
     def load(self):
-        base.cr.friendManager.setGameSpecificFunction(self.processQueuedRequests)
+        base.cr.friendManager.setGameSpecificFunction(
+            self.processQueuedRequests)
         self.accept(OTPGlobals.AvatarNewFriendAddEvent, self.__friendAdded)
         pass
 
@@ -84,7 +85,9 @@ class FriendsListManager:
         self.accept("friendInvitation", self.__handleFriendInvitation)
 
         # todo: check if player friends are available first?
-        self.accept(OTPGlobals.PlayerFriendInvitationEvent, self.__handlePlayerFriendInvitation)
+        self.accept(
+            OTPGlobals.PlayerFriendInvitationEvent,
+            self.__handlePlayerFriendInvitation)
 
         if base.cr.friendManager:
             base.cr.friendManager.setAvailable(1)
@@ -143,57 +146,62 @@ class FriendsListManager:
         FriendsListPanel.showFriendsList()
 
     # Handle the Avatar panel
-    def __handleClickedNametag(self, avatar, playerId = None):
+    def __handleClickedNametag(self, avatar, playerId=None):
         """
         Called when an avatar in the world has been picked directly by
         clicking on his nametag, either in the 3-d world or on the
         margins of the 2-d screen.  This should open up an AvatarPanel
         featuring the selected avatar.
         """
-        self.notify.debug("__handleClickedNametag. doId = %s" % avatar.doId)
+        self.notify.debug(f"__handleClickedNametag. doId = {avatar.doId}")
         if avatar.isPet():
             self.avatarPanel = PetAvatarPanel.PetAvatarPanel(avatar)
         elif (isinstance(avatar, Toon.Toon) or
-            isinstance(avatar, FriendHandle.FriendHandle)):
+              isinstance(avatar, FriendHandle.FriendHandle)):
             if hasattr(self, "avatarPanel"):
                 if self.avatarPanel:
-                    if (not hasattr(self.avatarPanel, "getAvId")) or (self.avatarPanel.getAvId() == avatar.doId):
+                    if (not hasattr(self.avatarPanel, "getAvId")) or (
+                            self.avatarPanel.getAvId() == avatar.doId):
                         if not self.avatarPanel.isHidden():
                             if self.avatarPanel.getType() == "toon":
                                 return
-            self.avatarPanel = ToonAvatarPanel.ToonAvatarPanel(avatar, playerId)
+            self.avatarPanel = ToonAvatarPanel.ToonAvatarPanel(
+                avatar, playerId)
         else:
             self.avatarPanel = SuitAvatarPanel.SuitAvatarPanel(avatar)
 
-    def __handleClickedNametagPlayer(self, avatar, playerId, showType = 1):
+    def __handleClickedNametagPlayer(self, avatar, playerId, showType=1):
         """
         Called when an avatar in the world has been picked directly by
         clicking on his nametag, either in the 3-d world or on the
         margins of the 2-d screen.  This should open up an AvatarPanel
         featuring the selected avatar.
         """
-        self.notify.debug("__handleClickedNametagPlayer PlayerId%s" % (playerId))
+        self.notify.debug(
+            f"__handleClickedNametagPlayer PlayerId{playerId}")
         if showType == 1:
             if hasattr(self, "avatarPanel"):
                 if self.avatarPanel:
-                    if (not hasattr(self.avatarPanel, "getPlayerId")) or (self.avatarPanel.getPlayerId() == playerId):
+                    if (not hasattr(self.avatarPanel, "getPlayerId")) or (
+                            self.avatarPanel.getPlayerId() == playerId):
                         if not self.avatarPanel.isHidden():
                             if self.avatarPanel.getType() == "player":
                                 return
             self.avatarPanel = PlayerInfoPanel.PlayerInfoPanel(playerId)
         elif (isinstance(avatar, Toon.Toon) or
-            isinstance(avatar, FriendHandle.FriendHandle)):
+              isinstance(avatar, FriendHandle.FriendHandle)):
             if hasattr(self, "avatarPanel"):
                 if self.avatarPanel:
-                    if (not hasattr(self.avatarPanel, "getAvId")) or (self.avatarPanel.getAvId() == avatar.doId):
+                    if (not hasattr(self.avatarPanel, "getAvId")) or (
+                            self.avatarPanel.getAvId() == avatar.doId):
                         if not self.avatarPanel.isHidden():
                             if self.avatarPanel.getType() == "toon":
                                 return
-            self.avatarPanel = ToonAvatarPanel.ToonAvatarPanel(avatar, playerId)
-
-
+            self.avatarPanel = ToonAvatarPanel.ToonAvatarPanel(
+                avatar, playerId)
 
     # Teleport to an avatar when you click "goto" from the Avatar panel.
+
     def __handleGotoAvatar(self, avId, avName, avDisableName):
         """__handleGotoAvatar(self, int avId, string avName, string avDisableName)
 
@@ -243,7 +251,12 @@ class FriendsListManager:
             FriendInvitee.FriendInvitee(avId, avName, dna, context)
 
     # Be invited by another player to be their friend.
-    def __handlePlayerFriendInvitation(self, avId, avName, inviterDna = None, context = None):
+    def __handlePlayerFriendInvitation(
+            self,
+            avId,
+            avName,
+            inviterDna=None,
+            context=None):
         self.notify.debug("incoming switchboard friend event")
         self.friendsRequestQueue.append((avId, avName, inviterDna, context))
         if base.cr.friendManager.getAvailable():
@@ -252,9 +265,15 @@ class FriendsListManager:
     def processQueuedRequests(self):
         if len(self.friendsRequestQueue):
             request = self.friendsRequestQueue.pop(0)
-            self.__processFriendRequest(request[0], request[1], request[2], request[3])
+            self.__processFriendRequest(
+                request[0], request[1], request[2], request[3])
 
-    def __processFriendRequest(self, avId, avName, inviterDna = None, context = None):
+    def __processFriendRequest(
+            self,
+            avId,
+            avName,
+            inviterDna=None,
+            context=None):
         """__handleAvatarFriendInvitation(self, int avId, string avName,
                                     AvatarDNA dna, int context)
 
@@ -272,20 +291,20 @@ class FriendsListManager:
         if askerToon:
             self.notify.debug("got toon")
             dna = askerToon.getStyle()
-            #dna.makeFromNetString(askerToon.getStyle)
+            # dna.makeFromNetString(askerToon.getStyle)
             if not base.cr.avatarFriendsManager.checkIgnored(avId):
                 FriendInvitee.FriendInvitee(avId, avName, dna, context)
         else:
             self.notify.debug("no toon")
 
-    def __handleAvatarDetails(self, avId, avName, playerId = None):
+    def __handleAvatarDetails(self, avId, avName, playerId=None):
         """__handleAvatarDetails(self, int avId, string avName)
 
         Bring up a detail panel on a particular avatar.
         """
         ToonAvatarDetailPanel.showAvatarDetail(avId, avName, playerId)
 
-    def __handlePlayerDetails(self, avId, avName, playerId = None):
+    def __handlePlayerDetails(self, avId, avName, playerId=None):
         """__handleAvatarDetails(self, int avId, string avName)
 
         Bring up a detail panel on a particular avatar.
@@ -300,14 +319,13 @@ class FriendsListManager:
         self._preserveFriendsList = True
 
     def __friendAdded(self, avId):
-        if FriendInviter.globalFriendInviter != None:
+        if FriendInviter.globalFriendInviter is not None:
             messenger.send("FriendsListManagerAddEvent", [avId])
         else:
             friendToon = base.cr.doId2do.get(avId)
             if friendToon:
                 print("got toon")
                 dna = friendToon.getStyle()
-                #dna.makeFromNetString(askerToon.getStyle)
-                FriendNotifier.FriendNotifier(avId, friendToon.getName(), dna, None)
-
-
+                # dna.makeFromNetString(askerToon.getStyle)
+                FriendNotifier.FriendNotifier(
+                    avId, friendToon.getName(), dna, None)

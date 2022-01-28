@@ -5,6 +5,7 @@ from .DistributedNPCToonBaseAI import *
 from . import NPCToons
 from direct.task.Task import Task
 
+
 class DistributedNPCBlockerAI(DistributedNPCToonBaseAI):
 
     def __init__(self, air, npcId):
@@ -32,12 +33,12 @@ class DistributedNPCBlockerAI(DistributedNPCToonBaseAI):
         # Do what the quest manager does for DistributedNPCToon
         av = self.air.doId2do.get(avId)
         if av is None:
-            self.notify.warning('toon isnt there! toon: %s' % avId)
+            self.notify.warning(f'toon isnt there! toon: {avId}')
             return
 
         # Handle unexpected exit
         self.acceptOnce(self.air.getAvatarExitEvent(avId),
-                                self.__handleUnexpectedExit, extraArgs=[avId])
+                        self.__handleUnexpectedExit, extraArgs=[avId])
 
         self.sendStartMovie(avId)
 
@@ -50,8 +51,8 @@ class DistributedNPCBlockerAI(DistributedNPCToonBaseAI):
         # Timeout
         if (not self.tutorial):
             taskMgr.doMethodLater(NPCToons.CLERK_COUNTDOWN_TIME,
-                                self.sendTimeoutMovie,
-                                self.uniqueName('clearMovie'))
+                                  self.sendTimeoutMovie,
+                                  self.uniqueName('clearMovie'))
 
     def sendTimeoutMovie(self, task):
         avId = self.air.getAvatarIdFromSender()
@@ -77,4 +78,4 @@ class DistributedNPCBlockerAI(DistributedNPCToonBaseAI):
         self.notify.warning('avatar:' + str(avId) + ' has exited unexpectedly')
         if (not self.tutorial):
             self.sendTimeoutMovie(None)
-        return None 
+        return None

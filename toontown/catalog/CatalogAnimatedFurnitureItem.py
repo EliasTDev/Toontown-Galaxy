@@ -10,9 +10,10 @@ from .CatalogFurnitureItem import *
 # FTScale = 5
 FTAnimRate = 6
 
-# IMPORTANT this list must be updated if any new animated furniture item gets added
+# IMPORTANT this list must be updated if any new animated furniture item
+# gets added
 AnimatedFurnitureItemKeys = (
-    10020, # winter tree
+    10020,  # winter tree
     270,  # Trolley Bed
     990,  # Gag Fan
     460,  # Coral Fireplace with fire
@@ -21,7 +22,8 @@ AnimatedFurnitureItemKeys = (
     490,  # Girly Fireplace with fire
     491,  # Bug Room Fireplace with fire
     492,  # Caramel Apple Fireplace with fire
-    )
+)
+
 
 class CatalogAnimatedFurnitureItem(CatalogFurnitureItem):
     """
@@ -30,15 +32,15 @@ class CatalogAnimatedFurnitureItem(CatalogFurnitureItem):
     handled by this class, or it could be an animating actor, in which case, will
     be handled by CatalogAnimatedFurnitureActor.
     CatalogAnimatedFurnitureActor should derive from CatalogAnimatedFurnitureItem.
-    
+
     This class supports functions to start, stop or change play rate of the animation.
     """
 
-    def loadModel(self):    
+    def loadModel(self):
         model = CatalogFurnitureItem.loadModel(self)
         self.setAnimRate(model, self.getAnimRate())
         return model
-    
+
     def getAnimRate(self):
         """
         Returns the animation rate of a CatalogAnimatedFurnitureItem
@@ -49,13 +51,13 @@ class CatalogAnimatedFurnitureItem(CatalogFurnitureItem):
         item = FurnitureTypes[self.furnitureType]
         if (FTAnimRate < len(item)):
             animRate = item[FTAnimRate]
-            if not (animRate == None):
+            if not (animRate is None):
                 return item[FTAnimRate]
             else:
                 return 1
         else:
             return 1
-        
+
     def setAnimRate(self, model, rate):
         """
         This function should set the play rate of the animation.

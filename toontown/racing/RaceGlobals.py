@@ -28,7 +28,8 @@ RT_Rural_1_rev = 21
 RT_Urban_1 = 40
 RT_Urban_1_rev = 41
 
-# we can't interleave these as originally planned because it will invalidate the records lists!
+# we can't interleave these as originally planned because it will
+# invalidate the records lists!
 RT_Speedway_2 = 60
 RT_Speedway_2_rev = 61
 
@@ -38,33 +39,39 @@ RT_Rural_2_rev = 63
 RT_Urban_2 = 64
 RT_Urban_2_rev = 65
 
+
 def getTrackGenre(trackId):
-    if trackId in (RT_Speedway_1, RT_Speedway_1_rev, RT_Speedway_2, RT_Speedway_2_rev):
+    if trackId in (
+            RT_Speedway_1,
+            RT_Speedway_1_rev,
+            RT_Speedway_2,
+            RT_Speedway_2_rev):
         return Speedway
     elif trackId in (RT_Rural_1, RT_Rural_1_rev, RT_Rural_2, RT_Rural_2_rev):
         return Rural
     else:
         return Urban
 
-#GagPosititions
-RT_Speedway_1_Gags=(
+
+# GagPosititions
+RT_Speedway_1_Gags = (
     # set 0
-    ( 923.052, -1177.431, 0.024 ),
-    ( 926.099, -1187.345, 0.024 ),
-    ( 925.680, -1197.327, 0.024 ),
-    ( 925.169, -1209.502, 0.024 ),
+    (923.052, -1177.431, 0.024),
+    (926.099, -1187.345, 0.024),
+    (925.680, -1197.327, 0.024),
+    (925.169, -1209.502, 0.024),
     # set 1
-    ( 394.009, 209.219, 0.025 ),
-    ( 279.109, 279.744, 0.025 ),
-    ( 204.366, 316.238, 0.025 ),
-    ( 118.646, 358.009, 0.025 ),
+    (394.009, 209.219, 0.025),
+    (279.109, 279.744, 0.025),
+    (204.366, 316.238, 0.025),
+    (118.646, 358.009, 0.025),
     # set 2
-    ( -1462.098, 791.722, 0.025 ),
-    ( -1459.446, 730.064, 0.025 ),
-    ( -1450.731, 666.811, 0.025 ),
-    ( -1438.388, 615.100, 0.025 ),
-    )
-RT_Speedway_2_Gags=(
+    (-1462.098, 791.722, 0.025),
+    (-1459.446, 730.064, 0.025),
+    (-1450.731, 666.811, 0.025),
+    (-1438.388, 615.100, 0.025),
+)
+RT_Speedway_2_Gags = (
     # set 0
     (-355.180, -2430.10, -0.126728),
     (-343.456, -2421.43, -0.0116951),
@@ -80,43 +87,43 @@ RT_Speedway_2_Gags=(
     (-868.154, 2370.54, 56.7396),
     (-896.126, 2332.55, 53.8607),
     (-921.952, 2291.16, 49.8209),
-    )
+)
 
-RT_Speedway_1_rev_Gags=(
+RT_Speedway_1_rev_Gags = (
     # set 0
-    ( 1364.601, -664.452, 0.025 ),
-    ( 1312.491, -588.218, 0.025 ),
-    ( 1251.775, -509.556, 0.025 ),
-    ( 1214.052, -461.743, 0.025 ),
+    (1364.601, -664.452, 0.025),
+    (1312.491, -588.218, 0.025),
+    (1251.775, -509.556, 0.025),
+    (1214.052, -461.743, 0.025),
     # set 1
-    ( -976.044, 995.072, 0.025 ),
-    ( -1043.917, 1018.780, 0.025 ),
-    ( -1124.555, 1038.362, 0.025 ),
-    ( -1187.950, 1047.006, 0.025 ),
+    (-976.044, 995.072, 0.025),
+    (-1043.917, 1018.780, 0.025),
+    (-1124.555, 1038.362, 0.025),
+    (-1187.950, 1047.006, 0.025),
     # set 2
-    ( -1174.542, -208.968, 0.025 ),
-    ( -1149.340, -270.698, 0.025 ),
-    ( -1121.200, -334.367, 0.025 ),
-    ( -1090.627, -392.662, 0.026 ),
-    )
+    (-1174.542, -208.968, 0.025),
+    (-1149.340, -270.698, 0.025),
+    (-1121.200, -334.367, 0.025),
+    (-1090.627, -392.662, 0.026),
+)
 
 RT_Rural_1_Gags = (
     # set 0
-    (  814.276, -552.928, 2.107 ),
-    (  847.738, -551.970, 2.106 ),
-    (  889.265, -549.569, 2.107 ),
-    (  922.022, -554.813, 2.106 ),
+    (814.276, -552.928, 2.107),
+    (847.738, -551.970, 2.106),
+    (889.265, -549.569, 2.107),
+    (922.022, -554.813, 2.106),
     # set 1
-    ( 1791.420, 2523.910, 2.106 ),
-    ( 1754.140, 2540.250, 2.107 ),
-    ( 1689.660, 2557.280, 2.107 ),
-    ( 1614.010, 2577.160, 2.106 ),
+    (1791.420, 2523.910, 2.106),
+    (1754.140, 2540.250, 2.107),
+    (1689.660, 2557.280, 2.107),
+    (1614.010, 2577.160, 2.106),
     # set 2
-    ( -1839.00,  654.477, 86.83 ),
-    ( -1894.33,  640.125, 80.39 ),
-    ( -1955.30,  625.090, 73.07 ),
-    ( -2016.99,  611.746, 65.86 ),
-    )
+    (-1839.00, 654.477, 86.83),
+    (-1894.33, 640.125, 80.39),
+    (-1955.30, 625.090, 73.07),
+    (-2016.99, 611.746, 65.86),
+)
 RT_Rural_2_Gags = (
     # set 0
     (2001.53, 560.532, 198.912),
@@ -138,24 +145,24 @@ RT_Rural_2_Gags = (
     (63.5314, -2334.02, 198.913),
     (57.9662, -2349.14, 198.913),
     (51.8838, -2363.87, 198.913),
-    )
+)
 
 RT_Urban_1_Gags = (
     # set 0
-    (  51.9952, 2431.62, 55.7053 ),
-    (  39.5407, 2421.64, 65.7053 ),
-    (  27.7504, 2411.67, 55.7053 ),
-    (  15.5500, 2401.65, 65.7053 ),
+    (51.9952, 2431.62, 55.7053),
+    (39.5407, 2421.64, 65.7053),
+    (27.7504, 2411.67, 55.7053),
+    (15.5500, 2401.65, 65.7053),
     # set 1
     (-1008.36, 2116.41, 0.0246798),
     (-1050.31, 2099.78, 0.0250000),
     (-1092.26, 2083.15, 0.0253202),
     (-1134.21, 2066.52, 0.0256404),
     # set 2
-    ( -1966.68, 1139.32, 1.76981 ),
-    ( -1970.46, 1120.57, 1.76981 ),
-    ( -1974.18, 1101.82, 1.76981 ),
-    ( -1977.93, 1084.07, 1.76981 ),
+    (-1966.68, 1139.32, 1.76981),
+    (-1970.46, 1120.57, 1.76981),
+    (-1974.18, 1101.82, 1.76981),
+    (-1977.93, 1084.07, 1.76981),
     # set 3
     (1419.05, -2987.18, 0.025),
     (1411.09, -3004.09, 0.025),
@@ -166,7 +173,7 @@ RT_Urban_1_Gags = (
     (935.545, -1204.09, 0.025),
     (922.959, -1191.41, 0.025),
     (909.959, -1177.41, 0.025),
-    )
+)
 RT_Urban_2_Gags = (
     # set 0
     (-2761.49, -3070.97, -0.255122),
@@ -193,7 +200,7 @@ RT_Urban_2_Gags = (
     (-1977.07, 560.797, -0.255415),
     (-1948.58, 544.782, -0.255122),
     (-1943.42, 510.262, -0.255866),
-    )
+)
 
 RT_Urban_1_rev_Gags = (
     # Set 0
@@ -221,47 +228,47 @@ RT_Urban_1_rev_Gags = (
     (481.284, 1836.89, 55.0),
     (491.941, 1845.47, 55.0),
     (502.597, 1854.04, 55.0),
-    )
+)
 
 # Turbo boost positions - ( ((pos),(hpr)) ... )
-Speedway_1_Boosts = ( ((-320, 685, 1), (415, 0, 0)), )
-Speedway_1_Rev_Boosts = ( ((-320, 685, .1), (235, 0, 0)), )
+Speedway_1_Boosts = (((-320, 685, 1), (415, 0, 0)), )
+Speedway_1_Rev_Boosts = (((-320, 685, .1), (235, 0, 0)), )
 
-Speedway_2_Boosts = ( ((-120, 430, 1.0), (-50, 0, 0)), )
-Speedway_2_Rev_Boosts = ( ((176, 625, 1.0), (130, 0, 0)), )
+Speedway_2_Boosts = (((-120, 430, 1.0), (-50, 0, 0)), )
+Speedway_2_Rev_Boosts = (((176, 625, 1.0), (130, 0, 0)), )
 
 
-Rural_1_Boosts = ( ((3132.64, 859.56, 5.0), (384.44, 363.5, 0)),
-                   ((-3050.33, -1804.97, 207.7), (229.4, 353.25, 342.90)),
-                   )
-Rural_1_Rev_Boosts = ( ((3132.64, 859.56, 5.0), (197.10, -2.25, 0)),
-                       ((-3151.34, -1569.56, 200.621), (189.46, 182.75, 195.255)),
-                       )
+Rural_1_Boosts = (((3132.64, 859.56, 5.0), (384.44, 363.5, 0)),
+                  ((-3050.33, -1804.97, 207.7), (229.4, 353.25, 342.90)),
+                  )
+Rural_1_Rev_Boosts = (((3132.64, 859.56, 5.0), (197.10, -2.25, 0)),
+                      ((-3151.34, -1569.56, 200.621), (189.46, 182.75, 195.255)),
+                      )
 
-Rural_2_Boosts = ( ((873.255, -593.664, 199.5), (87.715, 0, 0)),
-                   ((-1747.62, 801.56, 199.5), (-126.516, 0, 0)),
-                   )
-Rural_2_Rev_Boosts = ( ((-428.004, -243.692, 324.516), (51.428, 6, 1)),
-                       ((-384.043, 211.62, 193.5), (-127.859, 1, 0)),
-                       )
+Rural_2_Boosts = (((873.255, -593.664, 199.5), (87.715, 0, 0)),
+                  ((-1747.62, 801.56, 199.5), (-126.516, 0, 0)),
+                  )
+Rural_2_Rev_Boosts = (((-428.004, -243.692, 324.516), (51.428, 6, 1)),
+                      ((-384.043, 211.62, 193.5), (-127.859, 1, 0)),
+                      )
 
-Urban_1_Boosts = ( ((677.057, 1618.24, 0.025), (35.9995, 0, 0)),
-                   ((-2250.35, 1618.1, 0.0241526), (-154.8, 0, 0)),
-                   ((400.13, -1090.26, 0.025), (-175.204, 0, 0)),
-                   )
-Urban_1_Rev_Boosts = ( ((488.739, -2055.07, 0.025), (3.59753, 0, 0)),
-                       ((-1737.29, 588.138, 0.025), (26.3975, 0, 0)),
-                       ((-212.314, 2638.34, 0.025), (-128.404, 0, 0)),
-                       )
+Urban_1_Boosts = (((677.057, 1618.24, 0.025), (35.9995, 0, 0)),
+                  ((-2250.35, 1618.1, 0.0241526), (-154.8, 0, 0)),
+                  ((400.13, -1090.26, 0.025), (-175.204, 0, 0)),
+                  )
+Urban_1_Rev_Boosts = (((488.739, -2055.07, 0.025), (3.59753, 0, 0)),
+                      ((-1737.29, 588.138, 0.025), (26.3975, 0, 0)),
+                      ((-212.314, 2638.34, 0.025), (-128.404, 0, 0)),
+                      )
 
-Urban_2_Boosts = ( ((358.134, -1655.42, 0.3), (-4.95, 1, 0)),
-                   ((2058.77, 2560.03, 0.3), (77.31, 0, 0)),
-                   ((-3081.33, -1037.55, 0.25), (177.359, 0, 0)),
-                   )
-Urban_2_Rev_Boosts = ( ((-2007.38, 484.878, 0.25), (30.9102, 0, 0)),
-                       ((2646.51, 1455.15, 0.25), (-120.172, 0, 0)),
-                       ((-472.215, -2048.21, 0.25), (136.192, 0, 0)),
-                       )
+Urban_2_Boosts = (((358.134, -1655.42, 0.3), (-4.95, 1, 0)),
+                  ((2058.77, 2560.03, 0.3), (77.31, 0, 0)),
+                  ((-3081.33, -1037.55, 0.25), (177.359, 0, 0)),
+                  )
+Urban_2_Rev_Boosts = (((-2007.38, 484.878, 0.25), (30.9102, 0, 0)),
+                      ((2646.51, 1455.15, 0.25), (-120.172, 0, 0)),
+                      ((-472.215, -2048.21, 0.25), (136.192, 0, 0)),
+                      )
 
 
 def RaceInfo2RacePadId(trackId, trackType):
@@ -278,11 +285,13 @@ def RaceInfo2RacePadId(trackId, trackType):
             padId = 3
     return padId
 
+
 def getTrackGenreString(genreId):
-    genreStrings = [ "Speedway",
-                     "Country",
-                     "City" ]
+    genreStrings = ["Speedway",
+                    "Country",
+                    "City"]
     return genreStrings[genreId].lower()
+
 
 def getTunnelSignName(genreId, padId):
     # hack for bad naming!
@@ -291,55 +300,61 @@ def getTunnelSignName(genreId, padId):
     elif genreId == 1 and padId == 0:
         return "tunnel_countrysign1"
     else:
-        return "tunnel%s_%ssign" % (padId + 1, getTrackGenreString(genreId))
+        return f"tunnel{padId + 1}_{getTrackGenreString(genreId)}sign"
+
 
 # Note  - these are canonical pad ids
 # id : ( trackType(0=normal/1=reverse), race type, # of laps, direction )
 RacePadId2RaceInfo = {
-    0 : ( 0, Practice, 3 ),
-    1 : ( 1, Practice, 3 ),
-    2 : ( 0, ToonBattle, 3 ),
-    3 : ( 1, ToonBattle, 3 ),
-    }
+    0: (0, Practice, 3),
+    1: (1, Practice, 3),
+    2: (0, ToonBattle, 3),
+    3: (1, ToonBattle, 3),
+}
 
-def getGenreFromString( string ):
+
+def getGenreFromString(string):
     # Strings are obtained from the DNA. Yeah, kinda
     # klunky.. but how else do you specify which genre? Could
     # place a node in maya and tag it, I suppose.. but really
     # that's essentially the same thing and the designer
     # loses control of the pad placement in the level editor.
     # Not sure what's best - jjtaylor
-    if( string == 'town' ):
+    if(string == 'town'):
         return Urban
-    elif( string == 'stadium' ):
+    elif(string == 'stadium'):
         return Speedway
     else:
         return Rural
 
-def getTrackListByType( genre, type ):
-        return Rural
 
-def getTrackListByType( genre, type ):
+def getTrackListByType(genre, type):
+    return Rural
+
+
+def getTrackListByType(genre, type):
     """
     type - normal or reverse
     """
-    genreDict = { Urban    : [ [RT_Urban_1, RT_Urban_2], [RT_Urban_1_rev, RT_Urban_2_rev] ],
-                  Rural    : [ [RT_Rural_1, RT_Rural_2], [RT_Rural_1_rev, RT_Rural_2_rev] ],
-                  Speedway : [ [RT_Speedway_1, RT_Speedway_2], [RT_Speedway_1_rev, RT_Speedway_2_rev] ] }
-    trackIdList = genreDict.get( genre )
-    return trackIdList[ type ]
+    genreDict = {Urban: [[RT_Urban_1, RT_Urban_2], [RT_Urban_1_rev, RT_Urban_2_rev]],
+                 Rural: [[RT_Rural_1, RT_Rural_2], [RT_Rural_1_rev, RT_Rural_2_rev]],
+                 Speedway: [[RT_Speedway_1, RT_Speedway_2], [RT_Speedway_1_rev, RT_Speedway_2_rev]]}
+    trackIdList = genreDict.get(genre)
+    return trackIdList[type]
 
-def getCanonicalPadId( padId ):
+
+def getCanonicalPadId(padId):
     # If more tunnels are ever added to a specific race genre, change
     # this.
-    return ( padId % 4 )
+    return (padId % 4)
 
-def getNextRaceInfo( prevTrackId, genreString, padId ):
-    genre = getGenreFromString( genreString )
-    cPadId = getCanonicalPadId( padId )
+
+def getNextRaceInfo(prevTrackId, genreString, padId):
+    genre = getGenreFromString(genreString)
+    cPadId = getCanonicalPadId(padId)
     # Race Info
-    raceInfo = RacePadId2RaceInfo.get( cPadId )
-    trackList = getTrackListByType( genre, raceInfo[ 0 ] )
+    raceInfo = RacePadId2RaceInfo.get(cPadId)
+    trackList = getTrackListByType(genre, raceInfo[0])
 
     if trackList.count(prevTrackId) == 0:
         trackId = trackList[1]
@@ -351,46 +366,60 @@ def getNextRaceInfo( prevTrackId, genreString, padId ):
         index %= len(trackList)
         trackId = trackList[index]
 
-    #return ( trackId, Circuit, raceInfo[ 2 ] )
-    return ( trackId, raceInfo[ 1 ], raceInfo[ 2 ] )
+    # return ( trackId, Circuit, raceInfo[ 2 ] )
+    return (trackId, raceInfo[1], raceInfo[2])
+
 
 TrackPath = "phase_6/models/karting/"
 
 TrackDict = {
-    # id : (filepath, base qual time in secs, record qual time in sec, (race fee, circuit fee), gag pos list, turbo boost pos, gui map scale)
+    # id : (filepath, base qual time in secs, record qual time in sec, (race
+    # fee, circuit fee), gag pos list, turbo boost pos, gui map scale)
 
     # Stadium tracks
-    RT_Speedway_1     : (TrackPath + "RT_SpeedwayA", 240.00, 115.00, (50,500), RT_Speedway_1_Gags, Speedway_1_Boosts, 1.0, "GS_Race_SS.ogg", (0.01, 0.015)),
+    RT_Speedway_1: (TrackPath + "RT_SpeedwayA", 240.00, 115.00, (50, 500), RT_Speedway_1_Gags, Speedway_1_Boosts, 1.0, "GS_Race_SS.ogg", (0.01, 0.015)),
 
-    RT_Speedway_1_rev : (TrackPath + "RT_SpeedwayA", 240.00, 115.00, (50,500), RT_Speedway_1_rev_Gags, Speedway_1_Rev_Boosts, 1.0, "GS_Race_SS.ogg", (0.01, 0.015)),
+    RT_Speedway_1_rev: (TrackPath + "RT_SpeedwayA", 240.00, 115.00, (50, 500), RT_Speedway_1_rev_Gags, Speedway_1_Rev_Boosts, 1.0, "GS_Race_SS.ogg", (0.01, 0.015)),
 
-    RT_Speedway_2     : (TrackPath + "RT_SpeedwayB", 335.00, 210.00, (75,1000), RT_Speedway_2_Gags, Speedway_2_Boosts, 1.0, "GS_Race_SS.ogg", (0.01, 0.015)),
+    RT_Speedway_2: (TrackPath + "RT_SpeedwayB", 335.00, 210.00, (75, 1000), RT_Speedway_2_Gags, Speedway_2_Boosts, 1.0, "GS_Race_SS.ogg", (0.01, 0.015)),
 
-    RT_Speedway_2_rev : (TrackPath + "RT_SpeedwayB", 335.00, 210.00, (75,1000), RT_Speedway_2_Gags, Speedway_2_Rev_Boosts, 1.0, "GS_Race_SS.ogg", (0.01,  0.015)),
+    RT_Speedway_2_rev: (TrackPath + "RT_SpeedwayB", 335.00, 210.00, (75, 1000), RT_Speedway_2_Gags, Speedway_2_Rev_Boosts, 1.0, "GS_Race_SS.ogg", (0.01, 0.015)),
 
     # Rural tracks
-    RT_Rural_1        : (TrackPath + "RT_RuralB", 360.00, 230.00, (100,500), RT_Rural_1_Gags, Rural_1_Boosts, 0.75, "GS_Race_RR.ogg", (0.003, 0.004)),
+    RT_Rural_1: (TrackPath + "RT_RuralB", 360.00, 230.00, (100, 500), RT_Rural_1_Gags, Rural_1_Boosts, 0.75, "GS_Race_RR.ogg", (0.003, 0.004)),
 
-    RT_Rural_1_rev    : (TrackPath + "RT_RuralB", 360.00, 230.00, (100,500), RT_Rural_1_Gags, Rural_1_Rev_Boosts, 0.75, "GS_Race_RR.ogg", (0.003, 0.004)),
+    RT_Rural_1_rev: (TrackPath + "RT_RuralB", 360.00, 230.00, (100, 500), RT_Rural_1_Gags, Rural_1_Rev_Boosts, 0.75, "GS_Race_RR.ogg", (0.003, 0.004)),
 
-    RT_Rural_2        : (TrackPath + "RT_RuralB2", 480.00, 360.00, (150,1000), RT_Rural_2_Gags, Rural_2_Boosts, 0.75, "GS_Race_RR.ogg", (0.003, 0.004)),
+    RT_Rural_2: (TrackPath + "RT_RuralB2", 480.00, 360.00, (150, 1000), RT_Rural_2_Gags, Rural_2_Boosts, 0.75, "GS_Race_RR.ogg", (0.003, 0.004)),
 
-    RT_Rural_2_rev    : (TrackPath + "RT_RuralB2", 480.00, 360.00, (150,1000), RT_Rural_2_Gags, Rural_2_Rev_Boosts, 0.75, "GS_Race_RR.ogg", (0.003, 0.004 )),
+    RT_Rural_2_rev: (TrackPath + "RT_RuralB2", 480.00, 360.00, (150, 1000), RT_Rural_2_Gags, Rural_2_Rev_Boosts, 0.75, "GS_Race_RR.ogg", (0.003, 0.004)),
 
     # City tracks
-    RT_Urban_1        : (TrackPath + "RT_UrbanA", 480.00, 305.00, (300,500), RT_Urban_1_Gags, Urban_1_Boosts, 1.0, "GS_Race_CC.ogg", (0.002, 0.003)),
+    RT_Urban_1: (TrackPath + "RT_UrbanA", 480.00, 305.00, (300, 500), RT_Urban_1_Gags, Urban_1_Boosts, 1.0, "GS_Race_CC.ogg", (0.002, 0.003)),
 
-    RT_Urban_1_rev    : (TrackPath + "RT_UrbanA", 480.00, 305.00, (300,500), RT_Urban_1_rev_Gags, Urban_1_Rev_Boosts, 1.0, "GS_Race_CC.ogg", (0.002, 0.003)),
+    RT_Urban_1_rev: (TrackPath + "RT_UrbanA", 480.00, 305.00, (300, 500), RT_Urban_1_rev_Gags, Urban_1_Rev_Boosts, 1.0, "GS_Race_CC.ogg", (0.002, 0.003)),
 
-    RT_Urban_2        : (TrackPath + "RT_UrbanB", 480.00, 280.00, (400,1000), RT_Urban_2_Gags, Urban_2_Boosts, 1.0, "GS_Race_CC.ogg", (0.002, 0.003)),
+    RT_Urban_2: (TrackPath + "RT_UrbanB", 480.00, 280.00, (400, 1000), RT_Urban_2_Gags, Urban_2_Boosts, 1.0, "GS_Race_CC.ogg", (0.002, 0.003)),
 
-    RT_Urban_2_rev    : (TrackPath + "RT_UrbanB", 480.00, 280.00, (400,1000), RT_Urban_2_Gags, Urban_2_Rev_Boosts, 1.0, "GS_Race_CC.ogg", (0.002, 0.003))
+    RT_Urban_2_rev: (
+        TrackPath +
+        "RT_UrbanB",
+        480.00,
+        280.00,
+        (400,
+         1000),
+        RT_Urban_2_Gags,
+        Urban_2_Rev_Boosts,
+        1.0,
+        "GS_Race_CC.ogg",
+        (0.002,
+         0.003))
 
-    }
+}
 
-TrackIds = list(TrackDict.keys())
+TrackIds = sorted(TrackDict.keys())
 # hmmm, this was non-determistic before
-TrackIds.sort()
+
 
 def getEntryFee(trackId, raceType):
     fee = 0
@@ -401,11 +430,13 @@ def getEntryFee(trackId, raceType):
 
     return fee
 
+
 def getQualifyingTime(trackId):
     """
     Get the qualifying time for this track.
     """
     return TrackDict[trackId][1]
+
 
 def getDefaultRecordTime(trackId):
     """
@@ -413,23 +444,24 @@ def getDefaultRecordTime(trackId):
     """
     return TrackDict[trackId][2]
 
+
 # Period Ids
 Daily = 0
 Weekly = 1
 AllTime = 2
 
 PeriodDict = {
-    Daily : 10,
-    Weekly : 100,
-    AllTime : 1000,
-    }
+    Daily: 10,
+    Weekly: 100,
+    AllTime: 1000,
+}
 
 PeriodIds = list(PeriodDict.keys())
 NumRecordPeriods = len(PeriodIds)
 NumRecordsPerPeriod = 10
 
 # Payout mulitpliers by winning place
-Winnings = [ 3.0, 1.0, 0.5, 0.15 ]
+Winnings = [3.0, 1.0, 0.5, 0.15]
 PracticeWinnings = 20
 
 # Trophy info
@@ -449,8 +481,8 @@ CircuitSweeps = 10
 CircuitQuals = 11
 
 # NOTE: lists maintained for algorithmic convenience
-QualsList = [ SpeedwayQuals, RuralQuals, UrbanQuals ]
-WinsList = [ SpeedwayWins, RuralWins, UrbanWins ]
+QualsList = [SpeedwayQuals, RuralQuals, UrbanQuals]
+WinsList = [SpeedwayWins, RuralWins, UrbanWins]
 
 # Trophy indices
 SpeedwayQuals1 = 0
@@ -489,22 +521,22 @@ NumTrophies = 30
 TenTrophyCup = 30
 TwentyTrophyCup = 31
 ThirtyTrophyCup = 32
-TrophyCups = [ TenTrophyCup, TwentyTrophyCup, ThirtyTrophyCup ]
+TrophyCups = [TenTrophyCup, TwentyTrophyCup, ThirtyTrophyCup]
 NumCups = 3
 
 # NOTE: lists maintained for algorithmic convenience
-SpeedwayQualsList = [ SpeedwayQuals1, SpeedwayQuals2, SpeedwayQuals3 ]
-RuralQualsList = [ RuralQuals1, RuralQuals2, RuralQuals3 ]
-UrbanQualsList = [ UrbanQuals1, UrbanQuals2, UrbanQuals3 ]
-SpeedwayWinsList = [ SpeedwayWins1, SpeedwayWins2, SpeedwayWins3 ]
-RuralWinsList = [ RuralWins1, RuralWins2, RuralWins3 ]
-UrbanWinsList = [ UrbanWins1, UrbanWins2, UrbanWins3 ]
-CircuitWinsList = [ CircuitWins1, CircuitWins2, CircuitWins3 ]
-CircuitSweepsList = [ CircuitSweeps1, CircuitSweeps2, CircuitSweeps3]
+SpeedwayQualsList = [SpeedwayQuals1, SpeedwayQuals2, SpeedwayQuals3]
+RuralQualsList = [RuralQuals1, RuralQuals2, RuralQuals3]
+UrbanQualsList = [UrbanQuals1, UrbanQuals2, UrbanQuals3]
+SpeedwayWinsList = [SpeedwayWins1, SpeedwayWins2, SpeedwayWins3]
+RuralWinsList = [RuralWins1, RuralWins2, RuralWins3]
+UrbanWinsList = [UrbanWins1, UrbanWins2, UrbanWins3]
+CircuitWinsList = [CircuitWins1, CircuitWins2, CircuitWins3]
+CircuitSweepsList = [CircuitSweeps1, CircuitSweeps2, CircuitSweeps3]
 CircuitQualList = [CircuitQuals1, CircuitQuals2, CircuitQuals3]
 
-AllQualsList = [ SpeedwayQualsList, RuralQualsList, UrbanQualsList ]
-AllWinsList = [ SpeedwayWinsList, RuralWinsList, UrbanWinsList ]
+AllQualsList = [SpeedwayQualsList, RuralQualsList, UrbanQualsList]
+AllWinsList = [SpeedwayWinsList, RuralWinsList, UrbanWinsList]
 
 TrophiesPerCup = NumTrophies // NumCups
 
@@ -516,32 +548,32 @@ WonCircuitRaces = [1, 5, 25]
 SweptCircuitRaces = [1, 5, 25]
 QualifiedCircuitRaces = [1, 5, 25]
 
-#subscription lists for leaderboards indexed by board name
+# subscription lists for leaderboards indexed by board name
 LBSubscription = {
- "stadium" : [(RT_Speedway_1, Daily),(RT_Speedway_1, Weekly),(RT_Speedway_1, AllTime),
-              (RT_Speedway_1_rev, Daily),(RT_Speedway_1_rev, Weekly),(RT_Speedway_1_rev, AllTime),
-              (RT_Speedway_2, Daily),(RT_Speedway_2, Weekly),(RT_Speedway_2, AllTime),
-              (RT_Speedway_2_rev, Daily),(RT_Speedway_2_rev, Weekly),(RT_Speedway_2_rev, AllTime),],
- "country" : [(RT_Rural_1, Daily),(RT_Rural_1, Weekly),(RT_Rural_1, AllTime),
-              (RT_Rural_1_rev, Daily),(RT_Rural_1_rev, Weekly),(RT_Rural_1_rev, AllTime),
-              (RT_Rural_2, Daily),(RT_Rural_2, Weekly),(RT_Rural_2, AllTime),
-              (RT_Rural_2_rev, Daily),(RT_Rural_2_rev, Weekly),(RT_Rural_2_rev, AllTime),],
- "city" : [(RT_Urban_1, Daily),(RT_Urban_1, Weekly),(RT_Urban_1, AllTime),
-           (RT_Urban_1_rev, Daily),(RT_Urban_1_rev, Weekly),(RT_Urban_1_rev, AllTime),
-           (RT_Urban_2, Daily),(RT_Urban_2, Weekly),(RT_Urban_2, AllTime),
-           (RT_Urban_2_rev, Daily),(RT_Urban_2_rev, Weekly),(RT_Urban_2_rev, AllTime),]
+    "stadium": [(RT_Speedway_1, Daily), (RT_Speedway_1, Weekly), (RT_Speedway_1, AllTime),
+                (RT_Speedway_1_rev, Daily), (RT_Speedway_1_rev, Weekly), (RT_Speedway_1_rev, AllTime),
+                (RT_Speedway_2, Daily), (RT_Speedway_2, Weekly), (RT_Speedway_2, AllTime),
+                (RT_Speedway_2_rev, Daily), (RT_Speedway_2_rev, Weekly), (RT_Speedway_2_rev, AllTime), ],
+    "country": [(RT_Rural_1, Daily), (RT_Rural_1, Weekly), (RT_Rural_1, AllTime),
+                (RT_Rural_1_rev, Daily), (RT_Rural_1_rev, Weekly), (RT_Rural_1_rev, AllTime),
+                (RT_Rural_2, Daily), (RT_Rural_2, Weekly), (RT_Rural_2, AllTime),
+                (RT_Rural_2_rev, Daily), (RT_Rural_2_rev, Weekly), (RT_Rural_2_rev, AllTime), ],
+    "city": [(RT_Urban_1, Daily), (RT_Urban_1, Weekly), (RT_Urban_1, AllTime),
+             (RT_Urban_1_rev, Daily), (RT_Urban_1_rev, Weekly), (RT_Urban_1_rev, AllTime),
+             (RT_Urban_2, Daily), (RT_Urban_2, Weekly), (RT_Urban_2, AllTime),
+             (RT_Urban_2_rev, Daily), (RT_Urban_2_rev, Weekly), (RT_Urban_2_rev, AllTime), ]
 }
 
-BANANA=1
-TURBO=2
-ANVIL=3
-PIE=4
-GagFreq=[[PIE, BANANA, BANANA, BANANA, TURBO, PIE],
-         [PIE, BANANA, BANANA, TURBO,  ANVIL, PIE],
-         [PIE, BANANA, TURBO,  TURBO,  ANVIL, PIE],
-         [BANANA, TURBO,  TURBO,  TURBO,  ANVIL, PIE]]
+BANANA = 1
+TURBO = 2
+ANVIL = 3
+PIE = 4
+GagFreq = [[PIE, BANANA, BANANA, BANANA, TURBO, PIE],
+           [PIE, BANANA, BANANA, TURBO, ANVIL, PIE],
+           [PIE, BANANA, TURBO, TURBO, ANVIL, PIE],
+           [BANANA, TURBO, TURBO, TURBO, ANVIL, PIE]]
 
-#GagFreq=[[PIE, PIE, PIE, PIE, PIE, PIE],
+# GagFreq=[[PIE, PIE, PIE, PIE, PIE, PIE],
 #         [PIE, PIE, PIE, PIE,  PIE, PIE],
 #         [PIE, PIE, PIE,  PIE,  PIE, PIE],
 #         [PIE, PIE,  PIE,  PIE,  PIE, PIE]]
@@ -552,13 +584,14 @@ CircuitLoops = [[RT_Speedway_1, RT_Rural_1, RT_Urban_1],
                 [RT_Speedway_2_rev, RT_Rural_2_rev, RT_Urban_2_rev],
                 ]
 
-#CircuitLoops = [[RT_Speedway_1, RT_Speedway_1, RT_Speedway_1],
+# CircuitLoops = [[RT_Speedway_1, RT_Speedway_1, RT_Speedway_1],
 #                [RT_Speedway_1, RT_Speedway_1, RT_Speedway_1],
 #                [RT_Speedway_1, RT_Speedway_1, RT_Speedway_1],
 #                [RT_Speedway_1, RT_Speedway_1, RT_Speedway_1],
 #                ]
 
 CircuitPoints = [10, 8, 6, 4]
+
 
 def getCircuitLoop(startingTrack):
     circuitLoop = [startingTrack]
@@ -568,9 +601,10 @@ def getCircuitLoop(startingTrack):
             numTracks = len(loop)
             tempLoop = loop * 2
             startingIndex = tempLoop.index(startingTrack)
-            circuitLoop = tempLoop[startingIndex:startingIndex+numTracks]
+            circuitLoop = tempLoop[startingIndex:startingIndex + numTracks]
             break
     return circuitLoop
+
 
 # Reasons for exiting a race
 Exit_UserReq = 0

@@ -4,8 +4,9 @@ from direct.showbase.DirectObject import DirectObject
 from toontown.toonbase.ToontownGlobals import *
 from direct.directnotify import DirectNotifyGlobal
 
+
 class MazeTreasure(DirectObject):
-    
+
     #notify = DirectNotifyGlobal.directNotify.newCategory("MazeTreasure")
 
     RADIUS = 0.7
@@ -14,13 +15,13 @@ class MazeTreasure(DirectObject):
         # there are going to be MANY (~650) of these created and destroyed
         # all at once for 4-player games; make it lean
         self.serialNum = serialNum
-        
+
         self.nodePath = model.copyTo(render)
         self.nodePath.setPos(pos[0], pos[1], 1.)
 
         # Make a sphere, name it uniquely, and child it
         # to the nodepath.
-        self.sphereName = "treasureSphere%s-%s" % (gameId, self.serialNum)
+        self.sphereName = f"treasureSphere{gameId}-{self.serialNum}"
         self.collSphere = CollisionSphere(0, 0, 0, self.RADIUS)
         # Make the sphere intangible
         self.collSphere.setTangible(0)
@@ -32,7 +33,7 @@ class MazeTreasure(DirectObject):
 
         # Add a hook looking for collisions with localToon
         self.accept('enter' + self.sphereName, self.__handleEnterSphere)
-        
+
         # now that the treasure and sphere have been placed, flatten the
         # whole silly thing
         self.nodePath.flattenLight()

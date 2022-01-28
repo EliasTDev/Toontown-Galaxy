@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Contact: Edmundo Ruiz
 # Created: Oct 2008
 #
@@ -6,7 +6,7 @@
 #          thing to note is that all toons are parented to their own node which is
 #          rotated based on how the local toon entered the dance floor
 #          (such that up is always away from the camera and controls are orthogonal)
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 from pandac.PandaModules import *
 
@@ -16,12 +16,14 @@ from direct.interval.MetaInterval import Sequence
 
 from toontown.parties.PartyGlobals import DanceReverseLoopAnims, ToonDancingStates
 
+
 class PartyDanceActivityToonFSM(FSM):
     notify = directNotify.newCategory("PartyDanceActivityToonFSM")
 
     def __init__(self, avId, activity, h):
-        FSM.__init__( self, self.__class__.__name__ )
-        self.notify.debug("init : avId = %s, activity = %s " % (avId, activity))
+        FSM.__init__(self, self.__class__.__name__)
+        self.notify.debug(
+            f"init : avId = {avId}, activity = {activity} ")
 
         self.avId = avId
         self.activity = activity
@@ -33,11 +35,11 @@ class PartyDanceActivityToonFSM(FSM):
         self.danceMoveSequence = None
         self.lastAnim = None
 
-        self.defaultTransitions = {"Init" : ["Run", "DanceMove", "Cleanup"],
-                                   "DanceMove" : ["Run", "DanceMove", "Cleanup"],
-                                   "Run" : ["Run", "DanceMove", "Cleanup"],
-                                   "Cleanup": [],
-                                   }
+        self.defaultTransitions = {
+            "Init": [
+                "Run", "DanceMove", "Cleanup"], "DanceMove": [
+                "Run", "DanceMove", "Cleanup"], "Run": [
+                "Run", "DanceMove", "Cleanup"], "Cleanup": [], }
 
         #self.unexpectedExit = False
         self.enteredAlready = False
@@ -55,14 +57,14 @@ class PartyDanceActivityToonFSM(FSM):
         Initializes the toon when entering the dance floor.
         """
         if not self.enteredAlready:
-            self.danceNode = NodePath("danceNode-%s" % self.avId)
+            self.danceNode = NodePath(f"danceNode-{self.avId}")
             self.danceNode.reparentTo(render)
             #self.danceNode.setPos(self.activity.x, self.activity.y, 0)
             self.danceNode.setPos(0, 0, 0)
             self.danceNode.setH(self.toonH)
             pos = self.toon.getPos(self.danceNode)
             self.toon.reparentTo(self.danceNode)
-            #self.toon.wrtReparentTo(self.danceNode)
+            # self.toon.wrtReparentTo(self.danceNode)
             self.toon.setPos(pos)
             self.enteredAlready = True
 
@@ -97,15 +99,16 @@ class PartyDanceActivityToonFSM(FSM):
             previous dance move or to the default dance move
         """
         if self.lastAnim is None and anim == "":
-            self.toon.loop("victory", fromFrame = 98, toFrame = 122)
+            self.toon.loop("victory", fromFrame=98, toFrame=122)
         else:
             if anim == "":
                 anim = self.lastAnim
 
             if anim in DanceReverseLoopAnims:
-                self.danceMoveSequence = Sequence(self.toon.actorInterval(anim, loop = 0),
-                                                  self.toon.actorInterval(anim, loop = 0, playRate = -1.0)
-                                                  )
+                self.danceMoveSequence = Sequence(
+                    self.toon.actorInterval(
+                        anim, loop=0), self.toon.actorInterval(
+                        anim, loop=0, playRate=-1.0))
                 self.danceMoveSequence.loop()
             else:
                 self.toon.loop(anim)

@@ -14,8 +14,10 @@ from .InGameEditorElements import *
 from toontown.cogdominium import CogdoEntityCreator
 import string
 
+
 class InGameEditorEntityBase(InGameEditorElement):
     """ base class for editor entities that are also level Elements """
+
     def __init__(self):
         InGameEditorElement.__init__(self)
 
@@ -31,13 +33,13 @@ class InGameEditorEntityBase(InGameEditorElement):
         return self.level.getEntityType(self.entId)
 
     def privGetNamePrefix(self):
-        return '[%s-%s] ' % (self.getTypeName(), self.entId)
+        return f'[{self.getTypeName()}-{self.entId}] '
 
     def privGetEntityName(self):
         return self.level.levelSpec.getEntitySpec(self.entId)['name']
 
     def getName(self):
-        return '%s%s' % (self.privGetNamePrefix(), self.privGetEntityName())
+        return f'{self.privGetNamePrefix()}{self.privGetEntityName()}'
 
     def setNewName(self, newName):
         # OK, user typed in a new name. For now, assume that they either
@@ -59,8 +61,10 @@ class InGameEditorEntityBase(InGameEditorElement):
         self.name = name
         self.level.buildEntityTree()
 
+
 class InGameEditorEntity(Entity.Entity, InGameEditorEntityBase):
     """this is the in-game editor's representation of an entity"""
+
     def __init__(self, level, entId):
         Entity.Entity.__init__(self, level, entId)
         InGameEditorEntityBase.__init__(self)
@@ -72,20 +76,27 @@ class InGameEditorEntity(Entity.Entity, InGameEditorEntityBase):
         Entity.Entity.destroy(self)
 
 # we need a real editMgr
+
+
 class InGameEditorEditMgr(EditMgr.EditMgr, InGameEditorEntityBase):
     def __init__(self, level, entId):
         EditMgr.EditMgr.__init__(self, level, entId)
         InGameEditorEntityBase.__init__(self)
+
     def destroy(self):
         EditMgr.EditMgr.destroy(self)
 
+
 class AttribModifier(Entity.Entity, InGameEditorEntityBase):
-    notify = DirectNotifyGlobal.directNotify.newCategory('AttribModifier')    
+    notify = DirectNotifyGlobal.directNotify.newCategory('AttribModifier')
+
     def __init__(self, level, entId):
         Entity.Entity.__init__(self, level, entId)
         InGameEditorEntityBase.__init__(self)
+
     def destroy(self):
         Entity.Entity.destroy(self)
+
     def setValue(self, value):
         # here's the magic. Start at our parent, and modify the attributes.
         # If recursive, work through all children.
@@ -95,7 +106,8 @@ class AttribModifier(Entity.Entity, InGameEditorEntityBase):
             return
         entTypeReg = self.level.entTypeReg
         if self.typeName not in entTypeReg.getAllTypeNames():
-            AttribModifier.notify.warning('invalid typeName: %s' % self.typeName)
+            AttribModifier.notify.warning(
+                f'invalid typeName: {self.typeName}')
             return
         typeDesc = entTypeReg.getTypeDesc(self.typeName)
         # check attribName
@@ -104,7 +116,7 @@ class AttribModifier(Entity.Entity, InGameEditorEntityBase):
             return
         if self.attribName not in typeDesc.getAttribNames():
             AttribModifier.notify.warning(
-                'invalid attribName: %s' % self.attribName)
+                f'invalid attribName: {self.attribName}')
             return
         # check value
         if len(value) == 0:
@@ -113,8 +125,12 @@ class AttribModifier(Entity.Entity, InGameEditorEntityBase):
         # check that it's the right type for the attrib
 
         # OK, let's get going
-        def setAttrib(entId, typeName=self.typeName, attribName=self.attribName,
-                      value=eval(value), recursive=self.recursive):
+        def setAttrib(
+                entId,
+                typeName=self.typeName,
+                attribName=self.attribName,
+                value=eval(value),
+                recursive=self.recursive):
             # if this entity is of the right type, set the value
             if typeName == self.level.getEntityType(entId):
                 self.level.setAttribEdit(entId, attribName, value)
@@ -125,27 +141,30 @@ class AttribModifier(Entity.Entity, InGameEditorEntityBase):
                     setAttrib(child.entId)
         setAttrib(self.parentEntId)
 
-## class InGameEditorEntityCreator(FactoryEntityCreator.FactoryEntityCreator):
-##     """this is a factory entity creator hijacked to create editor-specific
-##     entity classes for all of its types"""
-##     def __init__(self, level):
+# class InGameEditorEntityCreator(FactoryEntityCreator.FactoryEntityCreator):
+# """this is a factory entity creator hijacked to create editor-specific
+# entity classes for all of its types"""
+# def __init__(self, level):
 ##         FactoryEntityCreator.FactoryEntityCreator.__init__(self, level)
-##         # it's a little dirty to be reaching down directly into
-##         # EntityCreatorBase like this. But I'm over it.
+# it's a little dirty to be reaching down directly into
+# EntityCreatorBase like this. But I'm over it.
 ##         entTypes = self.entType2Ctor.keys()
-##         for type in entTypes:
+# for type in entTypes:
 ##             self.entType2Ctor[type] = InGameEditorEntity
-##         # we need a real editMgr
+# we need a real editMgr
 ##         self.entType2Ctor['editMgr'] = InGameEditorEditMgr
-##         # and we have AttribModifiers
+# and we have AttribModifiers
 ##         self.entType2Ctor['attribModifier'] = AttribModifier
+
 
 def getInGameEditorEntityCreatorClass(level):
     entCreator = level.createEntityCreator()
     EntCreatorClass = entCreator.__class__
+
     class InGameEditorEntityCreator(EntCreatorClass):
         """this is a factory entity creator hijacked to create editor-specific
         entity classes for all of its types"""
+
         def __init__(self, editor):
             EntCreatorClass.__init__(self, editor)
             # it's a little dirty to be reaching down directly into
@@ -158,6 +177,7 @@ def getInGameEditorEntityCreatorClass(level):
             # and we have AttribModifiers
             self.entType2Ctor['attribModifier'] = AttribModifier
     return InGameEditorEntityCreator
+
 
 """
 class InGameEditorEntityCreator:
@@ -186,6 +206,7 @@ class InGameEditorEntityCreator:
         setattr(self.__dict__['_impl'], attrName, value)
 """
 
+
 class DistributedInGameEditor(DistributedObject.DistributedObject,
                               Level.Level,
                               InGameEditorElement):
@@ -198,7 +219,7 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
         InGameEditorElement.__init__(self)
         self.editorInitialized = 0
         self.specModified = 0
-        
+
         # these are stacks of
         # ([actions to get from new state to old state (undo)],
         #  [actions to get from old state to new state (redo)])
@@ -233,7 +254,7 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
 
     def getEditUsername(self):
         return self.editUsername
-        
+
     def setLevelDoId(self, levelDoId):
         self.levelDoId = levelDoId
         self.level = base.cr.doId2do[self.levelDoId]
@@ -251,14 +272,15 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
             from otp.level import EditorGlobals
             EditorGlobals.assertReadyToEdit()
             assert self.editUsername == EditorGlobals.getEditUsername()
-            
+
             # ask for the current spec; it will arrive in pieces, since
             # it's so large
-            self.notify.debug('requesting an up-to-date copy of the level spec')
+            self.notify.debug(
+                'requesting an up-to-date copy of the level spec')
             self.sendUpdate('requestCurrentLevelSpec')
 
     def setSpecSenderDoId(self, doId):
-        DistributedInGameEditor.notify.debug('setSpecSenderDoId: %s' % doId)
+        DistributedInGameEditor.notify.debug(f'setSpecSenderDoId: {doId}')
         blobSender = base.cr.doId2do[doId]
 
         def setSpecBlob(specBlob, blobSender=blobSender, self=self):
@@ -283,10 +305,10 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
         self.axis = loader.loadModel("models/misc/xyzAxis.bam")
         self.axis.setColorOff()
         # last 1 overrides default colorScale
-        self.axis.setColorScale(1,1,1,1,1)
+        self.axis.setColorScale(1, 1, 1, 1, 1)
 
-        ## by default, color the zones
-        #self.level.setColorZones(1)
+        # by default, color the zones
+        # self.level.setColorZones(1)
 
         # init the Level; this will create all the entities
         self.initializeLevel(self.doId, curSpec, curSpec.getScenario())
@@ -321,7 +343,7 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
             csEvent=csEvent,
             runEvent=runEvent,
             texEvent=texEvent,
-            )
+        )
         self.acceptOnce(doneEvent, self.doneEditing)
         self.accept(saveAsEvent, self.saveSpec)
         self.accept(requestSaveEvent, self.requestSpecSave)
@@ -337,7 +359,7 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
                     self.handleEntitySelect)
         self.accept(self.editor.getEventMsgName('Flash'),
                     self.handleEntitySelect)
-        
+
         self.editorInitialized = 1
         self.buildEntityTree()
 
@@ -408,10 +430,10 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
         searches = (
             '**/+ActorNode',
             '**/+Character',
-            #'**/+CollisionNode',
-            #'**/+LODNode',
-            #'**/+Nametag3d',
-            )
+            # '**/+CollisionNode',
+            # '**/+LODNode',
+            # '**/+Nametag3d',
+        )
         # stash nodes to avoid crashes when copying
         for search in searches:
             stashNodeGroups.append(np.findAllMatches(search))
@@ -426,12 +448,12 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
         for group in stashNodeGroups:
             if not group.isEmpty():
                 group.unstash()
-        
+
         return copy
 
     def saveSpec(self, filename):
         return self.levelSpec.saveToDisk(filename)
-        
+
     def setEntityParent(self, entity, parent):
         parent.addChild(entity)
         entity._parentEntity = parent
@@ -461,8 +483,7 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
     def buildEntityTree(self):
         # clear out all heirarchy
         self.setChildren([])
-        entIds = list(self.entities.keys())
-        entIds.sort()
+        entIds = sorted(self.entities.keys())
         for entId in entIds:
             ent = self.getEntity(entId)
             ent.setChildren([])
@@ -471,7 +492,7 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
         self.editor.refreshExplorer()
 
     def onEntityCreate(self, entId):
-        DistributedInGameEditor.notify.debug('onEntityCreate %s' % entId)
+        DistributedInGameEditor.notify.debug(f'onEntityCreate {entId}')
         Level.Level.onEntityCreate(self, entId)
 
         entityNP = self.getEntInstanceNP(entId)
@@ -489,7 +510,7 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
             self.editor.selectEntity(entId)
 
     def onEntityDestroy(self, entId):
-        DistributedInGameEditor.notify.debug('onEntityDestroy %s' % entId)
+        DistributedInGameEditor.notify.debug(f'onEntityDestroy {entId}')
         ent = self.getEntity(entId)
 
         if self.editorInitialized:
@@ -521,48 +542,58 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
                 oColor = entityNP.getColorScale()
                 flashIval = Sequence(
                     Func(Functor(entityNP.setColorScale, 1, 0, 0, 1)),
-                    WaitInterval(dur/3),
+                    WaitInterval(dur / 3),
                     Func(Functor(entityNP.setColorScale, 0, 1, 0, 1)),
-                    WaitInterval(dur/3),
+                    WaitInterval(dur / 3),
                     Func(Functor(entityNP.setColorScale, 0, 0, 1, 1)),
-                    WaitInterval(dur/3),
-                    Func(Functor(entityNP.setColorScale, oColor[0], oColor[1], oColor[2], oColor[3])),#Func(entityNP.clearColorScale),
-                    )
+                    WaitInterval(dur / 3),
+                    Func(
+                        Functor(
+                            entityNP.setColorScale,
+                            oColor[0],
+                            oColor[1],
+                            oColor[2],
+                            oColor[3])),
+                    # Func(entityNP.clearColorScale),
+                )
                 boundIval = Sequence(
                     Func(entityNP.showBounds),
-                    WaitInterval(dur*.5),
+                    WaitInterval(dur * .5),
                     Func(entityNP.hideBounds),
-                    )
+                )
                 entCp = self.getEntInstanceNPCopy(entity.entId)
                 entCp.setRenderModeWireframe()
                 entCp.setTextureOff(1)
                 wireIval = Sequence(
-                    Func(Functor(entCp.setColor,1,0,0,1,1)),
-                    WaitInterval(dur/3),
-                    Func(Functor(entCp.setColor,0,1,0,1,1)),
-                    WaitInterval(dur/3),
-                    Func(Functor(entCp.setColor,0,0,1,1,1)),
-                    WaitInterval(dur/3),
+                    Func(Functor(entCp.setColor, 1, 0, 0, 1, 1)),
+                    WaitInterval(dur / 3),
+                    Func(Functor(entCp.setColor, 0, 1, 0, 1, 1)),
+                    WaitInterval(dur / 3),
+                    Func(Functor(entCp.setColor, 0, 0, 1, 1, 1)),
+                    WaitInterval(dur / 3),
                     Func(entCp.removeNode),
-                    )
+                )
                 self.identifyIval = Parallel(
                     flashIval,
                     boundIval,
                     wireIval,
-                    )
+                )
+
                 def putAxis(self=self, entityNP=entityNP):
                     self.axis.reparentTo(entityNP)
-                    self.axis.setPos(0,0,0)
-                    self.axis.setHpr(0,0,0)
+                    self.axis.setPos(0, 0, 0)
+                    self.axis.setHpr(0, 0, 0)
+
                 def takeAxis(self=self):
                     self.axis.reparentTo(hidden)
                 self.identifyIval = Sequence(
                     Func(putAxis),
                     Parallel(self.identifyIval,
-                             WaitInterval(1000.5), #leaving the axis around JML
+                             # leaving the axis around JML
+                             WaitInterval(1000.5),
                              ),
                     Func(takeAxis),
-                    )
+                )
                 self.identifyIval.start()
             self.editor.updateAttribEditPane(entity.entId, self.levelSpec,
                                              self.entTypeReg)
@@ -574,9 +605,9 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
             # Get the index of the remove command
             index = menu.index('Remove Selected Entity')
             if entType in self.entTypeReg.getPermanentTypeNames():
-                menu.entryconfigure(index,state='disabled')
+                menu.entryconfigure(index, state='disabled')
             else:
-                menu.entryconfigure(index,state='normal')
+                menu.entryconfigure(index, state='normal')
 
     def privSendAttribEdit(self, entId, attrib, value):
         """this sends an edit to the AI; it does not manipulate the
@@ -586,9 +617,10 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
         # for the attribute; it may not be the value we are suggesting.
         self.specModified = 1
         valueStr = repr(value)
-        self.notify.debug("sending edit: %s: '%s' = %s" %
-                          (entId, attrib, valueStr))
-        self.sendUpdate('setEdit', [entId, attrib, valueStr, self.editUsername])
+        self.notify.debug(f"sending edit: {entId}: '{attrib}' = {valueStr}")
+        self.sendUpdate(
+            'setEdit', [
+                entId, attrib, valueStr, self.editUsername])
 
     def privExecActionList(self, actions):
         """execute an undo/redo action list"""
@@ -637,12 +669,16 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
 
     def doWireframe(self):
         messenger.send('magicWord', ['~wire'])
+
     def doOobe(self):
         messenger.send('magicWord', ['~oobe'])
+
     def doCs(self):
         messenger.send('magicWord', ['~cs'])
+
     def doRun(self):
         messenger.send('magicWord', ['~run'])
+
     def doTex(self):
         messenger.send('magicWord', ['~tex'])
 
@@ -666,14 +702,16 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
         # we don't know the entId yet; fill in when we do know
         removeAction = (self.editMgrEntity.entId,
                         'removeEntity',
-                        {'entId':'REPLACEME'},
+                        {'entId': 'REPLACEME'},
                         )
-        new2old = [removeAction,]
+        new2old = [removeAction, ]
+
         def setNewEntityId(entId, self=self, action=removeAction,
                            callback=callback):
             action[2]['entId'] = entId
             if callback:
                 callback(entId)
+
         def setEntCreateHandler(self=self, handler=setNewEntityId):
             self.entCreateHandlerQ.append(handler)
         old2new = [setEntCreateHandler,
@@ -692,7 +730,7 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
         requested."""
         Level.Level.setEntityCreatorUsername(self, entId, editUsername)
         if editUsername == self.getEditUsername():
-            print('entity %s about to be created; we requested it' % entId)
+            print(f'entity {entId} about to be created; we requested it')
             callback = self.entCreateHandlerQ[0]
             del self.entCreateHandlerQ[:1]
             callback(entId)
@@ -721,6 +759,7 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
                 'Please select a valid entity to be removed first.',
                 'error')
             return -1
+
         def removeEntity(entId):
             # recursively deletes children, then deletes entity
             entity = self.getEntity(entId)
@@ -734,22 +773,22 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
 
         entType = self.getEntityType(entId)
         if entType in self.entTypeReg.getPermanentTypeNames():
-            self.editor.showWarning("Cannot remove entities of type '%s'" %
-                                    entType)
+            self.editor.showWarning(f"Cannot remove entities of type '{entType}'")
             return
 
         # to undo removal, we first need to create the entity, then
         # set all of its attribs
         removeAction = (self.editMgrEntity.entId,
                         'removeEntity',
-                        {'entId':entId})
-        old2new = [removeAction,]
+                        {'entId': entId})
+        old2new = [removeAction, ]
 
         oldAttribs = []
         spec = self.levelSpec.getEntitySpecCopy(entId)
         del spec['type']
         for attrib, value in list(spec.items()):
             oldAttribs.append((attrib, value))
+
         def setNewEntityId(entId, self=self, removeAction=removeAction,
                            oldAttribs=oldAttribs):
             # user just undid the removal; change the redo action to
@@ -763,6 +802,7 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
             # during string of redos/undos, if entities are being
             # re-created, other entities that are subsequently re-created
             # may reference a previously re-created entity by its old entId
+
         def setEntCreateHandler(self=self, handler=setNewEntityId):
             self.entCreateHandlerQ.append(handler)
         new2old = [setEntCreateHandler,
@@ -795,7 +835,7 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
             if oldName[-1] != ')':
                 hasSuffix = False
             if hasSuffix and (oldName[-2] in string.digits):
-                i = len(oldName)-2
+                i = len(oldName) - 2
                 numString = ''
                 while oldName[i] in string.digits:
                     numString = oldName[i] + numString
@@ -807,8 +847,8 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
                     if oldName[i] != ' ':
                         hasSuffix = False
                     else:
-                        print('numString: %s' % numString)
-                        copyNum = int(numString)+1
+                        print(f'numString: {numString}')
+                        copyNum = int(numString) + 1
             if hasSuffix:
                 newName = oldName[:i] + suffix % copyNum
             else:
@@ -832,8 +872,8 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
         # to undo, remove the entity
         removeAction = (self.editMgrEntity.entId,
                         'removeEntity',
-                        {'entId':selectedEntId})
-        new2old = [removeAction,]
+                        {'entId': selectedEntId})
+        new2old = [removeAction, ]
 
         # to duplicate the entity, create a new entity and set (most of)
         # the same attribs
@@ -847,6 +887,7 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
         for attribName, attribDesc in list(attribDescs.items()):
             if attribDesc.getDatatype() == 'const':
                 del copyAttribs[attribName]
+
         def setNewEntityId(entId, self=self, removeAction=removeAction,
                            copyAttribs=copyAttribs):
             # user just undid the removal; change the redo action to
@@ -860,6 +901,7 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
             # during string of redos/undos, if entities are being
             # re-created, other entities that are subsequently re-created
             # may reference a previously re-created entity by its old entId
+
         def setEntCreateHandler(self=self, handler=setNewEntityId):
             self.entCreateHandlerQ.append(handler)
         old2new = [setEntCreateHandler,
@@ -904,7 +946,7 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
             filetypes=[('Entity Group', '.egroup'),
                        ('All Files', '*'),
                        ],
-            )
+        )
         if len(filename) == 0:
             return
         try:
@@ -914,13 +956,14 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
             eGroup = pickle.load(f)
             for entId, spec in list(eGroup.items()):
                 eGroup[entId] = self.specPostUnpickle(spec)
-        except:
+        except BaseException:
             self.editor.showWarning(
-                'Error importing entity group from \'%s\'.' % filename,
+                f'Error importing entity group from \'{filename}\'.',
                 'error')
             return
-            
+
         oldEntId2new = {}
+
         def addEntities(treeEntry, parentEntId, eGroup=eGroup):
             # recursively adds the entities described by the entId tree
             for entId, children in list(treeEntry.items()):
@@ -930,10 +973,12 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
                 del spec['parentEntId']
                 # remove all other 'const' attributes
                 typeDesc = self.entTypeReg.getTypeDesc(entType)
-                for attribName, attribDesc in list(typeDesc.getAttribDescDict().items()):
+                for attribName, attribDesc in list(
+                        typeDesc.getAttribDescDict().items()):
                     if attribDesc.getDatatype() == 'const':
                         if attribName in spec:
                             del spec[attribName]
+
                 def handleEntityInsertComplete(newEntId, oldEntId=entId,
                                                oldEntId2new=oldEntId2new,
                                                spec=spec, treeEntry=treeEntry,
@@ -970,12 +1015,12 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
             filetypes=[('Entity Group', '.egroup'),
                        ('All Files', '*'),
                        ],
-            )
+        )
         if len(filename) == 0:
             return
         # entity groups are just dictionaries of entId:spec, where
         # spec attrib values are repr'ed, along with a 'tree' of entIds
-        eTree = {selectedEntId:{}}
+        eTree = {selectedEntId: {}}
         eGroup = {}
         eGroup[selectedEntId] = self.levelSpec.getEntitySpecCopy(selectedEntId)
         for entId, spec in list(eGroup.items()):
@@ -985,9 +1030,9 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
             f = open(filename, 'w')
             pickle.dump(eTree, f)
             pickle.dump(eGroup, f)
-        except:
+        except BaseException:
             self.editor.showWarning(
-                'Error exporting entity group to \'%s\'.' % filename,
+                f'Error exporting entity group to \'{filename}\'.',
                 'error')
             return
 
@@ -1006,13 +1051,14 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
             filetypes=[('Entity Group', '.egroup'),
                        ('All Files', '*'),
                        ],
-            )
+        )
         if len(filename) == 0:
             return
         # entity groups are just dictionaries of entId:spec, where
         # spec attrib values are repr'ed, along with a 'tree' of entIds
         eTree = {}
         eGroup = {}
+
         def addEntity(entId, treeEntry):
             # recursively adds this entity and all its children to the
             # entity group structure
@@ -1029,9 +1075,9 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
             f = open(filename, 'w')
             pickle.dump(eTree, f)
             pickle.dump(eGroup, f)
-        except:
+        except BaseException:
             self.editor.showWarning(
-                'Error exporting entity group to \'%s\'.' % filename,
+                f'Error exporting entity group to \'{filename}\'.',
                 'error')
             return
 
@@ -1051,8 +1097,8 @@ class DistributedInGameEditor(DistributedObject.DistributedObject,
             zoneEntId = self.levelSpec.getEntityZoneEntId(selectedEntId)
             entNp = self.getEntInstanceNP(zoneEntId)
 
-        base.localAvatar.setPos(entNp,0,0,0)
-        base.localAvatar.setHpr(entNp,0,0,0)
+        base.localAvatar.setPos(entNp, 0, 0, 0)
+        base.localAvatar.setHpr(entNp, 0, 0, 0)
         zoneNum = self.getEntityZoneEntId(selectedEntId)
         self.level.enterZone(zoneNum)
 

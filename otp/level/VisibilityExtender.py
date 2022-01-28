@@ -2,6 +2,7 @@
 
 from . import Entity
 
+
 class VisibilityExtender(Entity.Entity):
     def __init__(self, level, entId):
         Entity.Entity.__init__(self, level, entId)
@@ -36,7 +37,7 @@ class VisibilityExtender(Entity.Entity):
         zoneEnt.incrementRefCounts(self.newZones)
         self.extended = 1
         self.level.handleVisChange()
-        
+
     def retract(self):
         """un-extend the visibility list"""
         assert self.extended
@@ -58,7 +59,7 @@ class VisibilityExtender(Entity.Entity):
             self.initVisExt()
             if extended:
                 self.extend()
-            
+
         def attribChanged(self, *args):
             extended = self.extended
             self.destroyVisExt()

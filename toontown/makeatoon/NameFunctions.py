@@ -1,16 +1,17 @@
 
 import string
 
+
 class NameFunctions:
 
     boyTitles = ["Baron", "Duke", "King", "Master",
                  "Mister", "Prince", "Sir",
                  ]
-    
+
     girlTitles = ["Lady", "Miss", "Princess",
                   "Queen", "Granny", "Aunt",
                   ]
-    
+
     neutralTitles = ["Big", "Captain", "Cool", "Colonel", "Crazy",
                      "Deputy", "Dippy", "Doctor", "Fat",
                      "Good ol'",
@@ -26,7 +27,7 @@ class NameFunctions:
                  "Cecil", "Chester", "Chip", "Chipper", "Clancy", "Clarence",
                  "Cliff", "Clyde",
                  "Dudley", "Duke", "Ernie",
-                 #"Fenimore",
+                 # "Fenimore",
                  "Fritz", "Graham", "Harvey", "Hector",
                  "Huey", "Jacques", "Jake",
                  "Knuckles",
@@ -34,34 +35,34 @@ class NameFunctions:
                  "Mac", "Max", "Moe", "Monty", "Milton", "Ned",
                  "Orville", "Oscar", "Oswald", "Ozzie",
                  "Pierre",
-                 #"Poindexter",
+                 # "Poindexter",
                  "Reggie", "Ricky",
                  "Rocco", "Rollie", "Romeo", "Rusty", "Sammie",
                  "Skip", "Skipper", "Skippy", "Spike", "Stinky",
-                 #"Thaddeus",
+                 # "Thaddeus",
                  "Tom",
                  "Waldo", "Wally", "Wilbur",
                  ]
     girlFirsts = ["Bonnie", "Bubbles",
-                  #"Buttercup",
+                  # "Buttercup",
                   "Candy",
-                  #"Cinnamon",
+                  # "Cinnamon",
                   "Clover",
                   "Cuddles",
                   "Daffodil",
-                  #"Dandelion",
+                  # "Dandelion",
                   "Daphne", "Dee Dee",
                   "Dottie", "Ginger", "Gwen", "Ladybug", "Lily",
                   "Marigold", "Maxie",
                   "Melody", "Mo Mo",
-                  #"Moonbeam",
+                  # "Moonbeam",
                   "Nutmeg",
                   "Peaches", "Pearl", "Penny", "Petunia",
-                  #"Penelope",
+                  # "Penelope",
                   "Rainbow", "Raven", "Robin", "Rosie", "Roxy",
                   "Sadie", "Sally", "Sandy",
-                  #"Snowflake",
-                  #"Sunflower",
+                  # "Snowflake",
+                  # "Sunflower",
                   "Taffy", "Trixie",
                   "Ursula", "Violet", "Vicky",
                   ]
@@ -69,31 +70,31 @@ class NameFunctions:
                      "Binky", "Biscuit", "Bongo", "Boo Boo", "Bonkers", "Bizzy",
                      "Blinky", "Bumpy", "C.J.", "C.W.", "Chirpy",
                      "Chunky", "Coconut", "Comet", "Corky", "Corny", "Cranky", "Crazy",
-                     #"Creampuff",
+                     # "Creampuff",
                      "Cricket", "Crumbly", "Curly", "Cuckoo",
                      "Daffy",
-                     #"Dingdong",
+                     # "Dingdong",
                      "Dinky", "Dizzy",
                      "Domino", "Drippy", "Droopy",
                      "Dusty", "Fancy", "Fangs", "Fireball",
                      "Fleabag", "Flapjack", "Flappy",
                      "Flip", "Fluffy", "Freckles", "Frizzy", "Furball",
                      "Goopy",
-                     #"Gumdrop",
-                     #"Harebrain",
+                     # "Gumdrop",
+                     # "Harebrain",
                      "Huddles", "J.C.",
-                     #"Jellybean",
+                     # "Jellybean",
                      "Jellyroll",
                      "Kippy", "Lefty", "Lollipop", "Loony", "Loopy",
                      "Mildew",
-                     #"Mumbles",
+                     # "Mumbles",
                      "Murky", "Nutty", "Pancake", "Peanut",
-                     #"Peppermint",
+                     # "Peppermint",
                      "Peppy", "Pickles",
                      "Pinky", "Popcorn", "Poppy",
                      "Rhubarb",
                      "Salty", "Scooter",
-                     #"Scratchy",
+                     # "Scratchy",
                      "Skids", "Skimpy", "Soupy",
                      "Slappy", "Slippy", "Slumpy", "Smirky", "Snappy",
                      "Sniffy", "Snuffy",
@@ -102,17 +103,17 @@ class NameFunctions:
                      "Tricky", "Tubby",
                      "Von",
                      "Wacky", "Wacko",
-                     #"Whiskers",
+                     # "Whiskers",
                      "Winky",
                      "Yippie",
                      "Z.Z.", "Zany", "Ziggy", "Zilly",
                      "Zippy", "Zippety", "Zowie",
                      ]
     # Last name prefixes
-    
+
     # Prefixes that will require suffix capitalization
     capPrefixes = ["Mc", "Mac"]
-    
+
     lastPrefixes = ["Bagel", "Banana", "Bean", "Beanie", "Biggen",
                     "Bizzen", "Blubber", "Boingen",
                     "Bumber", "Bumble", "Bumpen",
@@ -166,55 +167,72 @@ class NameFunctions:
                     "whip", "wig", "woof",
                     "zaner", "zap", "zapper", "zilla",
                     ]
-    
-    header = ["# This file contains all the possible names used in toon name generation.",
-              "# Each name has a unique id and a category:",
-              "#                                     0 - boyTitle",
-              "#                                     1 - girlTitle",
-              "#                                     2 - neutralTitle",
-              "#                                     3 - boyFirst",
-              "#                                     4 - girlFirst",
-              "#                                     5 - neutralFirst",
-              "#                                     6 - capPrefix",
-              "#                                     7 - lastPrefix",
-              "#                                     8 - lastSuffix"]
-    
+
+    header = [
+        "# This file contains all the possible names used in toon name generation.",
+        "# Each name has a unique id and a category:",
+        "#                                     0 - boyTitle",
+        "#                                     1 - girlTitle",
+        "#                                     2 - neutralTitle",
+        "#                                     3 - boyFirst",
+        "#                                     4 - girlFirst",
+        "#                                     5 - neutralFirst",
+        "#                                     6 - capPrefix",
+        "#                                     7 - lastPrefix",
+        "#                                     8 - lastSuffix"]
+
     def __init__(self):
         return
-    
+
     def writeNameMaster(self):
         print("Writing Name Master")
         output = open('NameMasterEnglish.txt', 'w')
         for x in self.header:
-            output.write(x+'\n')
+            output.write(x + '\n')
 
-        categoryNames = [self.boyTitles, self.girlTitles, self.neutralTitles,
-                         self.boyFirsts, self.girlFirsts, self.neutralFirsts,
-                         self.capPrefixes, self.lastPrefixes, self.lastSuffixes]
+        categoryNames = [
+            self.boyTitles,
+            self.girlTitles,
+            self.neutralTitles,
+            self.boyFirsts,
+            self.girlFirsts,
+            self.neutralFirsts,
+            self.capPrefixes,
+            self.lastPrefixes,
+            self.lastSuffixes]
 
         uniqueID = 0
-        for cat in range(0,9):
-            print("Working on list " + str(cat) + ".  UniqueID is up to " + str(uniqueID))
+        for cat in range(0, 9):
+            print(
+                "Working on list " +
+                str(cat) +
+                ".  UniqueID is up to " +
+                str(uniqueID))
             for name in categoryNames[cat]:
-                output.write(str(uniqueID) + "*" + str(cat) + "*" + name + '\n')
+                output.write(
+                    str(uniqueID) +
+                    "*" +
+                    str(cat) +
+                    "*" +
+                    name +
+                    '\n')
                 uniqueID += 1
         output.close()
-
 
     def readNameMaster(self):
         self.nameDictionary = {}
         try:
             input = open('NameMasterEnglish.txt1', 'r')
-        except:
+        except BaseException:
             print("NameFunctions: Error opening list text file.")
             return
         for currentLine in input:
             if currentLine.lstrip()[0:1] != '#':
                 a1 = currentLine.find('*')
-                a2 = currentLine.find('*', a1+1)
-                self.nameDictionary[int(currentLine[0:a1])]=(int(currentLine[a1+1:a2]),
-                                                             currentLine[a2+1:len(currentLine)-1])
-        masterList = [[],[],[],[],[],[],[],[],[]]
+                a2 = currentLine.find('*', a1 + 1)
+                self.nameDictionary[int(currentLine[0:a1])] = (
+                    int(currentLine[a1 + 1:a2]), currentLine[a2 + 1:len(currentLine) - 1])
+        masterList = [[], [], [], [], [], [], [], [], []]
         for tu in list(self.nameDictionary.values()):
             masterList[tu[0]].append(tu[1])
 
@@ -230,7 +248,3 @@ class NameFunctions:
 
         print(self.boyTitles)
         print(self.nboyTitles)
-
-
-
-

@@ -6,15 +6,18 @@ from direct.interval.FunctionInterval import Wait, Func
 PULSE_GUI_DURATION = 0.2
 PULSE_GUI_CHANGE = .333
 
+
 def cleanup(name):
     """Clean stop of an ival"""
-    taskMgr.remove(name)   
+    taskMgr.remove(name)
+
 
 def start(ival):
     """Clean start of an ival"""
     cleanup(ival.getName())
     ival.start()
-    
+
+
 def loop(ival):
     """Clean loop of an ival"""
     cleanup(ival.getName())
@@ -23,12 +26,24 @@ def loop(ival):
 
 def getPulseLargerIval(np, name, duration=PULSE_GUI_DURATION, scale=1):
     """Creates a boing larger effect"""
-    return getPulseIval(np, name, 1 + PULSE_GUI_CHANGE, duration=duration, scale=scale)
-    
+    return getPulseIval(
+        np,
+        name,
+        1 + PULSE_GUI_CHANGE,
+        duration=duration,
+        scale=scale)
+
+
 def getPulseSmallerIval(np, name, duration=PULSE_GUI_DURATION, scale=1):
     """Creates a boing smaller effect"""
-    return getPulseIval(np, name, 1 - PULSE_GUI_CHANGE, duration=duration, scale=scale)
-    
+    return getPulseIval(
+        np,
+        name,
+        1 - PULSE_GUI_CHANGE,
+        duration=duration,
+        scale=scale)
+
+
 def getPulseIval(np, name, change, duration=PULSE_GUI_CHANGE, scale=1):
     """Creates a boing interval builder"""
     return Sequence(
@@ -36,10 +51,19 @@ def getPulseIval(np, name, change, duration=PULSE_GUI_CHANGE, scale=1):
         np.scaleInterval(duration, scale, blendType='easeIn'),
         name=name,
         autoFinish=1
-        )
+    )
 
-    
-def getPresentGuiIval(np, name, waitDuration=0.5, moveDuration=1.0, parent=aspect2d, startPos = (0, 0, 0)):
+
+def getPresentGuiIval(
+    np,
+    name,
+    waitDuration=0.5,
+    moveDuration=1.0,
+    parent=aspect2d,
+    startPos=(
+        0,
+        0,
+        0)):
     """
     Presents a new GUI:
     Shows/boings the gui right on the center of the screen,
@@ -47,7 +71,7 @@ def getPresentGuiIval(np, name, waitDuration=0.5, moveDuration=1.0, parent=aspec
     """
     endPos = np.getPos()
     np.setPos(parent, startPos[0], startPos[1], startPos[2])
-    
+
     return Sequence(
         Func(np.show),
         getPulseLargerIval(np, "", scale=np.getScale()),
@@ -56,9 +80,7 @@ def getPresentGuiIval(np, name, waitDuration=0.5, moveDuration=1.0, parent=aspec
             moveDuration,
             endPos,
             blendType="easeInOut",
-            ),
+        ),
         name=name,
         autoFinish=1
-        )
-        
-    
+    )

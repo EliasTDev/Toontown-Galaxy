@@ -7,27 +7,27 @@ from . import DistributedSuitBase
 from toontown.toonbase import ToontownGlobals
 from toontown.battle import MovieUtil
 
+
 class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
     """
     These are meant to represent the lawyers in battle three of Lawbot Boss
     """
 
     notify = DirectNotifyGlobal.directNotify.newCategory(
-                                        'DistributedLawbotBossSuit')
+        'DistributedLawbotBossSuit')
 
-    timeToShow = 1.0 #how much time to wait before we show evidence
-    timeToRelease = 3.15 #how much time to wait before evidence flies off to toon or pan
+    timeToShow = 1.0  # how much time to wait before we show evidence
+    timeToRelease = 3.15  # how much time to wait before evidence flies off to toon or pan
     throwPaperEndTime = 4.33
- 
 
     def __init__(self, cr):
         """__init__(cr)"""
 
         self.flyingEvidenceTrack = None
-        
+
         try:
             self.DistributedSuit_initialized
-        except:
+        except BaseException:
             self.DistributedSuit_initialized = 1
             DistributedSuitBase.DistributedSuitBase.__init__(self, cr)
 
@@ -79,7 +79,7 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
                              ['PostThrowAttack',
                               'neutral',
                               'Stunned']
-                              ),
+                             ),
                  State.State('PostThrowAttack',
                              self.enterPostThrowAttack,
                              self.exitPostThrowAttack,
@@ -96,11 +96,11 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
                              self.exitWaitForBattle,
                              ['Battle']),
                  ],
-                        # Initial state
-                        'Off',
-                        # Final state
-                        'Off',
-                       )
+                # Initial state
+                'Off',
+                # Final state
+                'Off',
+            )
 
             self.fsm.enterInitialState()
 
@@ -115,16 +115,14 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
         self.notify.debug('DLBS.announceGenerate')
 
         colNode = self.find('**/distAvatarCollNode*')
-        colNode.setTag('pieCode',str(ToontownGlobals.PieCodeLawyer))
+        colNode.setTag('pieCode', str(ToontownGlobals.PieCodeLawyer))
 
         self.attackEvidenceA = self.getEvidence(True)
         self.attackEvidenceB = self.getEvidence(True)
         self.attackEvidence = self.attackEvidenceA
 
-
-        
         self.prosecuteEvidence = self.getEvidence(False)
-        #self.setState('neutral')
+        # self.setState('neutral')
 
         self.hideName()
         self.setPickable(False)
@@ -142,13 +140,11 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
         self.setState('Off')
         DistributedSuitBase.DistributedSuitBase.disable(self)
         self.cleanupIntervals()
-        
 
         #del self.boss.gavels[self.index]
 
         self.boss = None
 
-        
         return
 
     def delete(self):
@@ -163,7 +159,7 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
         """
         try:
             self.DistributedSuit_deleted
-        except:
+        except BaseException:
             self.DistributedSuit_deleted = 1
             self.notify.debug("DistributedSuit %d: deleting" % self.getDoId())
 
@@ -194,7 +190,7 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
 
         toonId = base.localAvatar.getDoId()
         self.notify.debug('Distributed suit: requesting a Battle with ' +
-                           'toon: %d' % toonId)
+                          'toon: %d' % toonId)
         self.d_requestBattle(self.getPos(), self.getHpr())
 
         # the suit on this machine only will go into wait for battle while it
@@ -203,7 +199,6 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
         self.setState('WaitForBattle')
 
         return None
-
 
     # Each state will have an enter function, an exit function,
     # and a datagram handler, which will be set during each enter function.
@@ -242,33 +237,31 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
 
     # Defined in DistributedSuitBase.py
 
-
     ##### Neutral state #####
 
     def enterNeutral(self):
         self.notify.debug("enterNeutral")
         # Get ready to pass through a door.
         self.notify.debug('DistributedLawbotBossSuit: Neutral')
-        #self.resumePath(0)
+        # self.resumePath(0)
         self.loop('neutral', 0)
-        
 
     def exitNeutral(self):
         self.notify.debug("exitNeutral")
         return
 
     ##### WaitForBattle state #####
-    
 
     ##### WaitForBattle state #####
 
     # Defined in DistributedSuitBase.py
 
-    def doAttack(self, x1, y1, z1, x2,y2,z2):
-        self.notify.debug("x1=%.2f y1=%.2f z2=%.2f x2=%.2f y2=%.2f z2=%.2f" % (x1,y1,z1,x2,y2,z2))
+    def doAttack(self, x1, y1, z1, x2, y2, z2):
+        self.notify.debug(
+            f"x1={x1:.2f} y1={y1:.2f} z2={z1:.2f} x2={x2:.2f} y2={y2:.2f} z2={z2:.2f}")
         #import pdb; pdb.set_trace()
-        
-        self.curTargetPt = Point3(x2,y2,z2)
+
+        self.curTargetPt = Point3(x2, y2, z2)
         self.fsm.request('PreThrowAttack')
         return
 
@@ -277,56 +270,53 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
         #nodePath = self.nodePath
         nodePath = render
 
-        node = nodePath.attachNewNode('attackEvidence-%s' % self.doId)
-        node.setPos(x1,y1,z1)
-        #attackEvidence.reparentTo(node)
+        node = nodePath.attachNewNode(f'attackEvidence-{self.doId}')
+        node.setPos(x1, y1, z1)
+        # attackEvidence.reparentTo(node)
 
-        duration = 3.0; #decrease this to make it the books fly faster
+        duration = 3.0  # decrease this to make it the books fly faster
 
         throwName = self.uniqueName('lawyerAttack')
 
-        throwingSeq = self.makeAttackThrowingTrack(attackEvidence, duration, Point3(x2,y2,z2))
-        
+        throwingSeq = self.makeAttackThrowingTrack(
+            attackEvidence, duration, Point3(x2, y2, z2))
+
         fullSequence = Sequence(
             throwingSeq,
-            name = throwName
-            )
+            name=throwName
+        )
 
-            
-            
         self.activeIntervals[throwName] = fullSequence
         fullSequence.start()
-            
-        pass
 
+        pass
 
     def doProsecute(self):
         self.notify.debug('doProsecute')
         #import pdb; pdb.set_trace()
 
-        
         bounds = self.boss.prosecutionColNodePath.getBounds()
-        panCenter = bounds.getCenter();
+        panCenter = bounds.getCenter()
         localPos = panCenter
-        prosecutionPanPos = render.getRelativePoint(self.boss.prosecutionColNodePath,localPos)
+        prosecutionPanPos = render.getRelativePoint(
+            self.boss.prosecutionColNodePath, localPos)
         self.curTargetPt = prosecutionPanPos
-        
+
         self.fsm.request('PreThrowProsecute')
         return
 
-        
         attackEvidence = self.getEvidence(False)
 
         #nodePath = self.nodePath
         nodePath = render
 
-        node = nodePath.attachNewNode('prosecuteEvidence-%s' % self.doId)
+        node = nodePath.attachNewNode(f'prosecuteEvidence-{self.doId}')
         node.setPos(self.getPos())
-        #attackEvidence.reparentTo(node)
+        # attackEvidence.reparentTo(node)
 
-        duration = ToontownGlobals.LawbotBossLawyerToPanTime; #decrease this to make it the books fly faster
+        # decrease this to make it the books fly faster
+        duration = ToontownGlobals.LawbotBossLawyerToPanTime
 
-        
         throwName = self.uniqueName('lawyerProsecute')
 
         """
@@ -335,56 +325,55 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
             Parallel(
                node.posInterval( duration , prosecutionPanPos, fluid = 1),
                #node.hprInterval(1, VBase3(720,0,0), fluid = 1)
-               ),                      
+               ),
             Func(node.detachNode),
             Func(self.boss.flashGreen),
             Func(self.clearInterval, throwName)
             )
         """
         #throwingSeq = self.makeThrowingTrack(node, duration, prosecutionPanPos)
-        throwingSeq = self.makeProsecuteThrowingTrack(attackEvidence, duration, prosecutionPanPos)
-        
-        
-        
+        throwingSeq = self.makeProsecuteThrowingTrack(
+            attackEvidence, duration, prosecutionPanPos)
+
         fullSequence = Sequence(
             throwingSeq,
             Func(self.boss.flashGreen),
-            Func(self.clearInterval,throwName),
-            name = throwName
-            )
+            Func(self.clearInterval, throwName),
+            name=throwName
+        )
 
         self.activeIntervals[throwName] = fullSequence
         fullSequence.start()
 
     def makeDummySequence(self):
         #import pdb; pdb.set_trace()
-        retval =Sequence(Wait(10))
+        retval = Sequence(Wait(10))
         return retval
-    
-    def makeProsecuteThrowingTrack(self, evidence, inFlightDuration, hitPos):
-       
-        suitTrack = Sequence()
-        suitTrack.append(ActorInterval(self,'throw-paper'))
 
-        throwPaperDuration = suitTrack.getDuration();
+    def makeProsecuteThrowingTrack(self, evidence, inFlightDuration, hitPos):
+
+        suitTrack = Sequence()
+        suitTrack.append(ActorInterval(self, 'throw-paper'))
+
+        throwPaperDuration = suitTrack.getDuration()
         #self.notify.debug('throwPaperDuration=%f' % throwPaperDuration)
 
         inFlight = Parallel(
-            evidence.posInterval(inFlightDuration,hitPos,fluid=1)
-            )
+            evidence.posInterval(inFlightDuration, hitPos, fluid=1)
+        )
 
         origHpr = self.getHpr()
         self.headsUp(hitPos)
         newHpr = self.getHpr()
         self.setHpr(origHpr)
         rotateTrack = Sequence(
-            self.hprInterval( self.timeToShow, newHpr, fluid = 1)
-            )
+            self.hprInterval(self.timeToShow, newHpr, fluid=1)
+        )
 
-        
         propTrack = Sequence(
             Func(evidence.hide),
-            Func(evidence.setPos,0,0.5,-0.3), #do some jiggerring to center it on the hand
+            # do some jiggerring to center it on the hand
+            Func(evidence.setPos, 0, 0.5, -0.3),
             Func(evidence.reparentTo, self.getRightHand()),
             Wait(self.timeToShow),
             Func(evidence.show),
@@ -393,23 +382,22 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
             Func(self.makeDummySequence),
             inFlight,
             Func(evidence.detachNode)
-            )
-            
-        
-        throwingTrack =  Parallel(suitTrack, propTrack, rotateTrack)
+        )
+
+        throwingTrack = Parallel(suitTrack, propTrack, rotateTrack)
         #suitTrackDuration = suitTrack.getDuration()
         #propTrackDuration = propTrack.getDuration()
         #throwingTrackDuration = throwingTrack.getDuration()
 
-        #self.notify.debug("suit=%f prop=%f throwing=%f" %
+        # self.notify.debug("suit=%f prop=%f throwing=%f" %
         #                  (suitTrackDuration, propTrackDuration,throwingTrackDuration))
         return throwingTrack
 
     def makeAttackThrowingTrack(self, evidence, inFlightDuration, hitPos):
         suitTrack = Sequence()
-        suitTrack.append(ActorInterval(self,'throw-paper'))
+        suitTrack.append(ActorInterval(self, 'throw-paper'))
 
-        throwPaperDuration = suitTrack.getDuration();
+        throwPaperDuration = suitTrack.getDuration()
         #self.notify.debug('throwPaperDuration=%f' % throwPaperDuration)
 
         origHpr = self.getHpr()
@@ -417,38 +405,42 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
         newHpr = self.getHpr()
         self.setHpr(origHpr)
         rotateTrack = Sequence(
-            self.hprInterval( self.timeToShow, newHpr, fluid = 1)
-            )
-               
+            self.hprInterval(self.timeToShow, newHpr, fluid=1)
+        )
+
         propTrack = Sequence(
             Func(evidence.hide),
-            Func(evidence.setPos,0,0.5,-0.3), #do some jiggerring to center it on the hand
+            # do some jiggerring to center it on the hand
+            Func(evidence.setPos, 0, 0.5, -0.3),
             Func(evidence.reparentTo, self.getRightHand()),
             Wait(self.timeToShow),
             Func(evidence.show),
             Wait(self.timeToRelease - self.timeToShow),
             Func(evidence.wrtReparentTo, render),
-            Func(evidence.setZ,1.3), #lower so big cogs like legal eagle won't be firing too high
-            evidence.posInterval(inFlightDuration,hitPos,fluid=1),
+            # lower so big cogs like legal eagle won't be firing too high
+            Func(evidence.setZ, 1.3),
+            evidence.posInterval(inFlightDuration, hitPos, fluid=1),
             Func(evidence.detachNode)
-            )
-            
-        
-        throwingTrack =  Parallel(suitTrack, propTrack, rotateTrack)
+        )
+
+        throwingTrack = Parallel(suitTrack, propTrack, rotateTrack)
         #suitTrackDuration = suitTrack.getDuration()
         #propTrackDuration = propTrack.getDuration()
         #throwingTrackDuration = throwingTrack.getDuration()
 
-        #self.notify.debug("suit=%f prop=%f throwing=%f" %
+        # self.notify.debug("suit=%f prop=%f throwing=%f" %
         #                  (suitTrackDuration, propTrackDuration,throwingTrackDuration))
         return throwingTrack
 
-
     def makePreThrowAttackTrack(self, evidence, inFlightDuration, hitPos):
         suitTrack = Sequence()
-        suitTrack.append(ActorInterval(self,'throw-paper', endTime=self.timeToRelease))
+        suitTrack.append(
+            ActorInterval(
+                self,
+                'throw-paper',
+                endTime=self.timeToRelease))
 
-        throwPaperDuration = suitTrack.getDuration();
+        throwPaperDuration = suitTrack.getDuration()
         #self.notify.debug('throwPaperDuration=%f' % throwPaperDuration)
 
         origHpr = self.getHpr()
@@ -456,28 +448,28 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
         newHpr = self.getHpr()
         self.setHpr(origHpr)
         rotateTrack = Sequence(
-            self.hprInterval( self.timeToShow, newHpr, fluid = 1)
-            )
-               
+            self.hprInterval(self.timeToShow, newHpr, fluid=1)
+        )
+
         propTrack = Sequence(
             Func(evidence.hide),
-            Func(evidence.setPos,0,0.5,-0.3), #do some jiggerring to center it on the hand
-            Func(evidence.setScale,1),
-            Func(evidence.setHpr,0,0,0),
+            # do some jiggerring to center it on the hand
+            Func(evidence.setPos, 0, 0.5, -0.3),
+            Func(evidence.setScale, 1),
+            Func(evidence.setHpr, 0, 0, 0),
             Func(evidence.reparentTo, self.getRightHand()),
             Wait(self.timeToShow),
             Func(evidence.show),
             Wait(self.timeToRelease - self.timeToShow),
-            )
-            
-        
-        throwingTrack =  Parallel(suitTrack, propTrack, rotateTrack)
+        )
+
+        throwingTrack = Parallel(suitTrack, propTrack, rotateTrack)
         #suitTrackDuration = suitTrack.getDuration()
         #propTrackDuration = propTrack.getDuration()
         #throwingTrackDuration = throwingTrack.getDuration()
 
-        #self.notify.debug("suit=%f prop=%f throwing=%f" %
-        
+        # self.notify.debug("suit=%f prop=%f throwing=%f" %
+
         return throwingTrack
 
     def makePostThrowAttackTrack(self, evidence, inFlightDuration, hitPos):
@@ -485,64 +477,73 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
         will return two tracks, one for the suit, other for the evidence in flight
         """
         suitTrack = Sequence()
-        suitTrack.append(ActorInterval(self,'throw-paper', startTime=self.timeToRelease))
+        suitTrack.append(
+            ActorInterval(
+                self,
+                'throw-paper',
+                startTime=self.timeToRelease))
 
         propTrack = Sequence(
             Func(evidence.wrtReparentTo, render),
-            Func(evidence.setScale,1),
-            Func(evidence.show),            
-            Func(evidence.setZ,1.3), #lower so big cogs like legal eagle won't be firing too high
-            evidence.posInterval(inFlightDuration,hitPos,fluid=1),
+            Func(evidence.setScale, 1),
+            Func(evidence.show),
+            # lower so big cogs like legal eagle won't be firing too high
+            Func(evidence.setZ, 1.3),
+            evidence.posInterval(inFlightDuration, hitPos, fluid=1),
             Func(evidence.hide)
-            )
+        )
 
         return suitTrack, propTrack
 
     def makePreThrowProsecuteTrack(self, evidence, inFlightDuration, hitPos):
-        return self.makePreThrowAttackTrack( evidence, inFlightDuration, hitPos)
+        return self.makePreThrowAttackTrack(evidence, inFlightDuration, hitPos)
         pass
-
 
     def makePostThrowProsecuteTrack(self, evidence, inFlightDuration, hitPos):
         suitTrack = Sequence()
-        suitTrack.append(ActorInterval(self,'throw-paper', startTime=self.timeToRelease))
+        suitTrack.append(
+            ActorInterval(
+                self,
+                'throw-paper',
+                startTime=self.timeToRelease))
 
         propTrack = Sequence(
             Func(evidence.wrtReparentTo, render),
-            Func(evidence.setScale,1),            
+            Func(evidence.setScale, 1),
             Func(evidence.show),
-            evidence.posInterval(inFlightDuration,hitPos,fluid=1),
+            evidence.posInterval(inFlightDuration, hitPos, fluid=1),
             Func(evidence.hide)
-            )
+        )
 
         return suitTrack, propTrack
-    
+
         pass
 
-    
-    def getEvidence(self, usedForAttack = False):
-        model =  loader.loadModel('phase_5/models/props/lawbook')
+    def getEvidence(self, usedForAttack=False):
+        model = loader.loadModel('phase_5/models/props/lawbook')
 
         if usedForAttack:
             bounds = model.getBounds()
             center = bounds.getCenter()
             radius = bounds.getRadius()
 
-            sphere = CollisionSphere(center.getX(),center.getY(),center.getZ(), radius)
+            sphere = CollisionSphere(
+                center.getX(), center.getY(), center.getZ(), radius)
             colNode = CollisionNode('BossZap')
-            colNode.setTag('attackCode',str(ToontownGlobals.BossCogLawyerAttack))
+            colNode.setTag(
+                'attackCode', str(
+                    ToontownGlobals.BossCogLawyerAttack))
             colNode.addSolid(sphere)
 
             #self.evidenceNodePath = model.attachNewNode(colNode)
             model.attachNewNode(colNode)
 
-            #make it ghostly to explain why it passes through the scale =)
+            # make it ghostly to explain why it passes through the scale =)
             model.setTransparency(1)
-            model.setAlphaScale(0.5)                      
+            model.setAlphaScale(0.5)
 
         return model
-    
- 
+
     def cleanupIntervals(self):
         for interval in list(self.activeIntervals.values()):
             interval.finish()
@@ -560,8 +561,7 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
             if name in self.activeIntervals:
                 del self.activeIntervals[name]
         else:
-            self.notify.debug('interval: %s already cleared' % name)
-
+            self.notify.debug(f'interval: {name} already cleared')
 
     def setBossCogId(self, bossCogId):
         self.bossCogId = bossCogId
@@ -576,173 +576,168 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
     def doStun(self):
         self.notify.debug('doStun')
         self.fsm.request('Stunned')
-        
 
     def enterPreThrowProsecute(self):
         assert(self.notify.debug('enterPreThrowProsecute'))
 
-        #just in case he got stunned
-        #self.attackEvidence.hide()
-        
-        duration = ToontownGlobals.LawbotBossLawyerToPanTime; #decrease this to make it the books fly faster
+        # just in case he got stunned
+        # self.attackEvidence.hide()
+
+        # decrease this to make it the books fly faster
+        duration = ToontownGlobals.LawbotBossLawyerToPanTime
         throwName = self.uniqueName('preThrowProsecute')
 
+        preThrowTrack = self.makePreThrowProsecuteTrack(
+            self.prosecuteEvidence, duration, self.curTargetPt)
 
-        preThrowTrack = self.makePreThrowProsecuteTrack(self.prosecuteEvidence,duration, self.curTargetPt)
-
-        #postThrowTrack, self.flyingEvidenceTrack = self.makePostThrowProsecuteTrack(
+        # postThrowTrack, self.flyingEvidenceTrack = self.makePostThrowProsecuteTrack(
         #    attackEvidence,duration, self.curTargetPt)
 
         fullSequence = Sequence(
             preThrowTrack,
-            Func(self.requestStateIfNotInFlux,'PostThrowProsecute'),
-            #Func(self.fsm.request,'PostThrowProsecute'),
+            Func(self.requestStateIfNotInFlux, 'PostThrowProsecute'),
+            # Func(self.fsm.request,'PostThrowProsecute'),
             #Parallel(postThrowTrack, self.flyingEvidenceTrack),
-            name = throwName,
-            )
-            
-            
+            name=throwName,
+        )
+
         self.activeIntervals[throwName] = fullSequence
         fullSequence.start()
-        
+
         return
 
     def exitPreThrowProsecute(self):
         assert(self.notify.debug('exitPreThrowProsecute'))
         throwName = self.uniqueName('preThrowProsecute')
         if (throwName in self.activeIntervals):
-            #self.activeIntervals[throwName].finish()
+            # self.activeIntervals[throwName].finish()
             self.activeIntervals[throwName].pause()
             del self.activeIntervals[throwName]
         return
-        
-             
+
     def enterPostThrowProsecute(self):
         assert(self.notify.debug('enterPostThrowProsecute'))
-        duration = ToontownGlobals.LawbotBossLawyerToPanTime; #decrease this to make it the books fly faster
+        # decrease this to make it the books fly faster
+        duration = ToontownGlobals.LawbotBossLawyerToPanTime
         throwName = self.uniqueName('postThrowProsecute')
 
-
         postThrowTrack, self.flyingEvidenceTrack = self.makePostThrowProsecuteTrack(
-            self.prosecuteEvidence,duration, self.curTargetPt)
+            self.prosecuteEvidence, duration, self.curTargetPt)
 
-        #waitKludgeTime = 1.0 
+        #waitKludgeTime = 1.0
         fullSequence = Sequence(
             postThrowTrack,
-            #Wait(waitKludgeTime),
-            Func(self.requestStateIfNotInFlux,'neutral'),   
-            #Func(self.fsm.request,'neutral'),
-            name = throwName,
-            )
-            
-            
+            # Wait(waitKludgeTime),
+            Func(self.requestStateIfNotInFlux, 'neutral'),
+            # Func(self.fsm.request,'neutral'),
+            name=throwName,
+        )
+
         self.activeIntervals[throwName] = fullSequence
         fullSequence.start()
 
         flyName = self.uniqueName('flyingEvidence')
         self.activeIntervals[flyName] = self.flyingEvidenceTrack
-        self.flyingEvidenceTrack.append(Func(self.finishedWithFlying,'prosecute'))        
+        self.flyingEvidenceTrack.append(
+            Func(self.finishedWithFlying, 'prosecute'))
         self.flyingEvidenceTrack.start()
         return
-
 
     def exitPostThrowProsecute(self):
         assert(self.notify.debug('exitPostThrowProsecute'))
 
-        #RAU note that we do not stop the flyingEvidenceTrack
+        # RAU note that we do not stop the flyingEvidenceTrack
         throwName = self.uniqueName('postThrowProsecute')
         if (throwName in self.activeIntervals):
             self.activeIntervals[throwName].finish()
             del self.activeIntervals[throwName]
         return
-        
+
     def requestStateIfNotInFlux(self, state):
         if not self.fsm._ClassicFSM__internalStateInFlux:
             self.fsm.request(state)
-    
+
     def enterPreThrowAttack(self):
         assert(self.notify.debug('enterPreThrowAttack'))
 
-        #just in case he got stunned
-        #self.prosecuteEvidence.hide()
+        # just in case he got stunned
+        # self.prosecuteEvidence.hide()
 
         if self.attackEvidence == self.attackEvidenceA:
             self.attackEvidence = self.attackEvidenceB
         else:
             self.attackEvidence = self.attackEvidenceA
-        
-        
-        duration = 3.0; #decrease this to make it the books fly faster
 
+        duration = 3.0  # decrease this to make it the books fly faster
 
         throwName = self.uniqueName('preThrowAttack')
 
+        preThrowTrack = self.makePreThrowAttackTrack(
+            self.attackEvidence, duration, self.curTargetPt)
 
-        preThrowTrack = self.makePreThrowAttackTrack(self.attackEvidence,duration, self.curTargetPt)
-
-        #postThrowTrack, self.flyingEvidenceTrack = self.makePostThrowAttackTrack(
+        # postThrowTrack, self.flyingEvidenceTrack = self.makePostThrowAttackTrack(
         #    attackEvidence,duration, self.curTargetPt)
 
         fullSequence = Sequence(
             preThrowTrack,
-            Func(self.requestStateIfNotInFlux,'PostThrowAttack'),
-            #Func(self.fsm.request,'PostThrowAttack'),
+            Func(self.requestStateIfNotInFlux, 'PostThrowAttack'),
+            # Func(self.fsm.request,'PostThrowAttack'),
             #Parallel(postThrowTrack, self.flyingEvidenceTrack),
-            name = throwName,
-            )
-            
-            
+            name=throwName,
+        )
+
         self.activeIntervals[throwName] = fullSequence
         fullSequence.start()
-        
+
         return
 
     def exitPreThrowAttack(self):
         assert(self.notify.debug('exitPreThrowAttack'))
         throwName = self.uniqueName('preThrowAttack')
         if (throwName in self.activeIntervals):
-            #self.activeIntervals[throwName].finish()
+            # self.activeIntervals[throwName].finish()
             self.activeIntervals[throwName].pause()
             del self.activeIntervals[throwName]
         return
-             
+
     def enterPostThrowAttack(self):
         assert(self.notify.debug('enterPostThrowAttack'))
-        #attackEvidence = self.getEvidence(True)        
-        duration = 3.0; #decrease this to make it the books fly faster
+        #attackEvidence = self.getEvidence(True)
+        duration = 3.0  # decrease this to make it the books fly faster
 
         throwName = self.uniqueName('postThrowAttack')
 
-
         postThrowTrack, self.flyingEvidenceTrack = self.makePostThrowAttackTrack(
-            self.attackEvidence,duration, self.curTargetPt)
+            self.attackEvidence, duration, self.curTargetPt)
 
         #waitKludgeTime = ToontownGlobals.LawbotBossLawyerCycleTime - self.throwPaperEndTime - 0.1
         fullSequence = Sequence(
             postThrowTrack,
-            #Wait(waitKludgeTime),
-            Func(self.requestStateIfNotInFlux,'neutral'),   
-            #Func(self.fsm.request,'neutral'),
-            name = throwName,
-            )
+            # Wait(waitKludgeTime),
+            Func(self.requestStateIfNotInFlux, 'neutral'),
+            # Func(self.fsm.request,'neutral'),
+            name=throwName,
+        )
 
-        self.notify.debug('duration of postThrowAttack = %f' % fullSequence.getDuration())
-            
+        self.notify.debug(
+            f'duration of postThrowAttack = {fullSequence.getDuration():f}')
+
         self.activeIntervals[throwName] = fullSequence
         fullSequence.start()
 
         flyName = self.uniqueName('flyingEvidence')
         self.activeIntervals[flyName] = self.flyingEvidenceTrack
-        self.flyingEvidenceTrack.append(Func(self.finishedWithFlying,'attack'))        
+        self.flyingEvidenceTrack.append(
+            Func(self.finishedWithFlying, 'attack'))
         self.flyingEvidenceTrack.start()
         return
 
     def finishedWithFlying(self, str):
-        self.notify.debug('finished flyingEvidenceTrack %s' % str)
+        self.notify.debug(f'finished flyingEvidenceTrack {str}')
 
     def exitPostThrowAttack(self):
         assert(self.notify.debug('exitPostThrowAttack'))
-        #RAU note that we do not stop the flyingEvidenceTrack
+        # RAU note that we do not stop the flyingEvidenceTrack
         throwName = self.uniqueName('postThrowAttack')
         if (throwName in self.activeIntervals):
             self.activeIntervals[throwName].finish()
@@ -752,19 +747,18 @@ class DistributedLawbotBossSuit(DistributedSuitBase.DistributedSuitBase):
     def enterStunned(self):
         assert(self.notify.debug('enterStunned'))
 
-        stunSequence = MovieUtil.createSuitStunInterval(self, 0, ToontownGlobals.LawbotBossLawyerStunTime)
+        stunSequence = MovieUtil.createSuitStunInterval(
+            self, 0, ToontownGlobals.LawbotBossLawyerStunTime)
         #seqName = self.uniqueName('stunSequence')
         seqName = stunSequence.getName()
-        stunSequence.append(Func(self.fsm.request,'neutral'))
+        stunSequence.append(Func(self.fsm.request, 'neutral'))
         self.activeIntervals[seqName] = stunSequence
         stunSequence.start()
-        
+
         return
-        
+
     def exitStunned(self):
         assert(self.notify.debug('exitStunned'))
         self.prosecuteEvidence.hide()
         self.attackEvidence.hide()
         return
-
-     

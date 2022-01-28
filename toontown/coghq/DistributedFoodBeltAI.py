@@ -3,18 +3,23 @@ from direct.fsm import FSM
 from direct.directnotify import DirectNotifyGlobal
 from toontown.coghq import FoodBeltBase
 
-class DistributedFoodBeltAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM, FoodBeltBase.FoodBeltBase):
+
+class DistributedFoodBeltAI(
+        DistributedObjectAI.DistributedObjectAI,
+        FSM.FSM,
+        FoodBeltBase.FoodBeltBase):
     """ This class represents an AI side conveyer belt bringing cog food out.
     The DistributedLawbotBoss creates 2 of these for the CEO
     battle scene. """
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedFoodBeltAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedFoodBeltAI')
 
     def __init__(self, air, boss, index):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
         FSM.FSM.__init__(self, 'DistributedFoodBeltAI')
-        self.boss = boss # the CEO himself
-        self.index = index # 0-left side belt, 1-right side belt
+        self.boss = boss  # the CEO himself
+        self.index = index  # 0-left side belt, 1-right side belt
 
     def delete(self):
         """Delete ourself."""
@@ -30,7 +35,7 @@ class DistributedFoodBeltAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM, Fo
 
     def setState(self, state):
         self.request(state)
-    
+
     def d_setState(self, state):
         newState = state
         if state == 'On':
@@ -40,18 +45,18 @@ class DistributedFoodBeltAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM, Fo
         elif state == 'Inactive':
             newState = 'I'
         elif state == 'Toonup':
-            newState = 'T'                
+            newState = 'T'
         else:
             assert(self.notify.error("Unknown state %s", state))
-        
+
         self.sendUpdate('setState', [newState])
 
     def b_setState(self, state):
         self.request(state)
-        self.d_setState( state) 
+        self.d_setState(state)
 
     def turnOn(self):
-        #we've entered battle two so start move
+        # we've entered battle two so start move
         self.b_setState('On')
 
     def goInactive(self):
@@ -60,7 +65,7 @@ class DistributedFoodBeltAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM, Fo
 
     def goToonup(self):
         """Force us into the inactive state."""
-        self.b_setState('Toonup')           
+        self.b_setState('Toonup')
 
     ### FSM States ###
     def enterOn(self):
@@ -85,4 +90,4 @@ class DistributedFoodBeltAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM, Fo
 
     def exitInactive(slef):
         """Handle exiting the inactive state."""
-        pass        
+        pass

@@ -4,10 +4,11 @@ from direct.directnotify import DirectNotifyGlobal
 from toontown.battle import SuitBattleGlobals
 from . import DistributedSuitBaseAI
 
+
 class DistributedTutorialSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
 
     notify = DirectNotifyGlobal.directNotify.newCategory(
-                                        'DistributedTutorialSuitAI')
+        'DistributedTutorialSuitAI')
 
     def __init__(self, air, suitPlanner):
         """__init__(air, suitPlanner)"""
@@ -24,9 +25,9 @@ class DistributedTutorialSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
         toonId = self.air.getAvatarIdFromSender()
 
         if self.notify.getDebug():
-            self.notify.debug( str( self.getDoId() ) + \
-                               str( self.zoneId ) + \
-                               ': request battle with toon: %d' % toonId )
+            self.notify.debug(str(self.getDoId()) +
+                              str(self.zoneId) +
+                              ': request battle with toon: %d' % toonId)
 
         # Store the suit's actual pos and hpr on the client
         self.confrontPos = Point3(x, y, z)
@@ -36,14 +37,18 @@ class DistributedTutorialSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
         if (self.sp.requestBattle(self.zoneId, self, toonId)):
             self.acceptOnce(self.getDeathEvent(), self._logDeath, [toonId])
             if self.notify.getDebug():
-                self.notify.debug( "Suit %d requesting battle in zone %d" %
-                                   (self.getDoId(), self.zoneId) )
+                self.notify.debug("Suit %d requesting battle in zone %d" %
+                                  (self.getDoId(), self.zoneId))
         else:
             # Suit tells toon to get lost
             if self.notify.getDebug():
-                self.notify.debug('requestBattle from suit %d - denied by battle manager' % (self.getDoId()))
-            self.b_setBrushOff(SuitDialog.getBrushOffIndex(self.getStyleName()))
-            self.d_denyBattle( toonId )
+                self.notify.debug(
+                    'requestBattle from suit %d - denied by battle manager' %
+                    (self.getDoId()))
+            self.b_setBrushOff(
+                SuitDialog.getBrushOffIndex(
+                    self.getStyleName()))
+            self.d_denyBattle(toonId)
 
     def getConfrontPosHpr(self):
         """ getConfrontPosHpr()

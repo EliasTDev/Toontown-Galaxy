@@ -13,10 +13,11 @@ from . import MintShelf
 from . import PathMasterEntity
 from . import RenderingEntity
 
+
 class FactoryEntityCreator(EntityCreator.EntityCreator):
     def __init__(self, level):
         EntityCreator.EntityCreator.__init__(self, level)
-        
+
         # create short aliases for EntityCreator create funcs
         nothing = EntityCreator.nothing
         _nonlocal = EntityCreator._nonlocal
@@ -27,7 +28,7 @@ class FactoryEntityCreator(EntityCreator.EntityCreator):
             'battleBlocker': _nonlocal,
             'beanBarrel': _nonlocal,
             'button': _nonlocal,
-            'conveyorBelt' : ConveyorBelt.ConveyorBelt,
+            'conveyorBelt': ConveyorBelt.ConveyorBelt,
             'crate': _nonlocal,
             'door': _nonlocal,
             'directionalCell': _nonlocal,
@@ -35,8 +36,8 @@ class FactoryEntityCreator(EntityCreator.EntityCreator):
             'gear': GearEntity.GearEntity,
             'goon': _nonlocal,
             'gridGoon': _nonlocal,
-            'golfGreenGame' : _nonlocal,
-            'goonClipPlane' : GoonClipPlane.GoonClipPlane,
+            'golfGreenGame': _nonlocal,
+            'goonClipPlane': GoonClipPlane.GoonClipPlane,
             'grid': _nonlocal,
             'healBarrel': _nonlocal,
             'levelMgr': FactoryLevelMgr.FactoryLevelMgr,
@@ -58,4 +59,4 @@ class FactoryEntityCreator(EntityCreator.EntityCreator):
             'trigger': _nonlocal,
             'moleField': _nonlocal,
             'maze': _nonlocal,
-            })
+        })

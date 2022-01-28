@@ -5,6 +5,7 @@ from toontown.coghq import MintLayout
 from direct.showbase import DirectObject
 import random
 
+
 class MintManagerAI(DirectObject.DirectObject):
 
     notify = DirectNotifyGlobal.directNotify.newCategory('MintManagerAI')
@@ -23,8 +24,8 @@ class MintManagerAI(DirectObject.DirectObject):
     def createMint(self, mintId, players):
         # check for ~mintId
         for avId in players:
-            if bboard.has('mintId-%s' % avId):
-                mintId = bboard.get('mintId-%s' % avId)
+            if bboard.has(f'mintId-{avId}'):
+                mintId = bboard.get(f'mintId-{avId}')
                 break
 
         numFloors = ToontownGlobals.MintNumFloors[mintId]
@@ -32,17 +33,17 @@ class MintManagerAI(DirectObject.DirectObject):
         floor = random.randrange(numFloors)
         # check for ~mintFloor
         for avId in players:
-            if bboard.has('mintFloor-%s' % avId):
-                floor = bboard.get('mintFloor-%s' % avId)
+            if bboard.has(f'mintFloor-{avId}'):
+                floor = bboard.get(f'mintFloor-{avId}')
                 # bounds check
                 floor = max(0, floor)
-                floor = min(floor, numFloors-1)
+                floor = min(floor, numFloors - 1)
                 break
 
         # check for ~mintRoom
         for avId in players:
-            if bboard.has('mintRoom-%s' % avId):
-                roomId = bboard.get('mintRoom-%s' % avId)
+            if bboard.has(f'mintRoom-{avId}'):
+                roomId = bboard.get(f'mintRoom-{avId}')
                 for i in range(numFloors):
                     layout = MintLayout.MintLayout(mintId, i)
                     if roomId in layout.getRoomIds():

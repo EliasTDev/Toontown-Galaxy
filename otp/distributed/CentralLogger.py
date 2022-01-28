@@ -9,6 +9,7 @@ ReportPersonalInfo = "MODERATION_PERSONAL_INFO"
 ReportRudeBehavior = "MODERATION_RUDE_BEHAVIOR"
 ReportBadName = "MODERATION_BAD_NAME"
 
+
 class CentralLogger(DistributedObjectGlobal):
 
     # Keep track of all the players reported.
@@ -19,7 +20,12 @@ class CentralLogger(DistributedObjectGlobal):
         # Has this playerId, avatarId already been reported this session?
         return (targetDISLId, targetAvId) in self.PlayersReportedThisSession
 
-    def reportPlayer(self, category, targetDISLId, targetAvId, description = "None"):
+    def reportPlayer(
+            self,
+            category,
+            targetDISLId,
+            targetAvId,
+            description="None"):
         # You can only report another player once per session.
         if self.hasReportedPlayer(targetDISLId, targetAvId):
             # Already reported, dont resend the report.
@@ -28,7 +34,9 @@ class CentralLogger(DistributedObjectGlobal):
         # Remember that we reported this user already.
         self.PlayersReportedThisSession[(targetDISLId, targetAvId)] = 1
         # Send the update. This shows up in the server event log.
-        self.sendUpdate("sendMessage", [category, REPORT_PLAYER, targetDISLId, targetAvId])
+        self.sendUpdate(
+            "sendMessage", [
+                category, REPORT_PLAYER, targetDISLId, targetAvId])
         return True
 
     def writeClientEvent(self, eventString):

@@ -5,10 +5,10 @@ import sys
 
 args = sys.stdin.read()
 
-filepath,filename,startRow,endRow = pickle.loads(args)
+filepath, filename, startRow, endRow = pickle.loads(args)
 
 mesh = NavMesh(filepath, filename)
-mesh.generatePathData((startRow,endRow))
+mesh.generatePathData((startRow, endRow))
 mesh.printPathData()
 sys.stdout.flush()
 sys.stdout.close()

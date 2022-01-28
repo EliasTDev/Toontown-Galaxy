@@ -3,6 +3,7 @@ from direct.distributed import DistributedObjectAI
 from direct.directutil import DistributedLargeBlobSenderAI
 from .SpecImports import *
 
+
 class DistributedInGameEditorAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory(
         'DistributedInGameEditorAI')
@@ -20,7 +21,7 @@ class DistributedInGameEditorAI(DistributedObjectAI.DistributedObjectAI):
         DistributedObjectAI.DistributedObjectAI.generate(self)
 
         simbase.levelEditor = self
-        
+
         self.acceptOnce(self.air.getAvatarExitEvent(self.editorAvId),
                         self.setFinished)
 
@@ -43,7 +44,7 @@ class DistributedInGameEditorAI(DistributedObjectAI.DistributedObjectAI):
 
     def getEditUsername(self):
         return self.editUsername
-    
+
     def getLevelDoId(self):
         return self.levelDoId
 
@@ -55,9 +56,9 @@ class DistributedInGameEditorAI(DistributedObjectAI.DistributedObjectAI):
         specStr = repr(spec)
 
         largeBlob = DistributedLargeBlobSenderAI.\
-                    DistributedLargeBlobSenderAI(
-            self.air, self.zoneId, self.editorAvId, specStr,
-            useDisk=simbase.config.GetBool('spec-by-disk', 1))
+            DistributedLargeBlobSenderAI(
+                self.air, self.zoneId, self.editorAvId, specStr,
+                useDisk=simbase.config.GetBool('spec-by-disk', 1))
         self.sendUpdateToAvatarId(self.editorAvId,
                                   'setSpecSenderDoId', [largeBlob.doId])
 

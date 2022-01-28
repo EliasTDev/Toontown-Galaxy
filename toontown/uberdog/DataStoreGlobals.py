@@ -7,11 +7,12 @@ GEN = 2
 TYPES = {
     # id : { classType, }
     # Trick-or-treat scavenger hunt
-    SH : ( ScavengerHuntDataStore, ),
-    GEN : ( DataStore , ),
-    }
+    SH: (ScavengerHuntDataStore, ),
+    GEN: (DataStore, ),
+}
+
 
 def getStoreClass(type):
-    storeClass = TYPES.get(type,None)
+    storeClass = TYPES.get(type, None)
     if storeClass:
         return storeClass[0]

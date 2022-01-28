@@ -14,12 +14,13 @@ from direct.interval.IntervalGlobal import *
 import random
 from panda3d.otp import NametagGroup
 
+
 class DistributedNPCToonBase(DistributedToon.DistributedToon):
 
     def __init__(self, cr):
         try:
             self.DistributedNPCToon_initialized
-        except:
+        except BaseException:
             self.DistributedNPCToon_initialized = 1
             DistributedToon.DistributedToon.__init__(self, cr)
             self.__initCollisions()
@@ -39,7 +40,7 @@ class DistributedNPCToonBase(DistributedToon.DistributedToon):
     def delete(self):
         try:
             self.DistributedNPCToon_deleted
-        except:
+        except BaseException:
             self.DistributedNPCToon_deleted = 1
             self.__deleteCollisions()
             DistributedToon.DistributedToon.delete(self)
@@ -109,7 +110,8 @@ class DistributedNPCToonBase(DistributedToon.DistributedToon):
             self.reparentTo(npcOrigin)
             self.initPos()
         else:
-            self.notify.warning("announceGenerate: Could not find npc_origin_" + str(self.posIndex))
+            self.notify.warning(
+                "announceGenerate: Could not find npc_origin_" + str(self.posIndex))
 
     def initPos(self):
         self.clearMat()
@@ -137,7 +139,8 @@ class DistributedNPCToonBase(DistributedToon.DistributedToon):
         return 3.25
 
     def __initCollisions(self):
-        self.cSphere = CollisionTube(0., 1., 0., 0., 1., 5., self.getCollSphereRadius())
+        self.cSphere = CollisionTube(
+            0., 1., 0., 0., 1., 5., self.getCollSphereRadius())
         #self.cSphere = CollisionSphere(0., 1., 0., self.getCollSphereRadius())
         self.cSphere.setTangible(0)
         self.cSphereNode = CollisionNode("cSphereNode")
@@ -167,7 +170,7 @@ class DistributedNPCToonBase(DistributedToon.DistributedToon):
         # Ignore avatars now to prevent unnecessary requestInteractions when we know
         # this npc is busy right now. If another toon did manage to request interaction
         # before we starting ignoring, he will get a freeAvatar message from the server
-        #self.ignoreAvatars()
+        # self.ignoreAvatars()
         # Make us face each other
         # TODO: make this a lerp
         av.headsUp(self, 0, 0, 0)
@@ -194,7 +197,7 @@ class DistributedNPCToonBase(DistributedToon.DistributedToon):
         """
         This is a message from the AI used to free the avatar from movie mode
         """
-        base.localAvatar.posCamera(0,0)
+        base.localAvatar.posCamera(0, 0)
         base.cr.playGame.getPlace().setState("walk")
 
     def setPositionIndex(self, posIndex):
@@ -203,4 +206,3 @@ class DistributedNPCToonBase(DistributedToon.DistributedToon):
         Each zone has N NPCs, and N corresponding NPC origins in the model.
         """
         self.posIndex = posIndex
-

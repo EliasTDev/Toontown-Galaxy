@@ -35,7 +35,7 @@ class HolidayInfo_Yearly(HolidayInfo_Base):
         """
         HolidayInfo_Base.__init__(self, holidayClass, displayOnCalendar)
         dateElemIter = ModifiedIter(dateList)
-        for i in range(len(dateList)//2):
+        for i in range(len(dateList) // 2):
             start = dateElemIter.current()
             end = next(dateElemIter)
 
@@ -53,12 +53,12 @@ class HolidayInfo_Yearly(HolidayInfo_Base):
         """
         # t is of the form (month, day, hour, min, sec)
         # date is of the form (year, month, day, weekday)
-        return time.mktime((date[0], # year
-                            t[0], # month
-                            t[1], # day
-                            t[2], # hour
-                            t[3], # second
-                            t[4], # minute
+        return time.mktime((date[0],  # year
+                            t[0],  # month
+                            t[1],  # day
+                            t[2],  # hour
+                            t[3],  # second
+                            t[4],  # minute
                             0,
                             0,
                             -1))
@@ -109,8 +109,8 @@ class HolidayInfo_Yearly(HolidayInfo_Base):
                 if cMonth > nMonth:
                     # We have not crossed over into the new week
                     # as found in case 1.
-                    sTime = self.getTime((sCurrYear+1,), startTuple)
-                    eTime = self.getTime((eCurrYear+1,), endTuple)
+                    sTime = self.getTime((sCurrYear + 1,), startTuple)
+                    eTime = self.getTime((eCurrYear + 1,), endTuple)
                 else:
                     # We have already started the new year as found
                     # in case 2. Adjust time normally.
@@ -124,8 +124,8 @@ class HolidayInfo_Yearly(HolidayInfo_Base):
                     # Since the next day is less than the current day,
                     # then we have reached the end of the list and the next
                     # date should be in the proceeding year.
-                    sTime = self.getTime((sCurrYear+1,), startTuple)
-                    eTime = self.getTime((eCurrYear+1,), endTuple)
+                    sTime = self.getTime((sCurrYear + 1,), startTuple)
+                    eTime = self.getTime((eCurrYear + 1,), endTuple)
                 elif sDay == nDay:
                     # Since the next tuple is of the same day, we must check
                     # the time tuples to see if the next time is greater than
@@ -137,8 +137,8 @@ class HolidayInfo_Yearly(HolidayInfo_Base):
                     time2 = (startTuple[2], startTuple[3], startTuple[4])
 
                     if time1 > time2:
-                        sTime = self.getTime((sCurrYear+1,), startTuple)
-                        eTime = self.getTime((eCurrYear+1,), endTuple)
+                        sTime = self.getTime((sCurrYear + 1,), startTuple)
+                        eTime = self.getTime((eCurrYear + 1,), endTuple)
                     else:
                         sTime = self.getTime((sCurrYear,), startTuple)
                         eTime = self.getTime((eCurrYear,), endTuple)
@@ -160,7 +160,7 @@ class HolidayInfo_Yearly(HolidayInfo_Base):
         # We are back to the original element, thus we should
         # schedule it for the next year.
         start = self.currElemIter.current()[0]
-        return self.getTime((sCurrYear+1,), start)
+        return self.getTime((sCurrYear + 1,), start)
 
     def adjustDate(self, date):
         """
@@ -170,5 +170,4 @@ class HolidayInfo_Yearly(HolidayInfo_Base):
         Input: date - the date that needs to be adjusted
         Output: None
         """
-        return (date[0]+1, date[1], date[2], date[3])
-
+        return (date[0] + 1, date[1], date[2], date[3])

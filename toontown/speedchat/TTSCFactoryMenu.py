@@ -52,15 +52,16 @@ ZoneToMsgs = {
     41: [1841, 1941],
     60: [1860, 1960],
     61: [1861, 1961],
-    }
+}
 # Messages you always want in any zone
-GLOBAL_MSGS = [1700, 1701, 1702, 1703, 1704,]
+GLOBAL_MSGS = [1700, 1701, 1702, 1703, 1704, ]
+
 
 class TTSCFactoryMenu(SCMenu):
     """
     SCFactoryMenu represents a menu of factory-related terminals.
     """
-    
+
     def __init__(self):
         SCMenu.__init__(self)
 
@@ -72,8 +73,8 @@ class TTSCFactoryMenu(SCMenu):
             for msgIndex in OTPLocalizer.SCFactoryMeetMenuIndexes:
                 term = SCStaticTextTerminal(msgIndex)
                 meetMenu.append(term)
-            self.meetMenuHolder = SCMenuHolder.SCMenuHolder(OTPLocalizer.SCMenuFactoryMeet,
-                                                            meetMenu)
+            self.meetMenuHolder = SCMenuHolder.SCMenuHolder(
+                OTPLocalizer.SCMenuFactoryMeet, meetMenu)
             self[0:0] = [self.meetMenuHolder]
 
         # listen for changes to the factory location
@@ -89,19 +90,20 @@ class TTSCFactoryMenu(SCMenu):
         # save the meet menu if we have one
         if self.meetMenuHolder:
             del self[0]
-            
+
         # clear out everything from our menu
         self.clearMenu()
 
         # if local toon has not been created, don't panic
         try:
             lt = base.localAvatar
-        except:
+        except BaseException:
             return
 
         # keep a list of the phrases we've added to the menu, to
         # detect duplicates
         phrases = []
+
         def addTerminal(terminal, self=self, phrases=phrases):
             displayText = terminal.getDisplayText()
             if displayText not in phrases:

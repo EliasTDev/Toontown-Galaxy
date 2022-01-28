@@ -4,6 +4,7 @@ from direct.directnotify import DirectNotifyGlobal
 from . import AttribDesc
 from direct.showbase.PythonUtil import mostDerivedLast
 
+
 class EntityTypeDesc:
     """This class is meta-data that describes an Entity type."""
     notify = DirectNotifyGlobal.directNotify.newCategory('EntityTypeDesc')
@@ -19,7 +20,8 @@ class EntityTypeDesc:
         # ordered list of attrib descriptors
         attribDescs = self.__class__._attribDescs
 
-        # create ordered list of attrib names, dict of attrib name to attribDesc
+        # create ordered list of attrib names, dict of attrib name to
+        # attribDesc
         for desc in attribDescs:
             attribName = desc.getName()
             self.attribNames.append(attribName)
@@ -63,8 +65,7 @@ class EntityTypeDesc:
             return
 
         c = entTypeClass
-        EntityTypeDesc.notify.debug('compiling attrib descriptors for %s' %
-                                    c.__name__)
+        EntityTypeDesc.notify.debug(f'compiling attrib descriptors for {c.__name__}')
 
         # make sure all of our base classes have their complete list of
         # attribDescs
@@ -84,7 +85,7 @@ class EntityTypeDesc:
                 # are we blocking this attribute?
                 if desc.getName() in blockAttribs:
                     continue
-                    
+
                 # make sure we haven't already picked up this attribute
                 # from an earlier base class
                 for d in baseADs:
@@ -102,12 +103,12 @@ class EntityTypeDesc:
         if 'attribs' in c.__dict__:
             for attrib in c.attribs:
                 desc = AttribDesc.AttribDesc(*attrib)
-                
+
                 if (desc.getName() == 'type' and
-                    entTypeClass.__name__ != 'Entity'):
+                        entTypeClass.__name__ != 'Entity'):
                     EntityTypeDesc.notify.error(
                         '(%s): \'%s\' is a reserved attribute name' % (
-                        entTypeClass.__name__, desc.getName()))
+                            entTypeClass.__name__, desc.getName()))
 
                 # if we picked up an attribute with the same name from a base
                 # class, this overrides it
@@ -118,15 +119,16 @@ class EntityTypeDesc:
                         # this name from the base classes
                         assert ad not in baseADs
                         break
-                    
+
                 attribDescs.append(desc)
 
         c._attribDescs = baseADs + attribDescs
 
     def __str__(self):
         return str(self.__class__)
+
     def __repr__(self):
         # this is used to produce a hash value
-        return (str(self.__class__.__dict__.get('type',None))+
-                str(self.output)+
+        return (str(self.__class__.__dict__.get('type', None)) +
+                str(self.output) +
                 str(self.attribDescDict))

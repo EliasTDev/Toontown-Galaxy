@@ -4,8 +4,10 @@ from toontown.minigame.DropScheduler import ThreePhaseDropScheduler
 from toontown.parties import PartyGlobals
 from functools import reduce
 
+
 class DistributedPartyCatchActivityBase:
-    notify = DirectNotifyGlobal.directNotify.newCategory("DistributedPartyCatchActivityBase")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedPartyCatchActivityBase")
 
     # number of players at which game stops dropping more items
     FallRateCap_Players = 20
@@ -19,11 +21,13 @@ class DistributedPartyCatchActivityBase:
         self.FirstDropDelay = 0.
 
         # after this many seconds, the game stops dropping things slower
-        self.NormalDropDelay = int((1. / 12) * PartyGlobals.CatchActivityDuration)
+        self.NormalDropDelay = int(
+            (1. / 12) * PartyGlobals.CatchActivityDuration)
         # after this many seconds, the game starts dropping things faster
-        self.FasterDropDelay = int((9. / 12) * PartyGlobals.CatchActivityDuration)
+        self.FasterDropDelay = int(
+            (9. / 12) * PartyGlobals.CatchActivityDuration)
         DistributedPartyCatchActivityBase.notify.debug(
-            'will start dropping fast after %s seconds' % self.FasterDropDelay)
+            f'will start dropping fast after {self.FasterDropDelay} seconds')
 
         # how much longer should the drop period be (time between drops)
         # during the 'slower drop' interval at the beginning of the game?
@@ -33,7 +37,7 @@ class DistributedPartyCatchActivityBase:
         # how much shorter should the drop period be (time between
         # drops) during the 'faster drop' interval at the end of
         # the game? .5 == 2x as fast, 1. == no difference
-        self.FasterDropPeriodMult = 1./3
+        self.FasterDropPeriodMult = 1. / 3
 
         self.ToonSpeed = 16.0
         # no need to scale up the toon speed when more toons are playing;
@@ -75,10 +79,12 @@ class DistributedPartyCatchActivityBase:
         BaseStageDimensions = [36, 36]
         self.StageAreaScale = 1.0
         self.StageLinearScale = math.sqrt(self.StageAreaScale)
-        DistributedPartyCatchActivityBase.notify.debug("StageLinearScale: %s" % self.StageLinearScale)
+        DistributedPartyCatchActivityBase.notify.debug(
+            f"StageLinearScale: {self.StageLinearScale}")
         self.StageDimensions = scaledDimensions(BaseStageDimensions,
                                                 self.StageAreaScale)
-        DistributedPartyCatchActivityBase.notify.debug("StageDimensions: %s" % self.StageDimensions)
+        DistributedPartyCatchActivityBase.notify.debug(
+            f"StageDimensions: {self.StageDimensions}")
         self.StageHalfWidth = self.StageDimensions[0] / 2.0
         self.StageHalfHeight = self.StageDimensions[1] / 2.0
 
@@ -104,12 +110,11 @@ class DistributedPartyCatchActivityBase:
         # of self.OffscreenTime, below;
         # fall duration = offscreen time + onscreen time
         distance = math.sqrt(
-            (self.StageDimensions[0] * self.StageDimensions[0]) + 
+            (self.StageDimensions[0] * self.StageDimensions[0]) +
             (self.StageDimensions[1] * self.StageDimensions[1]))
         # when there are more players, each individual toon doesn't need
         # to be able to cover the entire stage...
         distance /= self.StageLinearScale
-
 
         ToonRunDuration = distance / self.ToonSpeed
         # this is the ratio of offscreen to onscreen time for the baseline
@@ -130,18 +135,19 @@ class DistributedPartyCatchActivityBase:
         # OnscreenDur = ToonRunDuration / [fraction * (1 + OffOnratio)]
         self.BaselineOnscreenDropDuration = (
             ToonRunDuration / (fraction * (1. + offScreenOnScreenRatio)))
-        DistributedPartyCatchActivityBase.notify.debug("BaselineOnscreenDropDuration=%s" % 
-                          self.BaselineOnscreenDropDuration)
+        DistributedPartyCatchActivityBase.notify.debug(
+            f"BaselineOnscreenDropDuration={self.BaselineOnscreenDropDuration}")
 
         # tOff. How long all objects 'drop' before reaching moH (during this
         # period, you just see the shadow growing on the ground)
-        self.OffscreenTime = (offScreenOnScreenRatio * 
+        self.OffscreenTime = (offScreenOnScreenRatio *
                               self.BaselineOnscreenDropDuration)
-        DistributedPartyCatchActivityBase.notify.debug("OffscreenTime=%s" % self.OffscreenTime)
+        DistributedPartyCatchActivityBase.notify.debug(
+            f"OffscreenTime={self.OffscreenTime}")
 
         # at this point, we can calculate the total drop duration for
         # baseline objects
-        self.BaselineDropDuration = (self.BaselineOnscreenDropDuration + 
+        self.BaselineDropDuration = (self.BaselineOnscreenDropDuration +
                                      self.OffscreenTime)
 
         # this should be OK as long as we don't make any object types
@@ -153,15 +159,16 @@ class DistributedPartyCatchActivityBase:
         self.DropPeriod = self.BaselineDropDuration / 3.
         # dampen the impact of each successive player, on the theory that
         # it's actually more difficult to catch fruit with more players playing
-        scaledNumPlayers = (((min(numPlayers, self.FallRateCap_Players) - 1.) * .85) + 1.)
+        scaledNumPlayers = (
+            ((min(numPlayers, self.FallRateCap_Players) - 1.) * .85) + 1.)
         self.DropPeriod /= scaledNumPlayers
 
         # figure out how many fruits and anvils will be dropped
 
         # relative probabilities that a given drop object will
         # be of a particular type
-        typeProbs = {'fruit' : 3,
-                     'anvil' : 1,
+        typeProbs = {'fruit': 3,
+                     'anvil': 1,
                      }
         # normalize the probabilities to [0..1]
         probSum = reduce(lambda x, y: x + y, list(typeProbs.values()))

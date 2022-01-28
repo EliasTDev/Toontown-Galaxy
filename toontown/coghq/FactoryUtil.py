@@ -9,6 +9,7 @@ from direct.task.Task import Task
 from toontown.suit import Suit
 from toontown.suit import SuitDNA
 
+
 class Ouch(DirectObject.DirectObject):
     def __init__(self, keyEvent, callback):
         DirectObject.DirectObject.__init__(self)
@@ -17,7 +18,7 @@ class Ouch(DirectObject.DirectObject):
     def destroy(self):
         self.ignoreAll()
 
-    
+
 class CyclePlacer(DirectObject.DirectObject):
     def __init__(self, locations, keyEvent, startIndex=0):
         """
@@ -28,12 +29,15 @@ class CyclePlacer(DirectObject.DirectObject):
         self.locations = locations
         self.index = startIndex
         self.accept(keyEvent, self.gotoNextLocation)
+
     def destroy(self):
         self.locations = None
         self.ignoreAll()
+
     def gotoNextLocation(self):
         self.index = (self.index + 1) % len(self.locations)
         self.gotoLocation()
+
     def gotoLocation(self, index=None):
         if index is None:
             index = self.index
@@ -42,8 +46,10 @@ class CyclePlacer(DirectObject.DirectObject):
         base.localAvatar.setPos(*pos)
         base.localAvatar.setH(h)
 
+
 class ToonLifter(DirectObject.DirectObject):
     SerialNum = 0
+
     def __init__(self, keyDownEvent, speed=2):
         """
         keyDownEvent must have a corresponding '-up' event
@@ -52,18 +58,21 @@ class ToonLifter(DirectObject.DirectObject):
         DirectObject.DirectObject.__init__(self)
         self.serialNum = ToonLifter.SerialNum
         ToonLifter.SerialNum += 1
-        self.taskName = 'ToonLifter%s' % self.serialNum
+        self.taskName = f'ToonLifter{self.serialNum}'
         self.keyDownEvent = keyDownEvent
         self.keyUpEvent = self.keyDownEvent + '-up'
         self.speed = speed
         self.accept(self.keyDownEvent, self.startLifting)
+
     def destroy(self):
         self.ignoreAll()
         taskMgr.remove(self.taskName)
+
     def startLifting(self):
         def liftTask(task, self=self):
             base.localAvatar.setZ(base.localAvatar.getZ() + self.speed)
             return Task.cont
+
         def stopLifting(self=self):
             taskMgr.remove(self.taskName)
             self.ignore(self.keyUpEvent)
@@ -71,6 +80,7 @@ class ToonLifter(DirectObject.DirectObject):
         self.ignore(self.keyDownEvent)
         self.accept(self.keyUpEvent, stopLifting)
         taskMgr.add(liftTask, self.taskName)
+
 
 """
 class FactoryPlatform(MovingPlatform.MovingPlatform):
@@ -125,7 +135,7 @@ class WalkingSuit:
     def destroy(self):
         self.suit.delete()
         del self.suit
-    
+
     def start(self, startTime):
         self.walkIval = Sequence(name='factorySuitWalk%s' % self.serialNum)
         for i in range(len(self.wayPoints)):

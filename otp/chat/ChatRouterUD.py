@@ -4,6 +4,7 @@ from toontown.chat.TTWhiteList import TTWhiteList
 
 whiteList = TTWhiteList()
 
+
 class ChatRouterUD(DistributedObjectGlobalUD):
     notify = directNotify.newCategory('ChatRouterUD')
 
@@ -32,7 +33,8 @@ class ChatRouterUD(DistributedObjectGlobalUD):
 
         do = self.air.dclassesByName['DistributedPlayerUD']
         args = [avId, 0, '', message, mods, 0]
-        datagram = do.aiFormatUpdate('setTalk', avId, channel, self.air.ourChannel, args)
+        datagram = do.aiFormatUpdate(
+            'setTalk', avId, channel, self.air.ourChannel, args)
         self.air.send(datagram)
 
     def whisperMessage(self, message, receiverAvId):
@@ -45,5 +47,10 @@ class ChatRouterUD(DistributedObjectGlobalUD):
 
         do = self.air.dclassesByName['DistributedPlayerUD']
         args = [avId, 0, '', message, mods, 0]
-        datagram = do.aiFormatUpdate('setTalkWhisper', receiverAvId, receiverAvId, self.air.ourChannel, args)
+        datagram = do.aiFormatUpdate(
+            'setTalkWhisper',
+            receiverAvId,
+            receiverAvId,
+            self.air.ourChannel,
+            args)
         self.air.send(datagram)

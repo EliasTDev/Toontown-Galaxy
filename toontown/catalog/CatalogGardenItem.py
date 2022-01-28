@@ -5,6 +5,7 @@ from otp.otpbase import OTPLocalizer
 from direct.interval.IntervalGlobal import *
 from toontown.estate import GardenGlobals
 
+
 class CatalogGardenItem(CatalogItem.CatalogItem):
     """
     Represents a Garden Item on the Delivery List
@@ -12,7 +13,7 @@ class CatalogGardenItem(CatalogItem.CatalogItem):
 
     sequenceNumber = 0
 
-    def makeNewItem(self, itemIndex = 0, count  = 3, tagCode = 1):
+    def makeNewItem(self, itemIndex=0, count=3, tagCode=1):
         #import pdb; pdb.set_trace()
         self.gardenIndex = itemIndex
         self.numItems = count
@@ -33,7 +34,7 @@ class CatalogGardenItem(CatalogItem.CatalogItem):
         # has already bought his limit on this item.
         if self in avatar.onOrder or self in avatar.mailboxContents or self in avatar.onGiftOrder \
            or self in avatar.awardMailboxContents or self in avatar.onAwardOrder:
-            return 1        
+            return 1
         return 0
 
     def getAcceptItemErrorText(self, retcode):
@@ -42,7 +43,7 @@ class CatalogGardenItem(CatalogItem.CatalogItem):
         # parameter is the retcode returned by recordPurchase() or by
         # mailbox.acceptItem().
         if retcode == ToontownGlobals.P_ItemAvailable:
-                return TTLocalizer.CatalogAcceptGarden
+            return TTLocalizer.CatalogAcceptGarden
         return CatalogItem.CatalogItem.getAcceptItemErrorText(self, retcode)
 
     def saveHistory(self):
@@ -60,14 +61,14 @@ class CatalogGardenItem(CatalogItem.CatalogItem):
 
     def recordPurchase(self, avatar, optional):
         #import pdb; pdb.set_trace()
-        #if self.gardenIndex == GardenGlobals.GardenAcceleratorSpecial:
+        # if self.gardenIndex == GardenGlobals.GardenAcceleratorSpecial:
         #    return ToontownGlobals.P_ItemOnOrder
-        #else:
+        # else:
         if 1:
             if avatar:
                 pass
                 avatar.addGardenItem(self.gardenIndex, self.numItems)
-                #TODO modify the toon's GardenSpecials field
+                # TODO modify the toon's GardenSpecials field
             return ToontownGlobals.P_ItemAvailable
 
     def getPicture(self, avatar):
@@ -79,17 +80,15 @@ class CatalogGardenItem(CatalogItem.CatalogItem):
         photoPos = GardenGlobals.Specials[self.gardenIndex]['photoPos']
         beanJar.setPos(*photoPos)
         photoScale = GardenGlobals.Specials[self.gardenIndex]['photoScale']
-        #beanJar.setScale(2.5)
+        # beanJar.setScale(2.5)
         beanJar.setScale(photoScale)
 
         assert (not self.hasPicture)
-        self.hasPicture=True
+        self.hasPicture = True
         return (frame, None)
 
-    def output(self, store = ~0):
-        return "CatalogGardenItem(%s%s)" % (
-            self.gardenIndex,
-            self.formatOptionalData(store))
+    def output(self, store=~0):
+        return f"CatalogGardenItem({self.gardenIndex}{self.formatOptionalData(store)})"
 
     def compareTo(self, other):
         return 0
@@ -118,13 +117,15 @@ class CatalogGardenItem(CatalogItem.CatalogItem):
         """
         Tell the user the item is available and what jelly beans to use it with.
         """
-        retval = CatalogItem.CatalogItem.getRequestPurchaseErrorText(self,retcode)
-        origText =retval
-        
+        retval = CatalogItem.CatalogItem.getRequestPurchaseErrorText(
+            self, retcode)
+        origText = retval
+
         if retval == TTLocalizer.CatalogPurchaseItemAvailable or \
            retval == TTLocalizer.CatalogPurchaseItemOnOrder:
-            #now lets tell them what other beans to plant it with
-            recipeKey = GardenGlobals.getRecipeKeyUsingSpecial(self.gardenIndex)
+            # now lets tell them what other beans to plant it with
+            recipeKey = GardenGlobals.getRecipeKeyUsingSpecial(
+                self.gardenIndex)
             if not recipeKey == -1:
                 retval += GardenGlobals.getPlantItWithString(self.gardenIndex)
 
@@ -143,15 +144,13 @@ class CatalogGardenItem(CatalogItem.CatalogItem):
         """
         return 20
 
-
     def getDeliveryTime(self):
         # Returns the elapsed time in minutes from purchase to
         # delivery for this particular item.
         if self.gardenIndex == GardenGlobals.GardenAcceleratorSpecial:
-            return 24 * 60 #24 hrs
+            return 24 * 60  # 24 hrs
         else:
             return 0
-
 
     def getPurchaseLimit(self):
         # Returns the maximum number of this particular item an avatar
@@ -161,12 +160,12 @@ class CatalogGardenItem(CatalogItem.CatalogItem):
             return 1
         else:
             return 0
-        #return 1
+        # return 1
 
     def compareTo(self, other):
-       if self.gardenIndex != other.gardenIndex:
-           return self.gardenIndex - other.gardenIndex
-       return self.gardenIndex - other.gardenIndex
+        if self.gardenIndex != other.gardenIndex:
+            return self.gardenIndex - other.gardenIndex
+        return self.gardenIndex - other.gardenIndex
 
     def reachedPurchaseLimit(self, avatar):
         # Returns true if the item cannot be bought because the avatar
@@ -183,7 +182,7 @@ class CatalogGardenItem(CatalogItem.CatalogItem):
         for specials in avatar.getGardenSpecials():
             if specials[0] == self.gardenIndex:
                 if self.gardenIndex == GardenGlobals.GardenAcceleratorSpecial:
-                    #we're already carrying it
+                    # we're already carrying it
                     return 1
 
         # Not found anywhere; go ahead and buy it.
@@ -203,11 +202,11 @@ class CatalogGardenItem(CatalogItem.CatalogItem):
            self.gardenIndex in GardenGlobals.Specials and \
            'minSkill' in GardenGlobals.Specials[self.gardenIndex]:
             minSkill = GardenGlobals.Specials[self.gardenIndex]['minSkill']
-            if  avatar.shovelSkill < minSkill:
+            if avatar.shovelSkill < minSkill:
                 result = True
             else:
                 result = False
-        return result;
+        return result
 
     def noGarden(self, avatar):
         """

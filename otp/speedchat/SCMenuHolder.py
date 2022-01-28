@@ -7,6 +7,7 @@ from .SCElement import SCElement
 from .SCMenu import SCMenu
 import types
 
+
 class SCMenuHolder(SCElement):
     """
     SCMenuHolder is an SCElement that owns an SCMenu and is
@@ -37,7 +38,7 @@ class SCMenuHolder(SCElement):
     # N = (1-Asrc),
     # Asrc = (1-N)
     N = .9
-    DefaultFrameColor = (0,0,0,1.-N)
+    DefaultFrameColor = (0, 0, 0, 1. - N)
     del N
 
     # how much darker a child menu should be than its parent
@@ -62,6 +63,7 @@ class SCMenuHolder(SCElement):
     def setTitle(self, title):
         self.title = title
         self.invalidate()
+
     def getTitle(self):
         return self.title
 
@@ -76,6 +78,7 @@ class SCMenuHolder(SCElement):
             self.menu.reparentTo(self, 1)
             self.menu.hide()
         self.updateViewability()
+
     def getMenu(self):
         return self.menu
 
@@ -87,7 +90,7 @@ class SCMenuHolder(SCElement):
         """
         if self.menu is not None:
             cS = SCMenuHolder.MenuColorScaleDown
-            self.menu.setColorScale(cS,cS,cS,1)
+            self.menu.setColorScale(cS, cS, cS, 1)
             self.menu.enterVisible()
             self.menu.show()
 
@@ -122,12 +125,13 @@ class SCMenuHolder(SCElement):
 
         # set the frame color to show that this menuHolder is active
         if hasattr(self, 'button'):
-            r,g,b = self.getColorScheme().getMenuHolderActiveColor()
+            r, g, b = self.getColorScheme().getMenuHolderActiveColor()
             a = self.getColorScheme().getAlpha()
-            self.button.frameStyle[DGG.BUTTON_READY_STATE].setColor(r,g,b,a)
+            self.button.frameStyle[DGG.BUTTON_READY_STATE].setColor(r, g, b, a)
             self.button.updateFrameStyle()
         else:
-            self.notify.warning("SCMenuHolder has no button (has finalize been called?).")
+            self.notify.warning(
+                "SCMenuHolder has no button (has finalize been called?).")
 
     def exitActive(self):
         SCElement.exitActive(self)
@@ -185,26 +189,26 @@ class SCMenuHolder(SCElement):
         if not self.isDirty():
             return
 
-        r,g,b = self.getColorScheme().getArrowColor()
+        r, g, b = self.getColorScheme().getArrowColor()
         a = self.getColorScheme().getAlpha()
-        self.scArrow.setColorScale(r,g,b,a)
+        self.scArrow.setColorScale(r, g, b, a)
 
         if self.menu is not None:
             # adjust the position of the menu
             self.menu.setPos(self.getMenuOffset())
 
         if self.isActive():
-            r,g,b = self.getColorScheme().getMenuHolderActiveColor()
+            r, g, b = self.getColorScheme().getMenuHolderActiveColor()
             a = self.getColorScheme().getAlpha()
-            frameColor = (r,g,b,a)
+            frameColor = (r, g, b, a)
         else:
             frameColor = SCMenuHolder.DefaultFrameColor
 
         args = {
-            'image':      self.scArrow,
-            'image_pos':  (self.width-.5,0,-self.height*.5),
+            'image': self.scArrow,
+            'image_pos': (self.width - .5, 0, -self.height * .5),
             'frameColor': frameColor,
-            }
+        }
 
         args.update(dbArgs)
         SCElement.finalize(self, dbArgs=args)
@@ -230,4 +234,3 @@ class SCMenuHolder(SCElement):
         SCObject.finalizeAll(self)
         if self.menu is not None:
             self.menu.finalizeAll()
-

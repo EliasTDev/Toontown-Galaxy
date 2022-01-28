@@ -9,10 +9,10 @@ notify = directNotify.newCategory('SubscriptionToAvatars')
 
 class MySQLAccountAvatarsDB(DBInterface):
     notify = notify
-        
+
     def __init__(self, host, port, user, passwd, dbname):
         #self.sqlAvailable = uber.sqlAvailable
-        #if not self.sqlAvailable:
+        # if not self.sqlAvailable:
         #    self.notify.warning("SQL not available")
         #    return
 
@@ -28,16 +28,16 @@ class MySQLAccountAvatarsDB(DBInterface):
         cursor = self.connect()
 
         try:
-            cursor.execute("CREATE DATABASE %s" % self.dbname)
+            cursor.execute(f"CREATE DATABASE {self.dbname}")
             if __debug__:
                 self.notify.info("MySQL database '%s' did not exist, "
                                  "created a new one." % self.dbname)
         except MySQLdb.ProgrammingError as e:
             pass
 
-        cursor.execute("USE %s" % self.dbname)
+        cursor.execute(f"USE {self.dbname}")
         if __debug__:
-            self.notify.info("Using MySQL database '%s'." % self.dbname)
+            self.notify.info(f"Using MySQL database '{self.dbname}'.")
 
         try:
             cursor.execute("""
@@ -51,7 +51,7 @@ class MySQLAccountAvatarsDB(DBInterface):
                  datemadeinactive TIMESTAMP NULL);
                  """)
             cursor.execute("""
-                CREATE UNIQUE INDEX account_to_avatars_1 
+                CREATE UNIQUE INDEX account_to_avatars_1
                 ON account_to_avatars(subscription_id, avatar_id);
                 """)
             if __debug__:
@@ -120,11 +120,11 @@ class MySQLAccountAvatarsDB(DBInterface):
                                 "attempting to reconnect.")
         try:
             self.db.close()
-        except:
+        except BaseException:
             pass
 
         cursor = self.connect()
-        cursor.execute("USE %s" % self.dbname)
+        cursor.execute(f"USE {self.dbname}")
         if __debug__:
             self.notify.debug("Reconnected to MySQL server at %s:%d." %
                               (self.host, self.port))
@@ -135,15 +135,15 @@ class MySQLAccountAvatarsDB(DBInterface):
 
         try:
             self.db.close()
-        except:
+        except BaseException:
             pass
 
         self.db = None
 
     def setSharedFlag(self, avatar, subscription, shared):
         command = """
-            UPDATE account_to_avatars 
-            SET shared_with_family = %s 
+            UPDATE account_to_avatars
+            SET shared_with_family = %s
             WHERE avatar_id = %s and subscription_id = %s
             """ % (shared, avatar, subscription)
         try:
@@ -161,7 +161,7 @@ class MySQLAccountAvatarsDB(DBInterface):
     def addAvatarToSubscription(self, avatar, creator, subscription, shared):
         command = """
             INSERT INTO account_to_avatars(
-            avatar_id, creator_id, subscription_id, shared_with_family) 
+            avatar_id, creator_id, subscription_id, shared_with_family)
             VALUES (%s, %s, %s, %s)
             """ % (avatar, creator, subscription, shared)
         try:
@@ -178,8 +178,8 @@ class MySQLAccountAvatarsDB(DBInterface):
 
     def removeAvatarFromSubscription(self, avatar, subscription):
         command = """
-            UPDATE account_to_avatars 
-            SET datemadeinactive = CURRENT_TIMESTAMP 
+            UPDATE account_to_avatars
+            SET datemadeinactive = CURRENT_TIMESTAMP
             WHERE avatar_id = %s and subscription_id = %s
             """ % (avatar, subscription)
         try:
@@ -197,10 +197,10 @@ class MySQLAccountAvatarsDB(DBInterface):
     def deleteIncompleteAvatarFromDB(self, avatar):
         # Only call this when deleting an avatar we don't ever need to restore
         # CAUTION: THIS WILL REMOVE IT COMPLETELY FROM THE SQL DATABASE
-        command = """
-            DELETE FROM account_to_avatars 
-            WHERE avatar_id = %s
-            """ % (avatar)
+        command = f"""
+            DELETE FROM account_to_avatars
+            WHERE avatar_id = {avatar}
+            """
         try:
             cursor = MySQLdb.cursors.DictCursor(self.db)
             cursor.execute(command)
@@ -215,9 +215,9 @@ class MySQLAccountAvatarsDB(DBInterface):
 
     def getAvatarIdsForSubscription(self, subscription):
         command = """
-            SELECT avatar_id, creator_id, subscription_id, shared_with_family 
-            FROM account_to_avatars 
-            WHERE subscription_id = %s AND datemadeinactive IS NULL 
+            SELECT avatar_id, creator_id, subscription_id, shared_with_family
+            FROM account_to_avatars
+            WHERE subscription_id = %s AND datemadeinactive IS NULL
             ORDER BY birthdate
             """ % (subscription)
         try:
@@ -236,8 +236,8 @@ class MySQLAccountAvatarsDB(DBInterface):
 
     def lastPlayed(self, avatar, subscription):
         command = """
-            UPDATE account_to_avatars 
-            SET last_played = CURRENT_TIMESTAMP 
+            UPDATE account_to_avatars
+            SET last_played = CURRENT_TIMESTAMP
             WHERE avatar_id = %s and subscription_id = %s
             """ % (avatar, subscription)
         try:

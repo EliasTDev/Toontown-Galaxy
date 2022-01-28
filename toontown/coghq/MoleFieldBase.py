@@ -5,11 +5,10 @@ HILL_BOMB = 1
 HILL_WHACKED = 2
 HILL_COGWHACKED = 3
 
+
 class MoleFieldBase:
     WHACKED = 1
-    
 
-   
     MoveUpTimeMax = 1
     MoveUpTimeMultiplier = 0.95
     MoveUpTimeMin = 0.5
@@ -24,7 +23,7 @@ class MoleFieldBase:
 
     TimeBetweenPopupMax = 1.5
     TimeBetweenPopupMultiplier = 0.95
-    TimeBetweenPopupMin = 0.25    
+    TimeBetweenPopupMin = 0.25
 
     #GameDuration = 180
     #GameDuration = 60
@@ -32,27 +31,29 @@ class MoleFieldBase:
     #MolesWhackedTarget = 7
 
     DamageOnFailure = 20
-    
+
     # use this random generator whenever you calculate a random value for
     # the barrel that must be independently the same on the client and AI.
     # Use for one calculation and then discard.
     def getRng(self):
         return random.Random(self.entId * self.level.doId)
 
-        
     def scheduleMoles(self):
         """Schedule the moles going up and down."""
         self.schedule = []
         totalTime = 0
-        curMoveUpTime = self.MoveUpTimeMax # number of seconds it takes for the mole to move up
-        curMoveDownTime = self.MoveDownTimeMax # number of seconds it takes for the mole to move down
-        curTimeBetweenPopup = self.TimeBetweenPopupMax # how long before another mole pops up
+        # number of seconds it takes for the mole to move up
+        curMoveUpTime = self.MoveUpTimeMax
+        # number of seconds it takes for the mole to move down
+        curMoveDownTime = self.MoveDownTimeMax
+        # how long before another mole pops up
+        curTimeBetweenPopup = self.TimeBetweenPopupMax
         curStayUpTime = self.StayUpTimeMax  # how long does the mole stay up
         curTime = 3
         eligibleMoles = list(range(self.numMoles))
         self.getRng().shuffle(eligibleMoles)
         usedMoles = []
-        self.notify.debug('eligibleMoles=%s' % eligibleMoles)
+        self.notify.debug(f'eligibleMoles={eligibleMoles}')
         self.endingTime = 0
         randOb = random.Random(self.entId * self.level.doId)
         while self.endingTime < self.GameDuration:
@@ -61,27 +62,37 @@ class MoleFieldBase:
                 eligibleMoles = usedMoles
                 self.getRng().shuffle(usedMoles)
                 usedMoles = []
-                self.notify.debug('eligibleMoles=%s' % eligibleMoles)
+                self.notify.debug(f'eligibleMoles={eligibleMoles}')
             moleIndex = eligibleMoles[0]
             eligibleMoles.remove(moleIndex)
             usedMoles.append(moleIndex)
-            moleType = randOb.choice([HILL_MOLE, HILL_MOLE, HILL_MOLE, HILL_BOMB])
-            self.schedule.append((curTime, moleIndex, curMoveUpTime, curStayUpTime, curMoveDownTime, moleType))
+            moleType = randOb.choice(
+                [HILL_MOLE, HILL_MOLE, HILL_MOLE, HILL_BOMB])
+            self.schedule.append(
+                (curTime,
+                 moleIndex,
+                 curMoveUpTime,
+                 curStayUpTime,
+                 curMoveDownTime,
+                 moleType))
             curTime += curTimeBetweenPopup
-            
+
             curMoveUpTime = self.calcNextMoveUpTime(curTime, curMoveUpTime)
             curStayUpTime = self.calcNextStayUpTime(curTime, curStayUpTime)
-            curMoveDownTime = self.calcNextMoveDownTime(curTime, curMoveDownTime)
-            curTimeBetweenPopup = self.calcNextTimeBetweenPopup(curTime, curTimeBetweenPopup)
+            curMoveDownTime = self.calcNextMoveDownTime(
+                curTime, curMoveDownTime)
+            curTimeBetweenPopup = self.calcNextTimeBetweenPopup(
+                curTime, curTimeBetweenPopup)
             self.endingTime = curTime + curMoveUpTime + curStayUpTime + curMoveDownTime
 
-        # remove the last entry in the schedule, since it goes over the game duration
+        # remove the last entry in the schedule, since it goes over the game
+        # duration
         self.schedule.pop()
         self.endingTime = self.schedule[-1][0] + self.schedule[-1][2] + \
-                          self.schedule[-1][3] + self.schedule[-1][4]
-        
+            self.schedule[-1][3] + self.schedule[-1][4]
 
-        self.notify.debug('schedule length = %d, endingTime=%f' % (len(self.schedule), self.endingTime))
+        self.notify.debug('schedule length = %d, endingTime=%f' %
+                          (len(self.schedule), self.endingTime))
 
     def calcNextMoveUpTime(self, curTime, curMoveUpTime):
         """Calculate how long it takes for the next mole to move up."""
@@ -89,7 +100,7 @@ class MoleFieldBase:
         # then quickly ramp up
         newMoveUpTime = curMoveUpTime * self.MoveUpTimeMultiplier
         if newMoveUpTime < self.MoveDownTimeMin:
-            newMoveUpTime =  self.MoveDownTimeMin
+            newMoveUpTime = self.MoveDownTimeMin
         return newMoveUpTime
 
     def calcNextStayUpTime(self, curTime, curStayUpTime):
@@ -118,4 +129,3 @@ class MoleFieldBase:
         if newTimeBetweenPopup < self.TimeBetweenPopupMin:
             newTimeBetweenPopup = self.TimeBetweenPopupMin
         return newTimeBetweenPopup
-    

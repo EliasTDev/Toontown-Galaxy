@@ -3,8 +3,10 @@
 from .SCMenu import SCMenu
 from .SCEmoteTerminal import SCEmoteTerminal
 
+
 class SCEmoteMenu(SCMenu):
     """ SCEmoteMenu represents a menu of SCEmoteTerminals. """
+
     def __init__(self):
         SCMenu.__init__(self)
         self.accept('emotesChanged', self.__emoteAccessChanged)
@@ -20,7 +22,7 @@ class SCEmoteMenu(SCMenu):
         # if local toon has not been created, don't panic
         try:
             lt = base.localAvatar
-        except:
+        except BaseException:
             return
 
         for i in range(len(lt.emoteAccess)):

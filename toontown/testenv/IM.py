@@ -2,6 +2,7 @@
 from . import toc
 from direct.task import Task
 
+
 class TTToc(toc.TocTalk):
 
     def __init__(self):
@@ -28,9 +29,8 @@ class TTToc(toc.TocTalk):
             self.handle_event(event)
         return Task.cont
 
-    def on_IM_IN(self,data):
+    def on_IM_IN(self, data):
         screenname = data.split(":")[0]
-        message = self.strip_html(data.split(":",2)[2])
+        message = self.strip_html(data.split(":", 2)[2])
         print(screenname, message)
-        localAvatar.setSystemMessage(0, "%s: %s" % (screenname, message))
-        
+        localAvatar.setSystemMessage(0, f"{screenname}: {message}")

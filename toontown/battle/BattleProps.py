@@ -11,12 +11,12 @@ Props = (
     # fanfare partyball
     (5, 'partyBall', 'partyBall'),
     # heal
-    (5, 'feather', 'feather-mod', 'feather-chan'), # tickle
-    (5, 'lips', 'lips'), # smooch
-    (5, 'lipstick', 'lipstick'), # smooch
-    (5, 'hat', 'hat'), # happy-dance
-    (5, 'cane', 'cane'), # happy-dance
-    (5, 'cubes', 'cubes-mod', 'cubes-chan'), # juggle
+    (5, 'feather', 'feather-mod', 'feather-chan'),  # tickle
+    (5, 'lips', 'lips'),  # smooch
+    (5, 'lipstick', 'lipstick'),  # smooch
+    (5, 'hat', 'hat'),  # happy-dance
+    (5, 'cane', 'cane'),  # happy-dance
+    (5, 'cubes', 'cubes-mod', 'cubes-chan'),  # juggle
     (5, 'ladder', 'ladder2'),
     # lure
     (4, 'fishing-pole', 'fishing-pole-mod', 'fishing-pole-chan'),
@@ -50,12 +50,12 @@ Props = (
     (5, 'wedding-cake', 'wedding_cake'),
     # squirt
     # The squirting flower is used in the tutorial
-    (3.5, 'squirting-flower', 'squirting-flower'), # flower
-    (5, 'glass', 'glass-mod', 'glass-chan'), # water glass
-    (4, 'water-gun', 'water-gun'), # water pistol
-    (3.5, 'bottle', 'bottle'), # seltzer
-    (5, 'firehose', 'firehose-mod', 'firehose-chan'), # firehose
-    (5, 'hydrant', 'battle_hydrant'), # fire hydrant
+    (3.5, 'squirting-flower', 'squirting-flower'),  # flower
+    (5, 'glass', 'glass-mod', 'glass-chan'),  # water glass
+    (4, 'water-gun', 'water-gun'),  # water pistol
+    (3.5, 'bottle', 'bottle'),  # seltzer
+    (5, 'firehose', 'firehose-mod', 'firehose-chan'),  # firehose
+    (5, 'hydrant', 'battle_hydrant'),  # fire hydrant
     (4, 'stormcloud', 'stormcloud-mod', 'stormcloud-chan'),
     (5, 'geyser', 'geyser'),
     # drop
@@ -101,14 +101,14 @@ Props = (
     (5, 'can', 'can'),
     (5, 'cigar', 'cigar'),
     (5, 'evil-eye', 'evil-eye'),
-    (5, 'gavel', 'gavel'), # needs anim!
+    (5, 'gavel', 'gavel'),  # needs anim!
     (5, 'half-windsor', 'half-windsor'),
     (5, 'lawbook', 'lawbook'),
     (5, 'newspaper', 'newspaper'),
     (5, 'pink-slip', 'pink-slip'),
-    (5, 'teeth', 'teeth-mod', 'teeth-chan'), # wind-up
-    (5, 'power-tie', 'power-tie'), # there is a more polygonal version of this
-                                # if we deem it necesary.
+    (5, 'teeth', 'teeth-mod', 'teeth-chan'),  # wind-up
+    (5, 'power-tie', 'power-tie'),  # there is a more polygonal version of this
+    # if we deem it necesary.
     #
     # Battle effects
     #
@@ -118,20 +118,20 @@ Props = (
     (3.5, 'stun', 'stun-mod', 'stun-chan'),
     (3.5, 'glow', 'glow'),
     (3.5, 'suit_explosion', 'suit_explosion-mod', 'suit_explosion-chan'),
-    (3.5, 'suit_explosion_dust', 'dust_cloud'),    
+    (3.5, 'suit_explosion_dust', 'dust_cloud'),
 
     #
     # water effects
     #
     (4, 'ripples', 'ripples'),
     (4, 'wake', 'wake'),
-    (4, 'splashdown', 'SZ_splashdown-mod', 'SZ_splashdown-chan'),        
-    )
+    (4, 'splashdown', 'SZ_splashdown-mod', 'SZ_splashdown-chan'),
+)
 
 # splat dict: pie-name: (scale, color)
-CreampieColor = VBase4(250./255., 241./255., 24./255., 1.)
-FruitpieColor = VBase4(55./255., 40./255., 148./255., 1.)
-BirthdayCakeColor = VBase4(253./255., 119./255., 220./255., 1.)
+CreampieColor = VBase4(250. / 255., 241. / 255., 24. / 255., 1.)
+FruitpieColor = VBase4(55. / 255., 40. / 255., 148. / 255., 1.)
+BirthdayCakeColor = VBase4(253. / 255., 119. / 255., 220. / 255., 1.)
 Splats = {
     'tart': (0.3, FruitpieColor),
     'fruitpie-slice': (0.5, FruitpieColor),
@@ -139,12 +139,33 @@ Splats = {
     'fruitpie': (0.7, FruitpieColor),
     'creampie': (0.7, CreampieColor),
     'birthday-cake': (0.9, BirthdayCakeColor),
-    }
-Variants = ('tart', 'fruitpie', 'splat-tart', 'dust', 'kapow', 'double-windsor',
-            'splat-fruitpie-slice', 'splat-creampie-slice', 'splat-fruitpie',
-            'splat-creampie', 'splat-birthday-cake', 'splash-from-splat',
-            'clip-on-tie', 'lips', 'small-magnet', '5dollar', '10dollar',
-            'suit_explosion', 'quicksand', 'trapdoor', 'geyser', 'ship', 'trolley','traintrack')
+}
+Variants = (
+    'tart',
+    'fruitpie',
+    'splat-tart',
+    'dust',
+    'kapow',
+    'double-windsor',
+    'splat-fruitpie-slice',
+    'splat-creampie-slice',
+    'splat-fruitpie',
+    'splat-creampie',
+    'splat-birthday-cake',
+    'splash-from-splat',
+    'clip-on-tie',
+    'lips',
+    'small-magnet',
+    '5dollar',
+    '10dollar',
+    'suit_explosion',
+    'quicksand',
+    'trapdoor',
+    'geyser',
+    'ship',
+    'trolley',
+    'traintrack')
+
 
 class PropPool:
     """
@@ -159,7 +180,7 @@ class PropPool:
         self.propStrings = {}
         self.propTypes = {}
         self.maxPoolSize = base.config.GetInt("prop-pool-size", 8)
-        
+
         # load ref's to the props enumerated above
         for p in Props:
             phase = p[0]
@@ -179,7 +200,7 @@ class PropPool:
 
         # load the ref's for variant props
         propName = 'tart'
-        self.propStrings[propName] = (self.getPath(3.5,'tart'),)
+        self.propStrings[propName] = (self.getPath(3.5, 'tart'),)
         self.propTypes[propName] = 'model'
 
         propName = 'fruitpie'
@@ -193,11 +214,16 @@ class PropPool:
         splatAnimFileName = self.getPath(3.5, 'splat-chan')
         for splat in list(Splats.keys()):
             propName = 'splat-' + splat
-            self.propStrings[propName] = (self.getPath(3.5, 'splat-mod'), splatAnimFileName)
+            self.propStrings[propName] = (self.getPath(
+                3.5, 'splat-mod'), splatAnimFileName)
             self.propTypes[propName] = 'actor'
 
         propName = 'splash-from-splat'
-        self.propStrings[propName] = (self.getPath(3.5, 'splat-mod'), splatAnimFileName)
+        self.propStrings[propName] = (
+            self.getPath(
+                3.5,
+                'splat-mod'),
+            splatAnimFileName)
         self.propTypes[propName] = 'actor'
 
         propName = 'small-magnet'
@@ -230,11 +256,12 @@ class PropPool:
         self.propTypes[propName] = 'model'
 
         propName = 'trolley'
-        self.propStrings[propName] = ("phase_4/models/modules/trolley_station_TT",)
+        self.propStrings[propName] = (
+            "phase_4/models/modules/trolley_station_TT",)
         self.propTypes[propName] = 'model'
 
     def getPath(self, phase, model):
-        return ("phase_%s/models/props/%s" % (phase, model))
+        return (f"phase_{phase}/models/props/{model}")
 
     def makeVariant(self, name):
         """makeVariant(self, string)
@@ -307,7 +334,7 @@ class PropPool:
                 cloud = self.props[name].find(cloudName)
                 cloud.setBin('fixed', bin)
                 bin -= 10
-            
+
         # set the draw order on the kapow
         elif (name == 'kapow'):
             l = self.props[name].find('**/letters')
@@ -317,7 +344,11 @@ class PropPool:
 
         # pick random suit explosion text
         elif (name == 'suit_explosion'):
-            joints = ["**/joint_scale_POW", "**/joint_scale_BLAM", "**/joint_scale_BOOM",]
+            joints = [
+                "**/joint_scale_POW",
+                "**/joint_scale_BLAM",
+                "**/joint_scale_BOOM",
+            ]
             # pick two joints to hide at random
             joint = random.choice(joints)
             self.props[name].find(joint).hide()
@@ -335,16 +366,15 @@ class PropPool:
             p.getChild(0).setPos(0, 0, OTPGlobals.FloorOffset)
 
         elif (name == 'traintrack' or name == 'traintrack2'):
-            #hide the tunnels, and set the bin the same way we did trap door
+            # hide the tunnels, and set the bin the same way we did trap door
             prop = self.props[name]
             prop.find('**/tunnel3').hide()
             prop.find('**/tunnel2').hide()
             #import pdb; pdb.set_trace()
             pass
             #prop.setBin('shadow', -5)
-            #prop.setDepthWrite(0)
-            prop.find('**/tracksA').setPos(0, 0, OTPGlobals.FloorOffset)            
-
+            # prop.setDepthWrite(0)
+            prop.find('**/tracksA').setPos(0, 0, OTPGlobals.FloorOffset)
 
         # make the geyser tflip animate
         elif (name == 'geyser'):
@@ -368,11 +398,11 @@ class PropPool:
         """
         for p in list(self.props.values()):
             # make sure it's loaded before we remove it
-            if (type(p) != type(())):
+            if (not isinstance(p, type(()))):
                 self.__delProp(p)
         self.props = {}
         self.propCache = []
-        
+
     def getProp(self, name):
         """ getProp(name)
         """
@@ -398,8 +428,8 @@ class PropPool:
                     self.makeVariant(name)
             return Actor.Actor(other=self.props[name])
         else:
-            # make sure the props is loaded            
-            if name not in self.props:            
+            # make sure the props is loaded
+            if name not in self.props:
                 prop = loader.loadModel(self.propStrings[name][0])
                 prop.setName(name)
                 self.storeProp(name, prop)
@@ -424,10 +454,10 @@ class PropPool:
             del(self.props[oldest.getName()])
             # cleanup the prop
             self.__delProp(oldest)
-            
-        self.notify.debug("props = %s" % self.props)
-        self.notify.debug("propCache = %s" % self.propCache)
-        
+
+        self.notify.debug(f"props = {self.props}")
+        self.notify.debug(f"propCache = {self.propCache}")
+
     def getPropType(self, name):
         assert(name in self.propTypes)
         return self.propTypes[name]
@@ -437,7 +467,7 @@ class PropPool:
         This is a convenience function for deleting prop INSTANCES.
         It does NOT affect the prop dict or cache! Suckah!
         """
-        if (prop == None):
+        if (prop is None):
             self.notify.warning('tried to delete null prop!')
             return
         if (isinstance(prop, Actor.Actor)):

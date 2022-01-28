@@ -6,7 +6,7 @@ config = getConfigShowbase()
 
 username = config.GetString("mysql-user")
 password = config.GetString("mysql-passwd")
-dbSalt = config.GetString("dev-branch-flavor","")
+dbSalt = config.GetString("dev-branch-flavor", "")
 if dbSalt:
     dbSalt = dbSalt + '_'
     pass
@@ -25,21 +25,23 @@ print("Connected to MySQL at localhost.")
 
 cursor = db.cursor()
 
+
 def dropdb(dbname):
     try:
-        print("Dropping database %s:" % dbname)
-        cursor.execute("DROP DATABASE %s"%dbname)
+        print(f"Dropping database {dbname}:")
+        cursor.execute(f"DROP DATABASE {dbname}")
         print("  Success!")
     except Exception as e:
-        print("  Failed: %s" % e)
+        print(f"  Failed: {e}")
 
-dropdb("%savatar_accessories" % (dbSalt,))
-dropdb("%savatar_friends" % (dbSalt,)) #
-dropdb("%savatars" % (dbSalt,)) #
-dropdb("%sawards" % (dbSalt,))
-dropdb("%scode_redemption" % (dbSalt,))
-dropdb("%sguilds" % (dbSalt,)) #
-dropdb("%sholidayschedules" % (dbSalt,))
-dropdb("%sstatus" % (dbSalt,))
+
+dropdb(f"{dbSalt}avatar_accessories")
+dropdb(f"{dbSalt}avatar_friends")
+dropdb(f"{dbSalt}avatars")
+dropdb(f"{dbSalt}awards")
+dropdb(f"{dbSalt}code_redemption")
+dropdb(f"{dbSalt}guilds")
+dropdb(f"{dbSalt}holidayschedules")
+dropdb(f"{dbSalt}status")
 
 db.commit()

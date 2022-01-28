@@ -19,12 +19,13 @@ from panda3d.toontown import SuitLegList
 # for each leg
 #
 TIME_BUFFER_PER_WPT = 0.25
-TIME_DIVISOR        = 100
+TIME_DIVISOR = 100
 
 # spread out the creation of this suit's task, helps to prevent
 # slowdowns, but causes suits to take longer to get moving
 #
 DISTRIBUTE_TASK_CREATION = 0
+
 
 class SuitBase:
     """
@@ -38,7 +39,7 @@ class SuitBase:
     ////////////////////////////////////////////////////////////////////////
     """
     notify = DirectNotifyGlobal.directNotify.newCategory('SuitBase')
-   
+
     def __init__(self):
         self.dna = None
         self.level = 0
@@ -69,22 +70,25 @@ class SuitBase:
 
     def setLevel(self, level):
         self.level = level
-        nameWLevel = TTLocalizer.SuitBaseNameWithLevel % {"name":  self.name,
-                                                        "dept":  self.getStyleDept(),
-                                                        "level": self.getActualLevel(),}
-        self.setDisplayName( nameWLevel )
+        nameWLevel = TTLocalizer.SuitBaseNameWithLevel % {
+            "name": self.name,
+            "dept": self.getStyleDept(),
+            "level": self.getActualLevel(),
+        }
+        self.setDisplayName(nameWLevel)
         # Compute maxHP based on level
         attributes = SuitBattleGlobals.SuitAttributes[self.dna.name]
-        self.maxHP = SuitBattleGlobals.calculateHealth(attributes, self.level + 1)
+        self.maxHP = SuitBattleGlobals.calculateHealth(
+            attributes, self.level + 1)
         self.currHP = self.maxHP
 
     def getSkelecog(self):
         return self.isSkelecog
-        
+
     def setSkelecog(self, flag):
         self.isSkelecog = flag
 
-    def getActualLevel( self ):
+    def getActualLevel(self):
         """
         ////////////////////////////////////////////////////////////////////
         // Function:   from the suit's 'relative' level (relative to the
@@ -97,12 +101,13 @@ class SuitBase:
         if hasattr(self, "dna"):
             return SuitBattleGlobals.getActualFromRelativeLevel(
                 self.getStyleName(),
-                self.level ) + 1
+                self.level) + 1
         else:
-            self.notify.warning('called getActualLevel with no DNA, returning 1 for level')
+            self.notify.warning(
+                'called getActualLevel with no DNA, returning 1 for level')
             return 1
 
-    def setPath( self, path ):
+    def setPath(self, path):
         """
         ////////////////////////////////////////////////////////////////////
         // Function:    set the path to be used by this suit, this function
@@ -114,7 +119,7 @@ class SuitBase:
         self.path = path
         self.pathLength = self.path.getNumPoints()
 
-    def getPath( self ):
+    def getPath(self):
         """
         ////////////////////////////////////////////////////////////////////
         // Function:    set the path to be used by this suit, this function
@@ -125,7 +130,7 @@ class SuitBase:
         """
         return self.path
 
-    def printPath( self ):
+    def printPath(self):
         """
         ////////////////////////////////////////////////////////////////////
         // Function:    print out this suit's current path
@@ -137,9 +142,9 @@ class SuitBase:
         #
         print("%d points in path" % self.pathLength)
 #        print self.path
-        for currPathPt in range( self.pathLength ):
-            indexVal = self.path.getPointIndex( currPathPt )
-            print("\t", self.sp.dnaStore.getSuitPointWithIndex( indexVal ))
+        for currPathPt in range(self.pathLength):
+            indexVal = self.path.getPointIndex(currPathPt)
+            print("\t", self.sp.dnaStore.getSuitPointWithIndex(indexVal))
 
     def makeLegList(self):
         """makeLegList(self)
@@ -162,5 +167,3 @@ class SuitBase:
 #
 # 14Feb01       jlbutler        created
 #
-
-

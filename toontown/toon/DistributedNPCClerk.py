@@ -1,6 +1,6 @@
 from pandac.PandaModules import *
 from .DistributedNPCToonBase import *
-from toontown.minigame import ClerkPurchase 
+from toontown.minigame import ClerkPurchase
 from toontown.shtiker.PurchaseManagerConstants import *
 from . import NPCToons
 from direct.task.Task import Task
@@ -8,6 +8,7 @@ from toontown.toonbase import TTLocalizer
 from toontown.hood import ZoneUtil
 from toontown.toontowngui import TeaserPanel
 from panda3d.otp import CFSpeech, CFTimeout
+
 
 class DistributedNPCClerk(DistributedNPCToonBase):
 
@@ -18,7 +19,7 @@ class DistributedNPCClerk(DistributedNPCToonBase):
         self.av = None
         self.camSequence = None
         self.purchaseDoneEvent = 'purchaseDone'
-            
+
     def disable(self):
         self.ignoreAll()
         taskMgr.remove(self.uniqueName('popupPurchaseGUI'))
@@ -39,11 +40,11 @@ class DistributedNPCClerk(DistributedNPCToonBase):
             return True
         place = base.cr.playGame.getPlace()
         myHoodId = ZoneUtil.getCanonicalHoodId(place.zoneId)
-        if  myHoodId in \
+        if myHoodId in \
            (ToontownGlobals.ToontownCentral,
-            ToontownGlobals.MyEstate,
-            ToontownGlobals.GoofySpeedway,
-            ):
+                    ToontownGlobals.MyEstate,
+                    ToontownGlobals.GoofySpeedway,
+                ):
             # trialer going to TTC/Estate/Goofy Speedway, let them through
             return True
         return False
@@ -55,7 +56,7 @@ class DistributedNPCClerk(DistributedNPCToonBase):
         place = base.cr.playGame.getPlace()
         if place:
             place.fsm.request('walk')
-            
+
     def handleCollisionSphereEnter(self, collEntry):
         """
         Response for a toon walking up to this NPC
@@ -79,7 +80,7 @@ class DistributedNPCClerk(DistributedNPCToonBase):
 
     def resetClerk(self):
         if not self.isLocalToon:
-            return 
+            return
         assert self.notify.debug('resetClerk')
         self.ignoreAll()
         taskMgr.remove(self.uniqueName('popupPurchaseGUI'))
@@ -105,16 +106,16 @@ class DistributedNPCClerk(DistributedNPCToonBase):
     def setMovie(self, mode, npcId, avId, timestamp):
         """
         This is a message from the AI describing a movie between this NPC
-        and a Toon that has approached us. 
+        and a Toon that has approached us.
         """
         timeStamp = ClockDelta.globalClockDelta.localElapsedTime(timestamp)
         self.remain = NPCToons.CLERK_COUNTDOWN_TIME - timeStamp
 
         # See if this is the local toon
         self.isLocalToon = (avId == base.localAvatar.doId)
-            
+
         assert(self.notify.debug("setMovie: %s %s %s %s" %
-                          (mode, avId, timeStamp, self.isLocalToon)))
+                                 (mode, avId, timeStamp, self.isLocalToon)))
 
         # This is an old movie in the server ram that has been cleared.
         # Just return and do nothing
@@ -136,7 +137,7 @@ class DistributedNPCClerk(DistributedNPCToonBase):
             if self.purchase:
                 self.__handlePurchaseDone()
             self.setChatAbsolute(TTLocalizer.STOREOWNER_TOOKTOOLONG,
-                                                CFSpeech | CFTimeout)
+                                 CFSpeech | CFTimeout)
             self.resetClerk()
 
         elif (mode == NPCToons.PURCHASE_MOVIE_START):
@@ -147,29 +148,30 @@ class DistributedNPCClerk(DistributedNPCToonBase):
                 return
             else:
                 self.accept(self.av.uniqueName('disable'),
-                                        self.__handleUnexpectedExit)
+                            self.__handleUnexpectedExit)
 
             self.setupAvatars(self.av)
 
             if (self.isLocalToon):
                 camera.wrtReparentTo(render)
-                self.camSequence = camera.posQuatInterval(1, Point3(-5, 9, self.getHeight() - 0.5), Point3(-150, -2, 0), other=self, blendType='easeOut', name=self.uniqueName('lerpCamera'))
+                self.camSequence = camera.posQuatInterval(1, Point3(-5, 9, self.getHeight(
+                ) - 0.5), Point3(-150, -2, 0), other=self, blendType='easeOut', name=self.uniqueName('lerpCamera'))
                 self.camSequence.start()
             self.setChatAbsolute(TTLocalizer.STOREOWNER_GREETING,
-                                                CFSpeech | CFTimeout)
+                                 CFSpeech | CFTimeout)
             if (self.isLocalToon):
                 taskMgr.doMethodLater(1.0, self.popupPurchaseGUI,
-                                       self.uniqueName('popupPurchaseGUI'))
-            
+                                      self.uniqueName('popupPurchaseGUI'))
+
         elif (mode == NPCToons.PURCHASE_MOVIE_COMPLETE):
             assert self.notify.debug('PURCHASE_MOVIE_COMPLETE')
             self.setChatAbsolute(TTLocalizer.STOREOWNER_GOODBYE,
-                                                CFSpeech | CFTimeout)
+                                 CFSpeech | CFTimeout)
             self.resetClerk()
 
         elif (mode == NPCToons.PURCHASE_MOVIE_NO_MONEY):
             self.setChatAbsolute(TTLocalizer.STOREOWNER_NEEDJELLYBEANS,
-                                                CFSpeech | CFTimeout)
+                                 CFSpeech | CFTimeout)
             self.resetClerk()
 
         return
@@ -179,8 +181,8 @@ class DistributedNPCClerk(DistributedNPCToonBase):
         self.setChatAbsolute('', CFSpeech)
         self.acceptOnce(self.purchaseDoneEvent, self.__handlePurchaseDone)
         self.accept('boughtGag', self.__handleBoughtGag)
-        self.purchase = ClerkPurchase.ClerkPurchase(base.localAvatar,
-                                self.remain, self.purchaseDoneEvent)
+        self.purchase = ClerkPurchase.ClerkPurchase(
+            base.localAvatar, self.remain, self.purchaseDoneEvent)
         self.purchase.load()
         self.purchase.enter()
         return Task.done
@@ -196,15 +198,14 @@ class DistributedNPCClerk(DistributedNPCToonBase):
         Cleanup the gui and send the message to the AI
         """
         assert self.notify.debug('handlePurchaseDone()')
-        #print "handlepurchasedone"
+        # print "handlepurchasedone"
         self.ignore('boughtGag')
         self.d_setInventory(base.localAvatar.inventory.makeNetString(),
                             base.localAvatar.getMoney(), 1)
-        #print "handlepurchasedone, set inventory"
+        # print "handlepurchasedone, set inventory"
         self.purchase.exit()
         self.purchase.unload()
         self.purchase = None
-
 
     def d_setInventory(self, invString, money, done):
         # Report our inventory to the server

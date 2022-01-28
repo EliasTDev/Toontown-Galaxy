@@ -8,41 +8,43 @@ from . import RingGameGlobals
 import random
 import types
 
+
 class DistributedRingGameAI(DistributedMinigameAI):
 
     def __init__(self, air, minigameId):
         try:
             self.DistributedRingGameAI_initialized
-        except:
+        except BaseException:
             self.DistributedRingGameAI_initialized = 1
             DistributedMinigameAI.__init__(self, air, minigameId)
 
             self.gameFSM = ClassicFSM.ClassicFSM('DistributedRingGameAI',
-                                   [
-                                    State.State('inactive',
-                                                self.enterInactive,
-                                                self.exitInactive,
-                                                ['swimming']),
-                                    State.State('swimming',
-                                                self.enterSwimming,
-                                                self.exitSwimming,
-                                                ['cleanup']),
-                                    State.State('cleanup',
-                                                self.enterCleanup,
-                                                self.exitCleanup,
-                                                ['inactive']),
-                                    ],
-                                   # Initial State
-                                   'inactive',
-                                   # Final State
-                                   'inactive',
-                                   )
+                                                 [
+                                                     State.State('inactive',
+                                                                 self.enterInactive,
+                                                                 self.exitInactive,
+                                                                 ['swimming']),
+                                                     State.State('swimming',
+                                                                 self.enterSwimming,
+                                                                 self.exitSwimming,
+                                                                 ['cleanup']),
+                                                     State.State('cleanup',
+                                                                 self.enterCleanup,
+                                                                 self.exitCleanup,
+                                                                 ['inactive']),
+                                                 ],
+                                                 # Initial State
+                                                 'inactive',
+                                                 # Final State
+                                                 'inactive',
+                                                 )
 
             # Add our game ClassicFSM to the framework ClassicFSM
             self.addChildGameFSM(self.gameFSM)
 
             #self.__timeBase = globalClock.getRealTime()
-            self.__timeBase = globalClockDelta.localToNetworkTime(globalClock.getRealTime())
+            self.__timeBase = globalClockDelta.localToNetworkTime(
+                globalClock.getRealTime())
             self.selectColorIndices()
 
     # Generate is never called on the AI so we do not define one
@@ -150,18 +152,22 @@ class DistributedRingGameAI(DistributedMinigameAI):
         """
         avId = self.air.getAvatarIdFromSender()
         if avId not in self.avIdList:
-            self.air.writeServerEvent('suspicious', avId, 'RingGameAI.setToonGotRing: invalid avId')
+            self.air.writeServerEvent(
+                'suspicious', avId, 'RingGameAI.setToonGotRing: invalid avId')
             return
-        if (self.gameFSM.getCurrentState() is None) or (self.gameFSM.getCurrentState().getName() != 'swimming'):
-            self.air.writeServerEvent('suspicious', avId,
-                                      'RingGameAI.setToonGotRing: game not in swimming state')
+        if (self.gameFSM.getCurrentState() is None) or (
+                self.gameFSM.getCurrentState().getName() != 'swimming'):
+            self.air.writeServerEvent(
+                'suspicious',
+                avId,
+                'RingGameAI.setToonGotRing: game not in swimming state')
             return
         ringGroupIndex = self.__nextRingGroup[avId]
 
         # guard against messages that should not be arriving here
         if ringGroupIndex >= RingGameGlobals.NUM_RING_GROUPS:
             self.notify.warning(
-                'warning: got extra ToonGotRing msg from av %s' % avId)
+                f'warning: got extra ToonGotRing msg from av {avId}')
             return
 
         self.__nextRingGroup[avId] += 1
@@ -169,7 +175,7 @@ class DistributedRingGameAI(DistributedMinigameAI):
         if not success:
             # if not successful, set this toon's bit
             self.__ringResultBitfield[ringGroupIndex] |= \
-                                           1 << self.avIdList.index(avId)
+                1 << self.avIdList.index(avId)
             # reset the perfect flag for this toon
             self.perfectGames[avId] = 0
         else:
@@ -191,18 +197,18 @@ class DistributedRingGameAI(DistributedMinigameAI):
                 self.sendUpdate("setRingGroupResults", [bitfield])
 
             # if that was the last ring group, we're done
-            if ringGroupIndex >= (RingGameGlobals.NUM_RING_GROUPS-1):
+            if ringGroupIndex >= (RingGameGlobals.NUM_RING_GROUPS - 1):
                 # add a bonus if perfect game, depending on # of players
                 # that played perfectly.
                 # note that multiplayer games give .5 bonus for each perfect
                 # ring group, so a group-perfect game will already have an
                 # extra 8 beans per player.
                 perfectBonuses = {
-                    1 : 5,
-                    2 : 5,
-                    3 : 10,
-                    4 : 18,
-                    }
+                    1: 5,
+                    2: 5,
+                    3: 10,
+                    4: 18,
+                }
                 # tally the number of players that were perfect
                 numPerfectToons = 0
                 for avId in self.avIdList:
@@ -217,6 +223,6 @@ class DistributedRingGameAI(DistributedMinigameAI):
                 # make sure everyone has at least one jbean
                 for avId in self.avIdList:
                     self.scoreDict[avId] = max(1, self.scoreDict[avId])
-                
+
                 if not RingGameGlobals.ENDLESS_GAME:
                     self.gameOver()

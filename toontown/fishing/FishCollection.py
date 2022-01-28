@@ -2,6 +2,7 @@
 from . import FishBase
 from . import FishGlobals
 
+
 class FishCollection:
 
     def __init__(self):
@@ -18,7 +19,7 @@ class FishCollection:
         Return the current fish list
         """
         return self.fishList
-    
+
     def makeFromNetLists(self, genusList, speciesList, weightList):
         """
         Fill in the fish collection based on lists passed in like they are
@@ -27,7 +28,7 @@ class FishCollection:
         self.fishList = []
         # Fill in the lists by running through the parallel lists of properties
         for genus, species, weight in zip(genusList, speciesList, weightList):
-            self.fishList.append(FishBase.FishBase(genus, species, weight))        
+            self.fishList.append(FishBase.FishBase(genus, species, weight))
 
     def getNetLists(self):
         """
@@ -71,10 +72,11 @@ class FishCollection:
         # Look for this fish type in our list
         for fish in self.fishList:
             if ((fish.getGenus() == newFish.getGenus()) and
-                (fish.getSpecies() == newFish.getSpecies())):
+                    (fish.getSpecies() == newFish.getSpecies())):
                 # We already have this fish let's check the weight for a record
                 if (fish.getWeight() < newFish.getWeight()):
-                    # new record! set the new weight on the fish in our collection
+                    # new record! set the new weight on the fish in our
+                    # collection
                     if updateCollection:
                         fish.setWeight(newFish.getWeight())
                     return FishGlobals.COLLECT_NEW_RECORD
@@ -105,7 +107,7 @@ class FishCollection:
 
     def __str__(self):
         numFish = len(self.fishList)
-        txt = ("Fish Collection (%s fish):" % (numFish))
+        txt = f"Fish Collection ({numFish} fish):"
         for fish in self.fishList:
             txt += ("\n" + str(fish))
         return txt

@@ -1,14 +1,17 @@
 import time
 
+
 class DateObject:
     """ default Date object; uses local clock """
 
     def getYear(self):
         """ returns int """
         return time.localtime(time.time())[0]
+
     def getMonth(self):
         """ returns int, 1..12 """
         return time.localtime(time.time())[1]
+
     def getDay(self):
         """ returns int, 1.. """
         return time.localtime(time.time())[2]
@@ -49,17 +52,17 @@ class DateObject:
                                    curMonth=curMonth, curYear=curYear,
                                    curDay=curDay)[0]
 
-    def getNumDaysInMonth(self, month = None, year = None):
+    def getNumDaysInMonth(self, month=None, year=None):
         """Returns the number of days in the month.
-        
+
         If any of the arguments are missing (month or year) the
         current month/year is assumed."""
-    
+
         def isLeapYear(year):
             """Returns 1 if year is a leap year, zero otherwise."""
-            if year%4 == 0:
-                if year%100 == 0:
-                    if year%400 == 0:
+            if year % 4 == 0:
+                if year % 100 == 0:
+                    if year % 400 == 0:
                         return 1
                     else:
                         return 0
@@ -77,7 +80,7 @@ class DateObject:
             y = self.getYear()
         else:
             y = year
-    
+
         if m == 2:
             if isLeapYear(y):
                 return 29

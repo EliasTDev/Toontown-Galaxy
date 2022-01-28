@@ -3,6 +3,7 @@ from direct.showbase.PythonUtil import reduceAngle
 from otp.movement import Impulse
 import math
 
+
 class PetChase(Impulse.Impulse):
     def __init__(self, target=None, minDist=None, moveAngle=None):
         Impulse.Impulse.__init__(self)
@@ -15,7 +16,7 @@ class PetChase(Impulse.Impulse):
         if moveAngle is None:
             moveAngle = 20.
         self.moveAngle = moveAngle
-        
+
         # create a node that we'll use to calculate hprs
         self.lookAtNode = NodePath('lookatNode')
         self.lookAtNode.hide()
@@ -49,11 +50,11 @@ class PetChase(Impulse.Impulse):
 
         targetPos = target.getPos(me)
         # work in 2d
-        #targetPos.setZ(0)
+        # targetPos.setZ(0)
         #distance = self.VecType(targetPos).length()
         x = targetPos[0]
         y = targetPos[1]
-        distance = math.sqrt((x*x) + (y*y))
+        distance = math.sqrt((x * x) + (y * y))
         self.lookAtNode.lookAt(target)
         relH = reduceAngle(self.lookAtNode.getH(me))
 
@@ -68,7 +69,7 @@ class PetChase(Impulse.Impulse):
             vH = 0
 
         # don't oversteer
-        if abs(vH*dt) > abs(relH):
+        if abs(vH * dt) > abs(relH):
             vH = relH / dt
 
         if (distance > self.minDist) and (abs(relH) < self.moveAngle):
@@ -78,7 +79,7 @@ class PetChase(Impulse.Impulse):
 
         # don't get too close
         distanceLeft = distance - self.minDist
-        if (distance > self.minDist) and ((vForward*dt) > distanceLeft):
+        if (distance > self.minDist) and ((vForward * dt) > distanceLeft):
             vForward = distanceLeft / dt
 
         if vForward:

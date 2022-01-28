@@ -10,6 +10,7 @@ from . import NPCToons
 from direct.task import Task
 from toontown.quest import Quests
 
+
 class DistributedNPCToonBaseAI(DistributedToonAI.DistributedToonAI):
 
     def __init__(self, air, npcId, questCallback=None):
@@ -66,7 +67,7 @@ class DistributedNPCToonBaseAI(DistributedToonAI.DistributedToonAI):
         if avId in self.busy:
             return True
         else:
-            return False 
+            return False
 
     def getNpcId(self):
         return self.npcId
@@ -81,7 +82,6 @@ class DistributedNPCToonBaseAI(DistributedToonAI.DistributedToonAI):
 
     def setPositionIndex(self, posIndex):
         self.posIndex = posIndex
-        
+
     def getPositionIndex(self):
         return self.posIndex
-    

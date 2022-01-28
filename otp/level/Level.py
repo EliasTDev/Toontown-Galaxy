@@ -27,6 +27,7 @@ zoneNum / zoneEntId: the number that a modeler chooses for a zone, and also
 zoneId: the network ID of a zone
 """
 
+
 class Level:
     """Level: representation of a game level, keeps track of all of the
     entities and their interrelations, and creates and destroys entities"""
@@ -83,7 +84,11 @@ class Level:
 
         # create all the entities
         # TODO: maybe we should leave this to a subclass or the level user
-        self.createAllEntities(priorityTypes=['levelMgr','zone','propSpinner'])
+        self.createAllEntities(
+            priorityTypes=[
+                'levelMgr',
+                'zone',
+                'propSpinner'])
 
         # check on the singleton entities
         # we make our own references to them rather than expect them to
@@ -137,7 +142,7 @@ class Level:
 
     def createEntityCreator(self):
         Level.notify.error(
-            'concrete Level class must override %s' % lineInfo()[2])
+            f'concrete Level class must override {lineInfo()[2]}')
 
     def createAllEntities(self, priorityTypes=[]):
         """creates all entities in the spec. priorityTypes is an
@@ -171,16 +176,20 @@ class Level:
         self.nothingEntIds = {}
         # destroy the entities that we created in reverse order
         if not uniqueElements(self.createdEntIds):
-            Level.notify.warning('%s: self.createdEntIds is not unique: %s' %
-                                 (getattr(self, 'doId', None), self.createdEntIds))
+            Level.notify.warning(
+                '%s: self.createdEntIds is not unique: %s' %
+                (getattr(
+                    self,
+                    'doId',
+                    None),
+                    self.createdEntIds))
         while len(self.createdEntIds) > 0:
             entId = self.createdEntIds.pop()
             entity = self.getEntity(entId)
             if entity is not None:
-                Level.notify.debug('destroying %s %s' % (
-                    self.getEntityType(entId), entId))
+                Level.notify.debug(f'destroying {self.getEntityType(entId)} {entId}')
                 entity.destroy()
-                assert not entId in self.entities
+                assert entId not in self.entities
             else:
                 Level.notify.error('trying to destroy entity %s, but '
                                    'it is already gone' % entId)
@@ -197,9 +206,9 @@ class Level:
         self.onEntityTypePostCreate(entType)
 
     def createEntity(self, entId):
-        assert not entId in self.createdEntIds
+        assert entId not in self.createdEntIds
         spec = self.levelSpec.getEntitySpec(entId)
-        Level.notify.debug('creating %s %s' % (spec['type'], entId))
+        Level.notify.debug(f"creating {spec['type']} {entId}")
         entity = self.entityCreator.createEntity(entId)
         # NOTE: the entity is not considered to really be created until
         # it has all of its initial spec data; see 'initializeEntity'
@@ -233,7 +242,7 @@ class Level:
         entId = entity.entId
         spec = self.levelSpec.getEntitySpec(entId)
         # on initialization, set items directly on entity
-        for key,value in list(spec.items()):
+        for key, value in list(spec.items()):
             if key in ('type', 'name', 'comment',):
                 continue
             entity.setAttribInit(key, value)
@@ -244,7 +253,7 @@ class Level:
         if __debug__:
             if entId in self.entities:
                 self.notify.warning(
-                    'entity %s already in entity table... '%(entId)+
+                    f'entity {entId} already in entity table... ' +
                     'make sure distributedEntity is calling down to '
                     'Entity.destroy!')
         self.entities[entId] = entity
@@ -301,46 +310,55 @@ class Level:
     def getLevelPreCreateEvent(self):
         """This is the event that is thrown immediately before the level
         creates its entities."""
-        return 'levelPreCreate-%s' % (self.levelId)
+        return f'levelPreCreate-{self.levelId}'
+
     def getLevelPostCreateEvent(self):
         """This is the event that is thrown immediately after the level
         creates its entities."""
-        return 'levelPostCreate-%s' % (self.levelId)
+        return f'levelPostCreate-{self.levelId}'
     # ENTITY TYPE
+
     def getEntityTypePreCreateEvent(self, entType):
         """This is the event that is thrown immediately before the level
         creates the entities of the given type."""
-        return 'entityTypePreCreate-%s-%s' % (self.levelId, entType)
+        return f'entityTypePreCreate-{self.levelId}-{entType}'
+
     def getEntityTypePostCreateEvent(self, entType):
         """This is the event that is thrown immediately after the level
         creates the entities of the given type."""
-        return 'entityTypePostCreate-%s-%s' % (self.levelId, entType)
+        return f'entityTypePostCreate-{self.levelId}-{entType}'
     # ENTITY
+
     def getEntityCreateEvent(self, entId):
         """This is the event that is thrown immediately after a
         particular entity is initialized"""
-        return 'entityCreate-%s-%s' % (self.levelId, entId)
+        return f'entityCreate-{self.levelId}-{entId}'
+
     def getEntityOfTypeCreateEvent(self, entType):
         """This event is thrown immediately after each instance of the
         given entity type is created; handlers must accept an entId"""
-        return 'entityOfTypeCreate-%s-%s' % (self.levelId, entType)
+        return f'entityOfTypeCreate-{self.levelId}-{entType}'
 
     # these handlers are called as the level initializes itself
     # LEVEL
     def onLevelPreCreate(self):
         """Level is about to create its entities"""
         messenger.send(self.getLevelPreCreateEvent())
+
     def onLevelPostCreate(self):
         """Level is done creating its entities"""
         messenger.send(self.getLevelPostCreateEvent())
     # ENTITY TYPE
+
     def onEntityTypePreCreate(self, entType):
         """Level is about to create these entities"""
         messenger.send(self.getEntityTypePreCreateEvent(entType))
+
     def onEntityTypePostCreate(self, entType):
         """Level has just created these entities"""
         messenger.send(self.getEntityTypePostCreateEvent(entType))
     # ENTITY
+
     def onEntityCreate(self, entId):
         """Level has just created this entity"""
         # send the entity-create event
@@ -379,7 +397,8 @@ class Level:
     def getEntityDestroyEvent(self, entId):
         """This is the event that is thrown immediately before an
         entity is destroyed"""
-        return 'entityDestroy-%s-%s' % (self.levelId, entId)
+        return f'entityDestroy-{self.levelId}-{entId}'
+
     def onEntityDestroy(self, entId):
         """Level is about to destroy this entity"""
         assert entId in self.entities
@@ -397,16 +416,18 @@ class Level:
     def handleVisChange(self):
         """the zone visibility lists have changed"""
         pass
-    
+
     if __dev__:
         # the level generates these events when the spec changes
         def getAttribChangeEventName(self):
-            return 'attribChange-%s' % self.levelId
+            return f'attribChange-{self.levelId}'
+
         def getInsertEntityEventName(self):
-            return 'insertEntity-%s' % self.levelId
+            return f'insertEntity-{self.levelId}'
+
         def getRemoveEntityEventName(self):
-            return 'removeEntity-%s' % self.levelId
-        
+            return f'removeEntity-{self.levelId}'
+
         # these handlers are called directly by our levelSpec
         def handleAttribChange(self, entId, attrib, value, username=None):
             entity = self.getEntity(entId)

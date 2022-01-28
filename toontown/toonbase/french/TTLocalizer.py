@@ -2010,8 +2010,8 @@ QuestDialogDict = {
               },
     11001 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Oui, oui. J'ai des pièces de déguisement de Loibot.\aMais elles sont sans intérêt pour moi.\aMes recherches portent sur les fluctuations de la température ambiante de Toontown.\aJ'échangerais volontiers des pièces de déguisement contre des sondes de température Cog.\aTu peux commencer par aller voir %s." % GlobalStreetNames[2100][-1],
-              INCOMPLETE_PROGRESS : "Est-ce que tu as essayé de chercher sur %s?" % GlobalStreetNames[2100][-1],
+              QUEST : f"Oui, oui. J'ai des pièces de déguisement de Loibot.Mais elles sont sans intérêt pour moi.Mes recherches portent sur les fluctuations de la température ambiante de Toontown.J'échangerais volontiers des pièces de déguisement contre des sondes de température Cog.Tu peux commencer par aller voir {GlobalStreetNames[2100][-1]}.",
+              INCOMPLETE_PROGRESS : f"Est-ce que tu as essayé de chercher sur {GlobalStreetNames[2100][-1]}?",
               COMPLETE : "Ah, parfait!\aC'est ce que je craignais...\aOh, oui! Voilà ta pièce de déguisement.",
              },
 
@@ -2021,8 +2021,8 @@ QuestDialogDict = {
               },
     11003 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Plus de pièces de déguisement de Loibot?\aBon, si tu insistes...\amais j'ai besoin d'une autre sonde de température Cog.\aCette fois-ci, va sur %s." % GlobalStreetNames[2200][-1],
-              INCOMPLETE_PROGRESS : "Tu cherches bien sur %s ?" % GlobalStreetNames[2200][-1],
+              QUEST : f"Plus de pièces de déguisement de Loibot?Bon, si tu insistes...mais j'ai besoin d'une autre sonde de température Cog.Cette fois-ci, va sur {GlobalStreetNames[2200][-1]}.",
+              INCOMPLETE_PROGRESS : f"Tu cherches bien sur {GlobalStreetNames[2200][-1]} ?",
               COMPLETE : "Merci!\aVoilà ta pièce de déguisement.",
              },
     11004 : { GREETING : "",
@@ -2031,8 +2031,8 @@ QuestDialogDict = {
               },
     11005 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Tu sais te montrer utile!\aEst-ce que tu peux aller jeter un oeil sur %s?" % GlobalStreetNames[2300][-1],
-              INCOMPLETE_PROGRESS : " Tu es bien en train de chercher sur %s ?" % GlobalStreetNames[2300][-1],
+              QUEST : f"Tu sais te montrer utile!Est-ce que tu peux aller jeter un oeil sur {GlobalStreetNames[2300][-1]}?",
+              INCOMPLETE_PROGRESS : f" Tu es bien en train de chercher sur {GlobalStreetNames[2300][-1]} ?",
               COMPLETE : "Hmmm, je n'aime pas trop ça...\amais voici ta pièce de déguisement...",
              },
     11006 : { GREETING : "",
@@ -2041,8 +2041,8 @@ QuestDialogDict = {
               },
     11007 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Encore toi?\aTu as vraiment envie de travailler...\aLa prochaine destination, c'est %s." % GlobalStreetNames[1100][-1],
-              INCOMPLETE_PROGRESS : "Est-ce que tu as essayé de chercher sur %s?" % GlobalStreetNames[1100][-1],
+              QUEST : f"Encore toi?Tu as vraiment envie de travailler...La prochaine destination, c'est {GlobalStreetNames[1100][-1]}.",
+              INCOMPLETE_PROGRESS : f"Est-ce que tu as essayé de chercher sur {GlobalStreetNames[1100][-1]}?",
               COMPLETE : "Bon! On dirait que tu t'en sors plutôt bien!\aTa pièce de déguisement...",
              },
     11008 : { GREETING : "",
@@ -2051,8 +2051,8 @@ QuestDialogDict = {
               },
     11009 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Content de te trouver ici!\aMaintenant, j'ai besoin de relevés sur %s." % GlobalStreetNames[1200][-1],
-              INCOMPLETE_PROGRESS : "Tu cherches bien sur %s ?" % GlobalStreetNames[1200][-1],
+              QUEST : f"Content de te trouver ici!Maintenant, j'ai besoin de relevés sur {GlobalStreetNames[1200][-1]}.",
+              INCOMPLETE_PROGRESS : f"Tu cherches bien sur {GlobalStreetNames[1200][-1]} ?",
               COMPLETE : "Merci beaucoup!\aTu n'es probablement pas loin d'avoir tout ton déguisement...",
              },
     11010 : { GREETING : "",
@@ -2061,8 +2061,8 @@ QuestDialogDict = {
               },
     11011 : { GREETING : "",
               LEAVING : "",
-              QUEST : " Content de te revoir, _avName_!\aEst-ce que tu peux faire un relevé sur %s?" % GlobalStreetNames[1300][-1],
-              INCOMPLETE_PROGRESS : "Est-ce que tu as essayé de chercher sur %s?" % GlobalStreetNames[1300][-1],
+              QUEST : f" Content de te revoir, _avName_!Est-ce que tu peux faire un relevé sur {GlobalStreetNames[1300][-1]}?",
+              INCOMPLETE_PROGRESS : f"Est-ce que tu as essayé de chercher sur {GlobalStreetNames[1300][-1]}?",
               COMPLETE : "Super boulot!\aVoici ta récompense. Tu l'as bien méritée!",
              },
     11012 : { GREETING : "",
@@ -2071,8 +2071,8 @@ QuestDialogDict = {
               },
     11013 : { GREETING : "",
               LEAVING : "",
-              QUEST : "_avName_, mon ami!\aEst-ce que tu pourrais aller à %s et me trouver une autre sonde de température?" % GlobalStreetNames[5100][-1],
-              INCOMPLETE_PROGRESS : "Est-ce que tu es vraiment en train de chercher sur %s?" % GlobalStreetNames[5100][-1],
+              QUEST : f"_avName_, mon ami!Est-ce que tu pourrais aller à {GlobalStreetNames[5100][-1]} et me trouver une autre sonde de température?",
+              INCOMPLETE_PROGRESS : f"Est-ce que tu es vraiment en train de chercher sur {GlobalStreetNames[5100][-1]}?",
               COMPLETE : "Excellent!\aGrâce à ton aide, mes recherches avancent très vite!\aVoici ta récompense.",
              },
     11014 : { GREETING : "",
@@ -2081,8 +2081,8 @@ QuestDialogDict = {
               },
     11015 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Content de te revoir!\aJe t'attendais.\aLe prochain relevé dont j'ai besoin, c'est sur %s." % GlobalStreetNames[5200][-1],
-              INCOMPLETE_PROGRESS : "Tu cherches bien sur %s ?" % GlobalStreetNames[5200][-1],
+              QUEST : f"Content de te revoir!Je t'attendais.Le prochain relevé dont j'ai besoin, c'est sur {GlobalStreetNames[5200][-1]}.",
+              INCOMPLETE_PROGRESS : f"Tu cherches bien sur {GlobalStreetNames[5200][-1]} ?",
               COMPLETE : "Merci!\aVoici ta récompense.",
              },
     11016 : { GREETING : "",
@@ -2091,8 +2091,8 @@ QuestDialogDict = {
               },
     11017 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Salut, jeune chercheur!\aNous avons encore besoin de relevés de %s." % GlobalStreetNames[5300][-1],
-              INCOMPLETE_PROGRESS : "Est-ce que tu as essayé de chercher sur %s?" % GlobalStreetNames[5300][-1],
+              QUEST : f"Salut, jeune chercheur!Nous avons encore besoin de relevés de {GlobalStreetNames[5300][-1]}.",
+              INCOMPLETE_PROGRESS : f"Est-ce que tu as essayé de chercher sur {GlobalStreetNames[5300][-1]}?",
               COMPLETE : "Excellent travail!\aVoilà ton machin de Loibot...",
              },
     11018 : { GREETING : "",
@@ -2101,8 +2101,8 @@ QuestDialogDict = {
               },
     11019 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Bon, très bien.\aTu te sens d'attaque pour aller chercher autre chose?\aCette fois-ci, essaie %s." % GlobalStreetNames[4100][-1],
-              INCOMPLETE_PROGRESS : "Tu es bien en train de chercher sur %s ?" % GlobalStreetNames[4100][-1],
+              QUEST : f"Bon, très bien.Tu te sens d'attaque pour aller chercher autre chose?Cette fois-ci, essaie {GlobalStreetNames[4100][-1]}.",
+              INCOMPLETE_PROGRESS : f"Tu es bien en train de chercher sur {GlobalStreetNames[4100][-1]} ?",
               COMPLETE : "Et un de plus!\aQuelle efficacité!",
              },
     11020 : { GREETING : "",
@@ -2111,8 +2111,8 @@ QuestDialogDict = {
               },
     11021 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Tu as sans doute déjà deviné...\amais j'ai besoin de relevés de %s." % GlobalStreetNames[4200][-1],
-              INCOMPLETE_PROGRESS : "Tu cherches bien sur %s ?" % GlobalStreetNames[4200][-1],
+              QUEST : f"Tu as sans doute déjà deviné...mais j'ai besoin de relevés de {GlobalStreetNames[4200][-1]}.",
+              INCOMPLETE_PROGRESS : f"Tu cherches bien sur {GlobalStreetNames[4200][-1]} ?",
               COMPLETE : "On y est presque!\aEt voilà...",
              },
     11022 : { GREETING : "",
@@ -2121,8 +2121,8 @@ QuestDialogDict = {
               },
     11023 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Qu'est-ce que tu penses de %s? Est-ce que tu crois que tu pourrais aller chercher une sonde là-bas aussi?" % GlobalStreetNames[4300][-1],
-              INCOMPLETE_PROGRESS : "Est-ce que tu as essayé de chercher sur %s?" % GlobalStreetNames[4300][-1],
+              QUEST : f"Qu'est-ce que tu penses de {GlobalStreetNames[4300][-1]}? Est-ce que tu crois que tu pourrais aller chercher une sonde là-bas aussi?",
+              INCOMPLETE_PROGRESS : f"Est-ce que tu as essayé de chercher sur {GlobalStreetNames[4300][-1]}?",
               COMPLETE : "Encore du bon travail, _avName_",
              },
     11024 : { GREETING : "",
@@ -2131,8 +2131,8 @@ QuestDialogDict = {
               },
     11025 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Je crois qu'on a encore besoin d'un relevé de %s." % GlobalStreetNames[9100][-1],
-              INCOMPLETE_PROGRESS : "Tu es bien en train de chercher sur %s ?" % GlobalStreetNames[9100][-1],
+              QUEST : f"Je crois qu'on a encore besoin d'un relevé de {GlobalStreetNames[9100][-1]}.",
+              INCOMPLETE_PROGRESS : f"Tu es bien en train de chercher sur {GlobalStreetNames[9100][-1]} ?",
               COMPLETE : "Bon travail!\aJe crois qu'on se rapproche...",
              },
     11026 : { GREETING : "",
@@ -2141,8 +2141,8 @@ QuestDialogDict = {
               },
     11027 : { GREETING : "",
               LEAVING : "",
-              QUEST : "Déjà de retour?\aLe dernier relevé est sur %s." % GlobalStreetNames[9200][-1],
-              INCOMPLETE_PROGRESS : "Tu cherches bien sur %s ?" % GlobalStreetNames[9200][-1],
+              QUEST : f"Déjà de retour?Le dernier relevé est sur {GlobalStreetNames[9200][-1]}.",
+              INCOMPLETE_PROGRESS : f"Tu cherches bien sur {GlobalStreetNames[9200][-1]} ?",
               COMPLETE : "Ça y est enfin!\aMaintenant, tu vas pouvoir t'introduire dans le bureau du Procureur et ramasser des convocations du jury.\aBonne chance et merci pour ton aide!",
              },
     12000 : { GREETING : "",
@@ -2182,7 +2182,7 @@ QuestDialogDict = {
     12007 : { GREETING : "",
               LEAVING : "",
               QUEST : "Si tu triomphes d'un Microchef, je te donnerai une autre pièce de déguisement.",
-              INCOMPLETE_PROGRESS : "Va voir dans %s" % GlobalStreetNames[1100][-1],
+              INCOMPLETE_PROGRESS : f"Va voir dans {GlobalStreetNames[1100][-1]}",
               COMPLETE : "Tu t'es bien défendu !\aVoici ta quatrième pièce de déguisement.",
              },
     12008 : { GREETING : "",
@@ -2192,7 +2192,7 @@ QuestDialogDict = {
     12009 : { GREETING : "",
               LEAVING : "",
               QUEST : "Je suis à la recherche d'un Touptisseur maintenant...",
-              INCOMPLETE_PROGRESS : "Des problèmes ? Va voir dans %s" % GlobalStreetNames[3100][-1],
+              INCOMPLETE_PROGRESS : f"Des problèmes ? Va voir dans {GlobalStreetNames[3100][-1]}",
               COMPLETE : "Quelle terrible défaite !\aVoici ta cinquième pièce de déguisement.",
              },
     12010 : { GREETING : "",
@@ -2222,7 +2222,7 @@ QuestDialogDict = {
     12015 : { GREETING : "",
               LEAVING : "",
               QUEST : "Et maintenant, le coup de grâce : le Gros Blochon !",
-              INCOMPLETE_PROGRESS : "Va voir dans %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Va voir dans {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Je savais que je pouvais compter sur toi pour...\apeu importe !\aVoici une autre pièce de déguisement.",
              },
     12016 : { GREETING : "",
@@ -2232,7 +2232,7 @@ QuestDialogDict = {
     12017 : { GREETING : "",
               LEAVING : "",
               QUEST : "À présent, j'aimerais que tu t'attaques à l'un des nouveaux Cogs Chefbot, qui sont plus dangereux.",
-              INCOMPLETE_PROGRESS : "Va voir dans %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Va voir dans {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Ils sont plus forts qu'ils en ont l'air, hein&nbsp;?\aEnfin, je te dois quand même une pièce de déguisement.",
              },
     12018 : { GREETING : "",
@@ -2242,7 +2242,7 @@ QuestDialogDict = {
     12019 : { GREETING : "",
               LEAVING : "",
               QUEST : "Ces Cogs version 2.0 sont très intéressants.\aS'il te plaît, va en attaquer un autre.",
-              INCOMPLETE_PROGRESS : "Va voir dans %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Va voir dans {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Merci !\aUne autre pièce de déguisement pour toi.",
              },
     12020 : { GREETING : "",
@@ -2252,7 +2252,7 @@ QuestDialogDict = {
     12021 : { GREETING : "",
               LEAVING : "",
               QUEST : "Je me demande s'ils peuvent se régénérer...",
-              INCOMPLETE_PROGRESS : "Va voir dans %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Va voir dans {GlobalStreetNames[10000][-1]}",
               COMPLETE : "J'imagine que non.\aVoici ta pièce de déguisement...",
              },
     12022 : { GREETING : "",
@@ -2262,7 +2262,7 @@ QuestDialogDict = {
     12023 : { GREETING : "",
               LEAVING : "",
               QUEST : "Peut-être que ce ne sont pas des Chefbots du tout...",
-              INCOMPLETE_PROGRESS : "Va voir dans %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Va voir dans {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Finalement, je crois bien que ce sont des Chefbots.\aChoisis une autre pièce de déguisement.",
              },
     12024 : { GREETING : "",
@@ -2272,7 +2272,7 @@ QuestDialogDict = {
     12025 : { GREETING : "",
               LEAVING : "",
               QUEST : "Peut-être que d'une certaine manière, ils sont parents avec les Skelecogs...",
-              INCOMPLETE_PROGRESS : "Va voir dans %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Va voir dans {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Ce fut peu concluant...\aVoici ta pièce de déguisement.",
              },
     12026 : { GREETING : "",
@@ -2282,7 +2282,7 @@ QuestDialogDict = {
     12027 : { GREETING : "",
               LEAVING : "",
               QUEST : "Je ne suis toujours pas convaincu qu'il ne s'agit pas d'une espèce de Skelecog...",
-              INCOMPLETE_PROGRESS : "Va voir dans %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Va voir dans {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Peut-être pas.\aVoici une autre pièce de déguisement.",
              },
     12028 : { GREETING : "",
@@ -2292,7 +2292,7 @@ QuestDialogDict = {
     12029 : { GREETING : "",
               LEAVING : "",
               QUEST : "Ces nouveaux Cogs me laissent vraiment perplexe.\aPourrais-tu aller en attaquer un autre, s'il te plaît&nbsp;?",
-              INCOMPLETE_PROGRESS : "Va voir dans %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Va voir dans {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Vraiment fascinant.\aUne pièce de déguisement pour te remercier de tes efforts.",
              },
     12030 : { GREETING : "",
@@ -2302,7 +2302,7 @@ QuestDialogDict = {
     12031 : { GREETING : "",
               LEAVING : "",
               QUEST : "J'ai presque trouvé ce que sont ces Cogs.\aJuste encore un...",
-              INCOMPLETE_PROGRESS : "Va voir dans %s" % GlobalStreetNames[10000][-1],
+              INCOMPLETE_PROGRESS : f"Va voir dans {GlobalStreetNames[10000][-1]}",
               COMPLETE : "Oui, je crois que je suis sur la bonne voie.\aAh oui.\aÇa, c'est pour toi...",
              },
     12032 : { GREETING : "",
@@ -4331,8 +4331,8 @@ DaisyChatter = (
         "Si tu vois du sable sous une plante, c'est qu'elle a besoin d'eau - faute de quoi elle va se faner!"
         ],
         [ # Goodbyes
-        "Je vais au Pays musical pour voir %s!" % Minnie,
-        "Je suis en retard pour mon pique-nique avec %s!" % Donald,
+        f"Je vais au Pays musical pour voir {Minnie}!",
+        f"Je suis en retard pour mon pique-nique avec {Donald}!",
         "Je crois que je vais aller nager à"+lDonaldsDock+".",
         "Oh, je commence à avoir sommeil. Je crois que je vais aller au Pays des Rêves",
         ]
@@ -4340,7 +4340,7 @@ DaisyChatter = (
 
 ChipChatter = (
         [ # Greetings
-        "Bienvenue dans %s !" % lOutdoorZone,
+        f"Bienvenue dans {lOutdoorZone} !",
         "Bonjour, je m'appelle" + Chip + ". Et toi, comment t'appelles-tu ?",
         "Non, je suis" + Chip + ".",
         "Je suis content de te voir % !",
@@ -4352,8 +4352,8 @@ ChipChatter = (
         "Les trous de golf dotés de volcans sont les plus difficiles pour moi.",
         ],
         [ # Goodbyes
-        "Nous allons dans le" + lTheBrrrgh +"pour jouer avec %s." % Pluto,
-        "Nous rendrons visite à %s et pourrons le réparer." % Donald,
+        "Nous allons dans le" + lTheBrrrgh +f"pour jouer avec {Pluto}.",
+        f"Nous rendrons visite à {Donald} et pourrons le réparer.",
         "Je crois que je vais aller me baigner dans" + lDonaldsDock + ".",
         "Oh, j'ai un peu sommeil. Je pense que je vais aller au Pays des Rêves.",
         ]
@@ -4365,7 +4365,7 @@ DaleChatter = (
         "Je suis content de te voir % !",
         "Bonjour, je m'appelle" + Dale + ". Et toi, comment t'appelles-tu ?",
         "Salut, je suis" + Chip + ".",
-        "Bienvenue dans %s !" % lOutdoorZone,
+        f"Bienvenue dans {lOutdoorZone} !",
         "Nous sommes Tic et Tac !",
         ],
         [ # Comments
@@ -4375,7 +4375,7 @@ DaleChatter = (
         ],
         [ # Goodbyes
         "Hihihi" + Pluto + "est un compagnon de jeu amusant.",
-        "D'accord, réparons %s." % Donald,
+        f"D'accord, réparons {Donald}.",
         "Une baignade. Quelle idée rafraîchissante&nbsp;!",
         "Je suis de plus en plus fatigué et ferais bien une petite sieste.",
         ]
@@ -4429,8 +4429,8 @@ GoofySpeedwayChatter = (
         "À la boutique à gags de Dingo, chaque tarte à la crème est garantie de te faire rire ou tes bonbons te seront remboursés !"
         ],
         [ # Goodbyes
-        "Je vais au Pays Musical pour voir %s!" % Mickey,
-        "Aïe, je suis en retard pour mon rendez-vous avec %s!" % Donald,
+        f"Je vais au Pays Musical pour voir {Mickey}!",
+        f"Aïe, je suis en retard pour mon rendez-vous avec {Donald}!",
         "Je crois que je vais aller nager aux "+lDonaldsDock+".",
         "C'est l'heure de faire la sieste. Je vais au Pays des rêves.",
         ]
@@ -8462,7 +8462,7 @@ def getTunnelSignName(trackId, padId):
         return "panneau campagne_tunnel1"
     else:
         genreId = RaceGlobals.getTrackGenre(trackId)
-        return "panneau %s_%stunnel" % (padId + 1, RaceGlobals.getTrackGenreString(genreId))
+        return f"panneau {padId + 1}_{RaceGlobals.getTrackGenreString(genreId)}tunnel"
 
 # Kart Trophy Descriptions
 KartTrophyDescriptions = [
@@ -8843,20 +8843,19 @@ def getRecipeBeanText(beanTuple):
 
     if allTheSame:
         if len(beanTuple) > 1:
-            retval = "%d bonbons %s" % (len(beanTuple),
-                                           BeanColorWords[beanTuple[0]])
+            retval = f"{len(beanTuple)} bonbons {BeanColorWords[beanTuple[0]]}"
         else:
-            retval = "un bonbon %s" % BeanColorWords[beanTuple[0]]
+            retval = f"un bonbon {BeanColorWords[beanTuple[0]]}"
     else:
         retval += 'un'
         maxBeans = len(beanTuple)
         for index in range(maxBeans):
             if index == maxBeans - 1:
-                retval += " et un bonbon %s" % BeanColorWords[beanTuple[index]]
+                retval += f" et un bonbon {BeanColorWords[beanTuple[index]]}"
             elif index == 0:
-                retval += " %s" % BeanColorWords[beanTuple[index]]
+                retval += f" {BeanColorWords[beanTuple[index]]}"
             else:
-                retval += ", %s" % BeanColorWords[beanTuple[index]]
+                retval += f", {BeanColorWords[beanTuple[index]]}"
 
     return retval
 

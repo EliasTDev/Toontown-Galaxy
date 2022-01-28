@@ -5,6 +5,7 @@ from direct.interval.IntervalGlobal import *
 from otp.level import BasicEntities
 from . import MovingPlatform
 
+
 class PlatformEntity(BasicEntities.NodePathEntity):
     def __init__(self, level, entId):
         BasicEntities.NodePathEntity.__init__(self, level, entId)
@@ -27,26 +28,26 @@ class PlatformEntity(BasicEntities.NodePathEntity):
                                      self.floorName)
         self.platform.reparentTo(self)
 
-        startPos = Point3(0,0,0)
+        startPos = Point3(0, 0, 0)
         endPos = self.offset
         distance = Vec3(self.offset).length()
         waitDur = self.period * self.waitPercent
         moveDur = self.period - waitDur
         self.moveIval = Sequence(
-            WaitInterval(waitDur*.5),
-            LerpPosInterval(self.platform, moveDur*.5,
+            WaitInterval(waitDur * .5),
+            LerpPosInterval(self.platform, moveDur * .5,
                             endPos, startPos=startPos,
-                            name='platformOut%s' % self.entId,
-                            blendType = self.motion,
-                            fluid = 1),
-            WaitInterval(waitDur*.5),
-            LerpPosInterval(self.platform, moveDur*.5,
+                            name=f'platformOut{self.entId}',
+                            blendType=self.motion,
+                            fluid=1),
+            WaitInterval(waitDur * .5),
+            LerpPosInterval(self.platform, moveDur * .5,
                             startPos, startPos=endPos,
-                            name='platformBack%s' % self.entId,
-                            blendType = self.motion,
-                            fluid = 1),
+                            name=f'platformBack{self.entId}',
+                            blendType=self.motion,
+                            fluid=1),
             name=self.getUniqueName('platformIval'),
-            )
+        )
         self.moveIval.loop()
         self.moveIval.setT((globalClock.getFrameTime() - self.level.startTime)
                            + (self.period * self.phaseShift))

@@ -19,43 +19,44 @@ import types
 # 'off-floor' event upon jumping and an 'on-floor' event upon landing, that
 # should take care of it.
 
+
 class MovingPlatform(DirectObject.DirectObject, NodePath):
 
     notify = DirectNotifyGlobal.directNotify.newCategory('MovingPlatform')
-    
+
     def __init__(self):
         self.hasLt = 0
         DirectObject.DirectObject.__init__(self)
         NodePath.__init__(self)
-    
+
     def setupCopyModel(self, parentToken, model, floorNodeName=None,
                        parentingNode=None):
         """parentingNode is the node that avatars will be parented to when
         they are on this MovingPlatform; defaults to self"""
-        #("setupCopyModel(token=%s, model=%s, floorNodeName=%s)"%(
-            #parentToken, model, floorNodeName)))
+        # ("setupCopyModel(token=%s, model=%s, floorNodeName=%s)"%(
+        # parentToken, model, floorNodeName)))
         if floorNodeName is None:
             floorNodeName = 'floor'
-        if type(parentToken) == int:
+        if isinstance(parentToken, int):
             parentToken = ToontownGlobals.SPDynamic + parentToken
         self.parentToken = parentToken
 
-        self._name = "MovingPlatform-%s" % (parentToken)
+        self._name = f"MovingPlatform-{parentToken}"
         self.assign(hidden.attachNewNode(self._name))
         self.model = model.copyTo(self)
         self.ownsModel = 1
-        floorList = self.model.findAllMatches("**/%s" % floorNodeName)
+        floorList = self.model.findAllMatches(f"**/{floorNodeName}")
         if len(floorList) == 0:
             MovingPlatform.notify.warning('no floors in model')
             return
         for floor in floorList:
             floor.setName(self._name)
-        if parentingNode == None:
+        if parentingNode is None:
             parentingNode = self
         base.cr.parentMgr.registerParent(self.parentToken, parentingNode)
         self.parentingNode = parentingNode
-        self.accept('enter%s' % self._name, self.__handleEnter)
-        self.accept('exit%s' % self._name, self.__handleExit)
+        self.accept(f'enter{self._name}', self.__handleEnter)
+        self.accept(f'exit{self._name}', self.__handleExit)
 
     """ this doesn't appear to be used
     def setupEntity(self, entityId, parent, floorNodeName=None):
@@ -83,13 +84,14 @@ class MovingPlatform(DirectObject.DirectObject, NodePath):
         # If some external party set it up, they are responsible for
         # cleaning up the parentingNode. (for instance ConveyorBelt)
         if (hasattr(self, "parentingNode") and
-            (self.parentingNode is self)):
+                (self.parentingNode is self)):
             del self.parentingNode
-        
+
     def getEnterEvent(self):
-        return '%s-enter' % self._name
+        return f'{self._name}-enter'
+
     def getExitEvent(self):
-        return '%s-exit' % self._name
+        return f'{self._name}-exit'
 
     def releaseLocalToon(self):
         """ if localToon is parented to us, parents localToon to render """
@@ -97,30 +99,33 @@ class MovingPlatform(DirectObject.DirectObject, NodePath):
             self.__releaseLt()
 
     def __handleEnter(self, collEntry):
-        self.notify.debug('on movingPlatform %s' % (self._name))
+        self.notify.debug(f'on movingPlatform {self._name}')
         self.__grabLt()
         messenger.send(self.getEnterEvent())
+
     def __handleExit(self, collEntry):
-        self.notify.debug('off movingPlatform %s' % (self._name))
+        self.notify.debug(f'off movingPlatform {self._name}')
         self.__releaseLt()
         messenger.send(self.getExitEvent())
 
     def __handleOnFloor(self, collEntry):
         if (collEntry.getIntoNode().getName() == self._name):
             self.__handleEnter(collEntry)
+
     def __handleOffFloor(self, collEntry):
         if (collEntry.getIntoNode().getName() == self._name):
             self.__handleExit(collEntry)
-            
+
     def __grabLt(self):
         base.localAvatar.b_setParent(self.parentToken)
         self.hasLt = 1
+
     def __releaseLt(self):
         if base.localAvatar.getParent().compareTo(self.parentingNode) == 0:
             base.localAvatar.b_setParent(ToontownGlobals.SPRender)
             base.localAvatar.controlManager.currentControls.doDeltaPos()
         self.hasLt = 0
-    
+
 
 """
 platformModel = loader.loadModel("phase_4/models/minigames/block")

@@ -3,9 +3,11 @@ from direct.distributed import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from toontown.toonbase import TTLocalizer
 
+
 class DistributedTrophyMgrAI(DistributedObjectAI.DistributedObjectAI):
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTrophyMgrAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedTrophyMgrAI')
 
     def __init__(self, air):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
@@ -39,12 +41,12 @@ class DistributedTrophyMgrAI(DistributedObjectAI.DistributedObjectAI):
         """
         # Make a copy so we can manipulate it
         i = [list(t) for t in list(self.trophyDict.items())]
-            
+
         # Recompute only if the score is greater than the lowest score
         # or if there are less than 10 players in the list
-        if ((score > self.__minLeaderScore) or (len(i) < 10)):        
+        if ((score > self.__minLeaderScore) or (len(i) < 10)):
             # Reverse the items so we have score first
-            list(map(lambda r: r.reverse(),i))
+            list(map(lambda r: r.reverse(), i))
             # Sort by score
             i.sort()
             # Reverse that score so highest are first
@@ -52,20 +54,22 @@ class DistributedTrophyMgrAI(DistributedObjectAI.DistributedObjectAI):
             # Truncate the leaders to the max
             # TODO: what about a tie?
             self.__leaders = i[:self.maxLeaders]
-            
+
             # Keep some side tracking variables as an optimization so we
             # do not need to compute them every time.
             self.__leaderScores = [t[0] for t in self.__leaders]
             self.__minLeaderScore = min(self.__leaderScores)
             self.__leaderAvIds = [t[1] for t in self.__leaders]
-            self.__leaderNames = [self.nameDict[avId] for avId in self.__leaderAvIds]
-    
-            self.notify.debug("recomputed leaders:\n leaderScores: %s\n leaderAvIds: %s\n leaderNames: %s" %
-                              (self.__leaderScores, self.__leaderAvIds, self.__leaderNames))
-            
+            self.__leaderNames = [self.nameDict[avId]
+                                  for avId in self.__leaderAvIds]
+
+            self.notify.debug(
+                "recomputed leaders:\n leaderScores: %s\n leaderAvIds: %s\n leaderNames: %s" %
+                (self.__leaderScores, self.__leaderAvIds, self.__leaderNames))
+
             # Yep, it changed (well, most likely changed)
             return True
-        
+
         else:
             return False
 
@@ -86,12 +90,12 @@ class DistributedTrophyMgrAI(DistributedObjectAI.DistributedObjectAI):
             # Send a message to the DistributedHQInteriorAIs to update
             # their leaderboards
             messenger.send("leaderboardChanged")
-        self.notify.debug("addTrophy: %s avId: %s" % (addedScore, avId))
+        self.notify.debug(f"addTrophy: {addedScore} avId: {avId}")
         av = self.air.doId2do.get(avId)
         if av:
             av.d_setTrophyScore(score)
         self.air.writeServerEvent(
-            'trophy', avId, "%s|%s" % (score, addedScore))
+            'trophy', avId, f"{score}|{addedScore}")
 
     def removeTrophy(self, avId, numFloors):
         if avId in self.trophyDict:
@@ -102,30 +106,34 @@ class DistributedTrophyMgrAI(DistributedObjectAI.DistributedObjectAI):
                 # Send a message to the DistributedHQInteriorAIs to update
                 # their leaderboards
                 messenger.send("leaderboardChanged")
-            self.notify.debug("removeTrophy: %s avId: %s" % (removedScore, avId))
+            self.notify.debug(
+                f"removeTrophy: {removedScore} avId: {avId}")
 
-            # Whisper to the avatar to let them know their precious trophy is gone
+            # Whisper to the avatar to let them know their precious trophy is
+            # gone
             av = self.air.doId2do.get(avId)
             if av:
                 av.d_setSystemMessage(0, TTLocalizer.RemoveTrophy)
                 av.d_setTrophyScore(self.trophyDict[avId])
-            
+
             if self.trophyDict[avId] <= 0:
                 del self.trophyDict[avId]
                 del self.nameDict[avId]
-                self.notify.debug("removeTrophy avId: %s removed from dict" % avId)
+                self.notify.debug(
+                    f"removeTrophy avId: {avId} removed from dict")
             self.air.writeServerEvent(
-                'trophy', avId, "%s|%s" % (score, -removedScore))
+                'trophy', avId, f"{score}|{-removedScore}")
         else:
             # This should not happen
-            self.notify.warning("Tried to remove a trophy from avId: %s that has no trophies" % avId)
+            self.notify.warning(
+                f"Tried to remove a trophy from avId: {avId} that has no trophies")
 
     def getSortedScores(self):
         """
         Returns a list of score,avId pairs in sorted order, highest first
         """
         i = [list(t) for t in list(self.trophyDict.items())]
-        list(map(lambda r: r.reverse(),i))
+        list(map(lambda r: r.reverse(), i))
         i.sort()
         i.reverse()
         return i

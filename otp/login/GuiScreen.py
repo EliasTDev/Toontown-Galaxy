@@ -8,6 +8,7 @@ from direct.directnotify import DirectNotifyGlobal
 from otp.otpbase import OTPLocalizer
 from direct.task.Task import Task
 
+
 class GuiScreen:
     notify = DirectNotifyGlobal.directNotify.newCategory("GuiScreen")
 
@@ -29,7 +30,7 @@ class GuiScreen:
         # when we set the focus explicitly, we don't want to play
         # the click sound
         self.suppressClickSound = 0
-        
+
     def startFocusMgmt(self,
                        startFocus=0,
                        enterPressBehavior=DGG.ENTERPRESS_ADVANCE_IFNOTEMPTY,
@@ -38,7 +39,7 @@ class GuiScreen:
         """
         Sets up handlers to handle management of input focus
         For now, you must set self.focusList before calling startFocusMgmt.
-        
+
         GuiScreen hooks into the callbacks of DirectEntrys. Thus, GuiScreen
         is automatically notified when a DirectEntry focus item gains the
         input focus through a mouse click. The same is true for
@@ -130,7 +131,7 @@ class GuiScreen:
                 item['command'] = None
                 # this has to be a list (not a tuple)
                 item['extraArgs'] = []
-                
+
             elif isinstance(item, DirectScrolledList):
                 # for DirectScrolledLists, 'command' is invoked whenever
                 # the up/down controls are pressed; hook into that to
@@ -161,7 +162,7 @@ class GuiScreen:
                 # DGG.ENTERPRESS_ADVANCE_IFNOTEMPTY is only meaningful for
                 # DirectEntrys
                 if ((not isinstance(item, DirectEntry)) and
-                    (behavior == GuiScreen_ENTERPRESS_ADVANCE_IFNOTEMPTY)):
+                        (behavior == GuiScreen_ENTERPRESS_ADVANCE_IFNOTEMPTY)):
                     """ too much
                     GuiScreen.notify.debug(
                         "DGG.ENTERPRESS_ADVANCE_IFNOTEMPTY is not a valid "
@@ -175,13 +176,13 @@ class GuiScreen:
                     self.__advanceFocusIfNotEmpty,
                     self.__neverAdvanceFocus,
                     self.__ignoreEnterPress,
-                    )
+                )
                 self.enterPressHandlers[item] = commandHandlers[behavior]
 
         self.setFocus(startFocus)
 
     def focusMgmtActive(self):
-        return self.focusIndex != None
+        return self.focusIndex is not None
 
     def stopFocusMgmt(self):
         """
@@ -233,8 +234,8 @@ class GuiScreen:
         less than zero, it will be wrapped.
         """
         #GuiScreen.notify.spam('setFocus: %s' % arg)
-        
-        if type(arg) == type(0):
+
+        if isinstance(arg, type(0)):
             index = arg
         else:
             assert arg in self.focusList
@@ -275,7 +276,7 @@ class GuiScreen:
         """
         removes focus from focus item so that nothing has input focus
         """
-        #GuiScreen.notify.spam('removeFocus')
+        # GuiScreen.notify.spam('removeFocus')
         focusItem = self.getFocusItem()
         if isinstance(focusItem, DirectEntry):
             focusItem['focus'] = 0
@@ -287,7 +288,7 @@ class GuiScreen:
         """
         call to restore the input focus after a call to removeFocus()
         """
-        #GuiScreen.notify.spam('restoreFocus')
+        # GuiScreen.notify.spam('restoreFocus')
         self.setFocus(self.getFocusItem())
 
     def __setFocusIndex(self, index):
@@ -409,7 +410,7 @@ class GuiScreen:
         self.__focusChangedThisFrame = 0
         self.frameStartTaskName = 'GuiScreenFrameStart'
         taskMgr.add(self.__handleFrameStart, self.frameStartTaskName, -100)
-        
+
     def __stopFrameStartTask(self):
         taskMgr.remove(self.frameStartTaskName)
         del self.frameStartTaskName
@@ -426,7 +427,7 @@ class GuiScreen:
         self.__chainToUserCommandHandler(self.focusList[index])
         # set the focus to this item
         # don't play a sound if this DirectScrolledList already has the focus
-        self.setFocus(index, suppressSound=(self.getFocusIndex()==index))
+        self.setFocus(index, suppressSound=(self.getFocusIndex() == index))
 
     ### DGG.ENTER key handler ##########
 
@@ -448,10 +449,9 @@ class GuiScreen:
 
         # user handler may have shut us down or changed the focus
         if (self.focusMgmtActive() and
-            focusItem == self.getFocusItem()):
+                focusItem == self.getFocusItem()):
             # call the enter-press handler for the focus item
             self.enterPressHandlers[focusItem]()
-
 
     ### DGG.ENTER key behavior handlers ############
 
@@ -493,7 +493,6 @@ class GuiScreen:
         """
         pass
 
-
     # Deal with timeouts and such:
 
     # Maybe GuiScreen.py isn't the best place for this.  Please move this
@@ -517,11 +516,11 @@ class GuiScreen:
             requestName, globalClock.getFrameTime()))
         dialogClass = OTPGlobals.getDialogClass()
         self.waitingForDatabase = dialogClass(
-            text = OTPLocalizer.GuiScreenToontownUnavailable,
-            dialogName = "WaitingForDatabase",
-            buttonTextList = [OTPLocalizer.GuiScreenCancel],
-            style = OTPDialog.Acknowledge,
-            command = self.__handleCancelWaiting)
+            text=OTPLocalizer.GuiScreenToontownUnavailable,
+            dialogName="WaitingForDatabase",
+            buttonTextList=[OTPLocalizer.GuiScreenCancel],
+            style=OTPDialog.Acknowledge,
+            command=self.__handleCancelWaiting)
         self.waitingForDatabase.show()
         taskMgr.doMethodLater(OTPGlobals.DatabaseGiveupTimeout,
                               self.__giveUpWaitingForDatabase,
@@ -536,7 +535,7 @@ class GuiScreen:
         return Task.done
 
     def cleanupWaitingForDatabase(self):
-        if self.waitingForDatabase != None:
+        if self.waitingForDatabase is not None:
             self.waitingForDatabase.cleanup()
             self.waitingForDatabase = None
         taskMgr.remove("waitingForDatabase")

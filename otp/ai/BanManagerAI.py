@@ -3,10 +3,13 @@
 # Purpose: Module to ban avatars while inside the game and kick
 #          them out of the game
 #################################################################
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import os
 from panda3d.core import HTTPClient, Ramfile
 from direct.directnotify import DirectNotifyGlobal
+
 
 class BanManagerAI:
     notify = DirectNotifyGlobal.directNotify.newCategory("BanManagerAI")
@@ -18,12 +21,14 @@ class BanManagerAI:
     # http://qnhspapp02.wdig.com:8005/dis-hold/action/event
     # live
     # https://vapps.disl.starwave.com:8005/dis-hold/action/event
-    #TODO change to our own site eventually
-    BanUrl = simbase.config.GetString("ban-base-url", "https://vapps.disl.starwave.com:8005/dis-hold/action/event")
+    # TODO change to our own site eventually
+    BanUrl = simbase.config.GetString(
+        "ban-base-url",
+        "https://vapps.disl.starwave.com:8005/dis-hold/action/event")
     App = simbase.config.GetString("ban-app-name", "TTWorldAI")
     Product = simbase.config.GetString("ban-product", "Toontown")
     EventName = simbase.config.GetString("ban-event-name", "tthackattempt")
-    
+
     def __init__(self):
         """Construct and initialize members."""
         self.curBanRequestNum = 0
@@ -32,39 +37,42 @@ class BanManagerAI:
 
     def ban(self, avatarId, dislid, comment):
         """Ban the player"""
-        
+
         parameters = ""
-        parameters += "app=%s" % self.App
-        parameters += "&product=%s" % self.Product
-        parameters += "&user_id=%s" % dislid
-        parameters += "&event_name=%s" % self.EventName
-        commentWithAvatarId = "avId-%s " % avatarId
+        parameters += f"app={self.App}"
+        parameters += f"&product={self.Product}"
+        parameters += f"&user_id={dislid}"
+        parameters += f"&event_name={self.EventName}"
+        commentWithAvatarId = f"avId-{avatarId} "
         commentWithAvatarId += comment
-        parameters += "&comments=%s" % urllib.parse.quote(str(commentWithAvatarId))
+        parameters += f"&comments={urllib.parse.quote(str(commentWithAvatarId))}"
 
         # get the base ban url from the environment variable first
         baseUrlToUse = self.BanUrl
         osBaseUrl = os.getenv("BAN_URL")
         if osBaseUrl:
-            baseUrlToUse  = osBaseUrl
+            baseUrlToUse = osBaseUrl
         fullUrl = baseUrlToUse + "?" + parameters
-        
-        self.notify.info ("ban request %s dislid=%s comment=%s fullUrl=%s" % (self.curBanRequestNum, dislid, comment, fullUrl))
-        simbase.air.writeServerEvent('ban_request', avatarId, "%s|%s|%s" % (dislid, comment, fullUrl))
 
-        if ConfigVariableBool('do-actual-ban',False).value:            
+        self.notify.info(
+            f"ban request {self.curBanRequestNum} dislid={dislid} comment={comment} fullUrl={fullUrl}")
+        simbase.air.writeServerEvent(
+            'ban_request', avatarId, f"{dislid}|{comment}|{fullUrl}")
+
+        if ConfigVariableBool('do-actual-ban', False).value:
             newTaskName = "ban-task-%d" % self.curBanRequestNum
             newTask = taskMgr.add(self.doBanUrlTask, newTaskName)
             newTask.banRequestNum = self.curBanRequestNum
             http = HTTPClient.getGlobalPtr()
-            channel = http.makeChannel(False) # hmm should we make true for a persistent connection?
-            self.channels [ self.curBanRequestNum] = channel
+            # hmm should we make true for a persistent connection?
+            channel = http.makeChannel(False)
+            self.channels[self.curBanRequestNum] = channel
             rf = Ramfile()
-            self.ramFiles [ self.curBanRequestNum] = rf
+            self.ramFiles[self.curBanRequestNum] = rf
 
             channel.beginGetDocument(fullUrl)
             channel.downloadToRam(rf)
-        
+
         self.curBanRequestNum += 1
 
     def cleanupBanReq(self, banReq):
@@ -76,7 +84,6 @@ class BanManagerAI:
         if ramfile:
             del self.ramFiles[banReq]
 
-
     def doBanUrlTask(self, task):
         """Continue downloading the ban url if needed."""
         banReq = task.banRequestNum
@@ -85,7 +92,7 @@ class BanManagerAI:
             if channel.run():
                 return task.cont
         else:
-            self.notify.warning("no channel for ban req %s" % banReq)
+            self.notify.warning(f"no channel for ban req {banReq}")
             self.cleanupBanReq(banReq)
             return task.done
 
@@ -93,6 +100,7 @@ class BanManagerAI:
         ramfile = self.ramFiles.get(banReq)
         if ramfile:
             result = ramfile.getData()
-        self.notify.info("done processing ban request %s, ramFile=%s" % (banReq, result))
+        self.notify.info(
+            f"done processing ban request {banReq}, ramFile={result}")
         self.cleanupBanReq(banReq)
         return task.done

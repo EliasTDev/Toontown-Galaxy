@@ -3,12 +3,13 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.DirectObject import DirectObject
 
+
 class SCObject(DirectObject):
     """ SCObject is the base class for all entities that make up a
     SpeedChat tree. """
 
     notify = DirectNotifyGlobal.directNotify.newCategory('SpeedChat')
-    
+
     def __init__(self):
         self.settingsRef = None
         self.__visible = 0
@@ -23,12 +24,15 @@ class SCObject(DirectObject):
     this object appears on screen and no longer appears on the screen,
     respectively. Derived classes can override these functions and
     perform the appropriate actions """
+
     def enterVisible(self):
-        #print 'enterVisible: %s' % self
+        # print 'enterVisible: %s' % self
         self.__visible = 1
+
     def exitVisible(self):
-        #print 'exitVisible: %s' % self
+        # print 'exitVisible: %s' % self
         self.__visible = 0
+
     def isVisible(self):
         return self.__visible
 
@@ -36,8 +40,10 @@ class SCObject(DirectObject):
     # has changed, such that it needs to rebuild itself before being shown
     def invalidate(self):
         self.__dirty = 1
+
     def isDirty(self):
         return self.__dirty
+
     def validate(self):
         self.__dirty = 0
 
@@ -50,7 +56,7 @@ class SCObject(DirectObject):
     def getEventName(self, name):
         """ the names of all events that pertain to a specific SpeedChat
         object should come from this function """
-        return '%s%s' % (self.settingsRef.eventPrefix, name)
+        return f'{self.settingsRef.eventPrefix}{name}'
 
     def getColorScheme(self):
         return self.settingsRef.colorScheme

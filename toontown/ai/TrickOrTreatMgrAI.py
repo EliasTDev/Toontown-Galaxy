@@ -7,18 +7,19 @@ from otp.otpbase import OTPGlobals
 import time
 
 GOALS = {
-    0 : 2649,   # TTC
-    1 : 1834,   # DD
-    2 : 4835,   # MM
-    3 : 5620,   # DG
-    4 : 3707,   # BR
-    5 : 9619,   # DL
-    }
+    0: 2649,   # TTC
+    1: 1834,   # DD
+    2: 4835,   # MM
+    3: 5620,   # DG
+    4: 3707,   # BR
+    5: 9619,   # DL
+}
 
 # This dictionary defines the milestones for this scavenger hunt
 MILESTONES = {
     0: ((0, 1, 2, 3, 4, 5), 'All Trick-or-Treat goals found'),
-    }
+}
+
 
 class TrickOrTreatMgrAI(ScavengerHuntMgrAI.ScavengerHuntMgrAI):
     """
@@ -36,11 +37,8 @@ class TrickOrTreatMgrAI(ScavengerHuntMgrAI.ScavengerHuntMgrAI):
         Create the listeners that will look for an event in the relavent zone
         """
         for id in list(self.goals.keys()):
-            mgrAI = DistributedTrickOrTreatTargetAI.DistributedTrickOrTreatTargetAI(self.air,
-                                                                                self.hunt,
-                                                                                id,
-                                                                                self,
-                                                                                )
+            mgrAI = DistributedTrickOrTreatTargetAI.DistributedTrickOrTreatTargetAI(
+                self.air, self.hunt, id, self, )
             self.targets[id] = mgrAI
             self.targets[id].generateWithRequired(self.goals[id])
 
@@ -52,13 +50,16 @@ class TrickOrTreatMgrAI(ScavengerHuntMgrAI.ScavengerHuntMgrAI):
     def milestones(self):
         return MILESTONES
 
-    def huntCompletedReward(self, avId, goal, firstTime = False):
+    def huntCompletedReward(self, avId, goal, firstTime=False):
         """
         Reward the Toon for completing the TrickOrTreat with
         a pumpkin head
         """
         if firstTime:
-            self.air.writeServerEvent('pumpkinHeadEarned', avId, 'Trick-or-Treat scavenger hunt complete.')
+            self.air.writeServerEvent(
+                'pumpkinHeadEarned',
+                avId,
+                'Trick-or-Treat scavenger hunt complete.')
 
         av = self.air.doId2do.get(avId)
         localTime = time.localtime()
@@ -69,14 +70,16 @@ class TrickOrTreatMgrAI(ScavengerHuntMgrAI.ScavengerHuntMgrAI):
                 )
 
         from toontown.ai import HolidayManagerAI
-        endTime = HolidayManagerAI.HolidayManagerAI.holidays[self.holidayId].getEndTime(date)
+        endTime = HolidayManagerAI.HolidayManagerAI.holidays[self.holidayId].getEndTime(
+            date)
         endTime += ToontownGlobals.TOT_REWARD_END_OFFSET_AMOUNT
 
         if not av:
             self.notify.warning(
-                'Tried to send milestone feedback to av %s, but they left' % avId)
+                f'Tried to send milestone feedback to av {avId}, but they left')
         else:
-            av.b_setCheesyEffect(OTPGlobals.CEPumpkin, 0, (time.time()/60)+1)
+            av.b_setCheesyEffect(
+                OTPGlobals.CEPumpkin, 0, (time.time() / 60) + 1)
             #av.b_setCheesyEffect(OTPGlobals.CEPumpkin, 0, endTime/60)
 
     def huntGoalAlreadyFound(self, avId):
@@ -86,7 +89,7 @@ class TrickOrTreatMgrAI(ScavengerHuntMgrAI.ScavengerHuntMgrAI):
         av = self.air.doId2do.get(avId)
         if not av:
             self.notify.warning(
-                'Tried to send goal feedback to av %s, but they left' % avId)
+                f'Tried to send goal feedback to av {avId}, but they left')
         else:
             av.sendUpdate('trickOrTreatTargetMet', [0])
 
@@ -100,4 +103,5 @@ class TrickOrTreatMgrAI(ScavengerHuntMgrAI.ScavengerHuntMgrAI):
         av.addMoney(ToontownGlobals.TOT_REWARD_JELLYBEAN_AMOUNT)
         self.avatarCompletedGoal(avId, goal)
         # Start jellybean reward effect
-        av.sendUpdate('trickOrTreatTargetMet', [ToontownGlobals.TOT_REWARD_JELLYBEAN_AMOUNT])
+        av.sendUpdate('trickOrTreatTargetMet',
+                      [ToontownGlobals.TOT_REWARD_JELLYBEAN_AMOUNT])

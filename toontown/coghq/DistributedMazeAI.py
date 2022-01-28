@@ -22,7 +22,7 @@ class DistributedMazeAI(DistributedEntityAI.DistributedEntityAI):
         """Delete ourself and cleanup tasks."""
         self.removeAllTasks()
         DistributedEntityAI.DistributedEntityAI.delete(self)
-        
+
     def announceGenerate(self):
         """Load fields dependent on required fields."""
         DistributedEntityAI.DistributedEntityAI.announceGenerate(self)
@@ -31,14 +31,14 @@ class DistributedMazeAI(DistributedEntityAI.DistributedEntityAI):
     def getRoomDoId(self):
         """Return the doId of the room that contains us."""
         return self.roomDoId
-        
+
     def setClientTriggered(self):
         """A player entered us, start the moles."""
         if not hasattr(self, 'gameStartTime'):
             self.gameStartTime = globalClock.getRealTime()
-            self.b_setGameStart(globalClockDelta.localToNetworkTime(\
-                            self.gameStartTime))
-                            
+            self.b_setGameStart(globalClockDelta.localToNetworkTime(
+                self.gameStartTime))
+
     def b_setGameStart(self, timestamp):
         # send the distributed message first, so that any network msgs
         # sent by the subclass upon start of the game will arrive
@@ -61,8 +61,11 @@ class DistributedMazeAI(DistributedEntityAI.DistributedEntityAI):
 
     def prepareForGameStartOrRestart(self):
         """Zero out needed fields on a start or restart of the mole field."""
-        self.doMethodLater(self.GameDuration, self.gameEndingTimeHit, self.mazeEndTimeTaskName  )
-        
+        self.doMethodLater(
+            self.GameDuration,
+            self.gameEndingTimeHit,
+            self.mazeEndTimeTaskName)
+
     def setFinishedMaze(self):
         senderId = self.air.getAvatarIdFromSender()
         if senderId not in self.finishedList:
@@ -74,13 +77,16 @@ class DistributedMazeAI(DistributedEntityAI.DistributedEntityAI):
                     toon.toonUp(20.0)
                 lastToon = 0
                 if hasattr(self, 'level'):
-                    numToons =  len(self.level.presentAvIds)
+                    numToons = len(self.level.presentAvIds)
                     if numToons == (len(self.finishedList) + 1):
                         lastToon = 1
-                self.sendUpdate("toonFinished" , [senderId, len(self.finishedList), lastToon])
+                self.sendUpdate(
+                    "toonFinished", [
+                        senderId, len(
+                            self.finishedList), lastToon])
                 #print("toonFinished sent")
             self.finishedList.append(senderId)
-        
+
     def gameEndingTimeHit(self, task):
         """Handle the game hitting its ending time."""
         roomId = self.getLevelDoId()
@@ -93,7 +99,7 @@ class DistributedMazeAI(DistributedEntityAI.DistributedEntityAI):
 
                     self.finishedList.append(avId)
         self.sendUpdate("setGameOver", [])
-        
+
     def damageMe(self):
         senderId = self.air.getAvatarIdFromSender()
         av = simbase.air.doId2do.get(senderId)
@@ -103,4 +109,4 @@ class DistributedMazeAI(DistributedEntityAI.DistributedEntityAI):
             playerIds = room.presentAvIds
             if av and (senderId in playerIds):
                 av.takeDamage(self.DamageOnFailure, quietly=0)
-                room.sendUpdate('forceOuch',[self.DamageOnFailure])
+                room.sendUpdate('forceOuch', [self.DamageOnFailure])

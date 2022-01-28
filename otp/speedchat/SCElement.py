@@ -8,6 +8,7 @@ from .SCObject import SCObject
 from direct.showbase.PythonUtil import boolEqual
 from otp.otpbase import OTPGlobals
 
+
 class SCElement(SCObject, NodePath):
     """ SCElement is the base class for all entities that can appear
     as entries in a SpeedChat menu. """
@@ -21,10 +22,10 @@ class SCElement(SCObject, NodePath):
 
         self.SerialNum = SCElement.SerialNum
         SCElement.SerialNum += 1
-        node = hidden.attachNewNode('SCElement%s' % self.SerialNum)
+        node = hidden.attachNewNode(f'SCElement{self.SerialNum}')
         NodePath.__init__(self, node)
 
-        self.FinalizeTaskName = 'SCElement%s_Finalize' % self.SerialNum
+        self.FinalizeTaskName = f'SCElement{self.SerialNum}_Finalize'
 
         self.parentMenu = parentMenu
         self.__active = 0
@@ -35,7 +36,7 @@ class SCElement(SCObject, NodePath):
         self.lastWidth = 0
         self.lastHeight = 0
 
-        self.setDimensions(0,0)
+        self.setDimensions(0, 0)
 
         # how much space to put in around the edges of the button
         self.padX = .25
@@ -54,6 +55,7 @@ class SCElement(SCObject, NodePath):
 
     def setParentMenu(self, parentMenu):
         self.parentMenu = parentMenu
+
     def getParentMenu(self):
         return self.parentMenu
 
@@ -70,7 +72,7 @@ class SCElement(SCObject, NodePath):
         """ the mouse has just entered this entity """
         if self.parentMenu is not None:
             self.parentMenu.memberGainedInputFocus(self)
-        
+
     def onMouseLeave(self, event):
         """ the mouse has just left this entity """
         if self.parentMenu is not None:
@@ -86,8 +88,10 @@ class SCElement(SCObject, NodePath):
     other element types might play some sort of animation on activation).
     'active' generally corresponds to having the input focus, but not
     always; see 'hasStickyFocus' below. """
+
     def enterActive(self):
         self.__active = 1
+
     def exitActive(self):
         self.__active = 0
 
@@ -106,6 +110,7 @@ class SCElement(SCObject, NodePath):
     """ If this element is marked as 'not viewable', it will disappear from
     its parent menu, and it will not be possible for the user to
     interact with this element. """
+
     def setViewable(self, viewable):
         if (not boolEqual(self.__viewable, viewable)):
             self.__viewable = viewable
@@ -129,15 +134,15 @@ class SCElement(SCObject, NodePath):
         text.setText(dText)
         bounds = text.getCardActual()
         # there's already padding on the right, apparently
-        width  = abs(bounds[1] - bounds[0]) + self.padX
+        width = abs(bounds[1] - bounds[0]) + self.padX
         # the height will always be the same regardless of the string
-        height = abs(bounds[3] - bounds[2]) + 2.*self.padZ
+        height = abs(bounds[3] - bounds[2]) + 2. * self.padZ
         return width, height
 
     def setDimensions(self, width, height):
         """ Call this to tell this element how big it should be. Must be
         called before calling finalize. """
-        self.width  = float(width)
+        self.width = float(width)
         self.height = float(height)
         if (self.lastWidth, self.lastHeight) != (self.width, self.height):
             self.invalidate()
@@ -186,35 +191,35 @@ class SCElement(SCObject, NodePath):
         """
         if not self.isDirty():
             return
-        
+
         SCObject.finalize(self)
-        
+
         if hasattr(self, 'button'):
             self.button.destroy()
             del self.button
 
-        halfHeight = self.height/2.
+        halfHeight = self.height / 2.
 
         # if we're given a 'center' value for the text alignment,
         # calculate the appropriate text X position
         textX = 0
         if 'text_align' in dbArgs:
             if dbArgs['text_align'] == TextNode.ACenter:
-                textX = self.width/2.
+                textX = self.width / 2.
 
         args = {
             'text': self.getDisplayText(),
-            'frameColor': (0,0,0,0),
-            'rolloverColor': self.getColorScheme().getRolloverColor()+(1,),
-            'pressedColor': self.getColorScheme().getPressedColor()+(1,),
+            'frameColor': (0, 0, 0, 0),
+            'rolloverColor': self.getColorScheme().getRolloverColor() + (1,),
+            'pressedColor': self.getColorScheme().getPressedColor() + (1,),
             'text_font': OTPGlobals.getInterfaceFont(),
             'text_align': TextNode.ALeft,
-            'text_fg': self.getColorScheme().getTextColor()+(1,),
-            'text_pos': (textX,-.25-halfHeight,0),
+            'text_fg': self.getColorScheme().getTextColor() + (1,),
+            'text_pos': (textX, -.25 - halfHeight, 0),
             'relief': DGG.FLAT,
             # disable the 'press effect' (slight scale-down)
             'pressEffect': 0,
-            }
+        }
         # add external parameters and apply any overrides
         args.update(dbArgs)
 
@@ -229,14 +234,14 @@ class SCElement(SCObject, NodePath):
         btn.destroy();w=3;h=2;btn = DirectButton(parent=aspect2d,frameSize=(0,w,-h,0),text='TEST',frameColor=(.8,.8,1,1),text_font=OTPGlobals.getInterfaceFont(),text_align=TextNode.ALeft,text_fg=(0,0,0,1),text_pos=(0,-.25-(h/2.),0),image=('phase_3/models/props/page-arrow', 'poly'),image_pos=(w*.9,0,-h/2.),state=DGG.NORMAL,relief=DGG.RAISED);btn.setPos(-.5,0,0);btn.setScale(.5)"""
 
         btn = DirectButton(
-            parent = self,
-            frameSize = (0,self.width,
-                         -self.height,0),
+            parent=self,
+            frameSize=(0, self.width,
+                       -self.height, 0),
             # this doesn't trigger until mouse-up. We want to trigger
             # on mouse-down; see the 'bind' calls below
             #command = self.onMouseClick,
             **args
-            )
+        )
 
         # Set frame color for rollover and pressed states
         btn.frameStyle[DGG.BUTTON_ROLLOVER_STATE].setColor(*rolloverColor)
@@ -244,17 +249,16 @@ class SCElement(SCObject, NodePath):
         btn.updateFrameStyle()
 
         # listen for input events
-        btn.bind(DGG.ENTER,   self.onMouseEnter)
-        btn.bind(DGG.EXIT,    self.onMouseLeave)
+        btn.bind(DGG.ENTER, self.onMouseEnter)
+        btn.bind(DGG.EXIT, self.onMouseLeave)
         btn.bind(DGG.B1PRESS, self.onMouseClick)
         self.button = btn
 
         # store the new display params
-        self.lastWidth  = self.width
+        self.lastWidth = self.width
         self.lastHeight = self.height
 
         self.validate()
 
     def __str__(self):
-        return '%s: %s' % (self.__class__.__name__, self.getDisplayText())
-    
+        return f'{self.__class__.__name__}: {self.getDisplayText()}'

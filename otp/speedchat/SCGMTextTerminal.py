@@ -6,6 +6,7 @@ from otp.speedchat import SpeedChatGMHandler
 # args: textId
 SCGMTextMsgEvent = 'SCGMTextMsg'
 
+
 class SCGMTextTerminal(SCTerminal):
     """ SCGMTextTerminal represents a terminal SpeedChat entry that
     contains a piece of static (never-changing/constant) text sent
@@ -14,6 +15,7 @@ class SCGMTextTerminal(SCTerminal):
     When selected, generates a 'SCGMTextMsg' event, with arguments:
     - textId (32-bit; use as index)
     """
+
     def __init__(self, textId):
         SCTerminal.__init__(self)
         gmHandler = SpeedChatGMHandler.SpeedChatGMHandler()

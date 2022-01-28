@@ -7,9 +7,11 @@ from toontown.coghq import BarrelBase
 from otp.level import BasicEntities
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedBarrelBase(BasicEntities.DistributedNodePathEntity,
                             BarrelBase.BarrelBase):
-    notify = DirectNotifyGlobal.directNotify.newCategory("DistributedBarrelBase")
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedBarrelBase")
 
     def __init__(self, cr):
         self.rewardPerGrabMax = 0
@@ -24,21 +26,21 @@ class DistributedBarrelBase(BasicEntities.DistributedNodePathEntity,
         self.gagNode = None
         self.gagModel = None
         self.barrel = None
-        
+
     def disable(self):
         BasicEntities.DistributedNodePathEntity.disable(self)
         self.ignoreAll()
         if self.animTrack:
             self.animTrack.pause()
             self.animTrack = None
-            
+
     def generate(self):
         """generate(self)
         This method is called when the DistributedEntity is reintroduced
         to the world, either for the first time or from the cache.
         """
         BasicEntities.DistributedNodePathEntity.generate(self)
-        
+
     def delete(self):
         BasicEntities.DistributedNodePathEntity.delete(self)
 
@@ -55,7 +57,7 @@ class DistributedBarrelBase(BasicEntities.DistributedNodePathEntity,
 
         # At this point DistributedEntity has filled out all its
         # attributes.  We can now load the model and apply the label
-        
+
         # Load the model, (using loadModelOnce), and child it to the nodepath
         self.loadModel()
 
@@ -70,12 +72,12 @@ class DistributedBarrelBase(BasicEntities.DistributedNodePathEntity,
         self.collNodePath = self.barrel.attachNewNode(self.collNode)
         self.collNodePath.hide()
         self.applyLabel()
-        
+
         # Add a hook looking for collisions with localToon, and call
         # requestGrab.
         self.accept(self.uniqueName('enterbarrelSphere'),
                     self.handleEnterSphere)
-        
+
     def loadModel(self):
         # Load the sound effect
         self.grabSound = base.loader.loadSfx(self.grabSoundPath)
@@ -83,19 +85,19 @@ class DistributedBarrelBase(BasicEntities.DistributedNodePathEntity,
 
         # load the barrel model
         self.barrel = loader.loadModel("phase_4/models/cogHQ/gagTank")
-        
+
         self.barrel.setScale(self.barrelScale)
         self.barrel.reparentTo(self)
 
         # set up the node to which the label will be parented
         # use dcs node once a locator is added
         dcsNode = self.barrel.find("**/gagLabelDCS")
-        dcsNode.setColor(.15,.15,.1)
+        dcsNode.setColor(.15, .15, .1)
 
         self.gagNode = self.barrel.attachNewNode("gagNode")
-        self.gagNode.setPosHpr(0.0,-2.62,4.0,0,0,0)
+        self.gagNode.setPosHpr(0.0, -2.62, 4.0, 0, 0, 0)
         # desaturate the label a bit
-        self.gagNode.setColorScale(.7,.7,.6,1)
+        self.gagNode.setColorScale(.7, .7, .6, 1)
 
     def handleEnterSphere(self, collEntry=None):
         localAvId = base.localAvatar.getDoId()
@@ -105,7 +107,7 @@ class DistributedBarrelBase(BasicEntities.DistributedNodePathEntity,
         self.sendUpdate("requestGrab", [])
 
     def setGrab(self, avId):
-        self.notify.debug("handleGrab %s" % avId)
+        self.notify.debug(f"handleGrab {avId}")
         # this function handles client-side 'grabbed' behavior
 
         # Save the avId for later, we may need it if there is an unexpected
@@ -117,13 +119,13 @@ class DistributedBarrelBase(BasicEntities.DistributedNodePathEntity,
             self.ignore(self.uniqueName('entertreasureSphere'))
             # dim the barrel since we've already acquired our prize
             # and can't use it again
-            self.barrel.setColorScale(.5,.5,.5,1)
+            self.barrel.setColorScale(.5, .5, .5, 1)
 
         # Play a sound effect, if appropriate
         if self.playSoundForRemoteToons or \
            (self.avId == base.localAvatar.getDoId()):
             base.playSfx(self.grabSound)
-            
+
         # Create the flying treasure track
         if self.animTrack:
             self.animTrack.finish()
@@ -133,14 +135,14 @@ class DistributedBarrelBase(BasicEntities.DistributedNodePathEntity,
         self.animTrack = Sequence(
             LerpScaleInterval(self.barrel,
                               .2,
-                              1.1*self.barrelScale,
-                              blendType = "easeInOut"),
+                              1.1 * self.barrelScale,
+                              blendType="easeInOut"),
             LerpScaleInterval(self.barrel,
                               .2,
                               self.barrelScale,
-                              blendType = "easeInOut"),
+                              blendType="easeInOut"),
             Func(self.resetBarrel),
-            name = self.uniqueName("animTrack"))
+            name=self.uniqueName("animTrack"))
 
         self.animTrack.start()
 
@@ -156,4 +158,3 @@ class DistributedBarrelBase(BasicEntities.DistributedNodePathEntity,
         # listen to grab attempts again
         self.accept(self.uniqueName('entertreasureSphere'),
                     self.handleEnterSphere)
-

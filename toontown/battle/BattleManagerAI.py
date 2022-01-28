@@ -1,6 +1,7 @@
 from . import DistributedBattleAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class BattleManagerAI:
 
     """ This class used to assume that there was one battle cell per zone.
@@ -30,8 +31,17 @@ class BattleManagerAI:
             return self.cellId2battle[cellId]
         return None
 
-    def newBattle(self, cellId, zoneId, pos, suit, toonId,
-                  finishCallback=None, maxSuits=4, interactivePropTrackBonus = -1):
+    def newBattle(
+            self,
+            cellId,
+            zoneId,
+            pos,
+            suit,
+            toonId,
+            finishCallback=None,
+            maxSuits=4,
+            interactivePropTrackBonus=-
+            1):
         """ newBattle(zoneId, pos, suit, toonId, finishCallback, maxSuits)
         """
         if cellId in self.cellId2battle:
@@ -52,12 +62,19 @@ class BattleManagerAI:
         else:
             # Generate a new battle.  This is the normal case.
             battle = self.battleConstructor(
-                self.air, self,
-                pos, suit, toonId, zoneId, finishCallback, maxSuits, interactivePropTrackBonus = interactivePropTrackBonus)
+                self.air,
+                self,
+                pos,
+                suit,
+                toonId,
+                zoneId,
+                finishCallback,
+                maxSuits,
+                interactivePropTrackBonus=interactivePropTrackBonus)
             battle.generateWithRequired(zoneId)
             battle.battleCellId = cellId
             self.cellId2battle[cellId] = battle
-            
+
         return battle
 
     def requestBattleAddSuit(self, cellId, suit):

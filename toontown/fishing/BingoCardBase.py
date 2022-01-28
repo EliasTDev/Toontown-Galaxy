@@ -1,7 +1,7 @@
 #################################################################
 # class: BingoCardBase.py
 # Purpose: Provide a base layout of the bingo card which can
-#          be used in a variety of games. 
+#          be used in a variety of games.
 #################################################################
 
 #################################################################
@@ -21,6 +21,7 @@ from direct.showbase import RandomNumGen
 #################################################################
 from math import ceil, pow
 
+
 class BingoCardBase:
     notify = DirectNotifyGlobal.directNotify.newCategory('BingoCardBase')
     #################################################################
@@ -28,23 +29,27 @@ class BingoCardBase:
     # Purpose: This method provides initial construction of the Card.
     #          It determines if the card is of a valid size, and
     #          that it is square. Checking of a non-square card is
-    #          impossible for diagonal cases. 
+    #          impossible for diagonal cases.
     # Input: cardSize - The size of the card rowSize x colSize.
     #        rowSize - The number of rows in the card.
     #        colSize - The number of cols in the card.
     #        **kw - OptionDefs for the DirectFrame
     # Output: None
     #################################################################
-    def __init__( self, cardSize=BingoGlobals.CARD_SIZE,
-                  rowSize=BingoGlobals.CARD_ROWS, colSize=BingoGlobals.CARD_COLS ):
-        
+
+    def __init__(
+            self,
+            cardSize=BingoGlobals.CARD_SIZE,
+            rowSize=BingoGlobals.CARD_ROWS,
+            colSize=BingoGlobals.CARD_COLS):
+
         self.rowSize = rowSize
         self.colSize = colSize
         self.cardSize = cardSize
-        
+
         self.cellList = []
         self.gameType = None
-        self.gameState = 1<<self.cardSize//2
+        self.gameState = 1 << self.cardSize // 2
 
     #################################################################
     # Method: destroy
@@ -65,7 +70,7 @@ class BingoCardBase:
     #        zoneId - Needed to choose the appropriate fish for the
     #                 pond that the card instance is associated with.
     # Output: None
-    ################################################################# 
+    #################################################################
     def generateCard(self, tileSeed, zoneId):
         rng = RandomNumGen.RandomNumGen(tileSeed)
 
@@ -74,25 +79,26 @@ class BingoCardBase:
         fishList = FishGlobals.getPondGeneraList(zoneId)
 
         # Determine the number of cells left to fill.
-        emptyCells = (self.cardSize-1) - len(fishList)
+        emptyCells = (self.cardSize - 1) - len(fishList)
 
         rodId = 0
         for i in range(emptyCells):
             fish = FishGlobals.getRandomFishVitals(zoneId, rodId, rng)
-            while( not fish[0] ):
+            while(not fish[0]):
                 fish = FishGlobals.getRandomFishVitals(zoneId, rodId, rng)
-            fishList.append( (fish[1], fish[2]) )
+            fishList.append((fish[1], fish[2]))
             rodId += 1
 
-            if rodId > 4: rodId = 0
+            if rodId > 4:
+                rodId = 0
 
         # Now, fill up the the card by randomly placing the fish in a cell.
         for index in range(self.cardSize):
-            if index != self.cardSize//2:
-                choice = rng.randrange(0,len(fishList))
-                self.cellList.append( fishList.pop(choice) )
+            if index != self.cardSize // 2:
+                choice = rng.randrange(0, len(fishList))
+                self.cellList.append(fishList.pop(choice))
             else:
-                self.cellList.append( (None, None) )
+                self.cellList.append((None, None))
 
     #################################################################
     # Method: getGameType
@@ -153,17 +159,17 @@ class BingoCardBase:
     #################################################################
     def setGameState(self, state):
         self.gameState = state
-                                      
+
     #################################################################
     # Method: clearCellList
     # Purpose: This method clears the list of cells corresponding
     #          to this card.
     # Input: None
     # Output: None
-    ################################################################# 
+    #################################################################
     def clearCellList(self):
         del self.cellList
-        self.cellList = [] 
+        self.cellList = []
 
     #################################################################
     # Method: cellUpdateCheck
@@ -175,7 +181,7 @@ class BingoCardBase:
     #        Genus - Genus of the fish to check against.
     #        Species - Species of the fish to check against.
     # Output: None
-    ################################################################# 
+    #################################################################
     def cellUpdateCheck(self, id, genus, species):
         # For now, only check against genus. Perhaps
         # we shall move to species later if it is too easy.
@@ -184,15 +190,18 @@ class BingoCardBase:
         # proper range so that we do not receive and invalid
         # index from a client. Possible hack attempt.
         if id >= self.cardSize:
-            self.notify.warning('cellUpdateCheck: Invalid Cell Id %s. Id greater than Card Size.')
+            self.notify.warning(
+                'cellUpdateCheck: Invalid Cell Id %s. Id greater than Card Size.')
             return
         elif id < 0:
-            self.notify.warning('cellUpdateCheck: Invalid Cell Id %s. Id less than zero.')
+            self.notify.warning(
+                'cellUpdateCheck: Invalid Cell Id %s. Id less than zero.')
             return
-            
+
         fishTuple = (genus, species)
-        if (self.cellList[id][0] == genus) or (fishTuple == FishGlobals.BingoBoot):
-            self.gameState = self.gameState | (1<<id)
+        if (self.cellList[id][0] == genus) or (
+                fishTuple == FishGlobals.BingoBoot):
+            self.gameState = self.gameState | (1 << id)
             if self.checkForWin(id):
                 return BingoGlobals.WIN
             return BingoGlobals.UPDATE
@@ -205,20 +214,20 @@ class BingoCardBase:
     #          in C++.
     # Input: id - Cell ID to check against.
     # Output: None
-    ################################################################# 
+    #################################################################
     def checkForWin(self, id):
         pass
-                 
+
     #################################################################
     # Method: rowCheck
     # Purpose: This method checks to determine if there there is
     #          a win in a particular row.
     # Input: rowId - The Id Number of the Row to Check.
     # Output: None
-    ################################################################# 
+    #################################################################
     def rowCheck(self, rowId):
         for colId in range(self.colSize):
-            if not (self.gameState & (1 << (self.rowSize*rowId+colId) )):
+            if not (self.gameState & (1 << (self.rowSize * rowId + colId))):
                 return 0
         return 1
 
@@ -229,10 +238,10 @@ class BingoCardBase:
     #          bingo, but may be used for bonuses or such.
     # Input: rowId - The Id Number of the Column to Check.
     # Output: None
-    ################################################################# 
+    #################################################################
     def colCheck(self, colId):
         for rowId in range(self.rowSize):
-            if not (self.gameState & (1 << (self.rowSize*rowId+colId) )):
+            if not (self.gameState & (1 << (self.rowSize * rowId + colId))):
                 return 0
         return 1
 
@@ -243,12 +252,12 @@ class BingoCardBase:
     #          forward diagonal consists of ids from 0 to (cardSize-1)
     # Input: cellId - The ID Number of the Cell to check.
     # Output: None
-    ################################################################# 
+    #################################################################
     def fDiagCheck(self, id):
-        checkNum = self.rowSize+1
+        checkNum = self.rowSize + 1
         if not (id % checkNum):
             for i in range(self.rowSize):
-                if not (self.gameState & (1 << i*checkNum)):
+                if not (self.gameState & (1 << i * checkNum)):
                     return 0
             return 1
         else:
@@ -262,12 +271,12 @@ class BingoCardBase:
     #          (cardSize-rowSize)
     # Input: cellId - The ID Number of the Cell to check.
     # Output: None
-    ################################################################# 
+    #################################################################
     def bDiagCheck(self, id):
-        checkNum = self.rowSize-1
-        if not(id % checkNum) and (not(id==(self.cardSize-1))):
+        checkNum = self.rowSize - 1
+        if not(id % checkNum) and (not(id == (self.cardSize - 1))):
             for i in range(self.rowSize):
-                if not (self.gameState & (1 << (i*checkNum+checkNum))):
+                if not (self.gameState & (1 << (i * checkNum + checkNum))):
                     return 0
             return 1
         return 0
@@ -280,7 +289,7 @@ class BingoCardBase:
     #          called w
     # Input: id - The ID Number of the Cell to check.
     # Output: returns 1 or 0 based on whether the cell is occupied.
-    ################################################################# 
+    #################################################################
     def cellCheck(self, id):
         if (self.gameState & (1 << id)):
             return 1
@@ -293,12 +302,11 @@ class BingoCardBase:
     # Input: row - column to check against
     #        id - The ID Number of the Cell to check.
     # Output: returns 1 or 0 whether cell is on the specified row.
-    ################################################################# 
+    #################################################################
     def onRow(self, row, id):
-        if int( id / self.rowSize ) == row:
+        if int(id / self.rowSize) == row:
             return 1
         return 0
-
 
     #################################################################
     # Method: onCol
@@ -307,7 +315,8 @@ class BingoCardBase:
     # Input: col - column to check against
     #        id - The ID Number of the Cell to check.
     # Output: returns 1 or 0 whether cell is on the specified column.
-    ################################################################# 
+    #################################################################
+
     def onCol(self, col, id):
         if (id % BingoGlobals.CARD_COLS) == col:
             return 1
@@ -319,7 +328,7 @@ class BingoCardBase:
     #          diagonal of the card.
     # Input: id - The ID Number of the Cell to check.
     # Output: returns 1 or 0 whether cell is on the Forward Diagonal
-    ################################################################# 
+    #################################################################
     def onFDiag(self, id):
         checkNum = self.rowSize + 1
         if not (id % checkNum):
@@ -332,7 +341,7 @@ class BingoCardBase:
     #          diagonal of the card.
     # Input: id - The ID Number of the Cell to check.
     # Output: returns 1 or 0 whether cell is on the backward Diagonal
-    ################################################################# 
+    #################################################################
     def onBDiag(self, id):
         checkNum = self.rowSize - 1
         if not (id % checkNum):

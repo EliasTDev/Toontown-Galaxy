@@ -12,6 +12,7 @@ STFlooring = 2
 STWainscoting = 3
 NUM_ST_TYPES = 4
 
+
 class CatalogSurfaceItem(CatalogAtticItem.CatalogAtticItem):
     """CatalogSurfaceItem
 
@@ -22,7 +23,7 @@ class CatalogSurfaceItem(CatalogAtticItem.CatalogAtticItem):
 
     def makeNewItem(self):
         CatalogAtticItem.CatalogAtticItem.makeNewItem(self)
-        
+
     def setPatternIndex(self, patternIndex):
         self.patternIndex = patternIndex
 
@@ -48,4 +49,3 @@ class CatalogSurfaceItem(CatalogAtticItem.CatalogAtticItem):
         # Returns the elapsed time in minutes from purchase to
         # delivery for this particular item.
         return 60  # 1 hour.
-

@@ -2,6 +2,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 import math
 import string
 
+
 class TTCodeDict:
     notify = directNotify.newCategory('TTCodeDict')
 
@@ -11,7 +12,8 @@ class TTCodeDict:
 
     # characters used for manually-created codes
     IgnoredManualCharacters = '-' + ' '
-    ManualCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + string.digits + IgnoredManualCharacters
+    ManualCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + \
+        string.digits + IgnoredManualCharacters
     # all manually-created codes must contain at least one of these characters
     # ensures that code can never collide with an auto-generated code
     ManualOnlyCharacters = ''
@@ -86,19 +88,21 @@ class TTCodeDict:
 
     @classmethod
     def getNumUsableValuesInCodeSpace(cls, codeLength):
-        return int(cls.getNumValuesInCodeSpace(codeLength) / cls.BruteForceFactor)
+        return int(cls.getNumValuesInCodeSpace(
+            codeLength) / cls.BruteForceFactor)
 
     @classmethod
     def _getPrimeModulus(cls, codeLength):
-        # get the largest prime in this code value space to use as the code value modulus
+        # get the largest prime in this code value space to use as the code
+        # value modulus
         if codeLength in cls._PrimeModuli:
             return cls._PrimeModuli[codeLength]
-        print(('calculating prime modulus for code length %s...' % codeLength), end=' ')
+        print(f'calculating prime modulus for code length {codeLength}...', end=' ')
         i = cls.getNumValuesInCodeSpace(codeLength)
         while not cls._isPrime(i):
             i -= 1
             if i < 0:
-                raise 'could not find prime modulus for code length %s' % codeLength
+                raise f'could not find prime modulus for code length {codeLength}'
         cls._PrimeModuli[codeLength] = i
         print('done.')
         return i
@@ -107,10 +111,12 @@ class TTCodeDict:
     def _getPrime(cls, codeLength):
         if (codeLength in cls._Primes):
             return cls._Primes[codeLength]
-        print(('calculating prime multiplier for code length %s...' % codeLength), end=' ')
+        print(('calculating prime multiplier for code length %s...' %
+              codeLength), end=' ')
         numValues = cls.getNumValuesInCodeSpace(codeLength)
         if '_scatterPrime' not in cls.__dict__:
-            # longer codes will require a larger (longer/more digits/more 7's!) prime here
+            # longer codes will require a larger (longer/more digits/more 7's!)
+            # prime here
             cls._scatterPrime = 677770777
             cls._scatterPow10 = 1
             scratch = cls._scatterPrime
@@ -121,15 +127,16 @@ class TTCodeDict:
         subdivisions = cls.NumChars * cls._scatterPow10
         primeFactor = cls._scatterFactor
         multiplier = (subdivisions * primeFactor)
-        prime = cls._nextPrime(int((float(numValues) * multiplier) / subdivisions))
+        prime = cls._nextPrime(
+            int((float(numValues) * multiplier) / subdivisions))
         if prime >= numValues:
             prime = cls._nextPrime(int(float(numValues) / subdivisions))
         if prime >= numValues:
             prime = cls._nextPrime(0)
         if prime >= numValues:
-            raise 'could not find prime smaller than %s' % numValues
+            raise f'could not find prime smaller than {numValues}'
         cls._Primes[codeLength] = prime
-        #print 'codeLength %s, prime=%s' % (codeLength, prime)
+        # print 'codeLength %s, prime=%s' % (codeLength, prime)
         print('done.')
         return prime
 
@@ -181,35 +188,35 @@ class TTCodeDict:
         if length < 5:
             return code
         if length == 5:
-            return '%s-%s' % (code[:2], code[2:])
+            return f'{code[:2]}-{code[2:]}'
         if length == 6:
-            return '%s-%s' % (code[:3], code[3:])
+            return f'{code[:3]}-{code[3:]}'
         if length == 7:
-            return '%s-%s' % (code[:3], code[3:])
+            return f'{code[:3]}-{code[3:]}'
         if length == 8:
-            return '%s-%s' % (code[:4], code[4:])
+            return f'{code[:4]}-{code[4:]}'
         if length == 9:
-            return '%s-%s-%s' % (code[:3], code[3:6], code[6:])
+            return f'{code[:3]}-{code[3:6]}-{code[6:]}'
         numQuads = (len(code) - 6) / 4
         prefixLen = len(code) - (numQuads * 4)
         prefix = cls.getReadableCode(code[:prefixLen])
         toQuad = code[prefixLen:]
         rc = prefix
         while len(toQuad):
-            rc = '%s-%s' % (rc, toQuad[:4])
+            rc = f'{rc}-{toQuad[:4]}'
             toQuad = toQuad[4:]
         return rc
 
     @classmethod
     def getFromReadableCode(cls, code):
-        cls.notify.debug('getFromReadableCode: input: %s' % code)
+        cls.notify.debug(f'getFromReadableCode: input: {code}')
         # remove dashes
         code = ''.join(code.split('-'))
         # remove spaces
         code = ''.join(code.split(' '))
         # uppercase only
         code = code.upper()
-        cls.notify.debug('getFromReadableCode: output: %s' % code)
+        cls.notify.debug(f'getFromReadableCode: output: {code}')
         return code
 
     @classmethod
@@ -217,19 +224,19 @@ class TTCodeDict:
         if not codeLength:
             codeLength = 4
         while 1:
-            print('testing code uniqueness for code length: %s' % codeLength)
+            print(f'testing code uniqueness for code length: {codeLength}')
             codes = set()
             maxVal = cls._getPrimeModulus(codeLength)
-            #print maxVal
+            # print maxVal
             i = 0
             while i < maxVal:
                 x = cls.getObfuscatedCodeValue(i, codeLength)
                 code = cls.getCodeFromValue(x, codeLength)
                 if verbose:
-                    print('%s %s/%s -> %s' % (cls.getReadableCode(code), i, maxVal-1, x))
+                    print(
+                        f'{cls.getReadableCode(code)} {i}/{maxVal - 1} -> {x}')
                 if code in codes:
-                    raise 'code %s already encountered!' % code
+                    raise f'code {code} already encountered!'
                 codes.add(code)
                 i += 1
             codeLength += 1
-

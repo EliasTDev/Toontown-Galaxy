@@ -3,6 +3,7 @@ from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
 from otp.otpbase import OTPGlobals
 
+
 class FriendManager(DistributedObject.DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory("FriendManager")
 
@@ -13,7 +14,7 @@ class FriendManager(DistributedObject.DistributedObject):
         DistributedObject.DistributedObject.__init__(self, cr)
 
         self.__available = 0
-        
+
         # used for flexible request processing
         # in toontown we are keeping a queue of friends requests and processing them
         # once the avatar is available again
@@ -37,15 +38,13 @@ class FriendManager(DistributedObject.DistributedObject):
 
     def getAvailable(self):
         return self.__available
-        
+
     def setGameSpecificFunction(self, function):
         self.gameSpecificFunction = function
-        
+
     def executeGameSpecificFunction(self):
         if self.__available and self.gameSpecificFunction:
             self.gameSpecificFunction()
-        
-
 
     ### DistributedObject methods ###
 
@@ -54,7 +53,7 @@ class FriendManager(DistributedObject.DistributedObject):
         This method is called when the DistributedObject is reintroduced
         to the world, either for the first time or from the cache.
         """
-        if base.cr.friendManager != None:
+        if base.cr.friendManager is not None:
             base.cr.friendManager.delete()
         base.cr.friendManager = self
         DistributedObject.DistributedObject.generate(self)
@@ -78,8 +77,7 @@ class FriendManager(DistributedObject.DistributedObject):
         base.cr.friendManager = None
         DistributedObject.DistributedObject.delete(self)
 
-
-    ### Messages sent from inviter client to AI
+    # Messages sent from inviter client to AI
 
     def up_friendQuery(self, inviteeId):
         """friendQuery(self, int inviteeId)
@@ -101,8 +99,7 @@ class FriendManager(DistributedObject.DistributedObject):
         self.sendUpdate('cancelFriendQuery', [context])
         self.notify.debug("Client: cancelFriendQuery(%d)" % (context))
 
-
-    ### Messages sent from invitee client to AI
+    # Messages sent from invitee client to AI
 
     def up_inviteeFriendConsidering(self, yesNo, context):
         """inviteeFriendConsidering(self, bool yesNo, int context)
@@ -118,7 +115,9 @@ class FriendManager(DistributedObject.DistributedObject):
         """
 
         self.sendUpdate('inviteeFriendConsidering', [yesNo, context])
-        self.notify.debug("Client: inviteeFriendConsidering(%d, %d)" % (yesNo, context))
+        self.notify.debug(
+            "Client: inviteeFriendConsidering(%d, %d)" %
+            (yesNo, context))
 
     def up_inviteeFriendResponse(self, yesNoMaybe, context):
         """inviteeFriendResponse(self, int yesNoMaybe, int context)
@@ -134,9 +133,11 @@ class FriendManager(DistributedObject.DistributedObject):
           3 - the invitee has too many friends already.
         """
         if yesNoMaybe == 1:
-            base.cr.ttFriendsManager.friendIsOnline(self.friend )
+            base.cr.ttFriendsManager.friendIsOnline(self.friend)
         self.sendUpdate('inviteeFriendResponse', [yesNoMaybe, context])
-        self.notify.debug("Client: inviteeFriendResponse(%d, %d)" % (yesNoMaybe, context))
+        self.notify.debug(
+            "Client: inviteeFriendResponse(%d, %d)" %
+            (yesNoMaybe, context))
 
     def up_inviteeAcknowledgeCancel(self, context):
         """inviteeAcknowledgeCancel(self, int context)
@@ -150,9 +151,7 @@ class FriendManager(DistributedObject.DistributedObject):
         self.sendUpdate('inviteeAcknowledgeCancel', [context])
         self.notify.debug("Client: inviteeAcknowledgeCancel(%d)" % (context))
 
-
-
-    ### Messages sent from AI to inviter client
+    # Messages sent from AI to inviter client
 
     def friendConsidering(self, yesNoAlready, context):
         """friendConsidering(self, int yesNoAlready, int context)
@@ -169,7 +168,9 @@ class FriendManager(DistributedObject.DistributedObject):
           6 - the invitee is not accepting friends.
         """
 
-        self.notify.info("Roger Client: friendConsidering(%d, %d)" % (yesNoAlready, context))
+        self.notify.info(
+            "Roger Client: friendConsidering(%d, %d)" %
+            (yesNoAlready, context))
 
         messenger.send('friendConsidering', [yesNoAlready, context])
 
@@ -188,13 +189,13 @@ class FriendManager(DistributedObject.DistributedObject):
         """
         if yesNoMaybe == 1:
             base.cr.ttFriendsManager.friendIsOnline(self.friend)
-        self.notify.debug("Client: friendResponse(%d, %d)" % (yesNoMaybe, context))
+        self.notify.debug(
+            "Client: friendResponse(%d, %d)" %
+            (yesNoMaybe, context))
 
         messenger.send('friendResponse', [yesNoMaybe, context])
 
-
-
-    ### Messages sent from AI to invitee client
+    # Messages sent from AI to invitee client
 
     def inviteeFriendQuery(self, inviterId, inviterName, inviterDna, context):
         """inviteeFriendQuery(self, int inviterId, inviterName, inviterDna,
@@ -207,7 +208,9 @@ class FriendManager(DistributedObject.DistributedObject):
         invitation right now.
         """
 
-        self.notify.debug("Client: inviteeFriendQuery(%d, %s, dna, %d)" % (inviterId, inviterName, context))
+        self.notify.debug(
+            "Client: inviteeFriendQuery(%d, %s, dna, %d)" %
+            (inviterId, inviterName, context))
 
         # Immediately send a response back that indicates whether we
         # can consider the invitation.
@@ -232,7 +235,8 @@ class FriendManager(DistributedObject.DistributedObject):
         if self.__available:
             messenger.send('friendInvitation', [inviterId, inviterName,
                                                 inviterDna, context])
-        self.friend = inviterId 
+        self.friend = inviterId
+
     def inviteeCancelFriendQuery(self, context):
         """inviteeCancelFriendQuery(self, int context)
 
@@ -245,15 +249,14 @@ class FriendManager(DistributedObject.DistributedObject):
         messenger.send('cancelFriendInvitation', [context])
         self.up_inviteeAcknowledgeCancel(context)
 
-
-    ### Messages involving secrets
+    # Messages involving secrets
 
     def up_requestSecret(self):
         """
         Sent by the client to the AI to request a new "secret" for the
         user.
         """
-        self.notify.warning("Sending Request")        
+        self.notify.warning("Sending Request")
         self.sendUpdate('requestSecret', [])
 
     def requestSecretResponse(self, result, secret):
@@ -268,7 +271,6 @@ class FriendManager(DistributedObject.DistributedObject):
 
         """
         messenger.send('requestSecretResponse', [result, secret])
-
 
     def up_submitSecret(self, secret):
         """submitSecret(self, string secret)
@@ -291,6 +293,5 @@ class FriendManager(DistributedObject.DistributedObject):
 
         """
         messenger.send('submitSecretResponse', [result, avId])
-        
-    # Be invited by another avatar to be their friend.
 
+    # Be invited by another avatar to be their friend.

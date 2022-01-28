@@ -1,4 +1,6 @@
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import socket
 import datetime
 import os
@@ -38,34 +40,32 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
     <success>true</success>
     <fingerprint>%s</fingerprint>
     </securityBanMgrAddResponse>
-    \r\n"""    
+    \r\n"""
 
     securityBanMgrRemoveFingerprintXML = """
     <securityBanMgrRemoveResponse>
     <success>true</success>
     <fingerprint>%s</fingerprint>
     </securityBanMgrRemoveResponse>
-    \r\n"""    
-
-     
+    \r\n"""
 
     def __init__(self, air):
         """Construct ourselves, set up web dispatcher."""
         assert self.notify.debugCall()
         DistributedObjectGlobalUD.__init__(self, air)
         self.HTTPListenPort = uber.cpuInfoMgrHTTPListenPort
-#TODO find alternative to depercated http module
+# TODO find alternative to depercated http module
         #self.webDispatcher = WebRequestDispatcher()
-        #self.webDispatcher.landingPage.setTitle("SecurityBanMgr")
+        # self.webDispatcher.landingPage.setTitle("SecurityBanMgr")
         #self.webDispatcher.landingPage.setDescription("SecurityBanMgr for now handles banning my mac address.")
         #self.webDispatcher.registerGETHandler('securityBanMgr', self.securityBanMgr)
        # self.webDispatcher.registerGETHandler('securityBanMgrAddFingerprint', self.addFingerprint)
        # self.webDispatcher.registerGETHandler('securityBanMgrRemoveFingerprint', self.removeFingerprint)
         #self.webDispatcher.registerGETHandler('securityBanMgrListFingerprints', self.listFingerprints)
-        #self.webDispatcher.listenOnPort(self.HTTPListenPort)
-        #self.webDispatcher.landingPage.addTab("SecurityBanMgr","/securityBanMgr")
+        # self.webDispatcher.listenOnPort(self.HTTPListenPort)
+        # self.webDispatcher.landingPage.addTab("SecurityBanMgr","/securityBanMgr")
 
-        #self.air.setConnectionName("SecurityBanMgr")
+        # self.air.setConnectionName("SecurityBanMgr")
         #self.air.setConnectionURL("http://%s:%s/" % (socket.gethostbyname(socket.gethostname()),self.HTTPListenPort))
 
         self.filename = self.getFilename()
@@ -74,25 +74,29 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
         self.bannedFingerprints = self.loadRecords()
         self.banMgr = BanManagerAI.BanManagerAI()
 
-
     def setCpuInfoToUd(self, avId, dislId, cpuInfo, cacheStatus):
         """AI telling us a client just logged in."""
         if cacheStatus in self.bannedFingerprints:
-            self.notify.info("got a banned fingerprint %s for avId=%s dislId=%s" % (cacheStatus, avId, dislId))
-            self.banMgr.ban(avId, dislId, "banned macId, fingerprint is  %s" % cacheStatus)
-            pass        
-       
+            self.notify.info(
+                "got a banned fingerprint %s for avId=%s dislId=%s" %
+                (cacheStatus, avId, dislId))
+            self.banMgr.ban(
+                avId,
+                dislId,
+                f"banned macId, fingerprint is  {cacheStatus}")
+            pass
+
     def announceGenerate(self):
         """Start accepting http requests."""
         assert self.notify.debugCall()
         DistributedObjectGlobalUD.announceGenerate(self)
-        #self.webDispatcher.startCheckingIncomingHTTP()
-        #TODO find alternative to depercated http module
+        # self.webDispatcher.startCheckingIncomingHTTP()
+        # TODO find alternative to depercated http module
 
     def securityBanMgr(self, replyTo, **kw):
         """Handle all calls to web requests awardMgr."""
         assert self.notify.debugCall()
-        
+
         # If no arguments are passed, assume that the main menu should
         # be displayed
 
@@ -104,16 +108,15 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
 
         header = body = help = footer = ""
         if not function:
-            header,body,footer,help= self.getMainMenu()
+            header, body, footer, help = self.getMainMenu()
         else:
-            self.notify.debug("%s" % str(kw))
-            header,body,footer,help= self.getMainMenu()
+            self.notify.debug(f"{str(kw)}")
+            header, body, footer, help = self.getMainMenu()
             body = """<BODY><div id="contents"><center><P>got these arguments """
             body += str(kw)
-            
+
         #self.notify.info("%s" % header + body + help + footer)
         replyTo.respond(header + body + help + footer)
-
 
     def getMainMenu(self):
         """Create the main menu with forms for input."""
@@ -142,13 +145,12 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
             <br>
             <form name="listFingerprintsForm" action="securityBanMgrListFingerprints">
             <input type="submit" value="List Fingerprints" />
-            </form>            
-            """            
-            
+            </form>
+            """
+
         footer = """</tbody></table></P></center></div><div id="footer">Security Ban Mgr</div></BODY></HTML>"""
         help = """<table height = "15%"></table><P><table width = "60%"><caption>Note</caption><tr><th scope=col>- Use add to add ONE fingerpint that's autobanned. Use remove to take ONE fingerprint out. And use list to see them all.</th></tr></table></P>"""
-        return (header,body,footer,help)
-
+        return (header, body, footer, help)
 
     def updateRecordFile(self):
         """Update current track record in this shard's record file"""
@@ -166,10 +168,10 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
                 os.remove(backup)
         except EnvironmentError:
             self.notify.warning(str(sys.exc_info()[1]))
-        
+
     def getFilename(self):
         """Compose the track record filename"""
-        result = "%s.bannedFingerprints" % (self.serverDataFolder)
+        result = f"{self.serverDataFolder}.bannedFingerprints"
         return result
 
     def getDefaultLatestIssueTime(self):
@@ -197,10 +199,10 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
         result = self.loadFrom(file)
         file.close()
 
-        return result 
+        return result
 
     def loadFrom(self, file):
-        """Load banned fingerprint record data from specified file"""        
+        """Load banned fingerprint record data from specified file"""
         result = set()
         try:
             for oneFingerprint in file:
@@ -214,32 +216,35 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
     def setLatestIssueStr(self, issueStr):
         self.notify.debugStateCall(self)
 
-  
     def setLatestIssue(self, latestIssue):
         self.latestIssue = latestIssue
 
     def b_setLatestIssue(self, latestIssue):
         self.setLatestIssue(latestIssue)
         self.d_setLatestIssue(latestIssue)
-        
+
     def d_setLatestIssue(self, latestIssue):
         pass
         #self.sendUpdateToAllAis('newIssueUDtoAI', [ self.getLatestIssueUtcStr()])
 
     def sendUpdateToAllAis(self, message, args):
         dg = self.dclass.aiFormatUpdateMsgType(
-                message, self.doId, self.doId, self.air.ourChannel, IN_GAME_NEWS_MANAGER_UD_TO_ALL_AI, args)
+            message,
+            self.doId,
+            self.doId,
+            self.air.ourChannel,
+            IN_GAME_NEWS_MANAGER_UD_TO_ALL_AI,
+            args)
         self.air.send(dg)
 
-    def inGameNewsMgrAIStartingUp(self,  doId,  shardId):
+    def inGameNewsMgrAIStartingUp(self, doId, shardId):
         """Tell the new AI that just started up what the latest issue is."""
         self.air.sendUpdateToDoId(
-                "DistributedInGameNewsMgr",
-                'newIssueUDtoAI',
-                doId ,
-                [self.getLatestIssueStr()]
-            )
-
+            "DistributedInGameNewsMgr",
+            'newIssueUDtoAI',
+            doId,
+            [self.getLatestIssueStr()]
+        )
 
     def addFingerprint(self, replyTo, **kw):
         """Add a new fingerprint to auto ban."""
@@ -247,15 +252,15 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
             fingerprint = urllib.parse.unquote(kw['fingerprintToAdd'])
             self.bannedFingerprints.add(fingerprint)
             self.updateRecordFile()
-            header,body,footer,help= self.getMainMenu()
+            header, body, footer, help = self.getMainMenu()
             replyTo.respondXML(self.securityBanMgrAddFingerprintXML %
-                               ("%s" % fingerprint))
-            
-        except Exception as e:
-            replyTo.respondXML(self.securityBanMgrFailureXML %
-                               ("Catastrophic failure add fingerprint %s" % str(e)))
-            self.notify.warning("Got exception %s" % str(e))
+                               f"{fingerprint}")
 
+        except Exception as e:
+            replyTo.respondXML(
+                self.securityBanMgrFailureXML %
+                f"Catastrophic failure add fingerprint {str(e)}")
+            self.notify.warning(f"Got exception {str(e)}")
 
     def removeFingerprint(self, replyTo, **kw):
         """Remove a fingerprint to auto ban."""
@@ -264,33 +269,35 @@ class DistributedCpuInfoMgrUD(DistributedObjectGlobalUD):
             if fingerprint in self.bannedFingerprints:
                 self.bannedFingerprints.remove(fingerprint)
                 self.updateRecordFile()
-                header,body,footer,help= self.getMainMenu()
+                header, body, footer, help = self.getMainMenu()
                 replyTo.respondXML(self.securityBanMgrRemoveFingerprintXML %
-                                   ("%s" % fingerprint))
+                                   f"{fingerprint}")
             else:
-                replyTo.respondXML(self.securityBanMgrFailureXML % ("%s not a banned fingerprint" % fingerprint))
+                replyTo.respondXML(
+                    self.securityBanMgrFailureXML %
+                    f"{fingerprint} not a banned fingerprint")
         except Exception as e:
-            replyTo.respondXML(self.securityBanMgrFailureXML %
-                               ("Catastrophic failure add fingerprint %s" % str(e)))
-            self.notify.warning("Got exception %s" % str(e))  
+            replyTo.respondXML(
+                self.securityBanMgrFailureXML %
+                f"Catastrophic failure add fingerprint {str(e)}")
+            self.notify.warning(f"Got exception {str(e)}")
 
-    def listFingerprints(self, replyTo, **kw): 
+    def listFingerprints(self, replyTo, **kw):
         """List all banned fingerprints."""
         try:
-            header,body,footer,help= self.getMainMenu()
+            header, body, footer, help = self.getMainMenu()
             body = """<BODY><div id="contents"><center><P>"""
             body += """<h4>Banned Fingerprints:</h4>
             <table border="1">
             """
             for fingerprint in self.bannedFingerprints:
-                body += "<tr><td>" + str(fingerprint) +  "</td>"+"</tr>\n"
+                body += "<tr><td>" + str(fingerprint) + "</td>" + "</tr>\n"
             body += """
             </table>
-            """        
-            replyTo.respond(header +body+ help+footer)
+            """
+            replyTo.respond(header + body + help + footer)
         except Exception as e:
-            replyTo.respondXML(self.securityBanMgrFailureXML % ("Catastrophic failure listing fingerprints %s" % str(e)))
-            self.notify.warning("Got exception %s" % str(e))
-
-        
-        
+            replyTo.respondXML(
+                self.securityBanMgrFailureXML %
+                f"Catastrophic failure listing fingerprints {str(e)}")
+            self.notify.warning(f"Got exception {str(e)}")

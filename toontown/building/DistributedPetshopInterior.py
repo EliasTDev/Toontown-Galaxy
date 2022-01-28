@@ -10,6 +10,7 @@ from . import ToonInteriorColors
 from toontown.hood import ZoneUtil
 from panda3d.toontown import DNADoor
 
+
 class DistributedPetshopInterior(DistributedObject.DistributedObject):
     if __debug__:
         notify = DirectNotifyGlobal.directNotify.newCategory(
@@ -17,7 +18,7 @@ class DistributedPetshopInterior(DistributedObject.DistributedObject):
 
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
-        self.dnaStore=cr.playGame.dnaStore
+        self.dnaStore = cr.playGame.dnaStore
 
     def generate(self):
         DistributedObject.DistributedObject.generate(self)
@@ -28,7 +29,7 @@ class DistributedPetshopInterior(DistributedObject.DistributedObject):
 
     def randomDNAItem(self, category, findFunc):
         codeCount = self.dnaStore.getNumCatalogCodes(category)
-        index = self.randomGenerator.randint(0, codeCount-1)
+        index = self.randomGenerator.randint(0, codeCount - 1)
         code = self.dnaStore.getCatalogCode(category, index)
         # findFunc will probably be findNode or findTexture
         return findFunc(code)
@@ -49,16 +50,16 @@ class DistributedPetshopInterior(DistributedObject.DistributedObject):
         let you have multiple nodes with the same name
 
         """
-        baseTag="random_"
-        npc=model.findAllMatches("**/"+baseTag+"???_*")
+        baseTag = "random_"
+        npc = model.findAllMatches("**/" + baseTag + "???_*")
         for i in range(npc.getNumPaths()):
-            np=npc.getPath(i)
-            name=np.getName()
+            np = npc.getPath(i)
+            name = np.getName()
 
-            b=len(baseTag)
-            category=name[b+4:]
-            key1=name[b]
-            key2=name[b+1]
+            b = len(baseTag)
+            category = name[b + 4:]
+            key1 = name[b]
+            key2 = name[b + 1]
 
             assert(key1 in ["m", "t"])
             assert(key2 in ["c", "o", "r"])
@@ -71,12 +72,14 @@ class DistributedPetshopInterior(DistributedObject.DistributedObject):
                     self.replaceRandomInModel(newNP)
             elif key1 == "t":
                 # ...texture.
-                texture=self.randomDNAItem(category, self.dnaStore.findTexture)
+                texture = self.randomDNAItem(
+                    category, self.dnaStore.findTexture)
                 assert(texture)
-                np.setTexture(texture,100)
-                newNP=np
+                np.setTexture(texture, 100)
+                newNP = np
             if key2 == "c":
-                if (category == "TI_wallpaper") or (category == "TI_wallpaper_border"):
+                if (category == "TI_wallpaper") or (
+                        category == "TI_wallpaper_border"):
                     self.randomGenerator.seed(self.zoneId)
                     newNP.setColorScale(
                         self.randomGenerator.choice(self.colors[category]))
@@ -92,38 +95,39 @@ class DistributedPetshopInterior(DistributedObject.DistributedObject):
         # I copy/pasted this door string choosing code from
         # DistributedToonInterior.
         # Door:
-        doorModelName="door_double_round_ul" # hack  zzzzzzz
+        doorModelName = "door_double_round_ul"  # hack  zzzzzzz
         # Switch leaning of the door:
         if doorModelName[-1:] == "r":
-            doorModelName=doorModelName[:-1]+"l"
+            doorModelName = doorModelName[:-1] + "l"
         else:
-            doorModelName=doorModelName[:-1]+"r"
-        door=self.dnaStore.findNode(doorModelName)
+            doorModelName = doorModelName[:-1] + "r"
+        door = self.dnaStore.findNode(doorModelName)
         return door
 
     def setup(self):
-        self.dnaStore=base.cr.playGame.dnaStore
+        self.dnaStore = base.cr.playGame.dnaStore
         # Set up random generator
         self.randomGenerator = random.Random()
         self.randomGenerator.seed(self.zoneId)
 
-        self.interior = loader.loadModel('phase_4/models/modules/PetShopInterior')
+        self.interior = loader.loadModel(
+            'phase_4/models/modules/PetShopInterior')
         self.interior.reparentTo(render)
 
         # Fish swimming around behind the glass
         self.fish = Actor.Actor(
             'phase_4/models/props/interiorfish-zero',
-            { 'swim' : 'phase_4/models/props/interiorfish-swim',})
+            {'swim': 'phase_4/models/props/interiorfish-swim', })
         self.fish.reparentTo(self.interior)
         self.fish.setBlend(base.wantSmoothAnimations)
 
         # Give them a little bluish green color to make it seem like they
         # are behind the glass. The 0.8 alpha makes their fins a little
         # translucent which is kinda cool.
-        self.fish.setColorScale(0.8,0.9,1,0.8)
+        self.fish.setColorScale(0.8, 0.9, 1, 0.8)
         # Reposition them just a bit to bring them down and behind the glass
         self.fish.setScale(0.8)
-        self.fish.setPos(0,6,-4)
+        self.fish.setPos(0, 6, -4)
         # Slow it down a bit! Geez!
         self.fish.setPlayRate(0.7, 'swim')
         self.fish.loop('swim')
@@ -164,5 +168,3 @@ class DistributedPetshopInterior(DistributedObject.DistributedObject):
         self.interior.removeNode()
         del self.interior
         DistributedObject.DistributedObject.disable(self)
-
-

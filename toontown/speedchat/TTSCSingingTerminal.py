@@ -6,8 +6,10 @@ from otp.otpbase.OTPLocalizer import SpeedChatStaticText
 # args: textId
 TTSCSingingMsgEvent = 'SCSingingMsg'
 
+
 def decodeSCStaticTextMsg(textId):
     return SpeedChatStaticText.get(textId, None)
+
 
 class TTSCSingingTerminal(SCTerminal):
     """ TTSCSingingTerminal represents a terminal SpeedChat entry that
@@ -15,10 +17,11 @@ class TTSCSingingTerminal(SCTerminal):
 
     When selected, generates a 'TTSCSingingMsgEvent' event, with arguments:
     - textId (16-bit; use as index into OTPLocalizer.SpeedChatStaticText)
-    
+
     This event in turn makes the avatar sing a selected note depending on the
     toon species and torso size.
     """
+
     def __init__(self, textId):
         SCTerminal.__init__(self)
         self.textId = textId
@@ -35,5 +38,5 @@ class TTSCSingingTerminal(SCTerminal):
         """
         args = {
             'rolloverSound': None,
-            'clickSound': None,}    
+            'clickSound': None, }
         SCTerminal.finalize(self, args)

@@ -19,6 +19,7 @@ from toontown.catalog import CatalogItem
 
 CatalogInterval = 7 * 24 * 60  # 1 week (in minutes)
 
+
 class CatalogManagerAI(DistributedObjectAI.DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("CatalogManagerAI")
 
@@ -35,31 +36,31 @@ class CatalogManagerAI(DistributedObjectAI.DistributedObjectAI):
     def __init__(self, air):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
         self.generator = CatalogGenerator.CatalogGenerator()
-        self.uniqueIdToReturnCode = {} #cache for return phone calls
+        self.uniqueIdToReturnCode = {}  # cache for return phone calls
 
-        self.notify.info("Catalog time scale %s." % (self.timeScale))
-        
-        #DATA holders for gifting an item. So item can be handled on response
-        
-        
+        self.notify.info(f"Catalog time scale {self.timeScale}.")
+
+        # DATA holders for gifting an item. So item can be handled on response
+
     def generate(self):
         DistributedObjectAI.DistributedObjectAI.generate(self)
 
     def delete(self):
         DistributedObjectAI.DistributedObjectAI.delete(self)
 
-    def forceCatalog(self, avatar, week, afterMinutes = 0):
+    def forceCatalog(self, avatar, week, afterMinutes=0):
         # Forces the catalog to the indicated week for the given
         # avatar by fiddling with the avatar's start date.  Mainly
         # used for testing and magic words.
         weekDelta = week - avatar.catalogScheduleCurrentWeek - 1
         now = (int)(time.time() / 60 + 0.5)
-        avatar.catalogScheduleNextTime = now - (weekDelta  * self.catalogInterval) + afterMinutes
+        avatar.catalogScheduleNextTime = now - \
+            (weekDelta * self.catalogInterval) + afterMinutes
 
         # Temporarily force skipWeeks to true by setting a local
         # instance variable.
         self.skipWeeks = 1
-        
+
         self.deliverCatalogFor(avatar)
 
         # Delete the instance variable to re-expose the class variable.
@@ -75,9 +76,12 @@ class CatalogManagerAI(DistributedObjectAI.DistributedObjectAI):
         thentuple[2] = day
         then = time.mktime(thentuple)
 
-        monthlyCatalog = self.generator.generateMonthlyCatalog(avatar, then / 60)
-        avatar.b_setCatalog(monthlyCatalog, avatar.weeklyCatalog, avatar.backCatalog)
-
+        monthlyCatalog = self.generator.generateMonthlyCatalog(
+            avatar, then / 60)
+        avatar.b_setCatalog(
+            monthlyCatalog,
+            avatar.weeklyCatalog,
+            avatar.backCatalog)
 
     def deliverCatalogFor(self, avatar):
         # Computes the next catalog time for and delivers the catalog
@@ -113,7 +117,11 @@ class CatalogManagerAI(DistributedObjectAI.DistributedObjectAI):
             # Maybe the right thing to do is not to skip any
             # intervening weeks.
             interval = now - weekStart
-            weekDelta = int(math.floor(float(interval) / float(self.catalogInterval)))
+            weekDelta = int(
+                math.floor(
+                    float(interval) /
+                    float(
+                        self.catalogInterval)))
             if self.skipWeeks:
                 currentWeek += weekDelta
             weekStart += weekDelta * self.catalogInterval
@@ -137,7 +145,7 @@ class CatalogManagerAI(DistributedObjectAI.DistributedObjectAI):
         newMonthlyCatalog = (currentWeek != avatar.catalogScheduleCurrentWeek)
 
         previousWeek = avatar.catalogScheduleCurrentWeek
-        
+
         newWeeklyCatalog = (currentWeek != avatar.catalogScheduleCurrentWeek)
 
         self.notify.debug("Avatar %s at catalog week %s (previous %s)." % (
@@ -148,20 +156,24 @@ class CatalogManagerAI(DistributedObjectAI.DistributedObjectAI):
 
         # We decided that we should wrap around to the beginning of the
         # catalogs instead of holding on the last.
-        modCurrentWeek = ((currentWeek - 1) % ToontownGlobals.CatalogNumWeeks) + 1
+        modCurrentWeek = (
+            (currentWeek - 1) %
+            ToontownGlobals.CatalogNumWeeks) + 1
 
         if newMonthlyCatalog or newWeeklyCatalog:
             # Finally, generate a new catalog for the avatar.
-            monthlyCatalog = self.generator.generateMonthlyCatalog(avatar, weekStart)
+            monthlyCatalog = self.generator.generateMonthlyCatalog(
+                avatar, weekStart)
             if newWeeklyCatalog:
-                weeklyCatalog = self.generator.generateWeeklyCatalog(avatar, modCurrentWeek, monthlyCatalog)
-                backCatalog = self.generator.generateBackCatalog(avatar, modCurrentWeek, previousWeek, weeklyCatalog)
+                weeklyCatalog = self.generator.generateWeeklyCatalog(
+                    avatar, modCurrentWeek, monthlyCatalog)
+                backCatalog = self.generator.generateBackCatalog(
+                    avatar, modCurrentWeek, previousWeek, weeklyCatalog)
                 # Truncate the old items in the back catalog if it's too
                 # long.
-                
 
                 #import pdb; pdb.set_trace()
-                            
+
                 if len(backCatalog) > ToontownGlobals.MaxBackCatalog:
                     stickDict = {}
                     #print ("Back Catalog \n\n%s\n\nend back" % (backCatalog))
@@ -178,7 +190,7 @@ class CatalogManagerAI(DistributedObjectAI.DistributedObjectAI):
                                 stickDict[itemType] = [item]
                             #print ("stickDict %s" % (stickDict))
                         backCatalog.remove(item)
-                    backCatalog = backCatalog[ : ToontownGlobals.MaxBackCatalog]
+                    backCatalog = backCatalog[: ToontownGlobals.MaxBackCatalog]
                     for key in stickDict:
                         stickList = stickDict[key]
                         for item in stickList:
@@ -187,20 +199,21 @@ class CatalogManagerAI(DistributedObjectAI.DistributedObjectAI):
             else:
                 weeklyCatalog = avatar.weeklyCatalog
                 backCatalog = avatar.backCatalog
-                
+
             avatar.b_setCatalog(monthlyCatalog, weeklyCatalog, backCatalog)
             if (len(monthlyCatalog) + len(weeklyCatalog) != 0):
-                avatar.b_setCatalogNotify(ToontownGlobals.NewItems, avatar.mailboxNotify)
+                avatar.b_setCatalogNotify(
+                    ToontownGlobals.NewItems, avatar.mailboxNotify)
 
             self.air.writeServerEvent(
-                'issue-catalog', avatar.doId, "%s" % (modCurrentWeek))
+                'issue-catalog', avatar.doId, f"{modCurrentWeek}")
 
     def purchaseItem(self, avatar, item, optional):
         # Purchases the item for the given avatar.  Returns the
         # appropriate status code from ToontownGlobals.py.  If the item
         # requires a delayed delivery, this will schedule the
         # delivery; otherwise, it will be purchased immediately.
-        
+
         retcode = None
 
         if item in avatar.monthlyCatalog:
@@ -210,26 +223,38 @@ class CatalogManagerAI(DistributedObjectAI.DistributedObjectAI):
         elif item in avatar.backCatalog:
             catalogType = CatalogItem.CatalogTypeBackorder
         else:
-            self.air.writeServerEvent('suspicious', avatar.doId, 'purchaseItem %s not in catalog' % (item))
-            self.notify.warning("Avatar %s attempted to purchase %s, not on catalog." % (avatar.doId, item))
-            self.notify.warning("Avatar %s weekly: %s" % (avatar.doId, avatar.weeklyCatalog))
+            self.air.writeServerEvent(
+                'suspicious',
+                avatar.doId,
+                f'purchaseItem {item} not in catalog')
+            self.notify.warning(
+                f"Avatar {avatar.doId} attempted to purchase {item}, not on catalog.")
+            self.notify.warning(
+                f"Avatar {avatar.doId} weekly: {avatar.weeklyCatalog}")
             return ToontownGlobals.P_NotInCatalog
 
         price = item.getPrice(catalogType)
         if price > avatar.getTotalMoney():
-            self.air.writeServerEvent('suspicious', avatar.doId, 'purchaseItem %s not enough money' % (item))
-            self.notify.warning("Avatar %s attempted to purchase %s, not enough money." % (avatar.doId, item))
+            self.air.writeServerEvent(
+                'suspicious',
+                avatar.doId,
+                f'purchaseItem {item} not enough money')
+            self.notify.warning(
+                "Avatar %s attempted to purchase %s, not enough money." %
+                (avatar.doId, item))
             return ToontownGlobals.P_NotEnoughMoney
 
         deliveryTime = item.getDeliveryTime() / self.timeScale
         if deliveryTime == 0:
             # Deliver the item immediately.
-            self.notify.debug("Avatar %s purchased %s, delivered immediately." % (avatar.doId, item))
+            self.notify.debug(
+                f"Avatar {avatar.doId} purchased {item}, delivered immediately.")
             retcode = item.recordPurchase(avatar, optional)
 
         else:
             # Schedule a future delivery.
-            retcode = self.setDelivery(avatar, item, deliveryTime, retcode, doUpdateLater = True)
+            retcode = self.setDelivery(
+                avatar, item, deliveryTime, retcode, doUpdateLater=True)
 
         if retcode >= 0:
             # Now deduct the avatar's money.  We do this last, since there
@@ -239,32 +264,35 @@ class CatalogManagerAI(DistributedObjectAI.DistributedObjectAI):
             self.deductMoney(avatar, price, item)
 
         return retcode
-        
+
     def deductMoney(self, avatar, price, item):
 
-            bankPrice = min(avatar.getBankMoney(), price)
-            walletPrice = price - bankPrice
+        bankPrice = min(avatar.getBankMoney(), price)
+        walletPrice = price - bankPrice
 
-            avatar.b_setBankMoney(avatar.getBankMoney() - bankPrice)
-            avatar.b_setMoney(avatar.getMoney() - walletPrice)
+        avatar.b_setBankMoney(avatar.getBankMoney() - bankPrice)
+        avatar.b_setMoney(avatar.getMoney() - walletPrice)
 
-            self.air.writeServerEvent(
-                'catalog-purchase', avatar.doId, "%s|%s" %
-                (price, item))
-            #pdb.set_trace()
-            
+        self.air.writeServerEvent(
+            'catalog-purchase', avatar.doId, f"{price}|{item}")
+        # pdb.set_trace()
+
     def refundMoney(self, avatarId, refund):
-            avatar = self.air.doId2do.get(avatarId)
-            if avatar:
-                avatar.addMoney(refund)
-                self.air.writeServerEvent(
-                    'refunded-money', avatar.doId, "%s" %
-                    (refund))
-                #pdb.set_trace()
-        
+        avatar = self.air.doId2do.get(avatarId)
+        if avatar:
+            avatar.addMoney(refund)
+            self.air.writeServerEvent(
+                'refunded-money', avatar.doId, f"{refund}")
+            # pdb.set_trace()
+
     def setDelivery(self, avatar, item, deliveryTime, retcode, doUpdateLater):
-        if len(avatar.mailboxContents) + len(avatar.onOrder) >= ToontownGlobals.MaxMailboxContents:
-            self.notify.debug("Avatar %s has %s in mailbox and %s on order, too many." % (avatar.doId, len(avatar.mailboxContents), len(avatar.onOrder)))
+        if len(avatar.mailboxContents) + \
+                len(avatar.onOrder) >= ToontownGlobals.MaxMailboxContents:
+            self.notify.debug(
+                "Avatar %s has %s in mailbox and %s on order, too many." %
+                (avatar.doId, len(
+                    avatar.mailboxContents), len(
+                    avatar.onOrder)))
             if len(avatar.mailboxContents) == 0:
                 # If the mailbox is empty, don't tell the user to
                 # delete something out of his mailbox--he just has
@@ -276,16 +304,17 @@ class CatalogManagerAI(DistributedObjectAI.DistributedObjectAI):
                 # advise the user to do so.
                 retcode = ToontownGlobals.P_MailboxFull
         else:
-            self.notify.debug("Avatar %s purchased %s, to be delivered later." % (avatar.doId, item))
+            self.notify.debug(
+                f"Avatar {avatar.doId} purchased {item}, to be delivered later.")
             now = (int)(time.time() / 60 + 0.5)
             item.deliveryDate = int(now + deliveryTime)
             avatar.onOrder.append(item)
-            avatar.b_setDeliverySchedule(avatar.onOrder, doUpdateLater = doUpdateLater)
+            avatar.b_setDeliverySchedule(
+                avatar.onOrder, doUpdateLater=doUpdateLater)
             retcode = ToontownGlobals.P_ItemOnOrder
-        #pdb.set_trace()
+        # pdb.set_trace()
         return retcode
 
-        
     def payForGiftItem(self, avatar, item, retcode):
         print("in pay for Gift Item")
         if item in avatar.monthlyCatalog:
@@ -295,23 +324,31 @@ class CatalogManagerAI(DistributedObjectAI.DistributedObjectAI):
         elif item in avatar.backCatalog:
             catalogType = CatalogItem.CatalogTypeBackorder
         else:
-            self.air.writeServerEvent('suspicious', avatar.doId, 'purchaseItem %s not in catalog' % (item))
-            self.notify.warning("Avatar %s attempted to purchase %s, not on catalog." % (avatar.doId, item))
-            self.notify.warning("Avatar %s weekly: %s" % (avatar.doId, avatar.weeklyCatalog))
+            self.air.writeServerEvent(
+                'suspicious',
+                avatar.doId,
+                f'purchaseItem {item} not in catalog')
+            self.notify.warning(
+                f"Avatar {avatar.doId} attempted to purchase {item}, not on catalog.")
+            self.notify.warning(
+                f"Avatar {avatar.doId} weekly: {avatar.weeklyCatalog}")
             retcode = ToontownGlobals.P_NotInCatalog
             return 0
-            
+
         price = item.getPrice(catalogType)
         if price > avatar.getTotalMoney():
-            self.air.writeServerEvent('suspicious', avatar.doId, 'purchaseItem %s not enough money' % (item))
-            self.notify.warning("Avatar %s attempted to purchase %s, not enough money." % (avatar.doId, item))
+            self.air.writeServerEvent(
+                'suspicious',
+                avatar.doId,
+                f'purchaseItem {item} not enough money')
+            self.notify.warning(
+                "Avatar %s attempted to purchase %s, not enough money." %
+                (avatar.doId, item))
             retcode = ToontownGlobals.P_NotEnoughMoney
             return 0
-            
+
         self.deductMoney(avatar, price, item)
         return 1
-
-
 
     def startCatalog(self):
         # This message is sent by the client when he believes it is
@@ -320,6 +357,5 @@ class CatalogManagerAI(DistributedObjectAI.DistributedObjectAI):
         avatar = self.air.doId2do.get(avId)
 
         if avatar and avatar.catalogScheduleNextTime == 0:
-            print(("starting catalog for %s" % (avatar.getName())))
+            print(f"starting catalog for {avatar.getName()}")
             self.deliverCatalogFor(avatar)
-

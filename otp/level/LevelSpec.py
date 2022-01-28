@@ -9,6 +9,7 @@ import importlib
 if __dev__:
     import os
 
+
 class LevelSpec:
     """contains spec data for a level, is responsible for handing the data
     out upon request, as well as recording changes made during editing, and
@@ -18,19 +19,19 @@ class LevelSpec:
     SystemEntIds = (LevelConstants.UberZoneEntId,
                     LevelConstants.LevelMgrEntId,
                     LevelConstants.EditMgrEntId)
-    
+
     def __init__(self, spec=None, scenario=0):
         """spec must be passed in as a python module or a dictionary.
         If not passed in, will create a new spec."""
         newSpec = 0
-        if type(spec) is types.ModuleType:
+        if isinstance(spec, types.ModuleType):
             if __dev__:
                 # reload the spec module to pick up changes
                 importlib.reload(spec)
             self.specDict = spec.levelSpec
             if __dev__:
                 self.setFilename(spec.__file__)
-        elif type(spec) is dict:
+        elif isinstance(spec, dict):
             # we need this for repr/eval-ing LevelSpecs
             self.specDict = spec
         elif spec is None:
@@ -39,7 +40,7 @@ class LevelSpec:
                 self.specDict = {
                     'globalEntities': {},
                     'scenarios': [{}],
-                    }
+                }
 
         assert hasattr(self, 'specDict')
 
@@ -125,7 +126,7 @@ class LevelSpec:
         # return a copy of the spec, making sure that none of the attributes
         # are shared between the original and the copy (i.e. Point3's)
         specCopy = {}
-        exec('from %s import *' % self.getSpecImportsModuleName())
+        exec(f'from {self.getSpecImportsModuleName()} import *')
         for key in list(spec.keys()):
             specCopy[key] = eval(repr(spec[key]))
         return specCopy
@@ -180,7 +181,7 @@ class LevelSpec:
         zoneIds.sort()
         for zoneNum in zoneIds:
             spec = self.getEntitySpec(zoneNum)
-            print('zone %s: %s' % (zoneNum, spec['name']))
+            print(f"zone {zoneNum}: {spec['name']}")
 
     if __dev__:
         def setLevel(self, level):
@@ -217,7 +218,8 @@ class LevelSpec:
                 self.level.handleAttribChange(entId, attrib, value, username)
 
         def insertEntity(self, entId, entType, parentEntId='unspecified'):
-            LevelSpec.notify.info('inserting entity %s (%s)' % (entId, entType))
+            LevelSpec.notify.info(
+                f'inserting entity {entId} ({entType})')
             assert entId not in self.entId2specDict
             assert self.entTypeReg is not None
             globalEnts = self.privGetGlobalEntityDict()
@@ -238,7 +240,8 @@ class LevelSpec:
                 # notify the level
                 self.level.handleEntityInsert(entId)
             else:
-                LevelSpec.notify.warning('no level to be notified of insertion')
+                LevelSpec.notify.warning(
+                    'no level to be notified of insertion')
 
         """ this was never used/tested but may come in handy
         def insertEntityWithSpec(self, entId, spec):
@@ -253,9 +256,9 @@ class LevelSpec:
             for attribName, value in specCopy.items():
                 self.doSetAttrib(entId, attribName, value)
                 """
-            
+
         def removeEntity(self, entId):
-            LevelSpec.notify.info('removing entity %s' % entId)
+            LevelSpec.notify.info(f'removing entity {entId}')
             assert entId in self.entId2specDict
 
             if self.hasLevel():
@@ -302,14 +305,14 @@ class LevelSpec:
             return self.filename
 
         def privGetBackupFilename(self, filename):
-            return '%s.bak' % filename
+            return f'{filename}.bak'
 
         def saveToDisk(self, filename=None, makeBackup=1):
             """returns zero on failure"""
             if filename is None:
                 filename = self.filename
                 if filename.endswith('.pyc'):
-                    filename = filename.replace('.pyc','.py')
+                    filename = filename.replace('.pyc', '.py')
 
             if makeBackup and self.privFileExists(filename):
                 # create a backup
@@ -319,9 +322,9 @@ class LevelSpec:
                     os.rename(filename, backupFilename)
                 except OSError as e:
                     LevelSpec.notify.warning(
-                        'error during backup: %s' % str(e))
+                        f'error during backup: {str(e)}')
 
-            LevelSpec.notify.info("writing to '%s'" % filename)
+            LevelSpec.notify.info(f"writing to '{filename}'")
             self.privRemoveFile(filename)
             self.privSaveToDisk(filename)
 
@@ -355,16 +358,18 @@ class LevelSpec:
             """Returns a string that contains the spec data, nicely formatted.
             This should be used when writing the spec out to file."""
             import pprint
-            
+
             tabWidth = 4
             tab = ' ' * tabWidth
             # structure names
             globalEntitiesName = 'GlobalEntities'
             scenarioEntitiesName = 'Scenario%s'
             topLevelName = 'levelSpec'
+
             def getPrettyEntityDictStr(name, dict, tabs=0):
                 def t(n):
-                    return (tabs+n)*tab
+                    return (tabs + n) * tab
+
                 def sortList(lst, firstElements=[]):
                     """sort list; elements in firstElements will be put
                     first, in the order that they appear in firstElements;
@@ -379,7 +384,7 @@ class LevelSpec:
                     elements.sort()
                     result.extend(elements)
                     return result
-   
+
                 firstTypes = ('levelMgr', 'editMgr', 'zone',)
                 firstAttribs = ('type', 'name', 'comment', 'parentEntId',
                                 'pos', 'x', 'y', 'z',
@@ -388,41 +393,40 @@ class LevelSpec:
                                 'color',
                                 'model',
                                 )
-                str = t(0)+'%s = {\n' % name
+                str = t(0) + '%s = {\n' % name
                 # get list of types
                 entIds = list(dict.keys())
                 entType2ids = self.getEntType2ids(entIds)
                 # put types in order
                 types = sortList(list(entType2ids.keys()), firstTypes)
                 for _type in types:
-                    str += t(1)+'# %s\n' % _type.upper()
-                    entIds = entType2ids[_type]
-                    entIds.sort()
+                    str += t(1) + f'# {_type.upper()}\n'
+                    entIds = sorted(entType2ids[_type])
                     for entId in entIds:
-                        str += t(1)+'%s: {\n' % entId
+                        str += t(1) + '%s: {\n' % entId
                         spec = dict[entId]
                         attribs = sortList(list(spec.keys()), firstAttribs)
                         for attrib in attribs:
-                            str += t(2)+"'%s': %s,\n" % (attrib,
-                                                         repr(spec[attrib]))
+                            str += t(2) + f"'{attrib}': {repr(spec[attrib])},\n"
                         # maybe this will help with CVS merges?
-                        str += t(2)+'}, # end entity %s\n' % entId
-                        
-                str += t(1)+'}\n'
+                        str += t(2) + '}, # end entity %s\n' % entId
+
+                str += t(1) + '}\n'
                 return str
+
             def getPrettyTopLevelDictStr(tabs=0):
                 def t(n):
-                    return (tabs+n)*tab
-                str  = t(0)+'%s = {\n' % topLevelName
-                str += t(1)+"'globalEntities': %s,\n" % globalEntitiesName
-                str += t(1)+"'scenarios': [\n"
+                    return (tabs + n) * tab
+                str = t(0) + '%s = {\n' % topLevelName
+                str += t(1) + f"'globalEntities': {globalEntitiesName},\n"
+                str += t(1) + "'scenarios': [\n"
                 for i in range(self.getNumScenarios()):
-                    str += t(2)+'%s,\n' % (scenarioEntitiesName % i)
-                str += t(2)+'],\n'
-                str += t(1)+'}\n'
+                    str += t(2) + f'{scenarioEntitiesName % i},\n'
+                str += t(2) + '],\n'
+                str += t(1) + '}\n'
                 return str
-            
-            str  = 'from %s import *\n' % self.getSpecImportsModuleName()
+
+            str = f'from {self.getSpecImportsModuleName()} import *\n'
             str += '\n'
 
             # add the global entities
@@ -433,8 +437,8 @@ class LevelSpec:
             # add the scenario entities
             numScenarios = self.getNumScenarios()
             for i in range(numScenarios):
-                str += getPrettyEntityDictStr('Scenario%s' % i,
-                                              self.privGetScenarioEntityDict(i))
+                str += getPrettyEntityDictStr('Scenario%s' %
+                                              i, self.privGetScenarioEntityDict(i))
                 str += '\n'
 
             # add the top-level table
@@ -443,31 +447,36 @@ class LevelSpec:
             self.testPrettyString(prettyString=str)
 
             return str
-            
+
         def _recurKeyTest(self, dict1, dict2):
             # recursive key test for testPrettyString
             # cannot be sub function due to exec call in testPrettyString
-            s = '' # error out string
-            errorCount = 0 # number of non-matching keys; more or less
-            
-            #if set of keys don't match than they are not the same
+            s = ''  # error out string
+            errorCount = 0  # number of non-matching keys; more or less
+
+            # if set of keys don't match than they are not the same
             if set(dict1.keys()) != set(dict2.keys()):
                 return 0
             for key in dict1:
-                #if they are both dicitonaries we must test the subkeys
-                #this is because dicts are unordered and we are using repr to dump the 
-                #values into strings for comparision
-                if type(dict1[key]) == type({}) and type(dict2[key]) == type({}):
+                # if they are both dicitonaries we must test the subkeys
+                # this is because dicts are unordered and we are using repr to dump the
+                # values into strings for comparision
+                if isinstance(
+                    dict1[key], type(
+                        {})) and isinstance(
+                    dict2[key], type(
+                        {})):
                     if not self._recurKeyTest(dict1[key], dict2[key]):
                         return 0
-                #if they are not dicts turn the values into strings and compare the strings
+                # if they are not dicts turn the values into strings and
+                # compare the strings
                 else:
                     strd1 = repr(dict1[key])
                     strd2 = repr(dict2[key])
                     if strd1 != strd2:
-                        #if the strings don't match print an error
-                        s += '\nBAD VALUE(%s): %s != %s\n' % (key, strd1, strd2)
-                        errorCount += 1 #we could just bail here but instead we accumulate the errors
+                        # if the strings don't match print an error
+                        s += f'\nBAD VALUE({key}): {strd1} != {strd2}\n'
+                        errorCount += 1  # we could just bail here but instead we accumulate the errors
             print(s)
             #import pdb;pdb.set_trace
             if errorCount == 0:
@@ -476,16 +485,16 @@ class LevelSpec:
                 return 0
 
         def testPrettyString(self, prettyString=None):
-            # execute the pretty output in our local scope                    
+            # execute the pretty output in our local scope
             if prettyString is None:
-                prettyString=self.getPrettyString()
+                prettyString = self.getPrettyString()
             exec(prettyString)
             if self._recurKeyTest(levelSpec, self.specDict):
                 return 1
             else:
-                 #import pdb;pdb.set_trace()
-                assert 0,  (
-                'LevelSpec pretty string does not match spec data.\n'
+                #import pdb;pdb.set_trace()
+                assert 0, (
+                    'LevelSpec pretty string does not match spec data.\n'
                 )
 
         def checkSpecIntegrity(self):
@@ -523,7 +532,7 @@ class LevelSpec:
                         if attribName not in spec:
                             LevelSpec.notify.warning(
                                 "entId %s (%s): missing attrib '%s'" % (
-                                entId, spec['type'], attribName))
+                                    entId, spec['type'], attribName))
 
         def __hash__(self):
             return hash(repr(self))
@@ -532,5 +541,4 @@ class LevelSpec:
             return 'LevelSpec'
 
         def __repr__(self):
-            return 'LevelSpec(%s, scenario=%s)' % (repr(self.specDict),
-                                                   self.scenario)
+            return f'LevelSpec({repr(self.specDict)}, scenario={self.scenario})'

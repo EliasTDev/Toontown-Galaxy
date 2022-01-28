@@ -4,6 +4,7 @@ ToonTown Group object
 
 from .ToonTownObj import *
 
+
 class GroupObj(ToonTownObjBase):
     def __init__(self, editor, groupName, dna=None, nodePath=None):
         self.groupName = groupName
@@ -13,13 +14,14 @@ class GroupObj(ToonTownObjBase):
         dnaNode = DNAGroup(self.groupName)
         return dnaNode
 
+
 class VisGroupObj(GroupObj):
     def __init__(self, editor, groupName, dna=None, nodePath=None):
-        GroupObj.__init__(self, editor, groupName,  dna, nodePath)
+        GroupObj.__init__(self, editor, groupName, dna, nodePath)
 
     def initDNA(self):
         dnaNode = DNAVisGroup(self.groupName)
-        return dnaNode    
+        return dnaNode
 
     def setName(self, newName):
         oldName = self.getName()
@@ -46,7 +48,7 @@ class VisGroupObj(GroupObj):
     def removeVisible(self, visible):
         self.dna.removeVisible(visible)
         self.updateVisList()
-                         
+
     def addVisible2DNA(self, visible):
         if visible not in self.getVisList():
             self.dna.addVisible(visible)
@@ -109,6 +111,7 @@ class VisGroupObj(GroupObj):
 
         return result
 
+
 class NodeObj(ToonTownObj):
     def __init__(self, editor, nodeName, dna=None, nodePath=None):
         self.nodeName = nodeName
@@ -116,5 +119,4 @@ class NodeObj(ToonTownObj):
 
     def initDNA(self):
         dnaNode = DNANode(self.nodeName)
-        return dnaNode    
-
+        return dnaNode

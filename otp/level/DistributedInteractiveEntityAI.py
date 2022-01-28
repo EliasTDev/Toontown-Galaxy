@@ -1,5 +1,5 @@
 """ DistributedInteractiveEntityAI module: contains the DistributedInteractiveEntityAI
-    class, the server side representation of a simple, animated, interactive 
+    class, the server side representation of a simple, animated, interactive
     prop."""
 
 
@@ -21,118 +21,118 @@ class DistributedInteractiveEntityAI(DistributedEntityAI.DistributedEntityAI):
     client's display based on the state of the prop.
     """
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInteractiveEntityAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedInteractiveEntityAI')
 
     def __init__(self, level, entId):
         """entId: a unique identifier for this prop."""
         DistributedEntityAI.DistributedEntityAI.__init__(self, level, entId)
         assert self.debugPrint(
-            "DistributedInteractiveEntityAI(entId=%s)"%(entId))
+            f"DistributedInteractiveEntityAI(entId={entId})")
         self.fsm = ClassicFSM.ClassicFSM('DistributedInteractiveEntityAI',
-                           [State.State('off',
-                                        self.enterOff,
-                                        self.exitOff,
-                                        ['playing']),
-                            # Attract is an idle mode.  It is named attract
-                            # because the prop is not interacting with an
-                            # avatar, and is therefore trying to attract an
-                            # avatar.
-                            State.State('attract',
-                                        self.enterAttract,
-                                        self.exitAttract,
-                                        ['playing']),
-                            # Playing is for when an avatar is interacting
-                            # with the prop.
-                            State.State('playing',
-                                        self.enterPlaying,
-                                        self.exitPlaying,
-                                        ['attract'])],
-                           # Initial State
-                           'off',
-                           # Final State
-                           'off',
-                          )
+                                         [State.State('off',
+                                                      self.enterOff,
+                                                      self.exitOff,
+                                                      ['playing']),
+                                             # Attract is an idle mode.  It is named attract
+                                             # because the prop is not interacting with an
+                                             # avatar, and is therefore trying to attract an
+                                             # avatar.
+                                             State.State('attract',
+                                                         self.enterAttract,
+                                                         self.exitAttract,
+                                                         ['playing']),
+                                             # Playing is for when an avatar is interacting
+                                             # with the prop.
+                                             State.State('playing',
+                                                         self.enterPlaying,
+                                                         self.exitPlaying,
+                                                         ['attract'])],
+                                         # Initial State
+                                         'off',
+                                         # Final State
+                                         'off',
+                                         )
         self.fsm.enterInitialState()
-        self.avatarId=0
-
+        self.avatarId = 0
 
     def delete(self):
         del self.fsm
         DistributedEntityAI.DistributedEntityAI.delete(self)
-    
+
     def getAvatarInteract(self):
-        assert self.debugPrint("getAvatarInteract() returning: %s"%(self.avatarId,))
+        assert self.debugPrint(
+            f"getAvatarInteract() returning: {self.avatarId}")
         return self.avatarId
-    
-    #def getOwnerDoId(self):
+
+    # def getOwnerDoId(self):
     #    assert self.debugPrint("getOwnerDoId() returning: %s"%(self.ownerDoId,))
     #    return self.ownerDoId
-    
+
     def requestInteract(self):
         assert self.debugPrint("requestInteract()")
         avatarId = self.air.getAvatarIdFromSender()
-        assert self.notify.debug("  avatarId:%s"%(avatarId,))
+        assert self.notify.debug(f"  avatarId:{avatarId}")
         stateName = self.fsm.getCurrentState().getName()
         if stateName != 'playing':
             self.sendUpdate("setAvatarInteract", [avatarId])
-            self.avatarId=avatarId
+            self.avatarId = avatarId
             self.fsm.request('playing')
         else:
             self.sendUpdateToAvatarId(avatarId, "rejectInteract", [])
-    
+
     def requestExit(self):
         assert self.debugPrint("requestExit()")
         avatarId = self.air.getAvatarIdFromSender()
-        assert self.notify.debug("  avatarId:%s"%(avatarId,))
-        if avatarId==self.avatarId:
+        assert self.notify.debug(f"  avatarId:{avatarId}")
+        if avatarId == self.avatarId:
             stateName = self.fsm.getCurrentState().getName()
             if stateName == 'playing':
                 self.sendUpdate("avatarExit", [avatarId])
                 self.fsm.request('attract')
         else:
             assert self.notify.debug("  requestExit: invalid avatarId")
-    
+
     def getState(self):
         r = [
             self.fsm.getCurrentState().getName(),
             globalClockDelta.getRealNetworkTime()]
-        assert self.debugPrint("getState() returning %s"%(r,))
+        assert self.debugPrint(f"getState() returning {r}")
         return r
-    
+
     def sendState(self):
         assert self.debugPrint("sendState()")
         self.sendUpdate('setState', self.getState())
-    
+
     ##### off state #####
-    
+
     def enterOff(self):
         assert self.debugPrint("enterOff()")
-        #self.setState('off')
-    
+        # self.setState('off')
+
     def exitOff(self):
         assert self.debugPrint("exitOff()")
-    
+
     ##### attract state #####
-    
+
     def enterAttract(self):
         assert self.debugPrint("enterAttract()")
         self.sendState()
-    
+
     def exitAttract(self):
         assert self.debugPrint("exitAttract()")
-    
+
     ##### open state #####
-    
+
     def enterPlaying(self):
         assert self.debugPrint("enterPlaying()")
         self.sendState()
-    
+
     def exitPlaying(self):
         assert self.debugPrint("exitPlaying()")
-    
+
     if __debug__:
         def debugPrint(self, message):
             """for debugging"""
             return self.notify.debug(
-                    str(self.__dict__.get('entId', '?'))+' '+message)
-
+                str(self.__dict__.get('entId', '?')) + ' ' + message)

@@ -7,7 +7,8 @@ from toontown.battle import BattleParticles
 
 class Splash(NodePath):
     splashCount = 0
-    def __init__(self, parent = hidden, wantParticles=1):
+
+    def __init__(self, parent=hidden, wantParticles=1):
         """__init()"""
         # Initialize the superclass
         NodePath.__init__(self, parent)
@@ -40,7 +41,7 @@ class Splash(NodePath):
         # Start out hidden
         self.hide()
 
-    def createTrack(self, rate = 1):
+    def createTrack(self, rate=1):
         # Init ripple track
         self.ripples.createTrack(rate)
         # Compute anim duration
@@ -53,7 +54,7 @@ class Splash(NodePath):
             Func(self.splashdown.play, 'splashdown'),
             Wait(animDuration),
             Func(self.splashdown.hide),
-            )
+        )
 
         if self.wantParticles:
             particleSequence = Sequence(
@@ -63,40 +64,40 @@ class Splash(NodePath):
                 Wait(2.2),
                 Func(self.pSystem.hide),
                 Func(self.pSystem.disable),
-                )
+            )
         else:
             particleSequence = Sequence()
-        
+
         # Create track
         self.track = Sequence(
             Func(self.show),
             Parallel(
-            # Ripples sequence
-            self.ripples.track,
-            # Splashdown actor sequence
-            rippleSequence,
-            particleSequence,
+                # Ripples sequence
+                self.ripples.track,
+                # Splashdown actor sequence
+                rippleSequence,
+                particleSequence,
             ),
             Func(self.hide),
-            name = 'splashdown-%d-track' % self.trackId
-            )
-    
-    def play(self, rate = 1):
+            name='splashdown-%d-track' % self.trackId
+        )
+
+    def play(self, rate=1):
         # Stop existing track, if one exists
         self.stop()
         # Create new track at given rate
         self.createTrack(rate)
         # Play back track
         self.track.start()
-    
-    def loop(self, rate = 1):
+
+    def loop(self, rate=1):
         # Stop existing track, if one exists
         self.stop()
         # Create new track at given rate
         self.createTrack(rate)
         # Loop track
         self.track.loop()
-    
+
     def stop(self):
         if self.track:
             self.track.finish()
@@ -111,4 +112,3 @@ class Splash(NodePath):
             del self.pSystem
             del self.particles
         self.removeNode()
-

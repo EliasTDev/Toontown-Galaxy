@@ -10,6 +10,7 @@ from direct.showbase import DirectObject
 from toontown.toonbase import TTLocalizer
 from direct.directnotify import DirectNotifyGlobal
 
+
 class AprilFoolsManagerAI(CostumeManagerAI.CostumeManagerAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('AprilFoolsManagerAI')
 
@@ -21,7 +22,7 @@ class AprilFoolsManagerAI(CostumeManagerAI.CostumeManagerAI):
         CostumeManagerAI.CostumeManagerAI.start(self)
 
         estateManager = simbase.air.doFind("EstateManagerAI.EstateManagerAI")
-        if estateManager != None:
+        if estateManager is not None:
             estateManager.startAprilFools()
 
     # Overridden function
@@ -29,5 +30,5 @@ class AprilFoolsManagerAI(CostumeManagerAI.CostumeManagerAI):
         CostumeManagerAI.CostumeManagerAI.stop(self)
 
         estateManager = simbase.air.doFind("EstateManagerAI.EstateManagerAI")
-        if estateManager != None:
+        if estateManager is not None:
             estateManager.stopAprilFools()

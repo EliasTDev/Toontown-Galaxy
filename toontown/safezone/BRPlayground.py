@@ -6,11 +6,12 @@ import random
 from toontown.hood import Place
 from toontown.toonbase import ToontownGlobals
 
+
 class BRPlayground(Playground.Playground):
 
     STILL = 1
-    RUN = 2 
-    ROTATE = 3   
+    RUN = 2
+    ROTATE = 3
 
     stillPos = Point3(0, 20, 8)
     runPos = Point3(0, 60, 8)
@@ -18,22 +19,22 @@ class BRPlayground(Playground.Playground):
 
     timeFromStill = 1.0
     timeFromRotate = 2.0
-    
+
     def __init__(self, loader, parentFSM, doneEvent):
         Playground.Playground.__init__(self, loader, parentFSM, doneEvent)
 
     def load(self):
         Playground.Playground.load(self)
-        
+
     def unload(self):
         Playground.Playground.unload(self)
-        
+
     def enter(self, requestStatus):
         Playground.Playground.enter(self, requestStatus)
         self.nextWindTime = 0
         taskMgr.add(self.__windTask, 'br-wind')
         self.state = 0
-        
+
     def exit(self):
         taskMgr.remove('br-wind')
         taskMgr.remove('lerp-snow')
@@ -42,9 +43,9 @@ class BRPlayground(Playground.Playground):
     def enterTunnelOut(self, requestStatus):
         # We no longer need to stop the snow on tunnel out, because
         # the camera doesn't enter the tunnel any more.
-        #taskMgr.remove('lerp-snow')
-        #self.loader.snow.reparentTo(hidden)
-        
+        # taskMgr.remove('lerp-snow')
+        # self.loader.snow.reparentTo(hidden)
+
         Place.Place.enterTunnelOut(self, requestStatus)
 
     def __windTask(self, task):
@@ -61,7 +62,6 @@ class BRPlayground(Playground.Playground):
             base.playSfx(self.loader.wind3Sound)
         self.nextWindTime = now + randNum * 8.0
         return Task.cont
-
 
     def showPaths(self):
         # Overridden from Playground to fill in the correct parameters

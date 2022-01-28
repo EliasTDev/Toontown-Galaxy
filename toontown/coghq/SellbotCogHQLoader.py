@@ -18,10 +18,11 @@ from panda3d.core import DecalEffect
 # scale z by factor of 0.7227
 aspectSF = 0.7227
 
+
 class SellbotCogHQLoader(CogHQLoader.CogHQLoader):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("SellbotCogHQLoader")
-    #notify.setDebug(True)
+    # notify.setDebug(True)
 
     def __init__(self, hood, parentFSMState, doneEvent):
         CogHQLoader.CogHQLoader.__init__(self, hood, parentFSMState, doneEvent)
@@ -29,22 +30,22 @@ class SellbotCogHQLoader(CogHQLoader.CogHQLoader):
                                       self.enterFactoryExterior,
                                       self.exitFactoryExterior,
                                       ['quietZone',
-                                       'factoryInterior', # Elevator
-                                       'cogHQExterior', # Tunnel
+                                       'factoryInterior',  # Elevator
+                                       'cogHQExterior',  # Tunnel
                                        ]))
         for stateName in ['start', 'cogHQExterior', 'quietZone']:
             state = self.fsm.getStateNamed(stateName)
             state.addTransition('factoryExterior')
         self.fsm.addState(State.State('factoryInterior',
-                                        self.enterFactoryInterior,
-                                        self.exitFactoryInterior,
-                                        ['quietZone',
-                                         'factoryExterior', # Win bldg
-                                         ]))
+                                      self.enterFactoryInterior,
+                                      self.exitFactoryInterior,
+                                      ['quietZone',
+                                       'factoryExterior',  # Win bldg
+                                       ]))
         for stateName in ['quietZone']:
             state = self.fsm.getStateNamed(stateName)
             state.addTransition('factoryInterior')
-        
+
         self.musicFile = "phase_9/audio/bgm/encntr_suit_HQ_nbrhood.ogg"
 
         self.cogHQExteriorModelPath = "phase_9/models/cogHQ/SellbotHQExterior"
@@ -65,11 +66,12 @@ class SellbotCogHQLoader(CogHQLoader.CogHQLoader):
         CogHQLoader.CogHQLoader.unloadPlaceGeom(self)
 
     def loadPlaceGeom(self, zoneId):
-        self.notify.info("loadPlaceGeom: %s" % zoneId)
+        self.notify.info(f"loadPlaceGeom: {zoneId}")
 
-        # We shoud not look at the last 2 digits to match against these constants
-        zoneId = (zoneId - (zoneId %100))
-        
+        # We shoud not look at the last 2 digits to match against these
+        # constants
+        zoneId = (zoneId - (zoneId % 100))
+
         if zoneId == ToontownGlobals.SellbotHQ:
             self.geom = loader.loadModel(self.cogHQExteriorModelPath)
 
@@ -93,12 +95,12 @@ class SellbotCogHQLoader(CogHQLoader.CogHQLoader):
                 cogSignSF, cogSignSF, cogSignSF * aspectSF)
             dgSign.node().setEffect(DecalEffect.make())
             dgText = DirectGui.OnscreenText(
-                text = TTLocalizer.DaisyGardens[-1],
-                font = ToontownGlobals.getSuitFont(),
-                pos = (0,-0.3), scale = TTLocalizer.SCLdgSign,
+                text=TTLocalizer.DaisyGardens[-1],
+                font=ToontownGlobals.getSuitFont(),
+                pos=(0, -0.3), scale=TTLocalizer.SCLdgSign,
                 # required for DecalEffect (must be a GeomNode, not a TextNode)
                 mayChange=False,
-                parent = dgSign)
+                parent=dgSign)
             dgText.setDepthWrite(0)
 
             # To Factory
@@ -110,20 +112,20 @@ class SellbotCogHQLoader(CogHQLoader.CogHQLoader):
             # Make text a decal
             factorySign.node().setEffect(DecalEffect.make())
             factoryTypeText = DirectGui.OnscreenText(
-                text = TTLocalizer.Sellbot,
-                font = ToontownGlobals.getSuitFont(),
-                pos = (0,-0.25), scale = .075,
+                text=TTLocalizer.Sellbot,
+                font=ToontownGlobals.getSuitFont(),
+                pos=(0, -0.25), scale=.075,
                 # required for DecalEffect (must be a GeomNode, not a TextNode)
                 mayChange=False,
-                parent = factorySign)
+                parent=factorySign)
             factoryTypeText.setDepthWrite(0)
             factoryText = DirectGui.OnscreenText(
-                text = TTLocalizer.Factory,
-                font = ToontownGlobals.getSuitFont(),
-                pos = (0,-0.34), scale = .12,
+                text=TTLocalizer.Factory,
+                font=ToontownGlobals.getSuitFont(),
+                pos=(0, -0.34), scale=.12,
                 # required for DecalEffect (must be a GeomNode, not a TextNode)
                 mayChange=False,
-                parent = factorySign)
+                parent=factorySign)
             factoryText.setDepthWrite(0)
 
             doors = self.geom.find("**/doors")
@@ -140,14 +142,16 @@ class SellbotCogHQLoader(CogHQLoader.CogHQLoader):
                 door.find("**/doorFrameHoleRight").wrtReparentTo(doorFrame)
                 doorFrame.node().setEffect(DecalEffect.make())
                 index += 1
-                # Find the trigger and move it away from the wall a bit so the toon can actually collide with it
+                # Find the trigger and move it away from the wall a bit so the
+                # toon can actually collide with it
                 trigger = door.find("**/door_trigger*")
                 trigger.setPos(trigger, 0, -0.2, 0)
         elif zoneId == ToontownGlobals.SellbotFactoryExt:
             self.geom = loader.loadModel(self.factoryExteriorModelPath)
             factoryLinkTunnel = self.geom.find("**/tunnel_group2")
             factoryLinkTunnel.setName("linktunnel_sellhq_11000_DNARoot")
-            factoryLinkTunnel.find("**/tunnel_sphere").setName("tunnel_trigger")
+            factoryLinkTunnel.find(
+                "**/tunnel_sphere").setName("tunnel_trigger")
 
             # Put handy signs on the link tunnels
             cogSignModel = loader.loadModel(
@@ -164,20 +168,20 @@ class SellbotCogHQLoader(CogHQLoader.CogHQLoader):
                 cogSignSF, cogSignSF, cogSignSF * aspectSF)
             hqSign.node().setEffect(DecalEffect.make())
             hqTypeText = DirectGui.OnscreenText(
-                text = TTLocalizer.Sellbot,
-                font = ToontownGlobals.getSuitFont(),
-                pos = (0,-0.25), scale = .075,
+                text=TTLocalizer.Sellbot,
+                font=ToontownGlobals.getSuitFont(),
+                pos=(0, -0.25), scale=.075,
                 # required for DecalEffect (must be a GeomNode, not a TextNode)
                 mayChange=False,
-                parent = hqSign)
+                parent=hqSign)
             hqTypeText.setDepthWrite(0)
             hqText = DirectGui.OnscreenText(
-                text = TTLocalizer.Headquarters,
-                font = ToontownGlobals.getSuitFont(),
-                pos = (0,-0.34), scale = 0.1,
+                text=TTLocalizer.Headquarters,
+                font=ToontownGlobals.getSuitFont(),
+                pos=(0, -0.34), scale=0.1,
                 # required for DecalEffect (must be a GeomNode, not a TextNode)
                 mayChange=False,
-                parent = hqSign)
+                parent=hqSign)
             hqText.setDepthWrite(0)
 
             # Factory Front Entrance
@@ -189,20 +193,20 @@ class SellbotCogHQLoader(CogHQLoader.CogHQLoader):
                 elevatorSignSF, elevatorSignSF, elevatorSignSF * aspectSF)
             fdSign.node().setEffect(DecalEffect.make())
             fdTypeText = DirectGui.OnscreenText(
-                text = TTLocalizer.Factory,
-                font = ToontownGlobals.getSuitFont(),
-                pos = (0,-0.25), scale = TTLocalizer.SCLfdSign,
+                text=TTLocalizer.Factory,
+                font=ToontownGlobals.getSuitFont(),
+                pos=(0, -0.25), scale=TTLocalizer.SCLfdSign,
                 # required for DecalEffect (must be a GeomNode, not a TextNode)
                 mayChange=False,
-                parent = fdSign)
+                parent=fdSign)
             fdTypeText.setDepthWrite(0)
             fdText = DirectGui.OnscreenText(
-                text = TTLocalizer.SellbotFrontEntrance,
-                font = ToontownGlobals.getSuitFont(),
-                pos = (0,-0.34), scale = TTLocalizer.SCLdgSign,
+                text=TTLocalizer.SellbotFrontEntrance,
+                font=ToontownGlobals.getSuitFont(),
+                pos=(0, -0.34), scale=TTLocalizer.SCLdgSign,
                 # required for DecalEffect (must be a GeomNode, not a TextNode)
                 mayChange=False,
-                parent = fdSign)
+                parent=fdSign)
             fdText.setDepthWrite(0)
 
             # Factory Side Entrance
@@ -214,27 +218,27 @@ class SellbotCogHQLoader(CogHQLoader.CogHQLoader):
                 elevatorSignSF, elevatorSignSF, elevatorSignSF * aspectSF)
             sdSign.node().setEffect(DecalEffect.make())
             sdTypeText = DirectGui.OnscreenText(
-                text = TTLocalizer.Factory,
-                font = ToontownGlobals.getSuitFont(),
-                pos = (0,-0.25), scale = .075,
+                text=TTLocalizer.Factory,
+                font=ToontownGlobals.getSuitFont(),
+                pos=(0, -0.25), scale=.075,
                 # required for DecalEffect (must be a GeomNode, not a TextNode)
                 mayChange=False,
-                parent = sdSign)
+                parent=sdSign)
             sdTypeText.setDepthWrite(0)
             sdText = DirectGui.OnscreenText(
-                text = TTLocalizer.SellbotSideEntrance,
-                font = ToontownGlobals.getSuitFont(),
-                pos = (0,-0.34), scale = 0.1,
+                text=TTLocalizer.SellbotSideEntrance,
+                font=ToontownGlobals.getSuitFont(),
+                pos=(0, -0.34), scale=0.1,
                 # required for DecalEffect (must be a GeomNode, not a TextNode)
                 mayChange=False,
-                parent = sdSign)
+                parent=sdSign)
             sdText.setDepthWrite(0)
         elif zoneId == ToontownGlobals.SellbotLobby:
             self.geom = loader.loadModel(self.cogHQLobbyModelPath)
 
             front = self.geom.find("**/frontWall")
             front.node().setEffect(DecalEffect.make())
-            
+
             door = self.geom.find("**/door_0")
             parent = door.getParent()
             door.wrtReparentTo(front)
@@ -249,22 +253,20 @@ class SellbotCogHQLoader(CogHQLoader.CogHQLoader):
             # Note: the factory interior has a dynamically allocated zone but
             # that is ok because we do not need to load any models - they all
             # get loaded by the distributed object
-            self.notify.warning("loadPlaceGeom: unclassified zone %s" % zoneId)
-            
+            self.notify.warning(f"loadPlaceGeom: unclassified zone {zoneId}")
+
         CogHQLoader.CogHQLoader.loadPlaceGeom(self, zoneId)
-    
 
     def unload(self):
         CogHQLoader.CogHQLoader.unload(self)
         # unload anims
         Toon.unloadSellbotHQAnims()
 
-
     def enterFactoryExterior(self, requestStatus):
         self.placeClass = FactoryExterior.FactoryExterior
         self.enterPlace(requestStatus)
         self.hood.spawnTitleText(requestStatus['zoneId'])
-        
+
     def exitFactoryExterior(self):
         taskMgr.remove("titleText")
         self.hood.hideTitleText()
@@ -274,7 +276,7 @@ class SellbotCogHQLoader(CogHQLoader.CogHQLoader):
     def enterFactoryInterior(self, requestStatus):
         self.placeClass = FactoryInterior.FactoryInterior
         self.enterPlace(requestStatus)
-        
+
     def exitFactoryInterior(self):
         self.exitPlace()
         self.placeClass = None
@@ -284,4 +286,3 @@ class SellbotCogHQLoader(CogHQLoader.CogHQLoader):
 
     def getBossPlaceClass(self):
         return SellbotHQBossBattle.SellbotHQBossBattle
-

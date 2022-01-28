@@ -12,4 +12,3 @@ print('=== START SC STRINGS ===')
 for msg in msgs:
     if len(msg):
         print(msg)
-    

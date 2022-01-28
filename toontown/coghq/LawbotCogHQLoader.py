@@ -17,25 +17,26 @@ from . import LawbotOfficeExterior
 # scale z by factor of 0.7227
 aspectSF = 0.7227
 
+
 class LawbotCogHQLoader(CogHQLoader.CogHQLoader):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("LawbotCogHQLoader")
-    #notify.setDebug(True)
+    # notify.setDebug(True)
 
     def __init__(self, hood, parentFSMState, doneEvent):
         CogHQLoader.CogHQLoader.__init__(self, hood, parentFSMState, doneEvent)
-        
+
         self.fsm.addState(State.State('stageInterior',
                                       self.enterStageInterior,
                                       self.exitStageInterior,
                                       ['quietZone',
-                                       'cogHQExterior', # Tunnel
+                                       'cogHQExterior',  # Tunnel
                                        ]))
         self.fsm.addState(State.State('factoryExterior',
                                       self.enterFactoryExterior,
                                       self.exitFactoryExterior,
                                       ['quietZone',
-                                       'cogHQExterior', # Tunnel
+                                       'cogHQExterior',  # Tunnel
                                        ]))
         for stateName in ['start', 'cogHQExterior', 'quietZone']:
             state = self.fsm.getStateNamed(stateName)
@@ -43,7 +44,7 @@ class LawbotCogHQLoader(CogHQLoader.CogHQLoader):
         for stateName in ['quietZone']:
             state = self.fsm.getStateNamed(stateName)
             state.addTransition('factoryExterior')
-        
+
         self.musicFile = "phase_11/audio/bgm/LB_courtyard.ogg"
 
         self.cogHQExteriorModelPath = "phase_11/models/lawbotHQ/LawbotPlaza"
@@ -67,25 +68,27 @@ class LawbotCogHQLoader(CogHQLoader.CogHQLoader):
         CogHQLoader.CogHQLoader.unloadPlaceGeom(self)
 
     def loadPlaceGeom(self, zoneId):
-        self.notify.info("loadPlaceGeom: %s" % zoneId)
+        self.notify.info(f"loadPlaceGeom: {zoneId}")
 
-        # We shoud not look at the last 2 digits to match against these constants
-        zoneId = (zoneId - (zoneId %100))
+        # We shoud not look at the last 2 digits to match against these
+        # constants
+        zoneId = (zoneId - (zoneId % 100))
 
-        self.notify.debug("zoneId = %d ToontownGlobals.LawbotHQ=%d" % (zoneId,ToontownGlobals.LawbotHQ))
-            
+        self.notify.debug(
+            "zoneId = %d ToontownGlobals.LawbotHQ=%d" %
+            (zoneId, ToontownGlobals.LawbotHQ))
+
         if zoneId == ToontownGlobals.LawbotHQ:
             self.geom = loader.loadModel(self.cogHQExteriorModelPath)
 
             # make sure the reflective floor renders properly
             ug = self.geom.find("**/underground")
-            ug.setBin( "ground", -10)
-            
+            ug.setBin("ground", -10)
+
             # Rename the link tunnels so they will hook up properly
             brLinkTunnel = self.geom.find("**/TunnelEntrance1")
 
-
-            #RAU 
+            # RAU
             brLinkTunnel.setName("linktunnel_br_3326_DNARoot")
             """
             factoryLinkTunnel = self.geom.find("**/Tunnel2")
@@ -93,7 +96,7 @@ class LawbotCogHQLoader(CogHQLoader.CogHQLoader):
             factoryLinkTunnel.ls()
             factoryLinkTunnel.setName("linktunnel_lawhq_13200_DNARoot")
             ##factoryLinkTunnel.setName("linktunnel_sellhq_11200_DNARoot")
- 
+
 
             # Put handy signs on the link tunnels
             cogSignModel = loader.loadModel(
@@ -165,13 +168,13 @@ class LawbotCogHQLoader(CogHQLoader.CogHQLoader):
             door1.find("door_trigger_0").setName("door_trigger_1")
             door1.find("door_origin_0").setName("door_origin_1")
             """
-            
+
         elif zoneId == ToontownGlobals.LawbotOfficeExt:
             self.geom = loader.loadModel(self.factoryExteriorModelPath)
 
             # make sure the reflective floor renders properly
             ug = self.geom.find("**/underground")
-            ug.setBin( "ground", -10)
+            ug.setBin("ground", -10)
 
             """
             factoryLinkTunnel = self.geom.find("**/tunnel_group2")
@@ -260,17 +263,18 @@ class LawbotCogHQLoader(CogHQLoader.CogHQLoader):
             sdText.setDepthWrite(0)
             """
         elif zoneId == ToontownGlobals.LawbotLobby:
-            self.notify.debug("cogHQLobbyModelPath = %s" % self.cogHQLobbyModelPath)
+            self.notify.debug(
+                f"cogHQLobbyModelPath = {self.cogHQLobbyModelPath}")
             self.geom = loader.loadModel(self.cogHQLobbyModelPath)
 
             # make sure the reflective floor renders properly
             ug = self.geom.find("**/underground")
-            ug.setBin( "ground", -10)
+            ug.setBin("ground", -10)
 
             """
             front = self.geom.find("**/frontWall")
             front.node().setEffect(DecalEffect.make())
-            
+
             door = self.geom.find("**/door_0")
             parent = door.getParent()
             door.wrtReparentTo(front)
@@ -286,10 +290,9 @@ class LawbotCogHQLoader(CogHQLoader.CogHQLoader):
             # Note: the factory interior has a dynamically allocated zone but
             # that is ok because we do not need to load any models - they all
             # get loaded by the distributed object
-            self.notify.warning("loadPlaceGeom: unclassified zone %s" % zoneId)
-            
+            self.notify.warning(f"loadPlaceGeom: unclassified zone {zoneId}")
+
         CogHQLoader.CogHQLoader.loadPlaceGeom(self, zoneId)
-    
 
     def unload(self):
         CogHQLoader.CogHQLoader.unload(self)
@@ -300,16 +303,17 @@ class LawbotCogHQLoader(CogHQLoader.CogHQLoader):
 #    def enterFactoryInterior(self, requestStatus):
 #        self.placeClass = FactoryInterior.FactoryInterior
 #        self.enterPlace(requestStatus)
-        
+
+
     def enterStageInterior(self, requestStatus):
         self.placeClass = StageInterior.StageInterior
         self.stageId = requestStatus['stageId']
         self.enterPlace(requestStatus)
-        
+
 #    def exitFactoryInterior(self):
 #        self.exitPlace()
 #        self.placeClass = None
-        
+
     def exitStageInterior(self):
         self.exitPlace()
         self.placeClass = None
@@ -321,12 +325,12 @@ class LawbotCogHQLoader(CogHQLoader.CogHQLoader):
     def getBossPlaceClass(self):
         self.notify.debug("getBossPlaceClass")
         return LawbotHQBossBattle.LawbotHQBossBattle
-        
+
     def enterFactoryExterior(self, requestStatus):
         self.placeClass = LawbotOfficeExterior.LawbotOfficeExterior
         self.enterPlace(requestStatus)
         self.hood.spawnTitleText(requestStatus['zoneId'])
-        
+
     def exitFactoryExterior(self):
         taskMgr.remove("titleText")
         self.hood.hideTitleText()
@@ -337,12 +341,8 @@ class LawbotCogHQLoader(CogHQLoader.CogHQLoader):
         self.notify.debug("LawbotCogHQLoader.enterCogHQBossBattle")
         CogHQLoader.CogHQLoader.enterCogHQBossBattle(self, requestStatus)
         base.cr.forbidCheesyEffects(1)
-        
+
     def exitCogHQBossBattle(self):
         self.notify.debug("LawbotCogHQLoader.exitCogHQBossBattle")
         CogHQLoader.CogHQLoader.exitCogHQBossBattle(self)
-        base.cr.forbidCheesyEffects(0)        
-        
-
-
-
+        base.cr.forbidCheesyEffects(0)

@@ -5,7 +5,8 @@ from . import Playground
 import random
 from toontown.launcher import DownloadForceAcknowledge
 from direct.task.Task import Task
-from toontown.hood  import ZoneUtil
+from toontown.hood import ZoneUtil
+
 
 class TTPlayground(Playground.Playground):
     def __init__(self, loader, parentFSM, doneEvent):
@@ -13,7 +14,7 @@ class TTPlayground(Playground.Playground):
 
     def load(self):
         Playground.Playground.load(self)
-    
+
     def unload(self):
         Playground.Playground.unload(self)
 
@@ -48,17 +49,22 @@ class TTPlayground(Playground.Playground):
         hood = ZoneUtil.getCanonicalZoneId(requestStatus['hoodId'])
         if hood == ToontownGlobals.MyEstate:
             # Ask if we can enter phase 5.5
-            self.dfa.enter(base.cr.hoodMgr.getPhaseFromHood(ToontownGlobals.MyEstate))
+            self.dfa.enter(
+                base.cr.hoodMgr.getPhaseFromHood(
+                    ToontownGlobals.MyEstate))
         elif hood == ToontownGlobals.GoofySpeedway:
             # Ask if we can enter phase 6
-            self.dfa.enter(base.cr.hoodMgr.getPhaseFromHood(ToontownGlobals.GoofySpeedway))
+            self.dfa.enter(
+                base.cr.hoodMgr.getPhaseFromHood(
+                    ToontownGlobals.GoofySpeedway))
         elif hood == ToontownGlobals.PartyHood:
             # ask if we can enter phase 13
-            self.dfa.enter(base.cr.hoodMgr.getPhaseFromHood(ToontownGlobals.PartyHood))
+            self.dfa.enter(
+                base.cr.hoodMgr.getPhaseFromHood(
+                    ToontownGlobals.PartyHood))
         else:
             # Ask if we can enter phase 5
             self.dfa.enter(5)
-
 
     def showPaths(self):
         # Overridden from Playground to fill in the correct parameters

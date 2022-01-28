@@ -38,21 +38,25 @@ import time
 #################################################################
 BG = BingoGlobals
 
-class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM.FSM):
-    notify = DirectNotifyGlobal.directNotify.newCategory("DistributedPondBingoManagerAI")
-    #notify.setDebug(True)
+
+class DistributedPondBingoManagerAI(
+        DistributedObjectAI.DistributedObjectAI,
+        FSM.FSM):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        "DistributedPondBingoManagerAI")
+    # notify.setDebug(True)
 
     # Class Dictionary used as a c-like switch
-    TimeoutSwitch = { BG.NORMAL_GAME: 'WaitCountdown',
-                      BG.INTERMISSION: 'Intermission',
-                      BG.CLOSE_EVENT: 'CloseEvent' }
+    TimeoutSwitch = {BG.NORMAL_GAME: 'WaitCountdown',
+                     BG.INTERMISSION: 'Intermission',
+                     BG.CLOSE_EVENT: 'CloseEvent'}
 
     # Class Dictionary used as a c-like switch
-    cardTypeDict = { BG.NORMAL_CARD: NormalBingo.NormalBingo,
-                     BG.FOURCORNER_CARD: FourCornerBingo.FourCornerBingo,
-                     BG.DIAGONAL_CARD: DiagonalBingo.DiagonalBingo,
-                     BG.THREEWAY_CARD: ThreewayBingo.ThreewayBingo,
-                     BG.BLOCKOUT_CARD: BlockoutBingo.BlockoutBingo }
+    cardTypeDict = {BG.NORMAL_CARD: NormalBingo.NormalBingo,
+                    BG.FOURCORNER_CARD: FourCornerBingo.FourCornerBingo,
+                    BG.DIAGONAL_CARD: DiagonalBingo.DiagonalBingo,
+                    BG.THREEWAY_CARD: ThreewayBingo.ThreewayBingo,
+                    BG.BLOCKOUT_CARD: BlockoutBingo.BlockoutBingo}
 
 #################################################################
 # Construction and Destruction Method Definitions
@@ -66,7 +70,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     #               ManagerAI is associated with. Each pond will
     #               have an associated ManagerAI.
     # Output: None
-    #############################################################  
+    #############################################################
     def __init__(self, air, pond):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
         FSM.FSM.__init__(self, 'DistributedPondBingoManagerAI')
@@ -94,7 +98,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     #          initialization.
     # Input: None
     # Output: None
-    #############################################################              
+    #############################################################
     def generate(self):
         DistributedObjectAI.DistributedObjectAI.generate(self)
         self.notify.debug('generate: DistributedPondBingoManagerAI')
@@ -106,7 +110,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     #          unnecessary data.
     # Input: None
     # Output: None
-    #############################################################   
+    #############################################################
     def disable(self):
         DistributedObjectAI.DistributedObjectAI.disable(self)
 
@@ -117,18 +121,17 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     #          that we can avoid memory leaks.
     # Input: None
     # Output: None
-    ############################################################# 
+    #############################################################
     def delete(self):
         del self.pond.pondBingoMgr
         self.pond.pondBingoMgr = None
-        
+
         del self.pond
         del self.avId2Fish
 
         if self.card:
             self.card.destroy()
         del self.card
-
 
         self.__stopTimeout()
         if self.air.bingoMgr:
@@ -147,15 +150,15 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     #          information of the current game.
     # Input: avId - the id of the avatar.
     # Output: None
-    #############################################################        
+    #############################################################
     def d_setCardState(self, avId):
-        gameState = (self.card and [self.card.gameState] or [4096])[0]   
+        gameState = (self.card and [self.card.gameState] or [4096])[0]
         self.sendUpdateToAvatarId(avId,
                                   "setCardState",
-                                  [ self.cardId,
-                                    self.typeId,
-                                    self.tileSeed,
-                                    gameState ] )
+                                  [self.cardId,
+                                   self.typeId,
+                                   self.tileSeed,
+                                   gameState])
 
     #############################################################
     # Method: d_setJackpot
@@ -176,15 +179,15 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     #          game.
     # Input: avId - the id of the avatar.
     # Output: None
-    #############################################################     
+    #############################################################
     def d_updateGameState(self, avId, cellId):
         # incase AI comes up right before the hour, and someone
         # enters before card was generated.
-        gameState = (self.card and [self.card.gameState] or [4096])[0]        
+        gameState = (self.card and [self.card.gameState] or [4096])[0]
         self.sendUpdateToAvatarId(avId,
                                   "updateGameState",
-                                  [ gameState, cellId ] )
-   
+                                  [gameState, cellId])
+
     #############################################################
     # Method: d_setState
     # Purpose: This method sends a distributed call to the
@@ -195,7 +198,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     #############################################################
     def d_setState(self, avId, state):
         self.sendUpdateToAvatarId(avId, "setState",
-                                  [ state, self.timeStamp ] )
+                                  [state, self.timeStamp])
 
     #############################################################
     # Method: d_enableBingo
@@ -221,7 +224,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
         if self.card:
             self.card.destroy()
             del self.card
-            
+
         self.tileSeed = RandomNumGen.randHash(globalClock.getRealTime())
 
         # Determine whether the next game should be a super game. If
@@ -251,20 +254,20 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
         self.card.generateCard(self.tileSeed, self.pond.getArea())
         self.cardId += 1
 
-        self.numMarkedCells= 0
+        self.numMarkedCells = 0
         self.maxPlayers = len(self.avId2Fish)
 
-        
-    #############################################################    
-    # Method: __cardChoice 
+    #############################################################
+    # Method: __cardChoice
     # Purpose: This method generates generates the appropriate
     #          BingoCard based-on the current Card/Game Type.
     # Input: None
     # Output: BingoCard of TypeId
     #############################################################
+
     def __cardChoice(self):
         return self.cardTypeDict.get(self.typeId)()
-      
+
     #############################################################
     # Method: cardUpdate
     # Purpose: This method receives card and fish information
@@ -281,49 +284,57 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     #############################################################
     def cardUpdate(self, cardId, cellId, genus, species):
-      # First, check to make certain we have the proper card.
-      if self.cardId == cardId:
-          # Check to see if the card has already been marked
-          if self.card and self.card.cellCheck(cellId):
-              self.notify.debug("cardUpdate: Cell already marked.")
-              return
-              
-          # We have the proper card, check to make sure we have the same fish.
-          avId = self.air.getAvatarIdFromSender()
-          if self.isUpdateValid(avId, genus, species):
-              self.numMarkedCells += 1
-              success = self.card.cellUpdateCheck(cellId, genus, species)
-              if success == BingoGlobals.WIN:
-                  self.avId2Fish[avId] = ( None, None )
-                  for id in list(self.avId2Fish.keys()):
-                      if id != avId:
-                          self.notify.debug('cardUpdate: avId %s enable Bingo' %(id))
-                          self.d_updateGameState(id, cellId)
-                          self.d_enableBingo(id)
-              elif success == BingoGlobals.UPDATE:
-                  self.avId2Fish[avId] = ( None, None )
-                  for id in list(self.avId2Fish.keys()):
-                      if id != avId:
-                          self.notify.debug('cardUpdate: avId %s Update only' %(id))
-                          self.d_updateGameState(id, cellId)
-              else:
-                  self.notify.debug("cardUpdate: No Update was Made.")
-          else:
-              self.notify.warning("cardUpdate: Invalid Play attempt.")
-      elif cardId > self.cardId:
-          # The cardId of the client should never be greater
-          # than the cardId of the AI. Log this as suspicious.
-          self.notify.warning("cardUpdate: Client CardId %s is greater than AI CardID %s." % (cardId, self.cardId))
-      elif (self.cardId-cardId) > 2:
-          # The cardId of the client is far behind that of the AI.
-          # This could be a hack attempt. Mark as suspicious.
-          self.notify.warning("cardUpdate: Client CardId %s is far behind AI CardId %s." % (cardId, self.cardId))
-      else:
-          # The cardId is behind the client, but this could be a latency issue. Just ignore
-          # the attempt.
-          self.notify.debug("cardUpdate: Not Valid card, could be a latency Issue.")
+        # First, check to make certain we have the proper card.
+        if self.cardId == cardId:
+            # Check to see if the card has already been marked
+            if self.card and self.card.cellCheck(cellId):
+                self.notify.debug("cardUpdate: Cell already marked.")
+                return
 
-    #############################################################    
+            # We have the proper card, check to make sure we have the same
+            # fish.
+            avId = self.air.getAvatarIdFromSender()
+            if self.isUpdateValid(avId, genus, species):
+                self.numMarkedCells += 1
+                success = self.card.cellUpdateCheck(cellId, genus, species)
+                if success == BingoGlobals.WIN:
+                    self.avId2Fish[avId] = (None, None)
+                    for id in list(self.avId2Fish.keys()):
+                        if id != avId:
+                            self.notify.debug(
+                                f'cardUpdate: avId {id} enable Bingo')
+                            self.d_updateGameState(id, cellId)
+                            self.d_enableBingo(id)
+                elif success == BingoGlobals.UPDATE:
+                    self.avId2Fish[avId] = (None, None)
+                    for id in list(self.avId2Fish.keys()):
+                        if id != avId:
+                            self.notify.debug(
+                                f'cardUpdate: avId {id} Update only')
+                            self.d_updateGameState(id, cellId)
+                else:
+                    self.notify.debug("cardUpdate: No Update was Made.")
+            else:
+                self.notify.warning("cardUpdate: Invalid Play attempt.")
+        elif cardId > self.cardId:
+            # The cardId of the client should never be greater
+            # than the cardId of the AI. Log this as suspicious.
+            self.notify.warning(
+                "cardUpdate: Client CardId %s is greater than AI CardID %s." %
+                (cardId, self.cardId))
+        elif (self.cardId - cardId) > 2:
+            # The cardId of the client is far behind that of the AI.
+            # This could be a hack attempt. Mark as suspicious.
+            self.notify.warning(
+                "cardUpdate: Client CardId %s is far behind AI CardId %s." %
+                (cardId, self.cardId))
+        else:
+            # The cardId is behind the client, but this could be a latency issue. Just ignore
+            # the attempt.
+            self.notify.debug(
+                "cardUpdate: Not Valid card, could be a latency Issue.")
+
+    #############################################################
     # Method: isUpdateValid
     # Purpose: This method determines whether a player is sending
     #          a valid update option. For instance, are we even
@@ -346,37 +357,40 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
         # send a boot every time, virtually guaranteeing a win.
         if id in self.avId2Fish:
             if self.avId2Fish[id] != (genus, species):
-                self.notify.warning('isUpdateValid: Avatar and AI Fish do not match.')
+                self.notify.warning(
+                    'isUpdateValid: Avatar and AI Fish do not match.')
                 result = 0
         else:
             result = 0
         return result
 
-    #############################################################    
+    #############################################################
     # Method: handleBingoCall
     # Purpose: This method calls a quick check after a client
     #          claims it has "won." It does not check against
     #          a cell thus, there is no reason for the
     #          cellUpdateCheck call.
-    # Input: cardId - cardId that the client claims to have won 
+    # Input: cardId - cardId that the client claims to have won
     # Output: None
     #############################################################
     def handleBingoCall(self, cardId):
         if self.jackpot == 0:
             # someone has already called bingo... ignore this
-            self.notify.warning("handleBingoCall: Bingo call attempted twice (no big deal).")
+            self.notify.warning(
+                "handleBingoCall: Bingo call attempted twice (no big deal).")
             return
-            
+
         if self.cardId == cardId:
             success = self.card.checkForBingo()
             if success:
-                #tell everyone to make this toon say "Bingo!"
+                # tell everyone to make this toon say "Bingo!"
                 avId = self.air.getAvatarIdFromSender()
                 av = self.air.doId2do.get(avId)
                 if av:
                     av.b_announceBingo()
                 else:
-                    self.notify.warning('handleBingoCall: avId %s not found in doId2do' %(id))
+                    self.notify.warning(
+                        f'handleBingoCall: avId {id} not found in doId2do')
 
                 if self.typeId == BingoGlobals.BLOCKOUT_CARD:
                     self.air.bingoMgr.handleSuperBingoWin(self.zoneId)
@@ -386,17 +400,22 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
         elif cardId > self.cardId:
             # The cardId of the client should never be greater
             # than the cardId of the AI. Log this as suspicious.
-            self.notify.warning("handleBingoCall: Client CardId %s is greater than AI CardID %s." % (cardId, self.cardId))
-        elif (self.cardId-cardId) > 2:
+            self.notify.warning(
+                "handleBingoCall: Client CardId %s is greater than AI CardID %s." %
+                (cardId, self.cardId))
+        elif (self.cardId - cardId) > 2:
             # The cardId of the client is far behind that of the AI.
             # This could be a hack attempt. Mark as suspicious.
-            self.notify.warning("handleBingoCall: Client CardId %s is far behind AI CardId %s." % (cardId, self.cardId))
+            self.notify.warning(
+                "handleBingoCall: Client CardId %s is far behind AI CardId %s." %
+                (cardId, self.cardId))
         else:
             # The cardId is behind the client, but this could be a latency issue. Just ignore
             # the attempt.
-            self.notify.debug("handleBingoCall: Not Valid card, could be a latency Issue.")
+            self.notify.debug(
+                "handleBingoCall: Not Valid card, could be a latency Issue.")
 
-    #############################################################    
+    #############################################################
     # Method: handleSuperBingoLoss
     # Purpose: This method handles the case when a super bingo
     #          game has been lost. This is different than a
@@ -405,13 +424,13 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     #          the losers must handle a loss gracefully since it
     #          is not a normal "timeout" loss. In other words,
     #          another pond won so we must shut down the game.
-    # Input: None 
+    # Input: None
     # Output: None
     #############################################################
     def handleSuperBingoLoss(self):
         self.__stopTimeout()
         self.request('GameOver')
-                
+
     ############################################################
     # Method: addAvToGame
     # Purpose: This method adds id of the avatar entering a
@@ -422,10 +441,10 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     def addAvToGame(self, avId):
         # Defensive coding at this point. Make sure that there
         # is a valid slot open within the list.
-        self.notify.debug("addAvToGame: Adding avId %s to avId2Fish" % (avId))
-        self.avId2Fish[avId] = ( None, None )
+        self.notify.debug(f"addAvToGame: Adding avId {avId} to avId2Fish")
+        self.avId2Fish[avId] = (None, None)
 
-        #track this info for logging
+        # track this info for logging
         numPlayers = len(self.avId2Fish)
         if numPlayers > self.maxPlayers:
             self.maxPlayers = numPlayers
@@ -434,9 +453,9 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
         self.d_setCardState(avId)
         if self.typeId == BingoGlobals.BLOCKOUT_CARD:
             self.d_setJackpot(avId)
-        self.d_setState(avId, self.state)        
-        return 1        
- 
+        self.d_setState(avId, self.state)
+        return 1
+
     ############################################################
     # Method: removeAvFromGame
     # Purpose: This method removes id of the avatar exiting a
@@ -446,7 +465,8 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     ############################################################
     def removeAvFromGame(self, avId):
         if avId in self.avId2Fish:
-            self.notify.debug("removeAvFromGame: Removing avId %s from avId2Fish" % (avId))
+            self.notify.debug(
+                f"removeAvFromGame: Removing avId {avId} from avId2Fish")
             del self.avId2Fish[avId]
         else:
             self.notify.warning("addAvToGame: AvId not present in game")
@@ -479,7 +499,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     #        time - amount of time before the timer expires.
     # Output: None
     ############################################################
-    def __startTimeout(self, name, callback, time, params = None):
+    def __startTimeout(self, name, callback, time, params=None):
         self.__stopTimeout()
         self.timerTask = taskMgr.doMethodLater(time,
                                                callback,
@@ -501,7 +521,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
 
     ############################################################
     # Method: __handleDefaultTimeout
-    # Purpose: This method handles the 
+    # Purpose: This method handles the
     #          timeout by requesting a transition to the Playing
     #          state.
     # Input: state - receives the next state that should be
@@ -509,7 +529,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     ############################################################
     def __handleDefaultTimeout(self, state):
-        #check to make sure we haven't been deleted
+        # check to make sure we haven't been deleted
         if hasattr(self, "zoneId"):
             self.request(state)
         return Task.done
@@ -523,7 +543,8 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     ############################################################
     def __handleGameOverTimeout(self, task):
-        nextState = DistributedPondBingoManagerAI.TimeoutSwitch.get(self.finalGame)
+        nextState = DistributedPondBingoManagerAI.TimeoutSwitch.get(
+            self.finalGame)
         self.request(nextState)
         return Task.done
 
@@ -537,10 +558,10 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     def __handleCloseEventTimeout(self, task):
         taskMgr.remove(task)
         self.shutdown()
-        
+
 #################################################################
 # Accessor and Mutator Method Definitions
-#################################################################   
+#################################################################
     # Method: getPondDoId
     # Purpose: This method returns the DistributedObject Id of
     #          the pond that it is associated to.
@@ -574,7 +595,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     ###########################################################
     def setFinalGame(self, finalGame):
         self.finalGame = finalGame
-            
+
 #################################################################
 # Finite State Machine Methods
 #################################################################
@@ -590,7 +611,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
 #     - CloseEvent    Transitions To Off
 #################################################################
 
-    ################################################################# 
+    #################################################################
     # Method: filterOff
     # Purpose: This method is called when the BingoManagerAI starts
     #          the BingoCard Holiday.
@@ -606,7 +627,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
         else:
             return self.defaultFilter(request, args)
 
-    ################################################################# 
+    #################################################################
     # Method:  exitOff
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. It updates the avIdList
@@ -621,9 +642,9 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
             zoneId = self.zoneId
         else:
             zoneId = None
-        self.notify.debug("exitOff: Exit Off State in zone %s" % (zoneId))
+        self.notify.debug(f"exitOff: Exit Off State in zone {zoneId}")
 
-    ################################################################# 
+    #################################################################
     # Method:  enterIntro
     # Purpose: This method is called when the BingoManagerAI starts
     #          Bingo Night and tells the ManagerAI to enter the
@@ -634,7 +655,8 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     #################################################################
     def enterIntro(self):
-        self.notify.debug("enterIntro: Enter Intro State in zone %s" % (self.zoneId))
+        self.notify.debug(
+            f"enterIntro: Enter Intro State in zone {self.zoneId}")
 
         # Assumption: The BingoManagerAI will behave as a
         # weekly holiday. Thus, it is possible for clients
@@ -648,22 +670,25 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
         # exiting already.
         avIdList = list(self.pond.avId2SpotDict.keys())
         if avIdList:
-            self.notify.debug('enterIntro: Avatars %s found at Fishing Pond in zone %s' %(avIdList, self.zoneId))
+            self.notify.debug(
+                'enterIntro: Avatars %s found at Fishing Pond in zone %s' %
+                (avIdList, self.zoneId))
             for id in avIdList:
                 self.avId2Fish[id] = (None, None)
                 self.d_setState(id, 'Intro')
         else:
-            self.notify.debug('enterIntro: No Avatars found at Fishing Pond in zone %s' %(self.zoneId))
+            self.notify.debug(
+                f'enterIntro: No Avatars found at Fishing Pond in zone {self.zoneId}')
 
-        self.__startTimeout(self.uniqueName('IntroTimer-%s'%(self.doId)),
+        self.__startTimeout(self.uniqueName(f'IntroTimer-{self.doId}'),
                             self.__handleDefaultTimeout,
                             BingoGlobals.INTRO_SESSION,
                             ['WaitCountdown'])
 
-    ################################################################# 
+    #################################################################
     # Method: filterIntro
     # Purpose: This method is called when the ManagerAI timer expires
-    #          indicating the Intro phase has ended. It allows 
+    #          indicating the Intro phase has ended. It allows
     #          only a transition to the WaitCountdown state.
     # Input: request - The transitional state.
     #        args - additional arguments needed for the transition.
@@ -673,9 +698,10 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
         if request == 'WaitCountdown':
             return 'WaitCountdown'
         else:
-            self.notify.debug('filterIntro: Invalid State Transition from Intro Phase to %s' %(request))
-    
-    ################################################################# 
+            self.notify.debug(
+                f'filterIntro: Invalid State Transition from Intro Phase to {request}')
+
+    #################################################################
     # Method:  exitIntro
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. It updates the avIdList
@@ -686,9 +712,10 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     #################################################################
     def exitIntro(self):
-        self.notify.debug("exitIntro: Exit Intro State in zone %s" % (self.zoneId))
+        self.notify.debug(
+            f"exitIntro: Exit Intro State in zone {self.zoneId}")
 
-    ################################################################# 
+    #################################################################
     # Method:  enterWaitCountdown
     # Purpose: This method is called when the BingoManagerAI starts
     #          Bingo Night and tells the ManagerAI to enter the
@@ -701,12 +728,13 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     #################################################################
     def enterWaitCountdown(self):
-        self.notify.debug("enterWaitCountdown: Enter WaitCountdown State in zone %s" % (self.zoneId))
-     
+        self.notify.debug(
+            f"enterWaitCountdown: Enter WaitCountdown State in zone {self.zoneId}")
+
         self.generateCard()
         self.timeStamp = globalClockDelta.getRealNetworkTime()
 
-        self.__startTimeout(self.uniqueName('WaitTimer-%s'%(self.doId)),
+        self.__startTimeout(self.uniqueName(f'WaitTimer-{self.doId}'),
                             self.__handleDefaultTimeout,
                             BingoGlobals.TIMEOUT_SESSION,
                             ['Playing'])
@@ -716,11 +744,11 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
             if self.typeId == BingoGlobals.BLOCKOUT_CARD:
                 self.d_setJackpot(id)
             self.d_setState(id, 'WaitCountdown')
-           
-    ################################################################# 
+
+    #################################################################
     # Method: filterWaitCountdown
     # Purpose: This method is called when the ManagerAI timer expires
-    #          indicating the Countdown phase has ended. It allows 
+    #          indicating the Countdown phase has ended. It allows
     #          only a transition to the Playing state.
     # Input: request - The transitional state.
     #        args - additional arguments needed for the transition.
@@ -732,7 +760,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
         else:
             return self.defaultFilter(request, args)
 
-    ################################################################# 
+    #################################################################
     # Method:  exitWaitCountdown
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. Before leaving, it cleans
@@ -742,11 +770,12 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     #################################################################
     def exitWaitCountdown(self):
-        self.notify.debug("exitWaitCountdown: Exit WaitCountdown State in zone %s" % (self.zoneId))
+        self.notify.debug(
+            f"exitWaitCountdown: Exit WaitCountdown State in zone {self.zoneId}")
         del self.timeStamp
         self.__stopTimeout()
 
-    ################################################################# 
+    #################################################################
     # Method:  enterPlaying
     # Purpose: This method is called after the WaitCountdown Timer
     #          expired. It generates the gameplay timer, and tells
@@ -756,11 +785,12 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     #################################################################
     def enterPlaying(self):
-        self.notify.debug("enterPlaying: Enter Playing State in zone %s" % (self.zoneId))
+        self.notify.debug(
+            f"enterPlaying: Enter Playing State in zone {self.zoneId}")
         self.timeStamp = globalClockDelta.getRealNetworkTime()
-        
-        self.__startTimeout(self.uniqueName('GameTimer-%s'%(self.doId)),
-                            self.__handleDefaultTimeout, 
+
+        self.__startTimeout(self.uniqueName(f'GameTimer-{self.doId}'),
+                            self.__handleDefaultTimeout,
                             BingoGlobals.getGameTime(self.typeId),
                             ['GameOver'])
         # Change the client state for each player
@@ -769,8 +799,8 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
             # Reset Fish for each player in the game.
             self.avId2Fish[id] = (None, None)
             self.d_setState(id, 'Playing')
-            
-    ################################################################# 
+
+    #################################################################
     # Method: filterPlaying
     # Purpose: This method is called when Gameplay timer has expired
     #          or a victory has been achieved by the clients.
@@ -779,7 +809,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Input: request - The transitional state.
     #        args - additional arguments needed for the transition.
     # Output: None
-    ################################################################# 
+    #################################################################
     def filterPlaying(self, request, args):
         if request == 'Reward':
             return 'Reward'
@@ -790,7 +820,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
         else:
             return self.defaultFilter(request, args)
 
-    ################################################################# 
+    #################################################################
     # Method:  exitPlaying
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. Before leaving, it
@@ -801,11 +831,12 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     #################################################################
     def exitPlaying(self):
-        self.notify.debug("exitPlaying: Exit Playing State in zone %s" %(self.zoneId))
+        self.notify.debug(
+            f"exitPlaying: Exit Playing State in zone {self.zoneId}")
         del self.timeStamp
         self.__stopTimeout()
 
-    ################################################################# 
+    #################################################################
     # Method:  enterReward
     # Purpose: This method is called when ManagerAI detects a
     #          victory by the clients. It creates a Reward timer
@@ -815,7 +846,8 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     #################################################################
     def enterReward(self):
-        self.notify.debug("enterReward: Enter Reward State in zone %s" %(self.zoneId))
+        self.notify.debug(
+            f"enterReward: Enter Reward State in zone {self.zoneId}")
         self.timeStamp = globalClockDelta.getRealNetworkTime()
         avId = self.air.getAvatarIdFromSender()
         winningIds = []
@@ -826,28 +858,32 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
                 if av:
                     av.addMoney(self.jackpot)
                 else:
-                    self.notify.warning('enterReward: avId %s not found in doId2do' %(id))
+                    self.notify.warning(
+                        f'enterReward: avId {id} not found in doId2do')
                 if (id != avId):
-                    self.notify.debug('enterReward: avId %s Update and Win' %(id))
+                    self.notify.debug(
+                        f'enterReward: avId {id} Update and Win')
                     self.d_setState(id, 'Reward')
 
-        #log a bingo win (pondId, gameType, jackpot, winners)
-        self.air.writeServerEvent('fishBingoWin', self.zoneId, '%s|%s|%s|%s' % (self.typeId, self.jackpot, self.timeLeft, "|".join(winningIds)) )
-        
+        # log a bingo win (pondId, gameType, jackpot, winners)
+        self.air.writeServerEvent(
+            'fishBingoWin', self.zoneId, '%s|%s|%s|%s' %
+            (self.typeId, self.jackpot, self.timeLeft, "|".join(winningIds)))
+
         self.jackpot = 0
-        self.__startTimeout(self.uniqueName('RewardTimer-%s'%(self.doId)),
+        self.__startTimeout(self.uniqueName(f'RewardTimer-{self.doId}'),
                             self.__handleGameOverTimeout,
                             BingoGlobals.REWARD_TIMEOUT)
 
-    ################################################################# 
+    #################################################################
     # Method: filterReward
-    # Purpose: This method is called when the ManagerAI determines 
+    # Purpose: This method is called when the ManagerAI determines
     #          that the Reward phase has ended. It allows only a
     #          transition to the WaitCountdown or Off states.
     # Input: request - The transitional state.
     #        args - additional arguments needed for the transition.
     # Output: None
-    #################################################################  
+    #################################################################
     def filterReward(self, request, args):
         if request == 'WaitCountdown':
             return 'WaitCountdown'
@@ -860,7 +896,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
         else:
             return self.defaultFilter(request, args)
 
-    ################################################################# 
+    #################################################################
     # Method:  exitReward
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. Before leaving, it
@@ -870,11 +906,12 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     #################################################################
     def exitReward(self):
-        self.notify.debug("exitReward: Exit Reward State in zone %s" %(self.zoneId))
+        self.notify.debug(
+            f"exitReward: Exit Reward State in zone {self.zoneId}")
         del self.timeStamp
         self.__stopTimeout()
 
-    ################################################################# 
+    #################################################################
     # Method:  enterGameOver
     # Purpose: This method is called when the Gameplay Timer expires
     #          thus resulting in a loss. It generates a Timeout
@@ -884,29 +921,33 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     #################################################################
     def enterGameOver(self):
-        self.notify.debug("enterGameOver: Enter GameOver State in zone %s" %(self.zoneId))
+        self.notify.debug(
+            f"enterGameOver: Enter GameOver State in zone {self.zoneId}")
         # Retrieve the timestamp for entering the GameOver
         # state.
         self.timeStamp = globalClockDelta.getRealNetworkTime()
         for id in self.avId2Fish:
             self.d_setState(id, 'GameOver')
-            
-        #log a bingo loss (pondId, gameType, jackpot, number of marked spots, max players)
-        self.air.writeServerEvent('fishBingoLoss', self.zoneId, '%s|%s|%s|%s' % (self.typeId, self.jackpot, self.numMarkedCells, self.maxPlayers) )
-        
-        self.__startTimeout(self.uniqueName('GameOverTimer-%s'%(self.doId)),
+
+        # log a bingo loss (pondId, gameType, jackpot, number of marked spots,
+        # max players)
+        self.air.writeServerEvent(
+            'fishBingoLoss', self.zoneId, '%s|%s|%s|%s' %
+            (self.typeId, self.jackpot, self.numMarkedCells, self.maxPlayers))
+
+        self.__startTimeout(self.uniqueName(f'GameOverTimer-{self.doId}'),
                             self.__handleGameOverTimeout,
                             BG.REWARD_TIMEOUT)
 
-    ################################################################# 
+    #################################################################
     # Method: filterGameOver
-    # Purpose: This method is called when the ManagerAI determines 
+    # Purpose: This method is called when the ManagerAI determines
     #          that the Timeout phase has ended. It allows only a
     #          transition to the WaitCountdown or Off states.
     # Input: request - The transitional state.
     #        args - additional arguments needed for the transition.
     # Output: None
-    #################################################################  
+    #################################################################
     def filterGameOver(self, request, args):
         if request == 'WaitCountdown':
             return 'WaitCountdown'
@@ -919,7 +960,7 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
         else:
             return self.defaultFilter(request, args)
 
-    ################################################################# 
+    #################################################################
     # Method:  exitCloseEvent
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. Before leaving, it
@@ -929,11 +970,12 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     #################################################################
     def exitGameOver(self):
-        self.notify.debug("exitGameOver: Exit GameOver State in zone %s" %(self.zoneId))
+        self.notify.debug(
+            f"exitGameOver: Exit GameOver State in zone {self.zoneId}")
         del self.timeStamp
         self.__stopTimeout()
 
-    ################################################################# 
+    #################################################################
     # Method:  enterIntermission
     # Purpose: This method is called when the Gameplay Timer expires
     #          thus resulting in a loss. It generates a Timeout
@@ -943,7 +985,8 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     #################################################################
     def enterIntermission(self):
-        self.notify.debug("enterIntermission: Enter Intermission State in zone %s" %(self.zoneId))
+        self.notify.debug(
+            f"enterIntermission: Enter Intermission State in zone {self.zoneId}")
         self.nextGameSuper = True
         #self.timeStamp = globalClockDelta.getRealNetworkTime()
         self.timeStamp = self.air.bingoMgr.getIntermissionTime()
@@ -951,22 +994,22 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
         for id in list(self.avId2Fish.keys()):
             self.d_setState(id, 'Intermission')
 
-    ################################################################# 
+    #################################################################
     # Method: filterIntermission
-    # Purpose: This method is called when the ManagerAI determines 
+    # Purpose: This method is called when the ManagerAI determines
     #          that the Timeout phase has ended. It allows only a
     #          transition to the WaitCountdown or Off states.
     # Input: request - The transitional state.
     #        args - additional arguments needed for the transition.
     # Output: None
-    #################################################################  
+    #################################################################
     def filterIntermission(self, request, args):
         if request == 'WaitCountdown':
             return 'WaitCountdown'
         else:
             return self.defaultFilter(request, args)
 
-    ################################################################# 
+    #################################################################
     # Method:  exitIntermission
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. Before leaving, it
@@ -976,11 +1019,12 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     #################################################################
     def exitIntermission(self):
-        self.notify.debug("exitIntermission: Exit Intermission State in zone %s" %(self.zoneId))
+        self.notify.debug(
+            f"exitIntermission: Exit Intermission State in zone {self.zoneId}")
         del self.timeStamp
         self.__stopTimeout()
 
-    ################################################################# 
+    #################################################################
     # Method:  enterCloseEvent
     # Purpose: This method is called when the Gameplay Timer expires
     #          thus resulting in a loss. It generates a Timeout
@@ -990,32 +1034,35 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     #################################################################
     def enterCloseEvent(self):
-        self.notify.debug("enterCloseEvent: Enter CloseEvent State in zone %s" %(self.zoneId))
+        self.notify.debug(
+            f"enterCloseEvent: Enter CloseEvent State in zone {self.zoneId}")
         self.timeStamp = globalClockDelta.getRealNetworkTime()
 
         for id in list(self.avId2Fish.keys()):
             self.d_setState(id, 'CloseEvent')
 
-        self.__startTimeout(self.uniqueName('CloseEventTimer-%s'%(self.doId)),
-                            self.__handleCloseEventTimeout,
-                            BG.CLOSE_EVENT_TIMEOUT)
+        self.__startTimeout(
+            self.uniqueName(
+                f'CloseEventTimer-{self.doId}'),
+            self.__handleCloseEventTimeout,
+            BG.CLOSE_EVENT_TIMEOUT)
 
-    ################################################################# 
+    #################################################################
     # Method: filterCloseEvent
-    # Purpose: This method is called when the ManagerAI determines 
+    # Purpose: This method is called when the ManagerAI determines
     #          that the Timeout phase has ended. It allows only a
     #          transition to the WaitCountdown or Off states.
     # Input: request - The transitional state.
     #        args - additional arguments needed for the transition.
     # Output: None
-    #################################################################  
+    #################################################################
     def filterCloseEvent(self, request, args):
         if request == '0ff':
             return 'Off'
         else:
             return self.defaultFilter(request, args)
 
-    ################################################################# 
+    #################################################################
     # Method:  exitCloseEvent
     # Purpose: This method is called after a transition to a new
     #          state has been accepted. Before leaving, it
@@ -1025,11 +1072,12 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     # Output: None
     #################################################################
     def exitCloseEvent(self):
-        self.notify.debug("exitCloseEvent: Exit CloseEvent State in zone %s" %(self.zoneId))
+        self.notify.debug(
+            f"exitCloseEvent: Exit CloseEvent State in zone {self.zoneId}")
         del self.timeStamp
         self.__stopTimeout()
 
-    ################################################################# 
+    #################################################################
     # Method:  shutdown
     # Purpose: This method requests a delete on this distributed ai
     #          object. The final game of the evening has been played
@@ -1039,10 +1087,11 @@ class DistributedPondBingoManagerAI(DistributedObjectAI.DistributedObjectAI, FSM
     #################################################################
     def shutdown(self):
         if not self.isDeleted():
-            self.notify.debug("shutdown: Deleting Manager %s of zone %s" % (self.getDoId(), self.zoneId))
+            self.notify.debug(
+                f"shutdown: Deleting Manager {self.getDoId()} of zone {self.zoneId}")
             self.requestDelete()
 
-    ################################################################# 
+    #################################################################
     # Method:  resumeBingoNight
     # Purpose: This method transitions to the waitcountdown state
     #          once an intermission timeout has expired. Typically,

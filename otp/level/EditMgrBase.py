@@ -3,9 +3,11 @@
 from . import Entity
 from direct.directnotify import DirectNotifyGlobal
 
+
 class EditMgrBase(Entity.Entity):
     """This class contains EditMgr code shared between AI and client"""
     notify = DirectNotifyGlobal.directNotify.newCategory("EditMgr")
+
     def __init__(self, level, entId):
         Entity.Entity.__init__(self, level, entId)
 
@@ -16,7 +18,8 @@ class EditMgrBase(Entity.Entity):
     if __dev__:
         def setInsertEntity(self, data):
             # tell the level who created this entity
-            self.level.setEntityCreatorUsername(data['entId'], data['username'])
+            self.level.setEntityCreatorUsername(
+                data['entId'], data['username'])
             # create the entity
             self.level.levelSpec.insertEntity(data['entId'],
                                               data['entType'],

@@ -5,8 +5,10 @@ from . import StomperGlobals
 from direct.directnotify import DirectNotifyGlobal
 from otp.level import BasicEntities
 
+
 class DistributedStomperPair(BasicEntities.DistributedNodePathEntity):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedStomperPair')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedStomperPair')
 
     def __init__(self, cr):
         BasicEntities.DistributedNodePathEntity.__init__(self, cr)
@@ -15,7 +17,7 @@ class DistributedStomperPair(BasicEntities.DistributedNodePathEntity):
     def delete(self):
         BasicEntities.DistributedNodePathEntity.delete(self)
         self.ignoreAll()
-        
+
     def generateInit(self):
         self.notify.debug('generateInit')
         BasicEntities.DistributedNodePathEntity.generateInit(self)
@@ -28,7 +30,7 @@ class DistributedStomperPair(BasicEntities.DistributedNodePathEntity):
         self.notify.debug('announceGenerate')
         BasicEntities.DistributedNodePathEntity.announceGenerate(self)
         self.listenForChildren()
-        
+
     def listenForChildren(self):
         if self.stomperIds:
             for entId in self.stomperIds:
@@ -39,14 +41,14 @@ class DistributedStomperPair(BasicEntities.DistributedNodePathEntity):
         # if toon is within a half foot of the center of this thing,
         # he is squashed
         tPos = base.localAvatar.getPos(self)
-        print(("tpos = %s" % tPos))
+        print(f"tpos = {tPos}")
 
         yRange = 3.0
         xRange = 3.0
         if (tPos[1] < yRange and tPos[1] > -yRange and
-            tPos[0] < xRange and tPos[0] > -xRange):
-            #print "Squashed!!"
+                tPos[0] < xRange and tPos[0] > -xRange):
+            # print "Squashed!!"
             self.level.b_setOuch(3)
         else:
-            #print "toon is far enough away: %s" % tPos
+            # print "toon is far enough away: %s" % tPos
             pass

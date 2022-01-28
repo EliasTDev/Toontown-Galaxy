@@ -14,12 +14,13 @@ from direct.task.Task import Task
 from toontown.toonbase import ToontownGlobals
 from toontown.toonbase import ToontownBattleGlobals
 
+
 class SuitInterior(Place):
     """SuitInterior class"""
 
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("SuitInterior")
-    
+
     # special methods
 
     def __init__(self, loader, parentFSM, doneEvent):
@@ -29,78 +30,78 @@ class SuitInterior(Place):
         Place.__init__(self, loader, doneEvent)
 
         self.fsm = ClassicFSM.ClassicFSM('SuitInterior',
-                           [State.State('entrance',
-                                        self.enterEntrance,
-                                        self.exitEntrance,
-                                        ['battle', 'walk']),
-                            State.State('Elevator',
-                                        self.enterElevator,
-                                        self.exitElevator,
-                                        ['battle', 'walk']),
-                            State.State('battle',
-                                        self.enterBattle,
-                                        self.exitBattle,
-                                        ['walk', 'died']),
-                            State.State('walk',
-                                        self.enterWalk,
-                                        self.exitWalk,
-                                        ['stickerBook', 'stopped',
-                                         'sit', 'died',
-                                         'teleportOut',
-                                         'Elevator',
-                                         'DFA', 'trialerFA',]),
-                            State.State('sit',
-                                        self.enterSit,
-                                        self.exitSit,
-                                        ['walk',]),
-                            State.State('stickerBook',
-                                        self.enterStickerBook,
-                                        self.exitStickerBook,
-                                        ['walk', 'stopped', 'sit', 'died',
-                                         'DFA', 'trialerFA',
-                                         'teleportOut', 'Elevator',]),
-                            # Trialer Force Acknowledge:
-                            State.State('trialerFA',
-                                        self.enterTrialerFA,
-                                        self.exitTrialerFA,
-                                        ['trialerFAReject', 'DFA']),
-                            State.State('trialerFAReject',
-                                        self.enterTrialerFAReject,
-                                        self.exitTrialerFAReject,
-                                        ['walk']),
-                            State.State('DFA',
-                                        self.enterDFA,
-                                        self.exitDFA,
-                                        ['DFAReject', 'teleportOut']),
-                            State.State('DFAReject',
-                                        self.enterDFAReject,
-                                        self.exitDFAReject,
-                                        ['walk']),
-                            State.State('teleportIn',
-                                        self.enterTeleportIn,
-                                        self.exitTeleportIn,
-                                        ['walk']),
-                            State.State('teleportOut',
-                                        self.enterTeleportOut,
-                                        self.exitTeleportOut,
-                                        ['teleportIn']),
-                            State.State('stopped',
-                                        self.enterStopped,
-                                        self.exitStopped,
-                                        ['walk', 'elevatorOut']),
-                            State.State('died',
-                                        self.enterDied,
-                                        self.exitDied,
-                                        []),
-                            State.State('elevatorOut',
-                                        self.enterElevatorOut,
-                                        self.exitElevatorOut,
-                                        [])],
-                           # Initial State
-                           'entrance',
-                           # Final State
-                           'elevatorOut',
-                           )
+                                         [State.State('entrance',
+                                                      self.enterEntrance,
+                                                      self.exitEntrance,
+                                                      ['battle', 'walk']),
+                                             State.State('Elevator',
+                                                         self.enterElevator,
+                                                         self.exitElevator,
+                                                         ['battle', 'walk']),
+                                             State.State('battle',
+                                                         self.enterBattle,
+                                                         self.exitBattle,
+                                                         ['walk', 'died']),
+                                             State.State('walk',
+                                                         self.enterWalk,
+                                                         self.exitWalk,
+                                                         ['stickerBook', 'stopped',
+                                                          'sit', 'died',
+                                                          'teleportOut',
+                                                          'Elevator',
+                                                          'DFA', 'trialerFA', ]),
+                                             State.State('sit',
+                                                         self.enterSit,
+                                                         self.exitSit,
+                                                         ['walk', ]),
+                                             State.State('stickerBook',
+                                                         self.enterStickerBook,
+                                                         self.exitStickerBook,
+                                                         ['walk', 'stopped', 'sit', 'died',
+                                                          'DFA', 'trialerFA',
+                                                          'teleportOut', 'Elevator', ]),
+                                             # Trialer Force Acknowledge:
+                                             State.State('trialerFA',
+                                                         self.enterTrialerFA,
+                                                         self.exitTrialerFA,
+                                                         ['trialerFAReject', 'DFA']),
+                                             State.State('trialerFAReject',
+                                                         self.enterTrialerFAReject,
+                                                         self.exitTrialerFAReject,
+                                                         ['walk']),
+                                             State.State('DFA',
+                                                         self.enterDFA,
+                                                         self.exitDFA,
+                                                         ['DFAReject', 'teleportOut']),
+                                             State.State('DFAReject',
+                                                         self.enterDFAReject,
+                                                         self.exitDFAReject,
+                                                         ['walk']),
+                                             State.State('teleportIn',
+                                                         self.enterTeleportIn,
+                                                         self.exitTeleportIn,
+                                                         ['walk']),
+                                             State.State('teleportOut',
+                                                         self.enterTeleportOut,
+                                                         self.exitTeleportOut,
+                                                         ['teleportIn']),
+                                             State.State('stopped',
+                                                         self.enterStopped,
+                                                         self.exitStopped,
+                                                         ['walk', 'elevatorOut']),
+                                             State.State('died',
+                                                         self.enterDied,
+                                                         self.exitDied,
+                                                         []),
+                                             State.State('elevatorOut',
+                                                         self.enterElevatorOut,
+                                                         self.exitElevatorOut,
+                                                         [])],
+                                         # Initial State
+                                         'entrance',
+                                         # Final State
+                                         'elevatorOut',
+                                         )
         self.parentFSM = parentFSM
         self.elevatorDoneEvent = "elevatorDoneSI"
 
@@ -108,12 +109,16 @@ class SuitInterior(Place):
         self.currentFloor = 0
 
     def enter(self, requestStatus):
-        assert(self.notify.debug("enter(requestStatus="+str(requestStatus)+")"))
+        assert(
+            self.notify.debug(
+                "enter(requestStatus=" +
+                str(requestStatus) +
+                ")"))
         self.fsm.enterInitialState()
         # Let the safe zone manager know that we are here.
-        #messenger.send("enterToonInterior")
+        # messenger.send("enterToonInterior")
 
-        #self.geom.reparentTo(render)
+        # self.geom.reparentTo(render)
 
         self.zoneId = requestStatus['zoneId']
         self.accept("DSIDoneEvent", self.handleDSIDoneEvent)
@@ -122,11 +127,11 @@ class SuitInterior(Place):
         assert(self.notify.debug("exit()"))
         self.ignoreAll()
         # Let the safe zone manager know that we are leaving
-        #messenger.send("exitToonInterior")
-        #self.geom.reparentTo(hidden)
+        # messenger.send("exitToonInterior")
+        # self.geom.reparentTo(hidden)
 
         # Turn off the little red arrows.
-        #NametagGlobals.setMasterArrowsOn(0)
+        # NametagGlobals.setMasterArrowsOn(0)
 
     def load(self):
         assert(self.notify.debug("load()"))
@@ -142,11 +147,11 @@ class SuitInterior(Place):
         assert(self.notify.debug("unload()"))
         # Call up the chain
         Place.unload(self)
-        
+
         self.parentFSM.getStateNamed("suitInterior").removeChild(self.fsm)
         del self.parentFSM
         del self.fsm
-        #self.geom.removeNode()
+        # self.geom.removeNode()
         #del self.geom
         self.ignoreAll()
         # Get rid of any references to models or textures from this safe zone
@@ -160,8 +165,8 @@ class SuitInterior(Place):
             Suit.unloadSuits(i)
 
     def setState(self, state, battleEvent=None):
-        assert(self.notify.debug("setState(state="+str(state)
-                +", battleEvent="+str(battleEvent)+")"))
+        assert(self.notify.debug("setState(state=" + str(state)
+                                 + ", battleEvent=" + str(battleEvent) + ")"))
         if (battleEvent):
             self.fsm.request(state, [battleEvent])
         else:
@@ -232,13 +237,16 @@ class SuitInterior(Place):
         self.notify.debug("handling elevator done event")
         where = doneStatus['where']
         if (where == 'reject'):
-            # If there has been a reject the Elevator should show an 
+            # If there has been a reject the Elevator should show an
             # elevatorNotifier message and put the toon in the stopped state.
             # Don't request the walk state here. Let the the toon be stuck in the
             # stopped state till the player removes that message from his screen.
             # Removing the message will automatically put him in the walk state there.
-            # Put the player in the walk state only if there is no elevator message.
-            if hasattr(base.localAvatar, "elevatorNotifier") and base.localAvatar.elevatorNotifier.isNotifierOpen():
+            # Put the player in the walk state only if there is no elevator
+            # message.
+            if hasattr(
+                    base.localAvatar,
+                    "elevatorNotifier") and base.localAvatar.elevatorNotifier.isNotifierOpen():
                 pass
             else:
                 self.fsm.request("walk")
@@ -247,7 +255,7 @@ class SuitInterior(Place):
         elif (where == 'suitInterior'):
             pass
         else:
-            self.notify.error("Unknown mode: " +  +
+            self.notify.error("Unknown mode: " + +
                               " in handleElevatorDone")
 
     # Battle state
@@ -278,7 +286,7 @@ class SuitInterior(Place):
         base.localAvatar.setTeleportAvailable(0)
 
     # sticker book state inherited from Place.py
-    def enterStickerBook(self, page = None):
+    def enterStickerBook(self, page=None):
         Place.enterStickerBook(self, page)
         self.ignore('teleportQuery')
         base.localAvatar.setTeleportAvailable(0)
@@ -288,16 +296,16 @@ class SuitInterior(Place):
         Place.enterSit(self)
         self.ignore('teleportQuery')
         base.localAvatar.setTeleportAvailable(0)
-        
+
     # teleport in state
 
     def enterTeleportIn(self, requestStatus):
         # We can only teleport in if our goHome or teleport to toon
-        # request failed.  
+        # request failed.
         # Set localToon to the starting position within the
         # interior
         base.localAvatar.setPosHpr(2.5, 11.5, ToontownGlobals.FloorOffset,
-                                     45.0, 0.0, 0.0)
+                                   45.0, 0.0, 0.0)
 
         Place.enterTeleportIn(self, requestStatus)
 
@@ -305,8 +313,8 @@ class SuitInterior(Place):
 
     def enterTeleportOut(self, requestStatus):
         assert(self.notify.debug('enterTeleportOut()'))
-        Place.enterTeleportOut(self, requestStatus, 
-                        self.__teleportOutDone)
+        Place.enterTeleportOut(self, requestStatus,
+                               self.__teleportOutDone)
 
     def __teleportOutDone(self, requestStatus):
         # Get out of here.
@@ -333,11 +341,10 @@ class SuitInterior(Place):
         self.notifyUserGoHomeFailed()
         #  ignore the setLocalEstateZone message
         self.ignore("setLocalEstateZone")
-        self.doneStatus["avId"] =  -1
-        self.doneStatus["zoneId"] =  self.getZoneId()
+        self.doneStatus["avId"] = -1
+        self.doneStatus["zoneId"] = self.getZoneId()
         self.fsm.request("teleportIn", [self.doneStatus])
         return Task.done
-
 
     # elevatorOut state
 
@@ -346,7 +353,7 @@ class SuitInterior(Place):
         # TODO: Eventually, we will have a sequence here (like iris out)
         # and when it is done, it should find a way to call __elevatorOutDone.
         # for now, we'll just call it directly.
-        #self.__elevatorOutDone(
+        # self.__elevatorOutDone(
         return None
 
     def __elevatorOutDone(self, requestStatus):

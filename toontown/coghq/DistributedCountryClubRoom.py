@@ -15,16 +15,22 @@ if __dev__:
 
 # gives you the name of the bboard posting that will be made when a room is
 # ready for business
-def getCountryClubRoomReadyPostName(doId):
-    return 'countryClubRoomReady-%s' % doId
 
-class DistributedCountryClubRoom(DistributedLevel.DistributedLevel,
-                          CountryClubRoomBase.CountryClubRoomBase, CountryClubRoom.CountryClubRoom):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCountryClubRoom')
+
+def getCountryClubRoomReadyPostName(doId):
+    return f'countryClubRoomReady-{doId}'
+
+
+class DistributedCountryClubRoom(
+        DistributedLevel.DistributedLevel,
+        CountryClubRoomBase.CountryClubRoomBase,
+        CountryClubRoom.CountryClubRoom):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedCountryClubRoom')
 
     # Any non-entrance countryClub room will not have an entrancePoint entity.
     EmulateEntrancePoint = False
-    
+
     def __init__(self, cr):
         DistributedLevel.DistributedLevel.__init__(self, cr)
         CountryClubRoomBase.CountryClubRoomBase.__init__(self)
@@ -50,18 +56,19 @@ class DistributedCountryClubRoom(DistributedLevel.DistributedLevel,
         DistributedLevel.DistributedLevel.delete(self)
         CountryClubRoom.CountryClubRoom.delete(self)
         self.ignoreAll()
-        
+
     # required fields
     def setCountryClubId(self, countryClubId):
-        self.notify.debug('countryClubId: %s' % countryClubId)
-        CountryClubRoomBase.CountryClubRoomBase.setCountryClubId(self, countryClubId)
+        self.notify.debug(f'countryClubId: {countryClubId}')
+        CountryClubRoomBase.CountryClubRoomBase.setCountryClubId(
+            self, countryClubId)
 
     def setRoomId(self, roomId):
-        self.notify.debug('roomId: %s' % roomId)
+        self.notify.debug(f'roomId: {roomId}')
         CountryClubRoomBase.CountryClubRoomBase.setRoomId(self, roomId)
 
     def setRoomNum(self, num):
-        self.notify.debug('roomNum: %s' % num)
+        self.notify.debug(f'roomNum: {num}')
         CountryClubRoom.CountryClubRoom.setRoomNum(self, num)
 
     def levelAnnounceGenerate(self):
@@ -70,13 +77,14 @@ class DistributedCountryClubRoom(DistributedLevel.DistributedLevel,
 
         # create our spec
         # NOTE: in dev, the AI will probably send us another spec to use
-        specModule = CountryClubRoomSpecs.getCountryClubRoomSpecModule(self.roomId)
+        specModule = CountryClubRoomSpecs.getCountryClubRoomSpecModule(
+            self.roomId)
         roomSpec = LevelSpec.LevelSpec(specModule)
         if __dev__:
             # give the spec a factory EntityTypeRegistry.
             typeReg = self.getCountryClubEntityTypeReg()
             roomSpec.setEntityTypeReg(typeReg)
-        
+
         DistributedLevel.DistributedLevel.initializeLevel(self, roomSpec)
 
         # if the AI is sending us a spec, we won't have it yet and the
@@ -102,7 +110,8 @@ class DistributedCountryClubRoom(DistributedLevel.DistributedLevel,
 
         # let 'er rip.
         DistributedLevel.DistributedLevel.privGotSpec(self, levelSpec)
-        # as a special hack for country club entrance room, make the toon face the tunnel
+        # as a special hack for country club entrance room, make the toon face
+        # the tunnel
         base.localAvatar.setH(-90)
 
         CountryClubRoom.CountryClubRoom.enter(self)
@@ -138,22 +147,31 @@ class DistributedCountryClubRoom(DistributedLevel.DistributedLevel,
     # for now, let's ignore visibility, since we may not even need it
     def initVisibility(self, *args, **kw):
         pass
+
     def shutdownVisibility(self, *args, **kw):
         pass
+
     def lockVisibility(self, *args, **kw):
         pass
+
     def unlockVisibility(self, *args, **kw):
         pass
+
     def enterZone(self, *args, **kw):
         pass
+
     def updateVisibility(self, *args, **kw):
         pass
+
     def setVisibility(self, *args, **kw):
         pass
+
     def resetVisibility(self, *args, **kw):
         pass
+
     def handleVisChange(self, *args, **kw):
         pass
+
     def forceSetZoneThisFrame(self, *args, **kw):
         pass
 
@@ -194,20 +212,19 @@ class DistributedCountryClubRoom(DistributedLevel.DistributedLevel,
             pos = base.localAvatar.getPos(thisZone)
             h = base.localAvatar.getH(thisZone)
             roomName = CountryClubRoomSpecs.BossbotCountryClubRoomId2RoomName[self.roomId]
-            print('countryClub pos: %s, h: %s, room: %s' % (
-                repr(pos), h, roomName))
+            print(f'countryClub pos: {repr(pos)}, h: {h}, room: {roomName}')
             if self.countryClub is not None:
                 floorNum = self.countryClub.floorNum
             else:
                 floorNum = '???'
-            posStr = "X: %.3f" % pos[0] + "\nY: %.3f" % pos[1] + \
-                     "\nZ: %.3f" % pos[2] + "\nH: %.3f" % h + \
-                     "\ncountryClubId: %s" % self.countryClubId + \
-                     "\nfloor: %s" % floorNum + \
-                     "\nroomId: %s" % self.roomId + \
-                     "\nroomName: %s" % roomName
-            base.localAvatar.setChatAbsolute(posStr,CFThought|CFTimeout)
-        self.accept('f2',printPos)
+            posStr = f"X: {pos[0]:.3f}" + f"\nY: {pos[1]:.3f}" + \
+                     f"\nZ: {pos[2]:.3f}" + f"\nH: {h:.3f}" + \
+                     f"\ncountryClubId: {self.countryClubId}" + \
+                     f"\nfloor: {floorNum}" + \
+                     f"\nroomId: {self.roomId}" + \
+                     f"\nroomName: {roomName}"
+            base.localAvatar.setChatAbsolute(posStr, CFThought | CFTimeout)
+        self.accept('f2', printPos)
 
     def handleSOSPanel(self, panel):
         # make a list of toons that are still in the factory
@@ -238,7 +255,7 @@ class DistributedCountryClubRoom(DistributedLevel.DistributedLevel,
 
     def setSuits(self, suitIds, reserveSuitIds):
         assert(self.notify.debug(
-            "setSuits suits: %s, reserves: %s" % (suitIds, reserveSuitIds)))
+            f"setSuits suits: {suitIds}, reserves: {reserveSuitIds}"))
         oldSuitIds = list(self.suitIds)
         self.suitIds = suitIds
         self.reserveSuitIds = reserveSuitIds
@@ -286,6 +303,7 @@ class DistributedCountryClubRoom(DistributedLevel.DistributedLevel,
 
     def getBossTaunt(self):
         return TTLocalizer.CountryClubBossTaunt
+
     def getBossBattleTaunt(self):
         return TTLocalizer.CountryClubBossBattleTaunt
 
@@ -297,9 +315,10 @@ class DistributedCountryClubRoom(DistributedLevel.DistributedLevel,
                 CountryClubRoomSpecs.BossbotCountryClubRoomId2RoomName[self.roomId],)
         else:
             return 'DistributedCountryClubRoom'
+
     def __repr__(self):
         return str(self)
 
-    def forceOuch(self,penalty):
+    def forceOuch(self, penalty):
         """Handle the AI is telling us we took damage."""
         self.setOuch(penalty)

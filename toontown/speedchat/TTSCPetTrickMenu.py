@@ -7,12 +7,13 @@ from otp.speedchat.SCStaticTextTerminal import SCStaticTextTerminal
 from otp.otpbase import OTPLocalizer
 from toontown.pets import PetTricks
 
+
 class TTSCPetTrickMenu(SCMenu):
     """
     SCPetTrickMenu represents a menu of pet trick-training terminals.
     """
     notify = DirectNotifyGlobal.directNotify.newCategory("TTSCPetTrickMenu")
-    
+
     def __init__(self):
         SCMenu.__init__(self)
 
@@ -31,14 +32,14 @@ class TTSCPetTrickMenu(SCMenu):
         # if local toon has not been created, don't panic
         try:
             lt = base.localAvatar
-        except:
+        except BaseException:
             return
 
         # rebuild our menu
         for trickId in lt.petTrickPhrases:
             if trickId not in PetTricks.TrickId2scIds:
                 TTSCPetTrickMenu.notify.warning(
-                    'unknown trick ID: %s' % trickId)
+                    f'unknown trick ID: {trickId}')
             else:
                 # there may be multiple msgs per trick
                 for msg in PetTricks.TrickId2scIds[trickId]:

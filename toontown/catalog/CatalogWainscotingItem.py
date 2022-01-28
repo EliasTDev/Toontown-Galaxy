@@ -10,25 +10,26 @@ WSTBasePrice = 2
 # Also see TTLocalizer.WainscotingNames.
 WainscotingTypes = {
     # Plain
-    1000 : ("phase_3.5/maps/wall_paper_b3.jpg", CTFlatColorDark, 200),
+    1000: ("phase_3.5/maps/wall_paper_b3.jpg", CTFlatColorDark, 200),
     # Wood version
-    1010 : ("phase_5.5/maps/wall_paper_b4_greyscale.jpg",
-            CTBasicWoodColorOnWhite, 200),
+    1010: ("phase_5.5/maps/wall_paper_b4_greyscale.jpg",
+           CTBasicWoodColorOnWhite, 200),
     # Wood version - series 2
-    1020 : ("phase_5.5/maps/wainscotings_neutral.jpg", CTBasicWoodColorOnWhite, 200),
+    1020: ("phase_5.5/maps/wainscotings_neutral.jpg", CTBasicWoodColorOnWhite, 200),
     # Painted, valentines
-    1030 : ("phase_3.5/maps/wall_paper_b3.jpg", CTValentinesColors, 200),
+    1030: ("phase_3.5/maps/wall_paper_b3.jpg", CTValentinesColors, 200),
     # Painted, underwater colors
-    1040 : ("phase_3.5/maps/wall_paper_b3.jpg", CTUnderwaterColors, 200),
-    }
+    1040: ("phase_3.5/maps/wall_paper_b3.jpg", CTUnderwaterColors, 200),
+}
+
 
 class CatalogWainscotingItem(CatalogSurfaceItem):
     """CatalogWainscotingItem
 
     This represents a texture/color combination for wainscoting.
-    
+
     """
-    
+
     def makeNewItem(self, patternIndex, colorIndex):
         self.patternIndex = patternIndex
         self.colorIndex = colorIndex
@@ -69,13 +70,13 @@ class CatalogWainscotingItem(CatalogSurfaceItem):
         c.setColorScale(*self.getColor())
 
         sample.reparentTo(frame)
-        
+
 ##        assert (not self.hasPicture)
-        self.hasPicture=True
+        self.hasPicture = True
 
         return (frame, None)
 
-    def output(self, store = ~0):
+    def output(self, store=~0):
         return "CatalogWainscotingItem(%s, %s%s)" % (
             self.patternIndex, self.colorIndex,
             self.formatOptionalData(store))
@@ -102,7 +103,7 @@ class CatalogWainscotingItem(CatalogSurfaceItem):
         return texture
 
     def getColor(self):
-        if self.colorIndex == None:
+        if self.colorIndex is None:
             # If no color index is set yet, use first color in color list
             colorIndex = 0
         else:
@@ -118,7 +119,8 @@ class CatalogWainscotingItem(CatalogSurfaceItem):
             return CT_WHITE
 
     def decodeDatagram(self, di, versionNumber, store):
-        CatalogAtticItem.CatalogAtticItem.decodeDatagram(self, di, versionNumber, store)
+        CatalogAtticItem.CatalogAtticItem.decodeDatagram(
+            self, di, versionNumber, store)
         if versionNumber < 3:
             self.patternIndex = di.getUint8()
         else:
@@ -129,23 +131,24 @@ class CatalogWainscotingItem(CatalogSurfaceItem):
         # self.patternIndex is invalid.  The other fields can take
         # care of themselves.
         wtype = WainscotingTypes[self.patternIndex]
-        
+
     def encodeDatagram(self, dg, store):
         CatalogAtticItem.CatalogAtticItem.encodeDatagram(self, dg, store)
         dg.addUint16(self.patternIndex)
         dg.addUint8(self.colorIndex)
 
+
 def getWainscotings(*indexList):
     # This function returns a list of CatalogWainscotingItems
     # The returned items will all need to be customized (i.e
-    # have a color chosen by the user.  Until customization, 
+    # have a color chosen by the user.  Until customization,
     # use a default color index of 0 (if the pattern has a color
     # list) or CT_WHITE if the pattern has no color list
     _list = []
     for index in indexList:
         _list.append(CatalogWainscotingItem(index))
     return _list
-    
+
 
 def getAllWainscotings(*indexList):
     # This function returns a list of all possible
@@ -160,7 +163,7 @@ def getAllWainscotings(*indexList):
         else:
             _list.append(CatalogWainscotingItem(index, 0))
     return _list
-    
+
 
 def getWainscotingRange(fromIndex, toIndex, *otherRanges):
     # This function returns a list of all possible
@@ -168,21 +171,21 @@ def getWainscotingRange(fromIndex, toIndex, *otherRanges):
     # indicated type index(es).
 
     # Make sure we got an even number of otherRanges
-    assert(len(otherRanges)%2 == 0)
+    assert(len(otherRanges) % 2 == 0)
 
     _list = []
 
-    froms = [fromIndex,]
-    tos = [toIndex,]
+    froms = [fromIndex, ]
+    tos = [toIndex, ]
 
     i = 0
     while i < len(otherRanges):
         froms.append(otherRanges[i])
-        tos.append(otherRanges[i+1])
+        tos.append(otherRanges[i + 1])
         i += 2
-    
+
     for patternIndex in list(WainscotingTypes.keys()):
-        for fromIndex, toIndex in zip(froms,tos):
+        for fromIndex, toIndex in zip(froms, tos):
             if patternIndex >= fromIndex and patternIndex <= toIndex:
                 colors = WainscotingTypes[patternIndex][WSTColor]
                 if colors:

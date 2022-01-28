@@ -12,10 +12,12 @@ from toontown.toontowngui import TTDialog
 from toontown.toonbase import ToontownBattleGlobals
 from toontown.building import Elevator
 from panda3d.otp import *
+
+
 class FactoryInterior(BattlePlace.BattlePlace):
     # create a notify category
     notify = DirectNotifyGlobal.directNotify.newCategory("FactoryInterior")
-    
+
     # special methods
     def __init__(self, loader, parentFSM, doneEvent):
         assert(FactoryInterior.notify.debug("FactoryInterior()"))
@@ -26,111 +28,110 @@ class FactoryInterior(BattlePlace.BattlePlace):
         # needs to have a transition to teleportout
         self.elevatorDoneEvent = "elevatorDone"
 
-
     def load(self):
         self.fsm = ClassicFSM.ClassicFSM('FactoryInterior',
-                           [State.State('start',
-                                        self.enterStart,
-                                        self.exitStart,
-                                        ['walk',
-                                         'teleportIn',
-                                         'fallDown',
-                                         ]),
-                            State.State('walk',
-                                        self.enterWalk,
-                                        self.exitWalk,
-                                        ['push', 'sit', 'stickerBook', 
-                                         'WaitForBattle', 'battle', 
-                                         'died', 'teleportOut', 'squished',
-                                         'DFA', 'fallDown', 'elevator'
-                                         ]),
-                            State.State('stopped',
-                                        self.enterStopped,
-                                        self.exitStopped,
-                                        ['walk', 'teleportOut',
-                                         ]),
-                            State.State('sit',
-                                        self.enterSit,
-                                        self.exitSit,
-                                        ['walk', 'died', 'teleportOut',]),
-                            State.State('push',
-                                        self.enterPush,
-                                        self.exitPush,
-                                        ['walk', 'died', 'teleportOut',]),
-                            State.State('stickerBook',
-                                        self.enterStickerBook,
-                                        self.exitStickerBook,
-                                        ['walk', 'battle', 'DFA',
-                                        'WaitForBattle', 'died', 'teleportOut',
-                                         ]),
-                            # This needs a transition to teleportOut to allow
-                            # the toon to leave after beating the factory.
-                            # When localToon leaves the battle, battle gets
-                            # a setMembers with no localToon, enables its
-                            # collision sphere, collides with localToon, puts
-                            # localToon in WaitForBattle.
-                            State.State('WaitForBattle',
-                                        self.enterWaitForBattle,
-                                        self.exitWaitForBattle,
-                                        ['battle', 'walk', 'died',
-                                         'teleportOut',]),
-                            State.State('battle',
-                                        self.enterBattle,
-                                        self.exitBattle,
-                                        ['walk', 'teleportOut', 'died',]),
-                            State.State('fallDown',
-                                        self.enterFallDown,
-                                        self.exitFallDown,
-                                        ['walk', 'died', 'teleportOut',]),
-                            State.State('squished',
-                                        self.enterSquished,
-                                        self.exitSquished,
-                                        ['walk', 'died', 'teleportOut',]),
-                            State.State('teleportIn',
-                                        self.enterTeleportIn,
-                                        self.exitTeleportIn,
-                                        ['walk', 'teleportOut', 'quietZone', 'died',]),
-                            State.State('teleportOut',
-                                        self.enterTeleportOut,
-                                        self.exitTeleportOut,
-                                        ['teleportIn', 'FLA', 'quietZone',
-                                         'WaitForBattle']),
-                            # Download Force Acknowledge
-                            State.State('DFA',
-                                        self.enterDFA,
-                                        self.exitDFA,
-                                        ['DFAReject', 'teleportOut']),
-                            State.State('DFAReject',
-                                        self.enterDFAReject,
-                                        self.exitDFAReject,
-                                        ['walk' 'teleportOut',]),
-                            State.State('died',
-                                        self.enterDied,
-                                        self.exitDied,
-                                        ['teleportOut']),
-                            # Forced Leave Acknowledge
-                            State.State('FLA',
-                                        self.enterFLA,
-                                        self.exitFLA,
-                                        ['quietZone']),
-                            State.State('quietZone',
-                                        self.enterQuietZone,
-                                        self.exitQuietZone,
-                                        ['teleportIn']),
-                            State.State('elevator',
-                                        self.enterElevator,
-                                        self.exitElevator,
-                                        ['walk']),
-                            State.State('final',
-                                        self.enterFinal,
-                                        self.exitFinal,
-                                        ['start'])],
-                          
-                           # Initial State
-                           'start',
-                           # Final State
-                           'final',
-                           )
+                                         [State.State('start',
+                                                      self.enterStart,
+                                                      self.exitStart,
+                                                      ['walk',
+                                                       'teleportIn',
+                                                       'fallDown',
+                                                       ]),
+                                             State.State('walk',
+                                                         self.enterWalk,
+                                                         self.exitWalk,
+                                                         ['push', 'sit', 'stickerBook',
+                                                          'WaitForBattle', 'battle',
+                                                          'died', 'teleportOut', 'squished',
+                                                          'DFA', 'fallDown', 'elevator'
+                                                          ]),
+                                             State.State('stopped',
+                                                         self.enterStopped,
+                                                         self.exitStopped,
+                                                         ['walk', 'teleportOut',
+                                                          ]),
+                                             State.State('sit',
+                                                         self.enterSit,
+                                                         self.exitSit,
+                                                         ['walk', 'died', 'teleportOut', ]),
+                                             State.State('push',
+                                                         self.enterPush,
+                                                         self.exitPush,
+                                                         ['walk', 'died', 'teleportOut', ]),
+                                             State.State('stickerBook',
+                                                         self.enterStickerBook,
+                                                         self.exitStickerBook,
+                                                         ['walk', 'battle', 'DFA',
+                                                          'WaitForBattle', 'died', 'teleportOut',
+                                                          ]),
+                                             # This needs a transition to teleportOut to allow
+                                             # the toon to leave after beating the factory.
+                                             # When localToon leaves the battle, battle gets
+                                             # a setMembers with no localToon, enables its
+                                             # collision sphere, collides with localToon, puts
+                                             # localToon in WaitForBattle.
+                                             State.State('WaitForBattle',
+                                                         self.enterWaitForBattle,
+                                                         self.exitWaitForBattle,
+                                                         ['battle', 'walk', 'died',
+                                                          'teleportOut', ]),
+                                             State.State('battle',
+                                                         self.enterBattle,
+                                                         self.exitBattle,
+                                                         ['walk', 'teleportOut', 'died', ]),
+                                             State.State('fallDown',
+                                                         self.enterFallDown,
+                                                         self.exitFallDown,
+                                                         ['walk', 'died', 'teleportOut', ]),
+                                             State.State('squished',
+                                                         self.enterSquished,
+                                                         self.exitSquished,
+                                                         ['walk', 'died', 'teleportOut', ]),
+                                             State.State('teleportIn',
+                                                         self.enterTeleportIn,
+                                                         self.exitTeleportIn,
+                                                         ['walk', 'teleportOut', 'quietZone', 'died', ]),
+                                             State.State('teleportOut',
+                                                         self.enterTeleportOut,
+                                                         self.exitTeleportOut,
+                                                         ['teleportIn', 'FLA', 'quietZone',
+                                                          'WaitForBattle']),
+                                             # Download Force Acknowledge
+                                             State.State('DFA',
+                                                         self.enterDFA,
+                                                         self.exitDFA,
+                                                         ['DFAReject', 'teleportOut']),
+                                             State.State('DFAReject',
+                                                         self.enterDFAReject,
+                                                         self.exitDFAReject,
+                                                         ['walk' 'teleportOut', ]),
+                                             State.State('died',
+                                                         self.enterDied,
+                                                         self.exitDied,
+                                                         ['teleportOut']),
+                                             # Forced Leave Acknowledge
+                                             State.State('FLA',
+                                                         self.enterFLA,
+                                                         self.exitFLA,
+                                                         ['quietZone']),
+                                             State.State('quietZone',
+                                                         self.enterQuietZone,
+                                                         self.exitQuietZone,
+                                                         ['teleportIn']),
+                                             State.State('elevator',
+                                                         self.enterElevator,
+                                                         self.exitElevator,
+                                                         ['walk']),
+                                             State.State('final',
+                                                         self.enterFinal,
+                                                         self.exitFinal,
+                                                         ['start'])],
+
+                                         # Initial State
+                                         'start',
+                                         # Final State
+                                         'final',
+                                         )
         self.parentFSM.getStateNamed("factoryInterior").addChild(self.fsm)
         BattlePlace.BattlePlace.load(self)
         self.music = base.loader.loadMusic('phase_9/audio/bgm/CHQ_FACT_bg.ogg')
@@ -154,7 +155,7 @@ class FactoryInterior(BattlePlace.BattlePlace):
             # Turn on the little red arrows.
             NametagGlobals.setMasterArrowsOn(1)
             self.fsm.request(requestStatus["how"], [requestStatus])
-            base.playMusic(self.music, looping = 1, volume = 0.8)
+            base.playMusic(self.music, looping=1, volume=0.8)
             base.transitions.irisIn()
         # did the factory beat us here?
         if hasattr(base, 'factoryReady'):
@@ -170,6 +171,7 @@ class FactoryInterior(BattlePlace.BattlePlace):
             self.accept('f10', lambda: messenger.send('FactoryWinEvent'))
 
         self.confrontedForeman = 0
+
         def handleConfrontedForeman(self=self):
             self.confrontedForeman = 1
         self.acceptOnce('localToonConfrontedForeman', handleConfrontedForeman)
@@ -240,11 +242,11 @@ class FactoryInterior(BattlePlace.BattlePlace):
         FactoryInterior.notify.info('exitBattle')
         BattlePlace.BattlePlace.exitBattle(self)
         self.loader.music.stop()
-        base.playMusic(self.music, looping = 1, volume = 0.8)
+        base.playMusic(self.music, looping=1, volume=0.8)
 
     # sticker book state inherited from BattlePlace.py
     # Override to turn off teleport
-    def enterStickerBook(self, page = None):
+    def enterStickerBook(self, page=None):
         BattlePlace.BattlePlace.enterStickerBook(self, page)
         self.ignore('teleportQuery')
         base.localAvatar.setTeleportAvailable(0)
@@ -261,8 +263,8 @@ class FactoryInterior(BattlePlace.BattlePlace):
 
     def enterTeleportOut(self, requestStatus):
         FactoryInterior.notify.info('enterTeleportOut()')
-        BattlePlace.BattlePlace.enterTeleportOut(self, requestStatus, 
-                        self.__teleportOutDone)
+        BattlePlace.BattlePlace.enterTeleportOut(self, requestStatus,
+                                                 self.__teleportOutDone)
 
     def __processLeaveRequest(self, requestStatus):
         hoodId = requestStatus["hoodId"]
@@ -287,23 +289,23 @@ class FactoryInterior(BattlePlace.BattlePlace):
             self.fsm.request('FLA', [requestStatus])
         else:
             self.__processLeaveRequest(requestStatus)
-        
+
     def exitTeleportOut(self):
         FactoryInterior.notify.info('exitTeleportOut()')
         BattlePlace.BattlePlace.exitTeleportOut(self)
-        
+
     def detectedElevatorCollision(self, distElevator):
         assert(self.notify.debug("detectedElevatorCollision()"))
         self.fsm.request("elevator", [distElevator])
-        
+
     def enterElevator(self, distElevator):
         assert(self.notify.debug("enterElevator()"))
         self.accept(self.elevatorDoneEvent, self.handleElevatorDone)
         self.elevator = Elevator.Elevator(self.fsm.getStateNamed("elevator"),
                                           self.elevatorDoneEvent,
                                           distElevator)
-        #elevatorFSM is now on the DO
-        distElevator.elevatorFSM=self.elevator
+        # elevatorFSM is now on the DO
+        distElevator.elevatorFSM = self.elevator
         self.elevator.load()
         self.elevator.enter()
 
@@ -313,19 +315,22 @@ class FactoryInterior(BattlePlace.BattlePlace):
         self.elevator.unload()
         self.elevator.exit()
         #del self.elevator
-        
+
     def handleElevatorDone(self, doneStatus):
         assert(self.notify.debug("handleElevatorDone()"))
         self.notify.debug("handling elevator done event")
         where = doneStatus['where']
         if (where == 'reject'):
-            # If there has been a reject the Elevator should show an 
+            # If there has been a reject the Elevator should show an
             # elevatorNotifier message and put the toon in the stopped state.
             # Don't request the walk state here. Let the the toon be stuck in the
             # stopped state till the player removes that message from his screen.
             # Removing the message will automatically put him in the walk state there.
-            # Put the player in the walk state only if there is no elevator message.
-            if hasattr(base.localAvatar, "elevatorNotifier") and base.localAvatar.elevatorNotifier.isNotifierOpen():
+            # Put the player in the walk state only if there is no elevator
+            # message.
+            if hasattr(
+                    base.localAvatar,
+                    "elevatorNotifier") and base.localAvatar.elevatorNotifier.isNotifierOpen():
                 pass
             else:
                 self.fsm.request("walk")
@@ -335,18 +340,18 @@ class FactoryInterior(BattlePlace.BattlePlace):
             self.doneStatus = doneStatus
             self.doneEvent = "lawOfficeFloorDone"
             messenger.send(self.doneEvent)
-            #messenger.send(self.doneEvent)
+            # messenger.send(self.doneEvent)
         else:
             self.notify.error("Unknown mode: " + where +
                               " in handleElevatorDone")
-         
+
     def handleFactoryWinEvent(self):
         """this handler is called when the factory foreman has been defeated"""
         FactoryInterior.notify.info('handleFactoryWinEvent')
 
         # if we're in the process of dying, ignore this
         if (base.cr.playGame.getPlace().fsm.getCurrentState().getName() ==
-            'died'):
+                'died'):
             return
 
         # update our flag
@@ -366,11 +371,12 @@ class FactoryInterior(BattlePlace.BattlePlace):
             "zoneId": zoneId,
             "shardId": None,
             "avId": -1,
-            }])
+        }])
 
     # died state
-    def enterDied(self, requestStatus, callback = None):
+    def enterDied(self, requestStatus, callback=None):
         FactoryInterior.notify.info('enterDied')
+
         def diedDone(requestStatus, self=self, callback=callback):
             if callback is not None:
                 callback()
@@ -384,10 +390,11 @@ class FactoryInterior(BattlePlace.BattlePlace):
         FactoryInterior.notify.info('enterFLA')
         # inform the player about why they got booted from the factory
         self.flaDialog = TTDialog.TTGlobalDialog(
-            message = TTLocalizer.ForcedLeaveFactoryAckMsg,
-            doneEvent = 'FLADone', style = TTDialog.Acknowledge,
-            fadeScreen = 1,
-            )
+            message=TTLocalizer.ForcedLeaveFactoryAckMsg,
+            doneEvent='FLADone', style=TTDialog.Acknowledge,
+            fadeScreen=1,
+        )
+
         def continueExit(self=self, requestStatus=requestStatus):
             self.__processLeaveRequest(requestStatus)
         self.accept('FLADone', continueExit)

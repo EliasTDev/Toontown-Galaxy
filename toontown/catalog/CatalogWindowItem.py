@@ -19,30 +19,34 @@ WVTSkyName = 2
 # alpha'd items in front of it.
 
 WindowViewTypes = {
-    10 : ("phase_5.5/models/estate/Garden1", 900, None),
-    20 : ("phase_5.5/models/estate/GardenA", 900, None),         # Initial View
-    30 : ("phase_5.5/models/estate/GardenB", 900, None),
-    40 : ("phase_5.5/models/estate/cityView", 900, None),        # Catalog Series 1
-    50 : ("phase_5.5/models/estate/westernView", 900, None),     # Catalog Series 2
-    60 : ("phase_5.5/models/estate/underwaterView", 900, None),  # Catalog Series 2
-    70 : ("phase_5.5/models/estate/tropicView", 900, None),      # Catalog Series 1
-    80 : ("phase_5.5/models/estate/spaceView", 900, None),       # Catalog Series 2
-    90 : ("phase_5.5/models/estate/PoolView", 900, None),        # Catalog Series 3
-    100 : ("phase_5.5/models/estate/SnowView", 900, None),       # Catalog Series 3
-    110 : ("phase_5.5/models/estate/FarmView", 900, None),       # Catalog Series 3
-    120 : ("phase_5.5/models/estate/IndianView", 900, None),     # Catalog Series 4
-    130 : ("phase_5.5/models/estate/WesternMainStreetView", 900, None),    # Catalog Series 4
+    10: ("phase_5.5/models/estate/Garden1", 900, None),
+    20: ("phase_5.5/models/estate/GardenA", 900, None),         # Initial View
+    30: ("phase_5.5/models/estate/GardenB", 900, None),
+    40: ("phase_5.5/models/estate/cityView", 900, None),        # Catalog Series 1
+    50: ("phase_5.5/models/estate/westernView", 900, None),     # Catalog Series 2
+    60: ("phase_5.5/models/estate/underwaterView", 900, None),  # Catalog Series 2
+    70: ("phase_5.5/models/estate/tropicView", 900, None),      # Catalog Series 1
+    80: ("phase_5.5/models/estate/spaceView", 900, None),       # Catalog Series 2
+    90: ("phase_5.5/models/estate/PoolView", 900, None),        # Catalog Series 3
+    # Catalog Series 3
+    100: ("phase_5.5/models/estate/SnowView", 900, None),
+    # Catalog Series 3
+    110: ("phase_5.5/models/estate/FarmView", 900, None),
+    120: ("phase_5.5/models/estate/IndianView", 900, None),     # Catalog Series 4
+    # Catalog Series 4
+    130: ("phase_5.5/models/estate/WesternMainStreetView", 900, None),
     # Warning!  8-bit index number.  255 max value.
-    }
+}
+
 
 class CatalogWindowItem(CatalogAtticItem.CatalogAtticItem):
     """CatalogWindowItem
 
     # This represents a view to hang outside a window in a house.
-    
+
     """
-    
-    def makeNewItem(self, windowType, placement = None):
+
+    def makeNewItem(self, windowType, placement=None):
         self.windowType = windowType
         self.placement = placement
         CatalogAtticItem.CatalogAtticItem.makeNewItem(self)
@@ -72,7 +76,7 @@ class CatalogWindowItem(CatalogAtticItem.CatalogAtticItem):
         # Returns the elapsed time in minutes from purchase to
         # delivery for this particular item.
         return 4 * 60  # 4 hours.
-    
+
     def getPicture(self, avatar):
         # Returns a (DirectWidget, Interval) pair to draw and animate a
         # little representation of the item, or (None, None) if the
@@ -107,36 +111,35 @@ class CatalogWindowItem(CatalogAtticItem.CatalogAtticItem):
             if not bgNodePath.isEmpty():
                 # Put it at the front of the list to be drawn first
                 bgNodePath.reparentTo(model, -1)
-        
+
         # Get rid of the window frame that is in the model
         windowFrame = model.find("**/frame")
         if not windowFrame.isEmpty():
             windowFrame.removeNode()
-            
-        model.setPos(0,2,0)
+
+        model.setPos(0, 2, 0)
         model.setScale(0.4)
         model.reparentTo(frame)
 
         assert (not self.hasPicture)
-        self.hasPicture=True
+        self.hasPicture = True
 
         return (frame, None)
 
-    def output(self, store = ~0):
-        return "CatalogWindowItem(%s%s)" % (
-            self.windowType,
-            self.formatOptionalData(store))
+    def output(self, store=~0):
+        return f"CatalogWindowItem({self.windowType}{self.formatOptionalData(store)})"
 
     def getFilename(self):
         type = WindowViewTypes[self.windowType]
         return type[WVTModelName]
 
-    def formatOptionalData(self, store = ~0):
+    def formatOptionalData(self, store=~0):
         # This is used within output() to format optional data
         # (according to the bits indicated in store).
-        result = CatalogAtticItem.CatalogAtticItem.formatOptionalData(self, store)
-        if (store & CatalogItem.WindowPlacement) and self.placement != None:
-            result += ", placement = %s" % (self.placement)
+        result = CatalogAtticItem.CatalogAtticItem.formatOptionalData(
+            self, store)
+        if (store & CatalogItem.WindowPlacement) and self.placement is not None:
+            result += f", placement = {self.placement}"
         return result
 
     def compareTo(self, other):
@@ -155,7 +158,8 @@ class CatalogWindowItem(CatalogAtticItem.CatalogAtticItem):
         return model
 
     def decodeDatagram(self, di, versionNumber, store):
-        CatalogAtticItem.CatalogAtticItem.decodeDatagram(self, di, versionNumber, store)
+        CatalogAtticItem.CatalogAtticItem.decodeDatagram(
+            self, di, versionNumber, store)
         self.placement = None
         if store & CatalogItem.WindowPlacement:
             self.placement = di.getUint8()

@@ -3,6 +3,7 @@ from toontown.building import DistributedBuildingAI
 from toontown.building import DistributedAnimDoorAI
 from toontown.building import DoorTypes
 
+
 class DistributedAnimBuildingAI(DistributedBuildingAI.DistributedBuildingAI):
     """
     DistributedAnimBuildingAI class:  The server side representation of a
@@ -14,14 +15,16 @@ class DistributedAnimBuildingAI(DistributedBuildingAI.DistributedBuildingAI):
     """
 
     if __debug__:
-        notify = DirectNotifyGlobal.directNotify.newCategory('DistributedAnimBuildingAI')
+        notify = DirectNotifyGlobal.directNotify.newCategory(
+            'DistributedAnimBuildingAI')
 
     def __init__(self, air, blockNumber, zoneId, trophyMgr):
         """blockNumber: the landmark building number (from the name)"""
-        DistributedBuildingAI.DistributedBuildingAI.__init__(self, air, blockNumber, zoneId, trophyMgr)
-        
+        DistributedBuildingAI.DistributedBuildingAI.__init__(
+            self, air, blockNumber, zoneId, trophyMgr)
+
     def createExteriorDoor(self):
         """Return the DistributedDoor for the exterior, with correct door type set"""
-        result = DistributedAnimDoorAI.DistributedAnimDoorAI(self.air, self.block,
-                                                 DoorTypes.EXT_ANIM_STANDARD)
+        result = DistributedAnimDoorAI.DistributedAnimDoorAI(
+            self.air, self.block, DoorTypes.EXT_ANIM_STANDARD)
         return result

@@ -31,20 +31,21 @@ from toontown.toonbase import ToontownGlobals
 # Python Import Modules
 ##########################################################################
 import random
-if( __debug__ ):
+if(__debug__):
     import pdb
 
-class GSSafeZoneLoader( SafeZoneLoader ):
+
+class GSSafeZoneLoader(SafeZoneLoader):
     """
     Purpose: The GSSafeZoneLoader Class provides.. yadda yadda
     """
 
-    def __init__( self, hood, parentFSM, doneEvent ):
+    def __init__(self, hood, parentFSM, doneEvent):
         """
         """
 
         # Initialize Super Class
-        SafeZoneLoader.__init__( self, hood, parentFSM, doneEvent )     
+        SafeZoneLoader.__init__(self, hood, parentFSM, doneEvent)
 
         # Initialize Instance Variables
         self.musicFile = "phase_6/audio/bgm/GS_SZ.ogg"
@@ -55,116 +56,116 @@ class GSSafeZoneLoader( SafeZoneLoader ):
         # Override Super Class FSM
         del self.fsm
         self.fsm = ClassicFSM.ClassicFSM('SafeZoneLoader',
-                              [State.State('start',
-                                           self.enterStart,
-                                           self.exitStart,
-                                           ['quietZone',
-                                            'playground',
-                                            'toonInterior',]),
-                               State.State('playground',
-                                           self.enterPlayground,
-                                           self.exitPlayground,
-                                           ['quietZone', 'racetrack' ]),
-                               State.State('toonInterior',
-                                           self.enterToonInterior,
-                                           self.exitToonInterior,
-                                           ['quietZone']),
-                               State.State('quietZone',
-                                           self.enterQuietZone,
-                                           self.exitQuietZone,
-                                           ['playground', 'toonInterior', 'racetrack' ]),
-                               State.State('racetrack',
-                                           self.enterRacetrack,
-                                           self.exitRacetrack,
-                                           ['quietZone', 'playground']),
-                               State.State('final',
-                                           self.enterFinal,
-                                           self.exitFinal,
-                                           ['start'])],
-                              # Initial State
-                              'start',
-                              # Final State
-                              'final', )                              
+                                         [State.State('start',
+                                                      self.enterStart,
+                                                      self.exitStart,
+                                                      ['quietZone',
+                                                       'playground',
+                                                       'toonInterior', ]),
+                                          State.State('playground',
+                                                      self.enterPlayground,
+                                                      self.exitPlayground,
+                                                      ['quietZone', 'racetrack']),
+                                          State.State('toonInterior',
+                                                      self.enterToonInterior,
+                                                      self.exitToonInterior,
+                                                      ['quietZone']),
+                                          State.State('quietZone',
+                                                      self.enterQuietZone,
+                                                      self.exitQuietZone,
+                                                      ['playground', 'toonInterior', 'racetrack']),
+                                          State.State('racetrack',
+                                                      self.enterRacetrack,
+                                                      self.exitRacetrack,
+                                                      ['quietZone', 'playground']),
+                                          State.State('final',
+                                                      self.enterFinal,
+                                                      self.exitFinal,
+                                                      ['start'])],
+                                         # Initial State
+                                         'start',
+                                         # Final State
+                                         'final', )
         self.smoke = None
 
-    def load( self ):
+    def load(self):
         """
         """
 
+        SafeZoneLoader.load(self)
 
-        SafeZoneLoader.load( self )                
-        
         if base.cr.newsManager:
             holidayIds = base.cr.newsManager.getDecorationHolidayId()
             if ToontownGlobals.CRASHED_LEADERBOARD in holidayIds:
-                self.startSmokeEffect()                
-                
-        self.birdSound = list(map( base.loader.loadSfx, [ 'phase_4/audio/sfx/SZ_TC_bird1.ogg',
-                                              'phase_4/audio/sfx/SZ_TC_bird2.ogg',
-                                              'phase_4/audio/sfx/SZ_TC_bird3.ogg' ] ))
+                self.startSmokeEffect()
 
-    def unload( self ):
+        self.birdSound = list(map(base.loader.loadSfx,
+                                  ['phase_4/audio/sfx/SZ_TC_bird1.ogg',
+                                   'phase_4/audio/sfx/SZ_TC_bird2.ogg',
+                                   'phase_4/audio/sfx/SZ_TC_bird3.ogg']))
+
+    def unload(self):
         """
         """
-        del self.birdSound                
-        
-        if self.smoke != None:        
-            self.stopSmokeEffect()             
-            
-        SafeZoneLoader.unload( self )
+        del self.birdSound
 
-    def enterPlayground( self, requestStatus ):
+        if self.smoke is not None:
+            self.stopSmokeEffect()
+
+        SafeZoneLoader.unload(self)
+
+    def enterPlayground(self, requestStatus):
         """
         """
         self.playgroundClass = GSPlayground
-        SafeZoneLoader.enterPlayground( self, requestStatus )
+        SafeZoneLoader.enterPlayground(self, requestStatus)
 
         # self.hood.spawnTitleText( requestStatus[ 'zoneId' ] )
 
-    def exitPlayground( self ):
+    def exitPlayground(self):
         """
         """
 
-        taskMgr.remove( 'titleText' )
+        taskMgr.remove('titleText')
         self.hood.hideTitleText()
-        SafeZoneLoader.exitPlayground( self )
+        SafeZoneLoader.exitPlayground(self)
         self.playgroundClass = None
 
-    def handlePlaygroundDone( self ):
-        assert( self.notify.debug( "handlePlaygroundDone()" ) )
+    def handlePlaygroundDone(self):
+        assert(self.notify.debug("handlePlaygroundDone()"))
         status = self.place.doneStatus
-        if( self.enteringARace( status ) and status.get( 'shardId' ) == None ):
+        if(self.enteringARace(status) and status.get('shardId') is None):
             # GIVE THIS A WHIRL
-            zoneId = status[ 'zoneId' ]
-            self.fsm.request( 'quietZone', [ status ] )
+            zoneId = status['zoneId']
+            self.fsm.request('quietZone', [status])
         elif (ZoneUtil.getBranchZone(status["zoneId"]) == self.hood.hoodId and
-            # Going to Kart Shop
-            status["shardId"] == None):
-            self.fsm.request("quietZone", [status])            
+              # Going to Kart Shop
+              status["shardId"] is None):
+            self.fsm.request("quietZone", [status])
         else:
             self.doneStatus = status
-            messenger.send( self.doneEvent )
+            messenger.send(self.doneEvent)
 
-    def enteringARace( self, status ):
-        if( not status[ 'where' ] == 'racetrack' ):
+    def enteringARace(self, status):
+        if(not status['where'] == 'racetrack'):
             return 0
-        if( ZoneUtil.isDynamicZone( status[ 'zoneId' ] ) ):
-            return status[ 'hoodId' ] == self.hood.hoodId
+        if(ZoneUtil.isDynamicZone(status['zoneId'])):
+            return status['hoodId'] == self.hood.hoodId
         else:
-            return ZoneUtil.getHoodId( status[ 'zoneId' ] ) == self.hood.hoodId
+            return ZoneUtil.getHoodId(status['zoneId']) == self.hood.hoodId
 
-    def enterRacetrack( self, requestStatus ):
+    def enterRacetrack(self, requestStatus):
         """
         """
 
         # Racetrack will grab this off of us
-        self.trackId = requestStatus[ 'trackId' ]
-        self.accept("raceOver",self.handleRaceOver)
-        self.accept("leavingRace",self.handleLeftRace)
+        self.trackId = requestStatus['trackId']
+        self.accept("raceOver", self.handleRaceOver)
+        self.accept("leavingRace", self.handleLeftRace)
 
         base.transitions.fadeOut(t=0)
 
-    def exitRacetrack( self ):
+    def exitRacetrack(self):
         """
         """
         del self.trackId
@@ -173,21 +174,26 @@ class GSSafeZoneLoader( SafeZoneLoader ):
         print("you done!!")
 
     def handleLeftRace(self):
-        req={"loader":"safeZoneLoader","where":"playground","how":"teleportIn"
-             ,"zoneId":8000,"hoodId":8000,"shardId":None}
-        self.fsm.request("quietZone",[req])        
-                
-    def startSmokeEffect(self):           
+        req = {
+            "loader": "safeZoneLoader",
+            "where": "playground",
+            "how": "teleportIn",
+            "zoneId": 8000,
+            "hoodId": 8000,
+            "shardId": None}
+        self.fsm.request("quietZone", [req])
+
+    def startSmokeEffect(self):
         if base.config.GetBool('want-crashedLeaderBoard-Smoke', 1):
-            leaderBoard = self.geom.find("**/*crashed*")      
+            leaderBoard = self.geom.find("**/*crashed*")
             locator = leaderBoard.find("**/*locator_smoke*")
-            if locator != None:          
-                self.smoke = CarSmoke(locator)            
-                self.smoke.start()                 
-                        
-    def stopSmokeEffect(self):   
-        if base.config.GetBool('want-crashedLeaderBoard-Smoke', 1):         
-            if self.smoke != None:
-                self.smoke.stop()        
-                self.smoke.destroy()                
+            if locator is not None:
+                self.smoke = CarSmoke(locator)
+                self.smoke.start()
+
+    def stopSmokeEffect(self):
+        if base.config.GetBool('want-crashedLeaderBoard-Smoke', 1):
+            if self.smoke is not None:
+                self.smoke.stop()
+                self.smoke.destroy()
                 self.smoke = None

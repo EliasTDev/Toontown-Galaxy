@@ -15,6 +15,7 @@ from toontown.estate import EstateLoader
 from toontown.estate import HouseGlobals
 from . import ZoneUtil
 
+
 class EstateHood(Hood.Hood):
     """
     The base class for toon neighborhoods
@@ -28,34 +29,34 @@ class EstateHood(Hood.Hood):
     notify = DirectNotifyGlobal.directNotify.newCategory("EstateHood")
 
     def __init__(self, parentFSM, doneEvent, dnaStore, hoodId):
-        assert(self.notify.debug("__init__(parentFSM="+str(parentFSM)
-                +", doneEvent="+str(doneEvent)
-                +", dnaStore="+str(dnaStore)+")"))
+        assert(self.notify.debug("__init__(parentFSM=" + str(parentFSM)
+                                 + ", doneEvent=" + str(doneEvent)
+                                 + ", dnaStore=" + str(dnaStore) + ")"))
         Hood.Hood.__init__(self, parentFSM, doneEvent, dnaStore, hoodId)
 
         self.fsm = ClassicFSM.ClassicFSM('Hood',
-                           [State.State('start',
-                                        self.enterStart,
-                                        self.exitStart,
-                                        ['safeZoneLoader']),
-                            State.State('safeZoneLoader',
-                                        self.enterSafeZoneLoader,
-                                        self.exitSafeZoneLoader,
-                                        ['quietZone',
-                                         ]),
-                            State.State('quietZone',
-                                        self.enterQuietZone,
-                                        self.exitQuietZone,
-                                        ['safeZoneLoader',
-                                         ]),
-                            State.State('final',
-                                        self.enterFinal,
-                                        self.exitFinal,
-                                        [])
-                            ],
-                           'start',
-                           'final',
-                           )
+                                         [State.State('start',
+                                                      self.enterStart,
+                                                      self.exitStart,
+                                                      ['safeZoneLoader']),
+                                             State.State('safeZoneLoader',
+                                                         self.enterSafeZoneLoader,
+                                                         self.exitSafeZoneLoader,
+                                                         ['quietZone',
+                                                          ]),
+                                             State.State('quietZone',
+                                                         self.enterQuietZone,
+                                                         self.exitQuietZone,
+                                                         ['safeZoneLoader',
+                                                          ]),
+                                             State.State('final',
+                                                         self.enterFinal,
+                                                         self.exitFinal,
+                                                         [])
+                                          ],
+                                         'start',
+                                         'final',
+                                         )
 
         self.fsm.enterInitialState()
         self.id = MyEstate
@@ -64,14 +65,15 @@ class EstateHood(Hood.Hood):
         self.storageDNAFile = "phase_5.5/dna/storage_estate.dna"
         # Dictionary which holds holiday specific lists of Storage DNA Files
         # Keyed off of the News Manager holiday IDs stored in ToontownGlobals
-        self.holidayStorageDNADict = {WINTER_DECORATIONS : ['phase_5.5/dna/winter_storage_estate.dna'],
-                                       HALLOWEEN_PROPS : ['phase_5.5/dna/halloween_props_storage_estate.dna']}
-                                       
+        self.holidayStorageDNADict = {
+            WINTER_DECORATIONS: ['phase_5.5/dna/winter_storage_estate.dna'],
+            HALLOWEEN_PROPS: ['phase_5.5/dna/halloween_props_storage_estate.dna']}
+
         self.skyFile = "phase_3.5/models/props/TT_sky"
         self.spookySkyFile = "phase_3.5/models/props/BR_sky"
-        
+
         self.popupInfo = None
-        
+
     def load(self):
         assert(self.notify.debug("load()"))
         Hood.Hood.load(self)
@@ -91,7 +93,11 @@ class EstateHood(Hood.Hood):
         enter this hood and start the state machine
         -- don't call Hood.enter until we can implement the titleText for estates
         """
-        assert(self.notify.debug("enter(requestStatus="+str(requestStatus)+")"))
+        assert(
+            self.notify.debug(
+                "enter(requestStatus=" +
+                str(requestStatus) +
+                ")"))
         hoodId = requestStatus["hoodId"]
         zoneId = requestStatus["zoneId"]
         # accept messages from the AI saying we have been kicked out
@@ -105,7 +111,7 @@ class EstateHood(Hood.Hood):
             self.loader.unload()
             del self.loader
         Hood.Hood.exit(self)
-        
+
     # SafeZoneLoader state
 
     # Defined in Hood.py
@@ -120,16 +126,18 @@ class EstateHood(Hood.Hood):
 
     def loadLoader(self, requestStatus):
         assert(self.notify.debug("loadLoader(requestStatus="
-                                 +str(requestStatus)+")"))
+                                 + str(requestStatus) + ")"))
         loaderName = requestStatus["loader"]
-        #if loaderName=="estateLoader":
-        if loaderName=="safeZoneLoader":
-            self.loader = self.safeZoneLoaderClass(self, 
-                    self.fsm.getStateNamed("safeZoneLoader"), 
-                    self.loaderDoneEvent)
+        # if loaderName=="estateLoader":
+        if loaderName == "safeZoneLoader":
+            self.loader = self.safeZoneLoaderClass(
+                self, self.fsm.getStateNamed("safeZoneLoader"), self.loaderDoneEvent)
             self.loader.load()
         else:
-            assert(self.notify.debug("  unknown loaderName: "+str(loaderName)))
+            assert(
+                self.notify.debug(
+                    "  unknown loaderName: " +
+                    str(loaderName)))
 
     # Don't show title text when going to the estate
     # (This is TBD. We have to do some special case stuff for
@@ -152,14 +160,14 @@ class EstateHood(Hood.Hood):
             self.doneStatus = {
                 "loader": ZoneUtil.getBranchLoaderName(zoneId),
                 "where": ZoneUtil.getToonWhereName(zoneId),
-                "how" : "teleportIn",
-                "hoodId" : zoneId,
-                "zoneId" : zoneId,
-                "shardId" : None,
-                "avId" : -1,
-                }
+                "how": "teleportIn",
+                "hoodId": zoneId,
+                "zoneId": zoneId,
+                "shardId": None,
+                "avId": -1,
+            }
             messenger.send(self.doneEvent)
-            
+
         elif retCode == 2:
             # we have been booted from the estate.  this only
             # happens if we have been de-friended by the owner,
@@ -170,19 +178,19 @@ class EstateHood(Hood.Hood):
             self.doneStatus = {
                 "loader": ZoneUtil.getBranchLoaderName(zoneId),
                 "where": ZoneUtil.getToonWhereName(zoneId),
-                "how" : "teleportIn",
-                "hoodId" : zoneId,
-                "zoneId" : zoneId,
-                "shardId" : None,
-                "avId" : -1,
-                }
+                "how": "teleportIn",
+                "hoodId": zoneId,
+                "zoneId": zoneId,
+                "shardId": None,
+                "avId": -1,
+            }
             messenger.send(self.doneEvent)
         else:
             self.notify.error("unknown reason for exiting estate")
 
     def __popupKickoutMessage(self, msg):
         # Popup warning that we are being kicked out of the estate
-        if self.popupInfo != None:
+        if self.popupInfo is not None:
             self.popupInfo.destroy()
             self.popupInfo = None
 
@@ -192,75 +200,75 @@ class EstateHood(Hood.Hood):
                          buttons.find('**/ChtBx_OKBtn_Rllvr'))
 
         self.popupInfo = DirectFrame(
-            parent = hidden,
-            relief = None,
-            state = 'normal',
-            text =  msg,
-            frameSize = (-1,1,-1,1),
-            text_wordwrap = 10,
-            geom = DGG.getDefaultDialogGeom(),
-            geom_color = GlobalDialogColor,
-            geom_scale = (.88, 1, .75),
-            geom_pos = (0,0,-.08),
-            text_scale = TTLocalizer.EHpopupInfo,
-            text_pos = (0, 0.1),
-            )
+            parent=hidden,
+            relief=None,
+            state='normal',
+            text=msg,
+            frameSize=(-1, 1, -1, 1),
+            text_wordwrap=10,
+            geom=DGG.getDefaultDialogGeom(),
+            geom_color=GlobalDialogColor,
+            geom_scale=(.88, 1, .75),
+            geom_pos=(0, 0, -.08),
+            text_scale=TTLocalizer.EHpopupInfo,
+            text_pos=(0, 0.1),
+        )
         DirectButton(self.popupInfo,
-                     image = okButtonImage,
-                     relief = None,
-                     text = TTLocalizer.EstatePopupOK,
-                     text_scale = 0.05,
-                     text_pos = (0.0, -0.1),
-                     textMayChange = 0,
-                     pos = (0.0, 0.0, -0.30),
-                     command = self.__handleKickoutOk)
+                     image=okButtonImage,
+                     relief=None,
+                     text=TTLocalizer.EstatePopupOK,
+                     text_scale=0.05,
+                     text_pos=(0.0, -0.1),
+                     textMayChange=0,
+                     pos=(0.0, 0.0, -0.30),
+                     command=self.__handleKickoutOk)
         buttons.removeNode()
-        
+
         # Show the popup info (i.e. "Sorry, the owner has left...")
         self.popupInfo.reparentTo(aspect2d)
-        
+
     def __handleKickoutOk(self):
         # hide the popup
         self.popupInfo.reparentTo(hidden)
-
 
     def skyTrack(self, task):
         return SkyUtil.cloudSkyTrack(task)
 
     def startSky(self):
-        
+
         # we have the wrong sky; load in the regular sky
         if not (self.sky.getTag("sky") == "Regular"):
             self.endSpookySky()
-            
+
         SkyUtil.startCloudSky(self)
         if base.cloudPlatformsEnabled:
             self.loader.startCloudPlatforms()
-        
+
     def stopSky(self):
         assert(self.notify.debug("stopSky"))
         Hood.Hood.stopSky(self)
         self.loader.stopCloudPlatforms()
-        
+
     def startSpookySky(self):
-        if hasattr(self, "loader") and self.loader \
-        and hasattr(self.loader, "cloudTrack") and self.loader.cloudTrack:
+        if hasattr(self, "loader") and self.loader and hasattr(
+                self.loader, "cloudTrack") and self.loader.cloudTrack:
             self.stopSky()
         self.sky = loader.loadModel(self.spookySkyFile)
         self.sky.setTag("sky", "Halloween")
         self.sky.setScale(1.0)
         self.sky.setDepthTest(0)
         self.sky.setDepthWrite(0)
-        self.sky.setColor(0.5,0.5,0.5,1)
+        self.sky.setColor(0.5, 0.5, 0.5, 1)
         self.sky.setBin("background", 100)
         self.sky.setFogOff()
         self.sky.reparentTo(camera)
 
-        #fade the sky in
+        # fade the sky in
         self.sky.setTransparency(TransparencyAttrib.MDual, 1)
-        fadeIn = self.sky.colorScaleInterval( 1.5, Vec4(1, 1, 1, 1),
-                                               startColorScale = Vec4(1, 1, 1, 0.25),
-                                               blendType = 'easeInOut')
+        fadeIn = self.sky.colorScaleInterval(
+            1.5, Vec4(
+                1, 1, 1, 1), startColorScale=Vec4(
+                1, 1, 1, 0.25), blendType='easeInOut')
         fadeIn.start()
 
         # Nowadays we use a CompassEffect to counter-rotate the sky
@@ -268,5 +276,6 @@ class EstateHood(Hood.Hood):
         # task to do this just before the scene is rendered.
         self.sky.setZ(0.0)
         self.sky.setHpr(0.0, 0.0, 0.0)
-        ce = CompassEffect.make(NodePath(), CompassEffect.PRot | CompassEffect.PZ)
+        ce = CompassEffect.make(NodePath(),
+                                CompassEffect.PRot | CompassEffect.PZ)
         self.sky.node().setEffect(ce)

@@ -15,6 +15,8 @@ from toontown.toonbase import TTLocalizer
 from toontown.toon import NPCForceAcknowledge
 from toontown.toon import HealthForceAcknowledge
 from panda3d.otp import *
+
+
 class ToonInterior(Place.Place):
     """ToonInterior class"""
 
@@ -28,124 +30,123 @@ class ToonInterior(Place.Place):
         ToonInterior constructor: create a play game ClassicFSM
         """
         Place.Place.__init__(self, loader, doneEvent)
-        self.dnaFile="phase_7/models/modules/toon_interior"
-        self.isInterior=1
+        self.dnaFile = "phase_7/models/modules/toon_interior"
+        self.isInterior = 1
         self.tfaDoneEvent = "tfaDoneEvent"
         self.hfaDoneEvent = "hfaDoneEvent"
         self.npcfaDoneEvent = "npcfaDoneEvent"
         # shared state
         self.fsm = ClassicFSM.ClassicFSM('ToonInterior',
-                           [State.State('start',
-                                        self.enterStart,
-                                        self.exitStart,
-                                        ['doorIn', 'teleportIn', 'tutorial',]),
-                            State.State('walk',
-                                        self.enterWalk,
-                                        self.exitWalk,
-                                        ['sit', 'stickerBook', 'doorOut',
-                                         'DFA', 'trialerFA',
-                                         'teleportOut', 'quest',
-                                         'purchase', 'phone','stopped', 'pet']),
-                            State.State('sit',
-                                        self.enterSit,
-                                        self.exitSit,
-                                        ['walk',]),
-                            State.State('stickerBook',
-                                        self.enterStickerBook,
-                                        self.exitStickerBook,
-                                        ['walk', 'DFA', 'trialerFA',
-                                         'sit', 'doorOut',
-                                         'teleportOut', 'quest',
-                                         'purchase', 'phone', 'stopped',  'pet',
-                                         ]),
-                            # Trialer Force Acknowledge:
-                            State.State('trialerFA',
-                                        self.enterTrialerFA,
-                                        self.exitTrialerFA,
-                                        ['trialerFAReject', 'DFA']),
-                            State.State('trialerFAReject',
-                                        self.enterTrialerFAReject,
-                                        self.exitTrialerFAReject,
-                                        ['walk']),
-                            # Download Force Acknowlege:
-                            State.State('DFA',
-                                        self.enterDFA,
-                                        self.exitDFA,
-                                        ['DFAReject', 'HFA', 'NPCFA', 'teleportOut', 
-                                        'doorOut']),
-                            State.State('DFAReject',
-                                        self.enterDFAReject,
-                                        self.exitDFAReject,
-                                        ['walk']),
-                            # NPC Force Acknowledge:
-                            State.State('NPCFA',
-                                        self.enterNPCFA,
-                                        self.exitNPCFA,
-                                        ['NPCFAReject', 'HFA', 'teleportOut']),
-                            State.State('NPCFAReject',
-                                        self.enterNPCFAReject,
-                                        self.exitNPCFAReject,
-                                        ['walk']),
-                            # Health Force Acknowledge
-                            State.State('HFA',
-                                        self.enterHFA,
-                                        self.exitHFA,
-                                        ['HFAReject', 'teleportOut', 'tunnelOut']),
-                            State.State('HFAReject',
-                                        self.enterHFAReject,
-                                        self.exitHFAReject,
-                                        ['walk']),
-                            State.State('doorIn',
-                                        self.enterDoorIn,
-                                        self.exitDoorIn,
-                                        ['walk']),
-                            State.State('doorOut',
-                                        self.enterDoorOut,
-                                        self.exitDoorOut,
-                                        ['walk']), # 'final'
-                            State.State('teleportIn',
-                                        self.enterTeleportIn,
-                                        self.exitTeleportIn,
-                                        ['walk']),
-                            State.State('teleportOut',
-                                        self.enterTeleportOut,
-                                        self.exitTeleportOut,
-                                        ['teleportIn']), # 'final'
-                            State.State('quest',
-                                        self.enterQuest,
-                                        self.exitQuest,
-                                        ['walk', 'doorOut',]),
-                            State.State('tutorial',
-                                        self.enterTutorial,
-                                        self.exitTutorial,
-                                        ['walk', 'quest',]),
-                            State.State('purchase',
-                                        self.enterPurchase,
-                                        self.exitPurchase,
-                                        ['walk', 'doorOut']),
-                            State.State('pet',
-                                        self.enterPet,
-                                        self.exitPet,
-                                        ['walk']),
-                            State.State('phone',
-                                        self.enterPhone,
-                                        self.exitPhone,
-                                        ['walk', 'doorOut']),
-                            State.State('stopped',
-                                        self.enterStopped,
-                                        self.exitStopped,
-                                        ['walk', 'doorOut']),
-                            State.State('final',
-                                        self.enterFinal,
-                                        self.exitFinal,
-                                        ['start'])],
-                           # Initial State
-                           'start',
-                           # Final State
-                           'final',
-                           )
+                                         [State.State('start',
+                                                      self.enterStart,
+                                                      self.exitStart,
+                                                      ['doorIn', 'teleportIn', 'tutorial', ]),
+                                             State.State('walk',
+                                                         self.enterWalk,
+                                                         self.exitWalk,
+                                                         ['sit', 'stickerBook', 'doorOut',
+                                                          'DFA', 'trialerFA',
+                                                          'teleportOut', 'quest',
+                                                          'purchase', 'phone', 'stopped', 'pet']),
+                                             State.State('sit',
+                                                         self.enterSit,
+                                                         self.exitSit,
+                                                         ['walk', ]),
+                                             State.State('stickerBook',
+                                                         self.enterStickerBook,
+                                                         self.exitStickerBook,
+                                                         ['walk', 'DFA', 'trialerFA',
+                                                          'sit', 'doorOut',
+                                                          'teleportOut', 'quest',
+                                                          'purchase', 'phone', 'stopped', 'pet',
+                                                          ]),
+                                             # Trialer Force Acknowledge:
+                                             State.State('trialerFA',
+                                                         self.enterTrialerFA,
+                                                         self.exitTrialerFA,
+                                                         ['trialerFAReject', 'DFA']),
+                                             State.State('trialerFAReject',
+                                                         self.enterTrialerFAReject,
+                                                         self.exitTrialerFAReject,
+                                                         ['walk']),
+                                             # Download Force Acknowlege:
+                                             State.State('DFA',
+                                                         self.enterDFA,
+                                                         self.exitDFA,
+                                                         ['DFAReject', 'HFA', 'NPCFA', 'teleportOut',
+                                                          'doorOut']),
+                                             State.State('DFAReject',
+                                                         self.enterDFAReject,
+                                                         self.exitDFAReject,
+                                                         ['walk']),
+                                             # NPC Force Acknowledge:
+                                             State.State('NPCFA',
+                                                         self.enterNPCFA,
+                                                         self.exitNPCFA,
+                                                         ['NPCFAReject', 'HFA', 'teleportOut']),
+                                             State.State('NPCFAReject',
+                                                         self.enterNPCFAReject,
+                                                         self.exitNPCFAReject,
+                                                         ['walk']),
+                                             # Health Force Acknowledge
+                                             State.State('HFA',
+                                                         self.enterHFA,
+                                                         self.exitHFA,
+                                                         ['HFAReject', 'teleportOut', 'tunnelOut']),
+                                             State.State('HFAReject',
+                                                         self.enterHFAReject,
+                                                         self.exitHFAReject,
+                                                         ['walk']),
+                                             State.State('doorIn',
+                                                         self.enterDoorIn,
+                                                         self.exitDoorIn,
+                                                         ['walk']),
+                                             State.State('doorOut',
+                                                         self.enterDoorOut,
+                                                         self.exitDoorOut,
+                                                         ['walk']),  # 'final'
+                                             State.State('teleportIn',
+                                                         self.enterTeleportIn,
+                                                         self.exitTeleportIn,
+                                                         ['walk']),
+                                             State.State('teleportOut',
+                                                         self.enterTeleportOut,
+                                                         self.exitTeleportOut,
+                                                         ['teleportIn']),  # 'final'
+                                             State.State('quest',
+                                                         self.enterQuest,
+                                                         self.exitQuest,
+                                                         ['walk', 'doorOut', ]),
+                                             State.State('tutorial',
+                                                         self.enterTutorial,
+                                                         self.exitTutorial,
+                                                         ['walk', 'quest', ]),
+                                             State.State('purchase',
+                                                         self.enterPurchase,
+                                                         self.exitPurchase,
+                                                         ['walk', 'doorOut']),
+                                             State.State('pet',
+                                                         self.enterPet,
+                                                         self.exitPet,
+                                                         ['walk']),
+                                             State.State('phone',
+                                                         self.enterPhone,
+                                                         self.exitPhone,
+                                                         ['walk', 'doorOut']),
+                                             State.State('stopped',
+                                                         self.enterStopped,
+                                                         self.exitStopped,
+                                                         ['walk', 'doorOut']),
+                                             State.State('final',
+                                                         self.enterFinal,
+                                                         self.exitFinal,
+                                                         ['start'])],
+                                         # Initial State
+                                         'start',
+                                         # Final State
+                                         'final',
+                                         )
         self.parentFSMState = parentFSMState
-
 
     def load(self):
         assert(self.notify.debug("load()"))
@@ -158,19 +159,23 @@ class ToonInterior(Place.Place):
         assert(self.notify.debug("unload()"))
         # Call up the chain
         Place.Place.unload(self)
-        
+
         self.parentFSMState.removeChild(self.fsm)
         del self.parentFSMState
         del self.fsm
-        #self.geom.removeNode()
+        # self.geom.removeNode()
         #del self.geom
-        #self.ignoreAll()
+        # self.ignoreAll()
         # Get rid of any references to models or textures from this safe zone
         ModelPool.garbageCollect()
         TexturePool.garbageCollect()
 
     def enter(self, requestStatus):
-        assert(self.notify.debug("enter(requestStatus="+str(requestStatus)+")"))
+        assert(
+            self.notify.debug(
+                "enter(requestStatus=" +
+                str(requestStatus) +
+                ")"))
         self.zoneId = requestStatus["zoneId"]
         self.fsm.enterInitialState()
         # Let the safe zone manager know that we are here.
@@ -179,9 +184,9 @@ class ToonInterior(Place.Place):
         self.accept("DistributedDoor_doorTrigger", self.handleDoorTrigger)
         # Play music
         volume = requestStatus.get('musicVolume', 0.7)
-        base.playMusic(self.loader.activityMusic, looping = 1, volume = volume)
+        base.playMusic(self.loader.activityMusic, looping=1, volume=volume)
 
-        #self.geom.reparentTo(render)
+        # self.geom.reparentTo(render)
 
         # Turn on the little red arrows.
         NametagGlobals.setMasterArrowsOn(1)
@@ -193,7 +198,7 @@ class ToonInterior(Place.Place):
         self.ignoreAll()
         # Let the safe zone manager know that we are leaving
         messenger.send("exitToonInterior")
-        #self.geom.reparentTo(hidden)
+        # self.geom.reparentTo(hidden)
 
         # Turn off the little red arrows.
         NametagGlobals.setMasterArrowsOn(0)
@@ -202,7 +207,7 @@ class ToonInterior(Place.Place):
         self.loader.activityMusic.stop()
 
     def setState(self, state):
-        assert(self.notify.debug("setState(state="+str(state)+")"))
+        assert(self.notify.debug("setState(state=" + str(state) + ")"))
         self.fsm.request(state)
 
     def enterTutorial(self, requestStatus):
@@ -211,7 +216,6 @@ class ToonInterior(Place.Place):
         globalClock.tick()
         base.transitions.irisIn()
         messenger.send("enterTutorialInterior")
-        
 
     def exitTutorial(self):
         pass
@@ -223,7 +227,7 @@ class ToonInterior(Place.Place):
     # walk state inherited from Place.py
 
     # sticker book state inherited from Place.py
-        
+
     # doorIn/Out state inherited from Place.py
 
     # override DFA callback
@@ -251,23 +255,28 @@ class ToonInterior(Place.Place):
             self.fsm.request("DFAReject")
         else:
             # Some return code that is not handled
-            self.notify.error("Unknown done status for DownloadForceAcknowledge: "
-                              + repr(doneStatus))
+            self.notify.error(
+                "Unknown done status for DownloadForceAcknowledge: " +
+                repr(doneStatus))
 
     # NPCFA state
-            
+
     def enterNPCFA(self, requestStatus):
         """NPC Force Acknowledge"""
         assert(self.notify.debug("enterNPCFA()"))
 
-        self.acceptOnce(self.npcfaDoneEvent, self.enterNPCFACallback, [requestStatus])
-        self.npcfa = NPCForceAcknowledge.NPCForceAcknowledge(self.npcfaDoneEvent)
+        self.acceptOnce(
+            self.npcfaDoneEvent,
+            self.enterNPCFACallback,
+            [requestStatus])
+        self.npcfa = NPCForceAcknowledge.NPCForceAcknowledge(
+            self.npcfaDoneEvent)
         self.npcfa.enter()
-        
+
     def exitNPCFA(self):
         assert(self.notify.debug("exitNPCFA()"))
         self.ignore(self.npcfaDoneEvent)
-            
+
     def enterNPCFACallback(self, requestStatus, doneStatus):
         assert(self.notify.debug("enterNPCFACallback()"))
         self.npcfa.exit()
@@ -278,7 +287,10 @@ class ToonInterior(Place.Place):
         # Allowed, do the tunnel transition
         if (doneStatus["mode"] == "complete"):
             # Allowed, let them leave
-            outHow={"teleportIn":"teleportOut", "tunnelIn":"tunnelOut", "doorIn":"doorOut"}
+            outHow = {
+                "teleportIn": "teleportOut",
+                "tunnelIn": "tunnelOut",
+                "doorIn": "doorOut"}
             self.fsm.request(outHow[requestStatus["how"]], [requestStatus])
         elif (doneStatus["mode"] == 'incomplete'):
             self.fsm.request("NPCFAReject")
@@ -293,26 +305,29 @@ class ToonInterior(Place.Place):
         assert(self.notify.debug("enterNPCFAReject()"))
         # TODO: reject movie, turn toon around
         self.fsm.request("walk")
-    
+
     def exitNPCFAReject(self):
         assert(self.notify.debug("exitNPCFAReject()"))
-
 
         # HFA state
 
     def enterHFA(self, requestStatus):
         """Hit Point Force Acknowledge"""
         assert(self.notify.debug("enterHFA()"))
-        self.acceptOnce(self.hfaDoneEvent, self.enterHFACallback, [requestStatus])
+        self.acceptOnce(
+            self.hfaDoneEvent,
+            self.enterHFACallback,
+            [requestStatus])
         # Make sure we have enough HP to leave the safe zone
         # This enforces the so-called time out penalty
-        self.hfa = HealthForceAcknowledge.HealthForceAcknowledge(self.hfaDoneEvent)
+        self.hfa = HealthForceAcknowledge.HealthForceAcknowledge(
+            self.hfaDoneEvent)
         self.hfa.enter(1)
-        
+
     def exitHFA(self):
         assert(self.notify.debug("exitHFA()"))
         self.ignore(self.hfaDoneEvent)
-            
+
     def enterHFACallback(self, requestStatus, doneStatus):
         assert(self.notify.debug("enterHFACallback()"))
         self.hfa.exit()
@@ -322,15 +337,19 @@ class ToonInterior(Place.Place):
         # we can enter the tunnel, otherwise for now we just stand there
         # Allowed, do the tunnel transition
         if (doneStatus["mode"] == "complete"):
-            outHow={"teleportIn":"teleportOut", "tunnelIn":"tunnelOut", "doorIn":"doorOut"}
+            outHow = {
+                "teleportIn": "teleportOut",
+                "tunnelIn": "tunnelOut",
+                "doorIn": "doorOut"}
             self.fsm.request(outHow[requestStatus["how"]], [requestStatus])
         # Rejected
         elif (doneStatus["mode"] == 'incomplete'):
             self.fsm.request("HFAReject")
         else:
             # Some return code that is not handled
-            self.notify.error("Unknown done status for HealthForceAcknowledge: "
-                              + repr(doneStatus))
+            self.notify.error(
+                "Unknown done status for HealthForceAcknowledge: " +
+                repr(doneStatus))
 
     # hfa reject state
 
@@ -338,10 +357,9 @@ class ToonInterior(Place.Place):
         assert(self.notify.debug("enterHFAReject()"))
         # TODO: reject movie, turn toon around
         self.fsm.request("walk")
-    
+
     def exitHFAReject(self):
         assert(self.notify.debug("exitHFAReject()"))
-
 
     # teleport in state
 
@@ -364,15 +382,16 @@ class ToonInterior(Place.Place):
 
     def enterTeleportOut(self, requestStatus):
         Place.Place.enterTeleportOut(self, requestStatus,
-                self.__teleportOutDone)
+                                     self.__teleportOutDone)
 
     def __teleportOutDone(self, requestStatus):
         assert(self.notify.debug("__teleportOutDone(requestStatus="
-                +str(requestStatus)+")"))
+                                 + str(requestStatus) + ")"))
         hoodId = requestStatus["hoodId"]
         zoneId = requestStatus["zoneId"]
         shardId = requestStatus["shardId"]
-        if ((hoodId == self.loader.hood.id) and (zoneId == self.zoneId) and (shardId == None)):
+        if ((hoodId == self.loader.hood.id) and (
+                zoneId == self.zoneId) and (shardId is None)):
             # If you are teleporting to somebody in this zone
             self.fsm.request("teleportIn", [requestStatus])
         else:
@@ -389,12 +408,10 @@ class ToonInterior(Place.Place):
         self.notifyUserGoHomeFailed()
         #  ignore the setLocalEstateZone message
         self.ignore("setLocalEstateZone")
-        self.doneStatus["avId"] =  -1
-        self.doneStatus["zoneId"] =  self.getZoneId()
+        self.doneStatus["avId"] = -1
+        self.doneStatus["zoneId"] = self.getZoneId()
         self.fsm.request("teleportIn", [self.doneStatus])
         return Task.done
 
     def exitTeleportOut(self):
         Place.Place.exitTeleportOut(self)
-
-

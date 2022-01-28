@@ -3,17 +3,19 @@
 from direct.showbase.PythonUtil import Functor
 from . import LevelMgrBase
 
+
 class LevelMgr(LevelMgrBase.LevelMgrBase):
     """This class manages editable client-side level attributes"""
 
     def __init__(self, level, entId):
         LevelMgrBase.LevelMgrBase.__init__(self, level, entId)
-        
+
         # load the model
         self.geom = loader.loadModel(self.modelFilename)
-        
+
         if not self.geom:
-            import pdb; pdb.set_trace()
+            import pdb
+            pdb.set_trace()
 
         # this will hold the zoneNums/entIds for our own bookkeeping
         self.zoneNums = []
@@ -42,7 +44,7 @@ class LevelMgr(LevelMgrBase.LevelMgrBase):
 
         assert zoneEnt.entId not in self.zoneNums
         self.zoneNums.append(zoneEnt.entId)
-        
+
         # we can assume that we have a complete list of network zoneIds in
         # self.level.zoneIds. As each zone entity is created, set up
         # as if we have all of the zone entities. This allows dynamic

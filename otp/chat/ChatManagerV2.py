@@ -2,7 +2,7 @@
 ChatManagerV2 module: contains the ChatManagerV2 class
 
 ChatManagerV2 varies from the orginal chat manager in that it is only responsible for chat
-warnings. Chat sending is handled by the talkAssistant. This was done so that the GUI and 
+warnings. Chat sending is handled by the talkAssistant. This was done so that the GUI and
 logic could be free of each other
 """
 
@@ -42,7 +42,7 @@ class ChatManagerV2(DirectObject.DirectObject):
         self.secretChatActivated = None
         self.problemActivatingChat = None
         self.leaveToPayDialog = None
-        
+
         self.fsm = ClassicFSM.ClassicFSM(
             'chatManager', [
                 State.State("off",
@@ -87,33 +87,39 @@ class ChatManagerV2(DirectObject.DirectObject):
                 State.State("problemActivatingChat",
                             self.enterProblemActivatingChat,
                             self.exitProblemActivatingChat),
-                ],
-                "off",
-                "off",
-                )
+            ],
+            "off",
+            "off",
+        )
         self.fsm.enterInitialState()
-        
-        self.accept("Chat-Failed open typed chat test", self.__handleFailOpenTypedChat)
-        self.accept("Chat-Failed player typed chat test", self.__handleFailPlayerTypedWhsiper)
-        self.accept("Chat-Failed avatar typed chat test", self.__handleFailAvatarTypedWhsiper)
-        
+
+        self.accept(
+            "Chat-Failed open typed chat test",
+            self.__handleFailOpenTypedChat)
+        self.accept(
+            "Chat-Failed player typed chat test",
+            self.__handleFailPlayerTypedWhsiper)
+        self.accept(
+            "Chat-Failed avatar typed chat test",
+            self.__handleFailAvatarTypedWhsiper)
+
     def delete(self):
         self.ignoreAll()
         del self.fsm
-        
-    def __handleFailOpenTypedChat(self, caller = None):
+
+    def __handleFailOpenTypedChat(self, caller=None):
         self.fsm.request("openChatWarning")
-        
-    def __handleFailPlayerTypedWhsiper(self, caller = None):
+
+    def __handleFailPlayerTypedWhsiper(self, caller=None):
         self.fsm.request("noSecretChatWarning")
-        
-    def __handleFailAvatarTypedWhsiper(self, caller = None):
+
+    def __handleFailAvatarTypedWhsiper(self, caller=None):
         self.fsm.request("noSecretChatWarning")
-        
+
     def __handleLeaveToPayCancel(self):
         assert self.notify.debugStateCall(self)
         self.fsm.request("mainMenu")
-    
+
     def __secretFriendsInfoDone(self):
         assert self.notify.debugStateCall(self)
         self.fsm.request("activateChat")
@@ -121,7 +127,7 @@ class ChatManagerV2(DirectObject.DirectObject):
     def __privacyPolicyDone(self):
         assert self.notify.debugStateCall(self)
         self.fsm.request("activateChat")
-        
+
     def enterOff(self):
         assert self.notify.debugStateCall(self)
         self.ignoreAll()
@@ -129,13 +135,12 @@ class ChatManagerV2(DirectObject.DirectObject):
     def exitOff(self):
         assert self.notify.debugStateCall(self)
         pass
-        
+
     def enterOtherDialog(self):
         assert self.notify.debugStateCall(self)
-        
+
     def exitOtherDialog(self):
         assert self.notify.debugStateCall(self)
-        
 
     def enterUnpaidChatWarning(self):
         self.notify.error("called enterUnpaidChatWarning() on parent class")
@@ -144,31 +149,32 @@ class ChatManagerV2(DirectObject.DirectObject):
     def exitUnpaidChatWarning(self):
         self.notify.error("called exitUnpaidChatWarning() on parent class")
         pass
-        
+
     def enterNoFriendsWarning(self):
         self.notify.error("called enterNoFriendsWarning() on parent class")
         pass
-        
+
     def exitNoFriendsWarning(self):
         self.notify.error("called exitNoFriendsWarning() on parent class")
         pass
-        
+
     def enterSecretChatActivated(self):
         self.notify.error("called enterSecretChatActivated() on parent class")
         pass
-        
+
     def exitSecretChatActivated(self):
         self.notify.error("called exitSecretChatActivated() on parent class")
         pass
 
     def enterProblemActivatingChat(self):
-        self.notify.error("called enterProblemActivatingChat() on parent class")
+        self.notify.error(
+            "called enterProblemActivatingChat() on parent class")
         pass
-        
+
     def exitProblemActivatingChat(self):
         self.notify.error("called exitProblemActivatingChat() on parent class")
         pass
-        
+
     def enterChatPrivacyPolicy(self):
         """
         A dialog with lots of information about what it means to
@@ -176,11 +182,11 @@ class ChatManagerV2(DirectObject.DirectObject):
         """
         self.notify.error("called enterChatPrivacyPolicy() on parent class")
         pass
-        
+
     def exitChatPrivacyPolicy(self):
         self.notify.error("called exitChatPrivacyPolicy() on parent class")
         pass
-        
+
     def enterChatMoreInfo(self):
         """
         A dialog with lots of information about what it means to
@@ -188,19 +194,19 @@ class ChatManagerV2(DirectObject.DirectObject):
         """
         self.notify.error("called enterChatMoreInfo() on parent class")
         pass
-        
+
     def exitChatMoreInfo(self):
         self.notify.error("called exitChatMoreInfo() on parent class")
         pass
-        
+
     def enterNoSecretChatWarning(self):
         self.notify.error("called enterNoSecretChatWarning() on parent class")
         pass
-        
+
     def exitNoSecretChatWarning(self):
         self.notify.error("called exitNoSecretChatWarning() on parent class")
         pass
-        
+
     def enterLeaveToPayDialog(self):
         """
         Tell the user that we will exit the 3D client and take
@@ -212,4 +218,3 @@ class ChatManagerV2(DirectObject.DirectObject):
     def exitLeaveToPayDialog(self):
         self.notify.error("called exitLeaveToPayDialog() on parent class")
         pass
-

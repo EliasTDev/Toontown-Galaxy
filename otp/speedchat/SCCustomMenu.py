@@ -4,8 +4,10 @@ from .SCMenu import SCMenu
 from .SCCustomTerminal import SCCustomTerminal
 from otp.otpbase.OTPLocalizer import CustomSCStrings
 
+
 class SCCustomMenu(SCMenu):
     """ SCCustomMenu represents a menu of SCCustomTerminals. """
+
     def __init__(self):
         SCMenu.__init__(self)
         # listen for changes to localtoon's custom speedchat messages
@@ -22,7 +24,7 @@ class SCCustomMenu(SCMenu):
         # if local toon has not been created, don't panic
         try:
             lt = base.localAvatar
-        except:
+        except BaseException:
             return
 
         for msgIndex in lt.customMessages:

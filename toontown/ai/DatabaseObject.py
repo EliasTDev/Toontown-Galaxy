@@ -6,6 +6,7 @@ from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 import types
 
+
 class DatabaseObject:
     """DatabaseObject
 
@@ -16,7 +17,7 @@ class DatabaseObject:
 
     notify = directNotify.newCategory("DatabaseObject")
     notify.setInfo(0)
-    
+
     def __init__(self, air, doId=None, doneEvent="DatabaseObject"):
         self.air = air
         self.doId = doId
@@ -24,7 +25,7 @@ class DatabaseObject:
         self.gotDataHandler = None
         self.doneEvent = doneEvent
 
-    def readToon(self, fields = None):
+    def readToon(self, fields=None):
         # Reads and returns a DistributedToonAI object.  Note that an
         # empty DistributedToonAI will be returned by this call; the
         # values will be filled in on the toon at some later point in
@@ -50,9 +51,9 @@ class DatabaseObject:
             from toontown.pets import DistributedPetProxyAI
             petProxy = DistributedPetProxyAI.DistributedPetProxyAI(self.air)
             self.readObject(petProxy, None)
-            return petProxy   
+            return petProxy
 
-    def readObject(self, do, fields = None):
+    def readObject(self, do, fields=None):
         # Reads a DistributedObject from the database and fills in its
         # data.  The data is not available immediately, but rather
         # when the self.doneEvent is thrown.
@@ -62,34 +63,34 @@ class DatabaseObject:
         self.gotDataHandler = self.fillin
 
         # If fields is supplied, it is a subset of fields to read.
-        if fields != None:
+        if fields is not None:
             self.getFields(fields)
         else:
             self.getFields(self.getDatabaseFields(self.dclass))
 
-    def storeObject(self, do, fields = None):
+    def storeObject(self, do, fields=None):
         # Copies the data from the indicated DistributedObject and
         # writes it to the database.
         self.do = do
         className = do.__class__.__name__
         self.dclass = self.air.dclassesByName[className]
 
-        if fields != None:
+        if fields is not None:
             self.reload(self.do, self.dclass, fields)
         else:
             dbFields = self.getDatabaseFields(self.dclass)
             self.reload(self.do, self.dclass, dbFields)
 
         values = self.values
-        if fields != None:
+        if fields is not None:
             # If fields is supplied, it is a subset of fields to update.
             values = {}
             for field in fields:
                 if field in self.values:
                     values[field] = self.values[field]
                 else:
-                    self.notify.warning("Field %s not defined." % (field))
-                    
+                    self.notify.warning(f"Field {field} not defined.")
+
         self.setFields(values)
 
     def getFields(self, fields):
@@ -98,15 +99,18 @@ class DatabaseObject:
         context = self.air.dbObjContext
         self.air.dbObjContext += 1
         self.air.dbObjMap[context] = self
-        
+
         dg = PyDatagram()
-        dg.addServerHeader(DBSERVER_ID, self.air.ourChannel, DBSERVER_GET_STORED_VALUES)
+        dg.addServerHeader(
+            DBSERVER_ID,
+            self.air.ourChannel,
+            DBSERVER_GET_STORED_VALUES)
         dg.addUint32(context)
         dg.addUint32(self.doId)
         dg.addUint16(len(fields))
         for f in fields:
             dg.addString(f)
-            
+
         self.air.send(dg)
 
     def getFieldsResponse(self, di):
@@ -123,7 +127,9 @@ class DatabaseObject:
 
         retCode = di.getUint8()
         if retCode != 0:
-            self.notify.warning("Failed to retrieve data for object %d" % (self.doId))
+            self.notify.warning(
+                "Failed to retrieve data for object %d" %
+                (self.doId))
 
         else:
             values = []
@@ -137,29 +143,33 @@ class DatabaseObject:
                 if not found:
                     # this occurs for all DB fields on a pet when it's first created
                     # this should be a warning, but until we can create pets with
-                    # their required fields initialized in the DB, keep this as 'info'
-                    self.notify.info("field %s is not found" % (fields[i]))
+                    # their required fields initialized in the DB, keep this as
+                    # 'info'
+                    self.notify.info(f"field {fields[i]} is not found")
 
                     try:
                         del self.values[fields[i]]
-                    except:
+                    except BaseException:
                         pass
                 else:
                     self.values[fields[i]] = PyDatagram(values[i])
 
             self.notify.info("got data for %d" % (self.doId))
 
-            if self.gotDataHandler != None:
+            if self.gotDataHandler is not None:
                 self.gotDataHandler(self.do, self.dclass)
                 self.gotDataHandler = None
 
-        if self.doneEvent != None:
+        if self.doneEvent is not None:
             messenger.send(self.doneEvent, [self, retCode])
 
     def setFields(self, values):
         dg = PyDatagram()
-        dg.addServerHeader(DBSERVER_ID, self.air.ourChannel, DBSERVER_SET_STORED_VALUES)
-        
+        dg.addServerHeader(
+            DBSERVER_ID,
+            self.air.ourChannel,
+            DBSERVER_SET_STORED_VALUES)
+
         dg.addUint32(self.doId)
         dg.addUint16(len(values))
 
@@ -168,7 +178,7 @@ class DatabaseObject:
             dg.addString(field)
         for field, value in items:
             dg.addBlob(value.getMessage())
-            
+
         self.air.send(dg)
 
     def getDatabaseFields(self, dclass):
@@ -186,7 +196,7 @@ class DatabaseObject:
                     fields.append(af.getName())
 
         return fields
-    
+
     def fillin(self, do, dclass):
         """fillin(self, DistributedObjectAI do, DCClass dclass)
 
@@ -202,7 +212,7 @@ class DatabaseObject:
                 self.notify.warning("Ignoring broken setZonesVisited")
             else:
                 dclass.directUpdate(do, field, value)
-            
+
     def reload(self, do, dclass, fields):
         """reload(self, DistributedObjectAI do, DCClass dclass)
 
@@ -214,13 +224,13 @@ class DatabaseObject:
         self.values = {}
         for fieldName in fields:
             field = dclass.getFieldByName(fieldName)
-            if field == None:
-                self.notify.warning("No definition for %s" % (fieldName))
+            if field is None:
+                self.notify.warning(f"No definition for {fieldName}")
             else:
                 dg = PyDatagram()
                 packOk = dclass.packRequiredField(dg, do, field)
                 self.values[fieldName] = dg
-            
+
     def createObject(self, objectType):
         # If we just want the default values for the new object's fields,
         # there's no need to specify any field values here. (Upon generation,
@@ -249,7 +259,10 @@ class DatabaseObject:
         self.createObjType = objectType
 
         dg = PyDatagram()
-        dg.addServerHeader(DBSERVER_ID, self.air.ourChannel, DBSERVER_CREATE_STORED_OBJECT)
+        dg.addServerHeader(
+            DBSERVER_ID,
+            self.air.ourChannel,
+            DBSERVER_CREATE_STORED_OBJECT)
         dg.addUint32(context)
         dg.addString('')
         dg.addUint16(objectType)
@@ -265,23 +278,25 @@ class DatabaseObject:
     def handleCreateObjectResponse(self, di):
         retCode = di.getUint8()
         if retCode != 0:
-            self.notify.warning("Database object %s create failed" %
-                                (self.createObjType))
+            self.notify.warning(f"Database object {self.createObjType} create failed")
         else:
             del self.createObjType
             # The object has just been created in the database. We do not
             # have an instance of it, but we know its doId.
             self.doId = di.getUint32()
 
-        if self.doneEvent != None:
+        if self.doneEvent is not None:
             messenger.send(self.doneEvent, [self, retCode])
 
     def deleteObject(self):
-        self.notify.warning('deleting object %s' % self.doId)
+        self.notify.warning(f'deleting object {self.doId}')
 
         dg = PyDatagram()
-        dg.addServerHeader(DBSERVER_ID, self.air.ourChannel, DBSERVER_DELETE_STORED_OBJECT)
-        
+        dg.addServerHeader(
+            DBSERVER_ID,
+            self.air.ourChannel,
+            DBSERVER_DELETE_STORED_OBJECT)
+
         dg.addUint32(self.doId)
         dg.addUint32(0xdeadbeef)
 

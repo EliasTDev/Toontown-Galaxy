@@ -8,6 +8,7 @@ from pandac.PandaModules import TextEncoder, TextNode
 
 notify = DirectNotifyGlobal.directNotify.newCategory('NameCheck')
 
+
 def filterString(str, filter):
     """ returns a version of str that only contains characters in filter """
     result = ''
@@ -16,12 +17,14 @@ def filterString(str, filter):
             result = result + char
     return result
 
+
 def justLetters(str):
     letters = ''
     for c in str:
         if c.isalpha():
             letters = letters + c
     return letters
+
 
 def justUpper(str):
     upperCaseLetters = ''
@@ -30,6 +33,7 @@ def justUpper(str):
             if c == c.upper():
                 upperCaseLetters = upperCaseLetters + c
     return upperCaseLetters
+
 
 def wordList(str):
     """ just like split, but treats dashes as whitespace """
@@ -41,6 +45,7 @@ def wordList(str):
             if sw:
                 result.append(sw)
     return result
+
 
 def checkName(name, otherCheckFuncs=[], font=None):
     # misc check functions;
@@ -64,10 +69,11 @@ def checkName(name, otherCheckFuncs=[], font=None):
             # If it is an extended character, we cannot test it for printability here (but
             # presumably it is some printable character.)
             if ord(char) < 0x80 and char not in string.printable:
-                notify.info('name contains non-printable char #%s' % ord(char))
+                notify.info(f'name contains non-printable char #{ord(char)}')
                 return OTPLocalizer.NCGeneric
 
     validAsciiChars = set(".,'-" + string.ascii_letters + string.whitespace)
+
     def _validCharacter(c, validAsciiChars=validAsciiChars, font=font):
         if c in validAsciiChars:
             return True
@@ -83,7 +89,8 @@ def checkName(name, otherCheckFuncs=[], font=None):
                     notify.info('name contains digits')
                     return OTPLocalizer.NCNoDigits
                 else:
-                    notify.info('name contains bad char: %s' % TextEncoder().encodeWtext(char))
+                    notify.info(
+                        f'name contains bad char: {TextEncoder().encodeWtext(char)}')
                     return OTPLocalizer.NCBadCharacter % TextEncoder().encodeWtext(char)
 
     def fontHasCharacters(name, font=font):
@@ -92,17 +99,19 @@ def checkName(name, otherCheckFuncs=[], font=None):
             tn.setFont(font)
             for c in name:
                 if not tn.hasCharacter(str(c)):
-                    notify.info('name contains bad char: %s' % TextEncoder().encodeWtext(c))
+                    notify.info(
+                        f'name contains bad char: {TextEncoder().encodeWtext(c)}')
                     return OTPLocalizer.NCBadCharacter % TextEncoder().encodeWtext(c)
 
     def hasLetters(name):
-        #,...,
+        # ,...,
         words = wordList(name)
         for word in words:
             letters = justLetters(word)
 
             if len(letters) == 0:
-                notify.info('word "%s" has no letters' % TextEncoder().encodeWtext(word))
+                notify.info(
+                    f'word "{TextEncoder().encodeWtext(word)}" has no letters')
                 return OTPLocalizer.NCNeedLetters
 
     def hasVowels(name):
@@ -123,7 +132,8 @@ def checkName(name, otherCheckFuncs=[], font=None):
             if len(letters) > 2:
                 vowels = filterString(letters, 'aeiouyAEIOUY')
                 if len(vowels) == 0:
-                    notify.info('word "%s" has no vowels' % TextEncoder().encodeWtext(word))
+                    notify.info(
+                        f'word "{TextEncoder().encodeWtext(word)}" has no vowels')
                     return OTPLocalizer.NCNeedVowels
 
         for word in wordList(name):
@@ -140,10 +150,12 @@ def checkName(name, otherCheckFuncs=[], font=None):
                 # make case-insensitive
                 letters = TextEncoder().decodeText(
                     TextEncoder.lower(
-                    TextEncoder().encodeWtext(letters).decode()).encode())
+                        TextEncoder().encodeWtext(letters).decode()).encode())
                 filtered = filterString(letters, letters[0])
                 if filtered == letters:
-                    notify.info('word "%s" uses only one letter' % TextEncoder().encodeWtext(word))
+                    notify.info(
+                        'word "%s" uses only one letter' %
+                        TextEncoder().encodeWtext(word))
                     return OTPLocalizer.NCGeneric
         for word in wordList(name):
             problem = perWord(word)
@@ -153,16 +165,16 @@ def checkName(name, otherCheckFuncs=[], font=None):
     def checkDashes(name):
         def validDash(index, name=name):
             # if the dash is at the beginning or the end, fail
-            if (index == 0) or (i == len(name)-1):
+            if (index == 0) or (i == len(name) - 1):
                 return 0
             # dash must be surrounded by letters on both sides
-            if not (name[i-1].isalpha()):
+            if not (name[i - 1].isalpha()):
                 return 0
-            if not (name[i+1].isalpha()):
+            if not (name[i + 1].isalpha()):
                 return 0
             return 1
         i = 0
-        while 1:
+        while True:
             i = name.find('-', i, len(name))
             if i < 0:
                 return None
@@ -174,16 +186,16 @@ def checkName(name, otherCheckFuncs=[], font=None):
     def checkCommas(name):
         def validComma(index, name=name):
             # if the comma is at the beginning or the end, fail
-            if (index == 0) or (i == len(name)-1):
+            if (index == 0) or (i == len(name) - 1):
                 return OTPLocalizer.NCCommaEdge
             # comma must follow a word and be followed by a space
-            if (name[i-1].isspace()):
+            if (name[i - 1].isspace()):
                 return OTPLocalizer.NCCommaAfterWord
-            if not (name[i+1].isspace()):
+            if not (name[i + 1].isspace()):
                 return OTPLocalizer.NCCommaUsage
             return None
         i = 0
-        while 1:
+        while True:
             i = name.find(',', i, len(name))
             if i < 0:
                 return None
@@ -211,12 +223,15 @@ def checkName(name, otherCheckFuncs=[], font=None):
 
             # word must end in '.'
             if word[-1] != '.':
-                notify.info('word "%s" does not end in a period' % TextEncoder().encodeWtext(word))
+                notify.info(
+                    'word "%s" does not end in a period' %
+                    TextEncoder().encodeWtext(word))
                 return OTPLocalizer.NCPeriodUsage
 
             # max periods is 2
             if numPeriods > 2:
-                notify.info('word "%s" has too many periods' % TextEncoder().encodeWtext(word))
+                notify.info(
+                    f'word "{TextEncoder().encodeWtext(word)}" has too many periods')
                 return OTPLocalizer.NCPeriodUsage
 
             if numPeriods == 2:
@@ -233,7 +248,9 @@ def checkName(name, otherCheckFuncs=[], font=None):
         for word in words:
             numApos = word.count("'")
             if numApos > 2:
-                notify.info('word "%s" has too many apostrophes.' % TextEncoder().encodeWtext(word))
+                notify.info(
+                    'word "%s" has too many apostrophes.' %
+                    TextEncoder().encodeWtext(word))
                 return OTPLocalizer.NCApostrophes
         numApos = name.count("'")
         if numApos > 3:
@@ -250,8 +267,7 @@ def checkName(name, otherCheckFuncs=[], font=None):
         letters = justLetters(name)
         # J.T. -> OK
         if len(letters) > 2:
-            upperLetters = TextEncoder().decodeText(
-                TextEncoder.upper(
+            upperLetters = TextEncoder().decodeText(TextEncoder.upper(
                 TextEncoder().encodeWtext(letters).decode('utf-8')).encode('utf-8'))
             # some unicode characters can't be capitalized
             for i in range(len(upperLetters)):
@@ -298,8 +314,10 @@ def checkName(name, otherCheckFuncs=[], font=None):
                     notify.info('name contains not allowed ascii digits')
                     return OTPLocalizer.NCNoDigits
                 else:
-                    notify.info('name contains not allowed utf8 char: 0x%04x' % char)
-                    return OTPLocalizer.NCBadCharacter % te.encodeWtext(chr(char))
+                    notify.info(
+                        f'name contains not allowed utf8 char: 0x{char:04x}')
+                    return OTPLocalizer.NCBadCharacter % te.encodeWtext(
+                        chr(char))
             else:
                 # Restrict the number of characters, if three-byte-encoded utf-8 character
                 # The full-width characters would fit into a single display cell,
@@ -312,10 +330,11 @@ def checkName(name, otherCheckFuncs=[], font=None):
         # Japan restricts the number of the characters, if occupied less then two display cell
         # and more then eight display cell.
         if (dc < 2):
-            notify.info('name is too short: %0.1f' % dc)
+            notify.info(f'name is too short: {dc:0.1f}')
             return OTPLocalizer.NCTooShort
         elif (dc > 8):
-            notify.info('name has been occupied more than eight display cells: %0.1f' % dc)
+            notify.info(
+                f'name has been occupied more than eight display cells: {dc:0.1f}')
             return OTPLocalizer.NCGeneric
 
     def repeatedChars(name):
@@ -335,7 +354,9 @@ def checkName(name, otherCheckFuncs=[], font=None):
             lastChar = char
 
             if count > 2:
-                notify.info('character %s is repeated too many times' % TextEncoder().encodeWtext(char))
+                notify.info(
+                    'character %s is repeated too many times' %
+                    TextEncoder().encodeWtext(char))
                 return OTPLocalizer.NCRepeatedChar % TextEncoder().encodeWtext(char)
 
     checks = [
@@ -355,15 +376,16 @@ def checkName(name, otherCheckFuncs=[], font=None):
         allCaps,
         mixedCase,
         repeatedChars,
-        ] + otherCheckFuncs
+    ] + otherCheckFuncs
 
     # checks that should be run on the reversed name string
     symmetricChecks = [
-        ]
+    ]
 
     # make sure we are working with a wide-character version of the string
     name = TextEncoder().decodeText(name.encode('utf-8'))
-    notify.info('checking name "%s"...' % TextEncoder().encodeWtext(name).decode('utf-8'))
+    notify.info(
+        f"checking name \"{TextEncoder().encodeWtext(name).decode('utf-8')}\"...")
 
     # run through all the checks
     for check in checks:
@@ -373,18 +395,20 @@ def checkName(name, otherCheckFuncs=[], font=None):
             nName = name[:]
             bName.reverse()
             problem = check(bName)
-            print("problem = %s" % (problem))
+            print(f"problem = {problem}")
 
         if problem:
             return problem
 
     return None
 
+
 # prevent log spam during testing
 severity = notify.getSeverity()
 notify.setSeverity(NSError)
 
-# these tests can be removed or replaced for international versions of the codebase
+# these tests can be removed or replaced for international versions of the
+# codebase
 
 
 notify.setSeverity(severity)

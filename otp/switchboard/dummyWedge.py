@@ -7,6 +7,7 @@ import socket
 
 from .sbWedge import sbWedge
 
+
 class dummySocketWedge(sbWedge):
     def __init__(self):
         sbWedge.__init__("dummy")
@@ -15,16 +16,17 @@ class dummySocketWedge(sbWedge):
         pass
 
 #dsw = dummySocketWedge()
-#dsw.run()
+# dsw.run()
+
 
 while True:
     try:
         print("Starting")
-        sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        sock.bind(('',8989))
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.bind(('', 8989))
         sock.listen(5)
 
-        (clisock,addr) = sock.accept()
+        (clisock, addr) = sock.accept()
 
         clisock.sendall("Hey you're connected.\n")
 
@@ -39,7 +41,7 @@ while True:
                 clisock.sendall(s)
                 s = ""
             if not len(data):
-                break            
+                break
 
         clisock.close()
         sock.close()

@@ -7,16 +7,19 @@ from toontown.suit import SuitTimings
 from toontown.toonbase import ToontownGlobals
 
 # attack properties table
+
+
 class DistributedBattleWaiters(DistributedBattleFinal.DistributedBattleFinal):
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleWaiters')
-                    
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedBattleWaiters')
+
     def __init__(self, cr):
         """Create the waiters battle."""
-        DistributedBattleFinal.DistributedBattleFinal.__init__(self, cr) 
+        DistributedBattleFinal.DistributedBattleFinal.__init__(self, cr)
         self.initialReservesJoiningDone = False
 
-        #debug only remove this
+        # debug only remove this
         base.dbw = self
 
     def announceGenerate(self):
@@ -30,7 +33,7 @@ class DistributedBattleWaiters(DistributedBattleFinal.DistributedBattleFinal):
         assert self.notify.debugStateCall(self)
         if len(suits) == 0 and not self.initialReservesJoiningDone:
             # this is a valid case, avoid the assert
-            self.initialReservesJoiningDone = True;
+            self.initialReservesJoiningDone = True
             self.doInitialSuitsJoining(ts, name, callback)
             return
         self.showSuitsFalling(suits, ts, name, callback)
@@ -49,14 +52,14 @@ class DistributedBattleWaiters(DistributedBattleFinal.DistributedBattleFinal):
                 camera.setPosHpr(20, -4, 7, 60, 0, 0)
             else:
                 camera.setPosHpr(-20, -4, 7, -60, 0, 0)
-        track = Sequence(Wait(0.5), done, name = name)
+        track = Sequence(Wait(0.5), done, name=name)
         track.start(ts)
         self.storeInterval(track, name)
 
     def moveSuitsToInitialPos(self):
         """Force the inital suits to be in the right spot."""
         #import pdb; pdb.set_trace()
-        battlePts = self.suitPoints[len(self.suitPendingPoints)-1]
+        battlePts = self.suitPoints[len(self.suitPendingPoints) - 1]
         for i in range(len(self.suits)):
             suit = self.suits[i]
             suit.reparentTo(self)
@@ -67,7 +70,7 @@ class DistributedBattleWaiters(DistributedBattleFinal.DistributedBattleFinal):
     def showSuitsFalling(self, suits, ts, name, callback):
         assert(len(suits) > 0)
 
-        if self.bossCog == None:
+        if self.bossCog is None:
             # Hmm, no boss cog?  Maybe not generated yet.
             return
 
@@ -85,11 +88,11 @@ class DistributedBattleWaiters(DistributedBattleFinal.DistributedBattleFinal):
                 """
             suit.makeWaiter()
             suit.setState('Battle')
-            #RAU lawbot boss battle hack, 
+            # RAU lawbot boss battle hack,
             if suit.dna.dept == 'l':
                 suit.reparentTo(self.bossCog)
                 suit.setPos(0, 0, 0)
-            
+
             #suit.setScale(3.8 / suit.height)
 
             # Move all suits into position
@@ -100,19 +103,19 @@ class DistributedBattleWaiters(DistributedBattleFinal.DistributedBattleFinal):
             else:
                 destPos, destHpr = self.getActorPosHpr(suit, self.suits)
 
-            startPos = destPos + Point3(0,0,(SuitTimings.fromSky *
-                                      ToontownGlobals.SuitWalkSpeed))
-            self.notify.debug('startPos for %s = %s' % (suit, startPos))
+            startPos = destPos + Point3(0, 0, (SuitTimings.fromSky *
+                                               ToontownGlobals.SuitWalkSpeed))
+            self.notify.debug(f'startPos for {suit} = {startPos}')
             suit.reparentTo(self)
             suit.setPos(startPos)
-            suit.headsUp(self)                
+            suit.headsUp(self)
 
-            flyIval = suit.beginSupaFlyMove(destPos, True,'flyIn')
+            flyIval = suit.beginSupaFlyMove(destPos, True, 'flyIn')
             suitTrack.append(Track(
                 #(delay, self.createAdjustInterval(suit, destPos, destHpr)),
                 (delay, Sequence(flyIval,
                                  Func(suit.loop, 'neutral')))
-                ))
+            ))
             delay += 1
 
         if (self.hasLocalToon()):
@@ -127,13 +130,14 @@ class DistributedBattleWaiters(DistributedBattleFinal.DistributedBattleFinal):
                 camera.setPosHpr(-20, -4, 7, -60, 0, 0)
 
         done = Func(callback)
-        track = Sequence( suitTrack,  done,
-                         name = name)
+        track = Sequence(suitTrack, done,
+                         name=name)
         track.start(ts)
         self.storeInterval(track, name)
 
     def enterWaitForInput(self, ts=0):
         """Wait for input from the toons."""
-        DistributedBattleFinal.DistributedBattleFinal.enterWaitForInput(self,ts)
+        DistributedBattleFinal.DistributedBattleFinal.enterWaitForInput(
+            self, ts)
         if self.hasLocalToon():
             camera.reparentTo(self)

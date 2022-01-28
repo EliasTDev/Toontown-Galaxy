@@ -11,12 +11,13 @@ from direct.fsm import State
 from toontown.hood import ZoneUtil
 from toontown.toonbase import TTLocalizer
 
+
 class DistributedElevatorInt(DistributedElevator.DistributedElevator):
 
     def __init__(self, cr):
         DistributedElevator.DistributedElevator.__init__(self, cr)
-        self.countdownTime = base.config.GetFloat('int-elevator-timeout', INTERIOR_ELEVATOR_COUNTDOWN_TIME)
-    
+        self.countdownTime = base.config.GetFloat(
+            'int-elevator-timeout', INTERIOR_ELEVATOR_COUNTDOWN_TIME)
 
     def setupElevator(self):
         """setupElevator(self)
@@ -34,14 +35,14 @@ class DistributedElevatorInt(DistributedElevator.DistributedElevator):
         # Teleport to the last safe zone visited.
         target_sz = base.localAvatar.defaultZone
         base.cr.playGame.getPlace().fsm.request('teleportOut', [{
-            "loader" : ZoneUtil.getLoaderName(target_sz),
-            "where" : ZoneUtil.getWhereName(target_sz, 1),
-            'how' : 'teleportIn',
-            'hoodId' : target_sz,
-            'zoneId' : target_sz,
-            'shardId' : None,
-            'avId' : -1,
-            }], force = 1)
+            "loader": ZoneUtil.getLoaderName(target_sz),
+            "where": ZoneUtil.getWhereName(target_sz, 1),
+            'how': 'teleportIn',
+            'hoodId': target_sz,
+            'zoneId': target_sz,
+            'shardId': None,
+            'avId': -1,
+        }], force=1)
 
     ##### WaitCountdown state #####
 

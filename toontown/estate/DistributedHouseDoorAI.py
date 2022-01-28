@@ -19,7 +19,8 @@ class DistributedHouseDoorAI(DistributedDoorAI.DistributedDoorAI):
     """
 
     if __debug__:
-        notify = DirectNotifyGlobal.directNotify.newCategory('DistributedHouseDoorAI')
+        notify = DirectNotifyGlobal.directNotify.newCategory(
+            'DistributedHouseDoorAI')
 
     def __init__(self, air, houseDoId, doorType, doorIndex=0,
                  lockValue=0, swing=3):
@@ -28,10 +29,10 @@ class DistributedHouseDoorAI(DistributedDoorAI.DistributedDoorAI):
         in the case of house doors, we will use it to refer to the house id
         doorIndex: Each door must have a unique index
         """
-        DistributedDoorAI.DistributedDoorAI.__init__(self, air, houseDoId, doorType,
-                                                     doorIndex, lockValue, swing)
-        assert(self.notify.debug(str(houseDoId)+" DistributedHouseDoorAI("
-                "%s, %s)" % ("the air", str(houseDoId))))
+        DistributedDoorAI.DistributedDoorAI.__init__(
+            self, air, houseDoId, doorType, doorIndex, lockValue, swing)
+        assert(self.notify.debug(str(houseDoId) + " DistributedHouseDoorAI("
+                                 "%s, %s)" % ("the air", str(houseDoId))))
         self.houseId = houseDoId
         self.block = houseDoId
 
@@ -39,6 +40,4 @@ class DistributedHouseDoorAI(DistributedDoorAI.DistributedDoorAI):
         def debugPrint(self, message):
             """for debugging"""
             return self.notify.debug(
-                    str(self.__dict__.get('houseId', '?'))+' '+message)
-
-
+                str(self.__dict__.get('houseId', '?')) + ' ' + message)

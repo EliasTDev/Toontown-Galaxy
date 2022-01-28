@@ -5,13 +5,15 @@ from .EffectController import EffectController
 from .PooledEffect import PooledEffect
 import random
 
+
 class SimpleSparkles(PooledEffect, EffectController):
-    
+
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
-        
-        model = loader.loadModel("phase_4/models/props/tt_m_efx_ext_fireworkCards")
+
+        model = loader.loadModel(
+            "phase_4/models/props/tt_m_efx_ext_fireworkCards")
         self.card = model.find("**/tt_t_efx_ext_particleStars")
         self.cardScale = 64.0
 
@@ -20,12 +22,12 @@ class SimpleSparkles(PooledEffect, EffectController):
         self.setLightOff()
 
         self.effectScale = 1.0
-        self.effectColor = Vec4(1,1,1,1)
-        
+        self.effectColor = Vec4(1, 1, 1, 1)
+
         # Load Particle Effects
         self.f = ParticleEffect.ParticleEffect("SimpleSparkles")
         self.f.reparentTo(self)
-        
+
         self.p0 = Particles.Particles('particles-2')
         self.p0.setFactory("ZSpinParticleFactory")
         self.p0.setRenderer("SpriteParticleRenderer")
@@ -40,7 +42,7 @@ class SimpleSparkles(PooledEffect, EffectController):
         force0.setActive(1)
         f0.addForce(force0)
         self.f.addForceGroup(f0)
-        
+
         self.p0.setPoolSize(32)
         self.p0.setBirthRate(0.02)
         self.p0.setLitterSize(4)
@@ -64,7 +66,10 @@ class SimpleSparkles(PooledEffect, EffectController):
         # Renderer parameters
         self.p0.renderer.setAlphaMode(BaseParticleRenderer.PRALPHAOUT)
         self.p0.renderer.setUserAlpha(1.0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,ColorBlendAttrib.OIncomingAlpha,ColorBlendAttrib.OOne)
+        self.p0.renderer.setColorBlendMode(
+            ColorBlendAttrib.MAdd,
+            ColorBlendAttrib.OIncomingAlpha,
+            ColorBlendAttrib.OOne)
         # Sprite parameters
         self.p0.renderer.setFromNode(self.card)
         self.p0.renderer.setColor(Vec4(1.0, 1.0, 1.0, 1.0))
@@ -72,7 +77,8 @@ class SimpleSparkles(PooledEffect, EffectController):
         self.p0.renderer.setYScaleFlag(1)
         self.p0.renderer.setAnimAngleFlag(1)
         self.p0.renderer.setNonanimatedTheta(0.0000)
-        self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
+        self.p0.renderer.setAlphaBlendMethod(
+            BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
         # Emitter parameters
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
@@ -83,7 +89,7 @@ class SimpleSparkles(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.setEffectScale(self.effectScale)
         self.setEffectColor(self.effectColor)
-        
+
     def createTrack(self):
         self.track = Sequence(
             Func(self.p0.setBirthRate, .03),
@@ -93,16 +99,16 @@ class SimpleSparkles(PooledEffect, EffectController):
             Func(self.p0.setBirthRate, 100.0),
             Wait(2.5),
             Func(self.cleanUpEffect)
-            )
+        )
 
     def setEffectScale(self, scale):
         self.effectScale = scale
-        self.p0.renderer.setInitialXScale(.8*self.cardScale*scale)
-        self.p0.renderer.setFinalXScale(.4*self.cardScale*scale)
-        self.p0.renderer.setInitialYScale(.8*self.cardScale*scale)
-        self.p0.renderer.setFinalYScale(.4*self.cardScale*scale)
-        self.p0.emitter.setAmplitude(30.0*scale)
-        self.p0.emitter.setRadius(75.0*scale)
+        self.p0.renderer.setInitialXScale(.8 * self.cardScale * scale)
+        self.p0.renderer.setFinalXScale(.4 * self.cardScale * scale)
+        self.p0.renderer.setInitialYScale(.8 * self.cardScale * scale)
+        self.p0.renderer.setFinalYScale(.4 * self.cardScale * scale)
+        self.p0.emitter.setAmplitude(30.0 * scale)
+        self.p0.emitter.setRadius(75.0 * scale)
 
     def setRadius(self, radius):
         self.p0.emitter.setRadius(radius)

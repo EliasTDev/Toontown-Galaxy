@@ -1,6 +1,7 @@
 from pandac.PandaModules import WindowProperties
 from direct.showbase import ShowBase
 
+
 class ShowBaseAI(ShowBase.ShowBase):
     def __init__(self, windowTitle=None):
         self.windowTitle = windowTitle
@@ -12,7 +13,7 @@ class ShowBaseAI(ShowBase.ShowBase):
             wp = WindowProperties()
             wp.setTitle(self.windowTitle)
             self.win.requestProperties(wp)
-        
+
     def finalizeExit(self):
         # don't shut down the app when user closes the window
         pass

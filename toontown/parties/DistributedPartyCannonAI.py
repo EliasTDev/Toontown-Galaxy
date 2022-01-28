@@ -1,11 +1,11 @@
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Contact: Edmundo Ruiz (Schell Games)
 # Created: Oct 2008
 #
 # Purpose: DistributedPartyCannonAI handles the AI instance of a cannon at a party.
 #          It keeps track if a toon is inside the cannon. Note that it does not
 #          keep track of flying toons; that's the job of DistributedPartyCannonActivityAI
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 from direct.distributed.ClockDelta import *
 from direct.task import Task
@@ -16,12 +16,13 @@ from toontown.minigame import CannonGameGlobals
 from toontown.minigame import Trajectory
 from toontown.parties import PartyGlobals
 
+
 class DistributedPartyCannonAI(DistributedObjectAI.DistributedObjectAI):
     notify = directNotify.newCategory("DistributedPartyCannonAI")
-    #notify.setDebug(True)
+    # notify.setDebug(True)
 
     CANNON_LIT_EVENT = "D_PARTY_CANNON_LIT"
-    
+
     def __init__(self, air, activityDoId, x, y, z, h, p, r):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)
 
@@ -40,7 +41,7 @@ class DistributedPartyCannonAI(DistributedObjectAI.DistributedObjectAI):
         self.ignoreAll()
         self.__stopTimeout()
         DistributedObjectAI.DistributedObjectAI.delete(self)
-        
+
     # Generate is never called on the AI so we do not define one
     # Disable is never called on the AI so we do not define one
 
@@ -60,17 +61,18 @@ class DistributedPartyCannonAI(DistributedObjectAI.DistributedObjectAI):
                 self.notify.debug("requestEnter() - cannon already occupied")
                 self.sendUpdateToAvatarId(avId, "requestExit", [])
             else:
-                self.notify.warning("got requestEnter from toon already inside it.")
-            
-#===============================================================================
+                self.notify.warning(
+                    "got requestEnter from toon already inside it.")
+
+# ===============================================================================
 # Attributes
-#===============================================================================
+# ===============================================================================
     def isToonInside(self):
         return (self.toonInsideAvId != 0)
-    
+
     def getToonInsideId(self):
         return self.toonInsideAvId
-    
+
     def isReadyToFire(self):
         return self.isToonInside() and self.lit
 
@@ -78,11 +80,13 @@ class DistributedPartyCannonAI(DistributedObjectAI.DistributedObjectAI):
         """
         Prepares a toon to be inside the cannon.
         """
-        self.notify.debug("__placeToonInside %s" % avId)
+        self.notify.debug(f"__placeToonInside {avId}")
         self.toonEnteredTime = globalClock.getFrameTime()
         self.__stopTimeout()
         self.toonInsideAvId = avId
-        self.notify.debug("Sending PartyGlobals.CANNON_MOVIE_LOAD for %d" % avId)
+        self.notify.debug(
+            "Sending PartyGlobals.CANNON_MOVIE_LOAD for %d" %
+            avId)
         self.d_setMovie(PartyGlobals.CANNON_MOVIE_LOAD, self.toonInsideAvId)
 
         # Handle unexpected exit
@@ -92,19 +96,22 @@ class DistributedPartyCannonAI(DistributedObjectAI.DistributedObjectAI):
                         self.__handleBootMessage, extraArgs=[avId])
 
     def __clearToonInside(self):
-        self.notify.debug("%d __clearToonInside self.toonInsideAvId=%d" % (self.doId, self.toonInsideAvId))
+        self.notify.debug(
+            "%d __clearToonInside self.toonInsideAvId=%d" %
+            (self.doId, self.toonInsideAvId))
         self.toonInsideAvId = 0
         self.lit = False
         self.__stopTimeout()
-    
+
     # Distributed (broadcast, ram)
     def d_setMovie(self, mode, avId):
-        self.notify.debug("d_setMovie mode=%s, avId=%s" % (str(mode), str(avId)))
-        #if mode == PartyGlobals.CANNON_MOVIE_CLEAR:
+        self.notify.debug(
+            f"d_setMovie mode={str(mode)}, avId={str(avId)}")
+        # if mode == PartyGlobals.CANNON_MOVIE_CLEAR:
         #    from direct.showbase.PythonUtil import StackTrace
         #    print StackTrace()
         self.sendUpdate("setMovie", [mode, avId])
-        
+
     # Distributed (aisend clrecv)
     def setCannonPosition(self, zRot, angle):
         avId = self.air.getAvatarIdFromSender()
@@ -113,11 +120,13 @@ class DistributedPartyCannonAI(DistributedObjectAI.DistributedObjectAI):
         self.rotation = zRot
         self.angle = angle
         self.d_updateCannonPosition(avId)
-        
+
     # Distributed (broadcast ram)
     def d_updateCannonPosition(self, avId):
-        self.sendUpdate("updateCannonPosition", [avId, self.rotation, self.angle])
-        
+        self.sendUpdate(
+            "updateCannonPosition", [
+                avId, self.rotation, self.angle])
+
     # Distributed (required broadcast ram)
     def getPosHpr(self):
         return self.posHpr
@@ -132,44 +141,57 @@ class DistributedPartyCannonAI(DistributedObjectAI.DistributedObjectAI):
     def setCannonLit(self, zRot, angle):
         avId = self.air.getAvatarIdFromSender()
         self.__cannonIsLit(avId, zRot, angle)
-        
+
     def __cannonIsLit(self, avId, zRot, angle):
         if avId == self.toonInsideAvId:
             self.__stopTimeout()
             self.lit = True
             self.rotation = zRot
             self.angle = angle
-            self.notify.debug("__cannonIsLit: %d: zRot = %d, angle = %d" % (avId, zRot, angle))
-            # Send out that this cannon is ready to fire.            
-            messenger.send(DistributedPartyCannonAI.CANNON_LIT_EVENT, [self.doId, self.toonEnteredTime])
+            self.notify.debug(
+                "__cannonIsLit: %d: zRot = %d, angle = %d" %
+                (avId, zRot, angle))
+            # Send out that this cannon is ready to fire.
+            messenger.send(
+                DistributedPartyCannonAI.CANNON_LIT_EVENT, [
+                    self.doId, self.toonEnteredTime])
         else:
-            self.notify.warning("__cannonIsLit but avId=%s toonInsideAvId=%s" % (str(avId), str(self.toonInsideAvId)))
-            
+            self.notify.warning(
+                "__cannonIsLit but avId=%s toonInsideAvId=%s" %
+                (str(avId), str(
+                    self.toonInsideAvId)))
+
     # Distributed (clsend airecv)
     def setFired(self):
-        assert(self.notify.debug("%s setFired" % self.doId))
+        assert(self.notify.debug(f"{self.doId} setFired"))
         senderId = self.air.getAvatarIdFromSender()
         if self.lit:
             self.ignore(self.air.getAvatarExitEvent(senderId))
             self.ignore("bootAvFromParty-%d" % senderId)
-            self.notify.debug("sending PartyGlobals.CANNON_MOVIE_CLEAR for %d" % self.toonInsideAvId)
-            self.d_setMovie(PartyGlobals.CANNON_MOVIE_CLEAR, self.toonInsideAvId)
+            self.notify.debug(
+                "sending PartyGlobals.CANNON_MOVIE_CLEAR for %d" %
+                self.toonInsideAvId)
+            self.d_setMovie(
+                PartyGlobals.CANNON_MOVIE_CLEAR,
+                self.toonInsideAvId)
             self.__clearToonInside()
         else:
             self.notify.warning("%d setFired called but not lit" % self.doId)
 
     # Distributed (clsend airecv)
     def setLanded(self, avId):
-        assert(self.notify.debug("%s setLanded" % self.doId))
+        assert(self.notify.debug(f"{self.doId} setLanded"))
         self.ignore(self.air.getAvatarExitEvent(avId))
         self.ignore("bootAvFromParty-%d" % avId)
-        self.notify.debug("%d sending PartyGlobals.CANNON_MOVIE_LANDED for %d" % (self.doId,avId))
+        self.notify.debug(
+            "%d sending PartyGlobals.CANNON_MOVIE_LANDED for %d" %
+            (self.doId, avId))
         self.d_setMovie(PartyGlobals.CANNON_MOVIE_LANDED, avId)
         self.__clearToonInside()
 
-#===============================================================================
+# ===============================================================================
 # Functions
-#===============================================================================
+# ===============================================================================
     # Distributed (clsend airecv)
     def setTimeout(self):
         senderId = self.air.getAvatarIdFromSender()
@@ -181,9 +203,11 @@ class DistributedPartyCannonAI(DistributedObjectAI.DistributedObjectAI):
         # called before the time expires, we'll exit the avatar.  This
         # prevents avatars from hanging out in the fishing spot all
         # day.
-        self.notify.debug("__startTimeout %s" % self.taskName("timeout"))
+        self.notify.debug(f"__startTimeout {self.taskName('timeout')}")
         self.__stopTimeout()
-        self.notify.debug("done calling __stopTimeout, really starting it %s" % self.taskName("timeout"))
+        self.notify.debug(
+            "done calling __stopTimeout, really starting it %s" %
+            self.taskName("timeout"))
         self.timeoutTask = taskMgr.doMethodLater(timeLimit,
                                                  self.__handleTimeoutTask,
                                                  self.taskName("timeout"))
@@ -192,8 +216,8 @@ class DistributedPartyCannonAI(DistributedObjectAI.DistributedObjectAI):
         """
         Stops a previously-set timeout from expiring.
         """
-        self.notify.debug("__stopTimeout %s" % self.taskName("timeout"))
-        if self.timeoutTask != None:
+        self.notify.debug(f"__stopTimeout {self.taskName('timeout')}")
+        if self.timeoutTask is not None:
             taskMgr.remove(self.timeoutTask)
             self.timeoutTask = None
             self.notify.debug("%d __stopTimeout successful" % self.doId)
@@ -204,7 +228,8 @@ class DistributedPartyCannonAI(DistributedObjectAI.DistributedObjectAI):
         """
         Called when a timeout expires, this sends the avatar home
         """
-        self.notify.warning('Timeout expired! toonInside=%s' % str(self.toonInsideAvId))
+        self.notify.warning(
+            f'Timeout expired! toonInside={str(self.toonInsideAvId)}')
         #self.__cannonIsLit(self.toonInsideAvId, self.rotation, self.angle)
         self.__doExit()
         return Task.done
@@ -227,8 +252,12 @@ class DistributedPartyCannonAI(DistributedObjectAI.DistributedObjectAI):
         Take the avatar out of the cannon because he's been in it
         too long without firing.
         """
-        self.notify.debug("__doExit sending PartyGlobals.CANNON_MOVIE_FORCE_EXIT to %d" % self.toonInsideAvId)
-        self.d_setMovie(PartyGlobals.CANNON_MOVIE_FORCE_EXIT, self.toonInsideAvId)
+        self.notify.debug(
+            "__doExit sending PartyGlobals.CANNON_MOVIE_FORCE_EXIT to %d" %
+            self.toonInsideAvId)
+        self.d_setMovie(
+            PartyGlobals.CANNON_MOVIE_FORCE_EXIT,
+            self.toonInsideAvId)
         self.__clearToonInside()
 
     def forceInsideToonToExit(self):

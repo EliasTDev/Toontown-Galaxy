@@ -2,9 +2,11 @@ from toontown.battle import BattleManagerAI
 from direct.directnotify import DirectNotifyGlobal
 from toontown.coghq import BattleExperienceAggregatorAI
 
+
 class LevelBattleManagerAI(BattleManagerAI.BattleManagerAI):
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('LevelBattleManagerAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'LevelBattleManagerAI')
 
     def __init__(self, air, level, battleCtor, battleExpAggreg=None):
         BattleManagerAI.BattleManagerAI.__init__(self, air)
@@ -17,7 +19,7 @@ class LevelBattleManagerAI(BattleManagerAI.BattleManagerAI):
 
         if battleExpAggreg is None:
             battleExpAggreg = BattleExperienceAggregatorAI.\
-                              BattleExperienceAggregatorAI()
+                BattleExperienceAggregatorAI()
         self.battleExpAggreg = battleExpAggreg
 
     def destroyBattleMgr(self):
@@ -30,21 +32,23 @@ class LevelBattleManagerAI(BattleManagerAI.BattleManagerAI):
         del self.battleBlockers
         del self.cellId2battle
         del self.battleExpAggreg
-    
+
     def newBattle(self, cellId, zoneId, pos, suit, toonId,
                   roundCallback=None, finishCallback=None,
                   maxSuits=4):
         """ newBattle(zoneId, pos, suit, toonId, roundCallback, finishCallback, maxSuits)
         """
         battle = self.cellId2battle.get(cellId, None)
-        if battle != None:
+        if battle is not None:
             # This is a race condition and happens rarely.  It happens when
             # a toon bumps into a battle blocker in almost the same instance
             # as a battle is being created for that battle cell.  The battle
             # blocker thinks a battle has not been started, and tells the suit
             # to create a new one.  By the time the suit does this, the battle
             # has already been created.  Don't add the suit, just add the toon.
-            self.notify.debug("battle already created by battle blocker, add toon %d" % toonId)
+            self.notify.debug(
+                "battle already created by battle blocker, add toon %d" %
+                toonId)
             battle.signupToon(toonId, pos[0], pos[1], pos[2])
             return battle
         else:
@@ -67,7 +71,7 @@ class LevelBattleManagerAI(BattleManagerAI.BattleManagerAI):
 
             battle.generateWithRequired(zoneId)
             self.cellId2battle[cellId] = battle
-            
+
         return battle
 
     def addBattleBlocker(self, blocker, cellId):

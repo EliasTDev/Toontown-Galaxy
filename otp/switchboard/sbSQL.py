@@ -8,7 +8,7 @@ setInfoINSERT = "INSERT INTO playerinfo (playerId,avatarName,playerName,openChat
 
 setInfoUPDATE = "UPDATE playerinfo SET avatarName=%s,playerName=%s,openChatEnabledYesNo=%s,location=%s,sublocation=%s WHERE playerId=%s"
 
-#sbMaildb
+# sbMaildb
 
 getMailSELECT = "SELECT * FROM recipientmail WHERE recipientId=%s"
 

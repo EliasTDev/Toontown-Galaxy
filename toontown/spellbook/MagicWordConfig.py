@@ -14,13 +14,18 @@ CLICKED_NAMETAG_MESSAGE_NAME = 'clickedNametag'
 FOCUS_OUT_MESSAGE_NAME = 'focusOut'
 
 PREFIX_DEFAULT = '~'
-PREFIX_ALLOWED = ['~', '?', '/', '<', ':', ';',]
+PREFIX_ALLOWED = ['~', '?', '/', '<', ':', ';', ]
 if config.GetBool('exec-chat', False):
     PREFIX_ALLOWED.append('>')
 
 WIZARD_DEFAULT = 'Magic Minnie'
 
-MAGIC_WORD_SUCCESS_PHRASES = ['Alakazam!', 'Voila!', 'Ta-da!', 'Presto!', 'Abracadabra!']
+MAGIC_WORD_SUCCESS_PHRASES = [
+    'Alakazam!',
+    'Voila!',
+    'Ta-da!',
+    'Presto!',
+    'Abracadabra!']
 MAGIC_WORD_RESPONSES = {
     "SuccessNoResp": 'response will be randomly selected from MAGIC_WORD_SUCCESS_PHRASES',
     "Success": 'response will be provided by magic word',
@@ -41,8 +46,7 @@ MAGIC_WORD_RESPONSES = {
     "Locked": 'You are temporarily locked down and cannot use Magic Words.',
     "RestrictionOther": 'You may only target one other player with this Magic Word!',
     'NonCheaty': 'You cannot use cheaty Magic Words at this time!',
-    'Tutorial': 'You cannot use Magic Words in the Toontorial!'
-}
+    'Tutorial': 'You cannot use Magic Words in the Toontorial!'}
 MAGIC_WORD_NO_RESPONSE = "...I don't know how to respond!"
 HAS_EXTRA_MESSAGE_DATA = ["NotEnoughArgs", "TooManyArgs", "CloseWord"]
 
@@ -50,7 +54,10 @@ MAGIC_WORD_DEFAULT_DESC = 'A simple Magic Word.'
 MAGIC_WORD_DEFAULT_ADV_DESC = 'This Magic Word does a lot of things, because reasons.'
 
 AFFECT_TYPES = ['singular', 'zone', 'server', 'rank']
-AFFECT_TYPES_NAMES = ['Everyone in this zone', 'The entire server', 'Everyone with an Access Level of']
+AFFECT_TYPES_NAMES = [
+    'Everyone in this zone',
+    'The entire server',
+    'Everyone with an Access Level of']
 AFFECT_NONE = -1
 AFFECT_SELF = 0
 AFFECT_OTHER = 1

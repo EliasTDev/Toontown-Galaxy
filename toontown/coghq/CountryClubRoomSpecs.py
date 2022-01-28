@@ -11,12 +11,16 @@ from toontown.coghq import NullCogs, BossbotCountryClubMazeRoom_Battle00, Bossbo
 from toontown.coghq import BossbotCountryClubKartRoom_Battle00_Cogs, BossbotCountryClubGreenRoom_Action02
 from toontown.coghq import BossbotCountryClubPresidentRoom_Battle00_Cogs, BossbotCountryClubFairwayRoom_Battle00
 from toontown.coghq import BossbotCountryClubEntrance_Action00, BossbotCountryClubTeeOffRoom_Action00
+
+
 def getCountryClubRoomSpecModule(roomId):
     return CashbotMintSpecModules[roomId]
+
 
 def getCogSpecModule(roomId):
     roomName = BossbotCountryClubRoomId2RoomName[roomId]
     return CogSpecModules.get(roomName, NullCogs)
+
 
 def getNumBattles(roomId):
     return roomId2numBattles[roomId]
@@ -26,50 +30,53 @@ def getNumBattles(roomId):
 # s: safe(s)
 # x: adjust prop positions
 
+
 BossbotCountryClubRoomId2RoomName = {
-     0: 'BossbotCountryClubEntrance_Action00',
-     2: 'BossbotCountryClubTeeOffRoom_Action00',
-     4: 'BossbotCountryClubFairwayRoom_Battle00',
-     5: 'BossbotCountryClubMazeRoom_Battle00',
-     6: 'BossbotCountryClubMazeRoom_Battle01',
-     7: 'BossbotCountryClubMazeRoom_Battle02',
-     #8: 'BossbotCountryClubMazeRoom_Battle03',
-     9: 'BossbotCountryClubGreenRoom_Action00',
+    0: 'BossbotCountryClubEntrance_Action00',
+    2: 'BossbotCountryClubTeeOffRoom_Action00',
+    4: 'BossbotCountryClubFairwayRoom_Battle00',
+    5: 'BossbotCountryClubMazeRoom_Battle00',
+    6: 'BossbotCountryClubMazeRoom_Battle01',
+    7: 'BossbotCountryClubMazeRoom_Battle02',
+    # 8: 'BossbotCountryClubMazeRoom_Battle03',
+    9: 'BossbotCountryClubGreenRoom_Action00',
     17: 'BossbotCountryClubKartRoom_Battle00',
     18: 'BossbotCountryClubPresidentRoom_Battle00',
     22: 'BossbotCountryClubTeeOffRoom_Action01',
     32: 'BossbotCountryClubTeeOffRoom_Action02',
     29: 'BossbotCountryClubGreenRoom_Action01',
     39: 'BossbotCountryClubGreenRoom_Action02',
-    }
-BossbotCountryClubRoomName2RoomId = invertDict(BossbotCountryClubRoomId2RoomName)
+}
+BossbotCountryClubRoomName2RoomId = invertDict(
+    BossbotCountryClubRoomId2RoomName)
 
-BossbotCountryClubEntranceIDs   = (0,)
-BossbotCountryClubMiddleRoomIDs = (2,5,6)
+BossbotCountryClubEntranceIDs = (0,)
+BossbotCountryClubMiddleRoomIDs = (2, 5, 6)
 BossbotCountryClubFinalRoomIDs = (18,)
 #CashbotMintMiddleRoomIDs = (1,)
 #CashbotMintMiddleRoomIDs = (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,)
 #CashbotMintFinalRoomIDs  = (17,18,19,20,21,22,23,24,25)
 
-BossbotCountryClubConnectorRooms = ('phase_12/models/bossbotHQ/Connector_Tunnel_A',
-                                    'phase_12/models/bossbotHQ/Connector_Tunnel_B')
+BossbotCountryClubConnectorRooms = (
+    'phase_12/models/bossbotHQ/Connector_Tunnel_A',
+    'phase_12/models/bossbotHQ/Connector_Tunnel_B')
 
 # dict of roomId to spec Python module
 CashbotMintSpecModules = {}
 for roomName, roomId in list(BossbotCountryClubRoomName2RoomId.items()):
-    exec('from toontown.coghq import %s' % roomName)
+    exec(f'from toontown.coghq import {roomName}')
     CashbotMintSpecModules[roomId] = eval(roomName)
 
-## until cogs are entities...
+# until cogs are entities...
 CogSpecModules = {
-    'BossbotCountryClubFairwayRoom_Battle00' : BossbotCountryClubFairwayRoom_Battle00_Cogs,
-    'BossbotCountryClubMazeRoom_Battle00' : BossbotCountryClubMazeRoom_Battle00_Cogs,
-    'BossbotCountryClubMazeRoom_Battle01' : BossbotCountryClubMazeRoom_Battle01_Cogs,
-    'BossbotCountryClubMazeRoom_Battle02' : BossbotCountryClubMazeRoom_Battle02_Cogs,
-    #'BossbotCountryClubMazeRoom_Battle03' : BossbotCountryClubMazeRoom_Battle03_Cogs,
-    'BossbotCountryClubKartRoom_Battle00' : BossbotCountryClubKartRoom_Battle00_Cogs,
-    'BossbotCountryClubPresidentRoom_Battle00' : BossbotCountryClubPresidentRoom_Battle00_Cogs,    
-    }
+    'BossbotCountryClubFairwayRoom_Battle00': BossbotCountryClubFairwayRoom_Battle00_Cogs,
+    'BossbotCountryClubMazeRoom_Battle00': BossbotCountryClubMazeRoom_Battle00_Cogs,
+    'BossbotCountryClubMazeRoom_Battle01': BossbotCountryClubMazeRoom_Battle01_Cogs,
+    'BossbotCountryClubMazeRoom_Battle02': BossbotCountryClubMazeRoom_Battle02_Cogs,
+    # 'BossbotCountryClubMazeRoom_Battle03' : BossbotCountryClubMazeRoom_Battle03_Cogs,
+    'BossbotCountryClubKartRoom_Battle00': BossbotCountryClubKartRoom_Battle00_Cogs,
+    'BossbotCountryClubPresidentRoom_Battle00': BossbotCountryClubPresidentRoom_Battle00_Cogs,
+}
 
 roomId2numBattles = {}
 for roomName, roomId in list(BossbotCountryClubRoomName2RoomId.items()):
@@ -82,9 +89,11 @@ for roomName, roomId in list(BossbotCountryClubRoomName2RoomId.items()):
 # override # of battles for some rooms that don't have battle blockers for
 # some battles
 name2id = BossbotCountryClubRoomName2RoomId
-roomId2numBattles[name2id['BossbotCountryClubTeeOffRoom_Action00']] = 1 # 3 test override
+# 3 test override
+roomId2numBattles[name2id['BossbotCountryClubTeeOffRoom_Action00']] = 1
 
-#roomId2numBattles[name2id['BossbotCountryClubGreenRoom_Action00']] = 1 # 3 test override
+# roomId2numBattles[name2id['BossbotCountryClubGreenRoom_Action00']] = 1 #
+# 3 test override
 del name2id
 
 # make a table of middle rooms specifically, so MintLayout can easily pick

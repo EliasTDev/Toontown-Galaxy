@@ -17,9 +17,11 @@ from direct.fsm import ClassicFSM
 
 # effects #
 
+
 def nothing(self, track, subjectNodePath, duration):
 
     return track
+
 
 def irisInOut(self, track, subjectNodePath, duration):
 
@@ -29,8 +31,9 @@ def irisInOut(self, track, subjectNodePath, duration):
         Wait(duration),
         Func(base.transitions.irisOut, 1.0),
         Func(base.transitions.irisIn, 0.5),
-        ))
+    ))
     return track
+
 
 def letterBox(self, track, subjectNodePath, duration):
 
@@ -38,10 +41,11 @@ def letterBox(self, track, subjectNodePath, duration):
         #Func(base.transitions.letterBox, 0.5),
         Wait(duration),
         #Func(base.transitions.letterBox, 0.5),
-        ))
+    ))
     return track
 
 # motions #
+
 
 def foo1(self, track, subjectNodePath, duration):
 
@@ -65,8 +69,9 @@ def foo1(self, track, subjectNodePath, duration):
             pos=Point3(0, -28, 7.5),
             hpr=VBase3(0, 0, 0)),
         Func(base.localAvatar.startUpdateSmartCamera),
-        ))
+    ))
     return track
+
 
 def doorUnlock(self, track, subjectNodePath, duration):
     track.append(Sequence(
@@ -89,20 +94,20 @@ def doorUnlock(self, track, subjectNodePath, duration):
             pos=Point3(0, -28, 7.5),
             hpr=VBase3(0, 0, 0)),
         Func(base.localAvatar.startUpdateSmartCamera),
-        ))
+    ))
     return track
 
 
 class CutScene(BasicEntities.NodePathEntity, DirectObject.DirectObject):
     notify = DirectNotifyGlobal.directNotify.newCategory('CutScene')
-    
-    effects={
+
+    effects = {
         "nothing": nothing,
         "irisInOut": irisInOut,
         "letterBox": letterBox,
     }
-    
-    motions={
+
+    motions = {
         "foo1": foo1,
         "doorUnlock": doorUnlock,
     }
@@ -117,38 +122,40 @@ class CutScene(BasicEntities.NodePathEntity, DirectObject.DirectObject):
         self.subjectNodePath = render.attachNewNode("CutScene")
         self.subjectNodePath.setPos(self.pos)
         self.subjectNodePath.setHpr(self.hpr)
-        #self.setSubjectNodePath(self.subjectNodePath)
+        # self.setSubjectNodePath(self.subjectNodePath)
         self.setStartStop(self.startStopEvent)
 
     def destroy(self):
         self.ignore(self.startStopEvent)
         self.startStopEvent = None
         BasicEntities.NodePathEntity.destroy(self)
-        #DirectObject.DirectObject.destroy(self)
-    
+        # DirectObject.DirectObject.destroy(self)
+
     def setEffect(self, effect):
-        self.effect=effect
+        self.effect = effect
         assert self.effects[effect]
-        self.getEffect=self.effects[effect]
-    
+        self.getEffect = self.effects[effect]
+
     def setMotion(self, motion):
-        self.motionType=motion
+        self.motionType = motion
         assert self.motions[motion]
-        self.getMotion=self.motions[motion]
-    
+        self.getMotion = self.motions[motion]
+
     def setSubjectNodePath(self, subjectNodePath):
 
-        self.subjectNodePath=subjectNodePath
-    
+        self.subjectNodePath = subjectNodePath
+
     def startOrStop(self, start):
         trackName = "cutSceneTrack-%d" % (id(self),)
         if start:
             if self.track:
                 self.track.finish()
                 self.track = None
-            track = Parallel(name = trackName)
-            track = self.getEffect(self, track, self.subjectNodePath, self.duration)
-            track = self.getMotion(self, track, self.subjectNodePath, self.duration)
+            track = Parallel(name=trackName)
+            track = self.getEffect(
+                self, track, self.subjectNodePath, self.duration)
+            track = self.getMotion(
+                self, track, self.subjectNodePath, self.duration)
             track = Sequence(Wait(0.4), track)
             track.start(0.0)
             self.track = track
@@ -157,14 +164,14 @@ class CutScene(BasicEntities.NodePathEntity, DirectObject.DirectObject):
                 self.track.pause()
                 self.track = None
                 base.localAvatar.startUpdateSmartCamera()
-    
+
     def setStartStop(self, event):
         if self.startStopEvent:
             self.ignore(self.startStopEvent)
         self.startStopEvent = self.getOutputEventName(event)
         if self.startStopEvent:
             self.accept(self.startStopEvent, self.startOrStop)
-    
+
     def getName(self):
-        #return "CutScene-%s"%(self.entId,)
-        return "switch-%s"%(self.entId,)
+        # return "CutScene-%s"%(self.entId,)
+        return f"switch-{self.entId}"

@@ -8,6 +8,7 @@ from toontown.fishing import FishSellGUI
 from direct.task.Task import Task
 from panda3d.otp import CFSpeech, CFTimeout
 
+
 class DistributedNPCFisherman(DistributedNPCToonBase):
 
     def __init__(self, cr):
@@ -52,12 +53,14 @@ class DistributedNPCFisherman(DistributedNPCToonBase):
         self.setAnimState("neutral", 1.05, None, None)
         # Make sure you look under stashed nodes as well, since street
         # visibility might have stashed the zone this origin is under
-        npcOrigin = self.cr.playGame.hood.loader.geom.find("**/npc_fisherman_origin_%s;+s" % self.posIndex)
+        npcOrigin = self.cr.playGame.hood.loader.geom.find(
+            f"**/npc_fisherman_origin_{self.posIndex};+s")
         if not npcOrigin.isEmpty():
             self.reparentTo(npcOrigin)
             self.clearMat()
         else:
-            self.notify.warning("announceGenerate: Could not find npc_fisherman_origin_" + str(self.posIndex))
+            self.notify.warning(
+                "announceGenerate: Could not find npc_fisherman_origin_" + str(self.posIndex))
 
     def getCollSphereRadius(self):
         """
@@ -98,7 +101,7 @@ class DistributedNPCFisherman(DistributedNPCToonBase):
 
     def resetFisherman(self):
         if not self.isLocalToon:
-            return 
+            return
         assert self.notify.debug('resetFisherman')
         self.ignoreAll()
         taskMgr.remove(self.uniqueName('popupFishGUI'))
@@ -134,7 +137,7 @@ class DistributedNPCFisherman(DistributedNPCToonBase):
         self.isLocalToon = (avId == base.localAvatar.doId)
 
         assert(self.notify.debug("setMovie: %s %s %s %s" %
-                          (mode, avId, timeStamp, self.isLocalToon)))
+                                 (mode, avId, timeStamp, self.isLocalToon)))
 
         # This is an old movie in the server ram that has been cleared.
         # Just return and do nothing
@@ -176,11 +179,14 @@ class DistributedNPCFisherman(DistributedNPCToonBase):
                 camera.wrtReparentTo(render)
                 quat = Quat()
                 quat.setHpr((-150, -2, 0))
-                camera.posQuatInterval(1, Point3(-5, 9, base.localAvatar.getHeight()-0.5),
-                                  quat,
-                                  1,
-                                  other=self,
-                                  blendType="easeOut").start()
+                camera.posQuatInterval(1,
+                                       Point3(-5,
+                                              9,
+                                              base.localAvatar.getHeight() - 0.5),
+                                       quat,
+                                       1,
+                                       other=self,
+                                       blendType="easeOut").start()
 
             if (self.isLocalToon):
                 taskMgr.doMethodLater(1.0, self.popupFishGUI,
@@ -202,8 +208,9 @@ class DistributedNPCFisherman(DistributedNPCToonBase):
                 return
             else:
                 numFish, totalNumFish = extraArgs
-                self.setChatAbsolute(TTLocalizer.STOREOWNER_TROPHY % (numFish, totalNumFish),
-                                     CFSpeech | CFTimeout)
+                self.setChatAbsolute(
+                    TTLocalizer.STOREOWNER_TROPHY %
+                    (numFish, totalNumFish), CFSpeech | CFTimeout)
             self.resetFisherman()
 
         elif (mode == NPCToons.SELL_MOVIE_NOFISH):
@@ -230,5 +237,3 @@ class DistributedNPCFisherman(DistributedNPCToonBase):
         self.setChatAbsolute('', CFSpeech)
         self.acceptOnce(self.fishGuiDoneEvent, self.__handleSaleDone)
         self.fishGui = FishSellGUI.FishSellGUI(self.fishGuiDoneEvent)
-
-

@@ -7,13 +7,14 @@ from toontown.toonbase import TTLocalizer
 from toontown.fishing import FishGlobals
 from direct.task import Task
 
+
 class DistributedNPCFishermanAI(DistributedNPCToonBaseAI):
     def __init__(self, air, npcId):
         DistributedNPCToonBaseAI.__init__(self, air, npcId)
         # Fishermen are not in the business of giving out quests
         self.givesQuests = 0
         self.busy = []
-        
+
     def delete(self):
         taskMgr.remove(self.uniqueName('clearMovie'))
         self.ignoreAll()
@@ -23,9 +24,9 @@ class DistributedNPCFishermanAI(DistributedNPCToonBaseAI):
         avId = self.air.getAvatarIdFromSender()
         # this avatar has come within range
         assert self.notify.debug("avatar enter " + str(avId))
-        
+
         if (avId not in self.air.doId2do):
-            self.notify.warning("Avatar: %s not found" % (avId))
+            self.notify.warning(f"Avatar: {avId} not found")
             return
 
         if (self.isBusy(avId)):
@@ -44,17 +45,21 @@ class DistributedNPCFishermanAI(DistributedNPCToonBaseAI):
             # If you have some fish, let the client popup a gui to sell them
             flag = NPCToons.SELL_MOVIE_START
             self.d_setMovie(avId, flag)
-            taskMgr.doMethodLater(30.0, self.sendTimeoutMovie, self.uniqueName("clearMovie"))
+            taskMgr.doMethodLater(
+                30.0,
+                self.sendTimeoutMovie,
+                self.uniqueName("clearMovie"))
         else:
             # If you have no fish, send this instructional movie
             flag = NPCToons.SELL_MOVIE_NOFISH
             self.d_setMovie(avId, flag)
             # Immediately send the clear movie - we are done with this Toon
-            self.sendClearMovie(None)        
+            self.sendClearMovie(None)
         DistributedNPCToonBaseAI.avatarEnter(self)
 
     def rejectAvatar(self, avId):
-        self.notify.warning("rejectAvatar: should not be called by a fisherman!")
+        self.notify.warning(
+            "rejectAvatar: should not be called by a fisherman!")
         return
 
     def d_setMovie(self, avId, flag, extraArgs=[]):
@@ -63,7 +68,7 @@ class DistributedNPCFishermanAI(DistributedNPCToonBaseAI):
                         [flag,
                          self.npcId, avId, extraArgs,
                          ClockDelta.globalClockDelta.getRealNetworkTime()])
-        
+
     def sendTimeoutMovie(self, task):
         avId = self.air.getAvatarIdFromSender()
         assert self.notify.debug('sendTimeoutMovie()')
@@ -87,20 +92,26 @@ class DistributedNPCFishermanAI(DistributedNPCToonBaseAI):
         avId = self.air.getAvatarIdFromSender()
 
         if avId not in self.busy:
-            self.air.writeServerEvent('suspicious', avId, 'DistributedNPCFishermanAI.completeSale busy with %s' % (self.busy))
-            self.notify.warning("somebody called setMovieDone that I was not busy with! avId: %s" % avId)
+            self.air.writeServerEvent(
+                'suspicious',
+                avId,
+                f'DistributedNPCFishermanAI.completeSale busy with {self.busy}')
+            self.notify.warning(
+                f"somebody called setMovieDone that I was not busy with! avId: {avId}")
             return
-            
+
         if sell:
             av = simbase.air.doId2do.get(avId)
             if av:
                 # this function sells the fish, clears the tank, and
-                # updates the collection, trophies, and maxhp. One stop shopping!
+                # updates the collection, trophies, and maxhp. One stop
+                # shopping!
                 trophyResult = self.air.fishManager.creditFishTank(av)
-                
+
                 if trophyResult:
                     movieType = NPCToons.SELL_MOVIE_TROPHY
-                    extraArgs = [len(av.fishCollection), FishGlobals.getTotalNumFish()]
+                    extraArgs = [len(av.fishCollection),
+                                 FishGlobals.getTotalNumFish()]
                 else:
                     movieType = NPCToons.SELL_MOVIE_COMPLETE
                     extraArgs = []
@@ -121,7 +132,7 @@ class DistributedNPCFishermanAI(DistributedNPCToonBaseAI):
 
     def __handleUnexpectedExit(self, avId):
         self.notify.warning('avatar:' + str(avId) + ' has exited unexpectedly')
-        self.notify.warning('not busy with avId: %s, busy: %s ' % (avId, self.busy))
+        self.notify.warning(
+            f'not busy with avId: {avId}, busy: {self.busy} ')
         taskMgr.remove(self.uniqueName("clearMovie"))
         self.sendClearMovie(None)
-

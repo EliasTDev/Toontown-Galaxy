@@ -32,9 +32,9 @@ CameraTransparentBitmask = BitMask32(0x08)
 # by the player; this helps the collision system do the right thing;
 # toons that are not on the platform do not react to this bit mask):
 SafetyNetBitmask = BitMask32(0x200)
-# Collision polygons for _near_ moving platforms (normally these are 
-# not seen by the player; this helps the collision system do the 
-# right thing; toons that _are_ on the platform do not react to 
+# Collision polygons for _near_ moving platforms (normally these are
+# not seen by the player; this helps the collision system do the
+# right thing; toons that _are_ on the platform do not react to
 # this bit mask):
 SafetyGateBitmask = BitMask32(0x400)
 
@@ -88,7 +88,7 @@ MaxCustomMessages = 25
 
 # Tokens for the various nodes we can parent avatars to via
 # distributed setParent().
-SPInvalid = 0 # ParentMgr does not allow default values to be used as parent tokens
+SPInvalid = 0  # ParentMgr does not allow default values to be used as parent tokens
 SPHidden = 1
 SPRender = 2
 SPDynamic = 5
@@ -134,7 +134,7 @@ DisconnectReasons = {
     DisconnectPythonError: "python error",
     DisconnectSwitchShards: "switch shards",
     DisconnectGraphicsError: "graphics error",
-    }
+}
 
 # Timeouts on waiting for database responses.  These are just to
 # prevent users from seeing a black screen if the database happens to
@@ -180,14 +180,17 @@ ProductPrefix = None
 
 # Fonts.  These are functions rather than constants, so we can control
 # when they get loaded.
+
+
 def getInterfaceFont():
     global InterfaceFont
-    if (InterfaceFont == None):
-        if InterfaceFontPath == None:
+    if (InterfaceFont is None):
+        if InterfaceFontPath is None:
             InterfaceFont = TextNode.getDefaultFont()
         else:
-            InterfaceFont = loader.loadFont(InterfaceFontPath, lineHeight = 1.0)
+            InterfaceFont = loader.loadFont(InterfaceFontPath, lineHeight=1.0)
     return InterfaceFont
+
 
 def setInterfaceFont(path):
     global InterfaceFont
@@ -195,69 +198,76 @@ def setInterfaceFont(path):
     InterfaceFontPath = path
     InterfaceFont = None
 
+
 def getSignFont():
     global SignFont
-    if (SignFont == None):
-        if SignFontPath == None:
+    if (SignFont is None):
+        if SignFontPath is None:
             InterfaceFont = TextNode.getDefaultFont()
             SignFont = TextNode.getDefaultFont()
         else:
-            SignFont = loader.loadFont(SignFontPath, lineHeight = 1.0)
+            SignFont = loader.loadFont(SignFontPath, lineHeight=1.0)
     return SignFont
+
 
 def setSignFont(path):
     global SignFontPath
     SignFontPath = path
-    
-    
+
+
 def getFancyFont():
     global FancyFont
-    if (FancyFont == None):
-        if FancyFontPath == None:
+    if (FancyFont is None):
+        if FancyFontPath is None:
             InterfaceFont = TextNode.getDefaultFont()
             FancyFont = TextNode.getDefaultFont()
         else:
-            FancyFont = loader.loadFont(FancyFontPath, lineHeight = 1.0)
+            FancyFont = loader.loadFont(FancyFontPath, lineHeight=1.0)
     return FancyFont
+
 
 def setFancyFont(path):
     global FancyFontPath
     FancyFontPath = path
-    
-    
+
+
 def getNametagFont(index):
     global NametagFonts
-    if ((index not in NametagFonts )or NametagFonts[index] == None):
-        if (index not in NametagFontPaths ) or (NametagFontPaths[index] == None):
+    if ((index not in NametagFonts) or NametagFonts[index] is None):
+        if (index not in NametagFontPaths) or (
+                NametagFontPaths[index] is None):
             InterfaceFont = TextNode.getDefaultFont()
             NametagFonts[index] = TextNode.getDefaultFont()
         else:
-            NametagFonts[index] = loader.loadFont(NametagFontPaths[index], lineHeight = 1.0)
+            NametagFonts[index] = loader.loadFont(
+                NametagFontPaths[index], lineHeight=1.0)
     return NametagFonts[index]
+
 
 def setNametagFont(index, path):
     global NametagFontPaths
-    NametagFontPaths[index] = path    
-    
-    
+    NametagFontPaths[index] = path
+
 
 def getDialogClass():
     global DialogClass
-    
-    if DialogClass == None:
+
+    if DialogClass is None:
         from otp.otpgui.OTPDialog import OTPDialog
         DialogClass = OTPDialog
-        
+
     return DialogClass
+
 
 def getGlobalDialogClass():
     global GlobalDialogClass
-    
-    if DialogClass == None:
+
+    if DialogClass is None:
         from otp.otpgui.OTPDialog import GlobalDialog
         GlobalDialogClass = GlobalDialog
 
     return GlobalDialogClass
+
 
 def setDialogClasses(dialogClass, globalDialogClass):
     global DialogClass
@@ -265,12 +275,15 @@ def setDialogClasses(dialogClass, globalDialogClass):
     global GlobalDialogClass
     GlobalDialogClass = globalDialogClass
 
+
 def getDefaultProductPrefix():
     return ProductPrefix
+
 
 def setDefaultProductPrefix(prefix):
     global ProductPrefix
     ProductPrefix = prefix
+
 
 NetworkLatency = 1.0
 
@@ -289,27 +302,28 @@ REVERSE_INDEX = 3
 STRAFE_LEFT_INDEX = 4
 STRAFE_RIGHT_INDEX = 5
 
-ToonStandableGround = 0.707 # if ToonStandableGround > angle: toon is on ground.
+# if ToonStandableGround > angle: toon is on ground.
+ToonStandableGround = 0.707
 ToonSpeedFactor = 1.25
-ToonForwardSpeed = 20.0 * ToonSpeedFactor # feet per second
-ToonJumpForce = 24.0 # feet per second
-ToonReverseSpeed = 8.0 * ToonSpeedFactor # feet per second
+ToonForwardSpeed = 20.0 * ToonSpeedFactor  # feet per second
+ToonJumpForce = 24.0  # feet per second
+ToonReverseSpeed = 8.0 * ToonSpeedFactor  # feet per second
 ToonRotateSpeed = 80.0 * ToonSpeedFactor
 
 # When you are "dead"
 ToonForwardSlowSpeed = 6.0
-ToonJumpSlowForce = 4.0 # feet per second
+ToonJumpSlowForce = 4.0  # feet per second
 ToonReverseSlowSpeed = 2.5
 ToonRotateSlowSpeed = 33.0
 ToonForwardSprintSpeed = 32 * ToonSpeedFactor
 ToonReverseSprintSpeed = 15 * ToonSpeedFactor
 ToonForwardSadSprintSpeed = 28 * ToonSpeedFactor
-MickeySpeed = 5.0 # feet per second
-MinnieSpeed = 3.2 # feet per second
-#DonaldSpeed = 4.6 # feet per second
-DonaldSpeed = 3.68 # feet per second
-GoofySpeed  = 5.2 # feet per second
-PlutoSpeed  = 5.5 # feet per second per second
+MickeySpeed = 5.0  # feet per second
+MinnieSpeed = 3.2  # feet per second
+# DonaldSpeed = 4.6 # feet per second
+DonaldSpeed = 3.68  # feet per second
+GoofySpeed = 5.2  # feet per second
+PlutoSpeed = 5.5  # feet per second per second
 
 ThinkPosHotkey = "shift-f1"
 PlaceMarkerHotkey = "f2"
@@ -334,19 +348,19 @@ DefaultBackgroundColor = (0.3, 0.3, 0.3, 1)
 
 # Various scales and parameters for Toon.py
 
-# These scales came from Bruce's line-up. The body scales were globally 
+# These scales came from Bruce's line-up. The body scales were globally
 # reduced by about 10 percent to get the overall height he wanted
 toonBodyScales = {
-    'mouse':  0.60,
-    'cat':    0.73,
-    'duck':   0.66,
+    'mouse': 0.60,
+    'cat': 0.73,
+    'duck': 0.66,
     'rabbit': 0.74,
-    'horse':  0.85,
-    'dog':    0.85,
+    'horse': 0.85,
+    'dog': 0.85,
     'monkey': 0.68,
-    'bear':   0.85,
-    'pig':    0.77
-    }
+    'bear': 0.85,
+    'pig': 0.77
+}
 
 # These are vec3s since they are non uniform
 toonHeadScales = {
@@ -357,22 +371,22 @@ toonHeadScales = {
     #    'rabbit': Point3(1.0000),
     #    'horse':  Point3(1.0000),
     #    'dog':    Point3(1.0857),
-    'mouse':  Point3(1.0),
-    'cat':    Point3(1.0),
-    'duck':   Point3(1.0),
+    'mouse': Point3(1.0),
+    'cat': Point3(1.0),
+    'duck': Point3(1.0),
     'rabbit': Point3(1.0),
-    'horse':  Point3(1.0),
-    'dog':    Point3(1.0),
+    'horse': Point3(1.0),
+    'dog': Point3(1.0),
     'monkey': Point3(1.0),
-    'bear':   Point3(1.0),
-    'pig':    Point3(1.0)
-    }
+    'bear': Point3(1.0),
+    'pig': Point3(1.0)
+}
 
 legHeightDict = {
     's': 1.5,
     'm': 2.0,
     'l': 2.75,
-    }
+}
 torsoHeightDict = {
     's': 1.5,
     'm': 1.75,
@@ -383,7 +397,7 @@ torsoHeightDict = {
     'sd': 1.5,
     'md': 1.75,
     'ld': 2.25,
-    }
+}
 headHeightDict = {
     'dls': 0.75,
     'dss': 0.50,
@@ -422,11 +436,11 @@ headHeightDict = {
     'bss': 0.50,
     'bsl': 0.50,
     'bll': 0.75,
-    
+
     'sls': 0.75,
     'sss': 0.50,
     'ssl': 0.50,
-    'sll': 0.75,    
+    'sll': 0.75,
 
 }
 
@@ -468,7 +482,7 @@ CopyrightedNames = (
     "donaldduck",
     "pluto",
     "goofy",
-    )
+)
 
 
 # Guild Events
@@ -477,8 +491,8 @@ GuildInvitationEvent = "guildInvitationEvent"
 GuildAcceptInviteEvent = "guildAcceptInviteEvent"
 GuildRejectInviteEvent = "guildRejectInviteEvent"
 
-#New friends GUI events for Avatar Friends and Player Friends
-#from PiratesFriendsList
+# New friends GUI events for Avatar Friends and Player Friends
+# from PiratesFriendsList
 AvatarFriendAddEvent = "avatarFriendAddEvent"
 AvatarNewFriendAddEvent = "avatarNewFriendAddEvent"
 AvatarFriendUpdateEvent = "avatarFriendUpdateEvent"
@@ -486,13 +500,13 @@ AvatarFriendRemoveEvent = "avatarFriendRemoveEvent"
 PlayerFriendAddEvent = "playerFriendAddEvent"
 PlayerFriendUpdateEvent = "playerFriendUpdateEvent"
 PlayerFriendRemoveEvent = "playerFriendRemoveEvent"
-#from AvatarFriendsManager
+# from AvatarFriendsManager
 AvatarFriendConsideringEvent = "avatarFriendConsideringEvent"
 AvatarFriendInvitationEvent = "avatarFriendInvitationEvent"
 AvatarFriendRejectInviteEvent = "avatarFriendRejectInviteEvent"
 AvatarFriendRetractInviteEvent = "avatarFriendRetractInviteEvent"
 AvatarFriendRejectRemoveEvent = "avatarFriendRejectRemoveEvent"
-#from PlayerFriendsManager
+# from PlayerFriendsManager
 PlayerFriendInvitationEvent = "playerFriendInvitationEvent"
 PlayerFriendRejectInviteEvent = "playerFriendRejectInviteEvent"
 PlayerFriendRetractInviteEvent = "playerFriendRetractInviteEvent"
@@ -502,7 +516,7 @@ PlayerFriendRejectNewSecretEvent = "playerFriendRejectNewSecretEvent"
 PlayerFriendRejectUseSecretEvent = "playerFriendRejectUseSecretEvent"
 WhisperIncomingEvent = "whisperIncomingEvent"
 
-#Chat Feedback
+# Chat Feedback
 ChatFeedback_PassedBlacklist = 0x20
 ChatFeedback_Whitelist = 0x40
 ChatFeedback_OpenChat = 0x80
@@ -510,35 +524,36 @@ ChatFeedback_OpenChat = 0x80
 AccessUnknown = 0
 AccessVelvetRope = 1
 AccessFull = 2
-AccessInvalid = 3 #use this for the default value of setAccess to detect when it's not being set
+# use this for the default value of setAccess to detect when it's not being set
+AccessInvalid = 3
 
 AvatarPendingCreate = -1
 AvatarSlotUnavailable = -2
 AvatarSlotAvailable = -3
 
 AccessLevelName2Int = {
- 'RESTRICTED': -100,
- 'NO_ACCESS': 0,
- 'USER': 100,
- 'COMMUNITY': 200,
- 'CREATIVE': 300,
- 'MODERATOR': 400,
- 'DEVELOPER': 500,
- 'ADMIN': 600,
- 'SYSTEM ADMIN': 700
+    'RESTRICTED': -100,
+    'NO_ACCESS': 0,
+    'USER': 100,
+    'COMMUNITY': 200,
+    'CREATIVE': 300,
+    'MODERATOR': 400,
+    'DEVELOPER': 500,
+    'ADMIN': 600,
+    'SYSTEM ADMIN': 700
 
 }
 
 AccessLevelInt2Name = {
- -100: 'RESTRICTED',
- 0: 'NO_ACCESS',
- 100: 'USER',
- 200: 'COMMUNITY',
- 300: 'CREATIVE',
- 400: 'MODERATOR',
- 500: 'DEVELOPER',
- 600: 'ADMIN',
- 700: 'SYSTEM ADMIN'
+    -100: 'RESTRICTED',
+    0: 'NO_ACCESS',
+    100: 'USER',
+    200: 'COMMUNITY',
+    300: 'CREATIVE',
+    400: 'MODERATOR',
+    500: 'DEVELOPER',
+    600: 'ADMIN',
+    700: 'SYSTEM ADMIN'
 }
 
 AccessLevelDebug2Name = {

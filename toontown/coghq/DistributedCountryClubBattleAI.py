@@ -8,9 +8,12 @@ from . import CogDisguiseGlobals
 from toontown.toonbase.ToontownBattleGlobals import getCountryClubCreditMultiplier
 from direct.showbase.PythonUtil import addListsByValue
 
-class DistributedCountryClubBattleAI(DistributedLevelBattleAI.DistributedLevelBattleAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCountryClubBattleAI')
-    
+
+class DistributedCountryClubBattleAI(
+        DistributedLevelBattleAI.DistributedLevelBattleAI):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedCountryClubBattleAI')
+
     def __init__(self, air, battleMgr, pos, suit, toonId, zoneId,
                  level, battleCellId, roundCallback=None,
                  finishCallback=None, maxSuits=4):
@@ -28,9 +31,9 @@ class DistributedCountryClubBattleAI(DistributedLevelBattleAI.DistributedLevelBa
 
         # Add a new reward state to the battle ClassicFSM
         self.fsm.addState(State.State('CountryClubReward',
-                                        self.enterCountryClubReward,
-                                        self.exitCountryClubReward,
-                                        ['Resume']))
+                                      self.enterCountryClubReward,
+                                      self.exitCountryClubReward,
+                                      ['Resume']))
         playMovieState = self.fsm.getStateNamed('PlayMovie')
         playMovieState.addTransition('CountryClubReward')
 
@@ -39,13 +42,14 @@ class DistributedCountryClubBattleAI(DistributedLevelBattleAI.DistributedLevelBa
 
     def handleToonsWon(self, toons):
         # toons just beat the boss
-        extraMerits = [0,0,0,0]
+        extraMerits = [0, 0, 0, 0]
         amount = ToontownGlobals.CountryClubCogBuckRewards[self.level.countryClubId]
         index = ToontownGlobals.cogHQZoneId2deptIndex(self.level.countryClubId)
         extraMerits[index] = amount
 
         for toon in toons:
-            # Append the recovered and not recovered items to their respective lists
+            # Append the recovered and not recovered items to their respective
+            # lists
             recovered, notRecovered = self.air.questManager.recoverItems(
                 toon, self.suitsKilled, self.getTaskZoneId())
             self.toonItems[toon.doId][0].extend(recovered)
@@ -53,12 +57,15 @@ class DistributedCountryClubBattleAI(DistributedLevelBattleAI.DistributedLevelBa
 
             # the new merit list must be added by value to the cumulative list
             meritArray = self.air.promotionMgr.recoverMerits(
-                toon, self.suitsKilled, self.getTaskZoneId(),
-                getCountryClubCreditMultiplier(self.getTaskZoneId()), extraMerits=extraMerits)
+                toon, self.suitsKilled, self.getTaskZoneId(), getCountryClubCreditMultiplier(
+                    self.getTaskZoneId()), extraMerits=extraMerits)
             if toon.doId in self.helpfulToons:
-                self.toonMerits[toon.doId] = addListsByValue(self.toonMerits[toon.doId], meritArray)
+                self.toonMerits[toon.doId] = addListsByValue(
+                    self.toonMerits[toon.doId], meritArray)
             else:
-                self.notify.debug("toon %d not helpful list, skipping merits" % toon.doId)
+                self.notify.debug(
+                    "toon %d not helpful list, skipping merits" %
+                    toon.doId)
 
     ##### CountryClubReward state #####
 
@@ -77,7 +84,9 @@ class DistributedCountryClubBattleAI(DistributedLevelBattleAI.DistributedLevelBa
 
         # Set an upper timeout for the reward movie.  If no toons
         # report back by this time, call it done anyway.
-        self.timer.startCallback(BUILDING_REWARD_TIMEOUT, self.serverRewardDone)
+        self.timer.startCallback(
+            BUILDING_REWARD_TIMEOUT,
+            self.serverRewardDone)
 
         return None
 

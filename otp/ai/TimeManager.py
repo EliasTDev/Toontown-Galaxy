@@ -15,6 +15,7 @@ import sys
 import re
 from panda3d.otp import CFSpeech, CFTimeout
 
+
 class TimeManager(DistributedObject.DistributedObject):
     """
     This DistributedObject lives on the AI and on the client side, and
@@ -46,27 +47,31 @@ class TimeManager(DistributedObject.DistributedObject):
 
         # The maximum number of seconds of uncertainty to tolerate in
         # the clock delta without trying again.
-        self.maxUncertainty = ConfigVariableDouble('time-manager-max-uncertainty', 1).value
+        self.maxUncertainty = ConfigVariableDouble(
+            'time-manager-max-uncertainty', 1).value
 
         # The maximum number of attempts to try to get a low-latency
         # time measurement before giving up and accepting whatever we
         # get.
-        self.maxAttempts = ConfigVariableInt('time-manager-max-attempts', 5).value
+        self.maxAttempts = ConfigVariableInt(
+            'time-manager-max-attempts', 5).value
 
         # A simulated clock skew for debugging, in seconds.
         self.extraSkew = ConfigVariableInt('time-manager-extra-skew', 0).value
 
         if self.extraSkew != 0:
-            self.notify.info("Simulating clock skew of %0.3f s" % self.extraSkew)
+            self.notify.info(
+                f"Simulating clock skew of {self.extraSkew:0.3f} s")
 
-        self.reportFrameRateInterval = ConfigVariableDouble('report-frame-rate-interval', 300.0).value
+        self.reportFrameRateInterval = ConfigVariableDouble(
+            'report-frame-rate-interval', 300.0).value
 
         self.talkResult = 0
         self.thisContext = -1
         self.nextContext = 0
         self.attemptCount = 0
         self.start = 0
-        self.lastAttempt = -self.minWait*2
+        self.lastAttempt = -self.minWait * 2
 
         self.setFrameRateInterval(self.reportFrameRateInterval)
 
@@ -80,7 +85,7 @@ class TimeManager(DistributedObject.DistributedObject):
         to the world, either for the first time or from the cache.
         """
         self._gotFirstTimeSync = False
-        if self.cr.timeManager != None:
+        if self.cr.timeManager is not None:
             self.cr.timeManager.delete()
         self.cr.timeManager = self
         DistributedObject.DistributedObject.generate(self)
@@ -89,7 +94,9 @@ class TimeManager(DistributedObject.DistributedObject):
         self.accept('clock_error', self.handleClockError)
 
         if __dev__ and ConfigVariableBool('enable-garbage-hotkey', 0).value:
-            self.accept(OTPGlobals.DetectGarbageHotkey, self.handleDetectGarbageHotkey)
+            self.accept(
+                OTPGlobals.DetectGarbageHotkey,
+                self.handleDetectGarbageHotkey)
 
         if self.updateFreq > 0:
             self.startTask()
@@ -153,7 +160,7 @@ class TimeManager(DistributedObject.DistributedObject):
         # For now, we don't impose any restrictions on the amount of
         # time we must wait between user-suggested resyncs.  Comment
         # this out to change this behavior.
-        self.lastAttempt = -self.minWait*2
+        self.lastAttempt = -self.minWait * 2
 
         if self.synchronize("user hotkey"):
             self.talkResult = 1
@@ -185,20 +192,19 @@ class TimeManager(DistributedObject.DistributedObject):
         now = globalClock.getRealTime()
 
         if now - self.lastAttempt < self.minWait:
-            self.notify.debug("Not resyncing (too soon): %s" % (description))
+            self.notify.debug(f"Not resyncing (too soon): {description}")
             return 0
 
         self.talkResult = 0
         self.thisContext = self.nextContext
         self.attemptCount = 0
         self.nextContext = (self.nextContext + 1) & 255
-        self.notify.info("Clock sync: %s" % (description))
+        self.notify.info(f"Clock sync: {description}")
         self.start = now
         self.lastAttempt = now
         self.sendUpdate("requestServerTime", [self.thisContext])
 
         return 1
-
 
     def serverTime(self, context, timestamp, timeOfDay):
         """serverTime(self, int8 context, int32 timestamp, uint32 timeOfDay)
@@ -220,20 +226,26 @@ class TimeManager(DistributedObject.DistributedObject):
         aiTimeSkew = timeOfDay - self.cr.getServerTimeOfDay()
 
         if context != self.thisContext:
-            self.notify.info("Ignoring TimeManager response for old context %d" % (context))
+            self.notify.info(
+                "Ignoring TimeManager response for old context %d" %
+                (context))
             return
 
         elapsed = end - self.start
         self.attemptCount += 1
-        self.notify.info("Clock sync roundtrip took %0.3f ms" % (elapsed * 1000.0))
-        self.notify.info("AI time delta is %s from server delta" % (PythonUtil.formatElapsedSeconds(aiTimeSkew)))
+        self.notify.info(
+            f"Clock sync roundtrip took {elapsed * 1000.0:0.3f} ms")
+        self.notify.info(
+            "AI time delta is %s from server delta" %
+            (PythonUtil.formatElapsedSeconds(aiTimeSkew)))
 
         average = (self.start + end) / 2.0 - self.extraSkew
         uncertainty = (end - self.start) / 2.0 + abs(self.extraSkew)
 
         globalClockDelta.resynchronize(average, timestamp, uncertainty)
 
-        self.notify.info("Local clock uncertainty +/- %.3f s" % (globalClockDelta.getUncertainty()))
+        self.notify.info(
+            f"Local clock uncertainty +/- {globalClockDelta.getUncertainty():.3f} s")
 
         if globalClockDelta.getUncertainty() > self.maxUncertainty:
             if self.attemptCount < self.maxAttempts:
@@ -246,11 +258,16 @@ class TimeManager(DistributedObject.DistributedObject):
         if self.talkResult:
             # This should change to be more generic
             # maybe self.cr.localAv
-            base.localAvatar.setChatAbsolute("latency %0.0f ms, sync ±%0.0f ms" % (elapsed * 1000.0, globalClockDelta.getUncertainty() * 1000.0), CFSpeech | CFTimeout)
+            base.localAvatar.setChatAbsolute(
+                "latency %0.0f ms, sync ±%0.0f ms" %
+                (elapsed *
+                 1000.0,
+                 globalClockDelta.getUncertainty() *
+                 1000.0),
+                CFSpeech | CFTimeout)
 
         self._gotFirstTimeSync = True
         messenger.send("gotTimeSync")
-
 
     def setDisconnectReason(self, disconnectCode):
         """setDisconnectReason(self, uint8 disconnectCode)
@@ -260,7 +277,7 @@ class TimeManager(DistributedObject.DistributedObject):
         doesn't get this message, it can assume the client aborted
         messily or its internet connection was dropped.
         """
-        self.notify.info("Client disconnect reason %s." % (disconnectCode))
+        self.notify.info(f"Client disconnect reason {disconnectCode}.")
         self.sendUpdate("setDisconnectReason", [disconnectCode])
 
     def setExceptionInfo(self):
@@ -270,7 +287,7 @@ class TimeManager(DistributedObject.DistributedObject):
         sends a text string describing the exception for the AI log.
         """
         info = PythonUtil.describeException()
-        self.notify.info("Client exception: %s" % (info))
+        self.notify.info(f"Client exception: {info}")
         self.sendUpdate("setExceptionInfo", [info])
         self.cr.flush()
 
@@ -317,7 +334,7 @@ class TimeManager(DistributedObject.DistributedObject):
             '%0.03f,%0.03f' % cpuSpeed,
             '%d,%d' % (numCpuCores, numLogicalCpus))
 
-        print("cpu info: %s" % (info))
+        print(f"cpu info: {info}")
         self.sendUpdate("setCpuInfo", [info, cacheStatus])
 
     def setFrameRateInterval(self, frameRateInterval):
@@ -338,8 +355,10 @@ class TimeManager(DistributedObject.DistributedObject):
             # However, we'll put a cap on the frame rate interval, so
             # it doesn't go unreasonably wide if we set the reporting
             # interval to be fairly slow.
-            maxFrameRateInterval = ConfigVariableDouble('max-frame-rate-interval', 30.0).value
-            globalClock.setAverageFrameRateInterval(min(frameRateInterval, maxFrameRateInterval))
+            maxFrameRateInterval = ConfigVariableDouble(
+                'max-frame-rate-interval', 30.0).value
+            globalClock.setAverageFrameRateInterval(
+                min(frameRateInterval, maxFrameRateInterval))
 
         taskMgr.remove('frameRateMonitor')
         taskMgr.doMethodLater(frameRateInterval,
@@ -376,7 +395,11 @@ class TimeManager(DistributedObject.DistributedObject):
             pageFileUsage = di.getPageFileUsage() * oomb
             physicalMemory = di.getPhysicalMemory() * oomb
             pageFaultCount = di.getPageFaultCount() / 1000.0
-            osInfo = (os.name, di.getOsPlatformId(), di.getOsVersionMajor(), di.getOsVersionMinor())
+            osInfo = (
+                os.name,
+                di.getOsPlatformId(),
+                di.getOsVersionMajor(),
+                di.getOsVersionMinor())
             if sys.platform == 'darwin':
                 osInfo = self.getMacOsInfo(osInfo)
             di.updateCpuFrequency(0)
@@ -390,14 +413,13 @@ class TimeManager(DistributedObject.DistributedObject):
 
             apiName = base.pipe.getInterfaceName()
 
-
         self.d_setFrameRate(
             max(0, globalClock.getAverageFrameRate()),
             max(0, globalClock.calcFrameRateDeviation()),
             len(Avatar.ActiveAvatars),
             base.locationCode or '',
-            max(0,time.time() - base.locationCodeChanged),
-            max(0,globalClock.getRealTime()),
+            max(0, time.time() - base.locationCodeChanged),
+            max(0, globalClock.getRealTime()),
             base.gameOptionsCode,
             vendorId, deviceId, processMemory, pageFileUsage,
             physicalMemory, pageFaultCount, osInfo, cpuSpeed,
@@ -421,7 +443,7 @@ class TimeManager(DistributedObject.DistributedObject):
             pageFaultCount, '%s.%d.%d.%d' % osInfo, '%0.03f,%0.03f' % cpuSpeed,
             '%d,%d' % (numCpuCores, numLogicalCpus),
             apiName)
-        print("frame rate: %s" % (info))
+        print(f"frame rate: {info}")
 
         self.sendUpdate("setFrameRate", [
             fps, deviation, numAvs, locationCode,
@@ -432,22 +454,25 @@ class TimeManager(DistributedObject.DistributedObject):
 
     if __dev__:
         def handleDetectGarbageHotkey(self):
-            self._numClientGarbage = GarbageReport.b_checkForGarbageLeaks(wantReply=True)
+            self._numClientGarbage = GarbageReport.b_checkForGarbageLeaks(
+                wantReply=True)
             if self._numClientGarbage:
-                s = "%s client garbage cycles found, see log" % self._numClientGarbage
+                s = f"{self._numClientGarbage} client garbage cycles found, see log"
             else:
                 s = "0 client garbage cycles found"
             localAvatar.setChatAbsolute(s, CFSpeech | CFTimeout)
 
         def d_checkForGarbageLeaks(self, wantReply):
-            # if wantReply is True, AI will send back a setNumAIGarbageLeaks msg
+            # if wantReply is True, AI will send back a setNumAIGarbageLeaks
+            # msg
             self.sendUpdate('checkForGarbageLeaks', [wantReply])
 
         def setNumAIGarbageLeaks(self, numLeaks):
             if self._numClientGarbage and numLeaks:
-                s = "%s client and %s AI garbage cycles found, see logs" % (self._numClientGarbage, numLeaks)
+                s = "%s client and %s AI garbage cycles found, see logs" % (
+                    self._numClientGarbage, numLeaks)
             elif numLeaks:
-                s = "0 client and %s AI garbage cycles found, see log" % numLeaks
+                s = f"0 client and {numLeaks} AI garbage cycles found, see log"
             else:
                 s = "0 client and 0 AI garbage cycles found"
             localAvatar.setChatAbsolute(s, CFSpeech | CFTimeout)
@@ -476,13 +501,13 @@ class TimeManager(DistributedObject.DistributedObject):
                     major = int(parts[0])
                     minor = int(parts[1])
                     bugfix = int(parts[2])
-                    # since platform id is -1, i'll put the bug fix number in there instead,  better than an arbitrary number
+                    # since platform id is -1, i'll put the bug fix number in
+                    # there instead,  better than an arbitrary number
                     result = (sys.platform,
-                              bugfix, # what do we put for platform id?
+                              bugfix,  # what do we put for platform id?
                               major,
                               minor)
                 except Exception as e:
-                    self.notify.debug("getMacOsInfo %s" % str(e))
-        self.notify.debug('getMacOsInfo returning %s' % str(result))
+                    self.notify.debug(f"getMacOsInfo {str(e)}")
+        self.notify.debug(f'getMacOsInfo returning {str(result)}')
         return result
-
