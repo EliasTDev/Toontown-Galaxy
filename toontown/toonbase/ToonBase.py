@@ -66,8 +66,12 @@ class ToonBase(OTPBase.OTPBase):
                                 ToontownGlobals.DefaultCameraFar)
 
         # Music should be a bit quieter in toontown
-        self.musicManager.setVolume(0.65 )
-
+        musicVolume = self.settings.getFloat('game', 'musicVolume', 1.0)
+        sfxVolume = self.settings.getFloat('game', 'sfxVolume', 1.0)
+        self.musicManager.setVolume(musicVolume)
+        for sfm in self.sfxManagerList:
+            sfm.setVolume(sfxVolume)
+        self.sfxActive = sfxVolue > 0.0
         self.controlManager = TTControlManager.ControlManager()
         # Set the default background color.
         self.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
