@@ -40,12 +40,14 @@ simbase.air = ToontownAIRepository(config.GetInt('air-base-channel', 1000000), c
 
 host = config.GetString('air-connect', '127.0.0.1:7100')
 port = 7100
+wantSentry = ConfigVariableBool('want-Sentry', False)
 if ':' in host:
     host, port = host.split(':', 1)
     port = int(port)
 
 simbase.air.connect(host, port)
-sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
+if wantSentry:
+    sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
 
 try:
     run()
@@ -58,13 +60,14 @@ except Exception as e:
     simbase.air.writeServerEvent('ai-exception', avId=simbase.air.getAvatarIdFromSender(), accId=simbase.air.getAccountIdFromSender(), exception=info)
     with open(config.GetString('ai-crash-log-name', 'ai-crash.txt'), 'w+') as file:
         file.write(info + "\n")
-    from os.path import expanduser
-    sentry_sdk.set_context( "AI", { 
+    if wantSentry:
+        from os.path import expanduser
+        sentry_sdk.set_context( "AI", { 
         'district_name': os.getenv('DISTRICT_NAME', "NULL"),
         'SENDER_AVID': simbase.air.getAvatarIdFromSender(), 
         'SENDER_ACCOUNT_ID': simbase.air.getAccountIdFromSender(), 
         'homedir': expanduser('~'),
         'CRITICAL': 'True'
-    })
-    sentry_sdk.capture_exception(e)
+        })
+        sentry_sdk.capture_exception(e)
     raise
