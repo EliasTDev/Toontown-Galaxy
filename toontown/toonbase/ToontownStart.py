@@ -252,6 +252,10 @@ builtins.loader = base.loader
 
 autoRun = ConfigVariableBool('toontown-auto-run', 1)
 Discord.startTasks()
+import sentry_sdk
+
+sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
+
 if autoRun and launcher.isDummy():
     # This try .. except block exists solely to test the logic of
     # PythonUtil.describeException.  It's not at all necessary, and is
@@ -259,13 +263,11 @@ if autoRun and launcher.isDummy():
     # bugs you.
     try:
         base.run()
-
     except SystemExit:
         raise
 
-    except:
+    except Exception as e:
         from otp.otpbase import PythonUtil
-        from raven import Client
-        Client('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162').captureMessage(message=PythonUtil.describeException())
+        sentry_sdk.capture_exception(e)
         print(PythonUtil.describeException())
         raise

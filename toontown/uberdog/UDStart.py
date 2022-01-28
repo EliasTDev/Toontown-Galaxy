@@ -1,4 +1,5 @@
 import builtins, os
+import sentry_sdk
 
 class game:
     name = 'uberDog'
@@ -35,24 +36,24 @@ if ':' in host:
     port = int(port)
 
 simbase.air.connect(host, port)
+sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
 
 try:
+    
     run()
 except SystemExit:
     raise
-except Exception:
+except Exception as e:
     from otp.otpbase import PythonUtil
-    from raven import Client 
 
     info = PythonUtil.describeException()
     import getpass
-    sentryReporter = Client('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
-    sentryReporter.user_context({
+    sentry_sdk.set_context("UD" , {
         'district_name': os.getenv('DISTRICT_NAME', "NULL"),
         'SENDER_AVID': simbase.air.getAvatarIdFromSender(), 
         'SENDER_ACCOUNT_ID': simbase.air.getAccountIdFromSender(), 
         'HOST_NAME': getpass.getuser()
     })
-    sentryReporter.captureMessage(info)
+    sentry_sdk.capture_exception(e)
     print(info)
     raise

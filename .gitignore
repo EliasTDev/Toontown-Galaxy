@@ -99,3 +99,4 @@ dependencies/panda/Samples.url
 dependencies/panda/uninst.exe
 dependencies/panda3d/*/**
 test/test.py
+user/logs/magic-words/magic-words-log.txt

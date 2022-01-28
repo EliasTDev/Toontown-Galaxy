@@ -20,9 +20,10 @@ from panda3d.otp import NametagGroup, WhisperPopup
 
 from otp.otpbase import OTPLocalizer
 from otp.otpbase import OTPGlobals
-
+import sentry_sdk
+import os
 from . import MagicWordConfig
-import time, random, re, json
+import time, datetime, random, re, json
 from panda3d.core import *
 from toontown.toon import Experience
 from toontown.toonbase import ToontownGlobals
@@ -149,6 +150,9 @@ class MagicWord:
     def executeWord(self):
         executedWord = None
         validTargets = len(self.targets)
+        now = time.strftime("%c")
+        if not os.path.exists('user/logs/magic-words/'):
+            os.makedirs('user/logs/magic-words/')
         for avId in self.targets:
             invoker = None
             toon = None
@@ -186,6 +190,26 @@ class MagicWord:
                 self.args = json.loads(self.args)
 
             executedWord = self.handleWord(invoker, avId, toon, *self.args)
+            self.air.writeServerEvent('magic-word-excuted',
+                                  self.invokerId, invoker.getStaffAccess(),
+                                  toon.getStaffAccess(),
+                                  self.__class__.__name__,
+                                  executedWord)
+
+            sentry_sdk.init('https://6da70c2ded1a494cbf41ba7983443d30@o1128902.ingest.sentry.io/6172331')
+            sentry_sdk.set_context( 'magic-word', {
+            'Invoker-Id': self.invokerId,
+            'Invoker-Toon-Name': invoker.getName(), 
+            'InvokerAccessLevel': invoker.getStaffAccess(),
+            'time': now,
+            'TargetName': toon.getName(),
+            'TargetAcessLevel': toon.getStaffAccess(),
+            'Response': executedWord
+        })
+            sentry_sdk.capture_message(self.__class__.__name__)
+        with open ('user/logs/magic-words/magic-words-log.txt', 'a') as magicWordLogFile:
+            magicWordLogFile.write(f"{now} | {self.invokerId}: {self.__class__.__name__}\n")
+
         # If you're only using the Magic Word on one person and there is a response, return that response
         if executedWord and len(self.targets) == 1:
             return executedWord
@@ -195,6 +219,7 @@ class MagicWord:
             if validTargets == 1 and self.invokerId in self.targets:
                 return None
             # Otherwise, state how many targets you executed it on
+        
             return "Magic Word successfully executed on %s target(s)." % validTargets
         else:
             return "Magic Word unable to execute on any targets."

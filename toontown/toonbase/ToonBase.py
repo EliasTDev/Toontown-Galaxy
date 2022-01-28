@@ -71,7 +71,7 @@ class ToonBase(OTPBase.OTPBase):
         self.musicManager.setVolume(musicVolume)
         for sfm in self.sfxManagerList:
             sfm.setVolume(sfxVolume)
-        self.sfxActive = sfxVolue > 0.0
+        self.sfxActive = sfxVolume > 0.0
         self.controlManager = TTControlManager.ControlManager()
         # Set the default background color.
         self.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
