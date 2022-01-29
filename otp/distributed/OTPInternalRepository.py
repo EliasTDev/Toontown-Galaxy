@@ -44,16 +44,13 @@ class OTPInternalRepository(AstronInternalRepository):
             if wantSentry:
                 from os.path import expanduser
                 sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
-                sentry_sdk.set_context( 'uberdog',
-                {
-                    
-                'district_name': os.getenv('DISTRICT_NAME', "NULL"),
-                'SENDER_AVID': simbase.air.getAvatarIdFromSender(), 
-                'SENDER_ACCOUNT_ID': simbase.air.getAccountIdFromSender(), 
-                'homedir': expanduser('~'),
-                'CRITICAL': 'False'
-                }
-                )
+
+                sentry_sdk.set_tag('district_name', os.getenv('DISTRICT_NAME', "NULL"))
+                sentry_sdk.set_tag('SENDER_AVID', simbase.air.getAvatarIdFromSender())
+                sentry_sdk.set_tag('SENDER_ACCOUNT_ID', simbase.air.getAccountIdFromSender())
+                sentry_sdk.set_tag('homedir', expanduser('~'))
+                sentry_sdk.set_tag('CRITICAL', 'True')
+
                 sentry_sdk.capture_exception(e)
             
         return 1

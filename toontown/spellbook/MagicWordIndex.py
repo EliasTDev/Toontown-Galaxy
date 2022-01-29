@@ -202,16 +202,14 @@ class MagicWord:
                                       executedWord)
 
             sentry_sdk.init('https://6da70c2ded1a494cbf41ba7983443d30@o1128902.ingest.sentry.io/6172331')
-            sentry_sdk.set_context('magic-word', {
-                'Invoker-Id': self.invokerId,
-                'Invoker-Toon-Name': invoker.getName(),
-                'InvokerAccessLevel': invoker.getStaffAccess(),
-                'time': now,
-                'TargetName': toon.getName(),
-                'TargetAcessLevel': toon.getStaffAccess(),
-                'Response': executedWord
-            })
-            sentry_sdk.capture_message(self.__class__.__name__)
+            sentry_sdk.set_tag('Invoker-Id', self.invokerId)
+            sentry_sdk.set_tag('Invoker-Toon-Name', invoker.getName())
+            sentry_sdk.set_tag('InvokerAccessLevel', invoker.getStaffAccess())
+            sentry_sdk.set_tag('time', now)
+            sentry_sdk.set_tag('TargetName', toon.getName())
+            sentry_sdk.set_tag('TargetAcessLevel', toon.getStaffAccess())
+            sentry_sdk.set_tag('Response', executedWord)
+            sentry_sdk.capture_message(f' ~{self.__class__.__name__} used')
         with open('user/logs/magic-words/magic-words-log.txt', 'a') as magicWordLogFile:
             magicWordLogFile.write(f"{now} | {self.invokerId}: {self.__class__.__name__}\n")
 

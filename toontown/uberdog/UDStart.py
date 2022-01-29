@@ -48,15 +48,13 @@ except Exception as e:
     from otp.otpbase import PythonUtil
 
     info = PythonUtil.describeException()
-    if wantSentry:    
+    if wantSentry:
         from os.path import expanduser
-        sentry_sdk.set_context("Uberdog" , {
-        'district_name': os.getenv('DISTRICT_NAME', "NULL"),
-        'SENDER_AVID': simbase.air.getAvatarIdFromSender(), 
-        'SENDER_ACCOUNT_ID': simbase.air.getAccountIdFromSender(), 
-        'homedir': expanduser('~'),
-        'CRITICAL': 'True'
-        })
+        sentry_sdk.set_tag('district_name', os.getenv('DISTRICT_NAME', "NULL"))
+        sentry_sdk.set_tag('SENDER_AVID', simbase.air.getAvatarIdFromSender())
+        sentry_sdk.set_tag('SENDER_ACCOUNT_ID',simbase.air.getAccountIdFromSender())
+        sentry_sdk.set_tag('homedir', expanduser('~'))
+        sentry_sdk.set_tag('CRITICAL', 'True')
         sentry_sdk.capture_exception(e)
     print(info)
     raise
