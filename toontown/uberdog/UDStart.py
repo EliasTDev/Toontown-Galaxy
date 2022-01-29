@@ -37,8 +37,6 @@ if ':' in host:
 
 simbase.air.connect(host, port)
 wantSentry = ConfigVariableBool('want-Sentry', False)
-if wantSentry:
-    sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
 
 try:
     run()
@@ -50,6 +48,7 @@ except Exception as e:
     info = PythonUtil.describeException()
     if wantSentry:
         from os.path import expanduser
+        sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
         sentry_sdk.set_tag('district_name', os.getenv('DISTRICT_NAME', "NULL"))
         sentry_sdk.set_tag('SENDER_AVID', simbase.air.getAvatarIdFromSender())
         sentry_sdk.set_tag('SENDER_ACCOUNT_ID',simbase.air.getAccountIdFromSender())

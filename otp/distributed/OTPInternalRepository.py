@@ -29,8 +29,6 @@ class OTPInternalRepository(AstronInternalRepository):
             
         except Exception as e:
             wantSentry = ConfigVariableBool('want-Sentry', False)
-            if wantSentry:
-                sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
             if self.getAvatarIdFromSender() > 100000000:
                 dg = PyDatagram()
                 dg.addServerHeader(self.getMsgSender(), self.ourChannel, CLIENTAGENT_EJECT)

@@ -46,8 +46,7 @@ if ':' in host:
     port = int(port)
 
 simbase.air.connect(host, port)
-if wantSentry:
-    sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
+
 
 try:
     run()
@@ -61,6 +60,7 @@ except Exception as e:
     with open(config.GetString('ai-crash-log-name', 'ai-crash.txt'), 'w+') as file:
         file.write(info + "\n")
     if wantSentry:
+        sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
         from os.path import expanduser
         sentry_sdk.set_tag('district_name', os.getenv('DISTRICT_NAME', "NULL"))
         sentry_sdk.set_tag('SENDER_AVID', simbase.air.getAvatarIdFromSender())

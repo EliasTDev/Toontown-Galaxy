@@ -195,7 +195,9 @@ class MagicWord:
                 self.args = json.loads(self.args)
 
             executedWord = self.handleWord(invoker, avId, toon, *self.args)
-            self.air.writeServerEvent('magic-word-excuted',
+            # make sure the process is an ai process before writing a server event
+            if game.process == 'ai':
+                self.air.writeServerEvent('magic-word-excuted',
                                       self.invokerId, invoker.getStaffAccess(),
                                       toon.getStaffAccess(),
                                       self.__class__.__name__,
@@ -210,6 +212,7 @@ class MagicWord:
             sentry_sdk.set_tag('TargetAcessLevel', toon.getStaffAccess())
             sentry_sdk.set_tag('Response', executedWord)
             sentry_sdk.capture_message(f' ~{self.__class__.__name__} used')
+            sentry_sdk.init()
         with open('user/logs/magic-words/magic-words-log.txt', 'a') as magicWordLogFile:
             magicWordLogFile.write(f"{now} | {self.invokerId}: {self.__class__.__name__}\n")
 
