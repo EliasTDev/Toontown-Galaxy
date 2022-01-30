@@ -52,6 +52,8 @@ class TTChatInputWhiteList(ChatInputWhiteListFrame):
         self.prefilter = 0
         self.promoteWhiteList = 1
         self.typeGrabbed = 0
+        self.nearbyNames = []
+        self.nearbyPlayers = []
         
         #self.request("off")
         self.deactivate()
@@ -189,6 +191,8 @@ class TTChatInputWhiteList(ChatInputWhiteListFrame):
             messenger.send('enterNormalChat')
             
     def destroy(self):
+        self.nearbyNames = []
+        self.nearbyPlayers = []
         self.chatEntry.destroy()
         self.chatFrame.destroy()
         self.ignoreAll()
@@ -197,6 +201,8 @@ class TTChatInputWhiteList(ChatInputWhiteListFrame):
         
     def delete(self):
         base.whiteList = None
+        self.nearbyNames = []
+        self.nearbyPlayers = []
         ChatInputWhiteListFrame.delete(self)
         
     def sendChat(self, text, overflow = False):
@@ -311,6 +317,15 @@ class TTChatInputWhiteList(ChatInputWhiteListFrame):
             
     def applyFilter(self,keyArgs,strict=False):
         text = self.chatEntry.get(plain=True)
+        self.nearbyPlayers = []
+        self.nearbyPlayers = base.localAvatar.getNearbyPlayers()
+        self.nearbyNames = []
+        for playerId in self.nearbyPlayers:
+            player = base.cr.doId2do.get(playerId)
+            self.nearbyNames.append(str.lower(player.getName()))
+            self.nearbyNames.append(str.title(player.getName()))
+            self.nearbyNames.append(str.upper(player.getName()))
+
 
         if len(text) > 0 and text[0] in ['~','>']:
             self.okayToSubmit = True
@@ -326,7 +341,7 @@ class TTChatInputWhiteList(ChatInputWhiteListFrame):
  
 
             for word in words:
-                if word == "" or self.whiteList.isWord(word) or (not base.cr.whiteListChatEnabled):
+                if word == "" or self.whiteList.isWord(word) or (word in self.nearbyNames) or (not base.cr.whiteListChatEnabled):
                     newwords.append(word)
                 else:
                     if self.checkBeforeSend:
