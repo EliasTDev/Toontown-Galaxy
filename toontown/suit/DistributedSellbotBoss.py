@@ -284,10 +284,8 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
         # Also make a polygon to register when we jump up (in battle
         # three) and touch the bottom of the cage.
         
-        touch = CollisionPolygon(Point3(-3.0382, 3.0382, -1),
-                                 Point3(3.0382, 3.0382, -1),
-                                 Point3(3.0382, -3.0382, -1),
-                                 Point3(-3.0382, -3.0382, -1))
+        touch = CollisionSphere(0, 0, 0, 2)
+
         touchNode = CollisionNode('Cage')
         touchNode.setCollideMask(ToontownGlobals.WallBitmask)
         touchNode.addSolid(touch)

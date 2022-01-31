@@ -1,5 +1,5 @@
 import builtins, os
-
+import sentry_sdk
 class game:
     name = 'toontown'
     process = 'server'
@@ -40,19 +40,32 @@ simbase.air = ToontownAIRepository(config.GetInt('air-base-channel', 1000000), c
 
 host = config.GetString('air-connect', '127.0.0.1:7100')
 port = 7100
+wantSentry = ConfigVariableBool('want-Sentry', False)
 if ':' in host:
     host, port = host.split(':', 1)
     port = int(port)
 
 simbase.air.connect(host, port)
 
+
 try:
     run()
-except SystemExit:
+except (SystemExit, KeyboardInterrupt):
     raise
-except Exception:
+except Exception as e:
+    from otp.otpbase import PythonUtil
+
     info = PythonUtil.describeException()
     simbase.air.writeServerEvent('ai-exception', avId=simbase.air.getAvatarIdFromSender(), accId=simbase.air.getAccountIdFromSender(), exception=info)
     with open(config.GetString('ai-crash-log-name', 'ai-crash.txt'), 'w+') as file:
         file.write(info + "\n")
+    if wantSentry:
+        sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
+        from os.path import expanduser
+        sentry_sdk.set_tag('district_name', os.getenv('DISTRICT_NAME', "NULL"))
+        sentry_sdk.set_tag('SENDER_AVID', simbase.air.getAvatarIdFromSender())
+        sentry_sdk.set_tag('SENDER_ACCOUNT_ID',simbase.air.getAccountIdFromSender())
+        sentry_sdk.set_tag('homedir', expanduser('~'))
+        sentry_sdk.set_tag('CRITICAL', 'True')
+        sentry_sdk.capture_exception(e)
     raise

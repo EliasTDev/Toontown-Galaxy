@@ -55,7 +55,7 @@ class ToonBase(OTPBase.OTPBase):
         self.toonChatSounds = self.config.GetBool('toon-chat-sounds', 1)
 
         # Toontown doesn't care about dynamic shadows for now.
-        self.wantDynamicShadows = 1
+        self.wantDynamicShadows = 0
         # this is temporary until we pull in the new launcher code in production
         self.exitErrorCode = 0
 
@@ -66,8 +66,12 @@ class ToonBase(OTPBase.OTPBase):
                                 ToontownGlobals.DefaultCameraFar)
 
         # Music should be a bit quieter in toontown
-        self.musicManager.setVolume(0.65 )
-
+        musicVolume = self.settings.getFloat('game', 'musicVolume', 1.0)
+        sfxVolume = self.settings.getFloat('game', 'sfxVolume', 1.0)
+        self.musicManager.setVolume(musicVolume)
+        for sfm in self.sfxManagerList:
+            sfm.setVolume(sfxVolume)
+        self.sfxActive = sfxVolume > 0.0
         self.controlManager = TTControlManager.ControlManager()
         # Set the default background color.
         self.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
@@ -306,8 +310,9 @@ class ToonBase(OTPBase.OTPBase):
             render2d.setShaderAuto()
             render2dp.setShaderAuto()
         #TODO add gui setting in shticker book
-        base.wantSmoothAnimations = self.settings.getBool('game', 'smooth-animations', False)
-        
+        self.wantSmoothAnimations = self.settings.getBool('game', 'smooth-animations', False)
+
+        self.wantLaffMeterOverHead = self.settings.getBool('game', 'want-laff-meter-over-head', True)
     def reloadControls(self):
         self.ignore(self.SCREENSHOT)
         self.MOVE_FORWARD = self.controlManager.getKeyName('HotKeys', ToontownGlobals.HotkeyUp).lower()
@@ -343,8 +348,8 @@ class ToonBase(OTPBase.OTPBase):
         # These are to fix graphical issues on Modern panda.
         cullBinMgr = CullBinManager.getGlobalPtr()
         cullBinMgr.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
-        cullBinMgr.addBin('shadow', CullBinManager.BTFixed, -100)
-        cullBinMgr.addBin('ground', CullBinManager.BTUnsorted, 18)
+        cullBinMgr.addBin('shadow', CullBinManager.BTFixed, 15)
+        cullBinMgr.addBin('ground', CullBinManager.BTFixed, 14)
 
     def __walking(self, pressed):
         self.walking = pressed
@@ -742,7 +747,8 @@ class ToonBase(OTPBase.OTPBase):
             sfxVolume = self.settings.getFloat('game', 'sfxVolume', 1.0)
             res = self.settings.getList('game', 'resolution', [cdll.user32.GetSystemMetrics(0)*5/6, cdll.user32.GetSystemMetrics(1)*5/6])
             smoothAnimations = self.settings.getBool('game', 'smooth-animations', False)
-            antialiasing = self.settings.getInt('game', 'antialiasing', 0)
+            antialiasing = self.settings.getBool('game', 'antialiasing', 0)
+            wantLaffMeterOverHead = self.settings.getBool('game', 'want-laff-meter-over-head', True)
             if antialiasing:
                 loadPrcFileData('toonBase Settings Framebuffer MSAA', 'framebuffer-multisample 1')
                 loadPrcFileData('toonBase Settings MSAA Level', 'multisamples %i' % antialiasing)
@@ -759,5 +765,7 @@ class ToonBase(OTPBase.OTPBase):
             loadPrcFileData(f'toonBase Settings Custom Controls', 'customControls {wantCustomControls}')
             loadPrcFileData(f'toonBase Settings Controls', 'controls {controls}' )
             loadPrcFileData(f'toonBase Settings smooth animations', 'smooth animations: {smoothAnimations}' )
+            loadPrcFileData(f'toonBase Settings Laff Meter Over Head', 'laff-meter-overhead: {wantLaffMeterOverHead}' )
+
             self.settings.loadFromSettings()
 

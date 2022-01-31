@@ -60,7 +60,7 @@ echo Gameserver: %TTG_GAMESERVER%
 echo ===============================
 
 cd ../../
-
+"dependencies/panda/python/ppython.exe" -m pip install -r requirements.txt
 :main
 if %INPUT%==2 (
     "dependencies/panda/python/ppython.exe" -m toontown.toonbase.ToontownStart

@@ -1441,9 +1441,43 @@ class AnotherOptionsTabPage(DirectFrame):
             pos = (buttonbase_xcoord, 0, buttonbase_ycoord - 0.3),
             command = self.openCustomControlsGUI,
             )
+        self.laffMeterLabel = DirectLabel(parent=self, relief=None, text='Laff Meter Overhead:', 
+                                            text_align = TextNode.ALeft, text_scale = options_text_scale,
+                                                text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.5))
+       #TODO make it a directmenu instead where you can choose if you want it on , off or only when a toon takes damage
+        self.laffMeterButton = DirectButton(
+            parent = self,
+            relief = None,
+            image = (guiButton.find("**/QuitBtn_UP"),
+                     guiButton.find("**/QuitBtn_DN"),
+                     guiButton.find("**/QuitBtn_RLVR"),
+                     ),
+            image_scale = button_image_scale,
+            text = "Toggle Laff Meter",
+            text_scale = options_text_scale,
+            text_pos = button_textpos,
+            pos = (buttonbase_xcoord, 0, buttonbase_ycoord - 0.5),
+            command = self.toggleLaffMeter)
+
+
+
+    def toggleLaffMeter(self):
+        self.settingsChanged = 1
+        base.settings.updateSetting('game', 'want-laff-meter-over-head', not base.wantLaffMeterOverHead)
+        base.wantLaffMeterOverHead = not base.wantLaffMeterOverHead
+        self.__setLaffMeterLabel()
+
+    def __setLaffMeterLabel(self):
+        if base.wantLaffMeterOverHead:
+            self.laffMeterLabel['text'] = ['Laff Meter Overhead: On']
+            self.laffMeterButton['text'] = ['Toggle Laff Meter off']
+        else:
+            self.laffMeterLabel['text'] = ['Laff Meter Overhead: Off']
+            self.laffMeterButton['text'] = ['Toggle Laff Meter on']
 
     def openCustomControlsGUI(self):
         ControlSettingsDialog()
+
     def setMusicVolume(self, input=None):
         if input is None:
             input = self.musicVolumeEntry.get()
@@ -1535,6 +1569,10 @@ class AnotherOptionsTabPage(DirectFrame):
         del self.customsControlsLabel
         self.customCfontrolsButton.destroy()
         del self.customControlsButton
+        self.laffMeterLabel.destroy()
+        del self.laffMeterLabel
+        self.laffMeterButton.destroy()
+        del self.laffMeterButton
     
 
 

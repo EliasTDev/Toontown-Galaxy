@@ -13,6 +13,7 @@ from otp.speedchat import SCDecoders
 from otp.chat import TalkAssistant
 from . import Toon
 from . import GMUtils
+from . import LaffMeter
 from direct.task.Task import Task
 from direct.distributed import DistributedSmoothNode
 from direct.distributed import DistributedObject
@@ -230,6 +231,8 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
         self.gmNameTagColor = 'whiteGM'
         self.gmNameTagString = ''
         self.trueFriends = None 
+        #Not to be confused with wantlaffmeteroverhead in toonbase
+        self.laffMeterOverHead = None
 
     def disable(self):
         for soundSequence in self.soundSequenceList:
@@ -1688,6 +1691,31 @@ class DistributedToon(DistributedPlayer.DistributedPlayer,
 
     def getTrackAccess(self):
         return self.trackArray
+
+    def setHp(self, hp):
+        DistributedPlayer.DistributedPlayer.setHp(self, hp)
+
+        self.updateOverHeadLaffMeter()
+
+    def updateOverHeadLaffMeter(self):
+        #TODO make the hp check a player choice thing
+        if (self.hp < self.maxHp and base.wantLaffMeterOverHead 
+            and not self.laffMeterOverHead):
+            #Setup the laff meter 
+            self.laffMeterOverHead = LaffMeter.LaffMeter(self.style, self.hp, self.maxHp)
+            self.laffMeterOverHead.setAvatar(self)
+            #Set the laff meter above the toon's head
+            self.laffMeterOverHead.setZ(4)
+            self.laffMeterOverHead.reparentTo(self.nametag.getNameIcon())
+            self.laffMeterOverHead.setScale(1.2)
+            self.laffMeterOverHead.start()
+            self.notify.info('Starting laff meter ')
+        elif ( (not base.wantLaffMeterOverHead and self.laffMeterOverHead) 
+                or (self.hp >= self.maxHp and self.laffMeterOverHead) ):
+            #Disable the laff meter 
+            self.laffMeterOverHead.stop()
+            self.laffMeterOverHead.destroy()
+            self.laffMeterOverHead = None
 
 
     def hasTrackAccess(self, track):

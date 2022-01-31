@@ -1,4 +1,5 @@
 import builtins, os
+import sentry_sdk
 
 class game:
     name = 'uberDog'
@@ -35,12 +36,24 @@ if ':' in host:
     port = int(port)
 
 simbase.air.connect(host, port)
+wantSentry = ConfigVariableBool('want-Sentry', False)
 
 try:
     run()
-except SystemExit:
+except (SystemExit, KeyboardInterrupt):
     raise
-except Exception:
+except Exception as e:
     from otp.otpbase import PythonUtil
-    print(PythonUtil.describeException())
+
+    info = PythonUtil.describeException()
+    if wantSentry:
+        from os.path import expanduser
+        sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
+        sentry_sdk.set_tag('district_name', os.getenv('DISTRICT_NAME', "NULL"))
+        sentry_sdk.set_tag('SENDER_AVID', simbase.air.getAvatarIdFromSender())
+        sentry_sdk.set_tag('SENDER_ACCOUNT_ID',simbase.air.getAccountIdFromSender())
+        sentry_sdk.set_tag('homedir', expanduser('~'))
+        sentry_sdk.set_tag('CRITICAL', 'True')
+        sentry_sdk.capture_exception(e)
+    print(info)
     raise

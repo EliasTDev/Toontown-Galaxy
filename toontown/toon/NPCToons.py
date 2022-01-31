@@ -199,7 +199,7 @@ def createLocalNPC(npcId):
     dna = ToonDNA.ToonDNA()
     if dnaType == "r":
         # ...random dna.
-        dnaList = getRandomDNA(npcId, gender)
+        dnaList = getRandomDNA(npcId, eyelashes)
     else:
         dnaList = dnaType
     dna.newToonFromProperties(*dnaList)
@@ -1136,52 +1136,4 @@ npcFriends = {
             ToontownBattleGlobals.DROP_TRACK, 0, 3), 
     }
 
-FOnpcFriends = {9310: (ToontownBattleGlobals.LURE_TRACK,
-        1,
-        0,
-        0),
- 9311: (ToontownBattleGlobals.LURE_TRACK,
-        1,
-        0,
-        1),
- 9312: (ToontownBattleGlobals.LURE_TRACK,
-        3,
-        0,
-        2),
- 9307: (ToontownBattleGlobals.SOUND_TRACK,
-        1,
-        10,
-        0),
- 9308: (ToontownBattleGlobals.SOUND_TRACK,
-        3,
-        20,
-        1),
- 9309: (ToontownBattleGlobals.SOUND_TRACK,
-        4,
-        30,
-        2),
- 9304: (ToontownBattleGlobals.DROP_TRACK,
-        1,
-        20,
-        0),
- 9305: (ToontownBattleGlobals.DROP_TRACK,
-        2,
-        35,
-        1),
- 9306: (ToontownBattleGlobals.DROP_TRACK,
-        3,
-        50,
-        2),
- 9301: (ToontownBattleGlobals.HEAL_TRACK,
-        3,
-        10,
-        0),
- 9302: (ToontownBattleGlobals.HEAL_TRACK,
-        3,
-        20,
-        1),
- 9303: (ToontownBattleGlobals.HEAL_TRACK,
-        3,
-        30,
-        2)}
-npcFriends.update(FOnpcFriends)
+
