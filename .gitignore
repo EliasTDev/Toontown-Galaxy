@@ -100,3 +100,5 @@ dependencies/panda/uninst.exe
 dependencies/panda3d/*/**
 test/test.py
 user/logs/magic-words/magic-words-log.txt
+dev/win32/start-uberdog-server-2.bat
+dev/win32/start-game-2.bat
