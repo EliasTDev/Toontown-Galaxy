@@ -861,5 +861,5 @@ dclass ChatRouter : DistributedObject {
   chatMessage(string message) clsend;
   whisperMessage(string message, DoId receiverAvId) clsend;
   nearby_toons_command(uint32[]) airecv clsend;
-  set_extra_whitelisted_words(uint16[]);
+  set_extra_whitelisted_words(uint16[]) ram;
 };
