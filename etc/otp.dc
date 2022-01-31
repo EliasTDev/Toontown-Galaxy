@@ -860,5 +860,4 @@ dclass AstronLoginManager : DistributedObject {
 dclass ChatRouter : DistributedObject {
   chatMessage(string message) clsend;
   whisperMessage(string message, DoId receiverAvId) clsend;
-  nearbyToonsCommand(uint32[]) clsend;
 };
