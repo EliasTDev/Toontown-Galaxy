@@ -36,7 +36,7 @@ from otp.web import SettingsMgr/AI/UD
 from otp.status import StatusDatabase/UD
 from otp.avatar import AvatarHandle
 from otp.login import AstronLoginManager/UD
-from otp.chat import ChatRouter/UD
+from otp.chat import ChatRouter/AI/UD
 
 typedef uint8 bool;
 
@@ -860,5 +860,6 @@ dclass AstronLoginManager : DistributedObject {
 dclass ChatRouter : DistributedObject {
   chatMessage(string message) clsend;
   whisperMessage(string message, DoId receiverAvId) clsend;
-  nearbyToonsCommand(uint32[]) clsend;
+  nearby_toons_command(uint32[]) airecv clsend;
+  set_extra_whitelisted_words(uint16[]);
 };
