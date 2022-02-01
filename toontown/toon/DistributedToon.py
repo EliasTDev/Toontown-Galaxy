@@ -65,6 +65,7 @@ if base.wantKarts:
 from panda3d.otp import CFSpeech, CFTimeout, CFThought
 from panda3d.otp import WhisperPopup
 from direct.showbase.InputStateGlobal import inputState
+
 if( __debug__ ):
     import pdb
 

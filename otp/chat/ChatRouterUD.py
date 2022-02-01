@@ -1,6 +1,7 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from toontown.chat.TTWhiteList import TTWhiteList
+from discord_webhook import DiscordWebhook, DiscordEmbed
 
 whiteList = TTWhiteList()
 
@@ -27,7 +28,7 @@ class ChatRouterUD(DistributedObjectGlobalUD):
 
     def chatMessage(self, message):
         avId = self.air.getAvatarIdFromSender()
-
+        acId = self.air.getAccountIdFromSender()
         if not avId:
             self.air.writeServerEvent('suspicious', self.air.getAccountIdFromSender(), 'Account sent chat without an avatar')
             return
@@ -38,9 +39,15 @@ class ChatRouterUD(DistributedObjectGlobalUD):
         do = self.air.dclassesByName['DistributedPlayerUD']
         args = [avId, 0, '', message, mods, 0]
         datagram = do.aiFormatUpdate('setTalk', avId, channel, self.air.ourChannel, args)
-
         self.air.send(datagram)
-
+        webhook = DiscordWebhook(url='https://discord.com/api/webhooks/937991478951690320/qYM7lrA82N0Fom1jheSlyWReQjUZB_KaDLgBF7DfmFkwECV3uQ6JhrBfve5yLP_KYd6s', rate_limit_retry=True)
+        embed = DiscordEmbed(title='Chat Log')
+        # TODO make this an ai function so we can grab the toon's name
+        embed.add_embed_field(name='Avatar id: ', value=avId)
+        embed.add_embed_field(name='Account id: ', value=acId)
+        embed.add_embed_field(name='Message: ', value=message)
+        webhook.add_embed(embed)
+        response = webhook.execute()
 
     def whisperMessage(self, message, receiverAvId):
         avId = self.air.getAvatarIdFromSender()
