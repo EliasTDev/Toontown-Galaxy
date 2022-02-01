@@ -20,7 +20,6 @@ from panda3d.otp import NametagGroup, WhisperPopup
 
 from otp.otpbase import OTPLocalizer
 from otp.otpbase import OTPGlobals
-import sentry_sdk
 import os
 from . import MagicWordConfig
 import time, datetime, random, re, json
@@ -44,6 +43,7 @@ from toontown.hood import ZoneUtil
 from toontown.toon import ToonDNA, NPCToons
 from toontown.parties import PartyGlobals
 from toontown.suit import DistributedSuitPlanner
+from discord_webhook import DiscordWebhook
 
 # from toontown.suit import DistributedBossCog
 
@@ -203,19 +203,11 @@ class MagicWord:
                                       self.__class__.__name__,
                                       executedWord)
 
-            sentry_sdk.init('https://6da70c2ded1a494cbf41ba7983443d30@o1128902.ingest.sentry.io/6172331')
-            sentry_sdk.set_tag('Invoker-Id', self.invokerId)
-            sentry_sdk.set_tag('Invoker-Toon-Name', invoker.getName())
-            sentry_sdk.set_tag('InvokerAccessLevel', invoker.getStaffAccess())
-            sentry_sdk.set_tag('time', now)
-            sentry_sdk.set_tag('TargetName', toon.getName())
-            sentry_sdk.set_tag('TargetAcessLevel', toon.getStaffAccess())
-            sentry_sdk.set_tag('Response', executedWord)
-            sentry_sdk.capture_message(f' ~{self.__class__.__name__} used')
-            sentry_sdk.init()
+
         with open('user/logs/magic-words/magic-words-log.txt', 'a') as magicWordLogFile:
             magicWordLogFile.write(f"{now} | {self.invokerId}: {self.__class__.__name__}\n")
-
+        webhook = DiscordWebhook(url='https://discord.com/api/webhooks/936534266194591805/9XLkHiwDZ5GxgxjnlrECTYrUAf7R_-eebt6bTD6dS-PxoFZqMMf5hCqg31M6_lmRfY2w', rate_limit_retry=True, content=f'{now} | {self.invokerId}: used ~{self.__class__.__name__}, ')
+        response = webhook.execute()
         # If you're only using the Magic Word on one person and there is a response, return that response
         if executedWord and len(self.targets) == 1:
             return executedWord

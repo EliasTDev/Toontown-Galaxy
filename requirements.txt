@@ -2,3 +2,4 @@ mysqlclient
 pytz
 sentry-sdk
 pypresence
+discord-webhook
