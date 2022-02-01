@@ -29,7 +29,7 @@ class ChatRouterUD(DistributedObjectGlobalUD):
         avId = self.air.getAvatarIdFromSender()
 
         if not avId:
-            return
+            self.air.writeServerEvent('suspicious', self.air.getAccountIdFromSender(), 'Account sent chat without an avatar')
 
         channel = avId
 

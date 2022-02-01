@@ -6,7 +6,6 @@ from panda3d.otp import CImpulse
 from panda3d.toontown import *
 from otp.ai.AIZoneData import AIZoneDataStore
 from otp.ai.TimeManagerAI import TimeManagerAI
-from otp.chat.ChatRouterAI import ChatRouterAI
 from otp.distributed.OtpDoGlobals import *
 from toontown.ai.HolidayManagerAI import HolidayManagerAI
 from toontown.ai.NewsManagerAI import NewsManagerAI
@@ -304,8 +303,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         # Generate our party manager...
         self.partyManager = DistributedPartyManagerAI(self)
         self.partyManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
-        self.chatRouter = ChatRouterAI(self)
-        self.chatRouter.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+        self.chatRouter =simbase.air.generateGlobalObject(OTP_DO_ID_CHAT_ROUTER, 'ChatRouter')
         # Generate our code redemption manager...
         self.codeRedemptionManager = TTCodeRedemptionMgrAI(self)
         self.codeRedemptionManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
