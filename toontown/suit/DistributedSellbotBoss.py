@@ -82,9 +82,9 @@ class DistributedSellbotBoss(DistributedBossCog.DistributedBossCog, FSM.FSM):
             }
         self.setDisplayName(nameInfo)
 
-        self.cageDoorSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_SOS_cage_door.ogg')
+        self.cageDoorSfx = loader.loadSfx('phase_5/audio/sfx/CHQ_SOS_cage_door.ogg')
         self.cageLandSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_SOS_cage_land.ogg')
-        self.cageLowerSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_SOS_cage_lower.ogg')
+        self.cageLowerSfx = loader.loadSfx('phase_5/audio/sfx/CHQ_SOS_cage_lower.ogg')
         self.piesRestockSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_SOS_pies_restock.ogg')
         self.rampSlideSfx = loader.loadSfx('phase_9/audio/sfx/CHQ_VP_ramp_slide.ogg')
         # We need a different copy of the sfx for each strafe disk.
