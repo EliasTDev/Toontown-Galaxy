@@ -30,3 +30,4 @@ teleport-all 0 //disable during production
 want-cogdominiums #t
 
 is-winter-running #f
+fmod-use-surround-sound #t 
