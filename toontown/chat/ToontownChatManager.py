@@ -129,14 +129,14 @@ class ToontownChatManager(ChatManager.ChatManager):
             parent = base.a2dTopLeft,
             relief = None,
             image = DGG.getDefaultDialogGeom(),
-            image_scale = (0.45, 0.45, 0.45),
+            image_scale = (0.79, 0.7, 0.2),
             image_color = OTPGlobals.GlobalDialogColor,
-            pos = (1.25, 0, -0.269),
+            pos = (0.4, 0, -0.105),
             text = OTPLocalizer.ChatManagerWhisperTo,
-            text_wordwrap = 7.0,
+            text_wordwrap = 6.5,
             text_scale = TTLocalizer.CMwhisperFrame,
             text_fg = Vec4(0,0,0,1),
-            text_pos = (0.17,0.01),
+            text_pos = (0.18,0.01),
             textMayChange = 1,
             sortOrder = DGG.FOREGROUND_SORT_INDEX,
             )
@@ -148,7 +148,7 @@ class ToontownChatManager(ChatManager.ChatManager):
                      gui.find("**/ChtBx_ChtBtn_DN"),
                      gui.find("**/ChtBx_ChtBtn_RLVR"),
                      ),
-            pos = (-0.29, 0, 0.03),
+            pos = (-0.32, 0, 0.032),
             scale = 1.179,
             relief = None,
             image_color = Vec4(1,1,1,1),
@@ -171,7 +171,7 @@ class ToontownChatManager(ChatManager.ChatManager):
                      gui.find("**/ChtBx_ChtBtn_DN"),
                      gui.find("**/ChtBx_ChtBtn_RLVR"),
                      ),
-            pos = (-0.17, 0, 0.03),
+            pos = (-0.2, 0, 0.032),
             scale = 1.179,
             relief = None,
             image_color = Vec4(0.75,1,0.6,1),
@@ -194,7 +194,7 @@ class ToontownChatManager(ChatManager.ChatManager):
                      gui.find("**/CloseBtn_DN"),
                      gui.find("**/CloseBtn_Rllvr"),
                      ),
-            pos = (-0.05, 0, 0.033),
+            pos = (-0.06, 0, 0.033),
             scale = 1.179,
             relief = None,
             text = ("",
@@ -214,8 +214,8 @@ class ToontownChatManager(ChatManager.ChatManager):
         self.chatInputSpeedChat = TTChatInputSpeedChat(self)
         
         self.normalPos = Vec3(0.25, 0, -0.196)
-        self.whisperPos = Vec3(0, 0, -0.296)
-        self.speedChatPlusPos = Vec3(0, 0, 0)
+        self.whisperPos = Vec3(0.25, 0, -0.296)
+        self.speedChatPlusPos = Vec3(-0.35, 0, 0.7)
         
         if self.defaultToWhiteList:
             self.chatInputNormal = TTChatInputWhiteList()

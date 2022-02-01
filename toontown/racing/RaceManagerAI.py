@@ -19,7 +19,7 @@ def getDefaultRecord(trackId):
 class RaceManagerAI(DirectObject.DirectObject):
 
     notify = DirectNotifyGlobal.directNotify.newCategory('RaceManagerAI')
-    
+    # TODO turn this into a mysql database
     serverDataFolder = simbase.config.GetString('server-data-folder', "dependencies/backups/racing")
 
     SuspiciousPercent = 0.15 # what percent of qualifying time counts as suspicious
