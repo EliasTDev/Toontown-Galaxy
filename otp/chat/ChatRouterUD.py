@@ -55,6 +55,5 @@ class ChatRouterUD(DistributedObjectGlobalUD):
         self.air.send(datagram)
 
     def set_extra_whitelisted_words(self, extra_whitelisted_words):
-        self.extra_whitelisted_words = []
         self.extra_whitelisted_words = extra_whitelisted_words
         self.notify.info(f'Extra words: {self.extra_whitelisted_words}')
