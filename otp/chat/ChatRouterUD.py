@@ -56,4 +56,4 @@ class ChatRouterUD(DistributedObjectGlobalUD):
 
     def set_extra_whitelisted_words(self, extra_whitelisted_words):
         self.extra_whitelisted_words = extra_whitelisted_words
-        self.notify.info(f'Extra words: {self.extra_whitelisted_words}')
+        self.notify.debug(f'Extra words: {self.extra_whitelisted_words}')

@@ -32,5 +32,5 @@ class ChatRouterAI(DistributedObjectGlobalAI):
                 self.air.writeServerEvent('suspicious',
                                           f'Toon {sender_id}tried sending an invalid toons list {nearby_player_ids}')
                 return
-        print(extra_whitelisted_words)
+        self.notify.debug(extra_whitelisted_words)
         self.sendUpdate('set_extra_whitelisted_words', [extra_whitelisted_words])
