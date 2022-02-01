@@ -9,3 +9,10 @@ class ChatRouter(DistributedObjectGlobal):
 
     def sendWhisperMessage(self, message, receiverAvId):
         self.sendUpdate('whisperMessage', [message, receiverAvId])
+        
+    def sendNearbyToons(self):
+        """
+        Send nearby player ids to the ai
+        """
+        nearbyPlayers = base.localAvatar.getNearbyPlayers()
+        self.sendUpdate('nearby_toons_command', [nearbyPlayers])

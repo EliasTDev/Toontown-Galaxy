@@ -303,7 +303,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         # Generate our party manager...
         self.partyManager = DistributedPartyManagerAI(self)
         self.partyManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
-
+        self.chatRouter =simbase.air.generateGlobalObject(OTP_DO_ID_CHAT_ROUTER, 'ChatRouter')
         # Generate our code redemption manager...
         self.codeRedemptionManager = TTCodeRedemptionMgrAI(self)
         self.codeRedemptionManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
