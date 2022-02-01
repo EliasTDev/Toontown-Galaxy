@@ -21,10 +21,16 @@ class ChatRouterAI(DistributedObjectGlobalAI):
         extra_whitelisted_words = []
         sender_id = self.air.getAvatarIdFromSender()
         for toon_id in nearby_player_ids:
-            # try:
-            toon = self.air.doId2do.get(toon_id)
-            extra_whitelisted_words.append(str.lower(toon.getName()))
+            try:
+                toon = self.air.doId2do.get(toon_id)
+                toon_name = str.lower(toon.getName())
+                # get the extracted words from the toon name
+                extracted_words_toon_name = toon_name.split()
+                for word in extracted_words_toon_name:
+                    extra_whitelisted_words.append(word)
+            except BaseException:
+                self.air.writeServerEvent('suspicious',
+                                          f'Toon {sender_id}tried sending an invalid toons list {nearby_player_ids}')
+                return
         print(extra_whitelisted_words)
         self.sendUpdate('set_extra_whitelisted_words', [extra_whitelisted_words])
-        # except BaseException:
-        # self.air.writeServerEvent('suspicious', f'Toon {sender_id}tried sending an invalid toons list {nearby_player_ids}')

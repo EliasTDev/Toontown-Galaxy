@@ -39,11 +39,7 @@ class ChatRouterUD(DistributedObjectGlobalUD):
         args = [avId, 0, '', message, mods, 0]
         datagram = do.aiFormatUpdate('setTalk', avId, channel, self.air.ourChannel, args)
         self.air.send(datagram)
-        # we want to clear this list bc it might change
-        self.clear_extra_whitelisted_words()
 
-    def clear_extra_whitelisted_words(self):
-        self.extra_whitelisted_words = []
 
     def whisperMessage(self, message, receiverAvId):
         avId = self.air.getAvatarIdFromSender()
@@ -57,9 +53,8 @@ class ChatRouterUD(DistributedObjectGlobalUD):
         args = [avId, 0, '', message, mods, 0]
         datagram = do.aiFormatUpdate('setTalkWhisper', receiverAvId, receiverAvId, self.air.ourChannel, args)
         self.air.send(datagram)
-        # we want to clear this list bc it might change
-        self.clear_extra_whitelisted_words()
 
     def set_extra_whitelisted_words(self, extra_whitelisted_words):
+        self.extra_whitelisted_words = []
         self.extra_whitelisted_words = extra_whitelisted_words
         self.notify.info(f'Extra words: {self.extra_whitelisted_words}')
