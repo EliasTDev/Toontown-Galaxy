@@ -6,7 +6,11 @@ class ChatRouter(DistributedObjectGlobal):
 
     def sendChatMessage(self, message):
         self.sendNearbyToons()
-        self.sendUpdate('chatMessage', [message])
+        taskMgr.doMethodLater(0.01, self.__sendActualChatMessage, 'chatMessage', extraArgs=[message])
+
+    def __sendActualChatMessage(self, message):
+        self.sendUpdate('chatMessage',
+            [message])
         
     def sendWhisperMessage(self, message, receiverAvId):
         self.sendUpdate('whisperMessage', [message, receiverAvId])
