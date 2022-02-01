@@ -30,7 +30,7 @@ class ChatRouterUD(DistributedObjectGlobalUD):
 
         if not avId:
             self.air.writeServerEvent('suspicious', self.air.getAccountIdFromSender(), 'Account sent chat without an avatar')
-
+            return
         channel = avId
 
         mods = self.filterWhitelist(message)
