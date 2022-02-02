@@ -2,8 +2,10 @@ from . import DistributedSuitInterior
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM
 from direct.fsm import State
-
+from toontown.cogdominium import DistributedCogdoBarrel
 from toontown.toonbase import ToontownGlobals
+from panda3d.core import Point3
+from . import EndlessBuildingConsts
 class DistributedEndlessSuitInterior(DistributedSuitInterior.DistributedSuitInterior):
     notify = DirectNotifyGlobal.directNotify.newCategory(
         'DistributedSuitInterior')
@@ -52,6 +54,7 @@ class DistributedEndlessSuitInterior(DistributedSuitInterior.DistributedSuitInte
 
         # make sure we're in the initial state
         self.fsm.enterInitialState()
+        self.cr = cr
 
     def __uniqueName(self, name):
         DistributedEndlessSuitInterior.id += 1
@@ -100,11 +103,16 @@ class DistributedEndlessSuitInterior(DistributedSuitInterior.DistributedSuitInte
             self.floorModel = loader.loadModel('phase_7/models/modules/suit_interior')
             SuitHs = self.BottomFloor_SuitHs
             SuitPositions = self.BottomFloor_SuitPositions
-        elif (self.currentFloor == (self.currentFloor % 4 == 0)):
+        elif self.currentFloor % 4 == 0:
             # Boss floor
             self.floorModel = loader.loadModel('phase_7/models/modules/boss_suit_office')
             SuitHs = self.BossOffice_SuitHs
             SuitPositions = self.BossOffice_SuitPositions
+        elif self.currentFloor % 5 == 0:
+            #Checkpoint floor
+            self.floorModel = loader.loadModel('phase_7/models/modules/suit_interior')
+            # No suit lets spawn some gag barrels and laff barrels
+            self.setupBarrels()
         else:
             # middle floor
             self.floorModel = loader.loadModel('phase_7/models/modules/cubicle_room')
@@ -176,6 +184,10 @@ class DistributedEndlessSuitInterior(DistributedSuitInterior.DistributedSuitInte
         track.append(Func(callback))
         track.start(ts)
         self.activeIntervals[name] = track
+
+    def setupBarrels(self):
+        #TODO
+        return
 
     def enterElevator(self, ts=0):
         # Load model for the current floor and the suit models for the floor
