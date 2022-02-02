@@ -111,8 +111,8 @@ class DistributedEndlessSuitInterior(DistributedSuitInterior.DistributedSuitInte
         elif self.currentFloor % 5 == 0:
             #Checkpoint floor
             self.floorModel = loader.loadModel('phase_7/models/modules/suit_interior')
-            # No suit lets spawn some gag barrels and laff barrels
-            self.setupBarrels()
+            # No suit lets spawn an npc that gives a random temporary toonup unite and a random temporary gag up unite
+            self.setupNpc()
         else:
             # middle floor
             self.floorModel = loader.loadModel('phase_7/models/modules/cubicle_room')
@@ -185,7 +185,7 @@ class DistributedEndlessSuitInterior(DistributedSuitInterior.DistributedSuitInte
         track.start(ts)
         self.activeIntervals[name] = track
 
-    def setupBarrels(self):
+    def setupNpc(self):
         #TODO
         return
 
