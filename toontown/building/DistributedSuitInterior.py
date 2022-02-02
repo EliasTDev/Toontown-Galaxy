@@ -10,7 +10,6 @@ from toontown.toonbase import ToontownBattleGlobals
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM, State
 from direct.distributed import DistributedObject
-from direct.fsm import State
 from toontown.battle import BattleBase
 from toontown.hood import ZoneUtil
 
