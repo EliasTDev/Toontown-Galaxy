@@ -376,6 +376,7 @@ SCMenuPlacesCogs                 = "COGS"
 SCMenuPlacesWait                 = "WAIT"
 SCMenuFriendlyYou                = "You..."
 SCMenuFriendlyILike              = "I like..."
+SCMenuFriendlyPronouns = 'My pronouns are...'
 SCMenuPlacesLetsGo               = "Let's go..."
 SCMenuToontasksMyTasks           = "MY TASKS"
 SCMenuToontasksYouShouldChoose   = "I think you should choose..."
@@ -1136,7 +1137,12 @@ SpeedChatStaticText = {
     703 : "I like your skirt.",
     704 : "I like your shorts.",
     705 : "I like this game!",
-
+    # Friendly "My pronouns are ..."
+    706: 'My pronouns are he/him.',
+    707: 'My pronouns are she/her.',
+    708: 'My pronouns are they/them.',
+    709: 'I use any pronouns.',
+    710: 'What are your pronouns?',
     # Sorry
     800 : "Sorry!",
     801 : "Oops!",

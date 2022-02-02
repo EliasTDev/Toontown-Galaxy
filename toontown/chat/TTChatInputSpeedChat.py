@@ -47,7 +47,9 @@ scStructure = [
     [OTPLocalizer.SCMenuFriendly,
      [OTPLocalizer.SCMenuFriendlyYou,   600,601,602,603],
      [OTPLocalizer.SCMenuFriendlyILike, 700,701,702,703,704,705],
-     # Have you been here before? (515) after Are you new here?
+     [OTPLocalizer.SCMenuFriendlyPronouns, 706, 707, 708, 709, 710],
+
+      # Have you been here before? (515) after Are you new here?
      500,501,502,503,504,505,506,507,508,509,510,515,511,512,513,514],
 
     [OTPLocalizer.SCMenuSorry,
