@@ -60,6 +60,9 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         except:
             pass
 
+        self.debugSteps = 0
+        self.nudgeInProgress = False
+
         self.LocalAvatar_initialized = 1
         DistributedAvatar.DistributedAvatar.__init__(self, cr)
         DistributedSmoothNode.DistributedSmoothNode.__init__(self, cr)
@@ -767,11 +770,11 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         #
         # (position, neutral lookat, up lookat, down lookat, disableSmartCam)
         self.cameraPositions = [
-            #close shot
+            # close shot
             (Point3(0.0, (-9.0 * heightScaleFactor), camHeight),        #pos
-             defLookAt,                                                 #fwd
-             Point3(0.0, camHeight, camHeight*4.0),                    #up
-             Point3(0.0, camHeight, camHeight*-1.0),                    #down
+             defLookAt,                               # fwd
+             Point3(0.0, camHeight, camHeight*4.0),   # up
+             Point3(0.0, camHeight, camHeight*-1.0),  # down
              0,
              ),
             #fireworks shot
@@ -1189,38 +1192,19 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.initCameraPositions()
         self.setCameraPositionByIndex(self.cameraIndex)
         self.orbitalCamera.start()
-        return
-        # slam the camera to its destination
-        self.posCamera(0, 0.)
-        # self.__instantaneousCamPos holds the current "instantaneous"
-        # camera position. this variable is used to keep the camera moving
-        # in a straight line towards its target position regardless of how
-        # the camera is pushed off-track by its pusher.
-        self.__instantaneousCamPos = camera.getPos()
 
-        if push:
-
-            # Activate the camera Pusher
-            self.cTrav.addCollider(self.ccSphereNodePath, self.camPusher)
-            # activate the on-floor ray
-            self.ccTravOnFloor.addCollider(self.ccRay2NodePath,
-                                           self.camFloorCollisionBroadcaster)
-            self.__disableSmartCam = 0
-        else:
-            self.__disableSmartCam = 1
-
-        self.__lastPosWrtRender = camera.getPos(render)
-        self.__lastHprWrtRender = camera.getHpr(render)
+        # these 5 lines fix the ghost bug - Wiz
+        self.cTrav.addCollider(self.ccSphereNodePath, self.camPusher)
+        # activate the on-floor ray
+        self.ccTravOnFloor.addCollider(self.ccRay2NodePath,
+                                       self.camFloorCollisionBroadcaster)
 
         taskName = self.taskName("updateSmartCamera")
-        # remove any old
         taskMgr.remove(taskName)
-        # spawn the new task
-        # Set the priority somewhere between the collision task and
-        # the rendering:
         taskMgr.add(self.updateSmartCamera, taskName, priority=47)
 
-        self.enableSmartCameraViews()
+        # self.enableSmartCameraViews()
+        return
 
     def stopUpdateSmartCamera(self):
         self.orbitalCamera.stop()
@@ -1246,6 +1230,10 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self._smartCamEnabled = False
 
     def updateSmartCamera(self, task):
+        # This happens when the toon is unloaded
+        if not hasattr(self, 'ccTrav'):
+            return Task.done
+
         if (not self.__camCollCanMove) and (not self.__cameraHasBeenMoved):
             if self.__lastPosWrtRender == camera.getPos(render):
                 if self.__lastHprWrtRender == camera.getHpr(render):
@@ -1262,7 +1250,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             # traverse the smart camera line segment collision tree
             self.ccTrav.traverse(self.__geom)
             # check if we have any collisions
-            if (self.camCollisionQueue.getNumEntries() > 0):
+            if self.camCollisionQueue.getNumEntries() > 0:
                 # just take the closest one
                 self.camCollisionQueue.sortEntries()
                 self.handleCameraObstruction(
@@ -1273,9 +1261,12 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             if not self.__onLevelGround:
                 self.handleCameraFloorInteraction()
 
+        # Not doing this because it breaks camera
+        """
         if not self.__idealCameraObstructed:
             # move the camera a bit
             self.nudgeCamera()
+            """
 
         if not self.__disableSmartCam:
             # tell the pusher to do its thing; keep the camera out of the walls
@@ -1306,21 +1297,23 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         Move the camera a little bit closer to its desired
         position as indicated by getCompromiseCameraPos().
         """
+        self.nudgeInProgress = True
+
         # when the pos or hpr gets within this distance of the target,
         # set it and be done with it
-        CLOSE_ENOUGH = 0.1
+        CLOSE_ENOUGH = 100
 
         # save current camera position
-        curCamPos = self.__instantaneousCamPos
-        curCamHpr = camera.getHpr()
+        curCamPos = self.__instantaneousCamPos  # (0, -9, 0)
+        curCamHpr = camera.getHpr()  # (0, 0, 0)
 
         # get target camera params
-        targetCamPos = self.getCompromiseCameraPos()
-        targetCamLookAt = self.getLookAtPoint()
+        targetCamPos = (0, -9, 0)  # self.getCompromiseCameraPos()
+        targetCamLookAt = (0, 1.5, 0)  # self.getLookAtPoint()
 
         posDone = 0
         if Vec3(curCamPos - targetCamPos).length() <= CLOSE_ENOUGH:
-            camera.setPos(targetCamPos)
+            # camera.setPos(targetCamPos)
             posDone = 1
 
         ## do this here to get correct HPR
@@ -1338,6 +1331,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         # of the pusher on the camera HPR
         camera.setPos(targetCamPos)
         camera.lookAt(targetCamLookAt)
+
         ####################
 
         targetCamHpr = camera.getHpr()
@@ -1349,6 +1343,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
         # can we bail early?
         if posDone and hprDone:
+            self.nudgeInProgress = False
             return
 
         # move camera every frame according to this normalized percentage
@@ -1385,7 +1380,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         # set the new camera position with the pusher, so
         # that the HPR gets set correctly and we don't make
         # the player sick
-        self.positionCameraWithPusher(newCamPos, newCamLookAt)
+        # self.positionCameraWithPusher(newCamPos, newCamLookAt)
 
         # camera has been 'HOG' moved (Hand Of God)
         # so set the instantaneous position to the new
