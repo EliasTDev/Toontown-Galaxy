@@ -76,7 +76,7 @@ class OrthoDrive:
                 self.turnLocalToonIval.pause()
             del self.turnLocalToonIval
         # make localToon stop running
-        base.localAvatar.setSpeed(0,0)
+        base.localAvatar.setSpeed(0, 0, 0)
 
     def __update(self, task):
         # move the local toon

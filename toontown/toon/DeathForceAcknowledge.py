@@ -28,7 +28,7 @@ class DeathForceAcknowledge:
                 image_scale = 3.0,
                 state = DGG.NORMAL,
                 )
-            self.fade.reparentTo(aspect2d, FADE_SORT_INDEX)
+            self.fade.reparentTo(render2d, FADE_SORT_INDEX)
             fadeModel.removeNode()
         else:
             print("Problem loading fadeModel.")

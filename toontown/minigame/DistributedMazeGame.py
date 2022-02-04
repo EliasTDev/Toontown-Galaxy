@@ -841,7 +841,7 @@ class DistributedMazeGame(DistributedMinigame):
         def preFunc(self=self, avId=avId, toon=toon, dropShadow=dropShadow):
             forwardSpeed = toon.forwardSpeed
             rotateSpeed = toon.rotateSpeed
-
+            slideSpeed = toon.slideSpeed
             if avId == self.localAvId:
                 # disable control of local toon
                 self.orthoWalk.stop()
@@ -851,7 +851,7 @@ class DistributedMazeGame(DistributedMinigame):
             # preserve old bug/feature where toon would be running in the air
             # if toon was moving, make him continue to run
             if forwardSpeed or rotateSpeed:
-                toon.setSpeed(forwardSpeed, rotateSpeed)
+                toon.setSpeed(forwardSpeed, rotateSpeed, slideSpeed)
 
             # set toon's speed to zero to stop any walk animations
             # leave it, it's funny to see toon running in mid-air

@@ -89,7 +89,7 @@ class TwoDDrive:
                 self.turnLocalToonIval.pause()
             del self.turnLocalToonIval
         # make localToon stop running
-        base.localAvatar.setSpeed(0,0)
+        base.localAvatar.setSpeed(0, 0, 0)
         base.localAvatar.stopSound()
 
     def __update(self, task):
