@@ -1,7 +1,7 @@
 """ DistributedBuilding module: contains the DistributedBuilding
     class, the client side representation of a 'building'."""
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
 from direct.directtools.DirectGeometry import *
@@ -1686,7 +1686,7 @@ class DistributedBuilding(DistributedObject.DistributedObject):
         pass
 
     def getVisZoneId(self):
-        """Retur our visibible Zone Id."""
+        """Return our visibible Zone Id."""
         # this computation is taken from DistributedBuildingMgrAI
         exteriorZoneId = base.cr.playGame.hood.dnaStore.getZoneFromBlockNumber(self.block)
         visZoneId = ZoneUtil.getTrueZoneId(exteriorZoneId, self.zoneId)

@@ -12,6 +12,7 @@ from otp.ai.AIBaseGlobal import *
 
 from . import SuitPlannerInteriorAI
 
+
 class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
     SUIT_TRACKS = ['s', 'm', 'l', 'c']
     notify = DirectNotifyGlobal.directNotify.newCategory(
@@ -36,10 +37,10 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         else:
             self.dbg_defaultSuitType = SuitDNA.getSuitType(dbg_defaultSuitName)
 
-        self._genSuitInfos()
+        #self._genSuitInfos()
         assert (len(self.suitInfos) > 0)
 
-   def _genSuitInfos( self):
+    def _genSuitInfos( self, currFloor):
         """
         // Function:   create information about all suits that will exist
         //             in this building
@@ -58,33 +59,32 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         # process each floor in the building and create all active and
         # reserve suits
         #
-        for currFloor in range(numFloors):
-            infoDict = {}
-            lvls = self.__genLevelList(currFloor)
+        infoDict = {}
+        lvls = self.__genLevelList(currFloor)
 
-            # now randomly decide how many suits will be active and how
-            # many will be in reserve, create the active suit objects
-            # create the active suits in order of highest level to lowest
-            # this is only because we want to make sure the highest level
-            # active suit is in the first position in the list
-            #
-            activeDicts = []
+        # now randomly decide how many suits will be active and how
+        # many will be in reserve, create the active suit objects
+        # create the active suits in order of highest level to lowest
+        # this is only because we want to make sure the highest level
+        # active suit is in the first position in the list
+        #
+        activeDicts = []
 
-            if (self.dbg_4SuitsPerFloor):
-                numActive = 4
+        if (self.dbg_4SuitsPerFloor):
+            numActive = 4
+        else:
+            numActive = random.randint( 1, min( 4, len( lvls ) ) )
+
+        if (currFloor + 1) %4 == 0 and len(lvls) > 1:
+            # Make the boss be suit 1 (unless there is only 1 active suit)
+            origBossSpot = len(lvls) - 1
+            if (numActive == 1):
+                newBossSpot = numActive - 1
             else:
-                numActive = random.randint( 1, min( 4, len( lvls ) ) )
-
-            if (currFloor + 1) %4 == 0 and len(lvls) > 1:
-                # Make the boss be suit 1 (unless there is only 1 active suit)
-                origBossSpot = len(lvls) - 1
-                if (numActive == 1):
-                    newBossSpot = numActive - 1
-                else:
-                    newBossSpot = numActive - 2
-                tmp = lvls[newBossSpot]
-                lvls[newBossSpot] = lvls[origBossSpot]
-                lvls[origBossSpot] = tmp
+                newBossSpot = numActive - 2
+            tmp = lvls[newBossSpot]
+            lvls[newBossSpot] = lvls[origBossSpot]
+            lvls[origBossSpot] = tmp
 
            # bldgInfo = SuitBuildingGlobals.SuitBuildingInfo[ bldgLevel ]
 
