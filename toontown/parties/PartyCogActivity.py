@@ -624,7 +624,7 @@ class PartyCogActivity(DirectObject):
         
         def matchRunningAnim(toon=toon):
             toon.playingAnim = None
-            toon.setSpeed(toon.forwardSpeed, toon.rotateSpeed)
+            toon.setSpeed(toon.forwardSpeed, toon.rotateSpeed, toon.slideSpeed)
             
         newTossTrack = Sequence(tossTrack, Func(matchRunningAnim))
                                 
