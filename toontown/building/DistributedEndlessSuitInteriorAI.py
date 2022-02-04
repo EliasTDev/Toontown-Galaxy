@@ -4,7 +4,8 @@ from toontown.battle import DistributedBattleBldgAI
 
 class DistributedEndlessSuitInteriorAI(DistributedSuitInteriorAI.DistributedSuitInteriorAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedEndlessSuitInteriorAI')
-
+    # Call this class in toontown central and base it off how sellbot factory entrance is made
+    # Will be moved to neo toontown central in the future
     def __init__(self, air, elevator):
         self.air = air
         DistributedSuitInteriorAI.DistributedSuitInteriorAI.__init__(self, air, elevator)

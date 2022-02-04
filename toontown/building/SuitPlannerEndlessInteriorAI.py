@@ -14,6 +14,7 @@ from . import SuitPlannerInteriorAI
 
 
 class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
+
     SUIT_TRACKS = ['s', 'm', 'l', 'c']
     notify = DirectNotifyGlobal.directNotify.newCategory(
         'SuitPlannerInteriorAI')
@@ -41,16 +42,18 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         assert (len(self.suitInfos) > 0)
 
     def _genSuitInfos( self, currFloor):
+
+        
         """
         // Function:   create information about all suits that will exist
-        //             in this building
-        // Parameters: numFloors, number of floors in the building
-        //             bldgLevel, how difficult the building is, based on
-        //                        the suit that initially took the building
-        //             bldgTrack, the track of the building, based on the
-        //                        track that initially took the building
+        //             in on this floor specified
+        // Parameters: currFloor, The current floor of the building
+        //          
         // Changes:
         """
+        # Call this function in  DistributedEndlessSuitInteriorAI with the function that sets the spawn points right before toons fininish the elevator movie
+        
+
         self.suitInfos = []
 
 
