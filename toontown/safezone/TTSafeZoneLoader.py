@@ -1,14 +1,35 @@
-from pandac.PandaModules import *
-
-from . import SafeZoneLoader
-from . import TTPlayground
 import random
+
+from panda3d.core import *
+from toontown.building import DistributedEndlessSuitInterior
 from toontown.launcher import DownloadForceAcknowledge
 
-    
+from . import SafeZoneLoader, TTPlayground
+
+
 class TTSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
     def __init__(self, hood, parentFSM, doneEvent):
         SafeZoneLoader.SafeZoneLoader.__init__(self, hood, parentFSM, doneEvent)
+        self.fsm.addState(State.State('endlessBuildingExterior',
+                                      self.enterEndlessBuildingExterior,
+                                      self.exitEndlessBuildingExterior,
+                                      ['quietZone',
+                                       'endlessSuitInterior', # Elevator
+                                        
+                                       ]))
+        for stateName in ['start', 'endlessSuitInterior', 'quietZone']:
+            state = self.fsm.getStateNamed(stateName)
+            state.addTransition('endlessBuildingExterior')
+        self.fsm.addState(State.State('endlessSuitInterior',
+                                        self.enterSuitInterior,
+                                        self.exitSuitInterior,
+                                        ['quietZone',
+                                         'endlessBuildingExterior', # Win bldg
+                                         ]))
+        for stateName in ['quietZone']:
+            state = self.fsm.getStateNamed(stateName)
+            state.addTransition('endlessSuitInterior')
+
         self.playgroundClass = TTPlayground.TTPlayground
         self.musicFile = "phase_4/audio/bgm/TC_nbrhood.ogg"
         self.activityMusicFile = "phase_3.5/audio/bgm/TC_SZ_activity.ogg"
@@ -32,3 +53,25 @@ class TTSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
     def exit(self):
         SafeZoneLoader.SafeZoneLoader.exit(self)
 
+    def enterEndlessBuildingExterior(self, requestStatus):
+        self.placeClass = self.playgroundClass
+        self.enterPlace(requestStatus)
+       # self.hood.spawnTitleText(requestStatus['zoneId'])
+        
+    def exitEndlessBuildingExterior(self):
+        taskMgr.remove("titleText")
+        self.hood.hideTitleText()
+        self.exitPlace()
+        self.placeClass = None
+
+    def enterEndlessSuitInterior(self, requestStatus):
+        self.placeClass = DistributedEndlessSuitInterior.DistributedEndlessSuitInterior
+        self.enterPlace(requestStatus)
+        
+        # probably wont be used might be removed
+    def exitEndlessSuitInterior(self):
+        self.exitPlace()
+        self.placeClass = None
+
+    def getExteriorPlaceClass(self):
+        return self.playgroundClass

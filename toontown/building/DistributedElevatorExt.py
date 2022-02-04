@@ -1,17 +1,17 @@
-from pandac3d.core import *
+from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
+from direct.fsm import ClassicFSM, State
 from direct.interval.IntervalGlobal import *
+from panda3d.core import *
+from panda3d.otp import Nametag, NametagGroup
+from toontown.hood import ZoneUtil
+from toontown.toonbase import ToontownGlobals, TTLocalizer
+from toontown.toontowngui import TeaserPanel
+
+from . import DistributedElevator
 from .ElevatorConstants import *
 from .ElevatorUtils import *
-from . import DistributedElevator
-from toontown.toonbase import ToontownGlobals
-from direct.directnotify import DirectNotifyGlobal
-from direct.fsm import ClassicFSM
-from direct.fsm import State
-from toontown.hood import ZoneUtil
-from toontown.toonbase import TTLocalizer
-from toontown.toontowngui import TeaserPanel
-from panda3d.otp import NametagGroup, Nametag
+
 
 class DistributedElevatorExt(DistributedElevator.DistributedElevator):
     def __init__(self, cr):
@@ -41,7 +41,7 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
         self.clearNametag()
         DistributedElevator.DistributedElevator.disable(self)
 
-    def setupNametag(self):
+    def setupNametag(self, endless=False):
         if self.nametag == None:
             self.nametag = NametagGroup()
             self.nametag.setFont(ToontownGlobals.getBuildingNametagFont())
@@ -52,7 +52,8 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
             self.nametag.setActive(0)
             self.nametag.setAvatar(self.getElevatorModel())
 
-            name = self.cr.playGame.dnaStore.getTitleFromBlockNumber(self.bldg.block)
+            name = self.cr.playGame.dnaStore.getTitleFromBlockNumber(
+                self.bldg.block)
             if not name:
                 name = TTLocalizer.CogsInc
             else:
@@ -97,7 +98,8 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
         if self.currentFloor >= 0:
             if self.bldg.floorIndicator[floorNumber]:
 
-                self.bldg.floorIndicator[self.currentFloor].setColor(LIGHT_OFF_COLOR)
+                self.bldg.floorIndicator[self.currentFloor].setColor(
+                    LIGHT_OFF_COLOR)
 
         # Brighten the new light:
         if floorNumber >= 0:
@@ -116,7 +118,8 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
            localAvatar.boardingParty and \
            localAvatar.boardingParty.getGroupLeader(localAvatar.doId) and \
            localAvatar.boardingParty.getGroupLeader(localAvatar.doId) != localAvatar.doId:
-            base.localAvatar.elevatorNotifier.showMe(TTLocalizer.ElevatorGroupMember)
+            base.localAvatar.elevatorNotifier.showMe(
+                TTLocalizer.ElevatorGroupMember)
         elif self.allowedToEnter():
             # Tell localToon we are considering entering the elevator
             self.cr.playGame.getPlace().detectedElevatorCollision(self)
@@ -187,4 +190,3 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
 
     def getElevatorModel(self):
         return self.bldg.getSuitElevatorNodePath()
-

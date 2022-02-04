@@ -3,12 +3,13 @@
 
 """ SuitPlannerEndlessInteriorAI module:  contains the SuitPlannerEndlessInteriorAI
     class which handles management of all suits within a endless suit building."""
+import functools
 import random
-from toontown.suit import SuitDNA
+import types
+
 from direct.directnotify import DirectNotifyGlobal
-from toontown.suit import DistributedSuitAI
-import types, functools
 from otp.ai.AIBaseGlobal import *
+from toontown.suit import DistributedSuitAI, SuitDNA
 
 from . import SuitPlannerInteriorAI
 
@@ -166,7 +167,9 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         if (self.dbg_1SuitPerFloor):
             return [1]    # 1 suit of max level 1
         elif (self.dbg_4SuitsPerFloor):
-            return [5,6,7,10]  # a typical level with a higher level boss (must be at end)
+            return [5, 6,
+             # a typical level with a higher level boss (must be at end)
+                    7, 10] 
         # TODO change this to how we want to envision the level pool range
         lvlPoolRange = [currFloor, currFloor + 5]
         #maxFloors =  bldgInfo[ SuitBuildingGlobals.SUIT_BLDG_INFO_FLOORS ][1]
