@@ -383,7 +383,7 @@ class ToontownClientRepository(OTPClientRepository.OTPClientRepository):
             if self.winter:
                 self.music = base.musicManager.getSound('phase_3/audio/bgm/TTG_winter.ogg')
             else:
-                self.music = base.musicManager.getSound('phase_3/audio/bgm/TTGIntro.ogg')
+                self.music = base.musicManager.getSound('phase_3/audio/bgm/TTGIntroV2.ogg')
 
             # Reload the music if we don't have it already.
             # Set the music to play immediately after we load it.  It

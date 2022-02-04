@@ -19,6 +19,8 @@ if __debug__:
     if os.path.exists(localPrc):
         loadPrcFile(localPrc)
 
+
+
 # This module redefines the builtin import function with one
 # that prints out every import it does in a hierarchical form
 # Annoying and very noisy, but sometimes useful
@@ -163,7 +165,7 @@ if base.musicManagerIsValid:
     if winter:
         music = base.musicManager.getSound('phase_3/audio/bgm/TTG_winter.ogg')
     else:
-        music = base.musicManager.getSound("phase_3/audio/bgm/TTGIntro.ogg")
+        music = base.musicManager.getSound("phase_3/audio/bgm/TTGIntroV2.ogg")
     if music:
         music.setLoop(1)
         music.setVolume(0.9)
