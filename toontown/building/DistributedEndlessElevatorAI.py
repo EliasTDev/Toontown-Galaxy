@@ -19,6 +19,7 @@ class DistributedEndlessElevatorAI(DistributedElevatorExtAI.DistributedElevatorE
         # self.endlessId = endlessId
         # self.entranceId = entranceId
         self.planner = None
+        self.interiorZoneId = None
 
     def getEntranceId(self):
         return
@@ -30,10 +31,12 @@ class DistributedEndlessElevatorAI(DistributedElevatorExtAI.DistributedElevatorE
 
     def createSuitInterior(self):
         # Create a building interior in the new (interior) zone
-        dummy, interiorZoneId = self.air.allocateZone()
+        interiorZoneId = self.air.allocateZone()
+        self.interiorZoneId = interiorZoneId
+        dummy = interiorZoneId
         self.planner = SuitPlannerEndlessInteriorAI.SuitPlannerEndlessInteriorAI(
             interiorZoneId)
-        self.interior = self._createSuitInterior()
+        self.interior = self._createSuitInterior(interiorZoneId)
         
         self.interior.fsm.request('WaitForAllToonsInside')
         self.interior.generateWithRequired(interiorZoneId)
@@ -62,3 +65,9 @@ class DistributedEndlessElevatorAI(DistributedElevatorExtAI.DistributedElevatorE
         self.fsm.request('opening')
 
 
+    def _createInterior(self):
+        self.createSuitInterior()
+
+    def getExteriorAndInteriorZoneId(self):
+        # return TTC for now
+        return 2000, self.interiorZoneId

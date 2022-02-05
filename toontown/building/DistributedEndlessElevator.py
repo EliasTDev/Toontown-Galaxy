@@ -29,7 +29,8 @@ class DistributedEndlessElevator(DistributedElevatorExt.DistributedElevatorExt):
         #if self.entranceId == 0:
             # Front of the factory (south entrance)
             #self.elevatorModel.setPosHpr(62.74, -85.31, 0.00, 2.00, 0.00, 0.00)
-        self.elevatorModel.setZ(0.00)
+        
+
 
 
     def setupElevator(self):
@@ -47,6 +48,8 @@ class DistributedEndlessElevator(DistributedElevatorExt.DistributedElevatorExt):
         # No lights on this elevator
         self.elevatorModel.find("**/light_panel").removeNode()
         self.elevatorModel.find("**/light_panel_frame").removeNode()
+        self.elevatorModel.setPos(-134.8,  44.586,  0.525)
+        self.elevatorModel.setH(-455.152 - 180)
         DistributedElevator.DistributedElevator.setupElevator(self)
 
     def getElevatorModel(self):
@@ -61,5 +64,6 @@ class DistributedEndlessElevator(DistributedElevatorExt.DistributedElevatorExt):
 
 
 
-
+    def getZoneId(self):
+        return 0
 

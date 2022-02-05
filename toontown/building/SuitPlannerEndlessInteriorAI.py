@@ -3,15 +3,18 @@
 
 """ SuitPlannerEndlessInteriorAI module:  contains the SuitPlannerEndlessInteriorAI
     class which handles management of all suits within a endless suit building."""
-import functools
-import random
-import types
+import copy
 
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed import DistributedObjectAI
+from direct.distributed.ClockDelta import *
+from direct.fsm import ClassicFSM, State
+from direct.task import Timer
 from otp.ai.AIBaseGlobal import *
-from toontown.suit import DistributedSuitAI, SuitDNA
-
-from . import SuitPlannerInteriorAI
+from toontown.battle import BattleBase, DistributedBattleBldgAI
+from toontown.toonbase.ToontownBattleGlobals import *
+from toontown.building import SuitPlannerInteriorAI
+from .ElevatorConstants import *
 
 
 class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
@@ -40,7 +43,7 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
             self.dbg_defaultSuitType = SuitDNA.getSuitType(dbg_defaultSuitName)
 
         #self._genSuitInfos()
-        assert (len(self.suitInfos) > 0)
+        #assert (len(self.suitInfos) > 0)
 
     def _genSuitInfos( self, currFloor):
 

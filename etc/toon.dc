@@ -2358,13 +2358,25 @@ dclass DistributedSuitInterior: DistributedObject {
   elevatorDone() airecv clsend;    //appears safe
   reserveJoinDone() airecv clsend; //appears safe
 };
-dclass DistributedEndlessSuitInterior: DistributedSuitInterior
-{
-  setZoneId() required broadcast ram;
-  setExtZoneId() required broadcast ram;
-  setNumFloors();
-  setDistBldgDoId() required broadcast ram;
-}
+dclass DistributedEndlessSuitInterior: DistributedObject {
+  setZoneId(uint32 zoneId) required broadcast ram;
+  setExtZoneId(uint32 extZoneId) required broadcast ram;
+  setDistBldgDoId(uint8) required broadcast ram;
+
+  setToons(uint32array toonsIds, uint16 hack) broadcast ram;
+  setSuits(uint32array suitIds, uint32array reserveIds, uint16array values)
+          broadcast ram;
+
+  // How the server tells the client what state to enter into
+  setState(string, int16 timestamp) required broadcast ram;
+
+  // Messages from each client to indicate the client is ready to proceed.
+
+  setAvatarJoined() airecv clsend;   //possible security breach, name and dnaNetString need sanity check...need help = MIKE/DROSE
+  elevatorDone() airecv clsend;    //appears safe
+  reserveJoinDone() airecv clsend; //appears safe
+};
+
 dclass DistributedCogdoBarrel : DistributedObject {
   requestGrab() airecv clsend;
   setIndex(uint32) required broadcast ram;

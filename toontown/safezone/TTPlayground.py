@@ -14,92 +14,170 @@ from . import Playground
 class TTPlayground(Playground.Playground):
     def __init__(self, loader, parentFSM, doneEvent):
         Playground.Playground.__init__(self, loader, parentFSM, doneEvent)
+        self.fsm = ClassicFSM.ClassicFSM('Playground',
+                           [State.State('start',
+                                        self.enterStart,
+                                        self.exitStart,
+                                        ['walk', 'deathAck', 
+                                        'doorIn', 'tunnelIn']),
+                            State.State('walk',
+                                        self.enterWalk,
+                                        self.exitWalk,
+                                        ['drive', 'sit', 'stickerBook',
+                                         'TFA', 'DFA', 'trialerFA',
+                                         'trolley', 'final',
+                                         'doorOut', 'elevator', 'options', 'quest',
+                                         'purchase', 'stopped', 'fishing']),
+                            State.State('stickerBook',
+                                        self.enterStickerBook,
+                                        self.exitStickerBook,
+                                        ['walk', 'DFA', 'TFA',
+                                         # You can get to all of these by jumping over 
+                                         # the trigger then opening your book
+                                         'trolley', 'final',
+                                         'doorOut', 'quest',
+                                         'elevator',
+                                         'purchase', 'stopped',
+                                         'fishing', 'trialerFA',
+                                         ]),
+                            State.State('sit',
+                                        self.enterSit,
+                                        self.exitSit,
+                                        ['walk',
+                                         'DFA', # So you can teleport to a friend
+                                         'trialerFA',
+                                         ]),
+                            State.State('drive',
+                                        self.enterDrive,
+                                        self.exitDrive,
+                                        ['walk',
+                                         'DFA', # So you can teleport to a friend
+                                         'trialerFA',
+                                         ]),
+                            State.State('trolley',
+                                        self.enterTrolley,
+                                        self.exitTrolley,
+                                        ['walk']),
+                            State.State('doorIn',
+                                        self.enterDoorIn,
+                                        self.exitDoorIn,
+                                        ['walk']),
+                            State.State('doorOut',
+                                        self.enterDoorOut,
+                                        self.exitDoorOut,
+                                        ['walk']), # 'final'
+                            # Tutorial Force Acknowledge:
+                            State.State('TFA',
+                                        self.enterTFA,
+                                        self.exitTFA,
+                                        ['TFAReject', 'DFA']),
+                            State.State('TFAReject',
+                                        self.enterTFAReject,
+                                        self.exitTFAReject,
+                                        ['walk']),
+                            # Trialer Force Acknowledge:
+                            State.State('trialerFA',
+                                        self.enterTrialerFA,
+                                        self.exitTrialerFA,
+                                        ['trialerFAReject', 'DFA']),
+                            State.State('trialerFAReject',
+                                        self.enterTrialerFAReject,
+                                        self.exitTrialerFAReject,
+                                        ['walk']),
+                            # Download Force Acknowledge
+                            State.State('DFA',
+                                        self.enterDFA,
+                                        self.exitDFA,
+                                        ['DFAReject', 'NPCFA', 'HFA']),
+                            State.State('DFAReject',
+                                        self.enterDFAReject,
+                                        self.exitDFAReject,
+                                        ['walk']),
+                            # NPC Force Acknowledge:
+                            State.State('NPCFA',
+                                        self.enterNPCFA,
+                                        self.exitNPCFA,
+                                        ['NPCFAReject', 'HFA']),
+                            State.State('NPCFAReject',
+                                        self.enterNPCFAReject,
+                                        self.exitNPCFAReject,
+                                        ['walk']),
+                            # Health Force Acknowledge
+                            State.State('HFA',
+                                        self.enterHFA,
+                                        self.exitHFA,
+                                        ['HFAReject', 'teleportOut', 'tunnelOut']),
+                            State.State('HFAReject',
+                                        self.enterHFAReject,
+                                        self.exitHFAReject,
+                                        ['walk']),
+                            State.State('deathAck',
+                                        self.enterDeathAck,
+                                        self.exitDeathAck,
+                                        ['teleportIn']),
+                            State.State('teleportIn',
+                                        self.enterTeleportIn,
+                                        self.exitTeleportIn,
+                                        ['walk', 'popup']),
+                            State.State('popup',
+                                        self.enterPopup,
+                                        self.exitPopup,
+                                        ['walk']),
+                            State.State('teleportOut',
+                                        self.enterTeleportOut,
+                                        self.exitTeleportOut,
+                                        ['deathAck', 'teleportIn']), # 'final'
+                            State.State('died', # No transitions to "died" in the playground.
+                                        self.enterDied,
+                                        self.exitDied,
+                                        ['final']),
+                            State.State('tunnelIn',
+                                        self.enterTunnelIn,
+                                        self.exitTunnelIn,
+                                        ['walk']),
+                            State.State('tunnelOut',
+                                        self.enterTunnelOut,
+                                        self.exitTunnelOut,
+                                        ['final']),
+                            State.State('elevator',
+                                        self.enterElevator,
+                                        self.exitElevator,
+                                        ['walk', 'stopped']),
+                            State.State('quest',
+                                        self.enterQuest,
+                                        self.exitQuest,
+                                        ['walk']),
+                            State.State('purchase',
+                                        self.enterPurchase,
+                                        self.exitPurchase,
+                                        ['walk']),
+                            State.State('stopped',
+                                        self.enterStopped,
+                                        self.exitStopped,
+                                        ['walk', 'elevator']),
+                            State.State('fishing',
+                                        self.enterFishing,
+                                        self.exitFishing,
+                                        ['walk']),                            
+                            State.State('final',
+                                        self.enterFinal,
+                                        self.exitFinal,
+                                        ['start'])],
+
+                           # Initial State
+                           'start',
+                           # Final State
+                           'final',
+                           )
         self.parentFSM = parentFSM
         self.elevatorDoneEvent = "elevatorDone"
 
-    def load(self):
-        """"
-        self.fsm = ClassicFSM.ClassicFSM('TTPlayground',
-                                         [State.State('start',
-                                                      self.enterStart,
-                                                      self.exitStart,
-                                                      ['walk', 'tunnelIn', 'teleportIn',
-                                                       'doorIn',
-                                                       ]),
-                                             State.State('walk',
-                                                         self.enterWalk,
-                                                         self.exitWalk,
-                                                         ['stickerBook', 'teleportOut',
-                                                          'tunnelOut', 'DFA', 'doorOut',
-                                                          'elevator', 'stopped',
-                                                          ]),
-                                             State.State('stopped',
-                                                         self.enterStopped,
-                                                         self.exitStopped,
-                                                         ['walk', 'teleportOut', 'elevator'
-                                                          ]),
-                                             State.State('stickerBook',
-                                                         self.enterStickerBook,
-                                                         self.exitStickerBook,
-                                                         ['walk', 'DFA',
-                                                          'elevator',
-                                                          ]),
+    def load(self):    
 
-
-                                             # Download Force Acknowlege:
-                                             State.State('DFA',
-                                                         self.enterDFA,
-                                                         self.exitDFA,
-                                                         ['DFAReject', 'teleportOut', 'tunnelOut']),
-                                             State.State('DFAReject',
-                                                         self.enterDFAReject,
-                                                         self.exitDFAReject,
-                                                         ['walk']),
-                                             State.State('teleportIn',
-                                                         self.enterTeleportIn,
-                                                         self.exitTeleportIn,
-                                                         ['walk',
-                                                          ]),
-                                             State.State('teleportOut',
-                                                         self.enterTeleportOut,
-                                                         self.exitTeleportOut,
-                                                         ['teleportIn', 'final'
-                                                          ]),
-                                             State.State('doorIn',
-                                                         self.enterDoorIn,
-                                                         self.exitDoorIn,
-                                                         ['walk']),
-                                             State.State('doorOut',
-                                                         self.enterDoorOut,
-                                                         self.exitDoorOut,
-                                                         ['walk']),
-
-                                             State.State('tunnelIn',
-                                                         self.enterTunnelIn,
-                                                         self.exitTunnelIn,
-                                                         ['walk']),
-                                             State.State('tunnelOut',
-                                                         self.enterTunnelOut,
-                                                         self.exitTunnelOut,
-                                                         ['final']),
-                                             State.State('elevator',
-                                                         self.enterElevator,
-                                                         self.exitElevator,
-                                                         ['walk', 'stopped']),
-                                             State.State('final',
-                                                         self.enterFinal,
-                                                         self.exitFinal,
-                                                         ['start'])],
-                                         # Initial State
-                                         'start',
-                                         # Final State
-                                         'final',
-                                         )
-        self.parentFSM.getStateNamed("TTPlayground").addChild(self.fsm)
-        """
         Playground.Playground.load(self)
 
     def unload(self):
+
         Playground.Playground.unload(self)
 
     def enter(self, requestStatus):
@@ -198,6 +276,8 @@ class TTPlayground(Playground.Playground):
                 self.fsm.request("walk")
         elif (where == 'exit'):
             self.fsm.request("walk")
+        elif (where == 'suitInterior'):
+            pass
         elif (where == 'TTPlayground'):
             self.doneStatus = doneStatus
             messenger.send(self.doneEvent)

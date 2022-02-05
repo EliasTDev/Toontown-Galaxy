@@ -1,17 +1,22 @@
-from . import DistributedSuitInterior
 from direct.directnotify import DirectNotifyGlobal
-from direct.fsm import ClassicFSM
-from direct.fsm import State
-from toontown.cogdominium import DistributedCogdoBarrel
-from toontown.toonbase import ToontownGlobals
-from panda3d.core import Point3
-from . import EndlessBuildingConsts
-class DistributedEndlessSuitInterior(DistributedSuitInterior.DistributedSuitInterior):
+from direct.distributed import DistributedObject
+from direct.distributed.ClockDelta import *
+from direct.fsm import ClassicFSM, State
+from direct.interval.IntervalGlobal import *
+from toontown.battle import BattleBase
+from toontown.hood import ZoneUtil
+from toontown.toonbase import ToontownBattleGlobals, ToontownGlobals
+
+from . import ElevatorUtils
+from .ElevatorConstants import *
+
+
+class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory(
         'DistributedSuitInterior')
 
     def __init__(self, cr):
-        DistributedSuitInterior.DistributedSuitInterior.__init__(self, cr)
+        DistributedObject.DistributedObject__init__(self, cr)
         self.fsm = ClassicFSM.ClassicFSM('DistributedEndlessSuitInterior',
                                          [State.State('WaitForAllToonsInside',
                                                       self.enterWaitForAllToonsInside,
@@ -55,6 +60,7 @@ class DistributedEndlessSuitInterior(DistributedSuitInterior.DistributedSuitInte
         # make sure we're in the initial state
         self.fsm.enterInitialState()
         self.cr = cr
+        self.extZoneId = None
 
     def __uniqueName(self, name):
         DistributedEndlessSuitInterior.id += 1
@@ -87,7 +93,67 @@ class DistributedEndlessSuitInterior(DistributedSuitInterior.DistributedSuitInte
 
     def setElevatorLights(self, elevatorModel):
         # we don't want elevator lights for endless buildings
+        elevatorModel.find("**/light_panel").removeNode()
+        elevatorModel.find("**/light_panel_frame").removeNode()
         return
+
+    def handleAnnounceGenerate(self, obj):
+        """
+        handleAnnounceGenerate is called after all of the required fields are
+        filled in
+        'obj' is another copy of self
+        """
+        self.ignore(self.announceGenerateName)
+
+        assert(self.notify.debug('joining DistributedSuitInterior'))
+        # Update the minigame AI to join our local toon doId
+        self.sendUpdate('setAvatarJoined', [])
+
+    def disable(self):
+        assert(self.notify.debug('disable()'))
+        self.fsm.requestFinalState()
+        self.__cleanupIntervals()
+        self.ignoreAll()
+        self.__cleanup()
+        DistributedObject.DistributedObject.disable(self)
+
+    def delete(self):
+        assert(self.notify.debug('delete()'))
+        del self.waitMusic
+        del self.elevatorMusic
+        del self.openSfx
+        del self.closeSfx
+        del self.fsm
+        # No more battle multiplier
+        base.localAvatar.inventory.setBattleCreditMultiplier(1)
+        DistributedObject.DistributedObject.delete(self)
+
+    def __cleanup(self):
+        self.toons = []
+        self.suits = []
+        self.reserveSuits = []
+        self.joiningReserves = []
+        # Clean up elevator models
+        if (self.elevatorModelIn != None):
+            self.elevatorModelIn.removeNode()
+        if (self.elevatorModelOut != None):
+            self.elevatorModelOut.removeNode()
+        # Clean up current floor
+        if (self.floorModel != None):
+            self.floorModel.removeNode()
+        self.leftDoorIn = None
+        self.rightDoorIn = None
+        self.leftDoorOut = None
+        self.rightDoorOut = None
+
+    def __cleanupIntervals(self):
+        for interval in list(self.activeIntervals.values()):
+            interval.finish()
+        self.activeIntervals = {}
+
+    def __closeInElevator(self):
+        self.leftDoorIn.setPos(3.5, 0, 0)
+        self.rightDoorIn.setPos(-3.5, 0, 0)
 
     def __playElevator(self, ts, name, callback):
         # Load the floor model
@@ -222,6 +288,15 @@ class DistributedEndlessSuitInterior(DistributedSuitInterior.DistributedSuitInte
             self.toons.remove(toon)
         self.ignore(toon.uniqueName('disable'))
 
+    def __finishInterval(self, name):
+        """ Force the specified interval to jump to the end
+        """
+        if (name in self.activeIntervals):
+            interval = self.activeIntervals[name]
+            if (interval.isPlaying()):
+                assert(self.notify.debug('finishInterval(): %s' % \
+                        interval.getName()))
+                interval.finish()
     def rewardToonBasedOnCheckpoint(self, toon):
         #TODO write logic for this
 
@@ -231,21 +306,230 @@ class DistributedEndlessSuitInterior(DistributedSuitInterior.DistributedSuitInte
 
     def enterReward(self, ts=0):
         assert(self.notify.debug('enterReward()'))
-        base.localAvatar.b_setParent(ToontownGlobals.SPHidden)
-        request = {
-            "loader": ZoneUtil.getBranchLoaderName(self.extZoneId),
-            "where": ZoneUtil.getToonWhereName(self.extZoneId),
-            "how": "elevatorIn",
-            "hoodId": ZoneUtil.getHoodId(self.extZoneId),
-            "zoneId": self.extZoneId,
-            "shardId": None,
-            "avId": -1,
-            "bldgDoId": self.distBldgDoId
-            }
-        # Presumably, suitInterior.py has hung a hook waiting for
-        # this request. I mimicked what DistributedDoor was doing.
-        messenger.send("DSIDoneEvent", [request])
+        #base.localAvatar.b_setParent(ToontownGlobals.SPHidden)
         return None
 
     def exitReward(self):
         return None
+
+    def getZoneId(self):
+        return self.zoneId
+
+    def setZoneId(self, zoneId):
+        self.zoneId = zoneId
+
+    def exitResting(self):
+        self.waitMusic.stop()
+        return
+
+    def getExtZoneId(self):
+        return self.extZoneId
+
+    def setExtZoneId(self, extZoneId):
+        self.extZoneId = extZoneId
+
+    def getDistBldgDoId(self):
+        return 0
+
+    def setDistBldgDoId(self, distBldgDoId):
+        self.distBldgDoId = distBldgDoId
+
+
+    def setToons(self, toonIds, hack):
+        assert(self.notify.debug('setToons(): %s' % toonIds))
+        self.toonIds = toonIds
+        oldtoons = self.toons
+        self.toons = []
+        for toonId in toonIds:
+            if (toonId != 0):
+                if (toonId in self.cr.doId2do):
+                    toon = self.cr.doId2do[toonId]
+                    toon.stopSmooth()
+                    self.toons.append(toon)
+                    if (oldtoons.count(toon) == 0):
+                        assert(self.notify.debug('setToons() - new toon: %d' % \
+                                toon.doId))
+                        self.__addToon(toon)
+                else:
+                    self.notify.warning('setToons() - no toon: %d' % toonId)
+        for toon in oldtoons:
+            if (self.toons.count(toon) == 0):
+                self.__removeToon(toon)
+
+    def setSuits(self, suitIds, reserveIds, values):
+        self.notify.debug('setSuits(): active %s reserve %s values %s' \
+                           % (suitIds, reserveIds, values))
+        oldsuits = self.suits
+        self.suits = []
+        self.joiningReserves = []
+        for suitId in suitIds:
+            if (suitId in self.cr.doId2do):
+                suit = self.cr.doId2do[suitId]
+                self.suits.append(suit)
+                # Set this on the client
+                suit.fsm.request('Battle')
+                # This will allow client to respond to setState() from the
+                # server from here on out
+                suit.buildingSuit = 1
+                suit.reparentTo(render)
+                if (oldsuits.count(suit) == 0):
+                    assert(self.notify.debug('setSuits() suit: %d joining' % \
+                        suit.doId))
+                    self.joiningReserves.append(suit)
+            else:
+                self.notify.warning('setSuits() - no suit: %d' % suitId)
+        self.reserveSuits = []
+        assert(len(reserveIds) == len(values))
+        for index in range(len(reserveIds)):
+            suitId = reserveIds[index]
+            if (suitId in self.cr.doId2do):
+                suit = self.cr.doId2do[suitId]
+                self.reserveSuits.append((suit, values[index]))
+            else:
+                self.notify.warning('setSuits() - no suit: %d' % suitId)
+
+        if (len(self.joiningReserves) > 0):
+            assert(self.notify.debug('setSuits() reserves joining'))
+            self.fsm.request('ReservesJoining')
+
+    def setState(self, state, timestamp):
+        assert(self.notify.debug("setState(%s, %d)" % \
+                                (state, timestamp)))
+        self.fsm.request(state, [globalClockDelta.localElapsedTime(timestamp)])
+
+    def d_elevatorDone(self):
+        assert(self.notify.debug('network:elevatorDone(%d)' % base.localAvatar.doId))
+        self.sendUpdate('elevatorDone', [])
+
+    def d_reserveJoinDone(self):
+        assert(self.notify.debug('network:reserveJoinDone(%d)' % base.localAvatar.doId))
+        self.sendUpdate('reserveJoinDone', [])
+
+    def enterOff(self, ts=0):
+        self.notify.debug('enterOff()')
+        return None
+    
+    def exitOff(self):
+        return None
+
+    def enterWaitForAllToonsInside(self, ts=0):
+        assert(self.notify.debug('enterWaitForAllToonsInside()'))
+        return None
+
+    def exitWaitForAllToonsInside(self):        
+        return None
+
+    def __handleElevatorDone(self):
+        assert(self.notify.debug('handleElevatorDone()'))
+        self.d_elevatorDone()
+
+    def exitElevator(self):
+        self.elevatorMusic.stop()
+        self.__finishInterval(self.elevatorName)
+        return None
+
+    def __playCloseElevatorOut(self, name):
+        # Close the elevator doors
+        track = Sequence(
+            Wait(SUIT_LEAVE_ELEVATOR_TIME),
+            Parallel(SoundInterval(self.closeSfx),
+                     LerpPosInterval(self.leftDoorOut, 
+                                     ElevatorData[ELEVATOR_NORMAL]['closeTime'],
+                                     ElevatorUtils.getLeftClosePoint(ELEVATOR_NORMAL),
+                                     startPos=Point3(0, 0, 0), 
+                                     blendType='easeOut'),
+                     LerpPosInterval(self.rightDoorOut,
+                                     ElevatorData[ELEVATOR_NORMAL]['closeTime'],
+                                     ElevatorUtils.getRightClosePoint(ELEVATOR_NORMAL),
+                                     startPos=Point3(0, 0, 0),
+                                     blendType='easeOut')
+                     ),
+            )
+        track.start()
+        self.activeIntervals[name] = track
+
+    def enterBattle(self, ts=0):
+        assert(self.notify.debug('enterBattle()'))
+        if (self.elevatorOutOpen == 1):
+            self.__playCloseElevatorOut(self.uniqueName('close-out-elevator'))
+            # Watch reserve suits as they walk from the elevator
+            camera.setPos(0, -15, 6)
+            camera.headsUp(self.elevatorModelOut)
+        return None
+
+    def exitBattle(self):
+        if (self.elevatorOutOpen == 1):
+            self.__finishInterval(self.uniqueName('close-out-elevator'))
+            self.elevatorOutOpen = 0
+        return None
+
+  ##### ReservesJoining state #####
+
+    def __playReservesJoining(self, ts, name, callback):
+        # Position the joining suits
+        index = 0
+        assert(len(self.joiningReserves) <= 4)
+        for suit in self.joiningReserves:
+            suit.reparentTo(render)
+            suit.setPos(self.elevatorModelOut, Point3(ElevatorPoints[index][0],
+                                                      ElevatorPoints[index][1],
+                                                      ElevatorPoints[index][2]))
+            index += 1
+            suit.setH(180)
+            suit.loop('neutral')
+
+        # Aim the camera at the far elevator
+        track = Sequence(
+            Func(camera.wrtReparentTo, self.elevatorModelOut),
+            Func(camera.setPos, Point3(0, -8, 2)),
+            Func(camera.setHpr, Vec3(0, 10, 0)),
+
+            # Open the elevator doors
+            Parallel(SoundInterval(self.openSfx),
+                     LerpPosInterval(self.leftDoorOut, 
+                                     ElevatorData[ELEVATOR_NORMAL]['closeTime'],
+                                     Point3(0, 0, 0), 
+                                     startPos=ElevatorUtils.getLeftClosePoint(ELEVATOR_NORMAL),
+                                     blendType='easeOut'),
+                     LerpPosInterval(self.rightDoorOut,
+                                     ElevatorData[ELEVATOR_NORMAL]['closeTime'],
+                                     Point3(0, 0, 0), 
+                                     startPos=ElevatorUtils.getRightClosePoint(ELEVATOR_NORMAL),
+                                     blendType='easeOut'),
+                     ),
+
+            # Hold the camera angle for a couple of beats
+            Wait(SUIT_HOLD_ELEVATOR_TIME),
+
+            # Reparent the camera to render (enterWaitForInput will
+            # position it properly again by the battle)
+            Func(camera.wrtReparentTo, render),
+            Func(callback),
+            )
+        track.start(ts)
+        self.activeIntervals[name] = track
+
+    def enterReservesJoining(self, ts=0):
+        assert(self.notify.debug('enterReservesJoining()'))
+        self.__playReservesJoining(ts, self.uniqueName('reserves-joining'),
+                                       self.__handleReserveJoinDone)
+        return None
+
+    def __handleReserveJoinDone(self):
+        assert(self.notify.debug('handleReserveJoinDone()'))
+        self.joiningReserves = []
+        self.elevatorOutOpen = 1
+        self.d_reserveJoinDone()
+
+    def exitReservesJoining(self):
+        self.__finishInterval(self.uniqueName('reserves-joining'))
+        return None
+
+    ##### Resting state #####
+
+    def enterResting(self, ts=0):
+        assert(self.notify.debug('enterResting()'))
+        base.playMusic(self.waitMusic, looping=1, volume=0.7)
+        self.__closeInElevator()
+        return
+

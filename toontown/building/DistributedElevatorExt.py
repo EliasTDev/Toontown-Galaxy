@@ -186,7 +186,10 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
         DistributedElevator.DistributedElevator.exitWaitCountdown(self)
 
     def getZoneId(self):
-        return self.bldg.interiorZoneId
+        if self.bldg:
+            return self.bldg.interiorZoneId
+        else:
+            return 
 
     def getElevatorModel(self):
         return self.bldg.getSuitElevatorNodePath()
