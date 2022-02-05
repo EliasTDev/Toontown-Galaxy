@@ -80,7 +80,7 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         else:
             numActive = random.randint(1, min(4, len(lvls)))
 
-        if (currFloor + 1) % 4 == 0 and len(lvls) > 1:
+        if (currFloor + 1) % 5 == 4 and len(lvls) > 1:
             # Make the boss be suit 1 (unless there is only 1 active suit)
             origBossSpot = len(lvls) - 1
             if (numActive == 1):
@@ -207,7 +207,7 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         # now if we are on the top floor of the building, make sure to
         # add in a slot for the building boss
         #
-        if currFloor + 1 % 4 == 0:
+        if (currFloor) + 1 % 5 == 4:
             # TODO this is a place holder formula for now
             bossLvlRange = [(currFloor * 2) / 4, (currFloor * 2) / 4]
             newLvl = random.randint(bossLvlRange[0], bossLvlRange[1])

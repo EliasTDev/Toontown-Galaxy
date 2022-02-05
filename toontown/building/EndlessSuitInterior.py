@@ -245,8 +245,11 @@ class EndlessSuitInterior(Place):
         elif (where == 'endlessSuitInterior'):
             pass
         else:
-            self.notify.error("Unknown mode: " +  +
-                              " in handleElevatorDone")
+            # its probably has something to do with the interior so just pass for now
+            pass
+       # else:
+            #self.notify.error("Unknown mode: " +  
+                 #             " in handleElevatorDone")
 
     # Battle state
 

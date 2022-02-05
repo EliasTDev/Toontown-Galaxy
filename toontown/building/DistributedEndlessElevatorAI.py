@@ -71,3 +71,8 @@ class DistributedEndlessElevatorAI(DistributedElevatorExtAI.DistributedElevatorE
     def getExteriorAndInteriorZoneId(self):
         # return TTC for now
         return 2000, self.interiorZoneId
+        
+    def deleteSuitInterior(self):
+        if hasattr(self, "interior"):
+            self.interior.requestDelete()
+            del self.interior

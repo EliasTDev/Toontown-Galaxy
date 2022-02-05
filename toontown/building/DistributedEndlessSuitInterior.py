@@ -31,6 +31,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
 
         # we increment this each time we come out of an elevator:
         self.currentFloor = -1
+        self.chunkFloor = self.currentFloor % 5
 
         self.elevatorName = self.__uniqueName('elevator')
         self.floorModel = None
@@ -72,7 +73,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
                                           State.State('Elevator',
                                                       self.enterElevator,
                                                       self.exitElevator,
-                                                      ['Battle']),
+                                                      ['Battle', 'Resting']),
                                           State.State('Battle',
                                                       self.enterBattle,
                                                       self.exitBattle,
@@ -90,7 +91,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
                                           State.State('Reward',
                                                       self.enterReward,
                                                       self.exitReward,
-                                                      ['Off']),
+                                                      ['Off', 'Resting', 'Elevator']),
                                           State.State('Off',
                                                       self.enterOff,
                                                       self.exitOff,
@@ -140,8 +141,9 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
 
     def setElevatorLights(self, elevatorModel):
         # we don't want elevator lights for endless buildings
-        elevatorModel.find("**/light_panel").removeNode()
-        elevatorModel.find("**/light_panel_frame").removeNode()
+        if not elevatorModel.find("**/light_panel").isEmpty()
+            elevatorModel.find("**/light_panel").removeNode()
+            elevatorModel.find("**/light_panel_frame").removeNode()
         return
 
     def handleAnnounceGenerate(self, obj):
@@ -216,12 +218,12 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
             self.floorModel = loader.loadModel('phase_7/models/modules/suit_interior')
             SuitHs = self.BottomFloor_SuitHs
             SuitPositions = self.BottomFloor_SuitPositions
-        elif self.currentFloor % 4 == 0:
+        elif self.currentFloor % 5 == 3:
             # Boss floor
             self.floorModel = loader.loadModel('phase_7/models/modules/boss_suit_office')
             SuitHs = self.BossOffice_SuitHs
             SuitPositions = self.BossOffice_SuitPositions
-        elif self.currentFloor % 5 == 0:
+        elif self.currentFloor % 5 == 4:
             #Checkpoint floor
             self.floorModel = loader.loadModel('phase_7/models/modules/suit_interior')
             # No suit lets spawn an npc that gives a random temporary toonup unite and a random temporary gag up unite
@@ -304,12 +306,13 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
 
     def enterElevator(self, ts=0):
         # Load model for the current floor and the suit models for the floor
-        assert (self.notify.debug('enterElevator()'))
+        self.notify.info('enterElevator()')
 
         self.currentFloor += 1
+        self.chunkFloor = self.currentFloor % 5
         #self.cr.playGame.getPlace().currentFloor = self.currentFloor
-        self.setElevatorLights(self.elevatorModelIn)
-        self.setElevatorLights(self.elevatorModelOut)
+       self.setElevatorLights(self.elevatorModelIn)
+       self.setElevatorLights(self.elevatorModelOut)
 
         self.__playElevator(ts, self.elevatorName, self.__handleElevatorDone)
 
@@ -440,8 +443,8 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
             self.fsm.request('ReservesJoining')
 
     def setState(self, state, timestamp):
-        assert(self.notify.debug("setState(%s, %d)" % \
-                                (state, timestamp)))
+        self.notify.info("setState(%s, %d)" % \
+                                (state, timestamp))
         self.fsm.request(state, [globalClockDelta.localElapsedTime(timestamp)])
 
     def d_elevatorDone(self):
@@ -466,7 +469,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         return None
 
     def __handleElevatorDone(self):
-        assert(self.notify.debug('handleElevatorDone()'))
+        self.notify.info('handleElevatorDone()')
         self.d_elevatorDone()
 
     def exitElevator(self):
@@ -495,7 +498,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.activeIntervals[name] = track
 
     def enterBattle(self, ts=0):
-        assert(self.notify.debug('enterBattle()'))
+        self.notify.info('enterBattle()')
         if (self.elevatorOutOpen == 1):
             self.__playCloseElevatorOut(self.uniqueName('close-out-elevator'))
             # Watch reserve suits as they walk from the elevator
@@ -556,13 +559,13 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.activeIntervals[name] = track
 
     def enterReservesJoining(self, ts=0):
-        assert(self.notify.debug('enterReservesJoining()'))
+        self.notify.info('enterReservesJoining()')
         self.__playReservesJoining(ts, self.uniqueName('reserves-joining'),
                                        self.__handleReserveJoinDone)
         return None
 
     def __handleReserveJoinDone(self):
-        assert(self.notify.debug('handleReserveJoinDone()'))
+        self.notify.info('handleReserveJoinDone()')
         self.joiningReserves = []
         self.elevatorOutOpen = 1
         self.d_reserveJoinDone()
@@ -574,7 +577,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
     ##### Resting state #####
 
     def enterResting(self, ts=0):
-        assert(self.notify.debug('enterResting()'))
+        self.notify.info('enterResting()')
         base.playMusic(self.waitMusic, looping=1, volume=0.7)
         self.__closeInElevator()
         return
