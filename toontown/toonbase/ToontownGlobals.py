@@ -227,7 +227,7 @@ CEVirtual = 14
 # Bossbot HQ = 5
 MaxHpLimit = 137
 # Cap on the max carry
-MaxCarryLimit = 80
+MaxCarryLimit = 120
 # Cap on the max carry
 MaxQuestCarryLimit = 4
 
@@ -1604,7 +1604,6 @@ AnimPropTypes = Enum(("Unknown",
                      start = -1
                      )
 
-MaxCarryLimit = 80
 ALLOWED_FIELD_OFFICES = ['s', 'l']
 
 # New Hotkeys globals

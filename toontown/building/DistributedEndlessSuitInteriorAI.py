@@ -199,12 +199,12 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         assert(toonId in self.responses)
         self.responses[toonId] += 1
         assert(self.notify.debug('toon: %d done with elevator' % toonId))
-        if (self.__allToonsResponded() and
-            self.ignoreElevatorDone == 0 and self.chunkFloor != 4):
-            self.b_setState('Battle')
-        elif (self.__allToonsResponded() and
-              self.ignoreElevatorDone == 0 and  (self.chunkFloor == 4)):
-            self.b_setState('Resting')
+
+        if self.__allToonsResponded() and not self.ignoreElevatorDone:
+            if self.chunkFloor != 4:
+                self.b_setState('Battle')
+            else:
+                self.b_setState('Resting')
 
     def __createFloorBattle(self):
         if (self.currentFloor % 5 == 3):
@@ -385,7 +385,6 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.elevator.planner._genSuitInfos(self.currentFloor)
         suitHandles = self.elevator.planner.genFloorSuits(self.currentFloor)
         self.suits = suitHandles['activeSuits']
-        assert(len(self.suits) > 0)
         self.activeSuits = []
         for suit in self.suits:
             self.activeSuits.append(suit)

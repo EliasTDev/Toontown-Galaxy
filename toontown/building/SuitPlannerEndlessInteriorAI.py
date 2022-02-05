@@ -60,6 +60,8 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         """
 
         self.suitInfos = []
+        if currFloor % 5 == 4:
+            return
 
         # process each floor in the building and create all active and
         # reserve suits
@@ -160,6 +162,10 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         // Changes:
         // returns:    list of suit levels
         """
+
+        # checkpoint floor
+        if currFloor % 5 == 4:
+            return []
 
         # For quick building battles during debug.
         if (self.dbg_1SuitPerFloor):
@@ -264,6 +270,10 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
     def genFloorSuits(self, floor):
         """
         """
+
+        if floor % 5 == 4:
+            return {'activeSuits': [], 'reserveSuits': []}
+
         self.notify.debug('generating suits for floor: %d' % floor)
         suitHandles = {}
 
