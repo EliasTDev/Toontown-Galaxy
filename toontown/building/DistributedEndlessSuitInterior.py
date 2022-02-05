@@ -141,7 +141,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
 
     def setElevatorLights(self, elevatorModel):
         # we don't want elevator lights for endless buildings
-        if not elevatorModel.find("**/light_panel").isEmpty()
+        if not elevatorModel.find("**/light_panel").isEmpty():
             elevatorModel.find("**/light_panel").removeNode()
             elevatorModel.find("**/light_panel_frame").removeNode()
         return
@@ -310,9 +310,9 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
 
         self.currentFloor += 1
         self.chunkFloor = self.currentFloor % 5
-        #self.cr.playGame.getPlace().currentFloor = self.currentFloor
-       self.setElevatorLights(self.elevatorModelIn)
-       self.setElevatorLights(self.elevatorModelOut)
+        # self.cr.playGame.getPlace().currentFloor = self.currentFloor
+        self.setElevatorLights(self.elevatorModelIn)
+        self.setElevatorLights(self.elevatorModelOut)
 
         self.__playElevator(ts, self.elevatorName, self.__handleElevatorDone)
 

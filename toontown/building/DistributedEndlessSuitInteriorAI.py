@@ -324,10 +324,10 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.b_setState('Resting')
 
     def enterBattle(self):
-        #if (self.battle == None):
-        self.__createFloorBattle()
+        if self.battle is None:
+            self.__createFloorBattle()
         #self.elevator.d_setFloor(self.currentFloor)
-        return None
+        self.battle.d_setMembers()
 
     def exitBattle(self):
         return None
@@ -358,8 +358,6 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
                 # The building isn't finished yet - gather up experience and
                 # activate the elevator
             self.battle.resume(self.currentFloor, topFloor=0)
-        return None
-
 
     def exitBattleDone(self):
         self.__cleanupFloorBattle()
