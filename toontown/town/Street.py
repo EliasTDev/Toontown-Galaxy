@@ -410,7 +410,7 @@ class Street(BattlePlace.BattlePlace):
                 self.fsm.request("walk")
         elif (where == 'exit'):
             self.fsm.request("walk")
-        elif (where in ('suitInterior', 'cogdoInterior', 'endlessSuitInterior')):
+        elif (where in ('suitInterior', 'cogdoInterior')):
             self.doneStatus = doneStatus
             messenger.send(self.doneEvent)
         else:

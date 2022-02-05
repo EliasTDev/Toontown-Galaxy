@@ -175,6 +175,7 @@ class TTPlayground(Playground.Playground):
     def load(self):    
 
         Playground.Playground.load(self)
+        #self.parentFSM.getStateNamed("TTPlayground").addChild(self.fsm)
 
     def unload(self):
 
@@ -236,7 +237,7 @@ class TTPlayground(Playground.Playground):
     # (For boarding a building elevator)
 
     def enterElevator(self, distElevator, skipDFABoard=0):
-        assert(self.notify.debug("enterElevator()"))
+        self.notify.debug("enterElevator()")
 
         self.accept(self.elevatorDoneEvent, self.handleElevatorDone)
         self.elevator = Elevator.Elevator(self.fsm.getStateNamed("elevator"),
@@ -276,12 +277,15 @@ class TTPlayground(Playground.Playground):
                 self.fsm.request("walk")
         elif (where == 'exit'):
             self.fsm.request("walk")
-        elif (where == 'suitInterior'):
-            pass
-        elif (where == 'TTPlayground'):
+        elif where == 'TTPlayground':
+           # if 'how' not in doneStatus:
+            #    doneStatus['how'] = 'elevatorIn'
             self.doneStatus = doneStatus
             messenger.send(self.doneEvent)
-       
+            
+        elif (where == 'endlessSuitInterior'):
+            self.doneStatus = doneStatus
+            messenger.send(self.doneEvent)
         else:
             self.notify.error("Unknown mode: " + where +
                               " in handleElevatorDone")

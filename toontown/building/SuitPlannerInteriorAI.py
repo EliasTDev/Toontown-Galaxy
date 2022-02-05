@@ -1,16 +1,18 @@
 """ SuitPlannerInteriorAI module:  contains the SuitPlannerInteriorAI
     class which handles management of all suits within a suit building."""
 
+import functools
+import random
+import types
+
+from direct.directnotify import DirectNotifyGlobal
 # AI code should not import ShowBaseGlobal because it creates a graphics window
 # Use AIBaseGlobal instead
 from otp.ai.AIBaseGlobal import *
+from toontown.suit import DistributedSuitAI, SuitDNA
 
-import random
-from toontown.suit import SuitDNA
-from direct.directnotify import DirectNotifyGlobal
-from toontown.suit import DistributedSuitAI
 from . import SuitBuildingGlobals
-import types, functools
+
 
 class SuitPlannerInteriorAI:
     """
@@ -124,9 +126,9 @@ class SuitPlannerInteriorAI:
                 revives = 0
             for currActive in range( numActive - 1, -1, -1 ):
                 level = lvls[ currActive ]
-                type = self.__genNormalSuitType( level )
+                _type = self.__genNormalSuitType( level )
                 activeDict = {}
-                activeDict['type'] = type
+                activeDict['type'] = _type
                 activeDict['track'] = bldgTrack
                 activeDict['level'] = level
                 activeDict['revives'] = revives
@@ -143,9 +145,9 @@ class SuitPlannerInteriorAI:
             joinChances = self.__genJoinChances( numReserve )
             for currReserve in range( numReserve ):
                 level = lvls[ currReserve + numActive ]
-                type = self.__genNormalSuitType( level )
+                _type = self.__genNormalSuitType( level )
                 reserveDict = {}
-                reserveDict['type'] = type
+                reserveDict['type'] = _type
                 reserveDict['track'] = bldgTrack
                 reserveDict['level'] = level
                 reserveDict['revives'] = revives
@@ -344,7 +346,7 @@ class SuitPlannerInteriorAI:
         assert(floor < len(self.suitInfos))
         assert(self.notify.debug('generating suits for floor: %d' % floor))
         suitHandles = {}
-        floorInfo = self.suitInfos[floor]
+        floorInfo = self.suitInfos[z]
 
         activeSuits = []
         for activeSuitInfo in floorInfo['activeSuits']:

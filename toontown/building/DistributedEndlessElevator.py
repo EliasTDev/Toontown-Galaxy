@@ -8,6 +8,7 @@ from toontown.building.ElevatorUtils import *
 from toontown.hood import ZoneUtil
 from toontown.toonbase import ToontownGlobals, TTLocalizer
 
+
 class DistributedEndlessElevator(DistributedElevatorExt.DistributedElevatorExt):
 
     def __init__(self, cr):
@@ -26,12 +27,9 @@ class DistributedEndlessElevator(DistributedElevatorExt.DistributedElevatorExt):
         self.entranceId = entranceId
 
         # These hard coded poshprs should be replaced with nodes in the model
-        #if self.entranceId == 0:
-            # Front of the factory (south entrance)
-            #self.elevatorModel.setPosHpr(62.74, -85.31, 0.00, 2.00, 0.00, 0.00)
-        
-
-
+        # if self.entranceId == 0:
+        # Front of the factory (south entrance)
+        #self.elevatorModel.setPosHpr(62.74, -85.31, 0.00, 2.00, 0.00, 0.00)
 
     def setupElevator(self):
         """setupElevator(self)
@@ -62,8 +60,41 @@ class DistributedEndlessElevator(DistributedElevatorExt.DistributedElevatorExt):
         self.bldg = None
         self.setupElevator()
 
-
-
     def getZoneId(self):
         return 0
 
+    def _getDoorsClosedInfo(self):
+        return 'endlessSuitInterior', 'endlessSuitInterior'
+
+    def __doorsClosed(self, zoneId):
+        return
+        assert(self.notify.debug('doorsClosed()'))
+        DistributedEndlessSuitInterior.DistributedEndlessSuitInterior(
+            self, base.cr)
+        if (self.localToonOnBoard):
+            hoodId = ZoneUtil.getHoodId(zoneId)
+            loader, where = self._getDoorsClosedInfo()
+            doneStatus = {
+                'loader': loader,
+                'where': where,
+                'hoodId': hoodId,
+                'zoneId': zoneId,
+                'shardId': None,
+            }
+
+            elevator = self.elevatorFSM  # self.getPlaceElevator()
+            del self.elevatorFSM
+            elevator.signalDone(doneStatus)
+
+    def setEndlessInteriorZone(self, zoneId):
+        if (self.localToonOnBoard):
+            hoodId = self.cr.playGame.hood.hoodId
+            doneStatus = {
+                'loader': "safeZoneLoader",
+                'where': 'endlessSuitInterior',
+                'how': "teleportIn",
+                'zoneId': zoneId,
+                'hoodId': hoodId,
+                'shardId': None,
+            }
+            self.cr.playGame.getPlace().elevator.signalDone(doneStatus)

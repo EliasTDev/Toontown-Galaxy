@@ -1,5 +1,5 @@
 import copy
-
+import random
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
 from direct.distributed import DistributedObjectAI
@@ -382,7 +382,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
 
         # Create the suits and place them in their initial positions on
         # the floor
-        assert(self.currentFloor < self.numFloors)
+        
         self.elevator.planner._genSuitInfos(self.currentFloor)
         suitHandles = self.elevator.planner.genFloorSuits(self.currentFloor)
         self.suits = suitHandles['activeSuits']
@@ -494,8 +494,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
             return
 
         avatar = self.air.doId2do.get(avId)
-        if avatar != None:
-            self.savedByMap[avId] = (avatar.getName(), avatar.dna.asTuple())
+
         
         assert(avId in self.responses)
         self.responses[avId] += 1

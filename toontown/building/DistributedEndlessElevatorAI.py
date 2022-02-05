@@ -52,9 +52,9 @@ class DistributedEndlessElevatorAI(DistributedElevatorExtAI.DistributedElevatorE
                 # Tell each player on the elevator that they should enter the
                 # building now.
                 if avId:
-                    assert(avId > 0)
+                     self.sendUpdateToAvatarId(avId, "setEndlessInteriorZone", [self.interiorZoneId])
                     # Clear the fill slot
-                    self.clearFullNow(seatIndex)
+                     self.clearFullNow(seatIndex)
         else:
             self.notify.warning("The elevator left, but was empty.")
         self.fsm.request("closed")

@@ -14,9 +14,56 @@ from .ElevatorConstants import *
 class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory(
         'DistributedSuitInterior')
-
+    id = 0
     def __init__(self, cr):
-        DistributedObject.DistributedObject__init__(self, cr)
+        DistributedObject.DistributedObject.__init__(self, cr)
+        self.toons = []
+        self.activeIntervals = {}
+
+        self.openSfx = base.loader.loadSfx("phase_5/audio/sfx/elevator_door_open.ogg")
+        self.closeSfx = base.loader.loadSfx("phase_5/audio/sfx/elevator_door_close.ogg")
+
+        self.suits = []
+        self.reserveSuits = []
+        self.joiningReserves = []
+
+        self.distBldgDoId = 0
+
+        # we increment this each time we come out of an elevator:
+        self.currentFloor = -1
+
+        self.elevatorName = self.__uniqueName('elevator')
+        self.floorModel = None
+
+        self.elevatorOutOpen = 0
+
+        # initial cog positions vary based on the cog office model
+        self.BottomFloor_SuitPositions = [
+                         Point3(0, 15, 0),
+                         Point3(10, 20, 0),
+                         Point3(-7, 24, 0),
+                         Point3(-10, 0, 0)]
+        self.BottomFloor_SuitHs = [75, 170, -91, -44]   # Heading angles
+
+        self.Cubicle_SuitPositions = [
+                         Point3(0, 18, 0),
+                         Point3(10, 12, 0),
+                         Point3(-9, 11, 0),
+                         Point3(-3, 13, 0)]
+        self.Cubicle_SuitHs = [170, 56, -52, 10]
+
+        self.BossOffice_SuitPositions = [
+                         Point3(0, 15, 0),
+                         Point3(10, 20, 0),
+                         Point3(-10, 6, 0),
+                         Point3(-17, 34, 11),
+                         ]
+        self.BossOffice_SuitHs = [170, 120, 12, 38]
+
+        self.waitMusic = base.loader.loadMusic(
+            'phase_7/audio/bgm/encntr_toon_winning_indoor.ogg')
+        self.elevatorMusic = base.loader.loadMusic(
+            'phase_7/audio/bgm/tt_elevator.ogg')
         self.fsm = ClassicFSM.ClassicFSM('DistributedEndlessSuitInterior',
                                          [State.State('WaitForAllToonsInside',
                                                       self.enterWaitForAllToonsInside,
@@ -532,4 +579,5 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         base.playMusic(self.waitMusic, looping=1, volume=0.7)
         self.__closeInElevator()
         return
+
 

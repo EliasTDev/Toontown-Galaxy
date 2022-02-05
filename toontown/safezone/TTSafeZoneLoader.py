@@ -14,7 +14,7 @@ class TTSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
         SafeZoneLoader.SafeZoneLoader.__init__(
             self, hood, parentFSM, doneEvent)
 
-        # self.fsm.addState(State.State('playground',
+          #  self.fsm.addState(State.State('playground',
         #                             self.enterTTPlayground,
         #                            self.exitTTPlayground,
         #                           ['quietZone',
@@ -24,15 +24,15 @@ class TTSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
         # for stateName in ['start', 'endlessSuitInterior', 'quietZone']:
         #   state = self.fsm.getStateNamed(stateName)
         #  state.addTransition('ttPlayground')
-       # self.fsm.addState(State.State('endlessSuitInterior',
-        #                                self.enterEndlessSuitInterior,
-        #                                self.exitEndlessSuitInterior,
-        #                               ['quietZone',
-        #                               'ttPlayground', # Win bldg
-        #                              ]))
-       # for stateName in ['quietZone']:
-        #    state = self.fsm.getStateNamed(stateName)
-          #  state.addTransition('endlessSuitInterior')
+        self.fsm.addState(State.State('endlessSuitInterior',
+                                        self.enterEndlessSuitInterior,
+                                        self.exitEndlessSuitInterior,
+                                       ['quietZone',
+                                       #'ttPlayground', # Win bldg
+                                      ]))
+        for stateName in ['quietZone']:
+            state = self.fsm.getStateNamed(stateName)
+            state.addTransition('endlessSuitInterior')
 
         self.playgroundClass = TTPlayground.TTPlayground
         self.musicFile = "phase_4/audio/bgm/TC_nbrhood.ogg"
@@ -65,15 +65,14 @@ class TTSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
 
     def exitTTPlayground(self):
         return
-        # taskMgr.remove("titleText")
-       # self.hood.hideTitleText()
-       # self.exitPlace()
-      #  self.placeClass = None
+        taskMgr.remove("titleText")
+        self.hood.hideTitleText()
+        self.exitPlace()
+        self.placeClass = None
 
     def enterEndlessSuitInterior(self, requestStatus):
-        return
-      #  self.placeClass = EndlessSuitInterior.EndlessSuitInterior
-      #  self.enterPlace(requestStatus)
+        self.placeClass = EndlessSuitInterior.EndlessSuitInterior
+        self.enterPlace(requestStatus)
 
         # probably wont be used might be removed
     def exitEndlessSuitInterior(self):

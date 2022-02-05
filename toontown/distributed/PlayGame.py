@@ -305,12 +305,19 @@ class PlayGame(StateData.StateData):
         if doneStatus["where"] == "party":
             self.getPartyZoneAndGoToParty(doneStatus["avId"], doneStatus["zoneId"])
             return
+        if 'how' in doneStatus:
+            how = doneStatus["how"]
 
-        how = doneStatus["how"]
-        if how in ["tunnelIn", "teleportIn", "doorIn", "elevatorIn"]:
-            self.fsm.request("quietZone", [doneStatus])
+            if how in ["tunnelIn", "teleportIn", "doorIn", "elevatorIn"]:
+                self.fsm.request("quietZone", [doneStatus])
+            elif how in ['elevatorOut']:
+                self.doneStatus = doneStatus
+                messenger.send(self.doneEvent)
+            else:
+                self.notify.error("Exited hood with unexpected mode %s" % (how))
         else:
-            self.notify.error("Exited hood with unexpected mode %s" % (how))
+            self.notify.error('doneStatus is missing how')
+            #self.fsm.request('quietZone', [doneStatus])
 
     def _destroyHood(self):
         # every hood exit handler should call _destroyHood()
