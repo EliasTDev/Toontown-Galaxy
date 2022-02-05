@@ -15,7 +15,7 @@ from direct.task import Timer
 from otp.ai.AIBaseGlobal import *
 from toontown.battle import BattleBase, DistributedBattleBldgAI
 from toontown.building import SuitPlannerInteriorAI
-from toontown.suit import SuitDNA
+from toontown.suit import DistributedSuitAI, SuitDNA
 from toontown.toonbase.ToontownBattleGlobals import *
 
 from .ElevatorConstants import *
@@ -114,7 +114,7 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         joinChances = self.__genJoinChances(numReserve)
         for currReserve in range(numReserve):
             level = lvls[currReserve + numActive]
-            _type = self.__genNormalSuitType()
+            _type = self.__genNormalSuitType(level)
             reserveDict = {}
             reserveDict['type'] = _type
             reserveDict['level'] = level
@@ -169,7 +169,7 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
                     # a typical level with a higher level boss (must be at end)
                     7, 10]
         # TODO change this to how we want to envision the level pool range
-        lvlPoolRange = [currFloor, currFloor + 5]
+        lvlPoolRange = [currFloor + 1, currFloor + 5]
         #maxFloors =  bldgInfo[ SuitBuildingGlobals.SUIT_BLDG_INFO_FLOORS ][1]
 
         # now figure out which level pool multiplier to use
@@ -273,7 +273,7 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         for activeSuitInfo in floorInfo['activeSuits']:
             suit = self.__genSuitObject(self.zoneId,
                                         activeSuitInfo['type'],
-                                        activeSuitInfo['track'],
+                                        
                                         activeSuitInfo['level'],
                                         activeSuitInfo['revives'])
 
@@ -285,7 +285,6 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         for reserveSuitInfo in floorInfo['reserveSuits']:
             suit = self.__genSuitObject(self.zoneId,
                                         reserveSuitInfo['type'],
-                                        reserveSuitInfo['track'],
                                         reserveSuitInfo['level'],
                                         reserveSuitInfo['revives'])
             reserveSuits.append((suit, reserveSuitInfo['joinChance']))
@@ -298,3 +297,10 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         floorSuitHandles = self.genFloorSuits(currentFloor)
         suitHandles.append(floorSuitHandles)
         return suitHandles
+
+    def __genJoinChances( self, num ):
+        joinChances = []
+        for currChance in range( num ):
+            joinChances.append( random.randint( 1, 100 ) )
+        joinChances.sort(key=functools.cmp_to_key(cmp))
+        return joinChances

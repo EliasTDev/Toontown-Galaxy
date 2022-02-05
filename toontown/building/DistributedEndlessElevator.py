@@ -90,7 +90,7 @@ class DistributedEndlessElevator(DistributedElevatorExt.DistributedElevatorExt):
         if (self.localToonOnBoard):
             hoodId = self.cr.playGame.hood.hoodId
             doneStatus = {
-                'loader': "safeZoneLoader",
+                'loader': "endlessSuitInterior",
                 'where': 'endlessSuitInterior',
                 'how': "teleportIn",
                 'zoneId': zoneId,

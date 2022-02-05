@@ -8,7 +8,7 @@ from direct.task import Timer
 from otp.ai.AIBaseGlobal import *
 from toontown.battle import BattleBase, DistributedBattleBldgAI
 from toontown.toonbase.ToontownBattleGlobals import *
-
+from toontown.building import DistributedElevatorIntAI
 from .ElevatorConstants import *
 
 class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
@@ -169,9 +169,9 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
             # Reward the player based on last checkpoint
             if (self.fsm.getCurrentState().getName() == 'Resting'):
                 pass
-            elif (self.battle is None):
+            #elif (self.battle is None):
            #     self.bldg.deleteSuitInterior()
-                self.air.deallocateZone(self.zoneId)
+            self.air.deallocateZone(self.zoneId)
 
 
     def elevatorDone(self):
@@ -198,10 +198,10 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.responses[toonId] += 1
         assert(self.notify.debug('toon: %d done with elevator' % toonId))
         if (self.__allToonsResponded() and
-            self.ignoreElevatorDone == 0 and  self.currFloor % 5 != 0):
+            self.ignoreElevatorDone == 0 and  self.currentFloor % 5 != 0):
             self.b_setState('Battle')
         elif (self.__allToonsResponded() and
-            self.ignoreElevatorDone == 0 and self.currFloor % 5 == 0):
+            self.ignoreElevatorDone == 0 and self.currentFloor % 5 == 0):
             self.b_setState('Resting')
 
     def __createFloorBattle(self):
@@ -325,7 +325,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
     def enterBattle(self):
         if (self.battle == None):
             self.__createFloorBattle()
-            #self.elevator.d_setFloor(self.currentFloor)
+            self.elevator.d_setFloor(self.currentFloor)
         return None
 
     def exitBattle(self):
@@ -574,7 +574,8 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
 
 
     def __doDeleteInterior(self, task):
-        self.bldg.deleteSuitInterior()
+        #self.bldg.deleteSuitInterior()
+        self.air.deallocateZone(self.zoneId)
 
 
 
@@ -638,7 +639,8 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         # reset and get us out of here.
         numOfEmptySeats = seats.count(None)
         if (numOfEmptySeats == 4):
-            self.bldg.deleteSuitInterior()
+            #self.bldg.deleteSuitInterior()
+            self.air.deallocateZone(self.zoneId)
             return
         elif (numOfEmptySeats >= 0) and (numOfEmptySeats <=3):
             pass

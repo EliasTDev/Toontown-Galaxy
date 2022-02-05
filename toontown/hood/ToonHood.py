@@ -1,16 +1,17 @@
 
-from pandac.PandaModules import *
-from toontown.toonbase.ToonBaseGlobal import *
-from toontown.toonbase.ToontownGlobals import *
-from toontown.distributed.ToontownMsgTypes import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM, State
-from direct.fsm import State
-from toontown.minigame import Purchase
 from otp.avatar import DistributedAvatar
-from . import Hood
-from toontown.building import SuitInterior
+from pandac.PandaModules import *
+from toontown.building import EndlessSuitInterior, SuitInterior
 from toontown.cogdominium import CogdoInterior
+from toontown.distributed.ToontownMsgTypes import *
+from toontown.minigame import Purchase
+from toontown.toonbase.ToonBaseGlobal import *
+from toontown.toonbase.ToontownGlobals import *
+
+from . import Hood
+
 
 class ToonHood(Hood.Hood):
     """
@@ -65,6 +66,10 @@ class ToonHood(Hood.Hood):
                                         self.exitSuitInterior,
                                         ['quietZone',
                                         'townLoader', 'safeZoneLoader']),
+                            State.State('endlessSuitInterior',
+                                         self.enterEndlessSuitInterior,
+                                         self.exitEndlessSuitInterior,
+                                         ['quietZone', 'safeZoneLoader' ]),
                             State.State('cogdoInterior',
                                         self.enterCogdoInterior,
                                         self.exitCogdoInterior,
@@ -78,7 +83,7 @@ class ToonHood(Hood.Hood):
                                         self.enterQuietZone,
                                         self.exitQuietZone,
                                         ['safeZoneLoader', 'townLoader', 
-                                        'suitInterior', 'cogdoInterior', 'minigame']),
+                                        'suitInterior', 'cogdoInterior', 'minigame', 'endlessSuitInterior']),
                             State.State('final',
                                         self.enterFinal,
                                         self.exitFinal,
@@ -242,7 +247,39 @@ class ToonHood(Hood.Hood):
             self.doneStatus = doneStatus
             messenger.send(self.doneEvent)
 
+    def enterEndlessSuitInterior(self, requestStatus=None):
+        self.notify.debug("enterEndlessSuitInterior")
+        self.placeDoneEvent = 'endless-suit-interior-done'
+        self.acceptOnce(self.placeDoneEvent, self.handleEndlessSuitInteriorDone)
+        self.place = EndlessSuitInterior.EndlessSuitInterior(self, self.fsm, 
+                                                        self.placeDoneEvent)
+        self.place.load()
+        self.place.enter(requestStatus)
+        base.cr.playGame.setPlace(self.place)
+
+    def exitEndlessSuitInterior(self):
+        """exitEndlessSuitInterior(self)
+        """
+        self.notify.debug("exitEndlessSuitInterior()")
+        self.ignore(self.placeDoneEvent)
+        del self.placeDoneEvent
+        self.place.exit()
+        self.place.unload()
+        self.place=None
+        base.cr.playGame.setPlace(self.place)
+    
+    def handleEndlessSuitInteriorDone(self):
+        self.notify.debug("handleSuitInteriorDone()")
+        doneStatus = self.place.getDoneStatus()
+        if self.isSameHood(doneStatus):
+            self.fsm.request("quietZone", [doneStatus])
+        else:
+            # ...we're leaving the hood.
+            self.doneStatus = doneStatus
+            messenger.send(self.doneEvent)
+
     # cogdoInterior state
+    
 
     def enterCogdoInterior(self, requestStatus=None):
         """enterCogdoInterior(self)

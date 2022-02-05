@@ -1,34 +1,25 @@
 """SafeZoneLoader module: contains the SafeZoneLoader class"""
 
-from pandac.PandaModules import *
-from toontown.toonbase.ToonBaseGlobal import *
-from toontown.distributed.ToontownMsgTypes import *
-from toontown.hood import ZoneUtil
 from direct.directnotify import DirectNotifyGlobal
-from toontown.hood import Place
+from direct.fsm import ClassicFSM, State, StateData
 from direct.showbase import DirectObject
-from direct.fsm import StateData
-from direct.fsm import ClassicFSM, State
-from direct.fsm import State
 from direct.task import Task
+from panda3d.core import *
+from toontown.building import ToonInterior
+from toontown.distributed.ToontownMsgTypes import *
+from toontown.hood import (HQPeriscopeAnimatedProp, HQTelescopeAnimatedProp,
+                           HydrantInteractiveProp, MailboxOneAnimatedProp,
+                           MailboxTwoAnimatedProp, MailboxZeroAnimatedProp,
+                           PetShopFishAnimatedProp, Place, QuietZoneState,
+                           SleepingHydrantAnimatedProp,
+                           TrashcanInteractiveProp, TrashcanOneAnimatedProp,
+                           TrashcanTwoAnimatedProp, TrashcanZeroAnimatedProp,
+                           ZoneUtil)
 from toontown.launcher import DownloadForceAcknowledge
 from toontown.toon import HealthForceAcknowledge
-from toontown.tutorial import TutorialForceAcknowledge
+from toontown.toonbase.ToonBaseGlobal import *
 from toontown.toonbase.ToontownGlobals import *
-from toontown.building import ToonInterior
-from toontown.hood import QuietZoneState
-from toontown.hood import HQTelescopeAnimatedProp
-from toontown.hood import HQPeriscopeAnimatedProp 
-from toontown.hood import HydrantInteractiveProp 
-from toontown.hood import MailboxOneAnimatedProp
-from toontown.hood import MailboxTwoAnimatedProp
-from toontown.hood import MailboxZeroAnimatedProp
-from toontown.hood import PetShopFishAnimatedProp
-from toontown.hood import SleepingHydrantAnimatedProp
-from toontown.hood import TrashcanInteractiveProp
-from toontown.hood import TrashcanOneAnimatedProp
-from toontown.hood import TrashcanTwoAnimatedProp
-from toontown.hood import TrashcanZeroAnimatedProp
+from toontown.tutorial import TutorialForceAcknowledge
 
 
 class SafeZoneLoader(StateData.StateData):

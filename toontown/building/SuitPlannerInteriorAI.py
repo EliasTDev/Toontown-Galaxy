@@ -58,7 +58,7 @@ class SuitPlannerInteriorAI:
         self._genSuitInfos( numFloors, bldgLevel, bldgTrack )
         assert(len(self.suitInfos) > 0)
 
-    def __genJoinChances( self, num ):
+    def __genJoinChances(self, num ):
         joinChances = []
         for currChance in range( num ):
             joinChances.append( random.randint( 1, 100 ) )

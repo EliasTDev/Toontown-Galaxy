@@ -307,7 +307,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         assert (self.notify.debug('enterElevator()'))
 
         self.currentFloor += 1
-        self.cr.playGame.getPlace().currentFloor = self.currentFloor
+        #self.cr.playGame.getPlace().currentFloor = self.currentFloor
         self.setElevatorLights(self.elevatorModelIn)
         self.setElevatorLights(self.elevatorModelOut)
 
@@ -460,7 +460,6 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         return None
 
     def enterWaitForAllToonsInside(self, ts=0):
-        assert(self.notify.debug('enterWaitForAllToonsInside()'))
         return None
 
     def exitWaitForAllToonsInside(self):        
