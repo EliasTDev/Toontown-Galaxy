@@ -1,7 +1,7 @@
 import random
 
 from panda3d.core import *
-from toontown.building import DistributedEndlessSuitInterior
+#from toontown.building import EndlessSuitInterior
 from toontown.launcher import DownloadForceAcknowledge
 
 from . import SafeZoneLoader, TTPlayground
@@ -10,12 +10,12 @@ from . import SafeZoneLoader, TTPlayground
 class TTSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
     def __init__(self, hood, parentFSM, doneEvent):
         SafeZoneLoader.SafeZoneLoader.__init__(self, hood, parentFSM, doneEvent)
+        """"
         self.fsm.addState(State.State('endlessBuildingExterior',
                                       self.enterEndlessBuildingExterior,
                                       self.exitEndlessBuildingExterior,
                                       ['quietZone',
-                                       'endlessSuitInterior', # Elevator
-                                        
+                                       'endlessSuitInterior', # Elevator                                     
                                        ]))
         for stateName in ['start', 'endlessSuitInterior', 'quietZone']:
             state = self.fsm.getStateNamed(stateName)
@@ -29,7 +29,7 @@ class TTSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
         for stateName in ['quietZone']:
             state = self.fsm.getStateNamed(stateName)
             state.addTransition('endlessSuitInterior')
-
+        """
         self.playgroundClass = TTPlayground.TTPlayground
         self.musicFile = "phase_4/audio/bgm/TC_nbrhood.ogg"
         self.activityMusicFile = "phase_3.5/audio/bgm/TC_SZ_activity.ogg"
@@ -65,7 +65,7 @@ class TTSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
         self.placeClass = None
 
     def enterEndlessSuitInterior(self, requestStatus):
-        self.placeClass = DistributedEndlessSuitInterior.DistributedEndlessSuitInterior
+        self.placeClass = EndlessSuitInterior.EndlessSuitInterior
         self.enterPlace(requestStatus)
         
         # probably wont be used might be removed

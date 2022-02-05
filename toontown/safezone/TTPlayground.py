@@ -18,6 +18,7 @@ class TTPlayground(Playground.Playground):
         self.elevatorDoneEvent = "elevatorDone"
 
     def load(self):
+        """"
         self.fsm = ClassicFSM.ClassicFSM('TTPlayground',
                                          [State.State('start',
                                                       self.enterStart,
@@ -95,6 +96,7 @@ class TTPlayground(Playground.Playground):
                                          'final',
                                          )
         self.parentFSM.getStateNamed("TTPlayground").addChild(self.fsm)
+        """
         Playground.Playground.load(self)
 
     def unload(self):

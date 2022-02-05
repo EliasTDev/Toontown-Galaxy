@@ -1,9 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from panda3d.core import *
-#TODO make custom elevator file for endless
-from toontown.coghq import DistributedFactoryElevatorExt 
-from toontown.building import DistributedBuilding, DistributedElevator
+
 from toontown.safezone import TTSafeZoneLoader
 from toontown.toonbase.ToontownGlobals import *
 from toontown.town import TTTownLoader
@@ -37,7 +35,6 @@ class TTHood(ToonHood.ToonHood):
         self.titleColor = (1.0, 0.5, 0.4, 1.0)
 
     def load(self):
-        self.setupElevator()
         ToonHood.ToonHood.load(self)
         self.parentFSM.getStateNamed("TTHood").addChild(self.fsm)
 
@@ -96,8 +93,5 @@ class TTHood(ToonHood.ToonHood):
             NodePath(), CompassEffect.PRot | CompassEffect.PZ)
         self.sky.node().setEffect(ce)
 
-    def setupElevator(self):
-        # move this to distributedEndlessElevatorExt
-        elevator = DistributedFactoryElevatorExt.DistributedFactoryElevatorExt(self)
-        elevator.setupElevator()
+
 

@@ -1,16 +1,25 @@
-from . import DistributedSuitInteriorAI
+import copy
+
 from direct.directnotify import DirectNotifyGlobal
-from toontown.battle import DistributedBattleBldgAI
+from direct.distributed.ClockDelta import *
+from direct.fsm import ClassicFSM, State
+from direct.task import Timer
+from otp.ai.AIBaseGlobal import *
+from toontown.battle import BattleBase, DistributedBattleBldgAI
+from toontown.toonbase.ToontownBattleGlobals import *
+
+from .ElevatorConstants import *
+from . import DistributedSuitInteriorAI
 
 class DistributedEndlessSuitInteriorAI(DistributedSuitInteriorAI.DistributedSuitInteriorAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedEndlessSuitInteriorAI')
     # Call this class in toontown central and base it off how sellbot factory entrance is made
     # Will be moved to neo toontown central in the future
-    def __init__(self, air, elevator):
+    def __init__(self, air, elevator, interiorZoneId):
         self.air = air
         DistributedSuitInteriorAI.DistributedSuitInteriorAI.__init__(self, air, elevator)
         self.numFloors = float('inf')
-        self.extZoneId, self.zoneId = elevator.bldg.getExteriorAndInteriorZoneId()
+        self.extZoneId, self.zoneId = interiorZoneId
 
         self.avatarExitEvents = []
         self.toons = []
@@ -26,7 +35,7 @@ class DistributedEndlessSuitInteriorAI(DistributedSuitInteriorAI.DistributedSuit
         self.currentFloor = 0
         # There is no top floor >:)
         self.topFloor = float('inf')
-        self.bldg = elevator.bldg
+        #self.bldg = elevator.bldg
         self.elevator = elevator
 
         self.suits = []
@@ -138,11 +147,13 @@ class DistributedEndlessSuitInteriorAI(DistributedSuitInteriorAI.DistributedSuit
             # the interior elevator clean up first, otherwise, just
             # reset the suit interior.
 
-            # Reward the player based
+            # Reward the player based on last checkpoint
             if (self.fsm.getCurrentState().getName() == 'Resting'):
                 pass
-            elif (self.battle == None):
-                self.bldg.deleteSuitInterior()
+            elif (self.battle is None):
+           #     self.bldg.deleteSuitInterior()
+                self.air.deallocateZone(self.zoneId)
+
 
     def elevatorDone(self):
         """elevatorDone(self)
@@ -176,7 +187,7 @@ class DistributedEndlessSuitInteriorAI(DistributedSuitInteriorAI.DistributedSuit
 
     def __createFloorBattle(self):
         assert (len(self.toons) > 0)
-        if (self.currentFloor %4 == 0):
+        if (self.currentFloor % 4 == 0):
             assert (self.notify.debug('createFloorBattle() - boss battle'))
             bossBattle = 1
         else:
@@ -295,7 +306,7 @@ class DistributedEndlessSuitInteriorAI(DistributedSuitInteriorAI.DistributedSuit
     def enterBattle(self):
         if (self.battle == None):
             self.__createFloorBattle()
-            self.elevator.d_setFloor(self.currentFloor)
+            #self.elevator.d_setFloor(self.currentFloor)
         return None
 
     def exitBattle(self):
@@ -316,7 +327,9 @@ class DistributedEndlessSuitInteriorAI(DistributedSuitInteriorAI.DistributedSuit
         self.d_setToons()
 
         if (len(self.toons) == 0):
-            self.bldg.deleteSuitInterior()
+            #self.bldg.deleteSuitInterior()
+            self.air.deallocateZone(self.zoneId)
+
         else:
            # if (self.currentFloor == self.topFloor):
            #     # Toons beat the building
@@ -343,4 +356,30 @@ class DistributedEndlessSuitInteriorAI(DistributedSuitInteriorAI.DistributedSuit
 
         #Tell the client its reward time
         self.d_setState('Reward')
+        return None
+
+    def enterElevator(self):
+        assert(self.notify.debug('enterElevator()'))
+
+        # Create the suits and place them in their initial positions on
+        # the floor
+        assert(self.currentFloor < self.numFloors)
+        self.elevator.planner._genSuitInfos(self.currentFloor)
+        suitHandles = self.elevator.planner.genFloorSuits(self.currentFloor)
+        self.suits = suitHandles['activeSuits']
+        assert(len(self.suits) > 0)
+        self.activeSuits = []
+        for suit in self.suits:
+            self.activeSuits.append(suit)
+        self.reserveSuits = suitHandles['reserveSuits']
+
+        self.d_setToons()
+        self.d_setSuits()
+        self.__resetResponses()
+
+        self.d_setState('Elevator')
+
+        self.timer.startCallback(BattleBase.ELEVATOR_T + \
+                       ElevatorData[ELEVATOR_NORMAL]['openTime'] + \
+                       BattleBase.SERVER_BUFFER_TIME, self.__serverElevatorDone)
         return None

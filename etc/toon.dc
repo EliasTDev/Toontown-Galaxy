@@ -78,6 +78,7 @@ from toontown.building import DistributedAnimBuilding/AI
 from toontown.building import DistributedToonInterior/AI
 from toontown.building import DistributedToonHallInterior/AI
 from toontown.building import DistributedSuitInterior/AI
+from toontown.building import DistributedEndlessSuitInterior/AI
 from toontown.building import DistributedHQInterior/AI
 from toontown.building import DistributedGagshopInterior/AI
 from toontown.building import DistributedPetshopInterior/AI
@@ -103,6 +104,7 @@ from toontown.building import DistributedElevator/AI
 from toontown.building import DistributedElevatorFSM/AI
 from toontown.building import DistributedElevatorExt/AI
 from toontown.building import DistributedElevatorInt/AI
+from toontown.building import DistributedEndlessElevator/AI
 from toontown.coghq import DistributedFactoryElevatorExt/AI
 from toontown.coghq import DistributedMintElevatorExt/AI
 from toontown.coghq import DistributedLawOfficeElevatorExt/AI
@@ -2356,7 +2358,13 @@ dclass DistributedSuitInterior: DistributedObject {
   elevatorDone() airecv clsend;    //appears safe
   reserveJoinDone() airecv clsend; //appears safe
 };
-
+dclass DistributedEndlessSuitInterior: DistributedSuitInterior
+{
+  setZoneId() required broadcast ram;
+  setExtZoneId() required broadcast ram;
+  setNumFloors();
+  setDistBldgDoId() required broadcast ram;
+}
 dclass DistributedCogdoBarrel : DistributedObject {
   requestGrab() airecv clsend;
   setIndex(uint32) required broadcast ram;
@@ -2812,7 +2820,8 @@ dclass DistributedFactoryElevatorExt: DistributedElevatorExt {
   setFactoryInteriorZone(uint32 zoneId);
   setFactoryInteriorZoneForce(uint32 zoneId);
 };
-
+dclass DistributedEndlessElevator: DistributedElevatorExt {
+};
 dclass DistributedMintElevatorExt: DistributedElevatorExt {
   setMintId(uint16 mintId) required broadcast ram;
   // How the server puts the clients into a mint

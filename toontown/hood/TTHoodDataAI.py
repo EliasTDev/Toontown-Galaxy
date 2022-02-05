@@ -5,6 +5,7 @@ from toontown.safezone import DistributedTrolleyAI
 from toontown.safezone import TTTreasurePlannerAI
 from toontown.safezone import ButterflyGlobals
 from direct.task import Task
+from toontown.building import DistributedEndlessElevatorAI
 
 class TTHoodDataAI(HoodDataAI.HoodDataAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("TTHoodDataAI")
@@ -13,11 +14,14 @@ class TTHoodDataAI(HoodDataAI.HoodDataAI):
         hoodId = ToontownGlobals.ToontownCentral
         if zoneId == None:
             zoneId = hoodId
+        self.zoneId = zoneId
         HoodDataAI.HoodDataAI.__init__(self, air, zoneId, hoodId)
 
     def startup(self):
         HoodDataAI.HoodDataAI.startup(self)
-
+        self.endlessElevator = DistributedEndlessElevatorAI.DistributedEndlessElevatorAI(self.air, None, antiShuffle = 0, minLaff = 0) # antiShufflePOI
+        self.endlessElevator.generateWithRequired(self.zoneId)
+        self.addDistObj(self.endlessElevator)
         trolley = DistributedTrolleyAI.DistributedTrolleyAI(self.air)
         trolley.generateWithRequired(self.zoneId)
         trolley.start()
