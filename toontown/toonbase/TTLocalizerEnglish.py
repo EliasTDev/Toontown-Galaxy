@@ -6914,7 +6914,7 @@ HeadingToFriend = "Heading to %s's friend's estate..."  # avatar name
 # Hood.py
 HeadingToPlayground = "Heading to the Playground..."
 HeadingToStreet = "Heading %(to)s %(street)s..." # Street name
-HeadingToEndlessBuilding = 'Heading to Endless Building...'
+HeadingToEndlessBuilding = 'Heading to The Infini-Suite'
 # TownBattle.py
 TownBattleRun = "Run all the way back to the playground?"
 

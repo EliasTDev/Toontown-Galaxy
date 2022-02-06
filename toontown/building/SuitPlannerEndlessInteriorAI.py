@@ -198,15 +198,18 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         # for this level of building
         #
         lvlMin = 1
-        #lvlMax = float('inf')
+        lvlMax = 25
 
         # now randomly generate levels within our min and max, pulling
         # from our pool until we run out
         #
         self.notify.debug("Level Pool: " + str(lvlPool))
         lvlList = []
+        #TODO remove lvlMax when battle rewrite is done
+
         while lvlPool >= lvlMin:
-            newLvl = random.randint(lvlMin, lvlPool)
+            #newLvl = random.randint(lvlPool, lvlMax)
+            newLvl =  random.randint( lvlMin, min( lvlPool, lvlMax ) )
             lvlList.append(newLvl)
             lvlPool -= newLvl
 
@@ -215,7 +218,7 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         #
         if currFloor % 5 == 3:
             # TODO this is a place holder formula for now
-            bossLvlRange = [currFloor, currFloor + 2]
+            bossLvlRange = [currFloor + 2, currFloor + 6]
             newLvl = random.randint(bossLvlRange[0], bossLvlRange[1])
             lvlList.append(newLvl)
 
