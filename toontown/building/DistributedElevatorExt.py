@@ -116,7 +116,7 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
            localAvatar.boardingParty and \
            localAvatar.boardingParty.getGroupLeader(localAvatar.doId) and \
            localAvatar.boardingParty.getGroupLeader(localAvatar.doId) != localAvatar.doId:
-            base.localAvatar.elevatorNotifier.showMe(TTLocalizer.ElevatorGroupMember)
+            base.localAvatar.elevatorNotifier.showMeWithoutStopping(TTLocalizer.ElevatorGroupMember)
         elif self.allowedToEnter():
             # Tell localToon we are considering entering the elevator
             self.cr.playGame.getPlace().detectedElevatorCollision(self)

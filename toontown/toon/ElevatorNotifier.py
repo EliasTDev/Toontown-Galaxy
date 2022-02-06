@@ -73,9 +73,7 @@ class ElevatorNotifier:
 
     def __handleButton(self, value):
         self.cleanup()
-        place = base.cr.playGame.getPlace()
-        if place:
-            place.setState('walk')
+
         
     def showMe(self, message, pos = None):
         if self.frame == None:

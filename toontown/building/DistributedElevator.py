@@ -558,13 +558,13 @@ class DistributedElevator(DistributedObject.DistributedObject):
         print(("rejectBoard %s" % (reason)))
         if hasattr(base.localAvatar, "elevatorNotifier"):
             if reason == REJECT_SHUFFLE:
-                base.localAvatar.elevatorNotifier.showMe(TTLocalizer.ElevatorHoppedOff)
+                base.localAvatar.elevatorNotifier.showMeWithoutStopping(TTLocalizer.ElevatorHoppedOff)
             elif reason == REJECT_MINLAFF:
-                base.localAvatar.elevatorNotifier.showMe((TTLocalizer.ElevatorMinLaff % (self.minLaff)))
+                base.localAvatar.elevatorNotifier.showMeWithoutStopping(TTLocalizer.ElevatorMinLaff % (self.minLaff))
             elif reason == REJECT_PROMOTION:
-                base.localAvatar.elevatorNotifier.showMe(TTLocalizer.BossElevatorRejectMessage)
+                base.localAvatar.elevatorNotifier.showMeWithoutStopping(TTLocalizer.BossElevatorRejectMessage)
             elif reason == REJECT_NOT_YET_AVAILABLE:
-                base.localAvatar.elevatorNotifier.showMe(TTLocalizer.NotYetAvailable)
+                base.localAvatar.elevatorNotifier.showMeWithoutStopping(TTLocalizer.NotYetAvailable)
         assert(base.localAvatar.getDoId() == avId)
         
         doneStatus = {
