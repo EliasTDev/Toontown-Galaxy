@@ -56,7 +56,10 @@ except Exception as e:
     from otp.otpbase import PythonUtil
 
     info = PythonUtil.describeException()
-    simbase.air.writeServerEvent('ai-exception', avId=simbase.air.getAvatarIdFromSender(), accId=simbase.air.getAccountIdFromSender(), exception=info)
+    try:
+        simbase.air.writeServerEvent('ai-exception', avId=simbase.air.getAvatarIdFromSender(), accId=simbase.air.getAccountIdFromSender(), exception=info)
+    except AssertionError:
+        print('Failed to get sender for ai exception')
     with open(config.GetString('ai-crash-log-name', 'ai-crash.txt'), 'w+') as file:
         file.write(info + "\n")
     if wantSentry:
