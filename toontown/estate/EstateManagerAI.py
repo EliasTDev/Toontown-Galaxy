@@ -12,7 +12,6 @@ import functools
 from direct.fsm.FSM import FSM
 from toontown.toon import ToonDNA
 from toontown.estate.DistributedHouseAI import DistributedHouseAI
-from toontown.estate.GardenManagerAI import GardenManagerAI
 
 #TODO rewrite this into our own code instead of using other code here
 
@@ -230,7 +229,6 @@ class LoadEstateOperation(FSM):
         # Set the estate's ID list:
         self.estate.b_setIdList(self.avIds)
         #start the garden process
-        self.estate.gardenInit(self.avIds)
 
 
         # Load houses:
@@ -836,7 +834,6 @@ class EstateManagerAI(DistributedObjectAI.DistributedObjectAI):
                 self.notify.info('finish estate %s init, owner=%s' %
                                  (estateId, ownerId))
 
-                estateAI.gardenInit(avIdList)
 
         # Now that the zone is set up, send the notification back to
         # the client.
