@@ -109,6 +109,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.fsm.enterInitialState()
         self.cr = cr
         self.extZoneId = None
+        self.wantCheckpoint = False
 
     def __uniqueName(self, name):
         DistributedEndlessSuitInterior.id += 1
@@ -223,11 +224,12 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
             self.floorModel = loader.loadModel('phase_7/models/modules/boss_suit_office')
             SuitHs = self.BossOffice_SuitHs
             SuitPositions = self.BossOffice_SuitPositions
-        elif self.currentFloor % 5 == 4:
+        elif self.currentFloor % 5 == 4 and self.wantCheckpoint:
             #Checkpoint floor
             self.floorModel = loader.loadModel('phase_7/models/modules/suit_interior')
             # No suit lets spawn an npc that gives a random temporary toonup unite and a random temporary gag up unite
             self.setupNpc()
+
         else:
             # middle floor
             self.floorModel = loader.loadModel('phase_7/models/modules/cubicle_room')
@@ -242,10 +244,10 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         elevOut = self.floorModel.find('**/elevator-out')
 
         # Position the suits
-
+        #if self.currentFloor % 5 != 4 :
         for index in range(len(self.suits)):
             assert (self.notify.debug('setting suit: %d to pos: %s' % \
-                                      (self.suits[index].doId, SuitPositions[index])))
+                                    (self.suits[index].doId, SuitPositions[index])))
             self.suits[index].setPos(SuitPositions[index])
             if (len(self.suits) > 2):
                 self.suits[index].setH(SuitHs[index])
@@ -355,6 +357,8 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         return
 
     def enterReward(self, ts=0):
+        if self.chunkFloor == 4 and self.wantCheckpoint:
+            return
         assert(self.notify.debug('enterReward()'))
         #base.localAvatar.b_setParent(ToontownGlobals.SPHidden)
         return None
@@ -501,6 +505,9 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.notify.info('enterBattle()')
         if (self.elevatorOutOpen == 1):
             self.__playCloseElevatorOut(self.uniqueName('close-out-elevator'))
+            if self.chunkFloor == 4 and self.wantCheckpoint:
+                self.setState('Resting')
+                return
             # Watch reserve suits as they walk from the elevator
             camera.setPos(0, -15, 6)
             camera.headsUp(self.elevatorModelOut)
@@ -559,6 +566,8 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.activeIntervals[name] = track
 
     def enterReservesJoining(self, ts=0):
+        if self.chunkFloor == 4 and self.wantCheckpoint:
+            return
         self.notify.info('enterReservesJoining()')
         self.__playReservesJoining(ts, self.uniqueName('reserves-joining'),
                                        self.__handleReserveJoinDone)
@@ -582,4 +591,5 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.__closeInElevator()
         return
 
+    
 

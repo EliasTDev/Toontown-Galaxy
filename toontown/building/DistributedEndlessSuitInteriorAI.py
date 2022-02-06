@@ -34,7 +34,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.toonParts = {}
         self.helpfulToons = []
 
-        self.currentFloor = 0
+        self.currentFloor = 4
         self.chunkFloor = self.currentFloor % 5
         # There is no top floor >:)
         self.topFloor = float('inf')
@@ -55,6 +55,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.ignoreResponses = 0
         self.ignoreElevatorDone = 0
         self.ignoreReserveJoinDone = 0
+        self.wantCheckpoint = False
 
         # Register all the toons
         self.toonIds = copy.copy(elevator.seats)
@@ -201,10 +202,8 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         assert(self.notify.debug('toon: %d done with elevator' % toonId))
 
         if self.__allToonsResponded() and not self.ignoreElevatorDone:
-            if self.chunkFloor != 4:
-                self.b_setState('Battle')
-            else:
-                self.b_setState('Resting')
+            self.b_setState('Battle')
+
 
     def __createFloorBattle(self):
         if (self.currentFloor % 5 == 3):
@@ -320,10 +319,13 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
 
         # We give reward every floor
         # TODO since this calls battlebase we need to check in battlebase if we are in an endless building skip the reward visual
-        self.setState('Reward')
-        self.b_setState('Resting')
+        self.d_setState('Reward')
+        self.d_setState('Resting')
 
     def enterBattle(self):
+        #if self.chunkFloor == 4:
+            #self.d_setState('Reward')
+            #return
         if self.battle is None:
             self.__createFloorBattle()
         #self.elevator.d_setFloor(self.currentFloor)
@@ -336,6 +338,9 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
 ##### BattleDone state #####
 
     def enterBattleDone(self, toonIds):
+        if self.chunkFloor == 4 and self.wantCheckpoint:
+            self.d_setState('Reward')
+            return
         # Find out if any toons are gone
         if (len(toonIds) != len(self.toons)):
             deadToons = []
@@ -371,7 +376,9 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
 ##### Reward state #####
 
     def enterReward(self):
-
+        if self.chunkFloor == 4 and self.wantCheckpoint:
+            #   self.d_setState('Resting')
+            return
         #Tell the client its reward time
         self.d_setState('Reward')
         return None
@@ -381,7 +388,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
 
         # Create the suits and place them in their initial positions on
         # the floor
-        
+        #if self.chunkFloor != 4:
         self.elevator.planner._genSuitInfos(self.currentFloor)
         suitHandles = self.elevator.planner.genFloorSuits(self.currentFloor)
         self.suits = suitHandles['activeSuits']
@@ -391,6 +398,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.reserveSuits = suitHandles['reserveSuits']
 
         self.d_setToons()
+        #if self.chunkFloor != 4:
         self.d_setSuits()
         self.__resetResponses()
 
@@ -581,6 +589,9 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
     ##### ReservesJoining state #####
 
     def enterReservesJoining(self):
+        if self.chunkFloor == 4 and self.wantCheckpoint:
+            self.d_setState('Reward')
+            return
         assert(self.notify.debug('enterReservesJoining()'))
         self.__resetResponses()
         self.timer.startCallback(
