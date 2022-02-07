@@ -404,45 +404,28 @@ class TrunkGUI(StateData.StateData):
         messenger.send(self.doneEvent)
 
     def resetClothes(self, style):
-        if self.toon:
-            oldHat = style[ToonDNA.HAT]
-            oldGlasses = style[ToonDNA.GLASSES]
-            oldBackpack = style[ToonDNA.BACKPACK]
-            oldShoes = style[ToonDNA.SHOES]
-            self.toon.setHat(oldHat[0], oldHat[1], oldHat[2])
-            self.toon.setGlasses(oldGlasses[0], oldGlasses[1], oldGlasses[2])
-            self.toon.setBackpack(oldBackpack[0], oldBackpack[1], oldBackpack[2])
-            self.toon.setShoes(oldShoes[0], oldShoes[1], oldShoes[2])
-            self.toon.loop('neutral', 0)
+        return
 
     def changeAccessories(self):
         self.notify.debug('Entering changeAccessories')
         NoItem = (0, 0, 0)
         newChoice = self.shuffleButton.getCurrChoice()
         if newChoice[0] in self.hats:
-            newHatIndex = self.hats.index(newChoice[0])
+            self.toon.style.hatModel = self.hats.index(newChoice[0])
         else:
-            newHatIndex = self.hats.index(NoItem)
+            self.toon.style.hatModel = self.hats.index(NoItem)
         if newChoice[1] in self.glasses:
-            newGlassesIndex = self.glasses.index(newChoice[1])
+            self.toon.style.glassesModel = self.glasses.index(newChoice[1])
         else:
-            newGlassesIndex = self.glasses.index(NoItem)
+            self.toon.style.glassesModel = self.glasses.index(NoItem)
         if newChoice[2] in self.backpacks:
-            newBackpackIndex = self.backpacks.index(newChoice[2])
+            self.toon.style.backpackModel = self.backpacks.index(newChoice[2])
         else:
-            newBackpackIndex = self.backpacks.index(NoItem)
+            self.toon.style.backpackModel = self.backpacks.index(NoItem)
         if newChoice[3] in self.shoes:
-            newShoesIndex = self.shoes.index(newChoice[3])
+            self.toon.style.shoesModel = self.shoes.index(newChoice[3])
         else:
-            newShoesIndex = self.shoes.index(NoItem)
-        oldHatIndex = self.hatChoice
-        oldGlassesIndex = self.glassesChoice
-        oldBackpackIndex = self.backpackChoice
-        oldShoesIndex = self.shoesChoice
-        self.swapHat(newHatIndex - oldHatIndex)
-        self.swapGlasses(newGlassesIndex - oldGlassesIndex)
-        self.swapBackpack(newBackpackIndex - oldBackpackIndex)
-        self.swapShoes(newShoesIndex - oldShoesIndex)
+            self.toon.style.shoesModel = self.shoes.index(NoItem)
 
     def getCurrToonSetting(self):
         return [self.hats[self.hatChoice],
