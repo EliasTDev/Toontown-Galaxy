@@ -118,7 +118,7 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
            localAvatar.boardingParty and \
            localAvatar.boardingParty.getGroupLeader(localAvatar.doId) and \
            localAvatar.boardingParty.getGroupLeader(localAvatar.doId) != localAvatar.doId:
-            base.localAvatar.elevatorNotifier.showMe(
+            base.localAvatar.elevatorNotifier.showMeWithoutStopping(
                 TTLocalizer.ElevatorGroupMember)
         elif self.allowedToEnter():
             # Tell localToon we are considering entering the elevator
@@ -189,7 +189,7 @@ class DistributedElevatorExt(DistributedElevator.DistributedElevator):
         if self.bldg:
             return self.bldg.interiorZoneId
         else:
-            return 
+            return
 
     def getElevatorModel(self):
         return self.bldg.getSuitElevatorNodePath()

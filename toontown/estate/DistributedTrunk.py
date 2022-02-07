@@ -115,14 +115,9 @@ class DistributedTrunk(DistributedCloset.DistributedCloset):
                # self.closetGUI.setGender(self.ownerGender)
             self.closetGUI.enter(base.localAvatar)
             self.closetGUI.showButtons()
-            oldHat = self.av.getHat()
-            oldGlasses = self.av.getGlasses()
-            oldBackpack = self.av.getBackpack()
-            oldShoes = self.av.getShoes()
-            self.oldStyle = {ToonDNA.HAT: oldHat,
-             ToonDNA.GLASSES: oldGlasses,
-             ToonDNA.BACKPACK: oldBackpack,
-             ToonDNA.SHOES: oldShoes}
+            style = self.av.getStyle()
+            self.oldStyle =  ToonDNA.ToonDNA()
+            self.oldStyle.makeFromNetString(style.makeNetString())
         return Task.done
 
     def resetCloset(self):
@@ -137,14 +132,10 @@ class DistributedTrunk(DistributedCloset.DistributedCloset):
             self.closetGUI = None
             del self.av
         self.av = base.localAvatar
-        oldHat = self.av.getHat()
-        oldGlasses = self.av.getGlasses()
-        oldBackpack = self.av.getBackpack()
-        oldShoes = self.av.getShoes()
-        self.oldStyle = {ToonDNA.HAT: oldHat,
-         ToonDNA.GLASSES: oldGlasses,
-         ToonDNA.BACKPACK: oldBackpack,
-         ToonDNA.SHOES: oldShoes}
+
+        style = self.av.getStyle()
+        self.oldStyle = ToonDNA.ToonDNA()
+        self.oldStyle.makeFromNetString(style.makeNetString())
         self.hatDeleted = 0
         self.glassesDeleted = 0
         self.backpackDeleted = 0
@@ -153,12 +144,8 @@ class DistributedTrunk(DistributedCloset.DistributedCloset):
 
     def _handleCancel(self):
         if self.oldStyle:
-            oldHat = self.oldStyle[ToonDNA.HAT]
-            oldGlasses = self.oldStyle[ToonDNA.GLASSES]
-            oldBackpack = self.oldStyle[ToonDNA.BACKPACK]
-            oldShoes = self.oldStyle[ToonDNA.SHOES]
-            self.d_setDNA(self.av.getStyle().makeNetString(), 1)
-            self.updateToonProperties(hatModel=oldHat[0], hatTex=oldHat[1], hatColor=oldHat[2], glassesModel=oldGlasses[0], glassesTex=oldGlasses[1], glassesColor = oldGlasses[2], backpackModel = oldBackpack[0], backpackTex = oldBackpack[1], backpackColor = oldBackpack[2], shoesModel = oldShoes[0], shoesTex = oldShoes[1], shoesColor = oldShoes[2])
+            self.d_setDNA(self.oldStyle.makeNetString(), 1)
+            #self.updateToonProperties(hatModel=oldHat[0], hatTex=oldHat[1], hatColor=oldHat[2], glassesModel=oldGlasses[0], glassesTex=oldGlasses[1], glassesColor = oldGlasses[2], backpackModel = oldBackpack[0], backpackTex = oldBackpack[1], backpackColor = oldBackpack[2], shoesModel = oldShoes[0], shoesTex = oldShoes[1], shoesColor = oldShoes[2])
         else:
             self.notify.info('avoided crash in handleCancel')
             self._handlePurchaseDone()
@@ -262,11 +249,7 @@ class DistributedTrunk(DistributedCloset.DistributedCloset):
 
     def _handlePurchaseDone(self, timeout = 0):
         if timeout == 1:
-            oldHat = self.oldStyle[ToonDNA.HAT]
-            oldGlasses = self.oldStyle[ToonDNA.GLASSES]
-            oldBackpack = self.oldStyle[ToonDNA.BACKPACK]
-            oldShoes = self.oldStyle[ToonDNA.SHOES]
-            self.d_setDNA(self.av.getStyle().makeNetString(), 1, 0)
+            self.d_setDNA(self.av.getStyle().makeNetString(), 1)
         else:
             which = 0
             if hasattr(self.closetGUI, 'hatChoice') and hasattr(self.closetGUI, 'glassesChoice') and hasattr(self.closetGUI, 'backpackChoice') and hasattr(self.closetGUI, 'shoesChoice'):

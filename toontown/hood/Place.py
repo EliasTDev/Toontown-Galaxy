@@ -491,7 +491,7 @@ class Place(StateData.StateData,
         # The local avatar cannot leave the zone if he is part of a boarding group.
         if localAvatar.hasActiveBoardingGroup():
             rejectText = TTLocalizer.BoardingCannotLeaveZone
-            localAvatar.elevatorNotifier.showMe(rejectText)
+            localAvatar.elevatorNotifier.showMeWithoutStopping(rejectText)
             return
         # Pass avId of -1 if you are teleporting to a safe zone
         self.requestLeave({
@@ -522,7 +522,7 @@ class Place(StateData.StateData,
         # The local avatar cannot leave the zone if he is part of a boarding group.
         if localAvatar.hasActiveBoardingGroup():
             rejectText = TTLocalizer.BoardingCannotLeaveZone
-            localAvatar.elevatorNotifier.showMe(rejectText)
+            localAvatar.elevatorNotifier.showMeWithoutStopping(rejectText)
             return
         # We will get this process started before we have heard back
         # from the AI which zone we'll be using for the estate.
@@ -550,7 +550,7 @@ class Place(StateData.StateData,
         # The local avatar cannot leave the zone if he is part of a boarding group.
         if localAvatar.hasActiveBoardingGroup():
             rejectText = TTLocalizer.BoardingCannotLeaveZone
-            localAvatar.elevatorNotifier.showMe(rejectText)         
+            localAvatar.elevatorNotifier.showMeWithoutStopping(rejectText)         
             return
         base.localAvatar.creatingNewPartyWithMagicWord = False
         base.localAvatar.aboutToPlanParty = False
@@ -634,7 +634,7 @@ class Place(StateData.StateData,
         # The local avatar cannot leave the zone if he is part of a boarding group.
         if localAvatar.hasActiveBoardingGroup():
             rejectText = TTLocalizer.BoardingCannotLeaveZone
-            localAvatar.elevatorNotifier.showMe(rejectText)
+            localAvatar.elevatorNotifier.showMeWithoutStopping(rejectText)
             
             dummyNP = NodePath('dummyNP')
             dummyNP.reparentTo(render)
@@ -1072,7 +1072,7 @@ class Place(StateData.StateData,
         # The local avatar cannot leave the zone if he is part of a boarding group.
         if localAvatar.hasActiveBoardingGroup():
             rejectText = TTLocalizer.BoardingCannotLeaveZone
-            localAvatar.elevatorNotifier.showMe(rejectText)
+            localAvatar.elevatorNotifier.showMeWithoutStopping(rejectText)
             return
         loaderId = ZoneUtil.getBranchLoaderName(zoneId)
         whereId = ZoneUtil.getToonWhereName(zoneId)
