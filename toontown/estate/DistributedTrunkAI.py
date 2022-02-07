@@ -60,7 +60,8 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
         if not av:
             return #something has gone horridly wrong lets not crash the ai
 
-        self.customerDNA = (av.getHat(), av.getGlasses(), av.getBackpack(), av.getShoes())
+        self.customerDNA = ToonDNA.ToonDNA()
+        self.customerDNA.makeFromNetString(av.getDNAString())
         self.customerId = avId
         self.busy = avId
         # Handle unexpected exit
@@ -187,7 +188,8 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
             elif finished == 2:
 
                 if self.ownerId != avId:
-                    self.air.writeServerEvent('suspicious', avId, 'Toon tried to take accessories that are not theirs.')
+                    self.air.writeServerEvent('suspicious', avId,
+                                              'Toon tried to take accessories that are not theirs.')
                     return
                 newDNA = self.updateToonAccessories(av, blob)
                 hat = (newDNA.hatModel, newDNA.hatTex, newDNA.hatColor)
@@ -199,26 +201,55 @@ class DistributedTrunkAI(DistributedClosetAI.DistributedClosetAI):
                 types = (ToonDNA.HAT, ToonDNA.GLASSES, ToonDNA.BACKPACK, ToonDNA.SHOES)
                 for i, accessory in enumerate(accessories):
                     if not av.checkAccessorySanity(types[i], *accessory):
-                        #TODO do something better here then just returning 
+                        # TODO do something better here then just returning 
                         return
-                oldToNew = tuple([accessories[i] + self.customerDNA[i] for i in range(len(self.customerDNA))])
                 if which & ToonDNA.HAT:
-                    if av.replaceItemInAccessoriesList(ToonDNA.HAT, oldToNew[0]):
-                        av.b_setHat(None, *hat)
+                    if av.replaceItemInAccessoriesList(newDNA.hatModel,
+                                                       newDNA.hatTex,
+                                                       newDNA.hatColor,
+                                                       self.customerDNA.hatModel,
+                                                       self.customerDNA.hatTex,
+                                                       self.customerDNA.hatColor
+                                                       ):
+                        av.b_setHat(av.getHatList())
+                    else:
+                        self.notify.warning('Trunk: setDNA() - unable to save old hats - we exceeded the hats list length')
 
 
                 if which & ToonDNA.GLASSES:
-                    if av.replaceItemInAccessoriesList(ToonDNA.GLASSES, *oldToNew[1]):
-                        av.b_setGlasses(*glasses)
+                    if av.replaceItemInAccessoriesList(newDNA.glassesModel,
+                                                       newDNA.glassesTex,
+                                                       newDNA.glassesColor,
+                                                       self.customerDNA.glassesModel,
+                                                       self.customerDNA.glassesTex,
+                                                       self.customerDNA.glassesColor):
+                        av.b_setGlasses(av.getGlassesList())
+                    else:
+                        self.notify.warning('Trunk: setDNA() - unable to save old glasses - we exceeded the glasses list length')
 
                 if which & ToonDNA.BACKPACK:
-                    if av.replaceItemInAccessoriesList(ToonDNA.BACKPACK, *oldToNew[2]):
-                        av.b_setBackpack(*backpack)
+                    if av.replaceItemInAccessoriesList(newDNA.backpackModel,
+                                                       newDNA.backpackTex,
+                                                       newDNA.backpackColor,
+                                                       self.customerDNA.backpackModel,
+                                                       self.customerDNA.backpackTex,
+                                                       self.customerDNA.backpackColor):
+                        av.b_setBackpack(av.getBackpackList())
+                    else:
+                        self.notify.warning('Trunk: setDNA() - unable to save old backpack - we exceeded the backpack list length')
 
                 if which & ToonDNA.SHOES:
-                    if av.replaceItemInAccessoriesList(ToonDNA.SHOES, *oldToNew[3]):
-                        av.b_setShoes(*shoes)
-                
+                    if av.replaceItemInAccessoriesList(newDNA.shoesModel,
+                                                       newDNA.shoesTex,
+                                                       newDNA.shoesColor,
+                                                       self.customerDNA.shoesModel,
+                                                       self.customerDNA.shoesTex,
+                                                       self.customerDNA.shoesColor):
+                        av.b_setShoes(av.getShoesList())
+
+                    else:
+                        self.notify.warning('Trunk: setDNA() - unable to save old backpack - we exceeded the backpack list length')
+
                 for item in self.deletedAccessories[:]:
                     self.deletedAccessories.remove(item)
                     if not av.removeItemInAccessoriesList(*item):
