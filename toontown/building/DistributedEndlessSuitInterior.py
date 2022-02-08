@@ -615,7 +615,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
     ##### Resting state #####
 
     def enterResting(self, ts=0):
-            """"
+        """"
             avatar = base.localAvatar
             trackName = f'__checkpointFloorDone-{avatar.doId}'
             track = Parallel(name=trackName)
@@ -638,7 +638,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
                                   Func(self.checkpointNPC.setLocalPageChat, speech, 0),
                                   Func(camera.lookAt, self.checkpointNPC, Point3(0, 0, 2))))
             self.activeIntervals[trackName] = track
-            """
+        """
         self.notify.info('enterResting()')
         base.playMusic(self.waitMusic, looping=1, volume=0.7)
         self.__closeInElevator()
