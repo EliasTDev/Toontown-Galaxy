@@ -238,7 +238,7 @@ class DistributedCogdoInterior(DistributedObject.DistributedObject):
             self.elevatorModelOut.removeNode()
         if self.floorModel != None:
             self.floorModel.removeNode()
-        if self.cage != None:
+        if self.cage is not None:
             self.cage = None
         if self.barrelRoom != None:
             self.barrelRoom.destroy()

@@ -7,6 +7,7 @@ from direct.fsm import ClassicFSM, State
 from direct.task import Timer
 from otp.ai.AIBaseGlobal import *
 from toontown.battle import BattleBase, DistributedBattleBldgAI
+from toontown.toon import NPCToons
 from toontown.toonbase.ToontownBattleGlobals import *
 from toontown.building import DistributedElevatorIntAI
 from .ElevatorConstants import *
@@ -34,7 +35,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.toonParts = {}
         self.helpfulToons = []
 
-        self.currentFloor = 4
+        self.currentFloor = 0
         self.chunkFloor = self.currentFloor % 5
         # There is no top floor >:)
         self.topFloor = float('inf')
@@ -55,7 +56,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.ignoreResponses = 0
         self.ignoreElevatorDone = 0
         self.ignoreReserveJoinDone = 0
-        self.wantCheckpoint = False
+        self.wantCheckpoint = True
 
         # Register all the toons
         self.toonIds = copy.copy(elevator.seats)
@@ -74,7 +75,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
              State.State('Elevator',
                          self.enterElevator,
                          self.exitElevator,
-                         ['Battle', 'Resting']),
+                         ['Battle']),
              State.State('Battle',
                          self.enterBattle,
                          self.exitBattle,
@@ -96,7 +97,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
              State.State('Reward',
                          self.enterReward,
                          self.exitReward,
-                         ['Elevator', 'Resting']),
+                         ['Resting']),
              State.State('Off',
                          self.enterOff,
                          self.exitOff,
@@ -107,6 +108,8 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
             'Off',
             onUndefTransition=ClassicFSM.ClassicFSM.ALLOW)
         self.fsm.enterInitialState()
+
+
 
     def delete(self):
         assert(self.notify.debug('delete()'))
@@ -206,7 +209,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
 
 
     def __createFloorBattle(self):
-        if (self.currentFloor % 5 == 3):
+        if (self.chunkFloor  == 3):
             assert (self.notify.debug('createFloorBattle() - boss battle'))
             bossBattle = 1
         else:
@@ -319,13 +322,11 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
 
         # We give reward every floor
         # TODO since this calls battlebase we need to check in battlebase if we are in an endless building skip the reward visual
-        self.d_setState('Reward')
+        self.setState('Reward')
         self.d_setState('Resting')
 
     def enterBattle(self):
-        #if self.chunkFloor == 4:
-            #self.d_setState('Reward')
-            #return
+           # return
         if self.battle is None:
             self.__createFloorBattle()
         #self.elevator.d_setFloor(self.currentFloor)
@@ -338,9 +339,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
 ##### BattleDone state #####
 
     def enterBattleDone(self, toonIds):
-        if self.chunkFloor == 4 and self.wantCheckpoint:
-            self.d_setState('Reward')
-            return
+
         # Find out if any toons are gone
         if (len(toonIds) != len(self.toons)):
             deadToons = []
@@ -376,10 +375,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
 ##### Reward state #####
 
     def enterReward(self):
-        if self.chunkFloor == 4 and self.wantCheckpoint:
-            #   self.d_setState('Resting')
-            return
-        #Tell the client its reward time
+       # #Tell the client its reward time
         self.d_setState('Reward')
         return None
 
@@ -388,7 +384,6 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
 
         # Create the suits and place them in their initial positions on
         # the floor
-        #if self.chunkFloor != 4:
         self.elevator.planner._genSuitInfos(self.currentFloor)
         suitHandles = self.elevator.planner.genFloorSuits(self.currentFloor)
         self.suits = suitHandles['activeSuits']
@@ -398,7 +393,6 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.reserveSuits = suitHandles['reserveSuits']
 
         self.d_setToons()
-        #if self.chunkFloor != 4:
         self.d_setSuits()
         self.__resetResponses()
 
@@ -589,9 +583,6 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
     ##### ReservesJoining state #####
 
     def enterReservesJoining(self):
-        if self.chunkFloor == 4 and self.wantCheckpoint:
-            self.d_setState('Reward')
-            return
         assert(self.notify.debug('enterReservesJoining()'))
         self.__resetResponses()
         self.timer.startCallback(
@@ -629,11 +620,14 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.fsm.request('Elevator')
 
     def enterResting(self):
+        # TODO Free the npc and reward the player
         self.notify.debug('enterResting()')
+
         # Tell the elevator to start accepting entrants
         self.intElevator = DistributedElevatorIntAI.DistributedElevatorIntAI(
             self.air, self, self.toons)
         self.intElevator.generateWithRequired(self.zoneId)
+
         return None
 
     def handleAllAboard(self, seats):

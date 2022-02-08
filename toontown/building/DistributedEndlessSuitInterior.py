@@ -5,8 +5,9 @@ from direct.fsm import ClassicFSM, State
 from direct.interval.IntervalGlobal import *
 from toontown.battle import BattleBase
 from toontown.hood import ZoneUtil
+from toontown.toon import NPCToons
 from toontown.toonbase import ToontownBattleGlobals, ToontownGlobals
-
+from toontown.toonbase import TTLocalizer
 from . import ElevatorUtils
 from .ElevatorConstants import *
 
@@ -15,6 +16,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory(
         'DistributedSuitInterior')
     id = 0
+
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
         self.toons = []
@@ -37,28 +39,30 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.floorModel = None
 
         self.elevatorOutOpen = 0
+        self.checkpointNPC = None
+        self.cagedToonNpcId = 0
 
         # initial cog positions vary based on the cog office model
         self.BottomFloor_SuitPositions = [
-                         Point3(0, 15, 0),
-                         Point3(10, 20, 0),
-                         Point3(-7, 24, 0),
-                         Point3(-10, 0, 0)]
-        self.BottomFloor_SuitHs = [75, 170, -91, -44]   # Heading angles
+            Point3(0, 15, 0),
+            Point3(10, 20, 0),
+            Point3(-7, 24, 0),
+            Point3(-10, 0, 0)]
+        self.BottomFloor_SuitHs = [75, 170, -91, -44]  # Heading angles
 
         self.Cubicle_SuitPositions = [
-                         Point3(0, 18, 0),
-                         Point3(10, 12, 0),
-                         Point3(-9, 11, 0),
-                         Point3(-3, 13, 0)]
+            Point3(0, 18, 0),
+            Point3(10, 12, 0),
+            Point3(-9, 11, 0),
+            Point3(-3, 13, 0)]
         self.Cubicle_SuitHs = [170, 56, -52, 10]
 
         self.BossOffice_SuitPositions = [
-                         Point3(0, 15, 0),
-                         Point3(10, 20, 0),
-                         Point3(-10, 6, 0),
-                         Point3(-17, 34, 11),
-                         ]
+            Point3(0, 15, 0),
+            Point3(10, 20, 0),
+            Point3(-10, 6, 0),
+            Point3(-17, 34, 11),
+        ]
         self.BossOffice_SuitHs = [170, 120, 12, 38]
 
         self.waitMusic = base.loader.loadMusic(
@@ -109,19 +113,18 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.fsm.enterInitialState()
         self.cr = cr
         self.extZoneId = None
-        self.wantCheckpoint = False
+        self.wantCheckpoint = True
 
     def __uniqueName(self, name):
         DistributedEndlessSuitInterior.id += 1
         return name + f'{DistributedEndlessSuitInterior.id}'
-
 
     def generate(self):
         """generate(self)
         This method is called when the DistributedObject is reintroduced
         to the world, either for the first time or from the cache.
         """
-        assert(self.notify.debug("generate()"))
+        assert (self.notify.debug("generate()"))
         DistributedObject.DistributedObject.generate(self)
 
         # listen for the generate event, which will be thrown after the
@@ -131,12 +134,12 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
 
         # Load the elevator model
         self.elevatorModelIn = loader.loadModel(
-                                'phase_4/models/modules/elevator')
+            'phase_4/models/modules/elevator')
         self.leftDoorIn = self.elevatorModelIn.find('**/left-door')
         self.rightDoorIn = self.elevatorModelIn.find('**/right-door')
 
         self.elevatorModelOut = loader.loadModel(
-                                'phase_4/models/modules/elevator')
+            'phase_4/models/modules/elevator')
         self.leftDoorOut = self.elevatorModelOut.find('**/left-door')
         self.rightDoorOut = self.elevatorModelOut.find('**/right-door')
 
@@ -154,13 +157,14 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         'obj' is another copy of self
         """
         self.ignore(self.announceGenerateName)
-
-        assert(self.notify.debug('joining DistributedSuitInterior'))
+        self.cageDoorSfx = loader.loadSfx('phase_5/audio/sfx/CHQ_SOS_cage_door.ogg')
+        self.cageLowerSfx = loader.loadSfx('phase_5/audio/sfx/CHQ_SOS_cage_lower.ogg')
+        assert (self.notify.debug('joining DistributedSuitInterior'))
         # Update the minigame AI to join our local toon doId
         self.sendUpdate('setAvatarJoined', [])
 
     def disable(self):
-        assert(self.notify.debug('disable()'))
+        assert (self.notify.debug('disable()'))
         self.fsm.requestFinalState()
         self.__cleanupIntervals()
         self.ignoreAll()
@@ -168,7 +172,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         DistributedObject.DistributedObject.disable(self)
 
     def delete(self):
-        assert(self.notify.debug('delete()'))
+        assert (self.notify.debug('delete()'))
         del self.waitMusic
         del self.elevatorMusic
         del self.openSfx
@@ -195,6 +199,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.rightDoorIn = None
         self.leftDoorOut = None
         self.rightDoorOut = None
+        self.__cleanupCheckpointNPC()
 
     def __cleanupIntervals(self):
         for interval in list(self.activeIntervals.values()):
@@ -212,23 +217,29 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         SuitPositions = []
 
         if self.floorModel:
-            self.floorModel.removeNode()
+            self.floorModel.cleanup()
+            self.floorModel = None
 
-        if (self.currentFloor == 0):
+        if self.currentFloor == 0:
             # bottom floor
             self.floorModel = loader.loadModel('phase_7/models/modules/suit_interior')
             SuitHs = self.BottomFloor_SuitHs
             SuitPositions = self.BottomFloor_SuitPositions
-        elif self.currentFloor % 5 == 3:
+        elif self.chunkFloor == 3:
             # Boss floor
             self.floorModel = loader.loadModel('phase_7/models/modules/boss_suit_office')
             SuitHs = self.BossOffice_SuitHs
             SuitPositions = self.BossOffice_SuitPositions
-        elif self.currentFloor % 5 == 4 and self.wantCheckpoint:
-            #Checkpoint floor
+        elif self.chunkFloor == 4 and self.wantCheckpoint:
+            # Checkpoint floor
+
+            # Set up the cage
             self.floorModel = loader.loadModel('phase_7/models/modules/suit_interior')
-            # No suit lets spawn an npc that gives a random temporary toonup unite and a random temporary gag up unite
-            self.setupNpc()
+            if self.cage:
+                self.cage = None
+            self.setupNPC()
+
+
 
         else:
             # middle floor
@@ -244,16 +255,17 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         elevOut = self.floorModel.find('**/elevator-out')
 
         # Position the suits
-        #if self.currentFloor % 5 != 4 :
         for index in range(len(self.suits)):
             assert (self.notify.debug('setting suit: %d to pos: %s' % \
-                                    (self.suits[index].doId, SuitPositions[index])))
+                                      (self.suits[index].doId, SuitPositions[index])))
             self.suits[index].setPos(SuitPositions[index])
-            if (len(self.suits) > 2):
+            if len(self.suits) > 2:
                 self.suits[index].setH(SuitHs[index])
             else:
+                # if there's 2 or 1 suits, make them face fwd since there's no other suits
+                # they would be to be talking to
                 self.suits[index].setH(
-                    170)  # if there's 2 or 1 suits, make them face fwd since there's no other suits they would be to be talking to
+                    170)
             self.suits[index].loop('neutral')
 
         # Position the toons
@@ -302,8 +314,27 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         track.start(ts)
         self.activeIntervals[name] = track
 
-    def setupNpc(self):
-        #TODO
+    def __cleanupCheckpointNPC(self):
+        if self.checkpointNPC:
+            self.checkpointNPC.removeActive()
+            self.checkpointNPC.delete()
+            self.checkpointNPC = None
+        return
+
+    def setupNPC(self):
+
+        return
+        if self.chunkFloor == 4:
+            # Just a double check just in case
+            # For now choose a random npc thats locked up
+            if not self.checkpointNPC:
+                self.cagedToonNpcId = random.choice(list(NPCToons.NPCToonDict.keys()))
+                self.checkpointNPC = NPCToons.createLocalNPC(cagedToonNpcId)
+        self.checkpointNPC.addActive()
+        #self.checkpointNPC.reparentTo(self.cage)
+        self.checkpointNPC.setPos(15, 20, 0)
+        self.checkpointNPC.setPosHpr(0, -2, 0, 180, 0, 0)
+        self.checkpointNPC.loop('neutral')
         return
 
     def enterElevator(self, ts=0):
@@ -322,11 +353,14 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         mult = ToontownBattleGlobals.getCreditMultiplier(6)
         # Now set the inventory battleCreditMult
         base.localAvatar.inventory.setBattleCreditMultiplier(mult)
+        if self.cage is not None:
+            self.cage = None
+        self.__cleanupCheckpointNPC()
 
     def __addToon(self, toon):
-        assert(self.notify.debug('addToon(%d)' % toon.doId))
+        assert (self.notify.debug('addToon(%d)' % toon.doId))
         self.accept(toon.uniqueName('disable'),
-                        self.__handleUnexpectedExit, extraArgs=[toon])
+                    self.__handleUnexpectedExit, extraArgs=[toon])
 
     def __handleUnexpectedExit(self, toon):
         self.notify.warning('handleUnexpectedExit() - toon: %d' % toon.doId)
@@ -346,21 +380,20 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         if (name in self.activeIntervals):
             interval = self.activeIntervals[name]
             if (interval.isPlaying()):
-                assert(self.notify.debug('finishInterval(): %s' % \
-                        interval.getName()))
+                assert (self.notify.debug('finishInterval(): %s' % \
+                                          interval.getName()))
                 interval.finish()
+
     def rewardToonBasedOnCheckpoint(self, toon):
-        #TODO write logic for this
+        # TODO write logic for this
 
         # Reward gag experience and whatnot
 
         return
 
     def enterReward(self, ts=0):
-        if self.chunkFloor == 4 and self.wantCheckpoint:
-            return
-        assert(self.notify.debug('enterReward()'))
-        #base.localAvatar.b_setParent(ToontownGlobals.SPHidden)
+        assert (self.notify.debug('enterReward()'))
+        # base.localAvatar.b_setParent(ToontownGlobals.SPHidden)
         return None
 
     def exitReward(self):
@@ -388,9 +421,8 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
     def setDistBldgDoId(self, distBldgDoId):
         self.distBldgDoId = distBldgDoId
 
-
     def setToons(self, toonIds, hack):
-        assert(self.notify.debug('setToons(): %s' % toonIds))
+        assert (self.notify.debug('setToons(): %s' % toonIds))
         self.toonIds = toonIds
         oldtoons = self.toons
         self.toons = []
@@ -401,8 +433,8 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
                     toon.stopSmooth()
                     self.toons.append(toon)
                     if (oldtoons.count(toon) == 0):
-                        assert(self.notify.debug('setToons() - new toon: %d' % \
-                                toon.doId))
+                        assert (self.notify.debug('setToons() - new toon: %d' % \
+                                                  toon.doId))
                         self.__addToon(toon)
                 else:
                     self.notify.warning('setToons() - no toon: %d' % toonId)
@@ -412,7 +444,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
 
     def setSuits(self, suitIds, reserveIds, values):
         self.notify.debug('setSuits(): active %s reserve %s values %s' \
-                           % (suitIds, reserveIds, values))
+                          % (suitIds, reserveIds, values))
         oldsuits = self.suits
         self.suits = []
         self.joiningReserves = []
@@ -427,13 +459,13 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
                 suit.buildingSuit = 1
                 suit.reparentTo(render)
                 if (oldsuits.count(suit) == 0):
-                    assert(self.notify.debug('setSuits() suit: %d joining' % \
-                        suit.doId))
+                    assert (self.notify.debug('setSuits() suit: %d joining' % \
+                                              suit.doId))
                     self.joiningReserves.append(suit)
             else:
                 self.notify.warning('setSuits() - no suit: %d' % suitId)
         self.reserveSuits = []
-        assert(len(reserveIds) == len(values))
+        assert (len(reserveIds) == len(values))
         for index in range(len(reserveIds)):
             suitId = reserveIds[index]
             if (suitId in self.cr.doId2do):
@@ -443,33 +475,33 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
                 self.notify.warning('setSuits() - no suit: %d' % suitId)
 
         if (len(self.joiningReserves) > 0):
-            assert(self.notify.debug('setSuits() reserves joining'))
+            assert (self.notify.debug('setSuits() reserves joining'))
             self.fsm.request('ReservesJoining')
 
     def setState(self, state, timestamp):
         self.notify.info("setState(%s, %d)" % \
-                                (state, timestamp))
+                         (state, timestamp))
         self.fsm.request(state, [globalClockDelta.localElapsedTime(timestamp)])
 
     def d_elevatorDone(self):
-        assert(self.notify.debug('network:elevatorDone(%d)' % base.localAvatar.doId))
+        assert (self.notify.debug('network:elevatorDone(%d)' % base.localAvatar.doId))
         self.sendUpdate('elevatorDone', [])
 
     def d_reserveJoinDone(self):
-        assert(self.notify.debug('network:reserveJoinDone(%d)' % base.localAvatar.doId))
+        assert (self.notify.debug('network:reserveJoinDone(%d)' % base.localAvatar.doId))
         self.sendUpdate('reserveJoinDone', [])
 
     def enterOff(self, ts=0):
         self.notify.debug('enterOff()')
         return None
-    
+
     def exitOff(self):
         return None
 
     def enterWaitForAllToonsInside(self, ts=0):
         return None
 
-    def exitWaitForAllToonsInside(self):        
+    def exitWaitForAllToonsInside(self):
         return None
 
     def __handleElevatorDone(self):
@@ -486,10 +518,10 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         track = Sequence(
             Wait(SUIT_LEAVE_ELEVATOR_TIME),
             Parallel(SoundInterval(self.closeSfx),
-                     LerpPosInterval(self.leftDoorOut, 
+                     LerpPosInterval(self.leftDoorOut,
                                      ElevatorData[ELEVATOR_NORMAL]['closeTime'],
                                      ElevatorUtils.getLeftClosePoint(ELEVATOR_NORMAL),
-                                     startPos=Point3(0, 0, 0), 
+                                     startPos=Point3(0, 0, 0),
                                      blendType='easeOut'),
                      LerpPosInterval(self.rightDoorOut,
                                      ElevatorData[ELEVATOR_NORMAL]['closeTime'],
@@ -497,7 +529,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
                                      startPos=Point3(0, 0, 0),
                                      blendType='easeOut')
                      ),
-            )
+        )
         track.start()
         self.activeIntervals[name] = track
 
@@ -505,9 +537,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.notify.info('enterBattle()')
         if (self.elevatorOutOpen == 1):
             self.__playCloseElevatorOut(self.uniqueName('close-out-elevator'))
-            if self.chunkFloor == 4 and self.wantCheckpoint:
-                self.setState('Resting')
-                return
+
             # Watch reserve suits as they walk from the elevator
             camera.setPos(0, -15, 6)
             camera.headsUp(self.elevatorModelOut)
@@ -519,12 +549,12 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
             self.elevatorOutOpen = 0
         return None
 
-  ##### ReservesJoining state #####
+    ##### ReservesJoining state #####
 
     def __playReservesJoining(self, ts, name, callback):
         # Position the joining suits
         index = 0
-        assert(len(self.joiningReserves) <= 4)
+        assert (len(self.joiningReserves) <= 4)
         for suit in self.joiningReserves:
             suit.reparentTo(render)
             suit.setPos(self.elevatorModelOut, Point3(ElevatorPoints[index][0],
@@ -542,14 +572,14 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
 
             # Open the elevator doors
             Parallel(SoundInterval(self.openSfx),
-                     LerpPosInterval(self.leftDoorOut, 
+                     LerpPosInterval(self.leftDoorOut,
                                      ElevatorData[ELEVATOR_NORMAL]['closeTime'],
-                                     Point3(0, 0, 0), 
+                                     Point3(0, 0, 0),
                                      startPos=ElevatorUtils.getLeftClosePoint(ELEVATOR_NORMAL),
                                      blendType='easeOut'),
                      LerpPosInterval(self.rightDoorOut,
                                      ElevatorData[ELEVATOR_NORMAL]['closeTime'],
-                                     Point3(0, 0, 0), 
+                                     Point3(0, 0, 0),
                                      startPos=ElevatorUtils.getRightClosePoint(ELEVATOR_NORMAL),
                                      blendType='easeOut'),
                      ),
@@ -561,16 +591,14 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
             # position it properly again by the battle)
             Func(camera.wrtReparentTo, render),
             Func(callback),
-            )
+        )
         track.start(ts)
         self.activeIntervals[name] = track
 
     def enterReservesJoining(self, ts=0):
-        if self.chunkFloor == 4 and self.wantCheckpoint:
-            return
         self.notify.info('enterReservesJoining()')
         self.__playReservesJoining(ts, self.uniqueName('reserves-joining'),
-                                       self.__handleReserveJoinDone)
+                                   self.__handleReserveJoinDone)
         return None
 
     def __handleReserveJoinDone(self):
@@ -586,10 +614,31 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
     ##### Resting state #####
 
     def enterResting(self, ts=0):
+            """"
+            avatar = base.localAvatar
+            trackName = f'__checkpointFloorDone-{avatar.doId}'
+            track = Parallel(name=trackName)
+            speech = TTLocalizer.CogdoExecutiveSuiteToonThankYou % self.SOSToonName
+            track.append(Sequence(Func(camera.wrtReparentTo, localAvatar), Func(camera.setPos, 0, -9, 9),
+                                  Func(camera.lookAt, Point3(5, 15, 0)),
+                                  Parallel(self.cage.posInterval(0.75, self.cagePos[1], blendType='easeOut'),
+                                           SoundInterval(self.cageLowerSfx, duration=0.5)),
+                                  Parallel(self.cageDoor.hprInterval(0.5, VBase3(0, 90, 0), blendType='easeOut'),
+                                           Sequence(SoundInterval(self.cageDoorSfx), duration=0)), Wait(0.25),
+                                  Func(self.checkpointNPC.wrtReparentTo, render), Func(self.checkpointNPC.setScale, 1),
+                                  Func(self.checkpointNPC.loop, 'walk'),
+                                  Func(self.checkpointNPC.headsUp, Point3(0, 10, 0)),
+                                  ParallelEndTogether(self.checkpointNPC.posInterval(1.5, Point3(0, 10, 0)),
+                                                      self.checkpointNPC.hprInterval(0.5, VBase3(180, 0, 0),
+                                                                                    blendType='easeInOut')),
+                                  Func(self.checkpointNPC.setChatAbsolute, TTLocalizer.CagedToonYippee, CFSpeech),
+                                  ActorInterval(self.checkpointNPC, 'jump'), Func(self.shopOwnerNpc.loop, 'neutral'),
+                                  Func(self.checkpointNPC.headsUp, localAvatar),
+                                  Func(self.checkpointNPC.setLocalPageChat, speech, 0),
+                                  Func(camera.lookAt, self.checkpointNPC, Point3(0, 0, 2))))
+            self.activeIntervals[trackName] = track
+            """
         self.notify.info('enterResting()')
         base.playMusic(self.waitMusic, looping=1, volume=0.7)
         self.__closeInElevator()
         return
-
-    
-
