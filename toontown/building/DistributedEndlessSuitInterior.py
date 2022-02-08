@@ -41,6 +41,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.elevatorOutOpen = 0
         self.checkpointNPC = None
         self.cagedToonNpcId = 0
+        self.cage = None
 
         # initial cog positions vary based on the cog office model
         self.BottomFloor_SuitPositions = [
