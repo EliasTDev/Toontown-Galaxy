@@ -460,7 +460,7 @@ def __throwPie(throw, delay, hitCount, showCannon = 1):
     
         reactIval = Parallel(   ActorInterval(suit, 'pie-small-react'),
                                 Sequence(
-                                    Wait(0.0),
+                                    Wait(1.0),
                                     LerpPosInterval(cannonHolder, 2.0, posFinal,
                                              startPos = posInit, blendType='easeInOut'),
                                     Parallel(
@@ -477,7 +477,7 @@ def __throwPie(throw, delay, hitCount, showCannon = 1):
                                     
                                          ),
                                 Sequence(
-                                    Wait(0.0),
+                                    Wait(1.0),
                                     Parallel(
                                                 ActorInterval(suit, 'flail'),
                                                 suit.scaleInterval(1.0, suitScale),
@@ -531,8 +531,7 @@ def __throwPie(throw, delay, hitCount, showCannon = 1):
         suitResponseTrack.append(updateHealthBar)
         suitResponseTrack.append(sival)
         # Make a bonus track for any hp bonus
-        bonusTrack = Sequence(Wait(delay + tPieHitsSuit))
-        delay + tPieHitsSuit + 1
+        bonusTrack = Sequence(Wait(delay + tPieHitsSuit + 1))
         if (kbbonus > 0):
             bonusTrack.append(Wait(0.75))
             bonusTrack.append(Func(suit.showHpText, -kbbonus, 2, openEnded=0))
