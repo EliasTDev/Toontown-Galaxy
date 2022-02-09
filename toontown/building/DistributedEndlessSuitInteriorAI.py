@@ -23,7 +23,6 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.numFloors = float('inf')
         self.extZoneId = 2000
         self.zoneId = interiorZoneId
-
         self.avatarExitEvents = []
         self.toons = []
         self.toonSkillPtsGained = {}
@@ -209,7 +208,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
 
 
     def __createFloorBattle(self):
-        if (self.chunkFloor  == 3):
+        if (self.chunkFloor == 3):
             assert (self.notify.debug('createFloorBattle() - boss battle'))
             bossBattle = 1
         else:
@@ -272,7 +271,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
 
     def __handleRoundDone(self, toonIds, totalHp, deadSuits):
         # Determine if any reserves need to join
-        assert(self.notify.debug('handleRoundDone() - hp: %d' % totalHp))
+        self.notify.debug('handleRoundDone() - hp: %d' % totalHp)
         # Calculate the total max HP for all the suits currently on the floor
         totalMaxHp = 0
         for suit in self.suits:
@@ -322,15 +321,16 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
 
         # We give reward every floor
         # TODO since this calls battlebase we need to check in battlebase if we are in an endless building skip the reward visual
-        self.setState('Reward')
-        self.d_setState('Resting')
+        # Commenting  this out bc testbed exp will be temp
+        #self.setState('Reward')
+        self.b_setState('Resting')
 
     def enterBattle(self):
            # return
         if self.battle is None:
             self.__createFloorBattle()
         #self.elevator.d_setFloor(self.currentFloor)
-        self.battle.d_setMembers()
+        #self.battle.d_setMembers()
 
     def exitBattle(self):
         return None
@@ -380,10 +380,11 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         return None
 
     def enterElevator(self):
-        assert(self.notify.debug('enterElevator()'))
+        self.notify.debug('enterElevator()')
 
         # Create the suits and place them in their initial positions on
         # the floor
+        self.sendZonetoClient()
         self.elevator.planner._genSuitInfos(self.currentFloor)
         suitHandles = self.elevator.planner.genFloorSuits(self.currentFloor)
         self.suits = suitHandles['activeSuits']
@@ -402,6 +403,11 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
                        ElevatorData[ELEVATOR_NORMAL]['openTime'] + \
                        BattleBase.SERVER_BUFFER_TIME, self.__serverElevatorDone)
         return None
+
+    def sendZonetoClient(self):
+        self.notify.debug('Sending client zone id')
+        self.sendUpdate('setZoneId', [self.zoneId])
+        self.notify.debug('Sending client zone id done')
 
     def __resetResponses(self):
         self.responses = {}
@@ -428,6 +434,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
 
     def getNumFloors(self):
         return 
+
   # setToons()
         
     def d_setToons(self):
@@ -635,8 +642,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
             # If we've already been cleaned up, never mind.
             return
         
-        assert(self.fsm.getCurrentState().getName() == "Resting")
-        assert(self.notify.debug('handleAllAboard() - toons: %s' % self.toons))
+        self.notify.debug('handleAllAboard() - toons: %s' % self.toons)
 
         # Make sure the number of empty seats is correct. If it is empty,
         # reset and get us out of here.

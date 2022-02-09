@@ -113,7 +113,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         # make sure we're in the initial state
         self.fsm.enterInitialState()
         self.cr = cr
-        self.extZoneId = None
+        self.extZoneId = 2000
         self.wantCheckpoint = True
 
     def __uniqueName(self, name):
@@ -189,12 +189,12 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.reserveSuits = []
         self.joiningReserves = []
         # Clean up elevator models
-        if (self.elevatorModelIn != None):
+        if (self.elevatorModelIn is not None):
             self.elevatorModelIn.removeNode()
-        if (self.elevatorModelOut != None):
+        if (self.elevatorModelOut is not None):
             self.elevatorModelOut.removeNode()
         # Clean up current floor
-        if (self.floorModel != None):
+        if (self.floorModel is not None):
             self.floorModel.removeNode()
         self.leftDoorIn = None
         self.rightDoorIn = None
@@ -218,7 +218,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         SuitPositions = []
 
         if self.floorModel:
-            self.floorModel.cleanup()
+            self.floorModel.removeNode()
             self.floorModel = None
 
         if self.currentFloor == 0:
@@ -239,7 +239,6 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
             if self.cage:
                 self.cage = None
             self.setupNPC()
-
 
 
         else:
@@ -340,6 +339,10 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
 
     def enterElevator(self, ts=0):
         # Load model for the current floor and the suit models for the floor
+        try:
+            Discord.endlessBuilding()
+        except BaseException:
+            self.notify.warning("Toon isn't running discord")
         self.notify.info('enterElevator()')
 
         self.currentFloor += 1
@@ -405,6 +408,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
 
     def setZoneId(self, zoneId):
         self.zoneId = zoneId
+        self.notify.debug(f'Zone id : {self.zoneId}')
 
     def exitResting(self):
         self.waitMusic.stop()

@@ -458,7 +458,11 @@ class DistributedSuitInterior(DistributedObject.DistributedObject):
         
     def enterElevator(self, ts=0):
         # Load model for the current floor and the suit models for the floor
-        assert(self.notify.debug('enterElevator()'))
+        self.notify.debug('enterElevator()')
+        try:
+            Discord.suitBuilding()
+        except BaseException:
+            self.notify.warning("Toon isn't running discord")
 
         self.currentFloor += 1
         self.cr.playGame.getPlace().currentFloor = self.currentFloor

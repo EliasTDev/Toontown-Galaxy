@@ -172,8 +172,12 @@ class DiscordRPC(object):
         self.image = 'ceo'
         self.details = 'Fighting the ceo.'
 
+    def suitBuilding(self):
+        #TODO need an image for this
+        self.details = 'In a Cog Building'
 
-    
+    def endlessBuilding(self):
+        self.details = 'In The Infini-Suite'
 
     def startTasks(self):
         taskMgr.doMethodLater(10, self.updateTasks, 'UpdateTask')
@@ -192,3 +196,4 @@ class DiscordRPC(object):
             self.setData()
         else:
             print("Error: Zone Not Found!")
+    

@@ -366,11 +366,11 @@ class DistributedSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
     ##### Elevator state #####
 
     def enterElevator(self):
-        assert(self.notify.debug('enterElevator()'))
+        self.notify.debug('enterElevator()')
 
         # Create the suits and place them in their initial positions on
         # the floor
-        assert(self.currentFloor < self.numFloors)
+        
         suitHandles = self.bldg.planner.genFloorSuits(self.currentFloor)
         self.suits = suitHandles['activeSuits']
         assert(len(self.suits) > 0)
@@ -610,7 +610,7 @@ class DistributedSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.fsm.request('Elevator')
 
     def enterResting(self):
-        assert(self.notify.debug('enterResting()'))
+        self.notify.debug('enterResting()')
         # Tell the elevator to start accepting entrants
         self.intElevator = DistributedElevatorIntAI.DistributedElevatorIntAI(
             self.air, self, self.toons)

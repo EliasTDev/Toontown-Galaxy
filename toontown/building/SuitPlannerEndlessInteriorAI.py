@@ -164,8 +164,6 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         """
 
         # checkpoint floor
-        if currFloor % 5 == 4:
-            return []
 
         # For quick building battles during debug.
         if (self.dbg_1SuitPerFloor):
@@ -197,7 +195,10 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         # find the min and max possible suit levels that we can create
         # for this level of building
         #
-        lvlMin = 1
+        if currFloor >= 1:
+            lvlMin = currFloor
+        else:
+            lvlMin = 1
         lvlMax = 25
 
         # now randomly generate levels within our min and max, pulling
