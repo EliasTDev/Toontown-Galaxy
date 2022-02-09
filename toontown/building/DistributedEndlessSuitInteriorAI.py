@@ -34,7 +34,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.toonParts = {}
         self.helpfulToons = []
 
-        self.currentFloor = 35
+        self.currentFloor = 0
         self.chunkFloor = self.currentFloor % 5
         # There is no top floor >:)
         self.topFloor = float('inf')

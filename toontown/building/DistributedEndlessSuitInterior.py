@@ -36,7 +36,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.distBldgDoId = 0
 
         # we increment this each time we come out of an elevator:
-        self.currentFloor = 34
+        self.currentFloor = -1
         self.chunkFloor = self.currentFloor % 5
 
         self.elevatorName = self.__uniqueName('elevator')

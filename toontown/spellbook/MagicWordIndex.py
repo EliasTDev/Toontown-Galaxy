@@ -1541,7 +1541,7 @@ class DoMinigame(MagicWord):
 
 
 class SummonSuit(MagicWord):
-    aliases = ['call', 'summoncog']
+    aliases = ['call', 'summoncog', 'spawnsuit', 'spawncog']
     arguments = [('type', str, True, 'x'), ('level', int, True), ('skelecog', bool, False, False),
                  ('revives', int, False, 0)]
     accessLevel = 'DEVELOPER'
@@ -1575,7 +1575,7 @@ class SummonSuit(MagicWord):
 
         if len(args) > 1:
             level = int(args[1])
-            if level > 25 or level <= 0:
+            if level <= 0:
                 return 'Invalid level specified.'
         if len(args) > 2:
             skelecog = args[2]

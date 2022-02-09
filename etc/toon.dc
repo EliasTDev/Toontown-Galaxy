@@ -1105,7 +1105,7 @@ dclass DistributedBossCog: DistributedNode {
                       int16array origMerits7, int16array merits7,
                       uint32array parts7,
 
-                      uint8array deathList,
+                      uint32[] deathList,
                       int16array uberList,
                       uint32array helpfulToonsList) required broadcast ram;
 
