@@ -2363,7 +2363,7 @@ class BattleCalculatorAI:
                         # group attack 
                         #if theSuit.getActualLevel() <= 15:
                          #   result = 2 * theSuit.getActualLevel()
-                        if theSuit.getAcualLevel() > 15:
+                        if theSuit.getActualLevel() > 15:
                             result = round((0.5 * theSuit.getActualLevel()) + 30)
                     else:
                         if theSuit.getActualLevel() > 15:
