@@ -527,10 +527,12 @@ def __throwPie(throw, delay, hitCount, showCannon = 1):
             #sival = ActorInterval(suit, 'pie-small-react')
         suitResponseTrack.append(Wait(delay + tPieHitsSuit))
         suitResponseTrack.append(showDamage)
+        suitResponseTrack.append(Wait(1))
         suitResponseTrack.append(updateHealthBar)
         suitResponseTrack.append(sival)
         # Make a bonus track for any hp bonus
         bonusTrack = Sequence(Wait(delay + tPieHitsSuit))
+        delay + tPieHitsSuit + 1
         if (kbbonus > 0):
             bonusTrack.append(Wait(0.75))
             bonusTrack.append(Func(suit.showHpText, -kbbonus, 2, openEnded=0))
