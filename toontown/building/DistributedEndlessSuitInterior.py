@@ -14,6 +14,7 @@ from toontown.toonbase import (ToontownBattleGlobals, ToontownGlobals,
 
 from . import ElevatorUtils
 from .ElevatorConstants import *
+from ..battle.BattlePersistentMusic import BattlePersistentMusic
 
 
 class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
@@ -29,6 +30,14 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.openSfx = base.loader.loadSfx("phase_5/audio/sfx/elevator_door_open.ogg")
         self.closeSfx = base.loader.loadSfx("phase_5/audio/sfx/elevator_door_close.ogg")
 
+        #it's motherfucking music time baby featuring PINOTATE
+        self.persistentMusic = BattlePersistentMusic(
+            calm='phase_7/audio/bgm/encntr_infinity.ogg',
+            encntr='phase_7/audio/bgm/encntr_infinity.ogg',
+            limit='phase_7/audio/bgm/encntr_infinity_boss.ogg'
+        )
+        self.persistentMusic.play()
+
         self.suits = []
         self.reserveSuits = []
         self.joiningReserves = []
@@ -36,7 +45,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.distBldgDoId = 0
 
         # we increment this each time we come out of an elevator:
-        self.currentFloor = 34
+        self.currentFloor = 1
         self.chunkFloor = self.currentFloor % 5
 
         self.elevatorName = self.__uniqueName('elevator')
@@ -301,8 +310,9 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         camera.setH(180)
         camera.setPos(0, 14, 4)
 
-        # Play elevator music
-        base.playMusic(self.elevatorMusic, looping=1, volume=0.8)
+        # Switch to elevator music
+        # base.playMusic(self.elevatorMusic, looping=1, volume=0.8)
+        self.persistentMusic.switchMode('calm')
 
         # Ride the elevator, then open the doors.
         track = Sequence(
@@ -556,6 +566,11 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
             # Watch reserve suits as they walk from the elevator
             camera.setPos(0, -15, 6)
             camera.headsUp(self.elevatorModelOut)
+        if self.chunkFloor == 3:
+            battle_type = 'limit'
+        else:
+            battle_type = 'encntr'
+        self.persistentMusic.switchMode(battle_type)
         return None
 
     def exitBattle(self):
@@ -661,6 +676,6 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
             self.activeIntervals[trackName] = track
             self.cr.playGame.getPlace().setState('walk')
         self.notify.info('enterResting()')
-        base.playMusic(self.waitMusic, looping=1, volume=0.7)
+        #base.playMusic(self.waitMusic, looping=1, volume=0.7)
         self.__closeInElevator()
         return
