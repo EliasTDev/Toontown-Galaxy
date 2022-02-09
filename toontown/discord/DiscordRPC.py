@@ -2,6 +2,7 @@ import time
 from ctypes import *
 from direct.task import Task 
 from pypresence import Presence
+import pypresence
 clientId  = "796502813353050122"
 try:
     RPC = Presence(clientId)
@@ -126,8 +127,10 @@ class DiscordRPC(object):
         party = self.partySize
         maxSize = self.maxParty
         if RPC is not None:
-            RPC.update(state=state,details=details , large_image=image, large_text=imageTxt,  small_image=smallLogo, small_text=smallTxt, party_size=[party, maxSize])
-
+            try:
+                RPC.update(state=state,details=details , large_image=image, large_text=imageTxt,  small_image=smallLogo, small_text=smallTxt, party_size=[party, maxSize])
+            except pypresence.exceptions.InvalidID:
+                self.notify.warning("Discord client is gone")
     def setLaff(self, hp, maxHp):
         self.state = '{0}: {1}/{2}'.format(base.localAvatar.name, hp, maxHp)
         self.setData()
@@ -175,10 +178,13 @@ class DiscordRPC(object):
     def suitBuilding(self):
         #TODO need an image for this
         self.details = 'In a Cog Building'
+        self.image = 'toontown-logo'
 
     def endlessBuilding(self):
-        self.details = 'In The Infini-Suite'
-
+        #TODO need an image for this
+        #self.details = 'In The Infini-Suite'
+        self.details = '???'
+        self.image = 'toontown-logo'
     def startTasks(self):
         taskMgr.doMethodLater(10, self.updateTasks, 'UpdateTask')
 

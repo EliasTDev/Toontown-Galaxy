@@ -60,8 +60,7 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         """
 
         self.suitInfos = []
-        if currFloor % 5 == 4:
-            return
+
 
         # process each floor in the building and create all active and
         # reserve suits
@@ -163,8 +162,6 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         // returns:    list of suit levels
         """
 
-        # checkpoint floor
-
         # For quick building battles during debug.
         if (self.dbg_1SuitPerFloor):
             return [1]    # 1 suit of max level 1
@@ -196,10 +193,11 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         # for this level of building
         #
         if currFloor >= 1:
-            lvlMin = currFloor
+            lvlMin = 7 + currFloor // 5 + (currFloor % 5) // 2
         else:
             lvlMin = 1
-        lvlMax = 25
+        if lvlMin < 1:
+            lvlMin = 1
 
         # now randomly generate levels within our min and max, pulling
         # from our pool until we run out
@@ -210,7 +208,7 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
 
         while lvlPool >= lvlMin:
             #newLvl = random.randint(lvlPool, lvlMax)
-            newLvl =  random.randint( lvlMin, min( lvlPool, lvlMax ) )
+            newLvl =  random.randint( lvlMin, lvlPool)
             lvlList.append(newLvl)
             lvlPool -= newLvl
 
