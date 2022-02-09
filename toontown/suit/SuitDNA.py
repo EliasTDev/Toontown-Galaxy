@@ -112,7 +112,12 @@ def getSuitType(name):
 
 def getRandomSuitType(level, rng=random):
     """ given a suit level, return a randomly-chosen suit type """
-    return random.randint(max(level-4, 1 ), min(level, 8))
+    #TODO test on higher lvl low tier suits
+    try:
+        val = random.randint(max(level-4, 1 ), min(level, 8))
+    except ValueError:
+        val = 8
+    return val
 
 def getRandomSuitByDept(dept):
     """ given a suit dept, return a randomly-chosen suit """

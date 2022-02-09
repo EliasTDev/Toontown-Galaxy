@@ -34,7 +34,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.toonParts = {}
         self.helpfulToons = []
 
-        self.currentFloor = 0
+        self.currentFloor = 35
         self.chunkFloor = self.currentFloor % 5
         # There is no top floor >:)
         self.topFloor = float('inf')
@@ -55,7 +55,6 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.ignoreResponses = 0
         self.ignoreElevatorDone = 0
         self.ignoreReserveJoinDone = 0
-        self.wantCheckpoint = True
 
         # Register all the toons
         self.toonIds = copy.copy(elevator.seats)
@@ -79,6 +78,7 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
                          self.enterBattle,
                          self.exitBattle,
                          ['ReservesJoining',
+                          'Resting'
                           'BattleDone']),
              State.State('ReservesJoining',
                          self.enterReservesJoining,
@@ -326,7 +326,9 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         self.b_setState('Resting')
 
     def enterBattle(self):
-           # return
+        if self.chunkFloor == 4:
+            self.b_setState('Resting')
+            return
         if self.battle is None:
             self.__createFloorBattle()
         #self.elevator.d_setFloor(self.currentFloor)

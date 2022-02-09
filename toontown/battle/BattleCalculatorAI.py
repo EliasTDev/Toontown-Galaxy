@@ -501,7 +501,10 @@ class BattleCalculatorAI:
         """
         if atkTrack == HEAL:
             return 0
-        suitDef = SuitBattleGlobals.SuitAttributes[suit.dna.name]\
+        if suit.getActualLevel() > 12:
+            suitDef = 70
+        else:
+            suitDef = SuitBattleGlobals.SuitAttributes[suit.dna.name]\
                     ['def'][suit.getLevel()]
         return -suitDef
 
@@ -2251,13 +2254,19 @@ class BattleCalculatorAI:
             return 0
         theSuit = self.battle.activeSuits[attackIndex]
         atkType = self.battle.suitAttacks[attackIndex][SUIT_ATK_COL]
-
         atkInfo = SuitBattleGlobals.getSuitAttack(theSuit.dna.name,
                                                    theSuit.getLevel(),
                                                    atkType)
-        atkAcc = atkInfo['acc']
-        suitAcc = SuitBattleGlobals.SuitAttributes[theSuit.dna.name]\
-                  ['acc'][theSuit.getLevel()]
+        try:
+            atkAcc = atkInfo['acc']
+        except BaseException:
+            if theSuit.getActualLevel() > 25:
+                atkAcc = 95
+            else:
+                #TODO pattern for lower lvl cogs
+                return
+
+
 
         # Jesse changed this because he doesn't think we need suit
         # accuracies.
@@ -2268,7 +2277,7 @@ class BattleCalculatorAI:
             self.notify.debug("Suit attack rolled " + str(randChoice) +
                                " to hit with an accuracy of " + str(acc) +
                                " (attackAcc: " + str(atkAcc) +
-                               " suitAcc: " + str(suitAcc) + ")")
+                              ")")
         if randChoice < acc:
             return 1
         return 0
@@ -2346,7 +2355,21 @@ class BattleCalculatorAI:
                     theSuit.dna.name,
                     theSuit.getLevel(),
                     atkType)
-                result = atkInfo['hp']
+                try:
+                    result = atkInfo['hp']
+                except BaseException:
+                    #TODO actual formula for attack damage that we want 
+                    if atkInfo['group'] != SuitBattleGlobals.ATK_TGT_SINGLE:    
+                        # group attack 
+                        #if theSuit.getActualLevel() <= 15:
+                         #   result = 2 * theSuit.getActualLevel()
+                        if theSuit.getAcualLevel() > 15:
+                            result = round((0.5 * theSuit.getActualLevel()) + 30)
+                    else:
+                        if theSuit.getActualLevel() > 15:
+                            result = round((0.5) * theSuit.getActualLevel() + 30)                  
+                    
+
 
             # be sure to set the amount of damage done by this attack
             # in the appropriate slot in the toonAttacks list

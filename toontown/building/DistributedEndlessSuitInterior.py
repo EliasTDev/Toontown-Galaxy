@@ -1,13 +1,17 @@
+import random
+
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
 from direct.distributed.ClockDelta import *
 from direct.fsm import ClassicFSM, State
 from direct.interval.IntervalGlobal import *
+from panda3d.otp import CFSpeech
 from toontown.battle import BattleBase
 from toontown.hood import ZoneUtil
 from toontown.toon import NPCToons
-from toontown.toonbase import ToontownBattleGlobals, ToontownGlobals
-from toontown.toonbase import TTLocalizer
+from toontown.toonbase import (ToontownBattleGlobals, ToontownGlobals,
+                               TTLocalizer)
+
 from . import ElevatorUtils
 from .ElevatorConstants import *
 
@@ -32,7 +36,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.distBldgDoId = 0
 
         # we increment this each time we come out of an elevator:
-        self.currentFloor = -1
+        self.currentFloor = 34
         self.chunkFloor = self.currentFloor % 5
 
         self.elevatorName = self.__uniqueName('elevator')
@@ -323,17 +327,16 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
 
     def setupNPC(self):
 
-        return
         if self.chunkFloor == 4:
             # Just a double check just in case
             # For now choose a random npc thats locked up
             if not self.checkpointNPC:
                 self.cagedToonNpcId = random.choice(list(NPCToons.NPCToonDict.keys()))
-                self.checkpointNPC = NPCToons.createLocalNPC(cagedToonNpcId)
+                self.checkpointNPC = NPCToons.createLocalNPC(self.cagedToonNpcId)
         self.checkpointNPC.addActive()
-        #self.checkpointNPC.reparentTo(self.cage)
+        self.checkpointNPC.reparentTo(render)
         self.checkpointNPC.setPos(15, 20, 0)
-        self.checkpointNPC.setPosHpr(0, -2, 0, 180, 0, 0)
+        self.checkpointNPC.setH(180)
         self.checkpointNPC.loop('neutral')
         return
 
@@ -359,7 +362,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         base.localAvatar.inventory.setBattleCreditMultiplier(mult)
         if self.cage is not None:
             self.cage = None
-        self.__cleanupCheckpointNPC()
+        #self.__cleanupCheckpointNPC()
 
     def __addToon(self, toon):
         assert (self.notify.debug('addToon(%d)' % toon.doId))
@@ -539,6 +542,13 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.activeIntervals[name] = track
 
     def enterBattle(self, ts=0):
+        #if self.chunkFloor == 4:
+
+            #self.setState('Resting')
+            
+            #return
+            
+            
         self.notify.info('enterBattle()')
         if (self.elevatorOutOpen == 1):
             self.__playCloseElevatorOut(self.uniqueName('close-out-elevator'))
@@ -619,30 +629,37 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
     ##### Resting state #####
 
     def enterResting(self, ts=0):
-        """"
+
+        
+        if self.chunkFloor == 4:
             avatar = base.localAvatar
             trackName = f'__checkpointFloorDone-{avatar.doId}'
             track = Parallel(name=trackName)
-            speech = TTLocalizer.CogdoExecutiveSuiteToonThankYou % self.SOSToonName
-            track.append(Sequence(Func(camera.wrtReparentTo, localAvatar), Func(camera.setPos, 0, -9, 9),
-                                  Func(camera.lookAt, Point3(5, 15, 0)),
-                                  Parallel(self.cage.posInterval(0.75, self.cagePos[1], blendType='easeOut'),
-                                           SoundInterval(self.cageLowerSfx, duration=0.5)),
-                                  Parallel(self.cageDoor.hprInterval(0.5, VBase3(0, 90, 0), blendType='easeOut'),
-                                           Sequence(SoundInterval(self.cageDoorSfx), duration=0)), Wait(0.25),
-                                  Func(self.checkpointNPC.wrtReparentTo, render), Func(self.checkpointNPC.setScale, 1),
-                                  Func(self.checkpointNPC.loop, 'walk'),
-                                  Func(self.checkpointNPC.headsUp, Point3(0, 10, 0)),
-                                  ParallelEndTogether(self.checkpointNPC.posInterval(1.5, Point3(0, 10, 0)),
-                                                      self.checkpointNPC.hprInterval(0.5, VBase3(180, 0, 0),
-                                                                                    blendType='easeInOut')),
-                                  Func(self.checkpointNPC.setChatAbsolute, TTLocalizer.CagedToonYippee, CFSpeech),
-                                  ActorInterval(self.checkpointNPC, 'jump'), Func(self.shopOwnerNpc.loop, 'neutral'),
-                                  Func(self.checkpointNPC.headsUp, localAvatar),
-                                  Func(self.checkpointNPC.setLocalPageChat, speech, 0),
-                                  Func(camera.lookAt, self.checkpointNPC, Point3(0, 0, 2))))
+            if self.currentFloor < 15:
+                speech = TTLocalizer.EndlessBuildingToonThankYou
+            elif self.currentFloor >= 15:
+                speech = TTLocalizer.EndlessBuildingToonThankYouHigherFloors
+            track.append(Sequence(Func(camera.wrtReparentTo, localAvatar), Func(camera.setPos, 13, 20, 0),
+                                    Func(camera.lookAt, Point3(15, 20, 0)),
+
+                                    Func(self.checkpointNPC.wrtReparentTo, render), Func(self.checkpointNPC.setScale, 1),
+                                    #Func(self.checkpointNPC.loop, 'walk'),
+                                #   Func(self.checkpointNPC.headsUp, Point3(0, 10, 0)),
+                                    #  ParallelEndTogether(self.checkpointNPC.posInterval(1.5, Point3(15, 20, 0)),
+                                    #                     self.checkpointNPC.hprInterval(0.5, VBase3(180, 0, 0),
+                                                #                                        blendType='easeInOut')),
+                                    Func(self.checkpointNPC.setChatAbsolute, TTLocalizer.CagedToonYippee, CFSpeech),
+                                    ActorInterval(self.checkpointNPC, 'jump'), Func(self.checkpointNPC.loop, 'neutral'),
+                                    Func(self.checkpointNPC.headsUp, localAvatar),
+                                    Func(self.checkpointNPC.setChatAbsolute, speech, CFSpeech),
+                                    Func(camera.lookAt, self.checkpointNPC, Point3(0, 0, 2),
+                                    ActorInterval(self.checkpointNPC, 'teleportOut'))))
+
+            self.__cleanupCheckpointNPC()
+            # Dialog box appears here to select your reward if you are on a high enough flor
+            # otherwise just give the reward
             self.activeIntervals[trackName] = track
-        """
+            self.cr.playGame.getPlace().setState('walk')
         self.notify.info('enterResting()')
         base.playMusic(self.waitMusic, looping=1, volume=0.7)
         self.__closeInElevator()

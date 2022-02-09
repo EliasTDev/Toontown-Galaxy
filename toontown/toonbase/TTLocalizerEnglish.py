@@ -12148,6 +12148,10 @@ CogdoExecutiveSuiteToonBye = 'Bye!'
 CogdoBarrelRoomTitle = 'Cog Barrel Room'
 CogdoBarrelRoomIntroMovieDialog = 'Great work, Toons! You stopped the Stomp-O-Matic! You are now able to collect some of the stolen Laff barrels. Collect them before the Cogs come!'
 
+#Endless Building
+EndlessBuildingToonThankYou = 'Thanks for the rescue!\n As a reward you can have a random unite!'
+EndlessBuildingToonThankYouHigherFloors = 'Thanks for the rescue!\n As a reward you can choose between fires, or random unites.'
+
 # Silly Surge Terms
 SillySurgeTerms = {
     1:  "Amusing Ascent!",

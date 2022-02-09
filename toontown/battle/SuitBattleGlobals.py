@@ -68,6 +68,8 @@ def pickFromFreqList(freqList):
     #assert (level != None), "Element not found"
     return level
 
+
+
 def getActualFromRelativeLevel(name, relLevel):
     """
     convert from a relative level (0-4) into the suit's
@@ -88,6 +90,7 @@ def getActualFromRelativeLevel(name, relLevel):
 
     actualLevel = data['level'] + relLevel
     return actualLevel
+
 
 def getSuitVitals(name, level=-1):
     data = SuitAttributes[name]
@@ -114,7 +117,7 @@ def getSuitVitals(name, level=-1):
         alist.append(adict)
     dict['attacks'] = alist
     return dict
-
+    
 def pickSuitAttack(attacks, suitLevel):
     """
     Function:    randomly choose an attack from a list of possible
@@ -132,11 +135,19 @@ def pickSuitAttack(attacks, suitLevel):
 
     total = 0
     for c in attacks:
-        total = total + c[3][suitLevel]
-    assert (total == 100)
+        try:
+            total = total + c[3][suitLevel]
+        except IndexError:
+            # All the same values so get the first index
+            total = total + c[3][0]
+            
     
     for c in attacks:
-        count = count + c[3][suitLevel]
+        try:
+            count = count + c[3][suitLevel]
+        except:
+            count = count + c[3][0]
+
         if (randNum < count):
             attackNum = index
             notify.debug('picking attack %d' % attackNum)
@@ -173,7 +184,7 @@ def pickSuitAttack(attacks, suitLevel):
         # attack, so choose a random attack.
         return attackNum
 
-def getSuitAttack(suitName, suitLevel, attackNum=-1):
+def getSuitAttack(suitName, suitLevel, attackNum=-1, suit=None):
     # If no attack is specified, choose one based on frequency values
     attackChoices = SuitAttributes[suitName]['attacks']
     if (attackNum == -1):
@@ -187,9 +198,24 @@ def getSuitAttack(suitName, suitLevel, attackNum=-1):
     adict['name'] = name
     adict['id'] = list(SuitAttacks.keys()).index(name)
     adict['animName'] = SuitAttacks[name][0]
-    adict['hp'] = attack[1][suitLevel]
-    adict['acc'] = attack[2][suitLevel]
-    adict['freq'] = attack[3][suitLevel]
+
+    try:
+        adict['hp'] = attack[1][suitLevel]
+    except IndexError:
+        if suit:
+            actualLevel = suit.getActualLevel()
+            adict['hp'] = (actualLevel + 1) * (actualLevel + 2)
+    try:
+        adict['acc'] = attack[2][suitLevel]
+    except:
+        # Relative level
+        # TODO check low tier higher lvl suits
+        if suitLevel > 4:
+            adict['acc'] = 95
+    try:
+        adict['freq'] = attack[3][suitLevel]
+    except:
+        adict['freq'] = attack[3][0]
     adict['group'] = SuitAttacks[name][1]
     return adict
 
@@ -416,13 +442,13 @@ SuitAttributes = {
             'attacks': (('CigarSmoke',
                       (10, 12, 15, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46), #dmg
                       (55, 65, 75, 85, 90, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95), #acc
-                      (20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 95, 95, 95, 95, 95)), #freq
+                      (20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20)), #freq
                                          # not implemented defaults to glower power 
                                          # cringe, sidestep-left/right
                         ('FloodTheMarket',
                       (14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48),
                       (70, 75, 85, 90, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95),
-                      (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 95, 95, 95, 95, 95)),
+                      (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10)),
                                          # not implemented defaults to glower power
                                          # slip-backward&jump, sidestep-l/r
                         ('SongAndDance',
@@ -1212,7 +1238,7 @@ SuitFaceoffTaunts = OTPLocalizer.SuitFaceoffTaunts
 
 
 def getAttackTauntIndexFromIndex(suit, attackIndex):
-    adict = getSuitAttack(suit.getStyleName(), suit.getLevel(), attackIndex)
+    adict = getSuitAttack(suit.getStyleName(), suit.getLevel(), attackIndex, suit)
     return getAttackTauntIndex(adict['name'])
 
 def getAttackTauntIndex(attackName):
