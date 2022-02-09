@@ -959,7 +959,7 @@ dclass DistributedSuitBase: DistributedObject {
   // notify the client side suit that the server side suit
   // has changed its level
   //
-  setLevelDist(int16 level) required broadcast ram;
+  setLevelDist(int32 level) required broadcast ram;
 
   // We don't send chat messages literally through the net for Suits.
   // Instead, we use setBrushOff to send brush-off messages by index
@@ -972,7 +972,7 @@ dclass DistributedSuitBase: DistributedObject {
 
   setSkeleRevives(uint8 flag) required broadcast ram;
 
-  setHP(int16 hp) required broadcast ram;
+  setHP(int64 hp) required broadcast ram;
 
 };
 
@@ -1307,16 +1307,16 @@ dclass DistributedBattleBase: DistributedObject {
            //   damage bonus for the attack
            //   array of knockback bonuses
            //   bit-field indicating indices of suits that have died from this attack
-           int8 id0, int8 tr0, int8 le0, int32 tg0, int16array hp0,
-           int16 ac0, int16 hpb0, int16array kbb0, int8 died0, int8 revive0,
+           int8 id0, int8 tr0, int8 le0, int32 tg0, int64[] hp0,
+           int16 ac0, int64 hpb0, int16array kbb0, int8 died0, int8 revive0,
 
-           int8 id1, int8 tr1, int8 le1, int32 tg1, int16array hp1,
-           int16 ac1, int16 hpb1, int16array kbb1, int8 died1, int8 revive1,
+           int8 id1, int8 tr1, int8 le1, int32 tg1, int64[] hp1,
+           int16 ac1, int64 hpb1, int16array kbb1, int8 died1, int8 revive1,
 
-           int8 id2, int8 tr2, int8 le2, int32 tg2, int16array hp2,
-           int16 ac2, int16 hpb2, int16array kbb2, int8 died2, int8 revive2,
+           int8 id2, int8 tr2, int8 le2, int32 tg2, int64[] hp2,
+           int16 ac2, int64 hpb2, int16array kbb2, int8 died2, int8 revive2,
 
-           int8 id3, int8 tr3, int8 le3, int32 tg3, int16array hp3,
+           int8 id3, int8 tr3, int8 le3, int32 tg3, int64[] hp3,
            int16 ac3, int16 hpb3, int16array kbb3, int8 died3, int8 revive3,
 
            //   index of the attacking suit
