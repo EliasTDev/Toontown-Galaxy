@@ -50,16 +50,26 @@ class DistributedBattleBldg(DistributedBattleBase.DistributedBattleBase):
         #dbgBattleMarkers = loader.loadModel("dbgBattleMarkers.egg")
         #dbgBattleMarkers.reparentTo(self)
 
-    def setBossBattle(self, value):
+    def setBossBattle(self, value, type='normal'):
         self.bossBattle = value
+        if type == 'normal':
+            enc_music = 'phase_7/audio/bgm/encntr_general_bg_indoor.ogg'
+            enc_music_boss = 'phase_7/audio/bgm/encntr_suit_winning_indoor.ogg'
+        elif type == 'infinity':
+            enc_music = 'phase_7/audio/bgm/encntr_infinity.ogg'
+            enc_music_boss = 'phase_7/audio/bgm/encntr_infinity_boss.ogg'
+        volumes = (0.0, 0.9)
+        self.battleMusic = base.loader.loadMusic(enc_music_boss)
+        self.bossMusic = base.loader.loadMusic(enc_music)
         if self.bossBattle:
-            self.battleMusic = base.loader.loadMusic(
-                'phase_7/audio/bgm/encntr_suit_winning_indoor.ogg')
+            volume_enc = volumes[0]
+            volume_boss = volumes[1]
         else:
-            self.battleMusic = base.loader.loadMusic(
-                'phase_7/audio/bgm/encntr_general_bg_indoor.ogg')
-        base.playMusic(self.battleMusic, looping=1, volume=0.9)
-            
+            volume_enc = volumes[1]
+            volume_boss = volumes[0]
+        base.playMusic(self.battleMusic, looping=1, volume=volume_enc)
+        base.playMusic(self.bossMusic, looping=1, volume=volume_boss)
+
     def disable(self):
         """ disable()
         """

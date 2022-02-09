@@ -350,7 +350,7 @@ class DistributedBattleBaseAI(DistributedObjectAI.DistributedObjectAI,
 
     # setBossBattle
 
-    def setBossBattle(self, bossBattle):
+    def setBossBattle(self, bossBattle, type="normal"):
         """call this before generate"""
         self.bossBattle = bossBattle
 

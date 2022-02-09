@@ -485,7 +485,7 @@ class DistributedBattleBase(DistributedNode.DistributedNode, BattleBase):
     def setZoneId(self, zoneId):
         self.zoneId = zoneId
 
-    def setBossBattle(self, value):
+    def setBossBattle(self, value, type="normal"):
         self.bossBattle = value
 
     def setState(self, state, timestamp):
