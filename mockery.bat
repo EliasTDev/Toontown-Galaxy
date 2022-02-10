@@ -1,0 +1,1 @@
+"D:\GitHub\Galaxy\dependencies\panda\python\python.exe" -m mockery.mockerycore
