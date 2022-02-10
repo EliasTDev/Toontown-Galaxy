@@ -203,8 +203,8 @@ class InventoryPage(ShtikerPage.ShtikerPage):
         self.accept(f"{base.INVENTORY}-up", self.hideInventoryOnscreen)
 
     def ignoreOnscreenHooks(self):        
-        self.ignore(ToontownGlobals.InventoryHotkeyOn)
-        self.ignore(ToontownGlobals.InventoryHotkeyOff)
+        self.ignore(base.INVENTORY)
+        self.ignore(f"{base.INVENTORY}--up")
 
     def showInventoryOnscreen(self):
         messenger.send('wakeup')
