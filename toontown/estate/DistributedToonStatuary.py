@@ -232,7 +232,7 @@ class DistributedToonStatuary(DistributedStatuary.DistributedStatuary):
 
         # Lashes only exist in females
         #NO STOP BEING SEXIST DISNEY
-        if self.eyelashes:
+        if self.toon.getEyelashes():
         #if self.gender == 'f':
             if self.toon.hasLOD():
                 # Lashes are there only in the 1st LOD

@@ -1792,7 +1792,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
                 
                 self.lerpFurnitureButton = self.__furnitureGui.posHprScaleInterval(
                     1.0,
-                    pos = Point3(-1.19, 0.00, 0.33),
+                    pos = Point3(0.115, 0.00, -0.66),
                     hpr = Vec3(0.00, 0.00, 0.00),
                     scale = Vec3(0.04, 0.04, 0.04),
                     blendType = 'easeInOut',
