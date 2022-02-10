@@ -14,7 +14,7 @@ from toontown.toonbase import (ToontownBattleGlobals, ToontownGlobals,
 
 from . import ElevatorUtils
 from .ElevatorConstants import *
-from ..battle.BattlePersistentMusic import BattlePersistentMusic
+from toontown.battle.BattlePersistentMusic import BattlePersistentMusic
 
 
 class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
