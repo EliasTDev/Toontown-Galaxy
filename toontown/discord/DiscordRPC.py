@@ -91,7 +91,7 @@ class DiscordRPC(object):
         self.updateTask = None
         self.details = "Loading" # text next to photo
         self.image = 'toontown-logo' #Main image
-        self.imageTxt = 'Toontown: Event Horizon' #Hover text for main image 
+        self.imageTxt = 'Toontown: Galaxy' #Hover text for main image 
         self.smallLogo = 'discord-icon' #small image in corner
         self.state = '   ' #Displayed underneath details, used for boarding groups
         self.smallTxt = 'Loading'
@@ -202,4 +202,4 @@ class DiscordRPC(object):
             self.setData()
         else:
             print("Error: Zone Not Found!")
-    
+
