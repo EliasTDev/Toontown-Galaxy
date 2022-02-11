@@ -2,18 +2,6 @@ import time
 from ctypes import *
 from direct.task import Task 
 from pypresence import Presence
-import pypresence
-clientId  = "796502813353050122"
-try:
-    RPC = Presence(clientId)
-except:
-    print("DiscordRPC: Warning : Discord not found for this client.")
-    RPC = None    
-try:
-    RPC.connect()
-except:
-    print("DiscordRPC: Warning : Failed to connect to discord client.")
-    RPC = None
 class DiscordRPC(object):
 
     zone2imgdesc = { # A dict of ZoneID -> An image and a description
@@ -88,6 +76,8 @@ class DiscordRPC(object):
     }
 
     def __init__(self):
+        self.RPC = None
+        self.enable()
         self.updateTask = None
         self.details = "Loading" # text next to photo
         self.image = 'toontown-logo' #Main image
@@ -98,21 +88,25 @@ class DiscordRPC(object):
         self.partySize = 1
         self.maxParty = 1
 
+
     def stopBoarding(self):
-        self.partySize = 1
-        self.state = '  '
-        self.maxParty = 1
-        self.setData()
+        if base.wantRichPresence:
+            self.partySize = 1
+            self.state = '  '
+            self.maxParty = 1
+            self.setData()
 
     def allowBoarding(self, size):
-        self.state = 'In a boarding group'
-        self.partySize = 1
-        self.maxParty = size
-        self.setData()
+        if base.wantRichPresence:
+            self.state = 'In a boarding group'
+            self.partySize = 1
+            self.maxParty = size
+            self.setData()
 
     def setBoarding(self, size):
-        self.PartySize = size
-        self.setData()
+        if base.wantRichPresence:
+            self.PartySize = size
+            self.setData()
 
     def setData(self, details=None, image=None, imageTxt=None):
         if details == None:
@@ -126,54 +120,60 @@ class DiscordRPC(object):
         state = self.state
         party = self.partySize
         maxSize = self.maxParty
-        if RPC is not None:
-            try:
-                RPC.update(state=state,details=details , large_image=image, large_text=imageTxt,  small_image=smallLogo, small_text=smallTxt, party_size=[party, maxSize])
-            except pypresence.exceptions.InvalidID:
-                self.notify.warning("Discord client is gone")
-    def setLaff(self, hp, maxHp):
-        self.state = '{0}: {1}/{2}'.format(base.localAvatar.name, hp, maxHp)
-        self.setData()
+        if self.RPC is not None and base.wantRichPresence:
+            self.RPC.update(state=state,details=details , large_image=image, large_text=imageTxt,  small_image=smallLogo, small_text=smallTxt, party_size=[party, maxSize])
 
+    def setLaff(self, hp, maxHp):
+        if base.wantRichPresence:
+            self.state = '{0}: {1}/{2}'.format(base.localAvatar.name, hp, maxHp)
+            self.setData()
 
     def updateTasks(self, task):
-        self.updateTask = True
-        self.setData()
-        return task.again
+        if base.wantRichPresence:
+            self.updateTask = True
+            self.setData()
+            return task.again
     
     def avChoice(self):
-        self.image = 'toontown-logo'
-        self.details = 'Picking a Toon.'
-        self.state = '  '
-        self.setData()
+        if base.wantRichPresence:
+            self.image = 'toontown-logo'
+            self.details = 'Picking a Toon.'
+            self.state = '  '
+            self.setData()
 
     def launching(self):
-        self.image = 'toontown-logo'
-        self.details = 'Loading...'
-        self.setData()
+        if base.wantRichPresence:
+            self.image = 'toontown-logo'
+            self.details = 'Loading...'
+            self.setData()
 
     def making(self):
-        self.image = 'toontown-logo'
-        self.details = 'Making a Toon.'
+        if base.wantRichPresence:
+            self.image = 'toontown-logo'
+            self.details = 'Making a Toon.'
 
     def vp(self):
-        self.image = 'vp'
-        self.details = 'Fighting the vp.'
-        self.setData()
+        if base.wantRichPresence:
+            self.image = 'vp'
+            self.details = 'Fighting the vp.'
+            self.setData()
 
     def cfo(self):
-        self.image = 'cfo'
-        self.details = 'Fighting the cfo.'
-        self.setData()
+        if base.wantRichPresence:
+            self.image = 'cfo'
+            self.details = 'Fighting the cfo.'
+            self.setData()
 
     def cj(self):
-        self.image = 'cj'
-        self.details = 'Fighting the cj.'
-        self.setData()
+        if base.wantRichPresence:
+            self.image = 'cj'
+            self.details = 'Fighting the cj.'
+            self.setData()
 
     def ceo(self):
-        self.image = 'ceo'
-        self.details = 'Fighting the ceo.'
+        if base.wantRichPresence:
+            self.image = 'ceo'
+            self.details = 'Fighting the ceo.'
 
     def suitBuilding(self):
         #TODO need an image for this
@@ -186,13 +186,15 @@ class DiscordRPC(object):
         self.details = '???'
         self.image = 'toontown-logo'
     def startTasks(self):
-        taskMgr.doMethodLater(10, self.updateTasks, 'UpdateTask')
+        if base.wantRichPresence:
+            taskMgr.doMethodLater(10, self.updateTasks, 'UpdateTask')
 
     def setDistrict(self, name):
-        self.smallTxt = name
+        if base.wantRichPresence:
+            self.smallTxt = name
 
     def setZone(self,zone): # Set image and text based on the zone
-        if not isinstance(zone, int):
+        if not isinstance(zone, int) or not base.wantRichPresence:
             return
         zone -= zone % 100
         data = self.zone2imgdesc.get(zone,None)
@@ -202,4 +204,29 @@ class DiscordRPC(object):
             self.setData()
         else:
             print("Error: Zone Not Found!")
+
+    def disable(self):
+        try:
+            self.RPC.clear()
+            if self.RPC is not None:
+                self.RPC.close()
+        except BaseException:
+            print('DiscordRPC: Warning: Discord not open or invalid client id')
+        self.RPC = None
+        self.updateTask = None
+
+    def enable(self):
+        clientId = "796502813353050122"
+        try:
+            if self.RPC is None:
+                self.RPC = Presence(clientId)
+        except BaseException:
+            print("DiscordRPC: Warning : Discord not found for this client.")
+            self.RPC = None
+        try:
+            if base.wantRichPresence and self.RPC is not None:
+                self.RPC.connect()
+        except BaseException:
+            print("DiscordRPC: Warning: Failed to connect to discord client.")
+
 
