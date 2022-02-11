@@ -2210,7 +2210,8 @@ class ToonDNA(AvatarDNA.AvatarDNA):
     def isValidNetString(self, string):
         dg = PyDatagram(string)
         dgi = PyDatagramIterator(dg)
-        if dgi.getRemainingSize() != 27:
+        # TODO figure out the size
+        if dgi.getRemainingSize() != 39:
             return False
         type = dgi.getFixedString(1)
         if type not in ('t',):
