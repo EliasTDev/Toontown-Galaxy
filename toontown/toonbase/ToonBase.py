@@ -300,6 +300,8 @@ class ToonBase(OTPBase.OTPBase):
             base.setFrameRateMeter(True)
         else:
             base.setFrameRateMeter(False)
+        self.wantRichPresence = self.settings.getBool('game', 'rich-presence', True)
+
         #self.resetMusic = self.loader.loadMusic("phase_3/audio/bgm/MIDI_Events_16channels.ogg")
         self.wantWASD =  base.MOVE_FORWARD != 'arrow_up' and base.MOVE_BACKWARDS != 'arrow_down' and base.MOVE_LEFT != 'arrow_left' and base.MOVE_RIGHT != 'arrow_right'
         self.accept("winow-event", self.windowEvent)
@@ -748,6 +750,7 @@ class ToonBase(OTPBase.OTPBase):
             res = self.settings.getList('game', 'resolution', [cdll.user32.GetSystemMetrics(0)*5/6, cdll.user32.GetSystemMetrics(1)*5/6])
             smoothAnimations = self.settings.getBool('game', 'smooth-animations', False)
             antialiasing = self.settings.getBool('game', 'antialiasing', 0)
+            richPresence = self.settings.getBool('game', 'rich-presence', True)
             wantLaffMeterOverHead = self.settings.getBool('game', 'want-laff-meter-over-head', True)
             if antialiasing:
                 loadPrcFileData('toonBase Settings Framebuffer MSAA', 'framebuffer-multisample 1')
@@ -764,8 +767,9 @@ class ToonBase(OTPBase.OTPBase):
             loadPrcFileData('toonBase Settings Toon Chat Sounds', 'toon-chat-sounds %s' % toonChatSounds)
             loadPrcFileData(f'toonBase Settings Custom Controls', 'customControls {wantCustomControls}')
             loadPrcFileData(f'toonBase Settings Controls', 'controls {controls}' )
-            loadPrcFileData(f'toonBase Settings smooth animations', 'smooth animations: {smoothAnimations}' )
-            loadPrcFileData(f'toonBase Settings Laff Meter Over Head', 'laff-meter-overhead: {wantLaffMeterOverHead}' )
+            loadPrcFileData(f'toonBase Settings smooth animations', 'smooth animations: {smoothAnimations}')
+            loadPrcFileData(f'toonBase Settings Laff Meter Over Head', 'laff-meter-overhead: {wantLaffMeterOverHead}')
+            loadPrcFileData(f'toonBase Settings Discord Rich Presence', 'rich-presence: {richPresence}')
 
             self.settings.loadFromSettings()
 

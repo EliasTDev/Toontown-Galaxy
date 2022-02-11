@@ -41,10 +41,6 @@ import random
 # Need to import __builtin__ and use the __builtin__.foo = x
 # technique here in case you start toontown from the command line
 import builtins
-from toontown.discord.DiscordRPC import DiscordRPC
-builtins.Discord = DiscordRPC()
-Discord.launching()
-
 # See if we have a launcher, if we do not, make an empty one
 try:
     launcher
@@ -105,6 +101,9 @@ launcher.setPandaErrorCode(7)
 # Make sure we create a ToonBase first
 from . import ToonBase
 ToonBase.ToonBase()
+from toontown.discord.DiscordRPC import DiscordRPC
+builtins.Discord = DiscordRPC()
+Discord.launching()
 if (base.win == None):
     print("Unable to open window; aborting.")
     sys.exit()
