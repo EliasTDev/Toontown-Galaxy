@@ -2195,10 +2195,10 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             dg.addUint8(self.shoesTex)
             dg.addUint8(self.shoesColor)
             # Colors
-            dg.addUint8(self.armColor)  # We assume < 256 colors.
-            dg.addUint8(self.gloveColor)
-            dg.addUint8(self.legColor)
-            dg.addUint8(self.headColor)
+            dg.addUint32(self.armColor)  # We assume < 256 colors.
+            dg.addUint32(self.gloveColor)
+            dg.addUint32(self.legColor)
+            dg.addUint32(self.headColor)
 
         elif (self.type == 'u'):
             notify.error("undefined avatar")
@@ -2210,7 +2210,8 @@ class ToonDNA(AvatarDNA.AvatarDNA):
     def isValidNetString(self, string):
         dg = PyDatagram(string)
         dgi = PyDatagramIterator(dg)
-        if dgi.getRemainingSize() != 27:
+        # TODO figure out the size
+        if dgi.getRemainingSize() != 39:
             return False
         type = dgi.getFixedString(1)
         if type not in ('t',):
@@ -2248,10 +2249,10 @@ class ToonDNA(AvatarDNA.AvatarDNA):
         shoesModel = dgi.getUint8()
         shoesTex = dgi.getUint8()
         shoesColor = dgi.getUint8()
-        armColor = dgi.getUint8()
-        gloveColor = dgi.getUint8()
-        legColor = dgi.getUint8()
-        headColor = dgi.getUint8()
+        armColor = dgi.getUint32()
+        gloveColor = dgi.getUint32()
+        legColor = dgi.getUint32()
+        headColor = dgi.getUint32()
 
         if topTex >= len(Shirts):
             return False
@@ -2336,10 +2337,10 @@ class ToonDNA(AvatarDNA.AvatarDNA):
             self.shoesModel = dgi.getUint8()
             self.shoesTex = dgi.getUint8()
             self.shoesColor = dgi.getUint8()
-            self.armColor = dgi.getUint8()
-            self.gloveColor = dgi.getUint8()
-            self.legColor = dgi.getUint8()
-            self.headColor = dgi.getUint8()
+            self.armColor = dgi.getUint32()
+            self.gloveColor = dgi.getUint32()
+            self.legColor = dgi.getUint32()
+            self.headColor = dgi.getUint32()
         else:
             notify.error("unknown avatar type: ", self.type)
 

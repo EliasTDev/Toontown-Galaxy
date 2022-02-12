@@ -11,6 +11,7 @@ from toontown.makeatoon.NameGenerator import NameGenerator
 from toontown.toon.ToonDNA import ToonDNA
 from toontown.toonbase import TTLocalizer
 from otp.otpbase import OTPGlobals
+from direct.fsm.FSM import FSM
 
 REASONS = [
     'MODERATION_FOUL_LANGUAGE', 'MODERATION_PERSONAL_INFO',
@@ -61,18 +62,21 @@ class DeveloperAccountDB(AccountDB):
                       'staffAccess': fields.get('STAFF_ACCESS', 'USER')})
             self.loginManager.air.dbInterface.queryObject(self.loginManager.air.dbId, int(self.dbm[playToken]), handleAccountInfo)
 
-class GameOperation:
+class GameOperation(FSM):
     CHOSEN_CONNECTION = False
+
     def __init__(self, loginManager, sender):
         self.loginManager = loginManager
         self.sender = sender
         self.callback = None
+        FSM.__init__(self, self.__class__.__name__)
 
     def enterKill(self, reason):
         if self.CHOSEN_CONNECTION:
             self.loginManager.killConnection(self.sender, reason)
         else:
             self.loginManager.killAccount(self.sender, reason)
+
     def setCallback(self, callback):
         self.callback = callback
 
@@ -81,6 +85,9 @@ class GameOperation:
             del self.loginManager.sender2loginOperation[self.sender]
         else:
             del self.loginManager.account2operation[self.sender]
+
+
+
 
 
 class LoginOperation(GameOperation):
@@ -117,7 +124,7 @@ class LoginOperation(GameOperation):
 
     def __handleAccountRetrieved(self, dclass, fields):
         if dclass != self.loginManager.air.dclassesByName['AccountUD']:
-            self.demand('Kill', result.get('reason', 'Account was not found in the database.'))
+            self.demand('Kill' , 'Account was not found in the database.')
             return
 
         self.account = fields
@@ -138,7 +145,7 @@ class LoginOperation(GameOperation):
 
     def __handleAccountCreated(self, accountId):
         if not accountId:
-            self.demand('Kill', result.get('reason', 'Account could not be created.'))
+            self.demand('Kill', 'Account could not be created.')
             return
 
         self.accountId = accountId
@@ -149,7 +156,7 @@ class LoginOperation(GameOperation):
 
     def __handleAccountIdStored(self, success=True):
         if not success:
-            self.demand('Kill', result.get('reason', 'Could not store account id.'))
+            self.demand('Kill', 'Could not store account id.')
             return
 
         self.__handleSetAccount()
@@ -234,7 +241,7 @@ class AvatarOperation(GameOperation):
 
     def __handleAccountRetrieved(self, dclass, fields):
         if dclass != self.loginManager.air.dclassesByName['AccountUD']:
-            self.demand('Kill', result.get('reason', 'Account could not be retrieved.'))
+            self.demand('Kill', 'Account could not be retrieved.')
             return
 
         # Set the account & avList:
@@ -267,7 +274,7 @@ class GetAvatarsOperation(AvatarOperation):
 
                 def response(dclass, fields, avId=avId):
                     if dclass != self.loginManager.air.dclassesByName['DistributedToonUD']:
-                        self.demand('Kill', result.get('reason', 'One of the toons is invalid.'))
+                        self.demand('Kill', 'One of the toons is invalid.')
                         return
 
                     self.avatarFields[avId] = fields
@@ -317,13 +324,13 @@ class CreateAvatarOperation(GameOperation):
 
     def start(self, avDNA, avPosition):
         if avPosition >= 6:
-            self.demand('Kill', result.get('reason', "Can't have position at 6"))
+            self.demand('Kill', "Can't have position at 6")
             return
 
         dna = ToonDNA()
         valid = dna.isValidNetString(avDNA)
         if not valid:
-            self.demand('Kill', result.get('reason', "Toon's DNA is not valid."))
+            self.demand('Kill', "Toon's DNA is not valid.")
             return
 
         self.avPosition = avPosition
@@ -337,7 +344,7 @@ class CreateAvatarOperation(GameOperation):
 
     def __handleAccountRetrieved(self, dclass, fields):
         if dclass != self.loginManager.air.dclassesByName['AccountUD']:
-            self.demand('Kill', result.get('reason', 'Failed to retrieve account.'))
+            self.demand('Kill', 'Failed to retrieve account.')
 
             return
 
@@ -346,7 +353,7 @@ class CreateAvatarOperation(GameOperation):
         self.avList = self.avList[:6]
         self.avList += [0] * (6 - len(self.avList))
         if self.avList[self.avPosition]:
-            self.demand('Kill', result.get('reason', 'Toon slot is already taken'))
+            self.demand('Kill', 'Toon slot is already taken')
             return
 
         self.__handleCreateAvatar()
@@ -369,7 +376,7 @@ class CreateAvatarOperation(GameOperation):
 
     def __handleToonCreated(self, avId):
         if not avId:
-            self.demand('Kill', result.get('reason', 'Failed to create a new toon.'))
+            self.demand('Kill', 'Failed to create a new toon.')
             return
 
         self.avId = avId
