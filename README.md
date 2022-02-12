@@ -4,9 +4,8 @@ The official repo for Toontown: Event Horizon, a new Toontown game based on Disn
 # staff:
  
  1. Pants -  Founder,  Team Leader, Producer, and Composer
- 2. Xeltania - Game Developer
- 3.  DarthAnonymous1 - Game Developer 
- 4.  Wizzerinus - Game Developer
+ 2. Xeltania - Game Developer 
+ 3.  Wizzerinus - Game Developer
 
 # Repo Rules and Regulations:
 
