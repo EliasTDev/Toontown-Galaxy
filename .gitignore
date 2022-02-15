@@ -102,8 +102,8 @@ test/test.py
 user/logs/magic-words/magic-words-log.txt
 dev/win32/start-game-2.bat
 dev/win32/start-uberdog-server-2.bat
-
 mockery.bat
 mockery/__init__.py
 mockery/InventoryUI.py
 mockery/mockerycore.py
+resources.zip

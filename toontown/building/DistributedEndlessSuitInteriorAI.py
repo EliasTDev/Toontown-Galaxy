@@ -392,7 +392,8 @@ class DistributedEndlessSuitInteriorAI(DistributedObjectAI.DistributedObjectAI):
         # Create the suits and place them in their initial positions on
         # the floor
         self.sendZonetoClient()
-        self.elevator.planner._genSuitInfos(self.currentFloor)
+        if self.chunkFloor != 4:
+            self.elevator.planner._genSuitInfos(self.currentFloor)
         suitHandles = self.elevator.planner.genFloorSuits(self.currentFloor)
         self.suits = suitHandles['activeSuits']
         self.activeSuits = []

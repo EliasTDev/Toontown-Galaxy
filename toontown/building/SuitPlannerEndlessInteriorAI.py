@@ -79,7 +79,11 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         if (self.dbg_4SuitsPerFloor):
             numActive = 4
         else:
-            numActive = random.randint(1, min(4, len(lvls)))
+            try:
+                numActive = random.randint(1, min(4, len(lvls)))
+            except ValueError:
+                # Probably an issue with it being 1, 1 
+                numActive = 2
 
         if (currFloor + 1) % 5 == 4 and len(lvls) > 1:
             # Make the boss be suit 1 (unless there is only 1 active suit)
@@ -204,7 +208,6 @@ class SuitPlannerEndlessInteriorAI(SuitPlannerInteriorAI.SuitPlannerInteriorAI):
         #
         self.notify.debug("Level Pool: " + str(lvlPool))
         lvlList = []
-        #TODO remove lvlMax when battle rewrite is done
 
         while lvlPool >= lvlMin:
             #newLvl = random.randint(lvlPool, lvlMax)

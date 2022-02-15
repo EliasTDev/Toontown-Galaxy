@@ -5,7 +5,7 @@ from direct.distributed import DistributedObject
 from direct.distributed.ClockDelta import *
 from direct.fsm import ClassicFSM, State
 from direct.interval.IntervalGlobal import *
-from panda3d.otp import CFSpeech
+from panda3d.otp import CFSpeech, CFTimeout
 from toontown.battle import BattleBase
 from toontown.hood import ZoneUtil
 from toontown.toon import NPCToons
@@ -55,8 +55,13 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.elevatorOutOpen = 0
         self.checkpointNPC = None
         self.cagedToonNpcId = 0
+        self.npcMovieTrack = None
         self.cage = None
-
+        self.CheckpointFloor_ToonPositions = [
+            Point3(0, 10, 0),
+            Point3(10, 15, 0),
+            Point3(-7, 19, 0),
+            Point3(-10, -5, 0)]
         # initial cog positions vary based on the cog office model
         self.BottomFloor_SuitPositions = [
             Point3(0, 15, 0),
@@ -269,18 +274,19 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         elevOut = self.floorModel.find('**/elevator-out')
 
         # Position the suits
-        for index in range(len(self.suits)):
-            assert (self.notify.debug('setting suit: %d to pos: %s' % \
-                                      (self.suits[index].doId, SuitPositions[index])))
-            self.suits[index].setPos(SuitPositions[index])
-            if len(self.suits) > 2:
-                self.suits[index].setH(SuitHs[index])
-            else:
-                # if there's 2 or 1 suits, make them face fwd since there's no other suits
-                # they would be to be talking to
-                self.suits[index].setH(
-                    170)
-            self.suits[index].loop('neutral')
+        if self.chunkFloor != 4 and self.wantCheckpoint:
+            for index in range(len(self.suits)):
+                assert (self.notify.debug('setting suit: %d to pos: %s' % \
+                                        (self.suits[index].doId, SuitPositions[index])))
+                self.suits[index].setPos(SuitPositions[index])
+                if len(self.suits) > 2:
+                    self.suits[index].setH(SuitHs[index])
+                else:
+                    # if there's 2 or 1 suits, make them face fwd since there's no other suits
+                    # they would be to be talking to
+                    self.suits[index].setH(
+                        170)
+                self.suits[index].loop('neutral')
 
         # Position the toons
         for toon in self.toons:
@@ -346,7 +352,7 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
                 self.checkpointNPC = NPCToons.createLocalNPC(self.cagedToonNpcId)
         self.checkpointNPC.addActive()
         self.checkpointNPC.reparentTo(render)
-        self.checkpointNPC.setPos(15, 20, 0)
+        self.checkpointNPC.setPos(0, 15, 0)
         self.checkpointNPC.setH(180)
         self.checkpointNPC.loop('neutral')
         return
@@ -373,7 +379,6 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         base.localAvatar.inventory.setBattleCreditMultiplier(mult)
         if self.cage is not None:
             self.cage = None
-        #self.__cleanupCheckpointNPC()
 
     def __addToon(self, toon):
         assert (self.notify.debug('addToon(%d)' % toon.doId))
@@ -425,6 +430,8 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.notify.debug(f'Zone id : {self.zoneId}')
 
     def exitResting(self):
+        if self.npcMovieTrack:
+            self.npcMovieTrack.finish()
         self.waitMusic.stop()
         return
 
@@ -553,13 +560,6 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.activeIntervals[name] = track
 
     def enterBattle(self, ts=0):
-        #if self.chunkFloor == 4:
-
-            #self.setState('Resting')
-            
-            #return
-            
-            
         self.notify.info('enterBattle()')
         if (self.elevatorOutOpen == 1):
             self.__playCloseElevatorOut(self.uniqueName('close-out-elevator'))
@@ -642,41 +642,67 @@ class DistributedEndlessSuitInterior(DistributedObject.DistributedObject):
         self.__finishInterval(self.uniqueName('reserves-joining'))
         return None
 
+    def __npcMovieTrack(self):
+        avatar = base.localAvatar
+        trackName = f'__checkpointFloorDone-{avatar.doId}'
+        track = Parallel(name=trackName)
+        # If the npc doesn't exist 
+        if not self.checkpointNPC:
+            self.setupNPC()
+        if self.currentFloor < 15:
+            speech = TTLocalizer.EndlessBuildingToonThankYou
+        elif self.currentFloor >= 15:
+            speech = TTLocalizer.EndlessBuildingToonThankYouHigherFloors
+        track.append(Sequence(
+                                Func(self.checkpointNPC.wrtReparentTo, render), Func(self.checkpointNPC.setScale, 1)))
+        for toon in self.toons:
+            index = 0
+            track.append(Sequence(
+                                  Func(toon.loop, 'run'),
+                               
+                                  Func(toon.headsUp, Point3(0, 10, 0)),
+                                    
+                                 ParallelEndTogether(toon.posInterval(3, self.CheckpointFloor_ToonPositions[index]), base.camera.posInterval(3, Point3(0, -9, 6))),
+                                 Func(toon.loop, 'neutral')
+            ))
+            index += 1
+                               
+        track.append(Sequence(
+
+                               Func(base.camera.lookAt, self.checkpointNPC),
+                               Wait(1),
+                                Func(self.checkpointNPC.setChatAbsolute, TTLocalizer.CagedToonYippee, CFSpeech | CFTimeout),
+                                Wait(2),
+                                ActorInterval(self.checkpointNPC, 'jump'), Func(self.checkpointNPC.loop, 'neutral'),
+                                Func(self.checkpointNPC.headsUp, localAvatar),
+                                Func(self.checkpointNPC.setChatAbsolute, speech, CFSpeech | CFTimeout),
+                                Wait(5),
+                                Func(self.checkpointNPC.setChatAbsolute, TTLocalizer.MovieNPCSOSGoodbye, CFSpeech | CFTimeout),
+                                ActorInterval(self.checkpointNPC, 'wave'), 
+                                Wait(2),
+                                self.checkpointNPC.getTeleportOutTrack(),
+                                Func(self.checkpointNPC.removeActive),
+                                Func(self.checkpointNPC.detachNode),
+                                Func(self.checkpointNPC.delete),
+
+                                ))
+        # Dialog box appears here to select your reward if you are on a high enough flor
+        # otherwise just give the reward
+        self.activeIntervals[trackName] = track
+        return track
     ##### Resting state #####
 
     def enterResting(self, ts=0):
-
-        
         if self.chunkFloor == 4:
-            avatar = base.localAvatar
-            trackName = f'__checkpointFloorDone-{avatar.doId}'
-            track = Parallel(name=trackName)
-            if self.currentFloor < 15:
-                speech = TTLocalizer.EndlessBuildingToonThankYou
-            elif self.currentFloor >= 15:
-                speech = TTLocalizer.EndlessBuildingToonThankYouHigherFloors
-            track.append(Sequence(Func(camera.wrtReparentTo, localAvatar), Func(camera.setPos, 13, 20, 0),
-                                    Func(camera.lookAt, Point3(15, 20, 0)),
-
-                                    Func(self.checkpointNPC.wrtReparentTo, render), Func(self.checkpointNPC.setScale, 1),
-                                    #Func(self.checkpointNPC.loop, 'walk'),
-                                #   Func(self.checkpointNPC.headsUp, Point3(0, 10, 0)),
-                                    #  ParallelEndTogether(self.checkpointNPC.posInterval(1.5, Point3(15, 20, 0)),
-                                    #                     self.checkpointNPC.hprInterval(0.5, VBase3(180, 0, 0),
-                                                #                                        blendType='easeInOut')),
-                                    Func(self.checkpointNPC.setChatAbsolute, TTLocalizer.CagedToonYippee, CFSpeech),
-                                    ActorInterval(self.checkpointNPC, 'jump'), Func(self.checkpointNPC.loop, 'neutral'),
-                                    Func(self.checkpointNPC.headsUp, localAvatar),
-                                    Func(self.checkpointNPC.setChatAbsolute, speech, CFSpeech),
-                                    Func(camera.lookAt, self.checkpointNPC, Point3(0, 0, 2),
-                                    ActorInterval(self.checkpointNPC, 'teleportOut'))))
-
-            self.__cleanupCheckpointNPC()
-            # Dialog box appears here to select your reward if you are on a high enough flor
-            # otherwise just give the reward
-            self.activeIntervals[trackName] = track
-            self.cr.playGame.getPlace().setState('walk')
+            self.npcMovieTrack = self.__npcMovieTrack()
+            self.npcMovieTrack.start(ts)
+            
+            taskMgr.doMethodLater(15.0, self.__walk, 'walkTask')
         self.notify.info('enterResting()')
         #base.playMusic(self.waitMusic, looping=1, volume=0.7)
         self.__closeInElevator()
         return
+
+    def __walk(self, task):
+        self.cr.playGame.getPlace().setState('walk')
+        
