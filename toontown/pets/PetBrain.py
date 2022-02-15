@@ -13,7 +13,7 @@ from toontown.pets import PetConstants, PetObserve, PetGoal, PetGoalMgr
 from toontown.pets import PetTricks, PetLookerAI
 import random, types
 #from panda3d.toontown import *
-from libtoontown import CPetBrain
+from panda3d.toontown  import CPetBrain
 class PetBrain(DirectObject.DirectObject, CPetBrain):
     """This class handles the thought processes of Pets. It collects
     observations of the pet's environment, and controls the pet based
