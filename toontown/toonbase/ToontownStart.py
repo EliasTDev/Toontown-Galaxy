@@ -253,7 +253,6 @@ builtins.loader = base.loader
 
 autoRun = ConfigVariableBool('toontown-auto-run', 1)
 Discord.startTasks()
-import sentry_sdk
 
 
 if autoRun and launcher.isDummy():
@@ -268,8 +267,6 @@ if autoRun and launcher.isDummy():
 
     except Exception as e:
         from otp.otpbase import PythonUtil
-        if not __debug__:
-            sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
-            sentry_sdk.capture_exception(e)
+
         print(PythonUtil.describeException())
         raise

@@ -1,6 +1,8 @@
 """OptionsPage module: contains the OptionsPage class"""
 
 from panda3d.core import *
+
+from direct.showbase.ShowBaseGlobal import hidden
 from . import ShtikerPage
 from toontown.toontowngui import TTDialog
 from direct.gui.DirectGui import *
@@ -349,7 +351,6 @@ class OptionsTabPage(DirectFrame):
         self.displaySettingsEmbedded = None
         self.displaySettingsApi = None
         self.displaySettingsApiChanged = 0
-
         guiButton = loader.loadModel("phase_3/models/gui/quit_button")
         gui = loader.loadModel("phase_3.5/models/gui/friendslist_gui")
 
@@ -1329,86 +1330,51 @@ class AnotherOptionsTabPage(DirectFrame):
         options_text_scale = 0.052
         disabled_arrow_color = Vec4(0.6, 0.6, 0.6, 1.0)
         self.speed_chat_scale = 0.055
-        cdrGui = loader.loadModel(
-            'phase_3.5/models/gui/tt_m_gui_sbk_codeRedemptionGui')
-        instructionGui = cdrGui.find('**/tt_t_gui_sbk_cdrPresent')
-        flippyGui = cdrGui.find('**/tt_t_gui_sbk_cdrFlippy')
-        musicBoxGui = cdrGui.find('**/tt_t_gui_sbk_cdrCodeBox')
+
+        circleModel = loader.loadModel('phase_3/models/gui/tt_m_gui_mat_nameShop')
+        scrollBkgd = OnscreenImage(image='phase_3/maps/slider.png')
+        scrollBkgd.setTransparency(TransparencyAttrib.MAlpha)
         self.musicVolumeLabel = DirectLabel(parent=self, relief=None, text='',
                                             text_align=TextNode.ALeft, text_scale=options_text_scale,
                                             text_wordwrap=16, pos=(leftMargin, 0, textStartHeight))
-        # self.musicBox = DirectFrame(parent=self, relief=None,
-        #                           pos = (buttonbase_xcoord, 0, buttonbase_ycoord),
-        #                          image=musicBoxGui)
 
-        self.musicVolumeEntry = DirectEntry(text='', initialText='',
-                                            parent=self, relief=DGG.GROOVE,
-                                            pos=(buttonbase_xcoord, 0, buttonbase_ycoord),
-                                            borderWidth=(0.05,
-                                                         0.05),
-                                            frameColor=((1,
-                                                         1,
-                                                         1,
-                                                         1),
-                                                        (1,
-                                                         1,
-                                                         1,
-                                                         1),
-                                                        (0.5,
-                                                         0.5,
-                                                         0.5,
-                                                         0.5)),
-                                            state=DGG.NORMAL, text_align=TextNode.ALeft,
-                                            text_scale=TTLocalizer.OPCodesInputTextScale, width=10.5,
-                                            numLines=1, focus=1,
-                                            backgroundFocus=0, cursorKeys=1,
-                                            text_fg=(0,
-                                                     0,
-                                                     0,
-                                                     1),
-                                            suppressMouse=1, autoCapitalize=0,
-                                            command=self.setMusicVolume)
-        self.musicVolumeEntry.setScale(0.08)
+        self.musicVolumeSlider = DirectSlider(parent=self, pos=(0.18, 0, textStartHeight ),
+                                              frameSize=(-0.5, 0.5, -0.08, 0.08),
+                                              range=(0, 100),
+                                              value=base.settings.getFloat('game', 'musicVolume', 1.0) * 100,
+                                              pageSize=5, command=self.setMusicVolume)
+        self.musicVolumeSlider.setScale(0.5)
         self.sfxVolumeLabel = DirectLabel(parent=self, relief=None, text='',
                                           text_align=TextNode.ALeft, text_scale=options_text_scale,
                                           text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.1))
 
-        # self.musicBox = DirectFrame(parent=self, relief=None,
-        #                           pos = (buttonbase_xcoord, 0, buttonbase_ycoord),
-        #                          image=musicBoxGui)
 
-        self.sfxVolumeEntry = DirectEntry(text='', initialText='',
-                                          parent=self, relief=DGG.GROOVE,
-                                          pos=(buttonbase_xcoord, 0, buttonbase_ycoord - 0.1),
-                                          borderWidth=(0.05,
-                                                       0.05),
-                                          frameColor=((1,
-                                                       1,
-                                                       1,
-                                                       1),
-                                                      (1,
-                                                       1,
-                                                       1,
-                                                       1),
-                                                      (0.5,
-                                                       0.5,
-                                                       0.5,
-                                                       0.5)),
-                                          state=DGG.NORMAL, text_align=TextNode.ALeft,
-                                          text_scale=TTLocalizer.OPCodesInputTextScale, width=10.5,
-                                          numLines=1, focus=1,
-                                          backgroundFocus=0, cursorKeys=1,
-                                          text_fg=(0,
-                                                   0,
-                                                   0,
-                                                   1),
-                                          suppressMouse=1, autoCapitalize=0,
-                                          command=self.setSfxVolume)
-        self.sfxVolumeEntry.setScale(0.08)
+
+        self.sfxVolumeSlider = DirectSlider(parent=self, pos=(0.18, 0, textStartHeight - 0.1),
+                                            frameSize=(-0.5, 0.5, -0.08, 0.08),
+                                            range=(0, 100),
+                                            value=base.settings.getFloat('game', 'sfxVolume', 1.0) * 100, pageSize=5,
+                                            command=self.setSfxVolume)
+        self.sfxVolumeSlider.setScale(0.5)
+        #self.sfxVolumeSlider['relief'] = None
+        #self.musicVolumeSlider['relief'] = None
+        #self.sfxVolumeSlider['frameTexture'] = None
+        #self.musicVolumeSlider['frameTexture'] = None
+
+        self.musicVolumeSlider.thumb['geom'] = circleModel.find('**/tt_t_gui_mat_namePanelCircle')
+        self.sfxVolumeSlider.thumb['geom'] = circleModel.find('**/tt_t_gui_mat_namePanelCircle')
+        self.musicVolumeSlider.thumb['relief'] = None
+        self.sfxVolumeSlider.thumb['relief'] = None
+        self.sfxVolumeSlider.resizeThumb = False
+        self.musicVolumeSlider.resizeThumb = False
+
+
+
+
 
         self.FPSLabel = DirectLabel(parent=self, relief=None, text='FPS:',
                                     text_align=TextNode.ALeft, text_scale=options_text_scale,
-                                    text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.2))
+                                    text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.3))
 
         self.FPSButton = DirectButton(
             parent=self,
@@ -1417,17 +1383,17 @@ class AnotherOptionsTabPage(DirectFrame):
                    guiButton.find("**/QuitBtn_DN"),
                    guiButton.find("**/QuitBtn_RLVR"),
                    ),
-            image_scale=button_image_scale,
+            image_scale=(1.2, 1, 1),
             text="Toggle FPS",
             text_scale=options_text_scale,
             text_pos=button_textpos,
-            pos=(buttonbase_xcoord, 0, buttonbase_ycoord - 0.2),
+            pos=(buttonbase_xcoord + 0.04, 0, buttonbase_ycoord - 0.3),
             command=self.toggleFPS,
         )
 
         self.customsControlsLabel = DirectLabel(parent=self, relief=None, text='Custom Controls:',
                                                 text_align=TextNode.ALeft, text_scale=options_text_scale,
-                                                text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.3))
+                                                text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.5))
         self.customControlsButton = DirectButton(
             parent=self,
             relief=None,
@@ -1435,16 +1401,16 @@ class AnotherOptionsTabPage(DirectFrame):
                    guiButton.find("**/QuitBtn_DN"),
                    guiButton.find("**/QuitBtn_RLVR"),
                    ),
-            image_scale=button_image_scale,
+            image_scale=(1.2, 1, 1),
             text="Custom Controls",
             text_scale=options_text_scale,
             text_pos=button_textpos,
-            pos=(buttonbase_xcoord, 0, buttonbase_ycoord - 0.3),
+            pos=(buttonbase_xcoord + 0.04 , 0, buttonbase_ycoord - 0.5),
             command=self.openCustomControlsGUI,
         )
         self.laffMeterLabel = DirectLabel(parent=self, relief=None, text='Laff Meter Overhead:',
                                           text_align=TextNode.ALeft, text_scale=options_text_scale,
-                                          text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.5))
+                                          text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.7))
         # TODO make it a directmenu instead where you can choose if you want it on , off or only when a toon takes damage
         self.laffMeterButton = DirectButton(
             parent=self,
@@ -1453,16 +1419,16 @@ class AnotherOptionsTabPage(DirectFrame):
                    guiButton.find("**/QuitBtn_DN"),
                    guiButton.find("**/QuitBtn_RLVR"),
                    ),
-            image_scale=button_image_scale,
+            image_scale=(1.2, 1, 1),
             text="Toggle Laff Meter",
             text_scale=options_text_scale,
             text_pos=button_textpos,
-            pos=(buttonbase_xcoord, 0, buttonbase_ycoord - 0.5),
+            pos=(buttonbase_xcoord + 0.04, 0, buttonbase_ycoord - 0.7),
             command=self.toggleLaffMeter)
 
         self.richPresenceLabel = DirectLabel(parent=self, relief=None, text='Discord Rich Presence:',
                                              text_align=TextNode.ALeft, text_scale=options_text_scale,
-                                             text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.6))
+                                             text_wordwrap=16, pos=(leftMargin, 0, textStartHeight - 0.9))
         self.richPresenceButton = DirectButton(
             parent=self,
             relief=None,
@@ -1470,13 +1436,15 @@ class AnotherOptionsTabPage(DirectFrame):
                    guiButton.find("**/QuitBtn_DN"),
                    guiButton.find("**/QuitBtn_RLVR"),
                    ),
-            image_scale=button_image_scale,
+            image_scale=(1.4, 1, 1),
             text="Toggle Rich Presence",
             text_scale=options_text_scale,
             text_pos=button_textpos,
-            pos=(buttonbase_xcoord, 0, buttonbase_ycoord - 0.6),
+            pos=(buttonbase_xcoord + 0.06, 0, buttonbase_ycoord - 0.9),
             command=self.toggleRichPresence)
 
+        circleModel.removeNode()
+        scrollBkgd.destroy()
     def toggleLaffMeter(self):
         self.settingsChanged = 1
         base.settings.updateSetting('game', 'want-laff-meter-over-head', not base.wantLaffMeterOverHead)
@@ -1512,15 +1480,11 @@ class AnotherOptionsTabPage(DirectFrame):
     def openCustomControlsGUI(self):
         ControlSettingsDialog()
 
-    def setMusicVolume(self, input=None):
-        if input is None:
-            input = self.musicVolumeEntry.get()
-        self.musicVolumeEntry['focus'] = 1
-        messenger.send('wakeup')
+    def setMusicVolume(self):
         self.settingsChanged = 1
 
         try:
-            volume = float(input) / 100.
+            volume = round(float(self.musicVolumeSlider['value']), 2) / 100
         except:
             self.notify.warning('volume is not a number, volume: {0}'.format(input))
             return
@@ -1532,16 +1496,11 @@ class AnotherOptionsTabPage(DirectFrame):
         base.musicManager.setVolume(volume)
         base.musicActive = volume > 0.0
         self.__setMusicLabel()
-        self.musicVolumeEntry.enterText('')
 
-    def setSfxVolume(self, input=None):
-        if input is None:
-            input = self.sfxVolumeEntry.get()
-        self.sfxVolumeEntry['focus'] = 1
-        messenger.send('wakeup')
+    def setSfxVolume(self):
         self.settingsChanged = 1
         try:
-            volume = float(input) / 100.
+            volume = round(float(self.sfxVolumeSlider['value']), 2) / 100
         except:
             self.notify.warning('volume is not a number, volume: {0}'.format(input))
             return
@@ -1554,7 +1513,6 @@ class AnotherOptionsTabPage(DirectFrame):
             x.setVolume(volume)
         base.sfxActive = volume > 0.0
         self.__setSfxLabel()
-        self.sfxVolumeEntry.enterText('')
 
     def __setFPSLabel(self):
         if base.frameRateMeter:
@@ -1566,10 +1524,11 @@ class AnotherOptionsTabPage(DirectFrame):
 
     def __setMusicLabel(self):
         self.musicVolumeLabel['text'] = 'Music Volume: ' + str(
-            base.settings.getFloat('game', 'musicVolume', 1.0) * 100) + "%"
+            round(base.settings.getFloat('game', 'musicVolume', 1.0), 2) * 100) + "%"
 
     def __setSfxLabel(self):
-        self.sfxVolumeLabel['text'] = 'Sfx Volume: ' + str(base.settings.getFloat('game', 'sfxVolume', 1.0) * 100) + "%"
+        self.sfxVolumeLabel['text'] = 'Sfx Volume: ' + str(
+            round(base.settings.getFloat('game', 'sfxVolume', 1.0), 2) * 100) + "%"
 
     def enter(self):
         localAvatar.chatMgr.fsm.request("otherDialog")
@@ -1578,6 +1537,10 @@ class AnotherOptionsTabPage(DirectFrame):
         self.__setMusicLabel()
         self.__setSfxLabel()
         self.__setFPSLabel()
+        self.__setRichPresenceLabel()
+        self.__setLaffMeterLabel()
+
+
 
     def exit(self):
         self.ignore('confirmDone')
@@ -1586,13 +1549,13 @@ class AnotherOptionsTabPage(DirectFrame):
     def unload(self):
         self.musicVolumeLabel.destroy()
         del self.musicVolumeLabel
-        self.musicVolumeEntry.destroy()
-        del self.musicVolumeEntry
+        self.musicVolumeSlider.destroy()
+        del self.musicVolumeSlider
 
         self.sfxVolumeLabel.destroy()
         del self.sfxVolumeLabel
-        self.sfxVolumeEntry.destroy()
-        del self.sfxVolumeEntry
+        self.sfxVolumeSlider.destroy()
+        del self.sfxVolumeSlider
         self.FPSLabel.destroy()
         del self.FPSLabel
         self.FPSButton.destroy()

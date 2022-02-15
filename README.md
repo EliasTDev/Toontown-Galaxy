@@ -1,20 +1,26 @@
-# Toontown: Event Horizon
-The official repo for Toontown: Event Horizon, a new Toontown game based on Disney's Toontown Online.
+# Toontown: Galaxy
+The official archive repo for Toontown: Galaxy, a new Toontown game based on Disney's Toontown Online.
 
-# staff:
+# Contributors:
  
- 1. Galaxy-  Fouder,  Team Leader, and Game Developer
- 2. Xeltania - Game Developer
+ 1. Pants - Producer, and Composer
+ 2. Xeltania - Game Developer 
+ 3.  Wizzerinus - Game Developer
+ 4.  DarthAnonymous - Game Developer
+ 5.  Galaxy- Original Founder, Game Developer
+ 6.  Rocket - Game Developer
 
- 3.  DarthAnonymous1 - Game Developer 
 # Repo Rules and Regulations:
 
 When adding commits, don't push to master unless the code is tested and fully functional.
 
 # Dependencies
 You can find the installer for panda3d in our discord
-Windows: https://cdn.discordapp.com/attachments/919806809970212864/922756181779447808/Panda3D-1.11.0-py3.8.dmg
+
+Windows: https://cdn.discordapp.com/attachments/819676286703501325/940131594566529034/Panda3D-1.11.0-py3.9-x64.exe
+
 Mac: https://cdn.discordapp.com/attachments/919806809970212864/922756181779447808/Panda3D-1.11.0-py3.8.dmg
+
 Ubuntu: https://drive.google.com/file/d/1yafjV-PtRaIqHumpUSC1EqXKx5NuvHnV/view?usp=sharing
 
 Other linux platforms: https://cdn.discordapp.com/attachments/819676286703501325/930289469314170940/panda3d-1.11.0-cp39-cp39-linux_x86_64.whl

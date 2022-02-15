@@ -1,5 +1,4 @@
 import builtins, os
-import sentry_sdk
 class game:
     name = 'toontown'
     process = 'server'
@@ -62,13 +61,4 @@ except Exception as e:
         print('Failed to get sender for ai exception')
     with open(config.GetString('ai-crash-log-name', 'ai-crash.txt'), 'w+') as file:
         file.write(info + "\n")
-    if wantSentry:
-        sentry_sdk.init('https://b747c8225f394bafbdf9f830caaa293a@o1128902.ingest.sentry.io/6172162')
-        from os.path import expanduser
-        sentry_sdk.set_tag('district_name', os.getenv('DISTRICT_NAME', "NULL"))
-        sentry_sdk.set_tag('SENDER_AVID', simbase.air.getAvatarIdFromSender())
-        sentry_sdk.set_tag('SENDER_ACCOUNT_ID',simbase.air.getAccountIdFromSender())
-        sentry_sdk.set_tag('homedir', expanduser('~'))
-        sentry_sdk.set_tag('CRITICAL', 'True')
-        sentry_sdk.capture_exception(e)
     raise
