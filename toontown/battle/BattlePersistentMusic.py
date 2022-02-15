@@ -1,3 +1,5 @@
+# Author: King Pants / Buckstrom
+
 class BattlePersistentMusic():
     sound_type = ['calm', 'encntr', 'limit']
     PLACEHOLDER_VOLUME = 0.9
