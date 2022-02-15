@@ -31,3 +31,4 @@ want-cogdominiums #t
 
 is-winter-running #f
 fmod-use-surround-sound #t 
+want-db-test 0
